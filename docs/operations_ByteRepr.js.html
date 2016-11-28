@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/ByteRepr.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/ByteRepr.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/* globals app */
+
+/**
+ * Byte representation operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var ByteRepr = {
+
+    /**
+     * @constant
+     * @default
+     */
+    DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF"],
+    /**
+     * @constant
+     * @default
+     */
+    HEX_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"],
+    /**
+     * @constant
+     * @default
+     */
+    BIN_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "None"],
+    
+    /**
+     * To Hex operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_hex: function(input, args) {
+        var delim = Utils.char_rep[args[0] || "Space"];
+        return Utils.to_hex(input, delim, 2);
+    },
+    
+    
+    /**
+     * From Hex operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from_hex: function(input, args) {
+        var delim = args[0] || "Space";
+        return Utils.from_hex(input, delim, 2);
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    CHARCODE_BASE: 16,
+    
+    /**
+     * To Charcode operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_charcode: function(input, args) {
+        var delim = Utils.char_rep[args[0] || "Space"],
+            base = args[1],
+            output = "",
+            padding = 2,
+            ordinal;
+            
+        if (base &lt; 2 || base > 36) {
+            throw "Error: Base argument must be between 2 and 36";
+        }
+            
+        for (var i = 0; i &lt; input.length; i++) {
+            ordinal = Utils.ord(input[i]);
+            
+            if (base == 16) {
+                if (ordinal &lt; 256) padding = 2;
+                else if (ordinal &lt; 65536) padding = 4;
+                else if (ordinal &lt; 16777216) padding = 6;
+                else if (ordinal &lt; 4294967296) padding = 8;
+                else padding = 2;
+                
+                if (padding > 2) app.options.attempt_highlight = false;
+                
+                output += Utils.hex(ordinal, padding) + delim;
+            } else {
+                app.options.attempt_highlight = false;
+                output += ordinal.toString(base) + delim;
+            }
+        }
+        
+        return output.slice(0, -delim.length);
+    },
+    
+    
+    /**
+     * From Charcode operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from_charcode: function(input, args) {
+        var delim = Utils.char_rep[args[0] || "Space"],
+            base = args[1],
+            bites = input.split(delim),
+            i = 0;
+            
+        if (base &lt; 2 || base > 36) {
+            throw "Error: Base argument must be between 2 and 36";
+        }
+        
+        if (base != 16) {
+            app.options.attempt_highlight = false;
+        }
+        
+        // Split into groups of 2 if the whole string is concatenated and 
+        // too long to be a single character
+        if (bites.length == 1 &amp;&amp; input.length > 17) {
+            bites = [];
+            for (i = 0; i &lt; input.length; i += 2) {
+                bites.push(input.slice(i, i+2));
+            }
+        }
+        
+        var latin1 = "";
+        for (i = 0; i &lt; bites.length; i++) {
+            latin1 += Utils.chr(parseInt(bites[i], base));
+        }
+        return Utils.str_to_byte_array(latin1);
+    },
+    
+    
+    /**
+     * Highlight to hex
+     *
+     * @param {Object[]} pos
+     * @param {number} pos[].start
+     * @param {number} pos[].end
+     * @param {Object[]} args
+     * @returns {Object[]} pos
+     */
+    highlight_to: function(pos, args) {
+        var delim = Utils.char_rep[args[0] || "Space"],
+            len = delim == "\r\n" ? 1 : delim.length;
+            
+        pos[0].start = pos[0].start * (2 + len);
+        pos[0].end = pos[0].end * (2 + len) - len;
+        
+        // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
+        if (delim == "0x" || delim == "\\x") {
+            pos[0].start += 2;
+            pos[0].end   += 2;
+        }
+        return pos;
+    },
+    
+    
+    /**
+     * Highlight to hex
+     *
+     * @param {Object[]} pos
+     * @param {number} pos[].start
+     * @param {number} pos[].end
+     * @param {Object[]} args
+     * @returns {Object[]} pos
+     */
+    highlight_from: function(pos, args) {
+        var delim = Utils.char_rep[args[0] || "Space"],
+            len = delim == "\r\n" ? 1 : delim.length,
+            width = len + 2;
+        
+        // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
+        if (delim == "0x" || delim == "\\x") {
+            if (pos[0].start > 1) pos[0].start -= 2;
+            else pos[0].start = 0;
+            if (pos[0].end > 1) pos[0].end -= 2;
+            else pos[0].end = 0;
+        }
+        
+        pos[0].start = pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
+        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / width);
+        return pos;
+    },
+    
+    
+    /**
+     * To Decimal operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_decimal: function(input, args) {
+        var delim = Utils.char_rep[args[0]];
+        return input.join(delim);
+    },
+    
+    
+    /**
+     * From Decimal operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from_decimal: function(input, args) {
+        var delim = Utils.char_rep[args[0]];
+        var byte_str = input.split(delim), output = [];
+        if (byte_str[byte_str.length-1] === "")
+            byte_str = byte_str.slice(0, byte_str.length-1);
+        
+        for (var i = 0; i &lt; byte_str.length; i++) {
+            output[i] = parseInt(byte_str[i]);
+        }
+        return output;
+    },
+    
+    
+    /**
+     * To Binary operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_binary: function(input, args) {
+        var delim = Utils.char_rep[args[0] || "Space"],
+            output = "",
+            padding = 8;
+            
+        for (var i = 0; i &lt; input.length; i++) {
+            output += Utils.pad(input[i].toString(2), padding) + delim;
+        }
+        
+        if (delim.length) {
+            return output.slice(0, -delim.length);
+        } else {
+            return output;
+        }
+    },
+    
+    
+    /**
+     * From Binary operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from_binary: function(input, args) {
+        if (args[0] != "None") {
+            var delim_regex = Utils.regex_rep[args[0] || "Space"];
+            input = input.replace(delim_regex, '');
+        }
+        
+        var output = [];
+        var byte_len = 8;
+        for (var i = 0; i &lt; input.length; i += byte_len) {
+            output.push(parseInt(input.substr(i, byte_len), 2));
+        }
+        return output;
+    },
+    
+    
+    /**
+     * Highlight to binary
+     *
+     * @param {Object[]} pos
+     * @param {number} pos[].start
+     * @param {number} pos[].end
+     * @param {Object[]} args
+     * @returns {Object[]} pos
+     */
+    highlight_to_binary: function(pos, args) {
+        var delim = Utils.char_rep[args[0] || "Space"];
+        pos[0].start = pos[0].start * (8 + delim.length);
+        pos[0].end = pos[0].end * (8 + delim.length) - delim.length;
+        return pos;
+    },
+    
+    
+    /**
+     * Highlight from binary
+     *
+     * @param {Object[]} pos
+     * @param {number} pos[].start
+     * @param {number} pos[].end
+     * @param {Object[]} args
+     * @returns {Object[]} pos
+     */
+    highlight_from_binary: function(pos, args) {
+        var delim = Utils.char_rep[args[0] || "Space"];
+        pos[0].start = pos[0].start === 0 ? 0 : Math.floor(pos[0].start / (8 + delim.length));
+        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / (8 + delim.length));
+        return pos;
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    HEX_CONTENT_CONVERT_WHICH: ["Only special chars", "Only special chars including spaces", "All chars"],
+    /**
+     * @constant
+     * @default
+     */
+    HEX_CONTENT_SPACES_BETWEEN_BYTES: false,
+    
+    /**
+     * To Hex Content operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_hex_content: function(input, args) {
+        var convert = args[0];
+        var spaces = args[1];
+        if (convert == "All chars") {
+            var result = "|" + Utils.to_hex(input) + "|";
+            if (!spaces) result = result.replace(/ /g, "");
+            return result;
+        }
+        
+        var output = "",
+            in_hex = false,
+            convert_spaces = convert == "Only special chars including spaces",
+            b;
+        for (var i = 0; i &lt; input.length; i++) {
+            b = input[i];
+            if ((b == 32 &amp;&amp; convert_spaces) || (b &lt; 48 &amp;&amp; b != 32) || (b > 57 &amp;&amp; b &lt; 65) || (b > 90 &amp;&amp; b &lt; 97) || b > 122) {
+                if (!in_hex) {
+                    output += "|";
+                    in_hex = true;
+                } else if (spaces) output += " ";
+                output += Utils.to_hex([b]);
+            } else {
+                if (in_hex) {
+                    output += "|";
+                    in_hex = false;
+                }
+                output += Utils.chr(input[i]);
+            }
+        }
+        if (in_hex) output += "|";
+        return output;
+    },
+    
+    
+    /**
+     * From Hex Content operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from_hex_content: function(input, args) {
+        var regex = /\|([a-f\d ]{2,})\|/gi;
+        var output = [], m, i = 0;
+        while (!!(m = regex.exec(input))) {
+            // Add up to match
+            for (; i &lt; m.index;)
+                output.push(Utils.ord(input[i++]));
+            
+            // Add match
+            var bytes = Utils.from_hex(m[1]);
+            if (bytes) {
+                for (var a = 0; a &lt; bytes.length;)
+                    output.push(bytes[a++]);
+            } else {
+                // Not valid hex, print as normal
+                for (; i &lt; regex.lastIndex;)
+                    output.push(Utils.ord(input[i++]));
+            }
+            
+            i = regex.lastIndex;
+        }
+        // Add all after final match
+        for (; i &lt; input.length;)
+            output.push(Utils.ord(input[i++]));
+        
+        return output;
+    },
+
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

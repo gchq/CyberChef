@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/FileType.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/FileType.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * File type operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var FileType = {
+
+    /**
+     * Detect File Type operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_detect: function(input, args) {
+        var type = FileType._magic_type(input);
+        
+        if (!type) {
+            return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
+        } else {
+            var output = "File extension: " + type.ext + "\n" +
+                "MIME type:      " + type.mime;
+            
+            if (type.desc &amp;&amp; type.desc.length) {
+                output += "\nDescription:    " + type.desc;
+            }
+            
+            return output;
+        }
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    IGNORE_COMMON_BYTE_SEQUENCES: true,
+    
+    /**
+     * Scan for Embedded Files operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_scan_for_embedded_files: function(input, args) {
+        var output = "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.\n",
+            type,
+            ignore_common = args[0],
+            common_exts = ["ico", "ttf", ""],
+            num_found = 0,
+            num_common_found = 0;
+            
+        for (var i = 0; i &lt; input.length; i++) {
+            type = FileType._magic_type(input.slice(i));
+            if (type) {
+                if (ignore_common &amp;&amp; common_exts.indexOf(type.ext) > -1) {
+                    num_common_found++;
+                    continue;
+                }
+                num_found++;
+                output += "\nOffset " + i + " (0x" + Utils.hex(i) + "):\n" +
+                    "  File extension: " + type.ext + "\n" +
+                    "  MIME type:      " + type.mime + "\n";
+                    
+                if (type.desc &amp;&amp; type.desc.length) {
+                    output += "  Description:    " + type.desc + "\n";
+                }
+            }
+        }
+        
+        if (num_found === 0) {
+            output += "\nNo embedded files were found.";
+        }
+        
+        if (num_common_found > 0) {
+            output += "\n\n" + num_common_found;
+            output += num_common_found == 1 ?
+                " file type was detected that has a common byte sequence. This is likely to be a false positive." :
+                " file types were detected that have common byte sequences. These are likely to be false positives."; 
+            output += " Run this operation with the 'Ignore common byte sequences' option unchecked to see details.";
+        }
+        
+        return output;
+    },
+    
+    
+    /**
+     * Given a buffer, detects magic byte sequences at specific positions and returns the 
+     * extension and mime type.
+     *
+     * @private
+     * @param {byte_array} buf
+     * @returns {Object} type
+     * @returns {string} type.ext - File extension
+     * @returns {string} type.mime - Mime type
+     * @returns {string} [type.desc] - Description
+     */
+    _magic_type: function (buf) {
+        if (!(buf &amp;&amp; buf.length > 1)) {
+            return null;
+        }
+
+        if (buf[0] === 0xFF &amp;&amp; buf[1] === 0xD8 &amp;&amp; buf[2] === 0xFF) {
+            return {
+                ext: 'jpg',
+                mime: 'image/jpeg'
+            };
+        }
+
+        if (buf[0] === 0x89 &amp;&amp; buf[1] === 0x50 &amp;&amp; buf[2] === 0x4E &amp;&amp; buf[3] === 0x47) {
+            return {
+                ext: 'png',
+                mime: 'image/png'
+            };
+        }
+
+        if (buf[0] === 0x47 &amp;&amp; buf[1] === 0x49 &amp;&amp; buf[2] === 0x46) {
+            return {
+                ext: 'gif',
+                mime: 'image/gif'
+            };
+        }
+
+        if (buf[8] === 0x57 &amp;&amp; buf[9] === 0x45 &amp;&amp; buf[10] === 0x42 &amp;&amp; buf[11] === 0x50) {
+            return {
+                ext: 'webp',
+                mime: 'image/webp'
+            };
+        }
+
+        // needs to be before `tif` check
+        if (((buf[0] === 0x49 &amp;&amp; buf[1] === 0x49 &amp;&amp; buf[2] === 0x2A &amp;&amp; buf[3] === 0x0) || (buf[0] === 0x4D &amp;&amp; buf[1] === 0x4D &amp;&amp; buf[2] === 0x0 &amp;&amp; buf[3] === 0x2A)) &amp;&amp; buf[8] === 0x43 &amp;&amp; buf[9] === 0x52) {
+            return {
+                ext: 'cr2',
+                mime: 'image/x-canon-cr2'
+            };
+        }
+
+        if ((buf[0] === 0x49 &amp;&amp; buf[1] === 0x49 &amp;&amp; buf[2] === 0x2A &amp;&amp; buf[3] === 0x0) || (buf[0] === 0x4D &amp;&amp; buf[1] === 0x4D &amp;&amp; buf[2] === 0x0 &amp;&amp; buf[3] === 0x2A)) {
+            return {
+                ext: 'tif',
+                mime: 'image/tiff'
+            };
+        }
+
+        if (buf[0] === 0x42 &amp;&amp; buf[1] === 0x4D) {
+            return {
+                ext: 'bmp',
+                mime: 'image/bmp'
+            };
+        }
+
+        if (buf[0] === 0x49 &amp;&amp; buf[1] === 0x49 &amp;&amp; buf[2] === 0xBC) {
+            return {
+                ext: 'jxr',
+                mime: 'image/vnd.ms-photo'
+            };
+        }
+
+        if (buf[0] === 0x38 &amp;&amp; buf[1] === 0x42 &amp;&amp; buf[2] === 0x50 &amp;&amp; buf[3] === 0x53) {
+            return {
+                ext: 'psd',
+                mime: 'image/vnd.adobe.photoshop'
+            };
+        }
+
+        // needs to be before `zip` check
+        if (buf[0] === 0x50 &amp;&amp; buf[1] === 0x4B &amp;&amp; buf[2] === 0x3 &amp;&amp; buf[3] === 0x4 &amp;&amp; buf[30] === 0x6D &amp;&amp; buf[31] === 0x69 &amp;&amp; buf[32] === 0x6D &amp;&amp; buf[33] === 0x65 &amp;&amp; buf[34] === 0x74 &amp;&amp; buf[35] === 0x79 &amp;&amp; buf[36] === 0x70 &amp;&amp; buf[37] === 0x65 &amp;&amp; buf[38] === 0x61 &amp;&amp; buf[39] === 0x70 &amp;&amp; buf[40] === 0x70 &amp;&amp; buf[41] === 0x6C &amp;&amp; buf[42] === 0x69 &amp;&amp; buf[43] === 0x63 &amp;&amp; buf[44] === 0x61 &amp;&amp; buf[45] === 0x74 &amp;&amp; buf[46] === 0x69 &amp;&amp; buf[47] === 0x6F &amp;&amp; buf[48] === 0x6E &amp;&amp; buf[49] === 0x2F &amp;&amp; buf[50] === 0x65 &amp;&amp; buf[51] === 0x70 &amp;&amp; buf[52] === 0x75 &amp;&amp; buf[53] === 0x62 &amp;&amp; buf[54] === 0x2B &amp;&amp; buf[55] === 0x7A &amp;&amp; buf[56] === 0x69 &amp;&amp; buf[57] === 0x70) {
+            return {
+                ext: 'epub',
+                mime: 'application/epub+zip'
+            };
+        }
+
+        if (buf[0] === 0x50 &amp;&amp; buf[1] === 0x4B &amp;&amp; (buf[2] === 0x3 || buf[2] === 0x5 || buf[2] === 0x7) &amp;&amp; (buf[3] === 0x4 || buf[3] === 0x6 || buf[3] === 0x8)) {
+            return {
+                ext: 'zip',
+                mime: 'application/zip'
+            };
+        }
+
+        if (buf[257] === 0x75 &amp;&amp; buf[258] === 0x73 &amp;&amp; buf[259] === 0x74 &amp;&amp; buf[260] === 0x61 &amp;&amp; buf[261] === 0x72) {
+            return {
+                ext: 'tar',
+                mime: 'application/x-tar'
+            };
+        }
+
+        if (buf[0] === 0x52 &amp;&amp; buf[1] === 0x61 &amp;&amp; buf[2] === 0x72 &amp;&amp; buf[3] === 0x21 &amp;&amp; buf[4] === 0x1A &amp;&amp; buf[5] === 0x7 &amp;&amp; (buf[6] === 0x0 || buf[6] === 0x1)) {
+            return {
+                ext: 'rar',
+                mime: 'application/x-rar-compressed'
+            };
+        }
+
+        if (buf[0] === 0x1F &amp;&amp; buf[1] === 0x8B &amp;&amp; buf[2] === 0x8) {
+            return {
+                ext: 'gz',
+                mime: 'application/gzip'
+            };
+        }
+
+        if (buf[0] === 0x42 &amp;&amp; buf[1] === 0x5A &amp;&amp; buf[2] === 0x68) {
+            return {
+                ext: 'bz2',
+                mime: 'application/x-bzip2'
+            };
+        }
+
+        if (buf[0] === 0x37 &amp;&amp; buf[1] === 0x7A &amp;&amp; buf[2] === 0xBC &amp;&amp; buf[3] === 0xAF &amp;&amp; buf[4] === 0x27 &amp;&amp; buf[5] === 0x1C) {
+            return {
+                ext: '7z',
+                mime: 'application/x-7z-compressed'
+            };
+        }
+
+        if (buf[0] === 0x78 &amp;&amp; buf[1] === 0x01) {
+            return {
+                ext: 'dmg',
+                mime: 'application/x-apple-diskimage'
+            };
+        }
+
+        if ((buf[0] === 0x0 &amp;&amp; buf[1] === 0x0 &amp;&amp; buf[2] === 0x0 &amp;&amp; (buf[3] === 0x18 || buf[3] === 0x20) &amp;&amp; buf[4] === 0x66 &amp;&amp; buf[5] === 0x74 &amp;&amp; buf[6] === 0x79 &amp;&amp; buf[7] === 0x70) || (buf[0] === 0x33 &amp;&amp; buf[1] === 0x67 &amp;&amp; buf[2] === 0x70 &amp;&amp; buf[3] === 0x35) || (buf[0] === 0x0 &amp;&amp; buf[1] === 0x0 &amp;&amp; buf[2] === 0x0 &amp;&amp; buf[3] === 0x1C &amp;&amp; buf[4] === 0x66 &amp;&amp; buf[5] === 0x74 &amp;&amp; buf[6] === 0x79 &amp;&amp; buf[7] === 0x70 &amp;&amp; buf[8] === 0x6D &amp;&amp; buf[9] === 0x70 &amp;&amp; buf[10] === 0x34 &amp;&amp; buf[11] === 0x32 &amp;&amp; buf[16] === 0x6D &amp;&amp; buf[17] === 0x70 &amp;&amp; buf[18] === 0x34 &amp;&amp; buf[19] === 0x31 &amp;&amp; buf[20] === 0x6D &amp;&amp; buf[21] === 0x70 &amp;&amp; buf[22] === 0x34 &amp;&amp; buf[23] === 0x32 &amp;&amp; buf[24] === 0x69 &amp;&amp; buf[25] === 0x73 &amp;&amp; buf[26] === 0x6F &amp;&amp; buf[27] === 0x6D)) {
+            return {
+                ext: 'mp4',
+                mime: 'video/mp4'
+            };
+        }
+
+        if ((buf[0] === 0x0 &amp;&amp; buf[1] === 0x0 &amp;&amp; buf[2] === 0x0 &amp;&amp; buf[3] === 0x1C &amp;&amp; buf[4] === 0x66 &amp;&amp; buf[5] === 0x74 &amp;&amp; buf[6] === 0x79 &amp;&amp; buf[7] === 0x70 &amp;&amp; buf[8] === 0x4D &amp;&amp; buf[9] === 0x34 &amp;&amp; buf[10] === 0x56)) {
+            return {
+                ext: 'm4v',
+                mime: 'video/x-m4v'
+            };
+        }
+
+        if (buf[0] === 0x4D &amp;&amp; buf[1] === 0x54 &amp;&amp; buf[2] === 0x68 &amp;&amp; buf[3] === 0x64) {
+            return {
+                ext: 'mid',
+                mime: 'audio/midi'
+            };
+        }
+
+        // needs to be before the `webm` check
+        if (buf[31] === 0x6D &amp;&amp; buf[32] === 0x61 &amp;&amp; buf[33] === 0x74 &amp;&amp; buf[34] === 0x72 &amp;&amp; buf[35] === 0x6f &amp;&amp; buf[36] === 0x73 &amp;&amp; buf[37] === 0x6B &amp;&amp; buf[38] === 0x61) {
+            return {
+                ext: 'mkv',
+                mime: 'video/x-matroska'
+            };
+        }
+
+        if (buf[0] === 0x1A &amp;&amp; buf[1] === 0x45 &amp;&amp; buf[2] === 0xDF &amp;&amp; buf[3] === 0xA3) {
+            return {
+                ext: 'webm',
+                mime: 'video/webm'
+            };
+        }
+
+        if (buf[0] === 0x0 &amp;&amp; buf[1] === 0x0 &amp;&amp; buf[2] === 0x0 &amp;&amp; buf[3] === 0x14 &amp;&amp; buf[4] === 0x66 &amp;&amp; buf[5] === 0x74 &amp;&amp; buf[6] === 0x79 &amp;&amp; buf[7] === 0x70) {
+            return {
+                ext: 'mov',
+                mime: 'video/quicktime'
+            };
+        }
+
+        if (buf[0] === 0x52 &amp;&amp; buf[1] === 0x49 &amp;&amp; buf[2] === 0x46 &amp;&amp; buf[3] === 0x46 &amp;&amp; buf[8] === 0x41 &amp;&amp; buf[9] === 0x56 &amp;&amp; buf[10] === 0x49) {
+            return {
+                ext: 'avi',
+                mime: 'video/x-msvideo'
+            };
+        }
+
+        if (buf[0] === 0x30 &amp;&amp; buf[1] === 0x26 &amp;&amp; buf[2] === 0xB2 &amp;&amp; buf[3] === 0x75 &amp;&amp; buf[4] === 0x8E &amp;&amp; buf[5] === 0x66 &amp;&amp; buf[6] === 0xCF &amp;&amp; buf[7] === 0x11 &amp;&amp; buf[8] === 0xA6 &amp;&amp; buf[9] === 0xD9) {
+            return {
+                ext: 'wmv',
+                mime: 'video/x-ms-wmv'
+            };
+        }
+
+        if (buf[0] === 0x0 &amp;&amp; buf[1] === 0x0 &amp;&amp; buf[2] === 0x1 &amp;&amp; buf[3].toString(16)[0] === 'b') {
+            return {
+                ext: 'mpg',
+                mime: 'video/mpeg'
+            };
+        }
+
+        if ((buf[0] === 0x49 &amp;&amp; buf[1] === 0x44 &amp;&amp; buf[2] === 0x33) || (buf[0] === 0xFF &amp;&amp; buf[1] === 0xfb)) {
+            return {
+                ext: 'mp3',
+                mime: 'audio/mpeg'
+            };
+        }
+
+        if ((buf[4] === 0x66 &amp;&amp; buf[5] === 0x74 &amp;&amp; buf[6] === 0x79 &amp;&amp; buf[7] === 0x70 &amp;&amp; buf[8] === 0x4D &amp;&amp; buf[9] === 0x34 &amp;&amp; buf[10] === 0x41) || (buf[0] === 0x4D &amp;&amp; buf[1] === 0x34 &amp;&amp; buf[2] === 0x41 &amp;&amp; buf[3] === 0x20)) {
+            return {
+                ext: 'm4a',
+                mime: 'audio/m4a'
+            };
+        }
+
+        if (buf[0] === 0x4F &amp;&amp; buf[1] === 0x67 &amp;&amp; buf[2] === 0x67 &amp;&amp; buf[3] === 0x53) {
+            return {
+                ext: 'ogg',
+                mime: 'audio/ogg'
+            };
+        }
+
+        if (buf[0] === 0x66 &amp;&amp; buf[1] === 0x4C &amp;&amp; buf[2] === 0x61 &amp;&amp; buf[3] === 0x43) {
+            return {
+                ext: 'flac',
+                mime: 'audio/x-flac'
+            };
+        }
+
+        if (buf[0] === 0x52 &amp;&amp; buf[1] === 0x49 &amp;&amp; buf[2] === 0x46 &amp;&amp; buf[3] === 0x46 &amp;&amp; buf[8] === 0x57 &amp;&amp; buf[9] === 0x41 &amp;&amp; buf[10] === 0x56 &amp;&amp; buf[11] === 0x45) {
+            return {
+                ext: 'wav',
+                mime: 'audio/x-wav'
+            };
+        }
+
+        if (buf[0] === 0x23 &amp;&amp; buf[1] === 0x21 &amp;&amp; buf[2] === 0x41 &amp;&amp; buf[3] === 0x4D &amp;&amp; buf[4] === 0x52 &amp;&amp; buf[5] === 0x0A) {
+            return {
+                ext: 'amr',
+                mime: 'audio/amr'
+            };
+        }
+
+        if (buf[0] === 0x25 &amp;&amp; buf[1] === 0x50 &amp;&amp; buf[2] === 0x44 &amp;&amp; buf[3] === 0x46) {
+            return {
+                ext: 'pdf',
+                mime: 'application/pdf'
+            };
+        }
+
+        if (buf[0] === 0x4D &amp;&amp; buf[1] === 0x5A) {
+            return {
+                ext: 'exe',
+                mime: 'application/x-msdownload'
+            };
+        }
+
+        if ((buf[0] === 0x43 || buf[0] === 0x46) &amp;&amp; buf[1] === 0x57 &amp;&amp; buf[2] === 0x53) {
+            return {
+                ext: 'swf',
+                mime: 'application/x-shockwave-flash'
+            };
+        }
+
+        if (buf[0] === 0x7B &amp;&amp; buf[1] === 0x5C &amp;&amp; buf[2] === 0x72 &amp;&amp; buf[3] === 0x74 &amp;&amp; buf[4] === 0x66) {
+            return {
+                ext: 'rtf',
+                mime: 'application/rtf'
+            };
+        }
+
+        if (buf[0] === 0x77 &amp;&amp; buf[1] === 0x4F &amp;&amp; buf[2] === 0x46 &amp;&amp; buf[3] === 0x46 &amp;&amp; buf[4] === 0x00 &amp;&amp; buf[5] === 0x01 &amp;&amp; buf[6] === 0x00 &amp;&amp; buf[7] === 0x00) {
+            return {
+                ext: 'woff',
+                mime: 'application/font-woff'
+            };
+        }
+
+        if (buf[0] === 0x77 &amp;&amp; buf[1] === 0x4F &amp;&amp; buf[2] === 0x46 &amp;&amp; buf[3] === 0x32 &amp;&amp; buf[4] === 0x00 &amp;&amp; buf[5] === 0x01 &amp;&amp; buf[6] === 0x00 &amp;&amp; buf[7] === 0x00) {
+            return {
+                ext: 'woff2',
+                mime: 'application/font-woff'
+            };
+        }
+
+        if (buf[34] === 0x4C &amp;&amp; buf[35] === 0x50 &amp;&amp; ((buf[8] === 0x02 &amp;&amp; buf[9] === 0x00 &amp;&amp; buf[10] === 0x01) || (buf[8] === 0x01 &amp;&amp; buf[9] === 0x00 &amp;&amp; buf[10] === 0x00) || (buf[8] === 0x02 &amp;&amp; buf[9] === 0x00 &amp;&amp; buf[10] === 0x02))) {
+            return {
+                ext: 'eot',
+                mime: 'application/octet-stream'
+            };
+        }
+
+        if (buf[0] === 0x00 &amp;&amp; buf[1] === 0x01 &amp;&amp; buf[2] === 0x00 &amp;&amp; buf[3] === 0x00 &amp;&amp; buf[4] === 0x00) {
+            return {
+                ext: 'ttf',
+                mime: 'application/font-sfnt'
+            };
+        }
+
+        if (buf[0] === 0x4F &amp;&amp; buf[1] === 0x54 &amp;&amp; buf[2] === 0x54 &amp;&amp; buf[3] === 0x4F &amp;&amp; buf[4] === 0x00) {
+            return {
+                ext: 'otf',
+                mime: 'application/font-sfnt'
+            };
+        }
+
+        if (buf[0] === 0x00 &amp;&amp; buf[1] === 0x00 &amp;&amp; buf[2] === 0x01 &amp;&amp; buf[3] === 0x00) {
+            return {
+                ext: 'ico',
+                mime: 'image/x-icon'
+            };
+        }
+
+        if (buf[0] === 0x46 &amp;&amp; buf[1] === 0x4C &amp;&amp; buf[2] === 0x56 &amp;&amp; buf[3] === 0x01) {
+            return {
+                ext: 'flv',
+                mime: 'video/x-flv'
+            };
+        }
+
+        if (buf[0] === 0x25 &amp;&amp; buf[1] === 0x21) {
+            return {
+                ext: 'ps',
+                mime: 'application/postscript'
+            };
+        }
+
+        if (buf[0] === 0xFD &amp;&amp; buf[1] === 0x37 &amp;&amp; buf[2] === 0x7A &amp;&amp; buf[3] === 0x58 &amp;&amp; buf[4] === 0x5A &amp;&amp; buf[5] === 0x00) {
+            return {
+                ext: 'xz',
+                mime: 'application/x-xz'
+            };
+        }
+
+        if (buf[0] === 0x53 &amp;&amp; buf[1] === 0x51 &amp;&amp; buf[2] === 0x4C &amp;&amp; buf[3] === 0x69) {
+            return {
+                ext: 'sqlite',
+                mime: 'application/x-sqlite3'
+            };
+        }
+        
+        // Added by n1474335 [n1474335@gmail.com] from here on
+        // ################################################################## //
+        if ((buf[0] === 0x1F &amp;&amp; buf[1] === 0x9D) || (buf[0] === 0x1F &amp;&amp; buf[1] === 0xA0)) {
+            return {
+                ext: 'z, tar.z',
+                mime: 'application/x-gtar'
+            };
+        }
+        
+        if (buf[0] === 0x7F &amp;&amp; buf[1] === 0x45 &amp;&amp; buf[2] === 0x4C &amp;&amp; buf[3] === 0x46) {
+            return {
+                ext: 'none, axf, bin, elf, o, prx, puff, so',
+                mime: 'application/x-executable',
+                desc: 'Executable and Linkable Format file. No standard file extension.'
+            };
+        }
+        
+        if (buf[0] === 0xCA &amp;&amp; buf[1] === 0xFE &amp;&amp; buf[2] === 0xBA &amp;&amp; buf[3] === 0xBE) {
+            return {
+                ext: 'class',
+                mime: 'application/java-vm'
+            };
+        }
+        
+        if (buf[0] === 0xEF &amp;&amp; buf[1] === 0xBB &amp;&amp; buf[2] === 0xBF) {
+            return {
+                ext: 'txt',
+                mime: 'text/plain',
+                desc: 'UTF-8 encoded Unicode byte order mark detected, commonly but not exclusively seen in text files.'
+            };
+        }
+        
+        // Must be before Little-endian UTF-16 BOM
+        if (buf[0] === 0xFF &amp;&amp; buf[1] === 0xFE &amp;&amp; buf[2] === 0x00 &amp;&amp; buf[3] === 0x00) {
+            return {
+                ext: '',
+                mime: '',
+                desc: 'Little-endian UTF-32 encoded Unicode byte order mark detected.'
+            };
+        }
+        
+        if (buf[0] === 0xFF &amp;&amp; buf[1] === 0xFE) {
+            return {
+                ext: '',
+                mime: '',
+                desc: 'Little-endian UTF-16 encoded Unicode byte order mark detected.'
+            };
+        }
+        
+        if ((buf[0x8001] === 0x43 &amp;&amp; buf[0x8002] === 0x44 &amp;&amp; buf[0x8003] === 0x30 &amp;&amp; buf[0x8004] === 0x30 &amp;&amp; buf[0x8005] === 0x31) ||
+            (buf[0x8801] === 0x43 &amp;&amp; buf[0x8802] === 0x44 &amp;&amp; buf[0x8803] === 0x30 &amp;&amp; buf[0x8804] === 0x30 &amp;&amp; buf[0x8805] === 0x31) ||
+            (buf[0x9001] === 0x43 &amp;&amp; buf[0x9002] === 0x44 &amp;&amp; buf[0x9003] === 0x30 &amp;&amp; buf[0x9004] === 0x30 &amp;&amp; buf[0x9005] === 0x31)) {
+            return {
+                ext: 'iso',
+                mime: 'application/octet-stream',
+                desc: 'ISO 9660 CD/DVD image file'
+            };
+        }
+        
+        if (buf[0] === 0xD0 &amp;&amp; buf[1] === 0xCF &amp;&amp; buf[2] === 0x11 &amp;&amp; buf[3] === 0xE0 &amp;&amp; buf[4] === 0xA1 &amp;&amp; buf[5] === 0xB1 &amp;&amp; buf[6] === 0x1A &amp;&amp; buf[7] === 0xE1) {
+            return {
+                ext: 'doc, xls, ppt',
+                mime: 'application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint',
+                desc: 'Microsoft Office documents'
+            };
+        }
+        
+        if (buf[0] === 0x64 &amp;&amp; buf[1] === 0x65 &amp;&amp; buf[2] === 0x78 &amp;&amp; buf[3] === 0x0A &amp;&amp; buf[4] === 0x30 &amp;&amp; buf[5] === 0x33 &amp;&amp; buf[6] === 0x35 &amp;&amp; buf[7] === 0x00) {
+            return {
+                ext: 'dex',
+                mime: 'application/octet-stream',
+                desc: 'Dalvik Executable (Android)'
+            };
+        }
+        
+        if (buf[0] === 0x4B &amp;&amp; buf[1] === 0x44 &amp;&amp; buf[2] === 0x4D) {
+            return {
+                ext: 'vmdk',
+                mime: 'application/vmdk, application/x-virtualbox-vmdk'
+            };
+        }
+        
+        if (buf[0] === 0x43 &amp;&amp; buf[1] === 0x72 &amp;&amp; buf[2] === 0x32 &amp;&amp; buf[3] == 0x34) {
+            return {
+                ext: 'crx',
+                mime: 'application/crx',
+                desc: 'Google Chrome extension or packaged app'
+            };
+        }
+
+        return null;
+    },
+
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

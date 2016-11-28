@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: views/html/HTMLOperation.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: views/html/HTMLOperation.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Object to handle the creation of operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @constructor
+ * @param {string} name - The name of the operation.
+ * @param {Object} config - The configuration object for this operation.
+ * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {Manager} manager - The CyberChef event manager.
+ */
+var HTMLOperation = function(name, config, app, manager) {
+    this.app         = app;
+    this.manager     = manager;
+    
+    this.name        = name;
+    this.description = config.description;
+    this.manual_bake = config.manual_bake || false;
+    this.config      = config;
+    this.ing_list    = [];
+    
+    for (var i = 0; i &lt; config.args.length; i++) {
+        var ing = new HTMLIngredient(config.args[i], this.app, this.manager);
+        this.ing_list.push(ing);
+    }
+};
+
+
+/**
+ * @constant
+ */
+HTMLOperation.INFO_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAByElEQVR4XqVTzWoaYRQ9KZJmoVaS1J1QiYTIuOgqi9lEugguQhYhdGs3hTyAi0CWJTvJIks30ZBNsimUtlqkVLoQCuJsphRriyFjabWtEyf/Rv3iWcwwymTlgQuH851z5hu43wRGkEwmXwCIA4hiGAUAmUQikQbhEHwyGCWVSglVVUW73RYmyKnxjB56ncJ6NpsVxHGrI/ZLuniVb3DIqQmCHnrNkgcggNeSJPlisRgyJR2b737j/TcDsQUPwv6H5NR4BnroZcb6Z16N2PvyX6yna9Z8qp6JQ0Uf0ughmGHWBSAuyzJqrQ7eqKewY/dzE363C71e39LoWQq5wUwul4uzIBoIBHD01RgyrkZ8eDbvwUWnj623v2DHx4qB51IAzLIAXq8XP/7W0bUVVJtXWIk8wvlN364TA+/1IDMLwmWK/Hq3axmhaBdoGLeklm73ElaBYRgIzkyifHIOO4QQJKM3oJcZq6CgaVp0OTyHw9K/kQI4FiyHfdC0n2CWe5ApFosIPZ7C2tNpXpcDOehGyD/FIbd0euhlhllzFxRzC3fydbG4XRYbB9/tQ41n9m1U7l3lyp9LkfygiZeZCoecmtMqj/+Yxn7Od3v0j50qCO3zAAAAAElFTkSuQmCC";
+/**
+ * @constant
+ */
+HTMLOperation.REMOVE_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABwklEQVR42qRTPU8CQRB9K2CCMRJ6NTQajOUaqfxIbLCRghhjQixosLAgFNBQ3l8wsabxLxBJbCyVUBiMCVQEQkOEKBbCnefM3p4eohWXzM3uvHlv52b2hG3bmOWZw4yPn1/XQkCQ9wFxcgZZ0QLKpifpN8Z1n1L13griBBjHhYK0nMT4b+wom53ClAAFQacZJ/m8rNfrSOZy0vxJjPP6IJ2WzWYTO6mUwiwtILiJJSHUKVSWkchkZK1WQzQaxU2pVGUglkjIbreLUCiEx0qlStlFCpfPiPstYDtVKJH9ZFI2Gw1FGA6H6LTbCAaDeGu1FJl6UuYjpwTGzucokZW1NfnS66kyfT4fXns9RaZmlgNcuhZQU+jowLzuOK/HgwEW3E5ZlhLXVWKk11P3wNYNWw+HZdA0sUgx1zjGmD05nckx0ilGjBJdUq3fr7K5e8bGf43RdL7fOPSQb4lI8SLbrUfkUIuY32VTI1bJn5BqDnh4Dodt9ryPUDzyD7aquWoKQohl2i9sAbubwPkTcHkP3FHsg+yT+7sN7G0AF3Xg6sHB3onbdgWWKBDQg/BcTuVt51dQA/JrnIcyIu6rmPV3/hJgACPc0BMEYTg+AAAAAElFTkSuQmCC";
+
+
+/**
+ * Renders the operation in HTML as a stub operation with no ingredients.
+ *
+ * @returns {string}
+ */
+HTMLOperation.prototype.to_stub_html = function(remove_icon) {
+    var html = "&lt;li class='operation'";
+    
+    if (this.description) {
+        html += " data-container='body' data-toggle='popover' data-placement='auto right'\
+            data-content=\"" + this.description + "\" data-html='true' data-trigger='hover'";
+    }
+    
+    html += ">" + this.name;
+    
+    if (remove_icon) {
+        html += "&lt;img src='data:image/png;base64," + HTMLOperation.REMOVE_ICON +
+            "' class='op-icon remove-icon'>";
+    }
+    
+    if (this.description) {
+        html += "&lt;img src='data:image/png;base64," + HTMLOperation.INFO_ICON + "' class='op-icon'>";
+    }
+    
+    html += "&lt;/li>";
+    
+    return html;
+};
+
+
+/**
+ * Renders the operation in HTML as a full operation with ingredients.
+ *
+ * @returns {string}
+ */
+HTMLOperation.prototype.to_full_html = function() {
+    var html = "&lt;div class='arg-title'>" + this.name + "&lt;/div>";
+
+    for (var i = 0; i &lt; this.ing_list.length; i++) {
+        html += this.ing_list[i].to_html();
+    }
+    
+    html += "&lt;div class='recip-icons'>\
+        &lt;div class='breakpoint' title='Set breakpoint' break='false'>&lt;/div>\
+        &lt;div class='disable-icon recip-icon' title='Disable operation'\
+            disabled='false'>&lt;/div>";
+    
+    html += "&lt;/div>\
+        &lt;div class='clearfix'>&amp;nbsp;&lt;/div>";
+        
+    return html;
+};
+
+
+/**
+ * Highlights the searched string in the name and description of the operation.
+ *
+ * @param {string} search_str
+ * @param {number} name_pos - The position of the search string in the operation name
+ * @param {number} desc_pos - The position of the search string in the operation description
+ */
+HTMLOperation.prototype.highlight_search_string = function(search_str, name_pos, desc_pos) {
+    if (name_pos >= 0) {
+        this.name = this.name.slice(0, name_pos) + "&lt;b>&lt;u>" +
+            this.name.slice(name_pos, name_pos + search_str.length) + "&lt;/u>&lt;/b>" +
+            this.name.slice(name_pos + search_str.length);
+    }
+    
+    if (this.description &amp;&amp; desc_pos >= 0) {
+        this.description = this.description.slice(0, desc_pos) + "&lt;b>&lt;u>" +
+            this.description.slice(desc_pos, desc_pos + search_str.length) + "&lt;/u>&lt;/b>" +
+            this.description.slice(desc_pos + search_str.length);
+    }
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

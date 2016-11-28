@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/Extract.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/Extract.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Identifier extraction operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var Extract = {
+
+    /**
+     * Runs search operations across the input data using refular expressions.
+     *
+     * @private
+     * @param {string} input
+     * @param {RegExp} search_regex
+     * @param {RegExp} remove_regex - A regular expression defining results to remove from the
+     *      final list
+     * @param {boolean} include_total - Whether or not to include the total number of results
+     * @returns {string}
+     */
+    _search: function(input, search_regex, remove_regex, include_total) {
+        var output = "",
+            total = 0,
+            match;
+            
+        while (!!(match = search_regex.exec(input))) {
+            if (remove_regex &amp;&amp; remove_regex.test(match[0]))
+                continue;
+            total++;
+            output += match[0] + "\n";
+        }
+        
+        if (include_total)
+            output = "Total found: " + total + "\n\n" + output;
+            
+        return output;
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    MIN_STRING_LEN: 3,
+    /**
+     * @constant
+     * @default
+     */
+    DISPLAY_TOTAL: false,
+    
+    /**
+     * Strings operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_strings: function(input, args) {
+        var min_len = args[0] || Extract.MIN_STRING_LEN,
+            display_total = args[1],
+            strings = "[A-Z\\d/\\-:.,_$%'\"()&lt;>= !\\[\\]{}@]",
+            regex = new RegExp(strings + "{" + min_len + ",}", "ig");
+            
+        return Extract._search(input, regex, null, display_total);
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    INCLUDE_IPV4: true,
+    /**
+     * @constant
+     * @default
+     */
+    INCLUDE_IPV6: false,
+    /**
+     * @constant
+     * @default
+     */
+    REMOVE_LOCAL: false,
+    
+    /**
+     * Extract IP addresses operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_ip: function(input, args) {
+        var include_ipv4  = args[0],
+            include_ipv6  = args[1],
+            remove_local  = args[2],
+            display_total = args[3],
+            ipv4 = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
+            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})((([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}|(((2[0-4]|1\\d|[1-9])?\\d|25[0-5])\\.?\\b){4})",
+            ips  = "";
+        
+        if (include_ipv4 &amp;&amp; include_ipv6) {
+            ips = ipv4 + "|" + ipv6;
+        } else if (include_ipv4) {
+            ips = ipv4;
+        } else if (include_ipv6) {
+            ips = ipv6;
+        }
+        
+        if (ips) {
+            var regex = new RegExp(ips, "ig");
+            
+            if (remove_local) {
+                var ten = "10\\..+",
+                    oneninetwo = "192\\.168\\..+",
+                    oneseventwo = "172\\.(?:1[6-9]|2\\d|3[01])\\..+",
+                    onetwoseven = "127\\..+",
+                    remove_regex = new RegExp("^(?:" + ten + "|" + oneninetwo +
+                        "|" + oneseventwo + "|" + onetwoseven + ")");
+                        
+                return Extract._search(input, regex, remove_regex, display_total);
+            } else {
+                return Extract._search(input, regex, null, display_total);
+            }
+        } else {
+            return "";
+        }
+    },
+    
+    
+    /**
+     * Extract email addresses operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_email: function(input, args) {
+        var display_total = args[0],
+            regex = /\w[-.\w]*@[-\w]+(?:\.[-\w]+)*\.[A-Z]{2,4}/ig;
+            
+        return Extract._search(input, regex, null, display_total);
+    },
+    
+    
+    /**
+     * Extract MAC addresses operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_mac: function(input, args) {
+        var display_total = args[0],
+            regex = /[A-F\d]{2}(?:[:-][A-F\d]{2}){5}/ig;
+            
+        return Extract._search(input, regex, null, display_total);
+    },
+    
+    
+    /**
+     * Extract URLs operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_urls: function(input, args) {
+        var display_total = args[0],
+            protocol = "[A-Z]+://",
+            hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
+            port = ":\\d+",
+            path = "/[^.!,?;\"'&lt;>()\\[\\]{}\\s\\x7F-\\xFF]*";
+            
+        path += "(?:[.!,?]+[^.!,?;\"'&lt;>()\\[\\]{}\\s\\x7F-\\xFF]+)*";
+        var regex = new RegExp(protocol + hostname + "(?:" + port +
+            ")?(?:" + path + ")?", "ig");
+        return Extract._search(input, regex, null, display_total);
+    },
+    
+    
+    /**
+     * Extract domains operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_domains: function(input, args) {
+        var display_total = args[0],
+            protocol = "https?://",
+            hostname = "[-\\w\\.]+",
+            tld = "\\.(?:com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+",
+            regex = new RegExp("(?:" + protocol + ")?" + hostname + tld, "ig");
+        
+        return Extract._search(input, regex, null, display_total);
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    INCLUDE_WIN_PATH: true,
+    /**
+     * @constant
+     * @default
+     */
+    INCLUDE_UNIX_PATH: true,
+    
+    /**
+     * Extract file paths operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_file_paths: function(input, args) {
+        var include_win_path = args[0],
+            include_unix_path = args[1],
+            display_total = args[2],
+            win_drive = "[A-Z]:\\\\",
+            win_name = "[A-Z\\d][A-Z\\d\\- '_\\(\\)]{0,61}",
+            win_ext = "[A-Z\\d]{1,6}",
+            win_path = win_drive + "(?:" + win_name + "\\\\?)*" + win_name +
+                "(?:\\." + win_ext + ")?",
+            unix_path = "(?:/[A-Z\\d.][A-Z\\d\\-.]{0,61})+",
+            file_paths = "";
+        
+        if (include_win_path &amp;&amp; include_unix_path) {
+            file_paths = win_path + "|" + unix_path;
+        } else if (include_win_path) {
+            file_paths = win_path;
+        } else if (include_unix_path) {
+            file_paths = unix_path;
+        }
+        
+        if (file_paths) {
+            var regex = new RegExp(file_paths, "ig");
+            return Extract._search(input, regex, null, display_total);
+        } else {
+            return "";
+        }
+    },
+    
+    
+    /**
+     * Extract dates operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_dates: function(input, args) {
+        var display_total = args[0],
+            date1 = "(?:19|20)\\d\\d[- /.](?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])", // yyyy-mm-dd
+            date2 = "(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\\d\\d", // dd/mm/yyyy
+            date3 = "(?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])[- /.](?:19|20)\\d\\d", // mm/dd/yyyy
+            regex = new RegExp(date1 + "|" + date2 + "|" + date3, "ig");
+            
+        return Extract._search(input, regex, null, display_total);
+    },
+    
+    
+    /**
+     * Extract all identifiers operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_all_idents: function(input, args) {
+        var output = "";
+        output += "IP addresses\n";
+        output += Extract.run_ip(input, [true, true, false]);
+        
+        output += "\nEmail addresses\n";
+        output += Extract.run_email(input, []);
+        
+        output += "\nMAC addresses\n";
+        output += Extract.run_mac(input, []);
+        
+        output += "\nURLs\n";
+        output += Extract.run_urls(input, []);
+        
+        output += "\nDomain names\n";
+        output += Extract.run_domains(input, []);
+        
+        output += "\nFile paths\n";
+        output += Extract.run_file_paths(input, [true, true]);
+        
+        output += "\nDates\n";
+        output += Extract.run_dates(input, []);
+        return output;
+    },
+    
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

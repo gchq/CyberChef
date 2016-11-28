@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Namespace: Convert</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Namespace: Convert</h1>
+<section>
+
+<header>
+    
+        <h2>
+        Convert
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Unit conversion operations.</p></div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
+	<dd class="tag-author">
+		<ul>
+			<li>&lt;p>n1474335 [n1474335@gmail.com]&lt;/p></li>
+			</ul>
+	</dd>
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>Crown Copyright 2016</li>
+		</ul>
+	</dd>
+	
+
+	
+	<dt class="tag-license method-doc-label method-doc-details-label">License:</dt>
+	<dd class="tag-license">
+		<ul class="dummy">
+			<li>Apache-2.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-10">line 10</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id=".DISTANCE_UNITS">
+    <h4 id=".DISTANCE_UNITS"><span class="type-signature">&lt;static, constant> </span>DISTANCE_UNITS<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>["[Metric]","Nanometres (nm)","Micrometres (µm)","Millimetres (mm)","Centimetres (cm)","Metres (m)","Kilometers (km)","[/Metric]","[Imperial]","Thou (th)","Inches (in)","Feet (ft)","Yards (yd)","Chains (ch)","Furlongs (fur)","Miles (mi)","Leagues (lea)","[/Imperial]","[Maritime]","Fathoms (ftm)","Cables","Nautical miles","[/Maritime]","[Comparisons]","Cars (4m)","Buses (8.4m)","American football fields (91m)","Football pitches (105m)","[/Comparisons]","[Astronomical]","Earth-to-Moons","Earth's equators","Astronomical units (au)","Light-years (ly)","Parsecs (pc)","[/Astronomical]"]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-16">line 16</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".DISTANCE_FACTOR">
+    <h4 id=".DISTANCE_FACTOR"><span class="type-signature">&lt;static, constant> </span>DISTANCE_FACTOR<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>{"undefined":30856776000000000}</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-27">line 27</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".DATA_UNITS">
+    <h4 id=".DATA_UNITS"><span class="type-signature">&lt;static, constant> </span>DATA_UNITS<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>["Bits (b)","Nibbles","Octets","Bytes (B)","[Binary bits (2^n)]","Kibibits (Kib)","Mebibits (Mib)","Gibibits (Gib)","Tebibits (Tib)","Pebibits (Pib)","Exbibits (Eib)","Zebibits (Zib)","Yobibits (Yib)","[/Binary bits (2^n)]","[Decimal bits (10^n)]","Decabits","Hectobits","Kilobits (kb)","Megabits (Mb)","Gigabits (Gb)","Terabits (Tb)","Petabits (Pb)","Exabits (Eb)","Zettabits (Zb)","Yottabits (Yb)","[/Decimal bits (10^n)]","[Binary bytes (8 x 2^n)]","Kibibytes (KiB)","Mebibytes (MiB)","Gibibytes (GiB)","Tebibytes (TiB)","Pebibytes (PiB)","Exbibytes (EiB)","Zebibytes (ZiB)","Yobibytes (YiB)","[/Binary bytes (8 x 2^n)]","[Decimal bytes (8 x 10^n)]","Kilobytes (KB)","Megabytes (MB)","Gigabytes (GB)","Terabytes (TB)","Petabytes (PB)","Exabytes (EB)","Zettabytes (ZB)","Yottabytes (YB)","[/Decimal bytes (8 x 10^n)]"]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-81">line 81</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".DATA_FACTOR">
+    <h4 id=".DATA_FACTOR"><span class="type-signature">&lt;static, constant> </span>DATA_FACTOR<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>{"undefined":8e+24}</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-92">line 92</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".AREA_UNITS">
+    <h4 id=".AREA_UNITS"><span class="type-signature">&lt;static, constant> </span>AREA_UNITS<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>["[Metric]","Square metre (sq m)","Square kilometre (sq km)","Centiare (ca)","Deciare (da)","Are (a)","Decare (daa)","Hectare (ha)","[/Metric]","[Imperial]","Square inch (sq in)","Square foot (sq ft)","Square yard (sq yd)","Square mile (sq mi)","Perch (sq per)","Rood (ro)","International acre (ac)","[/Imperial]","[US customary units]","US survey acre (ac)","US survey square mile (sq mi)","US survey township","[/US customary units]","[Nuclear physics]","Yoctobarn (yb)","Zeptobarn (zb)","Attobarn (ab)","Femtobarn (fb)","Picobarn (pb)","Nanobarn (nb)","Microbarn (μb)","Millibarn (mb)","Barn (b)","Kilobarn (kb)","Megabarn (Mb)","Outhouse","Shed","Planck area","[/Nuclear physics]","[Comparisons]","Washington D.C.","Isle of Wight","Wales","Texas","[/Comparisons]"]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-161">line 161</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".AREA_FACTOR">
+    <h4 id=".AREA_FACTOR"><span class="type-signature">&lt;static, constant> </span>AREA_FACTOR<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>{"undefined":696241000000}</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-172">line 172</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".MASS_UNITS">
+    <h4 id=".MASS_UNITS"><span class="type-signature">&lt;static, constant> </span>MASS_UNITS<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>["[Metric]","Yoctogram (yg)","Zeptogram (zg)","Attogram (ag)","Femtogram (fg)","Picogram (pg)","Nanogram (ng)","Microgram (μg)","Milligram (mg)","Centigram (cg)","Decigram (dg)","Gram (g)","Decagram (dag)","Hectogram (hg)","Kilogram (kg)","Megagram (Mg)","Tonne (t)","Gigagram (Gg)","Teragram (Tg)","Petagram (Pg)","Exagram (Eg)","Zettagram (Zg)","Yottagram (Yg)","[/Metric]","[Imperial Avoirdupois]","Grain (gr)","Dram (dr)","Ounce (oz)","Pound (lb)","Nail","Stone (st)","Quarter (gr)","Tod","US hundredweight (cwt)","Imperial hundredweight (cwt)","US ton (t)","Imperial ton (t)","[/Imperial Avoirdupois]","[Imperial Troy]","Grain (gr)","Pennyweight (dwt)","Troy dram (dr t)","Troy ounce (oz t)","Troy pound (lb t)","Mark","[/Imperial Troy]","[Archaic]","Wey","Wool wey","Suffolk wey","Wool sack","Coal sack","Load","Last","Flax or feather last","Gunpowder last","Picul","Rice last","[/Archaic]","[Comparisons]","Big Ben (14 tonnes)","Blue whale (180 tonnes)","International Space Station (417 tonnes)","Space Shuttle (2,041 tonnes)","RMS Titanic (52,000 tonnes)","Great Pyramid of Giza (6,000,000 tonnes)","Earth's oceans (1.4 yottagrams)","[/Comparisons]","[Astronomical]","A teaspoon of neutron star (5,500 million tonnes)","Lunar mass (ML)","Earth mass (M⊕)","Jupiter mass (MJ)","Solar mass (M☉)","Sagittarius A* (7.5 x 10^36 kgs-ish)","Milky Way galaxy (1.2 x 10^42 kgs)","The observable universe (1.45 x 10^53 kgs)","[/Astronomical]"]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-241">line 241</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".MASS_FACTOR">
+    <h4 id=".MASS_FACTOR"><span class="type-signature">&lt;static, constant> </span>MASS_FACTOR<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>{"undefined":1.45e+56}</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-253">line 253</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".SPEED_UNITS">
+    <h4 id=".SPEED_UNITS"><span class="type-signature">&lt;static, constant> </span>SPEED_UNITS<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>["[Metric]","Metres per second (m/s)","Kilometres per hour (km/h)","[/Metric]","[Imperial]","Miles per hour (mph)","Knots (kn)","[/Imperial]","[Comparisons]","Human hair growth rate","Bamboo growth rate","World's fastest snail","Usain Bolt's top speed","Jet airliner cruising speed","Concorde","SR-71 Blackbird","Space Shuttle","International Space Station","[/Comparisons]","[Scientific]","Sound in standard atmosphere","Sound in water","Lunar escape velocity","Earth escape velocity","Earth's solar orbit","Solar system's Milky Way orbit","Milky Way relative to the cosmic microwave background","Solar escape velocity","Neutron star escape velocity (0.3c)","Light in a diamond (0.4136c)","Signal in an optical fibre (0.667c)","Light (c)","[/Scientific]"]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-352">line 352</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".SPEED_FACTOR">
+    <h4 id=".SPEED_FACTOR"><span class="type-signature">&lt;static, constant> </span>SPEED_FACTOR<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>{"undefined":299792458}</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-362">line 362</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".run_distance"><span class="type-signature">&lt;static> </span>run_distance(input, args)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Convert distance operation.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;Object></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-67">line 67</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".run_data_size"><span class="type-signature">&lt;static> </span>run_data_size(input, args)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Convert data units operation.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;Object></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-148">line 148</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".run_area"><span class="type-signature">&lt;static> </span>run_area(input, args)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Convert area operation.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;Object></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-228">line 228</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".run_mass"><span class="type-signature">&lt;static> </span>run_mass(input, args)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Convert mass operation.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;Object></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-339">line 339</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".run_speed"><span class="type-signature">&lt;static> </span>run_speed(input, args)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Convert speed operation.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;Object></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="operations_Convert.js.html">operations/Convert.js</a>,
+				 <a href="operations_Convert.js.html#sunlight-1-line-404">line 404</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

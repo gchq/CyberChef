@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/StrUtils.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/StrUtils.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/* globals JsDiff */
+
+/**
+ * String utility operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var StrUtils = {
+
+    /**
+     * @constant
+     * @default
+     */
+    REGEX_PRE_POPULATE: [
+        {
+            name: "User defined",
+            value: ""
+        },
+        {
+            name: "IPv4 address",
+            value: "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?"
+        },
+        {
+            name: "IPv6 address",
+            value: "((?=.*::)(?!.*::.+::)(::)?([\\dA-Fa-f]{1,4}:(:|\\b)|){5}|([\\dA-Fa-f]{1,4}:){6})((([\\dA-Fa-f]{1,4}((?!\\3)::|:\\b|(?![\\dA-Fa-f])))|(?!\\2\\3)){2}|(((2[0-4]|1\\d|[1-9])?\\d|25[0-5])\\.?\\b){4})"
+        },
+        {
+            name: "Email address",
+            value: "(\\w[-.\\w]*)@([-\\w]+(?:\\.[-\\w]+)*)\\.([A-Za-z]{2,4})"
+        },
+        {
+            name: "URL",
+            value: "([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?;\"\\x27&lt;>()\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?;\"\\x27&lt;>()\\[\\]{}\\s\\x7F-\\xFF]+)*)?"
+        },
+        {
+            name: "Domain",
+            value: "(?:(https?):\\/\\/)?([-\\w.]+)\\.(com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+"
+        },
+        {
+            name: "Windows file path",
+            value: "([A-Za-z]):\\\\((?:[A-Za-z\\d][A-Za-z\\d\\- \\x27_\\(\\)]{0,61}\\\\?)*[A-Za-z\\d][A-Za-z\\d\\- \\x27_\\(\\)]{0,61})(\\.[A-Za-z\\d]{1,6})?"
+        },
+        {
+            name: "UNIX file path",
+            value: "(?:/[A-Za-z\\d.][A-Za-z\\d\\-.]{0,61})+"
+        },
+        {
+            name: "MAC address",
+            value: "[A-Fa-f\\d]{2}(?:[:-][A-Fa-f\\d]{2}){5}"
+        },
+        {
+            name: "Date (yyyy-mm-dd)",
+            value: "((?:19|20)\\d\\d)[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"
+        },
+        {
+            name: "Date (dd/mm/yyyy)",
+            value: "(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]((?:19|20)\\d\\d)"
+        },
+        {
+            name: "Date (mm/dd/yyyy)",
+            value: "(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]((?:19|20)\\d\\d)"
+        },
+        {
+            name: "Strings",
+            value: "[A-Za-z\\d/\\-:.,_$%\\x27\"()&lt;>= !\\[\\]{}@]{4,}"
+        },
+    ],
+    /**
+     * @constant
+     * @default
+     */
+    REGEX_CASE_INSENSITIVE: true,
+    /**
+     * @constant
+     * @default
+     */
+    REGEX_MULTILINE_MATCHING: true,
+    /**
+     * @constant
+     * @default
+     */
+    OUTPUT_FORMAT: ["Highlight matches", "List matches", "List capture groups", "List matches with capture groups"],
+    /**
+     * @constant
+     * @default
+     */
+    DISPLAY_TOTAL: false,
+    
+    /**
+     * Regular expression operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_regex: function(input, args) {
+        var user_regex = args[1],
+            i = args[2],
+            m = args[3],
+            display_total = args[4],
+            output_format = args[5],
+            modifiers = "g";
+        
+        if (i) modifiers += "i";
+        if (m) modifiers += "m";
+        
+        if (user_regex &amp;&amp; user_regex != "^" &amp;&amp; user_regex != "$") {
+            try {
+                var regex = new RegExp(user_regex, modifiers);
+                
+                switch (output_format) {
+                    case "Highlight matches":
+                        return StrUtils._regex_highlight(input, regex, display_total);
+                    case "List matches":
+                        return Utils.escape_html(StrUtils._regex_list(input, regex, display_total, true, false));
+                    case "List capture groups":
+                        return Utils.escape_html(StrUtils._regex_list(input, regex, display_total, false, true));
+                    case "List matches with capture groups":
+                        return Utils.escape_html(StrUtils._regex_list(input, regex, display_total, true, true));
+                    default:
+                        return "Error: Invalid output format";
+                }
+            } catch (err) {
+                return "Invalid regex. Details: " + err.message;
+            }
+        } else {
+            return Utils.escape_html(input);
+        }
+    },
+
+    
+    /**
+     * @constant
+     * @default
+     */
+    CASE_SCOPE: ["All", "Word", "Sentence", "Paragraph"],
+    
+    /**
+     * To Upper case operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_upper: function (input, args) {
+        var scope = args[0];
+        
+        switch (scope) {
+            case "Word":
+                return input.replace(/(\b\w)/gi, function(m) {
+                    return m.toUpperCase();
+                });
+            case "Sentence":
+                return input.replace(/(?:\.|^)\s*(\b\w)/gi, function(m) {
+                    return m.toUpperCase();
+                });
+            case "Paragraph":
+                return input.replace(/(?:\n|^)\s*(\b\w)/gi, function(m) {
+                    return m.toUpperCase();
+                });
+            case "All":
+                /* falls through */
+            default:
+                return input.toUpperCase();
+        }
+    },
+    
+    
+    /**
+     * To Upper case operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_lower: function (input, args) {
+        return input.toLowerCase();
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    SEARCH_TYPE: ["Regex", "Extended (\\n, \\t, \\x...)", "Simple string"],
+    /**
+     * @constant
+     * @default
+     */
+    FIND_REPLACE_GLOBAL : true,
+    /**
+     * @constant
+     * @default
+     */
+    FIND_REPLACE_CASE : false,
+    /**
+     * @constant
+     * @default
+     */
+    FIND_REPLACE_MULTILINE : true,
+    
+    /**
+     * Find / Replace operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_find_replace: function(input, args) {
+        var find = args[0].string,
+            type = args[0].option,
+            replace = args[1],
+            g = args[2],
+            i = args[3],
+            m = args[4],
+            modifiers = "";
+            
+        if (g) modifiers += "g";
+        if (i) modifiers += "i";
+        if (m) modifiers += "m";
+        
+        if (type == "Regex") {
+            find = new RegExp(find, modifiers);
+        } else if (type.indexOf("Extended") === 0) {
+            find = Utils.parse_escaped_chars(find);
+        }
+        
+        return input.replace(find, replace, modifiers);
+        // Non-standard addition of flags in the third argument. This will work in Firefox but
+        // probably nowhere else. The purpose is to allow global matching when the `find` parameter
+        // is just a string.
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    SPLIT_DELIM: ",",
+    /**
+     * @constant
+     * @default
+     */
+    DELIMITER_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon", "Nothing (separate chars)"],
+    
+    /**
+     * Split operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_split: function(input, args) {
+        var split_delim = args[0] || StrUtils.SPLIT_DELIM,
+            join_delim = Utils.char_rep[args[1]],
+            sections = input.split(split_delim);
+            
+        return sections.join(join_delim);
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    DIFF_SAMPLE_DELIMITER: "\\n\\n",
+    /**
+     * @constant
+     * @default
+     */
+    DIFF_BY: ["Character", "Word", "Line", "Sentence", "CSS", "JSON"],
+    
+    /**
+     * Diff operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_diff: function(input, args) {
+        var sample_delim = args[0],
+            diff_by = args[1],
+            show_added = args[2],
+            show_removed = args[3],
+            ignore_whitespace = args[4],
+            samples = input.split(sample_delim),
+            output = "",
+            diff;
+            
+        if (!samples || samples.length != 2) {
+            return "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?";
+        }
+        
+        switch (diff_by) {
+            case "Character":
+                diff = JsDiff.diffChars(samples[0], samples[1]);
+                break;
+            case "Word":
+                if (ignore_whitespace) {
+                    diff = JsDiff.diffWords(samples[0], samples[1]);
+                } else {
+                    diff = JsDiff.diffWordsWithSpace(samples[0], samples[1]);
+                }
+                break;
+            case "Line":
+                if (ignore_whitespace) {
+                    diff = JsDiff.diffTrimmedLines(samples[0], samples[1]);
+                } else {
+                    diff = JsDiff.diffLines(samples[0], samples[1]);
+                }
+                break;
+            case "Sentence":
+                diff = JsDiff.diffSentences(samples[0], samples[1]);
+                break;
+            case "CSS":
+                diff = JsDiff.diffCss(samples[0], samples[1]);
+                break;
+            case "JSON":
+                diff = JsDiff.diffJson(samples[0], samples[1]);
+                break;
+            default:
+                return "Invalid 'Diff by' option.";
+        }
+        
+        for (var i = 0; i &lt; diff.length; i++) {
+            if (diff[i].added) {
+                if (show_added) output += "&lt;span class='hlgreen'>" + Utils.escape_html(diff[i].value) + "&lt;/span>";
+            } else if (diff[i].removed) {
+                if (show_removed) output += "&lt;span class='hlred'>" + Utils.escape_html(diff[i].value) + "&lt;/span>";
+            } else {
+                output += Utils.escape_html(diff[i].value);
+            }
+        }
+        
+        return output;
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    OFF_CHK_SAMPLE_DELIMITER: "\\n\\n",
+    
+    /**
+     * Offset checker operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_offset_checker: function(input, args) {
+        var sample_delim = args[0],
+            samples = input.split(sample_delim),
+            outputs = [],
+            i = 0,
+            s = 0,
+            match = false,
+            in_match = false,
+            chr;
+            
+        if (!samples || samples.length &lt; 2) {
+            return "Not enough samples, perhaps you need to modify the sample delimiter or add more data?";
+        }
+        
+        // Initialise output strings
+        for (s = 0; s &lt; samples.length; s++) {
+            outputs[s] = "";
+        }
+        
+        // Loop through each character in the first sample
+        for (i = 0; i &lt; samples[0].length; i++) {
+            chr = samples[0][i];
+            match = false;
+            
+            // Loop through each sample to see if the chars are the same
+            for (s = 1; s &lt; samples.length; s++) {
+                if (samples[s][i] != chr) {
+                    match = false;
+                    break;
+                }
+                match = true;
+            }
+            
+            // Write output for each sample
+            for (s = 0; s &lt; samples.length; s++) {
+                if (samples[s].length &lt;= i) {
+                    if (in_match) outputs[s] += "&lt;/span>";
+                    if (s == samples.length - 1) in_match = false;
+                    continue;
+                }
+                
+                if (match &amp;&amp; !in_match) {
+                    outputs[s] += "&lt;span class='hlgreen'>" + Utils.escape_html(samples[s][i]);
+                    if (samples[s].length == i + 1) outputs[s] += "&lt;/span>";
+                    if (s == samples.length - 1) in_match = true;
+                } else if (!match &amp;&amp; in_match) {
+                    outputs[s] += "&lt;/span>" + Utils.escape_html(samples[s][i]);
+                    if (s == samples.length - 1) in_match = false;
+                } else {
+                    outputs[s] += Utils.escape_html(samples[s][i]);
+                    if (in_match &amp;&amp; samples[s].length == i + 1) {
+                        outputs[s] += "&lt;/span>";
+                        if (samples[s].length - 1 != i) in_match = false;
+                    }
+                }
+                
+                if (samples[0].length - 1 == i) {
+                    if (in_match) outputs[s] += "&lt;/span>";
+                    outputs[s] += Utils.escape_html(samples[s].substring(i + 1));
+                }
+            }
+        }
+        
+        return outputs.join(sample_delim);
+    },
+    
+    
+    /**
+     * Parse escaped string operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_parse_escaped_string: function(input, args) {
+        return Utils.parse_escaped_chars(input);
+    },
+    
+    
+    /**
+     * Adds HTML highlights to matches within a string.
+     *
+     * @private
+     * @param {string} input
+     * @param {RegExp} regex
+     * @param {boolean} display_total
+     * @returns {string}
+     */
+    _regex_highlight: function(input, regex, display_total) {
+        var output = "",
+            m,
+            hl = 1,
+            i = 0,
+            total = 0;
+        
+        while (!!(m = regex.exec(input))) {
+            // Add up to match
+            output += Utils.escape_html(input.slice(i, m.index));
+            
+            // Add match with highlighting
+            output += "&lt;span class='hl"+hl+"'>" + Utils.escape_html(m[0]) + "&lt;/span>";
+            
+            // Switch highlight
+            hl = hl == 1 ? 2 : 1;
+            
+            i = regex.lastIndex;
+            total++;
+        }
+        
+        // Add all after final match
+        output += Utils.escape_html(input.slice(i, input.length));
+        
+        if (display_total)
+            output = "Total found: " + total + "\n\n" + output;
+
+        return output;
+    },
+    
+    
+    /**
+     * Creates a string listing the matches within a string.
+     *
+     * @private
+     * @param {string} input
+     * @param {RegExp} regex
+     * @param {boolean} display_total
+     * @param {boolean} matches - Display full match
+     * @param {boolean} capture_groups - Display each of the capture groups separately
+     * @returns {string}
+     */
+    _regex_list: function(input, regex, display_total, matches, capture_groups) {
+        var output = "",
+            total = 0,
+            match;
+            
+        while (!!(match = regex.exec(input))) {
+            total++;
+            if (matches) {
+                output += match[0] + "\n";
+            }
+            if (capture_groups) {
+                for (var i = 1; i &lt; match.length; i++) {
+                    if (matches) {
+                        output += "  Group " + i + ": ";
+                    }
+                    output += match[i] + "\n";
+                }
+            }
+        }
+        
+        if (display_total)
+            output = "Total found: " + total + "\n\n" + output;
+            
+        return output;
+    },
+    
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

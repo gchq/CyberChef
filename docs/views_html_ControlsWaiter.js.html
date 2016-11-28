@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: views/html/ControlsWaiter.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: views/html/ControlsWaiter.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Waiter to handle events related to the CyberChef controls (i.e. Bake, Step, Save, Load etc.)
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @constructor
+ * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {Manager} manager - The CyberChef event manager.
+ */
+var ControlsWaiter = function(app, manager) {
+    this.app = app;
+    this.manager = manager;
+};
+
+
+/**
+ * Adjusts the display properties of the control buttons so that they fit within the current width
+ * without wrapping or overflowing.
+ */
+ControlsWaiter.prototype.adjust_width = function() {
+    var controls       = document.getElementById("controls"),
+        step           = document.getElementById("step"),
+        clr_breaks     = document.getElementById("clr-breaks"),
+        save_img       = document.querySelector("#save img"),
+        load_img       = document.querySelector("#load img"),
+        step_img       = document.querySelector("#step img"),
+        clr_recip_img  = document.querySelector("#clr-recipe img"),
+        clr_breaks_img = document.querySelector("#clr-breaks img");
+    
+    if (controls.clientWidth &lt; 470) {
+        step.childNodes[1].nodeValue = " Step";
+    } else {
+        step.childNodes[1].nodeValue = " Step through";
+    }
+        
+    if (controls.clientWidth &lt; 400) {
+        save_img.style.display = "none";
+        load_img.style.display = "none";
+        step_img.style.display = "none";
+        clr_recip_img.style.display = "none";
+        clr_breaks_img.style.display = "none";
+    } else {
+        save_img.style.display = "inline";
+        load_img.style.display = "inline";
+        step_img.style.display = "inline";
+        clr_recip_img.style.display = "inline";
+        clr_breaks_img.style.display = "inline";
+    }
+    
+    if (controls.clientWidth &lt; 330) {
+        clr_breaks.childNodes[1].nodeValue = " Clear breaks";
+    } else {
+        clr_breaks.childNodes[1].nodeValue = " Clear breakpoints";
+    }
+};
+
+
+/**
+ * Checks or unchecks the Auto Bake checkbox based on the given value.
+ *
+ * @param {boolean} value - The new value for Auto Bake.
+ */
+ControlsWaiter.prototype.set_auto_bake = function(value) {
+    var auto_bake_checkbox = document.getElementById("auto-bake");
+    
+    if (auto_bake_checkbox.checked != value) {
+        auto_bake_checkbox.click();
+    }
+};
+
+
+/**
+ * Handler to trigger baking.
+ */
+ControlsWaiter.prototype.bake_click = function() {
+    this.app.bake();
+    $("#output-text").selectRange(0);
+};
+
+
+/**
+ * Handler for the 'Step through' command. Executes the next step of the recipe.
+ */
+ControlsWaiter.prototype.step_click = function() {
+    this.app.bake(true);
+    $("#output-text").selectRange(0);
+};
+
+
+/**
+ * Handler for changes made to the Auto Bake checkbox.
+ */
+ControlsWaiter.prototype.auto_bake_change = function() {
+    var auto_bake_label    = document.getElementById("auto-bake-label"),
+        auto_bake_checkbox = document.getElementById("auto-bake");
+        
+    this.app.auto_bake_ = auto_bake_checkbox.checked;
+    
+    if (auto_bake_checkbox.checked) {
+        auto_bake_label.classList.remove("btn-default");
+        auto_bake_label.classList.add("btn-success");
+    } else {
+        auto_bake_label.classList.remove("btn-success");
+        auto_bake_label.classList.add("btn-default");
+    }
+};
+
+
+/**
+ * Handler for the 'Clear recipe' command. Removes all operations from the recipe.
+ */
+ControlsWaiter.prototype.clear_recipe_click = function() {
+    this.manager.recipe.clear_recipe();
+};
+
+
+/**
+ * Handler for the 'Clear breakpoints' command. Removes all breakpoints from operations in the
+ * recipe.
+ */
+ControlsWaiter.prototype.clear_breaks_click = function() {
+    var bps = document.querySelectorAll("#rec_list li.operation .breakpoint");
+    
+    for (var i = 0; i &lt; bps.length; i++) {
+        bps[i].setAttribute("break", "false");
+        bps[i].classList.remove("breakpoint-selected");
+    }
+};
+
+
+/**
+ * Populates the save disalog box with a URL incorporating the recipe and input.
+ *
+ * @param {Object[]} [recipe_config] - The recipe configuration object array.
+ */
+ControlsWaiter.prototype.initialise_save_link = function(recipe_config) {
+    recipe_config = recipe_config || this.app.get_recipe_config();
+    
+    var recipe_str = JSON.stringify(recipe_config),
+        input_str = Utils.to_base64(this.app.get_input()),
+        include_recipe = document.getElementById("save-link-recipe-checkbox").checked,
+        include_input = document.getElementById("save-link-input-checkbox").checked,
+        save_link_el = document.getElementById("save-link"),
+        save_link = this.generate_state_url(include_recipe, include_input, recipe_config);
+    
+    save_link_el.innerHTML = Utils.truncate(save_link, 120);
+    save_link_el.setAttribute("href", save_link);
+};
+
+
+/**
+ * Generates a URL containing the current recipe and input state.
+ *
+ * @param {boolean} include_recipe - Whether to include the recipe in the URL.
+ * @param {boolean} include_input - Whether to include the input in the URL.
+ * @param {Object[]} [recipe_config] - The recipe configuration object array.
+ * @returns {string}
+ */
+ControlsWaiter.prototype.generate_state_url = function(include_recipe, include_input, recipe_config) {
+    recipe_config = recipe_config || this.app.get_recipe_config();
+    
+    var link = window.location.protocol + "//" +
+                window.location.host +
+                window.location.pathname,
+        recipe_str = JSON.stringify(recipe_config),
+        input_str = Utils.to_base64(this.app.get_input(), "A-Za-z0-9+/"); // B64 alphabet with no padding
+        
+    include_recipe = include_recipe &amp;&amp; (recipe_config.length > 0);
+    include_input = include_input &amp;&amp; (input_str.length > 0) &amp;&amp; (input_str.length &lt; 8000);
+
+    if (include_recipe) {
+        link += "?recipe=" + encodeURIComponent(recipe_str);
+    }
+    
+    if (include_recipe &amp;&amp; include_input) {
+        link += "&amp;input=" + encodeURIComponent(input_str);
+    } else if (include_input) {
+        link += "?input=" + encodeURIComponent(input_str);
+    }
+    
+    return link;
+};
+
+
+/**
+ * Handler for changes made to the save dialog text area. Re-initialises the save link.
+ */
+ControlsWaiter.prototype.save_text_change = function() {
+    try {
+        var recipe_config = JSON.parse(document.getElementById("save-text").value);
+        this.initialise_save_link(recipe_config);
+    } catch(err) {}
+};
+
+
+/**
+ * Handler for the 'Save' command. Pops up the save dialog box.
+ */
+ControlsWaiter.prototype.save_click = function() {
+    var recipe_config = this.app.get_recipe_config();
+    var recipe_str = JSON.stringify(recipe_config).replace(/},{/g, '},\n{');
+    document.getElementById("save-text").value = recipe_str;
+    
+    this.initialise_save_link(recipe_config);
+    $("#save-modal").modal();
+};
+
+
+/**
+ * Handler for the save link recipe checkbox change event.
+ */
+ControlsWaiter.prototype.slr_check_change = function() {
+    this.initialise_save_link();
+};
+
+
+/**
+ * Handler for the save link input checkbox change event.
+ */
+ControlsWaiter.prototype.sli_check_change = function() {
+    this.initialise_save_link();
+};
+
+
+/**
+ * Handler for the 'Load' command. Pops up the load dialog box.
+ */
+ControlsWaiter.prototype.load_click = function() {
+    this.populate_load_recipes_list();
+    $("#load-modal").modal();
+};
+
+
+/**
+ * Saves the recipe specified in the save textarea to local storage.
+ */
+ControlsWaiter.prototype.save_button_click = function() {
+    var recipe_name = document.getElementById("save-name").value,
+        recipe_str  = document.getElementById("save-text").value;
+    
+    if (!recipe_name) {
+        this.app.alert("Please enter a recipe name", "danger", 2000);
+        return;
+    }
+    
+    var saved_recipes = localStorage.saved_recipes ?
+            JSON.parse(localStorage.saved_recipes) : [],
+        recipe_id = localStorage.recipe_id || 0;
+    
+    saved_recipes.push({
+        id: ++recipe_id,
+        name: recipe_name,
+        recipe: recipe_str
+    });
+    
+    localStorage.saved_recipes = JSON.stringify(saved_recipes);
+    localStorage.recipe_id = recipe_id;
+    
+    this.app.alert("Recipe saved as \"" + recipe_name + "\".", "success", 2000);
+};
+
+
+/**
+ * Populates the list of saved recipes in the load dialog box from local storage.
+ */
+ControlsWaiter.prototype.populate_load_recipes_list = function() {
+    var load_name_el = document.getElementById("load-name");
+        
+    // Remove current recipes from select
+    var i = load_name_el.options.length;
+    while (i--) {
+        load_name_el.remove(i);
+    }
+
+    // Add recipes to select
+    var saved_recipes = localStorage.saved_recipes ?
+            JSON.parse(localStorage.saved_recipes) : [];
+    
+    for (i = 0; i &lt; saved_recipes.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = saved_recipes[i].id;
+        opt.innerHTML = saved_recipes[i].name;
+        
+        load_name_el.appendChild(opt);
+    }
+    
+    // Populate textarea with first recipe
+    document.getElementById("load-text").value = saved_recipes.length ? saved_recipes[0].recipe : "";
+};
+
+
+/**
+ * Removes the currently selected recipe from local storage.
+ */
+ControlsWaiter.prototype.load_delete_click = function() {
+    var id = document.getElementById("load-name").value,
+        saved_recipes = localStorage.saved_recipes ?
+            JSON.parse(localStorage.saved_recipes) : [];
+        
+    saved_recipes = saved_recipes.filter(function(r) {
+        return r.id != id;
+    });
+    
+    localStorage.saved_recipes = JSON.stringify(saved_recipes);
+    this.populate_load_recipes_list();
+};
+
+
+/**
+ * Displays the selected recipe in the load text box.
+ */
+ControlsWaiter.prototype.load_name_change = function(e) {
+    var el = e.target,
+        saved_recipes = localStorage.saved_recipes ?
+            JSON.parse(localStorage.saved_recipes) : [],
+        id = parseInt(el.value, 10);
+        
+    var recipe = saved_recipes.filter(function(r) {
+        return r.id == id;
+    })[0];
+    
+    document.getElementById("load-text").value = recipe.recipe;
+};
+
+
+/**
+ * Loads the selected recipe and populates the Recipe with its operations.
+ */
+ControlsWaiter.prototype.load_button_click = function() {
+    try {
+        var recipe_config = JSON.parse(document.getElementById("load-text").value);
+        this.app.set_recipe_config(recipe_config);
+
+        $("#rec_list [data-toggle=popover]").popover();
+    } catch(e) {
+        this.app.alert("Invalid recipe", "danger", 2000);
+    }
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

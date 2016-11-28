@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/HTML.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/HTML.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * HTML operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var HTML = {
+
+    /**
+     * @constant
+     * @default
+     */
+    CONVERT_ALL: false,
+    /**
+     * @constant
+     * @default
+     */
+    CONVERT_OPTIONS: ["Named entities where possible", "Numeric entities", "Hex entities"],
+    
+    /**
+     * To HTML Entity operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_entity: function(input, args) {
+        var convert_all = args[0],
+            numeric = args[1] == "Numeric entities",
+            hexa = args[1] == "Hex entities";
+        
+        var charcodes = Utils.str_to_charcode(input);
+        var output = "";
+        
+        for (var i = 0; i &lt; charcodes.length; i++) {
+            if (convert_all &amp;&amp; numeric) {
+                output += "&amp;#" + charcodes[i] + ";";
+            } else if (convert_all &amp;&amp; hexa) {
+                output += "&amp;#x" + Utils.hex(charcodes[i]) + ";";
+            } else if (convert_all) {
+                output += HTML._byte_to_entity[charcodes[i]] || "&amp;#" + charcodes[i] + ";";
+            } else if (numeric) {
+                if (charcodes[i] > 255 || HTML._byte_to_entity.hasOwnProperty(charcodes[i])) {
+                    output += "&amp;#" + charcodes[i] + ";";
+                } else {
+                    output += Utils.chr(charcodes[i]);
+                }
+            } else if (hexa) {
+                if (charcodes[i] > 255 || HTML._byte_to_entity.hasOwnProperty(charcodes[i])) {
+                    output += "&amp;#x" + Utils.hex(charcodes[i]) + ";";
+                } else {
+                    output += Utils.chr(charcodes[i]);
+                }
+            } else {
+                output += HTML._byte_to_entity[charcodes[i]] || (
+                    charcodes[i] > 255 ?
+                        "&amp;#" + charcodes[i] + ";" :
+                        Utils.chr(charcodes[i])
+                );
+            }
+        }
+        return output;
+    },
+    
+    
+    /**
+     * From HTML Entity operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_from_entity: function(input, args) {
+        var regex = /&amp;(#?x?[a-zA-Z0-9]{1,8});/g,
+            output = "",
+            m,
+            i = 0;
+            
+        while (!!(m = regex.exec(input))) {
+            // Add up to match
+            for (; i &lt; m.index;)
+                output += input[i++];
+            
+            // Add match
+            var bite = HTML._entity_to_byte[m[1]];
+            if (bite) {
+                output += Utils.chr(bite);
+            } else if (!bite &amp;&amp; m[1][0] == "#" &amp;&amp; m[1].length > 1 &amp;&amp; /^#\d{1,5}$/.test(m[1])) {
+                // Numeric entity (e.g. &amp;#10;)
+                var num = m[1].slice(1,m[1].length);
+                output += Utils.chr(parseInt(num, 10));
+            } else if (!bite &amp;&amp; m[1][0] == "#" &amp;&amp; m[1].length > 3 &amp;&amp; /^#x[\dA-F]{2,8}$/i.test(m[1])) {
+                // Hex entity (e.g. &amp;#x3A;)
+                var hex = m[1].slice(2,m[1].length);
+                output += Utils.chr(parseInt(hex, 16));
+            } else {
+                // Not a valid entity, print as normal
+                for (; i &lt; regex.lastIndex;)
+                    output += input[i++];
+            }
+            
+            i = regex.lastIndex;
+        }
+        // Add all after final match
+        for (; i &lt; input.length;)
+            output += input[i++];
+        
+        return output;
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    REMOVE_INDENTATION: true,
+    /**
+     * @constant
+     * @default
+     */
+    REMOVE_LINE_BREAKS: true,
+    
+    /**
+     * Strip HTML tags operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_strip_tags: function(input, args) {
+        var remove_indentation = args[0],
+            remove_line_breaks = args[1];
+            
+        input = Utils.strip_html_tags(input);
+        
+        if (remove_indentation) {
+            input = input.replace(/\n[ \f\t]+/g, "\n");
+        }
+        
+        if (remove_line_breaks) {
+            input = input.replace(/^\s*\n/, "") // first line
+                         .replace(/(\n\s*){2,}/g, "\n"); // all others
+        }
+        
+        return input;
+    },
+    
+    
+    /**
+     * Parse colour code operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_parse_colour_code: function(input, args) {
+        var m = null,
+            r = 0, g = 0, b = 0, a = 1;
+        
+        // Read in the input
+        if (!!(m = input.match(/#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})/i))) {
+            // Hex - #d9edf7
+            r = parseInt(m[1], 16);
+            g = parseInt(m[2], 16);
+            b = parseInt(m[3], 16);
+        } else if (!!(m = input.match(/rgba?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
+            // RGB or RGBA - rgb(217,237,247) or rgba(217,237,247,1)
+            r = parseFloat(m[1]);
+            g = parseFloat(m[2]);
+            b = parseFloat(m[3]);
+            a = m[4] ? parseFloat(m[4]) : 1;
+        } else if (!!(m = input.match(/hsla?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)%,\s?(\d{1,3}(?:\.\d+)?)%(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
+            // HSL or HSLA - hsl(200, 65%, 91%) or hsla(200, 65%, 91%, 1)
+            var h_ = parseFloat(m[1]) / 360,
+                s_ = parseFloat(m[2]) / 100,
+                l_ = parseFloat(m[3]) / 100,
+                rgb_ = HTML._hsl_to_rgb(h_, s_, l_);
+            
+            r = rgb_[0];
+            g = rgb_[1];
+            b = rgb_[2];
+            a = m[4] ? parseFloat(m[4]) : 1;
+        } else if (!!(m = input.match(/cmyk\((\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?)\)/i))) {
+            // CMYK - cmyk(0.12, 0.04, 0.00, 0.03)
+            var c_ = parseFloat(m[1]),
+                m_ = parseFloat(m[2]),
+                y_ = parseFloat(m[3]),
+                k_ = parseFloat(m[4]);
+
+            r = Math.round(255 * (1 - c_) * (1 - k_));
+            g = Math.round(255 * (1 - m_) * (1 - k_));
+            b = Math.round(255 * (1 - y_) * (1 - k_));
+        }
+        
+        var hsl_ = HTML._rgb_to_hsl(r, g, b),
+            h = Math.round(hsl_[0] * 360),
+            s = Math.round(hsl_[1] * 100),
+            l = Math.round(hsl_[2] * 100),
+            k = 1 - Math.max(r/255, g/255, b/255),
+            c = (1 - r/255 - k) / (1 - k),
+            m = (1 - g/255 - k) / (1 - k), // jshint ignore:line
+            y = (1 - b/255 - k) / (1 - k);
+            
+        c = isNaN(c) ? "0" : c.toFixed(2);
+        m = isNaN(m) ? "0" : m.toFixed(2);
+        y = isNaN(y) ? "0" : y.toFixed(2);
+        k = k.toFixed(2);
+        
+        var hex = "#" +
+                Utils.pad_left(Math.round(r).toString(16), 2) +
+                Utils.pad_left(Math.round(g).toString(16), 2) +
+                Utils.pad_left(Math.round(b).toString(16), 2),
+            rgb  = "rgb(" + r + ", " + g + ", " + b + ")",
+            rgba = "rgba(" + r + ", " + g + ", " + b + ", " + a + ")",
+            hsl  = "hsl(" + h + ", " + s + "%, " + l + "%)",
+            hsla = "hsla(" + h + ", " + s + "%, " + l + "%, " + a + ")",
+            cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
+            
+        // Generate output
+        return "&lt;div id='colorpicker' style='display: inline-block'>&lt;/div>" + 
+            "Hex:  " + hex + "\n" +
+            "RGB:  " + rgb + "\n" +
+            "RGBA: " + rgba + "\n" +
+            "HSL:  " + hsl + "\n" +
+            "HSLA: " + hsla + "\n" +
+            "CMYK: " + cmyk +
+            "&lt;script>\
+                $('#colorpicker').colorpicker({\
+                    format: 'rgba',\
+                    color: '" + rgba + "',\
+                    container: true,\
+                    inline: true,\
+                }).on('changeColor', function(e) {\
+                    var color = e.color.toRGB();\
+                    document.getElementById('input-text').value = 'rgba(' +\
+                        color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';\
+                    window.app.auto_bake();\
+                });\
+            &lt;/script>";
+    },
+    
+    
+    
+    /**
+     * Converts an HSL color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+     * Assumes h, s, and l are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 255].
+     *
+     * @private
+     * @author Mohsen (http://stackoverflow.com/a/9493060)
+     *
+     * @param {number} h - The hue
+     * @param {number} s - The saturation
+     * @param {number} l - The lightness
+     * @return {Array} The RGB representation
+     */
+    _hsl_to_rgb: function(h, s, l){
+        var r, g, b;
+
+        if (s === 0){
+            r = g = b = l; // achromatic
+        } else {
+            var hue2rgb = function hue2rgb(p, q, t) {
+                if (t &lt; 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t &lt; 1/6) return p + (q - p) * 6 * t;
+                if (t &lt; 1/2) return q;
+                if (t &lt; 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+
+            var q = l &lt; 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    },
+    
+    
+    /**
+     * Converts an RGB color value to HSL. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+     * Assumes r, g, and b are contained in the set [0, 255] and
+     * returns h, s, and l in the set [0, 1].
+     *
+     * @private
+     * @author Mohsen (http://stackoverflow.com/a/9493060)
+     *
+     * @param {number} r - The red color value
+     * @param {number} g - The green color value
+     * @param {number} b - The blue color value
+     * @return {Array} The HSL representation
+     */
+    _rgb_to_hsl: function(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        var max = Math.max(r, g, b),
+            min = Math.min(r, g, b),
+            h, s, l = (max + min) / 2;
+
+        if (max === min) {
+            h = s = 0; // achromatic
+        } else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch(max) {
+                case r: h = (g - b) / d + (g &lt; b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        return [h, s, l];
+    },
+    
+    
+    /**
+     * Lookup table to translate byte values to their HTML entity codes.
+     *
+     * @private
+     * @constant
+     */
+    _byte_to_entity: {
+        34 : "&amp;quot;",
+        38 : "&amp;amp;",
+        39 : "&amp;apos;",
+        60 : "&amp;lt;",
+        62 : "&amp;gt;",
+        160 : "&amp;nbsp;",
+        161 : "&amp;iexcl;",
+        162 : "&amp;cent;",
+        163 : "&amp;pound;",
+        164 : "&amp;curren;",
+        165 : "&amp;yen;",
+        166 : "&amp;brvbar;",
+        167 : "&amp;sect;",
+        168 : "&amp;uml;",
+        169 : "&amp;copy;",
+        170 : "&amp;ordf;",
+        171 : "&amp;laquo;",
+        172 : "&amp;not;",
+        173 : "&amp;shy;",
+        174 : "&amp;reg;",
+        175 : "&amp;macr;",
+        176 : "&amp;deg;",
+        177 : "&amp;plusmn;",
+        178 : "&amp;sup2;",
+        179 : "&amp;sup3;",
+        180 : "&amp;acute;",
+        181 : "&amp;micro;",
+        182 : "&amp;para;",
+        183 : "&amp;middot;",
+        184 : "&amp;cedil;",
+        185 : "&amp;sup1;",
+        186 : "&amp;ordm;",
+        187 : "&amp;raquo;",
+        188 : "&amp;frac14;",
+        189 : "&amp;frac12;",
+        190 : "&amp;frac34;",
+        191 : "&amp;iquest;",
+        192 : "&amp;Agrave;",
+        193 : "&amp;Aacute;",
+        194 : "&amp;Acirc;",
+        195 : "&amp;Atilde;",
+        196 : "&amp;Auml;",
+        197 : "&amp;Aring;",
+        198 : "&amp;AElig;",
+        199 : "&amp;Ccedil;",
+        200 : "&amp;Egrave;",
+        201 : "&amp;Eacute;",
+        202 : "&amp;Ecirc;",
+        203 : "&amp;Euml;",
+        204 : "&amp;Igrave;",
+        205 : "&amp;Iacute;",
+        206 : "&amp;Icirc;",
+        207 : "&amp;Iuml;",
+        208 : "&amp;ETH;",
+        209 : "&amp;Ntilde;",
+        210 : "&amp;Ograve;",
+        211 : "&amp;Oacute;",
+        212 : "&amp;Ocirc;",
+        213 : "&amp;Otilde;",
+        214 : "&amp;Ouml;",
+        215 : "&amp;times;",
+        216 : "&amp;Oslash;",
+        217 : "&amp;Ugrave;",
+        218 : "&amp;Uacute;",
+        219 : "&amp;Ucirc;",
+        220 : "&amp;Uuml;",
+        221 : "&amp;Yacute;",
+        222 : "&amp;THORN;",
+        223 : "&amp;szlig;",
+        224 : "&amp;agrave;",
+        225 : "&amp;aacute;",
+        226 : "&amp;acirc;",
+        227 : "&amp;atilde;",
+        228 : "&amp;auml;",
+        229 : "&amp;aring;",
+        230 : "&amp;aelig;",
+        231 : "&amp;ccedil;",
+        232 : "&amp;egrave;",
+        233 : "&amp;eacute;",
+        234 : "&amp;ecirc;",
+        235 : "&amp;euml;",
+        236 : "&amp;igrave;",
+        237 : "&amp;iacute;",
+        238 : "&amp;icirc;",
+        239 : "&amp;iuml;",
+        240 : "&amp;eth;",
+        241 : "&amp;ntilde;",
+        242 : "&amp;ograve;",
+        243 : "&amp;oacute;",
+        244 : "&amp;ocirc;",
+        245 : "&amp;otilde;",
+        246 : "&amp;ouml;",
+        247 : "&amp;divide;",
+        248 : "&amp;oslash;",
+        249 : "&amp;ugrave;",
+        250 : "&amp;uacute;",
+        251 : "&amp;ucirc;",
+        252 : "&amp;uuml;",
+        253 : "&amp;yacute;",
+        254 : "&amp;thorn;",
+        255 : "&amp;yuml;",
+        338 : "&amp;OElig;",
+        339 : "&amp;oelig;",
+        352 : "&amp;Scaron;",
+        353 : "&amp;scaron;",
+        376 : "&amp;Yuml;",
+        402 : "&amp;fnof;",
+        710 : "&amp;circ;",
+        732 : "&amp;tilde;",
+        913 : "&amp;Alpha;",
+        914 : "&amp;Beta;",
+        915 : "&amp;Gamma;",
+        916 : "&amp;Delta;",
+        917 : "&amp;Epsilon;",
+        918 : "&amp;Zeta;",
+        919 : "&amp;Eta;",
+        920 : "&amp;Theta;",
+        921 : "&amp;Iota;",
+        922 : "&amp;Kappa;",
+        923 : "&amp;Lambda;",
+        924 : "&amp;Mu;",
+        925 : "&amp;Nu;",
+        926 : "&amp;Xi;",
+        927 : "&amp;Omicron;",
+        928 : "&amp;Pi;",
+        929 : "&amp;Rho;",
+        931 : "&amp;Sigma;",
+        932 : "&amp;Tau;",
+        933 : "&amp;Upsilon;",
+        934 : "&amp;Phi;",
+        935 : "&amp;Chi;",
+        936 : "&amp;Psi;",
+        937 : "&amp;Omega;",
+        945 : "&amp;alpha;",
+        946 : "&amp;beta;",
+        947 : "&amp;gamma;",
+        948 : "&amp;delta;",
+        949 : "&amp;epsilon;",
+        950 : "&amp;zeta;",
+        951 : "&amp;eta;",
+        952 : "&amp;theta;",
+        953 : "&amp;iota;",
+        954 : "&amp;kappa;",
+        955 : "&amp;lambda;",
+        956 : "&amp;mu;",
+        957 : "&amp;nu;",
+        958 : "&amp;xi;",
+        959 : "&amp;omicron;",
+        960 : "&amp;pi;",
+        961 : "&amp;rho;",
+        962 : "&amp;sigmaf;",
+        963 : "&amp;sigma;",
+        964 : "&amp;tau;",
+        965 : "&amp;upsilon;",
+        966 : "&amp;phi;",
+        967 : "&amp;chi;",
+        968 : "&amp;psi;",
+        969 : "&amp;omega;",
+        977 : "&amp;thetasym;",
+        978 : "&amp;upsih;",
+        982 : "&amp;piv;",
+        8194 : "&amp;ensp;",
+        8195 : "&amp;emsp;",
+        8201 : "&amp;thinsp;",
+        8204 : "&amp;zwnj;",
+        8205 : "&amp;zwj;",
+        8206 : "&amp;lrm;",
+        8207 : "&amp;rlm;",
+        8211 : "&amp;ndash;",
+        8212 : "&amp;mdash;",
+        8216 : "&amp;lsquo;",
+        8217 : "&amp;rsquo;",
+        8218 : "&amp;sbquo;",
+        8220 : "&amp;ldquo;",
+        8221 : "&amp;rdquo;",
+        8222 : "&amp;bdquo;",
+        8224 : "&amp;dagger;",
+        8225 : "&amp;Dagger;",
+        8226 : "&amp;bull;",
+        8230 : "&amp;hellip;",
+        8240 : "&amp;permil;",
+        8242 : "&amp;prime;",
+        8243 : "&amp;Prime;",
+        8249 : "&amp;lsaquo;",
+        8250 : "&amp;rsaquo;",
+        8254 : "&amp;oline;",
+        8260 : "&amp;frasl;",
+        8364 : "&amp;euro;",
+        8465 : "&amp;image;",
+        8472 : "&amp;weierp;",
+        8476 : "&amp;real;",
+        8482 : "&amp;trade;",
+        8501 : "&amp;alefsym;",
+        8592 : "&amp;larr;",
+        8593 : "&amp;uarr;",
+        8594 : "&amp;rarr;",
+        8595 : "&amp;darr;",
+        8596 : "&amp;harr;",
+        8629 : "&amp;crarr;",
+        8656 : "&amp;lArr;",
+        8657 : "&amp;uArr;",
+        8658 : "&amp;rArr;",
+        8659 : "&amp;dArr;",
+        8660 : "&amp;hArr;",
+        8704 : "&amp;forall;",
+        8706 : "&amp;part;",
+        8707 : "&amp;exist;",
+        8709 : "&amp;empty;",
+        8711 : "&amp;nabla;",
+        8712 : "&amp;isin;",
+        8713 : "&amp;notin;",
+        8715 : "&amp;ni;",
+        8719 : "&amp;prod;",
+        8721 : "&amp;sum;",
+        8722 : "&amp;minus;",
+        8727 : "&amp;lowast;",
+        8730 : "&amp;radic;",
+        8733 : "&amp;prop;",
+        8734 : "&amp;infin;",
+        8736 : "&amp;ang;",
+        8743 : "&amp;and;",
+        8744 : "&amp;or;",
+        8745 : "&amp;cap;",
+        8746 : "&amp;cup;",
+        8747 : "&amp;int;",
+        8756 : "&amp;there4;",
+        8764 : "&amp;sim;",
+        8773 : "&amp;cong;",
+        8776 : "&amp;asymp;",
+        8800 : "&amp;ne;",
+        8801 : "&amp;equiv;",
+        8804 : "&amp;le;",
+        8805 : "&amp;ge;",
+        8834 : "&amp;sub;",
+        8835 : "&amp;sup;",
+        8836 : "&amp;nsub;",
+        8838 : "&amp;sube;",
+        8839 : "&amp;supe;",
+        8853 : "&amp;oplus;",
+        8855 : "&amp;otimes;",
+        8869 : "&amp;perp;",
+        8901 : "&amp;sdot;",
+        8942 : "&amp;vellip;",
+        8968 : "&amp;lceil;",
+        8969 : "&amp;rceil;",
+        8970 : "&amp;lfloor;",
+        8971 : "&amp;rfloor;",
+        9001 : "&amp;lang;",
+        9002 : "&amp;rang;",
+        9674 : "&amp;loz;",
+        9824 : "&amp;spades;",
+        9827 : "&amp;clubs;",
+        9829 : "&amp;hearts;",
+        9830 : "&amp;diams;",
+    },
+    
+    
+    /**
+     * Lookup table to translate HTML entity codes to their byte values.
+     *
+     * @private
+     * @constant
+     */
+    _entity_to_byte : {
+        "quot" : 34,
+        "amp" : 38,
+        "apos" : 39,
+        "lt" : 60,
+        "gt" : 62,
+        "nbsp" : 160,
+        "iexcl" : 161,
+        "cent" : 162,
+        "pound" : 163,
+        "curren" : 164,
+        "yen" : 165,
+        "brvbar" : 166,
+        "sect" : 167,
+        "uml" : 168,
+        "copy" : 169,
+        "ordf" : 170,
+        "laquo" : 171,
+        "not" : 172,
+        "shy" : 173,
+        "reg" : 174,
+        "macr" : 175,
+        "deg" : 176,
+        "plusmn" : 177,
+        "sup2" : 178,
+        "sup3" : 179,
+        "acute" : 180,
+        "micro" : 181,
+        "para" : 182,
+        "middot" : 183,
+        "cedil" : 184,
+        "sup1" : 185,
+        "ordm" : 186,
+        "raquo" : 187,
+        "frac14" : 188,
+        "frac12" : 189,
+        "frac34" : 190,
+        "iquest" : 191,
+        "Agrave" : 192,
+        "Aacute" : 193,
+        "Acirc" : 194,
+        "Atilde" : 195,
+        "Auml" : 196,
+        "Aring" : 197,
+        "AElig" : 198,
+        "Ccedil" : 199,
+        "Egrave" : 200,
+        "Eacute" : 201,
+        "Ecirc" : 202,
+        "Euml" : 203,
+        "Igrave" : 204,
+        "Iacute" : 205,
+        "Icirc" : 206,
+        "Iuml" : 207,
+        "ETH" : 208,
+        "Ntilde" : 209,
+        "Ograve" : 210,
+        "Oacute" : 211,
+        "Ocirc" : 212,
+        "Otilde" : 213,
+        "Ouml" : 214,
+        "times" : 215,
+        "Oslash" : 216,
+        "Ugrave" : 217,
+        "Uacute" : 218,
+        "Ucirc" : 219,
+        "Uuml" : 220,
+        "Yacute" : 221,
+        "THORN" : 222,
+        "szlig" : 223,
+        "agrave" : 224,
+        "aacute" : 225,
+        "acirc" : 226,
+        "atilde" : 227,
+        "auml" : 228,
+        "aring" : 229,
+        "aelig" : 230,
+        "ccedil" : 231,
+        "egrave" : 232,
+        "eacute" : 233,
+        "ecirc" : 234,
+        "euml" : 235,
+        "igrave" : 236,
+        "iacute" : 237,
+        "icirc" : 238,
+        "iuml" : 239,
+        "eth" : 240,
+        "ntilde" : 241,
+        "ograve" : 242,
+        "oacute" : 243,
+        "ocirc" : 244,
+        "otilde" : 245,
+        "ouml" : 246,
+        "divide" : 247,
+        "oslash" : 248,
+        "ugrave" : 249,
+        "uacute" : 250,
+        "ucirc" : 251,
+        "uuml" : 252,
+        "yacute" : 253,
+        "thorn" : 254,
+        "yuml" : 255,
+        "OElig" : 338,
+        "oelig" : 339,
+        "Scaron" : 352,
+        "scaron" : 353,
+        "Yuml" : 376,
+        "fnof" : 402,
+        "circ" : 710,
+        "tilde" : 732,
+        "Alpha" : 913,
+        "Beta" : 914,
+        "Gamma" : 915,
+        "Delta" : 916,
+        "Epsilon" : 917,
+        "Zeta" : 918,
+        "Eta" : 919,
+        "Theta" : 920,
+        "Iota" : 921,
+        "Kappa" : 922,
+        "Lambda" : 923,
+        "Mu" : 924,
+        "Nu" : 925,
+        "Xi" : 926,
+        "Omicron" : 927,
+        "Pi" : 928,
+        "Rho" : 929,
+        "Sigma" : 931,
+        "Tau" : 932,
+        "Upsilon" : 933,
+        "Phi" : 934,
+        "Chi" : 935,
+        "Psi" : 936,
+        "Omega" : 937,
+        "alpha" : 945,
+        "beta" : 946,
+        "gamma" : 947,
+        "delta" : 948,
+        "epsilon" : 949,
+        "zeta" : 950,
+        "eta" : 951,
+        "theta" : 952,
+        "iota" : 953,
+        "kappa" : 954,
+        "lambda" : 955,
+        "mu" : 956,
+        "nu" : 957,
+        "xi" : 958,
+        "omicron" : 959,
+        "pi" : 960,
+        "rho" : 961,
+        "sigmaf" : 962,
+        "sigma" : 963,
+        "tau" : 964,
+        "upsilon" : 965,
+        "phi" : 966,
+        "chi" : 967,
+        "psi" : 968,
+        "omega" : 969,
+        "thetasym" : 977,
+        "upsih" : 978,
+        "piv" : 982,
+        "ensp" : 8194,
+        "emsp" : 8195,
+        "thinsp" : 8201,
+        "zwnj" : 8204,
+        "zwj" : 8205,
+        "lrm" : 8206,
+        "rlm" : 8207,
+        "ndash" : 8211,
+        "mdash" : 8212,
+        "lsquo" : 8216,
+        "rsquo" : 8217,
+        "sbquo" : 8218,
+        "ldquo" : 8220,
+        "rdquo" : 8221,
+        "bdquo" : 8222,
+        "dagger" : 8224,
+        "Dagger" : 8225,
+        "bull" : 8226,
+        "hellip" : 8230,
+        "permil" : 8240,
+        "prime" : 8242,
+        "Prime" : 8243,
+        "lsaquo" : 8249,
+        "rsaquo" : 8250,
+        "oline" : 8254,
+        "frasl" : 8260,
+        "euro" : 8364,
+        "image" : 8465,
+        "weierp" : 8472,
+        "real" : 8476,
+        "trade" : 8482,
+        "alefsym" : 8501,
+        "larr" : 8592,
+        "uarr" : 8593,
+        "rarr" : 8594,
+        "darr" : 8595,
+        "harr" : 8596,
+        "crarr" : 8629,
+        "lArr" : 8656,
+        "uArr" : 8657,
+        "rArr" : 8658,
+        "dArr" : 8659,
+        "hArr" : 8660,
+        "forall" : 8704,
+        "part" : 8706,
+        "exist" : 8707,
+        "empty" : 8709,
+        "nabla" : 8711,
+        "isin" : 8712,
+        "notin" : 8713,
+        "ni" : 8715,
+        "prod" : 8719,
+        "sum" : 8721,
+        "minus" : 8722,
+        "lowast" : 8727,
+        "radic" : 8730,
+        "prop" : 8733,
+        "infin" : 8734,
+        "ang" : 8736,
+        "and" : 8743,
+        "or" : 8744,
+        "cap" : 8745,
+        "cup" : 8746,
+        "int" : 8747,
+        "there4" : 8756,
+        "sim" : 8764,
+        "cong" : 8773,
+        "asymp" : 8776,
+        "ne" : 8800,
+        "equiv" : 8801,
+        "le" : 8804,
+        "ge" : 8805,
+        "sub" : 8834,
+        "sup" : 8835,
+        "nsub" : 8836,
+        "sube" : 8838,
+        "supe" : 8839,
+        "oplus" : 8853,
+        "otimes" : 8855,
+        "perp" : 8869,
+        "sdot" : 8901,
+        "vellip" : 8942,
+        "lceil" : 8968,
+        "rceil" : 8969,
+        "lfloor" : 8970,
+        "rfloor" : 8971,
+        "lang" : 9001,
+        "rang" : 9002,
+        "loz" : 9674,
+        "spades" : 9824,
+        "clubs" : 9827,
+        "hearts" : 9829,
+        "diams" : 9830,
+    },
+
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

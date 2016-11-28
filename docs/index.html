@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><h1>CyberChef</h1><p>####<em>The Cyber Swiss Army Knife</em></p>
+<p>CyberChef is a simple, intuitive web app for carrying out all manner of &quot;cyber&quot; operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.</p>
+<p>The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer and the code has not been peer-reviewed for compliance with a formal specification.</p>
+<h2>Live demo</h2><p>CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!</p>
+<p>Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.</p>
+<p><a href="https://gchq.github.io/cyberchef">A live demo can be found here</a> - have fun!<br>Note: Use Chrome or Firefox, see the Browser Support section below for details.</p>
+<h2>How it works</h2><p>There are four main areas in CyberChef:</p>
+<ol>
+<li>The <strong>input</strong> box in the top right, where you can paste, type or drag the data you want to operate on.</li>
+<li>The <strong>output</strong> box in the bottom right, where the outcome of the specified processing will be displayed.</li>
+<li>The <strong>operations</strong> list on the far left, where you can find all the operations that CyberChef is capable of in categorised lists, or by searching.</li>
+<li>The <strong>recipe</strong> area in the middle, where you drag the operations that you want to use and specify arguments and options.</li>
+</ol>
+<p>You can use as many operations as you like in simple or complex ways. Some examples are as follows:</p>
+<ul>
+<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22From%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%2Ctrue%5D%7D%5D&amp;input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1">Decode a Base64-encoded string</a></li>
+<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Translate%20DateTime%20Format%22%2C%22args%22%3A%5B%22Standard%20date%20and%20time%22%2C%22DD%2FMM%2FYYYY%20HH%3Amm%3Ass%22%2C%22UTC%22%2C%22dddd%20Do%20MMMM%20YYYY%20HH%3Amm%3Ass%20Z%20z%22%2C%22Australia%2FQueensland%22%5D%7D%5D&amp;input=MTUvMDYvMjAxNSAyMDo0NTowMA">Convert a date and time to a different time zone</a></li>
+<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Parse%20IPv6%20address%22%2C%22args%22%3A%5B%5D%7D%5D&amp;input=MjAwMTowMDAwOjQxMzY6ZTM3ODo4MDAwOjYzYmY6M2ZmZjpmZGQy">Parse a Teredo IPv6 address</a></li>
+<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22From%20Hexdump%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22Gunzip%22%2C%22args%22%3A%5B%5D%7D%5D&amp;input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu%2Fy7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb%2F3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw">Convert data from a hexdump, then decompress</a></li>
+<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22From%20UNIX%20Timestamp%22%2C%22args%22%3A%5B%22Seconds%20(s)%22%5D%7D%5D&amp;input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA">Display multiple timestamps as full dates</a></li>
+<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22Conditional%20Jump%22%2C%22args%22%3A%5B%221%22%2C%222%22%2C%2210%22%5D%7D%2C%7B%22op%22%3A%22To%20Hex%22%2C%22args%22%3A%5B%22Space%22%5D%7D%2C%7B%22op%22%3A%22Return%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22To%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%5D%7D%5D&amp;input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA">Carry out different operations on data of different types</a></li>
+</ul>
+<h2>Features</h2><ul>
+<li>Drag and drop<ul>
+<li>Operations can be dragged in and out of the recipe list, or reorganised.</li>
+<li>Files can be dragged over the input box to load them directly.</li>
+</ul>
+</li>
+<li>Auto Bake<ul>
+<li>Whenever you modify the input or the recipe, CyberChef will automatically “bake” for you and produce the output immediately.</li>
+<li>This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).</li>
+<li>If any bake takes longer than 200 milliseconds, auto bake will be switched off automatically to prevent further performance issues.</li>
+</ul>
+</li>
+<li>Breakpoints<ul>
+<li>You can set breakpoints on any operation in your recipe to pause execution before running it.</li>
+<li>You can also step through the recipe one operation at a time to see what the data looks like at each stage.</li>
+</ul>
+</li>
+<li>Save and load recipes<ul>
+<li>If you come up with an awesome recipe that you know you’ll want to use again, just click save and add it to your local storage. It'll be waiting for you next time you visit CyberChef.</li>
+<li>You can also copy a URL which includes your recipe and input which can be shared with others.</li>
+</ul>
+</li>
+<li>Search<ul>
+<li>If you know the name of the operation you want or a word associated with it, start typing it into the search field and any matching operations will immediately be shown.</li>
+</ul>
+</li>
+<li>Highlighting<ul>
+<li>When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: <a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22XOR%22%2C%22args%22%3A%5B%22de%20ad%20be%20ef%22%2C%22Hex%22%2Cfalse%2Cfalse%5D%7D%2C%7B%22op%22%3A%22To%20Hexdump%22%2C%22args%22%3A%5B%2216%22%2Cfalse%2Cfalse%5D%7D%5D&amp;input=VGhlIGFuc3dlciB0byB0aGUgdWx0aW1hdGUgcXVlc3Rpb24gb2YgbGlmZSwgdGhlIFVuaXZlcnNlLCBhbmQgZXZlcnl0aGluZyBpcyA0Mi4">highlight the word 'question' in the input to see where it appears in the output</a>).</li>
+</ul>
+</li>
+<li>Save to file and load from file<ul>
+<li>You can save the output to a file at any time or load a file by dragging and dropping it into the input field (note that files larger than about 500kb may cause your browser to hang or even crash due to the way that browsers handle large amounts of textual data).</li>
+</ul>
+</li>
+<li>CyberChef is entirely client-side<ul>
+<li>It should be noted that none of your input or recipe configuration is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.</li>
+<li>Due to this feature, CyberChef can be compiled into a single HTML file. You can download this file and drop it into a virtual machine, share it with other people, or use it independently on your desktop.</li>
+</ul>
+</li>
+</ul>
+<h2>Browser support</h2><p>CyberChef works well in modern versions of Google Chrome and Mozilla Firefox.</p>
+<p>To aid in the efficient development of new features and operations, there has been no attempt to maintain support for any version of Microsoft Internet Explorer.</p>
+<p>Microsoft Edge is currently unsupported, but if anyone would like to contribute compatibility fixes, they would be appreciated.</p>
+<h2>Contributing</h2><p>An installation walkthrough, how-to guides for adding new operations, descriptions of the repository structure, available data types and coding conventions can all be found in the project <a href="#### TO BE REPLACED ####">wiki pages</a>.</p>
+<ul>
+<li>Sign the <a href="https://github.com/gchq/Gaffer/wiki/GCHQ-OSS-Contributor-License-Agreement-V1.0">GCHQ Contributor Licence Agreement</a></li>
+<li>Push your changes to your fork.</li>
+<li>Submit a pull request.</li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

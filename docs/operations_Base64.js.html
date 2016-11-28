@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/Base64.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/Base64.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Base64 operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var Base64 = {
+
+    /**
+     * @constant
+     * @default
+     */
+    ALPHABET: "A-Za-z0-9+/=",
+    /**
+     * @constant
+     * @default
+     */
+    ALPHABET_OPTIONS: [
+        {name: "Standard: A-Za-z0-9+/=", value: "A-Za-z0-9+/="},
+        {name: "URL safe: A-Za-z0-9-_", value: "A-Za-z0-9-_"},
+        {name: "Filename safe: A-Za-z0-9+-=", value: "A-Za-z0-9+\\-="},
+        {name: "itoa64: ./0-9A-Za-z=", value: "./0-9A-Za-z="},
+        {name: "XML: A-Za-z0-9_.", value: "A-Za-z0-9_."},
+        {name: "y64: A-Za-z0-9._-", value: "A-Za-z0-9._-"},
+        {name: "z64: 0-9a-zA-Z+/=", value: "0-9a-zA-Z+/="},
+        {name: "Radix-64: 0-9A-Za-z+/=", value: "0-9A-Za-z+/="},
+        {name: "Uuencoding: [space]-_", value: " -_"},
+        {name: "Xxencoding: +-0-9A-Za-z", value: "+\\-0-9A-Za-z"},
+        {name: "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r", value: "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"},
+        {name: "ROT13: N-ZA-Mn-za-m0-9+/=", value: "N-ZA-Mn-za-m0-9+/="},
+    ],
+
+    /**
+     * To Base64 operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to: function(input, args) {
+        var alphabet = args[0] || Base64.ALPHABET;
+        return Utils.to_base64(input, alphabet);
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    REMOVE_NON_ALPH_CHARS: true,
+    
+    /**
+     * From Base64 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from: function(input, args) {
+        var alphabet = args[0] || Base64.ALPHABET,
+            remove_non_alph_chars = args[1];
+        
+        return Utils.from_base64(input, alphabet, "byte_array", remove_non_alph_chars);
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    BASE32_ALPHABET: "A-Z2-7=",
+    
+    /**
+     * To Base32 operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_to_32: function(input, args) {
+        if (!input) return "";
+        
+        var alphabet = args[0] ?
+                Utils.expand_alph_range(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+            output = "",
+            chr1, chr2, chr3, chr4, chr5,
+            enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
+            i = 0;
+
+        while (i &lt; input.length) {
+            chr1 = input[i++];
+            chr2 = input[i++];
+            chr3 = input[i++];
+            chr4 = input[i++];
+            chr5 = input[i++];
+
+            enc1 = chr1 >> 3;
+            enc2 = ((chr1 &amp; 7) &lt;&lt; 2) | (chr2 >> 6);
+            enc3 = (chr2 >> 1) &amp; 31;
+            enc4 = ((chr2 &amp; 1) &lt;&lt; 4) | (chr3 >> 4);
+            enc5 = ((chr3 &amp; 15) &lt;&lt; 1) | (chr4 >> 7);
+            enc6 = (chr4 >> 2) &amp; 63;
+            enc7 = ((chr4 &amp; 3) &lt;&lt; 3) | (chr5 >> 5);
+            enc8 = chr5 &amp; 31;
+
+            if (isNaN(chr2)) {
+                enc3 = enc4 = enc5 = enc6 = enc7 = enc8 = 32;
+            } else if (isNaN(chr3)) {
+                enc5 = enc6 = enc7 = enc8 = 32;
+            } else if (isNaN(chr4)) {
+                enc6 = enc7 = enc8 = 32;
+            } else if (isNaN(chr5)) {
+                enc8 = 32;
+            }
+            
+            output += alphabet.charAt(enc1) + alphabet.charAt(enc2) + alphabet.charAt(enc3) +
+                alphabet.charAt(enc4) + alphabet.charAt(enc5) + alphabet.charAt(enc6) +
+                alphabet.charAt(enc7) + alphabet.charAt(enc8);
+        }
+        
+        return output;
+    },
+    
+    
+    /**
+     * From Base32 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_from_32: function(input, args) {
+        if (!input) return [];
+        
+        var alphabet = args[0] ?
+                Utils.expand_alph_range(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+            remove_non_alph_chars = args[0];
+        
+        var output = [],
+            chr1, chr2, chr3, chr4, chr5,
+            enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
+            i = 0;
+        
+        if (remove_non_alph_chars) {
+            var re = new RegExp("[^" + alphabet.replace(/[\]\\\-^]/g, "\\$&amp;") + "]", "g");
+            input = input.replace(re, "");
+        }
+
+        while (i &lt; input.length) {
+            enc1 = alphabet.indexOf(input.charAt(i++));
+            enc2 = alphabet.indexOf(input.charAt(i++) || "=");
+            enc3 = alphabet.indexOf(input.charAt(i++) || "=");
+            enc4 = alphabet.indexOf(input.charAt(i++) || "=");
+            enc5 = alphabet.indexOf(input.charAt(i++) || "=");
+            enc6 = alphabet.indexOf(input.charAt(i++) || "=");
+            enc7 = alphabet.indexOf(input.charAt(i++) || "=");
+            enc8 = alphabet.indexOf(input.charAt(i++) || "=");
+
+            chr1 = (enc1 &lt;&lt; 3) | (enc2 >> 2);
+            chr2 = ((enc2 &amp; 3) &lt;&lt; 6) | (enc3 &lt;&lt; 1) | (enc4 >> 4);
+            chr3 = ((enc4 &amp; 15) &lt;&lt; 4) | (enc5 >> 1);
+            chr4 = ((enc5 &amp; 1) &lt;&lt; 7) | (enc6 &lt;&lt; 2) | (enc7 >> 3);
+            chr5 = ((enc7 &amp; 7) &lt;&lt; 5) | enc8;
+
+            output.push(chr1);
+            if (enc2 &amp; 3 !== 0 || enc3 !== 32) output.push(chr2);
+            if (enc4 &amp; 15 !== 0 || enc5 !== 32) output.push(chr3);
+            if (enc5 &amp; 1 !== 0 || enc6 !== 32) output.push(chr4);
+            if (enc7 &amp; 7 !== 0 || enc8 !== 32) output.push(chr5);
+        }
+        
+        return output;
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    SHOW_IN_BINARY: false,
+    /**
+     * @constant
+     * @default
+     */
+    OFFSETS_SHOW_VARIABLE: true,
+    
+    /**
+     * Show Base64 offsets operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_offsets: function(input, args) {
+        var alphabet = args[0] || Base64.ALPHABET,
+            show_variable = args[1],
+            offset0 = Utils.to_base64(input, alphabet),
+            offset1 = Utils.to_base64([0].concat(input), alphabet),
+            offset2 = Utils.to_base64([0, 0].concat(input), alphabet),
+            len0 = offset0.indexOf("="),
+            len1 = offset1.indexOf("="),
+            len2 = offset2.indexOf("="),
+            script = "&lt;script type='application/javascript'>$('[data-toggle=\"tooltip\"]').tooltip()&lt;/script>",
+            static_section = "",
+            padding = "";
+        
+        if (input.length &lt; 1) {
+            return "Please enter a string.";
+        }
+        
+        // Highlight offset 0
+        if (len0 % 4 == 2) {
+            static_section = offset0.slice(0, -3);
+            offset0 = "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64(static_section, alphabet).slice(0, -2) + "'>" +
+                static_section + "&lt;/span>" +
+                "&lt;span class='hlgreen'>" + offset0.substr(offset0.length - 3, 1) + "&lt;/span>" +
+                "&lt;span class='hlred'>" + offset0.substr(offset0.length - 2) + "&lt;/span>";
+        } else if (len0 % 4 == 3) {
+            static_section = offset0.slice(0, -2);
+            offset0 = "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64(static_section, alphabet).slice(0, -1) + "'>" +
+                static_section + "&lt;/span>" +
+                "&lt;span class='hlgreen'>" + offset0.substr(offset0.length - 2, 1) + "&lt;/span>" +
+                "&lt;span class='hlred'>" + offset0.substr(offset0.length - 1) + "&lt;/span>";
+        } else {
+            static_section = offset0;
+            offset0 = "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64(static_section, alphabet) + "'>" +
+                static_section + "&lt;/span>";
+        }
+        
+        if (!show_variable) {
+            offset0 = static_section;
+        }
+        
+        
+        // Highlight offset 1
+        padding = "&lt;span class='hlred'>" + offset1.substr(0, 1) + "&lt;/span>" +
+            "&lt;span class='hlgreen'>" + offset1.substr(1, 1) + "&lt;/span>";
+        offset1 = offset1.substr(2);
+        if (len1 % 4 == 2) {
+            static_section = offset1.slice(0, -3);
+            offset1 = padding + "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64("AA" + static_section, alphabet).slice(1, -2) + "'>" +
+                static_section + "&lt;/span>" +
+                "&lt;span class='hlgreen'>" + offset1.substr(offset1.length - 3, 1) + "&lt;/span>" +
+                "&lt;span class='hlred'>" + offset1.substr(offset1.length - 2) + "&lt;/span>";
+        } else if (len1 % 4 == 3) {
+            static_section = offset1.slice(0, -2);
+             offset1 = padding + "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64("AA" + static_section, alphabet).slice(1, -1) + "'>" +
+                static_section + "&lt;/span>" +
+                "&lt;span class='hlgreen'>" + offset1.substr(offset1.length - 2, 1) + "&lt;/span>" +
+                "&lt;span class='hlred'>" + offset1.substr(offset1.length - 1) + "&lt;/span>";
+        } else {
+            static_section = offset1;
+            offset1 = padding +  "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64("AA" + static_section, alphabet).slice(1) + "'>" +
+                static_section + "&lt;/span>";
+        }
+        
+        if (!show_variable) {
+            offset1 = static_section;
+        }
+        
+        // Highlight offset 2
+        padding = "&lt;span class='hlred'>" + offset2.substr(0, 2) + "&lt;/span>" +
+            "&lt;span class='hlgreen'>" + offset2.substr(2, 1) + "&lt;/span>";
+        offset2 = offset2.substr(3);
+        if (len2 % 4 == 2) {
+            static_section = offset2.slice(0, -3);
+            offset2 = padding + "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2) + "'>" +
+                static_section + "&lt;/span>" +
+                "&lt;span class='hlgreen'>" + offset2.substr(offset2.length - 3, 1) + "&lt;/span>" +
+                "&lt;span class='hlred'>" + offset2.substr(offset2.length - 2) + "&lt;/span>";
+        } else if (len2 % 4 == 3) {
+            static_section = offset2.slice(0, -2);
+            offset2 = padding + "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2) + "'>" +
+                static_section + "&lt;/span>" +
+                "&lt;span class='hlgreen'>" + offset2.substr(offset2.length - 2, 1) + "&lt;/span>" +
+                "&lt;span class='hlred'>" + offset2.substr(offset2.length - 1) + "&lt;/span>";
+        } else {
+            static_section = offset2;
+            offset2 = padding +  "&lt;span data-toggle='tooltip' data-placement='top' title='" + 
+                Utils.from_base64("AAA" + static_section, alphabet).slice(2) + "'>" +
+                static_section + "&lt;/span>";
+        }
+        
+        if (!show_variable) {
+            offset2 = static_section;
+        }
+        
+        return (show_variable ? "Characters highlighted in &lt;span class='hlgreen'>green&lt;/span> could change if the input is surrounded by more data." +
+            "\nCharacters highlighted in &lt;span class='hlred'>red&lt;/span> are for padding purposes only." +
+            "\nUnhighlighted characters are &lt;span data-toggle='tooltip' data-placement='top' title='Tooltip on left'>static&lt;/span>." +
+            "\nHover over the static sections to see what they decode to on their own.\n" +
+            "\nOffset 0: " + offset0 +
+            "\nOffset 1: " + offset1 +
+            "\nOffset 2: " + offset2 +
+            script :
+            offset0 + "\n" + offset1 + "\n" + offset2);
+    },
+    
+    
+    /**
+     * Highlight to Base64
+     *
+     * @param {Object[]} pos
+     * @param {number} pos[].start
+     * @param {number} pos[].end
+     * @param {Object[]} args
+     * @returns {Object[]} pos
+     */
+    highlight_to: function(pos, args) {
+        pos[0].start = Math.floor(pos[0].start / 3 * 4);
+        pos[0].end = Math.ceil(pos[0].end / 3 * 4);
+        return pos;
+    },
+    
+    /**
+     * Highlight from Base64
+     *
+     * @param {Object[]} pos
+     * @param {number} pos[].start
+     * @param {number} pos[].end
+     * @param {Object[]} args
+     * @returns {Object[]} pos
+     */
+    highlight_from: function(pos, args) {
+        pos[0].start = Math.ceil(pos[0].start / 4 * 3);
+        pos[0].end = Math.floor(pos[0].end / 4 * 3);
+        return pos;
+    },
+    
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

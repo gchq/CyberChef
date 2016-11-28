@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: views/html/HTMLIngredient.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: views/html/HTMLIngredient.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Object to handle the creation of operation ingredients.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @constructor
+ * @param {Object} config - The configuration object for this ingredient.
+ * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {Manager} manager - The CyberChef event manager.
+ */
+var HTMLIngredient = function(config, app, manager) {
+    this.app = app;
+    this.manager = manager;
+    
+    this.name = config.name;
+    this.type = config.type;
+    this.value = config.value;
+    this.disabled = config.disabled || false;
+    this.disable_args = config.disable_args || false;
+    this.placeholder = config.placeholder || false;
+    this.target = config.target;
+    this.toggle_values = config.toggle_values;
+    this.id = "ing-" + this.app.next_ing_id();
+};
+
+
+/**
+ * Renders the ingredient in HTML.
+ *
+ * @returns {string}
+ */
+HTMLIngredient.prototype.to_html = function() {
+    var inline = (this.type == "boolean" ||
+                  this.type == "number" ||
+                  this.type == "option" ||
+                  this.type == "short_string" ||
+                  this.type == "binary_short_string"),
+        html = inline ? "" : "&lt;div class='clearfix'>&amp;nbsp;&lt;/div>",
+        i, m;
+    
+    html += "&lt;div class='arg-group" + (inline ? " inline-args" : "") +
+        (this.type == "text" ? " arg-group-text" : "") + "'>&lt;label class='arg-label' for='" +
+        this.id + "'>" + this.name + "&lt;/label>";
+    
+    switch (this.type) {
+        case "string":
+        case "binary_string":
+        case "byte_array":
+            html += "&lt;input type='text' id='" + this.id + "' class='arg arg-input' arg_name='" +
+                this.name + "' value='" + this.value + "'" +
+                (this.disabled ? " disabled='disabled'" : "") +
+                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            break;
+        case "short_string":
+        case "binary_short_string":
+            html += "&lt;input type='text' id='" + this.id +
+                "'class='arg arg-input short-string' arg_name='" + this.name + "'value='" +
+                this.value + "'" + (this.disabled ? " disabled='disabled'" : "") +
+                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            break;
+        case "toggle_string":
+            html += "&lt;div class='input-group'>&lt;div class='input-group-btn'>\
+                &lt;button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown'\
+                aria-haspopup='true' aria-expanded='false'" +
+                (this.disabled ? " disabled='disabled'" : "") + ">" + this.toggle_values[0] +
+                " &lt;span class='caret'>&lt;/span>&lt;/button>&lt;ul class='dropdown-menu'>";
+            for (i = 0; i &lt; this.toggle_values.length; i++) {
+                html += "&lt;li>&lt;a href='#'>" + this.toggle_values[i] + "&lt;/a>&lt;/li>";
+            }
+            html += "&lt;/ul>&lt;/div>&lt;input type='text' class='arg arg-input toggle-string'" +
+                (this.disabled ? " disabled='disabled'" : "") +
+                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">&lt;/div>";
+            break;
+        case "number":
+            html += "&lt;input type='number' id='" + this.id + "'class='arg arg-input' arg_name='" +
+                this.name + "'value='" + this.value + "'" +
+                (this.disabled ? " disabled='disabled'" : "") +
+                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            break;
+        case "boolean":
+            html += "&lt;input type='checkbox' id='" + this.id + "'class='arg' arg_name='" +
+                this.name + "'" + (this.value ? " checked='checked' " : "") +
+                (this.disabled ? " disabled='disabled'" : "") + ">";
+            
+            if (this.disable_args) {
+                this.manager.add_dynamic_listener("#" + this.id, "click", this.toggle_disable_args, this);
+            }
+            break;
+        case "option":
+            html += "&lt;select class='arg' id='" + this.id + "'arg_name='" + this.name + "'" +
+                (this.disabled ? " disabled='disabled'" : "") + ">";
+            for (i = 0; i &lt; this.value.length; i++) {
+                if (!!(m = this.value[i].match(/\[([a-z0-9 -()^]+)\]/i))) {
+                    html += "&lt;optgroup label='" + m[1] + "'>";
+                } else if (!!(m = this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i))) {
+                    html += "&lt;/optgroup>";
+                } else {
+                    html += "&lt;option>" + this.value[i] + "&lt;/option>";
+                }
+            }
+            html += "&lt;/select>";
+            break;
+        case "populate_option":
+            html += "&lt;select class='arg' id='" + this.id + "'arg_name='" + this.name + "'" +
+                (this.disabled ? " disabled='disabled'" : "") + ">";
+            for (i = 0; i &lt; this.value.length; i++) {
+                if (!!(m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
+                    html += "&lt;optgroup label='" + m[1] + "'>";
+                } else if (!!(m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
+                    html += "&lt;/optgroup>";
+                } else {
+                    html += "&lt;option populate-value='" + this.value[i].value + "'>" +
+                        this.value[i].name + "&lt;/option>";
+                }
+            }
+            html += "&lt;/select>";
+            
+            this.manager.add_dynamic_listener("#" + this.id, "change", this.populate_option_change, this);
+            break;
+        case "editable_option":
+            html += "&lt;div class='editable-option'>";
+            html += "&lt;select class='editable-option-select' id='sel-" + this.id + "'" +
+                (this.disabled ? " disabled='disabled'" : "") + ">";
+            for (i = 0; i &lt; this.value.length; i++) {
+                html += "&lt;option value='" + this.value[i].value + "'>" + this.value[i].name + "&lt;/option>";
+            }
+            html += "&lt;/select>";
+            html += "&lt;input class='arg arg-input editable-option-input' id='" + this.id +
+                "'arg_name='" + this.name + "'" + " value='" + this.value[0].value + "'" +
+                (this.disabled ? " disabled='disabled'" : "") +
+                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            html += "&lt;/div>";
+            
+            
+            this.manager.add_dynamic_listener("#sel-" + this.id, "change", this.editable_option_change, this);
+            break;
+        case "text":
+            html += "&lt;textarea id='" + this.id + "' class='arg' arg_name='" +
+                this.name + "'" + (this.disabled ? " disabled='disabled'" : "") +
+                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">" +
+                this.value + "&lt;/textarea>";
+            break;
+        default:
+            break;
+    }
+    html += "&lt;/div>";
+    
+    return html;
+};
+
+
+/**
+ * Handler for argument disable toggle.
+ * Toggles disabled state for all arguments in the disable_args list for this ingredient.
+ *
+ * @param {event} e
+ */
+HTMLIngredient.prototype.toggle_disable_args = function(e) {
+    var el = e.target,
+        op = el.parentNode.parentNode,
+        args = op.querySelectorAll(".arg-group"),
+        els;
+        
+    for (var i = 0; i &lt; this.disable_args.length; i++) {
+        els = args[this.disable_args[i]].querySelectorAll("input, select, button");
+        
+        for (var j = 0; j &lt; els.length; j++) {
+            if (els[j].getAttribute("disabled")) {
+                els[j].removeAttribute("disabled");
+            } else {
+                els[j].setAttribute("disabled", "disabled");
+            }
+        }
+    }
+    
+    this.manager.recipe.ing_change();
+};
+
+
+/**
+ * Handler for populate option changes.
+ * Populates the relevant argument with the specified value.
+ *
+ * @param {event} e
+ */
+HTMLIngredient.prototype.populate_option_change = function(e) {
+    var el = e.target,
+        op = el.parentNode.parentNode,
+        target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
+
+    target.value = el.childNodes[el.selectedIndex].getAttribute("populate-value");
+    
+    this.manager.recipe.ing_change();
+};
+
+
+/**
+ * Handler for editable option changes.
+ * Populates the input box with the selected value.
+ *
+ * @param {event} e
+ */
+HTMLIngredient.prototype.editable_option_change = function(e) {
+    var select = e.target,
+        input = select.nextSibling;
+
+    input.value = select.childNodes[select.selectedIndex].value;
+    
+    this.manager.recipe.ing_change();
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

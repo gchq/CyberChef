@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>CyberChef Source: operations/DateTime.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		alt="logo"/>CyberChef</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="FlowControl.html">FlowControl</a></li><li><a href="Utils.html">Utils</a></li><li><a href="Base.html">Base</a></li><li><a href="Base64.html">Base64</a></li><li><a href="BitwiseOp.html">BitwiseOp</a></li><li><a href="ByteRepr.html">ByteRepr</a></li><li><a href="CharEnc.html">CharEnc</a></li><li><a href="Checksum.html">Checksum</a></li><li><a href="Cipher.html">Cipher</a></li><li><a href="Code.html">Code</a></li><li><a href="Compress.html">Compress</a></li><li><a href="Convert.html">Convert</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Endian.html">Endian</a></li><li><a href="Entropy.html">Entropy</a></li><li><a href="Extract.html">Extract</a></li><li><a href="FileType.html">FileType</a></li><li><a href="HTML.html">HTML</a></li><li><a href="HTTP.html">HTTP</a></li><li><a href="Hash.html">Hash</a></li><li><a href="Hexdump.html">Hexdump</a></li><li><a href="IP.html">IP</a></li><li><a href="JS.html">JS</a></li><li><a href="MAC.html">MAC</a></li><li><a href="Numberwang.html">Numberwang</a></li><li><a href="OS.html">OS</a></li><li><a href="PublicKey.html">PublicKey</a></li><li><a href="Punycode.html">Punycode</a></li><li><a href="QuotedPrintable.html">QuotedPrintable</a></li><li><a href="Rotate.html">Rotate</a></li><li><a href="SeqUtils.html">SeqUtils</a></li><li><a href="StrUtils.html">StrUtils</a></li><li><a href="Tidy.html">Tidy</a></li><li><a href="URL_.html">URL_</a></li><li><a href="UUID.html">UUID</a></li><li><a href="Unicode.html">Unicode</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Chef.html">Chef</a></li><li><a href="Dish.html">Dish</a></li><li><a href="Ingredient.html">Ingredient</a></li><li><a href="Operation.html">Operation</a></li><li><a href="Recipe.html">Recipe</a></li><li><a href="ControlsWaiter.html">ControlsWaiter</a></li><li><a href="HTMLApp.html">HTMLApp</a></li><li><a href="HTMLCategory.html">HTMLCategory</a></li><li><a href="HTMLIngredient.html">HTMLIngredient</a></li><li><a href="HTMLOperation.html">HTMLOperation</a></li><li><a href="HighlighterWaiter.html">HighlighterWaiter</a></li><li><a href="InputWaiter.html">InputWaiter</a></li><li><a href="Manager.html">Manager</a></li><li><a href="OperationsWaiter.html">OperationsWaiter</a></li><li><a href="OptionsWaiter.html">OptionsWaiter</a></li><li><a href="OutputWaiter.html">OutputWaiter</a></li><li><a href="RecipeWaiter.html">RecipeWaiter</a></li><li><a href="SeasonalWaiter.html">SeasonalWaiter</a></li><li><a href="WindowWaiter.html">WindowWaiter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="Manager.html#event:appstart">Manager#event:appstart</a></li><li><a href="Manager.html#event:operationadd">Manager#event:operationadd</a></li><li><a href="Manager.html#event:operationremove">Manager#event:operationremove</a></li><li><a href="Manager.html#event:oplistcreate">Manager#event:oplistcreate</a></li><li><a href="Manager.html#event:statechange">Manager#event:statechange</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#Categories">Categories</a></li><li><a href="global.html#OperationConfig">OperationConfig</a></li><li><a href="global.html#main">main</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: operations/DateTime.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/* globals moment */
+
+/**
+ * Date and time operations.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ *
+ * @namespace
+ */
+var DateTime = {
+    
+    /**
+     * @constant
+     * @default
+     */
+    UNITS: ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"],
+    
+    /**
+     * From UNIX Timestamp operation.
+     *
+     * @param {number} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_from_unix_timestamp: function(input, args) {
+        var units = args[0],
+            d;
+        
+        input = parseFloat(input);
+        
+        if (units == "Seconds (s)") {
+            d = moment.unix(input);
+            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
+        } else if (units == "Milliseconds (ms)") {
+            d = moment(input);
+            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+        } else if (units == "Microseconds (μs)") {
+            d = moment(input / 1000);
+            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+        } else if (units == "Nanoseconds (ns)") {
+            d = moment(input / 1000000);
+            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+        } else {
+            throw "Unrecognised unit";
+        }
+    },
+    
+    
+    /**
+     * To UNIX Timestamp operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {number}
+     */
+    run_to_unix_timestamp: function(input, args) {
+        var units = args[0],
+            d = moment(input);
+        
+        if (units == "Seconds (s)") {
+            return d.unix();
+        } else if (units == "Milliseconds (ms)") {
+            return d.valueOf();
+        } else if (units == "Microseconds (μs)") {
+            return d.valueOf() * 1000;
+        } else if (units == "Nanoseconds (ns)") {
+            return d.valueOf() * 1000000;
+        } else {
+            throw "Unrecognised unit";
+        }
+    },
+    
+    
+    /**
+     * @constant
+     * @default
+     */
+    DATETIME_FORMATS: [
+        {
+            name: "Standard date and time",
+            value: "DD/MM/YYYY HH:mm:ss"
+        },
+        {
+            name: "American-style date and time",
+            value: "MM/DD/YYYY HH:mm:ss"
+        },
+        {
+            name: "International date and time",
+            value: "YYYY-MM-DD HH:mm:ss"
+        },
+        {
+            name: "Verbose date and time",
+            value: "dddd Do MMMM YYYY HH:mm:ss Z z"
+        },
+        {
+            name: "UNIX timestamp (seconds)",
+            value: "X"
+        },
+        {
+            name: "UNIX timestamp offset (milliseconds)",
+            value: "x"
+        },
+        {
+            name: "Automatic",
+            value: ""
+        },
+    ],
+    /**
+     * @constant
+     * @default
+     */
+    INPUT_FORMAT_STRING: "DD/MM/YYYY HH:mm:ss",
+    /**
+     * @constant
+     * @default
+     */
+    OUTPUT_FORMAT_STRING: "dddd Do MMMM YYYY HH:mm:ss Z z",
+    /**
+     * @constant
+     * @default
+     */
+    TIMEZONES: ["UTC"].concat(moment.tz.names()),
+    
+    /**
+     * Translate DateTime Format operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_translate_format: function(input, args) {
+        var input_format = args[1],
+            input_timezone = args[2],
+            output_format = args[3],
+            output_timezone = args[4],
+            date;
+
+        try {
+            date = moment.tz(input, input_format, input_timezone);
+            if (!date || date.format() == "Invalid date") throw Error;
+        } catch(err) {
+            return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
+        }
+        
+        return date.tz(output_timezone).format(output_format);
+    },
+    
+    
+    /**
+     * Parse DateTime operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    run_parse: function(input, args) {
+        var input_format = args[1],
+            input_timezone = args[2],
+            date,
+            output = "";
+            
+        try {
+            date = moment.tz(input, input_format, input_timezone);
+            if (!date || date.format() == "Invalid date") throw Error;
+        } catch(err) {
+            return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
+        }
+        
+        output += "Date: " + date.format("dddd Do MMMM YYYY") +
+            "\nTime: " + date.format("HH:mm:ss") +
+            "\nPeriod: " + date.format("A") +
+            "\nTimezone: " + date.format("z") +
+            "\nUTC offset: " + date.format("ZZ") +
+            "\n\nDaylight Saving Time: " + date.isDST() +
+            "\nLeap year: " + date.isLeapYear() +
+            "\nDays in this month: " + date.daysInMonth() +
+            "\n\nDay of year: " + date.dayOfYear() +
+            "\nWeek number: " + date.weekYear() +
+            "\nQuarter: " + date.quarter();
+        
+        return output;
+    },
+    
+    
+    /**
+     * @constant
+     */
+    FORMAT_EXAMPLES: "Format string tokens:\n\n\
+&lt;table class='table table-striped table-hover table-condensed table-bordered' style='font-family: sans-serif'>\
+  &lt;thead>\
+    &lt;tr>\
+      &lt;th>Category&lt;/th>\
+      &lt;th>Token&lt;/th>\
+      &lt;th>Output&lt;/th>\
+    &lt;/tr>\
+  &lt;/thead>\
+  &lt;tbody>\
+    &lt;tr>\
+      &lt;td>&lt;b>Month&lt;/b>&lt;/td>\
+      &lt;td>M&lt;/td>\
+      &lt;td>1 2 ... 11 12&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>Mo&lt;/td>\
+      &lt;td>1st 2nd ... 11th 12th&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>MM&lt;/td>\
+      &lt;td>01 02 ... 11 12&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>MMM&lt;/td>\
+      &lt;td>Jan Feb ... Nov Dec&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>MMMM&lt;/td>\
+      &lt;td>January February ... November December&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Quarter&lt;/b>&lt;/td>\
+      &lt;td>Q&lt;/td>\
+      &lt;td>1 2 3 4&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Day of Month&lt;/b>&lt;/td>\
+      &lt;td>D&lt;/td>\
+      &lt;td>1 2 ... 30 31&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>Do&lt;/td>\
+      &lt;td>1st 2nd ... 30th 31st&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>DD&lt;/td>\
+      &lt;td>01 02 ... 30 31&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Day of Year&lt;/b>&lt;/td>\
+      &lt;td>DDD&lt;/td>\
+      &lt;td>1 2 ... 364 365&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>DDDo&lt;/td>\
+      &lt;td>1st 2nd ... 364th 365th&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>DDDD&lt;/td>\
+      &lt;td>001 002 ... 364 365&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Day of Week&lt;/b>&lt;/td>\
+      &lt;td>d&lt;/td>\
+      &lt;td>0 1 ... 5 6&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>do&lt;/td>\
+      &lt;td>0th 1st ... 5th 6th&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>dd&lt;/td>\
+      &lt;td>Su Mo ... Fr Sa&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>ddd&lt;/td>\
+      &lt;td>Sun Mon ... Fri Sat&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>dddd&lt;/td>\
+      &lt;td>Sunday Monday ... Friday Saturday&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Day of Week (Locale)&lt;/b>&lt;/td>\
+      &lt;td>e&lt;/td>\
+      &lt;td>0 1 ... 5 6&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Day of Week (ISO)&lt;/b>&lt;/td>\
+      &lt;td>E&lt;/td>\
+      &lt;td>1 2 ... 6 7&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Week of Year&lt;/b>&lt;/td>\
+      &lt;td>w&lt;/td>\
+      &lt;td>1 2 ... 52 53&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>wo&lt;/td>\
+      &lt;td>1st 2nd ... 52nd 53rd&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>ww&lt;/td>\
+      &lt;td>01 02 ... 52 53&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Week of Year (ISO)&lt;/b>&lt;/td>\
+      &lt;td>W&lt;/td>\
+      &lt;td>1 2 ... 52 53&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>Wo&lt;/td>\
+      &lt;td>1st 2nd ... 52nd 53rd&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>WW&lt;/td>\
+      &lt;td>01 02 ... 52 53&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Year&lt;/b>&lt;/td>\
+      &lt;td>YY&lt;/td>\
+      &lt;td>70 71 ... 29 30&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>YYYY&lt;/td>\
+      &lt;td>1970 1971 ... 2029 2030&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Week Year&lt;/b>&lt;/td>\
+      &lt;td>gg&lt;/td>\
+      &lt;td>70 71 ... 29 30&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>gggg&lt;/td>\
+      &lt;td>1970 1971 ... 2029 2030&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Week Year (ISO)&lt;/b>&lt;/td>\
+      &lt;td>GG&lt;/td>\
+      &lt;td>70 71 ... 29 30&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>GGGG&lt;/td>\
+      &lt;td>1970 1971 ... 2029 2030&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>AM/PM&lt;/b>&lt;/td>\
+      &lt;td>A&lt;/td>\
+      &lt;td>AM PM&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>a&lt;/td>\
+      &lt;td>am pm&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Hour&lt;/b>&lt;/td>\
+      &lt;td>H&lt;/td>\
+      &lt;td>0 1 ... 22 23&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>HH&lt;/td>\
+      &lt;td>00 01 ... 22 23&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>h&lt;/td>\
+      &lt;td>1 2 ... 11 12&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>hh&lt;/td>\
+      &lt;td>01 02 ... 11 12&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Minute&lt;/b>&lt;/td>\
+      &lt;td>m&lt;/td>\
+      &lt;td>0 1 ... 58 59&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>mm&lt;/td>\
+      &lt;td>00 01 ... 58 59&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Second&lt;/b>&lt;/td>\
+      &lt;td>s&lt;/td>\
+      &lt;td>0 1 ... 58 59&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>ss&lt;/td>\
+      &lt;td>00 01 ... 58 59&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Fractional Second&lt;/b>&lt;/td>\
+      &lt;td>S&lt;/td>\
+      &lt;td>0 1 ... 8 9&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>SS&lt;/td>\
+      &lt;td>00 01 ... 98 99&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>SSS&lt;/td>\
+      &lt;td>000 001 ... 998 999&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>SSSS ... SSSSSSSSS&lt;/td>\
+      &lt;td>000[0..] 001[0..] ... 998[0..] 999[0..]&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Timezone&lt;/b>&lt;/td>\
+      &lt;td>z or zz&lt;/td>\
+      &lt;td>EST CST ... MST PST&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>Z&lt;/td>\
+      &lt;td>-07:00 -06:00 ... +06:00 +07:00&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;/td>\
+      &lt;td>ZZ&lt;/td>\
+      &lt;td>-0700 -0600 ... +0600 +0700&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Unix Timestamp&lt;/b>&lt;/td>\
+      &lt;td>X&lt;/td>\
+      &lt;td>1360013296&lt;/td>\
+    &lt;/tr>\
+    &lt;tr>\
+      &lt;td>&lt;b>Unix Millisecond Timestamp&lt;/b>&lt;/td>\
+      &lt;td>x&lt;/td>\
+      &lt;td>1360013296123&lt;/td>\
+    &lt;/tr>\
+  &lt;/tbody>\
+&lt;/table>",
+
+    
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	&copy; Crown Copyright 2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Mon Nov 28th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
