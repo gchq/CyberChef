@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+build/dev
+docs/*
+!docs/*.conf.json
+!docs/*.ico

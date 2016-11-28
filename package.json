@@ -1,0 +1,47 @@
+{
+  "name": "cyberchef",
+  "version": "4.0.0",
+  "description": "CyberChef is a simple, intuitive web app for analysing and decoding data within a web browser.",
+  "author": "n1474335 <n1474335@gmail.com>",
+  "homepage": "https://gchq.github.io/cyberchef",
+  "copyright": "Crown copyright 2016",
+  "license": "Apache-2.0",
+  "keywords": [
+    "cipher",
+    "cypher",
+    "encode",
+    "decode",
+    "encrypt",
+    "decrypt",
+    "base64",
+    "xor",
+    "charset",
+    "hex",
+    "encoding",
+    "format",
+    "cybersecurity"
+  ],
+  "bugs": {
+    "email": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-chmod": "~1.1.1",
+    "grunt-contrib-clean": "~1.0.0",
+    "grunt-contrib-concat": "~1.0.0",
+    "grunt-contrib-copy": "~0.8.2",
+    "grunt-contrib-cssmin": "~0.14.0",
+    "grunt-contrib-htmlmin": "~0.6.0",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-uglify": "~0.11.1",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-exec": "~0.4.6",
+    "grunt-inline-alt": "~0.3.10",
+    "grunt-jsdoc": "^1.1.0",
+    "ink-docstrap": "^1.1.4"
+  }
+}

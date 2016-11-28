@@ -1,0 +1,29 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "plugins": ["plugins/markdown"],
+    "templates": {
+        "systemName": "CyberChef",
+        "footer": "",
+        "copyright": "&copy; Crown Copyright 2016",
+        "navType": "inline",
+        "theme": "cerulean",
+        "linenums": true,
+        "collapseSymbols": false,
+        "inverseNav": true,
+        "outputSourceFiles": true,
+        "outputSourcePath": true,
+        "dateFormat": "ddd MMM Do YYYY",
+        "sort": false,
+        "logoFile": "../build/prod/images/cyberchef-32x32.png",
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "protocol": "html://",
+        "methodHeadingReturns": false
+    },
+    "markdown": {
+        "parser": "gfm",
+        "hardwrap": true
+    }
+}

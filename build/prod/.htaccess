@@ -1,0 +1,50 @@
+# Serve up .htm files as binary files rather than text/html.
+# This allows cyberchef.htm to be downloaded rather than opened in the browser.
+AddType application/octet-stream .htm
+
+# Fix Apache bug #45023 where "-gzip" is appended to all ETags, preventing 304 responses
+<IfModule mod_headers.c>
+    RequestHeader edit "If-None-Match" "^\"(.*)-gzip\"$" "\"$1\""
+    Header edit "ETag" "^\"(.*[^g][^z][^i][^p])\"$" "\"$1-gzip\""
+</IfModule>
+
+# Set gzip compression on all resources that support it
+<IfModule mod_deflate.c>
+    SetOutputFilter DEFLATE
+</IfModule>
+
+# Set Expires headers on various resources
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # 10 minutes
+    ExpiresDefault "access plus 600 seconds"
+    
+    # 30 days
+    ExpiresByType image/x-icon "access plus 2592000 seconds"
+    ExpiresByType image/jpeg "access plus 2592000 seconds"
+    ExpiresByType image/png "access plus 2592000 seconds"
+    ExpiresByType image/gif "access plus 2592000 seconds"
+    
+    # 7 days
+    ExpiresByType text/css "access plus 604800 seconds"
+    ExpiresByType text/javascript "access plus 604800 seconds"
+    ExpiresByType application/javascript "access plus 604800 seconds"
+    ExpiresByType text/html "access plus 604800 seconds"
+</IfModule>
+
+# Set Cache-Control headers on various resources
+<IfModule mod_headers.c>
+    <FilesMatch "\\.(ico|jpe?g|png|gif)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    <FilesMatch "\\.(css)$">
+        Header set Cache-Control "max-age=600, public"
+    </FilesMatch>
+    <FilesMatch "\\.(js)$">
+        Header set Cache-Control "max-age=600, private, must-revalidate"
+    </FilesMatch>
+    <FilesMatch "\\.(x?html?)$">
+        Header set Cache-Control "max-age=600, private, must-revalidate"
+    </FilesMatch>
+</IfModule>
