@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "description": "CyberChef is a simple, intuitive web app for analysing and decoding data within a web browser.",
   "author": "n1474335 <n1474335@gmail.com>",
-  "homepage": "https://gchq.github.io/cyberchef",
+  "homepage": "https://gchq.github.io/CyberChef",
   "copyright": "Crown copyright 2016",
   "license": "Apache-2.0",
   "keywords": [
