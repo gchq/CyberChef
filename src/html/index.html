@@ -273,7 +273,7 @@
                     </div>
                     <div class="modal-body">
                         <img class="about-img-left" src="images/cyberchef-128x128.png" />
-                        <p class="subtext">Compile time: <%= grunt.template.today("dd/mm/yyyy HH:MM:ss") %> UTC</p>
+                        <p class="subtext">Compile time: <%- htmlWebpackPlugin.options.compileTime %> UTC</p>
                         <p>&copy Crown Copyright 2016.</p>
                         <p>Licenced under the Apache Licence, Version 2.0.</p>
                         <br>
@@ -283,10 +283,6 @@
                                 <li role='presentation' class='active'><a href='#faqs' aria-controls='profile' role='tab' data-toggle='tab'>
                                     <img src='images/help-16x16.png' />
                                     FAQs
-                                </a></li>
-                                <li role='presentation'><a href='#stats' aria-controls='messages' role='tab' data-toggle='tab'>
-                                    <img src='images/stats-16x16.png' />
-                                    Stats
                                 </a></li>
                                 <li role='presentation'><a href='#about' aria-controls='messages' role='tab' data-toggle='tab'>
                                     <img src='images/speech-16x16.png' />
@@ -331,11 +327,6 @@
                                         <p>The 'Fork' operation (found in the 'Flow control' category) splits up the input line by line and runs all subsequent operations on each line separately. Each output is then displayed on a separate line. These delimiters can be changed, so if your inputs are separated by commas, you can change the split delimiter to a comma instead.</p>
                                         <p><a href='?recipe=%5B%7B"op"%3A"Fork"%2C"args"%3A%5B"%5C%5Cn"%2C"%5C%5Cn"%5D%7D%2C%7B"op"%3A"From%20UNIX%20Timestamp"%2C"args"%3A%5B"Seconds%20(s)"%5D%7D%5D&input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA%3D%3D'>Click here</a> for an example.</p>
                                     </div>
-                                </div>
-                                <div role='tabpanel' class='tab-pane' id='stats'>
-                                    <br>
-                                    <p>If you're a nerd like me, you might find statistics really fun! Here's some about the CyberChef code base:</p>
-                                    <br><pre><%= codebase_stats %></pre>
                                 </div>
                                 <div role='tabpanel' class='tab-pane' id='about' style="padding: 20px;">
                                     <h4>What</h4>
@@ -388,7 +379,5 @@
                 </div>
             </div>
         </div>
-        
-        <script type="application/javascript" src="scripts.js"></script>
     </body>
 </html>

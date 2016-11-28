@@ -28,7 +28,20 @@
     "type": "git",
     "url": ""
   },
+  "scripts": {
+    "build": "./node_modules/.bin/webpack --bail",
+    "start": "./node_modules/.bin/webpack-dev-server --progress",
+    "eslint": "./node_modules/.bin/eslint ."
+  },
   "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-env": "^0.0.9",
+    "babel-register": "^6.18.0",
+    "css-loader": "^0.26.0",
+    "extract-text-webpack-plugin": "2.0.0-beta.4",
+    "file-loader": "^0.9.0",
     "grunt": "~0.4.5",
     "grunt-chmod": "~1.1.1",
     "grunt-contrib-clean": "~1.0.0",
@@ -42,6 +55,14 @@
     "grunt-exec": "~0.4.6",
     "grunt-inline-alt": "~0.3.10",
     "grunt-jsdoc": "^1.1.0",
-    "ink-docstrap": "^1.1.4"
+    "html-webpack-plugin": "^2.24.1",
+    "ink-docstrap": "^1.1.4",
+    "style-loader": "^0.13.1",
+    "webpack": "2.1.0-beta.27",
+    "webpack-dev-server": "2.1.0-beta.12"
+  },
+  "dependencies": {
+    "estraverse": "^4.2.0",
+    "json-loader": "^0.5.4"
   }
 }
