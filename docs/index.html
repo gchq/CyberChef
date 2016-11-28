@@ -20,7 +20,7 @@
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
 <div class="container">
 	<div class="navbar-header">
-		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="../build/prod/images/cyberchef-32x32.png"
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="img/cyberchef-32x32.png"
 		alt="logo"/>CyberChef</a>
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
 			<span class="icon-bar"></span>
@@ -113,7 +113,7 @@
 <p>The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer and the code has not been peer-reviewed for compliance with a formal specification.</p>
 <h2>Live demo</h2><p>CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!</p>
 <p>Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.</p>
-<p><a href="https://gchq.github.io/cyberchef">A live demo can be found here</a> - have fun!<br>Note: Use Chrome or Firefox, see the Browser Support section below for details.</p>
+<p><a href="https://gchq.github.io/CyberChef">A live demo can be found here</a> - have fun!<br>Note: Use Chrome or Firefox, see the Browser Support section below for details.</p>
 <h2>How it works</h2><p>There are four main areas in CyberChef:</p>
 <ol>
 <li>The <strong>input</strong> box in the top right, where you can paste, type or drag the data you want to operate on.</li>
@@ -123,12 +123,12 @@
 </ol>
 <p>You can use as many operations as you like in simple or complex ways. Some examples are as follows:</p>
 <ul>
-<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22From%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%2Ctrue%5D%7D%5D&amp;input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1">Decode a Base64-encoded string</a></li>
-<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Translate%20DateTime%20Format%22%2C%22args%22%3A%5B%22Standard%20date%20and%20time%22%2C%22DD%2FMM%2FYYYY%20HH%3Amm%3Ass%22%2C%22UTC%22%2C%22dddd%20Do%20MMMM%20YYYY%20HH%3Amm%3Ass%20Z%20z%22%2C%22Australia%2FQueensland%22%5D%7D%5D&amp;input=MTUvMDYvMjAxNSAyMDo0NTowMA">Convert a date and time to a different time zone</a></li>
-<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Parse%20IPv6%20address%22%2C%22args%22%3A%5B%5D%7D%5D&amp;input=MjAwMTowMDAwOjQxMzY6ZTM3ODo4MDAwOjYzYmY6M2ZmZjpmZGQy">Parse a Teredo IPv6 address</a></li>
-<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22From%20Hexdump%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22Gunzip%22%2C%22args%22%3A%5B%5D%7D%5D&amp;input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu%2Fy7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb%2F3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw">Convert data from a hexdump, then decompress</a></li>
-<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22From%20UNIX%20Timestamp%22%2C%22args%22%3A%5B%22Seconds%20(s)%22%5D%7D%5D&amp;input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA">Display multiple timestamps as full dates</a></li>
-<li><a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22Conditional%20Jump%22%2C%22args%22%3A%5B%221%22%2C%222%22%2C%2210%22%5D%7D%2C%7B%22op%22%3A%22To%20Hex%22%2C%22args%22%3A%5B%22Space%22%5D%7D%2C%7B%22op%22%3A%22Return%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22To%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%5D%7D%5D&amp;input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA">Carry out different operations on data of different types</a></li>
+<li><a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22From%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%2Ctrue%5D%7D%5D&amp;input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1">Decode a Base64-encoded string</a></li>
+<li><a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Translate%20DateTime%20Format%22%2C%22args%22%3A%5B%22Standard%20date%20and%20time%22%2C%22DD%2FMM%2FYYYY%20HH%3Amm%3Ass%22%2C%22UTC%22%2C%22dddd%20Do%20MMMM%20YYYY%20HH%3Amm%3Ass%20Z%20z%22%2C%22Australia%2FQueensland%22%5D%7D%5D&amp;input=MTUvMDYvMjAxNSAyMDo0NTowMA">Convert a date and time to a different time zone</a></li>
+<li><a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Parse%20IPv6%20address%22%2C%22args%22%3A%5B%5D%7D%5D&amp;input=MjAwMTowMDAwOjQxMzY6ZTM3ODo4MDAwOjYzYmY6M2ZmZjpmZGQy">Parse a Teredo IPv6 address</a></li>
+<li><a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22From%20Hexdump%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22Gunzip%22%2C%22args%22%3A%5B%5D%7D%5D&amp;input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu%2Fy7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb%2F3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw">Convert data from a hexdump, then decompress</a></li>
+<li><a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22From%20UNIX%20Timestamp%22%2C%22args%22%3A%5B%22Seconds%20(s)%22%5D%7D%5D&amp;input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA">Display multiple timestamps as full dates</a></li>
+<li><a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22Conditional%20Jump%22%2C%22args%22%3A%5B%221%22%2C%222%22%2C%2210%22%5D%7D%2C%7B%22op%22%3A%22To%20Hex%22%2C%22args%22%3A%5B%22Space%22%5D%7D%2C%7B%22op%22%3A%22Return%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22To%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%5D%7D%5D&amp;input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA">Carry out different operations on data of different types</a></li>
 </ul>
 <h2>Features</h2><ul>
 <li>Drag and drop<ul>
@@ -157,7 +157,7 @@
 </ul>
 </li>
 <li>Highlighting<ul>
-<li>When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: <a href="https://gchq.github.io/cyberchef/?recipe=%5B%7B%22op%22%3A%22XOR%22%2C%22args%22%3A%5B%22de%20ad%20be%20ef%22%2C%22Hex%22%2Cfalse%2Cfalse%5D%7D%2C%7B%22op%22%3A%22To%20Hexdump%22%2C%22args%22%3A%5B%2216%22%2Cfalse%2Cfalse%5D%7D%5D&amp;input=VGhlIGFuc3dlciB0byB0aGUgdWx0aW1hdGUgcXVlc3Rpb24gb2YgbGlmZSwgdGhlIFVuaXZlcnNlLCBhbmQgZXZlcnl0aGluZyBpcyA0Mi4">highlight the word 'question' in the input to see where it appears in the output</a>).</li>
+<li>When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: <a href="https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22XOR%22%2C%22args%22%3A%5B%7B%22option%22%3A%22Hex%22%2C%22string%22%3A%223a%22%7D%2Cfalse%2Cfalse%5D%7D%2C%7B%22op%22%3A%22To%20Hexdump%22%2C%22args%22%3A%5B%2216%22%2Cfalse%2Cfalse%5D%7D%5D&amp;input=VGhlIGFuc3dlciB0byB0aGUgdWx0aW1hdGUgcXVlc3Rpb24gb2YgbGlmZSwgdGhlIFVuaXZlcnNlLCBhbmQgZXZlcnl0aGluZyBpcyA0Mi4">highlight the word 'question' in the input to see where it appears in the output</a>).</li>
 </ul>
 </li>
 <li>Save to file and load from file<ul>
@@ -173,7 +173,7 @@
 <h2>Browser support</h2><p>CyberChef works well in modern versions of Google Chrome and Mozilla Firefox.</p>
 <p>To aid in the efficient development of new features and operations, there has been no attempt to maintain support for any version of Microsoft Internet Explorer.</p>
 <p>Microsoft Edge is currently unsupported, but if anyone would like to contribute compatibility fixes, they would be appreciated.</p>
-<h2>Contributing</h2><p>An installation walkthrough, how-to guides for adding new operations, descriptions of the repository structure, available data types and coding conventions can all be found in the project <a href="#### TO BE REPLACED ####">wiki pages</a>.</p>
+<h2>Contributing</h2><p>An installation walkthrough, how-to guides for adding new operations, descriptions of the repository structure, available data types and coding conventions can all be found in the project <a href="https://github.com/gchq/CyberChef/wiki">wiki pages</a>.</p>
 <ul>
 <li>Sign the <a href="https://github.com/gchq/Gaffer/wiki/GCHQ-OSS-Contributor-License-Agreement-V1.0">GCHQ Contributor Licence Agreement</a></li>
 <li>Push your changes to your fork.</li>
