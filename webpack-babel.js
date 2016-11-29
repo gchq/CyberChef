@@ -76,7 +76,7 @@ export default {
             [
               'env', {
                 modules: false,
-                targets: { chrome: 55, firefox: 50}
+                targets: { chrome: 55, firefox: 50 },
               },
             ],
           ],
@@ -105,7 +105,7 @@ export default {
         test: /\.svg(\?[^/]*)?$/,
         loader: fontLoader,
       },
-    ].concat(cssConfig.loaders)
+    ].concat(cssConfig.loaders),
   },
   plugins: [
     cssConfig.plugin,
@@ -113,6 +113,6 @@ export default {
       template: './src/html/index.html',
       filename: 'index.html',
       compileTime: new Date().toISOString(),
-    })
-  ]
-}
+    }),
+  ],
+};

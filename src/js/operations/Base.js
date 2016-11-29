@@ -7,14 +7,14 @@
  *
  * @namespace
  */
-var Base = {
+const Base = {
 
     /**
      * @constant
      * @default
      */
-    DEFAULT_RADIX: 36,
-    
+  DEFAULT_RADIX: 36,
+
     /**
      * To Base operation.
      *
@@ -22,18 +22,18 @@ var Base = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to: function(input, args) {
-        if (!input) {
-            throw ("Error: Input must be a number");
-        }
-        var radix = args[0] || Base.DEFAULT_RADIX;
-        if (radix < 2 || radix > 36) {
-            throw "Error: Radix argument must be between 2 and 36";
-        }
-        return input.toString(radix);
-    },
-    
-    
+  run_to(input, args) {
+    if (!input) {
+      throw ('Error: Input must be a number');
+    }
+    const radix = args[0] || Base.DEFAULT_RADIX;
+    if (radix < 2 || radix > 36) {
+      throw 'Error: Radix argument must be between 2 and 36';
+    }
+    return input.toString(radix);
+  },
+
+
     /**
      * From Base operation.
      *
@@ -41,12 +41,12 @@ var Base = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_from: function(input, args) {
-        var radix = args[0] || Base.DEFAULT_RADIX;
-        if (radix < 2 || radix > 36) {
-            throw "Error: Radix argument must be between 2 and 36";
-        }
-        return parseInt(input.replace(/\s/g, ""), radix);
-    },
-    
+  run_from(input, args) {
+    const radix = args[0] || Base.DEFAULT_RADIX;
+    if (radix < 2 || radix > 36) {
+      throw 'Error: Radix argument must be between 2 and 36';
+    }
+    return parseInt(input.replace(/\s/g, ''), radix);
+  },
+
 };

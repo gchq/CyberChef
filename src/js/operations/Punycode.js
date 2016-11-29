@@ -9,14 +9,14 @@
  *
  * @namespace
  */
-var Punycode = {
+const Punycode = {
 
     /**
      * @constant
      * @default
      */
-    IDN: false,
-    
+  IDN: false,
+
     /**
      * To Punycode operation.
      *
@@ -24,17 +24,17 @@ var Punycode = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_ascii: function(input, args) {
-        var idn = args[0];
-        
-        if (idn) {
-            return punycode.ToASCII(input);
-        } else {
-            return punycode.encode(input);
-        }
-    },
-    
-    
+  run_to_ascii(input, args) {
+    const idn = args[0];
+
+    if (idn) {
+      return punycode.ToASCII(input);
+    } else {
+      return punycode.encode(input);
+    }
+  },
+
+
     /**
      * From Punycode operation.
      *
@@ -42,14 +42,14 @@ var Punycode = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_unicode: function(input, args) {
-        var idn = args[0];
-        
-        if (idn) {
-            return punycode.ToUnicode(input);
-        } else {
-            return punycode.decode(input);
-        }
-    },
-    
+  run_to_unicode(input, args) {
+    const idn = args[0];
+
+    if (idn) {
+      return punycode.ToUnicode(input);
+    } else {
+      return punycode.decode(input);
+    }
+  },
+
 };
