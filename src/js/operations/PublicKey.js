@@ -1,6 +1,6 @@
 import Utils from '../core/Utils';
 
-/* globals X509, KJUR, ASN1HEX, KEYUTIL, BigInteger */
+
 
 /**
  * Public Key operations.

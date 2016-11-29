@@ -1,6 +1,6 @@
 import Utils from '../core/Utils';
 
-/* globals JsDiff */
+
 
 /**
  * String utility operations.

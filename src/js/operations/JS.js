@@ -1,4 +1,4 @@
-/* globals esprima, escodegen, esmangle */
+
 
 /**
  * JavaScript operations.

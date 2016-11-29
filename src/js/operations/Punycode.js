@@ -1,4 +1,4 @@
-/* globals punycode */
+
 
 /**
  * Punycode operations.

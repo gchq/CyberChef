@@ -1,6 +1,6 @@
 import Utils from '../core/Utils';
 
-/* globals CryptoJS, Checksum */
+
 
 /**
  * Hashing operations.

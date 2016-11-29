@@ -7,7 +7,7 @@ import HTMLCategory from './HTMLCategory';
 import HTMLOperation from './HTMLOperation';
 
 
-/* globals Split */
+
 
 /**
  * HTML view for CyberChef responsible for building the web page and dealing with all user

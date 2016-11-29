@@ -1,4 +1,4 @@
-/* globals UAS_parser */
+
 
 /**
  * HTTP operations.

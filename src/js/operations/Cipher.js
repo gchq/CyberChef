@@ -1,5 +1,5 @@
 import Utils from '../core/Utils';
-/* globals CryptoJS, blowfish */
+
 
 /**
  * Cipher operations.

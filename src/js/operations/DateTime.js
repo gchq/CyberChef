@@ -1,4 +1,4 @@
-/* globals moment */
+
 
 /**
  * Date and time operations.

@@ -1,6 +1,6 @@
 import Utils from '../core/Utils';
 
-/* globals BigInteger */
+
 
 /**
  * Internet Protocol address operations.

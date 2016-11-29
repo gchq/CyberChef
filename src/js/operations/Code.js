@@ -1,6 +1,6 @@
 import Utils from '../core/Utils';
 
-/* globals prettyPrintOne, vkbeautify */
+
 
 /**
  * Code operations.

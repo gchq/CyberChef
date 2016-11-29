@@ -1,7 +1,7 @@
 import HTMLApp from './HTMLApp';
 import Categories from '../../config/Categories';
 import OperationConfig from '../../config/OperationConfig';
-/* globals moment */
+
 
 /**
  * @author n1474335 [n1474335@gmail.com]

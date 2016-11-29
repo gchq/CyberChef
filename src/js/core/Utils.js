@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-/* globals CryptoJS, moment */
+
 
 /**
  * Utility functions for use in operations, the core framework and the stage.

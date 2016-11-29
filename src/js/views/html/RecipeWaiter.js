@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import HTMLOperation from './HTMLOperation';
-/* globals Sortable */
+
 
 /**
  * Waiter to handle events related to the recipe.
