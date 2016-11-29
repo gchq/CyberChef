@@ -91,7 +91,7 @@ var Rotate = {
      * @default
      */
     ROT13_UPPERCASE: true,
-    
+
     /**
      * ROT13 operation.
      *
@@ -124,8 +124,43 @@ var Rotate = {
         }
         return output;
     },
-    
-    
+
+
+    /**
+     * @constant
+     * @default
+     */
+    ROT47_AMOUNT: 47,
+
+    /**
+     * ROT47 operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_rot47: function(input, args) {
+        var amount = args[0],
+            output = input,
+            chr;
+
+        if (amount) {
+            if (amount < 0) {
+                amount = 94 - (Math.abs(amount) % 94);
+            }
+
+            for (var i = 0; i < input.length; i++) {
+                chr = input[i];
+                if (chr >= 33 && chr <= 126) { // Upper case
+                    chr = (chr - 33 + amount) % 94;
+                    output[i] = chr + 33;
+                }
+            }
+        }
+        return output;
+    },
+
+
     /**
      * Rotate right bitwise op.
      *
