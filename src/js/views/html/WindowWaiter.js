@@ -8,9 +8,9 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-const WindowWaiter = function (app) {
+export default function WindowWaiter(app) {
   this.app = app;
-};
+}
 
 
 /**

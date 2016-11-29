@@ -1,3 +1,6 @@
+import Dish from './Dish';
+import Recipe from './Recipe';
+
 /**
  * The main controller for CyberChef.
  *
@@ -7,9 +10,9 @@
  *
  * @class
  */
-const Chef = function () {
+export default function Chef() {
   this.dish = new Dish();
-};
+}
 
 
 /**

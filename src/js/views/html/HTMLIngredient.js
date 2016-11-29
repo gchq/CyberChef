@@ -10,7 +10,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const HTMLIngredient = function (config, app, manager) {
+export default function HTMLIngredient(config, app, manager) {
   this.app = app;
   this.manager = manager;
 
@@ -23,7 +23,7 @@ const HTMLIngredient = function (config, app, manager) {
   this.target = config.target;
   this.toggle_values = config.toggle_values;
   this.id = `ing-${this.app.next_ing_id()}`;
-};
+}
 
 
 /**

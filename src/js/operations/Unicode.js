@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * Unicode operations.
  *
@@ -60,3 +62,5 @@ const Unicode = {
   },
 
 };
+
+export default Unicode;

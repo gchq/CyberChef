@@ -1,3 +1,4 @@
+import Utils from '../core/Utils';
 /* globals CryptoJS, blowfish */
 
 /**
@@ -427,3 +428,5 @@ CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
     // Return params
   return CryptoJS.lib.CipherParams.create({ key, iv, salt });
 };
+
+export default Cipher;

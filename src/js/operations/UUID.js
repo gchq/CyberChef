@@ -1,3 +1,5 @@
+import Uint32Array from 'core-js/modules/es6.typed.uint32-array';
+
 /**
  * UUID operations.
  *
@@ -37,3 +39,5 @@ const UUID = {
   },
 
 };
+
+export default UUID;

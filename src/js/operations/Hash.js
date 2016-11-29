@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals CryptoJS, Checksum */
 
 /**
@@ -339,3 +341,5 @@ const Hash = {
   },
 
 };
+
+export default Hash;

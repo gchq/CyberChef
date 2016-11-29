@@ -1,3 +1,6 @@
+import Utils from '../core/Utils';
+import Uint8Array from 'core-js/modules/es6.typed.uint8-array';
+
 /* globals Zlib, bzip2 */
 
 /**
@@ -346,3 +349,5 @@ const Compress = {
   },
 
 };
+
+export default Compress;

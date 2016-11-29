@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * Tidy operations.
  *
@@ -240,3 +242,5 @@ const Tidy = {
   },
 
 };
+
+export default Tidy;

@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals JsDiff */
 
 /**
@@ -502,3 +504,5 @@ const StrUtils = {
   },
 
 };
+
+export default StrUtils;

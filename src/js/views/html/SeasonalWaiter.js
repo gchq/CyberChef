@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /**
  * Waiter to handle seasonal events and easter eggs.
  *
@@ -9,10 +11,10 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const SeasonalWaiter = function (app, manager) {
+export default function SeasonalWaiter(app, manager) {
   this.app = app;
   this.manager = manager;
-};
+}
 
 
 /**

@@ -1,3 +1,6 @@
+import HTMLApp from './HTMLApp';
+import Categories from '../../config/Categories';
+import OperationConfig from '../../config/OperationConfig';
 /* globals moment */
 
 /**

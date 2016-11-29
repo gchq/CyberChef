@@ -9,11 +9,11 @@
  * @param {string} name - The name of the category.
  * @param {boolean} selected - Whether this category is pre-selected or not.
  */
-const HTMLCategory = function (name, selected) {
+export default function HTMLCategory(name, selected) {
   this.name = name;
   this.selected = selected;
   this.op_list = [];
-};
+}
 
 
 /**

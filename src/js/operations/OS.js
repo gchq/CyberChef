@@ -307,3 +307,5 @@ const OS = {
   },
 
 };
+
+export default OS;

@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals app */
 
 /**
@@ -396,3 +398,5 @@ const ByteRepr = {
   },
 
 };
+
+export default ByteRepr;

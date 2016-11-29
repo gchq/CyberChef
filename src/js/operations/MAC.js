@@ -86,3 +86,5 @@ const MAC = {
   },
 
 };
+
+export default MAC;

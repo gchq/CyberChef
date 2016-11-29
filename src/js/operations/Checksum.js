@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * Checksum operations.
  *
@@ -128,3 +130,5 @@ const Checksum = {
   },
 
 };
+
+export default Checksum;

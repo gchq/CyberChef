@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * File type operations.
  *
@@ -524,3 +526,5 @@ const FileType = {
   },
 
 };
+
+export default FileType;

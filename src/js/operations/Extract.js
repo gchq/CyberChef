@@ -297,3 +297,5 @@ const Extract = {
   },
 
 };
+
+export default Extract;

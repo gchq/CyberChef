@@ -1,3 +1,12 @@
+import $ from 'jquery';
+
+import Utils from '../../core/Utils';
+import Chef from '../../core/Chef';
+import Manager from './Manager';
+import HTMLCategory from './HTMLCategory';
+import HTMLOperation from './HTMLOperation';
+
+
 /* globals Split */
 
 /**
@@ -14,7 +23,7 @@
  * @param {String[]} default_favourites - A list of default favourite operations.
  * @param {Object} options - Default setting for app options.
  */
-const HTMLApp = function (categories, operations, default_favourites, default_options) {
+export default function HTMLApp(categories, operations, default_favourites, default_options) {
   this.categories = categories;
   this.operations = operations;
   this.dfavourites = default_favourites;
@@ -29,7 +38,7 @@ const HTMLApp = function (categories, operations, default_favourites, default_op
   this.ing_id = 0;
 
   window.chef = this.chef;
-};
+}
 
 
 /**
@@ -356,7 +365,9 @@ HTMLApp.prototype.load_URI_params = function () {
     try {
       const recipe_config = JSON.parse(this.query_string.recipe);
       this.set_recipe_config(recipe_config);
-    } catch (err) {}
+    } catch (err) {
+      // ignore error
+    }
   } else if (this.query_string.op) {
         // If there's no recipe, look for single operations
     this.manager.recipe.clear_recipe();
@@ -382,7 +393,9 @@ HTMLApp.prototype.load_URI_params = function () {
     try {
       const input_data = Utils.from_base64(this.query_string.input);
       this.set_input(input_data);
-    } catch (err) {}
+    } catch (err) {
+      // ignore error
+    }
   }
 
     // Restore auto-bake state

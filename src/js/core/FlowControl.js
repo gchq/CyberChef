@@ -1,3 +1,6 @@
+import Recipe from './Recipe';
+import Dish from './Dish';
+
 /**
  * Flow Control operations.
  *
@@ -170,3 +173,5 @@ const FlowControl = {
   },
 
 };
+
+export default FlowControl;

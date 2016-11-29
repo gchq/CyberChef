@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /* globals CryptoJS, moment */
 
 /**
@@ -1156,3 +1158,5 @@ CryptoJS.enc.Hex.parse = function (hexStr) {
 
   return new CryptoJS.lib.WordArray.init(words, hexStrLength / 2);
 };
+
+export default Utils;

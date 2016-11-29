@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * Sequence utility operations.
  *
@@ -218,3 +220,5 @@ const SeqUtils = {
   },
 
 };
+
+export default SeqUtils;

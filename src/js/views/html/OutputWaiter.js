@@ -1,3 +1,5 @@
+import Utils from '../../core/Utils';
+
 /**
  * Waiter to handle events related to the output.
  *
@@ -9,10 +11,10 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const OutputWaiter = function (app, manager) {
+export default function OutputWaiter(app, manager) {
   this.app = app;
   this.manager = manager;
-};
+}
 
 
 /**

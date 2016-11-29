@@ -204,3 +204,5 @@ const Rotate = {
   },
 
 };
+
+export default Rotate;

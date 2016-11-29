@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals X509, KJUR, ASN1HEX, KEYUTIL, BigInteger */
 
 /**
@@ -1051,3 +1053,5 @@ X509.DN_ATTRHEX = {
   '060355080101': 'rsa',
   '0603604c0101': 'DPC',
 };
+
+export default PublicKey;

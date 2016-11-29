@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals prettyPrintOne, vkbeautify */
 
 /**
@@ -303,3 +305,5 @@ const Code = {
   },
 
 };
+
+export default Code;

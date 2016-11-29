@@ -53,3 +53,5 @@ const Punycode = {
   },
 
 };
+
+export default Punycode;

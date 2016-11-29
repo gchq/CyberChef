@@ -1,3 +1,4 @@
+import Utils from '../core/Utils';
 /**
  * Entropy operations.
  *
@@ -164,3 +165,5 @@ const Entropy = {
   },
 
 };
+
+export default Entropy;

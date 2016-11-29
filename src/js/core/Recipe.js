@@ -1,3 +1,6 @@
+import OperationConfig from '../config/OperationConfig';
+import Operation from './Operation';
+
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
  *

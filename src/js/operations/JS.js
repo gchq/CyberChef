@@ -158,3 +158,5 @@ const JS = {
   },
 
 };
+
+export default JS;

@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * HTML operations.
  *
@@ -205,9 +207,9 @@ const HTML = {
       l = Math.round(hsl_[2] * 100),
       k = 1 - Math.max(r / 255, g / 255, b / 255),
       c = (1 - r / 255 - k) / (1 - k),
-      m = (1 - g / 255 - k) / (1 - k), // jshint ignore:line
       y = (1 - b / 255 - k) / (1 - k);
 
+    m = (1 - g / 255 - k) / (1 - k);
     c = isNaN(c) ? '0' : c.toFixed(2);
     m = isNaN(m) ? '0' : m.toFixed(2);
     y = isNaN(y) ? '0' : y.toFixed(2);

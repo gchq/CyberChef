@@ -266,3 +266,5 @@ const QuotedPrintable = {
   },
 
 };
+
+export default QuotedPrintable;

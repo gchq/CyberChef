@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals app */
 
 /**
@@ -196,3 +198,5 @@ const Hexdump = {
   },
 
 };
+
+export default Hexdump;

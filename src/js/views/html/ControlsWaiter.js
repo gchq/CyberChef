@@ -1,3 +1,5 @@
+import $ from 'jquery';
+import Utils from '../../core/Utils';
 /**
  * Waiter to handle events related to the CyberChef controls (i.e. Bake, Step, Save, Load etc.)
  *
@@ -9,10 +11,10 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const ControlsWaiter = function (app, manager) {
+export default function ControlsWaiter(app, manager) {
   this.app = app;
   this.manager = manager;
-};
+}
 
 
 /**
@@ -191,7 +193,9 @@ ControlsWaiter.prototype.save_text_change = function () {
   try {
     const recipe_config = JSON.parse(document.getElementById('save-text').value);
     this.initialise_save_link(recipe_config);
-  } catch (err) {}
+  } catch (err) {
+    // ignore error
+  }
 };
 
 

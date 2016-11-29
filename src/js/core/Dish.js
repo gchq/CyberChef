@@ -1,3 +1,5 @@
+import Utils from './Utils';
+
 /**
  * The data being operated on by each operation.
  *
@@ -9,10 +11,10 @@
  * @param {byte_array|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
-const Dish = function (value, type) {
+export default function Dish(value, type) {
   this.value = value || typeof value === 'string' ? value : null;
   this.type = type || Dish.BYTE_ARRAY;
-};
+}
 
 
 /**

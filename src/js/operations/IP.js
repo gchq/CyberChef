@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals BigInteger */
 
 /**
@@ -802,3 +804,5 @@ const IP = {
   },
 
 };
+
+export default IP;

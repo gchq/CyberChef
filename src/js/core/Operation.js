@@ -1,3 +1,6 @@
+import Dish from './Dish';
+import Ingredient from './Ingredient';
+
 /**
  * The Operation specified by the user to be run.
  *
@@ -9,7 +12,7 @@
  * @param {string} operation_name
  * @param {Object} operation_config
  */
-const Operation = function (operation_name, operation_config) {
+export default function Operation(operation_name, operation_config) {
   this.name = operation_name;
   this.description = '';
   this.input_type = -1;
@@ -24,7 +27,7 @@ const Operation = function (operation_name, operation_config) {
   if (operation_config) {
     this._parse_config(operation_config);
   }
-};
+}
 
 
 /**

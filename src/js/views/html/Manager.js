@@ -1,3 +1,15 @@
+import $ from 'jquery';
+
+import WindowWaiter from './WindowWaiter';
+import ControlsWaiter from './ControlsWaiter';
+import RecipeWaiter from './RecipeWaiter';
+import OperationsWaiter from './OperationsWaiter';
+import InputWaiter from './InputWaiter';
+import OutputWaiter from './OutputWaiter';
+import HighlighterWaiter from './HighlighterWaiter';
+import SeasonalWaiter from './SeasonalWaiter';
+import OptionsWaiter from './OptionsWaiter';
+
 /**
  * This object controls the Waiters responsible for handling events from all areas of the app.
  *

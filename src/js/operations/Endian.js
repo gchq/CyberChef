@@ -1,3 +1,4 @@
+import Utils from '../core/Utils';
 /**
  * Endian operations.
  *
@@ -92,3 +93,5 @@ const Endian = {
   },
 
 };
+
+export default Endian;

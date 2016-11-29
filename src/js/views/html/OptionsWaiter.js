@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /**
  * Waiter to handle events related to the CyberChef options.
  *
@@ -8,9 +10,9 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-const OptionsWaiter = function (app) {
+export default function OptionsWaiter(app) {
   this.app = app;
-};
+}
 
 
 /**

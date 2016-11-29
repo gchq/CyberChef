@@ -1,3 +1,5 @@
+import HTMLIngredient from './HTMLIngredient';
+
 /**
  * Object to handle the creation of operations.
  *
@@ -11,7 +13,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const HTMLOperation = function (name, config, app, manager) {
+export default function HTMLOperation(name, config, app, manager) {
   this.app = app;
   this.manager = manager;
 
@@ -25,7 +27,7 @@ const HTMLOperation = function (name, config, app, manager) {
     const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
     this.ing_list.push(ing);
   }
-};
+}
 
 
 /**

@@ -1,3 +1,39 @@
+import FlowControl from '../core/FlowControl';
+import Base64 from '../operations/Base64';
+import BitwiseOp from '../operations/BitwiseOp';
+import ByteRepr from '../operations/ByteRepr';
+import Hexdump from '../operations/Hexdump';
+import Base from '../operations/Base';
+import HTML from '../operations/HTML';
+import URL_ from '../operations/URL';
+import Unicode from '../operations/Unicode';
+import QuotedPrintable from '../operations/QuotedPrintable';
+import Punycode from '../operations/Punycode';
+import IP from '../operations/IP';
+import CharEnc from '../operations/CharEnc';
+import Cipher from '../operations/Cipher';
+import Rotate from '../operations/Rotate';
+import HTTP from '../operations/HTTP';
+import MAC from '../operations/MAC';
+import StrUtils from '../operations/StrUtils';
+import Tidy from '../operations/Tidy';
+import SeqUtils from '../operations/SeqUtils';
+import Extract from '../operations/Extract';
+import DateTime from '../operations/DateTime';
+import Convert from '../operations/Convert';
+import Compress from '../operations/Compress';
+import JS from '../operations/JS';
+import Code from '../operations/Code';
+import Hash from '../operations/Hash';
+import Checksum from '../operations/Checksum';
+import Entropy from '../operations/Entropy';
+import Numberwang from '../operations/Numberwang';
+import PublicKey from '../operations/PublicKey';
+import FileType from '../operations/FileType';
+import OS from '../operations/OS';
+import Endian from '../operations/Endian';
+import UUID from '../operations/UUID';
+
 /*
  * Tell JSHint to ignore "'Object' is not defined" errors in this file, as it references every
  * single operation object by definition.
@@ -2784,3 +2820,5 @@ const OperationConfig = {
     args: [],
   },
 };
+
+export default OperationConfig;

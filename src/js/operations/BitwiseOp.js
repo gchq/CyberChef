@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals CryptoJS */
 
 /**
@@ -298,3 +300,5 @@ const BitwiseOp = {
   },
 
 };
+
+export default BitwiseOp;

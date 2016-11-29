@@ -25,3 +25,5 @@ const Numberwang = {
   },
 
 };
+
+export default Numberwang;

@@ -1,3 +1,5 @@
+import Uint8Array from 'core-js/modules/es6.typed.uint8-array';
+import Utils from '../../core/Utils';
 /**
  * Waiter to handle events related to the input.
  *
@@ -9,7 +11,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const InputWaiter = function (app, manager) {
+export default function InputWaiter(app, manager) {
   this.app = app;
   this.manager = manager;
 
@@ -30,7 +32,7 @@ const InputWaiter = function (app, manager) {
     144, // Num
     145, //Scroll
   ];
-};
+}
 
 
 /**

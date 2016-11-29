@@ -1,3 +1,4 @@
+import Utils from '../core/Utils';
 /* globals unescape */
 
 /**
@@ -131,3 +132,5 @@ const URL_ = {
   },
 
 };
+
+export default URL_;

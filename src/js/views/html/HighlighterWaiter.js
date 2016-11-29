@@ -1,3 +1,4 @@
+import Utils from '../../core/Utils';
 /**
  * Waiter to handle events related to highlighting in CyberChef.
  *
@@ -8,12 +9,12 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-const HighlighterWaiter = function (app) {
+export default function HighlighterWaiter(app) {
   this.app = app;
 
   this.mouse_button_down = false;
   this.mouse_target = null;
-};
+}
 
 
 /**

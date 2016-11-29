@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import HTMLOperation from './HTMLOperation';
+
 /* globals Sortable */
 
 /**
@@ -11,13 +14,13 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const OperationsWaiter = function (app, manager) {
+export default function OperationsWaiter(app, manager) {
   this.app = app;
   this.manager = manager;
 
   this.options = {};
   this.remove_intent = false;
-};
+}
 
 
 /**

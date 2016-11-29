@@ -1,3 +1,5 @@
+import $ from 'jquery';
+import HTMLOperation from './HTMLOperation';
 /* globals Sortable */
 
 /**
@@ -11,11 +13,11 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-const RecipeWaiter = function (app, manager) {
+export default function RecipeWaiter(app, manager) {
   this.app = app;
   this.manager = manager;
   this.remove_intent = false;
-};
+}
 
 
 /**
@@ -405,7 +407,7 @@ RecipeWaiter.prototype.dropdown_toggle_click = function (e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.op_add = function (e) {
+RecipeWaiter.prototype.op_add = function () {
   window.dispatchEvent(this.manager.statechange);
 };
 
@@ -417,6 +419,6 @@ RecipeWaiter.prototype.op_add = function (e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.op_remove = function (e) {
+RecipeWaiter.prototype.op_remove = function () {
   window.dispatchEvent(this.manager.statechange);
 };

@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /**
  * Base64 operations.
  *
@@ -361,3 +363,5 @@ const Base64 = {
   },
 
 };
+
+export default Base64;

@@ -1,3 +1,5 @@
+import Utils from '../core/Utils';
+
 /* globals CryptoJS */
 
 /**
@@ -44,3 +46,5 @@ const CharEnc = {
   },
 
 };
+
+export default CharEnc;

@@ -1,3 +1,5 @@
+import Utils from './Utils';
+
 /**
  * The arguments to operations.
  *
@@ -8,7 +10,7 @@
  * @class
  * @param {Object} ingredient_config
  */
-const Ingredient = function (ingredient_config) {
+export default function Ingredient(ingredient_config) {
   this.name = '';
   this.type = '';
   this.value = null;
@@ -16,7 +18,7 @@ const Ingredient = function (ingredient_config) {
   if (ingredient_config) {
     this._parse_config(ingredient_config);
   }
-};
+}
 
 
 /**
@@ -72,7 +74,6 @@ Ingredient.prepare = function (data, type) {
       } else {
         return data;
       }
-      break;
     case 'number':
       var number = parseFloat(data);
       if (isNaN(number)) {
