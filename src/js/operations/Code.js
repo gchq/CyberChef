@@ -1,6 +1,6 @@
 import Utils from '../core/Utils';
-
-
+import { prettyPrintOne } from 'google-code-prettify/src/prettify';
+import vkbeautify from 'vkbeautify';
 
 /**
  * Code operations.

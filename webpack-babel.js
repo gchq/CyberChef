@@ -1,8 +1,10 @@
 import path from 'path';
+import webpack from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
+const imageLoader = 'file-loader?name=img/[name]-[sha512:hash:base64:7].[ext]';
 const fontLoader = 'file-loader?name=fnt/[name]-[sha512:hash:base64:7].[ext]';
 
 function getCssOptions(target) {
@@ -105,6 +107,23 @@ export default {
         test: /\.svg(\?[^/]*)?$/,
         loader: fontLoader,
       },
+      {
+        include: require.resolve('bootstrap/js/collapse'),
+        loader: 'imports-loader?jQuery=jquery',
+      },
+      {
+        include: require.resolve('bootstrap/js/modal'),
+        loader: 'imports-loader?jQuery=jquery',
+      },
+      {
+        include: require.resolve('bootstrap/js/tooltip'),
+        loader: 'imports-loader?jQuery=jquery',
+      },
+      {
+        include: require.resolve('bootstrap/js/popover'),
+        loader: 'imports-loader?jQuery=jquery',
+      },
+      { test: /\.(png|jpg|jpeg|gif|ico)$/, loader: imageLoader },
     ].concat(cssConfig.loaders),
   },
   plugins: [
@@ -114,5 +133,11 @@ export default {
       filename: 'index.html',
       compileTime: new Date().toISOString(),
     }),
+    new webpack.ProvidePlugin({
+      'window.jQuery': 'jquery',
+    }),
+    new webpack.DefinePlugin({
+      COMPILE_TIME: JSON.stringify(new Date()),
+    })
   ],
 };

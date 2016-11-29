@@ -1,5 +1,6 @@
+import CryptoJS from 'crypto-js';
 import Utils from '../core/Utils';
-
+import Checksum from './Checksum';
 
 
 /**

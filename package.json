@@ -61,18 +61,31 @@
     "grunt-inline-alt": "~0.3.10",
     "grunt-jsdoc": "^1.1.0",
     "html-webpack-plugin": "^2.24.1",
+    "imports-loader": "^0.6.5",
     "ink-docstrap": "^1.1.4",
     "style-loader": "^0.13.1",
     "webpack": "2.1.0-beta.27",
     "webpack-dev-server": "2.1.0-beta.12"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-switch": "^3.3.2",
     "core-js": "^2.4.1",
+    "crypto-js": "^3.1.8",
+    "escodegen": "^1.8.1",
+    "esmangle": "^1.0.1",
     "esprima": "^3.1.2",
     "estraverse": "^4.2.0",
+    "google-code-prettify": "^1.0.5",
     "jquery": "^3.1.1",
     "json-loader": "^0.5.4",
+    "jsrsasign": "^6.2.2",
     "moment": "^2.17.0",
-    "moment-timezone": "^0.5.10"
+    "moment-timezone": "^0.5.10",
+    "node-bzip": "^0.0.1-2",
+    "sladex-blowfish": "^0.8.1",
+    "split.js": "^1.1.1",
+    "vkbeautify": "^0.99.1",
+    "zlibjs": "^0.2.0"
   }
 }

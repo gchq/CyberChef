@@ -11,13 +11,13 @@ import Operation from './Operation';
  * @class
  * @param {Object} recipe_config
  */
-const Recipe = function (recipe_config) {
+export default function Recipe(recipe_config) {
   this.op_list = [];
 
   if (recipe_config) {
     this._parse_config(recipe_config);
   }
-};
+}
 
 
 /**

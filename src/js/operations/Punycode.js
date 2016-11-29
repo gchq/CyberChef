@@ -1,4 +1,4 @@
-
+import punycode from '../lib/punycode';
 
 /**
  * Punycode operations.

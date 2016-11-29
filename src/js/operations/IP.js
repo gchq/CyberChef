@@ -1,5 +1,5 @@
+import { BigInteger } from 'jsrsasign';
 import Utils from '../core/Utils';
-
 
 
 /**

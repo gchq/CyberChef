@@ -5,8 +5,7 @@ import Chef from '../../core/Chef';
 import Manager from './Manager';
 import HTMLCategory from './HTMLCategory';
 import HTMLOperation from './HTMLOperation';
-
-
+import Split from 'split.js';
 
 
 /**

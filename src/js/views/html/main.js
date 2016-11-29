@@ -1,7 +1,8 @@
+import moment from 'moment';
 import HTMLApp from './HTMLApp';
 import Categories from '../../config/Categories';
 import OperationConfig from '../../config/OperationConfig';
-
+import Split from '../../lib/split';
 
 /**
  * @author n1474335 [n1474335@gmail.com]
@@ -46,7 +47,7 @@ const main = function () {
 // Fix issues with browsers that don't support console.log()
 window.console = console || { log() {}, error() {} };
 
-window.compile_time = moment.tz('<%= grunt.template.today() %>', 'ddd MMM D YYYY HH:mm:ss', 'UTC').valueOf();
-window.compile_message = '<%= compile_msg %>';
+window.compile_time = moment(COMPILE_TIME).valueOf();
+window.compile_message = '';
 
 document.addEventListener('DOMContentLoaded', main, false);

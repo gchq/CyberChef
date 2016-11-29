@@ -94,7 +94,7 @@ const Hexdump = {
     const w = (width - 13) / 4;
         // w should be the specified width of the hexdump and therefore a round number
     if (Math.floor(w) != w || input.indexOf('\r') != -1 || output.indexOf(13) != -1) {
-      app.options.attempt_highlight = false;
+      window.app.options.attempt_highlight = false;
     }
     return output;
   },

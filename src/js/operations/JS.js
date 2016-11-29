@@ -1,4 +1,6 @@
-
+import esprima from 'esprima';
+import escodegen from 'escodegen';
+import esmangle from 'esmangle';
 
 /**
  * JavaScript operations.

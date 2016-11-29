@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import HTMLOperation from './HTMLOperation';
+import Sortable from '../../lib/Sortable';
 
 
 /**

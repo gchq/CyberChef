@@ -89,11 +89,11 @@ const ByteRepr = {
         else if (ordinal < 4294967296) padding = 8;
         else padding = 2;
 
-        if (padding > 2) app.options.attempt_highlight = false;
+        if (padding > 2) window.app.options.attempt_highlight = false;
 
         output += Utils.hex(ordinal, padding) + delim;
       } else {
-        app.options.attempt_highlight = false;
+        window.app.options.attempt_highlight = false;
         output += ordinal.toString(base) + delim;
       }
     }
@@ -120,7 +120,7 @@ const ByteRepr = {
     }
 
     if (base != 16) {
-      app.options.attempt_highlight = false;
+      window.app.options.attempt_highlight = false;
     }
 
         // Split into groups of 2 if the whole string is concatenated and

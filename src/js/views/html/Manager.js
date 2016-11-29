@@ -20,7 +20,7 @@ import OptionsWaiter from './OptionsWaiter';
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-const Manager = function (app) {
+export default function Manager(app) {
   this.app = app;
 
     // Define custom events
@@ -60,7 +60,7 @@ const Manager = function (app) {
   this.dynamic_handlers = {};
 
   this.initialise_event_listeners();
-};
+}
 
 
 /**

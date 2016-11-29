@@ -1,4 +1,4 @@
-
+import UAS_parser from '../lib/uas_parser';
 
 /**
  * HTTP operations.

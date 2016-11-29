@@ -1,4 +1,5 @@
 import Utils from '../core/Utils';
+import JsDiff from '../lib/diff';
 
 
 

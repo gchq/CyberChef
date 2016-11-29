@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js';
+import blowfish from 'sladex-blowfish';
 import Utils from '../core/Utils';
 
 

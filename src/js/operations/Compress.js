@@ -1,6 +1,22 @@
 import Utils from '../core/Utils';
 import Uint8Array from 'core-js/modules/es6.typed.uint8-array';
+import rawdeflate from 'zlibjs/bin/rawdeflate.min';
+import rawinflate from 'zlibjs/bin/rawinflate.min';
+import zlibAndGzip from 'zlibjs/bin/zlib_and_gzip.min';
+import zip from 'zlibjs/bin/zip.min';
+import unzip from 'zlibjs/bin/unzip.min';
+import bzip2 from '../lib/bzip2';
 
+const Zlib = {
+  RawDeflate: rawdeflate.Zlib.RawDeflate,
+  RawInflate: rawinflate.Zlib.RawInflate,
+  Deflate: zlibAndGzip.Zlib.Deflate,
+  Inflate: zlibAndGzip.Zlib.Inflate,
+  Gzip: zlibAndGzip.Zlib.Gzip,
+  Gunzip: zlibAndGzip.Zlib.Gunzip,
+  Zip: zip.Zlib.Zip,
+  Unzip: zip.Zlib.Unzip,
+}
 
 
 /**
