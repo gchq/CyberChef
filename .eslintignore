@@ -1,0 +1,3 @@
+src/js/lib/**
+dist/**
+build/**
