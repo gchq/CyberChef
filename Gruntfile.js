@@ -123,6 +123,7 @@ module.exports = function(grunt) {
         "src/js/lib/vkbeautify.js",
         "src/js/lib/Sortable.js",
         "src/js/lib/bootstrap-colorpicker.js",
+        'src/js/lib/jquery.xpath.js',
         
         // Custom libraries
         "src/js/lib/canvas_components.js",

@@ -1893,6 +1893,24 @@ var OperationConfig = {
             },
         ]
     },
+    "XPath expression": {
+        description: "Extract information from an xml document with an XPath query",
+        run: Extract.run_xpath,
+        input_type: "string",
+        output_type: "string",
+        args: [
+            {
+                name: "XPath",
+                type: "string",
+                value: Extract.XPATH_INITIAL
+            },
+            {
+                name: "Result delimiter",
+                type: "binary_short_string",
+                value: Extract.XPATH_DELIMITER
+            }
+        ]
+    },
     "From UNIX Timestamp": {
         description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code>",
         run: DateTime.run_from_unix_timestamp,

@@ -10,7 +10,7 @@
 var Extract = {
 
     /**
-     * Runs search operations across the input data using refular expressions.
+     * Runs search operations across the input data using regular expressions.
      *
      * @private
      * @param {string} input
@@ -293,5 +293,66 @@ var Extract = {
         output += Extract.run_dates(input, []);
         return output;
     },
-    
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_DELIMITER: "\\n",
+
+    /**
+     * Extract information (from an xml document) with an XPath query
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_xpath:function(input, args) {
+        var query = args[0];
+        var delimiter = args[1];
+
+        try {
+            var xml = $.parseXML(input);
+        } catch (err) {
+            return "Invalid input XML.";
+        }
+
+        try {
+            var result = $.xpath(xml, query);
+        } catch (err) {
+            return "Invalid XPath. Details:\n" + err.message;
+        }
+
+        var serializer = new XMLSerializer();
+        var output = "";
+        for (var i = 0; i < result.length; i++) {
+            if (i > 0) output +=  delimiter;
+
+            switch (result[i].nodeType) {
+                case Node.ELEMENT_NODE:
+                    output += serializer.serializeToString(result[i]);
+                    break;
+                case Node.ATTRIBUTE_NODE:
+                    output += result[i].value;
+                    break;
+                case Node.TEXT_NODE:
+                    output += result[i].wholeText;
+                    break;
+                case Node.COMMENT_NODE:
+                    output += result[i].data;
+                    break;
+                default:
+                    throw new Error("Unknown Node Type: " + result[i].nodeType);
+            }
+        }
+
+        return output;
+    }
+
 };

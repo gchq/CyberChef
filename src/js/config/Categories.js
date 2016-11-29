@@ -186,6 +186,7 @@ var Categories = [
             "Extract file paths",
             "Extract dates",
             "Regular expression",
+            "XPath expression",
         ]
     },
     {
