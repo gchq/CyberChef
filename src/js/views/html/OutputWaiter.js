@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import Utils from '../../core/Utils';
+import CanvasComponents from './utils/CanvasComponents';
 
 const inlineFuncs = {
   colorpicker({ rgba }) {
@@ -14,6 +15,32 @@ const inlineFuncs = {
         document.getElementById('input-text').value = css;
         window.app.auto_bake();
     });
+  },
+  entropy({ entropy }) {
+    const canvas = document.getElementById('chart-area');
+    const parent_rect = canvas.parentNode.getBoundingClientRect();
+    const height = parent_rect.height * 0.25;
+    canvas.width = parent_rect.width * 0.95;
+    canvas.height = height > 150 ? 150 : height;
+    CanvasComponents.draw_scale_bar(canvas, entropy, 8, [
+        {
+            label: 'English text',
+            min: 3.5,
+            max: 5
+        },{
+            label: 'Encrypted/compressed',
+            min: 7.5,
+            max: 8
+        }
+    ]);
+  },
+  freq({ percentages }) {
+    const scores = JSON.parse(percentages);
+    const canvas = document.getElementById('chart-area');
+    const parent_rect = canvas.parentNode.getBoundingClientRect();
+    canvas.width = parent_rect.width * 0.95;
+    canvas.height = parent_rect.height * 0.9;
+    CanvasComponents.draw_bar_chart(canvas, scores, 'Byte', 'Frequency %', 16, 6);
   }
 }
 

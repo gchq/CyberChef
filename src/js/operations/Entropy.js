@@ -29,32 +29,12 @@ const Entropy = {
       entropy = Entropy._calc_entropy(input);
 
     output += `Shannon entropy: ${entropy}\n` +
-            '<br><canvas id=\'chart-area\'></canvas><br>\n' +
+            `<br><canvas id=\'chart-area\' data-cyber-chef-func="entropy" data-entropy="${entropy}"></canvas><br>\n` +
             '- 0 represents no randomness (i.e. all the bytes in the data have the same value) whereas 8, the maximum, represents a completely random string.\n' +
             '- Standard English text usually falls somewhere between 3.5 and 5.\n' +
             '- Properly encrypted or compressed data of a reasonable length should have an entropy of over 7.5.\n\n' +
             'The following results show the entropy of chunks of the input data. Chunks with particularly high entropy could suggest encrypted or compressed sections.\n\n' +
-            `<br><script>\
-                var canvas = document.getElementById('chart-area'),\
-                    parent_rect = canvas.parentNode.getBoundingClientRect(),\
-                    entropy = ${entropy},\
-                    height = parent_rect.height * 0.25;\
-                \
-                canvas.width = parent_rect.width * 0.95;\
-                canvas.height = height > 150 ? 150 : height;\
-                \
-                CanvasComponents.draw_scale_bar(canvas, entropy, 8, [\
-                    {\
-                        label: 'English text',\
-                        min: 3.5,\
-                        max: 5\
-                    },{\
-                        label: 'Encrypted/compressed',\
-                        min: 7.5,\
-                        max: 8\
-                    }\
-                ]);\
-            </script>`;
+            '<br>';
 
     let chunk_entropy = 0;
     if (chunk_size !== 0) {
@@ -109,21 +89,17 @@ const Entropy = {
     }
 
         // Print
-    let output = `${"<canvas id='chart-area'></canvas><br>" +
-            'Total data length: '}${len
-            }\nNumber of bytes represented: ${repr
-            }\nNumber of bytes not represented: ${256 - repr
-            }\n\nByte   Percentage\n` +
-            `<script>\
-                var canvas = document.getElementById('chart-area'),\
-                    parent_rect = canvas.parentNode.getBoundingClientRect(),\
-                    scores = ${JSON.stringify(percentages)};\
-                \
-                canvas.width = parent_rect.width * 0.95;\
-                canvas.height = parent_rect.height * 0.9;\
-                \
-                CanvasComponents.draw_bar_chart(canvas, scores, 'Byte', 'Frequency %', 16, 6);\
-            </script>`;
+    let output = `
+      <canvas id='chart-area'
+              data-cyber-chef-func='freq'
+              data-percentages='${JSON.stringify(percentages)}'+ ></canvas><br>
+            Total data length: ${len}
+            Number of bytes represented: ${repr}
+            Number of bytes not represented: ${256 - repr}
+
+
+            Byte   Percentage
+            <br>`;
 
     for (i = 0; i < 256; i++) {
       if (distrib[i] || show_zeroes) {
