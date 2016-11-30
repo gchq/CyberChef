@@ -330,12 +330,13 @@ var Extract = {
         }
 
         var serializer = new XMLSerializer();
-        var nodeToString = function(node) {
+        const nodeToString = function(node) {
             const { nodeType, value, wholeText, data } = node;
             switch (nodeType) {
                 case Node.ELEMENT_NODE: return serializer.serializeToString(node);
                 case Node.ATTRIBUTE_NODE: return value;
                 case Node.COMMENT_NODE: return data;
+                case Node.DOCUMENT_NODE: return serializer.serializeToString(node);
                 default: throw new Error(`Unknown Node Type: ${nodeType}`);
             }
         }
