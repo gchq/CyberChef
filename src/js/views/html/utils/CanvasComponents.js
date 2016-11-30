@@ -66,15 +66,15 @@ const CanvasComponents = {
 		curr_x = left_padding + bar_padding;
 		if (num_x_labels >= scores.length) {
 			// Mark every score
-			for (var i = 0; i <= scores.length; i++) {
-				ctx.fillText(i, curr_x, base + (bottom_padding * 0.3));
+			for (var j = 0; j <= scores.length; j++) {
+				ctx.fillText(j, curr_x, base + (bottom_padding * 0.3));
 				curr_x += bar_width + bar_padding;
 			}
 		} else {
 			// Mark some scores
-			for (var i = 0; i <= num_x_labels; i++) {
-				var val = Math.ceil((scores.length / num_x_labels) * i);
-				curr_x = (graph_width / num_x_labels) * i + left_padding;
+			for (var k = 0; k <= num_x_labels; k++) {
+				var val = Math.ceil((scores.length / num_x_labels) * k);
+				curr_x = (graph_width / num_x_labels) * k + left_padding;
 				ctx.fillText(val, curr_x, base + (bottom_padding * 0.3));
 			}
 		}
@@ -84,16 +84,16 @@ const CanvasComponents = {
 		var curr_y;
 		if (num_y_labels >= max) {
 			// Mark every increment
-			for (var i = 0; i <= max; i++) {
-				curr_y = base - (i / max * graph_height) + font_size / 3;
+			for (var l = 0; l <= max; l++) {
+				curr_y = base - (l / max * graph_height) + font_size / 3;
 				ctx.fillText(i, left_padding * 0.8, curr_y);
 			}
 		} else {
 			// Mark some increments
-			for (var i = 0; i <= num_y_labels; i++) {
-				var val = Math.ceil((max / num_y_labels) * i);
-				curr_y = base - (val / max * graph_height) + font_size / 3;
-				ctx.fillText(val, left_padding * 0.8, curr_y);
+			for (var m = 0; m <= num_y_labels; m++) {
+				var val2 = Math.ceil((max / num_y_labels) * m);
+				curr_y = base - (val2 / max * graph_height) + font_size / 3;
+				ctx.fillText(val2, left_padding * 0.8, curr_y);
 			}
 		}
 		
