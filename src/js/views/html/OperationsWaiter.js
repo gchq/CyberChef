@@ -1,4 +1,7 @@
-/* globals Sortable */
+import $ from 'jquery';
+import HTMLOperation from './HTMLOperation';
+import Sortable from '../../lib/Sortable';
+
 
 /**
  * Waiter to handle events related to the operations.
@@ -11,13 +14,13 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var OperationsWaiter = function(app, manager) {
-    this.app = app;
-    this.manager = manager;
-    
-    this.options = {};
-    this.remove_intent = false;
-};
+export default function OperationsWaiter(app, manager) {
+  this.app = app;
+  this.manager = manager;
+
+  this.options = {};
+  this.remove_intent = false;
+}
 
 
 /**
@@ -26,67 +29,68 @@ var OperationsWaiter = function(app, manager) {
  *
  * @param {event} e
  */
-OperationsWaiter.prototype.search_operations = function(e) {
-    var ops, selected;
-    
-    if (e.type == "search") { // Search
-        e.preventDefault();
-        ops = document.querySelectorAll("#search-results li");
-        if (ops.length) {
-            selected = this.get_selected_op(ops);
-            if (selected > -1) {
-                this.manager.recipe.add_operation(ops[selected].innerHTML);
-                this.app.auto_bake();
-            }
-        }
+OperationsWaiter.prototype.search_operations = function (e) {
+  let ops,
+    selected;
+
+  if (e.type == 'search') { // Search
+    e.preventDefault();
+    ops = document.querySelectorAll('#search-results li');
+    if (ops.length) {
+      selected = this.get_selected_op(ops);
+      if (selected > -1) {
+        this.manager.recipe.add_operation(ops[selected].innerHTML);
+        this.app.auto_bake();
+      }
     }
-    
-    if (e.keyCode == 13) { // Return
-        e.preventDefault();
-    } else if (e.keyCode == 40) { // Down
-        e.preventDefault();
-        ops = document.querySelectorAll("#search-results li");
-        if (ops.length) {
-            selected = this.get_selected_op(ops);
-            if (selected > -1) {
-                ops[selected].classList.remove("selected-op");
-            }
-            if (selected == ops.length-1) selected = -1;
-            ops[selected+1].classList.add("selected-op");
-        }
-    } else if (e.keyCode == 38) { // Up
-        e.preventDefault();
-        ops = document.querySelectorAll("#search-results li");
-        if (ops.length) {
-            selected = this.get_selected_op(ops);
-            if (selected > -1) {
-                ops[selected].classList.remove("selected-op");
-            }
-            if (selected === 0) selected = ops.length;
-            ops[selected-1].classList.add("selected-op");
-        }
-    } else {
-        var search_results_el = document.getElementById("search-results"),
-            el = e.target,
-            str = el.value;
-        
-        while (search_results_el.firstChild) {
-            search_results_el.removeChild(search_results_el.firstChild);
-        }
-        
-        $("#categories .in").collapse("hide");
-        if (str) {
-            var matched_ops = this.filter_operations(str, true),
-                matched_ops_html = "";
-            
-            for (var i = 0; i < matched_ops.length; i++) {
-                matched_ops_html += matched_ops[i].to_stub_html();
-            }
-            
-            search_results_el.innerHTML = matched_ops_html;
-            search_results_el.dispatchEvent(this.manager.oplistcreate);
-        }
+  }
+
+  if (e.keyCode == 13) { // Return
+    e.preventDefault();
+  } else if (e.keyCode == 40) { // Down
+    e.preventDefault();
+    ops = document.querySelectorAll('#search-results li');
+    if (ops.length) {
+      selected = this.get_selected_op(ops);
+      if (selected > -1) {
+        ops[selected].classList.remove('selected-op');
+      }
+      if (selected == ops.length - 1) selected = -1;
+      ops[selected + 1].classList.add('selected-op');
     }
+  } else if (e.keyCode == 38) { // Up
+    e.preventDefault();
+    ops = document.querySelectorAll('#search-results li');
+    if (ops.length) {
+      selected = this.get_selected_op(ops);
+      if (selected > -1) {
+        ops[selected].classList.remove('selected-op');
+      }
+      if (selected === 0) selected = ops.length;
+      ops[selected - 1].classList.add('selected-op');
+    }
+  } else {
+    let search_results_el = document.getElementById('search-results'),
+      el = e.target,
+      str = el.value;
+
+    while (search_results_el.firstChild) {
+      search_results_el.removeChild(search_results_el.firstChild);
+    }
+
+    $('#categories .in').collapse('hide');
+    if (str) {
+      let matched_ops = this.filter_operations(str, true),
+        matched_ops_html = '';
+
+      for (let i = 0; i < matched_ops.length; i++) {
+        matched_ops_html += matched_ops[i].to_stub_html();
+      }
+
+      search_results_el.innerHTML = matched_ops_html;
+      search_results_el.dispatchEvent(this.manager.oplistcreate);
+    }
+  }
 };
 
 
@@ -98,32 +102,32 @@ OperationsWaiter.prototype.search_operations = function(e) {
  *   name and description
  * @returns {string[]}
  */
-OperationsWaiter.prototype.filter_operations = function(search_str, highlight) {
-    var matched_ops = [],
-        matched_descs = [];
-    
-    search_str = search_str.toLowerCase();
-    
-    for (var op_name in this.app.operations) {
-        var op = this.app.operations[op_name],
-            name_pos = op_name.toLowerCase().indexOf(search_str),
-            desc_pos = op.description.toLowerCase().indexOf(search_str);
-        
-        if (name_pos >= 0 || desc_pos >= 0) {
-            var operation = new HTMLOperation(op_name, this.app.operations[op_name], this.app, this.manager);
-            if (highlight) {
-                operation.highlight_search_string(search_str, name_pos, desc_pos);
-            }
-            
-            if (name_pos < 0) {
-                matched_ops.push(operation);
-            } else {
-                matched_descs.push(operation);
-            }
-        }
+OperationsWaiter.prototype.filter_operations = function (search_str, highlight) {
+  let matched_ops = [],
+    matched_descs = [];
+
+  search_str = search_str.toLowerCase();
+
+  for (const op_name in this.app.operations) {
+    let op = this.app.operations[op_name],
+      name_pos = op_name.toLowerCase().indexOf(search_str),
+      desc_pos = op.description.toLowerCase().indexOf(search_str);
+
+    if (name_pos >= 0 || desc_pos >= 0) {
+      const operation = new HTMLOperation(op_name, this.app.operations[op_name], this.app, this.manager);
+      if (highlight) {
+        operation.highlight_search_string(search_str, name_pos, desc_pos);
+      }
+
+      if (name_pos < 0) {
+        matched_ops.push(operation);
+      } else {
+        matched_descs.push(operation);
+      }
     }
-    
-    return matched_descs.concat(matched_ops);
+  }
+
+  return matched_descs.concat(matched_ops);
 };
 
 
@@ -134,13 +138,13 @@ OperationsWaiter.prototype.filter_operations = function(search_str, highlight) {
  * @param {element[]} ops
  * @returns {number}
  */
-OperationsWaiter.prototype.get_selected_op = function(ops) {
-    for (var i = 0; i < ops.length; i++) {
-        if (ops[i].classList.contains("selected-op")) {
-            return i;
-        }
+OperationsWaiter.prototype.get_selected_op = function (ops) {
+  for (let i = 0; i < ops.length; i++) {
+    if (ops[i].classList.contains('selected-op')) {
+      return i;
     }
-    return -1;
+  }
+  return -1;
 };
 
 
@@ -150,9 +154,9 @@ OperationsWaiter.prototype.get_selected_op = function(ops) {
  * @listens Manager#oplistcreate
  * @param {event} e
  */
-OperationsWaiter.prototype.op_list_create = function(e) {
-    this.manager.recipe.create_sortable_seed_list(e.target);
-    $("[data-toggle=popover]").popover();
+OperationsWaiter.prototype.op_list_create = function (e) {
+  this.manager.recipe.create_sortable_seed_list(e.target);
+  $('[data-toggle=popover]').popover();
 };
 
 
@@ -162,11 +166,11 @@ OperationsWaiter.prototype.op_list_create = function(e) {
  *
  * @param {event} e
  */
-OperationsWaiter.prototype.operation_dblclick = function(e) {
-    var li = e.target;
-    
-    this.manager.recipe.add_operation(li.textContent);
-    this.app.auto_bake();
+OperationsWaiter.prototype.operation_dblclick = function (e) {
+  const li = e.target;
+
+  this.manager.recipe.add_operation(li.textContent);
+  this.app.auto_bake();
 };
 
 
@@ -176,50 +180,48 @@ OperationsWaiter.prototype.operation_dblclick = function(e) {
  *
  * @param {event} e
  */
-OperationsWaiter.prototype.edit_favourites_click = function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
+OperationsWaiter.prototype.edit_favourites_click = function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+
     // Add favourites to modal
-    var fav_cat = this.app.categories.filter(function(c) {
-        return c.name == "Favourites";
-    })[0];
-    
-    var html = "";
-    for (var i = 0; i < fav_cat.ops.length; i++) {
-        var op_name = fav_cat.ops[i];
-        var operation = new HTMLOperation(op_name, this.app.operations[op_name], this.app, this.manager);
-        html += operation.to_stub_html(true);
-    }
-    
-    var edit_favourites_list = document.getElementById("edit-favourites-list");
-    edit_favourites_list.innerHTML = html;
+  const fav_cat = this.app.categories.filter(c => c.name == 'Favourites')[0];
+
+  let html = '';
+  for (let i = 0; i < fav_cat.ops.length; i++) {
+    const op_name = fav_cat.ops[i];
+    const operation = new HTMLOperation(op_name, this.app.operations[op_name], this.app, this.manager);
+    html += operation.to_stub_html(true);
+  }
+
+  const edit_favourites_list = document.getElementById('edit-favourites-list');
+  edit_favourites_list.innerHTML = html;
+  this.remove_intent = false;
+
+  const editable_list = Sortable.create(edit_favourites_list, {
+    filter: '.remove-icon',
+    onFilter(evt) {
+      const el = editable_list.closest(evt.item);
+      if (el) {
+        $(el).popover('destroy');
+        el.parentNode.removeChild(el);
+      }
+    },
+    onEnd: function (evt) {
+      if (this.remove_intent) evt.item.remove();
+    }.bind(this),
+  });
+
+  Sortable.utils.on(edit_favourites_list, 'dragleave', () => {
+    this.remove_intent = true;
+  });
+
+  Sortable.utils.on(edit_favourites_list, 'dragover', () => {
     this.remove_intent = false;
-    
-    var editable_list = Sortable.create(edit_favourites_list, {
-        filter: '.remove-icon',
-        onFilter: function (evt) {
-            var el = editable_list.closest(evt.item);
-            if (el) {
-                $(el).popover("destroy");
-                el.parentNode.removeChild(el);
-            }
-        },
-        onEnd: function(evt) {
-            if (this.remove_intent) evt.item.remove();
-        }.bind(this),
-    });
-    
-    Sortable.utils.on(edit_favourites_list, "dragleave", function() {
-         this.remove_intent = true;
-    }.bind(this));
-    
-    Sortable.utils.on(edit_favourites_list, "dragover", function() {
-         this.remove_intent = false;
-    }.bind(this));
-    
-    $("#edit-favourites-list [data-toggle=popover]").popover();
-    $("#favourites-modal").modal();
+  });
+
+  $('#edit-favourites-list [data-toggle=popover]').popover();
+  $('#favourites-modal').modal();
 };
 
 
@@ -227,18 +229,18 @@ OperationsWaiter.prototype.edit_favourites_click = function(e) {
  * Handler for save favourites click events.
  * Saves the selected favourites and reloads them.
  */
-OperationsWaiter.prototype.save_favourites_click = function() {
-    var favourites_list = [],
-        favs = document.querySelectorAll("#edit-favourites-list li");
-    
-    for (var i = 0; i < favs.length; i++) {
-        favourites_list.push(favs[i].textContent);
-    }
+OperationsWaiter.prototype.save_favourites_click = function () {
+  let favourites_list = [],
+    favs = document.querySelectorAll('#edit-favourites-list li');
 
-    this.app.save_favourites(favourites_list);
-    this.app.load_favourites();
-    this.app.populate_operations_list();
-    this.manager.recipe.initialise_operation_drag_n_drop();
+  for (let i = 0; i < favs.length; i++) {
+    favourites_list.push(favs[i].textContent);
+  }
+
+  this.app.save_favourites(favourites_list);
+  this.app.load_favourites();
+  this.app.populate_operations_list();
+  this.manager.recipe.initialise_operation_drag_n_drop();
 };
 
 
@@ -246,8 +248,8 @@ OperationsWaiter.prototype.save_favourites_click = function() {
  * Handler for reset favourites click events.
  * Resets favourites to their defaults.
  */
-OperationsWaiter.prototype.reset_favourites_click = function() {
-    this.app.reset_favourites();
+OperationsWaiter.prototype.reset_favourites_click = function () {
+  this.app.reset_favourites();
 };
 
 
@@ -257,11 +259,11 @@ OperationsWaiter.prototype.reset_favourites_click = function() {
  *
  * @param {event} e
  */
-OperationsWaiter.prototype.op_icon_mouseover = function(e) {
-    var op_el = e.target.parentNode;
-    if (e.target.getAttribute("data-toggle") == "popover") {
-        $(op_el).popover("hide");
-    }
+OperationsWaiter.prototype.op_icon_mouseover = function (e) {
+  const op_el = e.target.parentNode;
+  if (e.target.getAttribute('data-toggle') == 'popover') {
+    $(op_el).popover('hide');
+  }
 };
 
 
@@ -272,11 +274,11 @@ OperationsWaiter.prototype.op_icon_mouseover = function(e) {
  *
  * @param {event} e
  */
-OperationsWaiter.prototype.op_icon_mouseleave = function(e) {
-    var op_el = e.target.parentNode,
-        to_el = e.toElement || e.relatedElement;
-    
-    if (e.target.getAttribute("data-toggle") == "popover" && to_el === op_el) {
-        $(op_el).popover("show");
-    }
+OperationsWaiter.prototype.op_icon_mouseleave = function (e) {
+  let op_el = e.target.parentNode,
+    to_el = e.toElement || e.relatedElement;
+
+  if (e.target.getAttribute('data-toggle') == 'popover' && to_el === op_el) {
+    $(op_el).popover('show');
+  }
 };

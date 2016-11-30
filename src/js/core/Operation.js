@@ -1,3 +1,6 @@
+import Dish from './Dish';
+import Ingredient from './Ingredient';
+
 /**
  * The Operation specified by the user to be run.
  *
@@ -9,22 +12,22 @@
  * @param {string} operation_name
  * @param {Object} operation_config
  */
-var Operation = function(operation_name, operation_config) {
-    this.name              = operation_name;
-    this.description       = "";
-    this.input_type        = -1;
-    this.output_type       = -1;
-    this.run               = null;
-    this.highlight         = null;
-    this.highlight_reverse = null;
-    this.breakpoint        = false;
-    this.disabled          = false;
-    this.ing_list          = [];
-    
-    if (operation_config) {
-        this._parse_config(operation_config);
-    }
-};
+export default function Operation(operation_name, operation_config) {
+  this.name = operation_name;
+  this.description = '';
+  this.input_type = -1;
+  this.output_type = -1;
+  this.run = null;
+  this.highlight = null;
+  this.highlight_reverse = null;
+  this.breakpoint = false;
+  this.disabled = false;
+  this.ing_list = [];
+
+  if (operation_config) {
+    this._parse_config(operation_config);
+  }
+}
 
 
 /**
@@ -33,20 +36,20 @@ var Operation = function(operation_name, operation_config) {
  * @private
  * @param {Object} operation_config
  */
-Operation.prototype._parse_config = function(operation_config) {
-    this.description       = operation_config.description;
-    this.input_type        = Dish.type_enum(operation_config.input_type);
-    this.output_type       = Dish.type_enum(operation_config.output_type);
-    this.run               = operation_config.run;
-    this.highlight         = operation_config.highlight;
-    this.highlight_reverse = operation_config.highlight_reverse;
-    this.flow_control      = operation_config.flow_control;
+Operation.prototype._parse_config = function (operation_config) {
+  this.description = operation_config.description;
+  this.input_type = Dish.type_enum(operation_config.input_type);
+  this.output_type = Dish.type_enum(operation_config.output_type);
+  this.run = operation_config.run;
+  this.highlight = operation_config.highlight;
+  this.highlight_reverse = operation_config.highlight_reverse;
+  this.flow_control = operation_config.flow_control;
 
-    for (var a = 0; a < operation_config.args.length; a++) {
-        var ingredient_config = operation_config.args[a];
-        var ingredient = new Ingredient(ingredient_config);
-        this.add_ingredient(ingredient);
-    }
+  for (let a = 0; a < operation_config.args.length; a++) {
+    const ingredient_config = operation_config.args[a];
+    const ingredient = new Ingredient(ingredient_config);
+    this.add_ingredient(ingredient);
+  }
 };
 
 
@@ -55,19 +58,19 @@ Operation.prototype._parse_config = function(operation_config) {
  *
  * @returns {Object}
  */
-Operation.prototype.get_config = function() {
-    var ingredient_config = [];
-    
-    for (var o = 0; o < this.ing_list.length; o++) {
-        ingredient_config.push(this.ing_list[o].get_config());
-    }
-    
-    var operation_config = {
-        "op": this.name,
-        "args": ingredient_config
-    };
-    
-    return operation_config;
+Operation.prototype.get_config = function () {
+  const ingredient_config = [];
+
+  for (let o = 0; o < this.ing_list.length; o++) {
+    ingredient_config.push(this.ing_list[o].get_config());
+  }
+
+  const operation_config = {
+    op: this.name,
+    args: ingredient_config,
+  };
+
+  return operation_config;
 };
 
 
@@ -76,8 +79,8 @@ Operation.prototype.get_config = function() {
  *
  * @param {Ingredient} ingredient
  */
-Operation.prototype.add_ingredient = function(ingredient) {
-    this.ing_list.push(ingredient);
+Operation.prototype.add_ingredient = function (ingredient) {
+  this.ing_list.push(ingredient);
 };
 
 
@@ -86,10 +89,10 @@ Operation.prototype.add_ingredient = function(ingredient) {
  *
  * @param {Object[]} ing_values
  */
-Operation.prototype.set_ing_values = function(ing_values) {
-    for (var i = 0; i < ing_values.length; i++) {
-        this.ing_list[i].set_value(ing_values[i]);
-    }
+Operation.prototype.set_ing_values = function (ing_values) {
+  for (let i = 0; i < ing_values.length; i++) {
+    this.ing_list[i].set_value(ing_values[i]);
+  }
 };
 
 
@@ -98,12 +101,12 @@ Operation.prototype.set_ing_values = function(ing_values) {
  *
  * @returns {Object[]}
  */
-Operation.prototype.get_ing_values = function() {
-    var ing_values = [];
-    for (var i = 0; i < this.ing_list.length; i++) {
-        ing_values.push(this.ing_list[i].value);
-    }
-    return ing_values;
+Operation.prototype.get_ing_values = function () {
+  const ing_values = [];
+  for (let i = 0; i < this.ing_list.length; i++) {
+    ing_values.push(this.ing_list[i].value);
+  }
+  return ing_values;
 };
 
 
@@ -112,8 +115,8 @@ Operation.prototype.get_ing_values = function() {
  *
  * @param {boolean} value
  */
-Operation.prototype.set_breakpoint = function(value) {
-    this.breakpoint = !!value;
+Operation.prototype.set_breakpoint = function (value) {
+  this.breakpoint = !!value;
 };
 
 
@@ -122,8 +125,8 @@ Operation.prototype.set_breakpoint = function(value) {
  *
  * @returns {boolean}
  */
-Operation.prototype.is_breakpoint = function() {
-    return this.breakpoint;
+Operation.prototype.is_breakpoint = function () {
+  return this.breakpoint;
 };
 
 
@@ -132,8 +135,8 @@ Operation.prototype.is_breakpoint = function() {
  *
  * @param {boolean} value
  */
-Operation.prototype.set_disabled = function(value) {
-    this.disabled = !!value;
+Operation.prototype.set_disabled = function (value) {
+  this.disabled = !!value;
 };
 
 
@@ -142,8 +145,8 @@ Operation.prototype.set_disabled = function(value) {
  *
  * @returns {boolean}
  */
-Operation.prototype.is_disabled = function() {
-    return this.disabled;
+Operation.prototype.is_disabled = function () {
+  return this.disabled;
 };
 
 
@@ -152,6 +155,6 @@ Operation.prototype.is_disabled = function() {
  *
  * @returns {boolean}
  */
-Operation.prototype.is_flow_control = function() {
-    return this.flow_control;
+Operation.prototype.is_flow_control = function () {
+  return this.flow_control;
 };

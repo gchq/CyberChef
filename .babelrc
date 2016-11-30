@@ -1,0 +1,16 @@
+{
+    "env": {
+        "test": {
+            "plugins": ["istanbul"]
+        }
+    },
+    "plugins": ["transform-runtime"],
+    "presets": [
+        ["env", {
+            "targets": {
+                "node": "current"
+            }
+        }]
+    ],
+    "sourceMaps": "inline"
+}

@@ -28,7 +28,25 @@
     "type": "git",
     "url": ""
   },
+  "scripts": {
+    "build": "./node_modules/.bin/webpack --bail",
+    "start": "./node_modules/.bin/webpack-dev-server --progress",
+    "eslint": "./node_modules/.bin/eslint ."
+  },
   "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.8",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-env": "^0.0.9",
+    "babel-register": "^6.18.0",
+    "css-loader": "^0.26.0",
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "extract-text-webpack-plugin": "2.0.0-beta.4",
+    "file-loader": "^0.9.0",
     "grunt": "~0.4.5",
     "grunt-chmod": "~1.1.1",
     "grunt-contrib-clean": "~1.0.0",
@@ -42,6 +60,36 @@
     "grunt-exec": "~0.4.6",
     "grunt-inline-alt": "~0.3.10",
     "grunt-jsdoc": "^1.1.0",
-    "ink-docstrap": "^1.1.4"
+    "html-webpack-plugin": "^2.24.1",
+    "imports-loader": "^0.6.5",
+    "ink-docstrap": "^1.1.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "style-loader": "^0.13.1",
+    "unused-files-webpack-plugin2": "^3.0.2",
+    "webpack": "2.1.0-beta.27",
+    "webpack-dev-server": "2.1.0-beta.12"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-colorpicker": "^2.3.6",
+    "bootstrap-switch": "^3.3.2",
+    "core-js": "^2.4.1",
+    "crypto-js": "^3.1.8",
+    "escodegen": "^1.8.1",
+    "esmangle": "^1.0.1",
+    "esprima": "^3.1.2",
+    "estraverse": "^4.2.0",
+    "google-code-prettify": "^1.0.5",
+    "jquery": "^3.1.1",
+    "json-loader": "^0.5.4",
+    "jsrsasign": "^6.2.2",
+    "moment": "^2.17.0",
+    "moment-timezone": "^0.5.10",
+    "node-bzip": "^0.0.1-2",
+    "sladex-blowfish": "^0.8.1",
+    "split.js": "^1.1.1",
+    "vkbeautify": "^0.99.1",
+    "zlibjs": "^0.2.0"
   }
 }

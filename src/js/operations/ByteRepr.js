@@ -1,4 +1,5 @@
-/* globals app */
+import Utils from '../core/Utils';
+
 
 /**
  * Byte representation operations.
@@ -9,24 +10,24 @@
  *
  * @namespace
  */
-var ByteRepr = {
+const ByteRepr = {
 
     /**
      * @constant
      * @default
      */
-    DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF"],
+  DELIM_OPTIONS: ['Space', 'Comma', 'Semi-colon', 'Colon', 'Line feed', 'CRLF'],
     /**
      * @constant
      * @default
      */
-    HEX_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"],
+  HEX_DELIM_OPTIONS: ['Space', 'Comma', 'Semi-colon', 'Colon', 'Line feed', 'CRLF', '0x', '\\x', 'None'],
     /**
      * @constant
      * @default
      */
-    BIN_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "None"],
-    
+  BIN_DELIM_OPTIONS: ['Space', 'Comma', 'Semi-colon', 'Colon', 'Line feed', 'CRLF', 'None'],
+
     /**
      * To Hex operation.
      *
@@ -34,12 +35,12 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_hex: function(input, args) {
-        var delim = Utils.char_rep[args[0] || "Space"];
-        return Utils.to_hex(input, delim, 2);
-    },
-    
-    
+  run_to_hex(input, args) {
+    const delim = Utils.char_rep[args[0] || 'Space'];
+    return Utils.to_hex(input, delim, 2);
+  },
+
+
     /**
      * From Hex operation.
      *
@@ -47,18 +48,18 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {byte_array}
      */
-    run_from_hex: function(input, args) {
-        var delim = args[0] || "Space";
-        return Utils.from_hex(input, delim, 2);
-    },
-    
-    
+  run_from_hex(input, args) {
+    const delim = args[0] || 'Space';
+    return Utils.from_hex(input, delim, 2);
+  },
+
+
     /**
      * @constant
      * @default
      */
-    CHARCODE_BASE: 16,
-    
+  CHARCODE_BASE: 16,
+
     /**
      * To Charcode operation.
      *
@@ -66,40 +67,40 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_charcode: function(input, args) {
-        var delim = Utils.char_rep[args[0] || "Space"],
-            base = args[1],
-            output = "",
-            padding = 2,
-            ordinal;
-            
-        if (base < 2 || base > 36) {
-            throw "Error: Base argument must be between 2 and 36";
-        }
-            
-        for (var i = 0; i < input.length; i++) {
-            ordinal = Utils.ord(input[i]);
-            
-            if (base == 16) {
-                if (ordinal < 256) padding = 2;
-                else if (ordinal < 65536) padding = 4;
-                else if (ordinal < 16777216) padding = 6;
-                else if (ordinal < 4294967296) padding = 8;
-                else padding = 2;
-                
-                if (padding > 2) app.options.attempt_highlight = false;
-                
-                output += Utils.hex(ordinal, padding) + delim;
-            } else {
-                app.options.attempt_highlight = false;
-                output += ordinal.toString(base) + delim;
-            }
-        }
-        
-        return output.slice(0, -delim.length);
-    },
-    
-    
+  run_to_charcode(input, args) {
+    let delim = Utils.char_rep[args[0] || 'Space'],
+      base = args[1],
+      output = '',
+      padding = 2,
+      ordinal;
+
+    if (base < 2 || base > 36) {
+      throw 'Error: Base argument must be between 2 and 36';
+    }
+
+    for (let i = 0; i < input.length; i++) {
+      ordinal = Utils.ord(input[i]);
+
+      if (base == 16) {
+        if (ordinal < 256) padding = 2;
+        else if (ordinal < 65536) padding = 4;
+        else if (ordinal < 16777216) padding = 6;
+        else if (ordinal < 4294967296) padding = 8;
+        else padding = 2;
+
+        if (padding > 2) window.app.options.attempt_highlight = false;
+
+        output += Utils.hex(ordinal, padding) + delim;
+      } else {
+        window.app.options.attempt_highlight = false;
+        output += ordinal.toString(base) + delim;
+      }
+    }
+
+    return output.slice(0, -delim.length);
+  },
+
+
     /**
      * From Charcode operation.
      *
@@ -107,37 +108,37 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {byte_array}
      */
-    run_from_charcode: function(input, args) {
-        var delim = Utils.char_rep[args[0] || "Space"],
-            base = args[1],
-            bites = input.split(delim),
-            i = 0;
-            
-        if (base < 2 || base > 36) {
-            throw "Error: Base argument must be between 2 and 36";
-        }
-        
-        if (base != 16) {
-            app.options.attempt_highlight = false;
-        }
-        
-        // Split into groups of 2 if the whole string is concatenated and 
+  run_from_charcode(input, args) {
+    let delim = Utils.char_rep[args[0] || 'Space'],
+      base = args[1],
+      bites = input.split(delim),
+      i = 0;
+
+    if (base < 2 || base > 36) {
+      throw 'Error: Base argument must be between 2 and 36';
+    }
+
+    if (base != 16) {
+      window.app.options.attempt_highlight = false;
+    }
+
+        // Split into groups of 2 if the whole string is concatenated and
         // too long to be a single character
-        if (bites.length == 1 && input.length > 17) {
-            bites = [];
-            for (i = 0; i < input.length; i += 2) {
-                bites.push(input.slice(i, i+2));
-            }
-        }
-        
-        var latin1 = "";
-        for (i = 0; i < bites.length; i++) {
-            latin1 += Utils.chr(parseInt(bites[i], base));
-        }
-        return Utils.str_to_byte_array(latin1);
-    },
-    
-    
+    if (bites.length == 1 && input.length > 17) {
+      bites = [];
+      for (i = 0; i < input.length; i += 2) {
+        bites.push(input.slice(i, i + 2));
+      }
+    }
+
+    let latin1 = '';
+    for (i = 0; i < bites.length; i++) {
+      latin1 += Utils.chr(parseInt(bites[i], base));
+    }
+    return Utils.str_to_byte_array(latin1);
+  },
+
+
     /**
      * Highlight to hex
      *
@@ -147,22 +148,22 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {Object[]} pos
      */
-    highlight_to: function(pos, args) {
-        var delim = Utils.char_rep[args[0] || "Space"],
-            len = delim == "\r\n" ? 1 : delim.length;
-            
-        pos[0].start = pos[0].start * (2 + len);
-        pos[0].end = pos[0].end * (2 + len) - len;
-        
+  highlight_to(pos, args) {
+    let delim = Utils.char_rep[args[0] || 'Space'],
+      len = delim == '\r\n' ? 1 : delim.length;
+
+    pos[0].start = pos[0].start * (2 + len);
+    pos[0].end = pos[0].end * (2 + len) - len;
+
         // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
-        if (delim == "0x" || delim == "\\x") {
-            pos[0].start += 2;
-            pos[0].end   += 2;
-        }
-        return pos;
-    },
-    
-    
+    if (delim == '0x' || delim == '\\x') {
+      pos[0].start += 2;
+      pos[0].end += 2;
+    }
+    return pos;
+  },
+
+
     /**
      * Highlight to hex
      *
@@ -172,25 +173,25 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {Object[]} pos
      */
-    highlight_from: function(pos, args) {
-        var delim = Utils.char_rep[args[0] || "Space"],
-            len = delim == "\r\n" ? 1 : delim.length,
-            width = len + 2;
-        
+  highlight_from(pos, args) {
+    let delim = Utils.char_rep[args[0] || 'Space'],
+      len = delim == '\r\n' ? 1 : delim.length,
+      width = len + 2;
+
         // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
-        if (delim == "0x" || delim == "\\x") {
-            if (pos[0].start > 1) pos[0].start -= 2;
-            else pos[0].start = 0;
-            if (pos[0].end > 1) pos[0].end -= 2;
-            else pos[0].end = 0;
-        }
-        
-        pos[0].start = pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
-        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / width);
-        return pos;
-    },
-    
-    
+    if (delim == '0x' || delim == '\\x') {
+      if (pos[0].start > 1) pos[0].start -= 2;
+      else pos[0].start = 0;
+      if (pos[0].end > 1) pos[0].end -= 2;
+      else pos[0].end = 0;
+    }
+
+    pos[0].start = pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
+    pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / width);
+    return pos;
+  },
+
+
     /**
      * To Decimal operation.
      *
@@ -198,12 +199,12 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_decimal: function(input, args) {
-        var delim = Utils.char_rep[args[0]];
-        return input.join(delim);
-    },
-    
-    
+  run_to_decimal(input, args) {
+    const delim = Utils.char_rep[args[0]];
+    return input.join(delim);
+  },
+
+
     /**
      * From Decimal operation.
      *
@@ -211,19 +212,19 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {byte_array}
      */
-    run_from_decimal: function(input, args) {
-        var delim = Utils.char_rep[args[0]];
-        var byte_str = input.split(delim), output = [];
-        if (byte_str[byte_str.length-1] === "")
-            byte_str = byte_str.slice(0, byte_str.length-1);
-        
-        for (var i = 0; i < byte_str.length; i++) {
-            output[i] = parseInt(byte_str[i]);
-        }
-        return output;
-    },
-    
-    
+  run_from_decimal(input, args) {
+    const delim = Utils.char_rep[args[0]];
+    let byte_str = input.split(delim),
+      output = [];
+    if (byte_str[byte_str.length - 1] === '') { byte_str = byte_str.slice(0, byte_str.length - 1); }
+
+    for (let i = 0; i < byte_str.length; i++) {
+      output[i] = parseInt(byte_str[i]);
+    }
+    return output;
+  },
+
+
     /**
      * To Binary operation.
      *
@@ -231,23 +232,23 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_binary: function(input, args) {
-        var delim = Utils.char_rep[args[0] || "Space"],
-            output = "",
-            padding = 8;
-            
-        for (var i = 0; i < input.length; i++) {
-            output += Utils.pad(input[i].toString(2), padding) + delim;
-        }
-        
-        if (delim.length) {
-            return output.slice(0, -delim.length);
-        } else {
-            return output;
-        }
-    },
-    
-    
+  run_to_binary(input, args) {
+    let delim = Utils.char_rep[args[0] || 'Space'],
+      output = '',
+      padding = 8;
+
+    for (let i = 0; i < input.length; i++) {
+      output += Utils.pad(input[i].toString(2), padding) + delim;
+    }
+
+    if (delim.length) {
+      return output.slice(0, -delim.length);
+    } else {
+      return output;
+    }
+  },
+
+
     /**
      * From Binary operation.
      *
@@ -255,21 +256,21 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {byte_array}
      */
-    run_from_binary: function(input, args) {
-        if (args[0] != "None") {
-            var delim_regex = Utils.regex_rep[args[0] || "Space"];
-            input = input.replace(delim_regex, '');
-        }
-        
-        var output = [];
-        var byte_len = 8;
-        for (var i = 0; i < input.length; i += byte_len) {
-            output.push(parseInt(input.substr(i, byte_len), 2));
-        }
-        return output;
-    },
-    
-    
+  run_from_binary(input, args) {
+    if (args[0] != 'None') {
+      const delim_regex = Utils.regex_rep[args[0] || 'Space'];
+      input = input.replace(delim_regex, '');
+    }
+
+    const output = [];
+    const byte_len = 8;
+    for (let i = 0; i < input.length; i += byte_len) {
+      output.push(parseInt(input.substr(i, byte_len), 2));
+    }
+    return output;
+  },
+
+
     /**
      * Highlight to binary
      *
@@ -279,14 +280,14 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {Object[]} pos
      */
-    highlight_to_binary: function(pos, args) {
-        var delim = Utils.char_rep[args[0] || "Space"];
-        pos[0].start = pos[0].start * (8 + delim.length);
-        pos[0].end = pos[0].end * (8 + delim.length) - delim.length;
-        return pos;
-    },
-    
-    
+  highlight_to_binary(pos, args) {
+    const delim = Utils.char_rep[args[0] || 'Space'];
+    pos[0].start = pos[0].start * (8 + delim.length);
+    pos[0].end = pos[0].end * (8 + delim.length) - delim.length;
+    return pos;
+  },
+
+
     /**
      * Highlight from binary
      *
@@ -296,25 +297,25 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {Object[]} pos
      */
-    highlight_from_binary: function(pos, args) {
-        var delim = Utils.char_rep[args[0] || "Space"];
-        pos[0].start = pos[0].start === 0 ? 0 : Math.floor(pos[0].start / (8 + delim.length));
-        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / (8 + delim.length));
-        return pos;
-    },
-    
-    
+  highlight_from_binary(pos, args) {
+    const delim = Utils.char_rep[args[0] || 'Space'];
+    pos[0].start = pos[0].start === 0 ? 0 : Math.floor(pos[0].start / (8 + delim.length));
+    pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / (8 + delim.length));
+    return pos;
+  },
+
+
     /**
      * @constant
      * @default
      */
-    HEX_CONTENT_CONVERT_WHICH: ["Only special chars", "Only special chars including spaces", "All chars"],
+  HEX_CONTENT_CONVERT_WHICH: ['Only special chars', 'Only special chars including spaces', 'All chars'],
     /**
      * @constant
      * @default
      */
-    HEX_CONTENT_SPACES_BETWEEN_BYTES: false,
-    
+  HEX_CONTENT_SPACES_BETWEEN_BYTES: false,
+
     /**
      * To Hex Content operation.
      *
@@ -322,40 +323,40 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_hex_content: function(input, args) {
-        var convert = args[0];
-        var spaces = args[1];
-        if (convert == "All chars") {
-            var result = "|" + Utils.to_hex(input) + "|";
-            if (!spaces) result = result.replace(/ /g, "");
-            return result;
+  run_to_hex_content(input, args) {
+    const convert = args[0];
+    const spaces = args[1];
+    if (convert == 'All chars') {
+      let result = `|${Utils.to_hex(input)}|`;
+      if (!spaces) result = result.replace(/ /g, '');
+      return result;
+    }
+
+    let output = '',
+      in_hex = false,
+      convert_spaces = convert == 'Only special chars including spaces',
+      b;
+    for (let i = 0; i < input.length; i++) {
+      b = input[i];
+      if ((b == 32 && convert_spaces) || (b < 48 && b != 32) || (b > 57 && b < 65) || (b > 90 && b < 97) || b > 122) {
+        if (!in_hex) {
+          output += '|';
+          in_hex = true;
+        } else if (spaces) output += ' ';
+        output += Utils.to_hex([b]);
+      } else {
+        if (in_hex) {
+          output += '|';
+          in_hex = false;
         }
-        
-        var output = "",
-            in_hex = false,
-            convert_spaces = convert == "Only special chars including spaces",
-            b;
-        for (var i = 0; i < input.length; i++) {
-            b = input[i];
-            if ((b == 32 && convert_spaces) || (b < 48 && b != 32) || (b > 57 && b < 65) || (b > 90 && b < 97) || b > 122) {
-                if (!in_hex) {
-                    output += "|";
-                    in_hex = true;
-                } else if (spaces) output += " ";
-                output += Utils.to_hex([b]);
-            } else {
-                if (in_hex) {
-                    output += "|";
-                    in_hex = false;
-                }
-                output += Utils.chr(input[i]);
-            }
-        }
-        if (in_hex) output += "|";
-        return output;
-    },
-    
-    
+        output += Utils.chr(input[i]);
+      }
+    }
+    if (in_hex) output += '|';
+    return output;
+  },
+
+
     /**
      * From Hex Content operation.
      *
@@ -363,32 +364,38 @@ var ByteRepr = {
      * @param {Object[]} args
      * @returns {byte_array}
      */
-    run_from_hex_content: function(input, args) {
-        var regex = /\|([a-f\d ]{2,})\|/gi;
-        var output = [], m, i = 0;
-        while (!!(m = regex.exec(input))) {
+  run_from_hex_content(input, args) {
+    const regex = /\|([a-f\d ]{2,})\|/gi;
+    let output = [],
+      m,
+      i = 0;
+    while (m = regex.exec(input)) {
             // Add up to match
-            for (; i < m.index;)
-                output.push(Utils.ord(input[i++]));
-            
+      for (; i < m.index;) {
+        output.push(Utils.ord(input[i++]));
+      }
+
             // Add match
-            var bytes = Utils.from_hex(m[1]);
-            if (bytes) {
-                for (var a = 0; a < bytes.length;)
-                    output.push(bytes[a++]);
-            } else {
+      const bytes = Utils.from_hex(m[1]);
+      if (bytes) {
+        for (let a = 0; a < bytes.length;) { output.push(bytes[a++]); }
+      } else {
                 // Not valid hex, print as normal
-                for (; i < regex.lastIndex;)
-                    output.push(Utils.ord(input[i++]));
-            }
-            
-            i = regex.lastIndex;
+        for (; i < regex.lastIndex;) {
+          output.push(Utils.ord(input[i++]));
         }
+      }
+
+      i = regex.lastIndex;
+    }
         // Add all after final match
-        for (; i < input.length;)
-            output.push(Utils.ord(input[i++]));
-        
-        return output;
-    },
+    for (; i < input.length;) {
+      output.push(Utils.ord(input[i++]));
+    }
+
+    return output;
+  },
 
 };
+
+export default ByteRepr;

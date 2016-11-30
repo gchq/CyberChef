@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /**
  * Waiter to handle events related to the CyberChef options.
  *
@@ -8,9 +10,9 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-var OptionsWaiter = function(app) {
-    this.app = app;
-};
+export default function OptionsWaiter(app) {
+  this.app = app;
+}
 
 
 /**
@@ -18,33 +20,33 @@ var OptionsWaiter = function(app) {
  *
  * @param {Object} options
  */
-OptionsWaiter.prototype.load = function(options) {
-    $(".option-item input:checkbox").bootstrapSwitch({
-        size: "small",
-        animate: false,
-    });
-    
-    for (var option in options) {
-        this.app.options[option] = options[option];
-    }
-    
-    // Set options to match object
-    var cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
-    for (var i = 0; i < cboxes.length; i++) {
-        $(cboxes[i]).bootstrapSwitch("state", this.app.options[cboxes[i].getAttribute("option")]);
-    }
+OptionsWaiter.prototype.load = function (options) {
+  $('.option-item input:checkbox').bootstrapSwitch({
+    size: 'small',
+    animate: false,
+  });
 
-    var nboxes = document.querySelectorAll("#options-body input[type=number]");
-    for (i = 0; i < nboxes.length; i++) {
-        nboxes[i].value = this.app.options[nboxes[i].getAttribute("option")];
-        nboxes[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
-    }
-    
-    var selects = document.querySelectorAll("#options-body select");
-    for (i = 0; i < selects.length; i++) {
-        selects[i].value = this.app.options[selects[i].getAttribute("option")];
-        selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
-    }
+  for (const option in options) {
+    this.app.options[option] = options[option];
+  }
+
+    // Set options to match object
+  const cboxes = document.querySelectorAll('#options-body input[type=checkbox]');
+  for (var i = 0; i < cboxes.length; i++) {
+    $(cboxes[i]).bootstrapSwitch('state', this.app.options[cboxes[i].getAttribute('option')]);
+  }
+
+  const nboxes = document.querySelectorAll('#options-body input[type=number]');
+  for (i = 0; i < nboxes.length; i++) {
+    nboxes[i].value = this.app.options[nboxes[i].getAttribute('option')];
+    nboxes[i].dispatchEvent(new CustomEvent('change', { bubbles: true }));
+  }
+
+  const selects = document.querySelectorAll('#options-body select');
+  for (i = 0; i < selects.length; i++) {
+    selects[i].value = this.app.options[selects[i].getAttribute('option')];
+    selects[i].dispatchEvent(new CustomEvent('change', { bubbles: true }));
+  }
 };
 
 
@@ -52,8 +54,8 @@ OptionsWaiter.prototype.load = function(options) {
  * Handler for options click events.
  * Dispays the options pane.
  */
-OptionsWaiter.prototype.options_click = function() {
-    $("#options-modal").modal();
+OptionsWaiter.prototype.options_click = function () {
+  $('#options-modal').modal();
 };
 
 
@@ -61,8 +63,8 @@ OptionsWaiter.prototype.options_click = function() {
  * Handler for reset options click events.
  * Resets options back to their default values.
  */
-OptionsWaiter.prototype.reset_options_click = function() {
-    this.load(this.app.doptions);
+OptionsWaiter.prototype.reset_options_click = function () {
+  this.load(this.app.doptions);
 };
 
 
@@ -73,12 +75,12 @@ OptionsWaiter.prototype.reset_options_click = function() {
  * @param {event} e
  * @param {boolean} state
  */
-OptionsWaiter.prototype.switch_change = function(e, state) {
-    var el = e.target,
-        option = el.getAttribute("option");
-        
-    this.app.options[option] = state;
-    localStorage.setItem("options", JSON.stringify(this.app.options));
+OptionsWaiter.prototype.switch_change = function (e, state) {
+  let el = e.target,
+    option = el.getAttribute('option');
+
+  this.app.options[option] = state;
+  localStorage.setItem('options', JSON.stringify(this.app.options));
 };
 
 
@@ -88,12 +90,12 @@ OptionsWaiter.prototype.switch_change = function(e, state) {
  *
  * @param {event} e
  */
-OptionsWaiter.prototype.number_change = function(e) {
-    var el = e.target,
-        option = el.getAttribute("option");
-        
-    this.app.options[option] = parseInt(el.value, 10);
-    localStorage.setItem("options", JSON.stringify(this.app.options));
+OptionsWaiter.prototype.number_change = function (e) {
+  let el = e.target,
+    option = el.getAttribute('option');
+
+  this.app.options[option] = parseInt(el.value, 10);
+  localStorage.setItem('options', JSON.stringify(this.app.options));
 };
 
 
@@ -103,30 +105,30 @@ OptionsWaiter.prototype.number_change = function(e) {
  *
  * @param {event} e
  */
-OptionsWaiter.prototype.select_change = function(e) {
-    var el = e.target,
-        option = el.getAttribute("option");
-        
-    this.app.options[option] = el.value;
-    localStorage.setItem("options", JSON.stringify(this.app.options));
+OptionsWaiter.prototype.select_change = function (e) {
+  let el = e.target,
+    option = el.getAttribute('option');
+
+  this.app.options[option] = el.value;
+  localStorage.setItem('options', JSON.stringify(this.app.options));
 };
 
 
 /**
  * Sets or unsets word wrap on the input and output depending on the word_wrap option value.
  */
-OptionsWaiter.prototype.set_word_wrap = function() {
-    document.getElementById("input-text").classList.remove("word-wrap");
-    document.getElementById("output-text").classList.remove("word-wrap");
-    document.getElementById("output-html").classList.remove("word-wrap");
-    document.getElementById("input-highlighter").classList.remove("word-wrap");
-    document.getElementById("output-highlighter").classList.remove("word-wrap");
-    
-    if (!this.app.options.word_wrap) {
-        document.getElementById("input-text").classList.add("word-wrap");
-        document.getElementById("output-text").classList.add("word-wrap");
-        document.getElementById("output-html").classList.add("word-wrap");
-        document.getElementById("input-highlighter").classList.add("word-wrap");
-        document.getElementById("output-highlighter").classList.add("word-wrap");
-    }
+OptionsWaiter.prototype.set_word_wrap = function () {
+  document.getElementById('input-text').classList.remove('word-wrap');
+  document.getElementById('output-text').classList.remove('word-wrap');
+  document.getElementById('output-html').classList.remove('word-wrap');
+  document.getElementById('input-highlighter').classList.remove('word-wrap');
+  document.getElementById('output-highlighter').classList.remove('word-wrap');
+
+  if (!this.app.options.word_wrap) {
+    document.getElementById('input-text').classList.add('word-wrap');
+    document.getElementById('output-text').classList.add('word-wrap');
+    document.getElementById('output-html').classList.add('word-wrap');
+    document.getElementById('input-highlighter').classList.add('word-wrap');
+    document.getElementById('output-highlighter').classList.add('word-wrap');
+  }
 };

@@ -1,0 +1,24 @@
+{
+
+    "extends": "eslint:recommended",
+    "parser": "babel-eslint",
+    "plugins": ["babel"],
+    "rules": { 
+        "no-unused-vars": 0,
+        "no-console": 0,
+        "no-cond-assign": 0,
+        "no-unsafe-finally": 0
+    },
+    "settings": {
+        "import/resolver": {
+            "webpack": {}
+        }
+    },
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "globals": {
+        "COMPILE_TIME": true
+    }
+}

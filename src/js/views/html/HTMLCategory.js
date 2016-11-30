@@ -9,11 +9,11 @@
  * @param {string} name - The name of the category.
  * @param {boolean} selected - Whether this category is pre-selected or not.
  */
-var HTMLCategory = function(name, selected) {
-    this.name = name;
-    this.selected = selected;
-    this.op_list = [];
-};
+export default function HTMLCategory(name, selected) {
+  this.name = name;
+  this.selected = selected;
+  this.op_list = [];
+}
 
 
 /**
@@ -21,8 +21,8 @@ var HTMLCategory = function(name, selected) {
  *
  * @param {HTMLOperation} operation - The operation to add.
  */
-HTMLCategory.prototype.add_operation = function(operation) {
-    this.op_list.push(operation);
+HTMLCategory.prototype.add_operation = function (operation) {
+  this.op_list.push(operation);
 };
 
 
@@ -31,20 +31,20 @@ HTMLCategory.prototype.add_operation = function(operation) {
  *
  * @returns {string}
  */
-HTMLCategory.prototype.to_html = function() {
-    var cat_name = "cat" + this.name.replace(/[\s/-:_]/g, "");
-    var html = "<div class='panel category'>\
+HTMLCategory.prototype.to_html = function () {
+  const cat_name = `cat${this.name.replace(/[\s/-:_]/g, '')}`;
+  let html = `<div class='panel category'>\
         <a class='category-title' data-toggle='collapse'\
-            data-parent='#categories' href='#" + cat_name + "'>\
-            " + this.name + "\
+            data-parent='#categories' href='#${cat_name}'>\
+            ${this.name}\
         </a>\
-        <div id='" + cat_name + "' class='panel-collapse collapse\
-        " + (this.selected ? " in" : "") + "'><ul class='op_list'>";
-    
-    for (var i = 0; i < this.op_list.length; i++) {
-        html += this.op_list[i].to_stub_html();
-    }
-    
-    html += "</ul></div></div>";
-    return html;
+        <div id='${cat_name}' class='panel-collapse collapse\
+        ${this.selected ? ' in' : ''}'><ul class='op_list'>`;
+
+  for (let i = 0; i < this.op_list.length; i++) {
+    html += this.op_list[i].to_stub_html();
+  }
+
+  html += '</ul></div></div>';
+  return html;
 };

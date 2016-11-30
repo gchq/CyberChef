@@ -1,4 +1,4 @@
-/* globals moment */
+import moment from 'moment';
 
 /**
  * Date and time operations.
@@ -9,14 +9,14 @@
  *
  * @namespace
  */
-var DateTime = {
-    
+const DateTime = {
+
     /**
      * @constant
      * @default
      */
-    UNITS: ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"],
-    
+  UNITS: ['Seconds (s)', 'Milliseconds (ms)', 'Microseconds (μs)', 'Nanoseconds (ns)'],
+
     /**
      * From UNIX Timestamp operation.
      *
@@ -24,30 +24,30 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_from_unix_timestamp: function(input, args) {
-        var units = args[0],
-            d;
-        
-        input = parseFloat(input);
-        
-        if (units == "Seconds (s)") {
-            d = moment.unix(input);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
-        } else if (units == "Milliseconds (ms)") {
-            d = moment(input);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
-        } else if (units == "Microseconds (μs)") {
-            d = moment(input / 1000);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
-        } else if (units == "Nanoseconds (ns)") {
-            d = moment(input / 1000000);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
-        } else {
-            throw "Unrecognised unit";
-        }
-    },
-    
-    
+  run_from_unix_timestamp(input, args) {
+    let units = args[0],
+      d;
+
+    input = parseFloat(input);
+
+    if (units == 'Seconds (s)') {
+      d = moment.unix(input);
+      return `${d.tz('UTC').format('ddd D MMMM YYYY HH:mm:ss')} UTC`;
+    } else if (units == 'Milliseconds (ms)') {
+      d = moment(input);
+      return `${d.tz('UTC').format('ddd D MMMM YYYY HH:mm:ss.SSS')} UTC`;
+    } else if (units == 'Microseconds (μs)') {
+      d = moment(input / 1000);
+      return `${d.tz('UTC').format('ddd D MMMM YYYY HH:mm:ss.SSS')} UTC`;
+    } else if (units == 'Nanoseconds (ns)') {
+      d = moment(input / 1000000);
+      return `${d.tz('UTC').format('ddd D MMMM YYYY HH:mm:ss.SSS')} UTC`;
+    } else {
+      throw 'Unrecognised unit';
+    }
+  },
+
+
     /**
      * To UNIX Timestamp operation.
      *
@@ -55,74 +55,74 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_to_unix_timestamp: function(input, args) {
-        var units = args[0],
-            d = moment(input);
-        
-        if (units == "Seconds (s)") {
-            return d.unix();
-        } else if (units == "Milliseconds (ms)") {
-            return d.valueOf();
-        } else if (units == "Microseconds (μs)") {
-            return d.valueOf() * 1000;
-        } else if (units == "Nanoseconds (ns)") {
-            return d.valueOf() * 1000000;
-        } else {
-            throw "Unrecognised unit";
-        }
+  run_to_unix_timestamp(input, args) {
+    let units = args[0],
+      d = moment(input);
+
+    if (units == 'Seconds (s)') {
+      return d.unix();
+    } else if (units == 'Milliseconds (ms)') {
+      return d.valueOf();
+    } else if (units == 'Microseconds (μs)') {
+      return d.valueOf() * 1000;
+    } else if (units == 'Nanoseconds (ns)') {
+      return d.valueOf() * 1000000;
+    } else {
+      throw 'Unrecognised unit';
+    }
+  },
+
+
+    /**
+     * @constant
+     * @default
+     */
+  DATETIME_FORMATS: [
+    {
+      name: 'Standard date and time',
+      value: 'DD/MM/YYYY HH:mm:ss',
     },
-    
-    
+    {
+      name: 'American-style date and time',
+      value: 'MM/DD/YYYY HH:mm:ss',
+    },
+    {
+      name: 'International date and time',
+      value: 'YYYY-MM-DD HH:mm:ss',
+    },
+    {
+      name: 'Verbose date and time',
+      value: 'dddd Do MMMM YYYY HH:mm:ss Z z',
+    },
+    {
+      name: 'UNIX timestamp (seconds)',
+      value: 'X',
+    },
+    {
+      name: 'UNIX timestamp offset (milliseconds)',
+      value: 'x',
+    },
+    {
+      name: 'Automatic',
+      value: '',
+    },
+  ],
     /**
      * @constant
      * @default
      */
-    DATETIME_FORMATS: [
-        {
-            name: "Standard date and time",
-            value: "DD/MM/YYYY HH:mm:ss"
-        },
-        {
-            name: "American-style date and time",
-            value: "MM/DD/YYYY HH:mm:ss"
-        },
-        {
-            name: "International date and time",
-            value: "YYYY-MM-DD HH:mm:ss"
-        },
-        {
-            name: "Verbose date and time",
-            value: "dddd Do MMMM YYYY HH:mm:ss Z z"
-        },
-        {
-            name: "UNIX timestamp (seconds)",
-            value: "X"
-        },
-        {
-            name: "UNIX timestamp offset (milliseconds)",
-            value: "x"
-        },
-        {
-            name: "Automatic",
-            value: ""
-        },
-    ],
+  INPUT_FORMAT_STRING: 'DD/MM/YYYY HH:mm:ss',
     /**
      * @constant
      * @default
      */
-    INPUT_FORMAT_STRING: "DD/MM/YYYY HH:mm:ss",
+  OUTPUT_FORMAT_STRING: 'dddd Do MMMM YYYY HH:mm:ss Z z',
     /**
      * @constant
      * @default
      */
-    OUTPUT_FORMAT_STRING: "dddd Do MMMM YYYY HH:mm:ss Z z",
-    /**
-     * @constant
-     * @default
-     */
-    TIMEZONES: ["UTC"].concat(moment.tz.names()),
-    
+  TIMEZONES: ['UTC'].concat(moment.tz.names()),
+
     /**
      * Translate DateTime Format operation.
      *
@@ -130,24 +130,24 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_translate_format: function(input, args) {
-        var input_format = args[1],
-            input_timezone = args[2],
-            output_format = args[3],
-            output_timezone = args[4],
-            date;
+  run_translate_format(input, args) {
+    let input_format = args[1],
+      input_timezone = args[2],
+      output_format = args[3],
+      output_timezone = args[4],
+      date;
 
-        try {
-            date = moment.tz(input, input_format, input_timezone);
-            if (!date || date.format() == "Invalid date") throw Error;
-        } catch(err) {
-            return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
-        }
-        
-        return date.tz(output_timezone).format(output_format);
-    },
-    
-    
+    try {
+      date = moment.tz(input, input_format, input_timezone);
+      if (!date || date.format() == 'Invalid date') throw Error;
+    } catch (err) {
+      return `Invalid format.\n\n${DateTime.FORMAT_EXAMPLES}`;
+    }
+
+    return date.tz(output_timezone).format(output_format);
+  },
+
+
     /**
      * Parse DateTime operation.
      *
@@ -155,39 +155,39 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_parse: function(input, args) {
-        var input_format = args[1],
-            input_timezone = args[2],
-            date,
-            output = "";
-            
-        try {
-            date = moment.tz(input, input_format, input_timezone);
-            if (!date || date.format() == "Invalid date") throw Error;
-        } catch(err) {
-            return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
-        }
-        
-        output += "Date: " + date.format("dddd Do MMMM YYYY") +
-            "\nTime: " + date.format("HH:mm:ss") +
-            "\nPeriod: " + date.format("A") +
-            "\nTimezone: " + date.format("z") +
-            "\nUTC offset: " + date.format("ZZ") +
-            "\n\nDaylight Saving Time: " + date.isDST() +
-            "\nLeap year: " + date.isLeapYear() +
-            "\nDays in this month: " + date.daysInMonth() +
-            "\n\nDay of year: " + date.dayOfYear() +
-            "\nWeek number: " + date.weekYear() +
-            "\nQuarter: " + date.quarter();
-        
-        return output;
-    },
-    
-    
+  run_parse(input, args) {
+    let input_format = args[1],
+      input_timezone = args[2],
+      date,
+      output = '';
+
+    try {
+      date = moment.tz(input, input_format, input_timezone);
+      if (!date || date.format() == 'Invalid date') throw Error;
+    } catch (err) {
+      return `Invalid format.\n\n${DateTime.FORMAT_EXAMPLES}`;
+    }
+
+    output += `Date: ${date.format('dddd Do MMMM YYYY')
+            }\nTime: ${date.format('HH:mm:ss')
+            }\nPeriod: ${date.format('A')
+            }\nTimezone: ${date.format('z')
+            }\nUTC offset: ${date.format('ZZ')
+            }\n\nDaylight Saving Time: ${date.isDST()
+            }\nLeap year: ${date.isLeapYear()
+            }\nDays in this month: ${date.daysInMonth()
+            }\n\nDay of year: ${date.dayOfYear()
+            }\nWeek number: ${date.weekYear()
+            }\nQuarter: ${date.quarter()}`;
+
+    return output;
+  },
+
+
     /**
      * @constant
      */
-    FORMAT_EXAMPLES: "Format string tokens:\n\n\
+  FORMAT_EXAMPLES: "Format string tokens:\n\n\
 <table class='table table-striped table-hover table-condensed table-bordered' style='font-family: sans-serif'>\
   <thead>\
     <tr>\
@@ -450,5 +450,7 @@ var DateTime = {
   </tbody>\
 </table>",
 
-    
+
 };
+
+export default DateTime;
