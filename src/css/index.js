@@ -1,5 +1,5 @@
 import './lib/bootstrap-colorpicker.css';
-import './lib/prettify.css';
+import 'google-code-prettify/src/prettify.css';
 import 'bootstrap/less/bootstrap.less';
 import './lib/bootstrap-switch.css';
 import './lib/jquery.splitter.css';
