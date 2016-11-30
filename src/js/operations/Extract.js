@@ -330,29 +330,18 @@ var Extract = {
         }
 
         var serializer = new XMLSerializer();
-        var output = "";
-        for (var i = 0; i < result.length; i++) {
-            if (i > 0) output +=  delimiter;
-
-            switch (result[i].nodeType) {
-                case Node.ELEMENT_NODE:
-                    output += serializer.serializeToString(result[i]);
-                    break;
-                case Node.ATTRIBUTE_NODE:
-                    output += result[i].value;
-                    break;
-                case Node.TEXT_NODE:
-                    output += result[i].wholeText;
-                    break;
-                case Node.COMMENT_NODE:
-                    output += result[i].data;
-                    break;
-                default:
-                    throw new Error("Unknown Node Type: " + result[i].nodeType);
+        var nodeToString = function(node) {
+            const { nodeType, value, wholeText, data } = node;
+            switch (nodeType) {
+                case Node.ELEMENT_NODE: return serializer.serializeToString(node);
+                case Node.ATTRIBUTE_NODE: return value;
+                case Node.COMMENT_NODE: return data;
+                default: throw new Error(`Unknown Node Type: ${nodeType}`);
             }
         }
 
-        return output;
+        return Object.values(result).slice(0, -1) // all values except last (length)
+            .map(nodeToString)
+            .join(delimiter);
     }
-
 };

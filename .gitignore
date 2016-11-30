@@ -4,4 +4,3 @@ build/dev
 docs/*
 !docs/*.conf.json
 !docs/*.ico
-.idea/*
