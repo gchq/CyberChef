@@ -3,7 +3,6 @@ import HTMLOperation from './HTMLOperation';
 import Sortable from '../../lib/Sortable';
 
 
-
 /**
  * Waiter to handle events related to the operations.
  *

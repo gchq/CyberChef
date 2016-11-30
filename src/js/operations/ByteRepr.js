@@ -1,7 +1,6 @@
 import Utils from '../core/Utils';
 
 
-
 /**
  * Byte representation operations.
  *

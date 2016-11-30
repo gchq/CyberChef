@@ -126,13 +126,13 @@ const IP = {
                 // Teredo tunneling
         output += '\nTeredo tunneling IPv6 address detected\n';
         let server_ipv4 = (ipv6[2] << 16) + ipv6[3],
-            udp_port = (~ipv6[5]) & 0xffff,
-            client_ipv4 = ~((ipv6[6] << 16) + ipv6[7]),
-            flag_cone = (ipv6[4] >>> 15) & 1,
-            flag_r = (ipv6[4] >>> 14) & 1,
-            flag_random1 = (ipv6[4] >>> 10) & 15,
-            flag_ug = (ipv6[4] >>> 8) & 3,
-            flag_random2 = ipv6[4] & 255;
+          udp_port = (~ipv6[5]) & 0xffff,
+          client_ipv4 = ~((ipv6[6] << 16) + ipv6[7]),
+          flag_cone = (ipv6[4] >>> 15) & 1,
+          flag_r = (ipv6[4] >>> 14) & 1,
+          flag_random1 = (ipv6[4] >>> 10) & 15,
+          flag_ug = (ipv6[4] >>> 8) & 3,
+          flag_random2 = ipv6[4] & 255;
 
         output += `\nServer IPv4 address: ${IP._ipv4_to_str(server_ipv4)
                     }\nClient IPv4 address: ${IP._ipv4_to_str(client_ipv4)
@@ -141,76 +141,76 @@ const IP = {
                     `\n\tCone:    ${flag_cone}`;
 
         if (flag_cone) {
-            output += ' (Client is behind a cone NAT)';
-          } else {
-            output += ' (Client is not behind a cone NAT)';
-          }
+          output += ' (Client is behind a cone NAT)';
+        } else {
+          output += ' (Client is not behind a cone NAT)';
+        }
 
         output += `\n\tR:       ${flag_r}`;
 
         if (flag_r) {
-            output += ' Error: This flag should be set to 0. See RFC 5991 and RFC 4380.';
-          }
+          output += ' Error: This flag should be set to 0. See RFC 5991 and RFC 4380.';
+        }
 
         output += `\n\tRandom1: ${Utils.bin(flag_random1, 4)
                     }\n\tUG:      ${Utils.bin(flag_ug, 2)}`;
 
         if (flag_ug) {
-            output += ' Error: This flag should be set to 00. See RFC 4380.';
-          }
+          output += ' Error: This flag should be set to 00. See RFC 4380.';
+        }
 
         output += `\n\tRandom2: ${Utils.bin(flag_random2, 8)}`;
 
         if (!flag_r && !flag_ug && flag_random1 && flag_random2) {
-            output += '\n\nThis is a valid Teredo address which complies with RFC 4380 and RFC 5991.';
-          } else if (!flag_r && !flag_ug) {
-              output += '\n\nThis is a valid Teredo address which complies with RFC 4380, however it does not comply with RFC 5991 (Teredo Security Updates) as there are no randomised bits in the flag field.';
-            } else {
-              output += '\n\nThis is an invalid Teredo address.';
-            }
+          output += '\n\nThis is a valid Teredo address which complies with RFC 4380 and RFC 5991.';
+        } else if (!flag_r && !flag_ug) {
+          output += '\n\nThis is a valid Teredo address which complies with RFC 4380, however it does not comply with RFC 5991 (Teredo Security Updates) as there are no randomised bits in the flag field.';
+        } else {
+          output += '\n\nThis is an invalid Teredo address.';
+        }
         output += '\n\nTeredo prefix range: 2001::/32';
       } else if (ipv6[0] === 0x2001 && ipv6[1] === 0x2 && ipv6[2] === 0) {
                 // Benchmarking
-          output += '\nAssigned to the Benchmarking Methodology Working Group (BMWG) for benchmarking IPv6. Corresponds to 198.18.0.0/15 for benchmarking IPv4. See RFC 5180 for more details.';
-          output += '\nBMWG range: 2001:2::/48';
-        } else if (ipv6[0] == 0x2001 && ipv6[1] >= 0x10 && ipv6[1] <= 0x1f) {
+        output += '\nAssigned to the Benchmarking Methodology Working Group (BMWG) for benchmarking IPv6. Corresponds to 198.18.0.0/15 for benchmarking IPv4. See RFC 5180 for more details.';
+        output += '\nBMWG range: 2001:2::/48';
+      } else if (ipv6[0] == 0x2001 && ipv6[1] >= 0x10 && ipv6[1] <= 0x1f) {
                 // ORCHIDv1
-            output += '\nDeprecated, previously ORCHIDv1 (Overlay Routable Cryptographic Hash Identifiers).\nORCHIDv1 range: 2001:10::/28\nORCHIDv2 now uses 2001:20::/28.';
-          } else if (ipv6[0] == 0x2001 && ipv6[1] >= 0x20 && ipv6[1] <= 0x2f) {
+        output += '\nDeprecated, previously ORCHIDv1 (Overlay Routable Cryptographic Hash Identifiers).\nORCHIDv1 range: 2001:10::/28\nORCHIDv2 now uses 2001:20::/28.';
+      } else if (ipv6[0] == 0x2001 && ipv6[1] >= 0x20 && ipv6[1] <= 0x2f) {
                 // ORCHIDv2
-              output += '\nORCHIDv2 (Overlay Routable Cryptographic Hash Identifiers).\nThese are non-routed IPv6 addresses used for Cryptographic Hash Identifiers.';
-              output += '\nORCHIDv2 range: 2001:20::/28';
-            } else if (ipv6[0] == 0x2001 && ipv6[1] == 0xdb8) {
+        output += '\nORCHIDv2 (Overlay Routable Cryptographic Hash Identifiers).\nThese are non-routed IPv6 addresses used for Cryptographic Hash Identifiers.';
+        output += '\nORCHIDv2 range: 2001:20::/28';
+      } else if (ipv6[0] == 0x2001 && ipv6[1] == 0xdb8) {
                 // Documentation
-              output += '\nThis is a documentation IPv6 address. This range should be used whenever an example IPv6 address is given or to model networking scenarios. Corresponds to 192.0.2.0/24, 198.51.100.0/24, and 203.0.113.0/24 in IPv4.';
-              output += '\nDocumentation range: 2001:db8::/32';
-            } else if (ipv6[0] == 0x2002) {
+        output += '\nThis is a documentation IPv6 address. This range should be used whenever an example IPv6 address is given or to model networking scenarios. Corresponds to 192.0.2.0/24, 198.51.100.0/24, and 203.0.113.0/24 in IPv4.';
+        output += '\nDocumentation range: 2001:db8::/32';
+      } else if (ipv6[0] == 0x2002) {
                 // 6to4
-              output += '\n6to4 transition IPv6 address detected. See RFC 3056 for more details.' +
+        output += '\n6to4 transition IPv6 address detected. See RFC 3056 for more details.' +
                     '\n6to4 prefix range: 2002::/16';
 
-              let v4_addr = IP._ipv4_to_str((ipv6[1] << 16) + ipv6[2]),
-                sla_id = ipv6[3],
-                interface_id_str = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
-                interface_id = new BigInteger(interface_id_str, 16);
+        let v4_addr = IP._ipv4_to_str((ipv6[1] << 16) + ipv6[2]),
+          sla_id = ipv6[3],
+          interface_id_str = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
+          interface_id = new BigInteger(interface_id_str, 16);
 
-              output += `\n\nEncapsulated IPv4 address: ${v4_addr
+        output += `\n\nEncapsulated IPv4 address: ${v4_addr
                     }\nSLA ID: ${sla_id
                     }\nInterface ID (base 16): ${interface_id_str
                     }\nInterface ID (base 10): ${interface_id.toString()}`;
-            } else if (ipv6[0] >= 0xfc00 && ipv6[0] <= 0xfdff) {
+      } else if (ipv6[0] >= 0xfc00 && ipv6[0] <= 0xfdff) {
                 // Unique local address
-              output += '\nThis is a unique local address comparable to the IPv4 private addresses 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. See RFC 4193 for more details.';
-              output += '\nUnique local addresses range: fc00::/7';
-            } else if (ipv6[0] >= 0xfe80 && ipv6[0] <= 0xfebf) {
+        output += '\nThis is a unique local address comparable to the IPv4 private addresses 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. See RFC 4193 for more details.';
+        output += '\nUnique local addresses range: fc00::/7';
+      } else if (ipv6[0] >= 0xfe80 && ipv6[0] <= 0xfebf) {
                 // Link-local address
-              output += '\nThis is a link-local address comparable to the auto-configuration addresses 169.254.0.0/16 in IPv4.';
-              output += '\nLink-local addresses range: fe80::/10';
-            } else if (ipv6[0] >= 0xff00) {
+        output += '\nThis is a link-local address comparable to the auto-configuration addresses 169.254.0.0/16 in IPv4.';
+        output += '\nLink-local addresses range: fe80::/10';
+      } else if (ipv6[0] >= 0xff00) {
                 // Multicast
-              output += '\nThis is a reserved multicast address.';
-              output += '\nMulticast addresses range: ff00::/8';
-            }
+        output += '\nThis is a reserved multicast address.';
+        output += '\nMulticast addresses range: ff00::/8';
+      }
     } else {
       return 'Invalid IPv6 address';
     }

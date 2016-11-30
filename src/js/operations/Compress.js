@@ -16,7 +16,7 @@ const Zlib = {
   Gunzip: zlibAndGzip.Zlib.Gunzip,
   Zip: zip.Zlib.Zip,
   Unzip: zip.Zlib.Unzip,
-}
+};
 
 
 /**

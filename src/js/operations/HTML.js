@@ -160,7 +160,7 @@ const HTML = {
      * @returns {html}
      */
   run_parse_colour_code(input, args) {
-    var m = null,
+    let m = null,
       r = 0,
       g = 0,
       b = 0,
@@ -201,7 +201,7 @@ const HTML = {
       b = Math.round(255 * (1 - y_) * (1 - k_));
     }
 
-    var hsl_ = HTML._rgb_to_hsl(r, g, b),
+    let hsl_ = HTML._rgb_to_hsl(r, g, b),
       h = Math.round(hsl_[0] * 360),
       s = Math.round(hsl_[1] * 100),
       l = Math.round(hsl_[2] * 100),
@@ -226,7 +226,7 @@ const HTML = {
       cmyk = `cmyk(${c}, ${m}, ${y}, ${k})`;
 
         // Generate output
-    return `${"<div data-cyber-chef-func='colorpicker' data-rgba='" + rgba + "' id='colorpicker' style='display: inline-block'></div>" +
+    return `${`<div data-cyber-chef-func='colorpicker' data-rgba='${rgba}' id='colorpicker' style='display: inline-block'></div>` +
             'Hex:  '}${hex}\n` +
             `RGB:  ${rgb}\n` +
             `RGBA: ${rgba}\n` +
