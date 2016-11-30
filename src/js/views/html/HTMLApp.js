@@ -436,7 +436,8 @@ HTMLApp.prototype.set_recipe_config = function(recipe_config) {
             } else if (args[j].classList.contains("toggle-string")) {
                 // toggle_string
                 args[j].value = recipe_config[i].args[j].string;
-                args[j].previousSibling.children[0].innerHTML = recipe_config[i].args[j].option +
+                args[j].previousSibling.children[0].innerHTML =
+                    Utils.escape_html(recipe_config[i].args[j].option) +
                     " <span class='caret'></span>";
             } else {
                 // all others
