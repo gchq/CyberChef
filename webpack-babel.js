@@ -34,6 +34,7 @@ function css(target) {
     return extractCSS.extract({
       fallbackLoader: 'style-loader',
       loader: `${cssOptions}${loader}`,
+      publicPath: '../',
     });
   }
 

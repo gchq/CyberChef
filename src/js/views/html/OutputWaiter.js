@@ -1,4 +1,21 @@
+import $ from 'jquery';
 import Utils from '../../core/Utils';
+
+const inlineFuncs = {
+  colorpicker({ rgba }) {
+    $('#colorpicker').colorpicker({
+        format: 'rgba',
+        color: rgba,
+        container: true,
+        inline: true,
+    }).on('changeColor', function(e) {
+        const { r, g, b, a} = e.color.toRGB();
+        const css = `rgba(${r}, ${g}, ${b}, ${a})`;
+        document.getElementById('input-text').value = css;
+        window.app.auto_bake();
+    });
+  }
+}
 
 /**
  * Waiter to handle events related to the output.
@@ -50,10 +67,13 @@ OutputWaiter.prototype.set = function (data_str, type, duration) {
     output_html.innerHTML = data_str;
 
         // Execute script sections
-    const script_elements = output_html.querySelectorAll('script');
+    const script_elements = output_html.querySelectorAll('[data-cyber-chef-func]');
     for (let i = 0; i < script_elements.length; i++) {
+      const el = script_elements[i];
+      const data = el.dataset;
+      const func = inlineFuncs[data.cyberChefFunc];
       try {
-        eval(script_elements[i].innerHTML); // jshint ignore:line
+        func(data);
       } catch (err) {
         console.error(err);
       }

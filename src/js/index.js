@@ -5,4 +5,5 @@ import 'bootstrap/js/collapse';
 import 'bootstrap/js/modal';
 import 'bootstrap/js/tooltip';
 import 'bootstrap/js/popover';
+import 'bootstrap-colorpicker';
 import './views/html/main.js';
