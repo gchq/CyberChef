@@ -1,6 +1,6 @@
 import './lib/bootstrap-colorpicker.css';
 import './lib/prettify.css';
-import './lib/bootstrap3.min.css';
+import 'bootstrap/less/bootstrap.less';
 import './lib/bootstrap-switch.css';
 import './lib/jquery.splitter.css';
 import './structure/overrides.css';

@@ -63,6 +63,8 @@
     "html-webpack-plugin": "^2.24.1",
     "imports-loader": "^0.6.5",
     "ink-docstrap": "^1.1.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
     "style-loader": "^0.13.1",
     "unused-files-webpack-plugin2": "^3.0.2",
     "webpack": "2.1.0-beta.27",
