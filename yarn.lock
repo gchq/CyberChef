@@ -4905,6 +4905,12 @@ unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
 
+unused-files-webpack-plugin2@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/unused-files-webpack-plugin2/-/unused-files-webpack-plugin2-3.0.2.tgz#e4d63ae5f6cae588962532134184c7a9d349d918"
+  dependencies:
+    glob "^7.0.3"
+
 upper-case-first@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/upper-case-first/-/upper-case-first-1.1.2.tgz#5d79bedcff14419518fd2edb0a0507c9b6859115"

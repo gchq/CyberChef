@@ -64,6 +64,7 @@
     "imports-loader": "^0.6.5",
     "ink-docstrap": "^1.1.4",
     "style-loader": "^0.13.1",
+    "unused-files-webpack-plugin2": "^3.0.2",
     "webpack": "2.1.0-beta.27",
     "webpack-dev-server": "2.1.0-beta.12"
   },

@@ -3,6 +3,7 @@ import webpack from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import UnusedFilesWebpackPlugin from 'unused-files-webpack-plugin2';
 
 const imageLoader = 'file-loader?name=img/[name]-[sha512:hash:base64:7].[ext]';
 const fontLoader = 'file-loader?name=fnt/[name]-[sha512:hash:base64:7].[ext]';
@@ -138,6 +139,10 @@ export default {
     }),
     new webpack.DefinePlugin({
       COMPILE_TIME: JSON.stringify(new Date()),
-    })
+    }),
+    new UnusedFilesWebpackPlugin({
+      failOnUnused: true,
+      pattern: 'src/**/*.*',
+    }),
   ],
 };
