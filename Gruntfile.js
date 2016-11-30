@@ -431,7 +431,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: "src/js/**/*.js",
-                tasks: ["concat:js_all", "chmod:build"]
+                tasks: ["concat:js", "chmod:build"]
             },
             html: {
                 files: "src/html/**/*.html",
@@ -443,7 +443,7 @@ module.exports = function(grunt) {
             },
             grunt: {
                 files: "Gruntfile.js",
-                tasks: ["clean:dev", "concat:css", "concat:js_all", "copy:html_dev", "copy:static_dev", "chmod:build"]
+                tasks: ["clean:dev", "concat:css", "concat:js", "copy:html_dev", "copy:static_dev", "chmod:build"]
             }
         },
     });
