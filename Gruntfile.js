@@ -355,9 +355,16 @@ module.exports = function(grunt) {
                     css: "type='text/css'"
                 }
             },
-            prod: {
+            compiled: {
                 src: "build/prod/cyberchef.htm",
                 dest: "build/prod/cyberchef.htm"
+            },
+            prod: {
+                options: {
+                    tag: "__inline"
+                },
+                src: "build/prod/index.html",
+                dest: "build/prod/index.html"
             }
         },
         chmod: {
@@ -424,7 +431,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: "src/js/**/*.js",
-                tasks: ["concat:js_all", "chmod:build"]
+                tasks: ["concat:js", "chmod:build"]
             },
             html: {
                 files: "src/html/**/*.html",
@@ -436,7 +443,7 @@ module.exports = function(grunt) {
             },
             grunt: {
                 files: "Gruntfile.js",
-                tasks: ["clean:dev", "concat:css", "concat:js_all", "copy:html_dev", "copy:static_dev", "chmod:build"]
+                tasks: ["clean:dev", "concat:css", "concat:js", "copy:html_dev", "copy:static_dev", "chmod:build"]
             }
         },
     });

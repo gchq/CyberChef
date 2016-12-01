@@ -279,8 +279,8 @@ HTMLApp.prototype.valid_favourites = function(favourites) {
         if (this.operations.hasOwnProperty(favourites[i])) {
             valid_favs.push(favourites[i]);
         } else {
-            this.alert("The operation \"" + favourites[i] + "\" is no longer " +
-                "available. It has been removed from your favourites.", "info");
+            this.alert("The operation \"" + Utils.escape_html(favourites[i]) +
+                "\" is no longer available. It has been removed from your favourites.", "info");
         }
     }
     return valid_favs;
@@ -436,7 +436,8 @@ HTMLApp.prototype.set_recipe_config = function(recipe_config) {
             } else if (args[j].classList.contains("toggle-string")) {
                 // toggle_string
                 args[j].value = recipe_config[i].args[j].string;
-                args[j].previousSibling.children[0].innerHTML = recipe_config[i].args[j].option +
+                args[j].previousSibling.children[0].innerHTML =
+                    Utils.escape_html(recipe_config[i].args[j].option) +
                     " <span class='caret'></span>";
             } else {
                 // all others
