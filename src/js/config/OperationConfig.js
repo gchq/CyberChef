@@ -1911,6 +1911,24 @@ var OperationConfig = {
             }
         ]
     },
+    "CSS selector": {
+        description: "Extract information from an HTML document with an CSS selector",
+        run: Extract.run_css_query,
+        input_type: "string",
+        output_type: "string",
+        args: [
+            {
+                name: "CSS selector",
+                type: "string",
+                value: Extract.SELECTOR_INITIAL
+            },
+            {
+                name: "Delimiter",
+                type: "binary_short_string",
+                value: Extract.CSS_QUERY_DELIMITER
+            },
+        ]
+    },
     "From UNIX Timestamp": {
         description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code>",
         run: DateTime.run_from_unix_timestamp,

@@ -314,8 +314,8 @@ var Extract = {
      * @returns {string}
      */
     run_xpath:function(input, args) {
-        var query = args[0];
-        var delimiter = args[1];
+        const query = args[0];
+        const delimiter = args[1];
 
         try {
             var xml = $.parseXML(input);
@@ -329,7 +329,7 @@ var Extract = {
             return "Invalid XPath. Details:\n" + err.message;
         }
 
-        var serializer = new XMLSerializer();
+        const serializer = new XMLSerializer();
         const nodeToString = function(node) {
             const { nodeType, value, wholeText, data } = node;
             switch (nodeType) {
@@ -344,5 +344,59 @@ var Extract = {
         return Object.values(result).slice(0, -1) // all values except last (length)
             .map(nodeToString)
             .join(delimiter);
-    }
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    SELECTOR_INITIAL: "",
+    /**
+     * @constant
+     * @default
+     */
+    CSS_QUERY_DELIMITER: "\\n",
+
+    /**
+     * Extract information (from an hmtl document) with an css selector
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_css_query: function(input, args) {
+        const query = args[0];
+        const delimiter = args[1];
+
+        try {
+            var html = $.parseHTML(input);
+        } catch (err) {
+            return "Invalid input HTML.";
+        }
+
+        try {
+            var result = $(html).find(query);
+        } catch (err) {
+            return "Invalid CSS Selector. Details:\n" + err.message;
+        }
+
+        const nodeToString = function(node) {
+            const { nodeType, value, wholeText, data } = node;
+            switch (nodeType) {
+                case Node.ELEMENT_NODE: return node.outerHTML;
+                case Node.ATTRIBUTE_NODE: return value;
+                case Node.COMMENT_NODE: return data;
+                case Node.TEXT_NODE: return wholeText;
+                case Node.DOCUMENT_NODE: return node.outerHTML;
+                default: throw new Error(`Unknown Node Type: ${nodeType}`);
+            }
+        }
+
+        return Array.apply(null, Array(result.length))
+            .map(function (_, i) {return result[i];})
+            .map(nodeToString)
+            .join(delimiter);
+    },
+
 };
