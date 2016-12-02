@@ -508,5 +508,25 @@ var StrUtils = {
             
         return output;
     },
+
+
+    /**
+     * Script JS.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_javascript: function (input, args) {
+        try {
+            /*jshint -W061 */
+            var fn = Function("input", args);
+            /*jshint +W061 */
+            return fn(input);
+        }
+        catch (err) {
+            return "JavaScript error: " + err.message;
+        }
+    },
     
 };
