@@ -9,7 +9,8 @@ module.exports = function(grunt) {
         
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["jshint", "exec:stats", "clean", "jsdoc", "concat", "copy", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
+        ["jshint", "exec:stats", "clean", "jsdoc", "concat", "copy:html_dev", "copy:html_prod", "copy:html_inline",
+         "copy:static_dev", "copy:static_prod", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
         
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -18,6 +19,10 @@ module.exports = function(grunt) {
     grunt.registerTask("stats",
         "Provides statistics about the code base such as how many lines there are as well as details of file sizes before and after compression.",
         ["concat:js", "uglify:prod", "exec:stats", "exec:repo_size", "exec:display_stats"]);
+
+    grunt.registerTask("release",
+        "Prepares and deploys a production version of CyberChef to the gh-pages branch.",
+        ["copy:gh_pages", "exec:deploy_gh_pages"]);
     
     grunt.registerTask("default",
         "Lints the code base and shows stats",
@@ -274,7 +279,8 @@ module.exports = function(grunt) {
                         src: [
                             "**/*",
                             "**/.*",
-                            "!stats.txt"
+                            "!stats.txt",
+                            "!ga.html"
                         ],
                         dest: "build/dev/"
                     }
@@ -288,11 +294,24 @@ module.exports = function(grunt) {
                         src: [
                             "**/*",
                             "**/.*",
-                            "!stats.txt"
+                            "!stats.txt",
+                            "!ga.html"
                         ],
                         dest: "build/prod/"
                     }
                 ]
+            },
+            gh_pages: {
+                options: {
+                    process: function(content, srcpath) {
+                        // Add Google Analytics code to index.html
+                        content = content.replace("</body></html>",
+                            grunt.file.read("src/static/ga.html") + "</body></html>");
+                        return grunt.template.process(content, template_options);
+                    }
+                },
+                src: "build/prod/index.html",
+                dest: "build/prod/index.html"
             }
         },
         uglify: {
@@ -423,6 +442,15 @@ module.exports = function(grunt) {
             clean_git: {
                 command: "git gc --prune=now --aggressive"
             },
+            deploy_gh_pages: {
+                command: [
+                        "git add build/prod/index.html -v",
+                        "git commit -m 'GitHub Pages release'",
+                        "git push origin `git subtree split --prefix build/prod master`:gh-pages --force",
+                        "git reset HEAD~",
+                        "git checkout build/prod/index.html"
+                ].join(";")
+            }
         },
         watch: {
             css: {
