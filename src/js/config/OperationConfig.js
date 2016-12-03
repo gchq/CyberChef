@@ -209,7 +209,7 @@ var OperationConfig = {
         ]
     },
     "XOR": {
-        description: "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Differential:</u> Set the key to the value of the previously decoded byte.",
+        description: "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Scheme:</u><ul><li>Standard - key is unchanged after each round</li><li>Input differential - key is set to the value of the previous unprocessed byte</li><li>Output differential - key is set to the value of the previous processed byte</li></ul>",
         run: BitwiseOp.run_xor,
         highlight: true,
         highlight_reverse: true,
@@ -223,14 +223,14 @@ var OperationConfig = {
                 toggle_values: BitwiseOp.KEY_FORMAT
             },
             {
+                name: "Scheme",
+                type: "option",
+                value: BitwiseOp.XOR_SCHEME
+            },
+            {
                 name: "Null preserving",
                 type: "boolean",
                 value: BitwiseOp.XOR_PRESERVE_NULLS
-            },
-            {
-                name: "Differential",
-                type: "boolean",
-                value: BitwiseOp.XOR_DIFFERENTIAL
             }
         ]
     },

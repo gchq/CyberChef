@@ -445,7 +445,8 @@ module.exports = function(grunt) {
             deploy_gh_pages: {
                 command: [
                         "git add build/prod/index.html -v",
-                        "git commit -m 'GitHub Pages release'",
+                        "COMMIT_HASH=$(git rev-parse HEAD)",
+                        "git commit -m \"GitHub Pages release for ${COMMIT_HASH}\"",
                         "git push origin `git subtree split --prefix build/prod master`:gh-pages --force",
                         "git reset HEAD~",
                         "git checkout build/prod/index.html"
