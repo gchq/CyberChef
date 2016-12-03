@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 202	source files
 104241	lines
 	size
@@ -5,14 +6,28 @@
 136	JavaScript source files
 95169	lines
 3.5M	size
+=======
+203	source files
+104218	lines
+4.0M	size
+
+136	JavaScript source files
+95128	lines
+3.4M	size
+>>>>>>> master
 
 78	third party JavaScript source files
 76377	lines
 2.8M	size
 
 58	first party JavaScript source files
+<<<<<<< HEAD
 18792	lines
 736K	size
+=======
+18751	lines
+724K	size
+>>>>>>> master
 
 3.2M	uncompressed JavaScript size
 1.7M	compressed JavaScript size

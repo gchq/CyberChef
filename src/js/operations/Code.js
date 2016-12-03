@@ -64,6 +64,7 @@ var Code = {
      */
     run_json_beautify: function(input, args) {
         var indent_str = args[0];
+        if (!input) return "";
         return vkbeautify.json(input, indent_str);
     },
     
@@ -121,6 +122,7 @@ var Code = {
      * @returns {string}
      */
     run_json_minify: function(input, args) {
+        if (!input) return "";
         return vkbeautify.jsonmin(input);
     },
     

@@ -19,10 +19,10 @@ var BitwiseOp = {
      * @param {byte_array} key
      * @param {function} func - The bitwise calculation to carry out
      * @param {boolean} null_preserving
-     * @param {boolean} differential
+     * @param {string} scheme
      * @returns {byte_array}
      */
-    _bit_op: function (input, key, func, null_preserving, differential) {
+    _bit_op: function (input, key, func, null_preserving, scheme) {
         if (!key || !key.length) key = [0];
         var result = [],
             x = null,
@@ -34,8 +34,15 @@ var BitwiseOp = {
             o = input[i];
             x = null_preserving && (o === 0 || o == k) ? o : func(o, k);
             result.push(x);
-            if (differential && !(null_preserving && (o === 0 || o == k))) {
-                key[i % key.length] = x;
+            if (scheme != "Standard" && !(null_preserving && (o === 0 || o == k))) {
+                switch (scheme) {
+                    case "Input differential":
+                        key[i % key.length] = x;
+                        break;
+                    case "Output differential":
+                        key[i % key.length] = o;
+                        break;
+                }
             }
         }
         
@@ -52,7 +59,7 @@ var BitwiseOp = {
      * @constant
      * @default
      */
-    XOR_DIFFERENTIAL: false,
+    XOR_SCHEME: ["Standard", "Input differential", "Output differential"],
     /**
      * @constant
      * @default
@@ -68,12 +75,12 @@ var BitwiseOp = {
      */
     run_xor: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string || ""),
-            null_preserving = args[1],
-            differential = args[2];
+            scheme = args[1],
+            null_preserving = args[2];
         
         key = Utils.word_array_to_byte_array(key);
             
-        return BitwiseOp._bit_op(input, key, BitwiseOp._xor, null_preserving, differential);
+        return BitwiseOp._bit_op(input, key, BitwiseOp._xor, null_preserving, scheme);
     },
     
     
