@@ -263,7 +263,7 @@ module.exports = function(grunt) {
                     process: function(content, srcpath) {
                         // TODO: Do all this in Jade
                         content = content.replace(
-                            '<a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="images/cloud_computing_download-plain-24x24.png" /></a>',
+                            '<a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="images/download-24x24.png" /></a>',
                             '<span style="float: left; margin-left: 10px;">Compile time: ' + grunt.template.today("dd/mm/yyyy HH:MM:ss") + ' UTC</span>');
                         return grunt.template.process(content, template_options);
                     }
