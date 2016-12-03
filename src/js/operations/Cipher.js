@@ -422,7 +422,7 @@ var Cipher = {
                         output += alphabet[(keyIndex + msgIndex) % 26].toUpperCase();
                     } else {
                         output += input[i];
-                        fail++
+                        fail++;
                     }
                 }
             } else {
@@ -469,7 +469,7 @@ var Cipher = {
                         output += alphabet[(msgIndex + alphabet.length - keyIndex) % 26].toUpperCase();
                     } else {
                         output += input[i];
-                        fail++
+                        fail++;
                     }
                 }
             } else {
