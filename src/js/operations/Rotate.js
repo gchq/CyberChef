@@ -151,7 +151,7 @@ var Rotate = {
 
             for (var i = 0; i < input.length; i++) {
                 chr = input[i];
-                if (chr >= 33 && chr <= 126) { // Upper case
+                if (chr >= 33 && chr <= 126) {
                     chr = (chr - 33 + amount) % 94;
                     output[i] = chr + 33;
                 }
