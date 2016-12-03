@@ -81,6 +81,8 @@ var Categories = [
             "XOR Brute Force",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "Vigenere Encode",
+            "Vigenere Decode"
         ]
     },
     {

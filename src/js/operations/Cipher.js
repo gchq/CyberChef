@@ -3,7 +3,7 @@
 /**
  * Cipher operations.
  *
- * @author n1474335 [n1474335@gmail.com]
+ * @author n1474335 [n1474335@gmail.com] & Matt C [matt@artemisbot.pw]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
@@ -385,6 +385,101 @@ var Cipher = {
         return encrypted.ciphertext.toString(Utils.format[args[2]]);
     },
     
+
+    /**
+     * @constant
+     * @default
+     */
+    VIG_ENC_KEY: "cipher",
+
+    /**
+     * Vigenere cipher encode.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_vigenc: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            keyword = args[0].toLowerCase(),
+            output = "",
+            fail = 0,
+            keyIndex,
+            msgIndex,
+            chr;
+        if (keyword) {
+            if (/^[a-zA-Z]+$/.test(keyword)) {
+                for (var i = 0; i < input.length; i++) {
+                    if (alphabet.indexOf(input[i]) >= 0) {
+                        chr = keyword[(i - fail) % keyword.length];             //Gets the corresponding character of keyword for current letter, accounting for chars not in alphabet
+                        keyIndex = alphabet.indexOf(chr);                       //Gets location in vigenere square of keyword char
+                        msgIndex = alphabet.indexOf(input[i]);                  //Gets location in vigenere square of message char
+                        output += alphabet[(keyIndex + msgIndex) % 26];        //Gets encoded letter by finding sum of indexes modulo 26 and finding the letter corresponding to that
+                    } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                        chr = keyword[(i - fail) % keyword.length].toLowerCase();
+                        keyIndex = alphabet.indexOf(chr);
+                        msgIndex = alphabet.indexOf(input[i].toLowerCase());
+                        output += alphabet[(keyIndex + msgIndex) % 26].toUpperCase();
+                    } else {
+                        output += input[i];
+                        fail++
+                    }
+                }
+            } else {
+                throw "Keyword can only consist of letters.";
+            }
+        } else {
+            throw "A keyword is required.";
+        }
+        return output;
+    },
+    /**
+     * @constant
+     * @default
+     */
+    VIG_DEC_KEY: "cipher",
+
+    /**
+     * Vigenere cipher decode.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_vigdec: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            keyword = args[0].toLowerCase(),
+            output = "",
+            fail = 0,
+            keyIndex,
+            msgIndex,
+            chr;
+        if (keyword) {
+            if (/^[a-zA-Z]+$/.test(keyword)) {
+                for (var i = 0; i < input.length; i++) {
+                    if (alphabet.indexOf(input[i]) >= 0) {
+                        chr = keyword[(i - fail) % keyword.length];
+                        keyIndex = alphabet.indexOf(chr);
+                        msgIndex = alphabet.indexOf(input[i]);
+                        output += alphabet[(msgIndex - keyIndex + alphabet.length ) % 26]; //subtract indexes from each other, add 26 just in case the value is negative, modulo to remove if neccessary
+                    } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                        chr = keyword[(i - fail) % keyword.length].toLowerCase();
+                        keyIndex = alphabet.indexOf(chr);
+                        msgIndex = alphabet.indexOf(input[i].toLowerCase());
+                        output += alphabet[(msgIndex + alphabet.length - keyIndex) % 26].toUpperCase();
+                    } else {
+                        output += input[i];
+                        fail++
+                    }
+                }
+            } else {
+                throw "Keyword can only consist of letters.";
+            }
+        } else {
+            throw "A keyword is required.";
+        }
+        return output;
+    }
 };
 
 
