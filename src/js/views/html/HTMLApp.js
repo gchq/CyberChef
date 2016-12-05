@@ -279,8 +279,8 @@ HTMLApp.prototype.valid_favourites = function(favourites) {
         if (this.operations.hasOwnProperty(favourites[i])) {
             valid_favs.push(favourites[i]);
         } else {
-            this.alert("The operation \"" + favourites[i] + "\" is no longer " +
-                "available. It has been removed from your favourites.", "info");
+            this.alert("The operation \"" + Utils.escape_html(favourites[i]) +
+                "\" is no longer available. It has been removed from your favourites.", "info");
         }
     }
     return valid_favs;
