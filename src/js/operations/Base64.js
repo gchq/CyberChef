@@ -215,21 +215,21 @@ var Base64 = {
         if (len0 % 4 == 2) {
             static_section = offset0.slice(0, -3);
             offset0 = "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64(static_section, alphabet).slice(0, -2) + "'>" +
+                Utils.escape_html(Utils.from_base64(static_section, alphabet).slice(0, -2)) + "'>" +
                 static_section + "</span>" +
                 "<span class='hlgreen'>" + offset0.substr(offset0.length - 3, 1) + "</span>" +
                 "<span class='hlred'>" + offset0.substr(offset0.length - 2) + "</span>";
         } else if (len0 % 4 == 3) {
             static_section = offset0.slice(0, -2);
             offset0 = "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64(static_section, alphabet).slice(0, -1) + "'>" +
+                Utils.escape_html(Utils.from_base64(static_section, alphabet).slice(0, -1)) + "'>" +
                 static_section + "</span>" +
                 "<span class='hlgreen'>" + offset0.substr(offset0.length - 2, 1) + "</span>" +
                 "<span class='hlred'>" + offset0.substr(offset0.length - 1) + "</span>";
         } else {
             static_section = offset0;
             offset0 = "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64(static_section, alphabet) + "'>" +
+                Utils.escape_html(Utils.from_base64(static_section, alphabet)) + "'>" +
                 static_section + "</span>";
         }
         
@@ -245,21 +245,21 @@ var Base64 = {
         if (len1 % 4 == 2) {
             static_section = offset1.slice(0, -3);
             offset1 = padding + "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64("AA" + static_section, alphabet).slice(1, -2) + "'>" +
+                Utils.escape_html(Utils.from_base64("AA" + static_section, alphabet).slice(1, -2)) + "'>" +
                 static_section + "</span>" +
                 "<span class='hlgreen'>" + offset1.substr(offset1.length - 3, 1) + "</span>" +
                 "<span class='hlred'>" + offset1.substr(offset1.length - 2) + "</span>";
         } else if (len1 % 4 == 3) {
             static_section = offset1.slice(0, -2);
              offset1 = padding + "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64("AA" + static_section, alphabet).slice(1, -1) + "'>" +
+                Utils.escape_html(Utils.from_base64("AA" + static_section, alphabet).slice(1, -1)) + "'>" +
                 static_section + "</span>" +
                 "<span class='hlgreen'>" + offset1.substr(offset1.length - 2, 1) + "</span>" +
                 "<span class='hlred'>" + offset1.substr(offset1.length - 1) + "</span>";
         } else {
             static_section = offset1;
             offset1 = padding +  "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64("AA" + static_section, alphabet).slice(1) + "'>" +
+                Utils.escape_html(Utils.from_base64("AA" + static_section, alphabet).slice(1)) + "'>" +
                 static_section + "</span>";
         }
         
@@ -274,21 +274,21 @@ var Base64 = {
         if (len2 % 4 == 2) {
             static_section = offset2.slice(0, -3);
             offset2 = padding + "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2) + "'>" +
+                Utils.escape_html(Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2)) + "'>" +
                 static_section + "</span>" +
                 "<span class='hlgreen'>" + offset2.substr(offset2.length - 3, 1) + "</span>" +
                 "<span class='hlred'>" + offset2.substr(offset2.length - 2) + "</span>";
         } else if (len2 % 4 == 3) {
             static_section = offset2.slice(0, -2);
             offset2 = padding + "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2) + "'>" +
+                Utils.escape_html(Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2)) + "'>" +
                 static_section + "</span>" +
                 "<span class='hlgreen'>" + offset2.substr(offset2.length - 2, 1) + "</span>" +
                 "<span class='hlred'>" + offset2.substr(offset2.length - 1) + "</span>";
         } else {
             static_section = offset2;
             offset2 = padding +  "<span data-toggle='tooltip' data-placement='top' title='" + 
-                Utils.from_base64("AAA" + static_section, alphabet).slice(2) + "'>" +
+                Utils.escape_html(Utils.from_base64("AAA" + static_section, alphabet).slice(2)) + "'>" +
                 static_section + "</span>";
         }
         

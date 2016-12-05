@@ -875,7 +875,10 @@ var Utils = {
      * Utils.escape_html("A <script> tag");
      */
     escape_html: function(str) {
-        return str.replace(/</g, "&lt;");
+        return str.replace(/</g, "&lt;")
+                  .replace(/'/g, "&apos;")
+                  .replace(/"/g, '&quot;')
+                  .replace(/&/g, "&amp;");
     },
 
 
