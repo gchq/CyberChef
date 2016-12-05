@@ -10,7 +10,18 @@
  * @namespace
  */
 var JS = {
+
+     /**
+     * JavaScript Obfscate operation.
+     *
+     * @param {string} input
+     * @returns {string}
+     */
     
+     run_obfscate : function(input) {
+        return require('./javascriptObfscate').obfscate(input);
+     },
+
     /**
      * @constant
      * @default
