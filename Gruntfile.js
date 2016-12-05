@@ -356,9 +356,16 @@ module.exports = function(grunt) {
                     css: "type='text/css'"
                 }
             },
-            prod: {
+            compiled: {
                 src: "build/prod/cyberchef.htm",
                 dest: "build/prod/cyberchef.htm"
+            },
+            prod: {
+                options: {
+                    tag: "__inline"
+                },
+                src: "build/prod/index.html",
+                dest: "build/prod/index.html"
             }
         },
         chmod: {
