@@ -1,4 +1,5 @@
 {
+    "esversion": 6,
     "strict": "implied",
     "multistr": true,
     "browser": true,

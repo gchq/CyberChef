@@ -317,29 +317,30 @@ var Extract = {
         const query = args[0];
         const delimiter = args[1];
 
+        var xml;
         try {
-            var xml = $.parseXML(input);
+            xml = $.parseXML(input);
         } catch (err) {
             return "Invalid input XML.";
         }
 
+        var result;
         try {
-            var result = $.xpath(xml, query);
+            result = $.xpath(xml, query);
         } catch (err) {
             return "Invalid XPath. Details:\n" + err.message;
         }
 
         const serializer = new XMLSerializer();
         const nodeToString = function(node) {
-            const { nodeType, value, wholeText, data } = node;
-            switch (nodeType) {
+            switch (node.nodeType) {
                 case Node.ELEMENT_NODE: return serializer.serializeToString(node);
-                case Node.ATTRIBUTE_NODE: return value;
-                case Node.COMMENT_NODE: return data;
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
                 case Node.DOCUMENT_NODE: return serializer.serializeToString(node);
-                default: throw new Error(`Unknown Node Type: ${nodeType}`);
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
             }
-        }
+        };
 
         return Object.values(result).slice(0, -1) // all values except last (length)
             .map(nodeToString)
@@ -369,29 +370,30 @@ var Extract = {
         const query = args[0];
         const delimiter = args[1];
 
+        var html;
         try {
-            var html = $.parseHTML(input);
+            html = $.parseHTML(input);
         } catch (err) {
             return "Invalid input HTML.";
         }
-
+        
+        var result;
         try {
-            var result = $(html).find(query);
+            result = $(html).find(query);
         } catch (err) {
             return "Invalid CSS Selector. Details:\n" + err.message;
         }
 
         const nodeToString = function(node) {
-            const { nodeType, value, wholeText, data } = node;
-            switch (nodeType) {
+            switch (node.nodeType) {
                 case Node.ELEMENT_NODE: return node.outerHTML;
-                case Node.ATTRIBUTE_NODE: return value;
-                case Node.COMMENT_NODE: return data;
-                case Node.TEXT_NODE: return wholeText;
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.ata;
+                case Node.TEXT_NODE: return node.wholeText;
                 case Node.DOCUMENT_NODE: return node.outerHTML;
-                default: throw new Error(`Unknown Node Type: ${nodeType}`);
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
             }
-        }
+        };
 
         return Array.apply(null, Array(result.length))
             .map(function (_, i) {return result[i];})
