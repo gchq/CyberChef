@@ -2340,7 +2340,7 @@ var OperationConfig = {
         args: []
     },
     "XML Beautify": {
-        description: "Indents and prettifies extensible Markup Language (XML) code.",
+        description: "Indents and prettifies eXtensible Markup Language (XML) code.",
         run: Code.run_xml_beautify,
         input_type: "string",
         output_type: "string",
