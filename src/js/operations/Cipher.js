@@ -3,7 +3,7 @@
 /**
  * Cipher operations.
  *
- * @author n1474335 [n1474335@gmail.com] & Matt C [matt@artemisbot.pw]
+ * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
@@ -395,6 +395,7 @@ var Cipher = {
     /**
      * Vigenere cipher encode.
      *
+     * @author Matt C [matt@artemisbot.pw]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -442,6 +443,7 @@ var Cipher = {
     /**
      * Vigenere cipher decode.
      *
+     * @author Matt C [matt@artemisbot.pw]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
