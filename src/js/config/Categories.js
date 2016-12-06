@@ -77,6 +77,7 @@ var Categories = [
             "RC4",
             "RC4 Drop",
             "ROT13",
+            "ROT47",
             "XOR",
             "XOR Brute Force",
             "Derive PBKDF2 key",
