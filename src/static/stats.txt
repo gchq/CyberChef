@@ -1,10 +1,18 @@
 203	source files
 <<<<<<< HEAD
+<<<<<<< HEAD
 104269	lines
 	size
 
 136	JavaScript source files
 95179	lines
+=======
+104345	lines
+	size
+
+136	JavaScript source files
+95255	lines
+>>>>>>> feature_vigenere
 3.5M	size
 =======
 104221	lines
@@ -21,15 +29,24 @@
 
 58	first party JavaScript source files
 <<<<<<< HEAD
+<<<<<<< HEAD
 18802	lines
 736K	size
+=======
+18878	lines
+740K	size
+>>>>>>> feature_vigenere
 =======
 18754	lines
 724K	size
 >>>>>>> master
 
-3.1M	uncompressed JavaScript size
+3.2M	uncompressed JavaScript size
 1.7M	compressed JavaScript size
 
 15	categories
+<<<<<<< HEAD
 153	operations
+=======
+154	operations
+>>>>>>> feature_vigenere
