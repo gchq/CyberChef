@@ -1391,7 +1391,7 @@ var OperationConfig = {
         ]
     },
     "ROT47": {
-        description: "A slightly more complex variation of a caesar cipher, which includes ASCII characters too. (default 47)",
+        description: "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.",
         run: Rotate.run_rot47,
         highlight: true,
         highlight_reverse: true,

@@ -1,7 +1,7 @@
 /**
  * Bit rotation operations.
  *
- * @author n1474335 [n1474335@gmail.com] & Matt C [matt@artemisbot.pw]
+ * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
@@ -135,6 +135,7 @@ var Rotate = {
     /**
      * ROT47 operation.
      *
+     * @author Matt C [matt@artemisbot.pw]
      * @param {byte_array} input
      * @param {Object[]} args
      * @returns {byte_array}
