@@ -71,6 +71,7 @@ OperationsWaiter.prototype.search_operations = function(e) {
             str = el.value;
         
         while (search_results_el.firstChild) {
+            $(search_results_el.firstChild).popover("destroy");
             search_results_el.removeChild(search_results_el.firstChild);
         }
         
