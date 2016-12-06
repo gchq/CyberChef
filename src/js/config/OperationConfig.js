@@ -1390,6 +1390,21 @@ var OperationConfig = {
             },
         ]
     },
+    "ROT47": {
+        description: "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.",
+        run: Rotate.run_rot47,
+        highlight: true,
+        highlight_reverse: true,
+        input_type: "byte_array",
+        output_type: "byte_array",
+        args: [
+            {
+                name: "Amount",
+                type: "number",
+                value: Rotate.ROT47_AMOUNT
+            },
+        ]
+    },
     "Strip HTTP headers": {
         description: "Removes HTTP headers from a request or response by looking for the first instance of a double newline.",
         run: HTTP.run_strip_headers,
