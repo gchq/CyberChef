@@ -1325,6 +1325,36 @@ var OperationConfig = {
             },
         ]
     },
+    "Vigenere Encode": {
+        description: "Encodes string with the Vigenere cipher.",
+        run: Cipher.run_vigenc,
+        highlight: true,
+        highlight_reverse: true,
+        input_type: "string",
+        output_type: "string",
+        args: [
+            {
+                name: "Keyword",
+                type: "string",
+                value: Cipher.VIG_ENC_KEY
+            }
+        ]
+    },
+    "Vigenere Decode": {
+        description: "Decodes string with the Vigenere cipher.",
+        run: Cipher.run_vigdec,
+        highlight: true,
+        highlight_reverse: true,
+        input_type: "string",
+        output_type: "string",
+        args: [
+            {
+                name: "Keyword",
+                type: "string",
+                value: Cipher.VIG_DEC_KEY
+            }
+        ]
+    },
     "Rotate right": {
         description: "Rotates each byte to the right by the number of bits specified. Currently only supports 8-bit values.",
         run: Rotate.run_rotr,
