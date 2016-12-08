@@ -52,6 +52,13 @@ RecipeWaiter.prototype.initialise_operation_drag_n_drop = function() {
         this.remove_intent = true;
         this.app.progress = 0;
     }.bind(this));
+
+    Sortable.utils.on(rec_list, "touchend", function(e) {
+        var loc = e.changedTouches[0],
+            target = document.elementFromPoint(loc.clientX, loc.clientY);
+
+        this.remove_intent = !rec_list.contains(target);
+    }.bind(this));
     
     // Favourites category
     document.querySelector("#categories a").addEventListener("dragover", this.fav_dragover.bind(this));

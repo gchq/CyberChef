@@ -80,10 +80,10 @@ var Categories = [
             "ROT47",
             "XOR",
             "XOR Brute Force",
+            "Vigenère Encode",
+            "Vigenère Decode",
             "Derive PBKDF2 key",
             "Derive EVP key",
-            "Vigenere Encode",
-            "Vigenere Decode"
         ]
     },
     {
