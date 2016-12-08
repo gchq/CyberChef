@@ -385,6 +385,96 @@ var Cipher = {
         return encrypted.ciphertext.toString(Utils.format[args[2]]);
     },
     
+
+    /**
+     * Vigenère Encode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_vigenere_enc: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            key = args[0].toLowerCase(),
+            output = "",
+            fail = 0,
+            key_index,
+            msg_index,
+            chr;
+
+        if (!key) return "No key entered";
+        if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
+
+        for (var i = 0; i < input.length; i++) {
+            if (alphabet.indexOf(input[i]) >= 0) {
+                // Get the corresponding character of key for the current letter, accounting
+                // for chars not in alphabet
+                chr = key[(i - fail) % key.length];
+                // Get the location in the vigenere square of the key char
+                key_index = alphabet.indexOf(chr);
+                // Get the location in the vigenere square of the message char
+                msg_index = alphabet.indexOf(input[i]);
+                // Get the encoded letter by finding the sum of indexes modulo 26 and finding
+                // the letter corresponding to that
+                output += alphabet[(key_index + msg_index) % 26];
+            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                chr = key[(i - fail) % key.length].toLowerCase();
+                key_index = alphabet.indexOf(chr);
+                msg_index = alphabet.indexOf(input[i].toLowerCase());
+                output += alphabet[(key_index + msg_index) % 26].toUpperCase();
+            } else {
+                output += input[i];
+                fail++;
+            }
+        }
+
+        return output;
+    },
+
+
+    /**
+     * Vigenère Decode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_vigenere_dec: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            key = args[0].toLowerCase(),
+            output = "",
+            fail = 0,
+            key_index,
+            msg_index,
+            chr;
+
+        if (!key) return "No key entered";
+        if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
+
+        for (var i = 0; i < input.length; i++) {
+            if (alphabet.indexOf(input[i]) >= 0) {
+                chr = key[(i - fail) % key.length];
+                key_index = alphabet.indexOf(chr);
+                msg_index = alphabet.indexOf(input[i]);
+                // Subtract indexes from each other, add 26 just in case the value is negative,
+                // modulo to remove if neccessary
+                output += alphabet[(msg_index - key_index + alphabet.length ) % 26];
+            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                chr = key[(i - fail) % key.length].toLowerCase();
+                key_index = alphabet.indexOf(chr);
+                msg_index = alphabet.indexOf(input[i].toLowerCase());
+                output += alphabet[(msg_index + alphabet.length - key_index) % 26].toUpperCase();
+            } else {
+                output += input[i];
+                fail++;
+            }
+        }
+
+        return output;
+    },
+
 };
 
 
