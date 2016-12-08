@@ -1325,33 +1325,33 @@ var OperationConfig = {
             },
         ]
     },
-    "Vigenere Encode": {
-        description: "Encodes string with the Vigenere cipher.",
-        run: Cipher.run_vigenc,
+    "Vigenère Encode": {
+        description: "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
+        run: Cipher.run_vigenere_enc,
         highlight: true,
         highlight_reverse: true,
         input_type: "string",
         output_type: "string",
         args: [
             {
-                name: "Keyword",
+                name: "Key",
                 type: "string",
-                value: Cipher.VIG_ENC_KEY
+                value: ""
             }
         ]
     },
-    "Vigenere Decode": {
-        description: "Decodes string with the Vigenere cipher.",
-        run: Cipher.run_vigdec,
+    "Vigenère Decode": {
+        description: "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
+        run: Cipher.run_vigenere_dec,
         highlight: true,
         highlight_reverse: true,
         input_type: "string",
         output_type: "string",
         args: [
             {
-                name: "Keyword",
+                name: "Key",
                 type: "string",
-                value: Cipher.VIG_DEC_KEY
+                value: ""
             }
         ]
     },
