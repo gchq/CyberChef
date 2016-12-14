@@ -25,8 +25,8 @@ SeasonalWaiter.prototype.load = function() {
     if (now.getMonth() == 11 && now.getDate() > 12) { // Dec 13 -> Dec 31
         this.app.options.snow = false;
         this.create_snow_option();
-        this.manager.add_dynamic_listener(".option-item input:checkbox[option='snow']", "switchChange.bootstrapSwitch", this.let_it_snow, this);
-        this.manager.add_window_listener("resize", this.let_it_snow, this);
+        $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox[option='snow']", this.let_it_snow.bind(this));
+        window.addEventListener("resize", this.let_it_snow.bind(this));
         this.manager.add_listeners(".btn", "click", this.shake_off_snow, this);
         if (now.getDate() == 25) this.let_it_snow();
     }
@@ -157,6 +157,7 @@ SeasonalWaiter.prototype.let_it_snow = function() {
     
     $(document).snowfall(options);
 };
+
 
 /**
  * When a button is clicked, shake the snow off that button.
