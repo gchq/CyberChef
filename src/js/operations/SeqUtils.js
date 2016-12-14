@@ -38,11 +38,11 @@ var SeqUtils = {
             order = args[2],
             sorted = input.split(delim);
             
-        if (order == "Alphabetical (case sensitive)") {
+        if (order === "Alphabetical (case sensitive)") {
             sorted = sorted.sort();
-        } else if (order == "Alphabetical (case insensitive)") {
+        } else if (order === "Alphabetical (case insensitive)") {
             sorted = sorted.sort(SeqUtils._case_insensitive_sort);
-        } else if (order == "IP address") {
+        } else if (order === "IP address") {
             sorted = sorted.sort(SeqUtils._ip_sort);
         }
             
@@ -81,7 +81,7 @@ var SeqUtils = {
         var search = args[0].string,
             type = args[0].option;
             
-        if (type == "Regex" && search) {
+        if (type === "Regex" && search) {
             try {
                 var regex = new RegExp(search, "gi"),
                     matches = input.match(regex);
@@ -114,12 +114,12 @@ var SeqUtils = {
      * @returns {byte_array}
      */
     run_reverse: function (input, args) {
-        if (args[0] == "Line") {
+        if (args[0] === "Line") {
             var lines = [],
                 line = [],
                 result = [];
             for (var i = 0; i < input.length; i++) {
-                if (input[i] == 0x0a) {
+                if (input[i] === 0x0a) {
                     lines.push(line);
                     line = [];
                 } else {

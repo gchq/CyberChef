@@ -32,9 +32,9 @@ var BitwiseOp = {
         for (var i = 0; i < input.length; i++) {
             k = key[i % key.length];
             o = input[i];
-            x = null_preserving && (o === 0 || o == k) ? o : func(o, k);
+            x = null_preserving && (o === 0 || o === k) ? o : func(o, k);
             result.push(x);
-            if (scheme != "Standard" && !(null_preserving && (o === 0 || o == k))) {
+            if (scheme !== "Standard" && !(null_preserving && (o === 0 || o === k))) {
                 switch (scheme) {
                     case "Input differential":
                         key[i % key.length] = x;

@@ -20,14 +20,14 @@ var HTMLApp = function(categories, operations, default_favourites, default_optio
     this.dfavourites = default_favourites;
     this.doptions    = default_options;
     this.options     = Utils.extend({}, default_options);
-    
+
     this.chef        = new Chef();
     this.manager     = new Manager(this);
-    
+
     this.auto_bake_  = false;
     this.progress    = 0;
     this.ing_id      = 0;
-    
+
     window.chef      = this.chef;
 };
 
@@ -69,7 +69,7 @@ HTMLApp.prototype.handle_error = function(err) {
  */
 HTMLApp.prototype.bake = function(step) {
     var response;
-    
+
     try {
         response = this.chef.bake(
             this.get_input(),         // The user's input
@@ -80,24 +80,25 @@ HTMLApp.prototype.bake = function(step) {
         );
     } catch (err) {
         this.handle_error(err);
-    } finally {
-        if (!response) return;
-        
-        if (response.error) {
-            this.handle_error(response.error);
-        }
-        this.options  = response.options;
-        this.dish_str = response.type == "html" ? Utils.strip_html_tags(response.result, true) : response.result;
-        this.progress = response.progress;
-        this.manager.recipe.update_breakpoint_indicator(response.progress);
-        this.manager.output.set(response.result, response.type, response.duration);
-        
-        // If baking took too long, disable auto-bake
-        if (response.duration > this.options.auto_bake_threshold && this.auto_bake_) {
-            this.manager.controls.set_auto_bake(false);
-            this.alert("Baking took longer than " + this.options.auto_bake_threshold +
-                "ms, Auto Bake has been disabled.", "warning", 5000);
-        }
+    }
+
+    if (!response) return;
+
+    if (response.error) {
+        this.handle_error(response.error);
+    }
+
+    this.options  = response.options;
+    this.dish_str = response.type === "html" ? Utils.strip_html_tags(response.result, true) : response.result;
+    this.progress = response.progress;
+    this.manager.recipe.update_breakpoint_indicator(response.progress);
+    this.manager.output.set(response.result, response.type, response.duration);
+
+    // If baking took too long, disable auto-bake
+    if (response.duration > this.options.auto_bake_threshold && this.auto_bake_) {
+        this.manager.controls.set_auto_bake(false);
+        this.alert("Baking took longer than " + this.options.auto_bake_threshold +
+            "ms, Auto Bake has been disabled.", "warning", 5000);
     }
 };
 
@@ -124,11 +125,11 @@ HTMLApp.prototype.auto_bake = function() {
 HTMLApp.prototype.silent_bake = function() {
     var start_time = new Date().getTime(),
         recipe_config = this.get_recipe_config();
-    
+
     if (this.auto_bake_) {
         this.chef.silent_bake(recipe_config);
     }
-    
+
     return new Date().getTime() - start_time;
 };
 
@@ -140,11 +141,11 @@ HTMLApp.prototype.silent_bake = function() {
  */
 HTMLApp.prototype.get_input = function() {
     var input = this.manager.input.get();
-    
+
     // Save to session storage in case we need to restore it later
     sessionStorage.setItem("input_length", input.length);
     sessionStorage.setItem("input", input);
-    
+
     return input;
 };
 
@@ -170,31 +171,31 @@ HTMLApp.prototype.set_input = function(input) {
 HTMLApp.prototype.populate_operations_list = function() {
     // Move edit button away before we overwrite it
     document.body.appendChild(document.getElementById("edit-favourites"));
-    
+
     var html = "";
-    
+
     for (var i = 0; i < this.categories.length; i++) {
         var cat_conf = this.categories[i],
             selected = i === 0,
             cat = new HTMLCategory(cat_conf.name, selected);
-        
+
         for (var j = 0; j < cat_conf.ops.length; j++) {
             var op_name = cat_conf.ops[j],
                 op = new HTMLOperation(op_name, this.operations[op_name], this, this.manager);
             cat.add_operation(op);
         }
-        
+
         html += cat.to_html();
     }
-    
+
     document.getElementById("categories").innerHTML = html;
-    
+
     var op_lists = document.querySelectorAll("#categories .op_list");
-    
+
     for (i = 0; i < op_lists.length; i++) {
         op_lists[i].dispatchEvent(this.manager.oplistcreate);
     }
-    
+
     // Add edit button to first category (Favourites)
     document.querySelector("#categories a").appendChild(document.getElementById("edit-favourites"));
 };
@@ -210,12 +211,12 @@ HTMLApp.prototype.initialise_splitter = function() {
         gutterSize: 4,
         onDrag: this.manager.controls.adjust_width.bind(this.manager.controls)
     });
-    
+
     Split(["#input", "#output"], {
         direction: "vertical",
         gutterSize: 4,
     });
-    
+
     this.reset_layout();
 };
 
@@ -231,7 +232,7 @@ HTMLApp.prototype.load_local_storage = function() {
         l_options = JSON.parse(localStorage.options);
     }
     this.manager.options.load(l_options);
-    
+
     // Load favourites
     this.load_favourites();
 };
@@ -247,14 +248,14 @@ HTMLApp.prototype.load_favourites = function() {
         localStorage.favourites.length > 2 ?
         JSON.parse(localStorage.favourites) :
         this.dfavourites;
-        
+
     favourites = this.valid_favourites(favourites);
     this.save_favourites(favourites);
-    
+
     var fav_cat = this.categories.filter(function(c) {
-        return c.name == "Favourites";
+        return c.name === "Favourites";
     })[0];
-    
+
     if (fav_cat) {
         fav_cat.ops = favourites;
     } else {
@@ -269,7 +270,7 @@ HTMLApp.prototype.load_favourites = function() {
 /**
  * Filters the list of favourite operations that the user had stored and removes any that are no
  * longer available. The user is notified if this is the case.
- 
+
  * @param {string[]} favourites - A list of the user's favourite operations
  * @returns {string[]} A list of the valid favourites
  */
@@ -321,7 +322,7 @@ HTMLApp.prototype.add_favourite = function(name) {
         this.alert("'" + name + "' is already in your favourites", "info", 2000);
         return;
     }
-    
+
     favourites.push(name);
     this.save_favourites(favourites);
     this.load_favourites();
@@ -339,20 +340,20 @@ HTMLApp.prototype.load_URI_params = function() {
         if (a === "") return {};
         var b = {};
         for (var i = 0; i < a.length; i++) {
-            var p = a[i].split('=');
-            if (p.length != 2) {
+            var p = a[i].split("=");
+            if (p.length !== 2) {
                 b[a[i]] = true;
             } else {
                 b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
             }
         }
         return b;
-    })(window.location.search.substr(1).split('&'));
-    
+    })(window.location.search.substr(1).split("&"));
+
     // Turn off auto-bake while loading
     var auto_bake_val = this.auto_bake_;
     this.auto_bake_ = false;
-    
+
     // Read in recipe from query string
     if (this.query_string.recipe) {
         try {
@@ -370,15 +371,15 @@ HTMLApp.prototype.load_URI_params = function() {
             if (matched_ops.length) {
                 this.manager.recipe.add_operation(matched_ops[0].name);
             }
-            
+
             // Populate search with the string
             var search = document.getElementById("search");
-            
+
             search.value = this.query_string.op;
             search.dispatchEvent(new Event("search"));
         }
     }
-    
+
     // Read in input data from query string
     if (this.query_string.input) {
         try {
@@ -386,7 +387,7 @@ HTMLApp.prototype.load_URI_params = function() {
             this.set_input(input_data);
         } catch(err) {}
     }
-    
+
     // Restore auto-bake state
     this.auto_bake_ = auto_bake_val;
     this.auto_bake();
@@ -423,14 +424,14 @@ HTMLApp.prototype.get_recipe_config = function() {
 HTMLApp.prototype.set_recipe_config = function(recipe_config) {
     sessionStorage.setItem("recipe_config", JSON.stringify(recipe_config));
     document.getElementById("rec_list").innerHTML = null;
-    
+
     for (var i = 0; i < recipe_config.length; i++) {
         var item = this.manager.recipe.add_operation(recipe_config[i].op);
-        
+
         // Populate arguments
         var args = item.querySelectorAll(".arg");
         for (var j = 0; j < args.length; j++) {
-            if (args[j].getAttribute("type") == "checkbox") {
+            if (args[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 args[j].checked = recipe_config[i].args[j];
             } else if (args[j].classList.contains("toggle-string")) {
@@ -444,7 +445,7 @@ HTMLApp.prototype.set_recipe_config = function(recipe_config) {
                 args[j].value = recipe_config[i].args[j];
             }
         }
-        
+
         // Set disabled and breakpoint
         if (recipe_config[i].disabled) {
             item.querySelector(".disable-icon").click();
@@ -452,7 +453,7 @@ HTMLApp.prototype.set_recipe_config = function(recipe_config) {
         if (recipe_config[i].breakpoint) {
             item.querySelector(".breakpoint").click();
         }
-        
+
         this.progress = 0;
     }
 };
@@ -467,7 +468,7 @@ HTMLApp.prototype.reset_layout = function() {
     document.getElementById("IO").style.width = "calc(50% - 2px)";
     document.getElementById("input").style.height = "calc(50% - 2px)";
     document.getElementById("output").style.height = "calc(50% - 2px)";
-    
+
     this.manager.controls.adjust_width();
 };
 
@@ -480,12 +481,12 @@ HTMLApp.prototype.set_compile_message = function() {
     var now = new Date(),
         time_since_compile = Utils.fuzzy_time(now.getTime() - window.compile_time),
         compile_info = "<span style=\"font-weight: normal\">Last build: " +
-            time_since_compile.substr(0,1).toUpperCase() + time_since_compile.substr(1) + " ago";
-            
+            time_since_compile.substr(0, 1).toUpperCase() + time_since_compile.substr(1) + " ago";
+
     if (window.compile_message !== "") {
         compile_info += " - " + window.compile_message;
     }
-    
+
     compile_info += "</span>";
     document.getElementById("notice").innerHTML = compile_info;
 };
@@ -516,36 +517,36 @@ HTMLApp.prototype.set_compile_message = function() {
  */
 HTMLApp.prototype.alert = function(str, style, timeout, silent) {
     var time = new Date();
-    
+
     console.log("[" + time.toLocaleString() + "] " + str);
     if (silent) return;
-    
+
     style = style || "danger";
     timeout = timeout || 0;
-    
+
     var alert_el = document.getElementById("alert"),
         alert_content = document.getElementById("alert-content");
-    
+
     alert_el.classList.remove("alert-danger");
     alert_el.classList.remove("alert-warning");
     alert_el.classList.remove("alert-info");
     alert_el.classList.remove("alert-success");
     alert_el.classList.add("alert-" + style);
-    
+
     // If the box hasn't been closed, append to it rather than replacing
-    if (alert_el.style.display == "block") {
-        alert_content.innerHTML += 
+    if (alert_el.style.display === "block") {
+        alert_content.innerHTML +=
             "<br><br>[" + time.toLocaleTimeString() + "] " + str;
     } else {
         alert_content.innerHTML =
             "[" + time.toLocaleTimeString() + "] " + str;
     }
-    
+
     // Stop the animation if it is in progress
     $("#alert").stop();
     alert_el.style.display = "block";
     alert_el.style.opacity = 1;
-    
+
     if (timeout > 0) {
         clearTimeout(this.alert_timeout);
         this.alert_timeout = setTimeout(function(){
@@ -573,7 +574,7 @@ HTMLApp.prototype.confirm = function(title, body, callback, scope) {
     document.getElementById("confirm-title").innerHTML = title;
     document.getElementById("confirm-body").innerHTML = body;
     document.getElementById("confirm-modal").style.display = "block";
-    
+
     this.confirm_closed = false;
     $("#confirm-modal").modal()
         .one("show.bs.modal", function(e) {
@@ -610,7 +611,7 @@ HTMLApp.prototype.alert_close_click = function() {
  */
 HTMLApp.prototype.state_change = function(e) {
     this.auto_bake();
-    
+
     // Update the current history state (not creating a new one)
     if (this.options.update_url) {
         this.last_state_url = this.manager.controls.generate_state_url(true, true);
@@ -640,10 +641,10 @@ HTMLApp.prototype.call_api = function(url, type, data, data_type, content_type) 
     data = data || {};
     data_type = data_type || undefined;
     content_type = content_type || "application/json";
-    
+
     var response = null,
         success = false;
-    
+
     $.ajax({
         url: url,
         async: false,
@@ -660,7 +661,7 @@ HTMLApp.prototype.call_api = function(url, type, data, data_type, content_type) 
             response = data;
         },
     });
-    
+
     return {
         success: success,
         response: response

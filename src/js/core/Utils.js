@@ -203,7 +203,7 @@ var Utils = {
      */
     parse_escaped_chars: function(str) {
         return str.replace(/(\\)?\\([nrtbf]|x[\da-f]{2})/g, function(m, a, b) {
-            if (a == "\\") return "\\"+b;
+            if (a === "\\") return "\\"+b;
             switch (b[0]) {
                 case "n":
                     return "\n";
@@ -243,8 +243,8 @@ var Utils = {
         
         for (var i = 0; i < alph_str.length; i++) {
             if (i < alph_str.length - 2 &&
-                alph_str[i+1] == "-" &&
-                alph_str[i] != "\\") {
+                alph_str[i+1] === "-" &&
+                alph_str[i] !== "\\") {
                 var start = Utils.ord(alph_str[i]),
                     end = Utils.ord(alph_str[i+2]);
                     
@@ -253,8 +253,8 @@ var Utils = {
                 }
                 i += 2;
             } else if (i < alph_str.length - 2 &&
-                alph_str[i] == "\\" &&
-                alph_str[i+1] == "-") {
+                alph_str[i] === "\\" &&
+                alph_str[i+1] === "-") {
                 alph_arr.push("-");
                 i++;
             } else {
@@ -278,7 +278,7 @@ var Utils = {
     hex_to_byte_array: function(hex_str) {
         // TODO: Handle errors i.e. input string is not hex
         if (!hex_str) return [];
-        hex_str = hex_str.replace(/\s+/g, '');
+        hex_str = hex_str.replace(/\s+/g, "");
         var byte_array = [];
         for (var i = 0; i < hex_str.length; i += 2) {
             byte_array.push(parseInt(hex_str.substr(i, 2), 16));
@@ -351,7 +351,7 @@ var Utils = {
         var word_array = CryptoJS.enc.Utf8.parse(str),
             byte_array = Utils.word_array_to_byte_array(word_array);
 
-        if (str.length != word_array.sigBytes)
+        if (str.length !== word_array.sigBytes)
             window.app.options.attempt_highlight = false;
         return byte_array;
     },
@@ -403,7 +403,7 @@ var Utils = {
             var word_array = new CryptoJS.lib.WordArray.init(words, byte_array.length),
                 str = CryptoJS.enc.Utf8.stringify(word_array);
             
-            if (str.length != word_array.sigBytes)
+            if (str.length !== word_array.sigBytes)
                 window.app.options.attempt_highlight = false;
             return str;
         } catch (err) {
@@ -553,7 +553,7 @@ var Utils = {
             res.push(String.fromCharCode(Utils.UNIC_WIN1251_MAP[ord]));
         }
         
-        return res.join('');
+        return res.join("");
     },
 
 
@@ -577,7 +577,7 @@ var Utils = {
             res.push(String.fromCharCode(Utils.WIN1251_UNIC_MAP[ord]));
         }
         
-        return res.join('');
+        return res.join("");
     },
 
 
@@ -653,7 +653,7 @@ var Utils = {
         return_type = return_type || "string";
         
         if (!data) {
-            return return_type == "string" ? "" : [];
+            return return_type === "string" ? "" : [];
         }
         
         alphabet = alphabet ?
@@ -678,9 +678,9 @@ var Utils = {
             enc3 = alphabet.indexOf(data.charAt(i++) || "=");
             enc4 = alphabet.indexOf(data.charAt(i++) || "=");
             
-            enc2 = enc2 == -1 ? 64 : enc2;
-            enc3 = enc3 == -1 ? 64 : enc3;
-            enc4 = enc4 == -1 ? 64 : enc4;
+            enc2 = enc2 === -1 ? 64 : enc2;
+            enc3 = enc3 === -1 ? 64 : enc3;
+            enc4 = enc4 === -1 ? 64 : enc4;
 
             chr1 = (enc1 << 2) | (enc2 >> 4);
             chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -688,15 +688,15 @@ var Utils = {
 
             output.push(chr1);
 
-            if (enc3 != 64) {
+            if (enc3 !== 64) {
                 output.push(chr2);
             }
-            if (enc4 != 64) {
+            if (enc4 !== 64) {
                 output.push(chr3);
             }
         }
         
-        return return_type == "string" ? Utils.byte_array_to_utf8(output) : output;
+        return return_type === "string" ? Utils.byte_array_to_utf8(output) : output;
     },
 
 
@@ -727,8 +727,8 @@ var Utils = {
         }
         
         // Add \x or 0x to beginning
-        if (delim == "0x") output = "0x" + output;
-        if (delim == "\\x") output = "\\x" + output;
+        if (delim === "0x") output = "0x" + output;
+        if (delim === "\\x") output = "\\x" + output;
         
         if (delim.length)
             return output.slice(0, -delim.length);
@@ -779,9 +779,9 @@ var Utils = {
     from_hex: function(data, delim, byte_len) {
         delim = delim || (data.indexOf(" ") >= 0 ? "Space" : "None");
         byte_len = byte_len || 2;
-        if (delim != "None") {
+        if (delim !== "None") {
             var delim_regex = Utils.regex_rep[delim];
-            data = data.replace(delim_regex, '');
+            data = data.replace(delim_regex, "");
         }
         
         var output = [];
@@ -816,17 +816,17 @@ var Utils = {
             if (ignore_next) {
                 cell += b;
                 ignore_next = false;
-            } else if (b == "\\") {
+            } else if (b === "\\") {
                 cell += b;
                 ignore_next = true;
-            } else if (b == "\"" && !in_string) {
+            } else if (b === "\"" && !in_string) {
                 in_string = true;
-            } else if (b == "\"" && in_string) {
+            } else if (b === "\"" && in_string) {
                 in_string = false;
-            } else if (b == "," && !in_string) {
+            } else if (b === "," && !in_string) {
                 line.push(cell);
                 cell = "";
-            } else if ((b == "\n" || b == "\r") && !in_string) {
+            } else if ((b === "\n" || b === "\r") && !in_string) {
                 line.push(cell);
                 cell = "";
                 lines.push(line);
@@ -877,7 +877,7 @@ var Utils = {
     escape_html: function(str) {
         return str.replace(/</g, "&lt;")
                   .replace(/'/g, "&apos;")
-                  .replace(/"/g, '&quot;')
+                  .replace(/"/g, "&quot;")
                   .replace(/&/g, "&amp;");
     },
 
@@ -1002,8 +1002,8 @@ $.fn.selectRange = function(start, end) {
         } else if (this.createTextRange) {
             var range = this.createTextRange();
             range.collapse(true);
-            range.moveEnd('character', end);
-            range.moveStart('character', start);
+            range.moveEnd("character", end);
+            range.moveStart("character", start);
             range.select();
         }
     });
@@ -1095,7 +1095,7 @@ Array.prototype.sum = function() {
 Array.prototype.equals = function(other) {
     if (!other) return false;
     var i = this.length;
-    if (i != other.length) return false;
+    if (i !== other.length) return false;
     while (i--) {
         if (this[i] !== other[i]) return false;
     }

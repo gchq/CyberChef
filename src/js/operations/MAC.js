@@ -54,17 +54,17 @@ var MAC = {
             macs = input.toLowerCase().split(/[,\s\r\n]+/);
 
         macs.forEach(function(mac) {
-            var cleanMac = mac.replace(/[:.-]+/g, ''),
-                macHyphen = cleanMac.replace(/(.{2}(?=.))/g, '$1-'),
-                macColon = cleanMac.replace(/(.{2}(?=.))/g, '$1:'),
-                macCisco = cleanMac.replace(/(.{4}(?=.))/g, '$1.');
+            var cleanMac = mac.replace(/[:.-]+/g, ""),
+                macHyphen = cleanMac.replace(/(.{2}(?=.))/g, "$1-"),
+                macColon = cleanMac.replace(/(.{2}(?=.))/g, "$1:"),
+                macCisco = cleanMac.replace(/(.{4}(?=.))/g, "$1.");
                 
-            if (output_case == "Lower only") {
+            if (output_case === "Lower only") {
                 if (no_delim) output_list.push(cleanMac);
                 if (dash_delim) output_list.push(macHyphen);
                 if (colon_delim) output_list.push(macColon);
                 if (cisco_style) output_list.push(macCisco);
-            } else if (output_case == "Upper only") {
+            } else if (output_case === "Upper only") {
                 if (no_delim) output_list.push(cleanMac.toUpperCase());
                 if (dash_delim) output_list.push(macHyphen.toUpperCase());
                 if (colon_delim) output_list.push(macColon.toUpperCase());
@@ -82,7 +82,7 @@ var MAC = {
         });
 
         // Return the data as a string
-        return output_list.join('\n');
+        return output_list.join("\n");
     },
 
 };

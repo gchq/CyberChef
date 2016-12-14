@@ -29,7 +29,7 @@ var OperationsWaiter = function(app, manager) {
 OperationsWaiter.prototype.search_operations = function(e) {
     var ops, selected;
     
-    if (e.type == "search") { // Search
+    if (e.type === "search") { // Search
         e.preventDefault();
         ops = document.querySelectorAll("#search-results li");
         if (ops.length) {
@@ -41,9 +41,9 @@ OperationsWaiter.prototype.search_operations = function(e) {
         }
     }
     
-    if (e.keyCode == 13) { // Return
+    if (e.keyCode === 13) { // Return
         e.preventDefault();
-    } else if (e.keyCode == 40) { // Down
+    } else if (e.keyCode === 40) { // Down
         e.preventDefault();
         ops = document.querySelectorAll("#search-results li");
         if (ops.length) {
@@ -51,10 +51,10 @@ OperationsWaiter.prototype.search_operations = function(e) {
             if (selected > -1) {
                 ops[selected].classList.remove("selected-op");
             }
-            if (selected == ops.length-1) selected = -1;
+            if (selected === ops.length-1) selected = -1;
             ops[selected+1].classList.add("selected-op");
         }
-    } else if (e.keyCode == 38) { // Up
+    } else if (e.keyCode === 38) { // Up
         e.preventDefault();
         ops = document.querySelectorAll("#search-results li");
         if (ops.length) {
@@ -183,7 +183,7 @@ OperationsWaiter.prototype.edit_favourites_click = function(e) {
     
     // Add favourites to modal
     var fav_cat = this.app.categories.filter(function(c) {
-        return c.name == "Favourites";
+        return c.name === "Favourites";
     })[0];
     
     var html = "";
@@ -198,7 +198,7 @@ OperationsWaiter.prototype.edit_favourites_click = function(e) {
     this.remove_intent = false;
     
     var editable_list = Sortable.create(edit_favourites_list, {
-        filter: '.remove-icon',
+        filter: ".remove-icon",
         onFilter: function (evt) {
             var el = editable_list.closest(evt.item);
             if (el) {
@@ -212,11 +212,11 @@ OperationsWaiter.prototype.edit_favourites_click = function(e) {
     });
     
     Sortable.utils.on(edit_favourites_list, "dragleave", function() {
-         this.remove_intent = true;
+        this.remove_intent = true;
     }.bind(this));
     
     Sortable.utils.on(edit_favourites_list, "dragover", function() {
-         this.remove_intent = false;
+        this.remove_intent = false;
     }.bind(this));
     
     $("#edit-favourites-list [data-toggle=popover]").popover();
@@ -260,7 +260,7 @@ OperationsWaiter.prototype.reset_favourites_click = function() {
  */
 OperationsWaiter.prototype.op_icon_mouseover = function(e) {
     var op_el = e.target.parentNode;
-    if (e.target.getAttribute("data-toggle") == "popover") {
+    if (e.target.getAttribute("data-toggle") === "popover") {
         $(op_el).popover("hide");
     }
 };
@@ -277,7 +277,7 @@ OperationsWaiter.prototype.op_icon_mouseleave = function(e) {
     var op_el = e.target.parentNode,
         to_el = e.toElement || e.relatedElement;
     
-    if (e.target.getAttribute("data-toggle") == "popover" && to_el === op_el) {
+    if (e.target.getAttribute("data-toggle") === "popover" && to_el === op_el) {
         $(op_el).popover("show");
     }
 };

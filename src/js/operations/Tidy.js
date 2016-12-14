@@ -121,7 +121,7 @@ var Tidy = {
             line = [];
             
         for (var i = 0; i < input.length; i++) {
-            if (input[i] == 0x0a) {
+            if (input[i] === 0x0a) {
                 lines.push(line);
                 line = [];
             } else {
@@ -173,7 +173,7 @@ var Tidy = {
             line = [];
             
         for (var i = 0; i < input.length; i++) {
-            if (input[i] == 0x0a) {
+            if (input[i] === 0x0a) {
                 lines.push(line);
                 line = [];
             } else {
@@ -222,11 +222,11 @@ var Tidy = {
             output = "",
             i = 0;
             
-        if (position == "Start") {
+        if (position === "Start") {
             for (i = 0; i < lines.length; i++) {
                 output += Utils.pad_left(lines[i], lines[i].length+len, chr) + "\n";
             }
-        } else if (position == "End") {
+        } else if (position === "End") {
             for (i = 0; i < lines.length; i++) {
                 output += Utils.pad_right(lines[i], lines[i].length+len, chr) + "\n";
             }
