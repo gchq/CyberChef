@@ -176,6 +176,12 @@ textarea.arg {
     border-color: #b3dba2 !important;
 }
 
+.flow-control-op.break {
+    color: #94312f !important;
+    background-color: #eabfbf !important;
+    border-color: #e2aeb5 !important;
+}
+
 #support-modal textarea {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
