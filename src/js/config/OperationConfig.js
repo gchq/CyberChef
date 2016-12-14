@@ -2827,5 +2827,19 @@ var OperationConfig = {
         input_type: "string",
         output_type: "string",
         args: []
-    }
+    },
+    "JavaScript": {
+        description: "Script in JavaScript",
+        run: StrUtils.run_javascript,
+        manual_bake: true,
+        input_type: "string",
+        output_type: "string",
+        args: [
+            {
+                name: "@param {string} input, @returns {string}",
+                type: "text",
+                value: "return input;"
+            },
+        ]
+    },
 };
