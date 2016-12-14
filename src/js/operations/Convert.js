@@ -31,7 +31,7 @@ var Convert = {
         "Centimetres (cm)"  : 1e-2,
         "Metres (m)"        : 1,
         "Kilometers (km)"   : 1e3,
-        
+
         "Thou (th)"         : 0.0000254,
         "Inches (in)"       : 0.0254,
         "Feet (ft)"         : 0.3048,
@@ -40,23 +40,23 @@ var Convert = {
         "Furlongs (fur)"    : 201.168,
         "Miles (mi)"        : 1609.344,
         "Leagues (lea)"     : 4828.032,
-        
+
         "Fathoms (ftm)"     : 1.853184,
         "Cables"            : 185.3184,
         "Nautical miles"    : 1853.184,
-        
+
         "Cars (4m)"         : 4,
         "Buses (8.4m)"      : 8.4,
         "American football fields (91m)": 91,
         "Football pitches (105m)": 105,
-        
-        "Earth-to-Moons"    : 380000000, 
+
+        "Earth-to-Moons"    : 380000000,
         "Earth's equators"  : 40075016.686,
         "Astronomical units (au)": 149597870700,
         "Light-years (ly)"  : 9460730472580800,
         "Parsecs (pc)"      : 3.0856776e16
     },
-    
+
     /**
      * Convert distance operation.
      *
@@ -67,13 +67,13 @@ var Convert = {
     run_distance: function (input, args) {
         var input_units = args[0],
             output_units = args[1];
-            
+
         input = input * Convert.DISTANCE_FACTOR[input_units];
         return input / Convert.DISTANCE_FACTOR[output_units];
         // TODO Remove rounding errors (e.g. 1.000000000001)
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -94,7 +94,7 @@ var Convert = {
         "Nibbles"         : 4,
         "Octets"          : 8,
         "Bytes (B)"       : 8,
-        
+
         // Binary bits (2^n)
         "Kibibits (Kib)"  : 1024,
         "Mebibits (Mib)"  : 1048576,
@@ -104,7 +104,7 @@ var Convert = {
         "Exbibits (Eib)"  : 1152921504606846976,
         "Zebibits (Zib)"  : 1180591620717411303424,
         "Yobibits (Yib)"  : 1208925819614629174706176,
-        
+
         // Decimal bits (10^n)
         "Decabits"        : 10,
         "Hectobits"       : 100,
@@ -116,7 +116,7 @@ var Convert = {
         "Exabits (Eb)"    : 1e18,
         "Zettabits (Zb)"  : 1e21,
         "Yottabits (Yb)"  : 1e24,
-        
+
         // Binary bytes (8 x 2^n)
         "Kibibytes (KiB)" : 8192,
         "Mebibytes (MiB)" : 8388608,
@@ -126,7 +126,7 @@ var Convert = {
         "Exbibytes (EiB)" : 9223372036854775808,
         "Zebibytes (ZiB)" : 9444732965739290427392,
         "Yobibytes (YiB)" : 9671406556917033397649408,
-        
+
         // Decimal bytes (8 x 10^n)
         "Kilobytes (KB)"  : 8e3,
         "Megabytes (MB)"  : 8e6,
@@ -137,7 +137,7 @@ var Convert = {
         "Zettabytes (ZB)" : 8e21,
         "Yottabytes (YB)" : 8e24,
     },
-    
+
     /**
      * Convert data units operation.
      *
@@ -148,12 +148,12 @@ var Convert = {
     run_data_size: function (input, args) {
         var input_units = args[0],
             output_units = args[1];
-            
+
         input = input * Convert.DATA_FACTOR[input_units];
         return input / Convert.DATA_FACTOR[output_units];
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -173,13 +173,13 @@ var Convert = {
         // Metric
         "Square metre (sq m)"       : 1,
         "Square kilometre (sq km)"  : 1e6,
-        
+
         "Centiare (ca)"             : 1,
         "Deciare (da)"              : 10,
         "Are (a)"                   : 100,
         "Decare (daa)"              : 1e3,
         "Hectare (ha)"              : 1e4,
-        
+
         // Imperial
         "Square inch (sq in)"       : 0.00064516,
         "Square foot (sq ft)"       : 0.09290304,
@@ -188,12 +188,12 @@ var Convert = {
         "Perch (sq per)"            : 42.21,
         "Rood (ro)"                 : 1011,
         "International acre (ac)"   : 4046.8564224,
-        
+
         // US customary units
         "US survey acre (ac)"       : 4046.87261,
         "US survey square mile (sq mi)" : 2589998.470305239,
         "US survey township"        : 93239944.9309886,
-        
+
         // Nuclear physics
         "Yoctobarn (yb)"            : 1e-52,
         "Zeptobarn (zb)"            : 1e-49,
@@ -206,18 +206,18 @@ var Convert = {
         "Barn (b)"                  : 1e-28,
         "Kilobarn (kb)"             : 1e-25,
         "Megabarn (Mb)"             : 1e-22,
-        
+
         "Planck area"               : 2.6e-70,
         "Shed"                      : 1e-52,
         "Outhouse"                  : 1e-34,
-        
+
         // Comparisons
         "Washington D.C."           : 176119191.502848,
         "Isle of Wight"             : 380000000,
         "Wales"                     : 20779000000,
         "Texas"                     : 696241000000,
     },
-    
+
     /**
      * Convert area operation.
      *
@@ -228,12 +228,12 @@ var Convert = {
     run_area: function (input, args) {
         var input_units = args[0],
             output_units = args[1];
-            
+
         input = input * Convert.AREA_FACTOR[input_units];
         return input / Convert.AREA_FACTOR[output_units];
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -274,7 +274,7 @@ var Convert = {
         "Exagram (Eg)"      : 1e18,
         "Zettagram (Zg)"    : 1e21,
         "Yottagram (Yg)"    : 1e24,
-        
+
         // Imperial Avoirdupois
         "Grain (gr)"        : 64.79891e-3,
         "Dram (dr)"         : 1.7718451953125,
@@ -288,14 +288,14 @@ var Convert = {
         "Imperial hundredweight (cwt)" : 50.80234544e3,
         "US ton (t)"        : 907.18474e3,
         "Imperial ton (t)"  : 1016.0469088e3,
-        
+
         // Imperial Troy
         "Pennyweight (dwt)" : 1.55517384,
         "Troy dram (dr t)"  : 3.8879346,
         "Troy ounce (oz t)" : 31.1034768,
         "Troy pound (lb t)" : 373.2417216,
         "Mark"              : 248.8278144,
-        
+
         // Archaic
         "Wey"               : 76.5e3,
         "Wool wey"          : 101.7e3,
@@ -308,7 +308,7 @@ var Convert = {
         "Gunpowder last"    : 1090e3,
         "Picul"             : 60.478982e3,
         "Rice last"         : 1200e3,
-        
+
         // Comparisons
         "Big Ben (14 tonnes)"                      : 14e6,
         "Blue whale (180 tonnes)"                  : 180e6,
@@ -317,7 +317,7 @@ var Convert = {
         "RMS Titanic (52,000 tonnes)"              : 52000e6,
         "Great Pyramid of Giza (6,000,000 tonnes)" : 6e12,
         "Earth's oceans (1.4 yottagrams)"          : 1.4e24,
-        
+
         // Astronomical
         "A teaspoon of neutron star (5,500 million tonnes)" : 5.5e15,
         "Lunar mass (ML)"                          : 7.342e25,
@@ -328,7 +328,7 @@ var Convert = {
         "Milky Way galaxy (1.2 x 10^42 kgs)"       : 1.2e45,
         "The observable universe (1.45 x 10^53 kgs)" : 1.45e56,
     },
-    
+
     /**
      * Convert mass operation.
      *
@@ -339,12 +339,12 @@ var Convert = {
     run_mass: function (input, args) {
         var input_units = args[0],
             output_units = args[1];
-            
+
         input = input * Convert.MASS_FACTOR[input_units];
         return input / Convert.MASS_FACTOR[output_units];
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -363,11 +363,11 @@ var Convert = {
         // Metric
         "Metres per second (m/s)"        : 1,
         "Kilometres per hour (km/h)"     : 0.2778,
-        
+
         // Imperial
         "Miles per hour (mph)"           : 0.44704,
         "Knots (kn)"                     : 0.5144,
-        
+
         // Comparisons
         "Human hair growth rate"         : 4.8e-9,
         "Bamboo growth rate"             : 1.4e-5,
@@ -378,7 +378,7 @@ var Convert = {
         "SR-71 Blackbird"                : 981,
         "Space Shuttle"                  : 1400,
         "International Space Station"    : 7700,
-        
+
         // Scientific
         "Sound in standard atmosphere"   : 340.3,
         "Sound in water"                 : 1500,
@@ -393,7 +393,7 @@ var Convert = {
         "Signal in an optical fibre (0.667c)" : 200000000,
         "Light (c)"                      : 299792458,
     },
-    
+
     /**
      * Convert speed operation.
      *
@@ -404,9 +404,9 @@ var Convert = {
     run_speed: function (input, args) {
         var input_units = args[0],
             output_units = args[1];
-            
+
         input = input * Convert.SPEED_FACTOR[input_units];
         return input / Convert.SPEED_FACTOR[output_units];
     },
-    
+
 };

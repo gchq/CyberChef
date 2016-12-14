@@ -10,7 +10,7 @@
  */
 var HighlighterWaiter = function(app) {
     this.app = app;
-    
+
     this.mouse_button_down = false;
     this.mouse_target = null;
 };
@@ -40,7 +40,7 @@ HighlighterWaiter.OUTPUT = 1;
 HighlighterWaiter.prototype._is_selection_backwards = function() {
     var backwards = false,
         sel = window.getSelection();
-        
+
     if (!sel.isCollapsed) {
         var range = document.createRange();
         range.setStart(sel.anchorNode, sel.anchorOffset);
@@ -63,12 +63,12 @@ HighlighterWaiter.prototype._is_selection_backwards = function() {
 HighlighterWaiter.prototype._get_output_html_offset = function(node, offset) {
     var sel = window.getSelection(),
         range = document.createRange();
-        
+
     range.selectNodeContents(document.getElementById("output-html"));
     range.setEnd(node, offset);
     sel.removeAllRanges();
     sel.addRange(range);
-    
+
     return sel.toString().length;
 };
 
@@ -87,7 +87,7 @@ HighlighterWaiter.prototype._get_output_html_selection_offsets = function() {
         start = 0,
         end = 0,
         backwards = false;
-    
+
     if (sel.rangeCount) {
         range = sel.getRangeAt(sel.rangeCount - 1);
         backwards = this._is_selection_backwards();
@@ -95,7 +95,7 @@ HighlighterWaiter.prototype._get_output_html_selection_offsets = function() {
         end = this._get_output_html_offset(range.endContainer, range.endOffset);
         sel.removeAllRanges();
         sel.addRange(range);
-        
+
         if (backwards) {
             // If selecting backwards, reverse the start and end offsets for the selection to
             // prevent deselecting as the drag continues.
@@ -103,7 +103,7 @@ HighlighterWaiter.prototype._get_output_html_selection_offsets = function() {
             sel.extend(sel.anchorNode, range.startOffset);
         }
     }
-    
+
     return {
         start: start,
         end: end
@@ -147,11 +147,11 @@ HighlighterWaiter.prototype.input_mousedown = function(e) {
     this.mouse_button_down = true;
     this.mouse_target = HighlighterWaiter.INPUT;
     this.remove_highlights();
-    
+
     var el = e.target,
         start = el.selectionStart,
         end = el.selectionEnd;
-    
+
     if (start !== 0 || end !== 0) {
         document.getElementById("input-selection-info").innerHTML = this.selection_info(start, end);
         this.highlight_output([{start: start, end: end}]);
@@ -169,11 +169,11 @@ HighlighterWaiter.prototype.output_mousedown = function(e) {
     this.mouse_button_down = true;
     this.mouse_target = HighlighterWaiter.OUTPUT;
     this.remove_highlights();
-    
+
     var el = e.target,
         start = el.selectionStart,
         end = el.selectionEnd;
-    
+
     if (start !== 0 || end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selection_info(start, end);
         this.highlight_input([{start: start, end: end}]);
@@ -190,7 +190,7 @@ HighlighterWaiter.prototype.output_mousedown = function(e) {
 HighlighterWaiter.prototype.output_html_mousedown = function(e) {
     this.mouse_button_down = true;
     this.mouse_target = HighlighterWaiter.OUTPUT;
-    
+
     var sel = this._get_output_html_selection_offsets();
     if (sel.start !== 0 || sel.end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selection_info(sel.start, sel.end);
@@ -237,10 +237,10 @@ HighlighterWaiter.prototype.output_html_mouseup = function(e) {
 HighlighterWaiter.prototype.input_mousemove = function(e) {
     // Check that the left mouse button is pressed
     if (!this.mouse_button_down ||
-        e.which != 1 ||
-        this.mouse_target != HighlighterWaiter.INPUT)
+        e.which !== 1 ||
+        this.mouse_target !== HighlighterWaiter.INPUT)
         return;
-    
+
     var el = e.target,
         start = el.selectionStart,
         end = el.selectionEnd;
@@ -261,14 +261,14 @@ HighlighterWaiter.prototype.input_mousemove = function(e) {
 HighlighterWaiter.prototype.output_mousemove = function(e) {
     // Check that the left mouse button is pressed
     if (!this.mouse_button_down ||
-        e.which != 1 ||
-        this.mouse_target != HighlighterWaiter.OUTPUT)
+        e.which !== 1 ||
+        this.mouse_target !== HighlighterWaiter.OUTPUT)
         return;
-    
+
     var el = e.target,
         start = el.selectionStart,
         end = el.selectionEnd;
-    
+
     if (start !== 0 || end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selection_info(start, end);
         this.highlight_input([{start: start, end: end}]);
@@ -285,10 +285,10 @@ HighlighterWaiter.prototype.output_mousemove = function(e) {
 HighlighterWaiter.prototype.output_html_mousemove = function(e) {
     // Check that the left mouse button is pressed
     if (!this.mouse_button_down ||
-        e.which != 1 ||
-        this.mouse_target != HighlighterWaiter.OUTPUT)
+        e.which !== 1 ||
+        this.mouse_target !== HighlighterWaiter.OUTPUT)
         return;
-    
+
     var sel = this._get_output_html_selection_offsets();
     if (sel.start !== 0 || sel.end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selection_info(sel.start, sel.end);
@@ -310,7 +310,7 @@ HighlighterWaiter.prototype.selection_info = function(start, end) {
     var start_str = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;"),
         end_str   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;"),
         len_str   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
-        
+
     return "start: " + start_str + "<br>end: " + end_str + "<br>length: " + len_str;
 };
 
@@ -327,7 +327,7 @@ HighlighterWaiter.prototype.remove_highlights = function() {
 
 
 /**
- * Generates a list of all the highlight functions assigned to operations in the recipe, if the 
+ * Generates a list of all the highlight functions assigned to operations in the recipe, if the
  * entire recipe supports highlighting.
  *
  * @returns {Object[]} highlights
@@ -338,25 +338,25 @@ HighlighterWaiter.prototype.remove_highlights = function() {
 HighlighterWaiter.prototype.generate_highlight_list = function() {
     var recipe_config = this.app.get_recipe_config(),
         highlights = [];
-    
+
     for (var i = 0; i < recipe_config.length; i++) {
         if (recipe_config[i].disabled) continue;
-        
+
         // If any breakpoints are set, do not attempt to highlight
         if (recipe_config[i].breakpoint) return false;
-        
+
         var op = this.app.operations[recipe_config[i].op];
-        
+
         // If any of the operations do not support highlighting, fail immediately.
         if (op.highlight === false || op.highlight === undefined) return false;
-        
+
         highlights.push({
             f: op.highlight,
             b: op.highlight_reverse,
             args: recipe_config[i].args
         });
     }
-    
+
     return highlights;
 };
 
@@ -382,12 +382,12 @@ HighlighterWaiter.prototype.highlight_output = function(pos) {
     for (var i = 0; i < highlights.length; i++) {
         // Remove multiple highlights before processing again
         pos = [pos[0]];
-        
+
         if (typeof highlights[i].f == "function") {
             pos = highlights[i].f(pos, highlights[i].args);
         }
     }
-    
+
     document.getElementById("output-selection-info").innerHTML = this.selection_info(pos[0].start, pos[0].end);
     this.highlight(
         document.getElementById("output-text"),
@@ -409,7 +409,7 @@ HighlighterWaiter.prototype.highlight_output = function(pos) {
  */
 HighlighterWaiter.prototype.highlight_input = function(pos) {
     var highlights = this.generate_highlight_list();
-    
+
     if (!highlights || !this.app.auto_bake_) {
         return false;
     }
@@ -417,12 +417,12 @@ HighlighterWaiter.prototype.highlight_input = function(pos) {
     for (var i = 0; i < highlights.length; i++) {
         // Remove multiple highlights before processing again
         pos = [pos[0]];
-        
+
         if (typeof highlights[i].b == "function") {
             pos = highlights[i].b(pos, highlights[i].args);
         }
     }
-    
+
     document.getElementById("input-selection-info").innerHTML = this.selection_info(pos[0].start, pos[0].end);
     this.highlight(
         document.getElementById("input-text"),
@@ -444,21 +444,21 @@ HighlighterWaiter.prototype.highlight_input = function(pos) {
 HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     if (!this.app.options.show_highlighter) return false;
     if (!this.app.options.attempt_highlight) return false;
-    
+
     // Check if there is a carriage return in the output dish as this will not
     // be displayed by the HTML textarea and will mess up highlighting offsets.
     if (!this.app.dish_str || this.app.dish_str.indexOf("\r") >= 0) return false;
-    
+
     var start_placeholder = "[start_highlight]",
         start_placeholder_regex = /\[start_highlight\]/g,
         end_placeholder = "[end_highlight]",
         end_placeholder_regex = /\[end_highlight\]/g,
         text = textarea.value;
-    
+
     // Put placeholders in position
     // If there's only one value, select that
     // If there are multiple, ignore the first one and select all others
-    if (pos.length == 1) {
+    if (pos.length === 1) {
         if (pos[0].end < pos[0].start) return;
         text = text.slice(0, pos[0].start) +
             start_placeholder + text.slice(pos[0].start, pos[0].end) + end_placeholder +
@@ -467,15 +467,15 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
         // O(n^2) - Can anyone improve this without overwriting placeholders?
         var result = "",
             end_placed = true;
-            
+
         for (var i = 0; i < text.length; i++) {
             for (var j = 1; j < pos.length; j++) {
                 if (pos[j].end < pos[j].start) continue;
-                if (pos[j].start == i) {
+                if (pos[j].start === i) {
                     result += start_placeholder;
                     end_placed = false;
                 }
-                if (pos[j].end == i) {
+                if (pos[j].end === i) {
                     result += end_placeholder;
                     end_placed = true;
                 }
@@ -485,10 +485,10 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
         if (!end_placed) result += end_placeholder;
         text = result;
     }
-    
+
     var css_class = "hl1";
     //if (colour) css_class += "-"+colour;
-    
+
     // Remove HTML tags
     text = text.replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
@@ -497,7 +497,7 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
                 // Convert placeholders to tags
                 .replace(start_placeholder_regex, "<span class=\""+css_class+"\">")
                 .replace(end_placeholder_regex, "</span>") + "&nbsp;";
-    
+
     // Adjust width to allow for scrollbars
     highlighter.style.width = textarea.clientWidth + "px";
     highlighter.innerHTML = text;

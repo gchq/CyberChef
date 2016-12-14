@@ -108,12 +108,12 @@ var Compress = {
         // ]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]...
         // e.g. Input data of [8b, 1d, dc, 44]
         // Look for the first two square brackets:
-        if (result.length > 158 && result[0] == 93 && result[5] == 93) {
+        if (result.length > 158 && result[0] === 93 && result[5] === 93) {
             // If the first two square brackets are there, check that the others
             // are also there. If they are, throw an error. If not, continue.
             var valid = false;
             for (var i = 0; i < 155; i += 5) {
-                if (result[i] != 93) {
+                if (result[i] !== 93) {
                     valid = true;
                 }
             }
@@ -172,12 +172,12 @@ var Compress = {
         // Deal with character encoding issues
         input = Utils.str_to_byte_array(Utils.byte_array_to_utf8(input));
         var inflate = new Zlib.Inflate(input, {
-                index: args[0],
-                bufferSize: args[1],
-                bufferType: Compress.ZLIB_BUFFER_TYPE_LOOKUP[args[2]],
-                resize: args[3],
-                verify: args[4]
-            });
+            index: args[0],
+            bufferSize: args[1],
+            bufferType: Compress.ZLIB_BUFFER_TYPE_LOOKUP[args[2]],
+            resize: args[3],
+            verify: args[4]
+        });
         return Array.prototype.slice.call(inflate.decompress());
     },
     

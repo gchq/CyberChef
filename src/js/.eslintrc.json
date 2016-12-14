@@ -1,0 +1,93 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "env": {
+        "browser": true,
+        "jquery": true,
+        "es6": true,
+        "node": false
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        // enable additional rules
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "dot-notation": "error",
+        "eqeqeq": ["error", "smart"],
+        "no-caller": "error",
+        "no-extra-bind": "error",
+        "no-unused-expressions": "error",
+        "no-useless-call": "error",
+        "no-useless-return": "error",
+        "radix": "warn",
+
+        // modify rules from base configurations
+        "no-unused-vars": ["error", {
+            "args": "none",
+            "vars": "local"
+        }],
+        "no-empty": ["error", {
+            "allowEmptyCatch": true
+        }],
+
+        // disable rules from base configurations
+        "no-console": "off",
+        "no-control-regex": "off",
+
+        // stylistic conventions
+        "brace-style": ["error", "1tbs"],
+        "block-spacing": "error",
+        "array-bracket-spacing": "error",
+        "comma-spacing": "error",
+        "comma-style": "error",
+        "computed-property-spacing": "error",
+        "no-trailing-spaces": ["warn", {
+            "skipBlankLines": true
+        }],
+        "eol-last": "error",
+        "func-call-spacing": "error",
+        "indent": ["error", 4, {
+            "ArrayExpression": "first",
+            "SwitchCase": 1
+        }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double", {
+            "avoidEscape": true
+        }],
+        "semi": ["error", "always"],
+        "unicode-bom": "error"
+    },
+    "globals": {
+        /* core/* */
+        "Chef": false,
+        "Dish": false,
+        "Recipe": false,
+        "Ingredient": false,
+        "Operation": false,
+        "Utils": false,
+        
+        /* config/* */
+        "Categories": false,
+        "OperationConfig": false,
+        
+        /* views/html/* */
+        "HTMLApp": false,
+        "HTMLCategory": false,
+        "HTMLOperation": false,
+        "HTMLIngredient": false,
+        "Manager": false,
+        "ControlsWaiter": false,
+        "HighlighterWaiter": false,
+        "InputWaiter": false,
+        "OperationsWaiter": false,
+        "OptionsWaiter": false,
+        "OutputWaiter": false,
+        "RecipeWaiter": false,
+        "SeasonalWaiter": false,
+        "WindowWaiter": false
+    }
+}

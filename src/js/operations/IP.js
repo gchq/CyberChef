@@ -46,13 +46,13 @@ var IP = {
             ipv6_range_regex = /^\s*(((?=.*::)(?!.*::[^-]+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*-\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\17)::|:\b|(?![\dA-F])))|(?!\16\17)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
             match;
         
-        if (!!(match = ipv4_cidr_regex.exec(input))) {
+        if ((match = ipv4_cidr_regex.exec(input))) {
             return IP._ipv4_cidr_range(match, include_network_info, enumerate_addresses, allow_large_list);
-        } else if (!!(match = ipv4_range_regex.exec(input))) {
+        } else if ((match = ipv4_range_regex.exec(input))) {
             return IP._ipv4_hyphenated_range(match, include_network_info, enumerate_addresses, allow_large_list);
-        } else if (!!(match = ipv6_cidr_regex.exec(input))) {
+        } else if ((match = ipv6_cidr_regex.exec(input))) {
             return IP._ipv6_cidr_range(match, include_network_info);
-        } else if (!!(match = ipv6_range_regex.exec(input))) {
+        } else if ((match = ipv6_range_regex.exec(input))) {
             return IP._ipv6_hyphenated_range(match, include_network_info);
         } else {
             return "Invalid input.\n\nEnter either a CIDR range (e.g. 10.0.0.0/24) or a hyphenated range (e.g. 10.0.0.0 - 10.0.1.0). IPv6 also supported.";
@@ -82,7 +82,7 @@ var IP = {
         var match,
             output = "";
         
-        if (!!(match = IP.IPv6_REGEX.exec(input))) {
+        if ((match = IP.IPv6_REGEX.exec(input))) {
             var ipv6 = IP._str_to_ipv6(match[1]),
                 longhand = IP._ipv6_to_str(ipv6),
                 shorthand = IP._ipv6_to_str(ipv6, true);
@@ -90,11 +90,11 @@ var IP = {
             output += "Longhand:  " + longhand + "\nShorthand: " + shorthand + "\n";
             
             // Detect reserved addresses
-            if (shorthand == "::") {
+            if (shorthand === "::") {
                 // Unspecified address
                 output += "\nUnspecified address corresponding to 0.0.0.0/32 in IPv4.";
                 output += "\nUnspecified address range: ::/128";
-            } else if (shorthand == "::1") {
+            } else if (shorthand === "::1") {
                 // Loopback address
                 output += "\nLoopback address to the local host corresponding to 127.0.0.1/8 in IPv4.";
                 output += "\nLoopback addresses range: ::1/128";
@@ -171,18 +171,18 @@ var IP = {
                 // Benchmarking
                 output += "\nAssigned to the Benchmarking Methodology Working Group (BMWG) for benchmarking IPv6. Corresponds to 198.18.0.0/15 for benchmarking IPv4. See RFC 5180 for more details.";
                 output += "\nBMWG range: 2001:2::/48";
-            } else if (ipv6[0] == 0x2001 && ipv6[1] >= 0x10 && ipv6[1] <= 0x1f) {
+            } else if (ipv6[0] === 0x2001 && ipv6[1] >= 0x10 && ipv6[1] <= 0x1f) {
                 // ORCHIDv1
                 output += "\nDeprecated, previously ORCHIDv1 (Overlay Routable Cryptographic Hash Identifiers).\nORCHIDv1 range: 2001:10::/28\nORCHIDv2 now uses 2001:20::/28.";
-            } else if (ipv6[0] == 0x2001 && ipv6[1] >= 0x20 && ipv6[1] <= 0x2f) {
+            } else if (ipv6[0] === 0x2001 && ipv6[1] >= 0x20 && ipv6[1] <= 0x2f) {
                 // ORCHIDv2
                 output += "\nORCHIDv2 (Overlay Routable Cryptographic Hash Identifiers).\nThese are non-routed IPv6 addresses used for Cryptographic Hash Identifiers.";
                 output += "\nORCHIDv2 range: 2001:20::/28";
-            } else if (ipv6[0] == 0x2001 && ipv6[1] == 0xdb8) {
+            } else if (ipv6[0] === 0x2001 && ipv6[1] === 0xdb8) {
                 // Documentation
                 output += "\nThis is a documentation IPv6 address. This range should be used whenever an example IPv6 address is given or to model networking scenarios. Corresponds to 192.0.2.0/24, 198.51.100.0/24, and 203.0.113.0/24 in IPv4.";
                 output += "\nDocumentation range: 2001:db8::/32";
-            } else if (ipv6[0] == 0x2002) {
+            } else if (ipv6[0] === 0x2002) {
                 // 6to4
                 output += "\n6to4 transition IPv6 address detected. See RFC 3056 for more details." +
                     "\n6to4 prefix range: 2002::/16";
@@ -241,7 +241,7 @@ var IP = {
             if (lines[i] === "") continue;
             var ba_ip = [];
             
-            if (in_format == out_format) {
+            if (in_format === out_format) {
                 output += lines[i] + "\n";
                 continue;
             }
@@ -341,7 +341,7 @@ var IP = {
             
         // Parse all IPs and add to network dictionary
         for (var i = 0; i < ips.length; i++) {
-            if (!!(match = IP.IPv4_REGEX.exec(ips[i]))) {
+            if ((match = IP.IPv4_REGEX.exec(ips[i]))) {
                 ip = IP._str_to_ipv4(match[1]) >>> 0;
                 network = ip & ipv4_mask;
                 
@@ -350,7 +350,7 @@ var IP = {
                 } else {
                     ipv4_networks[network] = [ip];
                 }
-            } else if (!!(match = IP.IPv6_REGEX.exec(ips[i]))) {
+            } else if ((match = IP.IPv6_REGEX.exec(ips[i]))) {
                 ip = IP._str_to_ipv6(match[1]);
                 network = [];
                 network_str = "";
@@ -478,7 +478,7 @@ var IP = {
             ip2[i] = ip1[i] | (~mask[i] & 0x0000FFFF);
             total_diff = (ip2[i] - ip1[i]).toString(2);
             
-            if (total_diff != "0") {
+            if (total_diff !== "0") {
                 for (var n = 0; n < total_diff.length; n++) {
                     total[i*16 + 16-(total_diff.length-n)] = total_diff[n];
                 }
@@ -599,7 +599,7 @@ var IP = {
         
         for (i = 0; i < 8; i++) {
             t = (ip2[i] - ip1[i]).toString(2);
-            if (t != "0") {
+            if (t !== "0") {
                 for (var n = 0; n < t.length; n++) {
                     total[i*16 + 16-(t.length-n)] = t[n];
                 }
@@ -640,7 +640,7 @@ var IP = {
         return result;
         
         function parse_blocks(blocks) {
-            if (blocks.length != 4)
+            if (blocks.length !== 4)
                 throw "More than 4 blocks.";
                 
             var num_blocks = [];
@@ -695,7 +695,7 @@ var IP = {
         for (var i = 0; i < 8; i++) {
             if (isNaN(num_blocks[j])) {
                 ipv6[i] = 0;
-                if (i == (8-num_blocks.slice(j).length)) j++;
+                if (i === (8-num_blocks.slice(j).length)) j++;
             } else {
                 ipv6[i] = num_blocks[j];
                 j++;
@@ -734,7 +734,6 @@ var IP = {
      */
     _ipv6_to_str: function(ipv6, compact) {
         var output = "",
-            skips = 0,
             i = 0;
             
         if (compact) {
@@ -756,8 +755,8 @@ var IP = {
             }
             
             for (i = 0; i < 8; i++) {
-                if (i != start) {
-                    output += Utils.hex(ipv6[i],1) + ":";
+                if (i !== start) {
+                    output += Utils.hex(ipv6[i], 1) + ":";
                 } else {
                     output += ":";
                     i = end;
@@ -768,10 +767,10 @@ var IP = {
                 output = ":" + output;
         } else {
             for (i = 0; i < 8; i++) {
-                output += Utils.hex(ipv6[i],4) + ":";
+                output += Utils.hex(ipv6[i], 4) + ":";
             }
         }
-        return output.slice(0,output.length-1);
+        return output.slice(0, output.length-1);
     },
     
     

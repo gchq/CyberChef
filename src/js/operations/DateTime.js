@@ -30,16 +30,16 @@ var DateTime = {
         
         input = parseFloat(input);
         
-        if (units == "Seconds (s)") {
+        if (units === "Seconds (s)") {
             d = moment.unix(input);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
-        } else if (units == "Milliseconds (ms)") {
+        } else if (units === "Milliseconds (ms)") {
             d = moment(input);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
-        } else if (units == "Microseconds (μs)") {
+        } else if (units === "Microseconds (μs)") {
             d = moment(input / 1000);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
-        } else if (units == "Nanoseconds (ns)") {
+        } else if (units === "Nanoseconds (ns)") {
             d = moment(input / 1000000);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
         } else {
@@ -59,13 +59,13 @@ var DateTime = {
         var units = args[0],
             d = moment(input);
         
-        if (units == "Seconds (s)") {
+        if (units === "Seconds (s)") {
             return d.unix();
-        } else if (units == "Milliseconds (ms)") {
+        } else if (units === "Milliseconds (ms)") {
             return d.valueOf();
-        } else if (units == "Microseconds (μs)") {
+        } else if (units === "Microseconds (μs)") {
             return d.valueOf() * 1000;
-        } else if (units == "Nanoseconds (ns)") {
+        } else if (units === "Nanoseconds (ns)") {
             return d.valueOf() * 1000000;
         } else {
             throw "Unrecognised unit";
@@ -139,7 +139,7 @@ var DateTime = {
 
         try {
             date = moment.tz(input, input_format, input_timezone);
-            if (!date || date.format() == "Invalid date") throw Error;
+            if (!date || date.format() === "Invalid date") throw Error;
         } catch(err) {
             return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
         }
@@ -163,7 +163,7 @@ var DateTime = {
             
         try {
             date = moment.tz(input, input_format, input_timezone);
-            if (!date || date.format() == "Invalid date") throw Error;
+            if (!date || date.format() === "Invalid date") throw Error;
         } catch(err) {
             return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
         }

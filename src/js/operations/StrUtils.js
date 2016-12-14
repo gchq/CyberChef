@@ -108,7 +108,7 @@ var StrUtils = {
         if (i) modifiers += "i";
         if (m) modifiers += "m";
         
-        if (user_regex && user_regex != "^" && user_regex != "$") {
+        if (user_regex && user_regex !== "^" && user_regex !== "$") {
             try {
                 var regex = new RegExp(user_regex, modifiers);
                 
@@ -223,7 +223,7 @@ var StrUtils = {
         if (i) modifiers += "i";
         if (m) modifiers += "m";
         
-        if (type == "Regex") {
+        if (type === "Regex") {
             find = new RegExp(find, modifiers);
         } else if (type.indexOf("Extended") === 0) {
             find = Utils.parse_escaped_chars(find);
@@ -291,7 +291,7 @@ var StrUtils = {
             output = "",
             diff;
             
-        if (!samples || samples.length != 2) {
+        if (!samples || samples.length !== 2) {
             return "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?";
         }
         
@@ -379,7 +379,7 @@ var StrUtils = {
             
             // Loop through each sample to see if the chars are the same
             for (s = 1; s < samples.length; s++) {
-                if (samples[s][i] != chr) {
+                if (samples[s][i] !== chr) {
                     match = false;
                     break;
                 }
@@ -390,26 +390,26 @@ var StrUtils = {
             for (s = 0; s < samples.length; s++) {
                 if (samples[s].length <= i) {
                     if (in_match) outputs[s] += "</span>";
-                    if (s == samples.length - 1) in_match = false;
+                    if (s === samples.length - 1) in_match = false;
                     continue;
                 }
                 
                 if (match && !in_match) {
                     outputs[s] += "<span class='hlgreen'>" + Utils.escape_html(samples[s][i]);
-                    if (samples[s].length == i + 1) outputs[s] += "</span>";
-                    if (s == samples.length - 1) in_match = true;
+                    if (samples[s].length === i + 1) outputs[s] += "</span>";
+                    if (s === samples.length - 1) in_match = true;
                 } else if (!match && in_match) {
                     outputs[s] += "</span>" + Utils.escape_html(samples[s][i]);
-                    if (s == samples.length - 1) in_match = false;
+                    if (s === samples.length - 1) in_match = false;
                 } else {
                     outputs[s] += Utils.escape_html(samples[s][i]);
-                    if (in_match && samples[s].length == i + 1) {
+                    if (in_match && samples[s].length === i + 1) {
                         outputs[s] += "</span>";
-                        if (samples[s].length - 1 != i) in_match = false;
+                        if (samples[s].length - 1 !== i) in_match = false;
                     }
                 }
                 
-                if (samples[0].length - 1 == i) {
+                if (samples[0].length - 1 === i) {
                     if (in_match) outputs[s] += "</span>";
                     outputs[s] += Utils.escape_html(samples[s].substring(i + 1));
                 }
@@ -448,7 +448,7 @@ var StrUtils = {
             i = 0,
             total = 0;
         
-        while (!!(m = regex.exec(input))) {
+        while ((m = regex.exec(input))) {
             // Add up to match
             output += Utils.escape_html(input.slice(i, m.index));
             
@@ -456,7 +456,7 @@ var StrUtils = {
             output += "<span class='hl"+hl+"'>" + Utils.escape_html(m[0]) + "</span>";
             
             // Switch highlight
-            hl = hl == 1 ? 2 : 1;
+            hl = hl === 1 ? 2 : 1;
             
             i = regex.lastIndex;
             total++;
@@ -488,7 +488,7 @@ var StrUtils = {
             total = 0,
             match;
             
-        while (!!(match = regex.exec(input))) {
+        while ((match = regex.exec(input))) {
             total++;
             if (matches) {
                 output += match[0] + "\n";

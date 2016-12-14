@@ -22,8 +22,7 @@ var RecipeWaiter = function(app, manager) {
  * Sets up the drag and drop capability for operations in the operations and recipe areas.
  */
 RecipeWaiter.prototype.initialise_operation_drag_n_drop = function() {
-    var rec_list = document.getElementById("rec_list"),
-        op_lists = document.querySelectorAll(".category .op_list");
+    var rec_list = document.getElementById("rec_list");
     
     
     // Recipe list
@@ -102,7 +101,7 @@ RecipeWaiter.prototype.create_sortable_seed_list = function(list_el) {
  */
 RecipeWaiter.prototype.op_sort_end = function(evt) {
     if (this.remove_intent) {
-        if (evt.item.parentNode.id == "rec_list") {
+        if (evt.item.parentNode.id === "rec_list") {
             evt.item.remove();
         }
         return;
@@ -197,7 +196,7 @@ RecipeWaiter.prototype.ing_change = function() {
 RecipeWaiter.prototype.disable_click = function(e) {
     var icon = e.target;
     
-    if (icon.getAttribute("disabled") == "false") {
+    if (icon.getAttribute("disabled") === "false") {
         icon.setAttribute("disabled", "true");
         icon.classList.add("disable-icon-selected");
         icon.parentNode.parentNode.classList.add("disabled");
@@ -222,7 +221,7 @@ RecipeWaiter.prototype.disable_click = function(e) {
 RecipeWaiter.prototype.breakpoint_click = function(e) {
     var bp = e.target;
 
-    if (bp.getAttribute("break") == "false") {
+    if (bp.getAttribute("break") === "false") {
         bp.setAttribute("break", "true");
         bp.classList.add("breakpoint-selected");
     } else {
@@ -276,7 +275,7 @@ RecipeWaiter.prototype.get_config = function() {
         ing_list = operations[i].querySelectorAll(".arg");
         
         for (var j = 0; j < ing_list.length; j++) {
-            if (ing_list[j].getAttribute("type") == "checkbox") {
+            if (ing_list[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 ingredients[j] = ing_list[j].checked;
             } else if (ing_list[j].classList.contains("toggle-string")) {
@@ -296,11 +295,11 @@ RecipeWaiter.prototype.get_config = function() {
             args: ingredients
         };
         
-        if (disabled && disabled.getAttribute("disabled") == "true") {
+        if (disabled && disabled.getAttribute("disabled") === "true") {
             item.disabled = true;
         }
         
-        if (bp && bp.getAttribute("break") == "true") {
+        if (bp && bp.getAttribute("break") === "true") {
             item.breakpoint = true;
         }
         
@@ -319,7 +318,7 @@ RecipeWaiter.prototype.get_config = function() {
 RecipeWaiter.prototype.update_breakpoint_indicator = function(position) {
     var operations = document.querySelectorAll("#rec_list li.operation");
     for (var i = 0; i < operations.length; i++) {
-        if (i == position) {
+        if (i === position) {
             operations[i].classList.add("break");
         } else {
             operations[i].classList.remove("break");
@@ -360,10 +359,11 @@ RecipeWaiter.prototype.build_recipe_operation = function(el) {
  */
 RecipeWaiter.prototype.add_operation = function(name) {
     var item = document.createElement("li");
-        item.classList.add("operation");
-        item.innerHTML = name;
-        this.build_recipe_operation(item);
-        document.getElementById("rec_list").appendChild(item);
+    
+    item.classList.add("operation");
+    item.innerHTML = name;
+    this.build_recipe_operation(item);
+    document.getElementById("rec_list").appendChild(item);
     
     item.dispatchEvent(this.manager.operationadd);
     return item;

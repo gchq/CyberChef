@@ -38,7 +38,7 @@ OutputWaiter.prototype.set = function(data_str, type, duration) {
         output_highlighter = document.getElementById("output-highlighter"),
         input_highlighter = document.getElementById("input-highlighter");
 
-    if (type == "html") {
+    if (type === "html") {
         output_text.style.display = "none";
         output_html.style.display = "block";
         output_highlighter.display = "none";
@@ -51,7 +51,7 @@ OutputWaiter.prototype.set = function(data_str, type, duration) {
         var script_elements = output_html.querySelectorAll("script");
         for (var i = 0; i < script_elements.length; i++) {
             try {
-                eval(script_elements[i].innerHTML); // jshint ignore:line
+                eval(script_elements[i].innerHTML); // eslint-disable-line no-eval
             } catch (err) {
                 console.error(err);
             }

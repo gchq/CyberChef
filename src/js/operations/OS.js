@@ -45,12 +45,12 @@ var OS = {
             output = "",
             octal = null,
             textual = null;
-        
+
         if (input.search(/\s*[0-7]{1,4}\s*/i) === 0) {
             // Input is octal
             octal = input.match(/\s*([0-7]{1,4})\s*/i)[1];
 
-            if (octal.length == 4) {
+            if (octal.length === 4) {
                 d = parseInt(octal[0], 8);
                 u = parseInt(octal[1], 8);
                 g = parseInt(octal[2], 8);
@@ -60,26 +60,26 @@ var OS = {
                 if (octal.length > 1) g = parseInt(octal[1], 8);
                 if (octal.length > 2) o = parseInt(octal[2], 8);
             }
-            
+
             perms.su = d >> 2 & 0x1;
             perms.sg = d >> 1 & 0x1;
             perms.sb = d & 0x1;
-                    
+
             perms.ru = u >> 2 & 0x1;
             perms.wu = u >> 1 & 0x1;
             perms.eu = u & 0x1;
-            
+
             perms.rg = g >> 2 & 0x1;
             perms.wg = g >> 1 & 0x1;
             perms.eg = g & 0x1;
-            
+
             perms.ro = o >> 2 & 0x1;
             perms.wo = o >> 1 & 0x1;
             perms.eo = o & 0x1;
         } else if (input.search(/\s*[dlpcbDrwxsStT-]{1,10}\s*/) === 0) {
             // Input is textual
             textual = input.match(/\s*([dlpcbDrwxsStT-]{1,10})\s*/)[1];
-            
+
             switch (textual[0]) {
                 case "d":
                     perms.d = true;
@@ -103,9 +103,9 @@ var OS = {
                     perms.dr = true;
                     break;
             }
-            
-            if (textual.length > 1) perms.ru = textual[1] == "r";
-            if (textual.length > 2) perms.wu = textual[2] == "w";
+
+            if (textual.length > 1) perms.ru = textual[1] === "r";
+            if (textual.length > 2) perms.wu = textual[2] === "w";
             if (textual.length > 3) {
                 switch (textual[3]) {
                     case "x":
@@ -120,9 +120,9 @@ var OS = {
                         break;
                 }
             }
-            
-            if (textual.length > 4) perms.rg = textual[4] == "r";
-            if (textual.length > 5) perms.wg = textual[5] == "w";
+
+            if (textual.length > 4) perms.rg = textual[4] === "r";
+            if (textual.length > 5) perms.wg = textual[5] === "w";
             if (textual.length > 6) {
                 switch (textual[6]) {
                     case "x":
@@ -137,9 +137,9 @@ var OS = {
                         break;
                 }
             }
-            
-            if (textual.length > 7) perms.ro = textual[7] == "r";
-            if (textual.length > 8) perms.wo = textual[8] == "w";
+
+            if (textual.length > 7) perms.ro = textual[7] === "r";
+            if (textual.length > 8) perms.wo = textual[8] === "w";
             if (textual.length > 9) {
                 switch (textual[9]) {
                     case "x":
@@ -157,15 +157,15 @@ var OS = {
         } else {
             return "Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.";
         }
-        
+
         output += "Textual representation: " + OS._perms_to_str(perms);
         output += "\nOctal representation:   " + OS._perms_to_octal(perms);
- 
+
         // File type
         if (textual) {
             output += "\nFile type: " + OS._ft_from_perms(perms);
         }
-        
+
         // setuid, setgid
         if (perms.su) {
             output += "\nThe setuid flag is set";
@@ -173,15 +173,15 @@ var OS = {
         if (perms.sg) {
             output += "\nThe setgid flag is set";
         }
-        
+
         // sticky bit
         if (perms.sb) {
             output += "\nThe sticky bit is set";
         }
-        
+
         // Permission matrix
         output += "\n\n +---------+-------+-------+-------+\n" +
-            " |         | User  | Group | Other |\n" + 
+            " |         | User  | Group | Other |\n" +
             " +---------+-------+-------+-------+\n" +
             " |    Read |   " + (perms.ru ? "X" : " ") + "   |   " + (perms.rg ? "X" : " ") + "   |   " + (perms.ro ? "X" : " ") + "   |\n" +
             " +---------+-------+-------+-------+\n" +
@@ -189,11 +189,11 @@ var OS = {
             " +---------+-------+-------+-------+\n" +
             " | Execute |   " + (perms.eu ? "X" : " ") + "   |   " + (perms.eg ? "X" : " ") + "   |   " + (perms.eo ? "X" : " ") + "   |\n" +
             " +---------+-------+-------+-------+\n";
- 
+
         return output;
     },
-    
-    
+
+
     /**
      * Given a permissions object dictionary, generates a textual permissions string.
      *
@@ -204,7 +204,7 @@ var OS = {
     _perms_to_str: function(perms) {
         var str = "",
             type = "-";
-            
+
         if (perms.d) type = "d";
         if (perms.sl) type = "l";
         if (perms.np) type = "p";
@@ -212,9 +212,9 @@ var OS = {
         if (perms.cd) type = "c";
         if (perms.bd) type = "b";
         if (perms.dr) type = "D";
-        
+
         str = type;
-        
+
         str += perms.ru ? "r" : "-";
         str += perms.wu ? "w" : "-";
         if (perms.eu && perms.su) {
@@ -226,7 +226,7 @@ var OS = {
         } else {
             str += "-";
         }
-        
+
         str += perms.rg ? "r" : "-";
         str += perms.wg ? "w" : "-";
         if (perms.eg && perms.sg) {
@@ -238,7 +238,7 @@ var OS = {
         } else {
             str += "-";
         }
-        
+
         str += perms.ro ? "r" : "-";
         str += perms.wo ? "w" : "-";
         if (perms.eo && perms.sb) {
@@ -250,11 +250,11 @@ var OS = {
         } else {
             str += "-";
         }
-        
+
         return str;
     },
-    
-    
+
+
     /**
      * Given a permissions object dictionary, generates an octal permissions string.
      *
@@ -267,27 +267,27 @@ var OS = {
             u = 0,
             g = 0,
             o = 0;
-        
+
         if (perms.su) d += 4;
         if (perms.sg) d += 2;
         if (perms.sb) d += 1;
-        
+
         if (perms.ru) u += 4;
         if (perms.wu) u += 2;
         if (perms.eu) u += 1;
-        
+
         if (perms.rg) g += 4;
         if (perms.wg) g += 2;
         if (perms.eg) g += 1;
-        
+
         if (perms.ro) o += 4;
         if (perms.wo) o += 2;
         if (perms.eo) o += 1;
-        
+
         return d.toString() + u.toString() + g.toString() + o.toString();
     },
-    
-    
+
+
     /**
      * Given a permissions object dictionary, returns the file type.
      *
@@ -305,5 +305,5 @@ var OS = {
         if (perms.dr) return "Door";
         return "Regular file";
     },
-    
+
 };

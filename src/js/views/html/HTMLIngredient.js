@@ -32,16 +32,16 @@ var HTMLIngredient = function(config, app, manager) {
  * @returns {string}
  */
 HTMLIngredient.prototype.to_html = function() {
-    var inline = (this.type == "boolean" ||
-                  this.type == "number" ||
-                  this.type == "option" ||
-                  this.type == "short_string" ||
-                  this.type == "binary_short_string"),
+    var inline = (this.type === "boolean" ||
+                  this.type === "number" ||
+                  this.type === "option" ||
+                  this.type === "short_string" ||
+                  this.type === "binary_short_string"),
         html = inline ? "" : "<div class='clearfix'>&nbsp;</div>",
         i, m;
     
     html += "<div class='arg-group" + (inline ? " inline-args" : "") +
-        (this.type == "text" ? " arg-group-text" : "") + "'><label class='arg-label' for='" +
+        (this.type === "text" ? " arg-group-text" : "") + "'><label class='arg-label' for='" +
         this.id + "'>" + this.name + "</label>";
     
     switch (this.type) {
@@ -92,9 +92,9 @@ HTMLIngredient.prototype.to_html = function() {
             html += "<select class='arg' id='" + this.id + "'arg_name='" + this.name + "'" +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
             for (i = 0; i < this.value.length; i++) {
-                if (!!(m = this.value[i].match(/\[([a-z0-9 -()^]+)\]/i))) {
+                if ((m = this.value[i].match(/\[([a-z0-9 -()^]+)\]/i))) {
                     html += "<optgroup label='" + m[1] + "'>";
-                } else if (!!(m = this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i))) {
+                } else if ((m = this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                     html += "</optgroup>";
                 } else {
                     html += "<option>" + this.value[i] + "</option>";
@@ -106,9 +106,9 @@ HTMLIngredient.prototype.to_html = function() {
             html += "<select class='arg' id='" + this.id + "'arg_name='" + this.name + "'" +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
             for (i = 0; i < this.value.length; i++) {
-                if (!!(m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
+                if ((m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
                     html += "<optgroup label='" + m[1] + "'>";
-                } else if (!!(m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
+                } else if ((m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                     html += "</optgroup>";
                 } else {
                     html += "<option populate-value='" + this.value[i].value + "'>" +

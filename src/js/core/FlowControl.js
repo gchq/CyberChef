@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var FlowControl = {
+const FlowControl = {
 
     /**
      * @constant
@@ -46,7 +46,7 @@ var FlowControl = {
         // Create sub_op_list for each tranche to operate on
         // (all remaining operations unless we encounter a Merge)
         for (var i = state.progress + 1; i < op_list.length; i++) {
-            if (op_list[i].name == "Merge" && !op_list[i].is_disabled()) {
+            if (op_list[i].name === "Merge" && !op_list[i].is_disabled()) {
                 break;
             } else {
                 sub_op_list.push(op_list[i]);

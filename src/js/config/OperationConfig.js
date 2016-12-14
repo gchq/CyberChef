@@ -1,8 +1,8 @@
 /*
- * Tell JSHint to ignore "'Object' is not defined" errors in this file, as it references every
+ * Tell eslint to ignore "'Object' is not defined" errors in this file, as it references every
  * single operation object by definition.
  */
-/* jshint -W117 */
+/* eslint no-undef: "off" */
 
 
 /**
@@ -45,7 +45,7 @@
  * @constant
  * @type {Object.<string, OpConf>}
  */
-var OperationConfig = {
+const OperationConfig = {
     "Fork": {
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
         run: FlowControl.run_fork,

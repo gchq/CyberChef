@@ -21,12 +21,12 @@ var InputWaiter = function(app, manager) {
         19, //Pause
         20, //Caps
         27, //Esc
-        33,34,35,36, //PgUp, PgDn, End, Home
-        37,38,39,40, //Directional
+        33, 34, 35, 36, //PgUp, PgDn, End, Home
+        37, 38, 39, 40, //Directional
         44, //PrntScrn
-        91,92, //Win
+        91, 92, //Win
         93, //Context
-        112,113,114,115,116,117,118,119,120,121,122,123, //F1-12
+        112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, //F1-12
         144, //Num
         145, //Scroll
     ];
@@ -162,8 +162,8 @@ InputWaiter.prototype.input_drop = function(e) {
         
         this.set(input_charcode);
         var recipe_config = this.app.get_recipe_config();
-        if (!recipe_config[0] || recipe_config[0].op != "From Hex") {
-            recipe_config.unshift({op:"From Hex",args:["Space"]});
+        if (!recipe_config[0] || recipe_config[0].op !== "From Hex") {
+            recipe_config.unshift({op:"From Hex", args:["Space"]});
             this.app.set_recipe_config(recipe_config);
         }
         
@@ -178,14 +178,14 @@ InputWaiter.prototype.input_drop = function(e) {
         el.value = "Processing... " + Math.round(offset / file.size * 100) + "%";
         var slice = file.slice(offset, offset + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
-    }.bind(this);
+    };
     
     reader.onload = function(e) {
         var data = new Uint8Array(reader.result);
         input_charcode += Utils.to_hex_fast(data);
         offset += CHUNK_SIZE;
         seek();
-    }.bind(this);
+    };
     
     
     el.classList.remove("dropping-file");

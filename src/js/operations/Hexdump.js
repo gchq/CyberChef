@@ -58,7 +58,7 @@ var Hexdump = {
                 Utils.pad_right(hexa, (length*(padding+1))) +
                 " |" + Utils.pad_right(Utils.printable(Utils.byte_array_to_chars(buff)), buff.length) + "|\n";
                 
-            if (include_final_length && i+buff.length == input.length) {
+            if (include_final_length && i+buff.length === input.length) {
                 output += Utils.hex(i+buff.length, 8) + "\n";
             }
         }
@@ -79,7 +79,7 @@ var Hexdump = {
             regex = /^\s*(?:[\dA-F]{4,16}:?)?\s*((?:[\dA-F]{2}\s){1,8}(?:\s|[\dA-F]{2}-)(?:[\dA-F]{2}\s){1,8}|(?:[\dA-F]{2}\s|[\dA-F]{4}\s)+)/igm,
             block, line;
             
-        while (!!(block = regex.exec(input))) {
+        while ((block = regex.exec(input))) {
             line = Utils.from_hex(block[1].replace(/-/g, " "));
             for (var i = 0; i < line.length; i++) {
                 output.push(line[i]);
@@ -89,7 +89,7 @@ var Hexdump = {
         var width = input.indexOf("\n");
         var w = (width - 13) / 4;
         // w should be the specified width of the hexdump and therefore a round number
-        if (Math.floor(w) != w || input.indexOf("\r") != -1 || output.indexOf(13) != -1) {
+        if (Math.floor(w) !== w || input.indexOf("\r") !== -1 || output.indexOf(13) !== -1) {
             app.options.attempt_highlight = false;
         }
         return output;
@@ -118,14 +118,17 @@ var Hexdump = {
         
         line = Math.floor(pos[0].end / w);
         offset = pos[0].end % w;
-        if (offset === 0) { line--; offset = w; }
+        if (offset === 0) {
+            line--;
+            offset = w;
+        }
         pos[0].end = line*width + 10 + offset*3 - 1;
         
         // Set up multiple selections for bytes
         var start_line_num = Math.floor(pos[0].start / width);
         var end_line_num = Math.floor(pos[0].end / width);
         
-        if (start_line_num == end_line_num) {
+        if (start_line_num === end_line_num) {
             pos.push(pos[0]);
         } else {
             start = pos[0].start;

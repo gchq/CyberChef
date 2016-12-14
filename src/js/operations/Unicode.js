@@ -29,7 +29,7 @@ var Unicode = {
             m,
             i = 0;
         
-        while (!!(m = regex.exec(input))) {
+        while ((m = regex.exec(input))) {
             // Add up to match
             output += input.slice(i, m.index);
             i = m.index;
