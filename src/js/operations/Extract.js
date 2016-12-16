@@ -25,7 +25,7 @@ var Extract = {
             total = 0,
             match;
             
-        while (!!(match = search_regex.exec(input))) {
+        while ((match = search_regex.exec(input))) {
             if (remove_regex && remove_regex.test(match[0]))
                 continue;
             total++;

@@ -10,7 +10,7 @@
  * @namespace
  */
 var Cipher = {
-    
+
     /**
      * @constant
      * @default
@@ -46,8 +46,8 @@ var Cipher = {
      * @default
      */
     RESULT_TYPE: ["Show all", "Ciphertext", "Key", "IV", "Salt"],
-    
-    
+
+
     /**
      * Runs encryption operations using the CryptoJS framework.
      *
@@ -65,21 +65,21 @@ var Cipher = {
             padding = CryptoJS.pad[args[4]],
             result_option = args[5].toLowerCase(),
             output_format = args[6];
-        
+
         if (iv.sigBytes === 0) {
             // Use passphrase rather than key. Need to convert it to a string.
             key = key.toString(CryptoJS.enc.Latin1);
         }
-        
+
         var encrypted = algo.encrypt(input, key, {
             salt: salt.sigBytes > 0 ? salt : false,
             iv: iv.sigBytes > 0 ? iv : null,
             mode: mode,
             padding: padding
         });
-        
+
         var result = "";
-        if (result_option == "show all") {
+        if (result_option === "show all") {
             result += "Key:  " + encrypted.key.toString(Utils.format[output_format]);
             result += "\nIV:   " + encrypted.iv.toString(Utils.format[output_format]);
             if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Utils.format[output_format]);
@@ -87,11 +87,11 @@ var Cipher = {
         } else {
             result = encrypted[result_option].toString(Utils.format[output_format]);
         }
-        
+
         return result;
     },
-    
-    
+
+
     /**
      * Runs decryption operations using the CryptoJS framework.
      *
@@ -109,39 +109,39 @@ var Cipher = {
             padding = CryptoJS.pad[args[4]],
             input_format = args[5],
             output_format = args[6];
-        
+
         // The ZeroPadding option causes a crash when the input length is 0
         if (!input.length) {
             return "No input";
-        } 
-        
+        }
+
         var ciphertext = Utils.format[input_format].parse(input);
-        
+
         if (iv.sigBytes === 0) {
             // Use passphrase rather than key. Need to convert it to a string.
             key = key.toString(CryptoJS.enc.Latin1);
         }
-        
+
         var decrypted = algo.decrypt({
-                ciphertext: ciphertext,
-                salt: salt.sigBytes > 0 ? salt : false
-            }, key, {
-                iv: iv.sigBytes > 0 ? iv : null,
-                mode: mode,
-                padding: padding
-            });
-        
+            ciphertext: ciphertext,
+            salt: salt.sigBytes > 0 ? salt : false
+        }, key, {
+            iv: iv.sigBytes > 0 ? iv : null,
+            mode: mode,
+            padding: padding
+        });
+
         var result;
         try {
             result = decrypted.toString(Utils.format[output_format]);
         } catch (err) {
             result = "Decrypt error: " + err.message;
         }
-        
+
         return result;
     },
-    
-    
+
+
     /**
      * AES Encrypt operation.
      *
@@ -152,8 +152,8 @@ var Cipher = {
     run_aes_enc: function (input, args) {
         return Cipher._enc(CryptoJS.AES, input, args);
     },
-    
-    
+
+
     /**
      * AES Decrypt operation.
      *
@@ -164,8 +164,8 @@ var Cipher = {
     run_aes_dec: function (input, args) {
         return Cipher._dec(CryptoJS.AES, input, args);
     },
-    
-    
+
+
     /**
      * DES Encrypt operation.
      *
@@ -176,8 +176,8 @@ var Cipher = {
     run_des_enc: function (input, args) {
         return Cipher._enc(CryptoJS.DES, input, args);
     },
-    
-    
+
+
     /**
      * DES Decrypt operation.
      *
@@ -188,8 +188,8 @@ var Cipher = {
     run_des_dec: function (input, args) {
         return Cipher._dec(CryptoJS.DES, input, args);
     },
-    
-    
+
+
     /**
      * Triple DES Encrypt operation.
      *
@@ -200,8 +200,8 @@ var Cipher = {
     run_triple_des_enc: function (input, args) {
         return Cipher._enc(CryptoJS.TripleDES, input, args);
     },
-    
-    
+
+
     /**
      * Triple DES Decrypt operation.
      *
@@ -212,8 +212,8 @@ var Cipher = {
     run_triple_des_dec: function (input, args) {
         return Cipher._dec(CryptoJS.TripleDES, input, args);
     },
-    
-    
+
+
     /**
      * Rabbit Encrypt operation.
      *
@@ -224,8 +224,8 @@ var Cipher = {
     run_rabbit_enc: function (input, args) {
         return Cipher._enc(CryptoJS.Rabbit, input, args);
     },
-    
-    
+
+
     /**
      * Rabbit Decrypt operation.
      *
@@ -236,8 +236,8 @@ var Cipher = {
     run_rabbit_dec: function (input, args) {
         return Cipher._dec(CryptoJS.Rabbit, input, args);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -248,7 +248,7 @@ var Cipher = {
      * @default
      */
     BLOWFISH_OUTPUT_TYPES: ["Base64", "Hex", "String", "Raw"],
-    
+
     /**
      * Blowfish Encrypt operation.
      *
@@ -260,19 +260,19 @@ var Cipher = {
         var key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
             mode = args[1],
             output_format = args[2];
-            
+
         if (key.length === 0) return "Enter a key";
-        
+
         var enc_hex = blowfish.encrypt(input, key, {
                 outputType: 1,
                 cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
             }),
             enc = CryptoJS.enc.Hex.parse(enc_hex);
-            
+
         return enc.toString(Utils.format[output_format]);
     },
-    
-    
+
+
     /**
      * Blowfish Decrypt operation.
      *
@@ -284,18 +284,18 @@ var Cipher = {
         var key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
             mode = args[1],
             input_format = args[2];
-            
+
         if (key.length === 0) return "Enter a key";
-        
+
         input = Utils.format[input_format].parse(input);
-        
+
         return blowfish.decrypt(input.toString(CryptoJS.enc.Base64), key, {
             outputType: 0, // This actually means inputType. The library is weird.
             cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
         });
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -306,7 +306,7 @@ var Cipher = {
      * @default
      */
     KDF_ITERATIONS: 1,
-    
+
     /**
      * Derive PBKDF2 key operation.
      *
@@ -322,11 +322,11 @@ var Cipher = {
             output_format = args[4],
             passphrase = Utils.format[input_format].parse(input),
             key = CryptoJS.PBKDF2(passphrase, salt, { keySize: key_size, iterations: iterations });
-        
+
         return key.toString(Utils.format[output_format]);
     },
-    
-    
+
+
     /**
      * Derive EVP key operation.
      *
@@ -342,11 +342,11 @@ var Cipher = {
             output_format = args[4],
             passphrase = Utils.format[input_format].parse(input),
             key = CryptoJS.EvpKDF(passphrase, salt, { keySize: key_size, iterations: iterations });
-        
+
         return key.toString(Utils.format[output_format]);
     },
-    
-    
+
+
     /**
      * RC4 operation.
      *
@@ -358,17 +358,17 @@ var Cipher = {
         var message = Utils.format[args[1]].parse(input),
             passphrase = Utils.format[args[0].option].parse(args[0].string),
             encrypted = CryptoJS.RC4.encrypt(message, passphrase);
-            
+
         return encrypted.ciphertext.toString(Utils.format[args[2]]);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     RC4DROP_BYTES: 768,
-    
+
     /**
      * RC4 Drop operation.
      *
@@ -381,17 +381,107 @@ var Cipher = {
             passphrase = Utils.format[args[0].option].parse(args[0].string),
             drop = args[3],
             encrypted = CryptoJS.RC4Drop.encrypt(message, passphrase, { drop: drop });
-            
+
         return encrypted.ciphertext.toString(Utils.format[args[2]]);
     },
-    
+
+
+    /**
+     * Vigenère Encode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_vigenere_enc: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            key = args[0].toLowerCase(),
+            output = "",
+            fail = 0,
+            key_index,
+            msg_index,
+            chr;
+
+        if (!key) return "No key entered";
+        if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
+
+        for (var i = 0; i < input.length; i++) {
+            if (alphabet.indexOf(input[i]) >= 0) {
+                // Get the corresponding character of key for the current letter, accounting
+                // for chars not in alphabet
+                chr = key[(i - fail) % key.length];
+                // Get the location in the vigenere square of the key char
+                key_index = alphabet.indexOf(chr);
+                // Get the location in the vigenere square of the message char
+                msg_index = alphabet.indexOf(input[i]);
+                // Get the encoded letter by finding the sum of indexes modulo 26 and finding
+                // the letter corresponding to that
+                output += alphabet[(key_index + msg_index) % 26];
+            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                chr = key[(i - fail) % key.length].toLowerCase();
+                key_index = alphabet.indexOf(chr);
+                msg_index = alphabet.indexOf(input[i].toLowerCase());
+                output += alphabet[(key_index + msg_index) % 26].toUpperCase();
+            } else {
+                output += input[i];
+                fail++;
+            }
+        }
+
+        return output;
+    },
+
+
+    /**
+     * Vigenère Decode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_vigenere_dec: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            key = args[0].toLowerCase(),
+            output = "",
+            fail = 0,
+            key_index,
+            msg_index,
+            chr;
+
+        if (!key) return "No key entered";
+        if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
+
+        for (var i = 0; i < input.length; i++) {
+            if (alphabet.indexOf(input[i]) >= 0) {
+                chr = key[(i - fail) % key.length];
+                key_index = alphabet.indexOf(chr);
+                msg_index = alphabet.indexOf(input[i]);
+                // Subtract indexes from each other, add 26 just in case the value is negative,
+                // modulo to remove if neccessary
+                output += alphabet[(msg_index - key_index + alphabet.length ) % 26];
+            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                chr = key[(i - fail) % key.length].toLowerCase();
+                key_index = alphabet.indexOf(chr);
+                msg_index = alphabet.indexOf(input[i].toLowerCase());
+                output += alphabet[(msg_index + alphabet.length - key_index) % 26].toUpperCase();
+            } else {
+                output += input[i];
+                fail++;
+            }
+        }
+
+        return output;
+    },
+
 };
 
 
 /**
  * Overwriting the CryptoJS OpenSSL key derivation function so that it is possible to not pass a
  * salt in.
- 
+
  * @param {string} password - The password to derive from.
  * @param {number} keySize - The size in words of the key to generate.
  * @param {number} ivSize - The size in words of the IV to generate.

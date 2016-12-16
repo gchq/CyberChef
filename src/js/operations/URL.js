@@ -64,7 +64,7 @@ var URL_ = {
         
         if (a.protocol) {
             var output = "";
-            if (a.hostname != window.location.hostname) {
+            if (a.hostname !== window.location.hostname) {
                 output = "Protocol:\t" + a.protocol + "\n";
                 if (a.hostname) output += "Hostname:\t" + a.hostname + "\n";
                 if (a.port) output += "Port:\t\t" + a.port + "\n";

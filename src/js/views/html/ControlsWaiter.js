@@ -65,7 +65,7 @@ ControlsWaiter.prototype.adjust_width = function() {
 ControlsWaiter.prototype.set_auto_bake = function(value) {
     var auto_bake_checkbox = document.getElementById("auto-bake");
     
-    if (auto_bake_checkbox.checked != value) {
+    if (auto_bake_checkbox.checked !== value) {
         auto_bake_checkbox.click();
     }
 };
@@ -138,9 +138,7 @@ ControlsWaiter.prototype.clear_breaks_click = function() {
 ControlsWaiter.prototype.initialise_save_link = function(recipe_config) {
     recipe_config = recipe_config || this.app.get_recipe_config();
     
-    var recipe_str = JSON.stringify(recipe_config),
-        input_str = Utils.to_base64(this.app.get_input()),
-        include_recipe = document.getElementById("save-link-recipe-checkbox").checked,
+    var include_recipe = document.getElementById("save-link-recipe-checkbox").checked,
         include_input = document.getElementById("save-link-input-checkbox").checked,
         save_link_el = document.getElementById("save-link"),
         save_link = this.generate_state_url(include_recipe, include_input, recipe_config);
@@ -200,7 +198,7 @@ ControlsWaiter.prototype.save_text_change = function() {
  */
 ControlsWaiter.prototype.save_click = function() {
     var recipe_config = this.app.get_recipe_config();
-    var recipe_str = JSON.stringify(recipe_config).replace(/},{/g, '},\n{');
+    var recipe_str = JSON.stringify(recipe_config).replace(/},{/g, "},\n{");
     document.getElementById("save-text").value = recipe_str;
     
     this.initialise_save_link(recipe_config);
@@ -300,7 +298,7 @@ ControlsWaiter.prototype.load_delete_click = function() {
             JSON.parse(localStorage.saved_recipes) : [];
         
     saved_recipes = saved_recipes.filter(function(r) {
-        return r.id != id;
+        return r.id !== id;
     });
     
     localStorage.saved_recipes = JSON.stringify(saved_recipes);
@@ -318,7 +316,7 @@ ControlsWaiter.prototype.load_name_change = function(e) {
         id = parseInt(el.value, 10);
         
     var recipe = saved_recipes.filter(function(r) {
-        return r.id == id;
+        return r.id === id;
     })[0];
     
     document.getElementById("load-text").value = recipe.recipe;

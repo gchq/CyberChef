@@ -67,12 +67,11 @@ Ingredient.prepare = function(data, type) {
             return Utils.parse_escaped_chars(data);
         case "byte_array":
             if (typeof data == "string") {
-                data = data.replace(/\s+/g, '');
+                data = data.replace(/\s+/g, "");
                 return Utils.hex_to_byte_array(data);
             } else {
                 return data;
             }
-            break;
         case "number":
             var number = parseFloat(data);
             if (isNaN(number)) {

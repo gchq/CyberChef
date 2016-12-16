@@ -136,8 +136,8 @@ Manager.prototype.initialise_event_listeners = function() {
     // Options
     document.getElementById("options").addEventListener("click", this.options.options_click.bind(this.options));
     document.getElementById("reset-options").addEventListener("click", this.options.reset_options_click.bind(this.options));
-    $(".option-item input:checkbox").on("switchChange.bootstrapSwitch", this.options.switch_change.bind(this.options));
-    $(".option-item input:checkbox").on("switchChange.bootstrapSwitch", this.options.set_word_wrap.bind(this.options));
+    $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.switch_change.bind(this.options));
+    $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.set_word_wrap.bind(this.options));
     this.add_dynamic_listener(".option-item input[type=number]", "keyup", this.options.number_change, this.options);
     this.add_dynamic_listener(".option-item input[type=number]", "change", this.options.number_change, this.options);
     this.add_dynamic_listener(".option-item select", "change", this.options.select_change, this.options);

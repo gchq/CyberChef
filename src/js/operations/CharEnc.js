@@ -28,14 +28,14 @@ var CharEnc = {
         var input_format = args[0],
             output_format = args[1];
             
-        if (input_format == "Windows-1251") {
+        if (input_format === "Windows-1251") {
             input = Utils.win1251_to_unicode(input);
             input = CryptoJS.enc.Utf8.parse(input);
         } else {
             input = Utils.format[input_format].parse(input);
         }
         
-        if (output_format == "Windows-1251") {
+        if (output_format === "Windows-1251") {
             input = CryptoJS.enc.Utf8.stringify(input);
             return Utils.unicode_to_win1251(input);
         } else {

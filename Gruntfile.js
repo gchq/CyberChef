@@ -1,21 +1,23 @@
+/* eslint-env node */
+
 module.exports = function(grunt) {
     grunt.file.defaultEncoding = "utf8";
     grunt.file.preserveBOM = false;
-    
+
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
         ["clean:dev", "concat:css", "concat:js", "copy:html_dev", "copy:static_dev", "chmod:build", "watch"]);
-        
+
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["jshint", "exec:stats", "clean", "jsdoc", "concat", "copy:html_dev", "copy:html_prod", "copy:html_inline",
+        ["eslint", "exec:stats", "clean", "jsdoc", "concat", "copy:html_dev", "copy:html_prod", "copy:html_inline",
          "copy:static_dev", "copy:static_prod", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
-        
+
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
         ["clean:docs", "jsdoc", "chmod:docs"]);
-    
+
     grunt.registerTask("stats",
         "Provides statistics about the code base such as how many lines there are as well as details of file sizes before and after compression.",
         ["concat:js", "uglify:prod", "exec:stats", "exec:repo_size", "exec:display_stats"]);
@@ -23,17 +25,17 @@ module.exports = function(grunt) {
     grunt.registerTask("release",
         "Prepares and deploys a production version of CyberChef to the gh-pages branch.",
         ["copy:gh_pages", "exec:deploy_gh_pages"]);
-    
+
     grunt.registerTask("default",
         "Lints the code base and shows stats",
         ["jshint", "exec:stats", "exec:display_stats"]);
-    
+
     grunt.registerTask("doc", "docs");
-    grunt.registerTask("lint", "jshint");
-    
-    
+    grunt.registerTask("lint", "eslint");
+
+
     // Load tasks provided by each plugin
-    grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks("grunt-eslint");
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-concat");
@@ -45,8 +47,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-contrib-watch");
-    
-    
+
+
     // JS includes
     var js_files = [
         // Third party framework libraries
@@ -56,7 +58,7 @@ module.exports = function(grunt) {
         "src/js/lib/bootstrap-switch.js",
         "src/js/lib/yahoo.js",
         "src/js/lib/snowfall.jquery.js",
-        
+
         // Third party operation libraries
         "src/js/lib/cryptojs/core.js",
         "src/js/lib/cryptojs/x64-core.js",
@@ -132,22 +134,22 @@ module.exports = function(grunt) {
         
         // Custom libraries
         "src/js/lib/canvas_components.js",
-        
+
         // Utility functions
         "src/js/core/Utils.js",
-        
+
         // Operation objects
         "src/js/operations/*.js",
-        
+
         // Core framework objects
         "src/js/core/*.js",
         "src/js/config/Categories.js",
         "src/js/config/OperationConfig.js",
-        
+
         // HTML view objects
         "src/js/views/html/*.js",
         "!src/js/views/html/main.js",
-        
+
         // Start the app!
         "src/js/views/html/main.js",
     ];
@@ -179,12 +181,12 @@ module.exports = function(grunt) {
             codebase_stats: grunt.file.read("src/static/stats.txt").split("\n").join("<br>")
         }
     };
-    
+
     // Project configuration
     grunt.initConfig({
-        jshint: {
+        eslint: {
             options: {
-                jshintrc: "src/js/.jshintrc"
+                configFile: "src/js/.eslintrc.json"
             },
             gruntfile: ["Gruntfile.js"],
             core: ["src/js/core/**/*.js"],
@@ -265,7 +267,7 @@ module.exports = function(grunt) {
                         // TODO: Do all this in Jade
                         content = content.replace(
                             '<a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="images/download-24x24.png" /></a>',
-                            '<span style="float: left; margin-left: 10px;">Compile time: ' + grunt.template.today("dd/mm/yyyy HH:MM:ss") + ' UTC</span>');
+                            '<span style="float: left; margin-left: 10px;">Compile time: ' + grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC</span>");
                         return grunt.template.process(content, template_options);
                     }
                 },
@@ -404,13 +406,13 @@ module.exports = function(grunt) {
         exec: {
             repo_size: {
                 command: [
-                        "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
-                        "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
-                    ].join(";"),
+                    "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
+                    "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
+                ].join(";"),
                 stderr: false
             },
             stats: {
-                command: "rm src/static/stats.txt;" + 
+                command: "rm src/static/stats.txt;" +
                     [
                         "ls src/ -R1 | grep '^$' -v | grep ':$' -v | wc -l | xargs printf '%b\tsource files\n'",
                         "find src/ -regex '.*\..*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
@@ -430,10 +432,10 @@ module.exports = function(grunt) {
 
                         "du build/dev/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '\n%b\tuncompressed JavaScript size\n'",
                         "du build/prod/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '%b\tcompressed JavaScript size\n'",
-                        
+
                         "grep -E '^\\s+name: ' src/js/config/Categories.js | wc -l | xargs printf '\n%b\tcategories\n'",
                         "grep -E '^\\s+\"[A-Za-z0-9 \\-]+\": {' src/js/config/OperationConfig.js | wc -l | xargs printf '%b\toperations\n'",
-                        
+
                     ].join(" >> src/static/stats.txt;") + " >> src/static/stats.txt;",
                 stderr: false
             },

@@ -115,7 +115,7 @@ Dish.prototype.set = function(value, type) {
  * @returns {byte_array|string|number} The value of the output data.
  */
 Dish.prototype.get = function(type) {
-    if (this.type != type) {
+    if (this.type !== type) {
         this.translate(type);
     }
     return this.value;

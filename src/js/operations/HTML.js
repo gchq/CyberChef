@@ -19,7 +19,7 @@ var HTML = {
      * @default
      */
     CONVERT_OPTIONS: ["Named entities where possible", "Numeric entities", "Hex entities"],
-    
+
     /**
      * To HTML Entity operation.
      *
@@ -29,12 +29,12 @@ var HTML = {
      */
     run_to_entity: function(input, args) {
         var convert_all = args[0],
-            numeric = args[1] == "Numeric entities",
-            hexa = args[1] == "Hex entities";
-        
+            numeric = args[1] === "Numeric entities",
+            hexa = args[1] === "Hex entities";
+
         var charcodes = Utils.str_to_charcode(input);
         var output = "";
-        
+
         for (var i = 0; i < charcodes.length; i++) {
             if (convert_all && numeric) {
                 output += "&#" + charcodes[i] + ";";
@@ -64,8 +64,8 @@ var HTML = {
         }
         return output;
     },
-    
-    
+
+
     /**
      * From HTML Entity operation.
      *
@@ -78,40 +78,40 @@ var HTML = {
             output = "",
             m,
             i = 0;
-            
-        while (!!(m = regex.exec(input))) {
+
+        while ((m = regex.exec(input))) {
             // Add up to match
             for (; i < m.index;)
                 output += input[i++];
-            
+
             // Add match
             var bite = HTML._entity_to_byte[m[1]];
             if (bite) {
                 output += Utils.chr(bite);
-            } else if (!bite && m[1][0] == "#" && m[1].length > 1 && /^#\d{1,5}$/.test(m[1])) {
+            } else if (!bite && m[1][0] === "#" && m[1].length > 1 && /^#\d{1,5}$/.test(m[1])) {
                 // Numeric entity (e.g. &#10;)
-                var num = m[1].slice(1,m[1].length);
+                var num = m[1].slice(1, m[1].length);
                 output += Utils.chr(parseInt(num, 10));
-            } else if (!bite && m[1][0] == "#" && m[1].length > 3 && /^#x[\dA-F]{2,8}$/i.test(m[1])) {
+            } else if (!bite && m[1][0] === "#" && m[1].length > 3 && /^#x[\dA-F]{2,8}$/i.test(m[1])) {
                 // Hex entity (e.g. &#x3A;)
-                var hex = m[1].slice(2,m[1].length);
+                var hex = m[1].slice(2, m[1].length);
                 output += Utils.chr(parseInt(hex, 16));
             } else {
                 // Not a valid entity, print as normal
                 for (; i < regex.lastIndex;)
                     output += input[i++];
             }
-            
+
             i = regex.lastIndex;
         }
         // Add all after final match
         for (; i < input.length;)
             output += input[i++];
-        
+
         return output;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -122,7 +122,7 @@ var HTML = {
      * @default
      */
     REMOVE_LINE_BREAKS: true,
-    
+
     /**
      * Strip HTML tags operation.
      *
@@ -133,22 +133,22 @@ var HTML = {
     run_strip_tags: function(input, args) {
         var remove_indentation = args[0],
             remove_line_breaks = args[1];
-            
+
         input = Utils.strip_html_tags(input);
-        
+
         if (remove_indentation) {
             input = input.replace(/\n[ \f\t]+/g, "\n");
         }
-        
+
         if (remove_line_breaks) {
             input = input.replace(/^\s*\n/, "") // first line
                          .replace(/(\n\s*){2,}/g, "\n"); // all others
         }
-        
+
         return input;
     },
-    
-    
+
+
     /**
      * Parse colour code operation.
      *
@@ -159,31 +159,31 @@ var HTML = {
     run_parse_colour_code: function(input, args) {
         var m = null,
             r = 0, g = 0, b = 0, a = 1;
-        
+
         // Read in the input
-        if (!!(m = input.match(/#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})/i))) {
+        if ((m = input.match(/#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})/i))) {
             // Hex - #d9edf7
             r = parseInt(m[1], 16);
             g = parseInt(m[2], 16);
             b = parseInt(m[3], 16);
-        } else if (!!(m = input.match(/rgba?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
+        } else if ((m = input.match(/rgba?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
             // RGB or RGBA - rgb(217,237,247) or rgba(217,237,247,1)
             r = parseFloat(m[1]);
             g = parseFloat(m[2]);
             b = parseFloat(m[3]);
             a = m[4] ? parseFloat(m[4]) : 1;
-        } else if (!!(m = input.match(/hsla?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)%,\s?(\d{1,3}(?:\.\d+)?)%(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
+        } else if ((m = input.match(/hsla?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)%,\s?(\d{1,3}(?:\.\d+)?)%(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
             // HSL or HSLA - hsl(200, 65%, 91%) or hsla(200, 65%, 91%, 1)
             var h_ = parseFloat(m[1]) / 360,
                 s_ = parseFloat(m[2]) / 100,
                 l_ = parseFloat(m[3]) / 100,
                 rgb_ = HTML._hsl_to_rgb(h_, s_, l_);
-            
+
             r = rgb_[0];
             g = rgb_[1];
             b = rgb_[2];
             a = m[4] ? parseFloat(m[4]) : 1;
-        } else if (!!(m = input.match(/cmyk\((\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?)\)/i))) {
+        } else if ((m = input.match(/cmyk\((\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?)\)/i))) {
             // CMYK - cmyk(0.12, 0.04, 0.00, 0.03)
             var c_ = parseFloat(m[1]),
                 m_ = parseFloat(m[2]),
@@ -194,21 +194,21 @@ var HTML = {
             g = Math.round(255 * (1 - m_) * (1 - k_));
             b = Math.round(255 * (1 - y_) * (1 - k_));
         }
-        
+
         var hsl_ = HTML._rgb_to_hsl(r, g, b),
             h = Math.round(hsl_[0] * 360),
             s = Math.round(hsl_[1] * 100),
             l = Math.round(hsl_[2] * 100),
             k = 1 - Math.max(r/255, g/255, b/255),
             c = (1 - r/255 - k) / (1 - k),
-            m = (1 - g/255 - k) / (1 - k), // jshint ignore:line
+            m = (1 - g/255 - k) / (1 - k), // eslint-disable-line no-redeclare
             y = (1 - b/255 - k) / (1 - k);
-            
+
         c = isNaN(c) ? "0" : c.toFixed(2);
         m = isNaN(m) ? "0" : m.toFixed(2);
         y = isNaN(y) ? "0" : y.toFixed(2);
         k = k.toFixed(2);
-        
+
         var hex = "#" +
                 Utils.pad_left(Math.round(r).toString(16), 2) +
                 Utils.pad_left(Math.round(g).toString(16), 2) +
@@ -218,9 +218,9 @@ var HTML = {
             hsl  = "hsl(" + h + ", " + s + "%, " + l + "%)",
             hsla = "hsla(" + h + ", " + s + "%, " + l + "%, " + a + ")",
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
-            
+
         // Generate output
-        return "<div id='colorpicker' style='display: inline-block'></div>" + 
+        return "<div id='colorpicker' style='display: inline-block'></div>" +
             "Hex:  " + hex + "\n" +
             "RGB:  " + rgb + "\n" +
             "RGBA: " + rgba + "\n" +
@@ -241,9 +241,9 @@ var HTML = {
                 });\
             </script>";
     },
-    
-    
-    
+
+
+
     /**
      * Converts an HSL color value to RGB. Conversion formula
      * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -282,8 +282,8 @@ var HTML = {
 
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     },
-    
-    
+
+
     /**
      * Converts an RGB color value to HSL. Conversion formula
      * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -319,8 +319,8 @@ var HTML = {
 
         return [h, s, l];
     },
-    
-    
+
+
     /**
      * Lookup table to translate byte values to their HTML entity codes.
      *
@@ -583,8 +583,8 @@ var HTML = {
         9829 : "&hearts;",
         9830 : "&diams;",
     },
-    
-    
+
+
     /**
      * Lookup table to translate HTML entity codes to their byte values.
      *

@@ -81,7 +81,7 @@ var QuotedPrintable = {
 
         for (var i = 0, len = str.length; i < len; i++) {
             chr = str.charAt(i);
-            if (chr == "=" && (hex = str.substr(i + 1, 2)) && /[\da-fA-F]{2}/.test(hex)) {
+            if (chr === "=" && (hex = str.substr(i + 1, 2)) && /[\da-fA-F]{2}/.test(hex)) {
                 buffer[bufferPos++] = parseInt(hex, 16);
                 i += 2;
                 continue;
@@ -137,9 +137,9 @@ var QuotedPrintable = {
         for (var i = ranges.length - 1; i >= 0; i--) {
             if (!ranges[i].length)
                 continue;
-            if (ranges[i].length == 1 && nr == ranges[i][0])
+            if (ranges[i].length === 1 && nr === ranges[i][0])
                 return true;
-            if (ranges[i].length == 2 && nr >= ranges[i][0] && nr <= ranges[i][1])
+            if (ranges[i].length === 2 && nr >= ranges[i][0] && nr <= ranges[i][1])
                 return true;
         }
         return false;
@@ -161,7 +161,7 @@ var QuotedPrintable = {
 
         encoding = (encoding || "base64").toString().toLowerCase().trim();
 
-        if (encoding == "qp") {
+        if (encoding === "qp") {
             return this._addQPSoftLinebreaks(str, lineLengthMax);
         } else {
             return this._addBase64SoftLinebreaks(str, lineLengthMax);
@@ -208,7 +208,7 @@ var QuotedPrintable = {
                 continue;
             }
 
-            if (line.substr(-1) == "\n") {
+            if (line.substr(-1) === "\n") {
                 // nothing to change here
                 result += line;
                 pos += line.length;
@@ -222,7 +222,7 @@ var QuotedPrintable = {
             } else if (line.length > lineLengthMax - lineMargin && (match = line.substr(-lineMargin).match(/[ \t\.,!\?][^ \t\.,!\?]*$/))) {
                 // truncate to nearest space
                 line = line.substr(0, line.length - (match[0].length - 1));
-            } else if (line.substr(-1) == "\r") {
+            } else if (line.substr(-1) === "\r") {
                 line = line.substr(0, line.length - 1);
             } else {
                 if (line.match(/\=[\da-f]{0,2}$/i)) {
@@ -249,10 +249,10 @@ var QuotedPrintable = {
                 }
             }
 
-            if (pos + line.length < len && line.substr(-1) != "\n") {
-                if (line.length == 76 && line.match(/\=[\da-f]{2}$/i)) {
+            if (pos + line.length < len && line.substr(-1) !== "\n") {
+                if (line.length === 76 && line.match(/\=[\da-f]{2}$/i)) {
                     line = line.substr(0, line.length - 3);
-                } else if (line.length == 76) {
+                } else if (line.length === 76) {
                     line = line.substr(0, line.length - 1);
                 }
                 pos += line.length;
