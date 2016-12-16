@@ -396,7 +396,7 @@ var Extract = {
         };
 
         return Array.apply(null, Array(result.length))
-            .map(function (_, i) {return result[i];})
+            .map((_, i) => result[i])
             .map(nodeToString)
             .join(delimiter);
     },
