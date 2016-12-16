@@ -1,3 +1,5 @@
+/* globals xpath */
+
 /**
  * Identifier extraction operations.
  *
@@ -309,6 +311,8 @@ var Extract = {
     /**
      * Extract information (from an xml document) with an XPath query
      *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -326,7 +330,7 @@ var Extract = {
 
         var result;
         try {
-            result = $.xpath(xml, query);
+            result = xpath.evaluate(xml, query);
         } catch (err) {
             return "Invalid XPath. Details:\n" + err.message;
         }
@@ -362,6 +366,8 @@ var Extract = {
     /**
      * Extract information (from an hmtl document) with an css selector
      *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -376,7 +382,7 @@ var Extract = {
         } catch (err) {
             return "Invalid input HTML.";
         }
-        
+
         var result;
         try {
             result = $(html).find(query);
@@ -388,7 +394,7 @@ var Extract = {
             switch (node.nodeType) {
                 case Node.ELEMENT_NODE: return node.outerHTML;
                 case Node.ATTRIBUTE_NODE: return node.value;
-                case Node.COMMENT_NODE: return node.ata;
+                case Node.COMMENT_NODE: return node.data;
                 case Node.TEXT_NODE: return node.wholeText;
                 case Node.DOCUMENT_NODE: return node.outerHTML;
                 default: throw new Error("Unknown Node Type: " + node.nodeType);
@@ -396,7 +402,9 @@ var Extract = {
         };
 
         return Array.apply(null, Array(result.length))
-            .map((_, i) => result[i])
+            .map(function(_, i) {
+                return result[i];
+            })
             .map(nodeToString)
             .join(delimiter);
     },

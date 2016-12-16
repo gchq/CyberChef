@@ -1,18 +1,13 @@
-/*
- * jQuery XPath plugin v0.3.1
- * https://github.com/ilinsky/jquery-xpath
- * Copyright 2015, Sergey Ilinsky
+(function(){/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  *
- * Includes xpath.js - XPath 2.0 implementation in JavaScript
- * https://github.com/ilinsky/xpath.js
- * Copyright 2015, Sergey Ilinsky
- * Dual licensed under the MIT and GPL licenses.
  *
  */
-(function () {
 
-
+//	Javascript objects
 var cString		= window.String,
 	cBoolean	= window.Boolean,
 	cNumber		= window.Number,
@@ -22,14 +17,17 @@ var cString		= window.String,
 	cDate		= window.Date,
 	cFunction	= window.Function,
 	cMath		= window.Math,
+// Error Objects
 	cError		= window.Error,
 	cSyntaxError= window.SyntaxError,
 	cTypeError	= window.TypeError,
+//	misc
 	fIsNaN		= window.isNaN,
 	fIsFinite	= window.isFinite,
 	nNaN		= window.NaN,
 	nInfinity	= window.Infinity,
-		fWindow_btoa	= window.btoa,
+	// Functions
+	fWindow_btoa	= window.btoa,
 	fWindow_atob	= window.atob,
 	fWindow_parseInt= window.parseInt,
 	fString_trim	=(function() {
@@ -51,19 +49,28 @@ var sNS_XSD	= "http://www.w3.org/2001/XMLSchema",
 	sNS_XNS	= "http://www.w3.org/2000/xmlns/",
 	sNS_XML	= "http://www.w3.org/XML/1998/namespace";
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cException(sCode
-		, sMessage
+
 	) {
 
 	this.code		= sCode;
 	this.message	=
-					  sMessage ||
+
 					  oException_messages[sCode];
 };
 
 cException.prototype	= new cError;
 
+// "http://www.w3.org/2005/xqt-errors"
 
 var oException_messages	= {};
 oException_messages["XPDY0002"]	= "Evaluation of an expression relies on some part of the dynamic context that has not been assigned a value.";
@@ -77,21 +84,34 @@ oException_messages["XPTY0019"]	= "The result of a step (other than the last ste
 oException_messages["XPTY0020"]	= "In an axis step, the context item is not a node.";
 oException_messages["XPST0051"]	= "It is a static error if a QName that is used as an AtomicType in a SequenceType is not defined in the in-scope schema types as an atomic type.";
 oException_messages["XPST0081"]	= "A QName used in an expression contains a namespace prefix that cannot be expanded into a namespace URI by using the statically known namespaces.";
+//
 oException_messages["FORG0001"]	= "Invalid value for cast/constructor.";
 oException_messages["FORG0003"]	= "fn:zero-or-one called with a sequence containing more than one item.";
 oException_messages["FORG0004"]	= "fn:one-or-more called with a sequence containing no items.";
 oException_messages["FORG0005"]	= "fn:exactly-one called with a sequence containing zero or more than one item.";
 oException_messages["FORG0006"]	= "Invalid argument type.";
+//
 oException_messages["FODC0001"]	= "No context document.";
+//
 oException_messages["FORX0001"]	= "Invalid regular expression flags.";
+//
 oException_messages["FOCA0002"]	= "Invalid lexical value.";
+//
 oException_messages["FOCH0002"]	= "Unsupported collation.";
 
 oException_messages["FONS0004"]	= "No namespace found for prefix.";
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cLexer(sValue) {
-	var aMatch	= sValue.match(/\$?(?:(?![0-9-])(?:[\w-]+|\*):)?(?![0-9-])(?:[\w-]+|\*)|\(:|:\)|\/\/|\.\.|::|\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?|"[^"]*(?:""[^"]*)*"|'[^']*(?:''[^']*)*'|<<|>>|[!<>]=|(?![0-9-])[\w-]+:\*|\s+|./g);
+	var aMatch	= sValue.match(/\$?(?:(?![0-9-])(?:\w[\w.-]*|\*):)?(?![0-9-])(?:\w[\w.-]*|\*)|\(:|:\)|\/\/|\.\.|::|\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?|"[^"]*(?:""[^"]*)*"|'[^']*(?:''[^']*)*'|<<|>>|[!<>]=|(?![0-9-])[\w-]+:\*|\s+|./g);
 	if (aMatch) {
 		var nStack	= 0;
 		for (var nIndex = 0, nLength = aMatch.length; nIndex < nLength; nIndex++)
@@ -105,7 +125,7 @@ function cLexer(sValue) {
 				this[this.length++]	= aMatch[nIndex];
 		if (nStack)
 			throw new cException("XPST0003"
-					, "Unclosed comment"
+
 			);
 	}
 };
@@ -133,11 +153,20 @@ cLexer.prototype.eof	= function() {
 	return this.index >= this.length;
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cDOMAdapter() {
 
 };
 
+// Custom members
 cDOMAdapter.prototype.isNode		= function(oNode) {
 	return oNode &&!!oNode.nodeType;
 };
@@ -146,6 +175,7 @@ cDOMAdapter.prototype.getProperty	= function(oNode, sName) {
 	return oNode[sName];
 };
 
+// Standard members
 cDOMAdapter.prototype.isSameNode	= function(oNode, oNode2) {
 	return oNode == oNode2;
 };
@@ -158,22 +188,37 @@ cDOMAdapter.prototype.lookupNamespaceURI	= function(oNode, sPrefix) {
 	return oNode.lookupNamespaceURI(sPrefix);
 };
 
+// Document object members
 cDOMAdapter.prototype.getElementById	= function(oNode, sId) {
 	return oNode.getElementById(sId);
 };
 
+// Element/Document object members
 cDOMAdapter.prototype.getElementsByTagNameNS	= function(oNode, sNameSpaceURI, sLocalName) {
 	return oNode.getElementsByTagNameNS(sNameSpaceURI, sLocalName);
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cDynamicContext(oStaticContext, vItem, oScope, oDOMAdapter) {
-		this.staticContext	= oStaticContext;
-		this.item		= vItem;
-		this.scope		= oScope || {};
+	//
+	this.staticContext	= oStaticContext;
+	//
+	this.item		= vItem;
+	//
+	this.scope		= oScope || {};
 	this.stack		= {};
-		this.DOMAdapter	= oDOMAdapter || new cDOMAdapter;
-		var oDate	= new cDate,
+	//
+	this.DOMAdapter	= oDOMAdapter || new cDOMAdapter;
+	//
+	var oDate	= new cDate,
 		nOffset	= oDate.getTimezoneOffset();
 	this.dateTime	= new cXSDateTime(oDate.getFullYear(), oDate.getMonth() + 1, oDate.getDate(), oDate.getHours(), oDate.getMinutes(), oDate.getSeconds() + oDate.getMilliseconds() / 1000, -nOffset);
 	this.timezone	= new cXSDayTimeDuration(0, cMath.abs(~~(nOffset / 60)), cMath.abs(nOffset % 60), 0, nOffset > 0);
@@ -182,11 +227,16 @@ function cDynamicContext(oStaticContext, vItem, oScope, oDOMAdapter) {
 cDynamicContext.prototype.item		= null;
 cDynamicContext.prototype.position	= 0;
 cDynamicContext.prototype.size		= 0;
+//
 cDynamicContext.prototype.scope		= null;
-cDynamicContext.prototype.stack		= null;	cDynamicContext.prototype.dateTime	= null;
+cDynamicContext.prototype.stack		= null;	// Variables stack
+//
+cDynamicContext.prototype.dateTime	= null;
 cDynamicContext.prototype.timezone	= null;
+//
 cDynamicContext.prototype.staticContext	= null;
 
+// Stack management
 cDynamicContext.prototype.pushVariable	= function(sName, vValue) {
 	if (!this.stack.hasOwnProperty(sName))
 		this.stack[sName]	= [];
@@ -204,7 +254,14 @@ cDynamicContext.prototype.popVariable	= function(sName) {
 		}
 	}
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cStaticContext() {
 	this.dataTypes	= {};
@@ -215,17 +272,24 @@ function cStaticContext() {
 };
 
 cStaticContext.prototype.baseURI	= null;
+//
 cStaticContext.prototype.dataTypes	= null;
 cStaticContext.prototype.documents	= null;
+//
 cStaticContext.prototype.functions	= null;
 cStaticContext.prototype.defaultFunctionNamespace	= null;
+//
 cStaticContext.prototype.collations	= null;
 cStaticContext.prototype.defaultCollationName		= sNS_XPF + "/collation/codepoint";
+//
 cStaticContext.prototype.collections	= null;
+//
 cStaticContext.prototype.namespaceResolver	= null;
 cStaticContext.prototype.defaultElementNamespace	= null;
 
+//
 var rStaticContext_uri	= /^(?:\{([^\}]+)\})?(.+)$/;
+//
 cStaticContext.prototype.setDataType		= function(sUri, fFunction) {
 	var aMatch	= sUri.match(rStaticContext_uri);
 	if (aMatch)
@@ -236,11 +300,15 @@ cStaticContext.prototype.setDataType		= function(sUri, fFunction) {
 cStaticContext.prototype.getDataType		= function(sUri) {
 	var aMatch	= sUri.match(rStaticContext_uri);
 	if (aMatch)
-		return aMatch[1] == sNS_XSD ? hStaticContext_dataTypes[cRegExp.$2] : this.dataTypes[sUri];
+		return aMatch[1] == sNS_XSD ? hStaticContext_dataTypes[aMatch[2]] : this.dataTypes[sUri];
 };
 
 cStaticContext.prototype.setDocument		= function(sUri, fFunction) {
 	this.documents[sUri]	= fFunction;
+};
+
+cStaticContext.prototype.getDocument		= function(sUri) {
+	return this.documents[sUri];
 };
 
 cStaticContext.prototype.setFunction		= function(sUri, fFunction) {
@@ -253,7 +321,7 @@ cStaticContext.prototype.setFunction		= function(sUri, fFunction) {
 cStaticContext.prototype.getFunction		= function(sUri) {
 	var aMatch	= sUri.match(rStaticContext_uri);
 	if (aMatch)
-		return aMatch[1] == sNS_XPF ? hStaticContext_functions[cRegExp.$2] : this.functions[sUri];
+		return aMatch[1] == sNS_XPF ? hStaticContext_functions[aMatch[2]] : this.functions[sUri];
 };
 
 cStaticContext.prototype.setCollation		= function(sUri, fFunction) {
@@ -264,9 +332,12 @@ cStaticContext.prototype.getCollation		= function(sUri) {
 	return this.collations[sUri];
 };
 
-
 cStaticContext.prototype.setCollection	= function(sUri, fFunction) {
 	this.collections[sUri]	= fFunction;
+};
+
+cStaticContext.prototype.getCollection	= function(sUri) {
+	return this.collections[sUri];
 };
 
 cStaticContext.prototype.getURIForPrefix	= function(sPrefix) {
@@ -283,22 +354,28 @@ cStaticContext.prototype.getURIForPrefix	= function(sPrefix) {
 		return sNS_XML;
 	if (sPrefix == "xmlns")
 		return sNS_XNS;
-		throw new cException("XPST0081"
-				, "Prefix '" + sPrefix + "' has not been declared"
+	//
+	throw new cException("XPST0081"
+
 	);
 };
 
+// Static members
+//Converts non-null JavaScript object to XML Schema object
 cStaticContext.js2xs	= function(vItem) {
-		if (typeof vItem == "boolean")
+	// Convert types from JavaScript to XPath 2.0
+	if (typeof vItem == "boolean")
 		vItem	= new cXSBoolean(vItem);
 	else
 	if (typeof vItem == "number")
 		vItem	=(fIsNaN(vItem) ||!fIsFinite(vItem)) ? new cXSDouble(vItem) : fNumericLiteral_parseValue(cString(vItem));
 	else
 		vItem	= new cXSString(cString(vItem));
-		return vItem;
+	//
+	return vItem;
 };
 
+// Converts non-null XML Schema object to JavaScript object
 cStaticContext.xs2js	= function(vItem) {
 	if (vItem instanceof cXSBoolean)
 		vItem	= vItem.valueOf();
@@ -307,44 +384,68 @@ cStaticContext.xs2js	= function(vItem) {
 		vItem	= vItem.valueOf();
 	else
 		vItem	= vItem.toString();
-		return vItem;
+	//
+	return vItem;
 };
 
+// System functions with signatures, operators and types
 var hStaticContext_functions	= {},
 	hStaticContext_signatures	= {},
 	hStaticContext_dataTypes	= {},
 	hStaticContext_operators	= {};
 
 function fStaticContext_defineSystemFunction(sName, aParameters, fFunction) {
-		hStaticContext_functions[sName]	= fFunction;
-		hStaticContext_signatures[sName]	= aParameters;
+	// Register function
+	hStaticContext_functions[sName]	= fFunction;
+	// Register signature
+	hStaticContext_signatures[sName]	= aParameters;
 };
 
 function fStaticContext_defineSystemDataType(sName, fFunction) {
-		hStaticContext_dataTypes[sName]	= fFunction;
+	// Register dataType
+	hStaticContext_dataTypes[sName]	= fFunction;
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cExpression(sExpression, oStaticContext) {
 	var oLexer	= new cLexer(sExpression),
 		oExpr	= fExpr_parse(oLexer, oStaticContext);
-		if (!oLexer.eof())
+	//
+	if (!oLexer.eof())
 		throw new cException("XPST0003"
-				, "Unexpected token beyond end of query"
+
 		);
-		if (!oExpr)
+	//
+	if (!oExpr)
 		throw new cException("XPST0003"
-				, "Expected expression"
+
 		);
 	this.internalExpression	= oExpr;
 };
 
 cExpression.prototype.internalExpression	= null;
 
+// Public methods
 cExpression.prototype.evaluate	= function(oContext) {
 	return this.internalExpression.evaluate(oContext);
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cStringCollator() {
 
@@ -357,10 +458,18 @@ cStringCollator.prototype.equals	= function(sValue1, sValue2) {
 cStringCollator.prototype.compare	= function(sValue1, sValue2) {
 	throw "Not implemented";
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSConstants(){};
 
+// XML Schema 1.0 Datatypes
 cXSConstants.ANYSIMPLETYPE_DT		= 1;
 cXSConstants.STRING_DT				= 2;
 cXSConstants.BOOLEAN_DT				= 3;
@@ -407,6 +516,7 @@ cXSConstants.LISTOFUNION_DT			= 43;
 cXSConstants.LIST_DT				= 44;
 cXSConstants.UNAVAILABLE_DT			= 45;
 
+// XML Schema 1.1 Datatypes
 cXSConstants.DATETIMESTAMP_DT		= 46;
 cXSConstants.DAYMONTHDURATION_DT	= 47;
 cXSConstants.DAYTIMEDURATION_DT		= 48;
@@ -414,9 +524,18 @@ cXSConstants.PRECISIONDECIMAL_DT	= 49;
 cXSConstants.ANYATOMICTYPE_DT		= 50;
 cXSConstants.ANYTYPE_DT				= 51;
 
+//
 cXSConstants.XT_YEARMONTHDURATION_DT=-1;
 cXSConstants.XT_UNTYPEDATOMIC_DT	=-2;
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cExpr() {
 	this.items	= [];
@@ -424,36 +543,47 @@ function cExpr() {
 
 cExpr.prototype.items	= null;
 
+// Static members
 function fExpr_parse (oLexer, oStaticContext) {
 	var oItem;
 	if (oLexer.eof() ||!(oItem = fExprSingle_parse(oLexer, oStaticContext)))
 		return;
 
-		var oExpr	= new cExpr;
+	// Create expression
+	var oExpr	= new cExpr;
 	oExpr.items.push(oItem);
 	while (oLexer.peek() == ',') {
 		oLexer.next();
 		if (oLexer.eof() ||!(oItem = fExprSingle_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected expression"
+
 			);
 		oExpr.items.push(oItem);
 	}
 	return oExpr;
 };
 
+// Public members
 cExpr.prototype.evaluate	= function(oContext) {
 	var oSequence	= [];
 	for (var nIndex = 0, nLength = this.items.length; nIndex < nLength; nIndex++)
 		oSequence	= hStaticContext_operators["concatenate"].call(oContext, oSequence, this.items[nIndex].evaluate(oContext));
 	return oSequence;
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cExprSingle() {
 
 };
 
+// Static members
 function fExprSingle_parse (oLexer, oStaticContext) {
 	if (!oLexer.eof())
 		return fIfExpr_parse(oLexer, oStaticContext)
@@ -461,7 +591,14 @@ function fExprSingle_parse (oLexer, oStaticContext) {
 			|| fQuantifiedExpr_parse(oLexer, oStaticContext)
 			|| fOrExpr_parse(oLexer, oStaticContext);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cForExpr() {
 	this.bindings	= [];
@@ -471,6 +608,7 @@ function cForExpr() {
 cForExpr.prototype.bindings		= null;
 cForExpr.prototype.returnExpr	= null;
 
+// Static members
 function fForExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.peek() == "for" && oLexer.peek(1).substr(0, 1) == '$') {
 		oLexer.next();
@@ -484,13 +622,13 @@ function fForExpr_parse (oLexer, oStaticContext) {
 
 		if (oLexer.peek() != "return")
 			throw new cException("XPST0003"
-					, "Expected 'return' token in for expression"
+
 			);
 
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fExprSingle_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected return statement operand in for expression"
+
 			);
 
 		oForExpr.returnExpr	= oExpr;
@@ -498,6 +636,9 @@ function fForExpr_parse (oLexer, oStaticContext) {
 	}
 };
 
+// Public members
+// for $x in X, $y in Y, $z in Z return $x + $y + $z
+// for $x in X return for $y in Y return for $z in Z return $x + $y + $z
 cForExpr.prototype.evaluate	= function (oContext) {
 	var oSequence	= [];
 	(function(oSelf, nBinding) {
@@ -517,6 +658,7 @@ cForExpr.prototype.evaluate	= function (oContext) {
 	return oSequence;
 };
 
+//
 function cSimpleForBinding(sPrefix, sLocalName, sNameSpaceURI, oInExpr) {
 	this.prefix			= sPrefix;
 	this.localName		= sLocalName;
@@ -533,30 +675,37 @@ function fSimpleForBinding_parse (oLexer, oStaticContext) {
 	var aMatch	= oLexer.peek().substr(1).match(rNameTest);
 	if (!aMatch)
 		throw new cException("XPST0003"
-				, "Expected binding in for expression"
+
 		);
 
 	if (aMatch[1] == '*' || aMatch[2] == '*')
 		throw new cException("XPST0003"
-				, "Illegal use of wildcard in for expression binding variable name"
+
 		);
 
 	oLexer.next();
 	if (oLexer.peek() != "in")
 		throw new cException("XPST0003"
-				, "Expected 'in' token in for expression binding"
+
 		);
 
 	oLexer.next();
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fExprSingle_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected in statement operand in for expression binding"
+
 		);
 
 	return new cSimpleForBinding(aMatch[1] || null, aMatch[2], aMatch[1] ? oStaticContext.getURIForPrefix(aMatch[1]) : null, oExpr);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cIfExpr(oCondExpr, oThenExpr, oElseExpr) {
 	this.condExpr	= oCondExpr;
@@ -568,51 +717,63 @@ cIfExpr.prototype.condExpr	= null;
 cIfExpr.prototype.thenExpr	= null;
 cIfExpr.prototype.elseExpr	= null;
 
+// Static members
 function fIfExpr_parse (oLexer, oStaticContext) {
 	var oCondExpr,
 		oThenExpr,
 		oElseExpr;
 	if (oLexer.peek() == "if" && oLexer.peek(1) == '(') {
 		oLexer.next(2);
-				if (oLexer.eof() ||!(oCondExpr = fExpr_parse(oLexer, oStaticContext)))
+		//
+		if (oLexer.eof() ||!(oCondExpr = fExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected if statement operand in conditional expression"
+
 			);
-				if (oLexer.peek() != ')')
+		//
+		if (oLexer.peek() != ')')
 			throw new cException("XPST0003"
-					, "Expected ')' token in for expression"
+
 			);
 
 		oLexer.next();
 		if (oLexer.peek() != "then")
 			throw new cException("XPST0003"
-					, "Expected 'then' token in conditional if expression"
+
 			);
 
 		oLexer.next();
 		if (oLexer.eof() ||!(oThenExpr = fExprSingle_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected then statement operand in condional expression"
+
 			);
 
 		if (oLexer.peek() != "else")
 			throw new cException("XPST0003"
-					, "Expected 'else' token in conditional if expression"
+
 			);
 
 		oLexer.next();
 		if (oLexer.eof() ||!(oElseExpr = fExprSingle_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected else statement operand in condional expression"
+
 			);
-				return new cIfExpr(oCondExpr, oThenExpr, oElseExpr);
+		//
+		return new cIfExpr(oCondExpr, oThenExpr, oElseExpr);
 	}
 };
 
+// Public members
 cIfExpr.prototype.evaluate	= function (oContext) {
 	return this[fFunction_sequence_toEBV(this.condExpr.evaluate(oContext), oContext) ? "thenExpr" : "elseExpr"].evaluate(oContext);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cQuantifiedExpr(sQuantifier) {
 	this.quantifier		= sQuantifier;
@@ -624,6 +785,7 @@ cQuantifiedExpr.prototype.bindings		= null;
 cQuantifiedExpr.prototype.quantifier	= null;
 cQuantifiedExpr.prototype.satisfiesExpr	= null;
 
+// Static members
 function fQuantifiedExpr_parse (oLexer, oStaticContext) {
 	var sQuantifier	= oLexer.peek();
 	if ((sQuantifier == "some" || sQuantifier == "every") && oLexer.peek(1).substr(0, 1) == '$') {
@@ -638,13 +800,13 @@ function fQuantifiedExpr_parse (oLexer, oStaticContext) {
 
 		if (oLexer.peek() != "satisfies")
 			throw new cException("XPST0003"
-					, "Expected 'satisfies' token in quantified expression"
+
 			);
 
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fExprSingle_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected satisfies statement operand in quantified expression"
+
 			);
 
 		oQuantifiedExpr.satisfiesExpr	= oExpr;
@@ -652,8 +814,10 @@ function fQuantifiedExpr_parse (oLexer, oStaticContext) {
 	}
 };
 
+// Public members
 cQuantifiedExpr.prototype.evaluate	= function (oContext) {
-		var bEvery	= this.quantifier == "every",
+	// TODO: re-factor
+	var bEvery	= this.quantifier == "every",
 		bResult	= bEvery ? true : false;
 	(function(oSelf, nBinding) {
 		var oBinding	= oSelf.bindings[nBinding++],
@@ -674,6 +838,7 @@ cQuantifiedExpr.prototype.evaluate	= function (oContext) {
 
 
 
+//
 function cSimpleQuantifiedBinding(sPrefix, sLocalName, sNameSpaceURI, oInExpr) {
 	this.prefix			= sPrefix;
 	this.localName		= sLocalName;
@@ -690,30 +855,37 @@ function fSimpleQuantifiedBinding_parse (oLexer, oStaticContext) {
 	var aMatch	= oLexer.peek().substr(1).match(rNameTest);
 	if (!aMatch)
 		throw new cException("XPST0003"
-				, "Expected binding in quantified expression"
+
 		);
 
 	if (aMatch[1] == '*' || aMatch[2] == '*')
 		throw new cException("XPST0003"
-				, "Illegal use of wildcard in quantified expression binding variable name"
+
 		);
 
 	oLexer.next();
 	if (oLexer.peek() != "in")
 		throw new cException("XPST0003"
-				, "Expected 'in' token in quantified expression binding"
+
 		);
 
 	oLexer.next();
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fExprSingle_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected in statement operand in quantified expression binding"
+
 		);
 
 	return new cSimpleQuantifiedBinding(aMatch[1] || null, aMatch[2], aMatch[1] ? oStaticContext.getURIForPrefix(aMatch[1]) : null, oExpr);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cComparisonExpr(oLeft, oRight, sOperator) {
 	this.left	= oLeft;
@@ -725,6 +897,7 @@ cComparisonExpr.prototype.left	= null;
 cComparisonExpr.prototype.right	= null;
 cComparisonExpr.prototype.operator	= null;
 
+// Static members
 function fComparisonExpr_parse (oLexer, oStaticContext) {
 	var oExpr,
 		oRight;
@@ -733,20 +906,23 @@ function fComparisonExpr_parse (oLexer, oStaticContext) {
 	if (!(oLexer.peek() in hComparisonExpr_operators))
 		return oExpr;
 
-		var sOperator	= oLexer.peek();
+	// Comparison expression
+	var sOperator	= oLexer.peek();
 	oLexer.next();
 	if (oLexer.eof() ||!(oRight = fRangeExpr_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected second operand in comparison expression"
+
 		);
 	return new cComparisonExpr(oExpr, oRight, sOperator);
 };
 
+// Public members
 cComparisonExpr.prototype.evaluate	= function (oContext) {
 	var oResult	= hComparisonExpr_operators[this.operator](this, oContext);
 	return oResult == null ? [] : [oResult];
 };
 
+// General comparison
 function fComparisonExpr_GeneralComp(oExpr, oContext) {
 	var oLeft	= fFunction_sequence_atomize(oExpr.left.evaluate(oContext), oContext);
 	if (!oLeft.length)
@@ -767,33 +943,40 @@ function fComparisonExpr_GeneralComp(oExpr, oContext) {
 			bRight	= vRight instanceof cXSUntypedAtomic;
 
 			if (bLeft && bRight) {
-								vLeft	= cXSString.cast(vLeft);
+				// cast xs:untypedAtomic to xs:string
+				vLeft	= cXSString.cast(vLeft);
 				vRight	= cXSString.cast(vRight);
 			}
 			else {
-								if (bLeft) {
-										if (vRight instanceof cXSDayTimeDuration)
+				//
+				if (bLeft) {
+					// Special: durations
+					if (vRight instanceof cXSDayTimeDuration)
 						vLeft	= cXSDayTimeDuration.cast(vLeft);
 					else
 					if (vRight instanceof cXSYearMonthDuration)
 						vLeft	= cXSYearMonthDuration.cast(vLeft);
 					else
-										if (vRight.primitiveKind)
+					//
+					if (vRight.primitiveKind)
 						vLeft	= hStaticContext_dataTypes[vRight.primitiveKind].cast(vLeft);
 				}
 				else
 				if (bRight) {
-										if (vLeft instanceof cXSDayTimeDuration)
+					// Special: durations
+					if (vLeft instanceof cXSDayTimeDuration)
 						vRight	= cXSDayTimeDuration.cast(vRight);
 					else
 					if (vLeft instanceof cXSYearMonthDuration)
 						vRight	= cXSYearMonthDuration.cast(vRight);
 					else
-										if (vLeft.primitiveKind)
+					//
+					if (vLeft.primitiveKind)
 						vRight	= hStaticContext_dataTypes[vLeft.primitiveKind].cast(vRight);
 				}
 
-								if (vLeft instanceof cXSAnyURI)
+				// cast xs:anyURI to xs:string
+				if (vLeft instanceof cXSAnyURI)
 					vLeft	= cXSString.cast(vLeft);
 				if (vRight instanceof cXSAnyURI)
 					vRight	= cXSString.cast(vRight);
@@ -814,37 +997,44 @@ var hComparisonExpr_GeneralComp_map	= {
 	'<=':	'le'
 };
 
+// Value comparison
 function fComparisonExpr_ValueComp(oExpr, oContext) {
 	var oLeft	= fFunction_sequence_atomize(oExpr.left.evaluate(oContext), oContext);
 	if (!oLeft.length)
 		return null;
-		fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
-			, "first operand of '" + oExpr.operator + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
+
 	);
 
 	var oRight	= fFunction_sequence_atomize(oExpr.right.evaluate(oContext), oContext);
 	if (!oRight.length)
 		return null;
-		fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
-			, "second operand of '" + oExpr.operator + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
+
 	);
 
 	var vLeft	= oLeft[0],
 		vRight	= oRight[0];
 
-		if (vLeft instanceof cXSUntypedAtomic)
+	// cast xs:untypedAtomic to xs:string
+	if (vLeft instanceof cXSUntypedAtomic)
 		vLeft	= cXSString.cast(vLeft);
 	if (vRight instanceof cXSUntypedAtomic)
 		vRight	= cXSString.cast(vRight);
 
-		if (vLeft instanceof cXSAnyURI)
+	// cast xs:anyURI to xs:string
+	if (vLeft instanceof cXSAnyURI)
 		vLeft	= cXSString.cast(vLeft);
 	if (vRight instanceof cXSAnyURI)
 		vRight	= cXSString.cast(vRight);
 
-		return hComparisonExpr_ValueComp_operators[oExpr.operator](vLeft, vRight, oContext);
+	//
+	return hComparisonExpr_ValueComp_operators[oExpr.operator](vLeft, vRight, oContext);
 };
 
+//
 var hComparisonExpr_ValueComp_operators	= {};
 hComparisonExpr_ValueComp_operators['eq']	= function(oLeft, oRight, oContext) {
 	var sOperator	= '';
@@ -908,7 +1098,8 @@ hComparisonExpr_ValueComp_operators['eq']	= function(oLeft, oRight, oContext) {
 		if (oRight instanceof cXSGDay)
 			sOperator	= "gDay-equal";
 	}
-		else
+	// skipped: xs:anyURI (covered by xs:string)
+	else
 	if (oLeft instanceof cXSQName) {
 		if (oRight instanceof cXSQName)
 			sOperator	= "QName-equal";
@@ -924,12 +1115,15 @@ hComparisonExpr_ValueComp_operators['eq']	= function(oLeft, oRight, oContext) {
 			sOperator	= "base64Binary-equal";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, oLeft, oRight);
 
-		throw new cException("XPTY0004"
-			, "Cannot compare values of given types"
-	);	};
+	// skipped: xs:NOTATION
+	throw new cException("XPTY0004"
+
+	);	// Cannot compare {type1} to {type2}
+};
 hComparisonExpr_ValueComp_operators['ne']	= function(oLeft, oRight, oContext) {
 	return new cXSBoolean(!hComparisonExpr_ValueComp_operators['eq'](oLeft, oRight, oContext).valueOf());
 };
@@ -976,12 +1170,15 @@ hComparisonExpr_ValueComp_operators['gt']	= function(oLeft, oRight, oContext) {
 			sOperator	= "dayTimeDuration-greater-than";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, oLeft, oRight);
 
-		throw new cException("XPTY0004"
-			, "Cannot compare values of given types"
-	);	};
+	// skipped: xs:anyURI (covered by xs:string)
+	throw new cException("XPTY0004"
+
+	);	// Cannot compare {type1} to {type2}
+};
 hComparisonExpr_ValueComp_operators['lt']	= function(oLeft, oRight, oContext) {
 	var sOperator	= '';
 
@@ -1025,12 +1222,15 @@ hComparisonExpr_ValueComp_operators['lt']	= function(oLeft, oRight, oContext) {
 			sOperator	= "dayTimeDuration-less-than";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, oLeft, oRight);
 
-		throw new cException("XPTY0004"
-			, "Cannot compare values of given types"
-	);	};
+	// skipped: xs:anyURI (covered by xs:string)
+	throw new cException("XPTY0004"
+
+	);	// Cannot compare {type1} to {type2}
+};
 hComparisonExpr_ValueComp_operators['ge']	= function(oLeft, oRight, oContext) {
 	var sOperator	= '';
 
@@ -1074,12 +1274,15 @@ hComparisonExpr_ValueComp_operators['ge']	= function(oLeft, oRight, oContext) {
 			sOperator	= "dayTimeDuration-less-than";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return new cXSBoolean(!hStaticContext_operators[sOperator].call(oContext, oLeft, oRight).valueOf());
 
-		throw new cException("XPTY0004"
-			, "Cannot compare values of given types"
-	);	};
+	// skipped: xs:anyURI (covered by xs:string)
+	throw new cException("XPTY0004"
+
+	);	// Cannot compare {type1} to {type2}
+};
 hComparisonExpr_ValueComp_operators['le']	= function(oLeft, oRight, oContext) {
 	var sOperator	= '';
 
@@ -1123,32 +1326,40 @@ hComparisonExpr_ValueComp_operators['le']	= function(oLeft, oRight, oContext) {
 			sOperator	= "dayTimeDuration-greater-than";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return new cXSBoolean(!hStaticContext_operators[sOperator].call(oContext, oLeft, oRight).valueOf());
 
-		throw new cException("XPTY0004"
-			, "Cannot compare values of given types"
-	);	};
+	// skipped: xs:anyURI (covered by xs:string)
+	throw new cException("XPTY0004"
 
+	);	// Cannot compare {type1} to {type2}
+};
+
+// Node comparison
 function fComparisonExpr_NodeComp(oExpr, oContext) {
 	var oLeft	= oExpr.left.evaluate(oContext);
 	if (!oLeft.length)
 		return null;
-		fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
-			, "first operand of '" + oExpr.operator + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
+
 	);
-		fFunctionCall_assertSequenceItemType(oContext, oLeft, cXTNode
-			, "first operand of '" + oExpr.operator + "'"
+	// Assert item type
+	fFunctionCall_assertSequenceItemType(oContext, oLeft, cXTNode
+
 	);
 
 	var oRight	= oExpr.right.evaluate(oContext);
 	if (!oRight.length)
 		return null;
-		fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
-			, "second operand of '" + oExpr.operator + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
+
 	);
-		fFunctionCall_assertSequenceItemType(oContext, oRight, cXTNode
-			, "second operand of '" + oExpr.operator + "'"
+	// Assert item type
+	fFunctionCall_assertSequenceItemType(oContext, oRight, cXTNode
+
 	);
 
 	return hComparisonExpr_NodeComp_operators[oExpr.operator](oLeft[0], oRight[0], oContext);
@@ -1165,24 +1376,35 @@ hComparisonExpr_NodeComp_operators['<<']	= function(oLeft, oRight, oContext) {
 	return hStaticContext_operators["node-before"].call(oContext, oLeft, oRight);
 };
 
+// Operators
 var hComparisonExpr_operators	= {
-		'=':	fComparisonExpr_GeneralComp,
+	// GeneralComp
+	'=':	fComparisonExpr_GeneralComp,
 	'!=':	fComparisonExpr_GeneralComp,
 	'<':	fComparisonExpr_GeneralComp,
 	'<=':	fComparisonExpr_GeneralComp,
 	'>':	fComparisonExpr_GeneralComp,
 	'>=':	fComparisonExpr_GeneralComp,
-		'eq':	fComparisonExpr_ValueComp,
+	// ValueComp
+	'eq':	fComparisonExpr_ValueComp,
 	'ne':	fComparisonExpr_ValueComp,
 	'lt':	fComparisonExpr_ValueComp,
 	'le':	fComparisonExpr_ValueComp,
 	'gt':	fComparisonExpr_ValueComp,
 	'ge':	fComparisonExpr_ValueComp,
-		'is':	fComparisonExpr_NodeComp,
+	// NodeComp
+	'is':	fComparisonExpr_NodeComp,
 	'>>':	fComparisonExpr_NodeComp,
 	'<<':	fComparisonExpr_NodeComp
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cAdditiveExpr(oExpr) {
 	this.left	= oExpr;
@@ -1192,6 +1414,7 @@ function cAdditiveExpr(oExpr) {
 cAdditiveExpr.prototype.left	= null;
 cAdditiveExpr.prototype.items	= null;
 
+//
 var hAdditiveExpr_operators	= {};
 hAdditiveExpr_operators['+']	= function(oLeft, oRight, oContext) {
 	var sOperator	= '',
@@ -1258,12 +1481,15 @@ hAdditiveExpr_operators['+']	= function(oLeft, oRight, oContext) {
 			sOperator	= "add-dayTimeDuration-to-dateTime";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, bReverse ? oRight : oLeft, bReverse ? oLeft : oRight);
 
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
+
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
 hAdditiveExpr_operators['-']	= function (oLeft, oRight, oContext) {
 	var sOperator	= '';
 
@@ -1312,13 +1538,17 @@ hAdditiveExpr_operators['-']	= function (oLeft, oRight, oContext) {
 			sOperator	= "subtract-dayTimeDurations";
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, oLeft, oRight);
 
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
 
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
+
+// Static members
 function fAdditiveExpr_parse (oLexer, oStaticContext) {
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fMultiplicativeExpr_parse(oLexer, oStaticContext)))
@@ -1326,48 +1556,61 @@ function fAdditiveExpr_parse (oLexer, oStaticContext) {
 	if (!(oLexer.peek() in hAdditiveExpr_operators))
 		return oExpr;
 
-		var oAdditiveExpr	= new cAdditiveExpr(oExpr),
+	// Additive expression
+	var oAdditiveExpr	= new cAdditiveExpr(oExpr),
 		sOperator;
 	while ((sOperator = oLexer.peek()) in hAdditiveExpr_operators) {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fMultiplicativeExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected second operand in additive expression"
+
 			);
 		oAdditiveExpr.items.push([sOperator, oExpr]);
 	}
 	return oAdditiveExpr;
 };
 
+// Public members
 cAdditiveExpr.prototype.evaluate	= function (oContext) {
 	var oLeft	= fFunction_sequence_atomize(this.left.evaluate(oContext), oContext);
 
 	if (!oLeft.length)
 		return [];
-		fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
-			, "first operand of '" + this.items[0][0] + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
+
 	);
 
 	var vLeft	= oLeft[0];
 	if (vLeft instanceof cXSUntypedAtomic)
-		vLeft	= cXSDouble.cast(vLeft);	
+		vLeft	= cXSDouble.cast(vLeft);	// cast to xs:double
+
 	for (var nIndex = 0, nLength = this.items.length, oRight, vRight; nIndex < nLength; nIndex++) {
 		oRight	= fFunction_sequence_atomize(this.items[nIndex][1].evaluate(oContext), oContext);
 
 		if (!oRight.length)
 			return [];
-				fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
-				, "first operand of '" + this.items[nIndex][0] + "'"
+		// Assert cardinality
+		fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
+
 		);
 
 		vRight	= oRight[0];
 		if (vRight instanceof cXSUntypedAtomic)
-			vRight	= cXSDouble.cast(vRight);	
+			vRight	= cXSDouble.cast(vRight);	// cast to xs:double
+
 		vLeft	= hAdditiveExpr_operators[this.items[nIndex][0]](vLeft, vRight, oContext);
 	}
 	return [vLeft];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cMultiplicativeExpr(oExpr) {
 	this.left	= oExpr;
@@ -1377,6 +1620,7 @@ function cMultiplicativeExpr(oExpr) {
 cMultiplicativeExpr.prototype.left	= null;
 cMultiplicativeExpr.prototype.items	= null;
 
+//
 var hMultiplicativeExpr_operators	= {};
 hMultiplicativeExpr_operators['*']		= function (oLeft, oRight, oContext) {
 	var sOperator	= '',
@@ -1408,12 +1652,15 @@ hMultiplicativeExpr_operators['*']		= function (oLeft, oRight, oContext) {
 		}
 	}
 
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, bReverse ? oRight : oLeft, bReverse ? oLeft : oRight);
 
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
+
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
 hMultiplicativeExpr_operators['div']	= function (oLeft, oRight, oContext) {
 	var sOperator	= '';
 
@@ -1437,25 +1684,33 @@ hMultiplicativeExpr_operators['div']	= function (oLeft, oRight, oContext) {
 		if (oRight instanceof cXSDayTimeDuration)
 			sOperator	= "divide-dayTimeDuration-by-dayTimeDuration";
 	}
-		if (sOperator)
+	// Call operator function
+	if (sOperator)
 		return hStaticContext_operators[sOperator].call(oContext, oLeft, oRight);
 
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
+
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
 hMultiplicativeExpr_operators['idiv']	= function (oLeft, oRight, oContext) {
 	if (fXSAnyAtomicType_isNumeric(oLeft) && fXSAnyAtomicType_isNumeric(oRight))
 		return hStaticContext_operators["numeric-integer-divide"].call(oContext, oLeft, oRight);
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
+
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
 hMultiplicativeExpr_operators['mod']	= function (oLeft, oRight, oContext) {
 	if (fXSAnyAtomicType_isNumeric(oLeft) && fXSAnyAtomicType_isNumeric(oRight))
 		return hStaticContext_operators["numeric-mod"].call(oContext, oLeft, oRight);
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
 
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
+
+// Static members
 function fMultiplicativeExpr_parse (oLexer, oStaticContext) {
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fUnionExpr_parse(oLexer, oStaticContext)))
@@ -1463,48 +1718,62 @@ function fMultiplicativeExpr_parse (oLexer, oStaticContext) {
 	if (!(oLexer.peek() in hMultiplicativeExpr_operators))
 		return oExpr;
 
-		var oMultiplicativeExpr	= new cMultiplicativeExpr(oExpr),
+	// Additive expression
+	var oMultiplicativeExpr	= new cMultiplicativeExpr(oExpr),
 		sOperator;
 	while ((sOperator = oLexer.peek()) in hMultiplicativeExpr_operators) {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fUnionExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected second operand in multiplicative expression"
+
 			);
 		oMultiplicativeExpr.items.push([sOperator, oExpr]);
 	}
 	return oMultiplicativeExpr;
 };
 
+// Public members
 cMultiplicativeExpr.prototype.evaluate	= function (oContext) {
 	var oLeft	= fFunction_sequence_atomize(this.left.evaluate(oContext), oContext);
 
-		if (!oLeft.length)
+	//
+	if (!oLeft.length)
 		return [];
-		fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
-			, "first operand of '" + this.items[0][0] + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
+
 	);
 
 	var vLeft	= oLeft[0];
 	if (vLeft instanceof cXSUntypedAtomic)
-		vLeft	= cXSDouble.cast(vLeft);	
+		vLeft	= cXSDouble.cast(vLeft);	// cast to xs:double
+
 	for (var nIndex = 0, nLength = this.items.length, oRight, vRight; nIndex < nLength; nIndex++) {
 		oRight	= fFunction_sequence_atomize(this.items[nIndex][1].evaluate(oContext), oContext);
 
 		if (!oRight.length)
 			return [];
-				fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
-				, "second operand of '" + this.items[nIndex][0] + "'"
+		// Assert cardinality
+		fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
+
 		);
 
 		vRight	= oRight[0];
 		if (vRight instanceof cXSUntypedAtomic)
-			vRight	= cXSDouble.cast(vRight);	
+			vRight	= cXSDouble.cast(vRight);	// cast to xs:double
+
 		vLeft	= hMultiplicativeExpr_operators[this.items[nIndex][0]](vLeft, vRight, oContext);
 	}
 	return [vLeft];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cUnaryExpr(sOperator, oExpr) {
 	this.operator	= sOperator;
@@ -1514,27 +1783,35 @@ function cUnaryExpr(sOperator, oExpr) {
 cUnaryExpr.prototype.operator	= null;
 cUnaryExpr.prototype.expression	= null;
 
+//
 var hUnaryExpr_operators	= {};
 hUnaryExpr_operators['-']	= function(oRight, oContext) {
 	if (fXSAnyAtomicType_isNumeric(oRight))
 		return hStaticContext_operators["numeric-unary-minus"].call(oContext, oRight);
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
+
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
 hUnaryExpr_operators['+']	= function(oRight, oContext) {
 	if (fXSAnyAtomicType_isNumeric(oRight))
 		return hStaticContext_operators["numeric-unary-plus"].call(oContext, oRight);
-		throw new cException("XPTY0004"
-			, "Arithmetic operator is not defined for provided arguments"
-	);	};
+	//
+	throw new cException("XPTY0004"
 
+	);	// Arithmetic operator is not defined for arguments of types ({type1}, {type2})
+};
+
+// Static members
+// UnaryExpr	:= ("-" | "+")* ValueExpr
 function fUnaryExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.eof())
 		return;
 	if (!(oLexer.peek() in hUnaryExpr_operators))
 		return fValueExpr_parse(oLexer, oStaticContext);
 
-		var sOperator	= '+',
+	// Unary expression
+	var sOperator	= '+',
 		oExpr;
 	while (oLexer.peek() in hUnaryExpr_operators) {
 		if (oLexer.peek() == '-')
@@ -1543,7 +1820,7 @@ function fUnaryExpr_parse (oLexer, oStaticContext) {
 	}
 	if (oLexer.eof() ||!(oExpr = fValueExpr_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected operand in unary expression"
+
 		);
 	return new cUnaryExpr(sOperator, oExpr);
 };
@@ -1551,27 +1828,46 @@ function fUnaryExpr_parse (oLexer, oStaticContext) {
 cUnaryExpr.prototype.evaluate	= function (oContext) {
 	var oRight	= fFunction_sequence_atomize(this.expression.evaluate(oContext), oContext);
 
-		if (!oRight.length)
+	//
+	if (!oRight.length)
 		return [];
-		fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
-			, "second operand of '" + this.operator + "'"
+	// Assert cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
+
 	);
 
 	var vRight	= oRight[0];
 	if (vRight instanceof cXSUntypedAtomic)
-		vRight	= cXSDouble.cast(vRight);	
+		vRight	= cXSDouble.cast(vRight);	// cast to xs:double
+
 	return [hUnaryExpr_operators[this.operator](vRight, oContext)];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cValueExpr() {
 
 };
 
+// Static members
 function fValueExpr_parse (oLexer, oStaticContext) {
 	return fPathExpr_parse(oLexer, oStaticContext);
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cOrExpr(oExpr) {
 	this.left	= oExpr;
@@ -1581,6 +1877,7 @@ function cOrExpr(oExpr) {
 cOrExpr.prototype.left	= null;
 cOrExpr.prototype.items	= null;
 
+// Static members
 function fOrExpr_parse (oLexer, oStaticContext) {
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fAndExpr_parse(oLexer, oStaticContext)))
@@ -1588,25 +1885,34 @@ function fOrExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.peek() != "or")
 		return oExpr;
 
-		var oOrExpr	= new cOrExpr(oExpr);
+	// Or expression
+	var oOrExpr	= new cOrExpr(oExpr);
 	while (oLexer.peek() == "or") {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fAndExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected second operand in logical expression"
+
 			);
 		oOrExpr.items.push(oExpr);
 	}
 	return oOrExpr;
 };
 
+// Public members
 cOrExpr.prototype.evaluate	= function (oContext) {
 	var bValue	= fFunction_sequence_toEBV(this.left.evaluate(oContext), oContext);
 	for (var nIndex = 0, nLength = this.items.length; (nIndex < nLength) && !bValue; nIndex++)
 		bValue	= fFunction_sequence_toEBV(this.items[nIndex].evaluate(oContext), oContext);
 	return [new cXSBoolean(bValue)];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cAndExpr(oExpr) {
 	this.left	= oExpr;
@@ -1616,6 +1922,7 @@ function cAndExpr(oExpr) {
 cAndExpr.prototype.left		= null;
 cAndExpr.prototype.items	= null;
 
+// Static members
 function fAndExpr_parse (oLexer, oStaticContext) {
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fComparisonExpr_parse(oLexer, oStaticContext)))
@@ -1623,25 +1930,34 @@ function fAndExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.peek() != "and")
 		return oExpr;
 
-		var oAndExpr	= new cAndExpr(oExpr);
+	// And expression
+	var oAndExpr	= new cAndExpr(oExpr);
 	while (oLexer.peek() == "and") {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fComparisonExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected second operand in logical expression"
+
 			);
 		oAndExpr.items.push(oExpr);
 	}
 	return oAndExpr;
 };
 
+// Public members
 cAndExpr.prototype.evaluate	= function (oContext) {
 	var bValue	= fFunction_sequence_toEBV(this.left.evaluate(oContext), oContext);
 	for (var nIndex = 0, nLength = this.items.length; (nIndex < nLength) && bValue; nIndex++)
 		bValue	= fFunction_sequence_toEBV(this.items[nIndex].evaluate(oContext), oContext);
 	return [new cXSBoolean(bValue)];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cStepExpr() {
 
@@ -1649,6 +1965,7 @@ function cStepExpr() {
 
 cStepExpr.prototype.predicates	= null;
 
+// Static members
 function fStepExpr_parse (oLexer, oStaticContext) {
 	if (!oLexer.eof())
 		return fFilterExpr_parse(oLexer, oStaticContext)
@@ -1657,38 +1974,44 @@ function fStepExpr_parse (oLexer, oStaticContext) {
 
 function fStepExpr_parsePredicates (oLexer, oStaticContext, oStep) {
 	var oExpr;
-		while (oLexer.peek() == '[') {
+	// Parse predicates
+	while (oLexer.peek() == '[') {
 		oLexer.next();
 
 		if (oLexer.eof() ||!(oExpr = fExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected expression in predicate"
+
 			);
 
 		oStep.predicates.push(oExpr);
 
 		if (oLexer.peek() != ']')
 			throw new cException("XPST0003"
-					, "Expected ']' token in predicate"
+
 			);
 
 		oLexer.next();
 	}
 };
 
+// Public members
 cStepExpr.prototype.applyPredicates	= function(oSequence, oContext) {
 	var vContextItem	= oContext.item,
 		nContextPosition= oContext.position,
 		nContextSize	= oContext.size;
-		for (var nPredicateIndex = 0, oSequence1, nPredicateLength = this.predicates.length; nPredicateIndex < nPredicateLength; nPredicateIndex++) {
+	//
+	for (var nPredicateIndex = 0, oSequence1, nPredicateLength = this.predicates.length; nPredicateIndex < nPredicateLength; nPredicateIndex++) {
 		oSequence1	= oSequence;
 		oSequence	= [];
 		for (var nIndex = 0, oSequence2, nLength = oSequence1.length; nIndex < nLength; nIndex++) {
-						oContext.item		= oSequence1[nIndex];
+			// Set new context
+			oContext.item		= oSequence1[nIndex];
 			oContext.position	= nIndex + 1;
 			oContext.size		= nLength;
-						oSequence2	= this.predicates[nPredicateIndex].evaluate(oContext);
-						if (oSequence2.length == 1 && fXSAnyAtomicType_isNumeric(oSequence2[0])) {
+			//
+			oSequence2	= this.predicates[nPredicateIndex].evaluate(oContext);
+			//
+			if (oSequence2.length == 1 && fXSAnyAtomicType_isNumeric(oSequence2[0])) {
 				if (oSequence2[0].valueOf() == nIndex + 1)
 					oSequence.push(oSequence1[nIndex]);
 			}
@@ -1697,12 +2020,21 @@ cStepExpr.prototype.applyPredicates	= function(oSequence, oContext) {
 				oSequence.push(oSequence1[nIndex]);
 		}
 	}
-		oContext.item		= vContextItem;
+	// Restore context
+	oContext.item		= vContextItem;
 	oContext.position	= nContextPosition;
 	oContext.size		= nContextSize;
-		return oSequence;
+	//
+	return oSequence;
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cAxisStep(sAxis, oTest) {
 	this.axis	= sAxis;
@@ -1715,7 +2047,9 @@ cAxisStep.prototype	= new cStepExpr;
 cAxisStep.prototype.axis		= null;
 cAxisStep.prototype.test		= null;
 
+//
 var hAxisStep_axises	= {};
+// Forward axis
 hAxisStep_axises["attribute"]			= {};
 hAxisStep_axises["child"]				= {};
 hAxisStep_axises["descendant"]			= {};
@@ -1723,12 +2057,15 @@ hAxisStep_axises["descendant-or-self"]	= {};
 hAxisStep_axises["following"]			= {};
 hAxisStep_axises["following-sibling"]	= {};
 hAxisStep_axises["self"]				= {};
+// hAxisStep_axises["namespace"]			= {};	// deprecated in 2.0
+// Reverse axis
 hAxisStep_axises["ancestor"]			= {};
 hAxisStep_axises["ancestor-or-self"]	= {};
 hAxisStep_axises["parent"]				= {};
 hAxisStep_axises["preceding"]			= {};
 hAxisStep_axises["preceding-sibling"]	= {};
 
+// Static members
 function fAxisStep_parse (oLexer, oStaticContext) {
 	var sAxis	= oLexer.peek(),
 		oExpr,
@@ -1736,15 +2073,16 @@ function fAxisStep_parse (oLexer, oStaticContext) {
 	if (oLexer.peek(1) == '::') {
 		if (!(sAxis in hAxisStep_axises))
 			throw new cException("XPST0003"
-					, "Unknown axis name: " + sAxis
+
 			);
 
 		oLexer.next(2);
 		if (oLexer.eof() ||!(oExpr = fNodeTest_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected node test expression in axis step"
+
 			);
-				oStep	= new cAxisStep(sAxis, oExpr);
+		//
+		oStep	= new cAxisStep(sAxis, oExpr);
 	}
 	else
 	if (sAxis == '..') {
@@ -1756,20 +2094,23 @@ function fAxisStep_parse (oLexer, oStaticContext) {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fNodeTest_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected node test expression in axis step"
+
 			);
-				oStep	= new cAxisStep("attribute", oExpr);
+		//
+		oStep	= new cAxisStep("attribute", oExpr);
 	}
 	else {
 		if (oLexer.eof() ||!(oExpr = fNodeTest_parse(oLexer, oStaticContext)))
 			return;
 		oStep	= new cAxisStep(oExpr instanceof cKindTest && oExpr.name == "attribute" ? "attribute" : "child", oExpr);
 	}
-		fStepExpr_parsePredicates(oLexer, oStaticContext, oStep);
+	//
+	fStepExpr_parsePredicates(oLexer, oStaticContext, oStep);
 
 	return oStep;
 };
 
+// Public members
 cAxisStep.prototype.evaluate	= function (oContext) {
 	var oItem	= oContext.item;
 
@@ -1781,7 +2122,8 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 		nType		= fGetProperty(oItem, "nodeType");
 
 	switch (this.axis) {
-				case "attribute":
+		// Forward axis
+		case "attribute":
 			if (nType == 1)
 				for (var aAttributes = fGetProperty(oItem, "attributes"), nIndex = 0, nLength = aAttributes.length; nIndex < nLength; nIndex++)
 					oSequence.push(aAttributes[nIndex]);
@@ -1794,12 +2136,14 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 
 		case "descendant-or-self":
 			oSequence.push(oItem);
-					case "descendant":
+			// No break left intentionally
+		case "descendant":
 			fAxisStep_getChildrenForward(fGetProperty(oItem, "firstChild"), oSequence, fGetProperty);
 			break;
 
 		case "following":
-						for (var oParent = oItem, oSibling; oParent; oParent = fGetProperty(oParent, "parentNode"))
+			// TODO: Attribute node context
+			for (var oParent = oItem, oSibling; oParent; oParent = fGetProperty(oParent, "parentNode"))
 				if (oSibling = fGetProperty(oParent, "nextSibling"))
 					fAxisStep_getChildrenForward(oSibling, oSequence, fGetProperty);
 			break;
@@ -1813,9 +2157,11 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 			oSequence.push(oItem);
 			break;
 
-				case "ancestor-or-self":
+		// Reverse axis
+		case "ancestor-or-self":
 			oSequence.push(oItem);
-					case "ancestor":
+			// No break left intentionally
+		case "ancestor":
 			for (var oNode = nType == 2 ? fGetProperty(oItem, "ownerElement") : oItem; oNode = fGetProperty(oNode, "parentNode");)
 				oSequence.push(oNode);
 			break;
@@ -1827,7 +2173,8 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 			break;
 
 		case "preceding":
-						for (var oParent = oItem, oSibling; oParent; oParent = fGetProperty(oParent, "parentNode"))
+			// TODO: Attribute node context
+			for (var oParent = oItem, oSibling; oParent; oParent = fGetProperty(oParent, "parentNode"))
 				if (oSibling = fGetProperty(oParent, "previousSibling"))
 					fAxisStep_getChildrenBackward(oSibling, oSequence, fGetProperty);
 			break;
@@ -1838,7 +2185,8 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 			break;
 	}
 
-		if (oSequence.length && !(this.test instanceof cKindTest && this.test.name == "node")) {
+	// Apply test
+	if (oSequence.length && !(this.test instanceof cKindTest && this.test.name == "node")) {
 		var oSequence1	= oSequence;
 		oSequence	= [];
 		for (var nIndex = 0, nLength = oSequence1.length; nIndex < nLength; nIndex++) {
@@ -1847,10 +2195,12 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 		}
 	}
 
-		if (oSequence.length && this.predicates.length)
+	// Apply predicates
+	if (oSequence.length && this.predicates.length)
 		oSequence	= this.applyPredicates(oSequence, oContext);
 
-		switch (this.axis) {
+	// Reverse results if reverse axis
+	switch (this.axis) {
 		case "ancestor":
 		case "ancestor-or-self":
 		case "parent":
@@ -1862,6 +2212,7 @@ cAxisStep.prototype.evaluate	= function (oContext) {
 	return oSequence;
 };
 
+//
 function fAxisStep_getChildrenForward(oNode, oSequence, fGetProperty) {
 	for (var oChild; oNode; oNode = fGetProperty(oNode, "nextSibling")) {
 		oSequence.push(oNode);
@@ -1877,7 +2228,14 @@ function fAxisStep_getChildrenBackward(oNode, oSequence, fGetProperty) {
 		oSequence.push(oNode);
 	}
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cPathExpr() {
 	this.items	= [];
@@ -1885,6 +2243,7 @@ function cPathExpr() {
 
 cPathExpr.prototype.items	= null;
 
+// Static members
 function fPathExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.eof())
 		return;
@@ -1894,48 +2253,60 @@ function fPathExpr_parse (oLexer, oStaticContext) {
 	var oPathExpr	= new cPathExpr(),
 		sSlash	= oLexer.peek(),
 		oExpr;
-		if (sSlash == sDoubleSlash || sSlash == sSingleSlash) {
+	// Parse first step
+	if (sSlash == sDoubleSlash || sSlash == sSingleSlash) {
 		oLexer.next();
 		oPathExpr.items.push(new cFunctionCall(null, "root", sNS_XPF));
-				if (sSlash == sDoubleSlash)
+		//
+		if (sSlash == sDoubleSlash)
 			oPathExpr.items.push(new cAxisStep("descendant-or-self", new cKindTest("node")));
 	}
 
-		if (oLexer.eof() ||!(oExpr = fStepExpr_parse(oLexer, oStaticContext))) {
+	//
+	if (oLexer.eof() ||!(oExpr = fStepExpr_parse(oLexer, oStaticContext))) {
 		if (sSlash == sSingleSlash)
-			return oPathExpr.items[0];			if (sSlash == sDoubleSlash)
+			return oPathExpr.items[0];	// '/' expression
+		if (sSlash == sDoubleSlash)
 			throw new cException("XPST0003"
-					, "Expected path step expression"
+
 			);
 		return;
 	}
 	oPathExpr.items.push(oExpr);
 
-		while ((sSlash = oLexer.peek()) == sSingleSlash || sSlash == sDoubleSlash) {
+	// Parse other steps
+	while ((sSlash = oLexer.peek()) == sSingleSlash || sSlash == sDoubleSlash) {
 		if (sSlash == sDoubleSlash)
 			oPathExpr.items.push(new cAxisStep("descendant-or-self", new cKindTest("node")));
-				oLexer.next();
+		//
+		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fStepExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected path step expression"
+
 			);
-				oPathExpr.items.push(oExpr);
+		//
+		oPathExpr.items.push(oExpr);
 	}
 
 	if (oPathExpr.items.length == 1)
 		return oPathExpr.items[0];
 
-		return oPathExpr;
+	//
+	return oPathExpr;
 };
 
+// Public members
 cPathExpr.prototype.evaluate	= function (oContext) {
 	var vContextItem	= oContext.item;
-		var oSequence	= [vContextItem];
+	//
+	var oSequence	= [vContextItem];
 	for (var nItemIndex = 0, nItemLength = this.items.length, oSequence1; nItemIndex < nItemLength; nItemIndex++) {
 		oSequence1	= [];
 		for (var nIndex = 0, nLength = oSequence.length; nIndex < nLength; nIndex++) {
-						oContext.item	= oSequence[nIndex];
-						for (var nRightIndex = 0, oSequence2 = this.items[nItemIndex].evaluate(oContext), nRightLength = oSequence2.length; nRightIndex < nRightLength; nRightIndex++)
+			// Set new context item
+			oContext.item	= oSequence[nIndex];
+			//
+			for (var nRightIndex = 0, oSequence2 = this.items[nItemIndex].evaluate(oContext), nRightLength = oSequence2.length; nRightIndex < nRightLength; nRightIndex++)
 				if ((nItemIndex < nItemLength - 1) && !oContext.DOMAdapter.isNode(oSequence2[nRightIndex]))
 					throw new cException("XPTY0019");
 				else
@@ -1944,21 +2315,38 @@ cPathExpr.prototype.evaluate	= function (oContext) {
 		}
 		oSequence	= oSequence1;
 	};
-		oContext.item	= vContextItem;
-		return fFunction_sequence_order(oSequence, oContext);
+	// Restore context item
+	oContext.item	= vContextItem;
+	//
+	return fFunction_sequence_order(oSequence, oContext);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cNodeTest() {
 
 };
 
+// Static members
 function fNodeTest_parse (oLexer, oStaticContext) {
 	if (!oLexer.eof())
 		return fKindTest_parse(oLexer, oStaticContext)
 			|| fNameTest_parse(oLexer, oStaticContext);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cKindTest(sName) {
 	this.name	= sName;
@@ -1971,6 +2359,7 @@ cKindTest.prototype.name	= null;
 cKindTest.prototype.args	= null;
 
 var hKindTest_names	= {};
+//
 hKindTest_names["document-node"]	= {};
 hKindTest_names["element"]			= {};
 hKindTest_names["attribute"]		= {};
@@ -1978,53 +2367,70 @@ hKindTest_names["processing-instruction"]	= {};
 hKindTest_names["comment"]			= {};
 hKindTest_names["text"]				= {};
 hKindTest_names["node"]				= {};
+//
 hKindTest_names["schema-element"]	= {};
 hKindTest_names["schema-attribute"]	= {};
 
+// Static members
 function fKindTest_parse (oLexer, oStaticContext) {
-	var sName	= oLexer.peek();
+	var sName	= oLexer.peek(),
+		oValue;
 	if (oLexer.peek(1) == '(') {
-				if (!(sName in hKindTest_names))
+		//
+		if (!(sName in hKindTest_names))
 			throw new cException("XPST0003"
-					, "Unknown '" + sName + "' kind test"
+
 			);
 
-				oLexer.next(2);
-				var oTest	= new cKindTest(sName);
+		//
+		oLexer.next(2);
+		//
+		var oTest	= new cKindTest(sName);
 		if (oLexer.peek() != ')') {
 			if (sName == "document-node") {
-							}
+				// TODO: parse test further
+			}
 			else
 			if (sName == "element") {
-							}
+				// TODO: parse test further
+			}
 			else
 			if (sName == "attribute") {
-							}
+				// TODO: parse test further
+			}
 			else
 			if (sName == "processing-instruction") {
-							}
+				oValue = fStringLiteral_parse(oLexer, oStaticContext);
+				if (!oValue) {
+					oValue = new cStringLiteral(new cXSString(oLexer.peek()));
+					oLexer.next();
+				}
+				oTest.args.push(oValue);
+			}
 			else
 			if (sName == "schema-attribute") {
-							}
+				// TODO: parse test further
+			}
 			else
 			if (sName == "schema-element") {
-							}
+				// TODO: parse test further
+			}
 		}
 		else {
 			if (sName == "schema-attribute")
 				throw new cException("XPST0003"
-						, "Expected attribute declaration in 'schema-attribute' kind test"
+
 				);
 			else
 			if (sName == "schema-element")
 				throw new cException("XPST0003"
-						, "Expected element declaration in 'schema-element' kind test"
+
 				);
 		}
 
 		if (oLexer.peek() != ')')
 			throw new cException("XPST0003"
-					, "Expected ')' token in kind test"
+
 			);
 		oLexer.next();
 
@@ -2032,11 +2438,14 @@ function fKindTest_parse (oLexer, oStaticContext) {
 	}
 };
 
+// Public members
 cKindTest.prototype.test	= function (oNode, oContext) {
 	var fGetProperty	= oContext.DOMAdapter.getProperty,
-		nType	= oContext.DOMAdapter.isNode(oNode) ? fGetProperty(oNode, "nodeType") : 0;
+		nType	= oContext.DOMAdapter.isNode(oNode) ? fGetProperty(oNode, "nodeType") : 0,
+		sTarget;
 	switch (this.name) {
-				case "node":			return !!nType;
+		// Node type test
+		case "node":			return !!nType;
 		case "attribute":				if (nType != 2)	return false;	break;
 		case "document-node":	return nType == 9;
 		case "element":			return nType == 1;
@@ -2044,21 +2453,33 @@ cKindTest.prototype.test	= function (oNode, oContext) {
 		case "comment":			return nType == 8;
 		case "text":			return nType == 3 || nType == 4;
 
-				case "schema-attribute":
+		// Schema tests
+		case "schema-attribute":
 			throw "KindTest '" + "schema-attribute" + "' not implemented";
 
 		case "schema-element":
 			throw "KindTest '" + "schema-element" + "' not implemented";
 	}
 
-		if (nType == 2)
+	// Additional tests
+	if (nType == 2)
 		return fGetProperty(oNode, "prefix") != "xmlns" && fGetProperty(oNode, "localName") != "xmlns";
-	if (nType == 7)
-		return fGetProperty(oNode, "target") != "xml";
+	if (nType == 7) {
+		sTarget = fGetProperty(oNode, "target");
+		return this.args.length ? sTarget == this.args[0].value : sTarget != "xml";
+	}
 
 	return true;
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cNameTest(sPrefix, sLocalName, sNameSpaceURI) {
 	this.prefix			= sPrefix;
@@ -2072,19 +2493,21 @@ cNameTest.prototype.prefix			= null;
 cNameTest.prototype.localName		= null;
 cNameTest.prototype.namespaceURI	= null;
 
-var rNameTest	= /^(?:(?![0-9-])([\w-]+|\*)\:)?(?![0-9-])([\w-]+|\*)$/;
+// Static members
+var rNameTest	= /^(?:(?![0-9-])(\w[\w.-]*|\*)\:)?(?![0-9-])(\w[\w.-]*|\*)$/;
 function fNameTest_parse (oLexer, oStaticContext) {
 	var aMatch	= oLexer.peek().match(rNameTest);
 	if (aMatch) {
 		if (aMatch[1] == '*' && aMatch[2] == '*')
 			throw new cException("XPST0003"
-					, "Illegal use of *:* wildcard in name test"
+
 			);
 		oLexer.next();
 		return new cNameTest(aMatch[1] || null, aMatch[2], aMatch[1] ? aMatch[1] == '*' ? '*' : oStaticContext.getURIForPrefix(aMatch[1]) || null : oStaticContext.defaultElementNamespace);
 	}
 };
 
+// Public members
 cNameTest.prototype.test	= function (oNode, oContext) {
 	var fGetProperty	= oContext.DOMAdapter.getProperty,
 		nType	= fGetProperty(oNode, "nodeType");
@@ -2094,14 +2517,24 @@ cNameTest.prototype.test	= function (oNode, oContext) {
 		if (this.localName == fGetProperty(oNode, "localName"))
 			return this.namespaceURI == '*' || (nType == 2 && !this.prefix && !fGetProperty(oNode, "prefix")) || fGetProperty(oNode, "namespaceURI") == this.namespaceURI;
 	}
-		return false;
+	//
+	return false;
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cPrimaryExpr() {
 
 };
 
+// Static members
 function fPrimaryExpr_parse (oLexer, oStaticContext) {
 	if (!oLexer.eof())
 		return fContextItemExpr_parse(oLexer, oStaticContext)
@@ -2110,39 +2543,59 @@ function fPrimaryExpr_parse (oLexer, oStaticContext) {
 			|| fVarRef_parse(oLexer, oStaticContext)
 			|| fLiteral_parse(oLexer, oStaticContext);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cParenthesizedExpr(oExpr) {
 	this.expression	= oExpr;
 };
 
+// Static members
 function fParenthesizedExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.peek() == '(') {
 		oLexer.next();
-				var oExpr	= null;
+		// Check if not empty (allowed)
+		var oExpr	= null;
 		if (oLexer.peek() != ')')
 			oExpr	= fExpr_parse(oLexer, oStaticContext);
 
-				if (oLexer.peek() != ')')
+		//
+		if (oLexer.peek() != ')')
 			throw new cException("XPST0003"
-					, "Expected ')' token in parenthesized expression"
+
 			);
 
 		oLexer.next();
 
-				return new cParenthesizedExpr(oExpr);
+		//
+		return new cParenthesizedExpr(oExpr);
 	}
 };
 
+// Public members
 cParenthesizedExpr.prototype.evaluate	= function (oContext) {
 	return this.expression ? this.expression.evaluate(oContext) : [];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cContextItemExpr() {
 
 };
 
+// Static members
 function fContextItemExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.peek() == '.') {
 		oLexer.next();
@@ -2150,14 +2603,23 @@ function fContextItemExpr_parse (oLexer, oStaticContext) {
 	}
 };
 
+// Public members
 cContextItemExpr.prototype.evaluate	= function (oContext) {
 	if (oContext.item == null)
 		throw new cException("XPDY0002"
-				, "Dynamic context does not have context item initialized"
-		);
-		return [oContext.item];
-};
 
+		);
+	//
+	return [oContext.item];
+};
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cLiteral() {
 
@@ -2165,16 +2627,25 @@ function cLiteral() {
 
 cLiteral.prototype.value	= null;
 
+// Static members
 function fLiteral_parse (oLexer, oStaticContext) {
 	if (!oLexer.eof())
 		return fNumericLiteral_parse(oLexer, oStaticContext)
 			|| fStringLiteral_parse(oLexer, oStaticContext);
 };
 
+// Public members
 cLiteral.prototype.evaluate	= function (oContext) {
 	return [this.value];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cNumericLiteral(oValue) {
 	this.value	= oValue;
@@ -2182,6 +2653,7 @@ function cNumericLiteral(oValue) {
 
 cNumericLiteral.prototype	= new cLiteral;
 
+// Integer | Decimal | Double
 var rNumericLiteral	= /^[+\-]?(?:(?:(\d+)(?:\.(\d*))?)|(?:\.(\d+)))(?:[eE]([+-])?(\d+))?$/;
 function fNumericLiteral_parse (oLexer, oStaticContext) {
 	var sValue	= oLexer.peek(),
@@ -2204,7 +2676,14 @@ function fNumericLiteral_parseValue(sValue) {
 		return new cType(+sValue);
 	}
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cStringLiteral(oValue) {
 	this.value	= oValue;
@@ -2220,7 +2699,14 @@ function fStringLiteral_parse (oLexer, oStaticContext) {
 		return new cStringLiteral(new cXSString(aMatch[1] ? aMatch[1].replace("''", "'") : aMatch[2] ? aMatch[2].replace('""', '"') : ''));
 	}
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cFilterExpr(oPrimary) {
 	this.expression	= oPrimary;
@@ -2231,27 +2717,38 @@ cFilterExpr.prototype	= new cStepExpr;
 
 cFilterExpr.prototype.expression	= null;
 
+// Static members
 function fFilterExpr_parse (oLexer, oStaticContext) {
 	var oExpr;
 	if (oLexer.eof() ||!(oExpr = fPrimaryExpr_parse(oLexer, oStaticContext)))
 		return;
 
 	var oFilterExpr	= new cFilterExpr(oExpr);
-		fStepExpr_parsePredicates(oLexer, oStaticContext, oFilterExpr);
+	// Parse predicates
+	fStepExpr_parsePredicates(oLexer, oStaticContext, oFilterExpr);
 
-		if (oFilterExpr.predicates.length == 0)
+	// If no predicates found
+	if (oFilterExpr.predicates.length == 0)
 		return oFilterExpr.expression;
 
 	return oFilterExpr;
 };
 
+// Public members
 cFilterExpr.prototype.evaluate	= function (oContext) {
 	var oSequence	= this.expression.evaluate(oContext);
 	if (this.predicates.length && oSequence.length)
 		oSequence	= this.applyPredicates(oSequence, oContext);
 	return oSequence;
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cVarRef(sPrefix, sLocalName, sNameSpaceURI) {
 	this.prefix			= sPrefix;
@@ -2263,14 +2760,15 @@ cVarRef.prototype.prefix		= null;
 cVarRef.prototype.localName		= null;
 cVarRef.prototype.namespaceURI	= null;
 
+// Static members
 function fVarRef_parse (oLexer, oStaticContext) {
 	if (oLexer.peek().substr(0, 1) == '$') {
 		var aMatch	= oLexer.peek().substr(1).match(rNameTest);
 		if (aMatch) {
 			if (aMatch[1] == '*' || aMatch[2] == '*')
 				throw new cException("XPST0003"
-							, "Illegal use of wildcard in var expression variable name"
-					);
+	
+				);
 
 			var oVarRef	= new cVarRef(aMatch[1] || null, aMatch[2], aMatch[1] ? oStaticContext.getURIForPrefix(aMatch[1]) : null);
 			oLexer.next();
@@ -2279,15 +2777,24 @@ function fVarRef_parse (oLexer, oStaticContext) {
 	}
 };
 
+// Public members
 cVarRef.prototype.evaluate	= function (oContext) {
 	var sUri	= (this.namespaceURI ? '{' + this.namespaceURI + '}' : '') + this.localName;
 	if (oContext.scope.hasOwnProperty(sUri))
 		return [oContext.scope[sUri]];
-		throw new cException("XPST0008"
-			, "Variable $" + (this.prefix ? this.prefix + ':' : '') + this.localName + " has not been declared"
+	//
+	throw new cException("XPST0008"
+
 	);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cFunctionCall(sPrefix, sLocalName, sNameSpaceURI) {
 	this.prefix			= sPrefix;
@@ -2301,30 +2808,36 @@ cFunctionCall.prototype.localName		= null;
 cFunctionCall.prototype.namespaceURI	= null;
 cFunctionCall.prototype.args	= null;
 
+// Static members
 function fFunctionCall_parse (oLexer, oStaticContext) {
 	var aMatch	= oLexer.peek().match(rNameTest);
 	if (aMatch && oLexer.peek(1) == '(') {
-				if (!aMatch[1] && (aMatch[2] in hKindTest_names))
+		// Reserved "functions"
+		if (!aMatch[1] && (aMatch[2] in hKindTest_names))
 			return fAxisStep_parse(oLexer, oStaticContext);
-				if (aMatch[1] == '*' || aMatch[2] == '*')
+		// Other functions
+		if (aMatch[1] == '*' || aMatch[2] == '*')
 			throw new cException("XPST0003"
-					, "Illegal use of wildcard in function name"
+
 			);
 		var oFunctionCallExpr	= new cFunctionCall(aMatch[1] || null, aMatch[2], aMatch[1] ? oStaticContext.getURIForPrefix(aMatch[1]) || null : oStaticContext.defaultFunctionNamespace),
 			oExpr;
 		oLexer.next(2);
-				if (oLexer.peek() != ')') {
+		//
+		if (oLexer.peek() != ')') {
 			do {
 				if (oLexer.eof() ||!(oExpr = fExprSingle_parse(oLexer, oStaticContext)))
 					throw new cException("XPST0003"
-							, "Expected function call argument"
+
 					);
-								oFunctionCallExpr.args.push(oExpr);
+				//
+				oFunctionCallExpr.args.push(oExpr);
 			}
 			while (oLexer.peek() == ',' && oLexer.next());
-						if (oLexer.peek() != ')')
+			//
+			if (oLexer.peek() != ')')
 				throw new cException("XPST0003"
-						, "Expected ')' token in function call"
+
 				);
 		}
 		oLexer.next();
@@ -2332,43 +2845,54 @@ function fFunctionCall_parse (oLexer, oStaticContext) {
 	}
 };
 
+// Public members
 cFunctionCall.prototype.evaluate	= function (oContext) {
 	var aArguments	= [],
 		aParameters,
 		fFunction;
 
-		for (var nIndex = 0, nLength = this.args.length; nIndex < nLength; nIndex++)
+	// Evaluate arguments
+	for (var nIndex = 0, nLength = this.args.length; nIndex < nLength; nIndex++)
 		aArguments.push(this.args[nIndex].evaluate(oContext));
 
 	var sUri	= (this.namespaceURI ? '{' + this.namespaceURI + '}' : '') + this.localName;
-		if (this.namespaceURI == sNS_XPF) {
+	// Call function
+	if (this.namespaceURI == sNS_XPF) {
 		if (fFunction = hStaticContext_functions[this.localName]) {
-						if (aParameters = hStaticContext_signatures[this.localName])
+			// Validate/Cast arguments
+			if (aParameters = hStaticContext_signatures[this.localName])
 				fFunctionCall_prepare(this.localName, aParameters, fFunction, aArguments, oContext);
-						var vResult	= fFunction.apply(oContext, aArguments);
-						return vResult == null ? [] : vResult instanceof cArray ? vResult : [vResult];
+			//
+			var vResult	= fFunction.apply(oContext, aArguments);
+			//
+			return vResult == null ? [] : vResult instanceof cArray ? vResult : [vResult];
 		}
 		throw new cException("XPST0017"
-				, "Unknown system function: " + sUri + '()'
+
 		);
 	}
 	else
 	if (this.namespaceURI == sNS_XSD) {
 		if ((fFunction = hStaticContext_dataTypes[this.localName]) && this.localName != "NOTATION" && this.localName != "anyAtomicType") {
-						fFunctionCall_prepare(this.localName, [[cXSAnyAtomicType]], fFunction, aArguments, oContext);
-						return [fFunction.cast(aArguments[0])];
+			//
+			fFunctionCall_prepare(this.localName, [[cXSAnyAtomicType, '?']], fFunction, aArguments, oContext);
+			//
+			return aArguments[0] === null ? [] : [fFunction.cast(aArguments[0])];
 		}
 		throw new cException("XPST0017"
-				, "Unknown type constructor function: " + sUri + '()'
+
 		);
 	}
 	else
 	if (fFunction = oContext.staticContext.getFunction(sUri)) {
-				var vResult	= fFunction.apply(oContext, aArguments);
-				return vResult == null ? [] : vResult instanceof cArray ? vResult : [vResult];
+		//
+		var vResult	= fFunction.apply(oContext, aArguments);
+		//
+		return vResult == null ? [] : vResult instanceof cArray ? vResult : [vResult];
 	}
-		throw new cException("XPST0017"
-			, "Unknown user function: " + sUri + '()'
+	//
+	throw new cException("XPST0017"
+
 	);
 };
 
@@ -2380,27 +2904,31 @@ function fFunctionCall_prepare(sName, aParameters, fFunction, aArguments, oConte
 		nParametersLength	= aParameters.length,
 		nParametersRequired	= 0;
 
-		while ((nParametersRequired < aParameters.length) && !aParameters[nParametersRequired][2])
+	// Determine amount of parameters required
+	while ((nParametersRequired < aParameters.length) && !aParameters[nParametersRequired][2])
 		nParametersRequired++;
 
-		if (nArgumentsLength > nParametersLength)
+	// Validate arguments length
+	if (nArgumentsLength > nParametersLength)
 		throw new cException("XPST0017"
-				, "Function " + sName + "() must have " + (nParametersLength ? " no more than " : '') + nParametersLength + " argument" + (nParametersLength > 1 || !nParametersLength ? 's' : '')
+
 		);
 	else
 	if (nArgumentsLength < nParametersRequired)
 		throw new cException("XPST0017"
-				, "Function " + sName + "() must have " + (nParametersRequired == nParametersLength ? "exactly" : "at least") + ' ' + nParametersRequired + " argument" + (nParametersLength > 1 ? 's' : '')
+
 		);
 
 	for (var nIndex = 0; nIndex < nArgumentsLength; nIndex++) {
 		oParameter	= aParameters[nIndex];
 		oArgument	= aArguments[nIndex];
-				fFunctionCall_assertSequenceCardinality(oContext, oArgument, oParameter[1]
-				, aFunctionCall_numbers[nIndex] + " argument of " + sName + '()'
+		// Check sequence cardinality
+		fFunctionCall_assertSequenceCardinality(oContext, oArgument, oParameter[1]
+
 		);
-				fFunctionCall_assertSequenceItemType(oContext, oArgument, oParameter[0]
-				, aFunctionCall_numbers[nIndex] + " argument of " + sName + '()'
+		// Check sequence items data types consistency
+		fFunctionCall_assertSequenceItemType(oContext, oArgument, oParameter[0]
+
 		);
 		if (oParameter[1] != '+' && oParameter[1] != '*')
 			aArguments[nIndex]	= oArgument.length ? oArgument[0] : null;
@@ -2408,73 +2936,96 @@ function fFunctionCall_prepare(sName, aParameters, fFunction, aArguments, oConte
 };
 
 function fFunctionCall_assertSequenceItemType(oContext, oSequence, cItemType
-		, sSource
+
 	) {
-		for (var nIndex = 0, nLength = oSequence.length, nNodeType, vItem; nIndex < nLength; nIndex++) {
+	//
+	for (var nIndex = 0, nLength = oSequence.length, nNodeType, vItem; nIndex < nLength; nIndex++) {
 		vItem	= oSequence[nIndex];
-				if (cItemType == cXTNode || cItemType.prototype instanceof cXTNode) {
-						if (!oContext.DOMAdapter.isNode(vItem))
+		// Node types
+		if (cItemType == cXTNode || cItemType.prototype instanceof cXTNode) {
+			// Check if is node
+			if (!oContext.DOMAdapter.isNode(vItem))
 				throw new cException("XPTY0004"
-						, "Required item type of " + sSource + " is " + cItemType
+
 				);
 
-						if (cItemType != cXTNode) {
+			// Check node type
+			if (cItemType != cXTNode) {
 				nNodeType	= oContext.DOMAdapter.getProperty(vItem, "nodeType");
 				if ([null, cXTElement, cXTAttribute, cXTText, cXTText, null, null, cXTProcessingInstruction, cXTComment, cXTDocument, null, null, null][nNodeType] != cItemType)
 					throw new cException("XPTY0004"
-							, "Required item type of " + sSource + " is " + cItemType
+
 					);
 			}
 		}
 		else
-				if (cItemType == cXSAnyAtomicType || cItemType.prototype instanceof cXSAnyAtomicType) {
-						vItem	= fFunction_sequence_atomize([vItem], oContext)[0];
-						if (cItemType != cXSAnyAtomicType) {
-								if (vItem instanceof cXSUntypedAtomic)
+		// Atomic types
+		if (cItemType == cXSAnyAtomicType || cItemType.prototype instanceof cXSAnyAtomicType) {
+			// Atomize item
+			vItem	= fFunction_sequence_atomize([vItem], oContext)[0];
+			// Convert type if necessary
+			if (cItemType != cXSAnyAtomicType) {
+				// Cast item to expected type if it's type is xs:untypedAtomic
+				if (vItem instanceof cXSUntypedAtomic)
 					vItem	= cItemType.cast(vItem);
-								else
-				if (cItemType == cXSString) {
+				// Cast item to xs:string if it's type is xs:anyURI
+				else
+				if (cItemType == cXSString/* || cItemType.prototype instanceof cXSString*/) {
 					if (vItem instanceof cXSAnyURI)
 						vItem	= cXSString.cast(vItem);
 				}
 				else
-				if (cItemType == cXSDouble) {
+				if (cItemType == cXSDouble/* || cItemType.prototype instanceof cXSDouble*/) {
 					if (fXSAnyAtomicType_isNumeric(vItem))
 						vItem	= cItemType.cast(vItem);
 				}
 			}
-						if (!(vItem instanceof cItemType))
+			// Check type
+			if (!(vItem instanceof cItemType))
 				throw new cException("XPTY0004"
-						, "Required item type of " + sSource + " is " + cItemType
+
 				);
-						oSequence[nIndex]	= vItem;
+			// Write value back to sequence
+			oSequence[nIndex]	= vItem;
 		}
 	}
 };
 
 function fFunctionCall_assertSequenceCardinality(oContext, oSequence, sCardinality
-		, sSource
+
 	) {
 	var nLength	= oSequence.length;
-		if (sCardinality == '?') {			if (nLength > 1)
+	// Check cardinality
+	if (sCardinality == '?') {	// =0 or 1
+		if (nLength > 1)
 			throw new cException("XPTY0004"
-					, "Required cardinality of " + sSource + " is one or zero"
+
 			);
 	}
 	else
-	if (sCardinality == '+') {			if (nLength < 1)
+	if (sCardinality == '+') {	// =1+
+		if (nLength < 1)
 			throw new cException("XPTY0004"
-					, "Required cardinality of " + sSource + " is one or more"
+
 			);
 	}
 	else
-	if (sCardinality != '*') {			if (nLength != 1)
+	if (sCardinality != '*') {	// =1 ('*' =0+)
+		if (nLength != 1)
 			throw new cException("XPTY0004"
-					, "Required cardinality of " + sSource + " is exactly one"
+
 			);
 	}
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cIntersectExceptExpr(oExpr) {
 	this.left	= oExpr;
@@ -2484,6 +3035,7 @@ function cIntersectExceptExpr(oExpr) {
 cIntersectExceptExpr.prototype.left		= null;
 cIntersectExceptExpr.prototype.items	= null;
 
+// Static members
 function fIntersectExceptExpr_parse (oLexer, oStaticContext) {
 	var oExpr,
 		sOperator;
@@ -2492,25 +3044,34 @@ function fIntersectExceptExpr_parse (oLexer, oStaticContext) {
 	if (!((sOperator = oLexer.peek()) == "intersect" || sOperator == "except"))
 		return oExpr;
 
-		var oIntersectExceptExpr	= new cIntersectExceptExpr(oExpr);
+	// IntersectExcept expression
+	var oIntersectExceptExpr	= new cIntersectExceptExpr(oExpr);
 	while ((sOperator = oLexer.peek()) == "intersect" || sOperator == "except") {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fInstanceofExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected second operand in " + sOperator + " expression"
+
 			);
 		oIntersectExceptExpr.items.push([sOperator, oExpr]);
 	}
 	return oIntersectExceptExpr;
 };
 
+// Public members
 cIntersectExceptExpr.prototype.evaluate	= function (oContext) {
 	var oSequence	= this.left.evaluate(oContext);
 	for (var nIndex = 0, nLength = this.items.length, oItem; nIndex < nLength; nIndex++)
 		oSequence	= hStaticContext_operators[(oItem = this.items[nIndex])[0]].call(oContext, oSequence, oItem[1].evaluate(oContext));
 	return oSequence;
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cRangeExpr(oLeft, oRight) {
 	this.left	= oLeft;
@@ -2520,6 +3081,7 @@ function cRangeExpr(oLeft, oRight) {
 cRangeExpr.prototype.left	= null;
 cRangeExpr.prototype.right	= null;
 
+// Static members
 function fRangeExpr_parse (oLexer, oStaticContext) {
 	var oExpr,
 		oRight;
@@ -2528,43 +3090,54 @@ function fRangeExpr_parse (oLexer, oStaticContext) {
 	if (oLexer.peek() != "to")
 		return oExpr;
 
-		oLexer.next();
+	// Range expression
+	oLexer.next();
 	if (oLexer.eof() ||!(oRight = fAdditiveExpr_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected second operand in range expression"
+
 		);
 	return new cRangeExpr(oExpr, oRight);
 };
 
+// Public members
 cRangeExpr.prototype.evaluate	= function (oContext) {
-		var oLeft	= this.left.evaluate(oContext);
+	//
+	var oLeft	= this.left.evaluate(oContext);
 	if (!oLeft.length)
 		return [];
-		var sSource	= "first operand of 'to'";
+	//
+
 
 	fFunctionCall_assertSequenceCardinality(oContext, oLeft, '?'
-			, sSource
+
 	);
 	fFunctionCall_assertSequenceItemType(oContext, oLeft, cXSInteger
-			, sSource
+
 	);
 
 	var oRight	= this.right.evaluate(oContext);
 	if (!oRight.length)
 		return [];
 
-	sSource	= "second operand of 'to'";
+
 
 	fFunctionCall_assertSequenceCardinality(oContext, oRight, '?'
-			, sSource
+
 	);
 	fFunctionCall_assertSequenceItemType(oContext, oRight, cXSInteger
-			, sSource
+
 	);
 
 	return hStaticContext_operators["to"].call(oContext, oLeft[0], oRight[0]);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cUnionExpr(oExpr) {
 	this.left	= oExpr;
@@ -2574,6 +3147,7 @@ function cUnionExpr(oExpr) {
 cUnionExpr.prototype.left	= null;
 cUnionExpr.prototype.items	= null;
 
+// Static members
 function fUnionExpr_parse (oLexer, oStaticContext) {
 	var oExpr,
 		sOperator;
@@ -2582,25 +3156,34 @@ function fUnionExpr_parse (oLexer, oStaticContext) {
 	if (!((sOperator = oLexer.peek()) == '|' || sOperator == "union"))
 		return oExpr;
 
-		var oUnionExpr	= new cUnionExpr(oExpr);
+	// Union expression
+	var oUnionExpr	= new cUnionExpr(oExpr);
 	while ((sOperator = oLexer.peek()) == '|' || sOperator == "union") {
 		oLexer.next();
 		if (oLexer.eof() ||!(oExpr = fIntersectExceptExpr_parse(oLexer, oStaticContext)))
 			throw new cException("XPST0003"
-					, "Expected second operand in union expression"
+
 			);
 		oUnionExpr.items.push(oExpr);
 	}
 	return oUnionExpr;
 };
 
+// Public members
 cUnionExpr.prototype.evaluate	= function (oContext) {
 	var oSequence	= this.left.evaluate(oContext);
 	for (var nIndex = 0, nLength = this.items.length; nIndex < nLength; nIndex++)
 		oSequence	= hStaticContext_operators["union"].call(oContext, oSequence, this.items[nIndex].evaluate(oContext));
 	return oSequence;
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cInstanceofExpr(oExpr, oType) {
 	this.expression	= oExpr;
@@ -2622,7 +3205,7 @@ function fInstanceofExpr_parse (oLexer, oStaticContext) {
 	oLexer.next(2);
 	if (oLexer.eof() ||!(oType = fSequenceType_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected second operand in instance of expression"
+
 		);
 
 	return new cInstanceofExpr(oExpr, oType);
@@ -2632,22 +3215,34 @@ cInstanceofExpr.prototype.evaluate	= function(oContext) {
 	var oSequence1	= this.expression.evaluate(oContext),
 		oItemType	= this.type.itemType,
 		sOccurence	= this.type.occurence;
-		if (!oItemType)
+	// Validate empty-sequence()
+	if (!oItemType)
 		return [new cXSBoolean(!oSequence1.length)];
-		if (!oSequence1.length)
+	// Validate cardinality
+	if (!oSequence1.length)
 		return [new cXSBoolean(sOccurence == '?' || sOccurence == '*')];
 	if (oSequence1.length != 1)
 		if (!(sOccurence == '+' || sOccurence == '*'))
 			return [new cXSBoolean(false)];
 
-		if (!oItemType.test)			return [new cXSBoolean(true)];
+	// Validate type
+	if (!oItemType.test)	// item()
+		return [new cXSBoolean(true)];
 
 	var bValue	= true;
 	for (var nIndex = 0, nLength = oSequence1.length; (nIndex < nLength) && bValue; nIndex++)
 		bValue	= oItemType.test.test(oSequence1[nIndex], oContext);
-		return [new cXSBoolean(bValue)];
+	//
+	return [new cXSBoolean(bValue)];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cTreatExpr(oExpr, oType) {
 	this.expression	= oExpr;
@@ -2669,7 +3264,7 @@ function fTreatExpr_parse (oLexer, oStaticContext) {
 	oLexer.next(2);
 	if (oLexer.eof() ||!(oType = fSequenceType_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected second operand in treat expression"
+
 		);
 
 	return new cTreatExpr(oExpr, oType);
@@ -2679,37 +3274,49 @@ cTreatExpr.prototype.evaluate	= function(oContext) {
 	var oSequence1	= this.expression.evaluate(oContext),
 		oItemType	= this.type.itemType,
 		sOccurence	= this.type.occurence;
-		if (!oItemType) {
+	// Validate empty-sequence()
+	if (!oItemType) {
 		if (oSequence1.length)
 			throw new cException("XPDY0050"
-					, "The only value allowed for the value in 'treat as' expression is an empty sequence"
+
 			);
 		return oSequence1;
 	}
 
-		if (!(sOccurence == '?' || sOccurence == '*'))
+	// Validate cardinality
+	if (!(sOccurence == '?' || sOccurence == '*'))
 		if (!oSequence1.length)
 			throw new cException("XPDY0050"
-					, "An empty sequence is not allowed as the value in 'treat as' expression"
+
 			);
 
 	if (!(sOccurence == '+' || sOccurence == '*'))
 		if (oSequence1.length != 1)
 			throw new cException("XPDY0050"
-					, "A sequence of more than one item is not allowed as the value in 'treat as' expression"
+
 			);
 
-		if (!oItemType.test)			return oSequence1;
+	// Validate type
+	if (!oItemType.test)	// item()
+		return oSequence1;
 
 	for (var nIndex = 0, nLength = oSequence1.length; nIndex < nLength; nIndex++)
 		if (!oItemType.test.test(oSequence1[nIndex], oContext))
 			throw new cException("XPDY0050"
-					, "Required item type of value in 'treat as' expression is " + (oItemType.test.prefix ? oItemType.test.prefix + ':' : '') + oItemType.test.localName
-								);
 
-		return oSequence1;
+			);
+
+	//
+	return oSequence1;
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cCastableExpr(oExpr, oType) {
 	this.expression	= oExpr;
@@ -2731,7 +3338,7 @@ function fCastableExpr_parse (oLexer, oStaticContext) {
 	oLexer.next(2);
 	if (oLexer.eof() ||!(oType = fSingleType_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected second operand in castable expression"
+
 		);
 
 	return new cCastableExpr(oExpr, oType);
@@ -2748,7 +3355,8 @@ cCastableExpr.prototype.evaluate	= function(oContext) {
 	if (!oSequence1.length)
 		return [new cXSBoolean(sOccurence == '?')];
 
-		try {
+	// Try casting
+	try {
 		oItemType.cast(fFunction_sequence_atomize(oSequence1, oContext)[0]);
 	}
 	catch (e) {
@@ -2756,14 +3364,22 @@ cCastableExpr.prototype.evaluate	= function(oContext) {
 			throw e;
 		if (e.code == "XPST0017")
 			throw new cException("XPST0080"
-					, "No value is castable to " + (oItemType.prefix ? oItemType.prefix + ':' : '') + oItemType.localName
+
 			);
-				return [new cXSBoolean(false)];
+		//
+		return [new cXSBoolean(false)];
 	}
 
 	return [new cXSBoolean(true)];
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cCastExpr(oExpr, oType) {
 	this.expression	= oExpr;
@@ -2785,7 +3401,7 @@ function fCastExpr_parse (oLexer, oStaticContext) {
 	oLexer.next(2);
 	if (oLexer.eof() ||!(oType = fSingleType_parse(oLexer, oStaticContext)))
 		throw new cException("XPST0003"
-				, "Expected second operand in cast expression"
+
 		);
 
 	return new cCastExpr(oExpr, oType);
@@ -2793,14 +3409,24 @@ function fCastExpr_parse (oLexer, oStaticContext) {
 
 cCastExpr.prototype.evaluate	= function(oContext) {
 	var oSequence1	= this.expression.evaluate(oContext);
-		fFunctionCall_assertSequenceCardinality(oContext, oSequence1, this.type.occurence
-			, "'cast as' expression operand"
-	);
-		if (!oSequence1.length)
-		return [];
-		return [this.type.itemType.cast(fFunction_sequence_atomize(oSequence1, oContext)[0], oContext)];
-};
+	// Validate cardinality
+	fFunctionCall_assertSequenceCardinality(oContext, oSequence1, this.type.occurence
 
+	);
+	//
+	if (!oSequence1.length)
+		return [];
+	//
+	return [this.type.itemType.cast(fFunction_sequence_atomize(oSequence1, oContext)[0], oContext)];
+};
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cAtomicType(sPrefix, sLocalName, sNameSpaceURI) {
 	this.prefix			= sPrefix;
@@ -2817,7 +3443,7 @@ function fAtomicType_parse (oLexer, oStaticContext) {
 	if (aMatch) {
 		if (aMatch[1] == '*' || aMatch[2] == '*')
 			throw new cException("XPST0003"
-					, "Illegal use of wildcard in type name"
+
 			);
 		oLexer.next();
 		return new cAtomicType(aMatch[1] || null, aMatch[2], aMatch[1] ? oStaticContext.getURIForPrefix(aMatch[1]) : null);
@@ -2825,25 +3451,36 @@ function fAtomicType_parse (oLexer, oStaticContext) {
 };
 
 cAtomicType.prototype.test	= function(vItem, oContext) {
-		var sUri	= (this.namespaceURI ? '{' + this.namespaceURI + '}' : '') + this.localName,
+	// Test
+	var sUri	= (this.namespaceURI ? '{' + this.namespaceURI + '}' : '') + this.localName,
 		cType	= this.namespaceURI == sNS_XSD ? hStaticContext_dataTypes[this.localName] : oContext.staticContext.getDataType(sUri);
 	if (cType)
 		return vItem instanceof cType;
-		throw new cException("XPST0051"
-			, "Unknown simple type " + (this.prefix ? this.prefix + ':' : '') + this.localName
+	//
+	throw new cException("XPST0051"
+
 	);
 };
 
 cAtomicType.prototype.cast	= function(vItem, oContext) {
-		var sUri	= (this.namespaceURI ? '{' + this.namespaceURI + '}' : '') + this.localName,
+	// Cast
+	var sUri	= (this.namespaceURI ? '{' + this.namespaceURI + '}' : '') + this.localName,
 		cType	= this.namespaceURI == sNS_XSD ? hStaticContext_dataTypes[this.localName] : oContext.staticContext.getDataType(sUri);
 	if (cType)
 		return cType.cast(vItem);
-		throw new cException("XPST0051"
-			, "Unknown atomic type " + (this.prefix ? this.prefix + ':' : '') + this.localName
+	//
+	throw new cException("XPST0051"
+
 	);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cItemType(oTest) {
 	this.test	= oTest;
@@ -2860,17 +3497,25 @@ function fItemType_parse (oLexer, oStaticContext) {
 		oLexer.next(2);
 		if (oLexer.peek() != ')')
 			throw new cException("XPST0003"
-					, "Expected ')' token in item type expression"
+
 			);
 		oLexer.next();
 		return new cItemType;
 	}
-		if (oExpr = fKindTest_parse(oLexer, oStaticContext))
+	// Note! Following step should have been before previous as per spec
+	if (oExpr = fKindTest_parse(oLexer, oStaticContext))
 		return new cItemType(oExpr);
 	if (oExpr = fAtomicType_parse(oLexer, oStaticContext))
 		return new cItemType(oExpr);
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cSequenceType(oItemType, sOccurence) {
 	this.itemType	= oItemType	|| null;
@@ -2888,10 +3533,11 @@ function fSequenceType_parse (oLexer, oStaticContext) {
 		oLexer.next(2);
 		if (oLexer.peek() != ')')
 			throw new cException("XPST0003"
-					, "Expected ')' token in sequence type"
+
 			);
 		oLexer.next();
-		return new cSequenceType;		}
+		return new cSequenceType;	// empty sequence
+	}
 
 	var oExpr,
 		sOccurence;
@@ -2905,7 +3551,14 @@ function fSequenceType_parse (oLexer, oStaticContext) {
 		return new cSequenceType(oExpr, sOccurence);
 	}
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cSingleType(oItemType, sOccurence) {
 	this.itemType	= oItemType	|| null;
@@ -2928,14 +3581,28 @@ function fSingleType_parse (oLexer, oStaticContext) {
 		return new cSingleType(oExpr, sOccurence);
 	}
 };
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSAnyType() {
 
 };
 
 cXSAnyType.prototype.builtInKind	= cXSConstants.ANYTYPE_DT;
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSAnySimpleType() {
 
@@ -2946,7 +3613,34 @@ cXSAnySimpleType.prototype	= new cXSAnyType;
 cXSAnySimpleType.prototype.builtInKind	= cXSConstants.ANYSIMPLETYPE_DT;
 cXSAnySimpleType.prototype.primitiveKind= null;
 
-cXSAnySimpleType.PRIMITIVE_ANYURI		= "anyURI";		cXSAnySimpleType.PRIMITIVE_BASE64BINARY	= "base64Binary";	cXSAnySimpleType.PRIMITIVE_BOOLEAN		= "boolean";	cXSAnySimpleType.PRIMITIVE_DATE			= "date";		cXSAnySimpleType.PRIMITIVE_DATETIME		= "dateTime";	cXSAnySimpleType.PRIMITIVE_DECIMAL		= "decimal";	cXSAnySimpleType.PRIMITIVE_DOUBLE		= "double";		cXSAnySimpleType.PRIMITIVE_DURATION		= "duration";	cXSAnySimpleType.PRIMITIVE_FLOAT		= "float";		cXSAnySimpleType.PRIMITIVE_GDAY			= "gDay";		cXSAnySimpleType.PRIMITIVE_GMONTH		= "gMonth";		cXSAnySimpleType.PRIMITIVE_GMONTHDAY	= "gMonthDay";	cXSAnySimpleType.PRIMITIVE_GYEAR		= "gYear";		cXSAnySimpleType.PRIMITIVE_GYEARMONTH	= "gYearMonth";	cXSAnySimpleType.PRIMITIVE_HEXBINARY	= "hexBinary";	cXSAnySimpleType.PRIMITIVE_NOTATION		= "NOTATION";	cXSAnySimpleType.PRIMITIVE_QNAME		= "QName";		cXSAnySimpleType.PRIMITIVE_STRING		= "string";		cXSAnySimpleType.PRIMITIVE_TIME			= "time";		
+cXSAnySimpleType.PRIMITIVE_ANYURI		= "anyURI";		//18;
+cXSAnySimpleType.PRIMITIVE_BASE64BINARY	= "base64Binary";	// 17;
+cXSAnySimpleType.PRIMITIVE_BOOLEAN		= "boolean";	// 3;
+cXSAnySimpleType.PRIMITIVE_DATE			= "date";		// 10;
+cXSAnySimpleType.PRIMITIVE_DATETIME		= "dateTime";	// 8;
+cXSAnySimpleType.PRIMITIVE_DECIMAL		= "decimal";	// 4;
+cXSAnySimpleType.PRIMITIVE_DOUBLE		= "double";		// 6;
+cXSAnySimpleType.PRIMITIVE_DURATION		= "duration";	// 7;
+cXSAnySimpleType.PRIMITIVE_FLOAT		= "float";		// 5;
+cXSAnySimpleType.PRIMITIVE_GDAY			= "gDay";		// 14;
+cXSAnySimpleType.PRIMITIVE_GMONTH		= "gMonth";		// 15;
+cXSAnySimpleType.PRIMITIVE_GMONTHDAY	= "gMonthDay";	// 13;
+cXSAnySimpleType.PRIMITIVE_GYEAR		= "gYear";		// 12;
+cXSAnySimpleType.PRIMITIVE_GYEARMONTH	= "gYearMonth";	// 11;
+cXSAnySimpleType.PRIMITIVE_HEXBINARY	= "hexBinary";	// 16;
+cXSAnySimpleType.PRIMITIVE_NOTATION		= "NOTATION";	// 20;
+cXSAnySimpleType.PRIMITIVE_QNAME		= "QName";		// 19;
+cXSAnySimpleType.PRIMITIVE_STRING		= "string";		// 2;
+cXSAnySimpleType.PRIMITIVE_TIME			= "time";		// 9;
+
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSAnyAtomicType() {
 
@@ -2957,15 +3651,25 @@ cXSAnyAtomicType.prototype.builtInKind	= cXSConstants.ANYATOMICTYPE_DT;
 
 cXSAnyAtomicType.cast	= function(vValue) {
 	throw new cException("XPST0017"
-			, "Abstract type used in constructor function xs:anyAtomicType"
-	);	};
+
+	);	//  {http://www.w3.org/2001/XMLSchema}anyAtomicType
+};
 
 function fXSAnyAtomicType_isNumeric(vItem) {
 	return vItem instanceof cXSFloat || vItem instanceof cXSDouble || vItem instanceof cXSDecimal;
 };
 
+//
 fStaticContext_defineSystemDataType("anyAtomicType",	cXSAnyAtomicType);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSAnyURI(sScheme, sAuthority, sPath, sQuery, sFragment) {
 	this.scheme		= sScheme;
@@ -2993,7 +3697,8 @@ cXSAnyURI.prototype.toString	= function() {
 			+ (this.fragment ? '#' + this.fragment : '');
 };
 
-var rXSAnyURI	= /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;	cXSAnyURI.cast	= function(vValue) {
+var rXSAnyURI	= /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;	// http://tools.ietf.org/html/rfc3986
+cXSAnyURI.cast	= function(vValue) {
 	if (vValue instanceof cXSAnyURI)
 		return vValue;
 	if (vValue instanceof cXSString || vValue instanceof cXSUntypedAtomic) {
@@ -3002,13 +3707,23 @@ var rXSAnyURI	= /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 			return new cXSAnyURI(aMatch[2], aMatch[4], aMatch[5], aMatch[7], aMatch[9]);
 		throw new cException("FORG0001");
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:anyURI can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("anyURI",	cXSAnyURI);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSBase64Binary(sValue) {
 	this.value	= sValue;
@@ -3045,13 +3760,23 @@ cXSBase64Binary.cast	= function(vValue) {
 			aValue.push(cString.fromCharCode(fWindow_parseInt(aMatch[nIndex], 16)));
 		return new cXSBase64Binary(fWindow_btoa(aValue.join('')));
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:hexBinary can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("base64Binary",	cXSBase64Binary);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSBoolean(bValue) {
 	this.value	= bValue;
@@ -3083,13 +3808,23 @@ cXSBoolean.cast	= function(vValue) {
 	}
 	if (fXSAnyAtomicType_isNumeric(vValue))
 		return new cXSBoolean(vValue != 0);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:boolean can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("boolean",	cXSBoolean);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSDate(nYear, nMonth, nDay, nTimezone, bNegative) {
 	this.year		= nYear;
@@ -3131,26 +3866,30 @@ cXSDate.cast	= function(vValue) {
 									aMatch[5] ? aMatch[5] == 'Z' ? 0 : (aMatch[6] == '-' ? -1 : 1) * (aMatch[7] * 60 + aMatch[8] * 1) : null,
 									aMatch[1] == '-'
 				);
-						throw new cException("FORG0001"
-					, "Invalid date '" + vValue + "' (Non-existent date)"
+			//
+			throw new cException("FORG0001"
+
 			);
 		}
 		throw new cException("FORG0001");
 	}
 	if (vValue instanceof cXSDateTime)
 		return new cXSDate(vValue.year, vValue.month, vValue.day, vValue.timezone, vValue.negative);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:date can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+// Utilities
 var aXSDate_days	= [31,28,31,30,31,30,31,31,30,31,30,31];
 function fXSDate_getDaysForYearMonth(nYear, nMonth) {
 	return nMonth == 2 && (nYear % 400 == 0 || nYear % 100 != 0 && nYear % 4 == 0) ? 29 : aXSDate_days[nMonth - 1];
 };
 
 function fXSDate_normalize(oValue, bDay) {
-		if (!bDay) {
+	// Adjust day for month/year
+	if (!bDay) {
 		var nDay	= fXSDate_getDaysForYearMonth(oValue.year, oValue.month);
 		if (oValue.day > nDay) {
 			while (oValue.day > nDay) {
@@ -3180,7 +3919,9 @@ function fXSDate_normalize(oValue, bDay) {
 			}
 		}
 	}
-		if (oValue.month > 12) {
+//?	else
+	// Adjust month
+	if (oValue.month > 12) {
 		oValue.year		+= ~~(oValue.month / 12);
 		if (oValue.year == 0)
 			oValue.year	= 1;
@@ -3197,8 +3938,17 @@ function fXSDate_normalize(oValue, bDay) {
 	return oValue;
 };
 
+//
 fStaticContext_defineSystemDataType("date",	cXSDate);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSDateTime(nYear, nMonth, nDay, nHours, nMinutes, nSeconds, nTimezone, bNegative) {
 	this.year	= nYear;
@@ -3252,19 +4002,22 @@ cXSDateTime.cast	= function(vValue) {
 										aMatch[12] ? aMatch[12] == 'Z' ? 0 : (aMatch[13] == '-' ? -1 : 1) * (aMatch[14] * 60 + aMatch[15] * 1) : null,
 										aMatch[1] == '-'
 				));
-						throw new cException("FORG0001"
-					, "Invalid date '" + vValue + "' (Non-existent date)"
+			//
+			throw new cException("FORG0001"
+
 			);
 		}
 		throw new cException("FORG0001");
 	}
 	if (vValue instanceof cXSDate)
 		return new cXSDateTime(vValue.year, vValue.month, vValue.day, 0, 0, 0, vValue.timezone, vValue.negative);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:dateTime can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+// Utilities
 function fXSDateTime_pad(vValue, nLength) {
 	var sValue	= cString(vValue);
 	if (arguments.length < 2)
@@ -3303,8 +4056,17 @@ function fXSDateTime_normalize(oValue) {
 	return fXSDate_normalize(fXSTime_normalize(oValue));
 };
 
+//
 fStaticContext_defineSystemDataType("dateTime",	cXSDateTime);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSDecimal(nValue) {
 	this.value	= nValue;
@@ -3337,19 +4099,29 @@ cXSDecimal.cast	= function(vValue) {
 	if (vValue instanceof cXSBoolean)
 		return new cXSDecimal(vValue * 1);
 	if (fXSAnyAtomicType_isNumeric(vValue)) {
-		if (fIsNaN(vValue) || !fIsFinite(vValue))
-			throw new cException("FOCA0002"
-					, "Cannot convert '" + vValue + "' to xs:decimal"
-			);
-		return new cXSDecimal(+vValue);
+		if (!fIsNaN(vValue) && fIsFinite(vValue))
+			return new cXSDecimal(+vValue);
+		throw new cException("FOCA0002"
+
+		);
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:decimal can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("decimal",	cXSDecimal);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSDouble(nValue) {
 	this.value	= nValue;
@@ -3383,13 +4155,23 @@ cXSDouble.cast	= function(vValue) {
 		return new cXSDouble(vValue * 1);
 	if (fXSAnyAtomicType_isNumeric(vValue))
 		return new cXSDouble(vValue.value);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:double can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("double",	cXSDouble);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSDuration(nYear, nMonth, nDay, nHours, nMinutes, nSeconds, bNegative) {
 	this.year	= nYear;
@@ -3420,23 +4202,25 @@ cXSDuration.prototype.toString	= function() {
 
 var rXSDuration		= /^(-)?P(?:([0-9]+)Y)?(?:([0-9]+)M)?(?:([0-9]+)D)?(?:T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:((?:(?:[0-9]+(?:.[0-9]*)?)|(?:.[0-9]+)))S)?)?$/;
 cXSDuration.cast	= function(vValue) {
+	if (vValue instanceof cXSDuration)
+		return vValue;
 	if (vValue instanceof cXSYearMonthDuration)
 		return new cXSDuration(vValue.year, vValue.month, 0, 0, 0, 0, vValue.negative);
 	if (vValue instanceof cXSDayTimeDuration)
 		return new cXSDuration(0, 0, vValue.day, vValue.hours, vValue.minutes, vValue.seconds, vValue.negative);
-	if (vValue instanceof cXSDuration)
-		return vValue;
 	if (vValue instanceof cXSString || vValue instanceof cXSUntypedAtomic) {
 		var aMatch	= fString_trim(vValue).match(rXSDuration);
 		if (aMatch)
 			return fXSDuration_normalize(new cXSDuration(+aMatch[2] || 0, +aMatch[3] || 0, +aMatch[4] || 0, +aMatch[5] || 0, +aMatch[6] || 0, +aMatch[7] || 0, aMatch[1] == '-'));
 		throw new cException("FORG0001");
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:duration can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+// Utilities
 function fXSDuration_getYearMonthComponent(oDuration) {
 	return (oDuration.year ? oDuration.year + 'Y' : '')
 			+ (oDuration.month ? oDuration.month + 'M' : '');
@@ -3456,8 +4240,17 @@ function fXSDuration_normalize(oDuration) {
 	return fXSYearMonthDuration_normalize(fXSDayTimeDuration_normalize(oDuration));
 };
 
+//
 fStaticContext_defineSystemDataType("duration",	cXSDuration);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSFloat(nValue) {
 	this.value	= nValue;
@@ -3491,13 +4284,23 @@ cXSFloat.cast	= function(vValue) {
 		return new cXSFloat(vValue * 1);
 	if (fXSAnyAtomicType_isNumeric(vValue))
 		return new cXSFloat(vValue.value);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:float can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("float",	cXSFloat);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSGDay(nDay, nTimezone) {
 	this.day		= nDay;
@@ -3534,13 +4337,22 @@ cXSGDay.cast	= function(vValue) {
 	}
 	if (vValue instanceof cXSDate || vValue instanceof cXSDateTime)
 		return new cXSGDay(vValue.day, vValue.timezone);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:gDay can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("gDay",	cXSGDay);
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSGMonth(nMonth, nTimezone) {
 	this.month		= nMonth;
@@ -3576,13 +4388,22 @@ cXSGMonth.cast	= function(vValue) {
 	}
 	if (vValue instanceof cXSDate || vValue instanceof cXSDateTime)
 		return new cXSGMonth(vValue.month, vValue.timezone);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:gMonth can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("gMonth",	cXSGMonth);
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSGMonthDay(nMonth, nDay, nTimezone) {
 	this.month		= nMonth;
@@ -3619,21 +4440,31 @@ cXSGMonthDay.cast	= function(vValue) {
 											nDay,
 											aMatch[3] ? aMatch[3] == 'Z' ? 0 : (aMatch[4] == '-' ? -1 : 1) * (aMatch[5] * 60 + aMatch[6] * 1) : null
 				);
-						throw new cException("FORG0001"
-					, "Invalid date '" + vValue + "' (Non-existent date)"
+			//
+			throw new cException("FORG0001"
+
 			);
 		}
 		throw new cException("FORG0001");
 	}
 	if (vValue instanceof cXSDate || vValue instanceof cXSDateTime)
 		return new cXSGMonthDay(vValue.month, vValue.day, vValue.timezone);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:gMonthDay can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("gMonthDay",	cXSGMonthDay);
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSGYear(nYear, nTimezone) {
 	this.year	= nYear;
@@ -3668,13 +4499,22 @@ cXSGYear.cast	= function(vValue) {
 	}
 	if (vValue instanceof cXSDate || vValue instanceof cXSDateTime)
 		return new cXSGYear(vValue.year, vValue.timezone);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:gYear can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("gYear",	cXSGYear);
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSGYearMonth(nYear, nMonth, nTimezone) {
 	this.year		= nYear;
@@ -3714,13 +4554,22 @@ cXSGYearMonth.cast	= function(vValue) {
 	}
 	if (vValue instanceof cXSDate || vValue instanceof cXSDateTime)
 		return new cXSGYearMonth(vValue.year, vValue.month, vValue.timezone);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:gYearMonth can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("gYearMonth",	cXSGYearMonth);
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSHexBinary(sValue) {
 	this.value	= sValue;
@@ -3759,13 +4608,23 @@ cXSHexBinary.cast	= function(vValue) {
 		}
 		return new cXSHexBinary(aValue.join(''));
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:hexBinary can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("hexBinary",	cXSHexBinary);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNOTATION() {
 
@@ -3777,12 +4636,22 @@ cXSNOTATION.prototype.primitiveKind	= cXSAnySimpleType.PRIMITIVE_NOTATION;
 
 cXSNOTATION.cast	= function(vValue) {
 	throw new cException("XPST0017"
-			, "Abstract type used in constructor function xs:NOTATION"
-	);	};
 
+	);	//  {http://www.w3.org/2001/XMLSchema}NOTATION
+};
+
+//
 fStaticContext_defineSystemDataType("NOTATION",	cXSNOTATION);
 
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSQName(sPrefix, sLocalName, sNameSpaceURI) {
 	this.prefix	= sPrefix;
@@ -3802,7 +4671,7 @@ cXSQName.prototype.toString	= function() {
 	return (this.prefix ? this.prefix + ':' : '') + this.localName;
 };
 
-var rXSQName	= /^(?:(?![0-9-])([\w-]+)\:)?(?![0-9-])([\w-]+)$/;
+var rXSQName	= /^(?:(?![0-9-])(\w[\w.-]*)\:)?(?![0-9-])(\w[\w.-]*)$/;
 cXSQName.cast	= function(vValue) {
 	if (vValue instanceof cXSQName)
 		return vValue;
@@ -3812,13 +4681,23 @@ cXSQName.cast	= function(vValue) {
 			return new cXSQName(aMatch[1] || null, aMatch[2], null);
 		throw new cException("FORG0001");
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:QName can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("QName",	cXSQName);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSString(sValue) {
 	this.value	= sValue;
@@ -3840,13 +4719,23 @@ cXSString.prototype.toString	= function() {
 
 cXSString.cast	= function(vValue) {
 	return new cXSString(cString(vValue));
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:string can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("string",	cXSString);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSTime(nHours, nMinutes, nSeconds, nTimezone) {
 	this.hours	= nHours;
@@ -3887,30 +4776,45 @@ cXSTime.cast	= function(vValue) {
 	}
 	if (vValue instanceof cXSDateTime)
 		return new cXSTime(vValue.hours, vValue.minutes, vValue.seconds, vValue.timezone);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:time can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 function fXSTime_normalize(oValue) {
-		if (oValue.seconds >= 60 || oValue.seconds < 0) {
+	//
+	if (oValue.seconds >= 60 || oValue.seconds < 0) {
 		oValue.minutes	+= ~~(oValue.seconds / 60) - (oValue.seconds < 0 && oValue.seconds % 60 ? 1 : 0);
 		oValue.seconds	= oValue.seconds % 60 + (oValue.seconds < 0 && oValue.seconds % 60 ? 60 : 0);
 	}
-		if (oValue.minutes >= 60 || oValue.minutes < 0) {
+	//
+	if (oValue.minutes >= 60 || oValue.minutes < 0) {
 		oValue.hours	+= ~~(oValue.minutes / 60) - (oValue.minutes < 0 && oValue.minutes % 60 ? 1 : 0);
 		oValue.minutes	= oValue.minutes % 60 + (oValue.minutes < 0 && oValue.minutes % 60 ? 60 : 0);
 	}
-		if (oValue.hours >= 24 || oValue.hours < 0) {
+	//
+	if (oValue.hours >= 24 || oValue.hours < 0) {
 		if (oValue instanceof cXSDateTime)
 			oValue.day		+= ~~(oValue.hours / 24) - (oValue.hours < 0 && oValue.hours % 24 ? 1 : 0);
 		oValue.hours	= oValue.hours % 24 + (oValue.hours < 0 && oValue.hours % 24 ? 24 : 0);
 	}
-		return oValue;
+	//
+	return oValue;
 };
 
+//
 fStaticContext_defineSystemDataType("time",	cXSTime);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSUntypedAtomic(sValue) {
 	this.value	= sValue;
@@ -3928,13 +4832,23 @@ cXSUntypedAtomic.cast	= function(vValue) {
 		return vValue;
 
 	return new cXSUntypedAtomic(cString(vValue));
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:untypedAtomic can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("untypedAtomic",	cXSUntypedAtomic);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSYearMonthDuration(nYear, nMonth, bNegative) {
 	cXSDuration.call(this, nYear, nMonth, 0, 0, 0, 0, bNegative);
@@ -3962,11 +4876,13 @@ cXSYearMonthDuration.cast	= function(vValue) {
 		return new cXSYearMonthDuration(0, 0);
 	if (vValue instanceof cXSDuration)
 		return new cXSYearMonthDuration(vValue.year, vValue.month, vValue.negative);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:yearMonthDuration can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 function fXSYearMonthDuration_normalize(oDuration) {
 	if (oDuration.month >= 12) {
 		oDuration.year	+= ~~(oDuration.month / 12);
@@ -3975,8 +4891,17 @@ function fXSYearMonthDuration_normalize(oDuration) {
 	return oDuration;
 };
 
+//
 fStaticContext_defineSystemDataType("yearMonthDuration",	cXSYearMonthDuration);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSDayTimeDuration(nDay, nHours, nMinutes, nSeconds, bNegative) {
 	cXSDuration.call(this, 0, 0, nDay, nHours, nMinutes, nSeconds, bNegative);
@@ -4004,11 +4929,13 @@ cXSDayTimeDuration.cast	= function(vValue) {
 		return new cXSDayTimeDuration(0, 0, 0, 0);
 	if (vValue instanceof cXSDuration)
 		return new cXSDayTimeDuration(vValue.day, vValue.hours, vValue.minutes, vValue.seconds, vValue.negative);
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:dayTimeDuration can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+// Utilities
 function fXSDayTimeDuration_normalize(oDuration) {
 	if (oDuration.seconds >= 60) {
 		oDuration.minutes	+= ~~(oDuration.seconds / 60);
@@ -4025,8 +4952,17 @@ function fXSDayTimeDuration_normalize(oDuration) {
 	return oDuration;
 };
 
+//
 fStaticContext_defineSystemDataType("dayTimeDuration",	cXSDayTimeDuration);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSInteger(nValue) {
 	this.value	= nValue;
@@ -4038,29 +4974,39 @@ cXSInteger.prototype.builtInKind	= cXSConstants.INTEGER_DT;
 var rXSInteger	= /^[-+]?[0-9]+$/;
 cXSInteger.cast	= function(vValue) {
 	if (vValue instanceof cXSInteger)
-		return vValue;
+		return new cXSInteger(vValue.value);
 	if (vValue instanceof cXSString || vValue instanceof cXSUntypedAtomic) {
 		var aMatch	= fString_trim(vValue).match(rXSInteger);
 		if (aMatch)
-			return new cXSInteger(~~vValue);
+			return new cXSInteger(+vValue);
 		throw new cException("FORG0001");
 	}
 	if (vValue instanceof cXSBoolean)
 		return new cXSInteger(vValue * 1);
 	if (fXSAnyAtomicType_isNumeric(vValue)) {
-		if (fIsNaN(vValue) || !fIsFinite(vValue))
-			throw new cException("FOCA0002"
-					, "Cannot convert '" + vValue + "' to xs:integer"
-			);
-		return new cXSInteger(~~vValue);
+		if (!fIsNaN(vValue) && fIsFinite(vValue))
+			return new cXSInteger(+vValue);
+		throw new cException("FOCA0002"
+
+		);
 	}
-		throw new cException("XPTY0004"
-			, "Casting value '" + vValue + "' to xs:integer can never succeed"
+	//
+	throw new cException("XPTY0004"
+
 	);
 };
 
+//
 fStaticContext_defineSystemDataType("integer",	cXSInteger);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNonPositiveInteger(nValue) {
 	this.value	= nValue;
@@ -4070,11 +5016,31 @@ cXSNonPositiveInteger.prototype	= new cXSInteger;
 cXSNonPositiveInteger.prototype.builtInKind	= cXSConstants.NONPOSITIVEINTEGER_DT;
 
 cXSNonPositiveInteger.cast	= function(vValue) {
-	return new cXSNonPositiveInteger(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value <= 0)
+		return new cXSNonPositiveInteger(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("nonPositiveInteger",	cXSNonPositiveInteger);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNegativeInteger(nValue) {
 	this.value	= nValue;
@@ -4084,11 +5050,31 @@ cXSNegativeInteger.prototype	= new cXSNonPositiveInteger;
 cXSNegativeInteger.prototype.builtInKind	= cXSConstants.NEGATIVEINTEGER_DT;
 
 cXSNegativeInteger.cast	= function(vValue) {
-	return new cXSNegativeInteger(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value <= -1)
+		return new cXSNegativeInteger(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("negativeInteger",	cXSNegativeInteger);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSLong(nValue) {
 	this.value	= nValue;
@@ -4098,11 +5084,31 @@ cXSLong.prototype	= new cXSInteger;
 cXSLong.prototype.builtInKind	= cXSConstants.LONG_DT;
 
 cXSLong.cast	= function(vValue) {
-	return new cXSLong(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value <= 9223372036854775807 && oValue.value >= -9223372036854775808)
+		return new cXSLong(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("long",	cXSLong);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSInt(nValue) {
 	this.value	= nValue;
@@ -4112,11 +5118,31 @@ cXSInt.prototype	= new cXSLong;
 cXSInt.prototype.builtInKind	= cXSConstants.INT_DT;
 
 cXSInt.cast	= function(vValue) {
-	return new cXSInt(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value <= 2147483647 && oValue.value >= -2147483648)
+		return new cXSInt(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("int",	cXSInt);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSShort(nValue) {
 	this.value	= nValue;
@@ -4126,11 +5152,31 @@ cXSShort.prototype	= new cXSInt;
 cXSShort.prototype.builtInKind	= cXSConstants.SHORT_DT;
 
 cXSShort.cast	= function(vValue) {
-	return new cXSShort(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value <= 32767 && oValue.value >= -32768)
+		return new cXSShort(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("short",	cXSShort);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSByte(nValue) {
 	this.value	= nValue;
@@ -4140,11 +5186,31 @@ cXSByte.prototype	= new cXSShort;
 cXSByte.prototype.builtInKind	= cXSConstants.BYTE_DT;
 
 cXSByte.cast	= function(vValue) {
-	return new cXSByte(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value <= 127 && oValue.value >= -128)
+		return new cXSByte(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("byte",	cXSByte);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNonNegativeInteger(nValue) {
 	this.value	= nValue;
@@ -4154,11 +5220,31 @@ cXSNonNegativeInteger.prototype	= new cXSInteger;
 cXSNonNegativeInteger.prototype.builtInKind	= cXSConstants.NONNEGATIVEINTEGER_DT;
 
 cXSNonNegativeInteger.cast	= function(vValue) {
-	return new cXSNonNegativeInteger(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value >= 0)
+		return new cXSNonNegativeInteger(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("nonNegativeInteger",	cXSNonNegativeInteger);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSPositiveInteger(nValue) {
 	this.value	= nValue;
@@ -4168,11 +5254,31 @@ cXSPositiveInteger.prototype	= new cXSNonNegativeInteger;
 cXSPositiveInteger.prototype.builtInKind	= cXSConstants.POSITIVEINTEGER_DT;
 
 cXSPositiveInteger.cast	= function(vValue) {
-	return new cXSPositiveInteger(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value >= 1)
+		return new cXSPositiveInteger(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("positiveInteger",	cXSPositiveInteger);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSUnsignedLong(nValue) {
 	this.value	= nValue;
@@ -4182,11 +5288,31 @@ cXSUnsignedLong.prototype	= new cXSNonNegativeInteger;
 cXSUnsignedLong.prototype.builtInKind	= cXSConstants.UNSIGNEDLONG_DT;
 
 cXSUnsignedLong.cast	= function(vValue) {
-	return new cXSUnsignedLong(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value >= 1 && oValue.value <= 18446744073709551615)
+		return new cXSUnsignedLong(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("unsignedLong",	cXSUnsignedLong);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSUnsignedInt(nValue) {
 	this.value	= nValue;
@@ -4196,11 +5322,31 @@ cXSUnsignedInt.prototype	= new cXSNonNegativeInteger;
 cXSUnsignedInt.prototype.builtInKind	= cXSConstants.UNSIGNEDINT_DT;
 
 cXSUnsignedInt.cast	= function(vValue) {
-	return new cXSUnsignedInt(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value >= 1 && oValue.value <= 4294967295)
+		return new cXSUnsignedInt(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("unsignedInt",	cXSUnsignedInt);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSUnsignedShort(nValue) {
 	this.value	= nValue;
@@ -4210,11 +5356,31 @@ cXSUnsignedShort.prototype	= new cXSUnsignedInt;
 cXSUnsignedShort.prototype.builtInKind	= cXSConstants.UNSIGNEDSHORT_DT;
 
 cXSUnsignedShort.cast	= function(vValue) {
-	return new cXSUnsignedShort(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value >= 1 && oValue.value <= 65535)
+		return new cXSUnsignedShort(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("unsignedShort",	cXSUnsignedShort);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSUnsignedByte(nValue) {
 	this.value	= nValue;
@@ -4224,11 +5390,31 @@ cXSUnsignedByte.prototype	= new cXSUnsignedShort;
 cXSUnsignedByte.prototype.builtInKind	= cXSConstants.UNSIGNEDBYTE_DT;
 
 cXSUnsignedByte.cast	= function(vValue) {
-	return new cXSUnsignedByte(cNumber(vValue));
+	var oValue;
+	try {
+		oValue	= cXSInteger.cast(vValue);
+	}
+	catch (oError) {
+		throw oError;
+	}
+	// facet validation
+	if (oValue.value >= 1 && oValue.value <= 255)
+		return new cXSUnsignedByte(oValue.value);
+	//
+	throw new cException("FORG0001");
 };
 
+//
 fStaticContext_defineSystemDataType("unsignedByte",	cXSUnsignedByte);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNormalizedString(sValue) {
 	this.value	= sValue;
@@ -4241,8 +5427,17 @@ cXSNormalizedString.cast	= function(vValue) {
 	return new cXSNormalizedString(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("normalizedString",	cXSNormalizedString);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSToken(sValue) {
 	this.value	= sValue;
@@ -4255,8 +5450,17 @@ cXSToken.cast	= function(vValue) {
 	return new cXSToken(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("token",	cXSToken);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSName(sValue) {
 	this.value	= sValue;
@@ -4269,8 +5473,17 @@ cXSName.cast	= function(vValue) {
 	return new cXSName(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("Name",	cXSName);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNCName(sValue) {
 	this.value	= sValue;
@@ -4283,8 +5496,17 @@ cXSNCName.cast	= function(vValue) {
 	return new cXSNCName(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("NCName",	cXSNCName);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSENTITY(sValue) {
 	this.value	= sValue;
@@ -4297,8 +5519,17 @@ cXSENTITY.cast	= function(vValue) {
 	return new cXSENTITY(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("ENTITY",	cXSENTITY);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSID(sValue) {
 	this.value	= sValue;
@@ -4311,8 +5542,40 @@ cXSID.cast	= function(vValue) {
 	return new cXSID(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("ID",	cXSID);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
+
+function cXSIDREF(sValue) {
+	this.value	= sValue;
+};
+
+cXSIDREF.prototype	= new cXSNCName;
+cXSIDREF.prototype.builtInKind	= cXSConstants.IDREF_DT;
+
+cXSIDREF.cast	= function(vValue) {
+	return new cXSIDREF(cString(vValue));
+};
+
+//
+fStaticContext_defineSystemDataType("IDREF",	cXSIDREF);
+
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSLanguage(sValue) {
 	this.value	= sValue;
@@ -4325,8 +5588,17 @@ cXSLanguage.cast	= function(vValue) {
 	return new cXSLanguage(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("language",	cXSLanguage);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXSNMTOKEN(sValue) {
 	this.value	= sValue;
@@ -4339,13 +5611,30 @@ cXSNMTOKEN.cast	= function(vValue) {
 	return new cXSNMTOKEN(cString(vValue));
 };
 
+//
 fStaticContext_defineSystemDataType("NMTOKEN",	cXSNMTOKEN);
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTItem() {
 
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTNode() {
 
@@ -4354,50 +5643,104 @@ function cXTNode() {
 cXTNode.prototype	= new cXTItem;
 
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTAttribute() {
 
 };
 
 cXTAttribute.prototype	= new cXTNode;
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTComment() {
 
 };
 
 cXTComment.prototype	= new cXTNode;
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTDocument() {
 
 };
 
 cXTDocument.prototype	= new cXTNode;
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTElement() {
 
 };
 
 cXTElement.prototype	= new cXTNode;
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTProcessingInstruction() {
 
 };
 
 cXTProcessingInstruction.prototype	= new cXTNode;
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 function cXTText() {
 
 };
 
 cXTText.prototype	= new cXTNode;
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
-
-
+/*
+	12.1 Comparisons of base64Binary and hexBinary Values
+		op:hexBinary-equal
+		op:base64Binary-equal
+*/
 hStaticContext_operators["hexBinary-equal"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() == oRight.valueOf());
 };
@@ -4405,83 +5748,172 @@ hStaticContext_operators["hexBinary-equal"]	= function(oLeft, oRight) {
 hStaticContext_operators["base64Binary-equal"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() == oRight.valueOf());
 };
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	9.2 Operators on Boolean Values
+		op:boolean-equal
+		op:boolean-less-than
+		op:boolean-greater-than
+*/
 
-
-
+// 9.2 Operators on Boolean Values
+// op:boolean-equal($value1 as xs:boolean, $value2 as xs:boolean) as xs:boolean
 hStaticContext_operators["boolean-equal"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() == oRight.valueOf());
 };
 
+// op:boolean-less-than($arg1 as xs:boolean, $arg2 as xs:boolean) as xs:boolean
 hStaticContext_operators["boolean-less-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() < oRight.valueOf());
 };
 
+// op:boolean-greater-than($arg1 as xs:boolean, $arg2 as xs:boolean) as xs:boolean
 hStaticContext_operators["boolean-greater-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() > oRight.valueOf());
 };
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
+
+/*
+	10.4 Comparison Operators on Duration, Date and Time Values
+		op:yearMonthDuration-less-than
+		op:yearMonthDuration-greater-than
+		op:dayTimeDuration-less-than
+		op:dayTimeDuration-greater-than
+		op:duration-equal
+		op:dateTime-equal
+		op:dateTime-less-than
+		op:dateTime-greater-than
+		op:date-equal
+		op:date-less-than
+		op:date-greater-than
+		op:time-equal
+		op:time-less-than
+		op:time-greater-than
+		op:gYearMonth-equal
+		op:gYear-equal
+		op:gMonthDay-equal
+		op:gMonth-equal
+		op:gDay-equal
+
+	10.6 Arithmetic Operators on Durations
+		op:add-yearMonthDurations
+		op:subtract-yearMonthDurations
+		op:multiply-yearMonthDuration
+		op:divide-yearMonthDuration
+		op:divide-yearMonthDuration-by-yearMonthDuration
+		op:add-dayTimeDurations
+		op:subtract-dayTimeDurations
+		op:multiply-dayTimeDuration
+		op:divide-dayTimeDuration
+		op:divide-dayTimeDuration-by-dayTimeDuration
 
 
+	10.8 Arithmetic Operators on Durations, Dates and Times
+		op:subtract-dateTimes
+		op:subtract-dates
+		op:subtract-times
+		op:add-yearMonthDuration-to-dateTime
+		op:add-dayTimeDuration-to-dateTime
+		op:subtract-yearMonthDuration-from-dateTime
+		op:subtract-dayTimeDuration-from-dateTime
+		op:add-yearMonthDuration-to-date
+		op:add-dayTimeDuration-to-date
+		op:subtract-yearMonthDuration-from-date
+		op:subtract-dayTimeDuration-from-date
+		op:add-dayTimeDuration-to-time
+		op:subtract-dayTimeDuration-from-time
 
+*/
 
+// 10.4 Comparison Operators on Duration, Date and Time Values
+// op:yearMonthDuration-less-than($arg1 as xs:yearMonthDuration, $arg2 as xs:yearMonthDuration) as xs:boolean
 hStaticContext_operators["yearMonthDuration-less-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(fOperator_yearMonthDuration_toMonths(oLeft) < fOperator_yearMonthDuration_toMonths(oRight));
 };
 
+// op:yearMonthDuration-greater-than($arg1 as xs:yearMonthDuration, $arg2 as xs:yearMonthDuration) as xs:boolean
 hStaticContext_operators["yearMonthDuration-greater-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(fOperator_yearMonthDuration_toMonths(oLeft) > fOperator_yearMonthDuration_toMonths(oRight));
 };
 
+// op:dayTimeDuration-less-than($arg1 as dayTimeDuration, $arg2 as dayTimeDuration) as xs:boolean
 hStaticContext_operators["dayTimeDuration-less-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(fOperator_dayTimeDuration_toSeconds(oLeft) < fOperator_dayTimeDuration_toSeconds(oRight));
 };
 
+// op:dayTimeDuration-greater-than($arg1 as dayTimeDuration, $arg2 as dayTimeDuration) as xs:boolean
 hStaticContext_operators["dayTimeDuration-greater-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(fOperator_dayTimeDuration_toSeconds(oLeft) > fOperator_dayTimeDuration_toSeconds(oRight));
 };
 
+// op:duration-equal($arg1 as xs:duration, $arg2 as xs:duration) as xs:boolean
 hStaticContext_operators["duration-equal"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.negative == oRight.negative
 			&& fOperator_yearMonthDuration_toMonths(oLeft) == fOperator_yearMonthDuration_toMonths(oRight)
 			&& fOperator_dayTimeDuration_toSeconds(oLeft) == fOperator_dayTimeDuration_toSeconds(oRight));
 };
 
+// op:dateTime-equal($arg1 as xs:dateTime, $arg2 as xs:dateTime) as xs:boolean
 hStaticContext_operators["dateTime-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(oLeft, oRight, 'eq');
 };
 
+// op:dateTime-less-than($arg1 as xs:dateTime, $arg2 as xs:dateTime) as xs:boolean
 hStaticContext_operators["dateTime-less-than"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(oLeft, oRight, 'lt');
 };
 
+//op:dateTime-greater-than($arg1 as xs:dateTime, $arg2 as xs:dateTime) as xs:boolean
 hStaticContext_operators["dateTime-greater-than"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(oLeft, oRight, 'gt');
 };
 
+// op:date-equal($arg1 as xs:date, $arg2 as xs:date) as xs:boolean
 hStaticContext_operators["date-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDates(oLeft, oRight, 'eq');
 };
 
+// op:date-less-than($arg1 as xs:date, $arg2 as xs:date) as xs:boolean
 hStaticContext_operators["date-less-than"]	= function(oLeft, oRight) {
 	return fOperator_compareDates(oLeft, oRight, 'lt');
 };
 
+// op:date-greater-than($arg1 as xs:date, $arg2 as xs:date) as xs:boolean
 hStaticContext_operators["date-greater-than"]	= function(oLeft, oRight) {
 	return fOperator_compareDates(oLeft, oRight, 'gt');
 };
 
+// op:time-equal($arg1 as xs:time, $arg2 as xs:time) as xs:boolean
 hStaticContext_operators["time-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareTimes(oLeft, oRight, 'eq');
 };
 
+// op:time-less-than($arg1 as xs:time, $arg2 as xs:time) as xs:boolean
 hStaticContext_operators["time-less-than"]	= function(oLeft, oRight) {
 	return fOperator_compareTimes(oLeft, oRight, 'lt');
 };
 
+// op:time-greater-than($arg1 as xs:time, $arg2 as xs:time) as xs:boolean
 hStaticContext_operators["time-greater-than"]	= function(oLeft, oRight) {
 	return fOperator_compareTimes(oLeft, oRight, 'gt');
 };
 
+// op:gYearMonth-equal($arg1 as xs:gYearMonth, $arg2 as xs:gYearMonth) as xs:boolean
 hStaticContext_operators["gYearMonth-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(
 			new cXSDateTime(oLeft.year, oLeft.month, fXSDate_getDaysForYearMonth(oLeft.year, oLeft.month), 0, 0, 0, oLeft.timezone == null ? this.timezone : oLeft.timezone),
@@ -4490,6 +5922,7 @@ hStaticContext_operators["gYearMonth-equal"]	= function(oLeft, oRight) {
 	);
 };
 
+// op:gYear-equal($arg1 as xs:gYear, $arg2 as xs:gYear) as xs:boolean
 hStaticContext_operators["gYear-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(
 			new cXSDateTime(oLeft.year, 1, 1, 0, 0, 0, oLeft.timezone == null ? this.timezone : oLeft.timezone),
@@ -4498,6 +5931,7 @@ hStaticContext_operators["gYear-equal"]	= function(oLeft, oRight) {
 	);
 };
 
+// op:gMonthDay-equal($arg1 as xs:gMonthDay, $arg2 as xs:gMonthDay) as xs:boolean
 hStaticContext_operators["gMonthDay-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(
 			new cXSDateTime(1972, oLeft.month, oLeft.day, 0, 0, 0, oLeft.timezone == null ? this.timezone : oLeft.timezone),
@@ -4506,6 +5940,7 @@ hStaticContext_operators["gMonthDay-equal"]	= function(oLeft, oRight) {
 	);
 };
 
+// op:gMonth-equal($arg1 as xs:gMonth, $arg2 as xs:gMonth) as xs:boolean
 hStaticContext_operators["gMonth-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(
 			new cXSDateTime(1972, oLeft.month, fXSDate_getDaysForYearMonth(1972, oRight.month), 0, 0, 0, oLeft.timezone == null ? this.timezone : oLeft.timezone),
@@ -4514,6 +5949,7 @@ hStaticContext_operators["gMonth-equal"]	= function(oLeft, oRight) {
 	);
 };
 
+// op:gDay-equal($arg1 as xs:gDay, $arg2 as xs:gDay) as xs:boolean
 hStaticContext_operators["gDay-equal"]	= function(oLeft, oRight) {
 	return fOperator_compareDateTimes(
 			new cXSDateTime(1972, 12, oLeft.day, 0, 0, 0, oLeft.timezone == null ? this.timezone : oLeft.timezone),
@@ -4522,104 +5958,131 @@ hStaticContext_operators["gDay-equal"]	= function(oLeft, oRight) {
 	);
 };
 
+// 10.6 Arithmetic Operators on Durations
+// op:add-yearMonthDurations($arg1 as xs:yearMonthDuration, $arg2 as xs:yearMonthDuration) as xs:yearMonthDuration
 hStaticContext_operators["add-yearMonthDurations"]	= function(oLeft, oRight) {
 	return fOperator_yearMonthDuration_fromMonths(fOperator_yearMonthDuration_toMonths(oLeft) + fOperator_yearMonthDuration_toMonths(oRight));
 };
 
+// op:subtract-yearMonthDurations($arg1 as xs:yearMonthDuration, $arg2 as xs:yearMonthDuration) as xs:yearMonthDuration
 hStaticContext_operators["subtract-yearMonthDurations"]	= function(oLeft, oRight) {
 	return fOperator_yearMonthDuration_fromMonths(fOperator_yearMonthDuration_toMonths(oLeft) - fOperator_yearMonthDuration_toMonths(oRight));
 };
 
+// op:multiply-yearMonthDuration($arg1 as xs:yearMonthDuration, $arg2 as xs:double) as xs:yearMonthDuration
 hStaticContext_operators["multiply-yearMonthDuration"]	= function(oLeft, oRight) {
 	return fOperator_yearMonthDuration_fromMonths(fOperator_yearMonthDuration_toMonths(oLeft) * oRight);
 };
 
+// op:divide-yearMonthDuration($arg1 as xs:yearMonthDuration, $arg2 as xs:double) as xs:yearMonthDuration
 hStaticContext_operators["divide-yearMonthDuration"]	= function(oLeft, oRight) {
 	return fOperator_yearMonthDuration_fromMonths(fOperator_yearMonthDuration_toMonths(oLeft) / oRight);
 };
 
+// op:divide-yearMonthDuration-by-yearMonthDuration($arg1 as xs:yearMonthDuration, $arg2 as xs:yearMonthDuration) as xs:decimal
 hStaticContext_operators["divide-yearMonthDuration-by-yearMonthDuration"]	= function(oLeft, oRight) {
 	return new cXSDecimal(fOperator_yearMonthDuration_toMonths(oLeft) / fOperator_yearMonthDuration_toMonths(oRight));
 };
 
+// op:add-dayTimeDurations($arg1 as xs:dayTimeDuration, $arg2 as xs:dayTimeDuration) as xs:dayTimeDuration
 hStaticContext_operators["add-dayTimeDurations"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_dayTimeDuration_toSeconds(oLeft) + fOperator_dayTimeDuration_toSeconds(oRight));
 };
 
+// op:subtract-dayTimeDurations($arg1 as xs:dayTimeDuration, $arg2 as xs:dayTimeDuration) as xs:dayTimeDuration
 hStaticContext_operators["subtract-dayTimeDurations"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_dayTimeDuration_toSeconds(oLeft) - fOperator_dayTimeDuration_toSeconds(oRight));
 };
 
+// op:multiply-dayTimeDurations($arg1 as xs:dayTimeDuration, $arg2 as xs:double) as xs:dayTimeDuration
 hStaticContext_operators["multiply-dayTimeDuration"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_dayTimeDuration_toSeconds(oLeft) * oRight);
 };
 
+// op:divide-dayTimeDurations($arg1 as xs:dayTimeDuration, $arg2 as xs:double) as xs:dayTimeDuration
 hStaticContext_operators["divide-dayTimeDuration"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_dayTimeDuration_toSeconds(oLeft) / oRight);
 };
 
+// op:divide-dayTimeDuration-by-dayTimeDuration($arg1 as xs:dayTimeDuration, $arg2 as xs:dayTimeDuration) as xs:decimal
 hStaticContext_operators["divide-dayTimeDuration-by-dayTimeDuration"]	= function(oLeft, oRight) {
 	return new cXSDecimal(fOperator_dayTimeDuration_toSeconds(oLeft) / fOperator_dayTimeDuration_toSeconds(oRight));
 };
 
+// 10.8 Arithmetic Operators on Durations, Dates and Times
+// op:subtract-dateTimes($arg1 as xs:dateTime, $arg2 as xs:dateTime) as xs:dayTimeDuration
 hStaticContext_operators["subtract-dateTimes"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_dateTime_toSeconds(oLeft) - fOperator_dateTime_toSeconds(oRight));
 };
 
+// op:subtract-dates($arg1 as xs:date, $arg2 as xs:date) as xs:dayTimeDuration
 hStaticContext_operators["subtract-dates"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_dateTime_toSeconds(oLeft) - fOperator_dateTime_toSeconds(oRight));
 };
 
+// op:subtract-times($arg1 as xs:time, $arg2 as xs:time) as xs:dayTimeDuration
 hStaticContext_operators["subtract-times"]	= function(oLeft, oRight) {
 	return fOperator_dayTimeDuration_fromSeconds(fOperator_time_toSeconds(oLeft) - fOperator_time_toSeconds(oRight));
 };
 
+// op:add-yearMonthDuration-to-dateTime($arg1 as xs:dateTime, $arg2 as xs:yearMonthDuration) as xs:dateTime
 hStaticContext_operators["add-yearMonthDuration-to-dateTime"]	= function(oLeft, oRight) {
 	return fOperator_addYearMonthDuration2DateTime(oLeft, oRight, '+');
 };
 
+// op:add-dayTimeDuration-to-dateTime($arg1 as xs:dateTime, $arg2 as xs:dayTimeDuration) as xs:dateTime
 hStaticContext_operators["add-dayTimeDuration-to-dateTime"]	= function(oLeft, oRight) {
 	return fOperator_addDayTimeDuration2DateTime(oLeft, oRight, '+');
 };
 
+// op:subtract-yearMonthDuration-from-dateTime($arg1 as xs:dateTime, $arg2 as xs:yearMonthDuration) as xs:dateTime
 hStaticContext_operators["subtract-yearMonthDuration-from-dateTime"]	= function(oLeft, oRight) {
 	return fOperator_addYearMonthDuration2DateTime(oLeft, oRight, '-');
 };
 
+// op:subtract-dayTimeDuration-from-dateTime($arg1 as xs:dateTime, $arg2 as xs:dayTimeDuration) as xs:dateTime
 hStaticContext_operators["subtract-dayTimeDuration-from-dateTime"]	= function(oLeft, oRight) {
 	return fOperator_addDayTimeDuration2DateTime(oLeft, oRight, '-');
 };
 
+// op:add-yearMonthDuration-to-date($arg1 as xs:date, $arg2 as xs:yearMonthDuration) as xs:date
 hStaticContext_operators["add-yearMonthDuration-to-date"]	= function(oLeft, oRight) {
 	return fOperator_addYearMonthDuration2DateTime(oLeft, oRight, '+');
 };
 
+// op:add-dayTimeDuration-to-date($arg1 as xs:date, $arg2 as xs:dayTimeDuration) as xs:date
 hStaticContext_operators["add-dayTimeDuration-to-date"]	= function(oLeft, oRight) {
 	return fOperator_addDayTimeDuration2DateTime(oLeft, oRight, '+');
 };
 
+// op:subtract-yearMonthDuration-from-date($arg1 as xs:date, $arg2  as xs:yearMonthDuration) as xs:date
 hStaticContext_operators["subtract-yearMonthDuration-from-date"]	= function(oLeft, oRight) {
 	return fOperator_addYearMonthDuration2DateTime(oLeft, oRight, '-');
 };
 
+// op:subtract-dayTimeDuration-from-date($arg1 as xs:date, $arg2  as xs:dayTimeDuration) as xs:date
 hStaticContext_operators["subtract-dayTimeDuration-from-date"]	= function(oLeft, oRight) {
 	return fOperator_addDayTimeDuration2DateTime(oLeft, oRight, '-');
 };
 
+// op:add-dayTimeDuration-to-time($arg1 as xs:time, $arg2  as xs:dayTimeDuration) as xs:time
 hStaticContext_operators["add-dayTimeDuration-to-time"]	= function(oLeft, oRight) {
 	var oValue	= new cXSTime(oLeft.hours, oLeft.minutes, oLeft.seconds, oLeft.timezone);
 	oValue.hours	+= oRight.hours;
 	oValue.minutes	+= oRight.minutes;
 	oValue.seconds	+= oRight.seconds;
-		return fXSTime_normalize(oValue);
+	//
+	return fXSTime_normalize(oValue);
 };
 
+// op:subtract-dayTimeDuration-from-time($arg1 as xs:time, $arg2  as xs:dayTimeDuration) as xs:time
 hStaticContext_operators["subtract-dayTimeDuration-from-time"]	= function(oLeft, oRight) {
 	var oValue	= new cXSTime(oLeft.hours, oLeft.minutes, oLeft.seconds, oLeft.timezone);
 	oValue.hours	-= oRight.hours;
 	oValue.minutes	-= oRight.minutes;
 	oValue.seconds	-= oRight.seconds;
-		return fXSTime_normalize(oValue);
+	//
+	return fXSTime_normalize(oValue);
 };
 
 function fOperator_compareTimes(oLeft, oRight, sComparator) {
@@ -4633,7 +6096,8 @@ function fOperator_compareDates(oLeft, oRight, sComparator) {
 };
 
 function fOperator_compareDateTimes(oLeft, oRight, sComparator) {
-		var oTimezone	= new cXSDayTimeDuration(0, 0, 0, 0),
+	// Adjust object time zone to Z and compare as strings
+	var oTimezone	= new cXSDayTimeDuration(0, 0, 0, 0),
 		sLeft	= fFunction_dateTime_adjustTimezone(oLeft, oTimezone).toString(),
 		sRight	= fFunction_dateTime_adjustTimezone(oRight, oTimezone).toString();
 	return new cXSBoolean(sComparator == 'lt' ? sLeft < sRight : sComparator == 'gt' ? sLeft > sRight : sLeft == sRight);
@@ -4646,13 +6110,17 @@ function fOperator_addYearMonthDuration2DateTime(oLeft, oRight, sOperator) {
 	else
 	if (oLeft instanceof cXSDateTime)
 		oValue	= new cXSDateTime(oLeft.year, oLeft.month, oLeft.day, oLeft.hours, oLeft.minutes, oLeft.seconds, oLeft.timezone, oLeft.negative);
-		oValue.year		= oValue.year + oRight.year * (sOperator == '-' ?-1 : 1);
+	//
+	oValue.year		= oValue.year + oRight.year * (sOperator == '-' ?-1 : 1);
 	oValue.month	= oValue.month + oRight.month * (sOperator == '-' ?-1 : 1);
-		fXSDate_normalize(oValue, true);
-		var nDay	= fXSDate_getDaysForYearMonth(oValue.year, oValue.month);
+	//
+	fXSDate_normalize(oValue, true);
+	// Correct day if out of month range
+	var nDay	= fXSDate_getDaysForYearMonth(oValue.year, oValue.month);
 	if (oValue.day > nDay)
 		oValue.day	= nDay;
-		return oValue;
+	//
+	return oValue;
 };
 
 function fOperator_addDayTimeDuration2DateTime(oLeft, oRight, sOperator) {
@@ -4661,7 +6129,8 @@ function fOperator_addDayTimeDuration2DateTime(oLeft, oRight, sOperator) {
 		var nValue	= (oRight.hours * 60 + oRight.minutes) * 60 + oRight.seconds;
 		oValue	= new cXSDate(oLeft.year, oLeft.month, oLeft.day, oLeft.timezone, oLeft.negative);
 		oValue.day	= oValue.day + oRight.day * (sOperator == '-' ?-1 : 1) - 1 * (nValue && sOperator == '-');
-				fXSDate_normalize(oValue);
+		//
+		fXSDate_normalize(oValue);
 	}
 	else
 	if (oLeft instanceof cXSDateTime) {
@@ -4670,11 +6139,13 @@ function fOperator_addDayTimeDuration2DateTime(oLeft, oRight, sOperator) {
 		oValue.minutes	= oValue.minutes + oRight.minutes * (sOperator == '-' ?-1 : 1);
 		oValue.hours	= oValue.hours + oRight.hours * (sOperator == '-' ?-1 : 1);
 		oValue.day		= oValue.day + oRight.day * (sOperator == '-' ?-1 : 1);
-				fXSDateTime_normalize(oValue);
+		//
+		fXSDateTime_normalize(oValue);
 	}
 	return oValue;
 };
 
+// xs:dayTimeDuration to/from seconds
 function fOperator_dayTimeDuration_toSeconds(oDuration) {
 	return (((oDuration.day * 24 + oDuration.hours) * 60 + oDuration.minutes) * 60 + oDuration.seconds) * (oDuration.negative ? -1 : 1);
 };
@@ -4688,6 +6159,7 @@ function fOperator_dayTimeDuration_fromSeconds(nValue) {
 	return new cXSDayTimeDuration(nDays, nHours, nMinutes, nSeconds, bNegative);
 };
 
+// xs:yearMonthDuration to/from months
 function fOperator_yearMonthDuration_toMonths(oDuration) {
 	return (oDuration.year * 12 + oDuration.month) * (oDuration.negative ? -1 : 1);
 };
@@ -4699,10 +6171,12 @@ function fOperator_yearMonthDuration_fromMonths(nValue) {
 	return new cXSYearMonthDuration(nYears, nMonths, nNegative);
 };
 
+// xs:time to seconds
 function fOperator_time_toSeconds(oTime) {
 	return oTime.seconds + (oTime.minutes - (oTime.timezone != null ? oTime.timezone % 60 : 0) + (oTime.hours - (oTime.timezone != null ? ~~(oTime.timezone / 60) : 0)) * 60) * 60;
 };
 
+// This function unlike all other date-related functions rely on interpretor's dateTime handling
 function fOperator_dateTime_toSeconds(oValue) {
 	var oDate	= new cDate((oValue.negative ? -1 : 1) * oValue.year, oValue.month, oValue.day, 0, 0, 0, 0);
 	if (oValue instanceof cXSDateTime) {
@@ -4715,27 +6189,77 @@ function fOperator_dateTime_toSeconds(oValue) {
 	return oDate.getTime() / 1000;
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	14 Functions and Operators on Nodes
+		op:is-same-node
+		op:node-before
+		op:node-after
+*/
 
-
+// 14 Operators on Nodes
+// op:is-same-node($parameter1 as node(), $parameter2 as node()) as xs:boolean
 hStaticContext_operators["is-same-node"]	= function(oLeft, oRight) {
 	return new cXSBoolean(this.DOMAdapter.isSameNode(oLeft, oRight));
 };
 
+// op:node-before($parameter1 as node(), $parameter2 as node()) as xs:boolean
 hStaticContext_operators["node-before"]	= function(oLeft, oRight) {
 	return new cXSBoolean(!!(this.DOMAdapter.compareDocumentPosition(oLeft, oRight) & 4));
 };
 
+// op:node-after($parameter1 as node(), $parameter2 as node()) as xs:boolean
 hStaticContext_operators["node-after"]	= function(oLeft, oRight) {
 	return new cXSBoolean(!!(this.DOMAdapter.compareDocumentPosition(oLeft, oRight) & 2));
 };
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	13.1 Operators on NOTATION
+		op:NOTATION-equal
+*/
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	6.2 Operators on Numeric Values
+		op:numeric-add
+		op:numeric-subtract
+		op:numeric-multiply
+		op:numeric-divide
+		op:numeric-integer-divide
+		op:numeric-mod
+		op:numeric-unary-plus
+		op:numeric-unary-minus
 
+	6.3 Comparison Operators on Numeric Values
+		op:numeric-equal
+		op:numeric-less-than
+		op:numeric-greater-than
+*/
 
-
-
-
+// 6.2 Operators on Numeric Values
 function fFunctionCall_numeric_getPower(oLeft, oRight) {
 	if (fIsNaN(oLeft) || (cMath.abs(oLeft) == nInfinity) || fIsNaN(oRight) || (cMath.abs(oRight) == nInfinity))
 		return 0;
@@ -4745,6 +6269,7 @@ function fFunctionCall_numeric_getPower(oLeft, oRight) {
 	return nPower + (nPower % 2 ? 0 : 1);
 };
 
+// op:numeric-add($arg1 as numeric, $arg2 as numeric) as numeric
 hStaticContext_operators["numeric-add"]		= function(oLeft, oRight) {
 	var nLeft	= oLeft.valueOf(),
 		nRight	= oRight.valueOf(),
@@ -4752,6 +6277,7 @@ hStaticContext_operators["numeric-add"]		= function(oLeft, oRight) {
 	return fOperator_numeric_getResultOfType(oLeft, oRight, ((nLeft * nPower) + (nRight * nPower))/nPower);
 };
 
+// op:numeric-subtract($arg1 as numeric, $arg2 as numeric) as numeric
 hStaticContext_operators["numeric-subtract"]	= function(oLeft, oRight) {
 	var nLeft	= oLeft.valueOf(),
 		nRight	= oRight.valueOf(),
@@ -4759,6 +6285,7 @@ hStaticContext_operators["numeric-subtract"]	= function(oLeft, oRight) {
 	return fOperator_numeric_getResultOfType(oLeft, oRight, ((nLeft * nPower) - (nRight * nPower))/nPower);
 };
 
+// op:numeric-multiply($arg1 as numeric, $arg2 as numeric) as numeric
 hStaticContext_operators["numeric-multiply"]	= function(oLeft, oRight) {
 	var nLeft	= oLeft.valueOf(),
 		nRight	= oRight.valueOf(),
@@ -4766,6 +6293,7 @@ hStaticContext_operators["numeric-multiply"]	= function(oLeft, oRight) {
 	return fOperator_numeric_getResultOfType(oLeft, oRight, ((nLeft * nPower) * (nRight * nPower))/(nPower * nPower));
 };
 
+// op:numeric-divide($arg1 as numeric, $arg2 as numeric) as numeric
 hStaticContext_operators["numeric-divide"]	= function(oLeft, oRight) {
 	var nLeft	= oLeft.valueOf(),
 		nRight	= oRight.valueOf(),
@@ -4773,10 +6301,13 @@ hStaticContext_operators["numeric-divide"]	= function(oLeft, oRight) {
 	return fOperator_numeric_getResultOfType(oLeft, oRight, (oLeft * nPower) / (oRight * nPower));
 };
 
+// op:numeric-integer-divide($arg1 as numeric, $arg2 as numeric) as xs:integer
 hStaticContext_operators["numeric-integer-divide"]	= function(oLeft, oRight) {
-	return new cXSInteger(~~(oLeft / oRight));
+	var oValue = oLeft / oRight;
+	return new cXSInteger(cMath.floor(oValue) + (oValue < 0));
 };
 
+// op:numeric-mod($arg1 as numeric, $arg2 as numeric) as numeric
 hStaticContext_operators["numeric-mod"]	= function(oLeft, oRight) {
 	var nLeft	= oLeft.valueOf(),
 		nRight	= oRight.valueOf(),
@@ -4784,24 +6315,30 @@ hStaticContext_operators["numeric-mod"]	= function(oLeft, oRight) {
 	return fOperator_numeric_getResultOfType(oLeft, oRight, ((nLeft * nPower) % (nRight * nPower)) / nPower);
 };
 
+// op:numeric-unary-plus($arg as numeric) as numeric
 hStaticContext_operators["numeric-unary-plus"]	= function(oRight) {
 	return oRight;
 };
 
+// op:numeric-unary-minus($arg as numeric) as numeric
 hStaticContext_operators["numeric-unary-minus"]	= function(oRight) {
 	oRight.value	*=-1;
 	return oRight;
 };
 
 
+// 6.3 Comparison Operators on Numeric Values
+// op:numeric-equal($arg1 as numeric, $arg2 as numeric) as xs:boolean
 hStaticContext_operators["numeric-equal"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() == oRight.valueOf());
 };
 
+// op:numeric-less-than($arg1 as numeric, $arg2 as numeric) as xs:boolean
 hStaticContext_operators["numeric-less-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() < oRight.valueOf());
 };
 
+// op:numeric-greater-than($arg1 as numeric, $arg2 as numeric) as xs:boolean
 hStaticContext_operators["numeric-greater-than"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.valueOf() > oRight.valueOf());
 };
@@ -4809,112 +6346,195 @@ hStaticContext_operators["numeric-greater-than"]	= function(oLeft, oRight) {
 function fOperator_numeric_getResultOfType(oLeft, oRight, nResult) {
 	return new (oLeft instanceof cXSInteger && oRight instanceof cXSInteger && nResult == cMath.round(nResult) ? cXSInteger : cXSDecimal)(nResult);
 };
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	11.2 Functions and Operators Related to QNames
+		op:QName-equal
 
+*/
 
-
+// 11.2 Operators Related to QNames
+// op:QName-equal($arg1 as xs:QName, $arg2 as xs:QName) as xs:boolean
 hStaticContext_operators["QName-equal"]	= function(oLeft, oRight) {
 	return new cXSBoolean(oLeft.localName == oRight.localName && oLeft.namespaceURI == oRight.namespaceURI);
 };
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	15.1 General Functions and Operators on Sequences
+		op:concatenate
 
+	15.3 Equals, Union, Intersection and Except
+		op:union
+		op:intersect
+		op:except
 
+	15.5 Functions and Operators that Generate Sequences
+		op:to
 
+*/
+
+// 15.1 General Functions and Operators on Sequences
+// op:concatenate($seq1 as item()*, $seq2 as item()*) as item()*
 hStaticContext_operators["concatenate"]	= function(oSequence1, oSequence2) {
 	return oSequence1.concat(oSequence2);
 };
 
+// 15.3 Equals, Union, Intersection and Except
+// op:union($parameter1 as node()*, $parameter2 as node()*) as node()*
 hStaticContext_operators["union"]	= function(oSequence1, oSequence2) {
 	var oSequence	= [];
-		for (var nIndex = 0, nLength = oSequence1.length, oItem; nIndex < nLength; nIndex++) {
+	// Process first collection
+	for (var nIndex = 0, nLength = oSequence1.length, oItem; nIndex < nLength; nIndex++) {
 		if (!this.DOMAdapter.isNode(oItem = oSequence1[nIndex]))
 			throw new cException("XPTY0004"
-					, "Required item type of first operand of 'union' is node()"
-			);					if (fArray_indexOf(oSequence, oItem) ==-1)
+
+			);	// Required item type of second operand of 'intersect' is node(); supplied value has item type xs:integer
+		//
+		if (fArray_indexOf(oSequence, oItem) ==-1)
 			oSequence.push(oItem);
 	}
-		for (var nIndex = 0, nLength = oSequence2.length, oItem; nIndex < nLength; nIndex++) {
+	// Process second collection
+	for (var nIndex = 0, nLength = oSequence2.length, oItem; nIndex < nLength; nIndex++) {
 		if (!this.DOMAdapter.isNode(oItem = oSequence2[nIndex]))
 			throw new cException("XPTY0004"
-					, "Required item type of second operand of 'union' is node()"
-			);					if (fArray_indexOf(oSequence, oItem) ==-1)
+
+			);	// Required item type of second operand of 'intersect' is node(); supplied value has item type xs:integer
+		//
+		if (fArray_indexOf(oSequence, oItem) ==-1)
 			oSequence.push(oItem);
 	}
 	return fFunction_sequence_order(oSequence, this);
 };
 
+// op:intersect($parameter1 as node()*, $parameter2 as node()*) as node()*
 hStaticContext_operators["intersect"]	= function(oSequence1, oSequence2) {
 	var oSequence	= [];
 	for (var nIndex = 0, nLength = oSequence1.length, oItem, bFound; nIndex < nLength; nIndex++) {
 		if (!this.DOMAdapter.isNode(oItem = oSequence1[nIndex]))
 			throw new cException("XPTY0004"
-					, "Required item type of second operand of 'intersect' is node()"
-			);					bFound	= false;
+
+			);	// Required item type of second operand of 'intersect' is node(); supplied value has item type xs:integer
+		//
+		bFound	= false;
 		for (var nRightIndex = 0, nRightLength = oSequence2.length;(nRightIndex < nRightLength) && !bFound; nRightIndex++) {
 			if (!this.DOMAdapter.isNode(oSequence2[nRightIndex]))
 				throw new cException("XPTY0004"
-						, "Required item type of first operand of 'intersect' is node()"
+
 				);
 			bFound = this.DOMAdapter.isSameNode(oSequence2[nRightIndex], oItem);
 		}
-				if (bFound && fArray_indexOf(oSequence, oItem) ==-1)
+		//
+		if (bFound && fArray_indexOf(oSequence, oItem) ==-1)
 			oSequence.push(oItem);
 	}
 	return fFunction_sequence_order(oSequence, this);
 };
 
+// op:except($parameter1 as node()*, $parameter2 as node()*) as node()*
 hStaticContext_operators["except"]	= function(oSequence1, oSequence2) {
 	var oSequence	= [];
 	for (var nIndex = 0, nLength = oSequence1.length, oItem, bFound; nIndex < nLength; nIndex++) {
 		if (!this.DOMAdapter.isNode(oItem = oSequence1[nIndex]))
 			throw new cException("XPTY0004"
-					, "Required item type of second operand of 'except' is node()"
-			);					bFound	= false;
+
+			);	// Required item type of second operand of 'intersect' is node(); supplied value has item type xs:integer
+		//
+		bFound	= false;
 		for (var nRightIndex = 0, nRightLength = oSequence2.length;(nRightIndex < nRightLength) && !bFound; nRightIndex++) {
 			if (!this.DOMAdapter.isNode(oSequence2[nRightIndex]))
 				throw new cException("XPTY0004"
-						, "Required item type of first operand of 'except' is node()"
+
 				);
 			bFound = this.DOMAdapter.isSameNode(oSequence2[nRightIndex], oItem);
 		}
-				if (!bFound && fArray_indexOf(oSequence, oItem) ==-1)
+		//
+		if (!bFound && fArray_indexOf(oSequence, oItem) ==-1)
 			oSequence.push(oItem);
 	}
 	return fFunction_sequence_order(oSequence, this);
 };
 
+// 15.5 Functions and Operators that Generate Sequences
+// op:to($firstval as xs:integer, $lastval as xs:integer) as xs:integer*
 hStaticContext_operators["to"]	= function(oLeft, oRight) {
 	var oSequence	= [];
 	for (var nIndex = oLeft.valueOf(), nLength = oRight.valueOf(); nIndex <= nLength; nIndex++)
 		oSequence.push(new cXSInteger(nIndex));
-		return oSequence;
+	//
+	return oSequence;
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	2 Accessors
+		node-name
+		nilled
+		string
+		data
+		base-uri
+		document-uri
 
+*/
 
+// fn:node-name($arg as node()?) as xs:QName?
 fStaticContext_defineSystemFunction("node-name",		[[cXTNode, '?']],	function(oNode) {
 	if (oNode != null) {
 		var fGetProperty	= this.DOMAdapter.getProperty;
 		switch (fGetProperty(oNode, "nodeType")) {
-			case 1:					case 2:						return new cXSQName(fGetProperty(oNode, "prefix"), fGetProperty(oNode, "localName"), fGetProperty(oNode, "namespaceURI"));
-			case 5:						throw "Not implemented";
-			case 6:						throw "Not implemented";
-			case 7:						return new cXSQName(null, fGetProperty(oNode, "target"), null);
-			case 10:					return new cXSQName(null, fGetProperty(oNode, "name"), null);
+			case 1:		// ELEMENT_NAME
+			case 2:		// ATTRIBUTE_NODE
+				return new cXSQName(fGetProperty(oNode, "prefix"), fGetProperty(oNode, "localName"), fGetProperty(oNode, "namespaceURI"));
+			case 5:		// ENTITY_REFERENCE_NODE
+				throw "Not implemented";
+			case 6:		// ENTITY_NODE
+				throw "Not implemented";
+			case 7:		// PROCESSING_INSTRUCTION_NODE
+				return new cXSQName(null, fGetProperty(oNode, "target"), null);
+			case 10:	// DOCUMENT_TYPE_NODE
+				return new cXSQName(null, fGetProperty(oNode, "name"), null);
 		}
 	}
-		return null;
+	//
+	return null;
 });
 
+// fn:nilled($arg as node()?) as xs:boolean?
 fStaticContext_defineSystemFunction("nilled",	[[cXTNode, '?']],	function(oNode) {
 	if (oNode != null) {
 		if (this.DOMAdapter.getProperty(oNode, "nodeType") == 1)
-			return new cXSBoolean(false);		}
-		return null;
+			return new cXSBoolean(false);	// TODO: Determine if node is nilled
+	}
+	//
+	return null;
 });
 
-fStaticContext_defineSystemFunction("string",	[[cXTItem, '?', true]],	function(oItem) {
+// fn:string() as xs:string
+// fn:string($arg as item()?) as xs:string
+fStaticContext_defineSystemFunction("string",	[[cXTItem, '?', true]],	function(/*[*/oItem/*]*/) {
 	if (!arguments.length) {
 		if (!this.item)
 			throw new cException("XPDY0002");
@@ -4923,39 +6543,56 @@ fStaticContext_defineSystemFunction("string",	[[cXTItem, '?', true]],	function(o
 	return oItem == null ? new cXSString('') : cXSString.cast(fFunction_sequence_atomize([oItem], this)[0]);
 });
 
+// fn:data($arg as item()*) as xs:anyAtomicType*
 fStaticContext_defineSystemFunction("data",	[[cXTItem, '*']],		function(oSequence1) {
 	return fFunction_sequence_atomize(oSequence1, this);
 });
 
+// fn:base-uri() as xs:anyURI?
+// fn:base-uri($arg as node()?) as xs:anyURI?
 fStaticContext_defineSystemFunction("base-uri",	[[cXTNode, '?', true]],	function(oNode) {
 	if (!arguments.length) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "base-uri() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
-		return cXSAnyURI.cast(new cXSString(this.DOMAdapter.getProperty(oNode, "baseURI") || ''));
+	//
+	return cXSAnyURI.cast(new cXSString(this.DOMAdapter.getProperty(oNode, "baseURI") || ''));
 });
 
+// fn:document-uri($arg as node()?) as xs:anyURI?
 fStaticContext_defineSystemFunction("document-uri",	[[cXTNode, '?']],	function(oNode) {
 	if (oNode != null) {
 		var fGetProperty	= this.DOMAdapter.getProperty;
 		if (fGetProperty(oNode, "nodeType") == 9)
 			return cXSAnyURI.cast(new cXSString(fGetProperty(oNode, "documentURI") || ''));
 	}
-		return null;
+	//
+	return null;
 });
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	8 Functions on anyURI
+		resolve-uri
+*/
 
-
-
+// fn:resolve-uri($relative as xs:string?) as xs:anyURI?
+// fn:resolve-uri($relative as xs:string?, $base as xs:string) as xs:anyURI?
 fStaticContext_defineSystemFunction("resolve-uri",	[[cXSString, '?'], [cXSString, '', true]],	function(sUri, sBaseUri) {
-	var sBaseUri;
 	if (arguments.length < 2) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "resolve-uri() function called when the context item is not a node"
+
 			);
 		sBaseUri	= new cXSString(this.DOMAdapter.getProperty(this.item, "baseURI") || '');
 	}
@@ -4963,7 +6600,8 @@ fStaticContext_defineSystemFunction("resolve-uri",	[[cXSString, '?'], [cXSString
 	if (sUri == null)
 		return null;
 
-		if (sUri.valueOf() == '' || sUri.valueOf().charAt(0) == '#')
+	//
+	if (sUri.valueOf() == '' || sUri.valueOf().charAt(0) == '#')
 		return cXSAnyURI.cast(sBaseUri);
 
 	var oUri	= cXSAnyURI.cast(sUri);
@@ -4974,9 +6612,11 @@ fStaticContext_defineSystemFunction("resolve-uri",	[[cXSString, '?'], [cXSString
 	oUri.scheme	= oBaseUri.scheme;
 
 	if (!oUri.authority) {
-				oUri.authority	= oBaseUri.authority;
+		// authority
+		oUri.authority	= oBaseUri.authority;
 
-				if (oUri.path.charAt(0) != '/') {
+		// path
+		if (oUri.path.charAt(0) != '/') {
 			var aUriSegments		= oUri.path.split('/'),
 				aBaseUriSegments	= oBaseUri.path.split('/');
 			aBaseUriSegments.pop();
@@ -4997,162 +6637,277 @@ fStaticContext_defineSystemFunction("resolve-uri",	[[cXSString, '?'], [cXSString
 			}
 			if (aUriSegments[--nIndex] == '..' || aUriSegments[nIndex] == '.')
 				aBaseUriSegments.push('');
-						oUri.path	= aBaseUriSegments.join('/');
+			//
+			oUri.path	= aBaseUriSegments.join('/');
 		}
 	}
 
 	return oUri;
 });
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	9.1 Additional Boolean Constructor Functions
+		true
+		false
 
+	9.3 Functions on Boolean Values
+		not
+*/
 
-
+// 9.1 Additional Boolean Constructor Functions
+// fn:true() as xs:boolean
 fStaticContext_defineSystemFunction("true",	[],	function() {
 	return new cXSBoolean(true);
 });
 
+// fn:false() as xs:boolean
 fStaticContext_defineSystemFunction("false",	[],	function() {
 	return new cXSBoolean(false);
 });
 
+// 9.3 Functions on Boolean Values
+// fn:not($arg as item()*) as xs:boolean
 fStaticContext_defineSystemFunction("not",	[[cXTItem, '*']],	function(oSequence1) {
 	return new cXSBoolean(!fFunction_sequence_toEBV(oSequence1, this));
 });
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	16 Context Functions
+		position
+		last
+		current-dateTime
+		current-date
+		current-time
+		implicit-timezone
+		default-collation
+		static-base-uri
 
-
+*/
+// fn:position() as xs:integer
 fStaticContext_defineSystemFunction("position",	[],	function() {
 	return new cXSInteger(this.position);
 });
 
+// fn:last() as xs:integer
 fStaticContext_defineSystemFunction("last",	[],	function() {
 	return new cXSInteger(this.size);
 });
 
+// fn:current-dateTime() as xs:dateTime (2004-05-12T18:17:15.125Z)
 fStaticContext_defineSystemFunction("current-dateTime",	[],	 function() {
 	return this.dateTime;
 });
 
+// fn:current-date() as xs:date (2004-05-12+01:00)
 fStaticContext_defineSystemFunction("current-date",	[],	function() {
 	return cXSDate.cast(this.dateTime);
 });
 
+// fn:current-time() as xs:time (23:17:00.000-05:00)
 fStaticContext_defineSystemFunction("current-time",	[],	function() {
 	return cXSTime.cast(this.dateTime);
 });
 
+// fn:implicit-timezone() as xs:dayTimeDuration
 fStaticContext_defineSystemFunction("implicit-timezone",	[],	function() {
 	return this.timezone;
 });
 
+// fn:default-collation() as xs:string
 fStaticContext_defineSystemFunction("default-collation",	[],	 function() {
 	return new cXSString(this.staticContext.defaultCollationName);
 });
 
+// fn:static-base-uri() as xs:anyURI?
 fStaticContext_defineSystemFunction("static-base-uri",	[],	function() {
 	return cXSAnyURI.cast(new cXSString(this.staticContext.baseURI || ''));
 });
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	10.5 Component Extraction Functions on Durations, Dates and Times
+		years-from-duration
+		months-from-duration
+		days-from-duration
+		hours-from-duration
+		minutes-from-duration
+		seconds-from-duration
+		year-from-dateTime
+		month-from-dateTime
+		day-from-dateTime
+		hours-from-dateTime
+		minutes-from-dateTime
+		seconds-from-dateTime
+		timezone-from-dateTime
+		year-from-date
+		month-from-date
+		day-from-date
+		timezone-from-date
+		hours-from-time
+		minutes-from-time
+		seconds-from-time
+		timezone-from-time
 
+	10.7 Timezone Adjustment Functions on Dates and Time Values
+		adjust-dateTime-to-timezone
+		adjust-date-to-timezone
+		adjust-time-to-timezone
+*/
 
-
+// 10.5 Component Extraction Functions on Durations, Dates and Times
+// functions on duration
+// fn:years-from-duration($arg as xs:duration?) as xs:integer?
 fStaticContext_defineSystemFunction("years-from-duration",	[[cXSDuration, '?']],	function(oDuration) {
 	return fFunction_duration_getComponent(oDuration, "year");
 });
 
+// fn:months-from-duration($arg as xs:duration?) as xs:integer?
 fStaticContext_defineSystemFunction("months-from-duration",	[[cXSDuration, '?']],	function(oDuration) {
 	return fFunction_duration_getComponent(oDuration, "month");
 });
 
+// fn:days-from-duration($arg as xs:duration?) as xs:integer?
 fStaticContext_defineSystemFunction("days-from-duration",	[[cXSDuration, '?']],	function(oDuration) {
 	return fFunction_duration_getComponent(oDuration, "day");
 });
 
+// fn:hours-from-duration($arg as xs:duration?) as xs:integer?
 fStaticContext_defineSystemFunction("hours-from-duration",	[[cXSDuration, '?']],	function(oDuration) {
 	return fFunction_duration_getComponent(oDuration, "hours");
 });
 
+// fn:minutes-from-duration($arg as xs:duration?) as xs:integer?
 fStaticContext_defineSystemFunction("minutes-from-duration",	[[cXSDuration, '?']],	function(oDuration) {
 	return fFunction_duration_getComponent(oDuration, "minutes");
 });
 
+// fn:seconds-from-duration($arg as xs:duration?) as xs:decimal?
 fStaticContext_defineSystemFunction("seconds-from-duration",	[[cXSDuration, '?']],	function(oDuration) {
 	return fFunction_duration_getComponent(oDuration, "seconds");
 });
 
+// functions on dateTime
+// fn:year-from-dateTime($arg as xs:dateTime?) as xs:integer?
 fStaticContext_defineSystemFunction("year-from-dateTime",		[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime,	"year");
 });
 
+// fn:month-from-dateTime($arg as xs:dateTime?) as xs:integer?
 fStaticContext_defineSystemFunction("month-from-dateTime",		[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime, "month");
 });
 
+// fn:day-from-dateTime($arg as xs:dateTime?) as xs:integer?
 fStaticContext_defineSystemFunction("day-from-dateTime",			[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime, "day");
 });
 
+// fn:hours-from-dateTime($arg as xs:dateTime?) as xs:integer?
 fStaticContext_defineSystemFunction("hours-from-dateTime",		[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime, "hours");
 });
 
+// fn:minutes-from-dateTime($arg as xs:dateTime?) as xs:integer?
 fStaticContext_defineSystemFunction("minutes-from-dateTime",		[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime, "minutes");
 });
 
+// fn:seconds-from-dateTime($arg as xs:dateTime?) as xs:decimal?
 fStaticContext_defineSystemFunction("seconds-from-dateTime",		[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime, "seconds");
 });
 
+// fn:timezone-from-dateTime($arg as xs:dateTime?) as xs:dayTimeDuration?
 fStaticContext_defineSystemFunction("timezone-from-dateTime",	[[cXSDateTime, '?']],	function(oDateTime) {
 	return fFunction_dateTime_getComponent(oDateTime, "timezone");
 });
 
+// functions on date
+// fn:year-from-date($arg as xs:date?) as xs:integer?
 fStaticContext_defineSystemFunction("year-from-date",	[[cXSDate, '?']],	function(oDate) {
 	return fFunction_dateTime_getComponent(oDate, "year");
 });
 
+// fn:month-from-date($arg as xs:date?) as xs:integer?
 fStaticContext_defineSystemFunction("month-from-date",	[[cXSDate, '?']],	function(oDate) {
 	return fFunction_dateTime_getComponent(oDate, "month");
 });
 
+// fn:day-from-date($arg as xs:date?) as xs:integer?
 fStaticContext_defineSystemFunction("day-from-date",		[[cXSDate, '?']],	function(oDate) {
 	return fFunction_dateTime_getComponent(oDate, "day");
 });
 
+// fn:timezone-from-date($arg as xs:date?) as xs:dayTimeDuration?
 fStaticContext_defineSystemFunction("timezone-from-date",	[[cXSDate, '?']],	function(oDate) {
 	return fFunction_dateTime_getComponent(oDate, "timezone");
 });
 
+// functions on time
+// fn:hours-from-time($arg as xs:time?) as xs:integer?
 fStaticContext_defineSystemFunction("hours-from-time",		[[cXSTime, '?']],	function(oTime) {
 	return fFunction_dateTime_getComponent(oTime, "hours");
 });
 
+// fn:minutes-from-time($arg as xs:time?) as xs:integer?
 fStaticContext_defineSystemFunction("minutes-from-time",		[[cXSTime, '?']],	function(oTime) {
 	return fFunction_dateTime_getComponent(oTime, "minutes");
 });
 
+// fn:seconds-from-time($arg as xs:time?) as xs:decimal?
 fStaticContext_defineSystemFunction("seconds-from-time",		[[cXSTime, '?']],	function(oTime) {
 	return fFunction_dateTime_getComponent(oTime, "seconds");
 });
 
+// fn:timezone-from-time($arg as xs:time?) as xs:dayTimeDuration?
 fStaticContext_defineSystemFunction("timezone-from-time",	[[cXSTime, '?']],	function(oTime) {
 	return fFunction_dateTime_getComponent(oTime, "timezone");
 });
 
 
+// 10.7 Timezone Adjustment Functions on Dates and Time Values
+// fn:adjust-dateTime-to-timezone($arg as xs:dateTime?) as xs:dateTime?
+// fn:adjust-dateTime-to-timezone($arg as xs:dateTime?, $timezone as xs:dayTimeDuration?) as xs:dateTime?
 fStaticContext_defineSystemFunction("adjust-dateTime-to-timezone",	[[cXSDateTime, '?'], [cXSDayTimeDuration, '?', true]],	function(oDateTime, oDayTimeDuration) {
 	return fFunction_dateTime_adjustTimezone(oDateTime, arguments.length > 1 && oDayTimeDuration != null ? arguments.length > 1 ? oDayTimeDuration : this.timezone : null);
 });
 
+// fn:adjust-date-to-timezone($arg as xs:date?) as xs:date?
+// fn:adjust-date-to-timezone($arg as xs:date?, $timezone as xs:dayTimeDuration?) as xs:date?
 fStaticContext_defineSystemFunction("adjust-date-to-timezone",		[[cXSDate, '?'], [cXSDayTimeDuration, '?', true]],	function(oDate, oDayTimeDuration) {
 	return fFunction_dateTime_adjustTimezone(oDate, arguments.length > 1 && oDayTimeDuration != null ? arguments.length > 1 ? oDayTimeDuration : this.timezone : null);
 });
 
+// fn:adjust-time-to-timezone($arg as xs:time?) as xs:time?
+// fn:adjust-time-to-timezone($arg as xs:time?, $timezone as xs:dayTimeDuration?) as xs:time?
 fStaticContext_defineSystemFunction("adjust-time-to-timezone",		[[cXSTime, '?'], [cXSDayTimeDuration, '?', true]],	function(oTime, oDayTimeDuration) {
 	return fFunction_dateTime_adjustTimezone(oTime, arguments.length > 1 && oDayTimeDuration != null ? arguments.length > 1 ? oDayTimeDuration : this.timezone : null);
 });
 
+//
 function fFunction_duration_getComponent(oDuration, sName) {
 	if (oDuration == null)
 		return null;
@@ -5161,6 +6916,7 @@ function fFunction_duration_getComponent(oDuration, sName) {
 	return sName == "seconds" ? new cXSDecimal(nValue) : new cXSInteger(nValue);
 };
 
+//
 function fFunction_dateTime_getComponent(oDateTime, sName) {
 	if (oDateTime == null)
 		return null;
@@ -5184,11 +6940,13 @@ function fFunction_dateTime_getComponent(oDateTime, sName) {
 	}
 };
 
+//
 function fFunction_dateTime_adjustTimezone(oDateTime, oTimezone) {
 	if (oDateTime == null)
 		return null;
 
-		var oValue;
+	// Create a copy
+	var oValue;
 	if (oDateTime instanceof cXSDate)
 		oValue	= new cXSDate(oDateTime.year, oDateTime.month, oDateTime.day, oDateTime.timezone, oDateTime.negative);
 	else
@@ -5197,7 +6955,8 @@ function fFunction_dateTime_adjustTimezone(oDateTime, oTimezone) {
 	else
 		oValue	= new cXSDateTime(oDateTime.year, oDateTime.month, oDateTime.day, oDateTime.hours, oDateTime.minutes, oDateTime.seconds, oDateTime.timezone, oDateTime.negative);
 
-		if (oTimezone == null)
+	//
+	if (oTimezone == null)
 		oValue.timezone	= null;
 	else {
 		var nTimezone	= fOperator_dayTimeDuration_toSeconds(oTimezone) / 60;
@@ -5211,67 +6970,97 @@ function fFunction_dateTime_adjustTimezone(oDateTime, oTimezone) {
 				oValue.minutes	+= nDiff % 60;
 				oValue.hours	+= ~~(nDiff / 60);
 			}
-						fXSDateTime_normalize(oValue);
+			//
+			fXSDateTime_normalize(oValue);
 		}
 		oValue.timezone	= nTimezone;
 	}
 	return oValue;
 };
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	14 Functions and Operators on Nodes
+		name
+		local-name
+		namespace-uri
+		number
+		lang
+		root
 
+*/
 
-
+// 14 Functions on Nodes
+// fn:name() as xs:string
+// fn:name($arg as node()?) as xs:string
 fStaticContext_defineSystemFunction("name",	[[cXTNode, '?', true]],	function(oNode) {
 	if (!arguments.length) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "name() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
 	else
 	if (oNode == null)
 		return new cXSString('');
-		var vValue	= hStaticContext_functions["node-name"].call(this, oNode);
+	//
+	var vValue	= hStaticContext_functions["node-name"].call(this, oNode);
 	return new cXSString(vValue == null ? '' : vValue.toString());
 });
 
+// fn:local-name() as xs:string
+// fn:local-name($arg as node()?) as xs:string
 fStaticContext_defineSystemFunction("local-name",	[[cXTNode, '?', true]],	function(oNode) {
 	if (!arguments.length) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "local-name() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
 	else
 	if (oNode == null)
 		return new cXSString('');
-		return new cXSString(this.DOMAdapter.getProperty(oNode, "localName") || '');
+	//
+	return new cXSString(this.DOMAdapter.getProperty(oNode, "localName") || '');
 });
 
+// fn:namespace-uri() as xs:anyURI
+// fn:namespace-uri($arg as node()?) as xs:anyURI
 fStaticContext_defineSystemFunction("namespace-uri",	[[cXTNode, '?', true]],	function(oNode) {
 	if (!arguments.length) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "namespace-uri() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
 	else
 	if (oNode == null)
 		return cXSAnyURI.cast(new cXSString(''));
-		return cXSAnyURI.cast(new cXSString(this.DOMAdapter.getProperty(oNode, "namespaceURI") || ''));
+	//
+	return cXSAnyURI.cast(new cXSString(this.DOMAdapter.getProperty(oNode, "namespaceURI") || ''));
 });
 
-fStaticContext_defineSystemFunction("number",	[[cXSAnyAtomicType, '?', true]],	function(oItem) {
+// fn:number() as xs:double
+// fn:number($arg as xs:anyAtomicType?) as xs:double
+fStaticContext_defineSystemFunction("number",	[[cXSAnyAtomicType, '?', true]],	function(/*[*/oItem/*]*/) {
 	if (!arguments.length) {
 		if (!this.item)
 			throw new cException("XPDY0002");
 		oItem	= fFunction_sequence_atomize([this.item], this)[0];
 	}
 
-		var vValue	= new cXSDouble(nNaN);
+	// If input item cannot be cast to xs:decimal, a NaN should be returned
+	var vValue	= new cXSDouble(nNaN);
 	if (oItem != null) {
 		try {
 			vValue	= cXSDouble.cast(oItem);
@@ -5283,11 +7072,13 @@ fStaticContext_defineSystemFunction("number",	[[cXSAnyAtomicType, '?', true]],	f
 	return vValue;
 });
 
+// fn:lang($testlang as xs:string?) as xs:boolean
+// fn:lang($testlang as xs:string?, $node as node()) as xs:boolean
 fStaticContext_defineSystemFunction("lang",	[[cXSString, '?'], [cXTNode, '', true]],	function(sLang, oNode) {
 	if (arguments.length < 2) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "lang() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
@@ -5296,19 +7087,23 @@ fStaticContext_defineSystemFunction("lang",	[[cXSString, '?'], [cXTNode, '', tru
 	if (fGetProperty(oNode, "nodeType") == 2)
 		oNode	= fGetProperty(oNode, "ownerElement");
 
-		for (var aAttributes; oNode; oNode = fGetProperty(oNode, "parentNode"))
+	// walk up the tree looking for xml:lang attribute
+	for (var aAttributes; oNode; oNode = fGetProperty(oNode, "parentNode"))
 		if (aAttributes = fGetProperty(oNode, "attributes"))
 			for (var nIndex = 0, nLength = aAttributes.length; nIndex < nLength; nIndex++)
 				if (fGetProperty(aAttributes[nIndex], "nodeName") == "xml:lang")
 					return new cXSBoolean(fGetProperty(aAttributes[nIndex], "value").replace(/-.+/, '').toLowerCase() == sLang.valueOf().replace(/-.+/, '').toLowerCase());
-		return new cXSBoolean(false);
+	//
+	return new cXSBoolean(false);
 });
 
+// fn:root() as node()
+// fn:root($arg as node()?) as node()?
 fStaticContext_defineSystemFunction("root",	[[cXTNode, '?', true]],	function(oNode) {
 	if (!arguments.length) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "root() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
@@ -5318,7 +7113,8 @@ fStaticContext_defineSystemFunction("root",	[[cXTNode, '?', true]],	function(oNo
 
 	var fGetProperty	= this.DOMAdapter.getProperty;
 
-		if (fGetProperty(oNode, "nodeType") == 2)
+	// If context node is Attribute
+	if (fGetProperty(oNode, "nodeType") == 2)
 		oNode	= fGetProperty(oNode, "ownerElement");
 
 	for (var oParent = oNode; oParent; oParent = fGetProperty(oNode, "parentNode"))
@@ -5327,29 +7123,52 @@ fStaticContext_defineSystemFunction("root",	[[cXTNode, '?', true]],	function(oNo
 	return oNode;
 });
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	6.4 Functions on Numeric Values
+		abs
+		ceiling
+		floor
+		round
+		round-half-to-even
+*/
 
-
+// 6.4 Functions on Numeric Values
+// fn:abs($arg as numeric?) as numeric?
 fStaticContext_defineSystemFunction("abs",		[[cXSDouble, '?']],	function(oValue) {
 	return new cXSDecimal(cMath.abs(oValue));
 });
 
+// fn:ceiling($arg as numeric?) as numeric?
 fStaticContext_defineSystemFunction("ceiling",	[[cXSDouble, '?']],	function(oValue) {
 	return new cXSDecimal(cMath.ceil(oValue));
 });
 
+// fn:floor($arg as numeric?) as numeric?
 fStaticContext_defineSystemFunction("floor",		[[cXSDouble, '?']],	function(oValue) {
 	return new cXSDecimal(cMath.floor(oValue));
 });
 
+// fn:round($arg as numeric?) as numeric?
 fStaticContext_defineSystemFunction("round",		[[cXSDouble, '?']],	function(oValue) {
 	return new cXSDecimal(cMath.round(oValue));
 });
 
+// fn:round-half-to-even($arg as numeric?) as numeric?
+// fn:round-half-to-even($arg as numeric?, $precision as xs:integer) as numeric?
 fStaticContext_defineSystemFunction("round-half-to-even",	[[cXSDouble, '?'], [cXSInteger, '', true]],	function(oValue, oPrecision) {
 	var nPrecision	= arguments.length > 1 ? oPrecision.valueOf() : 0;
 
-		if (nPrecision < 0) {
+	//
+	if (nPrecision < 0) {
 		var oPower	= new cXSInteger(cMath.pow(10,-nPrecision)),
 			nRounded= cMath.round(hStaticContext_operators["numeric-divide"].call(this, oValue, oPower)),
 			oRounded= new cXSInteger(nRounded);
@@ -5364,10 +7183,31 @@ fStaticContext_defineSystemFunction("round-half-to-even",	[[cXSDouble, '?'], [cX
 		return hStaticContext_operators["numeric-divide"].call(this, hStaticContext_operators["numeric-add"].call(this, oRounded, new cXSDecimal(nDecimal == 0.5 && nRounded % 2 ?-1 : 0)), oPower);
 	}
 });
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	11.1 Additional Constructor Functions for QNames
+		resolve-QName
+		QName
 
+	11.2 Functions and Operators Related to QNames
+		prefix-from-QName
+		local-name-from-QName
+		namespace-uri-from-QName
+		namespace-uri-for-prefix
+		in-scope-prefixes
 
+*/
 
+// 11.1 Additional Constructor Functions for QNames
+// fn:resolve-QName($qname as xs:string?, $element as element()) as xs:QName?
 fStaticContext_defineSystemFunction("resolve-QName",	[[cXSString, '?'], [cXTElement]],	function(oQName, oElement) {
 	if (oQName == null)
 		return null;
@@ -5376,40 +7216,46 @@ fStaticContext_defineSystemFunction("resolve-QName",	[[cXSString, '?'], [cXTElem
 		aMatch	= sQName.match(rXSQName);
 	if (!aMatch)
 		throw new cException("FOCA0002"
-				, "Invalid QName '" + sQName + "'"
+
 		);
 
 	var sPrefix	= aMatch[1] || null,
 		sLocalName	= aMatch[2],
 		sNameSpaceURI = this.DOMAdapter.lookupNamespaceURI(oElement, sPrefix);
-		if (sPrefix != null &&!sNameSpaceURI)
+	//
+	if (sPrefix != null &&!sNameSpaceURI)
 		throw new cException("FONS0004"
-				, "Namespace prefix '" + sPrefix + "' has not been declared"
+
 		);
 
 	return new cXSQName(sPrefix, sLocalName, sNameSpaceURI || null);
 });
 
+// fn:QName($paramURI as xs:string?, $paramQName as xs:string) as xs:QName
 fStaticContext_defineSystemFunction("QName",		[[cXSString, '?'], [cXSString]],	function(oUri, oQName) {
 	var sQName	= oQName.valueOf(),
 		aMatch	= sQName.match(rXSQName);
 
 	if (!aMatch)
 		throw new cException("FOCA0002"
-				, "Invalid QName '" + sQName + "'"
+
 		);
 
 	return new cXSQName(aMatch[1] || null, aMatch[2] || null, oUri == null ? '' : oUri.valueOf());
 });
 
+// 11.2 Functions Related to QNames
+// fn:prefix-from-QName($arg as xs:QName?) as xs:NCName?
 fStaticContext_defineSystemFunction("prefix-from-QName",			[[cXSQName, '?']],	function(oQName) {
 	if (oQName != null) {
 		if (oQName.prefix)
 			return new cXSNCName(oQName.prefix);
 	}
-		return null;
+	//
+	return null;
 });
 
+// fn:local-name-from-QName($arg as xs:QName?) as xs:NCName?
 fStaticContext_defineSystemFunction("local-name-from-QName",		[[cXSQName, '?']],	function(oQName) {
 	if (oQName == null)
 		return null;
@@ -5417,6 +7263,7 @@ fStaticContext_defineSystemFunction("local-name-from-QName",		[[cXSQName, '?']],
 	return new cXSNCName(oQName.localName);
 });
 
+// fn:namespace-uri-from-QName($arg as xs:QName?) as xs:anyURI?
 fStaticContext_defineSystemFunction("namespace-uri-from-QName",	[[cXSQName, '?']],	function(oQName) {
 	if (oQName == null)
 		return null;
@@ -5424,6 +7271,7 @@ fStaticContext_defineSystemFunction("namespace-uri-from-QName",	[[cXSQName, '?']
 	return cXSAnyURI.cast(new cXSString(oQName.namespaceURI || ''));
 });
 
+// fn:namespace-uri-for-prefix($prefix as xs:string?, $element as element()) as xs:anyURI?
 fStaticContext_defineSystemFunction("namespace-uri-for-prefix",	[[cXSString, '?'], [cXTElement]],	function(oPrefix, oElement) {
 	var sPrefix	= oPrefix == null ? '' : oPrefix.valueOf(),
 		sNameSpaceURI	= this.DOMAdapter.lookupNamespaceURI(oElement, sPrefix || null);
@@ -5431,60 +7279,123 @@ fStaticContext_defineSystemFunction("namespace-uri-for-prefix",	[[cXSString, '?'
 	return sNameSpaceURI == null ? null : cXSAnyURI.cast(new cXSString(sNameSpaceURI));
 });
 
+// fn:in-scope-prefixes($element as element()) as xs:string*
 fStaticContext_defineSystemFunction("in-scope-prefixes",	[[cXTElement]],	function(oElement) {
 	throw "Function '" + "in-scope-prefixes" + "' not implemented";
 });
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	15.1 General Functions and Operators on Sequences
+		boolean
+		index-of
+		empty
+		exists
+		distinct-values
+		insert-before
+		remove
+		reverse
+		subsequence
+		unordered
 
+	15.2 Functions That Test the Cardinality of Sequences
+		zero-or-one
+		one-or-more
+		exactly-one
 
+	15.3 Equals, Union, Intersection and Except
+		deep-equal
+
+	15.4 Aggregate Functions
+		count
+		avg
+		max
+		min
+		sum
+
+	15.5 Functions and Operators that Generate Sequences
+		id
+		idref
+		doc
+		doc-available
+		collection
+		element-with-id
+
+*/
+
+// 15.1 General Functions and Operators on Sequences
+// fn:boolean($arg as item()*) as xs:boolean
 fStaticContext_defineSystemFunction("boolean",	[[cXTItem, '*']],	function(oSequence1) {
 	return new cXSBoolean(fFunction_sequence_toEBV(oSequence1, this));
 });
 
+// fn:index-of($seqParam as xs:anyAtomicType*, $srchParam as xs:anyAtomicType) as xs:integer*
+// fn:index-of($seqParam as xs:anyAtomicType*, $srchParam as xs:anyAtomicType, $collation as xs:string) as xs:integer*
 fStaticContext_defineSystemFunction("index-of",	[[cXSAnyAtomicType, '*'], [cXSAnyAtomicType], [cXSString, '', true]],	function(oSequence1, oSearch, oCollation) {
 	if (!oSequence1.length || oSearch == null)
 		return [];
 
-	
+	// TODO: Implement collation
+
 	var vLeft	= oSearch;
-		if (vLeft instanceof cXSUntypedAtomic)
+	// Cast to XSString if Untyped
+	if (vLeft instanceof cXSUntypedAtomic)
 		vLeft	= cXSString.cast(vLeft);
 
 	var oSequence	= [];
 	for (var nIndex = 0, nLength = oSequence1.length, vRight; nIndex < nLength; nIndex++) {
 		vRight	= oSequence1[nIndex];
-				if (vRight instanceof cXSUntypedAtomic)
+		// Cast to XSString if Untyped
+		if (vRight instanceof cXSUntypedAtomic)
 			vRight	= cXSString.cast(vRight);
-				if (vRight.valueOf() === vLeft.valueOf())
+		//
+		if (vRight.valueOf() === vLeft.valueOf())
 			oSequence.push(new cXSInteger(nIndex + 1));
 	}
 
 	return oSequence;
 });
 
+// fn:empty($arg as item()*) as xs:boolean
 fStaticContext_defineSystemFunction("empty",	[[cXTItem, '*']],	function(oSequence1) {
 	return new cXSBoolean(!oSequence1.length);
 });
 
+// fn:exists($arg as item()*) as xs:boolean
 fStaticContext_defineSystemFunction("exists",	[[cXTItem, '*']],	function(oSequence1) {
 	return new cXSBoolean(!!oSequence1.length);
 });
 
+// fn:distinct-values($arg as xs:anyAtomicType*) as xs:anyAtomicType*
+// fn:distinct-values($arg as xs:anyAtomicType*, $collation as xs:string) as xs:anyAtomicType*
 fStaticContext_defineSystemFunction("distinct-values",	[[cXSAnyAtomicType, '*'], [cXSString, '', true]],	function(oSequence1, oCollation) {
+	if (arguments.length > 1)
+		throw "Collation parameter in function '" + "distinct-values" + "' is not implemented";
+
 	if (!oSequence1.length)
 		return null;
 
 	var oSequence	= [];
 	for (var nIndex = 0, nLength = oSequence1.length, vLeft; nIndex < nLength; nIndex++) {
 		vLeft	= oSequence1[nIndex];
-				if (vLeft instanceof cXSUntypedAtomic)
+		// Cast to XSString if Untyped
+		if (vLeft instanceof cXSUntypedAtomic)
 			vLeft	= cXSString.cast(vLeft);
 		for (var nRightIndex = 0, nRightLength = oSequence.length, vRight, bFound = false; (nRightIndex < nRightLength) &&!bFound; nRightIndex++) {
 			vRight	= oSequence[nRightIndex];
-						if (vRight instanceof cXSUntypedAtomic)
+			// Cast to XSString if Untyped
+			if (vRight instanceof cXSUntypedAtomic)
 				vRight	= cXSString.cast(vRight);
-						if (vRight.valueOf() === vLeft.valueOf())
+			//
+			if (vRight.valueOf() === vLeft.valueOf())
 				bFound	= true;
 		}
 		if (!bFound)
@@ -5494,6 +7405,7 @@ fStaticContext_defineSystemFunction("distinct-values",	[[cXSAnyAtomicType, '*'],
 	return oSequence;
 });
 
+// fn:insert-before($target as item()*, $position as xs:integer, $inserts as item()*) as item()*
 fStaticContext_defineSystemFunction("insert-before",	[[cXTItem, '*'], [cXSInteger], [cXTItem, '*']],	function(oSequence1, oPosition, oSequence3) {
 	if (!oSequence1.length)
 		return oSequence3;
@@ -5520,6 +7432,7 @@ fStaticContext_defineSystemFunction("insert-before",	[[cXTItem, '*'], [cXSIntege
 	return oSequence;
 });
 
+// fn:remove($target as item()*, $position as xs:integer) as item()*
 fStaticContext_defineSystemFunction("remove",	[[cXTItem, '*'], [cXSInteger]],	function(oSequence1, oPosition) {
 	if (!oSequence1.length)
 		return [];
@@ -5538,24 +7451,31 @@ fStaticContext_defineSystemFunction("remove",	[[cXTItem, '*'], [cXSInteger]],	fu
 	return oSequence;
 });
 
+// fn:reverse($arg as item()*) as item()*
 fStaticContext_defineSystemFunction("reverse",	[[cXTItem, '*']],	function(oSequence1) {
 	oSequence1.reverse();
 
 	return oSequence1;
 });
 
+// fn:subsequence($sourceSeq as item()*, $startingLoc as xs:double) as item()*
+// fn:subsequence($sourceSeq as item()*, $startingLoc as xs:double, $length as xs:double) as item()*
 fStaticContext_defineSystemFunction("subsequence",	[[cXTItem, '*'], [cXSDouble, ''], [cXSDouble, '', true]],	function(oSequence1, oStart, oLength) {
 	var nPosition	= cMath.round(oStart),
 		nLength		= arguments.length > 2 ? cMath.round(oLength) : oSequence1.length - nPosition + 1;
 
-		return oSequence1.slice(nPosition - 1, nPosition - 1 + nLength);
+	// TODO: Handle out-of-range position and length values
+	return oSequence1.slice(nPosition - 1, nPosition - 1 + nLength);
 });
 
+// fn:unordered($sourceSeq as item()*) as item()*
 fStaticContext_defineSystemFunction("unordered",	[[cXTItem, '*']],	function(oSequence1) {
 	return oSequence1;
 });
 
 
+// 15.2 Functions That Test the Cardinality of Sequences
+// fn:zero-or-one($arg as item()*) as item()?
 fStaticContext_defineSystemFunction("zero-or-one",	[[cXTItem, '*']],	function(oSequence1) {
 	if (oSequence1.length > 1)
 		throw new cException("FORG0003");
@@ -5563,6 +7483,7 @@ fStaticContext_defineSystemFunction("zero-or-one",	[[cXTItem, '*']],	function(oS
 	return oSequence1;
 });
 
+// fn:one-or-more($arg as item()*) as item()+
 fStaticContext_defineSystemFunction("one-or-more",	[[cXTItem, '*']],	function(oSequence1) {
 	if (!oSequence1.length)
 		throw new cException("FORG0004");
@@ -5570,6 +7491,7 @@ fStaticContext_defineSystemFunction("one-or-more",	[[cXTItem, '*']],	function(oS
 	return oSequence1;
 });
 
+// fn:exactly-one($arg as item()*) as item()
 fStaticContext_defineSystemFunction("exactly-one",	[[cXTItem, '*']],	function(oSequence1) {
 	if (oSequence1.length != 1)
 		throw new cException("FORG0005");
@@ -5578,20 +7500,27 @@ fStaticContext_defineSystemFunction("exactly-one",	[[cXTItem, '*']],	function(oS
 });
 
 
+// 15.3 Equals, Union, Intersection and Except
+// fn:deep-equal($parameter1 as item()*, $parameter2 as item()*) as xs:boolean
+// fn:deep-equal($parameter1 as item()*, $parameter2 as item()*, $collation as string) as xs:boolean
 fStaticContext_defineSystemFunction("deep-equal",	[[cXTItem, '*'], [cXTItem, '*'], [cXSString, '', true]],	function(oSequence1, oSequence2, oCollation) {
 	throw "Function '" + "deep-equal" + "' not implemented";
 });
 
 
+// 15.4 Aggregate Functions
+// fn:count($arg as item()*) as xs:integer
 fStaticContext_defineSystemFunction("count",	[[cXTItem, '*']],	function(oSequence1) {
 	return new cXSInteger(oSequence1.length);
 });
 
+// fn:avg($arg as xs:anyAtomicType*) as xs:anyAtomicType?
 fStaticContext_defineSystemFunction("avg",	[[cXSAnyAtomicType, '*']],	function(oSequence1) {
 	if (!oSequence1.length)
 		return null;
 
-		try {
+	//
+	try {
 		var vValue	= oSequence1[0];
 		if (vValue instanceof cXSUntypedAtomic)
 			vValue	= cXSDouble.cast(vValue);
@@ -5604,50 +7533,75 @@ fStaticContext_defineSystemFunction("avg",	[[cXSAnyAtomicType, '*']],	function(o
 		return hMultiplicativeExpr_operators['div'](vValue, new cXSInteger(nLength), this);
 	}
 	catch (e) {
-				throw e.code != "XPTY0004" ? e : new cException("FORG0006"
-				, "Input to avg() contains a mix of types"
+		// XPTY0004: Arithmetic operator is not defined for provided arguments
+		throw e.code != "XPTY0004" ? e : new cException("FORG0006"
+
 		);
 	}
 });
 
+// fn:max($arg as xs:anyAtomicType*) as xs:anyAtomicType?
+// fn:max($arg as xs:anyAtomicType*, $collation as string) as xs:anyAtomicType?
 fStaticContext_defineSystemFunction("max",	[[cXSAnyAtomicType, '*'], [cXSString, '', true]],	function(oSequence1, oCollation) {
 	if (!oSequence1.length)
 		return null;
 
-	
-		try {
+	// TODO: Implement collation
+
+	//
+	try {
 		var vValue	= oSequence1[0];
-		for (var nIndex = 1, nLength = oSequence1.length; nIndex < nLength; nIndex++)
-			if (hComparisonExpr_ValueComp_operators['ge'](oSequence1[nIndex], vValue, this).valueOf())
-				vValue	= oSequence1[nIndex];
+		if (vValue instanceof cXSUntypedAtomic)
+			vValue	= cXSDouble.cast(vValue);
+		for (var nIndex = 1, nLength = oSequence1.length, vRight; nIndex < nLength; nIndex++) {
+			vRight	= oSequence1[nIndex];
+			if (vRight instanceof cXSUntypedAtomic)
+				vRight	= cXSDouble.cast(vRight);
+			if (hComparisonExpr_ValueComp_operators['ge'](vRight, vValue, this).valueOf())
+				vValue	= vRight;
+		}
 		return vValue;
 	}
 	catch (e) {
-				throw e.code != "XPTY0004" ? e : new cException("FORG0006"
-				, "Input to max() contains a mix of not comparable values"
+		// XPTY0004: Cannot compare {type1} with {type2}
+		throw e.code != "XPTY0004" ? e : new cException("FORG0006"
+
 		);
 	}
 });
 
+// fn:min($arg as xs:anyAtomicType*) as xs:anyAtomicType?
+// fn:min($arg as xs:anyAtomicType*, $collation as string) as xs:anyAtomicType?
 fStaticContext_defineSystemFunction("min",	[[cXSAnyAtomicType, '*'], [cXSString, '', true]],	function(oSequence1, oCollation) {
 	if (!oSequence1.length)
 		return null;
 
-	
-		try {
+	// TODO: Implement collation
+
+	//
+	try {
 		var vValue	= oSequence1[0];
-		for (var nIndex = 1, nLength = oSequence1.length; nIndex < nLength; nIndex++)
-			if (hComparisonExpr_ValueComp_operators['le'](oSequence1[nIndex], vValue, this).valueOf())
-				vValue	= oSequence1[nIndex];
+		if (vValue instanceof cXSUntypedAtomic)
+			vValue	= cXSDouble.cast(vValue);
+		for (var nIndex = 1, nLength = oSequence1.length, vRight; nIndex < nLength; nIndex++) {
+			vRight	= oSequence1[nIndex];
+			if (vRight instanceof cXSUntypedAtomic)
+				vRight	= cXSDouble.cast(vRight);
+			if (hComparisonExpr_ValueComp_operators['le'](vRight, vValue, this).valueOf())
+				vValue	= vRight;
+			}
 		return vValue;
 	}
 	catch (e) {
-				throw e.code != "XPTY0004" ? e : new cException("FORG0006"
-				, "Input to min() contains a mix of not comparable values"
+		// Cannot compare {type1} with {type2}
+		throw e.code != "XPTY0004" ? e : new cException("FORG0006"
+
 		);
 	}
 });
 
+// fn:sum($arg as xs:anyAtomicType*) as xs:anyAtomicType
+// fn:sum($arg as xs:anyAtomicType*, $zero as xs:anyAtomicType?) as xs:anyAtomicType?
 fStaticContext_defineSystemFunction("sum",	[[cXSAnyAtomicType, '*'], [cXSAnyAtomicType, '?', true]],	function(oSequence1, oZero) {
 	if (!oSequence1.length) {
 		if (arguments.length > 1)
@@ -5658,8 +7612,10 @@ fStaticContext_defineSystemFunction("sum",	[[cXSAnyAtomicType, '*'], [cXSAnyAtom
 		return null;
 	}
 
-	
-		try {
+	// TODO: Implement collation
+
+	//
+	try {
 		var vValue	= oSequence1[0];
 		if (vValue instanceof cXSUntypedAtomic)
 			vValue	= cXSDouble.cast(vValue);
@@ -5672,54 +7628,70 @@ fStaticContext_defineSystemFunction("sum",	[[cXSAnyAtomicType, '*'], [cXSAnyAtom
 		return vValue;
 	}
 	catch (e) {
-				throw e.code != "XPTY0004" ? e : new cException("FORG0006"
-				, "Input to sum() contains a mix of types"
+		// XPTY0004: Arithmetic operator is not defined for provided arguments
+		throw e.code != "XPTY0004" ? e : new cException("FORG0006"
+
 		);
 	}
 });
 
 
+// 15.5 Functions and Operators that Generate Sequences
+// fn:id($arg as xs:string*) as element()*
+// fn:id($arg as xs:string*, $node as node()) as element()*
 fStaticContext_defineSystemFunction("id",	[[cXSString, '*'], [cXTNode, '', true]],	function(oSequence1, oNode) {
 	if (arguments.length < 2) {
 		if (!this.DOMAdapter.isNode(this.item))
 			throw new cException("XPTY0004"
-					, "id() function called when the context item is not a node"
+
 			);
 		oNode	= this.item;
 	}
 
-		var oDocument	= hStaticContext_functions["root"].call(this, oNode);
+	// Get root node and check if it is Document
+	var oDocument	= hStaticContext_functions["root"].call(this, oNode);
 	if (this.DOMAdapter.getProperty(oDocument, "nodeType") != 9)
 		throw new cException("FODC0001");
 
-		var oSequence	= [];
+	// Search for elements
+	var oSequence	= [];
 	for (var nIndex = 0; nIndex < oSequence1.length; nIndex++)
 		for (var nRightIndex = 0, aValue = fString_trim(oSequence1[nIndex]).split(/\s+/), nRightLength = aValue.length; nRightIndex < nRightLength; nRightIndex++)
 			if ((oNode = this.DOMAdapter.getElementById(oDocument, aValue[nRightIndex])) && fArray_indexOf(oSequence, oNode) ==-1)
 				oSequence.push(oNode);
-		return fFunction_sequence_order(oSequence, this);
+	//
+	return fFunction_sequence_order(oSequence, this);
 });
 
+// fn:idref($arg as xs:string*) as node()*
+// fn:idref($arg as xs:string*, $node as node()) as node()*
 fStaticContext_defineSystemFunction("idref",	[[cXSString, '*'], [cXTNode, '', true]],	function(oSequence1, oNode) {
 	throw "Function '" + "idref" + "' not implemented";
 });
 
+// fn:doc($uri as xs:string?) as document-node()?
 fStaticContext_defineSystemFunction("doc",			[[cXSString, '?', true]],	function(oUri) {
 	throw "Function '" + "doc" + "' not implemented";
 });
 
+// fn:doc-available($uri as xs:string?) as xs:boolean
 fStaticContext_defineSystemFunction("doc-available",	[[cXSString, '?', true]],	function(oUri) {
 	throw "Function '" + "doc-available" + "' not implemented";
 });
 
+// fn:collection() as node()*
+// fn:collection($arg as xs:string?) as node()*
 fStaticContext_defineSystemFunction("collection",	[[cXSString, '?', true]],	function(oUri) {
 	throw "Function '" + "collection" + "' not implemented";
 });
 
+// fn:element-with-id($arg as xs:string*) as element()*
+// fn:element-with-id($arg as xs:string*, $node as node()) as element()*
 fStaticContext_defineSystemFunction("element-with-id",	[[cXSString, '*'], [cXTNode, '', true]],	function(oSequence1, oNode) {
 	throw "Function '" + "element-with-id" + "' not implemented";
 });
 
+// EBV calculation
 function fFunction_sequence_toEBV(oSequence1, oContext) {
 	if (!oSequence1.length)
 		return false;
@@ -5737,12 +7709,12 @@ function fFunction_sequence_toEBV(oSequence1, oContext) {
 			return !(fIsNaN(oItem.valueOf()) || oItem.valueOf() == 0);
 
 		throw new cException("FORG0006"
-				, "Effective boolean value is defined only for sequences containing booleans, strings, numbers, URIs, or nodes"
+
 		);
 	}
 
 	throw new cException("FORG0006"
-			, "Effective boolean value is not defined for a sequence of two or more items"
+
 	);
 };
 
@@ -5751,36 +7723,48 @@ function fFunction_sequence_atomize(oSequence1, oContext) {
 	for (var nIndex = 0, nLength = oSequence1.length, oItem, vItem; nIndex < nLength; nIndex++) {
 		oItem	= oSequence1[nIndex];
 		vItem	= null;
-				if (oItem == null)
+		// Untyped
+		if (oItem == null)
 			vItem	= null;
-				else
+		// Node type
+		else
 		if (oContext.DOMAdapter.isNode(oItem)) {
 			var fGetProperty	= oContext.DOMAdapter.getProperty;
 			switch (fGetProperty(oItem, "nodeType")) {
-				case 1:						vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "textContent"));
+				case 1:	// ELEMENT_NODE
+					vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "textContent"));
 					break;
-				case 2:						vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "value"));
+				case 2:	// ATTRIBUTE_NODE
+					vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "value"));
 					break;
-				case 3:					case 4:					case 8:						vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "data"));
+				case 3:	// TEXT_NODE
+				case 4:	// CDATA_SECTION_NODE
+				case 8:	// COMMENT_NODE
+					vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "data"));
 					break;
-				case 7:						vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "data"));
+				case 7:	// PROCESSING_INSTRUCTION_NODE
+					vItem	= new cXSUntypedAtomic(fGetProperty(oItem, "data"));
 					break;
-				case 9:						var oNode	= fGetProperty(oItem, "documentElement");
+				case 9:	// DOCUMENT_NODE
+					var oNode	= fGetProperty(oItem, "documentElement");
 					vItem	= new cXSUntypedAtomic(oNode ? fGetProperty(oNode, "textContent") : '');
 					break;
 			}
 		}
-				else
+		// Base types
+		else
 		if (oItem instanceof cXSAnyAtomicType)
 			vItem	= oItem;
 
-				if (vItem != null)
+		//
+		if (vItem != null)
 			oSequence.push(vItem);
 	}
 
 	return oSequence;
 };
 
+// Orders items in sequence in document order
 function fFunction_sequence_order(oSequence1, oContext) {
 	return oSequence1.sort(function(oNode, oNode2) {
 		var nPosition	= oContext.DOMAdapter.compareDocumentPosition(oNode, oNode2);
@@ -5788,9 +7772,53 @@ function fFunction_sequence_order(oSequence1, oContext) {
 	});
 };
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	7.2 Functions to Assemble and Disassemble Strings
+		codepoints-to-string
+		string-to-codepoints
 
+	7.3 Equality and Comparison of Strings
+		compare
+		codepoint-equal
 
+	7.4 Functions on String Values
+		concat
+		string-join
+		substring
+		string-length
+		normalize-space
+		normalize-unicode
+		upper-case
+		lower-case
+		translate
+		encode-for-uri
+		iri-to-uri
+		escape-html-uri
+
+	7.5 Functions Based on Substring Matching
+		contains
+		starts-with
+		ends-with
+		substring-before
+		substring-after
+
+	7.6 String Functions that Use Pattern Matching
+		matches
+		replace
+		tokenize
+*/
+
+// 7.2 Functions to Assemble and Disassemble Strings
+// fn:codepoints-to-string($arg as xs:integer*) as xs:string
 fStaticContext_defineSystemFunction("codepoints-to-string",	[[cXSInteger, '*']],	function(oSequence1) {
 	var aValue	= [];
 	for (var nIndex = 0, nLength = oSequence1.length; nIndex < nLength; nIndex++)
@@ -5799,6 +7827,7 @@ fStaticContext_defineSystemFunction("codepoints-to-string",	[[cXSInteger, '*']],
 	return new cXSString(aValue.join(''));
 });
 
+// fn:string-to-codepoints($arg as xs:string?) as xs:integer*
 fStaticContext_defineSystemFunction("string-to-codepoints",	[[cXSString, '?']],	function(oValue) {
 	if (oValue == null)
 		return null;
@@ -5814,6 +7843,9 @@ fStaticContext_defineSystemFunction("string-to-codepoints",	[[cXSString, '?']],	
 	return oSequence;
 });
 
+// 7.3 Equality and Comparison of Strings
+// fn:compare($comparand1 as xs:string?, $comparand2 as xs:string?) as xs:integer?
+// fn:compare($comparand1 as xs:string?, $comparand2 as xs:string?, $collation as xs:string) as xs:integer?
 fStaticContext_defineSystemFunction("compare",	[[cXSString, '?'], [cXSString, '?'], [cXSString, '', true]],	function(oValue1, oValue2, oCollation) {
 	if (oValue1 == null || oValue2 == null)
 		return null;
@@ -5826,52 +7858,65 @@ fStaticContext_defineSystemFunction("compare",	[[cXSString, '?'], [cXSString, '?
 	vCollation	= sCollation == sNS_XPF + "/collation/codepoint" ? oCodepointStringCollator : this.staticContext.getCollation(sCollation);
 	if (!vCollation)
 		throw new cException("FOCH0002"
-				, "Unknown collation " + '{' + sCollation + '}'
+
 		);
 
 	return new cXSInteger(vCollation.compare(oValue1.valueOf(), oValue2.valueOf()));
 });
 
+// fn:codepoint-equal($comparand1 as xs:string?, $comparand2  as xs:string?) as xs:boolean?
 fStaticContext_defineSystemFunction("codepoint-equal",	[[cXSString, '?'], [cXSString, '?']],	function(oValue1, oValue2) {
 	if (oValue1 == null || oValue2 == null)
 		return null;
 
-	
+	// TODO: Check if JS uses 'Unicode code point collation' here
+
 	return new cXSBoolean(oValue1.valueOf() == oValue2.valueOf());
 });
 
 
+// 7.4 Functions on String Values
+// fn:concat($arg1 as xs:anyAtomicType?, $arg2 as xs:anyAtomicType?, ...) as xs:string
 fStaticContext_defineSystemFunction("concat",	null,	function() {
-		if (arguments.length < 2)
+	// check arguments length
+	if (arguments.length < 2)
 		throw new cException("XPST0017"
-				, "Function concat() must have at least 2 arguments"
+
 		);
 
 	var aValue	= [];
 	for (var nIndex = 0, nLength = arguments.length, oSequence; nIndex < nLength; nIndex++) {
 		oSequence	= arguments[nIndex];
-				fFunctionCall_assertSequenceCardinality(this, oSequence, '?'
-				, "each argument of concat()"
+		// Assert cardinality
+		fFunctionCall_assertSequenceCardinality(this, oSequence, '?'
+
 		);
-				if (oSequence.length)
+		//
+		if (oSequence.length)
 			aValue[aValue.length]	= cXSString.cast(fFunction_sequence_atomize(oSequence, this)[0]).valueOf();
 	}
 
 	return new cXSString(aValue.join(''));
 });
 
+// fn:string-join($arg1 as xs:string*, $arg2 as xs:string) as xs:string
 fStaticContext_defineSystemFunction("string-join",	[[cXSString, '*'], [cXSString]],	function(oSequence1, oValue) {
 	return new cXSString(oSequence1.join(oValue));
 });
 
+// fn:substring($sourceString as xs:string?, $startingLoc as xs:double) as xs:string
+// fn:substring($sourceString as xs:string?, $startingLoc as xs:double, $length as xs:double) as xs:string
 fStaticContext_defineSystemFunction("substring",	[[cXSString, '?'], [cXSDouble], [cXSDouble, '', true]],	function(oValue, oStart, oLength) {
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		nStart	= cMath.round(oStart) - 1,
 		nEnd	= arguments.length > 2 ? nStart + cMath.round(oLength) : sValue.length;
 
-		return new cXSString(nEnd > nStart ? sValue.substring(nStart, nEnd) : '');
+	// TODO: start can be negative
+	return new cXSString(nEnd > nStart ? sValue.substring(nStart, nEnd) : '');
 });
 
+// fn:string-length() as xs:integer
+// fn:string-length($arg as xs:string?) as xs:integer
 fStaticContext_defineSystemFunction("string-length",	[[cXSString, '?', true]],	function(oValue) {
 	if (!arguments.length) {
 		if (!this.item)
@@ -5881,6 +7926,8 @@ fStaticContext_defineSystemFunction("string-length",	[[cXSString, '?', true]],	f
 	return new cXSInteger(oValue == null ? 0 : oValue.valueOf().length);
 });
 
+// fn:normalize-space() as xs:string
+// fn:normalize-space($arg as xs:string?) as xs:string
 fStaticContext_defineSystemFunction("normalize-space",	[[cXSString, '?', true]],	function(oValue) {
 	if (!arguments.length) {
 		if (!this.item)
@@ -5890,18 +7937,23 @@ fStaticContext_defineSystemFunction("normalize-space",	[[cXSString, '?', true]],
 	return new cXSString(oValue == null ? '' : fString_trim(oValue).replace(/\s\s+/g, ' '));
 });
 
+// fn:normalize-unicode($arg as xs:string?) as xs:string
+// fn:normalize-unicode($arg as xs:string?, $normalizationForm as xs:string) as xs:string
 fStaticContext_defineSystemFunction("normalize-unicode",	[[cXSString, '?'], [cXSString, '', true]],	function(oValue, oNormalization) {
 	throw "Function '" + "normalize-unicode" + "' not implemented";
 });
 
+// fn:upper-case($arg as xs:string?) as xs:string
 fStaticContext_defineSystemFunction("upper-case",	[[cXSString, '?']],	function(oValue) {
 	return new cXSString(oValue == null ? '' : oValue.valueOf().toUpperCase());
 });
 
+// fn:lower-case($arg as xs:string?) as xs:string
 fStaticContext_defineSystemFunction("lower-case",	[[cXSString, '?']],	function(oValue) {
 	return new cXSString(oValue == null ? '' : oValue.valueOf().toLowerCase());
 });
 
+// fn:translate($arg as xs:string?, $mapString as xs:string, $transString as xs:string) as xs:string
 fStaticContext_defineSystemFunction("translate",	[[cXSString, '?'], [cXSString], [cXSString]],	function(oValue, oMap, oTranslate) {
 	if (oValue == null)
 		return new cXSString('');
@@ -5921,18 +7973,22 @@ fStaticContext_defineSystemFunction("translate",	[[cXSString, '?'], [cXSString],
 	return new cXSString(aReturn.join(''));
 });
 
+// fn:encode-for-uri($uri-part as xs:string?) as xs:string
 fStaticContext_defineSystemFunction("encode-for-uri",	[[cXSString, '?']],	function(oValue) {
 	return new cXSString(oValue == null ? '' : window.encodeURIComponent(oValue));
 });
 
+// fn:iri-to-uri($iri as xs:string?) as xs:string
 fStaticContext_defineSystemFunction("iri-to-uri",		[[cXSString, '?']],	function(oValue) {
 	return new cXSString(oValue == null ? '' : window.encodeURI(window.decodeURI(oValue)));
 });
 
+// fn:escape-html-uri($uri as xs:string?) as xs:string
 fStaticContext_defineSystemFunction("escape-html-uri",	[[cXSString, '?']],	function(oValue) {
 	if (oValue == null || oValue.valueOf() == '')
 		return new cXSString('');
-		var aValue	= oValue.valueOf().split('');
+	// Encode
+	var aValue	= oValue.valueOf().split('');
 	for (var nIndex = 0, nLength = aValue.length, nCode; nIndex < nLength; nIndex++)
 		if ((nCode = aValue[nIndex].charCodeAt(0)) < 32 || nCode > 126)
 			aValue[nIndex]	= window.encodeURIComponent(aValue[nIndex]);
@@ -5940,22 +7996,40 @@ fStaticContext_defineSystemFunction("escape-html-uri",	[[cXSString, '?']],	funct
 });
 
 
+// 7.5 Functions Based on Substring Matching
+// fn:contains($arg1 as xs:string?, $arg2 as xs:string?) as xs:boolean
+// fn:contains($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:boolean
 fStaticContext_defineSystemFunction("contains",	[[cXSString, '?'], [cXSString, '?'], [cXSString, '', true]],	function(oValue, oSearch, oCollation) {
+	if (arguments.length > 2)
+		throw "Collation parameter in function '" + "contains" + "' is not implemented";
 	return new cXSBoolean((oValue == null ? '' : oValue.valueOf()).indexOf(oSearch == null ? '' : oSearch.valueOf()) >= 0);
 });
 
+// fn:starts-with($arg1 as xs:string?, $arg2 as xs:string?) as xs:boolean
+// fn:starts-with($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:boolean
 fStaticContext_defineSystemFunction("starts-with",	[[cXSString, '?'], [cXSString, '?'], [cXSString, '', true]],	function(oValue, oSearch, oCollation) {
+	if (arguments.length > 2)
+		throw "Collation parameter in function '" + "starts-with" + "' is not implemented";
 	return new cXSBoolean((oValue == null ? '' : oValue.valueOf()).indexOf(oSearch == null ? '' : oSearch.valueOf()) == 0);
 });
 
+// fn:ends-with($arg1 as xs:string?, $arg2 as xs:string?) as xs:boolean
+// fn:ends-with($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:boolean
 fStaticContext_defineSystemFunction("ends-with",	[[cXSString, '?'], [cXSString, '?'], [cXSString, '', true]],	function(oValue, oSearch, oCollation) {
+	if (arguments.length > 2)
+		throw "Collation parameter in function '" + "ends-with" + "' is not implemented";
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		sSearch	= oSearch == null ? '' : oSearch.valueOf();
 
 	return new cXSBoolean(sValue.indexOf(sSearch) == sValue.length - sSearch.length);
 });
 
+// fn:substring-before($arg1 as xs:string?, $arg2 as xs:string?) as xs:string
+// fn:substring-before($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:string
 fStaticContext_defineSystemFunction("substring-before",	[[cXSString, '?'], [cXSString, '?'], [cXSString, '', true]],	function(oValue, oSearch, oCollation) {
+	if (arguments.length > 2)
+		throw "Collation parameter in function '" + "substring-before" + "' is not implemented";
+
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		sSearch	= oSearch == null ? '' : oSearch.valueOf(),
 		nPosition;
@@ -5963,7 +8037,12 @@ fStaticContext_defineSystemFunction("substring-before",	[[cXSString, '?'], [cXSS
 	return new cXSString((nPosition = sValue.indexOf(sSearch)) >= 0 ? sValue.substring(0, nPosition) : '');
 });
 
+// fn:substring-after($arg1 as xs:string?, $arg2 as xs:string?) as xs:string
+// fn:substring-after($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:string
 fStaticContext_defineSystemFunction("substring-after",	[[cXSString, '?'], [cXSString, '?'], [cXSString, '', true]],	function(oValue, oSearch, oCollation) {
+	if (arguments.length > 2)
+		throw "Collation parameter in function '" + "substring-after" + "' is not implemented";
+
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		sSearch	= oSearch == null ? '' : oSearch.valueOf(),
 		nPosition;
@@ -5972,6 +8051,7 @@ fStaticContext_defineSystemFunction("substring-after",	[[cXSString, '?'], [cXSSt
 });
 
 
+// 7.6 String Functions that Use Pattern Matching
 function fFunction_string_createRegExp(sValue, sFlags) {
 	var d1	= '\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF',
 		d2	= '\u0370-\u037D\u037F-\u1FFF\u200C-\u200D',
@@ -5987,12 +8067,15 @@ function fFunction_string_createRegExp(sValue, sFlags) {
 				.replace(/\\c/g, '[:' + c + ']')
 				.replace(/\\C/g, '[^:' + c + ']');
 
-		if (sFlags && !sFlags.match(/^[smix]+$/))
-		throw new cException("FORX0001");	
+	// Check if all flags are legal
+	if (sFlags && !sFlags.match(/^[smix]+$/))
+		throw new cException("FORX0001");	// Invalid character '{%0}' in regular expression flags
+
 	var bFlagS	= sFlags.indexOf('s') >= 0,
 		bFlagX	= sFlags.indexOf('x') >= 0;
 	if (bFlagS || bFlagX) {
-				sFlags	= sFlags.replace(/[sx]/g, '');
+		// Strip 's' and 'x' from flags
+		sFlags	= sFlags.replace(/[sx]/g, '');
 		var aValue	= [],
 			rValue	= /\s/;
 		for (var nIndex = 0, nLength = sValue.length, bValue = false, sCharCurr, sCharPrev = ''; nIndex < nLength; nIndex++) {
@@ -6004,8 +8087,10 @@ function fFunction_string_createRegExp(sValue, sFlags) {
 				if (sCharCurr == ']')
 					bValue	= false;
 			}
-						if (bValue || !(bFlagX && rValue.test(sCharCurr))) {
-								if (!bValue && (bFlagS && sCharCurr == '.' && sCharPrev != '\\'))
+			// Replace '\s' for flag 'x' if not in []
+			if (bValue || !(bFlagX && rValue.test(sCharCurr))) {
+				// Replace '.' for flag 's' if not in []
+				if (!bValue && (bFlagS && sCharCurr == '.' && sCharPrev != '\\'))
 					aValue[aValue.length]	= '(?:.|\\s)';
 				else
 					aValue[aValue.length]	= sCharCurr;
@@ -6018,6 +8103,8 @@ function fFunction_string_createRegExp(sValue, sFlags) {
 	return new cRegExp(sValue, sFlags + 'g');
 };
 
+// fn:matches($input as xs:string?, $pattern as xs:string) as xs:boolean
+// fn:matches($input as xs:string?, $pattern as xs:string, $flags as xs:string) as xs:boolean
 fStaticContext_defineSystemFunction("matches",	[[cXSString, '?'], [cXSString], [cXSString, '', true]],	function(oValue, oPattern, oFlags) {
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		rRegExp	= fFunction_string_createRegExp(oPattern.valueOf(), arguments.length > 2 ? oFlags.valueOf() : '');
@@ -6025,6 +8112,8 @@ fStaticContext_defineSystemFunction("matches",	[[cXSString, '?'], [cXSString], [
 	return new cXSBoolean(rRegExp.test(sValue));
 });
 
+// fn:replace($input as xs:string?, $pattern as xs:string, $replacement as xs:string) as xs:string
+// fn:replace($input as xs:string?, $pattern as xs:string, $replacement as xs:string, $flags as xs:string) as xs:string
 fStaticContext_defineSystemFunction("replace",	[[cXSString, '?'], [cXSString],  [cXSString], [cXSString, '', true]],	function(oValue, oPattern, oReplacement, oFlags) {
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		rRegExp	= fFunction_string_createRegExp(oPattern.valueOf(), arguments.length > 3 ? oFlags.valueOf() : '');
@@ -6032,6 +8121,8 @@ fStaticContext_defineSystemFunction("replace",	[[cXSString, '?'], [cXSString],  
 	return new cXSBoolean(sValue.replace(rRegExp, oReplacement.valueOf()));
 });
 
+// fn:tokenize($input as xs:string?, $pattern as xs:string) as xs:string*
+// fn:tokenize($input as xs:string?, $pattern as xs:string, $flags as xs:string) as xs:string*
 fStaticContext_defineSystemFunction("tokenize",	[[cXSString, '?'], [cXSString], [cXSString, '', true]],	function(oValue, oPattern, oFlags) {
 	var sValue	= oValue == null ? '' : oValue.valueOf(),
 		rRegExp	= fFunction_string_createRegExp(oPattern.valueOf(), arguments.length > 2 ? oFlags.valueOf() : '');
@@ -6043,16 +8134,35 @@ fStaticContext_defineSystemFunction("tokenize",	[[cXSString, '?'], [cXSString], 
 	return oSequence;
 });
 
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
+/*
+	4 The Trace Function
+		trace
+*/
 
-
+// fn:trace($value as item()*, $label as xs:string) as item()*
 fStaticContext_defineSystemFunction("trace",		[[cXTItem, '*'], [cXSString]],	function(oSequence1, oLabel) {
 	var oConsole	= window.console;
 	if (oConsole && oConsole.log)
 		oConsole.log(oLabel.valueOf(), oSequence1);
 	return oSequence1;
 });
-
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
 
 var oCodepointStringCollator	= new cStringCollator;
 
@@ -6063,33 +8173,6 @@ oCodepointStringCollator.equals	= function(sValue1, sValue2) {
 oCodepointStringCollator.compare	= function(sValue1, sValue2) {
 	return sValue1 == sValue2 ? 0 : sValue1 > sValue2 ? 1 :-1;
 };
-
-
-var cAttr	= function() {
-
-};
-
-cAttr.prototype.nodeType		= 2;
-cAttr.prototype.nodeName		=
-cAttr.prototype.nodeValue		=
-cAttr.prototype.ownerDocument	=
-cAttr.prototype.localName		=
-cAttr.prototype.namespaceURI	=
-cAttr.prototype.prefix			=
-cAttr.prototype.attributes		=
-cAttr.prototype.childNodes		=
-cAttr.prototype.firstChild		=
-cAttr.prototype.lastChild		=
-cAttr.prototype.previousSibling	=
-cAttr.prototype.nextSibling		=
-cAttr.prototype.parentNode		=
-
-cAttr.prototype.name			=
-cAttr.prototype.specified		=
-cAttr.prototype.value			=
-cAttr.prototype.ownerElement	= null;
-
-
 function cLXDOMAdapter() {
 
 };
@@ -6219,24 +8302,6 @@ cLXDOMAdapter.prototype.getElementsByTagNameNS	= function(oNode, sNameSpaceURI, 
 	return aElements;
 };
 
-
-var oL2DOMAdapter	= new cLXDOMAdapter;
-
-
-
-var oL2HTMLDOMAdapter	= new cLXDOMAdapter;
-
-oL2HTMLDOMAdapter.getProperty	= function(oNode, sName) {
-	if (sName == "localName") {
-		if (oNode.nodeType == 1)
-			return oNode.localName.toLowerCase();
-	}
-	if (sName == "namespaceURI")
-		return oNode.nodeType == 1 ? "http://www.w3.org/1999/xhtml" : null;
-		return cLXDOMAdapter.prototype.getProperty.call(this, oNode, sName);
-};
-
-
 var oMSHTMLDOMAdapter	= new cLXDOMAdapter;
 
 oMSHTMLDOMAdapter.getProperty	= function(oNode, sName) {
@@ -6315,66 +8380,87 @@ oMSXMLDOMAdapter.getElementById	= function(oDocument, sId) {
 	return oDocument.nodeFromID(sId);
 };
 
+function cEvaluator() {
 
-
-
-var cQuery		= window.jQuery,
-	oDocument	= window.document,
-		bOldMS	= !!oDocument.namespaces && !oDocument.createElementNS,
-		bOldW3	= !bOldMS && oDocument.documentElement.namespaceURI != "http://www.w3.org/1999/xhtml";
-
-var oHTMLStaticContext	= new cStaticContext,
-	oXMLStaticContext	= new cStaticContext;
-
-oHTMLStaticContext.baseURI	= oDocument.location.href;
-oHTMLStaticContext.defaultFunctionNamespace	= "http://www.w3.org/2005/xpath-functions";
-oHTMLStaticContext.defaultElementNamespace	= "http://www.w3.org/1999/xhtml";
-
-oXMLStaticContext.defaultFunctionNamespace	= oHTMLStaticContext.defaultFunctionNamespace;
-
-function fXPath_evaluate(oQuery, sExpression, fNSResolver) {
-		if (typeof sExpression == "undefined" || sExpression === null)
-		sExpression	= '';
-
-		var oNode	= oQuery[0];
-	if (typeof oNode == "undefined")
-		oNode	= null;
-
-		var oStaticContext	= oNode && (oNode.nodeType == 9 ? oNode : oNode.ownerDocument).createElement("div").tagName == "DIV" ? oHTMLStaticContext : oXMLStaticContext;
-
-		oStaticContext.namespaceResolver	= fNSResolver;
-
-		var oExpression	= new cExpression(cString(sExpression), oStaticContext);
-
-		oStaticContext.namespaceResolver	= null;
-
-		var aSequence,
-		oSequence	= new cQuery,
-		oAdapter	= oL2DOMAdapter;
-
-		if (bOldMS)
-		oAdapter	= oStaticContext == oHTMLStaticContext ? oMSHTMLDOMAdapter : oMSXMLDOMAdapter;
-	else
-	if (bOldW3 && oStaticContext == oHTMLStaticContext)
-		oAdapter	= oL2HTMLDOMAdapter;
-
-		aSequence	= oExpression.evaluate(new cDynamicContext(oStaticContext, oNode, null, oAdapter));
-	for (var nIndex = 0, nLength = aSequence.length, oItem; nIndex < nLength; nIndex++)
-		oSequence.push(oAdapter.isNode(oItem = aSequence[nIndex]) ? oItem : cStaticContext.xs2js(oItem));
-
-	return oSequence;
 };
 
-var oObject	= {};
-oObject.xpath	= function(oQuery, sExpression, fNSResolver) {
-	return fXPath_evaluate(oQuery instanceof cQuery ? oQuery : new cQuery(oQuery), sExpression, fNSResolver);
-};
-cQuery.extend(cQuery, oObject);
+cEvaluator.prototype.defaultOL2DOMAdapter		= new cLXDOMAdapter;
+cEvaluator.prototype.defaultOL2HTMLDOMAdapter	= new cLXDOMAdapter;
 
-oObject	= {};
-oObject.xpath	= function(sExpression, fNSResolver) {
-	return fXPath_evaluate(this, sExpression, fNSResolver);
-};
-cQuery.extend(cQuery.prototype, oObject);
+cEvaluator.prototype.defaultHTMLStaticContext	= new cStaticContext;
+cEvaluator.prototype.defaultHTMLStaticContext.baseURI	= window.document.location.href;
+cEvaluator.prototype.defaultHTMLStaticContext.defaultFunctionNamespace	= "http://www.w3.org/2005/xpath-functions";
+cEvaluator.prototype.defaultHTMLStaticContext.defaultElementNamespace	= "http://www.w3.org/1999/xhtml";
 
-})();
+cEvaluator.prototype.defaultXMLStaticContext	= new cStaticContext;
+cEvaluator.prototype.defaultXMLStaticContext.defaultFunctionNamespace	= "http://www.w3.org/2005/xpath-functions";
+
+cEvaluator.prototype.bOldMS		= !!window.document.namespaces && !window.document.createElementNS;
+cEvaluator.prototype.bOldW3		= !cEvaluator.prototype.bOldMS && window.document.documentElement.namespaceURI != "http://www.w3.org/1999/xhtml";
+
+cEvaluator.prototype.defaultDOMAdapter		= new cDOMAdapter;
+
+cEvaluator.prototype.compile	= function(sExpression, oStaticContext) {
+    return new cExpression(sExpression, oStaticContext);
+};
+
+cEvaluator.prototype.evaluate	= function(oQuery, sExpression, fNSResolver) {
+	if (! (oQuery instanceof window.jQuery))
+        oQuery = new window.jQuery(oQuery)
+
+    if (typeof sExpression == "undefined" || sExpression === null)
+        sExpression	= '';
+
+    var oNode	= oQuery[0];
+    if (typeof oNode == "undefined")
+        oNode	= null;
+
+    var oStaticContext	= oNode && (oNode.nodeType == 9 ? oNode : oNode.ownerDocument).createElement("div").tagName == "DIV" ? this.defaultHTMLStaticContext : this.defaultXMLStaticContext;
+
+    oStaticContext.namespaceResolver	= fNSResolver;
+
+    var oExpression	= new cExpression(cString(sExpression), oStaticContext);
+
+    oStaticContext.namespaceResolver	= null;
+
+    var aSequence,
+        oSequence	= new window.jQuery,
+        oAdapter	= this.defaultOL2DOMAdapter;
+
+    if (this.bOldMS)
+        oAdapter	= oStaticContext == this.defaultHTMLStaticContext ? oMSHTMLDOMAdapter : oMSXMLDOMAdapter;
+    else
+    if (this.bOldW3 && oStaticContext == this.defaultHTMLStaticContext)
+        oAdapter	= this.defaultOL2HTMLDOMAdapter;
+
+    aSequence	= oExpression.evaluate(new cDynamicContext(oStaticContext, oNode, null, oAdapter));
+    for (var nIndex = 0, nLength = aSequence.length, oItem; nIndex < nLength; nIndex++)
+        oSequence.push(oAdapter.isNode(oItem = aSequence[nIndex]) ? oItem : cStaticContext.xs2js(oItem));
+
+    return oSequence;
+};
+
+/*
+ * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ *
+ * Copyright (c) 2012 Sergey Ilinsky
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ *
+ */
+
+var oXPathEvaluator	= new cEvaluator,
+    oXPathClasses	= oXPathEvaluator.classes = {};
+
+//
+oXPathClasses.Exception		= cException;
+oXPathClasses.Expression	= cExpression;
+oXPathClasses.DOMAdapter	= cDOMAdapter;
+oXPathClasses.StaticContext	= cStaticContext;
+oXPathClasses.DynamicContext= cDynamicContext;
+oXPathClasses.StringCollator= cStringCollator;
+
+// Publish object
+window.xpath	= oXPathEvaluator;
+
+})()
