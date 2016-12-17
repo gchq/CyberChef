@@ -261,6 +261,32 @@ var StrUtils = {
             
         return sections.join(join_delim);
     },
+
+    /**
+     * Filter by regex operation.
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_filter: function(input, args) {
+        var delim = Utils.char_rep[args[0]];
+        var reverse = args[2];
+
+        try {
+            var regex = new RegExp(args[1]);
+        } catch (err) {
+            return "Invalid regex. Details: " + err.message;
+        }
+
+        const regex_filter = function(value) {
+            return reverse ^ regex.test(value);
+        }
+
+        return input.split(delim).filter(regex_filter).join(delim);
+    },
     
     
     /**

@@ -148,6 +148,7 @@ const Categories = [
             "Sort",
             "Unique",
             "Split",
+            "Filter",
             "Count occurrences",
             "Expand alphabet range",
             "Parse escaped string",
