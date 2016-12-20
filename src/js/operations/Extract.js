@@ -1,3 +1,5 @@
+/* globals xpath */
+
 /**
  * Identifier extraction operations.
  *
@@ -10,7 +12,7 @@
 var Extract = {
 
     /**
-     * Runs search operations across the input data using refular expressions.
+     * Runs search operations across the input data using regular expressions.
      *
      * @private
      * @param {string} input
@@ -293,5 +295,118 @@ var Extract = {
         output += Extract.run_dates(input, []);
         return output;
     },
-    
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_DELIMITER: "\\n",
+
+    /**
+     * Extract information (from an xml document) with an XPath query
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_xpath:function(input, args) {
+        const query = args[0];
+        const delimiter = args[1];
+
+        var xml;
+        try {
+            xml = $.parseXML(input);
+        } catch (err) {
+            return "Invalid input XML.";
+        }
+
+        var result;
+        try {
+            result = xpath.evaluate(xml, query);
+        } catch (err) {
+            return "Invalid XPath. Details:\n" + err.message;
+        }
+
+        const serializer = new XMLSerializer();
+        const nodeToString = function(node) {
+            switch (node.nodeType) {
+                case Node.ELEMENT_NODE: return serializer.serializeToString(node);
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
+                case Node.DOCUMENT_NODE: return serializer.serializeToString(node);
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
+            }
+        };
+
+        return Object.values(result).slice(0, -1) // all values except last (length)
+            .map(nodeToString)
+            .join(delimiter);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    SELECTOR_INITIAL: "",
+    /**
+     * @constant
+     * @default
+     */
+    CSS_QUERY_DELIMITER: "\\n",
+
+    /**
+     * Extract information (from an hmtl document) with an css selector
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_css_query: function(input, args) {
+        const query = args[0];
+        const delimiter = args[1];
+
+        var html;
+        try {
+            html = $.parseHTML(input);
+        } catch (err) {
+            return "Invalid input HTML.";
+        }
+
+        var result;
+        try {
+            result = $(html).find(query);
+        } catch (err) {
+            return "Invalid CSS Selector. Details:\n" + err.message;
+        }
+
+        const nodeToString = function(node) {
+            switch (node.nodeType) {
+                case Node.ELEMENT_NODE: return node.outerHTML;
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
+                case Node.TEXT_NODE: return node.wholeText;
+                case Node.DOCUMENT_NODE: return node.outerHTML;
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
+            }
+        };
+
+        return Array.apply(null, Array(result.length))
+            .map(function(_, i) {
+                return result[i];
+            })
+            .map(nodeToString)
+            .join(delimiter);
+    },
+
 };

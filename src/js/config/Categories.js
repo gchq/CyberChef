@@ -189,6 +189,8 @@ const Categories = [
             "Extract file paths",
             "Extract dates",
             "Regular expression",
+            "XPath expression",
+            "CSS selector",
         ]
     },
     {
