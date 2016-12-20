@@ -1,4 +1,4 @@
-/* globals prettyPrintOne, vkbeautify */
+/* globals prettyPrintOne, vkbeautify, xpath */
 
 /**
  * Code operations.
@@ -302,6 +302,121 @@ var Code = {
                 "###preserved_token" + t + "###" +
                 str.substring(match.index + match[0].length);
         }
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_DELIMITER: "\\n",
+
+    /**
+     * XPath expression operation.
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_xpath:function(input, args) {
+        const query = args[0],
+            delimiter = args[1];
+
+        var xml;
+        try {
+            xml = $.parseXML(input);
+        } catch (err) {
+            return "Invalid input XML.";
+        }
+
+        var result;
+        try {
+            result = xpath.evaluate(xml, query);
+        } catch (err) {
+            return "Invalid XPath. Details:\n" + err.message;
+        }
+
+        const serializer = new XMLSerializer();
+        const node_to_string = function(node) {
+            switch (node.nodeType) {
+                case Node.ELEMENT_NODE: return serializer.serializeToString(node);
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
+                case Node.DOCUMENT_NODE: return serializer.serializeToString(node);
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
+            }
+        };
+
+        return Object.keys(result).map(function(key) {
+            return result[key];
+        }).slice(0, -1) // all values except last (length)
+        .map(node_to_string)
+        .join(delimiter);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    CSS_SELECTOR_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    CSS_QUERY_DELIMITER: "\\n",
+
+    /**
+     * CSS selector operation.
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_css_query: function(input, args) {
+        const query = args[0],
+            delimiter = args[1];
+
+        var html;
+        try {
+            html = $.parseHTML(input);
+        } catch (err) {
+            return "Invalid input HTML.";
+        }
+
+        var result;
+        try {
+            result = $(html).find(query);
+        } catch (err) {
+            return "Invalid CSS Selector. Details:\n" + err.message;
+        }
+
+        const node_to_string = function(node) {
+            switch (node.nodeType) {
+                case Node.ELEMENT_NODE: return node.outerHTML;
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
+                case Node.TEXT_NODE: return node.wholeText;
+                case Node.DOCUMENT_NODE: return node.outerHTML;
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
+            }
+        };
+
+        return Array.apply(null, Array(result.length))
+            .map(function(_, i) {
+                return result[i];
+            })
+            .map(node_to_string)
+            .join(delimiter);
     },
 
 };

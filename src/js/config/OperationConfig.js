@@ -1939,38 +1939,38 @@ const OperationConfig = {
         ]
     },
     "XPath expression": {
-        description: "Extract information from an xml document with an XPath query",
-        run: Extract.run_xpath,
+        description: "Extract information from an XML document with an XPath query",
+        run: Code.run_xpath,
         input_type: "string",
         output_type: "string",
         args: [
             {
                 name: "XPath",
                 type: "string",
-                value: Extract.XPATH_INITIAL
+                value: Code.XPATH_INITIAL
             },
             {
                 name: "Result delimiter",
                 type: "binary_short_string",
-                value: Extract.XPATH_DELIMITER
+                value: Code.XPATH_DELIMITER
             }
         ]
     },
     "CSS selector": {
-        description: "Extract information from an HTML document with an CSS selector",
-        run: Extract.run_css_query,
+        description: "Extract information from an HTML document with a CSS selector",
+        run: Code.run_css_query,
         input_type: "string",
         output_type: "string",
         args: [
             {
                 name: "CSS selector",
                 type: "string",
-                value: Extract.SELECTOR_INITIAL
+                value: Code.CSS_SELECTOR_INITIAL
             },
             {
                 name: "Delimiter",
                 type: "binary_short_string",
-                value: Extract.CSS_QUERY_DELIMITER
+                value: Code.CSS_QUERY_DELIMITER
             },
         ]
     },

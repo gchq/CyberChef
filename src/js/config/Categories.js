@@ -243,6 +243,8 @@ const Categories = [
             "SQL Minify",
             "CSS Beautify",
             "CSS Minify",
+            "XPath expression",
+            "CSS selector",
             "Strip HTML tags",
             "Diff",
         ]

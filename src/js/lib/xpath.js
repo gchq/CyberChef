@@ -1,11 +1,11 @@
-(function(){/*
- * XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
- *
- * Copyright (c) 2012 Sergey Ilinsky
- * Dual licensed under the MIT and GPL licenses.
- *
- *
- */
+/** @license
+========================================================================
+  XPath.js - Pure JavaScript implementation of XPath 2.0 parser and evaluator
+ 
+  Copyright (c) 2012 Sergey Ilinsky
+  Dual licensed under the MIT and GPL licenses.
+*/
+(function(){
 
 //	Javascript objects
 var cString		= window.String,
