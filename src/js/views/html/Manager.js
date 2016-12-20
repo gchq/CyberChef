@@ -125,6 +125,7 @@ Manager.prototype.initialise_event_listeners = function() {
     document.getElementById("save-to-file").addEventListener("click", this.output.save_click.bind(this.output));
     document.getElementById("switch").addEventListener("click", this.output.switch_click.bind(this.output));
     document.getElementById("undo-switch").addEventListener("click", this.output.undo_switch_click.bind(this.output));
+    document.getElementById("maximise-output").addEventListener("click", this.output.maximise_output_click.bind(this.output));
     document.getElementById("output-text").addEventListener("scroll", this.highlighter.output_scroll.bind(this.highlighter));
     document.getElementById("output-text").addEventListener("mouseup", this.highlighter.output_mouseup.bind(this.highlighter));
     document.getElementById("output-text").addEventListener("mousemove", this.highlighter.output_mousemove.bind(this.highlighter));

@@ -137,3 +137,23 @@ OutputWaiter.prototype.undo_switch_click = function() {
     this.app.set_input(this.switch_orig_data);
     document.getElementById("undo-switch").disabled = true;
 };
+
+
+/**
+ * Handler for maximise output click events.
+ * Resizes the output frame to be as large as possible, or restores it to its original size.
+ */
+OutputWaiter.prototype.maximise_output_click = function(e) {
+    var el = e.target;
+    
+    if (el.textContent.indexOf("Max") >= 0) {
+        this.app.column_splitter.collapse(0);
+        this.app.column_splitter.collapse(1);
+        this.app.io_splitter.collapse(0);
+
+        el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAlUlEQVQ4y93RwQpBQRQG4C9ba1fxBteGPIj38BTejFJKLFnwCJIiCsW1mcV0k9yx82/OzGK+OXMGOpiiLTFjFNiilQI0sQ7IJiAjLKsgGVYB2YdaVO0kwy46/BVQi9ZDNPyQWen2ub/KufS8y7shfkq9tF9U7SC+/YluKvAI9YZeFeCECXJcA3JHP2WgMXJM/ZUcBwxeM+YuSWTgMtUAAAAASUVORK5CYII='> Restore";
+    } else {
+        this.app.reset_layout();
+        el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAi0lEQVQ4y83TMQrCQBCF4S+5g4rJEdJ7KE+RQ1lrIQQCllroEULuoM0Ww3a7aXwwLAzMPzDvLcz4hnooUItT1rsoVNy+4lgLWNL7RlcCmDBij2eCfNCrUITc0dRCrhj8m5otw0O6SV8LuAV3uhrAAa8sJ2Np7KPFawhgscVLjH9bCDhjt8WNKft88w/HjCvuVqu53QAAAABJRU5ErkJggg=='> Max";
+    }
+};
