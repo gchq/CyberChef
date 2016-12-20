@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("default",
         "Lints the code base and shows stats",
-        ["jshint", "exec:stats", "exec:display_stats"]);
+        ["eslint", "exec:stats", "exec:display_stats"]);
 
     grunt.registerTask("doc", "docs");
     grunt.registerTask("lint", "eslint");
