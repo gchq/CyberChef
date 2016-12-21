@@ -207,9 +207,12 @@ HTMLApp.prototype.populate_operations_list = function() {
 HTMLApp.prototype.initialise_splitter = function() {
     this.column_splitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
-        minSize: [240, 325, 500],
+        minSize: [240, 325, 440],
         gutterSize: 4,
-        onDrag: this.manager.controls.adjust_width.bind(this.manager.controls)
+        onDrag: function() {
+            this.manager.controls.adjust_width();
+            this.manager.output.adjust_width();
+        }.bind(this)
     });
 
     this.io_splitter = Split(["#input", "#output"], {
@@ -467,6 +470,7 @@ HTMLApp.prototype.reset_layout = function() {
     this.io_splitter.setSizes([50, 50]);
 
     this.manager.controls.adjust_width();
+    this.manager.output.adjust_width();
 };
 
 
