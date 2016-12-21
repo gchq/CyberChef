@@ -475,6 +475,43 @@ var Cipher = {
         return output;
     },
 
+
+    /**
+     * @constant
+     * @default
+     */
+    SUBS_PLAINTEXT: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    /**
+     * @constant
+     * @default
+     */
+    SUBS_CIPHERTEXT: "XYZABCDEFGHIJKLMNOPQRSTUVW",
+
+    /**
+     * Substitute operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {byte_array}
+     */
+    run_substitute: function (input, args) {
+        var plaintext = Utils.str_to_byte_array(Utils.expand_alph_range(args[0]).join()),
+            ciphertext = Utils.str_to_byte_array(Utils.expand_alph_range(args[1]).join()),
+            output = [],
+            index = -1;
+
+        if (plaintext.length !== ciphertext.length) {
+            output = Utils.str_to_byte_array("Warning: Plaintext and Ciphertext lengths differ\n\n");
+        }
+
+        for (var i = 0; i < input.length; i++) {
+            index = plaintext.indexOf(input[i]);
+            output.push(index > -1 && index < ciphertext.length ? ciphertext[index] : input[i]);
+        }
+
+        return output;
+    },
+
 };
 
 

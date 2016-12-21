@@ -205,14 +205,17 @@ HTMLApp.prototype.populate_operations_list = function() {
  * Sets up the adjustable splitter to allow the user to resize areas of the page.
  */
 HTMLApp.prototype.initialise_splitter = function() {
-    Split(["#operations", "#recipe", "#IO"], {
+    this.column_splitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
-        minSize: [240, 325, 500],
+        minSize: [240, 325, 440],
         gutterSize: 4,
-        onDrag: this.manager.controls.adjust_width.bind(this.manager.controls)
+        onDrag: function() {
+            this.manager.controls.adjust_width();
+            this.manager.output.adjust_width();
+        }.bind(this)
     });
 
-    Split(["#input", "#output"], {
+    this.io_splitter = Split(["#input", "#output"], {
         direction: "vertical",
         gutterSize: 4,
     });
@@ -463,13 +466,11 @@ HTMLApp.prototype.set_recipe_config = function(recipe_config) {
  * Resets the splitter positions to default.
  */
 HTMLApp.prototype.reset_layout = function() {
-    document.getElementById("operations").style.width = "calc(20% - 2px)";
-    document.getElementById("recipe").style.width = "calc(30% - 4px)";
-    document.getElementById("IO").style.width = "calc(50% - 2px)";
-    document.getElementById("input").style.height = "calc(50% - 2px)";
-    document.getElementById("output").style.height = "calc(50% - 2px)";
+    this.column_splitter.setSizes([20, 30, 50]);
+    this.io_splitter.setSizes([50, 50]);
 
     this.manager.controls.adjust_width();
+    this.manager.output.adjust_width();
 };
 
 

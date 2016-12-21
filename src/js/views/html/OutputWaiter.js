@@ -96,6 +96,32 @@ OutputWaiter.prototype.set_output_info = function(length, lines, duration) {
 
 
 /**
+ * Adjusts the display properties of the output buttons so that they fit within the current width
+ * without wrapping or overflowing.
+ */
+OutputWaiter.prototype.adjust_width = function() {
+    var output          = document.getElementById("output"),
+        save_to_file    = document.getElementById("save-to-file"),
+        switch_io       = document.getElementById("switch"),
+        undo_switch     = document.getElementById("undo-switch"),
+        maximise_output = document.getElementById("maximise-output");
+    
+    if (output.clientWidth < 680) {
+        save_to_file.childNodes[1].nodeValue = "";
+        switch_io.childNodes[1].nodeValue = "";
+        undo_switch.childNodes[1].nodeValue = "";
+        maximise_output.childNodes[1].nodeValue = "";
+    } else {
+        save_to_file.childNodes[1].nodeValue = " Save to file";
+        switch_io.childNodes[1].nodeValue = " Move output to input";
+        undo_switch.childNodes[1].nodeValue = " Undo";
+        maximise_output.childNodes[1].nodeValue =
+            maximise_output.getAttribute("title") === "Maximise" ? " Max" : " Restore";
+    }
+};
+
+
+/**
  * Handler for save click events.
  * Saves the current output to a file, downloaded as a URL octet stream.
  */
@@ -136,4 +162,27 @@ OutputWaiter.prototype.switch_click = function() {
 OutputWaiter.prototype.undo_switch_click = function() {
     this.app.set_input(this.switch_orig_data);
     document.getElementById("undo-switch").disabled = true;
+};
+
+
+/**
+ * Handler for maximise output click events.
+ * Resizes the output frame to be as large as possible, or restores it to its original size.
+ */
+OutputWaiter.prototype.maximise_output_click = function(e) {
+    var el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
+
+    if (el.getAttribute("title") === "Maximise") {
+        this.app.column_splitter.collapse(0);
+        this.app.column_splitter.collapse(1);
+        this.app.io_splitter.collapse(0);
+
+        el.setAttribute("title", "Restore");
+        el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAlUlEQVQ4y93RwQpBQRQG4C9ba1fxBteGPIj38BTejFJKLFnwCJIiCsW1mcV0k9yx82/OzGK+OXMGOpiiLTFjFNiilQI0sQ7IJiAjLKsgGVYB2YdaVO0kwy46/BVQi9ZDNPyQWen2ub/KufS8y7shfkq9tF9U7SC+/YluKvAI9YZeFeCECXJcA3JHP2WgMXJM/ZUcBwxeM+YuSWTgMtUAAAAASUVORK5CYII='> Restore";
+        this.adjust_width();
+    } else {
+        el.setAttribute("title", "Maximise");
+        el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAi0lEQVQ4y83TMQrCQBCF4S+5g4rJEdJ7KE+RQ1lrIQQCllroEULuoM0Ww3a7aXwwLAzMPzDvLcz4hnooUItT1rsoVNy+4lgLWNL7RlcCmDBij2eCfNCrUITc0dRCrhj8m5otw0O6SV8LuAV3uhrAAa8sJ2Np7KPFawhgscVLjH9bCDhjt8WNKft88w/HjCvuVqu53QAAAABJRU5ErkJggg=='> Max";
+        this.app.reset_layout();
+    }
 };

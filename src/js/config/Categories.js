@@ -82,6 +82,7 @@ const Categories = [
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
         ]
@@ -190,6 +191,8 @@ const Categories = [
             "Extract file paths",
             "Extract dates",
             "Regular expression",
+            "XPath expression",
+            "CSS selector",
         ]
     },
     {
@@ -242,6 +245,8 @@ const Categories = [
             "SQL Minify",
             "CSS Beautify",
             "CSS Minify",
+            "XPath expression",
+            "CSS selector",
             "Strip HTML tags",
             "Diff",
         ]

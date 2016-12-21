@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("default",
         "Lints the code base and shows stats",
-        ["jshint", "exec:stats", "exec:display_stats"]);
+        ["eslint", "exec:stats", "exec:display_stats"]);
 
     grunt.registerTask("doc", "docs");
     grunt.registerTask("lint", "eslint");
@@ -130,7 +130,8 @@ module.exports = function(grunt) {
         "src/js/lib/vkbeautify.js",
         "src/js/lib/Sortable.js",
         "src/js/lib/bootstrap-colorpicker.js",
-
+        "src/js/lib/xpath.js",
+        
         // Custom libraries
         "src/js/lib/canvas_components.js",
 

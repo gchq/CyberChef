@@ -10,7 +10,7 @@
 var Extract = {
 
     /**
-     * Runs search operations across the input data using refular expressions.
+     * Runs search operations across the input data using regular expressions.
      *
      * @private
      * @param {string} input
@@ -293,5 +293,5 @@ var Extract = {
         output += Extract.run_dates(input, []);
         return output;
     },
-    
+
 };
