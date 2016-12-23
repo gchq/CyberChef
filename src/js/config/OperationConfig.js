@@ -1764,6 +1764,29 @@ const OperationConfig = {
             }
         ]
     },
+    "Filter": {
+        description: "Filter the string with an regular expression",
+        run: StrUtils.run_filter,
+        input_type: "string",
+        output_type: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: StrUtils.DELIMITER_OPTIONS
+            },
+            {
+                name: "Regex",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Invert condition",
+                type: "boolean",
+                value: SeqUtils.SORT_REVERSE
+            },
+        ]
+    },
     "Strings": {
         description: "Extracts all strings from the input.",
         run: Extract.run_strings,
