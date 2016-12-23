@@ -1765,8 +1765,9 @@ const OperationConfig = {
         ]
     },
     "Filter": {
-        description: "Filter the string with an regular expression",
+        description: "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.",
         run: StrUtils.run_filter,
+        manual_bake: true,
         input_type: "string",
         output_type: "string",
         args: [
