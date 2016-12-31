@@ -45,7 +45,7 @@
  * @constant
  * @type {Object.<string, OpConf>}
  */
-const OperationConfig = {
+var OperationConfig = {
     "Fork": {
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
         run: FlowControl.run_fork,

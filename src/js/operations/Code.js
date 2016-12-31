@@ -326,7 +326,7 @@ var Code = {
      * @returns {string}
      */
     run_xpath:function(input, args) {
-        const query = args[0],
+        var query = args[0],
             delimiter = args[1];
 
         var xml;
@@ -343,8 +343,8 @@ var Code = {
             return "Invalid XPath. Details:\n" + err.message;
         }
 
-        const serializer = new XMLSerializer();
-        const node_to_string = function(node) {
+        var serializer = new XMLSerializer();
+        var node_to_string = function(node) {
             switch (node.nodeType) {
                 case Node.ELEMENT_NODE: return serializer.serializeToString(node);
                 case Node.ATTRIBUTE_NODE: return node.value;
@@ -383,7 +383,7 @@ var Code = {
      * @returns {string}
      */
     run_css_query: function(input, args) {
-        const query = args[0],
+        var query = args[0],
             delimiter = args[1];
 
         var html;
@@ -400,7 +400,7 @@ var Code = {
             return "Invalid CSS Selector. Details:\n" + err.message;
         }
 
-        const node_to_string = function(node) {
+        var node_to_string = function(node) {
             switch (node.nodeType) {
                 case Node.ELEMENT_NODE: return node.outerHTML;
                 case Node.ATTRIBUTE_NODE: return node.value;

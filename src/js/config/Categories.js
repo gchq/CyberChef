@@ -17,7 +17,7 @@
  * @constant
  * @type {CatConf[]}
  */
-const Categories = [
+var Categories = [
     {
         name: "Favourites",
         ops: []

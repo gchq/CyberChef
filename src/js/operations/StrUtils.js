@@ -281,7 +281,7 @@ var StrUtils = {
             return "Invalid regex. Details: " + err.message;
         }
 
-        const regex_filter = function(value) {
+        var regex_filter = function(value) {
             return reverse ^ regex.test(value);
         };
 

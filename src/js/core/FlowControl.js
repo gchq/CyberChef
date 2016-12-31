@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-const FlowControl = {
+var FlowControl = {
 
     /**
      * @constant
