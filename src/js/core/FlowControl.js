@@ -128,7 +128,8 @@ var FlowControl = {
             max_jumps = ings[1];
         
         if (state.num_jumps >= max_jumps) {
-            throw "Reached maximum jumps, sorry!";
+            state.progress++;
+            return state;
         }
         
         state.progress += jump_num;
@@ -155,7 +156,8 @@ var FlowControl = {
             max_jumps = ings[2];
         
         if (state.num_jumps >= max_jumps) {
-            throw "Reached maximum jumps, sorry!";
+            state.progress++;
+            return state;
         }
         
         if (regex_str !== "" && dish.get(Dish.STRING).search(regex_str) > -1) {
