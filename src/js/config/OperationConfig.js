@@ -2541,9 +2541,30 @@ var OperationConfig = {
         output_type: "string",
         args: []
     },
+    "MD2": {
+        description: "The MD2 (Message-Digest 2) algorithm is a cryptographic hash function developed by Ronald Rivest in 1989. The algorithm is optimized for 8-bit computers.<br><br>Although MD2 is no longer considered secure, even as of 2014, it remains in use in public key infrastructures as part of certificates generated with MD2 and RSA.",
+        run: Hash.run_md2,
+        input_type: "string",
+        output_type: "string",
+        args: []
+    },
+    "MD4": {
+        description: "The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms.<br><br>The security of MD4 has been severely compromised.",
+        run: Hash.run_md4,
+        input_type: "string",
+        output_type: "string",
+        args: []
+    },
     "MD5": {
         description: "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
         run: Hash.run_md5,
+        input_type: "string",
+        output_type: "string",
+        args: []
+    },
+    "SHA0": {
+        description: "SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1.",
+        run: Hash.run_sha0,
         input_type: "string",
         output_type: "string",
         args: []

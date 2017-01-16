@@ -214,7 +214,10 @@ var Categories = [
         ops: [
             "Analyse hash",
             "Generate all hashes",
+            "MD2",
+            "MD4",
             "MD5",
+            "SHA0",
             "SHA1",
             "SHA224",
             "SHA256",

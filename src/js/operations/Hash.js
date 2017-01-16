@@ -1,4 +1,4 @@
-/* globals CryptoJS, Checksum */
+/* globals CryptoApi, CryptoJS, Checksum */
 
 /**
  * Hashing operations.
@@ -10,6 +10,30 @@
  * @namespace
  */
 var Hash = {
+
+    /**
+     * MD2 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_md2: function (input, args) {
+        return Utils.to_hex_fast(CryptoApi.hash("md2", input, {}));
+    },
+
+
+    /**
+     * MD4 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_md4: function (input, args) {
+        return Utils.to_hex_fast(CryptoApi.hash("md4", input, {}));
+    },
+
     
     /**
      * MD5 operation.
@@ -21,6 +45,18 @@ var Hash = {
     run_md5: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input); // Cast to WordArray
         return CryptoJS.MD5(input).toString(CryptoJS.enc.Hex);
+    },
+
+
+    /**
+     * SHA0 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_sha0: function (input, args) {
+        return Utils.to_hex_fast(CryptoApi.hash("sha0", input, {}));
     },
     
     
@@ -164,7 +200,10 @@ var Hash = {
      */
     run_all: function (input, args) {
         var byte_array = Utils.str_to_byte_array(input),
-            output = "MD5:         " + Hash.run_md5(input, []) +
+            output = "MD2:         " + Hash.run_md2(input, []) +
+                "\nMD4:         " + Hash.run_md4(input, []) +
+                "\nMD5:         " + Hash.run_md5(input, []) +
+                "\nSHA0:        " + Hash.run_sha0(input, []) +
                 "\nSHA1:        " + Hash.run_sha1(input, []) +
                 "\nSHA2 224:    " + Hash.run_sha224(input, []) +
                 "\nSHA2 256:    " + Hash.run_sha256(input, []) +
