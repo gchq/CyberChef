@@ -293,7 +293,7 @@ ControlsWaiter.prototype.populate_load_recipes_list = function() {
  * Removes the currently selected recipe from local storage.
  */
 ControlsWaiter.prototype.load_delete_click = function() {
-    var id = document.getElementById("load-name").value,
+    var id = parseInt(document.getElementById("load-name").value, 10),
         saved_recipes = localStorage.saved_recipes ?
             JSON.parse(localStorage.saved_recipes) : [];
         
