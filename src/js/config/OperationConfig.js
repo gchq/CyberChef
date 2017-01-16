@@ -62,6 +62,11 @@ var OperationConfig = {
                 name: "Merge delimiter",
                 type: "binary_short_string",
                 value: FlowControl.MERGE_DELIM
+            },
+            {
+                name: "Ignore errors",
+                type: "boolean",
+                value: FlowControl.FORK_IGNORE_ERRORS
             }
         ]
     },

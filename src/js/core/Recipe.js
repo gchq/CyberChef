@@ -177,13 +177,12 @@ Recipe.prototype.execute = function(dish, start_from) {
             var e = typeof err == "string" ? { message: err } : err;
 
             e.progress = i;
-            e.display_str = op.name + " - ";
             if (e.fileName) {
-                e.display_str += e.name + " in " + e.fileName +
-                    " on line " + e.lineNumber +
-                    ".<br><br>Message: " + e.message;
+                e.display_str = op.name + " - " + e.name + " in " +
+                    e.fileName + " on line " + e.lineNumber +
+                    ".<br><br>Message: " + (e.display_str || e.message);
             } else {
-                e.display_str += e.message;
+                e.display_str = op.name + " - " + (e.display_str || e.message);
             }
             
             throw e;

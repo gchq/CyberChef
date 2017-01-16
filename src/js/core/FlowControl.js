@@ -19,6 +19,11 @@ var FlowControl = {
      * @default
      */
     MERGE_DELIM: "\\n",
+    /**
+     * @constant
+     * @default
+     */
+    FORK_IGNORE_ERRORS: false,
     
     /**
      * Fork operation.
@@ -30,15 +35,16 @@ var FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     run_fork: function(state) {
-        var op_list     = state.op_list,
-            input_type  = op_list[state.progress].input_type,
-            output_type = op_list[state.progress].output_type,
-            input       = state.dish.get(input_type),
-            ings        = op_list[state.progress].get_ing_values(),
-            split_delim = ings[0],
-            merge_delim = ings[1],
-            sub_op_list = [],
-            inputs      = [];
+        var op_list       = state.op_list,
+            input_type    = op_list[state.progress].input_type,
+            output_type   = op_list[state.progress].output_type,
+            input         = state.dish.get(input_type),
+            ings          = op_list[state.progress].get_ing_values(),
+            split_delim   = ings[0],
+            merge_delim   = ings[1],
+            ignore_errors = ings[2],
+            sub_op_list   = [],
+            inputs        = [];
         
         if (input)
             inputs = input.split(split_delim);
@@ -55,14 +61,21 @@ var FlowControl = {
         
         var recipe = new Recipe(),
             output = "",
-            progress;
+            progress = 0;
             
         recipe.add_operations(sub_op_list);
         
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
             var dish = new Dish(inputs[i], input_type);
-            progress = recipe.execute(dish, 0);
+            try {
+                progress = recipe.execute(dish, 0);
+            } catch(err) {
+                if (!ignore_errors) {
+                    throw err;
+                }
+                progress = err.progress + 1;
+            }
             output += dish.get(output_type) + merge_delim;
         }
         
