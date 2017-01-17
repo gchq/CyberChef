@@ -10,6 +10,26 @@
 var Checksum = {
 
     /**
+     * Fletcher-8 Checksum operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_fletcher8: function(input, args) {
+        var a = 0,
+            b = 0;
+        
+        for (var i = 0; i < input.length; i++) {
+            a = (a + input[i]) % 0xf;
+            b = (b + a) % 0xf;
+        }
+        
+        return Utils.hex(((b << 4) | a) >>> 0, 2);
+    },
+
+
+    /**
      * Fletcher-16 Checksum operation.
      *
      * @param {byte_array} input
@@ -26,6 +46,46 @@ var Checksum = {
         }
         
         return Utils.hex(((b << 8) | a) >>> 0, 4);
+    },
+
+
+    /**
+     * Fletcher-32 Checksum operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_fletcher32: function(input, args) {
+        var a = 0,
+            b = 0;
+        
+        for (var i = 0; i < input.length; i++) {
+            a = (a + input[i]) % 0xffff;
+            b = (b + a) % 0xffff;
+        }
+        
+        return Utils.hex(((b << 16) | a) >>> 0, 8);
+    },
+
+
+    /**
+     * Fletcher-64 Checksum operation.
+     *
+     * @param {byte_array} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run_fletcher64: function(input, args) {
+        var a = 0,
+            b = 0;
+        
+        for (var i = 0; i < input.length; i++) {
+            a = (a + input[i]) % 0xffffffff;
+            b = (b + a) % 0xffffffff;
+        }
+        
+        return Utils.hex(b >>> 0, 8) + Utils.hex(a >>> 0, 8);
     },
     
     

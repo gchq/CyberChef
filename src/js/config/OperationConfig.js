@@ -2642,9 +2642,30 @@ var OperationConfig = {
             },
         ]
     },
+    "Fletcher-8 Checksum": {
+        description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
+        run: Checksum.run_fletcher8,
+        input_type: "byte_array",
+        output_type: "string",
+        args: []
+    },
     "Fletcher-16 Checksum": {
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
         run: Checksum.run_fletcher16,
+        input_type: "byte_array",
+        output_type: "string",
+        args: []
+    },
+    "Fletcher-32 Checksum": {
+        description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
+        run: Checksum.run_fletcher32,
+        input_type: "byte_array",
+        output_type: "string",
+        args: []
+    },
+    "Fletcher-64 Checksum": {
+        description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
+        run: Checksum.run_fletcher64,
         input_type: "byte_array",
         output_type: "string",
         args: []

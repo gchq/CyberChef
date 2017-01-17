@@ -215,7 +215,10 @@ var Hash = {
                 "\nSHA3 512:    " + Hash.run_sha3(input, ["512"]) +
                 "\nRIPEMD-160:  " + Hash.run_ripemd160(input, []) +
                 "\n\nChecksums:" +
+                "\nFletcher-8:  " + Checksum.run_fletcher8(byte_array, []) +
                 "\nFletcher-16: " + Checksum.run_fletcher16(byte_array, []) +
+                "\nFletcher-32: " + Checksum.run_fletcher32(byte_array, []) +
+                "\nFletcher-64: " + Checksum.run_fletcher64(byte_array, []) +
                 "\nAdler-32:    " + Checksum.run_adler32(byte_array, []) +
                 "\nCRC-32:      " + Checksum.run_crc32(byte_array, []);
                 
