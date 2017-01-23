@@ -2952,5 +2952,19 @@ var OperationConfig = {
                 value: Cipher.SUBS_CIPHERTEXT
             }
         ]
-    }
+    },
+    "Escape String": {
+        description: "Escapes a string so that it can be embedded in another. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
+        run: String_.run_escape,
+        input_type: "string",
+        output_type: "string",
+        args: []
+    },
+    "Unescape String": {
+        description: "Unescapes a string that was embedded inside another so that it can be used in it's own right. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
+        run: String_.run_unescape,
+        input_type: "string",
+        output_type: "string",
+        args: []
+    },
 };

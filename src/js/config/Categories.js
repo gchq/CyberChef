@@ -167,6 +167,8 @@ var Categories = [
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
+            "Escape String",
+            "Unescape String",
         ]
     },
     {
