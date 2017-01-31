@@ -42,15 +42,15 @@ var MAC = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_format: function(input, args) {
+    runFormat: function(input, args) {
         if (!input) return "";
     
-        var output_case = args[0],
-            no_delim = args[1],
-            dash_delim = args[2],
-            colon_delim = args[3],
-            cisco_style = args[4],
-            output_list = [],
+        var outputCase = args[0],
+            noDelim = args[1],
+            dashDelim = args[2],
+            colonDelim = args[3],
+            ciscoStyle = args[4],
+            outputList = [],
             macs = input.toLowerCase().split(/[,\s\r\n]+/);
 
         macs.forEach(function(mac) {
@@ -59,30 +59,30 @@ var MAC = {
                 macColon = cleanMac.replace(/(.{2}(?=.))/g, "$1:"),
                 macCisco = cleanMac.replace(/(.{4}(?=.))/g, "$1.");
                 
-            if (output_case === "Lower only") {
-                if (no_delim) output_list.push(cleanMac);
-                if (dash_delim) output_list.push(macHyphen);
-                if (colon_delim) output_list.push(macColon);
-                if (cisco_style) output_list.push(macCisco);
-            } else if (output_case === "Upper only") {
-                if (no_delim) output_list.push(cleanMac.toUpperCase());
-                if (dash_delim) output_list.push(macHyphen.toUpperCase());
-                if (colon_delim) output_list.push(macColon.toUpperCase());
-                if (cisco_style) output_list.push(macCisco.toUpperCase());
+            if (outputCase === "Lower only") {
+                if (noDelim) outputList.push(cleanMac);
+                if (dashDelim) outputList.push(macHyphen);
+                if (colonDelim) outputList.push(macColon);
+                if (ciscoStyle) outputList.push(macCisco);
+            } else if (outputCase === "Upper only") {
+                if (noDelim) outputList.push(cleanMac.toUpperCase());
+                if (dashDelim) outputList.push(macHyphen.toUpperCase());
+                if (colonDelim) outputList.push(macColon.toUpperCase());
+                if (ciscoStyle) outputList.push(macCisco.toUpperCase());
             } else {
-                if (no_delim) output_list.push(cleanMac, cleanMac.toUpperCase());
-                if (dash_delim) output_list.push(macHyphen, macHyphen.toUpperCase());
-                if (colon_delim) output_list.push(macColon, macColon.toUpperCase());
-                if (cisco_style) output_list.push(macCisco, macCisco.toUpperCase());
+                if (noDelim) outputList.push(cleanMac, cleanMac.toUpperCase());
+                if (dashDelim) outputList.push(macHyphen, macHyphen.toUpperCase());
+                if (colonDelim) outputList.push(macColon, macColon.toUpperCase());
+                if (ciscoStyle) outputList.push(macCisco, macCisco.toUpperCase());
             }
             
-            output_list.push(
+            outputList.push(
                 "" // Empty line to delimit groups
             );
         });
 
         // Return the data as a string
-        return output_list.join("\n");
+        return outputList.join("\n");
     },
 
 };

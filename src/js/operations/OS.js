@@ -16,7 +16,7 @@ var OS = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_parse_unix_perms: function(input, args) {
+    runParseUnixPerms: function(input, args) {
         var perms = {
                 d : false,  // directory
                 sl : false, // symbolic link
@@ -158,12 +158,12 @@ var OS = {
             return "Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.";
         }
 
-        output += "Textual representation: " + OS._perms_to_str(perms);
-        output += "\nOctal representation:   " + OS._perms_to_octal(perms);
+        output += "Textual representation: " + OS._permsToStr(perms);
+        output += "\nOctal representation:   " + OS._permsToOctal(perms);
 
         // File type
         if (textual) {
-            output += "\nFile type: " + OS._ft_from_perms(perms);
+            output += "\nFile type: " + OS._ftFromPerms(perms);
         }
 
         // setuid, setgid
@@ -201,7 +201,7 @@ var OS = {
      * @param {Object} perms
      * @returns {string}
      */
-    _perms_to_str: function(perms) {
+    _permsToStr: function(perms) {
         var str = "",
             type = "-";
 
@@ -262,7 +262,7 @@ var OS = {
      * @param {Object} perms
      * @returns {string}
      */
-    _perms_to_octal: function(perms) {
+    _permsToOctal: function(perms) {
         var d = 0,
             u = 0,
             g = 0,
@@ -295,7 +295,7 @@ var OS = {
      * @param {Object} perms
      * @returns {string}
      */
-    _ft_from_perms: function(perms) {
+    _ftFromPerms: function(perms) {
         if (perms.d) return "Directory";
         if (perms.sl) return "Symbolic link";
         if (perms.np) return "Named pipe";

@@ -12,11 +12,11 @@ var Checksum = {
     /**
      * Fletcher-8 Checksum operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_fletcher8: function(input, args) {
+    runFletcher8: function(input, args) {
         var a = 0,
             b = 0;
         
@@ -32,11 +32,11 @@ var Checksum = {
     /**
      * Fletcher-16 Checksum operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_fletcher16: function(input, args) {
+    runFletcher16: function(input, args) {
         var a = 0,
             b = 0;
         
@@ -52,11 +52,11 @@ var Checksum = {
     /**
      * Fletcher-32 Checksum operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_fletcher32: function(input, args) {
+    runFletcher32: function(input, args) {
         var a = 0,
             b = 0;
         
@@ -72,11 +72,11 @@ var Checksum = {
     /**
      * Fletcher-64 Checksum operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_fletcher64: function(input, args) {
+    runFletcher64: function(input, args) {
         var a = 0,
             b = 0;
         
@@ -92,11 +92,11 @@ var Checksum = {
     /**
      * Adler-32 Checksum operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_adler32: function(input, args) {
+    runAdler32: function(input, args) {
         var MOD_ADLER = 65521,
             a = 1,
             b = 0;
@@ -116,16 +116,16 @@ var Checksum = {
     /**
      * CRC-32 Checksum operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_crc32: function(input, args) {
-        var crc_table = window.crc_table || (window.crc_table = Checksum._gen_crc_table()),
+    runCRC32: function(input, args) {
+        var crcTable = window.crcTable || (window.crcTable = Checksum._genCRCTable()),
             crc = 0 ^ (-1);
         
         for (var i = 0; i < input.length; i++) {
-            crc = (crc >>> 8) ^ crc_table[(crc ^ input[i]) & 0xff];
+            crc = (crc >>> 8) ^ crcTable[(crc ^ input[i]) & 0xff];
         }
         
         return Utils.hex((crc ^ (-1)) >>> 0);
@@ -136,20 +136,20 @@ var Checksum = {
      * TCP/IP Checksum operation.
      *
      * @author GCHQ Contributor [1]
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      *
      * @example
      * // returns '3f2c'
-     * Checksum.run_tcp_ip([0x45,0x00,0x00,0x87,0xa3,0x1b,0x40,0x00,0x40,0x06,
+     * Checksum.runTcpIp([0x45,0x00,0x00,0x87,0xa3,0x1b,0x40,0x00,0x40,0x06,
      *                      0x00,0x00,0xac,0x11,0x00,0x04,0xac,0x11,0x00,0x03])
      *
      * // returns 'a249'
-     * Checksum.run_tcp_ip([0x45,0x00,0x01,0x11,0x3f,0x74,0x40,0x00,0x40,0x06,
+     * Checksum.runTcpIp([0x45,0x00,0x01,0x11,0x3f,0x74,0x40,0x00,0x40,0x06,
      *                      0x00,0x00,0xac,0x11,0x00,0x03,0xac,0x11,0x00,0x04])
      */
-    run_tcp_ip: function(input, args) {
+    runTCPIP: function(input, args) {
         var csum = 0;
         
         for (var i = 0; i < input.length; i++) {
@@ -172,19 +172,19 @@ var Checksum = {
      * @private
      * @returns {array}
      */
-    _gen_crc_table: function() {
+    _genCRCTable: function() {
         var c,
-            crc_table = [];
+            crcTable = [];
         
         for (var n = 0; n < 256; n++) {
             c = n;
             for (var k = 0; k < 8; k++) {
                 c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
             }
-            crc_table[n] = c;
+            crcTable[n] = c;
         }
         
-        return crc_table;
+        return crcTable;
     },
 
 };

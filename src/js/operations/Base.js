@@ -22,7 +22,7 @@ var Base = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to: function(input, args) {
+    runTo: function(input, args) {
         if (!input) {
             throw ("Error: Input must be a number");
         }
@@ -41,7 +41,7 @@ var Base = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_from: function(input, args) {
+    runFrom: function(input, args) {
         var radix = args[0] || Base.DEFAULT_RADIX;
         if (radix < 2 || radix > 36) {
             throw "Error: Radix argument must be between 2 and 36";

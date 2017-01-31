@@ -58,6 +58,9 @@
         "quotes": ["error", "double", {
             "avoidEscape": true
         }],
+        "camelcase": ["error", {
+            "properties": "always"
+        }],
         "semi": ["error", "always"],
         "unicode-bom": "error"
     },

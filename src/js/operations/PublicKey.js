@@ -24,15 +24,15 @@ var PublicKey = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_parse_x509: function (input, args) {
+    runParseX509: function (input, args) {
         var cert = new X509(),
-            input_format = args[0];
+            inputFormat = args[0];
             
         if (!input.length) {
             return "No input";
         }
         
-        switch (input_format) {
+        switch (inputFormat) {
             case "DER Hex":
                 input = input.replace(/\s/g, "");
                 cert.hex = input;
@@ -43,11 +43,11 @@ var PublicKey = {
                 cert.pem = input;
                 break;
             case "Base64":
-                cert.hex = Utils.to_hex(Utils.from_base64(input, null, "byte_array"), "");
+                cert.hex = Utils.toHex(Utils.fromBase64(input, null, "byteArray"), "");
                 cert.pem = KJUR.asn1.ASN1Util.getPEMStringFromHex(cert.hex, "CERTIFICATE");
                 break;
             case "Raw":
-                cert.hex = Utils.to_hex(Utils.str_to_byte_array(input), "");
+                cert.hex = Utils.toHex(Utils.strToByteArray(input), "");
                 cert.pem = KJUR.asn1.ASN1Util.getPEMStringFromHex(cert.hex, "CERTIFICATE");
                 break;
             default:
@@ -58,108 +58,108 @@ var PublicKey = {
             sn = cert.getSerialNumberHex(),
             algorithm = KJUR.asn1.x509.OID.oid2name(KJUR.asn1.ASN1Util.oidHexToInt(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 2, 0]))),
             issuer = cert.getIssuerString(),
-            not_before = cert.getNotBefore(),
-            not_after = cert.getNotAfter(),
+            notBefore = cert.getNotBefore(),
+            notAfter = cert.getNotAfter(),
             subject = cert.getSubjectString(),
-            pk_algorithm = KJUR.asn1.x509.OID.oid2name(KJUR.asn1.ASN1Util.oidHexToInt(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 6, 0, 0]))),
+            pkAlgorithm = KJUR.asn1.x509.OID.oid2name(KJUR.asn1.ASN1Util.oidHexToInt(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 6, 0, 0]))),
             pk = X509.getPublicKeyFromCertPEM(cert.pem),
-            pk_fields = [],
-            pk_str = "",
-            cert_sig_alg = KJUR.asn1.x509.OID.oid2name(KJUR.asn1.ASN1Util.oidHexToInt(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [1, 0]))),
-            cert_sig = ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [2]).substr(2),
-            sig_str = "",
+            pkFields = [],
+            pkStr = "",
+            certSigAlg = KJUR.asn1.x509.OID.oid2name(KJUR.asn1.ASN1Util.oidHexToInt(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [1, 0]))),
+            certSig = ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [2]).substr(2),
+            sigStr = "",
             extensions = ASN1HEX.dump(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 7]));
         
         // Public Key fields
         if (pk.type === "EC") { // ECDSA
-            pk_fields.push({
+            pkFields.push({
                 key: "Curve Name",
                 value: pk.curveName
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "Length",
                 value: (((new BigInteger(pk.pubKeyHex, 16)).bitLength()-3) /2) + " bits"
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "pub",
-                value: PublicKey._format_byte_str(pk.pubKeyHex, 16, 18)
+                value: PublicKey._formatByteStr(pk.pubKeyHex, 16, 18)
             });
         } else if (pk.type === "DSA") { // DSA
-            pk_fields.push({
+            pkFields.push({
                 key: "pub",
-                value: PublicKey._format_byte_str(pk.y.toString(16), 16, 18)
+                value: PublicKey._formatByteStr(pk.y.toString(16), 16, 18)
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "P",
-                value: PublicKey._format_byte_str(pk.p.toString(16), 16, 18)
+                value: PublicKey._formatByteStr(pk.p.toString(16), 16, 18)
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "Q",
-                value: PublicKey._format_byte_str(pk.q.toString(16), 16, 18)
+                value: PublicKey._formatByteStr(pk.q.toString(16), 16, 18)
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "G",
-                value: PublicKey._format_byte_str(pk.g.toString(16), 16, 18)
+                value: PublicKey._formatByteStr(pk.g.toString(16), 16, 18)
             });
         } else if (pk.e) { // RSA
-            pk_fields.push({
+            pkFields.push({
                 key: "Length",
                 value: pk.n.bitLength() + " bits"
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "Modulus",
-                value: PublicKey._format_byte_str(pk.n.toString(16), 16, 18)
+                value: PublicKey._formatByteStr(pk.n.toString(16), 16, 18)
             });
-            pk_fields.push({
+            pkFields.push({
                 key: "Exponent",
                 value: pk.e + " (0x" + pk.e.toString(16) + ")"
             });
         } else {
-            pk_fields.push({
+            pkFields.push({
                 key: "Error",
                 value: "Unknown Public Key type"
             });
         }
         
         // Signature fields
-        if (ASN1HEX.dump(cert_sig).indexOf("SEQUENCE") === 0) { // DSA or ECDSA
-            sig_str = "  r:              " + PublicKey._format_byte_str(ASN1HEX.getDecendantHexVByNthList(cert_sig, 0, [0]), 16, 18) + "\n" +
-                "  s:              " + PublicKey._format_byte_str(ASN1HEX.getDecendantHexVByNthList(cert_sig, 0, [1]), 16, 18) + "\n";
+        if (ASN1HEX.dump(certSig).indexOf("SEQUENCE") === 0) { // DSA or ECDSA
+            sigStr = "  r:              " + PublicKey._formatByteStr(ASN1HEX.getDecendantHexVByNthList(certSig, 0, [0]), 16, 18) + "\n" +
+                "  s:              " + PublicKey._formatByteStr(ASN1HEX.getDecendantHexVByNthList(certSig, 0, [1]), 16, 18) + "\n";
         } else { // RSA
-            sig_str = "  Signature:      " + PublicKey._format_byte_str(cert_sig, 16, 18) + "\n";
+            sigStr = "  Signature:      " + PublicKey._formatByteStr(certSig, 16, 18) + "\n";
         }
         
         // Format Public Key fields
-        for (var i = 0; i < pk_fields.length; i++) {
-            pk_str += "  " + pk_fields[i].key + ":" +
-                Utils.pad_left(
-                    pk_fields[i].value + "\n",
-                    18 - (pk_fields[i].key.length + 3) + pk_fields[i].value.length + 1,
+        for (var i = 0; i < pkFields.length; i++) {
+            pkStr += "  " + pkFields[i].key + ":" +
+                Utils.padLeft(
+                    pkFields[i].value + "\n",
+                    18 - (pkFields[i].key.length + 3) + pkFields[i].value.length + 1,
                     " "
                 );
         }
         
-        var issuer_str = PublicKey._format_dn_str(issuer, 2),
-            nb_date = PublicKey._format_date(not_before),
-            na_date = PublicKey._format_date(not_after),
-            subject_str = PublicKey._format_dn_str(subject, 2);
+        var issuerStr = PublicKey._formatDnStr(issuer, 2),
+            nbDate = PublicKey._formatDate(notBefore),
+            naDate = PublicKey._formatDate(notAfter),
+            subjectStr = PublicKey._formatDnStr(subject, 2);
         
         var output = "Version:          " + (parseInt(version, 16) + 1) + " (0x" + version + ")\n" +
             "Serial number:    " + new BigInteger(sn, 16).toString() + " (0x" + sn + ")\n" +
             "Algorithm ID:     " + algorithm + "\n" +
             "Validity\n" +
-            "  Not Before:     " + nb_date + " (dd-mm-yy hh:mm:ss) (" + not_before + ")\n" +
-            "  Not After:      " + na_date + " (dd-mm-yy hh:mm:ss) (" + not_after + ")\n" +
+            "  Not Before:     " + nbDate + " (dd-mm-yy hh:mm:ss) (" + notBefore + ")\n" +
+            "  Not After:      " + naDate + " (dd-mm-yy hh:mm:ss) (" + notAfter + ")\n" +
             "Issuer\n" +
-            issuer_str +
+            issuerStr +
             "Subject\n" +
-            subject_str +
+            subjectStr +
             "Public Key\n" +
-            "  Algorithm:      " + pk_algorithm + "\n" +
-            pk_str +
+            "  Algorithm:      " + pkAlgorithm + "\n" +
+            pkStr +
             "Certificate Signature\n" +
-            "  Algorithm:      " + cert_sig_alg + "\n" +
-            sig_str +
+            "  Algorithm:      " + certSigAlg + "\n" +
+            sigStr +
             "\nExtensions (parsed ASN.1)\n" +
             extensions;
         
@@ -174,7 +174,7 @@ var PublicKey = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_pem_to_hex: function(input, args) {
+    runPemToHex: function(input, args) {
         if (input.indexOf("-----BEGIN") < 0) {
             // Add header so that the KEYUTIL function works
             input = "-----BEGIN CERTIFICATE-----" + input;
@@ -200,7 +200,7 @@ var PublicKey = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_hex_to_pem: function(input, args) {
+    runHexToPem: function(input, args) {
         return KJUR.asn1.ASN1Util.getPEMStringFromHex(input.replace(/\s/g, ""), args[0]);
     },
     
@@ -212,7 +212,7 @@ var PublicKey = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_hex_to_object_identifier: function(input, args) {
+    runHexToObjectIdentifier: function(input, args) {
         return KJUR.asn1.ASN1Util.oidHexToInt(input.replace(/\s/g, ""));
     },
     
@@ -224,7 +224,7 @@ var PublicKey = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_object_identifier_to_hex: function(input, args) {
+    runObjectIdentifierToHex: function(input, args) {
         return KJUR.asn1.ASN1Util.oidIntToHex(input);
     },
     
@@ -242,11 +242,11 @@ var PublicKey = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_parse_asn1_hex_string: function(input, args) {
-        var truncate_len = args[1],
+    runParseAsn1HexString: function(input, args) {
+        var truncateLen = args[1],
             index = args[0];
         return ASN1HEX.dump(input.replace(/\s/g, ""), {
-            "ommit_long_octet": truncate_len
+            "ommitLongOctet": truncateLen
         }, index);
     },
     
@@ -255,14 +255,14 @@ var PublicKey = {
      * Formats Distinguished Name (DN) strings.
      *
      * @private
-     * @param {string} dn_str
+     * @param {string} dnStr
      * @param {number} indent
      * @returns {string}
      */
-    _format_dn_str: function(dn_str, indent) {
+    _formatDnStr: function(dnStr, indent) {
         var output = "",
-            fields = dn_str.split(",/|"),
-            max_key_len = 0,
+            fields = dnStr.split(",/|"),
+            maxKeyLen = 0,
             key,
             value,
             str;
@@ -272,7 +272,7 @@ var PublicKey = {
             
             key = fields[i].split("=")[0];
                 
-            max_key_len = key.length > max_key_len ? key.length : max_key_len;
+            maxKeyLen = key.length > maxKeyLen ? key.length : maxKeyLen;
         }
         
         for (i = 0; i < fields.length; i++) {
@@ -280,9 +280,9 @@ var PublicKey = {
             
             key = fields[i].split("=")[0];
             value = fields[i].split("=")[1];
-            str = Utils.pad_right(key, max_key_len) + " = " + value + "\n";
+            str = Utils.padRight(key, maxKeyLen) + " = " + value + "\n";
             
-            output += Utils.pad_left(str, indent + str.length, " ");
+            output += Utils.padLeft(str, indent + str.length, " ");
         }
         
         return output;
@@ -293,22 +293,22 @@ var PublicKey = {
      * Formats byte strings by adding line breaks and delimiters.
      *
      * @private
-     * @param {string} byte_str
+     * @param {string} byteStr
      * @param {number} length - Line width
      * @param {number} indent
      * @returns {string}
      */
-    _format_byte_str: function(byte_str, length, indent) {
-        byte_str = Utils.to_hex(Utils.from_hex(byte_str), ":");
+    _formatByteStr: function(byteStr, length, indent) {
+        byteStr = Utils.toHex(Utils.fromHex(byteStr), ":");
         length = length * 3;
         var output = "";
         
-        for (var i = 0; i < byte_str.length; i += length) {
-            var str = byte_str.slice(i, i + length) + "\n";
+        for (var i = 0; i < byteStr.length; i += length) {
+            var str = byteStr.slice(i, i + length) + "\n";
             if (i === 0) {
                 output += str;
             } else {
-                output += Utils.pad_left(str, indent + str.length, " ");
+                output += Utils.padLeft(str, indent + str.length, " ");
             }
         }
         
@@ -320,16 +320,16 @@ var PublicKey = {
      * Formats dates.
      *
      * @private
-     * @param {string} date_str
+     * @param {string} dateStr
      * @returns {string}
      */
-    _format_date: function(date_str) {
-        return date_str[4] + date_str[5] + "/" +
-            date_str[2] + date_str[3] + "/" +
-            date_str[0] + date_str[1] + " " +
-            date_str[6] + date_str[7] + ":" +
-            date_str[8] + date_str[9] + ":" +
-            date_str[10] + date_str[11];
+    _formatDate: function(dateStr) {
+        return dateStr[4] + dateStr[5] + "/" +
+            dateStr[2] + dateStr[3] + "/" +
+            dateStr[0] + dateStr[1] + " " +
+            dateStr[6] + dateStr[7] + ":" +
+            dateStr[8] + dateStr[9] + ":" +
+            dateStr[10] + dateStr[11];
     },
     
 };
@@ -388,9 +388,9 @@ X509.DN_ATTRHEX = {
     // "06032a864886f70d010104" : "md5withRSAEncryption",
     // "06032a864886f70d010105" : "SHA-1WithRSAEncryption",
     // "06032a8648ce380403" : "id-dsa-with-sha-1",
-    // "06032b06010505070302" : "id_kp_clientAuth",
-    // "06032b06010505070304" : "id_kp_securityemail",
-    "06032b06010505070201" : "id_certificatePolicies",
+    // "06032b06010505070302" : "idKpClientAuth",
+    // "06032b06010505070304" : "idKpSecurityemail",
+    "06032b06010505070201" : "idCertificatePolicies",
     "06036086480186f8420101" : "netscape-cert-type",
     "06036086480186f8420102" : "netscape-base-url",
     "06036086480186f8420103" : "netscape-revocation-url",
@@ -867,25 +867,25 @@ X509.DN_ATTRHEX = {
     "06036086480186f8450107010101" : "Unknown Verisign policy qualifier",
     "06036086480186f8450107010102" : "Unknown Verisign policy qualifier",
     "0603678105" : "TCPA",
-    "060367810501" : "tcpa_specVersion",
-    "060367810502" : "tcpa_attribute",
-    "06036781050201" : "tcpa_at_tpmManufacturer",
-    "0603678105020a" : "tcpa_at_securityQualities",
-    "0603678105020b" : "tcpa_at_tpmProtectionProfile",
-    "0603678105020c" : "tcpa_at_tpmSecurityTarget",
-    "0603678105020d" : "tcpa_at_foundationProtectionProfile",
-    "0603678105020e" : "tcpa_at_foundationSecurityTarget",
-    "0603678105020f" : "tcpa_at_tpmIdLabel",
-    "06036781050202" : "tcpa_at_tpmModel",
-    "06036781050203" : "tcpa_at_tpmVersion",
-    "06036781050204" : "tcpa_at_platformManufacturer",
-    "06036781050205" : "tcpa_at_platformModel",
-    "06036781050206" : "tcpa_at_platformVersion",
-    "06036781050207" : "tcpa_at_componentManufacturer",
-    "06036781050208" : "tcpa_at_componentModel",
-    "06036781050209" : "tcpa_at_componentVersion",
-    "060367810503" : "tcpa_protocol",
-    "06036781050301" : "tcpa_prtt_tpmIdProtocol",
+    "060367810501" : "tcpaSpecVersion",
+    "060367810502" : "tcpaAttribute",
+    "06036781050201" : "tcpaAtTpmManufacturer",
+    "0603678105020a" : "tcpaAtSecurityQualities",
+    "0603678105020b" : "tcpaAtTpmProtectionProfile",
+    "0603678105020c" : "tcpaAtTpmSecurityTarget",
+    "0603678105020d" : "tcpaAtFoundationProtectionProfile",
+    "0603678105020e" : "tcpaAtFoundationSecurityTarget",
+    "0603678105020f" : "tcpaAtTpmIdLabel",
+    "06036781050202" : "tcpaAtTpmModel",
+    "06036781050203" : "tcpaAtTpmVersion",
+    "06036781050204" : "tcpaAtPlatformManufacturer",
+    "06036781050205" : "tcpaAtPlatformModel",
+    "06036781050206" : "tcpaAtPlatformVersion",
+    "06036781050207" : "tcpaAtComponentManufacturer",
+    "06036781050208" : "tcpaAtComponentModel",
+    "06036781050209" : "tcpaAtComponentVersion",
+    "060367810503" : "tcpaProtocol",
+    "06036781050301" : "tcpaPrttTpmIdProtocol",
     "0603672a00" : "contentType",
     "0603672a0000" : "PANData",
     "0603672a0001" : "PANToken",

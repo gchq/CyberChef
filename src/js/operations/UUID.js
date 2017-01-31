@@ -16,7 +16,7 @@ var UUID = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_generate_v4: function(input, args) {
+    runGenerateV4: function(input, args) {
         if (typeof(window.crypto) !== "undefined" && typeof(window.crypto.getRandomValues) !== "undefined") {
             var buf = new Uint32Array(4),
                 i = 0;

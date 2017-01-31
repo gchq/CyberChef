@@ -36,13 +36,13 @@ var Base64 = {
     /**
      * To Base64 operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to: function(input, args) {
+    runTo: function(input, args) {
         var alphabet = args[0] || Base64.ALPHABET;
-        return Utils.to_base64(input, alphabet);
+        return Utils.toBase64(input, alphabet);
     },
 
 
@@ -57,13 +57,13 @@ var Base64 = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_from: function(input, args) {
+    runFrom: function(input, args) {
         var alphabet = args[0] || Base64.ALPHABET,
-            remove_non_alph_chars = args[1];
+            removeNonAlphChars = args[1];
 
-        return Utils.from_base64(input, alphabet, "byte_array", remove_non_alph_chars);
+        return Utils.fromBase64(input, alphabet, "byteArray", removeNonAlphChars);
     },
 
 
@@ -76,15 +76,15 @@ var Base64 = {
     /**
      * To Base32 operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_32: function(input, args) {
+    runTo32: function(input, args) {
         if (!input) return "";
 
         var alphabet = args[0] ?
-                Utils.expand_alph_range(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+                Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
             output = "",
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
@@ -130,21 +130,21 @@ var Base64 = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_from_32: function(input, args) {
+    runFrom32: function(input, args) {
         if (!input) return [];
 
         var alphabet = args[0] ?
-                Utils.expand_alph_range(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
-            remove_non_alph_chars = args[0];
+                Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+            removeNonAlphChars = args[0];
 
         var output = [],
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;
 
-        if (remove_non_alph_chars) {
+        if (removeNonAlphChars) {
             var re = new RegExp("[^" + alphabet.replace(/[\]\\\-^]/g, "\\$&") + "]", "g");
             input = input.replace(re, "");
         }
@@ -190,21 +190,21 @@ var Base64 = {
     /**
      * Show Base64 offsets operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {html}
      */
-    run_offsets: function(input, args) {
+    runOffsets: function(input, args) {
         var alphabet = args[0] || Base64.ALPHABET,
-            show_variable = args[1],
-            offset0 = Utils.to_base64(input, alphabet),
-            offset1 = Utils.to_base64([0].concat(input), alphabet),
-            offset2 = Utils.to_base64([0, 0].concat(input), alphabet),
+            showVariable = args[1],
+            offset0 = Utils.toBase64(input, alphabet),
+            offset1 = Utils.toBase64([0].concat(input), alphabet),
+            offset2 = Utils.toBase64([0, 0].concat(input), alphabet),
             len0 = offset0.indexOf("="),
             len1 = offset1.indexOf("="),
             len2 = offset2.indexOf("="),
             script = "<script type='application/javascript'>$('[data-toggle=\"tooltip\"]').tooltip()</script>",
-            static_section = "",
+            staticSection = "",
             padding = "";
 
         if (input.length < 1) {
@@ -213,28 +213,28 @@ var Base64 = {
 
         // Highlight offset 0
         if (len0 % 4 === 2) {
-            static_section = offset0.slice(0, -3);
+            staticSection = offset0.slice(0, -3);
             offset0 = "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64(static_section, alphabet).slice(0, -2)) + "'>" +
-                static_section + "</span>" +
+                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet).slice(0, -2)) + "'>" +
+                staticSection + "</span>" +
                 "<span class='hlgreen'>" + offset0.substr(offset0.length - 3, 1) + "</span>" +
                 "<span class='hlred'>" + offset0.substr(offset0.length - 2) + "</span>";
         } else if (len0 % 4 === 3) {
-            static_section = offset0.slice(0, -2);
+            staticSection = offset0.slice(0, -2);
             offset0 = "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64(static_section, alphabet).slice(0, -1)) + "'>" +
-                static_section + "</span>" +
+                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet).slice(0, -1)) + "'>" +
+                staticSection + "</span>" +
                 "<span class='hlgreen'>" + offset0.substr(offset0.length - 2, 1) + "</span>" +
                 "<span class='hlred'>" + offset0.substr(offset0.length - 1) + "</span>";
         } else {
-            static_section = offset0;
+            staticSection = offset0;
             offset0 = "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64(static_section, alphabet)) + "'>" +
-                static_section + "</span>";
+                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet)) + "'>" +
+                staticSection + "</span>";
         }
 
-        if (!show_variable) {
-            offset0 = static_section;
+        if (!showVariable) {
+            offset0 = staticSection;
         }
 
 
@@ -243,28 +243,28 @@ var Base64 = {
             "<span class='hlgreen'>" + offset1.substr(1, 1) + "</span>";
         offset1 = offset1.substr(2);
         if (len1 % 4 === 2) {
-            static_section = offset1.slice(0, -3);
+            staticSection = offset1.slice(0, -3);
             offset1 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64("AA" + static_section, alphabet).slice(1, -2)) + "'>" +
-                static_section + "</span>" +
+                Utils.escapeHtml(Utils.fromBase64("AA" + staticSection, alphabet).slice(1, -2)) + "'>" +
+                staticSection + "</span>" +
                 "<span class='hlgreen'>" + offset1.substr(offset1.length - 3, 1) + "</span>" +
                 "<span class='hlred'>" + offset1.substr(offset1.length - 2) + "</span>";
         } else if (len1 % 4 === 3) {
-            static_section = offset1.slice(0, -2);
+            staticSection = offset1.slice(0, -2);
             offset1 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64("AA" + static_section, alphabet).slice(1, -1)) + "'>" +
-                static_section + "</span>" +
+                Utils.escapeHtml(Utils.fromBase64("AA" + staticSection, alphabet).slice(1, -1)) + "'>" +
+                staticSection + "</span>" +
                 "<span class='hlgreen'>" + offset1.substr(offset1.length - 2, 1) + "</span>" +
                 "<span class='hlred'>" + offset1.substr(offset1.length - 1) + "</span>";
         } else {
-            static_section = offset1;
+            staticSection = offset1;
             offset1 = padding +  "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64("AA" + static_section, alphabet).slice(1)) + "'>" +
-                static_section + "</span>";
+                Utils.escapeHtml(Utils.fromBase64("AA" + staticSection, alphabet).slice(1)) + "'>" +
+                staticSection + "</span>";
         }
 
-        if (!show_variable) {
-            offset1 = static_section;
+        if (!showVariable) {
+            offset1 = staticSection;
         }
 
         // Highlight offset 2
@@ -272,31 +272,31 @@ var Base64 = {
             "<span class='hlgreen'>" + offset2.substr(2, 1) + "</span>";
         offset2 = offset2.substr(3);
         if (len2 % 4 === 2) {
-            static_section = offset2.slice(0, -3);
+            staticSection = offset2.slice(0, -3);
             offset2 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2)) + "'>" +
-                static_section + "</span>" +
+                Utils.escapeHtml(Utils.fromBase64("AAA" + staticSection, alphabet).slice(2, -2)) + "'>" +
+                staticSection + "</span>" +
                 "<span class='hlgreen'>" + offset2.substr(offset2.length - 3, 1) + "</span>" +
                 "<span class='hlred'>" + offset2.substr(offset2.length - 2) + "</span>";
         } else if (len2 % 4 === 3) {
-            static_section = offset2.slice(0, -2);
+            staticSection = offset2.slice(0, -2);
             offset2 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64("AAA" + static_section, alphabet).slice(2, -2)) + "'>" +
-                static_section + "</span>" +
+                Utils.escapeHtml(Utils.fromBase64("AAA" + staticSection, alphabet).slice(2, -2)) + "'>" +
+                staticSection + "</span>" +
                 "<span class='hlgreen'>" + offset2.substr(offset2.length - 2, 1) + "</span>" +
                 "<span class='hlred'>" + offset2.substr(offset2.length - 1) + "</span>";
         } else {
-            static_section = offset2;
+            staticSection = offset2;
             offset2 = padding +  "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escape_html(Utils.from_base64("AAA" + static_section, alphabet).slice(2)) + "'>" +
-                static_section + "</span>";
+                Utils.escapeHtml(Utils.fromBase64("AAA" + staticSection, alphabet).slice(2)) + "'>" +
+                staticSection + "</span>";
         }
 
-        if (!show_variable) {
-            offset2 = static_section;
+        if (!showVariable) {
+            offset2 = staticSection;
         }
 
-        return (show_variable ? "Characters highlighted in <span class='hlgreen'>green</span> could change if the input is surrounded by more data." +
+        return (showVariable ? "Characters highlighted in <span class='hlgreen'>green</span> could change if the input is surrounded by more data." +
             "\nCharacters highlighted in <span class='hlred'>red</span> are for padding purposes only." +
             "\nUnhighlighted characters are <span data-toggle='tooltip' data-placement='top' title='Tooltip on left'>static</span>." +
             "\nHover over the static sections to see what they decode to on their own.\n" +
@@ -317,7 +317,7 @@ var Base64 = {
      * @param {Object[]} args
      * @returns {Object[]} pos
      */
-    highlight_to: function(pos, args) {
+    highlightTo: function(pos, args) {
         pos[0].start = Math.floor(pos[0].start / 3 * 4);
         pos[0].end = Math.ceil(pos[0].end / 3 * 4);
         return pos;
@@ -332,7 +332,7 @@ var Base64 = {
      * @param {Object[]} args
      * @returns {Object[]} pos
      */
-    highlight_from: function(pos, args) {
+    highlightFrom: function(pos, args) {
         pos[0].start = Math.ceil(pos[0].start / 4 * 3);
         pos[0].end = Math.floor(pos[0].end / 4 * 3);
         return pos;

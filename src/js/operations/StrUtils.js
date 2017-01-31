@@ -97,30 +97,30 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_regex: function(input, args) {
-        var user_regex = args[1],
+    runRegex: function(input, args) {
+        var userRegex = args[1],
             i = args[2],
             m = args[3],
-            display_total = args[4],
-            output_format = args[5],
+            displayTotal = args[4],
+            outputFormat = args[5],
             modifiers = "g";
         
         if (i) modifiers += "i";
         if (m) modifiers += "m";
         
-        if (user_regex && user_regex !== "^" && user_regex !== "$") {
+        if (userRegex && userRegex !== "^" && userRegex !== "$") {
             try {
-                var regex = new RegExp(user_regex, modifiers);
+                var regex = new RegExp(userRegex, modifiers);
                 
-                switch (output_format) {
+                switch (outputFormat) {
                     case "Highlight matches":
-                        return StrUtils._regex_highlight(input, regex, display_total);
+                        return StrUtils._regexHighlight(input, regex, displayTotal);
                     case "List matches":
-                        return Utils.escape_html(StrUtils._regex_list(input, regex, display_total, true, false));
+                        return Utils.escapeHtml(StrUtils._regexList(input, regex, displayTotal, true, false));
                     case "List capture groups":
-                        return Utils.escape_html(StrUtils._regex_list(input, regex, display_total, false, true));
+                        return Utils.escapeHtml(StrUtils._regexList(input, regex, displayTotal, false, true));
                     case "List matches with capture groups":
-                        return Utils.escape_html(StrUtils._regex_list(input, regex, display_total, true, true));
+                        return Utils.escapeHtml(StrUtils._regexList(input, regex, displayTotal, true, true));
                     default:
                         return "Error: Invalid output format";
                 }
@@ -128,7 +128,7 @@ var StrUtils = {
                 return "Invalid regex. Details: " + err.message;
             }
         } else {
-            return Utils.escape_html(input);
+            return Utils.escapeHtml(input);
         }
     },
 
@@ -146,7 +146,7 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_upper: function (input, args) {
+    runUpper: function (input, args) {
         var scope = args[0];
         
         switch (scope) {
@@ -177,7 +177,7 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_lower: function (input, args) {
+    runLower: function (input, args) {
         return input.toLowerCase();
     },
     
@@ -210,7 +210,7 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_find_replace: function(input, args) {
+    runFindReplace: function(input, args) {
         var find = args[0].string,
             type = args[0].option,
             replace = args[1],
@@ -226,7 +226,7 @@ var StrUtils = {
         if (type === "Regex") {
             find = new RegExp(find, modifiers);
         } else if (type.indexOf("Extended") === 0) {
-            find = Utils.parse_escaped_chars(find);
+            find = Utils.parseEscapedChars(find);
         }
         
         return input.replace(find, replace, modifiers);
@@ -254,12 +254,12 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_split: function(input, args) {
-        var split_delim = args[0] || StrUtils.SPLIT_DELIM,
-            join_delim = Utils.char_rep[args[1]],
-            sections = input.split(split_delim);
+    runSplit: function(input, args) {
+        var splitDelim = args[0] || StrUtils.SPLIT_DELIM,
+            joinDelim = Utils.charRep[args[1]],
+            sections = input.split(splitDelim);
             
-        return sections.join(join_delim);
+        return sections.join(joinDelim);
     },
 
 
@@ -271,8 +271,8 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_filter: function(input, args) {
-        var delim = Utils.char_rep[args[0]],
+    runFilter: function(input, args) {
+        var delim = Utils.charRep[args[0]],
             reverse = args[2];
 
         try {
@@ -281,11 +281,11 @@ var StrUtils = {
             return "Invalid regex. Details: " + err.message;
         }
 
-        var regex_filter = function(value) {
+        var regexFilter = function(value) {
             return reverse ^ regex.test(value);
         };
 
-        return input.split(delim).filter(regex_filter).join(delim);
+        return input.split(delim).filter(regexFilter).join(delim);
     },
     
     
@@ -307,13 +307,13 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_diff: function(input, args) {
-        var sample_delim = args[0],
-            diff_by = args[1],
-            show_added = args[2],
-            show_removed = args[3],
-            ignore_whitespace = args[4],
-            samples = input.split(sample_delim),
+    runDiff: function(input, args) {
+        var sampleDelim = args[0],
+            diffBy = args[1],
+            showAdded = args[2],
+            showRemoved = args[3],
+            ignoreWhitespace = args[4],
+            samples = input.split(sampleDelim),
             output = "",
             diff;
             
@@ -321,19 +321,19 @@ var StrUtils = {
             return "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?";
         }
         
-        switch (diff_by) {
+        switch (diffBy) {
             case "Character":
                 diff = JsDiff.diffChars(samples[0], samples[1]);
                 break;
             case "Word":
-                if (ignore_whitespace) {
+                if (ignoreWhitespace) {
                     diff = JsDiff.diffWords(samples[0], samples[1]);
                 } else {
                     diff = JsDiff.diffWordsWithSpace(samples[0], samples[1]);
                 }
                 break;
             case "Line":
-                if (ignore_whitespace) {
+                if (ignoreWhitespace) {
                     diff = JsDiff.diffTrimmedLines(samples[0], samples[1]);
                 } else {
                     diff = JsDiff.diffLines(samples[0], samples[1]);
@@ -354,11 +354,11 @@ var StrUtils = {
         
         for (var i = 0; i < diff.length; i++) {
             if (diff[i].added) {
-                if (show_added) output += "<span class='hlgreen'>" + Utils.escape_html(diff[i].value) + "</span>";
+                if (showAdded) output += "<span class='hlgreen'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else if (diff[i].removed) {
-                if (show_removed) output += "<span class='hlred'>" + Utils.escape_html(diff[i].value) + "</span>";
+                if (showRemoved) output += "<span class='hlred'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else {
-                output += Utils.escape_html(diff[i].value);
+                output += Utils.escapeHtml(diff[i].value);
             }
         }
         
@@ -379,14 +379,14 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_offset_checker: function(input, args) {
-        var sample_delim = args[0],
-            samples = input.split(sample_delim),
+    runOffsetChecker: function(input, args) {
+        var sampleDelim = args[0],
+            samples = input.split(sampleDelim),
             outputs = [],
             i = 0,
             s = 0,
             match = false,
-            in_match = false,
+            inMatch = false,
             chr;
             
         if (!samples || samples.length < 2) {
@@ -415,34 +415,34 @@ var StrUtils = {
             // Write output for each sample
             for (s = 0; s < samples.length; s++) {
                 if (samples[s].length <= i) {
-                    if (in_match) outputs[s] += "</span>";
-                    if (s === samples.length - 1) in_match = false;
+                    if (inMatch) outputs[s] += "</span>";
+                    if (s === samples.length - 1) inMatch = false;
                     continue;
                 }
                 
-                if (match && !in_match) {
-                    outputs[s] += "<span class='hlgreen'>" + Utils.escape_html(samples[s][i]);
+                if (match && !inMatch) {
+                    outputs[s] += "<span class='hlgreen'>" + Utils.escapeHtml(samples[s][i]);
                     if (samples[s].length === i + 1) outputs[s] += "</span>";
-                    if (s === samples.length - 1) in_match = true;
-                } else if (!match && in_match) {
-                    outputs[s] += "</span>" + Utils.escape_html(samples[s][i]);
-                    if (s === samples.length - 1) in_match = false;
+                    if (s === samples.length - 1) inMatch = true;
+                } else if (!match && inMatch) {
+                    outputs[s] += "</span>" + Utils.escapeHtml(samples[s][i]);
+                    if (s === samples.length - 1) inMatch = false;
                 } else {
-                    outputs[s] += Utils.escape_html(samples[s][i]);
-                    if (in_match && samples[s].length === i + 1) {
+                    outputs[s] += Utils.escapeHtml(samples[s][i]);
+                    if (inMatch && samples[s].length === i + 1) {
                         outputs[s] += "</span>";
-                        if (samples[s].length - 1 !== i) in_match = false;
+                        if (samples[s].length - 1 !== i) inMatch = false;
                     }
                 }
                 
                 if (samples[0].length - 1 === i) {
-                    if (in_match) outputs[s] += "</span>";
-                    outputs[s] += Utils.escape_html(samples[s].substring(i + 1));
+                    if (inMatch) outputs[s] += "</span>";
+                    outputs[s] += Utils.escapeHtml(samples[s].substring(i + 1));
                 }
             }
         }
         
-        return outputs.join(sample_delim);
+        return outputs.join(sampleDelim);
     },
     
     
@@ -453,8 +453,8 @@ var StrUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_parse_escaped_string: function(input, args) {
-        return Utils.parse_escaped_chars(input);
+    runParseEscapedString: function(input, args) {
+        return Utils.parseEscapedChars(input);
     },
     
     
@@ -464,10 +464,10 @@ var StrUtils = {
      * @private
      * @param {string} input
      * @param {RegExp} regex
-     * @param {boolean} display_total
+     * @param {boolean} displayTotal
      * @returns {string}
      */
-    _regex_highlight: function(input, regex, display_total) {
+    _regexHighlight: function(input, regex, displayTotal) {
         var output = "",
             m,
             hl = 1,
@@ -476,10 +476,10 @@ var StrUtils = {
         
         while ((m = regex.exec(input))) {
             // Add up to match
-            output += Utils.escape_html(input.slice(i, m.index));
+            output += Utils.escapeHtml(input.slice(i, m.index));
             
             // Add match with highlighting
-            output += "<span class='hl"+hl+"'>" + Utils.escape_html(m[0]) + "</span>";
+            output += "<span class='hl"+hl+"'>" + Utils.escapeHtml(m[0]) + "</span>";
             
             // Switch highlight
             hl = hl === 1 ? 2 : 1;
@@ -489,9 +489,9 @@ var StrUtils = {
         }
         
         // Add all after final match
-        output += Utils.escape_html(input.slice(i, input.length));
+        output += Utils.escapeHtml(input.slice(i, input.length));
         
-        if (display_total)
+        if (displayTotal)
             output = "Total found: " + total + "\n\n" + output;
 
         return output;
@@ -504,12 +504,12 @@ var StrUtils = {
      * @private
      * @param {string} input
      * @param {RegExp} regex
-     * @param {boolean} display_total
+     * @param {boolean} displayTotal
      * @param {boolean} matches - Display full match
-     * @param {boolean} capture_groups - Display each of the capture groups separately
+     * @param {boolean} captureGroups - Display each of the capture groups separately
      * @returns {string}
      */
-    _regex_list: function(input, regex, display_total, matches, capture_groups) {
+    _regexList: function(input, regex, displayTotal, matches, captureGroups) {
         var output = "",
             total = 0,
             match;
@@ -519,7 +519,7 @@ var StrUtils = {
             if (matches) {
                 output += match[0] + "\n";
             }
-            if (capture_groups) {
+            if (captureGroups) {
                 for (var i = 1; i < match.length; i++) {
                     if (matches) {
                         output += "  Group " + i + ": ";
@@ -529,7 +529,7 @@ var StrUtils = {
             }
         }
         
-        if (display_total)
+        if (displayTotal)
             output = "Total found: " + total + "\n\n" + output;
             
         return output;

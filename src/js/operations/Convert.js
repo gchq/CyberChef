@@ -64,12 +64,12 @@ var Convert = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_distance: function (input, args) {
-        var input_units = args[0],
-            output_units = args[1];
+    runDistance: function (input, args) {
+        var inputUnits = args[0],
+            outputUnits = args[1];
 
-        input = input * Convert.DISTANCE_FACTOR[input_units];
-        return input / Convert.DISTANCE_FACTOR[output_units];
+        input = input * Convert.DISTANCE_FACTOR[inputUnits];
+        return input / Convert.DISTANCE_FACTOR[outputUnits];
         // TODO Remove rounding errors (e.g. 1.000000000001)
     },
 
@@ -145,12 +145,12 @@ var Convert = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_data_size: function (input, args) {
-        var input_units = args[0],
-            output_units = args[1];
+    runDataSize: function (input, args) {
+        var inputUnits = args[0],
+            outputUnits = args[1];
 
-        input = input * Convert.DATA_FACTOR[input_units];
-        return input / Convert.DATA_FACTOR[output_units];
+        input = input * Convert.DATA_FACTOR[inputUnits];
+        return input / Convert.DATA_FACTOR[outputUnits];
     },
 
 
@@ -225,12 +225,12 @@ var Convert = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_area: function (input, args) {
-        var input_units = args[0],
-            output_units = args[1];
+    runArea: function (input, args) {
+        var inputUnits = args[0],
+            outputUnits = args[1];
 
-        input = input * Convert.AREA_FACTOR[input_units];
-        return input / Convert.AREA_FACTOR[output_units];
+        input = input * Convert.AREA_FACTOR[inputUnits];
+        return input / Convert.AREA_FACTOR[outputUnits];
     },
 
 
@@ -336,12 +336,12 @@ var Convert = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_mass: function (input, args) {
-        var input_units = args[0],
-            output_units = args[1];
+    runMass: function (input, args) {
+        var inputUnits = args[0],
+            outputUnits = args[1];
 
-        input = input * Convert.MASS_FACTOR[input_units];
-        return input / Convert.MASS_FACTOR[output_units];
+        input = input * Convert.MASS_FACTOR[inputUnits];
+        return input / Convert.MASS_FACTOR[outputUnits];
     },
 
 
@@ -401,12 +401,12 @@ var Convert = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_speed: function (input, args) {
-        var input_units = args[0],
-            output_units = args[1];
+    runSpeed: function (input, args) {
+        var inputUnits = args[0],
+            outputUnits = args[1];
 
-        input = input * Convert.SPEED_FACTOR[input_units];
-        return input / Convert.SPEED_FACTOR[output_units];
+        input = input * Convert.SPEED_FACTOR[inputUnits];
+        return input / Convert.SPEED_FACTOR[outputUnits];
     },
 
 };

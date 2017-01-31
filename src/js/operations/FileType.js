@@ -12,12 +12,12 @@ var FileType = {
     /**
      * Detect File Type operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_detect: function(input, args) {
-        var type = FileType._magic_type(input);
+    runDetect: function(input, args) {
+        var type = FileType._magicType(input);
 
         if (!type) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
@@ -43,26 +43,26 @@ var FileType = {
     /**
      * Scan for Embedded Files operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_scan_for_embedded_files: function(input, args) {
+    runScanForEmbeddedFiles: function(input, args) {
         var output = "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.\n",
             type,
-            ignore_common = args[0],
-            common_exts = ["ico", "ttf", ""],
-            num_found = 0,
-            num_common_found = 0;
+            ignoreCommon = args[0],
+            commonExts = ["ico", "ttf", ""],
+            numFound = 0,
+            numCommonFound = 0;
 
         for (var i = 0; i < input.length; i++) {
-            type = FileType._magic_type(input.slice(i));
+            type = FileType._magicType(input.slice(i));
             if (type) {
-                if (ignore_common && common_exts.indexOf(type.ext) > -1) {
-                    num_common_found++;
+                if (ignoreCommon && commonExts.indexOf(type.ext) > -1) {
+                    numCommonFound++;
                     continue;
                 }
-                num_found++;
+                numFound++;
                 output += "\nOffset " + i + " (0x" + Utils.hex(i) + "):\n" +
                     "  File extension: " + type.ext + "\n" +
                     "  MIME type:      " + type.mime + "\n";
@@ -73,13 +73,13 @@ var FileType = {
             }
         }
 
-        if (num_found === 0) {
+        if (numFound === 0) {
             output += "\nNo embedded files were found.";
         }
 
-        if (num_common_found > 0) {
-            output += "\n\n" + num_common_found;
-            output += num_common_found === 1 ?
+        if (numCommonFound > 0) {
+            output += "\n\n" + numCommonFound;
+            output += numCommonFound === 1 ?
                 " file type was detected that has a common byte sequence. This is likely to be a false positive." :
                 " file types were detected that have common byte sequences. These are likely to be false positives.";
             output += " Run this operation with the 'Ignore common byte sequences' option unchecked to see details.";
@@ -94,13 +94,13 @@ var FileType = {
      * extension and mime type.
      *
      * @private
-     * @param {byte_array} buf
+     * @param {byteArray} buf
      * @returns {Object} type
      * @returns {string} type.ext - File extension
      * @returns {string} type.mime - Mime type
      * @returns {string} [type.desc] - Description
      */
-    _magic_type: function (buf) {
+    _magicType: function (buf) {
         if (!(buf && buf.length > 1)) {
             return null;
         }

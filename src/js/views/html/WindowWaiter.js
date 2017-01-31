@@ -18,9 +18,9 @@ var WindowWaiter = function(app) {
  * Resets the layout of CyberChef's panes after 200ms (so that continuous resizing doesn't cause
  * continuous resetting).
  */
-WindowWaiter.prototype.window_resize = function() {
-    clearTimeout(this.reset_layout_timeout);
-    this.reset_layout_timeout = setTimeout(this.app.reset_layout.bind(this.app), 200);
+WindowWaiter.prototype.windowResize = function() {
+    clearTimeout(this.resetLayoutTimeout);
+    this.resetLayoutTimeout = setTimeout(this.app.resetLayout.bind(this.app), 200);
 };
 
 
@@ -29,8 +29,8 @@ WindowWaiter.prototype.window_resize = function() {
  * Saves the current time so that we can calculate how long the window was unfocussed for when
  * focus is returned.
  */
-WindowWaiter.prototype.window_blur = function() {
-    this.window_blur_time = new Date().getTime();
+WindowWaiter.prototype.windowBlur = function() {
+    this.windowBlurTime = new Date().getTime();
 };
 
 
@@ -44,9 +44,9 @@ WindowWaiter.prototype.window_blur = function() {
  * This will stop baking taking a long time when the CyberChef browser tab has been unfocused for
  * a long time and the browser has swapped out all its memory.
  */
-WindowWaiter.prototype.window_focus = function() {
-    var unfocused_time = new Date().getTime() - this.window_blur_time;
-    if (unfocused_time > 60000) {
-        this.app.silent_bake();
+WindowWaiter.prototype.windowFocus = function() {
+    var unfocusedTime = new Date().getTime() - this.windowBlurTime;
+    if (unfocusedTime > 60000) {
+        this.app.silentBake();
     }
 };

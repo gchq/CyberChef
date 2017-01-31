@@ -6,15 +6,15 @@
  * @license Apache-2.0
  *
  * @class
- * @param {Object} ingredient_config
+ * @param {Object} ingredientConfig
  */
-var Ingredient = function(ingredient_config) {
+var Ingredient = function(ingredientConfig) {
     this.name  = "";
     this.type  = "";
     this.value = null;
     
-    if (ingredient_config) {
-        this._parse_config(ingredient_config);
+    if (ingredientConfig) {
+        this._parseConfig(ingredientConfig);
     }
 };
 
@@ -23,11 +23,11 @@ var Ingredient = function(ingredient_config) {
  * Reads and parses the given config.
  *
  * @private
- * @param {Object} ingredient_config
+ * @param {Object} ingredientConfig
  */
-Ingredient.prototype._parse_config = function(ingredient_config) {
-    this.name = ingredient_config.name;
-    this.type = ingredient_config.type;
+Ingredient.prototype._parseConfig = function(ingredientConfig) {
+    this.name = ingredientConfig.name;
+    this.type = ingredientConfig.type;
 };
 
 
@@ -36,7 +36,7 @@ Ingredient.prototype._parse_config = function(ingredient_config) {
  *
  * @returns {*}
  */
-Ingredient.prototype.get_config = function() {
+Ingredient.prototype.getConfig = function() {
     return this.value;
 };
 
@@ -46,7 +46,7 @@ Ingredient.prototype.get_config = function() {
  *
  * @param {*} value
  */
-Ingredient.prototype.set_value = function(value) {
+Ingredient.prototype.setValue = function(value) {
     this.value = Ingredient.prepare(value, this.type);
 };
 
@@ -61,14 +61,14 @@ Ingredient.prototype.set_value = function(value) {
 */
 Ingredient.prepare = function(data, type) {
     switch (type) {
-        case "binary_string":
-        case "binary_short_string":
-        case "editable_option":
-            return Utils.parse_escaped_chars(data);
-        case "byte_array":
+        case "binaryString":
+        case "binaryShortString":
+        case "editableOption":
+            return Utils.parseEscapedChars(data);
+        case "byteArray":
             if (typeof data == "string") {
                 data = data.replace(/\s+/g, "");
-                return Utils.hex_to_byte_array(data);
+                return Utils.hexToByteArray(data);
             } else {
                 return data;
             }

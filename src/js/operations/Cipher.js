@@ -53,7 +53,7 @@ var Cipher = {
      *
      * @private
      * @param {function} algo - The CryptoJS algorithm to use
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {function} args
      * @returns {string}
      */
@@ -63,8 +63,8 @@ var Cipher = {
             salt = Utils.format[args[2].option].parse(args[2].string || ""),
             mode = CryptoJS.mode[args[3]],
             padding = CryptoJS.pad[args[4]],
-            result_option = args[5].toLowerCase(),
-            output_format = args[6];
+            resultOption = args[5].toLowerCase(),
+            outputFormat = args[6];
 
         if (iv.sigBytes === 0) {
             // Use passphrase rather than key. Need to convert it to a string.
@@ -79,13 +79,13 @@ var Cipher = {
         });
 
         var result = "";
-        if (result_option === "show all") {
-            result += "Key:  " + encrypted.key.toString(Utils.format[output_format]);
-            result += "\nIV:   " + encrypted.iv.toString(Utils.format[output_format]);
-            if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Utils.format[output_format]);
-            result += "\n\nCiphertext: " + encrypted.ciphertext.toString(Utils.format[output_format]);
+        if (resultOption === "show all") {
+            result += "Key:  " + encrypted.key.toString(Utils.format[outputFormat]);
+            result += "\nIV:   " + encrypted.iv.toString(Utils.format[outputFormat]);
+            if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Utils.format[outputFormat]);
+            result += "\n\nCiphertext: " + encrypted.ciphertext.toString(Utils.format[outputFormat]);
         } else {
-            result = encrypted[result_option].toString(Utils.format[output_format]);
+            result = encrypted[resultOption].toString(Utils.format[outputFormat]);
         }
 
         return result;
@@ -97,7 +97,7 @@ var Cipher = {
      *
      * @private
      * @param {function} algo - The CryptoJS algorithm to use
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {function} args
      * @returns {string}
      */
@@ -107,15 +107,15 @@ var Cipher = {
             salt = Utils.format[args[2].option].parse(args[2].string || ""),
             mode = CryptoJS.mode[args[3]],
             padding = CryptoJS.pad[args[4]],
-            input_format = args[5],
-            output_format = args[6];
+            inputFormat = args[5],
+            outputFormat = args[6];
 
         // The ZeroPadding option causes a crash when the input length is 0
         if (!input.length) {
             return "No input";
         }
 
-        var ciphertext = Utils.format[input_format].parse(input);
+        var ciphertext = Utils.format[inputFormat].parse(input);
 
         if (iv.sigBytes === 0) {
             // Use passphrase rather than key. Need to convert it to a string.
@@ -133,7 +133,7 @@ var Cipher = {
 
         var result;
         try {
-            result = decrypted.toString(Utils.format[output_format]);
+            result = decrypted.toString(Utils.format[outputFormat]);
         } catch (err) {
             result = "Decrypt error: " + err.message;
         }
@@ -149,7 +149,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_aes_enc: function (input, args) {
+    runAesEnc: function (input, args) {
         return Cipher._enc(CryptoJS.AES, input, args);
     },
 
@@ -161,7 +161,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_aes_dec: function (input, args) {
+    runAesDec: function (input, args) {
         return Cipher._dec(CryptoJS.AES, input, args);
     },
 
@@ -173,7 +173,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_des_enc: function (input, args) {
+    runDesEnc: function (input, args) {
         return Cipher._enc(CryptoJS.DES, input, args);
     },
 
@@ -185,7 +185,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_des_dec: function (input, args) {
+    runDesDec: function (input, args) {
         return Cipher._dec(CryptoJS.DES, input, args);
     },
 
@@ -197,7 +197,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_triple_des_enc: function (input, args) {
+    runTripleDesEnc: function (input, args) {
         return Cipher._enc(CryptoJS.TripleDES, input, args);
     },
 
@@ -209,7 +209,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_triple_des_dec: function (input, args) {
+    runTripleDesDec: function (input, args) {
         return Cipher._dec(CryptoJS.TripleDES, input, args);
     },
 
@@ -221,7 +221,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_rabbit_enc: function (input, args) {
+    runRabbitEnc: function (input, args) {
         return Cipher._enc(CryptoJS.Rabbit, input, args);
     },
 
@@ -233,7 +233,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_rabbit_dec: function (input, args) {
+    runRabbitDec: function (input, args) {
         return Cipher._dec(CryptoJS.Rabbit, input, args);
     },
 
@@ -256,20 +256,20 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_blowfish_enc: function (input, args) {
+    runBlowfishEnc: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
             mode = args[1],
-            output_format = args[2];
+            outputFormat = args[2];
 
         if (key.length === 0) return "Enter a key";
 
-        var enc_hex = blowfish.encrypt(input, key, {
+        var encHex = blowfish.encrypt(input, key, {
                 outputType: 1,
                 cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
             }),
-            enc = CryptoJS.enc.Hex.parse(enc_hex);
+            enc = CryptoJS.enc.Hex.parse(encHex);
 
-        return enc.toString(Utils.format[output_format]);
+        return enc.toString(Utils.format[outputFormat]);
     },
 
 
@@ -280,14 +280,14 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_blowfish_dec: function (input, args) {
+    runBlowfishDec: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
             mode = args[1],
-            input_format = args[2];
+            inputFormat = args[2];
 
         if (key.length === 0) return "Enter a key";
 
-        input = Utils.format[input_format].parse(input);
+        input = Utils.format[inputFormat].parse(input);
 
         return blowfish.decrypt(input.toString(CryptoJS.enc.Base64), key, {
             outputType: 0, // This actually means inputType. The library is weird.
@@ -314,16 +314,16 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_pbkdf2: function (input, args) {
-        var key_size = args[0] / 32,
+    runPbkdf2: function (input, args) {
+        var keySize = args[0] / 32,
             iterations = args[1],
             salt = CryptoJS.enc.Hex.parse(args[2] || ""),
-            input_format = args[3],
-            output_format = args[4],
-            passphrase = Utils.format[input_format].parse(input),
-            key = CryptoJS.PBKDF2(passphrase, salt, { keySize: key_size, iterations: iterations });
+            inputFormat = args[3],
+            outputFormat = args[4],
+            passphrase = Utils.format[inputFormat].parse(input),
+            key = CryptoJS.PBKDF2(passphrase, salt, { keySize: keySize, iterations: iterations });
 
-        return key.toString(Utils.format[output_format]);
+        return key.toString(Utils.format[outputFormat]);
     },
 
 
@@ -334,16 +334,16 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_evpkdf: function (input, args) {
-        var key_size = args[0] / 32,
+    runEvpkdf: function (input, args) {
+        var keySize = args[0] / 32,
             iterations = args[1],
             salt = CryptoJS.enc.Hex.parse(args[2] || ""),
-            input_format = args[3],
-            output_format = args[4],
-            passphrase = Utils.format[input_format].parse(input),
-            key = CryptoJS.EvpKDF(passphrase, salt, { keySize: key_size, iterations: iterations });
+            inputFormat = args[3],
+            outputFormat = args[4],
+            passphrase = Utils.format[inputFormat].parse(input),
+            key = CryptoJS.EvpKDF(passphrase, salt, { keySize: keySize, iterations: iterations });
 
-        return key.toString(Utils.format[output_format]);
+        return key.toString(Utils.format[outputFormat]);
     },
 
 
@@ -354,7 +354,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_rc4: function (input, args) {
+    runRc4: function (input, args) {
         var message = Utils.format[args[1]].parse(input),
             passphrase = Utils.format[args[0].option].parse(args[0].string),
             encrypted = CryptoJS.RC4.encrypt(message, passphrase);
@@ -376,7 +376,7 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_rc4drop: function (input, args) {
+    runRc4drop: function (input, args) {
         var message = Utils.format[args[1]].parse(input),
             passphrase = Utils.format[args[0].option].parse(args[0].string),
             drop = args[3],
@@ -394,13 +394,13 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_vigenere_enc: function (input, args) {
+    runVigenereEnc: function (input, args) {
         var alphabet = "abcdefghijklmnopqrstuvwxyz",
             key = args[0].toLowerCase(),
             output = "",
             fail = 0,
-            key_index,
-            msg_index,
+            keyIndex,
+            msgIndex,
             chr;
 
         if (!key) return "No key entered";
@@ -412,17 +412,17 @@ var Cipher = {
                 // for chars not in alphabet
                 chr = key[(i - fail) % key.length];
                 // Get the location in the vigenere square of the key char
-                key_index = alphabet.indexOf(chr);
+                keyIndex = alphabet.indexOf(chr);
                 // Get the location in the vigenere square of the message char
-                msg_index = alphabet.indexOf(input[i]);
+                msgIndex = alphabet.indexOf(input[i]);
                 // Get the encoded letter by finding the sum of indexes modulo 26 and finding
                 // the letter corresponding to that
-                output += alphabet[(key_index + msg_index) % 26];
+                output += alphabet[(keyIndex + msgIndex) % 26];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 chr = key[(i - fail) % key.length].toLowerCase();
-                key_index = alphabet.indexOf(chr);
-                msg_index = alphabet.indexOf(input[i].toLowerCase());
-                output += alphabet[(key_index + msg_index) % 26].toUpperCase();
+                keyIndex = alphabet.indexOf(chr);
+                msgIndex = alphabet.indexOf(input[i].toLowerCase());
+                output += alphabet[(keyIndex + msgIndex) % 26].toUpperCase();
             } else {
                 output += input[i];
                 fail++;
@@ -441,13 +441,13 @@ var Cipher = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_vigenere_dec: function (input, args) {
+    runVigenereDec: function (input, args) {
         var alphabet = "abcdefghijklmnopqrstuvwxyz",
             key = args[0].toLowerCase(),
             output = "",
             fail = 0,
-            key_index,
-            msg_index,
+            keyIndex,
+            msgIndex,
             chr;
 
         if (!key) return "No key entered";
@@ -456,16 +456,16 @@ var Cipher = {
         for (var i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 chr = key[(i - fail) % key.length];
-                key_index = alphabet.indexOf(chr);
-                msg_index = alphabet.indexOf(input[i]);
+                keyIndex = alphabet.indexOf(chr);
+                msgIndex = alphabet.indexOf(input[i]);
                 // Subtract indexes from each other, add 26 just in case the value is negative,
                 // modulo to remove if neccessary
-                output += alphabet[(msg_index - key_index + alphabet.length ) % 26];
+                output += alphabet[(msgIndex - keyIndex + alphabet.length ) % 26];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 chr = key[(i - fail) % key.length].toLowerCase();
-                key_index = alphabet.indexOf(chr);
-                msg_index = alphabet.indexOf(input[i].toLowerCase());
-                output += alphabet[(msg_index + alphabet.length - key_index) % 26].toUpperCase();
+                keyIndex = alphabet.indexOf(chr);
+                msgIndex = alphabet.indexOf(input[i].toLowerCase());
+                output += alphabet[(msgIndex + alphabet.length - keyIndex) % 26].toUpperCase();
             } else {
                 output += input[i];
                 fail++;
@@ -490,18 +490,18 @@ var Cipher = {
     /**
      * Substitute operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_substitute: function (input, args) {
-        var plaintext = Utils.str_to_byte_array(Utils.expand_alph_range(args[0]).join()),
-            ciphertext = Utils.str_to_byte_array(Utils.expand_alph_range(args[1]).join()),
+    runSubstitute: function (input, args) {
+        var plaintext = Utils.strToByteArray(Utils.expandAlphRange(args[0]).join()),
+            ciphertext = Utils.strToByteArray(Utils.expandAlphRange(args[1]).join()),
             output = [],
             index = -1;
 
         if (plaintext.length !== ciphertext.length) {
-            output = Utils.str_to_byte_array("Warning: Plaintext and Ciphertext lengths differ\n\n");
+            output = Utils.strToByteArray("Warning: Plaintext and Ciphertext lengths differ\n\n");
         }
 
         for (var i = 0; i < input.length; i++) {

@@ -44,11 +44,11 @@ var Compress = {
     /**
      * Raw Deflate operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_raw_deflate: function(input, args) {
+    runRawDeflate: function(input, args) {
         var deflate = new Zlib.RawDeflate(input, {
             compressionType: Compress.RAW_COMPRESSION_TYPE_LOOKUP[args[0]]
         });
@@ -81,20 +81,20 @@ var Compress = {
      * @default
      */
     RAW_BUFFER_TYPE_LOOKUP: {
-        "Adaptive"  : Zlib.RawInflate.BufferType.ADAPTIVE,
-        "Block"     : Zlib.RawInflate.BufferType.BLOCK,
+        "Adaptive" : Zlib.RawInflate.BufferType.ADAPTIVE,
+        "Block"    : Zlib.RawInflate.BufferType.BLOCK,
     },
     
     /**
      * Raw Inflate operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_raw_inflate: function(input, args) {
+    runRawInflate: function(input, args) {
         // Deal with character encoding issues
-        input = Utils.str_to_byte_array(Utils.byte_array_to_utf8(input));
+        input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
         var inflate = new Zlib.RawInflate(input, {
                 index: args[0],
                 bufferSize: args[1],
@@ -140,11 +140,11 @@ var Compress = {
     /**
      * Zlib Deflate operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_zlib_deflate: function(input, args) {
+    runZlibDeflate: function(input, args) {
         var deflate = new Zlib.Deflate(input, {
             compressionType: Compress.ZLIB_COMPRESSION_TYPE_LOOKUP[args[0]]
         });
@@ -164,13 +164,13 @@ var Compress = {
     /**
      * Zlib Inflate operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_zlib_inflate: function(input, args) {
+    runZlibInflate: function(input, args) {
         // Deal with character encoding issues
-        input = Utils.str_to_byte_array(Utils.byte_array_to_utf8(input));
+        input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
         var inflate = new Zlib.Inflate(input, {
             index: args[0],
             bufferSize: args[1],
@@ -191,11 +191,11 @@ var Compress = {
     /**
      * Gzip operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_gzip: function(input, args) {
+    runGzip: function(input, args) {
         var filename = args[1],
             comment = args[2],
             options = {
@@ -224,13 +224,13 @@ var Compress = {
     /**
      * Gunzip operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_gunzip: function(input, args) {
+    runGunzip: function(input, args) {
         // Deal with character encoding issues
-        input = Utils.str_to_byte_array(Utils.byte_array_to_utf8(input));
+        input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
         var gunzip = new Zlib.Gunzip(input);
         return Array.prototype.slice.call(gunzip.decompress());
     },
@@ -262,15 +262,15 @@ var Compress = {
     /**
      * Zip operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_pkzip: function(input, args) {
-        var password = Utils.str_to_byte_array(args[2]),
+    runPkzip: function(input, args) {
+        var password = Utils.strToByteArray(args[2]),
             options = {
-                filename: Utils.str_to_byte_array(args[0]),
-                comment: Utils.str_to_byte_array(args[1]),
+                filename: Utils.strToByteArray(args[0]),
+                comment: Utils.strToByteArray(args[1]),
                 compressionMethod: Compress.ZIP_COMPRESSION_METHOD_LOOKUP[args[3]],
                 os: Compress.ZIP_OS_LOOKUP[args[4]],
                 deflateOption: {
@@ -295,13 +295,13 @@ var Compress = {
     /**
      * Unzip operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_pkunzip: function(input, args) {
+    runPkunzip: function(input, args) {
         var options = {
-                password: Utils.str_to_byte_array(args[0]),
+                password: Utils.strToByteArray(args[0]),
                 verify: args[1]
             },
             file = "",
@@ -313,7 +313,7 @@ var Compress = {
         
         window.uzip = unzip;
         for (var i = 0; i < filenames.length; i++) {
-            file = Utils.byte_array_to_utf8(unzip.decompress(filenames[i]));
+            file = Utils.byteArrayToUtf8(unzip.decompress(filenames[i]));
             output += "<div class='panel panel-default'>" +
                 "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
                 "<h4 class='panel-title'>" +
@@ -322,7 +322,7 @@ var Compress = {
                 filenames[i] + "<span class='pull-right'>" + file.length.toLocaleString() + " bytes</span></a></h4></div>" +
                 "<div id='collapse" + i + "' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading" + i + "'>" +
                 "<div class='panel-body'>" +
-                Utils.escape_html(file) + "</div></div></div>";
+                Utils.escapeHtml(file) + "</div></div></div>";
         }
         
         return output + "</div>";
@@ -332,17 +332,17 @@ var Compress = {
     /**
      * Bzip2 Decompress operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_bzip2_decompress: function(input, args) {
+    runBzip2Decompress: function(input, args) {
         var compressed = new Uint8Array(input),
-            bzip2_reader,
+            bzip2Reader,
             plain = "";
             
-        bzip2_reader = bzip2.array(compressed);
-        plain = bzip2.simple(bzip2_reader);
+        bzip2Reader = bzip2.array(compressed);
+        plain = bzip2.simple(bzip2Reader);
         return plain;
     },
     

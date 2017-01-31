@@ -17,13 +17,13 @@ var HTMLOperation = function(name, config, app, manager) {
     
     this.name        = name;
     this.description = config.description;
-    this.manual_bake = config.manual_bake || false;
+    this.manualBake  = config.manualBake || false;
     this.config      = config;
-    this.ing_list    = [];
+    this.ingList     = [];
     
     for (var i = 0; i < config.args.length; i++) {
         var ing = new HTMLIngredient(config.args[i], this.app, this.manager);
-        this.ing_list.push(ing);
+        this.ingList.push(ing);
     }
 };
 
@@ -43,7 +43,7 @@ HTMLOperation.REMOVE_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABwkl
  *
  * @returns {string}
  */
-HTMLOperation.prototype.to_stub_html = function(remove_icon) {
+HTMLOperation.prototype.toStubHtml = function(removeIcon) {
     var html = "<li class='operation'";
     
     if (this.description) {
@@ -53,7 +53,7 @@ HTMLOperation.prototype.to_stub_html = function(remove_icon) {
     
     html += ">" + this.name;
     
-    if (remove_icon) {
+    if (removeIcon) {
         html += "<img src='data:image/png;base64," + HTMLOperation.REMOVE_ICON +
             "' class='op-icon remove-icon'>";
     }
@@ -73,11 +73,11 @@ HTMLOperation.prototype.to_stub_html = function(remove_icon) {
  *
  * @returns {string}
  */
-HTMLOperation.prototype.to_full_html = function() {
+HTMLOperation.prototype.toFullHtml = function() {
     var html = "<div class='arg-title'>" + this.name + "</div>";
 
-    for (var i = 0; i < this.ing_list.length; i++) {
-        html += this.ing_list[i].to_html();
+    for (var i = 0; i < this.ingList.length; i++) {
+        html += this.ingList[i].toHtml();
     }
     
     html += "<div class='recip-icons'>\
@@ -95,20 +95,20 @@ HTMLOperation.prototype.to_full_html = function() {
 /**
  * Highlights the searched string in the name and description of the operation.
  *
- * @param {string} search_str
- * @param {number} name_pos - The position of the search string in the operation name
- * @param {number} desc_pos - The position of the search string in the operation description
+ * @param {string} searchStr
+ * @param {number} namePos - The position of the search string in the operation name
+ * @param {number} descPos - The position of the search string in the operation description
  */
-HTMLOperation.prototype.highlight_search_string = function(search_str, name_pos, desc_pos) {
-    if (name_pos >= 0) {
-        this.name = this.name.slice(0, name_pos) + "<b><u>" +
-            this.name.slice(name_pos, name_pos + search_str.length) + "</u></b>" +
-            this.name.slice(name_pos + search_str.length);
+HTMLOperation.prototype.highlightSearchString = function(searchStr, namePos, descPos) {
+    if (namePos >= 0) {
+        this.name = this.name.slice(0, namePos) + "<b><u>" +
+            this.name.slice(namePos, namePos + searchStr.length) + "</u></b>" +
+            this.name.slice(namePos + searchStr.length);
     }
     
-    if (this.description && desc_pos >= 0) {
-        this.description = this.description.slice(0, desc_pos) + "<b><u>" +
-            this.description.slice(desc_pos, desc_pos + search_str.length) + "</u></b>" +
-            this.description.slice(desc_pos + search_str.length);
+    if (this.description && descPos >= 0) {
+        this.description = this.description.slice(0, descPos) + "<b><u>" +
+            this.description.slice(descPos, descPos + searchStr.length) + "</u></b>" +
+            this.description.slice(descPos + searchStr.length);
     }
 };

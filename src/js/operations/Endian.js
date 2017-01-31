@@ -32,39 +32,39 @@ var Endian = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_swap_endianness: function(input, args) {
-        var data_format = args[0],
-            word_length = args[1],
-            pad_incomplete_words = args[2],
+    runSwapEndianness: function(input, args) {
+        var dataFormat = args[0],
+            wordLength = args[1],
+            padIncompleteWords = args[2],
             data = [],
             result = [],
             words = [],
             i = 0,
             j = 0;
             
-        if (word_length <= 0) {
+        if (wordLength <= 0) {
             return "Word length must be greater than 0";
         }
             
         // Convert input to raw data based on specified data format
-        switch (data_format) {
+        switch (dataFormat) {
             case "Hex":
-                data = Utils.from_hex(input);
+                data = Utils.fromHex(input);
                 break;
             case "Raw":
-                data = Utils.str_to_byte_array(input);
+                data = Utils.strToByteArray(input);
                 break;
             default:
                 data = input;
         }
         
         // Split up into words
-        for (i = 0; i < data.length; i += word_length) {
-            var word = data.slice(i, i + word_length);
+        for (i = 0; i < data.length; i += wordLength) {
+            var word = data.slice(i, i + wordLength);
             
             // Pad word if too short
-            if (pad_incomplete_words && word.length < word_length){
-                for (j = word.length; j < word_length; j++) {
+            if (padIncompleteWords && word.length < wordLength){
+                for (j = word.length; j < wordLength; j++) {
                     word.push(0);
                 }
             }
@@ -81,11 +81,11 @@ var Endian = {
         }
         
         // Convert data back to specified data format
-        switch (data_format) {
+        switch (dataFormat) {
             case "Hex":
-                return Utils.to_hex(result);
+                return Utils.toHex(result);
             case "Raw":
-                return Utils.byte_array_to_utf8(result);
+                return Utils.byteArrayToUtf8(result);
             default:
                 return result;
         }

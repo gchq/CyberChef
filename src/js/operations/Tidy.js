@@ -47,21 +47,21 @@ var Tidy = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_remove_whitespace: function (input, args) {
-        var remove_spaces = args[0],
-            remove_cariage_returns = args[1],
-            remove_line_feeds = args[2],
-            remove_tabs = args[3],
-            remove_form_feeds = args[4],
-            remove_full_stops = args[5],
+    runRemoveWhitespace: function (input, args) {
+        var removeSpaces = args[0],
+            removeCariageReturns = args[1],
+            removeLineFeeds = args[2],
+            removeTabs = args[3],
+            removeFormFeeds = args[4],
+            removeFullStops = args[5],
             data = input;
             
-        if (remove_spaces) data = data.replace(/ /g, "");
-        if (remove_cariage_returns) data = data.replace(/\r/g, "");
-        if (remove_line_feeds) data = data.replace(/\n/g, "");
-        if (remove_tabs) data = data.replace(/\t/g, "");
-        if (remove_form_feeds) data = data.replace(/\f/g, "");
-        if (remove_full_stops) data = data.replace(/\./g, "");
+        if (removeSpaces) data = data.replace(/ /g, "");
+        if (removeCariageReturns) data = data.replace(/\r/g, "");
+        if (removeLineFeeds) data = data.replace(/\n/g, "");
+        if (removeTabs) data = data.replace(/\t/g, "");
+        if (removeFormFeeds) data = data.replace(/\f/g, "");
+        if (removeFullStops) data = data.replace(/\./g, "");
         return data;
     },
     
@@ -69,11 +69,11 @@ var Tidy = {
     /**
      * Remove null bytes operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_remove_nulls: function (input, args) {
+    runRemoveNulls: function (input, args) {
         var output = [];
         for (var i = 0; i < input.length; i++) {
             if (input[i] !== 0) output.push(input[i]);
@@ -101,19 +101,19 @@ var Tidy = {
     /**
      * Drop bytes operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_drop_bytes: function(input, args) {
+    runDropBytes: function(input, args) {
         var start = args[0],
             length = args[1],
-            apply_to_each_line = args[2];
+            applyToEachLine = args[2];
             
         if (start < 0 || length < 0)
             throw "Error: Invalid value";
             
-        if (!apply_to_each_line)
+        if (!applyToEachLine)
             return input.slice(0, start).concat(input.slice(start+length, input.length));
             
         // Split input into lines
@@ -153,19 +153,19 @@ var Tidy = {
     /**
      * Take bytes operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_take_bytes: function(input, args) {
+    runTakeBytes: function(input, args) {
         var start = args[0],
             length = args[1],
-            apply_to_each_line = args[2];
+            applyToEachLine = args[2];
             
         if (start < 0 || length < 0)
             throw "Error: Invalid value";
             
-        if (!apply_to_each_line)
+        if (!applyToEachLine)
             return input.slice(start, start+length);
             
         // Split input into lines
@@ -214,7 +214,7 @@ var Tidy = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_pad: function(input, args) {
+    runPad: function(input, args) {
         var position = args[0],
             len = args[1],
             chr = args[2],
@@ -224,11 +224,11 @@ var Tidy = {
             
         if (position === "Start") {
             for (i = 0; i < lines.length; i++) {
-                output += Utils.pad_left(lines[i], lines[i].length+len, chr) + "\n";
+                output += Utils.padLeft(lines[i], lines[i].length+len, chr) + "\n";
             }
         } else if (position === "End") {
             for (i = 0; i < lines.length; i++) {
-                output += Utils.pad_right(lines[i], lines[i].length+len, chr) + "\n";
+                output += Utils.padRight(lines[i], lines[i].length+len, chr) + "\n";
             }
         }
         

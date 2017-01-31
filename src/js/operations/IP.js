@@ -34,26 +34,26 @@ var IP = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_parse_ip_range: function (input, args) {
-        var include_network_info = args[0],
-            enumerate_addresses = args[1],
-            allow_large_list = args[2];
+    runParseIpRange: function (input, args) {
+        var includeNetworkInfo = args[0],
+            enumerateAddresses = args[1],
+            allowLargeList = args[2];
         
         // Check what type of input we are looking at
-        var ipv4_cidr_regex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\/(\d\d?)\s*$/,
-            ipv4_range_regex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*-\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/,
-            ipv6_cidr_regex = /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\/(\d\d?\d?)\s*$/i,
-            ipv6_range_regex = /^\s*(((?=.*::)(?!.*::[^-]+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*-\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\17)::|:\b|(?![\dA-F])))|(?!\16\17)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
+        var ipv4CidrRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\/(\d\d?)\s*$/,
+            ipv4RangeRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*-\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/,
+            ipv6CidrRegex = /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\/(\d\d?\d?)\s*$/i,
+            ipv6RangeRegex = /^\s*(((?=.*::)(?!.*::[^-]+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*-\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\17)::|:\b|(?![\dA-F])))|(?!\16\17)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
             match;
         
-        if ((match = ipv4_cidr_regex.exec(input))) {
-            return IP._ipv4_cidr_range(match, include_network_info, enumerate_addresses, allow_large_list);
-        } else if ((match = ipv4_range_regex.exec(input))) {
-            return IP._ipv4_hyphenated_range(match, include_network_info, enumerate_addresses, allow_large_list);
-        } else if ((match = ipv6_cidr_regex.exec(input))) {
-            return IP._ipv6_cidr_range(match, include_network_info);
-        } else if ((match = ipv6_range_regex.exec(input))) {
-            return IP._ipv6_hyphenated_range(match, include_network_info);
+        if ((match = ipv4CidrRegex.exec(input))) {
+            return IP._ipv4CidrRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
+        } else if ((match = ipv4RangeRegex.exec(input))) {
+            return IP._ipv4HyphenatedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
+        } else if ((match = ipv6CidrRegex.exec(input))) {
+            return IP._ipv6CidrRange(match, includeNetworkInfo);
+        } else if ((match = ipv6RangeRegex.exec(input))) {
+            return IP._ipv6HyphenatedRange(match, includeNetworkInfo);
         } else {
             return "Invalid input.\n\nEnter either a CIDR range (e.g. 10.0.0.0/24) or a hyphenated range (e.g. 10.0.0.0 - 10.0.1.0). IPv6 also supported.";
         }
@@ -64,12 +64,12 @@ var IP = {
      * @constant
      * @default
      */
-    IPv4_REGEX: /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/,
+    IPV4_REGEX: /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/,
     /**
      * @constant
      * @default
      */
-    IPv6_REGEX: /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
+    IPV6_REGEX: /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
     
     /**
      * Parse IPv6 address operation.
@@ -78,14 +78,14 @@ var IP = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_parse_ipv6: function (input, args) {
+    runParseIpv6: function (input, args) {
         var match,
             output = "";
         
-        if ((match = IP.IPv6_REGEX.exec(input))) {
-            var ipv6 = IP._str_to_ipv6(match[1]),
-                longhand = IP._ipv6_to_str(ipv6),
-                shorthand = IP._ipv6_to_str(ipv6, true);
+        if ((match = IP.IPV6_REGEX.exec(input))) {
+            var ipv6 = IP._strToIpv6(match[1]),
+                longhand = IP._ipv6ToStr(ipv6),
+                shorthand = IP._ipv6ToStr(ipv6, true);
                 
             output += "Longhand:  " + longhand + "\nShorthand: " + shorthand + "\n";
             
@@ -102,13 +102,13 @@ var IP = {
                 ipv6[3] === 0 && ipv6[4] === 0 && ipv6[5] === 0xffff) {
                 // IPv4-mapped IPv6 address
                 output += "\nIPv4-mapped IPv6 address detected. IPv6 clients will be handled natively by default, and IPv4 clients appear as IPv6 clients at their IPv4-mapped IPv6 address.";
-                output += "\nMapped IPv4 address: " + IP._ipv4_to_str((ipv6[6] << 16) + ipv6[7]);
+                output += "\nMapped IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
                 output += "\nIPv4-mapped IPv6 addresses range: ::ffff:0:0/96";
             } else if (ipv6[0] === 0 && ipv6[1] === 0 && ipv6[2] === 0 &&
                 ipv6[3] === 0 && ipv6[4] === 0xffff && ipv6[5] === 0) {
                 // IPv4-translated address
                 output += "\nIPv4-translated address detected. Used by Stateless IP/ICMP Translation (SIIT). See RFCs 6145 and 6052 for more details.";
-                output += "\nTranslated IPv4 address: " + IP._ipv4_to_str((ipv6[6] << 16) + ipv6[7]);
+                output += "\nTranslated IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
                 output += "\nIPv4-translated addresses range: ::ffff:0:0:0/96";
             } else if (ipv6[0] === 0x100) {
                 // Discard prefix per RFC 6666
@@ -118,50 +118,50 @@ var IP = {
                 ipv6[3] === 0 && ipv6[4] === 0 && ipv6[5] === 0) {
                 // IPv4/IPv6 translation per RFC 6052
                 output += "\n'Well-Known' prefix for IPv4/IPv6 translation detected. See RFC 6052 for more details.";
-                output += "\nTranslated IPv4 address: " + IP._ipv4_to_str((ipv6[6] << 16) + ipv6[7]);
+                output += "\nTranslated IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
                 output += "\n'Well-Known prefix range: 64:ff9b::/96";
             } else if (ipv6[0] === 0x2001 && ipv6[1] === 0) {
                 // Teredo tunneling
                 output += "\nTeredo tunneling IPv6 address detected\n";
-                var server_ipv4  = (ipv6[2] << 16) + ipv6[3],
-                    udp_port     = (~ipv6[5]) & 0xffff,
-                    client_ipv4  = ~((ipv6[6] << 16) + ipv6[7]),
-                    flag_cone    = (ipv6[4] >>> 15) & 1,
-                    flag_r       = (ipv6[4] >>> 14) & 1,
-                    flag_random1 = (ipv6[4] >>> 10) & 15,
-                    flag_ug      = (ipv6[4] >>> 8) & 3,
-                    flag_random2 = ipv6[4] & 255;
+                var serverIpv4  = (ipv6[2] << 16) + ipv6[3],
+                    udpPort     = (~ipv6[5]) & 0xffff,
+                    clientIpv4  = ~((ipv6[6] << 16) + ipv6[7]),
+                    flagCone    = (ipv6[4] >>> 15) & 1,
+                    flagR       = (ipv6[4] >>> 14) & 1,
+                    flagRandom1 = (ipv6[4] >>> 10) & 15,
+                    flagUg      = (ipv6[4] >>> 8) & 3,
+                    flagRandom2 = ipv6[4] & 255;
                 
-                output += "\nServer IPv4 address: " + IP._ipv4_to_str(server_ipv4) +
-                    "\nClient IPv4 address: " + IP._ipv4_to_str(client_ipv4) +
-                    "\nClient UDP port:     " + udp_port +
+                output += "\nServer IPv4 address: " + IP._ipv4ToStr(serverIpv4) +
+                    "\nClient IPv4 address: " + IP._ipv4ToStr(clientIpv4) +
+                    "\nClient UDP port:     " + udpPort +
                     "\nFlags:" +
-                    "\n\tCone:    " + flag_cone;
+                    "\n\tCone:    " + flagCone;
                     
-                if (flag_cone) {
+                if (flagCone) {
                     output += " (Client is behind a cone NAT)";
                 } else {
                     output += " (Client is not behind a cone NAT)";
                 }
                 
-                output += "\n\tR:       " + flag_r;
+                output += "\n\tR:       " + flagR;
                 
-                if (flag_r) {
+                if (flagR) {
                     output += " Error: This flag should be set to 0. See RFC 5991 and RFC 4380.";
                 }
                     
-                output += "\n\tRandom1: " + Utils.bin(flag_random1, 4) +
-                    "\n\tUG:      " + Utils.bin(flag_ug, 2);
+                output += "\n\tRandom1: " + Utils.bin(flagRandom1, 4) +
+                    "\n\tUG:      " + Utils.bin(flagUg, 2);
                         
-                if (flag_ug) {
+                if (flagUg) {
                     output += " Error: This flag should be set to 00. See RFC 4380.";
                 }
                     
-                output += "\n\tRandom2: " + Utils.bin(flag_random2, 8);
+                output += "\n\tRandom2: " + Utils.bin(flagRandom2, 8);
                 
-                if (!flag_r && !flag_ug && flag_random1 && flag_random2) {
+                if (!flagR && !flagUg && flagRandom1 && flagRandom2) {
                     output += "\n\nThis is a valid Teredo address which complies with RFC 4380 and RFC 5991.";
-                } else if (!flag_r && !flag_ug) {
+                } else if (!flagR && !flagUg) {
                     output += "\n\nThis is a valid Teredo address which complies with RFC 4380, however it does not comply with RFC 5991 (Teredo Security Updates) as there are no randomised bits in the flag field.";
                 } else {
                     output += "\n\nThis is an invalid Teredo address.";
@@ -187,15 +187,15 @@ var IP = {
                 output += "\n6to4 transition IPv6 address detected. See RFC 3056 for more details." +
                     "\n6to4 prefix range: 2002::/16";
                 
-                var v4_addr = IP._ipv4_to_str((ipv6[1] << 16) + ipv6[2]),
-                    sla_id = ipv6[3],
-                    interface_id_str = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
-                    interface_id = new BigInteger(interface_id_str, 16);
+                var v4Addr = IP._ipv4ToStr((ipv6[1] << 16) + ipv6[2]),
+                    slaId = ipv6[3],
+                    interfaceIdStr = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
+                    interfaceId = new BigInteger(interfaceIdStr, 16);
                 
-                output += "\n\nEncapsulated IPv4 address: " + v4_addr +
-                    "\nSLA ID: " + sla_id +
-                    "\nInterface ID (base 16): " + interface_id_str +
-                    "\nInterface ID (base 10): " + interface_id.toString();
+                output += "\n\nEncapsulated IPv4 address: " + v4Addr +
+                    "\nSLA ID: " + slaId +
+                    "\nInterface ID (base 16): " + interfaceIdStr +
+                    "\nInterface ID (base 10): " + interfaceId.toString();
             } else if (ipv6[0] >= 0xfc00 && ipv6[0] <= 0xfdff) {
                 // Unique local address
                 output += "\nThis is a unique local address comparable to the IPv4 private addresses 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. See RFC 4193 for more details.";
@@ -229,9 +229,9 @@ var IP = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_change_ip_format: function(input, args) {
-        var in_format  = args[0],
-            out_format = args[1],
+    runChangeIpFormat: function(input, args) {
+        var inFormat = args[0],
+            outFormat = args[1],
             lines = input.split("\n"),
             output = "",
             j = 0;
@@ -239,54 +239,54 @@ var IP = {
         
         for (var i = 0; i < lines.length; i++) {
             if (lines[i] === "") continue;
-            var ba_ip = [];
+            var baIp = [];
             
-            if (in_format === out_format) {
+            if (inFormat === outFormat) {
                 output += lines[i] + "\n";
                 continue;
             }
             
             // Convert to byte array IP from input format
-            switch (in_format) {
+            switch (inFormat) {
                 case "Dotted Decimal":
                     var octets = lines[i].split(".");
                     for (j = 0; j < octets.length; j++) {
-                        ba_ip.push(parseInt(octets[j], 10));
+                        baIp.push(parseInt(octets[j], 10));
                     }
                     break;
                 case "Decimal":
                     var decimal = lines[i].toString();
-                    ba_ip.push(decimal >> 24 & 255);
-                    ba_ip.push(decimal >> 16 & 255);
-                    ba_ip.push(decimal >> 8 & 255);
-                    ba_ip.push(decimal & 255);
+                    baIp.push(decimal >> 24 & 255);
+                    baIp.push(decimal >> 16 & 255);
+                    baIp.push(decimal >> 8 & 255);
+                    baIp.push(decimal & 255);
                     break;
                 case "Hex":
-                    ba_ip = Utils.hex_to_byte_array(lines[i]);
+                    baIp = Utils.hexToByteArray(lines[i]);
                     break;
                 default:
                     throw "Unsupported input IP format";
             }
             
             // Convert byte array IP to output format
-            switch (out_format) {
+            switch (outFormat) {
                 case "Dotted Decimal":
-                    var dd_ip = "";
-                    for (j = 0; j < ba_ip.length; j++) {
-                        dd_ip += ba_ip[j] + ".";
+                    var ddIp = "";
+                    for (j = 0; j < baIp.length; j++) {
+                        ddIp += baIp[j] + ".";
                     }
-                    output += dd_ip.slice(0, dd_ip.length-1) + "\n";
+                    output += ddIp.slice(0, ddIp.length-1) + "\n";
                     break;
                 case "Decimal":
-                    var dec_ip = ((ba_ip[0] << 24) | (ba_ip[1] << 16) | (ba_ip[2] << 8) | ba_ip[3]) >>> 0;
-                    output += dec_ip.toString() + "\n";
+                    var decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
+                    output += decIp.toString() + "\n";
                     break;
                 case "Hex":
-                    var hex_ip = "";
-                    for (j = 0; j < ba_ip.length; j++) {
-                        hex_ip += Utils.hex(ba_ip[j]);
+                    var hexIp = "";
+                    for (j = 0; j < baIp.length; j++) {
+                        hexIp += Utils.hex(baIp[j]);
                     }
-                    output += hex_ip + "\n";
+                    output += hexIp + "\n";
                     break;
                 default:
                     throw "Unsupported output IP format";
@@ -320,20 +320,20 @@ var IP = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_group_ips: function(input, args) {
-        var delim = Utils.char_rep[args[0]],
+    runGroupIps: function(input, args) {
+        var delim = Utils.charRep[args[0]],
             cidr = args[1],
-            only_subnets = args[2],
-            ipv4_mask = cidr < 32 ? ~(0xFFFFFFFF >>> cidr) : 0xFFFFFFFF,
-            ipv6_mask = IP._gen_ipv6_mask(cidr),
+            onlySubnets = args[2],
+            ipv4Mask = cidr < 32 ? ~(0xFFFFFFFF >>> cidr) : 0xFFFFFFFF,
+            ipv6Mask = IP._genIpv6Mask(cidr),
             ips = input.split(delim),
-            ipv4_networks = {},
-            ipv6_networks = {},
+            ipv4Networks = {},
+            ipv6Networks = {},
             match = null,
             output = "",
             ip = null,
             network = null,
-            network_str = "";
+            networkStr = "";
             
         if (cidr < 0 || cidr > 127) {
             return "CIDR must be less than 32 for IPv4 or 128 for IPv6";
@@ -341,57 +341,57 @@ var IP = {
             
         // Parse all IPs and add to network dictionary
         for (var i = 0; i < ips.length; i++) {
-            if ((match = IP.IPv4_REGEX.exec(ips[i]))) {
-                ip = IP._str_to_ipv4(match[1]) >>> 0;
-                network = ip & ipv4_mask;
+            if ((match = IP.IPV4_REGEX.exec(ips[i]))) {
+                ip = IP._strToIpv4(match[1]) >>> 0;
+                network = ip & ipv4Mask;
                 
-                if (ipv4_networks.hasOwnProperty(network)) {
-                    ipv4_networks[network].push(ip);
+                if (ipv4Networks.hasOwnProperty(network)) {
+                    ipv4Networks[network].push(ip);
                 } else {
-                    ipv4_networks[network] = [ip];
+                    ipv4Networks[network] = [ip];
                 }
-            } else if ((match = IP.IPv6_REGEX.exec(ips[i]))) {
-                ip = IP._str_to_ipv6(match[1]);
+            } else if ((match = IP.IPV6_REGEX.exec(ips[i]))) {
+                ip = IP._strToIpv6(match[1]);
                 network = [];
-                network_str = "";
+                networkStr = "";
                 
                 for (var j = 0; j < 8; j++) {
-                    network.push(ip[j] & ipv6_mask[j]);
+                    network.push(ip[j] & ipv6Mask[j]);
                 }
                 
-                network_str = IP._ipv6_to_str(network, true);
+                networkStr = IP._ipv6ToStr(network, true);
                 
-                if (ipv6_networks.hasOwnProperty(network_str)) {
-                    ipv6_networks[network_str].push(ip);
+                if (ipv6Networks.hasOwnProperty(networkStr)) {
+                    ipv6Networks[networkStr].push(ip);
                 } else {
-                    ipv6_networks[network_str] = [ip];
+                    ipv6Networks[networkStr] = [ip];
                 }
             }
         }
         
         // Sort IPv4 network dictionaries and print
-        for (network in ipv4_networks) {
-            ipv4_networks[network] = ipv4_networks[network].sort();
+        for (network in ipv4Networks) {
+            ipv4Networks[network] = ipv4Networks[network].sort();
             
-            output += IP._ipv4_to_str(network) + "/" + cidr + "\n";
+            output += IP._ipv4ToStr(network) + "/" + cidr + "\n";
             
-            if (!only_subnets) {
-                for (i = 0; i < ipv4_networks[network].length; i++) {
-                    output += "  " + IP._ipv4_to_str(ipv4_networks[network][i]) + "\n";
+            if (!onlySubnets) {
+                for (i = 0; i < ipv4Networks[network].length; i++) {
+                    output += "  " + IP._ipv4ToStr(ipv4Networks[network][i]) + "\n";
                 }
                 output += "\n";
             }
         }
         
         // Sort IPv6 network dictionaries and print
-        for (network_str in ipv6_networks) {
-            //ipv6_networks[network_str] = ipv6_networks[network_str].sort();  TODO
+        for (networkStr in ipv6Networks) {
+            //ipv6Networks[networkStr] = ipv6Networks[networkStr].sort();  TODO
             
-            output += network_str + "/" + cidr + "\n";
+            output += networkStr + "/" + cidr + "\n";
             
-            if (!only_subnets) {
-                for (i = 0; i < ipv6_networks[network_str].length; i++) {
-                    output += "  " + IP._ipv6_to_str(ipv6_networks[network_str][i], true) + "\n";
+            if (!onlySubnets) {
+                for (i = 0; i < ipv6Networks[networkStr].length; i++) {
+                    output += "  " + IP._ipv6ToStr(ipv6Networks[networkStr][i], true) + "\n";
                 }
                 output += "\n";
             }
@@ -413,35 +413,35 @@ var IP = {
      *
      * @private
      * @param {RegExp} cidr
-     * @param {boolean} include_network_info
-     * @param {boolean} enumerate_addresses
-     * @param {boolean} allow_large_list
+     * @param {boolean} includeNetworkInfo
+     * @param {boolean} enumerateAddresses
+     * @param {boolean} allowLargeList
      * @returns {string}
      */
-    _ipv4_cidr_range: function(cidr, include_network_info, enumerate_addresses, allow_large_list) {
+    _ipv4CidrRange: function(cidr, includeNetworkInfo, enumerateAddresses, allowLargeList) {
         var output = "",
-            network = IP._str_to_ipv4(cidr[1]),
-            cidr_range = parseInt(cidr[2], 10);
+            network = IP._strToIpv4(cidr[1]),
+            cidrRange = parseInt(cidr[2], 10);
             
-        if (cidr_range < 0 || cidr_range > 31) {
+        if (cidrRange < 0 || cidrRange > 31) {
             return "IPv4 CIDR must be less than 32";
         }
         
-        var mask = ~(0xFFFFFFFF >>> cidr_range),
+        var mask = ~(0xFFFFFFFF >>> cidrRange),
             ip1 = network & mask,
             ip2 = ip1 | ~mask;
         
-        if (include_network_info) {
-            output += "Network: " + IP._ipv4_to_str(network) + "\n";
-            output += "CIDR: " + cidr_range + "\n";
-            output += "Mask: " + IP._ipv4_to_str(mask) + "\n";
-            output += "Range: " + IP._ipv4_to_str(ip1) + " - " + IP._ipv4_to_str(ip2) + "\n";
+        if (includeNetworkInfo) {
+            output += "Network: " + IP._ipv4ToStr(network) + "\n";
+            output += "CIDR: " + cidrRange + "\n";
+            output += "Mask: " + IP._ipv4ToStr(mask) + "\n";
+            output += "Range: " + IP._ipv4ToStr(ip1) + " - " + IP._ipv4ToStr(ip2) + "\n";
             output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
         }
         
-        if (enumerate_addresses) {
-            if (cidr_range >= 16 || allow_large_list) {
-                output += IP._generate_ipv4_range(ip1, ip2).join("\n");
+        if (enumerateAddresses) {
+            if (cidrRange >= 16 || allowLargeList) {
+                output += IP._generateIpv4Range(ip1, ip2).join("\n");
             } else {
                 output += IP._LARGE_RANGE_ERROR;
             }
@@ -455,42 +455,42 @@ var IP = {
      *
      * @private
      * @param {RegExp} cidr
-     * @param {boolean} include_network_info
+     * @param {boolean} includeNetworkInfo
      * @returns {string}
      */
-    _ipv6_cidr_range: function(cidr, include_network_info) {
+    _ipv6CidrRange: function(cidr, includeNetworkInfo) {
         var output = "",
-            network = IP._str_to_ipv6(cidr[1]),
-            cidr_range = parseInt(cidr[cidr.length-1], 10);
+            network = IP._strToIpv6(cidr[1]),
+            cidrRange = parseInt(cidr[cidr.length-1], 10);
             
-        if (cidr_range < 0 || cidr_range > 127) {
+        if (cidrRange < 0 || cidrRange > 127) {
             return "IPv6 CIDR must be less than 128";
         }
         
-        var mask = IP._gen_ipv6_mask(cidr_range),
+        var mask = IP._genIpv6Mask(cidrRange),
             ip1 = new Array(8),
             ip2 = new Array(8),
-            total_diff = "",
+            totalDiff = "",
             total = new Array(128);
             
         for (var i = 0; i < 8; i++) {
             ip1[i] = network[i] & mask[i];
             ip2[i] = ip1[i] | (~mask[i] & 0x0000FFFF);
-            total_diff = (ip2[i] - ip1[i]).toString(2);
+            totalDiff = (ip2[i] - ip1[i]).toString(2);
             
-            if (total_diff !== "0") {
-                for (var n = 0; n < total_diff.length; n++) {
-                    total[i*16 + 16-(total_diff.length-n)] = total_diff[n];
+            if (totalDiff !== "0") {
+                for (var n = 0; n < totalDiff.length; n++) {
+                    total[i*16 + 16-(totalDiff.length-n)] = totalDiff[n];
                 }
             }
         }
 
-        if (include_network_info) {
-            output += "Network: " + IP._ipv6_to_str(network) + "\n";
-            output += "Shorthand: " + IP._ipv6_to_str(network, true) + "\n";
-            output += "CIDR: " + cidr_range + "\n";
-            output += "Mask: " + IP._ipv6_to_str(mask) + "\n";
-            output += "Range: " + IP._ipv6_to_str(ip1) + " - " + IP._ipv6_to_str(ip2) + "\n";
+        if (includeNetworkInfo) {
+            output += "Network: " + IP._ipv6ToStr(network) + "\n";
+            output += "Shorthand: " + IP._ipv6ToStr(network, true) + "\n";
+            output += "CIDR: " + cidrRange + "\n";
+            output += "Mask: " + IP._ipv6ToStr(mask) + "\n";
+            output += "Range: " + IP._ipv6ToStr(ip1) + " - " + IP._ipv6ToStr(ip2) + "\n";
             output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
         }
         
@@ -505,7 +505,7 @@ var IP = {
      * @param {number} cidr
      * @returns {number[]}
      */
-    _gen_ipv6_mask: function(cidr) {
+    _genIpv6Mask: function(cidr) {
         var mask = new Array(8),
             shift;
             
@@ -529,15 +529,15 @@ var IP = {
      *
      * @private
      * @param {RegExp} range
-     * @param {boolean} include_network_info
-     * @param {boolean} enumerate_addresses
-     * @param {boolean} allow_large_list
+     * @param {boolean} includeNetworkInfo
+     * @param {boolean} enumerateAddresses
+     * @param {boolean} allowLargeList
      * @returns {string}
      */
-    _ipv4_hyphenated_range: function(range, include_network_info, enumerate_addresses, allow_large_list) {
+    _ipv4HyphenatedRange: function(range, includeNetworkInfo, enumerateAddresses, allowLargeList) {
         var output = "",
-            ip1 = IP._str_to_ipv4(range[1]),
-            ip2 = IP._str_to_ipv4(range[2]);
+            ip1 = IP._strToIpv4(range[1]),
+            ip2 = IP._strToIpv4(range[2]);
         
         // Calculate mask
         var diff = ip1 ^ ip2,
@@ -552,23 +552,23 @@ var IP = {
         
         mask = ~mask >>> 0;
         var network = ip1 & mask,
-            sub_ip1 = network & mask,
-            sub_ip2 = sub_ip1 | ~mask;
+            subIp1 = network & mask,
+            subIp2 = subIp1 | ~mask;
         
-        if (include_network_info) {
+        if (includeNetworkInfo) {
             output += "Minimum subnet required to hold this range:\n";
-            output += "\tNetwork: " + IP._ipv4_to_str(network) + "\n";
+            output += "\tNetwork: " + IP._ipv4ToStr(network) + "\n";
             output += "\tCIDR: " + cidr + "\n";
-            output += "\tMask: " + IP._ipv4_to_str(mask) + "\n";
-            output += "\tSubnet range: " + IP._ipv4_to_str(sub_ip1) + " - " + IP._ipv4_to_str(sub_ip2) + "\n";
-            output += "\tTotal addresses in subnet: " + (((sub_ip2 - sub_ip1) >>> 0) + 1) + "\n\n";
-            output += "Range: " + IP._ipv4_to_str(ip1) + " - " + IP._ipv4_to_str(ip2) + "\n";
+            output += "\tMask: " + IP._ipv4ToStr(mask) + "\n";
+            output += "\tSubnet range: " + IP._ipv4ToStr(subIp1) + " - " + IP._ipv4ToStr(subIp2) + "\n";
+            output += "\tTotal addresses in subnet: " + (((subIp2 - subIp1) >>> 0) + 1) + "\n\n";
+            output += "Range: " + IP._ipv4ToStr(ip1) + " - " + IP._ipv4ToStr(ip2) + "\n";
             output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
         }
         
-        if (enumerate_addresses) {
-            if (((ip2 - ip1) >>> 0) <= 65536 || allow_large_list) {
-                output += IP._generate_ipv4_range(ip1, ip2).join("\n");
+        if (enumerateAddresses) {
+            if (((ip2 - ip1) >>> 0) <= 65536 || allowLargeList) {
+                output += IP._generateIpv4Range(ip1, ip2).join("\n");
             } else {
                 output += IP._LARGE_RANGE_ERROR;
             }
@@ -582,13 +582,13 @@ var IP = {
      *
      * @private
      * @param {RegExp} range
-     * @param {boolean} include_network_info
+     * @param {boolean} includeNetworkInfo
      * @returns {string}
      */
-    _ipv6_hyphenated_range: function(range, include_network_info) {
+    _ipv6HyphenatedRange: function(range, includeNetworkInfo) {
         var output = "",
-            ip1 = IP._str_to_ipv6(range[1]),
-            ip2 = IP._str_to_ipv6(range[14]);
+            ip1 = IP._strToIpv6(range[1]),
+            ip2 = IP._strToIpv6(range[14]);
         
         var t = "",
             total = new Array(128);
@@ -606,9 +606,9 @@ var IP = {
             }
         }
         
-        if (include_network_info) {
-            output += "Range: " + IP._ipv6_to_str(ip1) + " - " + IP._ipv6_to_str(ip2) + "\n";
-            output += "Shorthand range: " + IP._ipv6_to_str(ip1, true) + " - " + IP._ipv6_to_str(ip2, true) + "\n";
+        if (includeNetworkInfo) {
+            output += "Range: " + IP._ipv6ToStr(ip1) + " - " + IP._ipv6ToStr(ip2) + "\n";
+            output += "Shorthand range: " + IP._ipv6ToStr(ip1, true) + " - " + IP._ipv6ToStr(ip2, true) + "\n";
             output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
         }
         
@@ -620,36 +620,36 @@ var IP = {
      * Converts an IPv4 address from string format to numerical format.
      *
      * @private
-     * @param {string} ip_str
+     * @param {string} ipStr
      * @returns {number}
      *
      * @example
      * // returns 168427520
-     * IP._str_to_ipv4("10.10.0.0");
+     * IP._strToIpv4("10.10.0.0");
      */
-    _str_to_ipv4: function (ip_str) {
-        var blocks = ip_str.split("."),
-            num_blocks = parse_blocks(blocks),
+    _strToIpv4: function (ipStr) {
+        var blocks = ipStr.split("."),
+            numBlocks = parseBlocks(blocks),
             result = 0;
             
-        result += num_blocks[0] << 24;
-        result += num_blocks[1] << 16;
-        result += num_blocks[2] << 8;
-        result += num_blocks[3];
+        result += numBlocks[0] << 24;
+        result += numBlocks[1] << 16;
+        result += numBlocks[2] << 8;
+        result += numBlocks[3];
         
         return result;
         
-        function parse_blocks(blocks) {
+        function parseBlocks(blocks) {
             if (blocks.length !== 4)
                 throw "More than 4 blocks.";
                 
-            var num_blocks = [];
+            var numBlocks = [];
             for (var i = 0; i < 4; i++) {
-                num_blocks[i] = parseInt(blocks[i], 10);
-                if (num_blocks[i] < 0 || num_blocks[i] > 255)
+                numBlocks[i] = parseInt(blocks[i], 10);
+                if (numBlocks[i] < 0 || numBlocks[i] > 255)
                     throw "Block out of range.";
             }
-            return num_blocks;
+            return numBlocks;
         }
     },
     
@@ -658,18 +658,18 @@ var IP = {
      * Converts an IPv4 address from numerical format to string format.
      *
      * @private
-     * @param {number} ip_int
+     * @param {number} ipInt
      * @returns {string}
      *
      * @example
      * // returns "10.10.0.0"
-     * IP._ipv4_to_str(168427520);
+     * IP._ipv4ToStr(168427520);
      */
-    _ipv4_to_str: function(ip_int) {
-        var blockA = (ip_int >> 24) & 255,
-            blockB = (ip_int >> 16) & 255,
-            blockC = (ip_int >> 8) & 255,
-            blockD = ip_int & 255;
+    _ipv4ToStr: function(ipInt) {
+        var blockA = (ipInt >> 24) & 255,
+            blockB = (ipInt >> 16) & 255,
+            blockC = (ipInt >> 8) & 255,
+            blockD = ipInt & 255;
         
         return blockA + "." + blockB + "." + blockC + "." + blockD;
     },
@@ -679,40 +679,40 @@ var IP = {
      * Converts an IPv6 address from string format to numerical array format.
      *
      * @private
-     * @param {string} ip_str
+     * @param {string} ipStr
      * @returns {number[]}
      *
      * @example
      * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
-     * IP._str_to_ipv6("ff00::1111:2222");
+     * IP._strToIpv6("ff00::1111:2222");
      */
-    _str_to_ipv6: function(ip_str) {
-        var blocks = ip_str.split(":"),
-            num_blocks = parse_blocks(blocks),
+    _strToIpv6: function(ipStr) {
+        var blocks = ipStr.split(":"),
+            numBlocks = parseBlocks(blocks),
             j = 0,
             ipv6 = new Array(8);
         
         for (var i = 0; i < 8; i++) {
-            if (isNaN(num_blocks[j])) {
+            if (isNaN(numBlocks[j])) {
                 ipv6[i] = 0;
-                if (i === (8-num_blocks.slice(j).length)) j++;
+                if (i === (8-numBlocks.slice(j).length)) j++;
             } else {
-                ipv6[i] = num_blocks[j];
+                ipv6[i] = numBlocks[j];
                 j++;
             }
         }
         return ipv6;
         
-        function parse_blocks(blocks) {
+        function parseBlocks(blocks) {
             if (blocks.length < 3 || blocks.length > 8)
                 throw "Badly formatted IPv6 address.";
-            var num_blocks = [];
+            var numBlocks = [];
             for (var i = 0; i < blocks.length; i++) {
-                num_blocks[i] = parseInt(blocks[i], 16);
-                if (num_blocks[i] < 0 || num_blocks[i] > 65535)
+                numBlocks[i] = parseInt(blocks[i], 16);
+                if (numBlocks[i] < 0 || numBlocks[i] > 65535)
                     throw "Block out of range.";
             }
-            return num_blocks;
+            return numBlocks;
         }
     },
     
@@ -727,12 +727,12 @@ var IP = {
      *
      * @example
      * // returns "ff00::1111:2222"
-     * IP._ipv6_to_str([65280, 0, 0, 0, 0, 0, 4369, 8738], true);
+     * IP._ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], true);
      *
      * // returns "ff00:0000:0000:0000:0000:0000:1111:2222"
-     * IP._ipv6_to_str([65280, 0, 0, 0, 0, 0, 4369, 8738], false);
+     * IP._ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], false);
      */
-    _ipv6_to_str: function(ipv6, compact) {
+    _ipv6ToStr: function(ipv6, compact) {
         var output = "",
             i = 0;
             
@@ -779,18 +779,18 @@ var IP = {
      *
      * @private
      * @param {number} ip
-     * @param {number} end_ip
+     * @param {number} endIp
      * @returns {string[]}
      *
      * @example
      * // returns ["0.0.0.1", "0.0.0.2", "0.0.0.3"]
-     * IP._generate_ipv4_range(1, 3);
+     * IP._generateIpv4Range(1, 3);
      */
-    _generate_ipv4_range: function(ip, end_ip) {
+    _generateIpv4Range: function(ip, endIp) {
         var range = [];
-        if (end_ip >= ip) {
-            for (; ip <= end_ip; ip++) {
-                range.push(IP._ipv4_to_str(ip));
+        if (endIp >= ip) {
+            for (; ip <= endIp; ip++) {
+                range.push(IP._ipv4ToStr(ip));
             }
         } else {
             range[0] = "Second IP address smaller than first.";

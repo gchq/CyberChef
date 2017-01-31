@@ -26,10 +26,10 @@ var Rotate = {
      * Runs rotation operations across the input data.
      *
      * @private
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @param {number} amount
      * @param {function} algo - The rotation operation to carry out
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
     _rot: function(data, amount, algo) {
         var result = [];
@@ -47,13 +47,13 @@ var Rotate = {
     /**
      * Rotate right operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_rotr: function(input, args) {
+    runRotr: function(input, args) {
         if (args[1]) {
-            return Rotate._rotr_whole(input, args[0]);
+            return Rotate._rotrWhole(input, args[0]);
         } else {
             return Rotate._rot(input, args[0], Rotate._rotr);
         }
@@ -63,13 +63,13 @@ var Rotate = {
     /**
      * Rotate left operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_rotl: function(input, args) {
+    runRotl: function(input, args) {
         if (args[1]) {
-            return Rotate._rotl_whole(input, args[0]);
+            return Rotate._rotlWhole(input, args[0]);
         } else {
             return Rotate._rot(input, args[0], Rotate._rotl);
         }
@@ -95,16 +95,16 @@ var Rotate = {
     /**
      * ROT13 operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_rot13: function(input, args) {
+    runRot13: function(input, args) {
         var amount = args[2],
             output = input,
             chr,
-            rot13_lowercase = args[0],
-            rot13_upperacse = args[1];
+            rot13Lowercase = args[0],
+            rot13Upperacse = args[1];
             
         if (amount) {
             if (amount < 0) {
@@ -113,10 +113,10 @@ var Rotate = {
             
             for (var i = 0; i < input.length; i++) {
                 chr = input[i];
-                if (rot13_upperacse && chr >= 65 && chr <= 90) { // Upper case
+                if (rot13Upperacse && chr >= 65 && chr <= 90) { // Upper case
                     chr = (chr - 65 + amount) % 26;
                     output[i] = chr + 65;
-                } else if (rot13_lowercase && chr >= 97 && chr <= 122) { // Lower case
+                } else if (rot13Lowercase && chr >= 97 && chr <= 122) { // Lower case
                     chr = (chr - 97 + amount) % 26;
                     output[i] = chr + 97;
                 }
@@ -136,11 +136,11 @@ var Rotate = {
      * ROT47 operation.
      *
      * @author Matt C [matt@artemisbot.pw]
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_rot47: function(input, args) {
+    runRot47: function(input, args) {
         var amount = args[0],
             output = input,
             chr;
@@ -193,23 +193,23 @@ var Rotate = {
      * from the end of the array to the beginning.
      *
      * @private
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @param {number} amount
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    _rotr_whole: function(data, amount) {
-        var carry_bits = 0,
-            new_byte,
+    _rotrWhole: function(data, amount) {
+        var carryBits = 0,
+            newByte,
             result = [];
         
         amount = amount % 8;
         for (var i = 0; i < data.length; i++) {
-            var old_byte = data[i] >>> 0;
-            new_byte = (old_byte >> amount) | carry_bits;
-            carry_bits = (old_byte & (Math.pow(2, amount)-1)) << (8-amount);
-            result.push(new_byte);
+            var oldByte = data[i] >>> 0;
+            newByte = (oldByte >> amount) | carryBits;
+            carryBits = (oldByte & (Math.pow(2, amount)-1)) << (8-amount);
+            result.push(newByte);
         }
-        result[0] |= carry_bits;
+        result[0] |= carryBits;
         return result;
     },
     
@@ -219,23 +219,23 @@ var Rotate = {
      * from the beginning of the array to the end.
      *
      * @private
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @param {number} amount
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    _rotl_whole: function(data, amount) {
-        var carry_bits = 0,
-            new_byte,
+    _rotlWhole: function(data, amount) {
+        var carryBits = 0,
+            newByte,
             result = [];
             
         amount = amount % 8;
         for (var i = data.length-1; i >= 0; i--) {
-            var old_byte = data[i];
-            new_byte = ((old_byte << amount) | carry_bits) & 0xFF;
-            carry_bits = (old_byte >> (8-amount)) & (Math.pow(2, amount)-1);
-            result[i] = (new_byte);
+            var oldByte = data[i];
+            newByte = ((oldByte << amount) | carryBits) & 0xFF;
+            carryBits = (oldByte >> (8-amount)) & (Math.pow(2, amount)-1);
+            result[i] = (newByte);
         }
-        result[data.length-1] = result[data.length-1] | carry_bits;
+        result[data.length-1] = result[data.length-1] | carryBits;
         return result;
     },
 

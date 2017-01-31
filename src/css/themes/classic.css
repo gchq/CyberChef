@@ -30,13 +30,13 @@
     border-top-width: 0;
 }
 
-.op_list .operation { /*blue*/
+.op-list .operation { /*blue*/
     color: #3a87ad;
     background-color: #d9edf7;
     border-color: #bce8f1;
 }
 
-#rec_list .operation { /*green*/
+#rec-list .operation { /*green*/
     color: #468847;
     background-color: #dff0d8;
     border-color: #d6e9c6;

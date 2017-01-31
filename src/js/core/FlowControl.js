@@ -31,31 +31,31 @@ var FlowControl = {
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
-     * @param {Operation[]} state.op_list - The list of operations in the recipe.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    run_fork: function(state) {
-        var op_list       = state.op_list,
-            input_type    = op_list[state.progress].input_type,
-            output_type   = op_list[state.progress].output_type,
-            input         = state.dish.get(input_type),
-            ings          = op_list[state.progress].get_ing_values(),
-            split_delim   = ings[0],
-            merge_delim   = ings[1],
-            ignore_errors = ings[2],
-            sub_op_list   = [],
-            inputs        = [];
+    runFork: function(state) {
+        var opList       = state.opList,
+            inputType    = opList[state.progress].inputType,
+            outputType   = opList[state.progress].outputType,
+            input        = state.dish.get(inputType),
+            ings         = opList[state.progress].getIngValues(),
+            splitDelim   = ings[0],
+            mergeDelim   = ings[1],
+            ignoreErrors = ings[2],
+            subOpList    = [],
+            inputs       = [];
         
         if (input)
-            inputs = input.split(split_delim);
+            inputs = input.split(splitDelim);
         
-        // Create sub_op_list for each tranche to operate on
+        // Create subOpList for each tranche to operate on
         // (all remaining operations unless we encounter a Merge)
-        for (var i = state.progress + 1; i < op_list.length; i++) {
-            if (op_list[i].name === "Merge" && !op_list[i].is_disabled()) {
+        for (var i = state.progress + 1; i < opList.length; i++) {
+            if (opList[i].name === "Merge" && !opList[i].isDisabled()) {
                 break;
             } else {
-                sub_op_list.push(op_list[i]);
+                subOpList.push(opList[i]);
             }
         }
         
@@ -63,23 +63,23 @@ var FlowControl = {
             output = "",
             progress = 0;
             
-        recipe.add_operations(sub_op_list);
+        recipe.addOperations(subOpList);
         
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
-            var dish = new Dish(inputs[i], input_type);
+            var dish = new Dish(inputs[i], inputType);
             try {
                 progress = recipe.execute(dish, 0);
             } catch(err) {
-                if (!ignore_errors) {
+                if (!ignoreErrors) {
                     throw err;
                 }
                 progress = err.progress + 1;
             }
-            output += dish.get(output_type) + merge_delim;
+            output += dish.get(outputType) + mergeDelim;
         }
         
-        state.dish.set(output, output_type);
+        state.dish.set(output, outputType);
         state.progress += progress;
         return state;
     },
@@ -91,10 +91,10 @@ var FlowControl = {
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
-     * @param {Operation[]} state.op_list - The list of operations in the recipe.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    run_merge: function(state) {
+    runMerge: function(state) {
         // No need to actually do anything here. The fork operation will
         // merge when it sees this operation.
         return state;
@@ -118,22 +118,22 @@ var FlowControl = {
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
-     * @param {Operation[]} state.op_list - The list of operations in the recipe.
-     * @param {number} state.num_jumps - The number of jumps taken so far.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
+     * @param {number} state.numJumps - The number of jumps taken so far.
      * @returns {Object} The updated state of the recipe.
      */
-    run_jump: function(state) {
-        var ings      = state.op_list[state.progress].get_ing_values(),
-            jump_num  = ings[0],
-            max_jumps = ings[1];
+    runJump: function(state) {
+        var ings     = state.opList[state.progress].getIngValues(),
+            jumpNum  = ings[0],
+            maxJumps = ings[1];
         
-        if (state.num_jumps >= max_jumps) {
+        if (state.numJumps >= maxJumps) {
             state.progress++;
             return state;
         }
         
-        state.progress += jump_num;
-        state.num_jumps++;
+        state.progress += jumpNum;
+        state.numJumps++;
         return state;
     },
     
@@ -144,25 +144,25 @@ var FlowControl = {
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
-     * @param {Operation[]} state.op_list - The list of operations in the recipe.
-     * @param {number} state.num_jumps - The number of jumps taken so far.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
+     * @param {number} state.numJumps - The number of jumps taken so far.
      * @returns {Object} The updated state of the recipe.
      */
-    run_cond_jump: function(state) {
-        var ings      = state.op_list[state.progress].get_ing_values(),
-            dish      = state.dish,
-            regex_str = ings[0],
-            jump_num  = ings[1],
-            max_jumps = ings[2];
+    runCondJump: function(state) {
+        var ings     = state.opList[state.progress].getIngValues(),
+            dish     = state.dish,
+            regexStr = ings[0],
+            jumpNum  = ings[1],
+            maxJumps = ings[2];
         
-        if (state.num_jumps >= max_jumps) {
+        if (state.numJumps >= maxJumps) {
             state.progress++;
             return state;
         }
         
-        if (regex_str !== "" && dish.get(Dish.STRING).search(regex_str) > -1) {
-            state.progress += jump_num;
-            state.num_jumps++;
+        if (regexStr !== "" && dish.get(Dish.STRING).search(regexStr) > -1) {
+            state.progress += jumpNum;
+            state.numJumps++;
         }
         
         return state;
@@ -175,11 +175,11 @@ var FlowControl = {
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
-     * @param {Operation[]} state.op_list - The list of operations in the recipe.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    run_return: function(state) {
-        state.progress = state.op_list.length;
+    runReturn: function(state) {
+        state.progress = state.opList.length;
         return state;
     },
     

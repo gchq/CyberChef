@@ -6,23 +6,23 @@
  * @license Apache-2.0
  *
  * @class
- * @param {string} operation_name
- * @param {Object} operation_config
+ * @param {string} operationName
+ * @param {Object} operationConfig
  */
-var Operation = function(operation_name, operation_config) {
-    this.name              = operation_name;
-    this.description       = "";
-    this.input_type        = -1;
-    this.output_type       = -1;
-    this.run               = null;
-    this.highlight         = null;
-    this.highlight_reverse = null;
-    this.breakpoint        = false;
-    this.disabled          = false;
-    this.ing_list          = [];
+var Operation = function(operationName, operationConfig) {
+    this.name             = operationName;
+    this.description      = "";
+    this.inputType        = -1;
+    this.outputType       = -1;
+    this.run              = null;
+    this.highlight        = null;
+    this.highlightReverse = null;
+    this.breakpoint       = false;
+    this.disabled         = false;
+    this.ingList          = [];
     
-    if (operation_config) {
-        this._parse_config(operation_config);
+    if (operationConfig) {
+        this._parseConfig(operationConfig);
     }
 };
 
@@ -31,21 +31,21 @@ var Operation = function(operation_name, operation_config) {
  * Reads and parses the given config.
  *
  * @private
- * @param {Object} operation_config
+ * @param {Object} operationConfig
  */
-Operation.prototype._parse_config = function(operation_config) {
-    this.description       = operation_config.description;
-    this.input_type        = Dish.type_enum(operation_config.input_type);
-    this.output_type       = Dish.type_enum(operation_config.output_type);
-    this.run               = operation_config.run;
-    this.highlight         = operation_config.highlight;
-    this.highlight_reverse = operation_config.highlight_reverse;
-    this.flow_control      = operation_config.flow_control;
+Operation.prototype._parseConfig = function(operationConfig) {
+    this.description      = operationConfig.description;
+    this.inputType        = Dish.typeEnum(operationConfig.inputType);
+    this.outputType       = Dish.typeEnum(operationConfig.outputType);
+    this.run              = operationConfig.run;
+    this.highlight        = operationConfig.highlight;
+    this.highlightReverse = operationConfig.highlightReverse;
+    this.flowControl      = operationConfig.flowControl;
 
-    for (var a = 0; a < operation_config.args.length; a++) {
-        var ingredient_config = operation_config.args[a];
-        var ingredient = new Ingredient(ingredient_config);
-        this.add_ingredient(ingredient);
+    for (var a = 0; a < operationConfig.args.length; a++) {
+        var ingredientConfig = operationConfig.args[a];
+        var ingredient = new Ingredient(ingredientConfig);
+        this.addIngredient(ingredient);
     }
 };
 
@@ -55,19 +55,19 @@ Operation.prototype._parse_config = function(operation_config) {
  *
  * @returns {Object}
  */
-Operation.prototype.get_config = function() {
-    var ingredient_config = [];
+Operation.prototype.getConfig = function() {
+    var ingredientConfig = [];
     
-    for (var o = 0; o < this.ing_list.length; o++) {
-        ingredient_config.push(this.ing_list[o].get_config());
+    for (var o = 0; o < this.ingList.length; o++) {
+        ingredientConfig.push(this.ingList[o].getConfig());
     }
     
-    var operation_config = {
+    var operationConfig = {
         "op": this.name,
-        "args": ingredient_config
+        "args": ingredientConfig
     };
     
-    return operation_config;
+    return operationConfig;
 };
 
 
@@ -76,19 +76,19 @@ Operation.prototype.get_config = function() {
  *
  * @param {Ingredient} ingredient
  */
-Operation.prototype.add_ingredient = function(ingredient) {
-    this.ing_list.push(ingredient);
+Operation.prototype.addIngredient = function(ingredient) {
+    this.ingList.push(ingredient);
 };
 
 
 /**
  * Set the Ingredient values for this Operation.
  *
- * @param {Object[]} ing_values
+ * @param {Object[]} ingValues
  */
-Operation.prototype.set_ing_values = function(ing_values) {
-    for (var i = 0; i < ing_values.length; i++) {
-        this.ing_list[i].set_value(ing_values[i]);
+Operation.prototype.setIngValues = function(ingValues) {
+    for (var i = 0; i < ingValues.length; i++) {
+        this.ingList[i].setValue(ingValues[i]);
     }
 };
 
@@ -98,12 +98,12 @@ Operation.prototype.set_ing_values = function(ing_values) {
  *
  * @returns {Object[]}
  */
-Operation.prototype.get_ing_values = function() {
-    var ing_values = [];
-    for (var i = 0; i < this.ing_list.length; i++) {
-        ing_values.push(this.ing_list[i].value);
+Operation.prototype.getIngValues = function() {
+    var ingValues = [];
+    for (var i = 0; i < this.ingList.length; i++) {
+        ingValues.push(this.ingList[i].value);
     }
-    return ing_values;
+    return ingValues;
 };
 
 
@@ -112,7 +112,7 @@ Operation.prototype.get_ing_values = function() {
  *
  * @param {boolean} value
  */
-Operation.prototype.set_breakpoint = function(value) {
+Operation.prototype.setBreakpoint = function(value) {
     this.breakpoint = !!value;
 };
 
@@ -122,7 +122,7 @@ Operation.prototype.set_breakpoint = function(value) {
  *
  * @returns {boolean}
  */
-Operation.prototype.is_breakpoint = function() {
+Operation.prototype.isBreakpoint = function() {
     return this.breakpoint;
 };
 
@@ -132,7 +132,7 @@ Operation.prototype.is_breakpoint = function() {
  *
  * @param {boolean} value
  */
-Operation.prototype.set_disabled = function(value) {
+Operation.prototype.setDisabled = function(value) {
     this.disabled = !!value;
 };
 
@@ -142,7 +142,7 @@ Operation.prototype.set_disabled = function(value) {
  *
  * @returns {boolean}
  */
-Operation.prototype.is_disabled = function() {
+Operation.prototype.isDisabled = function() {
     return this.disabled;
 };
 
@@ -152,6 +152,6 @@ Operation.prototype.is_disabled = function() {
  *
  * @returns {boolean}
  */
-Operation.prototype.is_flow_control = function() {
-    return this.flow_control;
+Operation.prototype.isFlowControl = function() {
+    return this.flowControl;
 };
