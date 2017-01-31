@@ -64,6 +64,10 @@ blockquote {
     font-size: inherit;
 }
 
+blockquote a {
+    cursor: pointer;
+}
+
 optgroup {
     font-weight: bold;
 }
