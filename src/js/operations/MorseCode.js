@@ -96,27 +96,39 @@ var MorseCode = {
         var letter_delim = MorseCode.OPTION_TABLE[args[1]];
         var word_delim = MorseCode.OPTION_TABLE[args[2]];
 
-        var words = input.split(/ +/);
-        words = Array.prototype.map.call(words, function(word) {
-            var letters = Array.prototype.map.call(word, function(character) {
-                var letter = character.toUpperCase();
-                if(typeof MorseCode.MORSE_TABLE[letter] == "undefined") {
-                    return "";
-                }
+        input = input.split(/\r?\n/);
+        input = Array.prototype.map.call(input, function(line) {
+            var words = line.split(/ +/);
+            words = Array.prototype.map.call(words, function(word) {
+                var letters = Array.prototype.map.call(word, function(character) {
+                    var letter = character.toUpperCase();
+                    if(typeof MorseCode.MORSE_TABLE[letter] == "undefined") {
+                        return "";
+                    }
 
-                return MorseCode.MORSE_TABLE[letter];
+                    return MorseCode.MORSE_TABLE[letter];
+                });
+
+                return letters.join("<ld>");
             });
-
-            return letters.join("<ld>");
+            line = words.join("<wd>");
+            return line;
         });
+        input = input.join("\n");
 
-        var morse = words.join("<wd>");
-        morse = morse.replace(/<dash>/g, dash);
-        morse = morse.replace(/<dot>/g, dot);
-        morse = morse.replace(/<ld>/g, letter_delim);
-        morse = morse.replace(/<wd>/g, word_delim);
+        input = input.replace(
+            /<dash>|<dot>|<ld>|<wd>/g,
+            function(match) {
+                switch(match) {
+                    case "<dash>": return dash;
+                    case "<dot>": return dot;
+                    case "<ld>": return letter_delim;
+                    case "<wd>": return word_delim;
+                }
+            }
+        );
 
-        return morse;
+        return input;
     },
     
     
