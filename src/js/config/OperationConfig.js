@@ -2953,8 +2953,8 @@ var OperationConfig = {
             }
         ]
     },
-    "To Morse Code": {
-        description: "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. SOS becomes ... --- ...",
+    "To Morse code": {
+        description: "Translates alphanumeric characters into International Morse code.<br><br>Ignores non-Morse characters.<br><br>e.g. SOS becomes ... --- ...",
         run: MorseCode.translateTo,
         inputType: "string",
         outputType: "string",
@@ -2976,8 +2976,8 @@ var OperationConfig = {
             }
         ]
     },
-    "From Morse Code": {
-        description: "Translates Morse Code into (upper case) alphanumeric characters.",
+    "From Morse code": {
+        description: "Translates Morse code into (upper case) alphanumeric characters.",
         run: MorseCode.translateFrom,
         inputType: "string",
         outputType: "string",
