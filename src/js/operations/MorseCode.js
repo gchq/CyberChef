@@ -93,8 +93,8 @@ var MorseCode = {
         var dash = format[0];
         var dot = format[1];
 
-        var letter_delim = MorseCode.OPTION_TABLE[args[1]];
-        var word_delim = MorseCode.OPTION_TABLE[args[2]];
+        var letterDelim = MorseCode.OPTION_TABLE[args[1]];
+        var wordDelim = MorseCode.OPTION_TABLE[args[2]];
 
         input = input.split(/\r?\n/);
         input = Array.prototype.map.call(input, function(line) {
@@ -122,16 +122,16 @@ var MorseCode = {
                 switch(match) {
                     case "<dash>": return dash;
                     case "<dot>": return dot;
-                    case "<ld>": return letter_delim;
-                    case "<wd>": return word_delim;
+                    case "<ld>": return letterDelim;
+                    case "<wd>": return wordDelim;
                 }
             }
         );
 
         return input;
     },
-    
-    
+
+
     /**
      * From Morse Code operation.
      *
@@ -155,27 +155,26 @@ var MorseCode = {
                 reverseTable();
             }
 
-            var letter_delim = MorseCode.OPTION_TABLE[args[0]];
-            var word_delim = MorseCode.OPTION_TABLE[args[1]];
+            var letterDelim = MorseCode.OPTION_TABLE[args[0]];
+            var wordDelim = MorseCode.OPTION_TABLE[args[1]];
 
-            input = input.replace(/-|_|dash/ig, "<dash>")
-            input = input.replace(/\.|dot/ig, "<dot>")
+            input = input.replace(/-|_|dash/ig, "<dash>");
+            input = input.replace(/\.|dot/ig, "<dot>");
 
-            var words = input.split(word_delim);
+            var words = input.split(wordDelim);
             words = Array.prototype.map.call(words, function(word) {
-                var signals = word.split(letter_delim);
+                var signals = word.split(letterDelim);
 
                 var letters = signals.map(function(signal) {
                     return reversedTable[signal];
                 });
 
-                var word = letters.join("");
-                return word;
+                return letters.join("");
             });
             words = words.join(" ");
 
             return words;
         };
     })(),
-    
+
 };
