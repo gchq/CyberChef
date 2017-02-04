@@ -35,11 +35,11 @@ var QuotedPrintable = {
     /**
      * To Quoted Printable operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to: function (input, args) {
+    runTo: function (input, args) {
         var mimeEncodedStr = QuotedPrintable.mimeEncode(input);
         
         // fix line breaks
@@ -58,9 +58,9 @@ var QuotedPrintable = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_from: function (input, args) {
+    runFrom: function (input, args) {
         var str = input.replace(/\=(?:\r?\n|$)/g, "");
         return QuotedPrintable.mimeDecode(str);
     },
@@ -70,7 +70,7 @@ var QuotedPrintable = {
      * Decodes mime-encoded data.
      *
      * @param {string} str
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
     mimeDecode: function(str) {
         var encodedBytesCount = (str.match(/\=[\da-fA-F]{2}/g) || []).length,
@@ -96,7 +96,7 @@ var QuotedPrintable = {
     /**
      * Encodes mime data.
      *
-     * @param {byte_array} buffer
+     * @param {byteArray} buffer
      * @returns {string}
      */
     mimeEncode: function(buffer) {
@@ -130,7 +130,7 @@ var QuotedPrintable = {
      *
      * @private
      * @param {number} nr
-     * @param {byte_array[]} ranges
+     * @param {byteArray[]} ranges
      * @returns {bolean}
      */
     _checkRanges: function(nr, ranges) {

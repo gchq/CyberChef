@@ -6,7 +6,7 @@
  * @license Apache-2.0
  *
  * @class
- * @param {byte_array|string|number} value - The value of the input data.
+ * @param {byteArray|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
 var Dish = function(value, type) {
@@ -45,12 +45,12 @@ Dish.HTML = 3;
  * Returns the data type enum for the given type string.
  *
  * @static
- * @param {string} type_str - The name of the data type.
+ * @param {string} typeStr - The name of the data type.
  * @returns {number} The data type enum value.
  */
-Dish.type_enum = function(type_str) {
-    switch (type_str) {
-        case "byte_array":
+Dish.typeEnum = function(typeStr) {
+    switch (typeStr) {
+        case "byteArray":
         case "Byte array":
             return Dish.BYTE_ARRAY;
         case "string":
@@ -72,13 +72,13 @@ Dish.type_enum = function(type_str) {
  * Returns the data type string for the given type enum.
  *
  * @static
- * @param {string} type_enum - The enum value of the data type.
+ * @param {string} typeEnum - The enum value of the data type.
  * @returns {number} The data type as a string.
  */
-Dish.enum_lookup = function(type_enum) {
-    switch (type_enum) {
+Dish.enumLookup = function(typeEnum) {
+    switch (typeEnum) {
         case Dish.BYTE_ARRAY:
-            return "byte_array";
+            return "byteArray";
         case Dish.STRING:
             return "string";
         case Dish.NUMBER:
@@ -94,7 +94,7 @@ Dish.enum_lookup = function(type_enum) {
 /**
  * Sets the data value and type and then validates them.
  *
- * @param {byte_array|string|number} value - The value of the input data.
+ * @param {byteArray|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
 Dish.prototype.set = function(value, type) {
@@ -103,7 +103,7 @@ Dish.prototype.set = function(value, type) {
     
     if (!this.valid()) {
         var sample = Utils.truncate(JSON.stringify(this.value), 13);
-        throw "Data is not a valid " + Dish.enum_lookup(type) + ": " + sample;
+        throw "Data is not a valid " + Dish.enumLookup(type) + ": " + sample;
     }
 };
 
@@ -112,7 +112,7 @@ Dish.prototype.set = function(value, type) {
  * Returns the value of the data in the type format specified.
  *
  * @param {number} type - The data type of value, see Dish enums.
- * @returns {byte_array|string|number} The value of the output data.
+ * @returns {byteArray|string|number} The value of the output data.
  */
 Dish.prototype.get = function(type) {
     if (this.type !== type) {
@@ -125,36 +125,36 @@ Dish.prototype.get = function(type) {
 /**
  * Translates the data to the given type format.
  *
- * @param {number} to_type - The data type of value, see Dish enums.
+ * @param {number} toType - The data type of value, see Dish enums.
  */
-Dish.prototype.translate = function(to_type) {
-    // Convert data to intermediate byte_array type
+Dish.prototype.translate = function(toType) {
+    // Convert data to intermediate byteArray type
     switch (this.type) {
         case Dish.STRING:
-            this.value = this.value ? Utils.str_to_byte_array(this.value) : [];
+            this.value = this.value ? Utils.strToByteArray(this.value) : [];
             this.type = Dish.BYTE_ARRAY;
             break;
         case Dish.NUMBER:
-            this.value = typeof this.value == "number" ? Utils.str_to_byte_array(this.value.toString()) : [];
+            this.value = typeof this.value == "number" ? Utils.strToByteArray(this.value.toString()) : [];
             this.type = Dish.BYTE_ARRAY;
             break;
         case Dish.HTML:
-            this.value = this.value ? Utils.str_to_byte_array(Utils.strip_html_tags(this.value, true)) : [];
+            this.value = this.value ? Utils.strToByteArray(Utils.stripHtmlTags(this.value, true)) : [];
             this.type = Dish.BYTE_ARRAY;
             break;
         default:
             break;
     }
     
-    // Convert from byte_array to to_type
-    switch (to_type) {
+    // Convert from byteArray to toType
+    switch (toType) {
         case Dish.STRING:
         case Dish.HTML:
-            this.value = this.value ? Utils.byte_array_to_utf8(this.value) : "";
+            this.value = this.value ? Utils.byteArrayToUtf8(this.value) : "";
             this.type = Dish.STRING;
             break;
         case Dish.NUMBER:
-            this.value = this.value ? parseFloat(Utils.byte_array_to_utf8(this.value)) : 0;
+            this.value = this.value ? parseFloat(Utils.byteArrayToUtf8(this.value)) : 0;
             this.type = Dish.NUMBER;
             break;
         default:

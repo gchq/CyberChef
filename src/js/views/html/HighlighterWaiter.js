@@ -11,8 +11,8 @@
 var HighlighterWaiter = function(app) {
     this.app = app;
 
-    this.mouse_button_down = false;
-    this.mouse_target = null;
+    this.mouseButtonDown = false;
+    this.mouseTarget = null;
 };
 
 
@@ -37,7 +37,7 @@ HighlighterWaiter.OUTPUT = 1;
  * @private
  * @returns {boolean}
  */
-HighlighterWaiter.prototype._is_selection_backwards = function() {
+HighlighterWaiter.prototype._isSelectionBackwards = function() {
     var backwards = false,
         sel = window.getSelection();
 
@@ -60,7 +60,7 @@ HighlighterWaiter.prototype._is_selection_backwards = function() {
  * @param {number} offset - The offset since the last HTML element.
  * @returns {number}
  */
-HighlighterWaiter.prototype._get_output_html_offset = function(node, offset) {
+HighlighterWaiter.prototype._getOutputHtmlOffset = function(node, offset) {
     var sel = window.getSelection(),
         range = document.createRange();
 
@@ -81,7 +81,7 @@ HighlighterWaiter.prototype._get_output_html_offset = function(node, offset) {
  * @returns {number} pos.start
  * @returns {number} pos.end
  */
-HighlighterWaiter.prototype._get_output_html_selection_offsets = function() {
+HighlighterWaiter.prototype._getOutputHtmlSelectionOffsets = function() {
     var sel = window.getSelection(),
         range,
         start = 0,
@@ -90,9 +90,9 @@ HighlighterWaiter.prototype._get_output_html_selection_offsets = function() {
 
     if (sel.rangeCount) {
         range = sel.getRangeAt(sel.rangeCount - 1);
-        backwards = this._is_selection_backwards();
-        start = this._get_output_html_offset(range.startContainer, range.startOffset);
-        end = this._get_output_html_offset(range.endContainer, range.endOffset);
+        backwards = this._isSelectionBackwards();
+        start = this._getOutputHtmlOffset(range.startContainer, range.startOffset);
+        end = this._getOutputHtmlOffset(range.endContainer, range.endOffset);
         sel.removeAllRanges();
         sel.addRange(range);
 
@@ -117,7 +117,7 @@ HighlighterWaiter.prototype._get_output_html_selection_offsets = function() {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.input_scroll = function(e) {
+HighlighterWaiter.prototype.inputScroll = function(e) {
     var el = e.target;
     document.getElementById("input-highlighter").scrollTop = el.scrollTop;
     document.getElementById("input-highlighter").scrollLeft = el.scrollLeft;
@@ -130,7 +130,7 @@ HighlighterWaiter.prototype.input_scroll = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_scroll = function(e) {
+HighlighterWaiter.prototype.outputScroll = function(e) {
     var el = e.target;
     document.getElementById("output-highlighter").scrollTop = el.scrollTop;
     document.getElementById("output-highlighter").scrollLeft = el.scrollLeft;
@@ -143,18 +143,18 @@ HighlighterWaiter.prototype.output_scroll = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.input_mousedown = function(e) {
-    this.mouse_button_down = true;
-    this.mouse_target = HighlighterWaiter.INPUT;
-    this.remove_highlights();
+HighlighterWaiter.prototype.inputMousedown = function(e) {
+    this.mouseButtonDown = true;
+    this.mouseTarget = HighlighterWaiter.INPUT;
+    this.removeHighlights();
 
     var el = e.target,
         start = el.selectionStart,
         end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
-        document.getElementById("input-selection-info").innerHTML = this.selection_info(start, end);
-        this.highlight_output([{start: start, end: end}]);
+        document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
+        this.highlightOutput([{start: start, end: end}]);
     }
 };
 
@@ -165,18 +165,18 @@ HighlighterWaiter.prototype.input_mousedown = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_mousedown = function(e) {
-    this.mouse_button_down = true;
-    this.mouse_target = HighlighterWaiter.OUTPUT;
-    this.remove_highlights();
+HighlighterWaiter.prototype.outputMousedown = function(e) {
+    this.mouseButtonDown = true;
+    this.mouseTarget = HighlighterWaiter.OUTPUT;
+    this.removeHighlights();
 
     var el = e.target,
         start = el.selectionStart,
         end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
-        document.getElementById("output-selection-info").innerHTML = this.selection_info(start, end);
-        this.highlight_input([{start: start, end: end}]);
+        document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
+        this.highlightInput([{start: start, end: end}]);
     }
 };
 
@@ -187,13 +187,13 @@ HighlighterWaiter.prototype.output_mousedown = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_html_mousedown = function(e) {
-    this.mouse_button_down = true;
-    this.mouse_target = HighlighterWaiter.OUTPUT;
+HighlighterWaiter.prototype.outputHtmlMousedown = function(e) {
+    this.mouseButtonDown = true;
+    this.mouseTarget = HighlighterWaiter.OUTPUT;
 
-    var sel = this._get_output_html_selection_offsets();
+    var sel = this._getOutputHtmlSelectionOffsets();
     if (sel.start !== 0 || sel.end !== 0) {
-        document.getElementById("output-selection-info").innerHTML = this.selection_info(sel.start, sel.end);
+        document.getElementById("output-selection-info").innerHTML = this.selectionInfo(sel.start, sel.end);
     }
 };
 
@@ -203,8 +203,8 @@ HighlighterWaiter.prototype.output_html_mousedown = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.input_mouseup = function(e) {
-    this.mouse_button_down = false;
+HighlighterWaiter.prototype.inputMouseup = function(e) {
+    this.mouseButtonDown = false;
 };
 
 
@@ -213,8 +213,8 @@ HighlighterWaiter.prototype.input_mouseup = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_mouseup = function(e) {
-    this.mouse_button_down = false;
+HighlighterWaiter.prototype.outputMouseup = function(e) {
+    this.mouseButtonDown = false;
 };
 
 
@@ -223,8 +223,8 @@ HighlighterWaiter.prototype.output_mouseup = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_html_mouseup = function(e) {
-    this.mouse_button_down = false;
+HighlighterWaiter.prototype.outputHtmlMouseup = function(e) {
+    this.mouseButtonDown = false;
 };
 
 
@@ -234,11 +234,11 @@ HighlighterWaiter.prototype.output_html_mouseup = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.input_mousemove = function(e) {
+HighlighterWaiter.prototype.inputMousemove = function(e) {
     // Check that the left mouse button is pressed
-    if (!this.mouse_button_down ||
+    if (!this.mouseButtonDown ||
         e.which !== 1 ||
-        this.mouse_target !== HighlighterWaiter.INPUT)
+        this.mouseTarget !== HighlighterWaiter.INPUT)
         return;
 
     var el = e.target,
@@ -246,8 +246,8 @@ HighlighterWaiter.prototype.input_mousemove = function(e) {
         end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
-        document.getElementById("input-selection-info").innerHTML = this.selection_info(start, end);
-        this.highlight_output([{start: start, end: end}]);
+        document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
+        this.highlightOutput([{start: start, end: end}]);
     }
 };
 
@@ -258,11 +258,11 @@ HighlighterWaiter.prototype.input_mousemove = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_mousemove = function(e) {
+HighlighterWaiter.prototype.outputMousemove = function(e) {
     // Check that the left mouse button is pressed
-    if (!this.mouse_button_down ||
+    if (!this.mouseButtonDown ||
         e.which !== 1 ||
-        this.mouse_target !== HighlighterWaiter.OUTPUT)
+        this.mouseTarget !== HighlighterWaiter.OUTPUT)
         return;
 
     var el = e.target,
@@ -270,8 +270,8 @@ HighlighterWaiter.prototype.output_mousemove = function(e) {
         end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
-        document.getElementById("output-selection-info").innerHTML = this.selection_info(start, end);
-        this.highlight_input([{start: start, end: end}]);
+        document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
+        this.highlightInput([{start: start, end: end}]);
     }
 };
 
@@ -282,16 +282,16 @@ HighlighterWaiter.prototype.output_mousemove = function(e) {
  *
  * @param {event} e
  */
-HighlighterWaiter.prototype.output_html_mousemove = function(e) {
+HighlighterWaiter.prototype.outputHtmlMousemove = function(e) {
     // Check that the left mouse button is pressed
-    if (!this.mouse_button_down ||
+    if (!this.mouseButtonDown ||
         e.which !== 1 ||
-        this.mouse_target !== HighlighterWaiter.OUTPUT)
+        this.mouseTarget !== HighlighterWaiter.OUTPUT)
         return;
 
-    var sel = this._get_output_html_selection_offsets();
+    var sel = this._getOutputHtmlSelectionOffsets();
     if (sel.start !== 0 || sel.end !== 0) {
-        document.getElementById("output-selection-info").innerHTML = this.selection_info(sel.start, sel.end);
+        document.getElementById("output-selection-info").innerHTML = this.selectionInfo(sel.start, sel.end);
     }
 };
 
@@ -304,21 +304,21 @@ HighlighterWaiter.prototype.output_html_mousemove = function(e) {
  * @param {number} end - The end offset.
  * @returns {string}
  */
-HighlighterWaiter.prototype.selection_info = function(start, end) {
+HighlighterWaiter.prototype.selectionInfo = function(start, end) {
     var width = end.toString().length;
     width = width < 2 ? 2 : width;
-    var start_str = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;"),
-        end_str   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;"),
-        len_str   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
+    var startStr = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;"),
+        endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;"),
+        lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
 
-    return "start: " + start_str + "<br>end: " + end_str + "<br>length: " + len_str;
+    return "start: " + startStr + "<br>end: " + endStr + "<br>length: " + lenStr;
 };
 
 
 /**
  * Removes highlighting and selection information.
  */
-HighlighterWaiter.prototype.remove_highlights = function() {
+HighlighterWaiter.prototype.removeHighlights = function() {
     document.getElementById("input-highlighter").innerHTML = "";
     document.getElementById("output-highlighter").innerHTML = "";
     document.getElementById("input-selection-info").innerHTML = "";
@@ -335,25 +335,25 @@ HighlighterWaiter.prototype.remove_highlights = function() {
  * @returns {function} highlights[].b
  * @returns {Object[]} highlights[].args
  */
-HighlighterWaiter.prototype.generate_highlight_list = function() {
-    var recipe_config = this.app.get_recipe_config(),
+HighlighterWaiter.prototype.generateHighlightList = function() {
+    var recipeConfig = this.app.getRecipeConfig(),
         highlights = [];
 
-    for (var i = 0; i < recipe_config.length; i++) {
-        if (recipe_config[i].disabled) continue;
+    for (var i = 0; i < recipeConfig.length; i++) {
+        if (recipeConfig[i].disabled) continue;
 
         // If any breakpoints are set, do not attempt to highlight
-        if (recipe_config[i].breakpoint) return false;
+        if (recipeConfig[i].breakpoint) return false;
 
-        var op = this.app.operations[recipe_config[i].op];
+        var op = this.app.operations[recipeConfig[i].op];
 
         // If any of the operations do not support highlighting, fail immediately.
         if (op.highlight === false || op.highlight === undefined) return false;
 
         highlights.push({
             f: op.highlight,
-            b: op.highlight_reverse,
-            args: recipe_config[i].args
+            b: op.highlightReverse,
+            args: recipeConfig[i].args
         });
     }
 
@@ -372,10 +372,10 @@ HighlighterWaiter.prototype.generate_highlight_list = function() {
  * @param {number} pos.start - The start offset.
  * @param {number} pos.end - The end offset.
  */
-HighlighterWaiter.prototype.highlight_output = function(pos) {
-    var highlights = this.generate_highlight_list();
+HighlighterWaiter.prototype.highlightOutput = function(pos) {
+    var highlights = this.generateHighlightList();
 
-    if (!highlights || !this.app.auto_bake_) {
+    if (!highlights || !this.app.autoBake_) {
         return false;
     }
 
@@ -388,7 +388,7 @@ HighlighterWaiter.prototype.highlight_output = function(pos) {
         }
     }
 
-    document.getElementById("output-selection-info").innerHTML = this.selection_info(pos[0].start, pos[0].end);
+    document.getElementById("output-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
     this.highlight(
         document.getElementById("output-text"),
         document.getElementById("output-highlighter"),
@@ -407,10 +407,10 @@ HighlighterWaiter.prototype.highlight_output = function(pos) {
  * @param {number} pos.start - The start offset.
  * @param {number} pos.end - The end offset.
  */
-HighlighterWaiter.prototype.highlight_input = function(pos) {
-    var highlights = this.generate_highlight_list();
+HighlighterWaiter.prototype.highlightInput = function(pos) {
+    var highlights = this.generateHighlightList();
 
-    if (!highlights || !this.app.auto_bake_) {
+    if (!highlights || !this.app.autoBake_) {
         return false;
     }
 
@@ -423,7 +423,7 @@ HighlighterWaiter.prototype.highlight_input = function(pos) {
         }
     }
 
-    document.getElementById("input-selection-info").innerHTML = this.selection_info(pos[0].start, pos[0].end);
+    document.getElementById("input-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
     this.highlight(
         document.getElementById("input-text"),
         document.getElementById("input-highlighter"),
@@ -442,17 +442,17 @@ HighlighterWaiter.prototype.highlight_input = function(pos) {
  * @param {number} pos.end - The end offset.
  */
 HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
-    if (!this.app.options.show_highlighter) return false;
-    if (!this.app.options.attempt_highlight) return false;
+    if (!this.app.options.showHighlighter) return false;
+    if (!this.app.options.attemptHighlight) return false;
 
     // Check if there is a carriage return in the output dish as this will not
     // be displayed by the HTML textarea and will mess up highlighting offsets.
-    if (!this.app.dish_str || this.app.dish_str.indexOf("\r") >= 0) return false;
+    if (!this.app.dishStr || this.app.dishStr.indexOf("\r") >= 0) return false;
 
-    var start_placeholder = "[start_highlight]",
-        start_placeholder_regex = /\[start_highlight\]/g,
-        end_placeholder = "[end_highlight]",
-        end_placeholder_regex = /\[end_highlight\]/g,
+    var startPlaceholder = "[startHighlight]",
+        startPlaceholderRegex = /\[startHighlight\]/g,
+        endPlaceholder = "[endHighlight]",
+        endPlaceholderRegex = /\[endHighlight\]/g,
         text = textarea.value;
 
     // Put placeholders in position
@@ -461,33 +461,33 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     if (pos.length === 1) {
         if (pos[0].end < pos[0].start) return;
         text = text.slice(0, pos[0].start) +
-            start_placeholder + text.slice(pos[0].start, pos[0].end) + end_placeholder +
+            startPlaceholder + text.slice(pos[0].start, pos[0].end) + endPlaceholder +
             text.slice(pos[0].end, text.length);
     } else {
         // O(n^2) - Can anyone improve this without overwriting placeholders?
         var result = "",
-            end_placed = true;
+            endPlaced = true;
 
         for (var i = 0; i < text.length; i++) {
             for (var j = 1; j < pos.length; j++) {
                 if (pos[j].end < pos[j].start) continue;
                 if (pos[j].start === i) {
-                    result += start_placeholder;
-                    end_placed = false;
+                    result += startPlaceholder;
+                    endPlaced = false;
                 }
                 if (pos[j].end === i) {
-                    result += end_placeholder;
-                    end_placed = true;
+                    result += endPlaceholder;
+                    endPlaced = true;
                 }
             }
             result += text[i];
         }
-        if (!end_placed) result += end_placeholder;
+        if (!endPlaced) result += endPlaceholder;
         text = result;
     }
 
-    var css_class = "hl1";
-    //if (colour) css_class += "-"+colour;
+    var cssClass = "hl1";
+    //if (colour) cssClass += "-"+colour;
 
     // Remove HTML tags
     text = text.replace(/&/g, "&amp;")
@@ -495,8 +495,8 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
                 .replace(/>/g, "&gt;")
                 .replace(/\n/g, "&#10;")
                 // Convert placeholders to tags
-                .replace(start_placeholder_regex, "<span class=\""+css_class+"\">")
-                .replace(end_placeholder_regex, "</span>") + "&nbsp;";
+                .replace(startPlaceholderRegex, "<span class=\""+cssClass+"\">")
+                .replace(endPlaceholderRegex, "</span>") + "&nbsp;";
 
     // Adjust width to allow for scrollbars
     highlighter.style.width = textarea.clientWidth + "px";

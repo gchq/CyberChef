@@ -18,11 +18,11 @@ var HTMLIngredient = function(config, app, manager) {
     this.type = config.type;
     this.value = config.value;
     this.disabled = config.disabled || false;
-    this.disable_args = config.disable_args || false;
+    this.disableArgs = config.disableArgs || false;
     this.placeholder = config.placeholder || false;
     this.target = config.target;
-    this.toggle_values = config.toggle_values;
-    this.id = "ing-" + this.app.next_ing_id();
+    this.toggleValues = config.toggleValues;
+    this.id = "ing-" + this.app.nextIngId();
 };
 
 
@@ -31,12 +31,12 @@ var HTMLIngredient = function(config, app, manager) {
  *
  * @returns {string}
  */
-HTMLIngredient.prototype.to_html = function() {
+HTMLIngredient.prototype.toHtml = function() {
     var inline = (this.type === "boolean" ||
                   this.type === "number" ||
                   this.type === "option" ||
-                  this.type === "short_string" ||
-                  this.type === "binary_short_string"),
+                  this.type === "shortString" ||
+                  this.type === "binaryShortString"),
         html = inline ? "" : "<div class='clearfix'>&nbsp;</div>",
         i, m;
     
@@ -46,50 +46,50 @@ HTMLIngredient.prototype.to_html = function() {
     
     switch (this.type) {
         case "string":
-        case "binary_string":
-        case "byte_array":
-            html += "<input type='text' id='" + this.id + "' class='arg arg-input' arg_name='" +
+        case "binaryString":
+        case "byteArray":
+            html += "<input type='text' id='" + this.id + "' class='arg arg-input' arg-name='" +
                 this.name + "' value='" + this.value + "'" +
                 (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
             break;
-        case "short_string":
-        case "binary_short_string":
+        case "shortString":
+        case "binaryShortString":
             html += "<input type='text' id='" + this.id +
-                "'class='arg arg-input short-string' arg_name='" + this.name + "'value='" +
+                "'class='arg arg-input short-string' arg-name='" + this.name + "'value='" +
                 this.value + "'" + (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
             break;
-        case "toggle_string":
+        case "toggleString":
             html += "<div class='input-group'><div class='input-group-btn'>\
                 <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown'\
                 aria-haspopup='true' aria-expanded='false'" +
-                (this.disabled ? " disabled='disabled'" : "") + ">" + this.toggle_values[0] +
+                (this.disabled ? " disabled='disabled'" : "") + ">" + this.toggleValues[0] +
                 " <span class='caret'></span></button><ul class='dropdown-menu'>";
-            for (i = 0; i < this.toggle_values.length; i++) {
-                html += "<li><a href='#'>" + this.toggle_values[i] + "</a></li>";
+            for (i = 0; i < this.toggleValues.length; i++) {
+                html += "<li><a href='#'>" + this.toggleValues[i] + "</a></li>";
             }
             html += "</ul></div><input type='text' class='arg arg-input toggle-string'" +
                 (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + "></div>";
             break;
         case "number":
-            html += "<input type='number' id='" + this.id + "'class='arg arg-input' arg_name='" +
+            html += "<input type='number' id='" + this.id + "'class='arg arg-input' arg-name='" +
                 this.name + "'value='" + this.value + "'" +
                 (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
             break;
         case "boolean":
-            html += "<input type='checkbox' id='" + this.id + "'class='arg' arg_name='" +
+            html += "<input type='checkbox' id='" + this.id + "'class='arg' arg-name='" +
                 this.name + "'" + (this.value ? " checked='checked' " : "") +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
             
-            if (this.disable_args) {
-                this.manager.add_dynamic_listener("#" + this.id, "click", this.toggle_disable_args, this);
+            if (this.disableArgs) {
+                this.manager.addDynamicListener("#" + this.id, "click", this.toggleDisableArgs, this);
             }
             break;
         case "option":
-            html += "<select class='arg' id='" + this.id + "'arg_name='" + this.name + "'" +
+            html += "<select class='arg' id='" + this.id + "'arg-name='" + this.name + "'" +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
             for (i = 0; i < this.value.length; i++) {
                 if ((m = this.value[i].match(/\[([a-z0-9 -()^]+)\]/i))) {
@@ -102,8 +102,8 @@ HTMLIngredient.prototype.to_html = function() {
             }
             html += "</select>";
             break;
-        case "populate_option":
-            html += "<select class='arg' id='" + this.id + "'arg_name='" + this.name + "'" +
+        case "populateOption":
+            html += "<select class='arg' id='" + this.id + "'arg-name='" + this.name + "'" +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
             for (i = 0; i < this.value.length; i++) {
                 if ((m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
@@ -117,9 +117,9 @@ HTMLIngredient.prototype.to_html = function() {
             }
             html += "</select>";
             
-            this.manager.add_dynamic_listener("#" + this.id, "change", this.populate_option_change, this);
+            this.manager.addDynamicListener("#" + this.id, "change", this.populateOptionChange, this);
             break;
-        case "editable_option":
+        case "editableOption":
             html += "<div class='editable-option'>";
             html += "<select class='editable-option-select' id='sel-" + this.id + "'" +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
@@ -128,16 +128,16 @@ HTMLIngredient.prototype.to_html = function() {
             }
             html += "</select>";
             html += "<input class='arg arg-input editable-option-input' id='" + this.id +
-                "'arg_name='" + this.name + "'" + " value='" + this.value[0].value + "'" +
+                "'arg-name='" + this.name + "'" + " value='" + this.value[0].value + "'" +
                 (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
             html += "</div>";
             
             
-            this.manager.add_dynamic_listener("#sel-" + this.id, "change", this.editable_option_change, this);
+            this.manager.addDynamicListener("#sel-" + this.id, "change", this.editableOptionChange, this);
             break;
         case "text":
-            html += "<textarea id='" + this.id + "' class='arg' arg_name='" +
+            html += "<textarea id='" + this.id + "' class='arg' arg-name='" +
                 this.name + "'" + (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">" +
                 this.value + "</textarea>";
@@ -153,18 +153,18 @@ HTMLIngredient.prototype.to_html = function() {
 
 /**
  * Handler for argument disable toggle.
- * Toggles disabled state for all arguments in the disable_args list for this ingredient.
+ * Toggles disabled state for all arguments in the disableArgs list for this ingredient.
  *
  * @param {event} e
  */
-HTMLIngredient.prototype.toggle_disable_args = function(e) {
+HTMLIngredient.prototype.toggleDisableArgs = function(e) {
     var el = e.target,
         op = el.parentNode.parentNode,
         args = op.querySelectorAll(".arg-group"),
         els;
         
-    for (var i = 0; i < this.disable_args.length; i++) {
-        els = args[this.disable_args[i]].querySelectorAll("input, select, button");
+    for (var i = 0; i < this.disableArgs.length; i++) {
+        els = args[this.disableArgs[i]].querySelectorAll("input, select, button");
         
         for (var j = 0; j < els.length; j++) {
             if (els[j].getAttribute("disabled")) {
@@ -175,7 +175,7 @@ HTMLIngredient.prototype.toggle_disable_args = function(e) {
         }
     }
     
-    this.manager.recipe.ing_change();
+    this.manager.recipe.ingChange();
 };
 
 
@@ -185,14 +185,14 @@ HTMLIngredient.prototype.toggle_disable_args = function(e) {
  *
  * @param {event} e
  */
-HTMLIngredient.prototype.populate_option_change = function(e) {
+HTMLIngredient.prototype.populateOptionChange = function(e) {
     var el = e.target,
         op = el.parentNode.parentNode,
         target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
 
     target.value = el.childNodes[el.selectedIndex].getAttribute("populate-value");
     
-    this.manager.recipe.ing_change();
+    this.manager.recipe.ingChange();
 };
 
 
@@ -202,11 +202,11 @@ HTMLIngredient.prototype.populate_option_change = function(e) {
  *
  * @param {event} e
  */
-HTMLIngredient.prototype.editable_option_change = function(e) {
+HTMLIngredient.prototype.editableOptionChange = function(e) {
     var select = e.target,
         input = select.nextSibling;
 
     input.value = select.childNodes[select.selectedIndex].value;
     
-    this.manager.recipe.ing_change();
+    this.manager.recipe.ingChange();
 };

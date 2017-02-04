@@ -14,7 +14,7 @@ var InputWaiter = function(app, manager) {
     this.manager = manager;
     
     // Define keys that don't change the input so we don't have to autobake when they are pressed
-    this.bad_keys = [
+    this.badKeys = [
         16, //Shift
         17, //Ctrl
         18, //Alt
@@ -62,14 +62,14 @@ InputWaiter.prototype.set = function(input) {
  * @param {number} length - The length of the current input string
  * @param {number} lines - The number of the lines in the current input string
  */
-InputWaiter.prototype.set_input_info = function(length, lines) {
+InputWaiter.prototype.setInputInfo = function(length, lines) {
     var width = length.toString().length;
     width = width < 2 ? 2 : width;
     
-    var length_str = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    var lines_str  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+    var lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
+    var linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
         
-    document.getElementById("input-info").innerHTML = "length: " + length_str + "<br>lines: " + lines_str;
+    document.getElementById("input-info").innerHTML = "length: " + lengthStr + "<br>lines: " + linesStr;
 };
 
 
@@ -81,21 +81,21 @@ InputWaiter.prototype.set_input_info = function(length, lines) {
  *
  * @fires Manager#statechange
  */
-InputWaiter.prototype.input_change = function(e) {
+InputWaiter.prototype.inputChange = function(e) {
     // Remove highlighting from input and output panes as the offsets might be different now
-    this.manager.highlighter.remove_highlights();
+    this.manager.highlighter.removeHighlights();
     
     // Reset recipe progress as any previous processing will be redundant now
     this.app.progress = 0;
     
     // Update the input metadata info
-    var input_text = this.get(),
-        lines = input_text.count("\n") + 1;
+    var inputText = this.get(),
+        lines = inputText.count("\n") + 1;
         
-    this.set_input_info(input_text.length, lines);
+    this.setInputInfo(inputText.length, lines);
     
     
-    if (this.bad_keys.indexOf(e.keyCode) < 0) {
+    if (this.badKeys.indexOf(e.keyCode) < 0) {
         // Fire the statechange event as the input has been modified
         window.dispatchEvent(this.manager.statechange);
     }
@@ -108,7 +108,7 @@ InputWaiter.prototype.input_change = function(e) {
  *
  * @param {event} e
  */
-InputWaiter.prototype.input_dragover = function(e) {
+InputWaiter.prototype.inputDragover = function(e) {
     // This will be set if we're dragging an operation
     if (e.dataTransfer.effectAllowed === "move")
         return false;
@@ -125,7 +125,7 @@ InputWaiter.prototype.input_dragover = function(e) {
  *
  * @param {event} e
  */
-InputWaiter.prototype.input_dragleave = function(e) {
+InputWaiter.prototype.inputDragleave = function(e) {
     e.stopPropagation();
     e.preventDefault();
     e.target.classList.remove("dropping-file");
@@ -138,7 +138,7 @@ InputWaiter.prototype.input_dragleave = function(e) {
  *
  * @param {event} e
  */
-InputWaiter.prototype.input_drop = function(e) {
+InputWaiter.prototype.inputDrop = function(e) {
     // This will be set if we're dragging an operation
     if (e.dataTransfer.effectAllowed === "move")
         return false;
@@ -150,29 +150,29 @@ InputWaiter.prototype.input_drop = function(e) {
         file = e.dataTransfer.files[0],
         text = e.dataTransfer.getData("Text"),
         reader = new FileReader(),
-        input_charcode = "",
+        inputCharcode = "",
         offset = 0,
         CHUNK_SIZE = 20480; // 20KB
     
-    var set_input = function() {
-        if (input_charcode.length > 100000 && this.app.auto_bake_) {
-            this.manager.controls.set_auto_bake(false);
+    var setInput = function() {
+        if (inputCharcode.length > 100000 && this.app.autoBake_) {
+            this.manager.controls.setAutoBake(false);
             this.app.alert("Turned off Auto Bake as the input is large", "warning", 5000);
         }
         
-        this.set(input_charcode);
-        var recipe_config = this.app.get_recipe_config();
-        if (!recipe_config[0] || recipe_config[0].op !== "From Hex") {
-            recipe_config.unshift({op:"From Hex", args:["Space"]});
-            this.app.set_recipe_config(recipe_config);
+        this.set(inputCharcode);
+        var recipeConfig = this.app.getRecipeConfig();
+        if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
+            recipeConfig.unshift({op:"From Hex", args:["Space"]});
+            this.app.setRecipeConfig(recipeConfig);
         }
         
-        el.classList.remove("loading_file");
+        el.classList.remove("loadingFile");
     }.bind(this);
     
     var seek = function() {
         if (offset >= file.size) {
-            set_input();
+            setInput();
             return;
         }
         el.value = "Processing... " + Math.round(offset / file.size * 100) + "%";
@@ -182,7 +182,7 @@ InputWaiter.prototype.input_drop = function(e) {
     
     reader.onload = function(e) {
         var data = new Uint8Array(reader.result);
-        input_charcode += Utils.to_hex_fast(data);
+        inputCharcode += Utils.toHexFast(data);
         offset += CHUNK_SIZE;
         seek();
     };
@@ -191,7 +191,7 @@ InputWaiter.prototype.input_drop = function(e) {
     el.classList.remove("dropping-file");
     
     if (file) {
-        el.classList.add("loading_file");
+        el.classList.add("loadingFile");
         seek();
     } else if (text) {
         this.set(text);
@@ -205,8 +205,8 @@ InputWaiter.prototype.input_drop = function(e) {
  *
  * @fires Manager#statechange
  */
-InputWaiter.prototype.clear_io_click = function() {
-    this.manager.highlighter.remove_highlights();
+InputWaiter.prototype.clearIoClick = function() {
+    this.manager.highlighter.removeHighlights();
     document.getElementById("input-text").value = "";
     document.getElementById("output-text").value = "";
     document.getElementById("input-info").innerHTML = "";

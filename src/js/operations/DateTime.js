@@ -24,7 +24,7 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_from_unix_timestamp: function(input, args) {
+    runFromUnixTimestamp: function(input, args) {
         var units = args[0],
             d;
         
@@ -55,7 +55,7 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_to_unix_timestamp: function(input, args) {
+    runToUnixTimestamp: function(input, args) {
         var units = args[0],
             d = moment(input);
         
@@ -130,21 +130,21 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_translate_format: function(input, args) {
-        var input_format = args[1],
-            input_timezone = args[2],
-            output_format = args[3],
-            output_timezone = args[4],
+    runTranslateFormat: function(input, args) {
+        var inputFormat = args[1],
+            inputTimezone = args[2],
+            outputFormat = args[3],
+            outputTimezone = args[4],
             date;
 
         try {
-            date = moment.tz(input, input_format, input_timezone);
+            date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch(err) {
             return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
         }
         
-        return date.tz(output_timezone).format(output_format);
+        return date.tz(outputTimezone).format(outputFormat);
     },
     
     
@@ -155,14 +155,14 @@ var DateTime = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_parse: function(input, args) {
-        var input_format = args[1],
-            input_timezone = args[2],
+    runParse: function(input, args) {
+        var inputFormat = args[1],
+            inputTimezone = args[2],
             date,
             output = "";
             
         try {
-            date = moment.tz(input, input_format, input_timezone);
+            date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch(err) {
             return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;

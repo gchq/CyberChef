@@ -1,4 +1,4 @@
-/* globals CryptoJS, Checksum */
+/* globals CryptoApi, CryptoJS, Checksum */
 
 /**
  * Hashing operations.
@@ -10,6 +10,30 @@
  * @namespace
  */
 var Hash = {
+
+    /**
+     * MD2 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runMD2: function (input, args) {
+        return Utils.toHexFast(CryptoApi.hash("md2", input, {}));
+    },
+
+
+    /**
+     * MD4 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runMD4: function (input, args) {
+        return Utils.toHexFast(CryptoApi.hash("md4", input, {}));
+    },
+
     
     /**
      * MD5 operation.
@@ -18,9 +42,21 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_md5: function (input, args) {
+    runMD5: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input); // Cast to WordArray
         return CryptoJS.MD5(input).toString(CryptoJS.enc.Hex);
+    },
+
+
+    /**
+     * SHA0 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runSHA0: function (input, args) {
+        return Utils.toHexFast(CryptoApi.hash("sha0", input, {}));
     },
     
     
@@ -31,7 +67,7 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sha1: function (input, args) {
+    runSHA1: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
         return CryptoJS.SHA1(input).toString(CryptoJS.enc.Hex);
     },
@@ -44,7 +80,7 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sha224: function (input, args) {
+    runSHA224: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
         return CryptoJS.SHA224(input).toString(CryptoJS.enc.Hex);
     },
@@ -57,7 +93,7 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sha256: function (input, args) {
+    runSHA256: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
         return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
     },
@@ -70,7 +106,7 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sha384: function (input, args) {
+    runSHA384: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
         return CryptoJS.SHA384(input).toString(CryptoJS.enc.Hex);
     },
@@ -83,7 +119,7 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sha512: function (input, args) {
+    runSHA512: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
         return CryptoJS.SHA512(input).toString(CryptoJS.enc.Hex);
     },
@@ -102,11 +138,11 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sha3: function (input, args) {
+    runSHA3: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
-        var sha3_length = args[0],
+        var sha3Length = args[0],
             options = {
-                outputLength: parseInt(sha3_length, 10)
+                outputLength: parseInt(sha3Length, 10)
             };
         return CryptoJS.SHA3(input, options).toString(CryptoJS.enc.Hex);
     },
@@ -119,7 +155,7 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_ripemd160: function (input, args) {
+    runRIPEMD160: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
         return CryptoJS.RIPEMD160(input).toString(CryptoJS.enc.Hex);
     },
@@ -138,8 +174,8 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_hmac: function (input, args) {
-        var hash_func = args[1];
+    runHMAC: function (input, args) {
+        var hashFunc = args[1];
         input = CryptoJS.enc.Latin1.parse(input);
         var execute = {
             "MD5": CryptoJS.HmacMD5(input, args[0]),
@@ -151,7 +187,7 @@ var Hash = {
             "SHA3": CryptoJS.HmacSHA3(input, args[0]),
             "RIPEMD-160": CryptoJS.HmacRIPEMD160(input, args[0]),
         };
-        return execute[hash_func].toString(CryptoJS.enc.Hex);
+        return execute[hashFunc].toString(CryptoJS.enc.Hex);
     },
     
     
@@ -162,23 +198,29 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_all: function (input, args) {
-        var byte_array = Utils.str_to_byte_array(input),
-            output = "MD5:         " + Hash.run_md5(input, []) +
-                "\nSHA1:        " + Hash.run_sha1(input, []) +
-                "\nSHA2 224:    " + Hash.run_sha224(input, []) +
-                "\nSHA2 256:    " + Hash.run_sha256(input, []) +
-                "\nSHA2 384:    " + Hash.run_sha384(input, []) +
-                "\nSHA2 512:    " + Hash.run_sha512(input, []) +
-                "\nSHA3 224:    " + Hash.run_sha3(input, ["224"]) +
-                "\nSHA3 256:    " + Hash.run_sha3(input, ["256"]) +
-                "\nSHA3 384:    " + Hash.run_sha3(input, ["384"]) +
-                "\nSHA3 512:    " + Hash.run_sha3(input, ["512"]) +
-                "\nRIPEMD-160:  " + Hash.run_ripemd160(input, []) +
+    runAll: function (input, args) {
+        var byteArray = Utils.strToByteArray(input),
+            output = "MD2:         " + Hash.runMD2(input, []) +
+                "\nMD4:         " + Hash.runMD4(input, []) +
+                "\nMD5:         " + Hash.runMD5(input, []) +
+                "\nSHA0:        " + Hash.runSHA0(input, []) +
+                "\nSHA1:        " + Hash.runSHA1(input, []) +
+                "\nSHA2 224:    " + Hash.runSHA224(input, []) +
+                "\nSHA2 256:    " + Hash.runSHA256(input, []) +
+                "\nSHA2 384:    " + Hash.runSHA384(input, []) +
+                "\nSHA2 512:    " + Hash.runSHA512(input, []) +
+                "\nSHA3 224:    " + Hash.runSHA3(input, ["224"]) +
+                "\nSHA3 256:    " + Hash.runSHA3(input, ["256"]) +
+                "\nSHA3 384:    " + Hash.runSHA3(input, ["384"]) +
+                "\nSHA3 512:    " + Hash.runSHA3(input, ["512"]) +
+                "\nRIPEMD-160:  " + Hash.runRIPEMD160(input, []) +
                 "\n\nChecksums:" +
-                "\nFletcher-16: " + Checksum.run_fletcher16(byte_array, []) +
-                "\nAdler-32:    " + Checksum.run_adler32(byte_array, []) +
-                "\nCRC-32:      " + Checksum.run_crc32(byte_array, []);
+                "\nFletcher-8:  " + Checksum.runFletcher8(byteArray, []) +
+                "\nFletcher-16: " + Checksum.runFletcher16(byteArray, []) +
+                "\nFletcher-32: " + Checksum.runFletcher32(byteArray, []) +
+                "\nFletcher-64: " + Checksum.runFletcher64(byteArray, []) +
+                "\nAdler-32:    " + Checksum.runAdler32(byteArray, []) +
+                "\nCRC-32:      " + Checksum.runCRC32(byteArray, []);
                 
         return output;
     },
@@ -191,38 +233,38 @@ var Hash = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_analyse: function(input, args) {
+    runAnalyse: function(input, args) {
         input = input.replace(/\s/g, "");
     
         var output = "",
-            byte_length = input.length / 2,
-            bit_length = byte_length * 8,
-            possible_hash_functions = [];
+            byteLength = input.length / 2,
+            bitLength = byteLength * 8,
+            possibleHashFunctions = [];
         
         if (!/^[a-f0-9]+$/i.test(input)) {
             return "Invalid hash";
         }
         
         output += "Hash length: " + input.length + "\n" +
-            "Byte length: " + byte_length + "\n" +
-            "Bit length:  " + bit_length + "\n\n" +
+            "Byte length: " + byteLength + "\n" +
+            "Bit length:  " + bitLength + "\n\n" +
             "Based on the length, this hash could have been generated by one of the following hashing functions:\n";
                 
-        switch (bit_length) {
+        switch (bitLength) {
             case 4:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "Fletcher-4",
                     "Luhn algorithm",
                     "Verhoeff algorithm",
                 ];
                 break;
             case 8:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "Fletcher-8",
                 ];
                 break;
             case 16:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "BSD checksum",
                     "CRC-16",
                     "SYSV checksum",
@@ -230,21 +272,21 @@ var Hash = {
                 ];
                 break;
             case 32:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "CRC-32",
                     "Fletcher-32",
                     "Adler-32",
                 ];
                 break;
             case 64:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "CRC-64",
                     "RIPEMD-64",
                     "SipHash",
                 ];
                 break;
             case 128:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "MD5",
                     "MD4",
                     "MD2",
@@ -255,7 +297,7 @@ var Hash = {
                 ];
                 break;
             case 160:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "SHA-1",
                     "SHA-0",
                     "FSB-160",
@@ -266,13 +308,13 @@ var Hash = {
                 ];
                 break;
             case 192:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "Tiger",
                     "HAVAL-192",
                 ];
                 break;
             case 224:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "SHA-224",
                     "SHA3-224",
                     "ECOH-224",
@@ -281,7 +323,7 @@ var Hash = {
                 ];
                 break;
             case 256:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "SHA-256",
                     "SHA3-256",
                     "BLAKE-256",
@@ -296,12 +338,12 @@ var Hash = {
                 ];
                 break;
             case 320:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "RIPEMD-320",
                 ];
                 break;
             case 384:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "SHA-384",
                     "SHA3-384",
                     "ECOH-384",
@@ -309,7 +351,7 @@ var Hash = {
                 ];
                 break;
             case 512:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "SHA-512",
                     "SHA3-512",
                     "BLAKE-512",
@@ -324,18 +366,18 @@ var Hash = {
                 ];
                 break;
             case 1024:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "Fowler-Noll-Vo",
                 ];
                 break;
             default:
-                possible_hash_functions = [
+                possibleHashFunctions = [
                     "Unknown"
                 ];
                 break;
         }
         
-        return output + possible_hash_functions.join("\n");
+        return output + possibleHashFunctions.join("\n");
     },
     
 };

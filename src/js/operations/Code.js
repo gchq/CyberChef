@@ -1,4 +1,4 @@
-/* globals prettyPrintOne, vkbeautify */
+/* globals prettyPrintOne, vkbeautify, xpath */
 
 /**
  * Code operations.
@@ -29,10 +29,10 @@ var Code = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_syntax_highlight: function(input, args) {
+    runSyntaxHighlight: function(input, args) {
         var language = args[0],
-            line_nums = args[1];
-        return "<code class='prettyprint'>" + prettyPrintOne(Utils.escape_html(input), language, line_nums) + "</code>";
+            lineNums = args[1];
+        return "<code class='prettyprint'>" + prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
     },
 
 
@@ -49,9 +49,9 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_xml_beautify: function(input, args) {
-        var indent_str = args[0];
-        return vkbeautify.xml(input, indent_str);
+    runXmlBeautify: function(input, args) {
+        var indentStr = args[0];
+        return vkbeautify.xml(input, indentStr);
     },
 
 
@@ -62,10 +62,10 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_json_beautify: function(input, args) {
-        var indent_str = args[0];
+    runJsonBeautify: function(input, args) {
+        var indentStr = args[0];
         if (!input) return "";
-        return vkbeautify.json(input, indent_str);
+        return vkbeautify.json(input, indentStr);
     },
 
 
@@ -76,9 +76,9 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_css_beautify: function(input, args) {
-        var indent_str = args[0];
-        return vkbeautify.css(input, indent_str);
+    runCssBeautify: function(input, args) {
+        var indentStr = args[0];
+        return vkbeautify.css(input, indentStr);
     },
 
 
@@ -89,9 +89,9 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sql_beautify: function(input, args) {
-        var indent_str = args[0];
-        return vkbeautify.sql(input, indent_str);
+    runSqlBeautify: function(input, args) {
+        var indentStr = args[0];
+        return vkbeautify.sql(input, indentStr);
     },
 
 
@@ -108,9 +108,9 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_xml_minify: function(input, args) {
-        var preserve_comments = args[0];
-        return vkbeautify.xmlmin(input, preserve_comments);
+    runXmlMinify: function(input, args) {
+        var preserveComments = args[0];
+        return vkbeautify.xmlmin(input, preserveComments);
     },
 
 
@@ -121,7 +121,7 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_json_minify: function(input, args) {
+    runJsonMinify: function(input, args) {
         if (!input) return "";
         return vkbeautify.jsonmin(input);
     },
@@ -134,9 +134,9 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_css_minify: function(input, args) {
-        var preserve_comments = args[0];
-        return vkbeautify.cssmin(input, preserve_comments);
+    runCssMinify: function(input, args) {
+        var preserveComments = args[0];
+        return vkbeautify.cssmin(input, preserveComments);
     },
 
 
@@ -147,7 +147,7 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sql_minify: function(input, args) {
+    runSqlMinify: function(input, args) {
         return vkbeautify.sqlmin(input);
     },
 
@@ -175,48 +175,48 @@ var Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_generic_beautify: function(input, args) {
+    runGenericBeautify: function(input, args) {
         var code = input,
             t = 0,
-            preserved_tokens = [],
+            preservedTokens = [],
             m;
 
         // Remove strings
         var sstrings = /'([^'\\]|\\.)*'/g;
         while ((m = sstrings.exec(code))) {
-            code = preserve_token(code, m, t++);
+            code = preserveToken(code, m, t++);
             sstrings.lastIndex = m.index;
         }
 
         var dstrings = /"([^"\\]|\\.)*"/g;
         while ((m = dstrings.exec(code))) {
-            code = preserve_token(code, m, t++);
+            code = preserveToken(code, m, t++);
             dstrings.lastIndex = m.index;
         }
 
         // Remove comments
         var scomments = /\/\/[^\n\r]*/g;
         while ((m = scomments.exec(code))) {
-            code = preserve_token(code, m, t++);
+            code = preserveToken(code, m, t++);
             scomments.lastIndex = m.index;
         }
 
         var mcomments = /\/\*[\s\S]*?\*\//gm;
         while ((m = mcomments.exec(code))) {
-            code = preserve_token(code, m, t++);
+            code = preserveToken(code, m, t++);
             mcomments.lastIndex = m.index;
         }
 
         var hcomments = /(^|\n)#[^\n\r#]+/g;
         while ((m = hcomments.exec(code))) {
-            code = preserve_token(code, m, t++);
+            code = preserveToken(code, m, t++);
             hcomments.lastIndex = m.index;
         }
 
         // Remove regexes
         var regexes = /\/.*?[^\\]\/[gim]{0,3}/gi;
         while ((m = regexes.exec(code))) {
-            code = preserve_token(code, m, t++);
+            code = preserveToken(code, m, t++);
             regexes.lastIndex = m.index;
         }
 
@@ -287,21 +287,136 @@ var Code = {
 
 
         // Replace preserved tokens
-        var ptokens = /###preserved_token(\d+)###/g;
+        var ptokens = /###preservedToken(\d+)###/g;
         while ((m = ptokens.exec(code))) {
             var ti = parseInt(m[1], 10);
-            code = code.substring(0, m.index) + preserved_tokens[ti] + code.substring(m.index + m[0].length);
+            code = code.substring(0, m.index) + preservedTokens[ti] + code.substring(m.index + m[0].length);
             ptokens.lastIndex = m.index;
         }
 
         return code;
 
-        function preserve_token(str, match, t) {
-            preserved_tokens[t] = match[0];
+        function preserveToken(str, match, t) {
+            preservedTokens[t] = match[0];
             return str.substring(0, match.index) +
-                "###preserved_token" + t + "###" +
+                "###preservedToken" + t + "###" +
                 str.substring(match.index + match[0].length);
         }
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    XPATH_DELIMITER: "\\n",
+
+    /**
+     * XPath expression operation.
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runXpath:function(input, args) {
+        var query = args[0],
+            delimiter = args[1];
+
+        var xml;
+        try {
+            xml = $.parseXML(input);
+        } catch (err) {
+            return "Invalid input XML.";
+        }
+
+        var result;
+        try {
+            result = xpath.evaluate(xml, query);
+        } catch (err) {
+            return "Invalid XPath. Details:\n" + err.message;
+        }
+
+        var serializer = new XMLSerializer();
+        var nodeToString = function(node) {
+            switch (node.nodeType) {
+                case Node.ELEMENT_NODE: return serializer.serializeToString(node);
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
+                case Node.DOCUMENT_NODE: return serializer.serializeToString(node);
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
+            }
+        };
+
+        return Object.keys(result).map(function(key) {
+            return result[key];
+        }).slice(0, -1) // all values except last (length)
+        .map(nodeToString)
+        .join(delimiter);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    CSS_SELECTOR_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    CSS_QUERY_DELIMITER: "\\n",
+
+    /**
+     * CSS selector operation.
+     *
+     * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runCssQuery: function(input, args) {
+        var query = args[0],
+            delimiter = args[1];
+
+        var html;
+        try {
+            html = $.parseHTML(input);
+        } catch (err) {
+            return "Invalid input HTML.";
+        }
+
+        var result;
+        try {
+            result = $(html).find(query);
+        } catch (err) {
+            return "Invalid CSS Selector. Details:\n" + err.message;
+        }
+
+        var nodeToString = function(node) {
+            switch (node.nodeType) {
+                case Node.ELEMENT_NODE: return node.outerHTML;
+                case Node.ATTRIBUTE_NODE: return node.value;
+                case Node.COMMENT_NODE: return node.data;
+                case Node.TEXT_NODE: return node.wholeText;
+                case Node.DOCUMENT_NODE: return node.outerHTML;
+                default: throw new Error("Unknown Node Type: " + node.nodeType);
+            }
+        };
+
+        return Array.apply(null, Array(result.length))
+            .map(function(_, i) {
+                return result[i];
+            })
+            .map(nodeToString)
+            .join(delimiter);
     },
 
 };

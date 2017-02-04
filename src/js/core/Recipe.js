@@ -6,13 +6,13 @@
  * @license Apache-2.0
  *
  * @class
- * @param {Object} recipe_config
+ * @param {Object} recipeConfig
  */
-var Recipe = function(recipe_config) {
-    this.op_list = [];
+var Recipe = function(recipeConfig) {
+    this.opList = [];
     
-    if (recipe_config) {
-        this._parse_config(recipe_config);
+    if (recipeConfig) {
+        this._parseConfig(recipeConfig);
     }
 };
 
@@ -21,17 +21,17 @@ var Recipe = function(recipe_config) {
  * Reads and parses the given config.
  *
  * @private
- * @param {Object} recipe_config
+ * @param {Object} recipeConfig
  */
-Recipe.prototype._parse_config = function(recipe_config) {
-    for (var c = 0; c < recipe_config.length; c++) {
-        var operation_name = recipe_config[c].op;
-        var operation_config = OperationConfig[operation_name];
-        var operation = new Operation(operation_name, operation_config);
-        operation.set_ing_values(recipe_config[c].args);
-        operation.set_breakpoint(recipe_config[c].breakpoint);
-        operation.set_disabled(recipe_config[c].disabled);
-        this.add_operation(operation);
+Recipe.prototype._parseConfig = function(recipeConfig) {
+    for (var c = 0; c < recipeConfig.length; c++) {
+        var operationName = recipeConfig[c].op;
+        var operationConfig = OperationConfig[operationName];
+        var operation = new Operation(operationName, operationConfig);
+        operation.setIngValues(recipeConfig[c].args);
+        operation.setBreakpoint(recipeConfig[c].breakpoint);
+        operation.setDisabled(recipeConfig[c].disabled);
+        this.addOperation(operation);
     }
 };
 
@@ -41,14 +41,14 @@ Recipe.prototype._parse_config = function(recipe_config) {
  *
  * @returns {*}
  */
-Recipe.prototype.get_config = function() {
-    var recipe_config = [];
+Recipe.prototype.getConfig = function() {
+    var recipeConfig = [];
     
-    for (var o = 0; o < this.op_list.length; o++) {
-        recipe_config.push(this.op_list[o].get_config());
+    for (var o = 0; o < this.opList.length; o++) {
+        recipeConfig.push(this.opList[o].getConfig());
     }
     
-    return recipe_config;
+    return recipeConfig;
 };
 
 
@@ -57,8 +57,8 @@ Recipe.prototype.get_config = function() {
  *
  * @param {Operation} operation
  */
-Recipe.prototype.add_operation = function(operation) {
-    this.op_list.push(operation);
+Recipe.prototype.addOperation = function(operation) {
+    this.opList.push(operation);
 };
 
 
@@ -67,8 +67,8 @@ Recipe.prototype.add_operation = function(operation) {
  *
  * @param {Operation[]} operations
  */
-Recipe.prototype.add_operations = function(operations) {
-    this.op_list = this.op_list.concat(operations);
+Recipe.prototype.addOperations = function(operations) {
+    this.opList = this.opList.concat(operations);
 };
 
 
@@ -78,9 +78,9 @@ Recipe.prototype.add_operations = function(operations) {
  * @param {number} position - The index of the Operation
  * @param {boolean} value
  */
-Recipe.prototype.set_breakpoint = function(position, value) {
+Recipe.prototype.setBreakpoint = function(position, value) {
     try {
-        this.op_list[position].set_breakpoint(value);
+        this.opList[position].setBreakpoint(value);
     } catch (err) {
         // Ignore index error
     }
@@ -93,9 +93,9 @@ Recipe.prototype.set_breakpoint = function(position, value) {
  *
  * @param {number} pos
  */
-Recipe.prototype.remove_breaks_up_to = function(pos) {
+Recipe.prototype.removeBreaksUpTo = function(pos) {
     for (var i = 0; i < pos; i++) {
-        this.op_list[i].set_breakpoint(false);
+        this.opList[i].setBreakpoint(false);
     }
 };
 
@@ -105,9 +105,9 @@ Recipe.prototype.remove_breaks_up_to = function(pos) {
  *
  * @returns {boolean}
  */
-Recipe.prototype.contains_flow_control = function() {
-    for (var i = 0; i < this.op_list.length; i++) {
-        if (this.op_list[i].is_flow_control()) return true;
+Recipe.prototype.containsFlowControl = function() {
+    for (var i = 0; i < this.opList.length; i++) {
+        if (this.opList[i].isFlowControl()) return true;
     }
     return false;
 };
@@ -117,17 +117,17 @@ Recipe.prototype.contains_flow_control = function() {
  * Returns the index of the last Operation index that will be executed, taking into account disabled
  * Operations and breakpoints.
  *
- * @param {number} [start_index=0] - The index to start searching from
+ * @param {number} [startIndex=0] - The index to start searching from
  * @returns (number}
  */
-Recipe.prototype.last_op_index = function(start_index) {
-    var i = start_index + 1 || 0,
+Recipe.prototype.lastOpIndex = function(startIndex) {
+    var i = startIndex + 1 || 0,
         op;
         
-    for (; i < this.op_list.length; i++) {
-        op = this.op_list[i];
-        if (op.is_disabled()) return i-1;
-        if (op.is_breakpoint()) return i-1;
+    for (; i < this.opList.length; i++) {
+        op = this.opList[i];
+        if (op.isDisabled()) return i-1;
+        if (op.isBreakpoint()) return i-1;
     }
     
     return i-1;
@@ -138,59 +138,58 @@ Recipe.prototype.last_op_index = function(start_index) {
  * Executes each operation in the recipe over the given Dish.
  *
  * @param {Dish} dish
- * @param {number} [start_from=0] - The index of the Operation to start executing from
+ * @param {number} [startFrom=0] - The index of the Operation to start executing from
  * @returns {number} - The final progress through the recipe
  */
-Recipe.prototype.execute = function(dish, start_from) {
-    start_from = start_from || 0;
-    var op, input, output, num_jumps = 0;
+Recipe.prototype.execute = function(dish, startFrom) {
+    startFrom = startFrom || 0;
+    var op, input, output, numJumps = 0;
     
-    for (var i = start_from; i < this.op_list.length; i++) {
-        op = this.op_list[i];
-        if (op.is_disabled()) {
+    for (var i = startFrom; i < this.opList.length; i++) {
+        op = this.opList[i];
+        if (op.isDisabled()) {
             continue;
         }
-        if (op.is_breakpoint()) {
+        if (op.isBreakpoint()) {
             return i;
         }
         
         try {
-            input = dish.get(op.input_type);
+            input = dish.get(op.inputType);
             
-            if (op.is_flow_control()) {
+            if (op.isFlowControl()) {
                 // Package up the current state
                 var state = {
                     "progress" : i,
                     "dish"     : dish,
-                    "op_list"  : this.op_list,
-                    "num_jumps" : num_jumps
+                    "opList"  : this.opList,
+                    "numJumps" : numJumps
                 };
                 
                 state = op.run(state);
                 i = state.progress;
-                num_jumps = state.num_jumps;
+                numJumps = state.numJumps;
             } else {
-                output = op.run(input, op.get_ing_values());
-                dish.set(output, op.output_type);
+                output = op.run(input, op.getIngValues());
+                dish.set(output, op.outputType);
             }
         } catch (err) {
             var e = typeof err == "string" ? { message: err } : err;
 
             e.progress = i;
-            e.display_str = op.name + " - ";
             if (e.fileName) {
-                e.display_str += e.name + " in " + e.fileName +
-                    " on line " + e.lineNumber +
-                    ".<br><br>Message: " + e.message;
+                e.displayStr = op.name + " - " + e.name + " in " +
+                    e.fileName + " on line " + e.lineNumber +
+                    ".<br><br>Message: " + (e.displayStr || e.message);
             } else {
-                e.display_str += e.message;
+                e.displayStr = op.name + " - " + (e.displayStr || e.message);
             }
             
             throw e;
         }
     }
     
-    return this.op_list.length;
+    return this.opList.length;
 };
 
 
@@ -199,17 +198,17 @@ Recipe.prototype.execute = function(dish, start_from) {
  *
  * @returns {string}
  */
-Recipe.prototype.to_string = function() {
-    return JSON.stringify(this.get_config());
+Recipe.prototype.toString = function() {
+    return JSON.stringify(this.getConfig());
 };
 
 
 /**
  * Creates a Recipe from a given configuration string.
  *
- * @param {string} recipe_str
+ * @param {string} recipeStr
  */
-Recipe.prototype.from_string = function(recipe_str) {
-    var recipe_config = JSON.parse(recipe_str);
-    this._parse_config(recipe_config);
+Recipe.prototype.fromString = function(recipeStr) {
+    var recipeConfig = JSON.parse(recipeStr);
+    this._parseConfig(recipeConfig);
 };

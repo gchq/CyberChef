@@ -27,35 +27,35 @@ var HTML = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_entity: function(input, args) {
-        var convert_all = args[0],
+    runToEntity: function(input, args) {
+        var convertAll = args[0],
             numeric = args[1] === "Numeric entities",
             hexa = args[1] === "Hex entities";
 
-        var charcodes = Utils.str_to_charcode(input);
+        var charcodes = Utils.strToCharcode(input);
         var output = "";
 
         for (var i = 0; i < charcodes.length; i++) {
-            if (convert_all && numeric) {
+            if (convertAll && numeric) {
                 output += "&#" + charcodes[i] + ";";
-            } else if (convert_all && hexa) {
+            } else if (convertAll && hexa) {
                 output += "&#x" + Utils.hex(charcodes[i]) + ";";
-            } else if (convert_all) {
-                output += HTML._byte_to_entity[charcodes[i]] || "&#" + charcodes[i] + ";";
+            } else if (convertAll) {
+                output += HTML._byteToEntity[charcodes[i]] || "&#" + charcodes[i] + ";";
             } else if (numeric) {
-                if (charcodes[i] > 255 || HTML._byte_to_entity.hasOwnProperty(charcodes[i])) {
+                if (charcodes[i] > 255 || HTML._byteToEntity.hasOwnProperty(charcodes[i])) {
                     output += "&#" + charcodes[i] + ";";
                 } else {
                     output += Utils.chr(charcodes[i]);
                 }
             } else if (hexa) {
-                if (charcodes[i] > 255 || HTML._byte_to_entity.hasOwnProperty(charcodes[i])) {
+                if (charcodes[i] > 255 || HTML._byteToEntity.hasOwnProperty(charcodes[i])) {
                     output += "&#x" + Utils.hex(charcodes[i]) + ";";
                 } else {
                     output += Utils.chr(charcodes[i]);
                 }
             } else {
-                output += HTML._byte_to_entity[charcodes[i]] || (
+                output += HTML._byteToEntity[charcodes[i]] || (
                     charcodes[i] > 255 ?
                         "&#" + charcodes[i] + ";" :
                         Utils.chr(charcodes[i])
@@ -73,7 +73,7 @@ var HTML = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_from_entity: function(input, args) {
+    runFromEntity: function(input, args) {
         var regex = /&(#?x?[a-zA-Z0-9]{1,8});/g,
             output = "",
             m,
@@ -85,7 +85,7 @@ var HTML = {
                 output += input[i++];
 
             // Add match
-            var bite = HTML._entity_to_byte[m[1]];
+            var bite = HTML._entityToByte[m[1]];
             if (bite) {
                 output += Utils.chr(bite);
             } else if (!bite && m[1][0] === "#" && m[1].length > 1 && /^#\d{1,5}$/.test(m[1])) {
@@ -130,17 +130,17 @@ var HTML = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_strip_tags: function(input, args) {
-        var remove_indentation = args[0],
-            remove_line_breaks = args[1];
+    runStripTags: function(input, args) {
+        var removeIndentation = args[0],
+            removeLineBreaks = args[1];
 
-        input = Utils.strip_html_tags(input);
+        input = Utils.stripHtmlTags(input);
 
-        if (remove_indentation) {
+        if (removeIndentation) {
             input = input.replace(/\n[ \f\t]+/g, "\n");
         }
 
-        if (remove_line_breaks) {
+        if (removeLineBreaks) {
             input = input.replace(/^\s*\n/, "") // first line
                          .replace(/(\n\s*){2,}/g, "\n"); // all others
         }
@@ -156,7 +156,7 @@ var HTML = {
      * @param {Object[]} args
      * @returns {html}
      */
-    run_parse_colour_code: function(input, args) {
+    runParseColourCode: function(input, args) {
         var m = null,
             r = 0, g = 0, b = 0, a = 1;
 
@@ -177,7 +177,7 @@ var HTML = {
             var h_ = parseFloat(m[1]) / 360,
                 s_ = parseFloat(m[2]) / 100,
                 l_ = parseFloat(m[3]) / 100,
-                rgb_ = HTML._hsl_to_rgb(h_, s_, l_);
+                rgb_ = HTML._hslToRgb(h_, s_, l_);
 
             r = rgb_[0];
             g = rgb_[1];
@@ -195,7 +195,7 @@ var HTML = {
             b = Math.round(255 * (1 - y_) * (1 - k_));
         }
 
-        var hsl_ = HTML._rgb_to_hsl(r, g, b),
+        var hsl_ = HTML._rgbToHsl(r, g, b),
             h = Math.round(hsl_[0] * 360),
             s = Math.round(hsl_[1] * 100),
             l = Math.round(hsl_[2] * 100),
@@ -210,9 +210,9 @@ var HTML = {
         k = k.toFixed(2);
 
         var hex = "#" +
-                Utils.pad_left(Math.round(r).toString(16), 2) +
-                Utils.pad_left(Math.round(g).toString(16), 2) +
-                Utils.pad_left(Math.round(b).toString(16), 2),
+                Utils.padLeft(Math.round(r).toString(16), 2) +
+                Utils.padLeft(Math.round(g).toString(16), 2) +
+                Utils.padLeft(Math.round(b).toString(16), 2),
             rgb  = "rgb(" + r + ", " + g + ", " + b + ")",
             rgba = "rgba(" + r + ", " + g + ", " + b + ", " + a + ")",
             hsl  = "hsl(" + h + ", " + s + "%, " + l + "%)",
@@ -237,7 +237,7 @@ var HTML = {
                     var color = e.color.toRGB();\
                     document.getElementById('input-text').value = 'rgba(' +\
                         color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';\
-                    window.app.auto_bake();\
+                    window.app.autoBake();\
                 });\
             </script>";
     },
@@ -246,7 +246,7 @@ var HTML = {
 
     /**
      * Converts an HSL color value to RGB. Conversion formula
-     * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+     * adapted from http://en.wikipedia.org/wiki/HSL_colorSpace.
      * Assumes h, s, and l are contained in the set [0, 1] and
      * returns r, g, and b in the set [0, 255].
      *
@@ -258,7 +258,7 @@ var HTML = {
      * @param {number} l - The lightness
      * @return {Array} The RGB representation
      */
-    _hsl_to_rgb: function(h, s, l){
+    _hslToRgb: function(h, s, l){
         var r, g, b;
 
         if (s === 0){
@@ -286,7 +286,7 @@ var HTML = {
 
     /**
      * Converts an RGB color value to HSL. Conversion formula
-     * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+     * adapted from http://en.wikipedia.org/wiki/HSL_colorSpace.
      * Assumes r, g, and b are contained in the set [0, 255] and
      * returns h, s, and l in the set [0, 1].
      *
@@ -298,7 +298,7 @@ var HTML = {
      * @param {number} b - The blue color value
      * @return {Array} The HSL representation
      */
-    _rgb_to_hsl: function(r, g, b) {
+    _rgbToHsl: function(r, g, b) {
         r /= 255; g /= 255; b /= 255;
         var max = Math.max(r, g, b),
             min = Math.min(r, g, b),
@@ -327,7 +327,7 @@ var HTML = {
      * @private
      * @constant
      */
-    _byte_to_entity: {
+    _byteToEntity: {
         34 : "&quot;",
         38 : "&amp;",
         39 : "&apos;",
@@ -591,7 +591,7 @@ var HTML = {
      * @private
      * @constant
      */
-    _entity_to_byte : {
+    _entityToByte : {
         "quot" : 34,
         "amp" : 38,
         "apos" : 39,

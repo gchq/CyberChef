@@ -15,10 +15,10 @@ var Chef = function() {
 /**
  * Runs the recipe over the input.
  *
- * @param {string} input_text - The input data as a string
- * @param {Object[]} recipe_config - The recipe configuration object
+ * @param {string} inputText - The input data as a string
+ * @param {Object[]} recipeConfig - The recipe configuration object
  * @param {Object} options - The options object storing various user choices
- * @param {boolean} options.attemp_highlight - Whether or not to attempt highlighting
+ * @param {boolean} options.attempHighlight - Whether or not to attempt highlighting
  * @param {number} progress - The position in the recipe to start from
  * @param {number} [step] - The number of operations to execute
  *
@@ -30,41 +30,41 @@ var Chef = function() {
  * @returns {number} response.duration - The number of ms it took to execute the recipe
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
-Chef.prototype.bake = function(input_text, recipe_config, options, progress, step) {
-    var start_time  = new Date().getTime(),
-        recipe      = new Recipe(recipe_config),
-        contains_fc = recipe.contains_flow_control(),
-        error       = false;
+Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step) {
+    var startTime  = new Date().getTime(),
+        recipe     = new Recipe(recipeConfig),
+        containsFc = recipe.containsFlowControl(),
+        error      = false;
 
-    // Reset attempt_highlight flag
-    if (options.hasOwnProperty("attempt_highlight")) {
-        options.attempt_highlight = true;
+    // Reset attemptHighlight flag
+    if (options.hasOwnProperty("attemptHighlight")) {
+        options.attemptHighlight = true;
     }
 
-    if (contains_fc) options.attempt_highlight = false;
+    if (containsFc) options.attemptHighlight = false;
 
     // Clean up progress
-    if (progress >= recipe_config.length) {
+    if (progress >= recipeConfig.length) {
         progress = 0;
     }
 
     if (step) {
         // Unset breakpoint on this step
-        recipe.set_breakpoint(progress, false);
+        recipe.setBreakpoint(progress, false);
         // Set breakpoint on next step
-        recipe.set_breakpoint(progress + 1, true);
+        recipe.setBreakpoint(progress + 1, true);
     }
 
     // If stepping with flow control, we have to start from the beginning
     // but still want to skip all previous breakpoints
-    if (progress > 0 && contains_fc) {
-        recipe.remove_breaks_up_to(progress);
+    if (progress > 0 && containsFc) {
+        recipe.removeBreaksUpTo(progress);
         progress = 0;
     }
 
     // If starting from scratch, load data
     if (progress === 0) {
-        this.dish.set(input_text, Dish.STRING);
+        this.dish.set(inputText, Dish.STRING);
     }
 
     try {
@@ -80,10 +80,10 @@ Chef.prototype.bake = function(input_text, recipe_config, options, progress, ste
         result: this.dish.type === Dish.HTML ?
             this.dish.get(Dish.HTML) :
             this.dish.get(Dish.STRING),
-        type: Dish.enum_lookup(this.dish.type),
+        type: Dish.enumLookup(this.dish.type),
         progress: progress,
         options: options,
-        duration: new Date().getTime() - start_time,
+        duration: new Date().getTime() - startTime,
         error: error
     };
 };
@@ -103,18 +103,18 @@ Chef.prototype.bake = function(input_text, recipe_config, options, progress, ste
  * This will only actually execute the recipe if auto-bake is enabled, otherwise it will just load
  * the recipe, ingredients and dish.
  *
- * @param {Object[]} recipe_config - The recipe configuration object
+ * @param {Object[]} recipeConfig - The recipe configuration object
  * @returns {number} The time it took to run the silent bake in milliseconds.
 */
-Chef.prototype.silent_bake = function(recipe_config) {
-    var start_time = new Date().getTime(),
-        recipe     = new Recipe(recipe_config),
-        dish       = new Dish("", Dish.STRING);
+Chef.prototype.silentBake = function(recipeConfig) {
+    var startTime = new Date().getTime(),
+        recipe    = new Recipe(recipeConfig),
+        dish      = new Dish("", Dish.STRING);
 
     try {
         recipe.execute(dish);
     } catch(err) {
         // Suppress all errors
     }
-    return new Date().getTime() - start_time;
+    return new Date().getTime() - startTime;
 };

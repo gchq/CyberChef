@@ -24,7 +24,7 @@ var Punycode = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_ascii: function(input, args) {
+    runToAscii: function(input, args) {
         var idn = args[0];
         
         if (idn) {
@@ -42,7 +42,7 @@ var Punycode = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_to_unicode: function(input, args) {
+    runToUnicode: function(input, args) {
         var idn = args[0];
         
         if (idn) {

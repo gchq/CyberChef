@@ -25,21 +25,21 @@ var CharEnc = {
      * @returns {string}
      */
     run: function(input, args) {
-        var input_format = args[0],
-            output_format = args[1];
+        var inputFormat = args[0],
+            outputFormat = args[1];
             
-        if (input_format === "Windows-1251") {
-            input = Utils.win1251_to_unicode(input);
+        if (inputFormat === "Windows-1251") {
+            input = Utils.win1251ToUnicode(input);
             input = CryptoJS.enc.Utf8.parse(input);
         } else {
-            input = Utils.format[input_format].parse(input);
+            input = Utils.format[inputFormat].parse(input);
         }
         
-        if (output_format === "Windows-1251") {
+        if (outputFormat === "Windows-1251") {
             input = CryptoJS.enc.Utf8.stringify(input);
-            return Utils.unicode_to_win1251(input);
+            return Utils.unicodeToWin1251(input);
         } else {
-            return Utils.format[output_format].stringify(input);
+            return Utils.format[outputFormat].stringify(input);
         }
     },
     

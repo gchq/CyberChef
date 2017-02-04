@@ -51,23 +51,23 @@ var Utils = {
      *
      * @example
      * // returns "0a"
-     * Utils.pad_left("a", 2);
+     * Utils.padLeft("a", 2);
      *
      * // returns "000a"
-     * Utils.pad_left("a", 4);
+     * Utils.padLeft("a", 4);
      *
      * // returns "xxxa"
-     * Utils.pad_left("a", 4, "x");
+     * Utils.padLeft("a", 4, "x");
      *
      * // returns "bcabchello"
-     * Utils.pad_left("hello", 10, "abc");
+     * Utils.padLeft("hello", 10, "abc");
      */
-    pad_left: function(str, max, chr) {
+    padLeft: function(str, max, chr) {
         chr = chr || "0";
-        var start_index = chr.length - (max - str.length);
-        start_index = start_index < 0 ? 0 : start_index;
+        var startIndex = chr.length - (max - str.length);
+        startIndex = startIndex < 0 ? 0 : startIndex;
         return str.length < max ?
-            Utils.pad_left(chr.slice(start_index, chr.length) + str, max, chr) : str;
+            Utils.padLeft(chr.slice(startIndex, chr.length) + str, max, chr) : str;
     },
 
 
@@ -81,23 +81,23 @@ var Utils = {
      *
      * @example
      * // returns "a   "
-     * Utils.pad_right("a", 4);
+     * Utils.padRight("a", 4);
      *
      * // returns "axxx"
-     * Utils.pad_right("a", 4, "x");
+     * Utils.padRight("a", 4, "x");
      */
-    pad_right: function(str, max, chr) {
+    padRight: function(str, max, chr) {
         chr = chr || " ";
         return str.length < max ?
-            Utils.pad_right(str + chr.slice(0, max-str.length), max, chr) : str;
+            Utils.padRight(str + chr.slice(0, max-str.length), max, chr) : str;
     },
 
 
     /**
-     * @alias Utils.pad_left
+     * @alias Utils.padLeft
      */
     pad: function(str, max, chr) {
-        return Utils.pad_left(str, max, chr);
+        return Utils.padLeft(str, max, chr);
     },
 
 
@@ -171,19 +171,19 @@ var Utils = {
      * Returns a string with all non-printable chars as dots, optionally preserving whitespace.
      *
      * @param {string} str - The input string to display.
-     * @param {boolean} [preserve_ws=false] - Whether or not to print whitespace.
+     * @param {boolean} [preserveWs=false] - Whether or not to print whitespace.
      * @returns {string}
      */
-    printable: function(str, preserve_ws) {
-        if (window && window.app && !window.app.options.treat_as_utf8) {
-            str = Utils.byte_array_to_chars(Utils.str_to_byte_array(str));
+    printable: function(str, preserveWs) {
+        if (window && window.app && !window.app.options.treatAsUtf8) {
+            str = Utils.byteArrayToChars(Utils.strToByteArray(str));
         }
         
         var re = /[\0-\x08\x0B-\x0C\x0E-\x1F\x7F-\x9F\xAD\u0378\u0379\u037F-\u0383\u038B\u038D\u03A2\u0528-\u0530\u0557\u0558\u0560\u0588\u058B-\u058E\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08A1\u08AD-\u08E3\u08FF\u0978\u0980\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0C00\u0C04\u0C0D\u0C11\u0C29\u0C34\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5A-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C81\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D01\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5F\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F5-\u13FF\u169D-\u169F\u16F1-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191D-\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7-\u1CFF\u1DE7-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BB-\u20CF\u20F1-\u20FF\u218A-\u218F\u23F4-\u23FF\u2427-\u243F\u244B-\u245F\u2700\u2B4D-\u2B4F\u2B5A-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E3C-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FCD-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA698-\uA69E\uA6F8-\uA6FF\uA78F\uA794-\uA79F\uA7AB-\uA7F7\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FC-\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9E0-\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAA7C-\uAA7F\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F-\uABBF\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE27-\uFE2F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF]/g;
-        var ws_re = /[\x09-\x10\x0D\u2028\u2029]/g;
+        var wsRe = /[\x09-\x10\x0D\u2028\u2029]/g;
         
         str = str.replace(re, ".");
-        if (!preserve_ws) str = str.replace(ws_re, ".");
+        if (!preserveWs) str = str.replace(wsRe, ".");
         return str;
     },
 
@@ -196,12 +196,12 @@ var Utils = {
      *
      * @example
      * // returns "\x00"
-     * Utils.parse_escaped_chars("\\x00");
+     * Utils.parseEscapedChars("\\x00");
      *
      * // returns "\n"
-     * Utils.parse_escaped_chars("\\n");
+     * Utils.parseEscapedChars("\\n");
      */
-    parse_escaped_chars: function(str) {
+    parseEscapedChars: function(str) {
         return str.replace(/(\\)?\\([nrtbf]|x[\da-f]{2})/g, function(m, a, b) {
             if (a === "\\") return "\\"+b;
             switch (b[0]) {
@@ -225,85 +225,85 @@ var Utils = {
     /**
      * Expand an alphabet range string into a list of the characters in that range.
      *
-     * @param {string} alph_str
+     * @param {string} alphStr
      * @returns {char[]}
      *
      * @example
      * // returns ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-     * Utils.expand_alph_range("0-9");
+     * Utils.expandAlphRange("0-9");
      *
      * // returns ["a", "b", "c", "d", "0", "1", "2", "3", "+", "/"]
-     * Utils.expand_alph_range("a-d0-3+/");
+     * Utils.expandAlphRange("a-d0-3+/");
      *
      * // returns ["a", "b", "c", "d", "0", "-", "3"]
-     * Utils.expand_alph_range("a-d0\\-3")
+     * Utils.expandAlphRange("a-d0\\-3")
      */
-    expand_alph_range: function(alph_str) {
-        var alph_arr = [];
+    expandAlphRange: function(alphStr) {
+        var alphArr = [];
         
-        for (var i = 0; i < alph_str.length; i++) {
-            if (i < alph_str.length - 2 &&
-                alph_str[i+1] === "-" &&
-                alph_str[i] !== "\\") {
-                var start = Utils.ord(alph_str[i]),
-                    end = Utils.ord(alph_str[i+2]);
+        for (var i = 0; i < alphStr.length; i++) {
+            if (i < alphStr.length - 2 &&
+                alphStr[i+1] === "-" &&
+                alphStr[i] !== "\\") {
+                var start = Utils.ord(alphStr[i]),
+                    end = Utils.ord(alphStr[i+2]);
                     
                 for (var j = start; j <= end; j++) {
-                    alph_arr.push(Utils.chr(j));
+                    alphArr.push(Utils.chr(j));
                 }
                 i += 2;
-            } else if (i < alph_str.length - 2 &&
-                alph_str[i] === "\\" &&
-                alph_str[i+1] === "-") {
-                alph_arr.push("-");
+            } else if (i < alphStr.length - 2 &&
+                alphStr[i] === "\\" &&
+                alphStr[i+1] === "-") {
+                alphArr.push("-");
                 i++;
             } else {
-                alph_arr.push(alph_str[i]);
+                alphArr.push(alphStr[i]);
             }
         }
-        return alph_arr;
+        return alphArr;
     },
 
 
     /**
      * Translates a hex string into an array of bytes.
      *
-     * @param {string} hex_str
-     * @returns {byte_array}
+     * @param {string} hexStr
+     * @returns {byteArray}
      *
      * @example
      * // returns [0xfe, 0x09, 0xa7]
-     * Utils.hex_to_byte_array("fe09a7");
+     * Utils.hexToByteArray("fe09a7");
      */
-    hex_to_byte_array: function(hex_str) {
+    hexToByteArray: function(hexStr) {
         // TODO: Handle errors i.e. input string is not hex
-        if (!hex_str) return [];
-        hex_str = hex_str.replace(/\s+/g, "");
-        var byte_array = [];
-        for (var i = 0; i < hex_str.length; i += 2) {
-            byte_array.push(parseInt(hex_str.substr(i, 2), 16));
+        if (!hexStr) return [];
+        hexStr = hexStr.replace(/\s+/g, "");
+        var byteArray = [];
+        for (var i = 0; i < hexStr.length; i += 2) {
+            byteArray.push(parseInt(hexStr.substr(i, 2), 16));
         }
-        return byte_array;
+        return byteArray;
     },
 
 
     /**
      * Translates an array of bytes to a hex string.
      *
-     * @param {byte_array} byte_array
+     * @param {byteArray} byteArray
      * @returns {string}
      *
      * @example
      * // returns "fe09a7"
-     * Utils.byte_array_to_hex([0xfe, 0x09, 0xa7]);
+     * Utils.byteArrayToHex([0xfe, 0x09, 0xa7]);
      */
-    byte_array_to_hex: function(byte_array) {
-        if (!byte_array) return "";
-        var hex_str = "";
-        for (var i = 0; i < byte_array.length; i++) {
-            hex_str += Utils.hex(byte_array[i]) + " ";
+    byteArrayToHex: function(byteArray) {
+        if (!byteArray) return "";
+        var hexStr = "";
+        for (var i = 0; i < byteArray.length; i++) {
+            hexStr += Utils.hex(byteArray[i]) + " ";
         }
-        return hex_str.slice(0, hex_str.length-1);
+        return hexStr.slice(0, hexStr.length-1);
     },
 
 
@@ -312,25 +312,25 @@ var Utils = {
      * Treats the string as UTF-8 if any values are over 255.
      *
      * @param {string} str
-     * @returns {byte_array}
+     * @returns {byteArray}
      *
      * @example
      * // returns [72,101,108,108,111]
-     * Utils.str_to_byte_array("Hello");
+     * Utils.strToByteArray("Hello");
      *
      * // returns [228,189,160,229,165,189]
-     * Utils.str_to_byte_array("你好");
+     * Utils.strToByteArray("你好");
      */
-    str_to_byte_array: function(str) {
-        var byte_array = new Array(str.length);
+    strToByteArray: function(str) {
+        var byteArray = new Array(str.length);
         var i = str.length, b;
         while (i--) {
             b = str.charCodeAt(i);
-            byte_array[i] = b;
+            byteArray[i] = b;
             // If any of the bytes are over 255, read as UTF-8
-            if (b > 255) return Utils.str_to_utf8_byte_array(str);
+            if (b > 255) return Utils.strToUtf8ByteArray(str);
         }
-        return byte_array;
+        return byteArray;
     },
 
 
@@ -338,22 +338,22 @@ var Utils = {
      * Converts a string to a UTF-8 byte array.
      *
      * @param {string} str
-     * @returns {byte_array}
+     * @returns {byteArray}
      *
      * @example
      * // returns [72,101,108,108,111]
-     * Utils.str_to_utf8_byte_array("Hello");
+     * Utils.strToUtf8ByteArray("Hello");
      *
      * // returns [228,189,160,229,165,189]
-     * Utils.str_to_utf8_byte_array("你好");
+     * Utils.strToUtf8ByteArray("你好");
      */
-    str_to_utf8_byte_array: function(str) {
-        var word_array = CryptoJS.enc.Utf8.parse(str),
-            byte_array = Utils.word_array_to_byte_array(word_array);
+    strToUtf8ByteArray: function(str) {
+        var wordArray = CryptoJS.enc.Utf8.parse(str),
+            byteArray = Utils.wordArrayToByteArray(wordArray);
 
-        if (str.length !== word_array.sigBytes)
-            window.app.options.attempt_highlight = false;
-        return byte_array;
+        if (str.length !== wordArray.sigBytes)
+            window.app.options.attemptHighlight = false;
+        return byteArray;
     },
 
 
@@ -361,54 +361,54 @@ var Utils = {
      * Converts a string to a charcode array
      *
      * @param {string} str
-     * @returns {byte_array}
+     * @returns {byteArray}
      *
      * @example
      * // returns [72,101,108,108,111]
-     * Utils.str_to_charcode("Hello");
+     * Utils.strToCharcode("Hello");
      *
      * // returns [20320,22909]
-     * Utils.str_to_charcode("你好");
+     * Utils.strToCharcode("你好");
      */
-    str_to_charcode: function(str) {
-        var byte_array = new Array(str.length);
+    strToCharcode: function(str) {
+        var byteArray = new Array(str.length);
         var i = str.length;
         while (i--) {
-            byte_array[i] = str.charCodeAt(i);
+            byteArray[i] = str.charCodeAt(i);
         }
-        return byte_array;
+        return byteArray;
     },
 
 
     /**
      * Attempts to convert a byte array to a UTF-8 string.
      *
-     * @param {byte_array} byte_array
+     * @param {byteArray} byteArray
      * @returns {string}
      *
      * @example
      * // returns "Hello"
-     * Utils.byte_array_to_utf8([72,101,108,108,111]);
+     * Utils.byteArrayToUtf8([72,101,108,108,111]);
      *
      * // returns "你好"
-     * Utils.byte_array_to_utf8([228,189,160,229,165,189]);
+     * Utils.byteArrayToUtf8([228,189,160,229,165,189]);
      */
-    byte_array_to_utf8: function(byte_array) {
+    byteArrayToUtf8: function(byteArray) {
         try {
             // Try to output data as UTF-8 string
             var words = [];
-            for (var i = 0; i < byte_array.length; i++) {
-                words[i >>> 2] |= byte_array[i] << (24 - (i % 4) * 8);
+            for (var i = 0; i < byteArray.length; i++) {
+                words[i >>> 2] |= byteArray[i] << (24 - (i % 4) * 8);
             }
-            var word_array = new CryptoJS.lib.WordArray.init(words, byte_array.length),
-                str = CryptoJS.enc.Utf8.stringify(word_array);
+            var wordArray = new CryptoJS.lib.WordArray.init(words, byteArray.length),
+                str = CryptoJS.enc.Utf8.stringify(wordArray);
             
-            if (str.length !== word_array.sigBytes)
-                window.app.options.attempt_highlight = false;
+            if (str.length !== wordArray.sigBytes)
+                window.app.options.attemptHighlight = false;
             return str;
         } catch (err) {
             // If it fails, treat it as ANSI
-            return Utils.byte_array_to_chars(byte_array);
+            return Utils.byteArrayToChars(byteArray);
         }
     },
 
@@ -416,47 +416,47 @@ var Utils = {
     /**
      * Converts a charcode array to a string.
      *
-     * @param {byte_array} byte_array
+     * @param {byteArray} byteArray
      * @returns {string}
      *
      * @example
      * // returns "Hello"
-     * Utils.byte_array_to_chars([72,101,108,108,111]);
+     * Utils.byteArrayToChars([72,101,108,108,111]);
      *
      * // returns "你好"
-     * Utils.byte_array_to_chars([20320,22909]);
+     * Utils.byteArrayToChars([20320,22909]);
      */
-    byte_array_to_chars: function(byte_array) {
-        if (!byte_array) return "";
+    byteArrayToChars: function(byteArray) {
+        if (!byteArray) return "";
         var str = "";
-        for (var i = 0; i < byte_array.length;) {
-            str += String.fromCharCode(byte_array[i++]);
+        for (var i = 0; i < byteArray.length;) {
+            str += String.fromCharCode(byteArray[i++]);
         }
         return str;
     },
     
     
     /**
-     * Converts a CryptoJS.lib.WordArray to a byte_array.
+     * Converts a CryptoJS.lib.WordArray to a byteArray.
      *
-     * @param {CryptoJS.lib.WordArray} word_array
-     * @returns {byte_array}
+     * @param {CryptoJS.lib.WordArray} wordArray
+     * @returns {byteArray}
      *
      * @example
      * // returns [84, 101, 115, 116]
-     * Utils.word_array_to_byte_array(CryptoJS.enc.Hex.parse("54657374"));
+     * Utils.wordArrayToByteArray(CryptoJS.enc.Hex.parse("54657374"));
      */
-    word_array_to_byte_array: function(word_array) {
-        if (word_array.sigBytes <= 0) return [];
+    wordArrayToByteArray: function(wordArray) {
+        if (wordArray.sigBytes <= 0) return [];
         
-        var words = word_array.words,
-            byte_array = [];
+        var words = wordArray.words,
+            byteArray = [];
             
-        for (var i = 0; i < word_array.sigBytes; i++) {
-            byte_array.push((words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff);
+        for (var i = 0; i < wordArray.sigBytes; i++) {
+            byteArray.push((words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff);
         }
         
-        return byte_array;
+        return byteArray;
     },
 
 
@@ -536,20 +536,20 @@ var Utils = {
     /**
      * Converts a Unicode string to Windows-1251 encoding
      *
-     * @param {string} unic_str
+     * @param {string} unicStr
      * @returns {string} String encoded in Windows-1251
      *
      * @example
      * // returns "îáíîâëåííàÿ òåõíè÷êà ïî Áîèíãó. îðèãèíàë ó ìåíÿ. çàáåðåòå êîãäà áóäåòå â ÊÈ"
-     * Utils.unicode_to_win1251("обновленная техничка по Боингу. оригинал у меня. заберете когда будете в КИ");
+     * Utils.unicodeToWin1251("обновленная техничка по Боингу. оригинал у меня. заберете когда будете в КИ");
      */
-    unicode_to_win1251: function(unic_str) {
+    unicodeToWin1251: function(unicStr) {
         var res = [];
         
-        for (var i = 0; i < unic_str.length; i++) {
-            var ord = unic_str.charCodeAt(i);
+        for (var i = 0; i < unicStr.length; i++) {
+            var ord = unicStr.charCodeAt(i);
             if (!(ord in Utils.UNIC_WIN1251_MAP))
-                throw "Character '" + unic_str.charAt(i) + "' isn't supported by Windows-1251";
+                throw "Character '" + unicStr.charAt(i) + "' isn't supported by Windows-1251";
             res.push(String.fromCharCode(Utils.UNIC_WIN1251_MAP[ord]));
         }
         
@@ -560,20 +560,20 @@ var Utils = {
     /**
      * Converts a Windows-1251 string to Unicode encoding
      *
-     * @param {string} win1251_str
+     * @param {string} win1251Str
      * @returns {string} String encoded in Unicode
      *
      * @example
      * // returns "обновленная техничка по Боингу. оригинал у меня. заберете когда будете в КИ"
-     * Utils.unicode_to_win1251("îáíîâëåííàÿ òåõíè÷êà ïî Áîèíãó. îðèãèíàë ó ìåíÿ. çàáåðåòå êîãäà áóäåòå â ÊÈ");
+     * Utils.unicodeToWin1251("îáíîâëåííàÿ òåõíè÷êà ïî Áîèíãó. îðèãèíàë ó ìåíÿ. çàáåðåòå êîãäà áóäåòå â ÊÈ");
      */
-    win1251_to_unicode: function(win1251_str) {
+    win1251ToUnicode: function(win1251Str) {
         var res = [];
         
-        for (var i = 0; i < win1251_str.length; i++) {
-            var ord = win1251_str.charCodeAt(i);
+        for (var i = 0; i < win1251Str.length; i++) {
+            var ord = win1251Str.charCodeAt(i);
             if (!(ord in Utils.WIN1251_UNIC_MAP))
-                throw "Character '" + win1251_str.charAt(i) + "' isn't supported by Windows-1251";
+                throw "Character '" + win1251Str.charAt(i) + "' isn't supported by Windows-1251";
             res.push(String.fromCharCode(Utils.WIN1251_UNIC_MAP[ord]));
         }
         
@@ -584,25 +584,25 @@ var Utils = {
     /**
      * Base64's the input byte array using the given alphabet, returning a string.
      *
-     * @param {byte_array|string} data
+     * @param {byteArray|string} data
      * @param {string} [alphabet]
      * @returns {string}
      *
      * @example
      * // returns "SGVsbG8="
-     * Utils.to_base64([72, 101, 108, 108, 111]);
+     * Utils.toBase64([72, 101, 108, 108, 111]);
      *
      * // returns "SGVsbG8="
-     * Utils.to_base64("Hello");
+     * Utils.toBase64("Hello");
      */
-    to_base64: function(data, alphabet) {
+    toBase64: function(data, alphabet) {
         if (!data) return "";
         if (typeof data == "string") {
-            data = Utils.str_to_byte_array(data);
+            data = Utils.strToByteArray(data);
         }
         
         alphabet = alphabet ?
-            Utils.expand_alph_range(alphabet).join("") :
+            Utils.expandAlphRange(alphabet).join("") :
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
         var output = "",
             chr1, chr2, chr3,
@@ -636,38 +636,38 @@ var Utils = {
     /**
      * UnBase64's the input string using the given alphabet, returning a byte array.
      *
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @param {string} [alphabet]
-     * @param {string} [return_type="string"] - Either "string" or "byte_array"
-     * @param {boolean} [remove_non_alph_chars=true]
-     * @returns {byte_array}
+     * @param {string} [returnType="string"] - Either "string" or "byteArray"
+     * @param {boolean} [removeNonAlphChars=true]
+     * @returns {byteArray}
      *
      * @example
      * // returns "Hello"
-     * Utils.from_base64("SGVsbG8=");
+     * Utils.fromBase64("SGVsbG8=");
      *
      * // returns [72, 101, 108, 108, 111]
-     * Utils.from_base64("SGVsbG8=", null, "byte_array");
+     * Utils.fromBase64("SGVsbG8=", null, "byteArray");
      */
-    from_base64: function(data, alphabet, return_type, remove_non_alph_chars) {
-        return_type = return_type || "string";
+    fromBase64: function(data, alphabet, returnType, removeNonAlphChars) {
+        returnType = returnType || "string";
         
         if (!data) {
-            return return_type === "string" ? "" : [];
+            return returnType === "string" ? "" : [];
         }
         
         alphabet = alphabet ?
-            Utils.expand_alph_range(alphabet).join("") :
+            Utils.expandAlphRange(alphabet).join("") :
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-        if (remove_non_alph_chars === undefined)
-            remove_non_alph_chars = true;
+        if (removeNonAlphChars === undefined)
+            removeNonAlphChars = true;
         
         var output = [],
             chr1, chr2, chr3,
             enc1, enc2, enc3, enc4,
             i = 0;
         
-        if (remove_non_alph_chars) {
+        if (removeNonAlphChars) {
             var re = new RegExp("[^" + alphabet.replace(/[\[\]\\\-^$]/g, "\\$&") + "]", "g");
             data = data.replace(re, "");
         }
@@ -696,26 +696,26 @@ var Utils = {
             }
         }
         
-        return return_type === "string" ? Utils.byte_array_to_utf8(output) : output;
+        return returnType === "string" ? Utils.byteArrayToUtf8(output) : output;
     },
 
 
     /**
      * Convert a byte array into a hex string.
      *
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @param {string} [delim=" "]
      * @param {number} [padding=2]
      * @returns {string}
      *
      * @example
      * // returns "0a 14 1e"
-     * Utils.to_hex([10,20,30]);
+     * Utils.toHex([10,20,30]);
      *
      * // returns "0a:14:1e"
-     * Utils.to_hex([10,20,30], ":");
+     * Utils.toHex([10,20,30], ":");
      */
-    to_hex: function(data, delim, padding) {
+    toHex: function(data, delim, padding) {
         if (!data) return "";
         
         delim = typeof delim == "string" ? delim : " ";
@@ -740,14 +740,14 @@ var Utils = {
     /**
      * Convert a byte array into a hex string as efficiently as possible with no options.
      *
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @returns {string}
      *
      * @example
      * // returns "0a141e"
-     * Utils.to_hex([10,20,30]);
+     * Utils.toHex([10,20,30]);
      */
-    to_hex_fast: function(data) {
+    toHexFast: function(data) {
         if (!data) return "";
         
         var output = [];
@@ -766,27 +766,27 @@ var Utils = {
      *
      * @param {string} data
      * @param {string} [delim]
-     * @param {number} [byte_len=2]
-     * @returns {byte_array}
+     * @param {number} [byteLen=2]
+     * @returns {byteArray}
      *
      * @example
      * // returns [10,20,30]
-     * Utils.from_hex("0a 14 1e");
+     * Utils.fromHex("0a 14 1e");
      *
      * // returns [10,20,30]
-     * Utils.from_hex("0a:14:1e", "Colon");
+     * Utils.fromHex("0a:14:1e", "Colon");
      */
-    from_hex: function(data, delim, byte_len) {
+    fromHex: function(data, delim, byteLen) {
         delim = delim || (data.indexOf(" ") >= 0 ? "Space" : "None");
-        byte_len = byte_len || 2;
+        byteLen = byteLen || 2;
         if (delim !== "None") {
-            var delim_regex = Utils.regex_rep[delim];
-            data = data.replace(delim_regex, "");
+            var delimRegex = Utils.regexRep[delim];
+            data = data.replace(delimRegex, "");
         }
         
         var output = [];
-        for (var i = 0; i < data.length; i += byte_len) {
-            output.push(parseInt(data.substr(i, byte_len), 16));
+        for (var i = 0; i < data.length; i += byteLen) {
+            output.push(parseInt(data.substr(i, byteLen), 16));
         }
         return output;
     },
@@ -800,33 +800,33 @@ var Utils = {
      *
      * @example
      * // returns [["head1", "head2"], ["data1", "data2"]]
-     * Utils.parse_csv("head1,head2\ndata1,data2");
+     * Utils.parseCSV("head1,head2\ndata1,data2");
      */
-    parse_csv: function(data) {
+    parseCSV: function(data) {
         
         var b,
-            ignore_next = false,
-            in_string = false,
+            ignoreNext = false,
+            inString = false,
             cell = "",
             line = [],
             lines = [];
             
         for (var i = 0; i < data.length; i++) {
             b = data[i];
-            if (ignore_next) {
+            if (ignoreNext) {
                 cell += b;
-                ignore_next = false;
+                ignoreNext = false;
             } else if (b === "\\") {
                 cell += b;
-                ignore_next = true;
-            } else if (b === "\"" && !in_string) {
-                in_string = true;
-            } else if (b === "\"" && in_string) {
-                in_string = false;
-            } else if (b === "," && !in_string) {
+                ignoreNext = true;
+            } else if (b === "\"" && !inString) {
+                inString = true;
+            } else if (b === "\"" && inString) {
+                inString = false;
+            } else if (b === "," && !inString) {
                 line.push(cell);
                 cell = "";
-            } else if ((b === "\n" || b === "\r") && !in_string) {
+            } else if ((b === "\n" || b === "\r") && !inString) {
                 line.push(cell);
                 cell = "";
                 lines.push(line);
@@ -848,19 +848,19 @@ var Utils = {
     /**
      * Removes all HTML (or XML) tags from the input string.
      *
-     * @param {string} html_str
-     * @param {boolean} remove_script_and_style - Flag to specify whether to remove entire script or style blocks
+     * @param {string} htmlStr
+     * @param {boolean} removeScriptAndStyle - Flag to specify whether to remove entire script or style blocks
      * @returns {string}
      *
      * @example
      * // returns "Test"
-     * Utils.strip_html_tags("<div>Test</div>");
+     * Utils.stripHtmlTags("<div>Test</div>");
      */
-    strip_html_tags: function(html_str, remove_script_and_style) {
-        if (remove_script_and_style) {
-            html_str = html_str.replace(/<(script|style)[^>]*>.*<\/(script|style)>/gmi, "");
+    stripHtmlTags: function(htmlStr, removeScriptAndStyle) {
+        if (removeScriptAndStyle) {
+            htmlStr = htmlStr.replace(/<(script|style)[^>]*>.*<\/(script|style)>/gmi, "");
         }
-        return html_str.replace(/<[^>\n]+>/g, "");
+        return htmlStr.replace(/<[^>\n]+>/g, "");
     },
 
 
@@ -872,9 +872,9 @@ var Utils = {
      *
      * @example
      * // return "A &lt;script> tag"
-     * Utils.escape_html("A <script> tag");
+     * Utils.escapeHtml("A <script> tag");
      */
-    escape_html: function(str) {
+    escapeHtml: function(str) {
         return str.replace(/</g, "&lt;")
                   .replace(/'/g, "&apos;")
                   .replace(/"/g, "&quot;")
@@ -904,12 +904,12 @@ var Utils = {
      *
      * @example
      * // returns "3 minutes"
-     * Utils.fuzzy_time(152435);
+     * Utils.fuzzyTime(152435);
      *
      * // returns "5 days"
-     * Utils.fuzzy_time(456851321);
+     * Utils.fuzzyTime(456851321);
      */
-    fuzzy_time: function(ms) {
+    fuzzyTime: function(ms) {
         return moment.duration(ms, "milliseconds").humanize();
     },
     
@@ -933,7 +933,7 @@ var Utils = {
      * A mapping of names of delimiter characters to their symbols.
      * @constant
      */
-    char_rep: {
+    charRep: {
         "Space":      " ",
         "Comma":      ",",
         "Semi-colon": ";",
@@ -951,7 +951,7 @@ var Utils = {
      * A mapping of names of delimiter characters to regular expressions which can select them.
      * @constant
      */
-    regex_rep: {
+    regexRep: {
         "Space":      /\s+/g,
         "Comma":      /,/g,
         "Semi-colon": /;/g,

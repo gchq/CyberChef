@@ -14,79 +14,79 @@
 var RecipeWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
-    this.remove_intent = false;
+    this.removeIntent = false;
 };
 
 
 /**
  * Sets up the drag and drop capability for operations in the operations and recipe areas.
  */
-RecipeWaiter.prototype.initialise_operation_drag_n_drop = function() {
-    var rec_list = document.getElementById("rec_list");
+RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
+    var recList = document.getElementById("rec-list");
     
     
     // Recipe list
-    Sortable.create(rec_list, {
+    Sortable.create(recList, {
         group: "recipe",
         sort: true,
         animation: 0,
         delay: 0,
         filter: ".arg-input,.arg", // Relies on commenting out a line in Sortable.js which calls evt.preventDefault()
-        setData: function(dataTransfer, drag_el) {
-            dataTransfer.setData("Text", drag_el.querySelector(".arg-title").textContent);
+        setData: function(dataTransfer, dragEl) {
+            dataTransfer.setData("Text", dragEl.querySelector(".arg-title").textContent);
         },
         onEnd: function(evt) {
-            if (this.remove_intent) {
+            if (this.removeIntent) {
                 evt.item.remove();
                 evt.target.dispatchEvent(this.manager.operationremove);
             }
         }.bind(this)
     });
     
-    Sortable.utils.on(rec_list, "dragover", function() {
-        this.remove_intent = false;
+    Sortable.utils.on(recList, "dragover", function() {
+        this.removeIntent = false;
     }.bind(this));
     
-    Sortable.utils.on(rec_list, "dragleave", function() {
-        this.remove_intent = true;
+    Sortable.utils.on(recList, "dragleave", function() {
+        this.removeIntent = true;
         this.app.progress = 0;
     }.bind(this));
 
-    Sortable.utils.on(rec_list, "touchend", function(e) {
+    Sortable.utils.on(recList, "touchend", function(e) {
         var loc = e.changedTouches[0],
             target = document.elementFromPoint(loc.clientX, loc.clientY);
 
-        this.remove_intent = !rec_list.contains(target);
+        this.removeIntent = !recList.contains(target);
     }.bind(this));
     
     // Favourites category
-    document.querySelector("#categories a").addEventListener("dragover", this.fav_dragover.bind(this));
-    document.querySelector("#categories a").addEventListener("dragleave", this.fav_dragleave.bind(this));
-    document.querySelector("#categories a").addEventListener("drop", this.fav_drop.bind(this));
+    document.querySelector("#categories a").addEventListener("dragover", this.favDragover.bind(this));
+    document.querySelector("#categories a").addEventListener("dragleave", this.favDragleave.bind(this));
+    document.querySelector("#categories a").addEventListener("drop", this.favDrop.bind(this));
 };
 
 
 /**
  * Creates a drag-n-droppable seed list of operations.
  *
- * @param {element} list_el - The list the initialise
+ * @param {element} listEl - The list the initialise
  */
-RecipeWaiter.prototype.create_sortable_seed_list = function(list_el) {
-    Sortable.create(list_el, {
+RecipeWaiter.prototype.createSortableSeedList = function(listEl) {
+    Sortable.create(listEl, {
         group: {
             name: "recipe",
             pull: "clone",
             put: false
         },
         sort: false,
-        setData: function(dataTransfer, drag_el) {
-            dataTransfer.setData("Text", drag_el.textContent);
+        setData: function(dataTransfer, dragEl) {
+            dataTransfer.setData("Text", dragEl.textContent);
         },
         onStart: function(evt) {
             $(evt.item).popover("destroy");
             evt.item.setAttribute("data-toggle", "popover-disabled");
         },
-        onEnd: this.op_sort_end.bind(this)
+        onEnd: this.opSortEnd.bind(this)
     });
 };
 
@@ -99,9 +99,9 @@ RecipeWaiter.prototype.create_sortable_seed_list = function(list_el) {
  * @fires Manager#operationadd
  * @param {event} evt
  */
-RecipeWaiter.prototype.op_sort_end = function(evt) {
-    if (this.remove_intent) {
-        if (evt.item.parentNode.id === "rec_list") {
+RecipeWaiter.prototype.opSortEnd = function(evt) {
+    if (this.removeIntent) {
+        if (evt.item.parentNode.id === "rec-list") {
             evt.item.remove();
         }
         return;
@@ -112,11 +112,11 @@ RecipeWaiter.prototype.op_sort_end = function(evt) {
     $(evt.clone).popover();
     $(evt.clone).children("[data-toggle=popover]").popover();
     
-    if (evt.item.parentNode.id !== "rec_list") {
+    if (evt.item.parentNode.id !== "rec-list") {
         return;
     }
     
-    this.build_recipe_operation(evt.item);
+    this.buildRecipeOperation(evt.item);
     evt.item.dispatchEvent(this.manager.operationadd);
 };
 
@@ -128,7 +128,7 @@ RecipeWaiter.prototype.op_sort_end = function(evt) {
  *
  * @param {event} e
  */
-RecipeWaiter.prototype.fav_dragover = function(e) {
+RecipeWaiter.prototype.favDragover = function(e) {
     if (e.dataTransfer.effectAllowed !== "move")
         return false;
     
@@ -153,7 +153,7 @@ RecipeWaiter.prototype.fav_dragover = function(e) {
  *
  * @param {event} e
  */
-RecipeWaiter.prototype.fav_dragleave = function(e) {
+RecipeWaiter.prototype.favDragleave = function(e) {
     e.stopPropagation();
     e.preventDefault();
     document.querySelector("#categories a").classList.remove("favourites-hover");
@@ -166,13 +166,13 @@ RecipeWaiter.prototype.fav_dragleave = function(e) {
  *
  * @param {event} e
  */
-RecipeWaiter.prototype.fav_drop = function(e) {
+RecipeWaiter.prototype.favDrop = function(e) {
     e.stopPropagation();
     e.preventDefault();
     e.target.classList.remove("favourites-hover");
     
-    var op_name = e.dataTransfer.getData("Text");
-    this.app.add_favourite(op_name);
+    var opName = e.dataTransfer.getData("Text");
+    this.app.addFavourite(opName);
 };
 
 
@@ -181,7 +181,7 @@ RecipeWaiter.prototype.fav_drop = function(e) {
  *
  * @fires Manager#statechange
  */
-RecipeWaiter.prototype.ing_change = function() {
+RecipeWaiter.prototype.ingChange = function() {
     window.dispatchEvent(this.manager.statechange);
 };
 
@@ -193,7 +193,7 @@ RecipeWaiter.prototype.ing_change = function() {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.disable_click = function(e) {
+RecipeWaiter.prototype.disableClick = function(e) {
     var icon = e.target;
     
     if (icon.getAttribute("disabled") === "false") {
@@ -218,7 +218,7 @@ RecipeWaiter.prototype.disable_click = function(e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.breakpoint_click = function(e) {
+RecipeWaiter.prototype.breakpointClick = function(e) {
     var bp = e.target;
 
     if (bp.getAttribute("break") === "false") {
@@ -240,7 +240,7 @@ RecipeWaiter.prototype.breakpoint_click = function(e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.operation_dblclick = function(e) {
+RecipeWaiter.prototype.operationDblclick = function(e) {
     e.target.remove();
     window.dispatchEvent(this.manager.statechange);
 };
@@ -253,7 +253,7 @@ RecipeWaiter.prototype.operation_dblclick = function(e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.operation_child_dblclick = function(e) {
+RecipeWaiter.prototype.operationChildDblclick = function(e) {
     e.target.parentNode.remove();
     window.dispatchEvent(this.manager.statechange);
 };
@@ -262,31 +262,31 @@ RecipeWaiter.prototype.operation_child_dblclick = function(e) {
 /**
  * Generates a configuration object to represent the current recipe.
  *
- * @returns {recipe_config}
+ * @returns {recipeConfig}
  */
-RecipeWaiter.prototype.get_config = function() {
-    var config = [], ingredients, ing_list, disabled, bp, item,
-        operations = document.querySelectorAll("#rec_list li.operation");
+RecipeWaiter.prototype.getConfig = function() {
+    var config = [], ingredients, ingList, disabled, bp, item,
+        operations = document.querySelectorAll("#rec-list li.operation");
     
     for (var i = 0; i < operations.length; i++) {
         ingredients = [];
         disabled = operations[i].querySelector(".disable-icon");
         bp = operations[i].querySelector(".breakpoint");
-        ing_list = operations[i].querySelectorAll(".arg");
+        ingList = operations[i].querySelectorAll(".arg");
         
-        for (var j = 0; j < ing_list.length; j++) {
-            if (ing_list[j].getAttribute("type") === "checkbox") {
+        for (var j = 0; j < ingList.length; j++) {
+            if (ingList[j].getAttribute("type") === "checkbox") {
                 // checkbox
-                ingredients[j] = ing_list[j].checked;
-            } else if (ing_list[j].classList.contains("toggle-string")) {
-                // toggle_string
+                ingredients[j] = ingList[j].checked;
+            } else if (ingList[j].classList.contains("toggle-string")) {
+                // toggleString
                 ingredients[j] = {
-                    option: ing_list[j].previousSibling.children[0].textContent.slice(0, -1),
-                    string: ing_list[j].value
+                    option: ingList[j].previousSibling.children[0].textContent.slice(0, -1),
+                    string: ingList[j].value
                 };
             } else {
                 // all others
-                ingredients[j] = ing_list[j].value;
+                ingredients[j] = ingList[j].value;
             }
         }
         
@@ -315,8 +315,8 @@ RecipeWaiter.prototype.get_config = function() {
  *
  * @param {number} position
  */
-RecipeWaiter.prototype.update_breakpoint_indicator = function(position) {
-    var operations = document.querySelectorAll("#rec_list li.operation");
+RecipeWaiter.prototype.updateBreakpointIndicator = function(position) {
+    var operations = document.querySelectorAll("#rec-list li.operation");
     for (var i = 0; i < operations.length; i++) {
         if (i === position) {
             operations[i].classList.add("break");
@@ -333,19 +333,19 @@ RecipeWaiter.prototype.update_breakpoint_indicator = function(position) {
  *
  * @param {element} el - The operation stub element from the operations pane
  */
-RecipeWaiter.prototype.build_recipe_operation = function(el) {
-    var op_name = el.textContent;
-    var op = new HTMLOperation(op_name, this.app.operations[op_name], this.app, this.manager);
-    el.innerHTML = op.to_full_html();
+RecipeWaiter.prototype.buildRecipeOperation = function(el) {
+    var opName = el.textContent;
+    var op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+    el.innerHTML = op.toFullHtml();
     
-    if (this.app.operations[op_name].flow_control) {
+    if (this.app.operations[opName].flowControl) {
         el.classList.add("flow-control-op");
     }
     
     // Disable auto-bake if this is a manual op - this should be moved to the 'operationadd'
     // handler after event restructuring
-    if (op.manual_bake && this.app.auto_bake_) {
-        this.manager.controls.set_auto_bake(false);
+    if (op.manualBake && this.app.autoBake_) {
+        this.manager.controls.setAutoBake(false);
         this.app.alert("Auto-Bake is disabled by default when using this operation.", "info", 5000);
     }
 };
@@ -357,13 +357,13 @@ RecipeWaiter.prototype.build_recipe_operation = function(el) {
  * @param {string} name - The name of the operation to add
  * @returns {element}
  */
-RecipeWaiter.prototype.add_operation = function(name) {
+RecipeWaiter.prototype.addOperation = function(name) {
     var item = document.createElement("li");
     
     item.classList.add("operation");
     item.innerHTML = name;
-    this.build_recipe_operation(item);
-    document.getElementById("rec_list").appendChild(item);
+    this.buildRecipeOperation(item);
+    document.getElementById("rec-list").appendChild(item);
     
     item.dispatchEvent(this.manager.operationadd);
     return item;
@@ -375,27 +375,27 @@ RecipeWaiter.prototype.add_operation = function(name) {
  *
  * @fires Manager#operationremove
  */
-RecipeWaiter.prototype.clear_recipe = function() {
-    var rec_list = document.getElementById("rec_list");
-    while (rec_list.firstChild) {
-        rec_list.removeChild(rec_list.firstChild);
+RecipeWaiter.prototype.clearRecipe = function() {
+    var recList = document.getElementById("rec-list");
+    while (recList.firstChild) {
+        recList.removeChild(recList.firstChild);
     }
-    rec_list.dispatchEvent(this.manager.operationremove);
+    recList.dispatchEvent(this.manager.operationremove);
 };
 
 
 /**
- * Handler for operation dropdown events from toggle_string arguments.
+ * Handler for operation dropdown events from toggleString arguments.
  * Sets the selected option as the name of the button.
  *
  * @param {event} e
  */
-RecipeWaiter.prototype.dropdown_toggle_click = function(e) {
+RecipeWaiter.prototype.dropdownToggleClick = function(e) {
     var el = e.target,
         button = el.parentNode.parentNode.previousSibling;
         
     button.innerHTML = el.textContent + " <span class='caret'></span>";
-    this.ing_change();
+    this.ingChange();
 };
 
 
@@ -406,7 +406,7 @@ RecipeWaiter.prototype.dropdown_toggle_click = function(e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.op_add = function(e) {
+RecipeWaiter.prototype.opAdd = function(e) {
     window.dispatchEvent(this.manager.statechange);
 };
 
@@ -418,6 +418,6 @@ RecipeWaiter.prototype.op_add = function(e) {
  * @fires Manager#statechange
  * @param {event} e
  */
-RecipeWaiter.prototype.op_remove = function(e) {
+RecipeWaiter.prototype.opRemove = function(e) {
     window.dispatchEvent(this.manager.statechange);
 };

@@ -11,22 +11,22 @@
  * @constructor
  * @param {CatConf[]} categories - The list of categories and operations to be populated.
  * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
- * @param {String[]} default_favourites - A list of default favourite operations.
+ * @param {String[]} defaultFavourites - A list of default favourite operations.
  * @param {Object} options - Default setting for app options.
  */
-var HTMLApp = function(categories, operations, default_favourites, default_options) {
+var HTMLApp = function(categories, operations, defaultFavourites, defaultOptions) {
     this.categories  = categories;
     this.operations  = operations;
-    this.dfavourites = default_favourites;
-    this.doptions    = default_options;
-    this.options     = Utils.extend({}, default_options);
+    this.dfavourites = defaultFavourites;
+    this.doptions    = defaultOptions;
+    this.options     = Utils.extend({}, defaultOptions);
 
     this.chef        = new Chef();
     this.manager     = new Manager(this);
 
-    this.auto_bake_  = false;
+    this.autoBake_   = false;
     this.progress    = 0;
-    this.ing_id      = 0;
+    this.ingId       = 0;
 
     window.chef      = this.chef;
 };
@@ -39,13 +39,13 @@ var HTMLApp = function(categories, operations, default_favourites, default_optio
  */
 HTMLApp.prototype.setup = function() {
     document.dispatchEvent(this.manager.appstart);
-    this.initialise_splitter();
-    this.load_local_storage();
-    this.populate_operations_list();
+    this.initialiseSplitter();
+    this.loadLocalStorage();
+    this.populateOperationsList();
     this.manager.setup();
-    this.reset_layout();
-    this.set_compile_message();
-    this.load_URI_params();
+    this.resetLayout();
+    this.setCompileMessage();
+    this.loadURIParams();
 };
 
 
@@ -54,10 +54,10 @@ HTMLApp.prototype.setup = function() {
  *
  * @param {Error} err
  */
-HTMLApp.prototype.handle_error = function(err) {
+HTMLApp.prototype.handleError = function(err) {
     console.error(err);
-    var msg = err.display_str || err.toString();
-    this.alert(msg, "danger", this.options.error_timeout, !this.options.show_errors);
+    var msg = err.displayStr || err.toString();
+    this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
 };
 
 
@@ -72,32 +72,32 @@ HTMLApp.prototype.bake = function(step) {
 
     try {
         response = this.chef.bake(
-            this.get_input(),         // The user's input
-            this.get_recipe_config(), // The configuration of the recipe
+            this.getInput(),         // The user's input
+            this.getRecipeConfig(), // The configuration of the recipe
             this.options,             // Options set by the user
             this.progress,            // The current position in the recipe
             step                      // Whether or not to take one step or execute the whole recipe
         );
     } catch (err) {
-        this.handle_error(err);
+        this.handleError(err);
     }
 
     if (!response) return;
 
     if (response.error) {
-        this.handle_error(response.error);
+        this.handleError(response.error);
     }
 
     this.options  = response.options;
-    this.dish_str = response.type === "html" ? Utils.strip_html_tags(response.result, true) : response.result;
+    this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
     this.progress = response.progress;
-    this.manager.recipe.update_breakpoint_indicator(response.progress);
+    this.manager.recipe.updateBreakpointIndicator(response.progress);
     this.manager.output.set(response.result, response.type, response.duration);
 
     // If baking took too long, disable auto-bake
-    if (response.duration > this.options.auto_bake_threshold && this.auto_bake_) {
-        this.manager.controls.set_auto_bake(false);
-        this.alert("Baking took longer than " + this.options.auto_bake_threshold +
+    if (response.duration > this.options.autoBakeThreshold && this.autoBake_) {
+        this.manager.controls.setAutoBake(false);
+        this.alert("Baking took longer than " + this.options.autoBakeThreshold +
             "ms, Auto Bake has been disabled.", "warning", 5000);
     }
 };
@@ -106,8 +106,8 @@ HTMLApp.prototype.bake = function(step) {
 /**
  * Runs Auto Bake if it is set.
  */
-HTMLApp.prototype.auto_bake = function() {
-    if (this.auto_bake_) {
+HTMLApp.prototype.autoBake = function() {
+    if (this.autoBake_) {
         this.bake();
     }
 };
@@ -122,15 +122,15 @@ HTMLApp.prototype.auto_bake = function() {
  *
  * @returns {number} - The number of miliseconds it took to run the silent bake.
  */
-HTMLApp.prototype.silent_bake = function() {
-    var start_time = new Date().getTime(),
-        recipe_config = this.get_recipe_config();
+HTMLApp.prototype.silentBake = function() {
+    var startTime = new Date().getTime(),
+        recipeConfig = this.getRecipeConfig();
 
-    if (this.auto_bake_) {
-        this.chef.silent_bake(recipe_config);
+    if (this.autoBake_) {
+        this.chef.silentBake(recipeConfig);
     }
 
-    return new Date().getTime() - start_time;
+    return new Date().getTime() - startTime;
 };
 
 
@@ -139,11 +139,11 @@ HTMLApp.prototype.silent_bake = function() {
  *
  * @returns {string}
  */
-HTMLApp.prototype.get_input = function() {
+HTMLApp.prototype.getInput = function() {
     var input = this.manager.input.get();
 
     // Save to session storage in case we need to restore it later
-    sessionStorage.setItem("input_length", input.length);
+    sessionStorage.setItem("inputLength", input.length);
     sessionStorage.setItem("input", input);
 
     return input;
@@ -155,8 +155,8 @@ HTMLApp.prototype.get_input = function() {
  *
  * @param {string} input - The string to set the input to
  */
-HTMLApp.prototype.set_input = function(input) {
-    sessionStorage.setItem("input_length", input.length);
+HTMLApp.prototype.setInput = function(input) {
+    sessionStorage.setItem("inputLength", input.length);
     sessionStorage.setItem("input", input);
     this.manager.input.set(input);
 };
@@ -168,32 +168,32 @@ HTMLApp.prototype.set_input = function(input) {
  *
  * @fires Manager#oplistcreate
  */
-HTMLApp.prototype.populate_operations_list = function() {
+HTMLApp.prototype.populateOperationsList = function() {
     // Move edit button away before we overwrite it
     document.body.appendChild(document.getElementById("edit-favourites"));
 
     var html = "";
 
     for (var i = 0; i < this.categories.length; i++) {
-        var cat_conf = this.categories[i],
+        var catConf = this.categories[i],
             selected = i === 0,
-            cat = new HTMLCategory(cat_conf.name, selected);
+            cat = new HTMLCategory(catConf.name, selected);
 
-        for (var j = 0; j < cat_conf.ops.length; j++) {
-            var op_name = cat_conf.ops[j],
-                op = new HTMLOperation(op_name, this.operations[op_name], this, this.manager);
-            cat.add_operation(op);
+        for (var j = 0; j < catConf.ops.length; j++) {
+            var opName = catConf.ops[j],
+                op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
+            cat.addOperation(op);
         }
 
-        html += cat.to_html();
+        html += cat.toHtml();
     }
 
     document.getElementById("categories").innerHTML = html;
 
-    var op_lists = document.querySelectorAll("#categories .op_list");
+    var opLists = document.querySelectorAll("#categories .op-list");
 
-    for (i = 0; i < op_lists.length; i++) {
-        op_lists[i].dispatchEvent(this.manager.oplistcreate);
+    for (i = 0; i < opLists.length; i++) {
+        opLists[i].dispatchEvent(this.manager.oplistcreate);
     }
 
     // Add edit button to first category (Favourites)
@@ -204,20 +204,23 @@ HTMLApp.prototype.populate_operations_list = function() {
 /**
  * Sets up the adjustable splitter to allow the user to resize areas of the page.
  */
-HTMLApp.prototype.initialise_splitter = function() {
-    Split(["#operations", "#recipe", "#IO"], {
+HTMLApp.prototype.initialiseSplitter = function() {
+    this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
-        minSize: [240, 325, 500],
+        minSize: [240, 325, 440],
         gutterSize: 4,
-        onDrag: this.manager.controls.adjust_width.bind(this.manager.controls)
+        onDrag: function() {
+            this.manager.controls.adjustWidth();
+            this.manager.output.adjustWidth();
+        }.bind(this)
     });
 
-    Split(["#input", "#output"], {
+    this.ioSplitter = Split(["#input", "#output"], {
         direction: "vertical",
         gutterSize: 4,
     });
 
-    this.reset_layout();
+    this.resetLayout();
 };
 
 
@@ -225,16 +228,16 @@ HTMLApp.prototype.initialise_splitter = function() {
  * Loads the information previously saved to the HTML5 local storage object so that user options
  * and favourites can be restored.
  */
-HTMLApp.prototype.load_local_storage = function() {
+HTMLApp.prototype.loadLocalStorage = function() {
     // Load options
-    var l_options;
+    var lOptions;
     if (localStorage.options !== undefined) {
-        l_options = JSON.parse(localStorage.options);
+        lOptions = JSON.parse(localStorage.options);
     }
-    this.manager.options.load(l_options);
+    this.manager.options.load(lOptions);
 
     // Load favourites
-    this.load_favourites();
+    this.loadFavourites();
 };
 
 
@@ -243,21 +246,21 @@ HTMLApp.prototype.load_local_storage = function() {
  * Favourites category with them.
  * If the user currently has no saved favourites, the defaults from the view constructor are used.
  */
-HTMLApp.prototype.load_favourites = function() {
+HTMLApp.prototype.loadFavourites = function() {
     var favourites = localStorage.favourites &&
         localStorage.favourites.length > 2 ?
         JSON.parse(localStorage.favourites) :
         this.dfavourites;
 
-    favourites = this.valid_favourites(favourites);
-    this.save_favourites(favourites);
+    favourites = this.validFavourites(favourites);
+    this.saveFavourites(favourites);
 
-    var fav_cat = this.categories.filter(function(c) {
+    var favCat = this.categories.filter(function(c) {
         return c.name === "Favourites";
     })[0];
 
-    if (fav_cat) {
-        fav_cat.ops = favourites;
+    if (favCat) {
+        favCat.ops = favourites;
     } else {
         this.categories.unshift({
             name: "Favourites",
@@ -274,17 +277,17 @@ HTMLApp.prototype.load_favourites = function() {
  * @param {string[]} favourites - A list of the user's favourite operations
  * @returns {string[]} A list of the valid favourites
  */
-HTMLApp.prototype.valid_favourites = function(favourites) {
-    var valid_favs = [];
+HTMLApp.prototype.validFavourites = function(favourites) {
+    var validFavs = [];
     for (var i = 0; i < favourites.length; i++) {
         if (this.operations.hasOwnProperty(favourites[i])) {
-            valid_favs.push(favourites[i]);
+            validFavs.push(favourites[i]);
         } else {
-            this.alert("The operation \"" + Utils.escape_html(favourites[i]) +
+            this.alert("The operation \"" + Utils.escapeHtml(favourites[i]) +
                 "\" is no longer available. It has been removed from your favourites.", "info");
         }
     }
-    return valid_favs;
+    return validFavs;
 };
 
 
@@ -293,8 +296,8 @@ HTMLApp.prototype.valid_favourites = function(favourites) {
  *
  * @param {string[]} favourites - A list of the user's favourite operations
  */
-HTMLApp.prototype.save_favourites = function(favourites) {
-    localStorage.setItem("favourites", JSON.stringify(this.valid_favourites(favourites)));
+HTMLApp.prototype.saveFavourites = function(favourites) {
+    localStorage.setItem("favourites", JSON.stringify(this.validFavourites(favourites)));
 };
 
 
@@ -302,11 +305,11 @@ HTMLApp.prototype.save_favourites = function(favourites) {
  * Resets favourite operations back to the default as specified in the view constructor and
  * refreshes the operation list.
  */
-HTMLApp.prototype.reset_favourites = function() {
-    this.save_favourites(this.dfavourites);
-    this.load_favourites();
-    this.populate_operations_list();
-    this.manager.recipe.initialise_operation_drag_n_drop();
+HTMLApp.prototype.resetFavourites = function() {
+    this.saveFavourites(this.dfavourites);
+    this.loadFavourites();
+    this.populateOperationsList();
+    this.manager.recipe.initialiseOperationDragNDrop();
 };
 
 
@@ -315,7 +318,7 @@ HTMLApp.prototype.reset_favourites = function() {
  *
  * @param {string} name - The name of the operation
  */
-HTMLApp.prototype.add_favourite = function(name) {
+HTMLApp.prototype.addFavourite = function(name) {
     var favourites = JSON.parse(localStorage.favourites);
 
     if (favourites.indexOf(name) >= 0) {
@@ -324,19 +327,19 @@ HTMLApp.prototype.add_favourite = function(name) {
     }
 
     favourites.push(name);
-    this.save_favourites(favourites);
-    this.load_favourites();
-    this.populate_operations_list();
-    this.manager.recipe.initialise_operation_drag_n_drop();
+    this.saveFavourites(favourites);
+    this.loadFavourites();
+    this.populateOperationsList();
+    this.manager.recipe.initialiseOperationDragNDrop();
 };
 
 
 /**
  * Checks for input and recipe in the URI parameters and loads them if present.
  */
-HTMLApp.prototype.load_URI_params = function() {
+HTMLApp.prototype.loadURIParams = function() {
     // Load query string from URI
-    this.query_string = (function(a) {
+    this.queryString = (function(a) {
         if (a === "") return {};
         var b = {};
         for (var i = 0; i < a.length; i++) {
@@ -351,46 +354,46 @@ HTMLApp.prototype.load_URI_params = function() {
     })(window.location.search.substr(1).split("&"));
 
     // Turn off auto-bake while loading
-    var auto_bake_val = this.auto_bake_;
-    this.auto_bake_ = false;
+    var autoBakeVal = this.autoBake_;
+    this.autoBake_ = false;
 
     // Read in recipe from query string
-    if (this.query_string.recipe) {
+    if (this.queryString.recipe) {
         try {
-            var recipe_config = JSON.parse(this.query_string.recipe);
-            this.set_recipe_config(recipe_config);
+            var recipeConfig = JSON.parse(this.queryString.recipe);
+            this.setRecipeConfig(recipeConfig);
         } catch(err) {}
-    } else if (this.query_string.op) {
+    } else if (this.queryString.op) {
         // If there's no recipe, look for single operations
-        this.manager.recipe.clear_recipe();
+        this.manager.recipe.clearRecipe();
         try {
-            this.manager.recipe.add_operation(this.query_string.op);
+            this.manager.recipe.addOperation(this.queryString.op);
         } catch(err) {
             // If no exact match, search for nearest match and add that
-            var matched_ops = this.manager.ops.filter_operations(this.query_string.op, false);
-            if (matched_ops.length) {
-                this.manager.recipe.add_operation(matched_ops[0].name);
+            var matchedOps = this.manager.ops.filterOperations(this.queryString.op, false);
+            if (matchedOps.length) {
+                this.manager.recipe.addOperation(matchedOps[0].name);
             }
 
             // Populate search with the string
             var search = document.getElementById("search");
 
-            search.value = this.query_string.op;
+            search.value = this.queryString.op;
             search.dispatchEvent(new Event("search"));
         }
     }
 
     // Read in input data from query string
-    if (this.query_string.input) {
+    if (this.queryString.input) {
         try {
-            var input_data = Utils.from_base64(this.query_string.input);
-            this.set_input(input_data);
+            var inputData = Utils.fromBase64(this.queryString.input);
+            this.setInput(inputData);
         } catch(err) {}
     }
 
     // Restore auto-bake state
-    this.auto_bake_ = auto_bake_val;
-    this.auto_bake();
+    this.autoBake_ = autoBakeVal;
+    this.autoBake();
 };
 
 
@@ -399,8 +402,8 @@ HTMLApp.prototype.load_URI_params = function() {
  *
  * @returns {number}
  */
-HTMLApp.prototype.next_ing_id = function() {
-    return this.ing_id++;
+HTMLApp.prototype.nextIngId = function() {
+    return this.ingId++;
 };
 
 
@@ -409,48 +412,48 @@ HTMLApp.prototype.next_ing_id = function() {
  *
  * @returns {Object[]}
  */
-HTMLApp.prototype.get_recipe_config = function() {
-    var recipe_config = this.manager.recipe.get_config();
-    sessionStorage.setItem("recipe_config", JSON.stringify(recipe_config));
-    return recipe_config;
+HTMLApp.prototype.getRecipeConfig = function() {
+    var recipeConfig = this.manager.recipe.getConfig();
+    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
+    return recipeConfig;
 };
 
 
 /**
  * Given a recipe configuration, sets the recipe to that configuration.
  *
- * @param {Object[]} recipe_config - The recipe configuration
+ * @param {Object[]} recipeConfig - The recipe configuration
  */
-HTMLApp.prototype.set_recipe_config = function(recipe_config) {
-    sessionStorage.setItem("recipe_config", JSON.stringify(recipe_config));
-    document.getElementById("rec_list").innerHTML = null;
+HTMLApp.prototype.setRecipeConfig = function(recipeConfig) {
+    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
+    document.getElementById("rec-list").innerHTML = null;
 
-    for (var i = 0; i < recipe_config.length; i++) {
-        var item = this.manager.recipe.add_operation(recipe_config[i].op);
+    for (var i = 0; i < recipeConfig.length; i++) {
+        var item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
         // Populate arguments
         var args = item.querySelectorAll(".arg");
         for (var j = 0; j < args.length; j++) {
             if (args[j].getAttribute("type") === "checkbox") {
                 // checkbox
-                args[j].checked = recipe_config[i].args[j];
+                args[j].checked = recipeConfig[i].args[j];
             } else if (args[j].classList.contains("toggle-string")) {
-                // toggle_string
-                args[j].value = recipe_config[i].args[j].string;
+                // toggleString
+                args[j].value = recipeConfig[i].args[j].string;
                 args[j].previousSibling.children[0].innerHTML =
-                    Utils.escape_html(recipe_config[i].args[j].option) +
+                    Utils.escapeHtml(recipeConfig[i].args[j].option) +
                     " <span class='caret'></span>";
             } else {
                 // all others
-                args[j].value = recipe_config[i].args[j];
+                args[j].value = recipeConfig[i].args[j];
             }
         }
 
         // Set disabled and breakpoint
-        if (recipe_config[i].disabled) {
+        if (recipeConfig[i].disabled) {
             item.querySelector(".disable-icon").click();
         }
-        if (recipe_config[i].breakpoint) {
+        if (recipeConfig[i].breakpoint) {
             item.querySelector(".breakpoint").click();
         }
 
@@ -462,33 +465,31 @@ HTMLApp.prototype.set_recipe_config = function(recipe_config) {
 /**
  * Resets the splitter positions to default.
  */
-HTMLApp.prototype.reset_layout = function() {
-    document.getElementById("operations").style.width = "calc(20% - 2px)";
-    document.getElementById("recipe").style.width = "calc(30% - 4px)";
-    document.getElementById("IO").style.width = "calc(50% - 2px)";
-    document.getElementById("input").style.height = "calc(50% - 2px)";
-    document.getElementById("output").style.height = "calc(50% - 2px)";
+HTMLApp.prototype.resetLayout = function() {
+    this.columnSplitter.setSizes([20, 30, 50]);
+    this.ioSplitter.setSizes([50, 50]);
 
-    this.manager.controls.adjust_width();
+    this.manager.controls.adjustWidth();
+    this.manager.output.adjustWidth();
 };
 
 
 /**
  * Sets the compile message.
  */
-HTMLApp.prototype.set_compile_message = function() {
+HTMLApp.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
     var now = new Date(),
-        time_since_compile = Utils.fuzzy_time(now.getTime() - window.compile_time),
-        compile_info = "<span style=\"font-weight: normal\">Last build: " +
-            time_since_compile.substr(0, 1).toUpperCase() + time_since_compile.substr(1) + " ago";
+        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
+        compileInfo = "<span style=\"font-weight: normal\">Last build: " +
+            timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1) + " ago";
 
-    if (window.compile_message !== "") {
-        compile_info += " - " + window.compile_message;
+    if (window.compileMessage !== "") {
+        compileInfo += " - " + window.compileMessage;
     }
 
-    compile_info += "</span>";
-    document.getElementById("notice").innerHTML = compile_info;
+    compileInfo += "</span>";
+    document.getElementById("notice").innerHTML = compileInfo;
 };
 
 
@@ -524,32 +525,32 @@ HTMLApp.prototype.alert = function(str, style, timeout, silent) {
     style = style || "danger";
     timeout = timeout || 0;
 
-    var alert_el = document.getElementById("alert"),
-        alert_content = document.getElementById("alert-content");
+    var alertEl = document.getElementById("alert"),
+        alertContent = document.getElementById("alert-content");
 
-    alert_el.classList.remove("alert-danger");
-    alert_el.classList.remove("alert-warning");
-    alert_el.classList.remove("alert-info");
-    alert_el.classList.remove("alert-success");
-    alert_el.classList.add("alert-" + style);
+    alertEl.classList.remove("alert-danger");
+    alertEl.classList.remove("alert-warning");
+    alertEl.classList.remove("alert-info");
+    alertEl.classList.remove("alert-success");
+    alertEl.classList.add("alert-" + style);
 
     // If the box hasn't been closed, append to it rather than replacing
-    if (alert_el.style.display === "block") {
-        alert_content.innerHTML +=
+    if (alertEl.style.display === "block") {
+        alertContent.innerHTML +=
             "<br><br>[" + time.toLocaleTimeString() + "] " + str;
     } else {
-        alert_content.innerHTML =
+        alertContent.innerHTML =
             "[" + time.toLocaleTimeString() + "] " + str;
     }
 
     // Stop the animation if it is in progress
     $("#alert").stop();
-    alert_el.style.display = "block";
-    alert_el.style.opacity = 1;
+    alertEl.style.display = "block";
+    alertEl.style.opacity = 1;
 
     if (timeout > 0) {
-        clearTimeout(this.alert_timeout);
-        this.alert_timeout = setTimeout(function(){
+        clearTimeout(this.alertTimeout);
+        this.alertTimeout = setTimeout(function(){
             $("#alert").slideUp(100);
         }, timeout);
     }
@@ -575,20 +576,20 @@ HTMLApp.prototype.confirm = function(title, body, callback, scope) {
     document.getElementById("confirm-body").innerHTML = body;
     document.getElementById("confirm-modal").style.display = "block";
 
-    this.confirm_closed = false;
+    this.confirmClosed = false;
     $("#confirm-modal").modal()
         .one("show.bs.modal", function(e) {
-            this.confirm_closed = false;
+            this.confirmClosed = false;
         }.bind(this))
         .one("click", "#confirm-yes", function() {
-            this.confirm_closed = true;
+            this.confirmClosed = true;
             callback.bind(scope)(true);
             $("#confirm-modal").modal("hide");
         }.bind(this))
         .one("hide.bs.modal", function(e) {
-            if (!this.confirm_closed)
+            if (!this.confirmClosed)
                 callback.bind(scope)(false);
-            this.confirm_closed = true;
+            this.confirmClosed = true;
         }.bind(this));
 };
 
@@ -597,7 +598,7 @@ HTMLApp.prototype.confirm = function(title, body, callback, scope) {
  * Handler for the alert close button click event.
  * Closes the alert box.
  */
-HTMLApp.prototype.alert_close_click = function() {
+HTMLApp.prototype.alertCloseClick = function() {
     document.getElementById("alert").style.display = "none";
 };
 
@@ -609,13 +610,13 @@ HTMLApp.prototype.alert_close_click = function() {
  * @listens Manager#statechange
  * @param {event} e
  */
-HTMLApp.prototype.state_change = function(e) {
-    this.auto_bake();
+HTMLApp.prototype.stateChange = function(e) {
+    this.autoBake();
 
     // Update the current history state (not creating a new one)
-    if (this.options.update_url) {
-        this.last_state_url = this.manager.controls.generate_state_url(true, true);
-        window.history.replaceState({}, "CyberChef", this.last_state_url);
+    if (this.options.updateUrl) {
+        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true);
+        window.history.replaceState({}, "CyberChef", this.lastStateUrl);
     }
 };
 
@@ -626,9 +627,9 @@ HTMLApp.prototype.state_change = function(e) {
  *
  * @param {event} e
  */
-HTMLApp.prototype.pop_state = function(e) {
-    if (window.location.href.split("#")[0] !== this.last_state_url) {
-        this.load_URI_params();
+HTMLApp.prototype.popState = function(e) {
+    if (window.location.href.split("#")[0] !== this.lastStateUrl) {
+        this.loadURIParams();
     }
 };
 
@@ -636,11 +637,11 @@ HTMLApp.prototype.pop_state = function(e) {
 /**
  * Function to call an external API from this view.
  */
-HTMLApp.prototype.call_api = function(url, type, data, data_type, content_type) {
+HTMLApp.prototype.callApi = function(url, type, data, dataType, contentType) {
     type = type || "POST";
     data = data || {};
-    data_type = data_type || undefined;
-    content_type = content_type || "application/json";
+    dataType = dataType || undefined;
+    contentType = contentType || "application/json";
 
     var response = null,
         success = false;
@@ -650,8 +651,8 @@ HTMLApp.prototype.call_api = function(url, type, data, data_type, content_type) 
         async: false,
         type: type,
         data: data,
-        dataType: data_type,
-        contentType: content_type,
+        dataType: dataType,
+        contentType: contentType,
         success: function(data) {
             success = true;
             response = data;

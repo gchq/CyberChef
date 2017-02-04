@@ -105,8 +105,8 @@ textarea,
     border: none;
 }
 
-#op_list,
-#rec_list {
+#op-list,
+#rec-list {
     position: absolute;
     top: 43px;
     bottom: 0;
@@ -116,13 +116,13 @@ textarea,
     padding: 0;
 }
 
-.op_list {
+.op-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-#rec_list {
+#rec-list {
     bottom: 120px; /* Linked to #controls height */
     overflow: auto;
 }
@@ -137,7 +137,7 @@ textarea,
 #controls {
     position: absolute;
     width: 100%;
-    height: 120px;  /* Linked to #rec_list bottom */
+    height: 120px;  /* Linked to #rec-list bottom */
     bottom: 0;
     padding: 10px;
 }

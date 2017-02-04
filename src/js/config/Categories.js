@@ -17,7 +17,7 @@
  * @constant
  * @type {CatConf[]}
  */
-const Categories = [
+var Categories = [
     {
         name: "Favourites",
         ops: []
@@ -82,6 +82,7 @@ const Categories = [
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
         ]
@@ -148,6 +149,7 @@ const Categories = [
             "Sort",
             "Unique",
             "Split",
+            "Filter",
             "Count occurrences",
             "Expand alphabet range",
             "Parse escaped string",
@@ -189,6 +191,8 @@ const Categories = [
             "Extract file paths",
             "Extract dates",
             "Regular expression",
+            "XPath expression",
+            "CSS selector",
         ]
     },
     {
@@ -210,7 +214,10 @@ const Categories = [
         ops: [
             "Analyse hash",
             "Generate all hashes",
+            "MD2",
+            "MD4",
             "MD5",
+            "SHA0",
             "SHA1",
             "SHA224",
             "SHA256",
@@ -219,7 +226,10 @@ const Categories = [
             "SHA3",
             "RIPEMD-160",
             "HMAC",
+            "Fletcher-8 Checksum",
             "Fletcher-16 Checksum",
+            "Fletcher-32 Checksum",
+            "Fletcher-64 Checksum",
             "Adler-32 Checksum",
             "CRC-32 Checksum",
             "TCP/IP Checksum",
@@ -241,6 +251,8 @@ const Categories = [
             "SQL Minify",
             "CSS Beautify",
             "CSS Minify",
+            "XPath expression",
+            "CSS selector",
             "Strip HTML tags",
             "Diff",
         ]

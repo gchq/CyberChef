@@ -7,12 +7,12 @@ module.exports = function(grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "concat:css", "concat:js", "copy:html_dev", "copy:static_dev", "chmod:build", "watch"]);
+        ["clean:dev", "concat:css", "concat:js", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "exec:stats", "clean", "jsdoc", "concat", "copy:html_dev", "copy:html_prod", "copy:html_inline",
-         "copy:static_dev", "copy:static_prod", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
+        ["eslint", "exec:stats", "clean", "jsdoc", "concat", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
+         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -20,15 +20,15 @@ module.exports = function(grunt) {
 
     grunt.registerTask("stats",
         "Provides statistics about the code base such as how many lines there are as well as details of file sizes before and after compression.",
-        ["concat:js", "uglify:prod", "exec:stats", "exec:repo_size", "exec:display_stats"]);
+        ["concat:js", "uglify:prod", "exec:stats", "exec:repoSize", "exec:displayStats"]);
 
     grunt.registerTask("release",
         "Prepares and deploys a production version of CyberChef to the gh-pages branch.",
-        ["copy:gh_pages", "exec:deploy_gh_pages"]);
+        ["copy:ghPages", "exec:deployGhPages"]);
 
     grunt.registerTask("default",
         "Lints the code base and shows stats",
-        ["jshint", "exec:stats", "exec:display_stats"]);
+        ["eslint", "exec:stats", "exec:displayStats"]);
 
     grunt.registerTask("doc", "docs");
     grunt.registerTask("lint", "eslint");
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
 
 
     // JS includes
-    var js_files = [
+    var jsFiles = [
         // Third party framework libraries
         "src/js/lib/jquery-2.1.1.js",
         "src/js/lib/bootstrap-3.3.6.js",
@@ -93,6 +93,10 @@ module.exports = function(grunt) {
         "src/js/lib/cryptojs/tripledes.js",
         "src/js/lib/cryptojs/rc4.js",
         "src/js/lib/cryptojs/pbkdf2.js",
+        "src/js/lib/cryptoapi/crypto-api.js",
+        "src/js/lib/cryptoapi/hasher.md2.js",
+        "src/js/lib/cryptoapi/hasher.md4.js",
+        "src/js/lib/cryptoapi/hasher.sha0.js",
         "src/js/lib/jsbn/jsbn.js",
         "src/js/lib/jsbn/jsbn2.js",
         "src/js/lib/jsbn/base64.js",
@@ -130,7 +134,8 @@ module.exports = function(grunt) {
         "src/js/lib/vkbeautify.js",
         "src/js/lib/Sortable.js",
         "src/js/lib/bootstrap-colorpicker.js",
-
+        "src/js/lib/xpath.js",
+        
         // Custom libraries
         "src/js/lib/canvas_components.js",
 
@@ -174,10 +179,10 @@ module.exports = function(grunt) {
  * limitations under the License.\n\
  */\n';
 
-    var template_options = {
+    var templateOptions = {
         data: {
-            compile_msg: grunt.option("compile-msg") || grunt.option("msg") || "",
-            codebase_stats: grunt.file.read("src/static/stats.txt").split("\n").join("<br>")
+            compileMsg: grunt.option("compile-msg") || grunt.option("msg") || "",
+            codebaseStats: grunt.file.read("src/static/stats.txt").split("\n").join("<br>")
         }
     };
 
@@ -215,7 +220,7 @@ module.exports = function(grunt) {
         },
         concat: {
             options: {
-                process: template_options
+                process: templateOptions
             },
             css: {
                 options: {
@@ -237,43 +242,43 @@ module.exports = function(grunt) {
                 options: {
                     banner: '"use strict";\n'
                 },
-                src: js_files,
+                src: jsFiles,
                 dest: "build/dev/scripts.js"
             }
         },
         copy: {
-            html_dev: {
+            htmlDev: {
                 options: {
                     process: function(content, srcpath) {
-                        return grunt.template.process(content, template_options);
+                        return grunt.template.process(content, templateOptions);
                     }
                 },
                 src: "src/html/index.html",
                 dest: "build/dev/index.html"
             },
-            html_prod: {
+            htmlProd: {
                 options: {
                     process: function(content, srcpath) {
-                        return grunt.template.process(content, template_options);
+                        return grunt.template.process(content, templateOptions);
                     }
                 },
                 src: "src/html/index.html",
                 dest: "build/prod/index.html"
             },
-            html_inline: {
+            htmlInline: {
                 options: {
                     process: function(content, srcpath) {
                         // TODO: Do all this in Jade
                         content = content.replace(
                             '<a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="images/download-24x24.png" /></a>',
                             '<span style="float: left; margin-left: 10px;">Compile time: ' + grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC</span>");
-                        return grunt.template.process(content, template_options);
+                        return grunt.template.process(content, templateOptions);
                     }
                 },
                 src: "src/html/index.html",
                 dest: "build/prod/cyberchef.htm"
             },
-            static_dev: {
+            staticDev: {
                 files: [
                     {
                         expand: true,
@@ -288,7 +293,7 @@ module.exports = function(grunt) {
                     }
                 ]
             },
-            static_prod: {
+            staticProd: {
                 files: [
                     {
                         expand: true,
@@ -303,13 +308,13 @@ module.exports = function(grunt) {
                     }
                 ]
             },
-            gh_pages: {
+            ghPages: {
                 options: {
                     process: function(content, srcpath) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
                             grunt.file.read("src/static/ga.html") + "</body></html>");
-                        return grunt.template.process(content, template_options);
+                        return grunt.template.process(content, templateOptions);
                     }
                 },
                 src: "build/prod/index.html",
@@ -326,12 +331,12 @@ module.exports = function(grunt) {
                 ASCIIOnly: true,
                 beautify: {
                     beautify: false,
-                    inline_script: true,
-                    ascii_only: true,
-                    screw_ie8: true
+                    inline_script: true, // eslint-disable-line camelcase
+                    ascii_only: true, // eslint-disable-line camelcase
+                    screw_ie8: true // eslint-disable-line camelcase
                 },
                 compress: {
-                    screw_ie8: true
+                    screw_ie8: true // eslint-disable-line camelcase
                 },
                 banner: banner
             },
@@ -403,7 +408,7 @@ module.exports = function(grunt) {
             }
         },
         exec: {
-            repo_size: {
+            repoSize: {
                 command: [
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
                     "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
@@ -438,13 +443,13 @@ module.exports = function(grunt) {
                     ].join(" >> src/static/stats.txt;") + " >> src/static/stats.txt;",
                 stderr: false
             },
-            display_stats: {
+            displayStats: {
                 command: "cat src/static/stats.txt"
             },
-            clean_git: {
+            cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
-            deploy_gh_pages: {
+            deployGhPages: {
                 command: [
                         "git add build/prod/index.html -v",
                         "COMMIT_HASH=$(git rev-parse HEAD)",
@@ -466,15 +471,15 @@ module.exports = function(grunt) {
             },
             html: {
                 files: "src/html/**/*.html",
-                tasks: ["copy:html_dev", "chmod:build"]
+                tasks: ["copy:htmlDev", "chmod:build"]
             },
             static: {
                 files: ["src/static/**/*", "src/static/**/.*"],
-                tasks: ["copy:static_dev", "chmod:build"]
+                tasks: ["copy:staticDev", "chmod:build"]
             },
             grunt: {
                 files: "Gruntfile.js",
-                tasks: ["clean:dev", "concat:css", "concat:js", "copy:html_dev", "copy:static_dev", "chmod:build"]
+                tasks: ["clean:dev", "concat:css", "concat:js", "copy:htmlDev", "copy:staticDev", "chmod:build"]
             }
         },
     });

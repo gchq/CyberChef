@@ -18,14 +18,14 @@ var Entropy = {
     /**
      * Entropy operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {html}
      */
-    run_entropy: function(input, args) {
-        var chunk_size = args[0],
+    runEntropy: function(input, args) {
+        var chunkSize = args[0],
             output = "",
-            entropy = Entropy._calc_entropy(input);
+            entropy = Entropy._calcEntropy(input);
         
         output += "Shannon entropy: " + entropy + "\n" +
             "<br><canvas id='chart-area'></canvas><br>\n" +
@@ -35,14 +35,14 @@ var Entropy = {
             "The following results show the entropy of chunks of the input data. Chunks with particularly high entropy could suggest encrypted or compressed sections.\n\n" +
             "<br><script>\
                 var canvas = document.getElementById('chart-area'),\
-                    parent_rect = canvas.parentNode.getBoundingClientRect(),\
+                    parentRect = canvas.parentNode.getBoundingClientRect(),\
                     entropy = " + entropy + ",\
-                    height = parent_rect.height * 0.25;\
+                    height = parentRect.height * 0.25;\
                 \
-                canvas.width = parent_rect.width * 0.95;\
+                canvas.width = parentRect.width * 0.95;\
                 canvas.height = height > 150 ? 150 : height;\
                 \
-                CanvasComponents.draw_scale_bar(canvas, entropy, 8, [\
+                CanvasComponents.drawScaleBar(canvas, entropy, 8, [\
                     {\
                         label: 'English text',\
                         min: 3.5,\
@@ -55,11 +55,11 @@ var Entropy = {
                 ]);\
             </script>";
         
-        var chunk_entropy = 0;
-        if (chunk_size !== 0) {
-            for (var i = 0; i < input.length; i += chunk_size) {
-                chunk_entropy = Entropy._calc_entropy(input.slice(i, i+chunk_size));
-                output += "Bytes " + i + " to " + (i+chunk_size) + ": " + chunk_entropy + "\n";
+        var chunkEntropy = 0;
+        if (chunkSize !== 0) {
+            for (var i = 0; i < input.length; i += chunkSize) {
+                chunkEntropy = Entropy._calcEntropy(input.slice(i, i+chunkSize));
+                output += "Bytes " + i + " to " + (i+chunkSize) + ": " + chunkEntropy + "\n";
             }
         } else {
             output += "Chunk size cannot be 0.";
@@ -78,17 +78,17 @@ var Entropy = {
     /**
      * Frequency distribution operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {html}
      */
-    run_freq_distrib: function (input, args) {
+    runFreqDistrib: function (input, args) {
         if (!input.length) return "No data";
         
         var distrib = new Array(256),
             percentages = new Array(256),
             len = input.length,
-            show_zeroes = args[0];
+            showZeroes = args[0];
         
         // Initialise distrib to 0
         for (var i = 0; i < 256; i++) {
@@ -115,19 +115,19 @@ var Entropy = {
             "\n\nByte   Percentage\n" +
             "<script>\
                 var canvas = document.getElementById('chart-area'),\
-                    parent_rect = canvas.parentNode.getBoundingClientRect(),\
+                    parentRect = canvas.parentNode.getBoundingClientRect(),\
                     scores = " + JSON.stringify(percentages) + ";\
                 \
-                canvas.width = parent_rect.width * 0.95;\
-                canvas.height = parent_rect.height * 0.9;\
+                canvas.width = parentRect.width * 0.95;\
+                canvas.height = parentRect.height * 0.9;\
                 \
-                CanvasComponents.draw_bar_chart(canvas, scores, 'Byte', 'Frequency %', 16, 6);\
+                CanvasComponents.drawBarChart(canvas, scores, 'Byte', 'Frequency %', 16, 6);\
             </script>";
                 
         for (i = 0; i < 256; i++) {
-            if (distrib[i] || show_zeroes) {
+            if (distrib[i] || showZeroes) {
                 output += " " + Utils.hex(i, 2) + "    (" +
-                        Utils.pad_right(percentages[i].toFixed(2).replace(".00", "") + "%)", 8) +
+                        Utils.padRight(percentages[i].toFixed(2).replace(".00", "") + "%)", 8) +
                         Array(Math.ceil(percentages[i])+1).join("|") + "\n";
             }
         }
@@ -140,13 +140,13 @@ var Entropy = {
      * Calculates the Shannon entropy for a given chunk of data.
      *
      * @private
-     * @param {byte_array} data
+     * @param {byteArray} data
      * @returns {number}
      */
-    _calc_entropy: function(data) {
+    _calcEntropy: function(data) {
         var prob = [],
             uniques = data.unique(),
-            str = Utils.byte_array_to_chars(data);
+            str = Utils.byteArrayToChars(data);
             
         for (var i = 0; i < uniques.length; i++) {
             prob.push(str.count(Utils.chr(uniques[i])) / data.length);

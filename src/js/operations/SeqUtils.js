@@ -32,21 +32,21 @@ var SeqUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_sort: function (input, args) {
-        var delim = Utils.char_rep[args[0]],
-            sort_reverse = args[1],
+    runSort: function (input, args) {
+        var delim = Utils.charRep[args[0]],
+            sortReverse = args[1],
             order = args[2],
             sorted = input.split(delim);
             
         if (order === "Alphabetical (case sensitive)") {
             sorted = sorted.sort();
         } else if (order === "Alphabetical (case insensitive)") {
-            sorted = sorted.sort(SeqUtils._case_insensitive_sort);
+            sorted = sorted.sort(SeqUtils._caseInsensitiveSort);
         } else if (order === "IP address") {
-            sorted = sorted.sort(SeqUtils._ip_sort);
+            sorted = sorted.sort(SeqUtils._ipSort);
         }
             
-        if (sort_reverse) sorted.reverse();
+        if (sortReverse) sorted.reverse();
         return sorted.join(delim);
     },
     
@@ -58,8 +58,8 @@ var SeqUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_unique: function (input, args) {
-        var delim = Utils.char_rep[args[0]];
+    runUnique: function (input, args) {
+        var delim = Utils.charRep[args[0]];
         return input.split(delim).unique().join(delim);
     },
     
@@ -77,7 +77,7 @@ var SeqUtils = {
      * @param {Object[]} args
      * @returns {number}
      */
-    run_count: function(input, args) {
+    runCount: function(input, args) {
         var search = args[0].string,
             type = args[0].option;
             
@@ -91,7 +91,7 @@ var SeqUtils = {
             }
         } else if (search) {
             if (type.indexOf("Extended") === 0) {
-                search = Utils.parse_escaped_chars(search);
+                search = Utils.parseEscapedChars(search);
             }
             return input.count(search);
         } else {
@@ -109,11 +109,11 @@ var SeqUtils = {
     /**
      * Reverse operation.
      *
-     * @param {byte_array} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {byte_array}
+     * @returns {byteArray}
      */
-    run_reverse: function (input, args) {
+    runReverse: function (input, args) {
         if (args[0] === "Line") {
             var lines = [],
                 line = [],
@@ -146,7 +146,7 @@ var SeqUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_add_line_numbers: function(input, args) {
+    runAddLineNumbers: function(input, args) {
         var lines = input.split("\n"),
             output = "",
             width = lines.length.toString().length;
@@ -165,7 +165,7 @@ var SeqUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_remove_line_numbers: function(input, args) {
+    runRemoveLineNumbers: function(input, args) {
         return input.replace(/^[ \t]{0,5}\d+[\s:|\-,.)\]]/gm, "");
     },
     
@@ -177,8 +177,8 @@ var SeqUtils = {
      * @param {Object[]} args
      * @returns {string}
      */
-    run_expand_alph_range: function(input, args) {
-        return Utils.expand_alph_range(input).join(args[0]);
+    runExpandAlphRange: function(input, args) {
+        return Utils.expandAlphRange(input).join(args[0]);
     },
     
     
@@ -190,7 +190,7 @@ var SeqUtils = {
      * @param {string} b
      * @returns {number}
      */
-    _case_insensitive_sort: function(a, b) {
+    _caseInsensitiveSort: function(a, b) {
         return a.toLowerCase().localeCompare(b.toLowerCase());
     },
     
@@ -203,7 +203,7 @@ var SeqUtils = {
      * @param {string} b
      * @returns {number}
      */
-    _ip_sort: function(a, b) {
+    _ipSort: function(a, b) {
         var a_ = a.split("."),
             b_ = b.split(".");
         

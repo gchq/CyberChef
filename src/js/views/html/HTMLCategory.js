@@ -12,7 +12,7 @@
 var HTMLCategory = function(name, selected) {
     this.name = name;
     this.selected = selected;
-    this.op_list = [];
+    this.opList = [];
 };
 
 
@@ -21,8 +21,8 @@ var HTMLCategory = function(name, selected) {
  *
  * @param {HTMLOperation} operation - The operation to add.
  */
-HTMLCategory.prototype.add_operation = function(operation) {
-    this.op_list.push(operation);
+HTMLCategory.prototype.addOperation = function(operation) {
+    this.opList.push(operation);
 };
 
 
@@ -31,18 +31,18 @@ HTMLCategory.prototype.add_operation = function(operation) {
  *
  * @returns {string}
  */
-HTMLCategory.prototype.to_html = function() {
-    var cat_name = "cat" + this.name.replace(/[\s/-:_]/g, "");
+HTMLCategory.prototype.toHtml = function() {
+    var catName = "cat" + this.name.replace(/[\s/-:_]/g, "");
     var html = "<div class='panel category'>\
         <a class='category-title' data-toggle='collapse'\
-            data-parent='#categories' href='#" + cat_name + "'>\
+            data-parent='#categories' href='#" + catName + "'>\
             " + this.name + "\
         </a>\
-        <div id='" + cat_name + "' class='panel-collapse collapse\
-        " + (this.selected ? " in" : "") + "'><ul class='op_list'>";
+        <div id='" + catName + "' class='panel-collapse collapse\
+        " + (this.selected ? " in" : "") + "'><ul class='op-list'>";
     
-    for (var i = 0; i < this.op_list.length; i++) {
-        html += this.op_list[i].to_stub_html();
+    for (var i = 0; i < this.opList.length; i++) {
+        html += this.opList[i].toStubHtml();
     }
     
     html += "</ul></div></div>";
