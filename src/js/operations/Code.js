@@ -378,24 +378,30 @@ var Code = {
      * CSS selector operation.
      *
      * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+     * @author n1474335 [n1474335@gmail.com]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
-    runCssQuery: function(input, args) {
+    runCSSQuery: function(input, args) {
         var query = args[0],
-            delimiter = args[1];
+            delimiter = args[1],
+            parser = new DOMParser(),
+            html,
+            result;
 
-        var html;
+        if (!query.length || !input.length) {
+            return "";
+        }
+
         try {
-            html = $.parseHTML(input);
+            html = parser.parseFromString(input, "text/html");
         } catch (err) {
             return "Invalid input HTML.";
         }
 
-        var result;
         try {
-            result = $(html).find(query);
+            result = html.querySelectorAll(query);
         } catch (err) {
             return "Invalid CSS Selector. Details:\n" + err.message;
         }

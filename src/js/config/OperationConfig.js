@@ -1987,7 +1987,7 @@ var OperationConfig = {
     },
     "CSS selector": {
         description: "Extract information from an HTML document with a CSS selector",
-        run: Code.runCssQuery,
+        run: Code.runCSSQuery,
         inputType: "string",
         outputType: "string",
         args: [
