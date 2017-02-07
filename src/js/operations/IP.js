@@ -119,7 +119,7 @@ var IP = {
                 // IPv4/IPv6 translation per RFC 6052
                 output += "\n'Well-Known' prefix for IPv4/IPv6 translation detected. See RFC 6052 for more details.";
                 output += "\nTranslated IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
-                output += "\n'Well-Known prefix range: 64:ff9b::/96";
+                output += "\n'Well-Known' prefix range: 64:ff9b::/96";
             } else if (ipv6[0] === 0x2001 && ipv6[1] === 0) {
                 // Teredo tunneling
                 output += "\nTeredo tunneling IPv6 address detected\n";

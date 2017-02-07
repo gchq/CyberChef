@@ -934,16 +934,18 @@ var Utils = {
      * @constant
      */
     charRep: {
-        "Space":      " ",
-        "Comma":      ",",
-        "Semi-colon": ";",
-        "Colon":      ":",
-        "Line feed":  "\n",
-        "CRLF":       "\r\n",
-        "0x":         "0x",
-        "\\x":        "\\x",
+        "Space":         " ",
+        "Comma":         ",",
+        "Semi-colon":    ";",
+        "Colon":         ":",
+        "Line feed":     "\n",
+        "CRLF":          "\r\n",
+        "Forward slash": "/",
+        "Backslash":     "\\",
+        "0x":            "0x",
+        "\\x":           "\\x",
         "Nothing (separate chars)": "",
-        "None":       "",
+        "None":          "",
     },
 
 
@@ -952,14 +954,16 @@ var Utils = {
      * @constant
      */
     regexRep: {
-        "Space":      /\s+/g,
-        "Comma":      /,/g,
-        "Semi-colon": /;/g,
-        "Colon":      /:/g,
-        "Line feed":  /\n/g,
-        "CRLF":       /\r\n/g,
-        "0x":         /0x/g,
-        "\\x":        /\\x/g
+        "Space":         /\s+/g,
+        "Comma":         /,/g,
+        "Semi-colon":    /;/g,
+        "Colon":         /:/g,
+        "Line feed":     /\n/g,
+        "CRLF":          /\r\n/g,
+        "Forward slash": /\//g,
+        "Backslash":     /\\/g,
+        "0x":            /0x/g,
+        "\\x":           /\\x/g
     },
 
 

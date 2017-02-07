@@ -18,12 +18,12 @@ var MorseCode = {
      * @constant
      * @default
      */
-    LETTER_DELIM_OPTIONS: ["Space", "Line feed", "CRLF", "Comma", "Semi-colon", "Colon"],
+    LETTER_DELIM_OPTIONS: ["Space", "Line feed", "CRLF", "Forward slash", "Backslash", "Comma", "Semi-colon", "Colon"],
     /**
      * @constant
      * @default
      */
-    WORD_DELIM_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon"],
+    WORD_DELIM_OPTIONS: ["Line feed", "CRLF", "Forward slash", "Backslash", "Comma", "Semi-colon", "Colon"],
     /**
      * @constant
      * @default
