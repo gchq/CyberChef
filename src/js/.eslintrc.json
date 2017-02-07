@@ -62,7 +62,15 @@
             "properties": "always"
         }],
         "semi": ["error", "always"],
-        "unicode-bom": "error"
+        "unicode-bom": "error",
+        "require-jsdoc": ["error", {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true,
+                "ArrowFunctionExpression": true
+            }
+        }]
     },
     "globals": {
         /* core/* */

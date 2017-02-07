@@ -43,7 +43,7 @@ var main = function() {
 // Fix issues with browsers that don't support console.log()
 window.console = console || {log: function() {}, error: function() {}};
 
-window.compileTime = moment.tz("<%= grunt.template.today() %>", "ddd MMM D YYYY HH:mm:ss", "UTC").valueOf();
+window.compileTime = moment.tz("<%= compileTime %>", "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
 window.compileMessage = "<%= compileMsg %>";
 
 document.addEventListener("DOMContentLoaded", main, false);

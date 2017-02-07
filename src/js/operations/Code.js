@@ -296,6 +296,9 @@ var Code = {
 
         return code;
 
+        /**
+         * Replaces a matched token with a placeholder value.
+         */
         function preserveToken(str, match, t) {
             preservedTokens[t] = match[0];
             return str.substring(0, match.index) +

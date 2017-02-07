@@ -1,3 +1,5 @@
+/* globals moment */
+
 /**
  * Waiter to handle events related to the CyberChef controls (i.e. Bake, Step, Save, Load etc.)
  *
@@ -154,12 +156,13 @@ ControlsWaiter.prototype.initialiseSaveLink = function(recipeConfig) {
  * @param {boolean} includeRecipe - Whether to include the recipe in the URL.
  * @param {boolean} includeInput - Whether to include the input in the URL.
  * @param {Object[]} [recipeConfig] - The recipe configuration object array.
+ * @param {string} [baseURL] - The CyberChef URL, set to the current URL if not included
  * @returns {string}
  */
-ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput, recipeConfig) {
+ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput, recipeConfig, baseURL) {
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
     
-    var link = window.location.protocol + "//" +
+    var link = baseURL || window.location.protocol + "//" +
                 window.location.host +
                 window.location.pathname,
         recipeStr = JSON.stringify(recipeConfig),
@@ -336,4 +339,17 @@ ControlsWaiter.prototype.loadButtonClick = function() {
     } catch(e) {
         this.app.alert("Invalid recipe", "danger", 2000);
     }
+};
+
+
+/**
+ * Populates the bug report information box with useful technical info.
+ */
+ControlsWaiter.prototype.supportButtonClick = function() {
+    var reportBugInfo = document.getElementById("report-bug-info"),
+        saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
+
+    reportBugInfo.innerHTML = "* CyberChef compile time: <%= compileTime %>\n" +
+        "* User-Agent: \n" + navigator.userAgent + "\n" +
+        "* [Link to reproduce](" + saveLink + ")\n\n";
 };

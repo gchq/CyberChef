@@ -639,6 +639,9 @@ var IP = {
         
         return result;
         
+        /**
+         * Converts a list of 4 numeric strings in the range 0-255 to a list of numbers.
+         */
         function parseBlocks(blocks) {
             if (blocks.length !== 4)
                 throw "More than 4 blocks.";
@@ -703,6 +706,9 @@ var IP = {
         }
         return ipv6;
         
+        /**
+         * Converts a list of 3-8 numeric hex strings in the range 0-65535 to a list of numbers.
+         */
         function parseBlocks(blocks) {
             if (blocks.length < 3 || blocks.length > 8)
                 throw "Badly formatted IPv6 address.";
