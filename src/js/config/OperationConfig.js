@@ -2952,5 +2952,46 @@ var OperationConfig = {
                 value: Cipher.SUBS_CIPHERTEXT
             }
         ]
+    },
+    "To Morse Code": {
+        description: "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>",
+        run: MorseCode.runTo,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Format options",
+                type: "option",
+                value: MorseCode.FORMAT_OPTIONS
+            },
+            {
+                name: "Letter delimiter",
+                type: "option",
+                value: MorseCode.LETTER_DELIM_OPTIONS
+            },
+            {
+                name: "Word delimiter",
+                type: "option",
+                value: MorseCode.WORD_DELIM_OPTIONS
+            }
+        ]
+    },
+    "From Morse Code": {
+        description: "Translates Morse Code into (upper case) alphanumeric characters.",
+        run: MorseCode.runFrom,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Letter delimiter",
+                type: "option",
+                value: MorseCode.LETTER_DELIM_OPTIONS
+            },
+            {
+                name: "Word delimiter",
+                type: "option",
+                value: MorseCode.WORD_DELIM_OPTIONS
+            }
+        ]
     }
 };

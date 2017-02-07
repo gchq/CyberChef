@@ -82,6 +82,8 @@ var Categories = [
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "To Morse Code",
+            "From Morse Code",
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
