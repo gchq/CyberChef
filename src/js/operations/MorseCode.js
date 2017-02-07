@@ -14,29 +14,16 @@ var MorseCode = {
      * @default
      */
     FORMAT_OPTIONS: ["-/.", "_/.", "Dash/Dot", "DASH/DOT", "dash/dot"],
-
     /**
      * @constant
      * @default
      */
-    LETTER_DELIM_OPTIONS: ["space", "line feed", "crlf"],
-
+    LETTER_DELIM_OPTIONS: ["Space", "Line feed", "CRLF", "Comma", "Semi-colon", "Colon"],
     /**
      * @constant
      * @default
      */
-    WORD_DELIM_OPTIONS: ["line feed", "crlf", "space"],
-
-    /**
-     * @constant
-     * @default
-     */
-    OPTION_TABLE: {
-        "space": " ",
-        "line feed": "\n",
-        "crlf": "\r\n"
-    },
-
+    WORD_DELIM_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon"],
     /**
      * @constant
      * @default
@@ -88,13 +75,13 @@ var MorseCode = {
      * @param {Object[]} args
      * @returns {string}
      */
-    translateTo: function(input, args) {
+    runTo: function(input, args) {
         var format = args[0].split("/");
         var dash = format[0];
         var dot = format[1];
 
-        var letterDelim = MorseCode.OPTION_TABLE[args[1]];
-        var wordDelim = MorseCode.OPTION_TABLE[args[2]];
+        var letterDelim = Utils.charRep[args[1]];
+        var wordDelim = Utils.charRep[args[2]];
 
         input = input.split(/\r?\n/);
         input = Array.prototype.map.call(input, function(line) {
@@ -139,7 +126,7 @@ var MorseCode = {
      * @param {Object[]} args
      * @returns {string}
      */
-    translateFrom: (function() {
+    runFrom: (function() {
         var reversedTable = null;
         var reverseTable = function() {
             reversedTable = {};
@@ -155,8 +142,8 @@ var MorseCode = {
                 reverseTable();
             }
 
-            var letterDelim = MorseCode.OPTION_TABLE[args[0]];
-            var wordDelim = MorseCode.OPTION_TABLE[args[1]];
+            var letterDelim = Utils.charRep[args[0]];
+            var wordDelim = Utils.charRep[args[1]];
 
             input = input.replace(/-|_|dash/ig, "<dash>");
             input = input.replace(/\.|dot/ig, "<dot>");
