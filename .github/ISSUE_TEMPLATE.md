@@ -20,5 +20,6 @@
 ### Environment
 <!-- Include any relevant details about the environment you experienced the bug in -->
 <!-- This information is displayed in the About/Support pane -->
-* Compile date: 
+* CyberChef compile time: 
 * User-Agent: 
+* [Link to reproduce]()
