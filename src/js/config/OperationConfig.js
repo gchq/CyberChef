@@ -1361,7 +1361,7 @@ var OperationConfig = {
         ]
     },
     "Affine Cipher Encode": {
-        description: "The affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function (ax + b) % 26, and converted back to a letter.",
+        description: "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function (ax + b) % 26, and converted back to a letter.",
         run: Cipher.runAffineEnc,
         highlight: true,
         highlightReverse: true,
@@ -1381,7 +1381,7 @@ var OperationConfig = {
         ]
     },
     "Affine Cipher Decode": {
-        description: "The affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.",
+        description: "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.",
         run: Cipher.runAffineDec,
         highlight: true,
         highlightReverse: true,
@@ -1401,7 +1401,7 @@ var OperationConfig = {
         ]
     },
     "Atbash Cipher": {
-        description: "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the latin alphabet.",
+        description: "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.",
         run: Cipher.runAtbash,
         highlight: true,
         highlightReverse: true,

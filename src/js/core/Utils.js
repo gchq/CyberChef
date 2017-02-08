@@ -927,8 +927,11 @@ var Utils = {
                 a[key] = b[key];
         return a;
     },
+
+
     /**
      * Actual modulo function, since % is actually the remainder function in JS
+     *
      * @author Matt C [matt@artemisbot.pw]
      * @param {number} x
      * @param {number} y
@@ -937,8 +940,10 @@ var Utils = {
         return ((x % y) + y) % y;
     },
 
+
     /**
      * Finds GCD of two numbers
+     *
      * @author Matt C [matt@artemisbot.pw]
      * @param {number} x
      * @param {number} y
@@ -950,6 +955,14 @@ var Utils = {
         return Utils.gcd(y, x % y);
     },
 
+
+    /**
+     * Finds modular inverse of two values
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {number} x
+     * @param {number} y
+     */
     modInv: function(x, y) {
         x %= y;
         for (var i = 1; i < y; i++) {
@@ -958,6 +971,7 @@ var Utils = {
             }
         }
     },
+
 
     /**
      * A mapping of names of delimiter characters to their symbols.

@@ -385,6 +385,7 @@ var Cipher = {
         return encrypted.ciphertext.toString(Utils.format[args[2]]);
     },
 
+
     /**
      * Vigenère Encode operation.
      *
@@ -474,6 +475,7 @@ var Cipher = {
         return output;
     },
 
+
     /**
      * @constant
      * @default
@@ -484,6 +486,7 @@ var Cipher = {
      * @default
      */
     AFFINE_B: 0,
+
     /**
      * Affine Cipher Encode operation.
      *
@@ -512,6 +515,7 @@ var Cipher = {
         }
         return output;
     },
+
 
     /**
      * Affine Cipher Encode operation.
@@ -546,6 +550,7 @@ var Cipher = {
         return output;
     },
 
+
     /**
      * Atbash Cipher Encode operation.
      *
@@ -557,6 +562,7 @@ var Cipher = {
     runAtbash: function (input, args) {
         return Cipher.runAffineEnc(input, [25, 25]);
     },
+
 
     /**
      * @constant
