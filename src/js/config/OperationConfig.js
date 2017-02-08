@@ -2993,5 +2993,26 @@ var OperationConfig = {
                 value: MorseCode.WORD_DELIM_OPTIONS
             }
         ]
+    },
+    "Tar": {
+        description: "Packs the input into a tarball.<br><br>No support for multiple files at this time.",
+        run: Compress.tar,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: [
+            {
+                name: "Filename",
+                type: "string",
+                value: Compress.TAR_FILENAME
+            }
+        ]
+    },
+    "Untar": {
+        description: "Unpacks a tarball and displays it per file.",
+        run: Compress.untar,
+        inputType: "byteArray",
+        outputType: "html",
+        args: [
+        ]
     }
 };

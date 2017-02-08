@@ -345,5 +345,113 @@ var Compress = {
         plain = bzip2.simple(bzip2Reader);
         return plain;
     },
-    
+
+
+    /**
+     * @constant
+     * @default
+     */
+    TAR_FILENAME: "file.txt",
+
+
+    /**
+     * Tar unpack operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    tar: function(input, args) {
+        // Not implemented yet
+        return input;
+    },
+
+
+    /**
+     * Untar unpack operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    untar: function(input, args) {
+        var Stream = function(input) {
+            this.bytes = input;
+            this.position = 0;
+        };
+
+        Stream.prototype.readString = function(numBytes) {
+            var result = "";
+            for(var i = this.position; i < this.position + numBytes; i++) {
+                var currentByte = this.bytes[i];
+                if(currentByte === 0) break;
+                result += String.fromCharCode(currentByte);
+            }
+            this.position += numBytes;
+            return result;
+        };
+
+        Stream.prototype.readInt = function(numBytes, base) {
+            var string = this.readString(numBytes);
+            return parseInt(string, base);
+        };
+
+        Stream.prototype.hasMore = function() {
+            return this.position < this.bytes.length;
+        };
+
+        var stream = new Stream(input),
+            files = [];
+
+        while(stream.hasMore()) {
+            var dataPosition = stream.position + 512;
+
+            var file = {
+                fileName: stream.readString(100),
+                fileMode: stream.readString(8),
+                ownerUID: stream.readString(8),
+                ownerGID: stream.readString(8),
+                size: parseInt(stream.readString(12), 8), // Octal
+                lastModTime: new Date(1000 * stream.readInt(12, 8)), // Octal
+                checksum: stream.readString(8),
+                type: stream.readString(1),
+                linkedFileName: stream.readString(100),
+                USTARFormat: stream.readString(6).indexOf("ustar") >= 0,
+            };
+
+            if(file.USTARFormat) {
+                file.version = stream.readString(2);
+                file.ownerUserName = stream.readString(32);
+                file.ownerGroupName = stream.readString(32);
+                file.deviceMajor = stream.readString(8);
+                file.deviceMinor = stream.readString(8);
+                file.filenamePrefix = stream.readString(155);
+            }
+
+            stream.position = dataPosition;
+
+            if(file.type === "0") {
+                // File
+                files.push(file);
+                var endPosition = stream.position + file.size;
+                if(file.size % 512 !== 0) {
+                    endPosition += 512 - (file.size % 512);
+                }
+
+                file.contents = "";
+
+                while(stream.position < endPosition) {
+                    file.contents += stream.readString(512);
+                }
+            } else if(file.type === "5") {
+                // Directory
+                files.push(file);
+            } else {
+                // Symlink or empty bytes
+            }
+        }
+
+        var output = Utils.HTMLFiles(files);
+        return output;
+    },
 };

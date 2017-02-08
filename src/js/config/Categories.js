@@ -209,6 +209,8 @@ var Categories = [
             "Zip",
             "Unzip",
             "Bzip2 Decompress",
+            "Tar",
+            "Untar",
         ]
     },
     {

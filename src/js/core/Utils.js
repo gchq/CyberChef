@@ -930,6 +930,65 @@ var Utils = {
 
 
     /**
+     * Formats a list of files or directories.
+     *
+     * @param {File[]} files
+     * @returns {html}
+     */
+    HTMLFiles: function(files){
+        var formatDirectory = function(file) {
+            var html = "<div class='panel panel-default'>" +
+                   "<div class='panel-heading' role='tab'>" +
+                   "<h4 class='panel-title'>" +
+                   file.fileName +
+                   // The following line is for formatting when HTML is stripped
+                   "<span style='display: none'>\n0 bytes\n</span>" +
+                   "</h4>" +
+                   "</div>" +
+                   "</div>";
+            return html;
+        };
+
+        var formatFile = function(file, i) {
+            var html = "<div class='panel panel-default'>" +
+                       "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
+                       "<h4 class='panel-title'>" +
+                       "<a class='collapsed' role='button' data-toggle='collapse' " +
+                       "data-parent='#zip-accordion' href='#collapse" + i + "' " +
+                       "aria-expanded='true' aria-controls='collapse" + i +"'>" +
+                       file.fileName +
+                       "<span class='pull-right'>" +
+                       // These are for formatting when stripping HTML
+                       "<span style='display: none'>\n</span>" +
+                       file.size.toLocaleString() + " bytes" +
+                       "<span style='display: none'>\n</span>" +
+                       "</span>" +
+                       "</a>" +
+                       "</h4>" +
+                       "</div>" +
+                       "<div id='collapse" + i + "' class='panel-collapse collapse' " +
+                       "role='tabpanel' aria-labelledby='heading" + i + "'>" +
+                       "<div class='panel-body'>" +
+                       "<pre><code>" + Utils.escapeHtml(file.contents) + "</pre></code></div>" +
+                       "</div>" +
+                       "</div>";
+            return html;
+        };
+
+        var Utils = this;
+        var html = "";
+        files.forEach(function(file, i) {
+            if(typeof file.contents !== "undefined") {
+                html += formatFile(file, i);
+            } else {
+                html += formatDirectory(file);
+            }
+        });
+        return html;
+    },
+
+
+    /**
      * A mapping of names of delimiter characters to their symbols.
      * @constant
      */
