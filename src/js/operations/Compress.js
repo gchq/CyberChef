@@ -361,7 +361,7 @@ var Compress = {
      * @param {Object[]} args
      * @returns {byteArray}
      */
-    tar: function(input, args) {
+    runTar: function(input, args) {
         // Not implemented yet
         return input;
     },
@@ -374,7 +374,7 @@ var Compress = {
      * @param {Object[]} args
      * @returns {html}
      */
-    untar: function(input, args) {
+    runUntar: function(input, args) {
         var Stream = function(input) {
             this.bytes = input;
             this.position = 0;
@@ -451,7 +451,6 @@ var Compress = {
             }
         }
 
-        var output = Utils.HTMLFiles(files);
-        return output;
+        return Utils.displayFilesAsHTML(files);
     },
 };

@@ -2996,7 +2996,7 @@ var OperationConfig = {
     },
     "Tar": {
         description: "Packs the input into a tarball.<br><br>No support for multiple files at this time.",
-        run: Compress.tar,
+        run: Compress.runTar,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -3009,7 +3009,7 @@ var OperationConfig = {
     },
     "Untar": {
         description: "Unpacks a tarball and displays it per file.",
-        run: Compress.untar,
+        run: Compress.runUntar,
         inputType: "byteArray",
         outputType: "html",
         args: [

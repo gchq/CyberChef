@@ -935,7 +935,7 @@ var Utils = {
      * @param {File[]} files
      * @returns {html}
      */
-    HTMLFiles: function(files){
+    displayFilesAsHTML: function(files){
         var formatDirectory = function(file) {
             var html = "<div class='panel panel-default'>" +
                    "<div class='panel-heading' role='tab'>" +
