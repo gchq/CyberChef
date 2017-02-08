@@ -66,6 +66,9 @@ var Categories = [
         ops: [
             "AES Encrypt",
             "AES Decrypt",
+            "Affine Cipher Encode",
+            "Affine Cipher Decode",
+            "Atbash Cipher",
             "Blowfish Encrypt",
             "Blowfish Decrypt",
             "DES Encrypt",

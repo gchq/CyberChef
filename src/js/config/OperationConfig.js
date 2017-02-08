@@ -20,7 +20,7 @@
  * @property {boolean} [flowControl] - True if the operation is for Flow Control
  * @property {ArgConf[]} [args] - A list of configuration objects for the arguments
  */
- 
+
 
 /**
  * Type definition for an ArgConf.
@@ -800,7 +800,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -847,7 +847,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -894,7 +894,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -941,7 +941,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -988,7 +988,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -1035,7 +1035,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -1130,7 +1130,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -1177,7 +1177,7 @@ var OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-                
+
             },
             {
                 name: "Salt",
@@ -1359,6 +1359,55 @@ var OperationConfig = {
                 value: ""
             }
         ]
+    },
+    "Affine Cipher Encode": {
+        description: "The affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function (ax + b) % 26, and converted back to a letter.",
+        run: Cipher.runAffineEnc,
+        highlight: true,
+        highlightReverse: true,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "a",
+                type: "number",
+                value: Cipher.AFFINE_A
+            },
+            {
+                name: "b",
+                type: "number",
+                value: Cipher.AFFINE_B
+            }
+        ]
+    },
+    "Affine Cipher Decode": {
+        description: "The affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.",
+        run: Cipher.runAffineDec,
+        highlight: true,
+        highlightReverse: true,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "a",
+                type: "number",
+                value: Cipher.AFFINE_A
+            },
+            {
+                name: "b",
+                type: "number",
+                value: Cipher.AFFINE_B
+            }
+        ]
+    },
+    "Atbash Cipher": {
+        description: "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the latin alphabet.",
+        run: Cipher.runAtbash,
+        highlight: true,
+        highlightReverse: true,
+        inputType: "string",
+        outputType: "string",
+        args: []
     },
     "Rotate right": {
         description: "Rotates each byte to the right by the number of bits specified. Currently only supports 8-bit values.",
@@ -1724,7 +1773,7 @@ var OperationConfig = {
                 type: "boolean",
                 value: StrUtils.FIND_REPLACE_MULTILINE,
             },
-            
+
         ]
     },
     "To Upper case": {
