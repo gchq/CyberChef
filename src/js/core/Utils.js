@@ -932,6 +932,8 @@ var Utils = {
     /**
      * Formats a list of files or directories.
      *
+     * @author tlwr [toby@toby.codes]
+     *
      * @param {File[]} files
      * @returns {html}
      */

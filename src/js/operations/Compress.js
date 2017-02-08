@@ -357,6 +357,8 @@ var Compress = {
     /**
      * Tar unpack operation.
      *
+     * @author tlwr [toby@toby.codes]
+     *
      * @param {byteArray} input
      * @param {Object[]} args
      * @returns {byteArray}
@@ -369,6 +371,8 @@ var Compress = {
 
     /**
      * Untar unpack operation.
+     *
+     * @author tlwr [toby@toby.codes]
      *
      * @param {byteArray} input
      * @param {Object[]} args
