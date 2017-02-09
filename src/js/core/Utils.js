@@ -934,7 +934,7 @@ var Utils = {
      *
      * @author tlwr [toby@toby.codes]
      *
-     * @param {File[]} files
+     * @param {Object[]} files
      * @returns {html}
      */
     displayFilesAsHTML: function(files){
