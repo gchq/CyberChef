@@ -388,13 +388,17 @@ var Compress = {
             this.position = 0;
         };
 
+        Tarball.prototype.addEmptyBlock = function() {
+            var filler = new Array(512);
+            filler.fill(0);
+            this.bytes = this.bytes.concat(filler);
+        };
+
         Tarball.prototype.writeBytes = function(bytes) {
             var self = this;
 
-            if(this.bytes.length - this.position < 512) {
-                var filler = new Array(512);
-                filler.fill(0);
-                this.bytes = this.bytes.concat(filler);
+            if(this.position + bytes.length > this.bytes.length) {
+                this.addEmptyBlock();
             }
 
             Array.prototype.forEach.call(bytes, function(b, i) {
@@ -408,9 +412,10 @@ var Compress = {
         };
 
         Tarball.prototype.writeEndBlocks = function() {
-            var filler = new Array(512 * 2);
-            filler.fill(0);
-            this.writeBytes(filler);
+            var numEmptyBlocks = 2;
+            for(var i = 0; i < numEmptyBlocks; i++) {
+                this.addEmptyBlock();
+            }
         };
 
         var fileSize = padLeft(input.length.toString(8), 11, "0");
