@@ -45,9 +45,7 @@
         "comma-spacing": "error",
         "comma-style": "error",
         "computed-property-spacing": "error",
-        "no-trailing-spaces": ["warn", {
-            "skipBlankLines": true
-        }],
+        "no-trailing-spaces": "warn",
         "eol-last": "error",
         "func-call-spacing": "error",
         "indent": ["error", 4, {
@@ -62,7 +60,27 @@
             "properties": "always"
         }],
         "semi": ["error", "always"],
-        "unicode-bom": "error"
+        "unicode-bom": "error",
+        "require-jsdoc": ["error", {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true,
+                "ArrowFunctionExpression": true
+            }
+        }],
+        "keyword-spacing": ["error", {
+            "before": true,
+            "after": true
+        }],
+        "no-multiple-empty-lines": ["warn", {
+            "max": 2,
+            "maxEOF": 1,
+            "maxBOF": 0
+        }],
+        "no-whitespace-before-property": "error",
+        "operator-linebreak": ["error", "after"],
+        "space-in-parens": "error"
     },
     "globals": {
         /* core/* */

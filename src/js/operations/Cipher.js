@@ -460,7 +460,7 @@ var Cipher = {
                 msgIndex = alphabet.indexOf(input[i]);
                 // Subtract indexes from each other, add 26 just in case the value is negative,
                 // modulo to remove if neccessary
-                output += alphabet[(msgIndex - keyIndex + alphabet.length ) % 26];
+                output += alphabet[(msgIndex - keyIndex + alphabet.length) % 26];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 chr = key[(i - fail) % key.length].toLowerCase();
                 keyIndex = alphabet.indexOf(chr);
@@ -473,6 +473,106 @@ var Cipher = {
         }
 
         return output;
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    AFFINE_A: 1,
+    /**
+     * @constant
+     * @default
+     */
+    AFFINE_B: 0,
+
+    /**
+     * Affine Cipher Encode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runAffineEnc: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            a = args[0],
+            b = args[1],
+            output = "";
+
+        if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+            return "The values of a and b can only be integers.";
+        }
+
+        for (var i = 0; i < input.length; i++) {
+            if (alphabet.indexOf(input[i]) >= 0) {
+                // Uses the affine function ax+b % m = y (where m is length of the alphabet)
+                output += alphabet[((a * alphabet.indexOf(input[i])) + b) % 26];
+            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                // Same as above, accounting for uppercase
+                output += alphabet[((a * alphabet.indexOf(input[i].toLowerCase())) + b) % 26].toUpperCase();
+            } else {
+                // Non-alphabetic characters
+                output += input[i];
+            }
+        }
+        return output;
+    },
+
+
+    /**
+     * Affine Cipher Encode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runAffineDec: function (input, args) {
+        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+            a = args[0],
+            b = args[1],
+            output = "",
+            aModInv;
+
+        if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+            return "The values of a and b can only be integers.";
+        }
+
+        if (Utils.gcd(a, 26) !== 1) {
+            return "The value of a must be coprime to 26.";
+        }
+
+        // Calculates modular inverse of a
+        aModInv = Utils.modInv(a, 26);
+
+        for (var i = 0; i < input.length; i++) {
+            if (alphabet.indexOf(input[i]) >= 0) {
+                // Uses the affine decode function (y-b * A') % m = x (where m is length of the alphabet and A' is modular inverse)
+                output += alphabet[Utils.mod((alphabet.indexOf(input[i]) - b) * aModInv, 26)];
+            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
+                // Same as above, accounting for uppercase
+                output += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) - b) * aModInv, 26)].toUpperCase();
+            } else {
+                // Non-alphabetic characters
+                output += input[i];
+            }
+        }
+        return output;
+    },
+
+
+    /**
+     * Atbash Cipher Encode operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runAtbash: function (input, args) {
+        return Cipher.runAffineEnc(input, [25, 25]);
     },
 
 

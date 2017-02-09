@@ -12,7 +12,7 @@ var Ingredient = function(ingredientConfig) {
     this.name  = "";
     this.type  = "";
     this.value = null;
-    
+
     if (ingredientConfig) {
         this._parseConfig(ingredientConfig);
     }

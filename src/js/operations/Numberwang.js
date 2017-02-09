@@ -23,5 +23,5 @@ var Numberwang = {
             return "Sorry, that's not Numberwang. Let's rotate the board!";
         }
     },
-    
+
 };

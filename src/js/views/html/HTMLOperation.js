@@ -14,13 +14,13 @@
 var HTMLOperation = function(name, config, app, manager) {
     this.app         = app;
     this.manager     = manager;
-    
+
     this.name        = name;
     this.description = config.description;
     this.manualBake  = config.manualBake || false;
     this.config      = config;
     this.ingList     = [];
-    
+
     for (var i = 0; i < config.args.length; i++) {
         var ing = new HTMLIngredient(config.args[i], this.app, this.manager);
         this.ingList.push(ing);
@@ -45,25 +45,25 @@ HTMLOperation.REMOVE_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABwkl
  */
 HTMLOperation.prototype.toStubHtml = function(removeIcon) {
     var html = "<li class='operation'";
-    
+
     if (this.description) {
         html += " data-container='body' data-toggle='popover' data-placement='auto right'\
             data-content=\"" + this.description + "\" data-html='true' data-trigger='hover'";
     }
-    
+
     html += ">" + this.name;
-    
+
     if (removeIcon) {
         html += "<img src='data:image/png;base64," + HTMLOperation.REMOVE_ICON +
             "' class='op-icon remove-icon'>";
     }
-    
+
     if (this.description) {
         html += "<img src='data:image/png;base64," + HTMLOperation.INFO_ICON + "' class='op-icon'>";
     }
-    
+
     html += "</li>";
-    
+
     return html;
 };
 
@@ -79,15 +79,15 @@ HTMLOperation.prototype.toFullHtml = function() {
     for (var i = 0; i < this.ingList.length; i++) {
         html += this.ingList[i].toHtml();
     }
-    
+
     html += "<div class='recip-icons'>\
         <div class='breakpoint' title='Set breakpoint' break='false'></div>\
         <div class='disable-icon recip-icon' title='Disable operation'\
             disabled='false'></div>";
-    
+
     html += "</div>\
         <div class='clearfix'>&nbsp;</div>";
-        
+
     return html;
 };
 
@@ -105,7 +105,7 @@ HTMLOperation.prototype.highlightSearchString = function(searchStr, namePos, des
             this.name.slice(namePos, namePos + searchStr.length) + "</u></b>" +
             this.name.slice(namePos + searchStr.length);
     }
-    
+
     if (this.description && descPos >= 0) {
         this.description = this.description.slice(0, descPos) + "<b><u>" +
             this.description.slice(descPos, descPos + searchStr.length) + "</u></b>" +

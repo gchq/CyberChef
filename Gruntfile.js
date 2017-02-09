@@ -135,7 +135,7 @@ module.exports = function(grunt) {
         "src/js/lib/Sortable.js",
         "src/js/lib/bootstrap-colorpicker.js",
         "src/js/lib/xpath.js",
-        
+
         // Custom libraries
         "src/js/lib/canvas_components.js",
 
@@ -181,6 +181,7 @@ module.exports = function(grunt) {
 
     var templateOptions = {
         data: {
+            compileTime: grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
             compileMsg: grunt.option("compile-msg") || grunt.option("msg") || "",
             codebaseStats: grunt.file.read("src/static/stats.txt").split("\n").join("<br>")
         }

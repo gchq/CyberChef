@@ -113,7 +113,7 @@ Chef.prototype.silentBake = function(recipeConfig) {
 
     try {
         recipe.execute(dish);
-    } catch(err) {
+    } catch (err) {
         // Suppress all errors
     }
     return new Date().getTime() - startTime;

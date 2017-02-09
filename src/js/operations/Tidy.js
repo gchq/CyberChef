@@ -39,7 +39,7 @@ var Tidy = {
      * @default
      */
     REMOVE_FULL_STOPS : false,
-    
+
     /**
      * Remove whitespace operation.
      *
@@ -55,7 +55,7 @@ var Tidy = {
             removeFormFeeds = args[4],
             removeFullStops = args[5],
             data = input;
-            
+
         if (removeSpaces) data = data.replace(/ /g, "");
         if (removeCariageReturns) data = data.replace(/\r/g, "");
         if (removeLineFeeds) data = data.replace(/\n/g, "");
@@ -64,8 +64,8 @@ var Tidy = {
         if (removeFullStops) data = data.replace(/\./g, "");
         return data;
     },
-    
-    
+
+
     /**
      * Remove null bytes operation.
      *
@@ -80,8 +80,8 @@ var Tidy = {
         }
         return output;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -97,7 +97,7 @@ var Tidy = {
      * @default
      */
     DROP_LENGTH : 5,
-    
+
     /**
      * Drop bytes operation.
      *
@@ -109,17 +109,17 @@ var Tidy = {
         var start = args[0],
             length = args[1],
             applyToEachLine = args[2];
-            
+
         if (start < 0 || length < 0)
             throw "Error: Invalid value";
-            
+
         if (!applyToEachLine)
             return input.slice(0, start).concat(input.slice(start+length, input.length));
-            
+
         // Split input into lines
         var lines = [],
             line = [];
-            
+
         for (var i = 0; i < input.length; i++) {
             if (input[i] === 0x0a) {
                 lines.push(line);
@@ -129,7 +129,7 @@ var Tidy = {
             }
         }
         lines.push(line);
-        
+
         var output = [];
         for (i = 0; i < lines.length; i++) {
             output = output.concat(lines[i].slice(0, start).concat(lines[i].slice(start+length, lines[i].length)));
@@ -137,8 +137,8 @@ var Tidy = {
         }
         return output.slice(0, output.length-1);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -149,7 +149,7 @@ var Tidy = {
      * @default
      */
     TAKE_LENGTH: 5,
-    
+
     /**
      * Take bytes operation.
      *
@@ -161,17 +161,17 @@ var Tidy = {
         var start = args[0],
             length = args[1],
             applyToEachLine = args[2];
-            
+
         if (start < 0 || length < 0)
             throw "Error: Invalid value";
-            
+
         if (!applyToEachLine)
             return input.slice(start, start+length);
-            
+
         // Split input into lines
         var lines = [],
             line = [];
-            
+
         for (var i = 0; i < input.length; i++) {
             if (input[i] === 0x0a) {
                 lines.push(line);
@@ -181,7 +181,7 @@ var Tidy = {
             }
         }
         lines.push(line);
-        
+
         var output = [];
         for (i = 0; i < lines.length; i++) {
             output = output.concat(lines[i].slice(start, start+length));
@@ -189,8 +189,8 @@ var Tidy = {
         }
         return output.slice(0, output.length-1);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -206,7 +206,7 @@ var Tidy = {
      * @default
      */
     PAD_CHAR : " ",
-    
+
     /**
      * Pad lines operation.
      *
@@ -221,7 +221,7 @@ var Tidy = {
             lines = input.split("\n"),
             output = "",
             i = 0;
-            
+
         if (position === "Start") {
             for (i = 0; i < lines.length; i++) {
                 output += Utils.padLeft(lines[i], lines[i].length+len, chr) + "\n";
@@ -231,8 +231,8 @@ var Tidy = {
                 output += Utils.padRight(lines[i], lines[i].length+len, chr) + "\n";
             }
         }
-        
+
         return output.slice(0, output.length-1);
     },
-    
+
 };

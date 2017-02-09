@@ -10,7 +10,7 @@
  * @namespace
  */
 var JS = {
-    
+
     /**
      * @constant
      * @default
@@ -36,7 +36,7 @@ var JS = {
      * @default
      */
     PARSE_TOLERANT: false,
-    
+
     /**
      * JavaScript Parser operation.
      *
@@ -58,12 +58,12 @@ var JS = {
                 comment:  parseComment,
                 tolerant: parseTolerant
             };
-            
+
         result = esprima.parse(input, options);
         return JSON.stringify(result, null, 2);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -84,7 +84,7 @@ var JS = {
      * @default
      */
     BEAUTIFY_COMMENT: true,
-    
+
     /**
      * JavaScript Beautify operation.
      *
@@ -99,14 +99,14 @@ var JS = {
             beautifyComment = args[3],
             result = "",
             AST;
-            
+
         try {
             AST = esprima.parse(input, {
                 range: true,
                 tokens: true,
                 comment: true
             });
-            
+
             var options = {
                 format: {
                     indent: {
@@ -117,19 +117,19 @@ var JS = {
                 },
                 comment: beautifyComment
             };
-            
+
             if (options.comment)
                 AST = escodegen.attachComments(AST, AST.comments, AST.tokens);
-                
+
             result = escodegen.generate(AST, options);
-        } catch(e) {
+        } catch (e) {
             // Leave original error so the user can see the detail
             throw "Unable to parse JavaScript.<br>" + e.message;
         }
         return result;
     },
-    
-    
+
+
     /**
      * JavaScript Minify operation.
      *
@@ -142,7 +142,7 @@ var JS = {
             AST = esprima.parse(input),
             optimisedAST = esmangle.optimize(AST, null),
             mangledAST = esmangle.mangle(optimisedAST);
-            
+
         result = escodegen.generate(mangledAST, {
             format: {
                 renumber:    true,

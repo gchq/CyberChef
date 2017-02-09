@@ -16,7 +16,7 @@ var Punycode = {
      * @default
      */
     IDN: false,
-    
+
     /**
      * To Punycode operation.
      *
@@ -26,15 +26,15 @@ var Punycode = {
      */
     runToAscii: function(input, args) {
         var idn = args[0];
-        
+
         if (idn) {
             return punycode.ToASCII(input);
         } else {
             return punycode.encode(input);
         }
     },
-    
-    
+
+
     /**
      * From Punycode operation.
      *
@@ -44,12 +44,12 @@ var Punycode = {
      */
     runToUnicode: function(input, args) {
         var idn = args[0];
-        
+
         if (idn) {
             return punycode.ToUnicode(input);
         } else {
             return punycode.decode(input);
         }
     },
-    
+
 };

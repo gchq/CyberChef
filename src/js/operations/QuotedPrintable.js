@@ -2,14 +2,14 @@
 ========================================================================
   mimelib: http://github.com/andris9/mimelib
   Copyright (c) 2011-2012 Andris Reinman
-  
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   copies of the Software, and to permit persons to whom the Software is
   furnished to do so, subject to the following conditions:
-  
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@
  * @namespace
  */
 var QuotedPrintable = {
-    
+
     /**
      * To Quoted Printable operation.
      *
@@ -41,7 +41,7 @@ var QuotedPrintable = {
      */
     runTo: function (input, args) {
         var mimeEncodedStr = QuotedPrintable.mimeEncode(input);
-        
+
         // fix line breaks
         mimeEncodedStr = mimeEncodedStr.replace(/\r?\n|\r/g, function() {
             return "\r\n";
@@ -51,8 +51,8 @@ var QuotedPrintable = {
 
         return QuotedPrintable._addSoftLinebreaks(mimeEncodedStr, "qp");
     },
-    
-    
+
+
     /**
      * From Quoted Printable operation.
      *
@@ -64,8 +64,8 @@ var QuotedPrintable = {
         var str = input.replace(/\=(?:\r?\n|$)/g, "");
         return QuotedPrintable.mimeDecode(str);
     },
-    
-    
+
+
     /**
      * Decodes mime-encoded data.
      *
@@ -91,8 +91,8 @@ var QuotedPrintable = {
 
         return buffer;
     },
-    
-    
+
+
     /**
      * Encodes mime data.
      *
@@ -123,8 +123,8 @@ var QuotedPrintable = {
 
         return result;
     },
-    
-    
+
+
     /**
      * Checks if a given number falls within a given set of ranges.
      *
@@ -145,7 +145,7 @@ var QuotedPrintable = {
         return false;
     },
 
-    
+
     /**
      * Adds soft line breaks to a string.
      * Lines can't be longer that 76 + <CR><LF> = 78 bytes
@@ -168,7 +168,7 @@ var QuotedPrintable = {
         }
     },
 
-    
+
     /**
      * Adds soft line breaks to a base64 string.
      *
@@ -182,7 +182,7 @@ var QuotedPrintable = {
         return base64EncodedStr.replace(new RegExp(".{" + lineLengthMax + "}", "g"), "$&\r\n").trim();
     },
 
-    
+
     /**
      * Adds soft line breaks to a quoted printable string.
      *
@@ -266,5 +266,5 @@ var QuotedPrintable = {
 
         return result;
     },
-    
+
 };

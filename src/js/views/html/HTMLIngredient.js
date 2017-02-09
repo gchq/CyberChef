@@ -13,7 +13,7 @@
 var HTMLIngredient = function(config, app, manager) {
     this.app = app;
     this.manager = manager;
-    
+
     this.name = config.name;
     this.type = config.type;
     this.value = config.value;
@@ -39,11 +39,11 @@ HTMLIngredient.prototype.toHtml = function() {
                   this.type === "binaryShortString"),
         html = inline ? "" : "<div class='clearfix'>&nbsp;</div>",
         i, m;
-    
+
     html += "<div class='arg-group" + (inline ? " inline-args" : "") +
         (this.type === "text" ? " arg-group-text" : "") + "'><label class='arg-label' for='" +
         this.id + "'>" + this.name + "</label>";
-    
+
     switch (this.type) {
         case "string":
         case "binaryString":
@@ -83,7 +83,7 @@ HTMLIngredient.prototype.toHtml = function() {
             html += "<input type='checkbox' id='" + this.id + "'class='arg' arg-name='" +
                 this.name + "'" + (this.value ? " checked='checked' " : "") +
                 (this.disabled ? " disabled='disabled'" : "") + ">";
-            
+
             if (this.disableArgs) {
                 this.manager.addDynamicListener("#" + this.id, "click", this.toggleDisableArgs, this);
             }
@@ -116,7 +116,7 @@ HTMLIngredient.prototype.toHtml = function() {
                 }
             }
             html += "</select>";
-            
+
             this.manager.addDynamicListener("#" + this.id, "change", this.populateOptionChange, this);
             break;
         case "editableOption":
@@ -132,8 +132,8 @@ HTMLIngredient.prototype.toHtml = function() {
                 (this.disabled ? " disabled='disabled'" : "") +
                 (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
             html += "</div>";
-            
-            
+
+
             this.manager.addDynamicListener("#sel-" + this.id, "change", this.editableOptionChange, this);
             break;
         case "text":
@@ -146,7 +146,7 @@ HTMLIngredient.prototype.toHtml = function() {
             break;
     }
     html += "</div>";
-    
+
     return html;
 };
 
@@ -162,10 +162,10 @@ HTMLIngredient.prototype.toggleDisableArgs = function(e) {
         op = el.parentNode.parentNode,
         args = op.querySelectorAll(".arg-group"),
         els;
-        
+
     for (var i = 0; i < this.disableArgs.length; i++) {
         els = args[this.disableArgs[i]].querySelectorAll("input, select, button");
-        
+
         for (var j = 0; j < els.length; j++) {
             if (els[j].getAttribute("disabled")) {
                 els[j].removeAttribute("disabled");
@@ -174,7 +174,7 @@ HTMLIngredient.prototype.toggleDisableArgs = function(e) {
             }
         }
     }
-    
+
     this.manager.recipe.ingChange();
 };
 
@@ -191,7 +191,7 @@ HTMLIngredient.prototype.populateOptionChange = function(e) {
         target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
 
     target.value = el.childNodes[el.selectedIndex].getAttribute("populate-value");
-    
+
     this.manager.recipe.ingChange();
 };
 
@@ -207,6 +207,6 @@ HTMLIngredient.prototype.editableOptionChange = function(e) {
         input = select.nextSibling;
 
     input.value = select.childNodes[select.selectedIndex].value;
-    
+
     this.manager.recipe.ingChange();
 };

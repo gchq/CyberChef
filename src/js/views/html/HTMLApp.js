@@ -362,13 +362,13 @@ HTMLApp.prototype.loadURIParams = function() {
         try {
             var recipeConfig = JSON.parse(this.queryString.recipe);
             this.setRecipeConfig(recipeConfig);
-        } catch(err) {}
+        } catch (err) {}
     } else if (this.queryString.op) {
         // If there's no recipe, look for single operations
         this.manager.recipe.clearRecipe();
         try {
             this.manager.recipe.addOperation(this.queryString.op);
-        } catch(err) {
+        } catch (err) {
             // If no exact match, search for nearest match and add that
             var matchedOps = this.manager.ops.filterOperations(this.queryString.op, false);
             if (matchedOps.length) {
@@ -388,7 +388,7 @@ HTMLApp.prototype.loadURIParams = function() {
         try {
             var inputData = Utils.fromBase64(this.queryString.input);
             this.setInput(inputData);
-        } catch(err) {}
+        } catch (err) {}
     }
 
     // Restore auto-bake state
