@@ -248,6 +248,7 @@ var Categories = [
             "JavaScript Parser",
             "JavaScript Beautify",
             "JavaScript Minify",
+            "JavaScript Obfscate",
             "JSON Beautify",
             "JSON Minify",
             "XML Beautify",

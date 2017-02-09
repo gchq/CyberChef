@@ -2491,6 +2491,13 @@ var OperationConfig = {
         outputType: "string",
         args: []
     },
+    "JavaScript Obfscate": {
+        description: "Obfscate JavaScript code.",
+        run: JS.run_minify,
+        input_type: "string",
+        output_type: "string",
+        args: []
+    },
     "XML Beautify": {
         description: "Indents and prettifies eXtensible Markup Language (XML) code.",
         run: Code.runXmlBeautify,
