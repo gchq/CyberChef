@@ -408,7 +408,7 @@ var Compress = {
         };
 
         Tarball.prototype.writeEndBlocks = function() {
-            var filler = new Array(512 * 1);
+            var filler = new Array(512 * 2);
             filler.fill(0);
             this.writeBytes(filler);
         };
