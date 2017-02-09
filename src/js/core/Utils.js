@@ -978,7 +978,9 @@ var Utils = {
         };
 
         var Utils = this;
-        var html = "";
+        var html = "<div style='padding: 5px;'>" +
+                   files.length +
+                   " file(s) found</div>\n";
         files.forEach(function(file, i) {
             if (typeof file.contents !== "undefined") {
                 html += formatFile(file, i);
