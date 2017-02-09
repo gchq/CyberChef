@@ -980,7 +980,7 @@ var Utils = {
         var Utils = this;
         var html = "";
         files.forEach(function(file, i) {
-            if(typeof file.contents !== "undefined") {
+            if (typeof file.contents !== "undefined") {
                 html += formatFile(file, i);
             } else {
                 html += formatDirectory(file);

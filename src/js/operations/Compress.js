@@ -377,7 +377,7 @@ var Compress = {
         };
 
         var padLeft = function(string, length, padChar) {
-            while(string.length < length) {
+            while (string.length < length) {
                 string = padChar + string;
             }
             return string;
@@ -397,12 +397,12 @@ var Compress = {
         Tarball.prototype.writeBytes = function(bytes) {
             var self = this;
 
-            if(this.position + bytes.length > this.bytes.length) {
+            if (this.position + bytes.length > this.bytes.length) {
                 this.addEmptyBlock();
             }
 
             Array.prototype.forEach.call(bytes, function(b, i) {
-                if(typeof b.charCodeAt !== "undefined") {
+                if (typeof b.charCodeAt !== "undefined") {
                     b = b.charCodeAt();
                 }
 
@@ -413,7 +413,7 @@ var Compress = {
 
         Tarball.prototype.writeEndBlocks = function() {
             var numEmptyBlocks = 2;
-            for(var i = 0; i < numEmptyBlocks; i++) {
+            for (var i = 0; i < numEmptyBlocks; i++) {
                 this.addEmptyBlock();
             }
         };
@@ -442,10 +442,10 @@ var Compress = {
         };
 
         var checksum = 0;
-        for(var key in file) {
+        for (var key in file) {
             var bytes = file[key];
             Array.prototype.forEach.call(bytes, function(b) {
-                if(typeof b.charCodeAt !== "undefined") {
+                if (typeof b.charCodeAt !== "undefined") {
                     checksum += b.charCodeAt();
                 } else {
                     checksum += b;
@@ -497,9 +497,9 @@ var Compress = {
 
         Stream.prototype.readString = function(numBytes) {
             var result = "";
-            for(var i = this.position; i < this.position + numBytes; i++) {
+            for (var i = this.position; i < this.position + numBytes; i++) {
                 var currentByte = this.bytes[i];
-                if(currentByte === 0) break;
+                if (currentByte === 0) break;
                 result += String.fromCharCode(currentByte);
             }
             this.position += numBytes;
@@ -518,7 +518,7 @@ var Compress = {
         var stream = new Stream(input),
             files = [];
 
-        while(stream.hasMore()) {
+        while (stream.hasMore()) {
             var dataPosition = stream.position + 512;
 
             var file = {
@@ -534,7 +534,7 @@ var Compress = {
                 USTARFormat: stream.readString(6).indexOf("ustar") >= 0,
             };
 
-            if(file.USTARFormat) {
+            if (file.USTARFormat) {
                 file.version = stream.readString(2);
                 file.ownerUserName = stream.readString(32);
                 file.ownerGroupName = stream.readString(32);
@@ -545,20 +545,20 @@ var Compress = {
 
             stream.position = dataPosition;
 
-            if(file.type === "0") {
+            if (file.type === "0") {
                 // File
                 files.push(file);
                 var endPosition = stream.position + file.size;
-                if(file.size % 512 !== 0) {
+                if (file.size % 512 !== 0) {
                     endPosition += 512 - (file.size % 512);
                 }
 
                 file.contents = "";
 
-                while(stream.position < endPosition) {
+                while (stream.position < endPosition) {
                     file.contents += stream.readString(512);
                 }
-            } else if(file.type === "5") {
+            } else if (file.type === "5") {
                 // Directory
                 files.push(file);
             } else {
