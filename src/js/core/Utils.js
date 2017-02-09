@@ -104,11 +104,17 @@ var Utils = {
      * @returns {byteArray}
      *
      * @example
-     * // returns "['a', 0, 0, 0]"
+     * // returns ["a", 0, 0, 0]
      * Utils.padBytesRight("a", 4);
      *
-     * // returns "['a', 1, 1, 1]"
+     * // returns ["a", 1, 1, 1]
      * Utils.padBytesRight("a", 4, 1);
+     *
+     * // returns ["t", "e", "s", "t", 0, 0, 0, 0]
+     * Utils.padBytesRight("test", 8);
+     *
+     * // returns ["t", "e", "s", "t", 1, 1, 1, 1]
+     * Utils.padBytesRight("test", 8, 1);
      */
     padBytesRight: function(arr, numBytes, padByte) {
         padByte = padByte || 0;
