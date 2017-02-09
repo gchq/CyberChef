@@ -1005,7 +1005,6 @@ var Utils = {
             return html;
         };
 
-        var Utils = this;
         var html = "<div style='padding: 5px;'>" +
                    files.length +
                    " file(s) found</div>\n";
