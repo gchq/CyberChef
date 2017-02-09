@@ -163,8 +163,8 @@ var MorseCode = {
             var letterDelim = Utils.charRep[args[0]];
             var wordDelim = Utils.charRep[args[1]];
 
-            input = input.replace(/-|_|dash/ig, "<dash>");
-            input = input.replace(/\.|dot/ig, "<dot>");
+            input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); //hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
+            input = input.replace(/\.|·|dot/ig, "<dot>");
 
             var words = input.split(wordDelim);
             words = Array.prototype.map.call(words, function(word) {
