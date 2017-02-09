@@ -364,8 +364,114 @@ var Compress = {
      * @returns {byteArray}
      */
     runTar: function(input, args) {
-        // Not implemented yet
-        return input;
+        var zeroFillBytes = function(string, bytes) {
+            var paddedString = new Array(bytes);
+            paddedString.fill(0);
+
+            string = string.toString().slice(0, bytes);
+            Array.prototype.map.call(string, function(chr, i) {
+                paddedString[i] = chr;
+            });
+
+            return paddedString;
+        };
+
+        var padLeft = function(string, length, padChar) {
+            while(string.length < length) {
+                string = padChar + string;
+            }
+            return string;
+        };
+
+        var Tarball = function() {
+            this.bytes = new Array(512);
+            this.position = 0;
+        };
+
+        Tarball.prototype.writeBytes = function(bytes) {
+            var self = this;
+
+            if(this.bytes.length - this.position < 512) {
+                var filler = new Array(512);
+                filler.fill(0);
+                this.bytes = this.bytes.concat(filler);
+            }
+
+            Array.prototype.forEach.call(bytes, function(b, i) {
+                if(typeof b.charCodeAt !== "undefined") {
+                    b = b.charCodeAt();
+                }
+
+                self.bytes[self.position] = b;
+                self.position += 1;
+            });
+        };
+
+        Tarball.prototype.writeEndBlocks = function() {
+            var filler = new Array(512 * 1);
+            filler.fill(0);
+            this.writeBytes(filler);
+        };
+
+        var fileSize = padLeft(input.length.toString(8), 11, "0");
+        var currentUnixTimestamp = Math.floor(Date.now() / 1000);
+        var lastModTime = padLeft(currentUnixTimestamp.toString(8), 11, "0");
+
+        var file = {
+            fileName: zeroFillBytes(args[0], 100),
+            fileMode: zeroFillBytes("0000664", 8),
+            ownerUID: zeroFillBytes("0", 8),
+            ownerGID: zeroFillBytes("0", 8),
+            size: zeroFillBytes(fileSize, 12),
+            lastModTime: zeroFillBytes(lastModTime, 12),
+            checksum: "        ",
+            type: "0",
+            linkedFileName: zeroFillBytes("", 100),
+            USTARFormat: zeroFillBytes("ustar", 6),
+            version: "00",
+            ownerUserName: zeroFillBytes("", 32),
+            ownerGroupName: zeroFillBytes("", 32),
+            deviceMajor: zeroFillBytes("", 8),
+            deviceMinor: zeroFillBytes("", 8),
+            fileNamePrefix: zeroFillBytes("", 155),
+        };
+
+        var checksum = 0;
+        for(var key in file) {
+            var bytes = file[key];
+            Array.prototype.forEach.call(bytes, function(b) {
+                if(typeof b.charCodeAt !== "undefined") {
+                    checksum += b.charCodeAt();
+                } else {
+                    checksum += b;
+                }
+            });
+        }
+        checksum = zeroFillBytes(padLeft(checksum.toString(8), 7, "0"), 8);
+        file.checksum = checksum;
+
+        var tarball = new Tarball();
+        tarball.writeBytes(file.fileName);
+        tarball.writeBytes(file.fileMode);
+        tarball.writeBytes(file.ownerUID);
+        tarball.writeBytes(file.ownerGID);
+        tarball.writeBytes(file.size);
+        tarball.writeBytes(file.lastModTime);
+        tarball.writeBytes(file.checksum);
+        tarball.writeBytes(file.type);
+        tarball.writeBytes(file.linkedFileName);
+        tarball.writeBytes(file.USTARFormat);
+        tarball.writeBytes(file.version);
+        tarball.writeBytes(file.ownerUserName);
+        tarball.writeBytes(file.ownerGroupName);
+        tarball.writeBytes(file.deviceMajor);
+        tarball.writeBytes(file.deviceMinor);
+        tarball.writeBytes(file.fileNamePrefix);
+        tarball.writeBytes(zeroFillBytes("", 12));
+        tarball.writeBytes(input);
+        tarball.writeEndBlocks();
+
+        return tarball.bytes;
     },
 
 
