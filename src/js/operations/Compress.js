@@ -356,7 +356,7 @@ var Compress = {
 
 
     /**
-     * Tar unpack operation.
+     * Tar pack operation.
      *
      * @author tlwr [toby@toby.codes]
      *
