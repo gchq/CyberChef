@@ -460,7 +460,7 @@ var Cipher = {
                 msgIndex = alphabet.indexOf(input[i]);
                 // Subtract indexes from each other, add 26 just in case the value is negative,
                 // modulo to remove if neccessary
-                output += alphabet[(msgIndex - keyIndex + alphabet.length ) % 26];
+                output += alphabet[(msgIndex - keyIndex + alphabet.length) % 26];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 chr = key[(i - fail) % key.length].toLowerCase();
                 keyIndex = alphabet.indexOf(chr);
@@ -546,7 +546,7 @@ var Cipher = {
 
         // Calculates modular inverse of a
         aModInv = Utils.modInv(a, 26);
-        
+
         for (var i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 // Uses the affine decode function (y-b * A') % m = x (where m is length of the alphabet and A' is modular inverse)

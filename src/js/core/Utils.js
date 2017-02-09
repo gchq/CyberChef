@@ -922,8 +922,8 @@ var Utils = {
      * @returns {Object}
      */
     extend: function(a, b){
-        for(var key in b)
-            if(b.hasOwnProperty(key))
+        for (var key in b)
+            if (b.hasOwnProperty(key))
                 a[key] = b[key];
         return a;
     },
@@ -1167,7 +1167,6 @@ Array.prototype.equals = function(other) {
 String.prototype.count = function(chr) {
     return this.split(chr).length - 1;
 };
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

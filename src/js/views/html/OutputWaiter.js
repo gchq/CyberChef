@@ -43,10 +43,10 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
         outputHtml.style.display = "block";
         outputHighlighter.display = "none";
         inputHighlighter.display = "none";
-        
+
         outputText.value = "";
         outputHtml.innerHTML = dataStr;
-        
+
         // Execute script sections
         var scriptElements = outputHtml.querySelectorAll("script");
         for (var i = 0; i < scriptElements.length; i++) {
@@ -61,11 +61,11 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
         outputHtml.style.display = "none";
         outputHighlighter.display = "block";
         inputHighlighter.display = "block";
-        
+
         outputText.value = Utils.printable(dataStr, true);
         outputHtml.innerHTML = "";
     }
-    
+
     this.manager.highlighter.removeHighlights();
     var lines = dataStr.count("\n") + 1;
     this.setOutputInfo(dataStr.length, lines, duration);
@@ -82,11 +82,11 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
 OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
     var width = length.toString().length;
     width = width < 4 ? 4 : width;
-    
+
     var lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
     var linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
     var timeStr   = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
-    
+
     document.getElementById("output-info").innerHTML = "time: " + timeStr +
         "<br>length: " + lengthStr +
         "<br>lines: " + linesStr;
@@ -105,7 +105,7 @@ OutputWaiter.prototype.adjustWidth = function() {
         switchIO       = document.getElementById("switch"),
         undoSwitch     = document.getElementById("undo-switch"),
         maximiseOutput = document.getElementById("maximise-output");
-    
+
     if (output.clientWidth < 680) {
         saveToFile.childNodes[1].nodeValue = "";
         switchIO.childNodes[1].nodeValue = "";
@@ -128,16 +128,16 @@ OutputWaiter.prototype.adjustWidth = function() {
 OutputWaiter.prototype.saveClick = function() {
     var data = Utils.toBase64(this.app.dishStr),
         filename = window.prompt("Please enter a filename:", "download.dat");
-        
+
     if (filename) {
         var el = document.createElement("a");
         el.setAttribute("href", "data:application/octet-stream;base64;charset=utf-8," + data);
         el.setAttribute("download", filename);
-        
+
         // Firefox requires that the element be added to the DOM before it can be clicked
         el.style.display = "none";
         document.body.appendChild(el);
-        
+
         el.click();
         el.remove();
     }

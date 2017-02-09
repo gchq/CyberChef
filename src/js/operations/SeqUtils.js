@@ -24,7 +24,7 @@ var SeqUtils = {
      * @default
      */
     SORT_ORDER: ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address"],
-    
+
     /**
      * Sort operation.
      *
@@ -37,7 +37,7 @@ var SeqUtils = {
             sortReverse = args[1],
             order = args[2],
             sorted = input.split(delim);
-            
+
         if (order === "Alphabetical (case sensitive)") {
             sorted = sorted.sort();
         } else if (order === "Alphabetical (case insensitive)") {
@@ -45,12 +45,12 @@ var SeqUtils = {
         } else if (order === "IP address") {
             sorted = sorted.sort(SeqUtils._ipSort);
         }
-            
+
         if (sortReverse) sorted.reverse();
         return sorted.join(delim);
     },
-    
-    
+
+
     /**
      * Unique operation.
      *
@@ -62,14 +62,14 @@ var SeqUtils = {
         var delim = Utils.charRep[args[0]];
         return input.split(delim).unique().join(delim);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     SEARCH_TYPE: ["Regex", "Extended (\\n, \\t, \\x...)", "Simple string"],
-    
+
     /**
      * Count occurrences operation.
      *
@@ -80,13 +80,13 @@ var SeqUtils = {
     runCount: function(input, args) {
         var search = args[0].string,
             type = args[0].option;
-            
+
         if (type === "Regex" && search) {
             try {
                 var regex = new RegExp(search, "gi"),
                     matches = input.match(regex);
                 return matches.length;
-            } catch(err) {
+            } catch (err) {
                 return 0;
             }
         } else if (search) {
@@ -98,14 +98,14 @@ var SeqUtils = {
             return 0;
         }
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     REVERSE_BY: ["Character", "Line"],
-    
+
     /**
      * Reverse operation.
      *
@@ -137,8 +137,8 @@ var SeqUtils = {
             return input.reverse();
         }
     },
-    
-    
+
+
     /**
      * Add line numbers operation.
      *
@@ -150,14 +150,14 @@ var SeqUtils = {
         var lines = input.split("\n"),
             output = "",
             width = lines.length.toString().length;
-            
+
         for (var n = 0; n < lines.length; n++) {
             output += Utils.pad((n+1).toString(), width, " ") + " " + lines[n] + "\n";
         }
         return output.slice(0, output.length-1);
     },
-    
-    
+
+
     /**
      * Remove line numbers operation.
      *
@@ -168,8 +168,8 @@ var SeqUtils = {
     runRemoveLineNumbers: function(input, args) {
         return input.replace(/^[ \t]{0,5}\d+[\s:|\-,.)\]]/gm, "");
     },
-    
-    
+
+
     /**
      * Expand alphabet range operation.
      *
@@ -180,8 +180,8 @@ var SeqUtils = {
     runExpandAlphRange: function(input, args) {
         return Utils.expandAlphRange(input).join(args[0]);
     },
-    
-    
+
+
     /**
      * Comparison operation for sorting of strings ignoring case.
      *
@@ -193,8 +193,8 @@ var SeqUtils = {
     _caseInsensitiveSort: function(a, b) {
         return a.toLowerCase().localeCompare(b.toLowerCase());
     },
-    
-    
+
+
     /**
      * Comparison operation for sorting of IPv4 addresses.
      *
@@ -206,15 +206,15 @@ var SeqUtils = {
     _ipSort: function(a, b) {
         var a_ = a.split("."),
             b_ = b.split(".");
-        
+
         a_ = a_[0] * 0x1000000 + a_[1] * 0x10000 + a_[2] * 0x100 + a_[3] * 1;
         b_ = b_[0] * 0x1000000 + b_[1] * 0x10000 + b_[2] * 0x100 + b_[3] * 1;
-        
+
         if (isNaN(a_) && !isNaN(b_)) return 1;
         if (!isNaN(a_) && isNaN(b_)) return -1;
         if (isNaN(a_) && isNaN(b_)) return a.localeCompare(b);
-        
+
         return a_ - b_;
     },
-    
+
 };

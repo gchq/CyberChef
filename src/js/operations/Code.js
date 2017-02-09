@@ -244,7 +244,7 @@ var Code = {
         var i = 0,
             level = 0;
         while (i < code.length) {
-            switch(code[i]) {
+            switch (code[i]) {
                 case "{":
                     level++;
                     break;

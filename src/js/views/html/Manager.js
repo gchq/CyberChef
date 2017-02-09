@@ -10,7 +10,7 @@
  */
 var Manager = function(app) {
     this.app = app;
-    
+
     // Define custom events
     /**
      * @event Manager#appstart
@@ -32,7 +32,7 @@ var Manager = function(app) {
      * @event Manager#statechange
      */
     this.statechange = new CustomEvent("statechange", {bubbles: true});
-    
+
     // Define Waiter objects to handle various areas
     this.window      = new WindowWaiter(this.app);
     this.controls    = new ControlsWaiter(this.app, this);
@@ -43,10 +43,10 @@ var Manager = function(app) {
     this.options     = new OptionsWaiter(this.app);
     this.highlighter = new HighlighterWaiter(this.app);
     this.seasonal    = new SeasonalWaiter(this.app, this);
-    
+
     // Object to store dynamic handlers to fire on elements that may not exist yet
     this.dynamicHandlers = {};
-    
+
     this.initialiseEventListeners();
 };
 
@@ -71,7 +71,7 @@ Manager.prototype.initialiseEventListeners = function() {
     window.addEventListener("focus", this.window.windowFocus.bind(this.window));
     window.addEventListener("statechange", this.app.stateChange.bind(this.app));
     window.addEventListener("popstate", this.app.popState.bind(this.app));
-    
+
     // Controls
     document.getElementById("bake").addEventListener("click", this.controls.bakeClick.bind(this.controls));
     document.getElementById("auto-bake").addEventListener("change", this.controls.autoBakeChange.bind(this.controls));
@@ -88,7 +88,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
     document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
     this.addMultiEventListener("#save-text", "keyup paste", this.controls.saveTextChange, this.controls);
-    
+
     // Operations
     this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
     this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
@@ -99,7 +99,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".op-list .op-icon", "mouseleave", this.ops.opIconMouseleave, this.ops);
     this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
     this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd.bind(this.recipe));
-    
+
     // Recipe
     this.addDynamicListener(".arg", "keyup", this.recipe.ingChange, this.recipe);
     this.addDynamicListener(".arg", "change", this.recipe.ingChange, this.recipe);
@@ -109,7 +109,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
     this.addDynamicListener("#rec-list .input-group .dropdown-menu a", "click", this.recipe.dropdownToggleClick, this.recipe);
     this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
-    
+
     // Input
     this.addMultiEventListener("#input-text", "keyup paste", this.input.inputChange, this.input);
     document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
@@ -121,7 +121,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
     document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
     this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
-    
+
     // Output
     document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
     document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
@@ -134,7 +134,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
     this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
     this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
-    
+
     // Options
     document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));
     document.getElementById("reset-options").addEventListener("click", this.options.resetOptionsClick.bind(this.options));
@@ -143,7 +143,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
-    
+
     // Misc
     document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
 };
@@ -231,7 +231,7 @@ Manager.prototype.addDynamicListener = function(selector, eventType, callback, s
         selector: selector,
         callback: callback.bind(scope || this)
     };
-    
+
     if (this.dynamicHandlers.hasOwnProperty(eventType)) {
         // Listener already exists, add new handler to the appropriate list
         this.dynamicHandlers[eventType].push(eventConfig);
@@ -256,7 +256,7 @@ Manager.prototype.dynamicListenerHandler = function(e) {
             e.target.mozMatchesSelector ||
             e.target.msMatchesSelector ||
             e.target.oMatchesSelector;
-    
+
     for (var i = 0; i < handlers.length; i++) {
         if (matches && e.target[matches.name](handlers[i].selector)) {
             handlers[i].callback(e);

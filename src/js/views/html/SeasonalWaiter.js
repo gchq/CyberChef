@@ -227,7 +227,7 @@ SeasonalWaiter.treeWalk = (function() {
         while (node && node !== parent) {
             if (allNodes || node.nodeType === 1) {
                 if (fn(node) === false) {
-                    return(false);
+                    return false;
                 }
             }
             // If it's an element &&

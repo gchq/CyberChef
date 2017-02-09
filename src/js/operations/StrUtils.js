@@ -89,7 +89,7 @@ var StrUtils = {
      * @default
      */
     DISPLAY_TOTAL: false,
-    
+
     /**
      * Regular expression operation.
      *
@@ -104,14 +104,14 @@ var StrUtils = {
             displayTotal = args[4],
             outputFormat = args[5],
             modifiers = "g";
-        
+
         if (i) modifiers += "i";
         if (m) modifiers += "m";
-        
+
         if (userRegex && userRegex !== "^" && userRegex !== "$") {
             try {
                 var regex = new RegExp(userRegex, modifiers);
-                
+
                 switch (outputFormat) {
                     case "Highlight matches":
                         return StrUtils._regexHighlight(input, regex, displayTotal);
@@ -132,13 +132,13 @@ var StrUtils = {
         }
     },
 
-    
+
     /**
      * @constant
      * @default
      */
     CASE_SCOPE: ["All", "Word", "Sentence", "Paragraph"],
-    
+
     /**
      * To Upper case operation.
      *
@@ -148,7 +148,7 @@ var StrUtils = {
      */
     runUpper: function (input, args) {
         var scope = args[0];
-        
+
         switch (scope) {
             case "Word":
                 return input.replace(/(\b\w)/gi, function(m) {
@@ -168,8 +168,8 @@ var StrUtils = {
                 return input.toUpperCase();
         }
     },
-    
-    
+
+
     /**
      * To Upper case operation.
      *
@@ -180,8 +180,8 @@ var StrUtils = {
     runLower: function (input, args) {
         return input.toLowerCase();
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -202,7 +202,7 @@ var StrUtils = {
      * @default
      */
     FIND_REPLACE_MULTILINE : true,
-    
+
     /**
      * Find / Replace operation.
      *
@@ -218,24 +218,24 @@ var StrUtils = {
             i = args[3],
             m = args[4],
             modifiers = "";
-            
+
         if (g) modifiers += "g";
         if (i) modifiers += "i";
         if (m) modifiers += "m";
-        
+
         if (type === "Regex") {
             find = new RegExp(find, modifiers);
         } else if (type.indexOf("Extended") === 0) {
             find = Utils.parseEscapedChars(find);
         }
-        
+
         return input.replace(find, replace, modifiers);
         // Non-standard addition of flags in the third argument. This will work in Firefox but
         // probably nowhere else. The purpose is to allow global matching when the `find` parameter
         // is just a string.
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -246,7 +246,7 @@ var StrUtils = {
      * @default
      */
     DELIMITER_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon", "Nothing (separate chars)"],
-    
+
     /**
      * Split operation.
      *
@@ -258,7 +258,7 @@ var StrUtils = {
         var splitDelim = args[0] || StrUtils.SPLIT_DELIM,
             joinDelim = Utils.charRep[args[1]],
             sections = input.split(splitDelim);
-            
+
         return sections.join(joinDelim);
     },
 
@@ -287,8 +287,8 @@ var StrUtils = {
 
         return input.split(delim).filter(regexFilter).join(delim);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -299,7 +299,7 @@ var StrUtils = {
      * @default
      */
     DIFF_BY: ["Character", "Word", "Line", "Sentence", "CSS", "JSON"],
-    
+
     /**
      * Diff operation.
      *
@@ -316,11 +316,11 @@ var StrUtils = {
             samples = input.split(sampleDelim),
             output = "",
             diff;
-            
+
         if (!samples || samples.length !== 2) {
             return "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?";
         }
-        
+
         switch (diffBy) {
             case "Character":
                 diff = JsDiff.diffChars(samples[0], samples[1]);
@@ -351,7 +351,7 @@ var StrUtils = {
             default:
                 return "Invalid 'Diff by' option.";
         }
-        
+
         for (var i = 0; i < diff.length; i++) {
             if (diff[i].added) {
                 if (showAdded) output += "<span class='hlgreen'>" + Utils.escapeHtml(diff[i].value) + "</span>";
@@ -361,17 +361,17 @@ var StrUtils = {
                 output += Utils.escapeHtml(diff[i].value);
             }
         }
-        
+
         return output;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     OFF_CHK_SAMPLE_DELIMITER: "\\n\\n",
-    
+
     /**
      * Offset checker operation.
      *
@@ -388,21 +388,21 @@ var StrUtils = {
             match = false,
             inMatch = false,
             chr;
-            
+
         if (!samples || samples.length < 2) {
             return "Not enough samples, perhaps you need to modify the sample delimiter or add more data?";
         }
-        
+
         // Initialise output strings
         for (s = 0; s < samples.length; s++) {
             outputs[s] = "";
         }
-        
+
         // Loop through each character in the first sample
         for (i = 0; i < samples[0].length; i++) {
             chr = samples[0][i];
             match = false;
-            
+
             // Loop through each sample to see if the chars are the same
             for (s = 1; s < samples.length; s++) {
                 if (samples[s][i] !== chr) {
@@ -411,7 +411,7 @@ var StrUtils = {
                 }
                 match = true;
             }
-            
+
             // Write output for each sample
             for (s = 0; s < samples.length; s++) {
                 if (samples[s].length <= i) {
@@ -419,7 +419,7 @@ var StrUtils = {
                     if (s === samples.length - 1) inMatch = false;
                     continue;
                 }
-                
+
                 if (match && !inMatch) {
                     outputs[s] += "<span class='hlgreen'>" + Utils.escapeHtml(samples[s][i]);
                     if (samples[s].length === i + 1) outputs[s] += "</span>";
@@ -434,18 +434,18 @@ var StrUtils = {
                         if (samples[s].length - 1 !== i) inMatch = false;
                     }
                 }
-                
+
                 if (samples[0].length - 1 === i) {
                     if (inMatch) outputs[s] += "</span>";
                     outputs[s] += Utils.escapeHtml(samples[s].substring(i + 1));
                 }
             }
         }
-        
+
         return outputs.join(sampleDelim);
     },
-    
-    
+
+
     /**
      * Parse escaped string operation.
      *
@@ -456,8 +456,8 @@ var StrUtils = {
     runParseEscapedString: function(input, args) {
         return Utils.parseEscapedChars(input);
     },
-    
-    
+
+
     /**
      * Adds HTML highlights to matches within a string.
      *
@@ -473,31 +473,31 @@ var StrUtils = {
             hl = 1,
             i = 0,
             total = 0;
-        
+
         while ((m = regex.exec(input))) {
             // Add up to match
             output += Utils.escapeHtml(input.slice(i, m.index));
-            
+
             // Add match with highlighting
             output += "<span class='hl"+hl+"'>" + Utils.escapeHtml(m[0]) + "</span>";
-            
+
             // Switch highlight
             hl = hl === 1 ? 2 : 1;
-            
+
             i = regex.lastIndex;
             total++;
         }
-        
+
         // Add all after final match
         output += Utils.escapeHtml(input.slice(i, input.length));
-        
+
         if (displayTotal)
             output = "Total found: " + total + "\n\n" + output;
 
         return output;
     },
-    
-    
+
+
     /**
      * Creates a string listing the matches within a string.
      *
@@ -513,7 +513,7 @@ var StrUtils = {
         var output = "",
             total = 0,
             match;
-            
+
         while ((match = regex.exec(input))) {
             total++;
             if (matches) {
@@ -528,11 +528,11 @@ var StrUtils = {
                 }
             }
         }
-        
+
         if (displayTotal)
             output = "Total found: " + total + "\n\n" + output;
-            
+
         return output;
     },
-    
+
 };

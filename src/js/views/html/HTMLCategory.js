@@ -40,11 +40,11 @@ HTMLCategory.prototype.toHtml = function() {
         </a>\
         <div id='" + catName + "' class='panel-collapse collapse\
         " + (this.selected ? " in" : "") + "'><ul class='op-list'>";
-    
+
     for (var i = 0; i < this.opList.length; i++) {
         html += this.opList[i].toStubHtml();
     }
-    
+
     html += "</ul></div></div>";
     return html;
 };

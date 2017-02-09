@@ -12,7 +12,7 @@
 var InputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
-    
+
     // Define keys that don't change the input so we don't have to autobake when they are pressed
     this.badKeys = [
         16, //Shift
@@ -65,10 +65,10 @@ InputWaiter.prototype.set = function(input) {
 InputWaiter.prototype.setInputInfo = function(length, lines) {
     var width = length.toString().length;
     width = width < 2 ? 2 : width;
-    
+
     var lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
     var linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
-        
+
     document.getElementById("input-info").innerHTML = "length: " + lengthStr + "<br>lines: " + linesStr;
 };
 
@@ -84,17 +84,17 @@ InputWaiter.prototype.setInputInfo = function(length, lines) {
 InputWaiter.prototype.inputChange = function(e) {
     // Remove highlighting from input and output panes as the offsets might be different now
     this.manager.highlighter.removeHighlights();
-    
+
     // Reset recipe progress as any previous processing will be redundant now
     this.app.progress = 0;
-    
+
     // Update the input metadata info
     var inputText = this.get(),
         lines = inputText.count("\n") + 1;
-        
+
     this.setInputInfo(inputText.length, lines);
-    
-    
+
+
     if (this.badKeys.indexOf(e.keyCode) < 0) {
         // Fire the statechange event as the input has been modified
         window.dispatchEvent(this.manager.statechange);
@@ -112,7 +112,7 @@ InputWaiter.prototype.inputDragover = function(e) {
     // This will be set if we're dragging an operation
     if (e.dataTransfer.effectAllowed === "move")
         return false;
-    
+
     e.stopPropagation();
     e.preventDefault();
     e.target.classList.add("dropping-file");
@@ -142,10 +142,10 @@ InputWaiter.prototype.inputDrop = function(e) {
     // This will be set if we're dragging an operation
     if (e.dataTransfer.effectAllowed === "move")
         return false;
-    
+
     e.stopPropagation();
     e.preventDefault();
-    
+
     var el = e.target,
         file = e.dataTransfer.files[0],
         text = e.dataTransfer.getData("Text"),
@@ -153,23 +153,23 @@ InputWaiter.prototype.inputDrop = function(e) {
         inputCharcode = "",
         offset = 0,
         CHUNK_SIZE = 20480; // 20KB
-    
+
     var setInput = function() {
         if (inputCharcode.length > 100000 && this.app.autoBake_) {
             this.manager.controls.setAutoBake(false);
             this.app.alert("Turned off Auto Bake as the input is large", "warning", 5000);
         }
-        
+
         this.set(inputCharcode);
         var recipeConfig = this.app.getRecipeConfig();
         if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
             recipeConfig.unshift({op:"From Hex", args:["Space"]});
             this.app.setRecipeConfig(recipeConfig);
         }
-        
+
         el.classList.remove("loadingFile");
     }.bind(this);
-    
+
     var seek = function() {
         if (offset >= file.size) {
             setInput();
@@ -179,17 +179,17 @@ InputWaiter.prototype.inputDrop = function(e) {
         var slice = file.slice(offset, offset + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
     };
-    
+
     reader.onload = function(e) {
         var data = new Uint8Array(reader.result);
         inputCharcode += Utils.toHexFast(data);
         offset += CHUNK_SIZE;
         seek();
     };
-    
-    
+
+
     el.classList.remove("dropping-file");
-    
+
     if (file) {
         el.classList.add("loadingFile");
         seek();

@@ -23,8 +23,8 @@ var RecipeWaiter = function(app, manager) {
  */
 RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
     var recList = document.getElementById("rec-list");
-    
-    
+
+
     // Recipe list
     Sortable.create(recList, {
         group: "recipe",
@@ -42,11 +42,11 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
             }
         }.bind(this)
     });
-    
+
     Sortable.utils.on(recList, "dragover", function() {
         this.removeIntent = false;
     }.bind(this));
-    
+
     Sortable.utils.on(recList, "dragleave", function() {
         this.removeIntent = true;
         this.app.progress = 0;
@@ -58,7 +58,7 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
 
         this.removeIntent = !recList.contains(target);
     }.bind(this));
-    
+
     // Favourites category
     document.querySelector("#categories a").addEventListener("dragover", this.favDragover.bind(this));
     document.querySelector("#categories a").addEventListener("dragleave", this.favDragleave.bind(this));
@@ -106,16 +106,16 @@ RecipeWaiter.prototype.opSortEnd = function(evt) {
         }
         return;
     }
-    
+
     // Reinitialise the popover on the original element in the ops list because for some reason it
     // gets destroyed and recreated.
     $(evt.clone).popover();
     $(evt.clone).children("[data-toggle=popover]").popover();
-    
+
     if (evt.item.parentNode.id !== "rec-list") {
         return;
     }
-    
+
     this.buildRecipeOperation(evt.item);
     evt.item.dispatchEvent(this.manager.operationadd);
 };
@@ -131,7 +131,7 @@ RecipeWaiter.prototype.opSortEnd = function(evt) {
 RecipeWaiter.prototype.favDragover = function(e) {
     if (e.dataTransfer.effectAllowed !== "move")
         return false;
-    
+
     e.stopPropagation();
     e.preventDefault();
     if (e.target.className && e.target.className.indexOf("category-title") > -1) {
@@ -170,7 +170,7 @@ RecipeWaiter.prototype.favDrop = function(e) {
     e.stopPropagation();
     e.preventDefault();
     e.target.classList.remove("favourites-hover");
-    
+
     var opName = e.dataTransfer.getData("Text");
     this.app.addFavourite(opName);
 };
@@ -195,7 +195,7 @@ RecipeWaiter.prototype.ingChange = function() {
  */
 RecipeWaiter.prototype.disableClick = function(e) {
     var icon = e.target;
-    
+
     if (icon.getAttribute("disabled") === "false") {
         icon.setAttribute("disabled", "true");
         icon.classList.add("disable-icon-selected");
@@ -205,7 +205,7 @@ RecipeWaiter.prototype.disableClick = function(e) {
         icon.classList.remove("disable-icon-selected");
         icon.parentNode.parentNode.classList.remove("disabled");
     }
-    
+
     this.app.progress = 0;
     window.dispatchEvent(this.manager.statechange);
 };
@@ -228,7 +228,7 @@ RecipeWaiter.prototype.breakpointClick = function(e) {
         bp.setAttribute("break", "false");
         bp.classList.remove("breakpoint-selected");
     }
-    
+
     window.dispatchEvent(this.manager.statechange);
 };
 
@@ -267,13 +267,13 @@ RecipeWaiter.prototype.operationChildDblclick = function(e) {
 RecipeWaiter.prototype.getConfig = function() {
     var config = [], ingredients, ingList, disabled, bp, item,
         operations = document.querySelectorAll("#rec-list li.operation");
-    
+
     for (var i = 0; i < operations.length; i++) {
         ingredients = [];
         disabled = operations[i].querySelector(".disable-icon");
         bp = operations[i].querySelector(".breakpoint");
         ingList = operations[i].querySelectorAll(".arg");
-        
+
         for (var j = 0; j < ingList.length; j++) {
             if (ingList[j].getAttribute("type") === "checkbox") {
                 // checkbox
@@ -289,23 +289,23 @@ RecipeWaiter.prototype.getConfig = function() {
                 ingredients[j] = ingList[j].value;
             }
         }
-        
+
         item = {
             op: operations[i].querySelector(".arg-title").textContent,
             args: ingredients
         };
-        
+
         if (disabled && disabled.getAttribute("disabled") === "true") {
             item.disabled = true;
         }
-        
+
         if (bp && bp.getAttribute("break") === "true") {
             item.breakpoint = true;
         }
-        
+
         config.push(item);
     }
-    
+
     return config;
 };
 
@@ -337,11 +337,11 @@ RecipeWaiter.prototype.buildRecipeOperation = function(el) {
     var opName = el.textContent;
     var op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
     el.innerHTML = op.toFullHtml();
-    
+
     if (this.app.operations[opName].flowControl) {
         el.classList.add("flow-control-op");
     }
-    
+
     // Disable auto-bake if this is a manual op - this should be moved to the 'operationadd'
     // handler after event restructuring
     if (op.manualBake && this.app.autoBake_) {
@@ -359,12 +359,12 @@ RecipeWaiter.prototype.buildRecipeOperation = function(el) {
  */
 RecipeWaiter.prototype.addOperation = function(name) {
     var item = document.createElement("li");
-    
+
     item.classList.add("operation");
     item.innerHTML = name;
     this.buildRecipeOperation(item);
     document.getElementById("rec-list").appendChild(item);
-    
+
     item.dispatchEvent(this.manager.operationadd);
     return item;
 };
@@ -393,7 +393,7 @@ RecipeWaiter.prototype.clearRecipe = function() {
 RecipeWaiter.prototype.dropdownToggleClick = function(e) {
     var el = e.target,
         button = el.parentNode.parentNode.previousSibling;
-        
+
     button.innerHTML = el.textContent + " <span class='caret'></span>";
     this.ingChange();
 };

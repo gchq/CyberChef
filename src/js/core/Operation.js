@@ -20,7 +20,7 @@ var Operation = function(operationName, operationConfig) {
     this.breakpoint       = false;
     this.disabled         = false;
     this.ingList          = [];
-    
+
     if (operationConfig) {
         this._parseConfig(operationConfig);
     }
@@ -57,16 +57,16 @@ Operation.prototype._parseConfig = function(operationConfig) {
  */
 Operation.prototype.getConfig = function() {
     var ingredientConfig = [];
-    
+
     for (var o = 0; o < this.ingList.length; o++) {
         ingredientConfig.push(this.ingList[o].getConfig());
     }
-    
+
     var operationConfig = {
         "op": this.name,
         "args": ingredientConfig
     };
-    
+
     return operationConfig;
 };
 

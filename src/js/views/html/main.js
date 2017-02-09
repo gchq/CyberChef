@@ -22,7 +22,7 @@ var main = function() {
         "Entropy",
         "Fork"
     ];
-    
+
     var defaultOptions = {
         updateUrl         : true,
         showHighlighter   : true,

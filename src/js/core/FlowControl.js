@@ -24,7 +24,7 @@ var FlowControl = {
      * @default
      */
     FORK_IGNORE_ERRORS: false,
-    
+
     /**
      * Fork operation.
      *
@@ -45,10 +45,10 @@ var FlowControl = {
             ignoreErrors = ings[2],
             subOpList    = [],
             inputs       = [];
-        
+
         if (input)
             inputs = input.split(splitDelim);
-        
+
         // Create subOpList for each tranche to operate on
         // (all remaining operations unless we encounter a Merge)
         for (var i = state.progress + 1; i < opList.length; i++) {
@@ -58,19 +58,19 @@ var FlowControl = {
                 subOpList.push(opList[i]);
             }
         }
-        
+
         var recipe = new Recipe(),
             output = "",
             progress = 0;
-            
+
         recipe.addOperations(subOpList);
-        
+
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
             var dish = new Dish(inputs[i], inputType);
             try {
                 progress = recipe.execute(dish, 0);
-            } catch(err) {
+            } catch (err) {
                 if (!ignoreErrors) {
                     throw err;
                 }
@@ -78,13 +78,13 @@ var FlowControl = {
             }
             output += dish.get(outputType) + mergeDelim;
         }
-        
+
         state.dish.set(output, outputType);
         state.progress += progress;
         return state;
     },
-    
-    
+
+
     /**
      * Merge operation.
      *
@@ -99,8 +99,8 @@ var FlowControl = {
         // merge when it sees this operation.
         return state;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -111,7 +111,7 @@ var FlowControl = {
      * @default
      */
     MAX_JUMPS: 10,
-    
+
     /**
      * Jump operation.
      *
@@ -126,18 +126,18 @@ var FlowControl = {
         var ings     = state.opList[state.progress].getIngValues(),
             jumpNum  = ings[0],
             maxJumps = ings[1];
-        
+
         if (state.numJumps >= maxJumps) {
             state.progress++;
             return state;
         }
-        
+
         state.progress += jumpNum;
         state.numJumps++;
         return state;
     },
-    
-    
+
+
     /**
      * Conditional Jump operation.
      *
@@ -154,21 +154,21 @@ var FlowControl = {
             regexStr = ings[0],
             jumpNum  = ings[1],
             maxJumps = ings[2];
-        
+
         if (state.numJumps >= maxJumps) {
             state.progress++;
             return state;
         }
-        
+
         if (regexStr !== "" && dish.get(Dish.STRING).search(regexStr) > -1) {
             state.progress += jumpNum;
             state.numJumps++;
         }
-        
+
         return state;
     },
-    
-    
+
+
     /**
      * Return operation.
      *
@@ -182,5 +182,5 @@ var FlowControl = {
         state.progress = state.opList.length;
         return state;
     },
-    
+
 };

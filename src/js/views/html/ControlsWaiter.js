@@ -30,13 +30,13 @@ ControlsWaiter.prototype.adjustWidth = function() {
         stepImg      = document.querySelector("#step img"),
         clrRecipImg  = document.querySelector("#clr-recipe img"),
         clrBreaksImg = document.querySelector("#clr-breaks img");
-    
+
     if (controls.clientWidth < 470) {
         step.childNodes[1].nodeValue = " Step";
     } else {
         step.childNodes[1].nodeValue = " Step through";
     }
-        
+
     if (controls.clientWidth < 400) {
         saveImg.style.display = "none";
         loadImg.style.display = "none";
@@ -50,7 +50,7 @@ ControlsWaiter.prototype.adjustWidth = function() {
         clrRecipImg.style.display = "inline";
         clrBreaksImg.style.display = "inline";
     }
-    
+
     if (controls.clientWidth < 330) {
         clrBreaks.childNodes[1].nodeValue = " Clear breaks";
     } else {
@@ -66,7 +66,7 @@ ControlsWaiter.prototype.adjustWidth = function() {
  */
 ControlsWaiter.prototype.setAutoBake = function(value) {
     var autoBakeCheckbox = document.getElementById("auto-bake");
-    
+
     if (autoBakeCheckbox.checked !== value) {
         autoBakeCheckbox.click();
     }
@@ -97,9 +97,9 @@ ControlsWaiter.prototype.stepClick = function() {
 ControlsWaiter.prototype.autoBakeChange = function() {
     var autoBakeLabel    = document.getElementById("auto-bake-label"),
         autoBakeCheckbox = document.getElementById("auto-bake");
-        
+
     this.app.autoBake_ = autoBakeCheckbox.checked;
-    
+
     if (autoBakeCheckbox.checked) {
         autoBakeLabel.classList.remove("btn-default");
         autoBakeLabel.classList.add("btn-success");
@@ -124,7 +124,7 @@ ControlsWaiter.prototype.clearRecipeClick = function() {
  */
 ControlsWaiter.prototype.clearBreaksClick = function() {
     var bps = document.querySelectorAll("#rec-list li.operation .breakpoint");
-    
+
     for (var i = 0; i < bps.length; i++) {
         bps[i].setAttribute("break", "false");
         bps[i].classList.remove("breakpoint-selected");
@@ -139,12 +139,12 @@ ControlsWaiter.prototype.clearBreaksClick = function() {
  */
 ControlsWaiter.prototype.initialiseSaveLink = function(recipeConfig) {
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
-    
+
     var includeRecipe = document.getElementById("save-link-recipe-checkbox").checked,
         includeInput = document.getElementById("save-link-input-checkbox").checked,
         saveLinkEl = document.getElementById("save-link"),
         saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
-    
+
     saveLinkEl.innerHTML = Utils.truncate(saveLink, 120);
     saveLinkEl.setAttribute("href", saveLink);
 };
@@ -161,26 +161,26 @@ ControlsWaiter.prototype.initialiseSaveLink = function(recipeConfig) {
  */
 ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput, recipeConfig, baseURL) {
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
-    
+
     var link = baseURL || window.location.protocol + "//" +
                 window.location.host +
                 window.location.pathname,
         recipeStr = JSON.stringify(recipeConfig),
         inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
-        
+
     includeRecipe = includeRecipe && (recipeConfig.length > 0);
     includeInput = includeInput && (inputStr.length > 0) && (inputStr.length < 8000);
 
     if (includeRecipe) {
         link += "?recipe=" + encodeURIComponent(recipeStr);
     }
-    
+
     if (includeRecipe && includeInput) {
         link += "&input=" + encodeURIComponent(inputStr);
     } else if (includeInput) {
         link += "?input=" + encodeURIComponent(inputStr);
     }
-    
+
     return link;
 };
 
@@ -192,7 +192,7 @@ ControlsWaiter.prototype.saveTextChange = function() {
     try {
         var recipeConfig = JSON.parse(document.getElementById("save-text").value);
         this.initialiseSaveLink(recipeConfig);
-    } catch(err) {}
+    } catch (err) {}
 };
 
 
@@ -202,9 +202,9 @@ ControlsWaiter.prototype.saveTextChange = function() {
 ControlsWaiter.prototype.saveClick = function() {
     var recipeConfig = this.app.getRecipeConfig(),
         recipeStr = JSON.stringify(recipeConfig).replace(/},{/g, "},\n{");
-        
+
     document.getElementById("save-text").value = recipeStr;
-    
+
     this.initialiseSaveLink(recipeConfig);
     $("#save-modal").modal();
 };
@@ -241,25 +241,25 @@ ControlsWaiter.prototype.loadClick = function() {
 ControlsWaiter.prototype.saveButtonClick = function() {
     var recipeName = document.getElementById("save-name").value,
         recipeStr  = document.getElementById("save-text").value;
-    
+
     if (!recipeName) {
         this.app.alert("Please enter a recipe name", "danger", 2000);
         return;
     }
-    
+
     var savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [],
         recipeId = localStorage.recipeId || 0;
-    
+
     savedRecipes.push({
         id: ++recipeId,
         name: recipeName,
         recipe: recipeStr
     });
-    
+
     localStorage.savedRecipes = JSON.stringify(savedRecipes);
     localStorage.recipeId = recipeId;
-    
+
     this.app.alert("Recipe saved as \"" + recipeName + "\".", "success", 2000);
 };
 
@@ -269,7 +269,7 @@ ControlsWaiter.prototype.saveButtonClick = function() {
  */
 ControlsWaiter.prototype.populateLoadRecipesList = function() {
     var loadNameEl = document.getElementById("load-name");
-        
+
     // Remove current recipes from select
     var i = loadNameEl.options.length;
     while (i--) {
@@ -279,15 +279,15 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
     // Add recipes to select
     var savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [];
-    
+
     for (i = 0; i < savedRecipes.length; i++) {
         var opt = document.createElement("option");
         opt.value = savedRecipes[i].id;
         opt.innerHTML = savedRecipes[i].name;
-        
+
         loadNameEl.appendChild(opt);
     }
-    
+
     // Populate textarea with first recipe
     document.getElementById("load-text").value = savedRecipes.length ? savedRecipes[0].recipe : "";
 };
@@ -300,11 +300,11 @@ ControlsWaiter.prototype.loadDeleteClick = function() {
     var id = parseInt(document.getElementById("load-name").value, 10),
         savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [];
-        
+
     savedRecipes = savedRecipes.filter(function(r) {
         return r.id !== id;
     });
-    
+
     localStorage.savedRecipes = JSON.stringify(savedRecipes);
     this.populateLoadRecipesList();
 };
@@ -318,11 +318,11 @@ ControlsWaiter.prototype.loadNameChange = function(e) {
         savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [],
         id = parseInt(el.value, 10);
-        
+
     var recipe = savedRecipes.filter(function(r) {
         return r.id === id;
     })[0];
-    
+
     document.getElementById("load-text").value = recipe.recipe;
 };
 
@@ -336,7 +336,7 @@ ControlsWaiter.prototype.loadButtonClick = function() {
         this.app.setRecipeConfig(recipeConfig);
 
         $("#rec-list [data-toggle=popover]").popover();
-    } catch(e) {
+    } catch (e) {
         this.app.alert("Invalid recipe", "danger", 2000);
     }
 };

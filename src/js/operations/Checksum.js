@@ -19,12 +19,12 @@ var Checksum = {
     runFletcher8: function(input, args) {
         var a = 0,
             b = 0;
-        
+
         for (var i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xf;
             b = (b + a) % 0xf;
         }
-        
+
         return Utils.hex(((b << 4) | a) >>> 0, 2);
     },
 
@@ -39,12 +39,12 @@ var Checksum = {
     runFletcher16: function(input, args) {
         var a = 0,
             b = 0;
-        
+
         for (var i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xff;
             b = (b + a) % 0xff;
         }
-        
+
         return Utils.hex(((b << 8) | a) >>> 0, 4);
     },
 
@@ -59,12 +59,12 @@ var Checksum = {
     runFletcher32: function(input, args) {
         var a = 0,
             b = 0;
-        
+
         for (var i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xffff;
             b = (b + a) % 0xffff;
         }
-        
+
         return Utils.hex(((b << 16) | a) >>> 0, 8);
     },
 
@@ -79,16 +79,16 @@ var Checksum = {
     runFletcher64: function(input, args) {
         var a = 0,
             b = 0;
-        
+
         for (var i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xffffffff;
             b = (b + a) % 0xffffffff;
         }
-        
+
         return Utils.hex(b >>> 0, 8) + Utils.hex(a >>> 0, 8);
     },
-    
-    
+
+
     /**
      * Adler-32 Checksum operation.
      *
@@ -100,19 +100,19 @@ var Checksum = {
         var MOD_ADLER = 65521,
             a = 1,
             b = 0;
-        
+
         for (var i = 0; i < input.length; i++) {
             a += input[i];
             b += a;
         }
-        
+
         a %= MOD_ADLER;
         b %= MOD_ADLER;
-        
+
         return Utils.hex(((b << 16) | a) >>> 0, 8);
     },
-    
-    
+
+
     /**
      * CRC-32 Checksum operation.
      *
@@ -123,15 +123,15 @@ var Checksum = {
     runCRC32: function(input, args) {
         var crcTable = window.crcTable || (window.crcTable = Checksum._genCRCTable()),
             crc = 0 ^ (-1);
-        
+
         for (var i = 0; i < input.length; i++) {
             crc = (crc >>> 8) ^ crcTable[(crc ^ input[i]) & 0xff];
         }
-        
+
         return Utils.hex((crc ^ (-1)) >>> 0);
     },
-    
-    
+
+
     /**
      * TCP/IP Checksum operation.
      *
@@ -151,9 +151,9 @@ var Checksum = {
      */
     runTCPIP: function(input, args) {
         var csum = 0;
-        
+
         for (var i = 0; i < input.length; i++) {
-            if(i % 2 === 0) {
+            if (i % 2 === 0) {
                 csum += (input[i] << 8);
             } else {
                 csum += input[i];
@@ -164,8 +164,8 @@ var Checksum = {
 
         return Utils.hex(0xffff - csum);
     },
-    
-    
+
+
     /**
      * Generates a CRC table for use with CRC checksums.
      *
@@ -175,7 +175,7 @@ var Checksum = {
     _genCRCTable: function() {
         var c,
             crcTable = [];
-        
+
         for (var n = 0; n < 256; n++) {
             c = n;
             for (var k = 0; k < 8; k++) {
@@ -183,7 +183,7 @@ var Checksum = {
             }
             crcTable[n] = c;
         }
-        
+
         return crcTable;
     },
 

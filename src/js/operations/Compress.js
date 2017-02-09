@@ -40,7 +40,7 @@ var Compress = {
         "Dynamic Huffman Coding" : Zlib.RawDeflate.CompressionType.DYNAMIC,
         "None (Store)"           : Zlib.RawDeflate.CompressionType.NONE,
     },
-    
+
     /**
      * Raw Deflate operation.
      *
@@ -54,8 +54,8 @@ var Compress = {
         });
         return Array.prototype.slice.call(deflate.compress());
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -84,7 +84,7 @@ var Compress = {
         "Adaptive" : Zlib.RawInflate.BufferType.ADAPTIVE,
         "Block"    : Zlib.RawInflate.BufferType.BLOCK,
     },
-    
+
     /**
      * Raw Inflate operation.
      *
@@ -103,7 +103,7 @@ var Compress = {
                 verify: args[4]
             }),
             result = Array.prototype.slice.call(inflate.decompress());
-        
+
         // Raw Inflate somethimes messes up and returns nonsense like this:
         // ]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]....]...
         // e.g. Input data of [8b, 1d, dc, 44]
@@ -117,7 +117,7 @@ var Compress = {
                     valid = true;
                 }
             }
-            
+
             if (!valid) {
                 throw "Error: Unable to inflate data";
             }
@@ -125,8 +125,8 @@ var Compress = {
         // Trust me, this is the easiest way...
         return result;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -136,7 +136,7 @@ var Compress = {
         "Dynamic Huffman Coding" : Zlib.Deflate.CompressionType.DYNAMIC,
         "None (Store)"           : Zlib.Deflate.CompressionType.NONE,
     },
-    
+
     /**
      * Zlib Deflate operation.
      *
@@ -150,8 +150,8 @@ var Compress = {
         });
         return Array.prototype.slice.call(deflate.compress());
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -160,7 +160,7 @@ var Compress = {
         "Adaptive" : Zlib.Inflate.BufferType.ADAPTIVE,
         "Block"    : Zlib.Inflate.BufferType.BLOCK,
     },
-    
+
     /**
      * Zlib Inflate operation.
      *
@@ -180,14 +180,14 @@ var Compress = {
         });
         return Array.prototype.slice.call(inflate.decompress());
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     GZIP_CHECKSUM: false,
-    
+
     /**
      * Gzip operation.
      *
@@ -206,7 +206,7 @@ var Compress = {
                     fhcrc: args[3]
                 }
             };
-        
+
         if (filename.length) {
             options.flags.fname = true;
             options.filename = filename;
@@ -215,12 +215,12 @@ var Compress = {
             options.flags.fcommenct = true;
             options.comment = comment;
         }
-        
+
         var gzip = new Zlib.Gzip(input, options);
         return Array.prototype.slice.call(gzip.compress());
     },
-    
-    
+
+
     /**
      * Gunzip operation.
      *
@@ -234,8 +234,8 @@ var Compress = {
         var gunzip = new Zlib.Gunzip(input);
         return Array.prototype.slice.call(gunzip.decompress());
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -258,7 +258,7 @@ var Compress = {
         "Unix"      : Zlib.Zip.OperatingSystem.UNIX,
         "Macintosh" : Zlib.Zip.OperatingSystem.MACINTOSH
     },
-    
+
     /**
      * Zip operation.
      *
@@ -278,20 +278,20 @@ var Compress = {
                 },
             },
             zip = new Zlib.Zip();
-            
+
         if (password.length)
             zip.setPassword(password);
         zip.addFile(input, options);
         return Array.prototype.slice.call(zip.compress());
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     PKUNZIP_VERIFY: false,
-    
+
     /**
      * Unzip operation.
      *
@@ -308,9 +308,9 @@ var Compress = {
             unzip = new Zlib.Unzip(input, options),
             filenames = unzip.getFilenames(),
             output = "<div style='padding: 5px;'>" + filenames.length + " file(s) found</div>\n";
-            
+
         output += "<div class='panel-group' id='zip-accordion' role='tablist' aria-multiselectable='true'>";
-        
+
         window.uzip = unzip;
         for (var i = 0; i < filenames.length; i++) {
             file = Utils.byteArrayToUtf8(unzip.decompress(filenames[i]));
@@ -324,11 +324,11 @@ var Compress = {
                 "<div class='panel-body'>" +
                 Utils.escapeHtml(file) + "</div></div></div>";
         }
-        
+
         return output + "</div>";
     },
-    
-    
+
+
     /**
      * Bzip2 Decompress operation.
      *
@@ -340,10 +340,10 @@ var Compress = {
         var compressed = new Uint8Array(input),
             bzip2Reader,
             plain = "";
-            
+
         bzip2Reader = bzip2.array(compressed);
         plain = bzip2.simple(bzip2Reader);
         return plain;
     },
-    
+
 };
