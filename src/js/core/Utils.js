@@ -94,6 +94,34 @@ var Utils = {
 
 
     /**
+     * Adds trailing bytes to a byteArray.
+     *
+     * @param {byteArray} arr - byteArray to add trailing bytes to.
+     * @param {number} numBytes - Maximum width of the array.
+     * @param {Integer} [padByte=0] - The byte to pad with.
+     * @returns {byteArray}
+     *
+     * @example
+     * // returns "['a', 0, 0, 0]"
+     * Utils.padBytesRight("a", 4);
+     *
+     * // returns "['a', 1, 1, 1]"
+     * Utils.padBytesRight("a", 4, 1);
+     */
+    padBytesRight: function(arr, numBytes, padByte) {
+        padByte = padByte || 0;
+        var paddedBytes = new Array(numBytes);
+        paddedBytes.fill(padByte);
+
+        Array.prototype.map.call(arr, function(b, i) {
+            paddedBytes[i] = b;
+        });
+
+        return paddedBytes;
+    },
+
+
+    /**
      * @alias Utils.padLeft
      */
     pad: function(str, max, chr) {
