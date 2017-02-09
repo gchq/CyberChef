@@ -8,13 +8,13 @@
  * @namespace
  */
 var Entropy = {
-    
+
     /**
      * @constant
      * @default
      */
     CHUNK_SIZE: 1000,
-    
+
     /**
      * Entropy operation.
      *
@@ -26,7 +26,7 @@ var Entropy = {
         var chunkSize = args[0],
             output = "",
             entropy = Entropy._calcEntropy(input);
-        
+
         output += "Shannon entropy: " + entropy + "\n" +
             "<br><canvas id='chart-area'></canvas><br>\n" +
             "- 0 represents no randomness (i.e. all the bytes in the data have the same value) whereas 8, the maximum, represents a completely random string.\n" +
@@ -54,7 +54,7 @@ var Entropy = {
                     }\
                 ]);\
             </script>";
-        
+
         var chunkEntropy = 0;
         if (chunkSize !== 0) {
             for (var i = 0; i < input.length; i += chunkSize) {
@@ -64,17 +64,17 @@ var Entropy = {
         } else {
             output += "Chunk size cannot be 0.";
         }
-        
+
         return output;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     FREQ_ZEROS: false,
-    
+
     /**
      * Frequency distribution operation.
      *
@@ -84,29 +84,29 @@ var Entropy = {
      */
     runFreqDistrib: function (input, args) {
         if (!input.length) return "No data";
-        
+
         var distrib = new Array(256),
             percentages = new Array(256),
             len = input.length,
             showZeroes = args[0];
-        
+
         // Initialise distrib to 0
         for (var i = 0; i < 256; i++) {
             distrib[i] = 0;
         }
-        
+
         // Count bytes
         for (i = 0; i < len; i++) {
             distrib[input[i]]++;
         }
-        
+
         // Calculate percentages
         var repr = 0;
         for (i = 0; i < 256; i++) {
             if (distrib[i] > 0) repr++;
             percentages[i] = distrib[i] / len * 100;
         }
-        
+
         // Print
         var output = "<canvas id='chart-area'></canvas><br>" +
             "Total data length: " + len +
@@ -123,7 +123,7 @@ var Entropy = {
                 \
                 CanvasComponents.drawBarChart(canvas, scores, 'Byte', 'Frequency %', 16, 6);\
             </script>";
-                
+
         for (i = 0; i < 256; i++) {
             if (distrib[i] || showZeroes) {
                 output += " " + Utils.hex(i, 2) + "    (" +
@@ -131,11 +131,11 @@ var Entropy = {
                         Array(Math.ceil(percentages[i])+1).join("|") + "\n";
             }
         }
-        
+
         return output;
     },
-    
-    
+
+
     /**
      * Calculates the Shannon entropy for a given chunk of data.
      *
@@ -147,19 +147,19 @@ var Entropy = {
         var prob = [],
             uniques = data.unique(),
             str = Utils.byteArrayToChars(data);
-            
+
         for (var i = 0; i < uniques.length; i++) {
             prob.push(str.count(Utils.chr(uniques[i])) / data.length);
         }
-        
+
         var entropy = 0,
             p;
-            
+
         for (i = 0; i < prob.length; i++) {
             p = prob[i];
             entropy += p * Math.log(p) / Math.log(2);
         }
-        
+
         return -entropy;
     },
 

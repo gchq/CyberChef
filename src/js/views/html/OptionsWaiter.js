@@ -23,11 +23,11 @@ OptionsWaiter.prototype.load = function(options) {
         size: "small",
         animate: false,
     });
-    
+
     for (var option in options) {
         this.app.options[option] = options[option];
     }
-    
+
     // Set options to match object
     var cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
     for (var i = 0; i < cboxes.length; i++) {
@@ -39,7 +39,7 @@ OptionsWaiter.prototype.load = function(options) {
         nboxes[i].value = this.app.options[nboxes[i].getAttribute("option")];
         nboxes[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
     }
-    
+
     var selects = document.querySelectorAll("#options-body select");
     for (i = 0; i < selects.length; i++) {
         selects[i].value = this.app.options[selects[i].getAttribute("option")];
@@ -76,7 +76,7 @@ OptionsWaiter.prototype.resetOptionsClick = function() {
 OptionsWaiter.prototype.switchChange = function(e, state) {
     var el = e.target,
         option = el.getAttribute("option");
-        
+
     this.app.options[option] = state;
     localStorage.setItem("options", JSON.stringify(this.app.options));
 };
@@ -91,7 +91,7 @@ OptionsWaiter.prototype.switchChange = function(e, state) {
 OptionsWaiter.prototype.numberChange = function(e) {
     var el = e.target,
         option = el.getAttribute("option");
-        
+
     this.app.options[option] = parseInt(el.value, 10);
     localStorage.setItem("options", JSON.stringify(this.app.options));
 };
@@ -106,7 +106,7 @@ OptionsWaiter.prototype.numberChange = function(e) {
 OptionsWaiter.prototype.selectChange = function(e) {
     var el = e.target,
         option = el.getAttribute("option");
-        
+
     this.app.options[option] = el.value;
     localStorage.setItem("options", JSON.stringify(this.app.options));
 };
@@ -121,7 +121,7 @@ OptionsWaiter.prototype.setWordWrap = function() {
     document.getElementById("output-html").classList.remove("word-wrap");
     document.getElementById("input-highlighter").classList.remove("word-wrap");
     document.getElementById("output-highlighter").classList.remove("word-wrap");
-    
+
     if (!this.app.options.wordWrap) {
         document.getElementById("input-text").classList.add("word-wrap");
         document.getElementById("output-text").classList.add("word-wrap");

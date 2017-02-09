@@ -21,7 +21,7 @@ var Rotate = {
      * @default
      */
     ROTATE_WHOLE: false,
-    
+
     /**
      * Runs rotation operations across the input data.
      *
@@ -42,8 +42,8 @@ var Rotate = {
         }
         return result;
     },
-    
-    
+
+
     /**
      * Rotate right operation.
      *
@@ -58,8 +58,8 @@ var Rotate = {
             return Rotate._rot(input, args[0], Rotate._rotr);
         }
     },
-    
-    
+
+
     /**
      * Rotate left operation.
      *
@@ -74,8 +74,8 @@ var Rotate = {
             return Rotate._rot(input, args[0], Rotate._rotl);
         }
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -105,12 +105,12 @@ var Rotate = {
             chr,
             rot13Lowercase = args[0],
             rot13Upperacse = args[1];
-            
+
         if (amount) {
             if (amount < 0) {
                 amount = 26 - (Math.abs(amount) % 26);
             }
-            
+
             for (var i = 0; i < input.length; i++) {
                 chr = input[i];
                 if (rot13Upperacse && chr >= 65 && chr <= 90) { // Upper case
@@ -173,8 +173,8 @@ var Rotate = {
         var bit = (b & 1) << 7;
         return (b >> 1) | bit;
     },
-    
-    
+
+
     /**
      * Rotate left bitwise op.
      *
@@ -186,8 +186,8 @@ var Rotate = {
         var bit = (b >> 7) & 1;
         return ((b << 1) | bit) & 0xFF;
     },
-    
-    
+
+
     /**
      * Rotates a byte array to the right by a specific amount as a whole, so that bits are wrapped
      * from the end of the array to the beginning.
@@ -201,7 +201,7 @@ var Rotate = {
         var carryBits = 0,
             newByte,
             result = [];
-        
+
         amount = amount % 8;
         for (var i = 0; i < data.length; i++) {
             var oldByte = data[i] >>> 0;
@@ -212,8 +212,8 @@ var Rotate = {
         result[0] |= carryBits;
         return result;
     },
-    
-    
+
+
     /**
      * Rotates a byte array to the left by a specific amount as a whole, so that bits are wrapped
      * from the beginning of the array to the end.
@@ -227,7 +227,7 @@ var Rotate = {
         var carryBits = 0,
             newByte,
             result = [];
-            
+
         amount = amount % 8;
         for (var i = data.length-1; i >= 0; i--) {
             var oldByte = data[i];

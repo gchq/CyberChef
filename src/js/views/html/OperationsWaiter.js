@@ -14,7 +14,7 @@
 var OperationsWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
-    
+
     this.options = {};
     this.removeIntent = false;
 };
@@ -28,7 +28,7 @@ var OperationsWaiter = function(app, manager) {
  */
 OperationsWaiter.prototype.searchOperations = function(e) {
     var ops, selected;
-    
+
     if (e.type === "search") { // Search
         e.preventDefault();
         ops = document.querySelectorAll("#search-results li");
@@ -40,7 +40,7 @@ OperationsWaiter.prototype.searchOperations = function(e) {
             }
         }
     }
-    
+
     if (e.keyCode === 13) { // Return
         e.preventDefault();
     } else if (e.keyCode === 40) { // Down
@@ -69,21 +69,21 @@ OperationsWaiter.prototype.searchOperations = function(e) {
         var searchResultsEl = document.getElementById("search-results"),
             el = e.target,
             str = el.value;
-        
+
         while (searchResultsEl.firstChild) {
             $(searchResultsEl.firstChild).popover("destroy");
             searchResultsEl.removeChild(searchResultsEl.firstChild);
         }
-        
+
         $("#categories .in").collapse("hide");
         if (str) {
             var matchedOps = this.filterOperations(str, true),
                 matchedOpsHtml = "";
-            
+
             for (var i = 0; i < matchedOps.length; i++) {
                 matchedOpsHtml += matchedOps[i].toStubHtml();
             }
-            
+
             searchResultsEl.innerHTML = matchedOpsHtml;
             searchResultsEl.dispatchEvent(this.manager.oplistcreate);
         }
@@ -102,20 +102,20 @@ OperationsWaiter.prototype.searchOperations = function(e) {
 OperationsWaiter.prototype.filterOperations = function(searchStr, highlight) {
     var matchedOps = [],
         matchedDescs = [];
-    
+
     searchStr = searchStr.toLowerCase();
-    
+
     for (var opName in this.app.operations) {
         var op = this.app.operations[opName],
             namePos = opName.toLowerCase().indexOf(searchStr),
             descPos = op.description.toLowerCase().indexOf(searchStr);
-        
+
         if (namePos >= 0 || descPos >= 0) {
             var operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
             if (highlight) {
                 operation.highlightSearchString(searchStr, namePos, descPos);
             }
-            
+
             if (namePos < 0) {
                 matchedOps.push(operation);
             } else {
@@ -123,7 +123,7 @@ OperationsWaiter.prototype.filterOperations = function(searchStr, highlight) {
             }
         }
     }
-    
+
     return matchedDescs.concat(matchedOps);
 };
 
@@ -165,7 +165,7 @@ OperationsWaiter.prototype.opListCreate = function(e) {
  */
 OperationsWaiter.prototype.operationDblclick = function(e) {
     var li = e.target;
-    
+
     this.manager.recipe.addOperation(li.textContent);
     this.app.autoBake();
 };
@@ -180,23 +180,23 @@ OperationsWaiter.prototype.operationDblclick = function(e) {
 OperationsWaiter.prototype.editFavouritesClick = function(e) {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Add favourites to modal
     var favCat = this.app.categories.filter(function(c) {
         return c.name === "Favourites";
     })[0];
-    
+
     var html = "";
     for (var i = 0; i < favCat.ops.length; i++) {
         var opName = favCat.ops[i];
         var operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         html += operation.toStubHtml(true);
     }
-    
+
     var editFavouritesList = document.getElementById("edit-favourites-list");
     editFavouritesList.innerHTML = html;
     this.removeIntent = false;
-    
+
     var editableList = Sortable.create(editFavouritesList, {
         filter: ".remove-icon",
         onFilter: function (evt) {
@@ -210,15 +210,15 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
             if (this.removeIntent) evt.item.remove();
         }.bind(this),
     });
-    
+
     Sortable.utils.on(editFavouritesList, "dragleave", function() {
         this.removeIntent = true;
     }.bind(this));
-    
+
     Sortable.utils.on(editFavouritesList, "dragover", function() {
         this.removeIntent = false;
     }.bind(this));
-    
+
     $("#edit-favourites-list [data-toggle=popover]").popover();
     $("#favourites-modal").modal();
 };
@@ -231,7 +231,7 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
 OperationsWaiter.prototype.saveFavouritesClick = function() {
     var favouritesList = [],
         favs = document.querySelectorAll("#edit-favourites-list li");
-    
+
     for (var i = 0; i < favs.length; i++) {
         favouritesList.push(favs[i].textContent);
     }
@@ -276,7 +276,7 @@ OperationsWaiter.prototype.opIconMouseover = function(e) {
 OperationsWaiter.prototype.opIconMouseleave = function(e) {
     var opEl = e.target.parentNode,
         toEl = e.toElement || e.relatedElement;
-    
+
     if (e.target.getAttribute("data-toggle") === "popover" && toEl === opEl) {
         $(opEl).popover("show");
     }

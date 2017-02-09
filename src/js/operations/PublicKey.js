@@ -10,13 +10,13 @@
  * @namespace
  */
 var PublicKey = {
-    
+
     /**
      * @constant
      * @default
      */
     X509_INPUT_FORMAT: ["PEM", "DER Hex", "Base64", "Raw"],
-    
+
     /**
      * Parse X.509 certificate operation.
      *
@@ -27,11 +27,11 @@ var PublicKey = {
     runParseX509: function (input, args) {
         var cert = new X509(),
             inputFormat = args[0];
-            
+
         if (!input.length) {
             return "No input";
         }
-        
+
         switch (inputFormat) {
             case "DER Hex":
                 input = input.replace(/\s/g, "");
@@ -53,7 +53,7 @@ var PublicKey = {
             default:
                 throw "Undefined input format";
         }
-        
+
         var version = ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 0, 0]),
             sn = cert.getSerialNumberHex(),
             algorithm = KJUR.asn1.x509.OID.oid2name(KJUR.asn1.ASN1Util.oidHexToInt(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 2, 0]))),
@@ -69,7 +69,7 @@ var PublicKey = {
             certSig = ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [2]).substr(2),
             sigStr = "",
             extensions = ASN1HEX.dump(ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 7]));
-        
+
         // Public Key fields
         if (pk.type === "EC") { // ECDSA
             pkFields.push({
@@ -120,7 +120,7 @@ var PublicKey = {
                 value: "Unknown Public Key type"
             });
         }
-        
+
         // Signature fields
         if (ASN1HEX.dump(certSig).indexOf("SEQUENCE") === 0) { // DSA or ECDSA
             sigStr = "  r:              " + PublicKey._formatByteStr(ASN1HEX.getDecendantHexVByNthList(certSig, 0, [0]), 16, 18) + "\n" +
@@ -128,7 +128,7 @@ var PublicKey = {
         } else { // RSA
             sigStr = "  Signature:      " + PublicKey._formatByteStr(certSig, 16, 18) + "\n";
         }
-        
+
         // Format Public Key fields
         for (var i = 0; i < pkFields.length; i++) {
             pkStr += "  " + pkFields[i].key + ":" +
@@ -138,12 +138,12 @@ var PublicKey = {
                     " "
                 );
         }
-        
+
         var issuerStr = PublicKey._formatDnStr(issuer, 2),
             nbDate = PublicKey._formatDate(notBefore),
             naDate = PublicKey._formatDate(notAfter),
             subjectStr = PublicKey._formatDnStr(subject, 2);
-        
+
         var output = "Version:          " + (parseInt(version, 16) + 1) + " (0x" + version + ")\n" +
             "Serial number:    " + new BigInteger(sn, 16).toString() + " (0x" + sn + ")\n" +
             "Algorithm ID:     " + algorithm + "\n" +
@@ -162,11 +162,11 @@ var PublicKey = {
             sigStr +
             "\nExtensions (parsed ASN.1)\n" +
             extensions;
-        
+
         return output;
     },
 
-    
+
     /**
      * PEM to Hex operation.
      *
@@ -185,14 +185,14 @@ var PublicKey = {
         }
         return KEYUTIL.getHexFromPEM(input);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     PEM_HEADER_STRING: "CERTIFICATE",
-    
+
     /**
      * Hex to PEM operation.
      *
@@ -203,8 +203,8 @@ var PublicKey = {
     runHexToPem: function(input, args) {
         return KJUR.asn1.ASN1Util.getPEMStringFromHex(input.replace(/\s/g, ""), args[0]);
     },
-    
-    
+
+
     /**
      * Hex to Object Identifier operation.
      *
@@ -215,8 +215,8 @@ var PublicKey = {
     runHexToObjectIdentifier: function(input, args) {
         return KJUR.asn1.ASN1Util.oidHexToInt(input.replace(/\s/g, ""));
     },
-    
-    
+
+
     /**
      * Object Identifier to Hex operation.
      *
@@ -227,14 +227,14 @@ var PublicKey = {
     runObjectIdentifierToHex: function(input, args) {
         return KJUR.asn1.ASN1Util.oidIntToHex(input);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
      */
     ASN1_TRUNCATE_LENGTH: 32,
-    
+
     /**
      * Parse ASN.1 hex string operation.
      *
@@ -249,8 +249,8 @@ var PublicKey = {
             "ommitLongOctet": truncateLen
         }, index);
     },
-    
-    
+
+
     /**
      * Formats Distinguished Name (DN) strings.
      *
@@ -266,29 +266,29 @@ var PublicKey = {
             key,
             value,
             str;
-        
+
         for (var i = 0; i < fields.length; i++) {
             if (!fields[i].length) continue;
-            
+
             key = fields[i].split("=")[0];
-                
+
             maxKeyLen = key.length > maxKeyLen ? key.length : maxKeyLen;
         }
-        
+
         for (i = 0; i < fields.length; i++) {
             if (!fields[i].length) continue;
-            
+
             key = fields[i].split("=")[0];
             value = fields[i].split("=")[1];
             str = Utils.padRight(key, maxKeyLen) + " = " + value + "\n";
-            
+
             output += Utils.padLeft(str, indent + str.length, " ");
         }
-        
+
         return output;
     },
-    
-    
+
+
     /**
      * Formats byte strings by adding line breaks and delimiters.
      *
@@ -302,7 +302,7 @@ var PublicKey = {
         byteStr = Utils.toHex(Utils.fromHex(byteStr), ":");
         length = length * 3;
         var output = "";
-        
+
         for (var i = 0; i < byteStr.length; i += length) {
             var str = byteStr.slice(i, i + length) + "\n";
             if (i === 0) {
@@ -311,11 +311,11 @@ var PublicKey = {
                 output += Utils.padLeft(str, indent + str.length, " ");
             }
         }
-        
+
         return output.slice(0, output.length-1);
     },
-    
-    
+
+
     /**
      * Formats dates.
      *
@@ -331,7 +331,7 @@ var PublicKey = {
             dateStr[8] + dateStr[9] + ":" +
             dateStr[10] + dateStr[11];
     },
-    
+
 };
 
 

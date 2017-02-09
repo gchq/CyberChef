@@ -14,7 +14,7 @@ var Base = {
      * @default
      */
     DEFAULT_RADIX: 36,
-    
+
     /**
      * To Base operation.
      *
@@ -32,8 +32,8 @@ var Base = {
         }
         return input.toString(radix);
     },
-    
-    
+
+
     /**
      * From Base operation.
      *
@@ -48,5 +48,5 @@ var Base = {
         }
         return parseInt(input.replace(/\s/g, ""), radix);
     },
-    
+
 };

@@ -10,7 +10,7 @@
  */
 var Recipe = function(recipeConfig) {
     this.opList = [];
-    
+
     if (recipeConfig) {
         this._parseConfig(recipeConfig);
     }
@@ -43,11 +43,11 @@ Recipe.prototype._parseConfig = function(recipeConfig) {
  */
 Recipe.prototype.getConfig = function() {
     var recipeConfig = [];
-    
+
     for (var o = 0; o < this.opList.length; o++) {
         recipeConfig.push(this.opList[o].getConfig());
     }
-    
+
     return recipeConfig;
 };
 
@@ -123,13 +123,13 @@ Recipe.prototype.containsFlowControl = function() {
 Recipe.prototype.lastOpIndex = function(startIndex) {
     var i = startIndex + 1 || 0,
         op;
-        
+
     for (; i < this.opList.length; i++) {
         op = this.opList[i];
         if (op.isDisabled()) return i-1;
         if (op.isBreakpoint()) return i-1;
     }
-    
+
     return i-1;
 };
 
@@ -144,7 +144,7 @@ Recipe.prototype.lastOpIndex = function(startIndex) {
 Recipe.prototype.execute = function(dish, startFrom) {
     startFrom = startFrom || 0;
     var op, input, output, numJumps = 0;
-    
+
     for (var i = startFrom; i < this.opList.length; i++) {
         op = this.opList[i];
         if (op.isDisabled()) {
@@ -153,10 +153,10 @@ Recipe.prototype.execute = function(dish, startFrom) {
         if (op.isBreakpoint()) {
             return i;
         }
-        
+
         try {
             input = dish.get(op.inputType);
-            
+
             if (op.isFlowControl()) {
                 // Package up the current state
                 var state = {
@@ -165,7 +165,7 @@ Recipe.prototype.execute = function(dish, startFrom) {
                     "opList"  : this.opList,
                     "numJumps" : numJumps
                 };
-                
+
                 state = op.run(state);
                 i = state.progress;
                 numJumps = state.numJumps;
@@ -184,11 +184,11 @@ Recipe.prototype.execute = function(dish, startFrom) {
             } else {
                 e.displayStr = op.name + " - " + (e.displayStr || e.message);
             }
-            
+
             throw e;
         }
     }
-    
+
     return this.opList.length;
 };
 

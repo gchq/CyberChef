@@ -28,7 +28,7 @@ var BitwiseOp = {
             x = null,
             k = null,
             o = null;
-        
+
         for (var i = 0; i < input.length; i++) {
             k = key[i % key.length];
             o = input[i];
@@ -45,11 +45,11 @@ var BitwiseOp = {
                 }
             }
         }
-        
+
         return result;
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -65,7 +65,7 @@ var BitwiseOp = {
      * @default
      */
     KEY_FORMAT: ["Hex", "Base64", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1"],
-    
+
     /**
      * XOR operation.
      *
@@ -77,13 +77,13 @@ var BitwiseOp = {
         var key = Utils.format[args[0].option].parse(args[0].string || ""),
             scheme = args[1],
             nullPreserving = args[2];
-        
+
         key = Utils.wordArrayToByteArray(key);
-            
+
         return BitwiseOp._bitOp(input, key, BitwiseOp._xor, nullPreserving, scheme);
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -109,7 +109,7 @@ var BitwiseOp = {
      * @default
      */
     XOR_BRUTE_OUTPUT_HEX: false,
-    
+
     /**
      * XOR Brute Force operation.
      *
@@ -127,18 +127,18 @@ var BitwiseOp = {
             printKey = args[6],
             outputHex = args[7],
             regex;
-        
+
         var output = "",
             result,
             resultUtf8;
-        
+
         input = input.slice(sampleOffset, sampleOffset + sampleLength);
-        
+
         if (crib !== "") {
             regex = new RegExp(crib, "im");
         }
-        
-        
+
+
         for (var key = 1, l = Math.pow(256, keyLength); key < l; key++) {
             result = BitwiseOp._bitOp(input, Utils.hexToByteArray(key.toString(16)), BitwiseOp._xor, nullPreserving, differential);
             resultUtf8 = Utils.byteArrayToUtf8(result);
@@ -152,8 +152,8 @@ var BitwiseOp = {
         }
         return output;
     },
-    
-    
+
+
     /**
      * NOT operation.
      *
@@ -164,8 +164,8 @@ var BitwiseOp = {
     runNot: function (input, args) {
         return BitwiseOp._bitOp(input, null, BitwiseOp._not);
     },
-    
-    
+
+
     /**
      * AND operation.
      *
@@ -176,11 +176,11 @@ var BitwiseOp = {
     runAnd: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string || "");
         key = Utils.wordArrayToByteArray(key);
-        
+
         return BitwiseOp._bitOp(input, key, BitwiseOp._and);
     },
-    
-    
+
+
     /**
      * OR operation.
      *
@@ -191,11 +191,11 @@ var BitwiseOp = {
     runOr: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string || "");
         key = Utils.wordArrayToByteArray(key);
-        
+
         return BitwiseOp._bitOp(input, key, BitwiseOp._or);
     },
-    
-    
+
+
     /**
      * ADD operation.
      *
@@ -206,11 +206,11 @@ var BitwiseOp = {
     runAdd: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string || "");
         key = Utils.wordArrayToByteArray(key);
-        
+
         return BitwiseOp._bitOp(input, key, BitwiseOp._add);
     },
-    
-    
+
+
     /**
      * SUB operation.
      *
@@ -221,11 +221,11 @@ var BitwiseOp = {
     runSub: function (input, args) {
         var key = Utils.format[args[0].option].parse(args[0].string || "");
         key = Utils.wordArrayToByteArray(key);
-        
+
         return BitwiseOp._bitOp(input, key, BitwiseOp._sub);
     },
-    
-    
+
+
     /**
      * XOR bitwise calculation.
      *
@@ -237,8 +237,8 @@ var BitwiseOp = {
     _xor: function (operand, key) {
         return operand ^ key;
     },
-    
-    
+
+
     /**
      * NOT bitwise calculation.
      *
@@ -249,8 +249,8 @@ var BitwiseOp = {
     _not: function (operand, _) {
         return ~operand & 0xff;
     },
-    
-    
+
+
     /**
      * AND bitwise calculation.
      *
@@ -262,8 +262,8 @@ var BitwiseOp = {
     _and: function (operand, key) {
         return operand & key;
     },
-    
-    
+
+
     /**
      * OR bitwise calculation.
      *
@@ -276,7 +276,7 @@ var BitwiseOp = {
         return operand | key;
     },
 
-    
+
     /**
      * ADD bitwise calculation.
      *
@@ -289,7 +289,7 @@ var BitwiseOp = {
         return (operand + key) % 256;
     },
 
-    
+
     /**
      * SUB bitwise calculation.
      *

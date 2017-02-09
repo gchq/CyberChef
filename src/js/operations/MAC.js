@@ -44,7 +44,7 @@ var MAC = {
      */
     runFormat: function(input, args) {
         if (!input) return "";
-    
+
         var outputCase = args[0],
             noDelim = args[1],
             dashDelim = args[2],
@@ -58,7 +58,7 @@ var MAC = {
                 macHyphen = cleanMac.replace(/(.{2}(?=.))/g, "$1-"),
                 macColon = cleanMac.replace(/(.{2}(?=.))/g, "$1:"),
                 macCisco = cleanMac.replace(/(.{4}(?=.))/g, "$1.");
-                
+
             if (outputCase === "Lower only") {
                 if (noDelim) outputList.push(cleanMac);
                 if (dashDelim) outputList.push(macHyphen);
@@ -75,7 +75,7 @@ var MAC = {
                 if (colonDelim) outputList.push(macColon, macColon.toUpperCase());
                 if (ciscoStyle) outputList.push(macCisco, macCisco.toUpperCase());
             }
-            
+
             outputList.push(
                 "" // Empty line to delimit groups
             );

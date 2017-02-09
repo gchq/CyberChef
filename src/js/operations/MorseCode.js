@@ -89,7 +89,7 @@ var MorseCode = {
             words = Array.prototype.map.call(words, function(word) {
                 var letters = Array.prototype.map.call(word, function(character) {
                     var letter = character.toUpperCase();
-                    if(typeof MorseCode.MORSE_TABLE[letter] == "undefined") {
+                    if (typeof MorseCode.MORSE_TABLE[letter] == "undefined") {
                         return "";
                     }
 
@@ -106,7 +106,7 @@ var MorseCode = {
         input = input.replace(
             /<dash>|<dot>|<ld>|<wd>/g,
             function(match) {
-                switch(match) {
+                switch (match) {
                     case "<dash>": return dash;
                     case "<dot>": return dot;
                     case "<ld>": return letterDelim;
@@ -131,14 +131,14 @@ var MorseCode = {
         var reverseTable = function() {
             reversedTable = {};
 
-            for(var letter in MorseCode.MORSE_TABLE) {
+            for (var letter in MorseCode.MORSE_TABLE) {
                 var signal = MorseCode.MORSE_TABLE[letter];
                 reversedTable[signal] = letter;
             }
         };
 
         return function(input, args) {
-            if(reversedTable === null) {
+            if (reversedTable === null) {
                 reverseTable();
             }
 

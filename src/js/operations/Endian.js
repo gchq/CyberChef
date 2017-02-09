@@ -8,7 +8,7 @@
  * @namespace
  */
 var Endian = {
-    
+
     /**
      * @constant
      * @default
@@ -24,7 +24,7 @@ var Endian = {
      * @default
      */
     PAD_INCOMPLETE_WORDS: true,
-    
+
     /**
      * Swap endianness operation.
      *
@@ -41,11 +41,11 @@ var Endian = {
             words = [],
             i = 0,
             j = 0;
-            
+
         if (wordLength <= 0) {
             return "Word length must be greater than 0";
         }
-            
+
         // Convert input to raw data based on specified data format
         switch (dataFormat) {
             case "Hex":
@@ -57,21 +57,21 @@ var Endian = {
             default:
                 data = input;
         }
-        
+
         // Split up into words
         for (i = 0; i < data.length; i += wordLength) {
             var word = data.slice(i, i + wordLength);
-            
+
             // Pad word if too short
             if (padIncompleteWords && word.length < wordLength){
                 for (j = word.length; j < wordLength; j++) {
                     word.push(0);
                 }
             }
-            
+
             words.push(word);
         }
-        
+
         // Swap endianness and flatten
         for (i = 0; i < words.length; i++) {
             j = words[i].length;
@@ -79,7 +79,7 @@ var Endian = {
                 result.push(words[i][j]);
             }
         }
-        
+
         // Convert data back to specified data format
         switch (dataFormat) {
             case "Hex":
@@ -90,5 +90,5 @@ var Endian = {
                 return result;
         }
     },
-    
+
 };

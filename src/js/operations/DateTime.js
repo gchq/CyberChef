@@ -10,13 +10,13 @@
  * @namespace
  */
 var DateTime = {
-    
+
     /**
      * @constant
      * @default
      */
     UNITS: ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"],
-    
+
     /**
      * From UNIX Timestamp operation.
      *
@@ -27,9 +27,9 @@ var DateTime = {
     runFromUnixTimestamp: function(input, args) {
         var units = args[0],
             d;
-        
+
         input = parseFloat(input);
-        
+
         if (units === "Seconds (s)") {
             d = moment.unix(input);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
@@ -46,8 +46,8 @@ var DateTime = {
             throw "Unrecognised unit";
         }
     },
-    
-    
+
+
     /**
      * To UNIX Timestamp operation.
      *
@@ -58,7 +58,7 @@ var DateTime = {
     runToUnixTimestamp: function(input, args) {
         var units = args[0],
             d = moment(input);
-        
+
         if (units === "Seconds (s)") {
             return d.unix();
         } else if (units === "Milliseconds (ms)") {
@@ -71,8 +71,8 @@ var DateTime = {
             throw "Unrecognised unit";
         }
     },
-    
-    
+
+
     /**
      * @constant
      * @default
@@ -122,7 +122,7 @@ var DateTime = {
      * @default
      */
     TIMEZONES: ["UTC"].concat(moment.tz.names()),
-    
+
     /**
      * Translate DateTime Format operation.
      *
@@ -140,14 +140,14 @@ var DateTime = {
         try {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
-        } catch(err) {
+        } catch (err) {
             return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
         }
-        
+
         return date.tz(outputTimezone).format(outputFormat);
     },
-    
-    
+
+
     /**
      * Parse DateTime operation.
      *
@@ -160,14 +160,14 @@ var DateTime = {
             inputTimezone = args[2],
             date,
             output = "";
-            
+
         try {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
-        } catch(err) {
+        } catch (err) {
             return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
         }
-        
+
         output += "Date: " + date.format("dddd Do MMMM YYYY") +
             "\nTime: " + date.format("HH:mm:ss") +
             "\nPeriod: " + date.format("A") +
@@ -179,11 +179,11 @@ var DateTime = {
             "\n\nDay of year: " + date.dayOfYear() +
             "\nWeek number: " + date.weekYear() +
             "\nQuarter: " + date.quarter();
-        
+
         return output;
     },
-    
-    
+
+
     /**
      * @constant
      */
@@ -450,5 +450,5 @@ var DateTime = {
   </tbody>\
 </table>",
 
-    
+
 };

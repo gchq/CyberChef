@@ -26,7 +26,7 @@ var Hexdump = {
      * @default
      */
     INCLUDE_FINAL_LENGTH: false,
-    
+
     /**
      * To Hexdump operation.
      *
@@ -38,7 +38,7 @@ var Hexdump = {
         var length = args[0] || Hexdump.WIDTH;
         var upperCase = args[1];
         var includeFinalLength = args[2];
-        
+
         var output = "", padding = 2;
         for (var i = 0; i < input.length; i += length) {
             var buff = input.slice(i, i+length);
@@ -46,27 +46,27 @@ var Hexdump = {
             for (var j = 0; j < buff.length; j++) {
                 hexa += Utils.hex(buff[j], padding) + " ";
             }
-            
+
             var lineNo = Utils.hex(i, 8);
-            
+
             if (upperCase) {
                 hexa = hexa.toUpperCase();
                 lineNo = lineNo.toUpperCase();
             }
-            
+
             output += lineNo + "  " +
                 Utils.padRight(hexa, (length*(padding+1))) +
                 " |" + Utils.padRight(Utils.printable(Utils.byteArrayToChars(buff)), buff.length) + "|\n";
-                
+
             if (includeFinalLength && i+buff.length === input.length) {
                 output += Utils.hex(i+buff.length, 8) + "\n";
             }
         }
-        
+
         return output.slice(0, -1);
     },
-    
-    
+
+
     /**
      * From Hexdump operation.
      *
@@ -78,7 +78,7 @@ var Hexdump = {
         var output = [],
             regex = /^\s*(?:[\dA-F]{4,16}:?)?\s*((?:[\dA-F]{2}\s){1,8}(?:\s|[\dA-F]{2}-)(?:[\dA-F]{2}\s){1,8}|(?:[\dA-F]{2}\s|[\dA-F]{4}\s)+)/igm,
             block, line;
-            
+
         while ((block = regex.exec(input))) {
             line = Utils.fromHex(block[1].replace(/-/g, " "));
             for (var i = 0; i < line.length; i++) {
@@ -94,8 +94,8 @@ var Hexdump = {
         }
         return output;
     },
-    
-    
+
+
     /**
      * Highlight to hexdump
      *
@@ -113,9 +113,9 @@ var Hexdump = {
             offset = pos[0].start % w,
             start = 0,
             end = 0;
-            
+
         pos[0].start = line*width + 10 + offset*3;
-        
+
         line = Math.floor(pos[0].end / w);
         offset = pos[0].end % w;
         if (offset === 0) {
@@ -123,11 +123,11 @@ var Hexdump = {
             offset = w;
         }
         pos[0].end = line*width + 10 + offset*3 - 1;
-        
+
         // Set up multiple selections for bytes
         var startLineNum = Math.floor(pos[0].start / width);
         var endLineNum = Math.floor(pos[0].end / width);
-        
+
         if (startLineNum === endLineNum) {
             pos.push(pos[0]);
         } else {
@@ -142,7 +142,7 @@ var Hexdump = {
                 pos.push({ start: start, end: end });
             }
         }
-        
+
         // Set up multiple selections for ASCII
         var len = pos.length, lineNum = 0;
         start = 0;
@@ -155,8 +155,8 @@ var Hexdump = {
         }
         return pos;
     },
-    
-    
+
+
     /**
      * Highlight from hexdump
      *
@@ -169,10 +169,10 @@ var Hexdump = {
     highlightFrom: function(pos, args) {
         var w = args[0] || 16;
         var width = 14 + (w*4);
-        
+
         var line = Math.floor(pos[0].start / width);
         var offset = pos[0].start % width;
-        
+
         if (offset < 10) { // In line number section
             pos[0].start = line*w;
         } else if (offset > 10+(w*3)) { // In ASCII section
@@ -180,10 +180,10 @@ var Hexdump = {
         } else { // In byte section
             pos[0].start = line*w + Math.floor((offset-10)/3);
         }
-        
+
         line = Math.floor(pos[0].end / width);
         offset = pos[0].end % width;
-        
+
         if (offset < 10) { // In line number section
             pos[0].end = line*w;
         } else if (offset > 10+(w*3)) { // In ASCII section
@@ -191,8 +191,8 @@ var Hexdump = {
         } else { // In byte section
             pos[0].end = line*w + Math.ceil((offset-10)/3);
         }
-        
+
         return pos;
     },
-    
+
 };
