@@ -304,28 +304,29 @@ var Compress = {
                 password: Utils.strToByteArray(args[0]),
                 verify: args[1]
             },
-            file = "",
             unzip = new Zlib.Unzip(input, options),
             filenames = unzip.getFilenames(),
-            output = "<div style='padding: 5px;'>" + filenames.length + " file(s) found</div>\n";
+            files = [];
 
-        output += "<div class='panel-group' id='zip-accordion' role='tablist' aria-multiselectable='true'>";
+        filenames.forEach(function(fileName) {
+            var contents = unzip.decompress(fileName);
 
-        window.uzip = unzip;
-        for (var i = 0; i < filenames.length; i++) {
-            file = Utils.byteArrayToUtf8(unzip.decompress(filenames[i]));
-            output += "<div class='panel panel-default'>" +
-                "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
-                "<h4 class='panel-title'>" +
-                "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#zip-accordion' href='#collapse" + i +
-                "' aria-expanded='true' aria-controls='collapse" + i + "'>" +
-                filenames[i] + "<span class='pull-right'>" + file.length.toLocaleString() + " bytes</span></a></h4></div>" +
-                "<div id='collapse" + i + "' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading" + i + "'>" +
-                "<div class='panel-body'>" +
-                Utils.escapeHtml(file) + "</div></div></div>";
-        }
+            contents = Utils.byteArrayToUtf8(contents);
 
-        return output + "</div>";
+            var file = {
+                fileName: fileName,
+                size: contents.length,
+            };
+
+            var isDir = contents.length === 0 && fileName.endsWith("/");
+            if (!isDir) {
+                file.contents = contents;
+            }
+
+            files.push(file);
+        });
+
+        return Utils.displayFilesAsHTML(files);
     },
 
 
