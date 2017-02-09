@@ -96,6 +96,8 @@ var Utils = {
     /**
      * Adds trailing bytes to a byteArray.
      *
+     * @author tlwr [toby@toby.codes]
+     *
      * @param {byteArray} arr - byteArray to add trailing bytes to.
      * @param {number} numBytes - Maximum width of the array.
      * @param {Integer} [padByte=0] - The byte to pad with.
@@ -959,6 +961,9 @@ var Utils = {
 
     /**
      * Formats a list of files or directories.
+     * A File is an object with a "fileName" and optionally a "contents".
+     * If the fileName ends with "/" and the contents is of length 0 then
+     * it is considered a directory.
      *
      * @author tlwr [toby@toby.codes]
      *
