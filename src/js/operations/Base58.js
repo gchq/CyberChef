@@ -1,5 +1,5 @@
 /**
- * Base64 operations.
+ * Base58 operations.
  *
  * @author tlwr [toby@toby.codes]
  * @copyright Crown Copyright 2017
