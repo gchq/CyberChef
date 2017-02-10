@@ -304,28 +304,29 @@ var Compress = {
                 password: Utils.strToByteArray(args[0]),
                 verify: args[1]
             },
-            file = "",
             unzip = new Zlib.Unzip(input, options),
             filenames = unzip.getFilenames(),
-            output = "<div style='padding: 5px;'>" + filenames.length + " file(s) found</div>\n";
+            files = [];
 
-        output += "<div class='panel-group' id='zip-accordion' role='tablist' aria-multiselectable='true'>";
+        filenames.forEach(function(fileName) {
+            var contents = unzip.decompress(fileName);
 
-        window.uzip = unzip;
-        for (var i = 0; i < filenames.length; i++) {
-            file = Utils.byteArrayToUtf8(unzip.decompress(filenames[i]));
-            output += "<div class='panel panel-default'>" +
-                "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
-                "<h4 class='panel-title'>" +
-                "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#zip-accordion' href='#collapse" + i +
-                "' aria-expanded='true' aria-controls='collapse" + i + "'>" +
-                filenames[i] + "<span class='pull-right'>" + file.length.toLocaleString() + " bytes</span></a></h4></div>" +
-                "<div id='collapse" + i + "' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading" + i + "'>" +
-                "<div class='panel-body'>" +
-                Utils.escapeHtml(file) + "</div></div></div>";
-        }
+            contents = Utils.byteArrayToUtf8(contents);
 
-        return output + "</div>";
+            var file = {
+                fileName: fileName,
+                size: contents.length,
+            };
+
+            var isDir = contents.length === 0 && fileName.endsWith("/");
+            if (!isDir) {
+                file.contents = contents;
+            }
+
+            files.push(file);
+        });
+
+        return Utils.displayFilesAsHTML(files);
     },
 
 
@@ -346,4 +347,207 @@ var Compress = {
         return plain;
     },
 
+
+    /**
+     * @constant
+     * @default
+     */
+    TAR_FILENAME: "file.txt",
+
+
+    /**
+     * Tar pack operation.
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    runTar: function(input, args) {
+        var Tarball = function() {
+            this.bytes = new Array(512);
+            this.position = 0;
+        };
+
+        Tarball.prototype.addEmptyBlock = function() {
+            var filler = new Array(512);
+            filler.fill(0);
+            this.bytes = this.bytes.concat(filler);
+        };
+
+        Tarball.prototype.writeBytes = function(bytes) {
+            var self = this;
+
+            if (this.position + bytes.length > this.bytes.length) {
+                this.addEmptyBlock();
+            }
+
+            Array.prototype.forEach.call(bytes, function(b, i) {
+                if (typeof b.charCodeAt !== "undefined") {
+                    b = b.charCodeAt();
+                }
+
+                self.bytes[self.position] = b;
+                self.position += 1;
+            });
+        };
+
+        Tarball.prototype.writeEndBlocks = function() {
+            var numEmptyBlocks = 2;
+            for (var i = 0; i < numEmptyBlocks; i++) {
+                this.addEmptyBlock();
+            }
+        };
+
+        var fileSize = Utils.padLeft(input.length.toString(8), 11, "0");
+        var currentUnixTimestamp = Math.floor(Date.now() / 1000);
+        var lastModTime = Utils.padLeft(currentUnixTimestamp.toString(8), 11, "0");
+
+        var file = {
+            fileName: Utils.padBytesRight(args[0], 100),
+            fileMode: Utils.padBytesRight("0000664", 8),
+            ownerUID: Utils.padBytesRight("0", 8),
+            ownerGID: Utils.padBytesRight("0", 8),
+            size: Utils.padBytesRight(fileSize, 12),
+            lastModTime: Utils.padBytesRight(lastModTime, 12),
+            checksum: "        ",
+            type: "0",
+            linkedFileName: Utils.padBytesRight("", 100),
+            USTARFormat: Utils.padBytesRight("ustar", 6),
+            version: "00",
+            ownerUserName: Utils.padBytesRight("", 32),
+            ownerGroupName: Utils.padBytesRight("", 32),
+            deviceMajor: Utils.padBytesRight("", 8),
+            deviceMinor: Utils.padBytesRight("", 8),
+            fileNamePrefix: Utils.padBytesRight("", 155),
+        };
+
+        var checksum = 0;
+        for (var key in file) {
+            var bytes = file[key];
+            Array.prototype.forEach.call(bytes, function(b) {
+                if (typeof b.charCodeAt !== "undefined") {
+                    checksum += b.charCodeAt();
+                } else {
+                    checksum += b;
+                }
+            });
+        }
+        checksum = Utils.padBytesRight(Utils.padLeft(checksum.toString(8), 7, "0"), 8);
+        file.checksum = checksum;
+
+        var tarball = new Tarball();
+        tarball.writeBytes(file.fileName);
+        tarball.writeBytes(file.fileMode);
+        tarball.writeBytes(file.ownerUID);
+        tarball.writeBytes(file.ownerGID);
+        tarball.writeBytes(file.size);
+        tarball.writeBytes(file.lastModTime);
+        tarball.writeBytes(file.checksum);
+        tarball.writeBytes(file.type);
+        tarball.writeBytes(file.linkedFileName);
+        tarball.writeBytes(file.USTARFormat);
+        tarball.writeBytes(file.version);
+        tarball.writeBytes(file.ownerUserName);
+        tarball.writeBytes(file.ownerGroupName);
+        tarball.writeBytes(file.deviceMajor);
+        tarball.writeBytes(file.deviceMinor);
+        tarball.writeBytes(file.fileNamePrefix);
+        tarball.writeBytes(Utils.padBytesRight("", 12));
+        tarball.writeBytes(input);
+        tarball.writeEndBlocks();
+
+        return tarball.bytes;
+    },
+
+
+    /**
+     * Untar unpack operation.
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    runUntar: function(input, args) {
+        var Stream = function(input) {
+            this.bytes = input;
+            this.position = 0;
+        };
+
+        Stream.prototype.readString = function(numBytes) {
+            var result = "";
+            for (var i = this.position; i < this.position + numBytes; i++) {
+                var currentByte = this.bytes[i];
+                if (currentByte === 0) break;
+                result += String.fromCharCode(currentByte);
+            }
+            this.position += numBytes;
+            return result;
+        };
+
+        Stream.prototype.readInt = function(numBytes, base) {
+            var string = this.readString(numBytes);
+            return parseInt(string, base);
+        };
+
+        Stream.prototype.hasMore = function() {
+            return this.position < this.bytes.length;
+        };
+
+        var stream = new Stream(input),
+            files = [];
+
+        while (stream.hasMore()) {
+            var dataPosition = stream.position + 512;
+
+            var file = {
+                fileName: stream.readString(100),
+                fileMode: stream.readString(8),
+                ownerUID: stream.readString(8),
+                ownerGID: stream.readString(8),
+                size: parseInt(stream.readString(12), 8), // Octal
+                lastModTime: new Date(1000 * stream.readInt(12, 8)), // Octal
+                checksum: stream.readString(8),
+                type: stream.readString(1),
+                linkedFileName: stream.readString(100),
+                USTARFormat: stream.readString(6).indexOf("ustar") >= 0,
+            };
+
+            if (file.USTARFormat) {
+                file.version = stream.readString(2);
+                file.ownerUserName = stream.readString(32);
+                file.ownerGroupName = stream.readString(32);
+                file.deviceMajor = stream.readString(8);
+                file.deviceMinor = stream.readString(8);
+                file.filenamePrefix = stream.readString(155);
+            }
+
+            stream.position = dataPosition;
+
+            if (file.type === "0") {
+                // File
+                files.push(file);
+                var endPosition = stream.position + file.size;
+                if (file.size % 512 !== 0) {
+                    endPosition += 512 - (file.size % 512);
+                }
+
+                file.contents = "";
+
+                while (stream.position < endPosition) {
+                    file.contents += stream.readString(512);
+                }
+            } else if (file.type === "5") {
+                // Directory
+                files.push(file);
+            } else {
+                // Symlink or empty bytes
+            }
+        }
+
+        return Utils.displayFilesAsHTML(files);
+    },
 };

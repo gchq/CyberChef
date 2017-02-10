@@ -94,6 +94,42 @@ var Utils = {
 
 
     /**
+     * Adds trailing bytes to a byteArray.
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @param {byteArray} arr - byteArray to add trailing bytes to.
+     * @param {number} numBytes - Maximum width of the array.
+     * @param {Integer} [padByte=0] - The byte to pad with.
+     * @returns {byteArray}
+     *
+     * @example
+     * // returns ["a", 0, 0, 0]
+     * Utils.padBytesRight("a", 4);
+     *
+     * // returns ["a", 1, 1, 1]
+     * Utils.padBytesRight("a", 4, 1);
+     *
+     * // returns ["t", "e", "s", "t", 0, 0, 0, 0]
+     * Utils.padBytesRight("test", 8);
+     *
+     * // returns ["t", "e", "s", "t", 1, 1, 1, 1]
+     * Utils.padBytesRight("test", 8, 1);
+     */
+    padBytesRight: function(arr, numBytes, padByte) {
+        padByte = padByte || 0;
+        var paddedBytes = new Array(numBytes);
+        paddedBytes.fill(padByte);
+
+        Array.prototype.map.call(arr, function(b, i) {
+            paddedBytes[i] = b;
+        });
+
+        return paddedBytes;
+    },
+
+
+    /**
      * @alias Utils.padLeft
      */
     pad: function(str, max, chr) {
@@ -926,6 +962,71 @@ var Utils = {
             if (b.hasOwnProperty(key))
                 a[key] = b[key];
         return a;
+    },
+
+
+    /**
+     * Formats a list of files or directories.
+     * A File is an object with a "fileName" and optionally a "contents".
+     * If the fileName ends with "/" and the contents is of length 0 then
+     * it is considered a directory.
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @param {Object[]} files
+     * @returns {html}
+     */
+    displayFilesAsHTML: function(files){
+        var formatDirectory = function(file) {
+            var html = "<div class='panel panel-default'>" +
+                   "<div class='panel-heading' role='tab'>" +
+                   "<h4 class='panel-title'>" +
+                   file.fileName +
+                   // The following line is for formatting when HTML is stripped
+                   "<span style='display: none'>\n0 bytes\n</span>" +
+                   "</h4>" +
+                   "</div>" +
+                   "</div>";
+            return html;
+        };
+
+        var formatFile = function(file, i) {
+            var html = "<div class='panel panel-default'>" +
+                       "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
+                       "<h4 class='panel-title'>" +
+                       "<a class='collapsed' role='button' data-toggle='collapse' " +
+                       "data-parent='#zip-accordion' href='#collapse" + i + "' " +
+                       "aria-expanded='true' aria-controls='collapse" + i +"'>" +
+                       file.fileName +
+                       "<span class='pull-right'>" +
+                       // These are for formatting when stripping HTML
+                       "<span style='display: none'>\n</span>" +
+                       file.size.toLocaleString() + " bytes" +
+                       "<span style='display: none'>\n</span>" +
+                       "</span>" +
+                       "</a>" +
+                       "</h4>" +
+                       "</div>" +
+                       "<div id='collapse" + i + "' class='panel-collapse collapse' " +
+                       "role='tabpanel' aria-labelledby='heading" + i + "'>" +
+                       "<div class='panel-body'>" +
+                       "<pre><code>" + Utils.escapeHtml(file.contents) + "</pre></code></div>" +
+                       "</div>" +
+                       "</div>";
+            return html;
+        };
+
+        var html = "<div style='padding: 5px;'>" +
+                   files.length +
+                   " file(s) found</div>\n";
+        files.forEach(function(file, i) {
+            if (typeof file.contents !== "undefined") {
+                html += formatFile(file, i);
+            } else {
+                html += formatDirectory(file);
+            }
+        });
+        return html;
     },
 
 
