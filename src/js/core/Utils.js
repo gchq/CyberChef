@@ -901,20 +901,30 @@ var Utils = {
 
 
     /**
-     * Escapes HTML tags in a string to stop them being rendered
+     * Escapes HTML tags in a string to stop them being rendered.
+     * https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
      *
      * @param {string} str
      * @returns string
      *
      * @example
-     * // return "A &lt;script> tag"
+     * // return "A &lt;script&gt; tag"
      * Utils.escapeHtml("A <script> tag");
      */
     escapeHtml: function(str) {
-        return str.replace(/</g, "&lt;")
-                  .replace(/'/g, "&apos;")
-                  .replace(/"/g, "&quot;")
-                  .replace(/&/g, "&amp;");
+        var HTML_CHARS = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#x27;", // &apos; not recommended because it's not in the HTML spec
+            "/": "&#x2F;", // forward slash is included as it helps end an HTML entity
+            "`": "&#x60;"
+        };
+
+        return str.replace(/[&<>"'\/`]/g, function (match) {
+            return HTML_CHARS[match];
+        });
     },
 
 
