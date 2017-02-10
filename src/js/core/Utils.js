@@ -995,7 +995,7 @@ var Utils = {
                        "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
                        "<h4 class='panel-title'>" +
                        "<a class='collapsed' role='button' data-toggle='collapse' " +
-                       "data-parent='#zip-accordion' href='#collapse" + i + "' " +
+                       "href='#collapse" + i + "' " +
                        "aria-expanded='true' aria-controls='collapse" + i +"'>" +
                        file.fileName +
                        "<span class='pull-right'>" +

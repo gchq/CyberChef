@@ -1,9 +1,9 @@
 212	source files
-115305	lines
+115641	lines
 4.3M	size
 
 142	JavaScript source files
-106125	lines
+106451	lines
 3.8M	size
 
 83	third party JavaScript source files
@@ -11,11 +11,11 @@
 3.0M	size
 
 59	first party JavaScript source files
-19867	lines
-748K	size
+20193	lines
+752K	size
 
 3.5M	uncompressed JavaScript size
 1.9M	compressed JavaScript size
 
 15	categories
-170	operations
+172	operations
