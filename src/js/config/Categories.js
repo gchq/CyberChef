@@ -40,6 +40,8 @@ var Categories = [
             "Show Base64 offsets",
             "To Base32",
             "From Base32",
+            "To Base58",
+            "From Base58",
             "To Base",
             "From Base",
             "To HTML Entity",
