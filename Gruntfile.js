@@ -137,7 +137,7 @@ module.exports = function(grunt) {
         "src/js/lib/xpath.js",
 
         // Custom libraries
-        "src/js/lib/canvas_components.js",
+        "src/js/lib/canvascomponents.js",
 
         // Utility functions
         "src/js/core/Utils.js",
