@@ -9,7 +9,6 @@
  */
 var Base58 = {
 
-
     /**
      * @constant
      * @default
@@ -24,14 +23,11 @@ var Base58 = {
             value: "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz",
         },
     ],
-
-
     /**
      * @constant
      * @default
      */
     REMOVE_NON_ALPH_CHARS: true,
-
 
     /**
      * To Base58 operation.
@@ -41,7 +37,10 @@ var Base58 = {
      * @returns {string}
      */
     runTo: function(input, args) {
-        var alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value;
+        var alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value,
+            result = [0];
+
+        alphabet = Utils.expandAlphRange(alphabet).join("");
 
         if (alphabet.length !== 58 ||
             [].unique.call(alphabet).length !== 58) {
@@ -49,8 +48,6 @@ var Base58 = {
         }
 
         if (input.length === 0) return "";
-
-        var result = [0];
 
         input.forEach(function(b) {
             var carry = (result[0] << 8) + b;
@@ -89,20 +86,18 @@ var Base58 = {
      * @returns {byteArray}
      */
     runFrom: function(input, args) {
-        var alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value;
+        var alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value,
+            removeNonAlphaChars = args[1] === undefined ? true : args[1],
+            result = [0];
+
+        alphabet = Utils.expandAlphRange(alphabet).join("");
 
         if (alphabet.length !== 58 ||
             [].unique.call(alphabet).length !== 58) {
             throw ("Alphabet must be of length 58");
         }
 
-        var removeNonAlphaChars = args[1];
-        if (removeNonAlphaChars === undefined)
-            removeNonAlphaChars = true;
-
         if (input.length === 0) return [];
-
-        var result = [0];
 
         [].forEach.call(input, function(c, charIndex) {
             var index = alphabet.indexOf(c);
@@ -111,7 +106,7 @@ var Base58 = {
                 if (removeNonAlphaChars) {
                     return;
                 } else {
-                    throw ("Char " + c + " not in alphabet");
+                    throw ("Char '" + c + "' at position " + charIndex + " not in alphabet");
                 }
             }
 
@@ -133,4 +128,5 @@ var Base58 = {
 
         return result.reverse();
     },
+
 };

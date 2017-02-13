@@ -229,7 +229,9 @@ textarea.arg {
     display: inline-block;
 }
 
-.editable-option-select {}
+.editable-option-select {
+    min-width: 250px;
+}
 
 .editable-option-input {
     position: absolute;
