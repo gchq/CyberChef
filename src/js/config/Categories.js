@@ -133,6 +133,8 @@ var Categories = [
             "Format MAC addresses",
             "Change IP format",
             "Group IP addresses",
+            "Encode NetBIOS Name",
+            "Decode NetBIOS Name",
         ]
     },
     {
