@@ -138,58 +138,112 @@ Recipe.prototype.lastOpIndex = function(startIndex) {
  * Executes each operation in the recipe over the given Dish.
  *
  * @param {Dish} dish
- * @param {number} [startFrom=0] - The index of the Operation to start executing from
+ * @param {number} [currentStep=0] - The index of the Operation to start executing from
  * @returns {number} - The final progress through the recipe
  */
-Recipe.prototype.execute = function(dish, startFrom) {
-    startFrom = startFrom || 0;
-    var op, input, output, numJumps = 0;
+Recipe.prototype.execute = function(dish, currentStep, state) {
+    var recipe = this;
 
-    for (var i = startFrom; i < this.opList.length; i++) {
-        op = this.opList[i];
-        if (op.isDisabled()) {
-            continue;
-        }
-        if (op.isBreakpoint()) {
-            return i;
+    var formatErrMsg = function(err, step, op) {
+        var e = typeof err == "string" ? { message: err } : err;
+
+        e.progress = step;
+        if (e.fileName) {
+            e.displayStr = op.name + " - " + e.name + " in " +
+                e.fileName + " on line " + e.lineNumber +
+                ".<br><br>Message: " + (e.displayStr || e.message);
+        } else {
+            e.displayStr = op.name + " - " + (e.displayStr || e.message);
         }
 
-        try {
+        return e;
+    };
+
+    // Operations can be asynchronous so we have to return a Promise to a
+    // future value.
+    return new Promise(function(resolve, reject) {
+        // Helper function to clean up recursing to the next recipe step.
+        // It is a closure to avoid having to pass in resolve and reject.
+        var execRecipe = function(recipe, dish, step, state) {
+            return recipe.execute(dish, step, state)
+                .then(function(progress) {
+                    resolve(progress);
+                })
+                .catch(function(err) {
+                    // Pass back the error to the previous caller.
+                    // We don't want to handle the error here as the current
+                    // operation did not cause the error, and so it should
+                    // not appear in the error message.
+                    reject(err);
+                });
+        };
+
+        currentStep = currentStep || 0;
+
+        if (currentStep === recipe.opList.length) {
+            resolve(currentStep);
+            return;
+        }
+
+        var op = recipe.opList[currentStep],
             input = dish.get(op.inputType);
 
+        if (op.isDisabled()) {
+            // Skip to next operation
+            var nextStep = currentStep + 1;
+            execRecipe(recipe, dish, nextStep, state);
+        } else if (op.isBreakpoint()) {
+            // We are at a breakpoint, we shouldn't recurse to the next op.
+            resolve(currentStep);
+        } else  {
+            var operationResult;
+
+            // We must try/catch here because op.run can either return
+            // A) a value
+            // B) a promise
+            // Promise.resolve -> .catch will handle errors from promises
+            // try/catch will handle errors from values
+            try {
+                if (op.isFlowControl()) {
+                    state = {
+                        progress: currentStep,
+                        dish: dish,
+                        opList: recipe.opList,
+                        numJumps: (state && state.numJumps) || 0,
+                    };
+                    operationResult = op.run(state);
+                } else {
+                    operationResult = op.run(input, op.getIngValues());
+                }
+            } catch (err) {
+                reject(formatErrMsg(err, currentStep, op));
+                return;
+            }
+
             if (op.isFlowControl()) {
-                // Package up the current state
-                var state = {
-                    "progress" : i,
-                    "dish"     : dish,
-                    "opList"  : this.opList,
-                    "numJumps" : numJumps
-                };
-
-                state = op.run(state);
-                i = state.progress;
-                numJumps = state.numJumps;
+                Promise.resolve(operationResult)
+                    .then(function(state) {
+                        return recipe.execute(state.dish, state.progress + 1);
+                    })
+                    .then(function(progress) {
+                        resolve(progress);
+                    })
+                    .catch(function(err) {
+                        reject(formatErrMsg(err, currentStep, op));
+                    });
             } else {
-                output = op.run(input, op.getIngValues());
-                dish.set(output, op.outputType);
+                Promise.resolve(operationResult)
+                    .then(function(output) {
+                        dish.set(output, op.outputType);
+                        var nextStep = currentStep + 1;
+                        execRecipe(recipe, dish, nextStep, state);
+                    })
+                    .catch(function(err) {
+                        reject(formatErrMsg(err, currentStep, op));
+                    });
             }
-        } catch (err) {
-            var e = typeof err == "string" ? { message: err } : err;
-
-            e.progress = i;
-            if (e.fileName) {
-                e.displayStr = op.name + " - " + e.name + " in " +
-                    e.fileName + " on line " + e.lineNumber +
-                    ".<br><br>Message: " + (e.displayStr || e.message);
-            } else {
-                e.displayStr = op.name + " - " + (e.displayStr || e.message);
-            }
-
-            throw e;
         }
-    }
-
-    return this.opList.length;
+    });
 };
 
 

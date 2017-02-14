@@ -34,7 +34,7 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
     var startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
-        error      = false;
+        chef       = this;
 
     // Reset attemptHighlight flag
     if (options.hasOwnProperty("attemptHighlight")) {
@@ -64,28 +64,41 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
 
     // If starting from scratch, load data
     if (progress === 0) {
-        this.dish.set(inputText, Dish.STRING);
+        chef.dish.set(inputText, Dish.STRING);
     }
 
-    try {
-        progress = recipe.execute(this.dish, progress);
-    } catch (err) {
-        // Return the error in the result so that everything else gets correctly updated
-        // rather than throwing it here and losing state info.
-        error = err;
-        progress = err.progress;
-    }
-
-    return {
-        result: this.dish.type === Dish.HTML ?
-            this.dish.get(Dish.HTML) :
-            this.dish.get(Dish.STRING),
-        type: Dish.enumLookup(this.dish.type),
-        progress: progress,
+    var ret = {
         options: options,
-        duration: new Date().getTime() - startTime,
-        error: error
+        error: false,
     };
+
+    return new Promise(function(resolve) {
+        recipe.execute(chef.dish, progress)
+            .then(function(progress) {
+                ret.result = chef.dish.type === Dish.HTML ?
+                    chef.dish.get(Dish.HTML) :
+                    chef.dish.get(Dish.STRING);
+                ret.type = Dish.enumLookup(chef.dish.type);
+
+                ret.duration = new Date().getTime() - startTime;
+                ret.progress = progress;
+
+                resolve(ret);
+            })
+            .catch(function(err) {
+                ret.result = chef.dish.type === Dish.HTML ?
+                    chef.dish.get(Dish.HTML) :
+                    chef.dish.get(Dish.STRING);
+                ret.type = Dish.enumLookup(chef.dish.type);
+
+                ret.duration = new Date().getTime() - startTime;
+                ret.progress = err.progress;
+                ret.error = err;
+
+                // Resolve not reject: we are packaging the error as a value.
+                resolve(ret);
+            });
+    });
 };
 
 

@@ -3094,5 +3094,19 @@ var OperationConfig = {
         outputType: "html",
         args: [
         ]
-    }
+    },
+    "Wait": {
+        description: "Waits for a number of milliseconds.",
+        run: FlowControl.runWait,
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "Sleep time in milliseconds",
+                type: "number",
+                value: FlowControl.SLEEP_TIME,
+            }
+        ]
+    },
 };
