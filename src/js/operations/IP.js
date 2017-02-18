@@ -1,4 +1,4 @@
-/* globals BigInteger */
+/* globals BigInteger, Checksum */
 
 /**
  * Internet Protocol address operations.
@@ -78,7 +78,7 @@ var IP = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runParseIpv6: function (input, args) {
+    runParseIPv6: function (input, args) {
         var match,
             output = "";
 
@@ -396,6 +396,91 @@ var IP = {
                 output += "\n";
             }
         }
+
+        return output;
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    IP_HEADER_FORMAT: ["Hex", "Raw"],
+
+    /**
+     * Parse IPv4 header operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runParseIPv4Header: function(input, args) {
+        var format = args[0],
+            output;
+
+        if (format === "Hex") {
+            input = Utils.fromHex(input);
+        } else if (format === "Raw") {
+            input = Utils.strToByteArray(input);
+        } else {
+            return "Unrecognised input format.";
+        }
+
+        var version = (input[0] >>> 4) & 0x0f,
+            ihl = input[0] & 0x0f,
+            dscp = (input[1] >>> 2) & 0x3f,
+            ecn = input[1] & 0x03,
+            length = input[2] << 8 | input[3],
+            identification = input[4] << 8 | input[5],
+            flags = (input[6] >>> 5) & 0x07,
+            fragOffset = (input[6] & 0x1f) << 8 | input[7],
+            ttl = input[8],
+            protocol = input[9],
+            checksum = input[10] << 8 | input[11],
+            srcIP = input[12] << 24 | input[13] << 16 | input[14] << 8 | input[15],
+            dstIP = input[16] << 24 | input[17] << 16 | input[18] << 8 | input[19],
+            checksumHeader = input.slice(0, 10).concat([0, 0]).concat(input.slice(12, 20));
+
+        // Version
+        if (version !== 4) {
+            version = version + " (Error: for IPv4 headers, this should always be set to 4)";
+        }
+
+        // IHL
+        if (ihl < 5) {
+            ihl = ihl + " (Error: this should always be at least 5)";
+        } else if (ihl > 5) {
+            // sort out options...
+        }
+
+        // 
+
+
+        // Check checksum
+        var correctChecksum = Checksum.runTCPIP(checksumHeader, []),
+            givenChecksum = Utils.hex(checksum),
+            checksumResult;
+        if (correctChecksum === givenChecksum) {
+            checksumResult = givenChecksum + " (correct)";
+        } else {
+            checksumResult = givenChecksum + " (incorrect, should be " + correctChecksum + ")";
+        }
+
+        output = "Version: " + version +
+            "\nInternet Header Length (IHL): " + ihl +
+            "\nDifferentiated Services Code Point (DSCP): " + dscp +
+            "\nECN: " + ecn +
+            "\nTotal length: " + length +
+            "\nIdentification: " + identification +
+            "\nFlags: " + flags +
+            "\nFragment offset: " + fragOffset +
+            "\nTime-To-Live: " + ttl +
+            "\nProtocol: " + protocol +
+            "\nHeader checksum: " + checksumResult +
+            "\nSource IP address: " + IP._ipv4ToStr(srcIP) +
+            "\nDestination IP address: " + IP._ipv4ToStr(dstIP) +
+            "\nCorrect checksum: " + Checksum.runTCPIP(checksumHeader, []);
+
 
         return output;
     },

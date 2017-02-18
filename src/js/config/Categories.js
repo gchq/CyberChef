@@ -127,6 +127,7 @@ var Categories = [
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
+            "Parse IPv4 header",
             "Parse URI",
             "URL Encode",
             "URL Decode",
