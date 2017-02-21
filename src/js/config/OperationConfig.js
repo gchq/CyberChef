@@ -797,10 +797,10 @@ var OperationConfig = {
         args: []
     },
     "Parse IPv4 header": {
-        description: "Given an IPv4 header as raw bytes, this operations parses and displays each field in an easily readable format.",
+        description: "Given an IPv4 header, this operations parses and displays each field in an easily readable format.",
         run: IP.runParseIPv4Header,
         inputType: "string",
-        outputType: "string",
+        outputType: "html",
         args: [
             {
                 name: "Input format",
