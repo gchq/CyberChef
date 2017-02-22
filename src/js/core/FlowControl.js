@@ -90,7 +90,7 @@ var FlowControl = {
 
             Promise.all(promises)
                 .then(function(values) {
-                    var progress;
+                    var progress = 0;
 
                     var output = values.map(function(value) {
                         progress = value.progress;
