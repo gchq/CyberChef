@@ -39,6 +39,8 @@
      * Returns the list of tests.
      *
      * @returns {Object[]} tests
+     */
+    TestRegister.prototype.getTests = function() {
         return this.tests;
     };
 
