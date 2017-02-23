@@ -74,7 +74,14 @@
                             ].join("\n");
                         }
                     } else {
-                        if (result.result === test.expectedOutput) {
+                        if (test.expectedError) {
+                            test.status = "failing";
+                            test.output = [
+                                "Failing",
+                                "-------",
+                                "Expected an error but did not receive one.",
+                            ].join("\n");
+                        } else if (result.result === test.expectedOutput) {
                             test.status = "passing";
                         } else {
                             test.status = "failing";

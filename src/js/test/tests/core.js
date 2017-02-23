@@ -22,6 +22,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Example non-error when error was expected",
+        input: "1",
+        expectedError: true,
+        recipeConfig: [
+            {
+                op: "To Base",
+                args: [16],
+            },
+        ],
+    },
+    {
         name: "Example fail",
         input: "1\n2\na\n4",
         expectedOutput: "1\n2\n3\n4",
