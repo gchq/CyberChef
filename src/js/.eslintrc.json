@@ -109,6 +109,10 @@
         "OutputWaiter": false,
         "RecipeWaiter": false,
         "SeasonalWaiter": false,
-        "WindowWaiter": false
+        "WindowWaiter": false,
+
+        /* test */
+        "Vue": false,
+        "TestRegister": false
     }
 }
