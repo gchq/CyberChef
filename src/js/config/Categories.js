@@ -288,6 +288,7 @@ var Categories = [
             "Jump",
             "Conditional Jump",
             "Return",
+            "Wait",
         ]
     },
 ];

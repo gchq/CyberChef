@@ -59,29 +59,53 @@ var FlowControl = {
             }
         }
 
-        var recipe = new Recipe(),
-            output = "",
-            progress = 0;
-
+        var recipe = new Recipe();
         recipe.addOperations(subOpList);
 
-        // Run recipe over each tranche
-        for (i = 0; i < inputs.length; i++) {
-            var dish = new Dish(inputs[i], inputType);
-            try {
-                progress = recipe.execute(dish, 0);
-            } catch (err) {
-                if (!ignoreErrors) {
-                    throw err;
-                }
-                progress = err.progress + 1;
-            }
-            output += dish.get(outputType) + mergeDelim;
-        }
+        return new Promise(function(resolve, reject) {
+            var promises = inputs.map(function(input, i) {
+                var forkDish = new Dish(input, inputType);
 
-        state.dish.set(output, outputType);
-        state.progress += progress;
-        return state;
+                return new Promise(function(resolve, reject) {
+                    recipe.execute(forkDish, 0)
+                        .then(function(progress) {
+                            resolve({
+                                progress: progress,
+                                dish: forkDish,
+                            });
+                        })
+                        .catch(function(err) {
+                            if (ignoreErrors) {
+                                resolve({
+                                    progress: err.progress + 1,
+                                    dish: forkDish,
+                                });
+                            } else {
+                                reject(err);
+                            }
+                        });
+                });
+
+            });
+
+            Promise.all(promises)
+                .then(function(values) {
+                    var progress = 0;
+
+                    var output = values.map(function(value) {
+                        progress = value.progress;
+                        return value.dish.get(outputType);
+                    }).join(mergeDelim);
+
+                    state.progress += progress;
+                    state.dish.set(output, outputType);
+
+                    resolve(state);
+                })
+                .catch(function(err) {
+                    reject(err);
+                });
+        });
     },
 
 
@@ -181,6 +205,34 @@ var FlowControl = {
     runReturn: function(state) {
         state.progress = state.opList.length;
         return state;
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    SLEEP_TIME: 2500,
+
+
+    /**
+     * Wait operation.
+     *
+     * @param {Object} state - The current state of the recipe.
+     * @param {number} state.progress - The current position in the recipe.
+     * @param {Dish} state.dish - The Dish being operated on.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
+     * @returns {Object} The updated state of the recipe.
+     */
+    runWait: function(state) {
+        var ings     = state.opList[state.progress].getIngValues(),
+            sleepTime  = ings[0];
+
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve(state);
+            }, sleepTime);
+        });
     },
 
 };

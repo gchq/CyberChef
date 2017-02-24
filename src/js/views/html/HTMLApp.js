@@ -28,6 +28,9 @@ var HTMLApp = function(categories, operations, defaultFavourites, defaultOptions
     this.progress    = 0;
     this.ingId       = 0;
 
+    this.baking      = false;
+    this.rebake      = false;
+
     window.chef      = this.chef;
 };
 
@@ -62,43 +65,106 @@ HTMLApp.prototype.handleError = function(err) {
 
 
 /**
+ * Updates the UI to show if baking is in process or not.
+ *
+ * @param {bakingStatus}
+ */
+HTMLApp.prototype.setBakingStatus = function(bakingStatus) {
+    var inputLoadingIcon = document.querySelector("#input .title .loading-icon");
+    var outputLoadingIcon = document.querySelector("#output .title .loading-icon");
+
+    var inputElement = document.querySelector("#input-text");
+    var outputElement = document.querySelector("#output-text");
+
+    if (bakingStatus) {
+        inputLoadingIcon.style.display = "inline-block";
+        outputLoadingIcon.style.display = "inline-block";
+        inputElement.classList.add("disabled");
+        outputElement.classList.add("disabled");
+        inputElement.disabled = true;
+        outputElement.disabled = true;
+    } else {
+        inputLoadingIcon.style.display = "none";
+        outputLoadingIcon.style.display = "none";
+        inputElement.classList.remove("disabled");
+        outputElement.classList.remove("disabled");
+        inputElement.disabled = false;
+        outputElement.disabled = false;
+    }
+};
+
+
+/**
  * Calls the Chef to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
 HTMLApp.prototype.bake = function(step) {
-    var response;
+    var app = this;
+
+    if (app.baking) {
+        if (!app.rebake) {
+            // We do not want to keep autobaking
+            // Say that we will rebake and then try again later
+            app.rebake = true;
+            setTimeout(function() {
+                app.bake(step);
+            }, 500);
+        }
+
+        return;
+    }
+
+    app.rebake = false;
+    app.baking = true;
+    app.setBakingStatus(true);
 
     try {
-        response = this.chef.bake(
-            this.getInput(),         // The user's input
-            this.getRecipeConfig(), // The configuration of the recipe
-            this.options,             // Options set by the user
-            this.progress,            // The current position in the recipe
+        app.chef.bake(
+            app.getInput(),         // The user's input
+            app.getRecipeConfig(), // The configuration of the recipe
+            app.options,             // Options set by the user
+            app.progress,            // The current position in the recipe
             step                      // Whether or not to take one step or execute the whole recipe
-        );
+        )
+            .then(function(response) {
+                app.baking = false;
+                app.setBakingStatus(false);
+
+                if (!response) {
+                    return;
+                }
+                if (response.error) {
+                    app.handleError(response.error);
+                }
+
+                app.options  = response.options;
+
+                if (response.type === "html") {
+                    app.dishStr = Utils.stripHtmlTags(response.result, true);
+                } else {
+                    app.dishStr = response.result;
+                }
+
+                app.progress = response.progress;
+                app.manager.recipe.updateBreakpointIndicator(response.progress);
+                app.manager.output.set(response.result, response.type, response.duration);
+
+                // If baking took too long, disable auto-bake
+                if (response.duration > app.options.autoBakeThreshold && app.autoBake_) {
+                    app.manager.controls.setAutoBake(false);
+                    app.alert("Baking took longer than " + app.options.autoBakeThreshold +
+                        "ms, Auto Bake has been disabled.", "warning", 5000);
+                }
+            })
+            .catch(function(err) {
+                console.error("Chef's promise was rejected, should never occur");
+            });
     } catch (err) {
-        this.handleError(err);
-    }
-
-    if (!response) return;
-
-    if (response.error) {
-        this.handleError(response.error);
-    }
-
-    this.options  = response.options;
-    this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
-    this.progress = response.progress;
-    this.manager.recipe.updateBreakpointIndicator(response.progress);
-    this.manager.output.set(response.result, response.type, response.duration);
-
-    // If baking took too long, disable auto-bake
-    if (response.duration > this.options.autoBakeThreshold && this.autoBake_) {
-        this.manager.controls.setAutoBake(false);
-        this.alert("Baking took longer than " + this.options.autoBakeThreshold +
-            "ms, Auto Bake has been disabled.", "warning", 5000);
+        app.baking = false;
+        app.setBakingStatus(false);
+        app.handleError(err);
     }
 };
 
