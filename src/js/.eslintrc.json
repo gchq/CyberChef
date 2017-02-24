@@ -111,8 +111,8 @@
         "SeasonalWaiter": false,
         "WindowWaiter": false,
 
-        /* test */
-        "Vue": false,
-        "TestRegister": false
+        /* tests */
+        "TestRegister": false,
+        "TestRunner": false
     }
 }

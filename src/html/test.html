@@ -25,72 +25,10 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>CyberChef Test Runner</title>
-        <link rel="icon" type="image/png" href="images/favicon.ico?__inline" />
-        <link href="styles.css" rel="stylesheet" />
+        <title>CyberChef</title>
     </head>
     <body>
-        <template id="test-status-icon-template">
-            <span>{{ getIcon() }}</span>
-        </template>
-
-        <template id="test-stats-template">
-            <div class="text-center row">
-                <div class="col-md-2"
-                     v-for="status in ['Waiting', 'Loading', 'Erroring', 'Failing']">
-                    <test-status-icon :status="status.toLowerCase()"></test-status-icon>
-                    <br>
-                    {{ status }}
-                    <br>
-                    {{ countTestsWithStatus(status.toLowerCase()) }}
-                </div>
-                <div class="col-md-2">
-                    <test-status-icon status="passing"></test-status-icon>
-                    <br>
-                    Passing
-                    <br>
-                    {{ countTestsWithStatus("passing") }}
-                    /
-                    {{ tests.length }}
-                </div>
-                <div class="col-md-2">
-                    <test-status-icon status="passing"></test-status-icon>
-                    <br>
-                    % Passing
-                    <br>
-                    {{ ((100.0 * countTestsWithStatus("passing")) / tests.length).toFixed(1) }}%
-                </div>
-            </div>
-        </template>
-
-        <template id="tests-template">
-            <table class="table table-striped">
-                <tbody>
-                    <tr v-for="test in tests">
-                        <td class="col-md-1 col-sm-4">
-                            <test-status-icon :status="test.status"></test-status-icon>
-                        </td>
-                        <td class="col-md-4 col-sm-8">
-                            {{ test.name }}
-                        </td>
-                        <td class="col-md-7 col-sm-12">
-                            <pre v-if="test.output"><code>{{ test.output }}</code></pre>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </template>
-
-        <div class="container">
-            <main>
-                <h1>CyberChef Test Runner</h1>
-                <hr>
-                <test-stats :tests="tests"></test-stats>
-                <hr>
-                <tests :tests="tests"></tests>
-            </main>
-        </div>
-
-        <script type="application/javascript" src="scripts.js"></script>
+        <main style="white-space: pre"></main>
+        <script type="application/javascript" src="tests.js"></script>
     </body>
 </html>

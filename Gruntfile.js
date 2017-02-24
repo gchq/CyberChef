@@ -10,13 +10,13 @@ module.exports = function(grunt) {
         ["clean:dev", "concat:css", "concat:js", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
 
     grunt.registerTask("test",
-        "A persistent task which creates a test build whenever source files are modified.",
-        ["clean:dev", "concat:cssTest", "concat:jsTest", "copy:htmlTest", "copy:staticTest", "chmod:build", "watch"]);
+        "A task which runs all the tests in test/tests.",
+        ["clean:test", "concat:jsTest", "copy:htmlTest", "chmod:build", "exec:tests"]);
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         ["eslint", "exec:stats", "clean", "jsdoc", "concat", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
-         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
+         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod", "test"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -138,6 +138,7 @@ module.exports = function(grunt) {
         "src/js/lib/vkbeautify.js",
         "src/js/lib/Sortable.js",
         "src/js/lib/bootstrap-colorpicker.js",
+        "src/js/lib/es6-promise.auto.js",
         "src/js/lib/xpath.js",
 
         // Custom libraries
@@ -171,11 +172,9 @@ module.exports = function(grunt) {
     var jsTestFiles = [].concat(
         jsIncludes,
         [
-            "src/js/lib/vuejs/vue.min.js",
-            "src/js/test/*.js",
-            "src/js/test/tests/**/*",
-            // Start the test runner app!
-            "src/js/test/views/html/main.js",
+            "test/TestRegister.js",
+            "test/tests/**/*.js",
+            "test/TestRunner.js",
         ]
     );
 
@@ -219,7 +218,11 @@ module.exports = function(grunt) {
             config: ["src/js/config/**/*.js"],
             views: ["src/js/views/**/*.js"],
             operations: ["src/js/operations/**/*.js"],
-            tests: ["src/js/test/**/*.js"],
+            tests: [
+                "test/**/*.js",
+                "!test/PhantomRunner.js",
+                "!test/NodeRunner.js",
+            ],
         },
         jsdoc: {
             options: {
@@ -238,6 +241,7 @@ module.exports = function(grunt) {
         },
         clean: {
             dev: ["build/dev/*"],
+            test: ["build/test/*"],
             prod: ["build/prod/*"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
         },
@@ -261,22 +265,6 @@ module.exports = function(grunt) {
                 ],
                 dest: "build/dev/styles.css"
             },
-            cssTest: {
-                options: {
-                    banner: banner.replace(/\/\*\*/g, "/*!"),
-                    process: function(content, srcpath) {
-                        // Change special comments from /** to /*! to comply with cssmin
-                        content = content.replace(/^\/\*\* /g, "/*! ");
-                        return grunt.template.process(content);
-                    }
-                },
-                src: [
-                    "src/css/lib/**/*.css",
-                    "src/css/structure/**/*.css",
-                    "src/css/themes/classic.css"
-                ],
-                dest: "build/test/styles.css"
-            },
             js: {
                 options: {
                     banner: '"use strict";\n'
@@ -289,7 +277,7 @@ module.exports = function(grunt) {
                     banner: '"use strict";\n'
                 },
                 src: jsTestFiles,
-                dest: "build/test/scripts.js"
+                dest: "build/test/tests.js"
             }
         },
         copy: {
@@ -345,21 +333,6 @@ module.exports = function(grunt) {
                             "!ga.html"
                         ],
                         dest: "build/dev/"
-                    }
-                ]
-            },
-            staticTest: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "src/static/",
-                        src: [
-                            "**/*",
-                            "**/.*",
-                            "!stats.txt",
-                            "!ga.html"
-                        ],
-                        dest: "build/test/"
                     }
                 ]
             },
@@ -478,6 +451,9 @@ module.exports = function(grunt) {
             }
         },
         exec: {
+            tests: {
+                command: "node test/NodeRunner.js",
+            },
             repoSize: {
                 command: [
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
@@ -537,15 +513,15 @@ module.exports = function(grunt) {
             },
             js: {
                 files: "src/js/**/*.js",
-                tasks: ["concat:js", "concat:jsTest", "chmod:build"]
+                tasks: ["concat:js", "chmod:build"]
             },
             html: {
                 files: "src/html/**/*.html",
-                tasks: ["copy:htmlDev", "copy:htmlTest", "chmod:build"]
+                tasks: ["copy:htmlDev", "chmod:build"]
             },
             static: {
                 files: ["src/static/**/*", "src/static/**/.*"],
-                tasks: ["copy:staticDev", "copy:staticTest", "chmod:build"]
+                tasks: ["copy:staticDev", "chmod:build"]
             },
             grunt: {
                 files: "Gruntfile.js",
