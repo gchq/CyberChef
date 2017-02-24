@@ -1,4 +1,4 @@
-/* globals BigInteger */
+/* globals BigInteger, Checksum */
 
 /**
  * Internet Protocol address operations.
@@ -78,7 +78,7 @@ var IP = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runParseIpv6: function (input, args) {
+    runParseIPv6: function (input, args) {
         var match,
             output = "";
 
@@ -398,6 +398,102 @@ var IP = {
         }
 
         return output;
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    IP_HEADER_FORMAT: ["Hex", "Raw"],
+
+    /**
+     * Parse IPv4 header operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    runParseIPv4Header: function(input, args) {
+        var format = args[0],
+            output;
+
+        if (format === "Hex") {
+            input = Utils.fromHex(input);
+        } else if (format === "Raw") {
+            input = Utils.strToByteArray(input);
+        } else {
+            return "Unrecognised input format.";
+        }
+
+        var version = (input[0] >>> 4) & 0x0f,
+            ihl = input[0] & 0x0f,
+            dscp = (input[1] >>> 2) & 0x3f,
+            ecn = input[1] & 0x03,
+            length = input[2] << 8 | input[3],
+            identification = input[4] << 8 | input[5],
+            flags = (input[6] >>> 5) & 0x07,
+            fragOffset = (input[6] & 0x1f) << 8 | input[7],
+            ttl = input[8],
+            protocol = input[9],
+            checksum = input[10] << 8 | input[11],
+            srcIP = input[12] << 24 | input[13] << 16 | input[14] << 8 | input[15],
+            dstIP = input[16] << 24 | input[17] << 16 | input[18] << 8 | input[19],
+            checksumHeader = input.slice(0, 10).concat([0, 0]).concat(input.slice(12, 20)),
+            options = [];
+
+        // Version
+        if (version !== 4) {
+            version = version + " (Error: for IPv4 headers, this should always be set to 4)";
+        }
+
+        // IHL
+        if (ihl < 5) {
+            ihl = ihl + " (Error: this should always be at least 5)";
+        } else if (ihl > 5) {
+            // sort out options...
+            var optionsLen = ihl * 4 - 20;
+            options = input.slice(20, optionsLen + 20);
+        }
+
+        // Protocol
+        var protocolInfo = IP._protocolLookup[protocol] || {keyword: "", protocol: ""};
+
+        // Checksum
+        var correctChecksum = Checksum.runTCPIP(checksumHeader, []),
+            givenChecksum = Utils.hex(checksum),
+            checksumResult;
+        if (correctChecksum === givenChecksum) {
+            checksumResult = givenChecksum + " (correct)";
+        } else {
+            checksumResult = givenChecksum + " (incorrect, should be " + correctChecksum + ")";
+        }
+
+        output = "<table class='table table-hover table-condensed table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>" +
+            "<tr><td>Version</td><td>" + version + "</td></tr>" +
+            "<tr><td>Internet Header Length (IHL)</td><td>" + ihl + " (" + (ihl * 4) + " bytes)</td></tr>" +
+            "<tr><td>Differentiated Services Code Point (DSCP)</td><td>" + dscp + "</td></tr>" +
+            "<tr><td>Explicit Congestion Notification (ECN)</td><td>" + ecn + "</td></tr>" +
+            "<tr><td>Total length</td><td>" + length + " bytes" +
+            "\n  IP header: " + (ihl * 4) + " bytes" +
+            "\n  Data: " + (length - ihl * 4) + " bytes</td></tr>" +
+            "<tr><td>Identification</td><td>0x" + Utils.hex(identification) + " (" + identification + ")</td></tr>" +
+            "<tr><td>Flags</td><td>0x" + Utils.hex(flags, 2) +
+            "\n  Reserved bit:" + (flags >> 2) + " (must be 0)" +
+            "\n  Don't fragment:" + (flags >> 1 & 1) +
+            "\n  More fragments:" + (flags & 1) + "</td></tr>" +
+            "<tr><td>Fragment offset</td><td>" + fragOffset + "</td></tr>" +
+            "<tr><td>Time-To-Live</td><td>" + ttl + "</td></tr>" +
+            "<tr><td>Protocol</td><td>" + protocol + ", " + protocolInfo.protocol + " (" + protocolInfo.keyword + ")</td></tr>" +
+            "<tr><td>Header checksum</td><td>" + checksumResult + "</td></tr>" +
+            "<tr><td>Source IP address</td><td>" + IP._ipv4ToStr(srcIP) + "</td></tr>" +
+            "<tr><td>Destination IP address</td><td>" + IP._ipv4ToStr(dstIP) + "</td></tr>";
+
+        if (ihl > 5) {
+            output += "<tr><td>Options</td><td>" + Utils.byteArrayToHex(options) + "</td></tr>";
+        }
+
+        return output + "</table>";
     },
 
 
@@ -803,5 +899,163 @@ var IP = {
         }
         return range;
     },
+
+
+    /**
+     * Lookup table for Internet Protocols.
+     * Taken from https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+     *
+     * @private
+     * @constant
+     */
+    _protocolLookup: {
+        0: {keyword: "HOPOPT", protocol: "IPv6 Hop-by-Hop Option"},
+        1: {keyword: "ICMP", protocol: "Internet Control Message"},
+        2: {keyword: "IGMP", protocol: "Internet Group Management"},
+        3: {keyword: "GGP", protocol: "Gateway-to-Gateway"},
+        4: {keyword: "IPv4", protocol: "IPv4 encapsulation"},
+        5: {keyword: "ST", protocol: "Stream"},
+        6: {keyword: "TCP", protocol: "Transmission Control"},
+        7: {keyword: "CBT", protocol: "CBT"},
+        8: {keyword: "EGP", protocol: "Exterior Gateway Protocol"},
+        9: {keyword: "IGP", protocol: "any private interior gateway (used by Cisco for their IGRP)"},
+        10: {keyword: "BBN-RCC-MON", protocol: "BBN RCC Monitoring"},
+        11: {keyword: "NVP-II", protocol: "Network Voice Protocol"},
+        12: {keyword: "PUP", protocol: "PUP"},
+        13: {keyword: "ARGUS (deprecated)", protocol: "ARGUS"},
+        14: {keyword: "EMCON", protocol: "EMCON"},
+        15: {keyword: "XNET", protocol: "Cross Net Debugger"},
+        16: {keyword: "CHAOS", protocol: "Chaos"},
+        17: {keyword: "UDP", protocol: "User Datagram"},
+        18: {keyword: "MUX", protocol: "Multiplexing"},
+        19: {keyword: "DCN-MEAS", protocol: "DCN Measurement Subsystems"},
+        20: {keyword: "HMP", protocol: "Host Monitoring"},
+        21: {keyword: "PRM", protocol: "Packet Radio Measurement"},
+        22: {keyword: "XNS-IDP", protocol: "XEROX NS IDP"},
+        23: {keyword: "TRUNK-1", protocol: "Trunk-1"},
+        24: {keyword: "TRUNK-2", protocol: "Trunk-2"},
+        25: {keyword: "LEAF-1", protocol: "Leaf-1"},
+        26: {keyword: "LEAF-2", protocol: "Leaf-2"},
+        27: {keyword: "RDP", protocol: "Reliable Data Protocol"},
+        28: {keyword: "IRTP", protocol: "Internet Reliable Transaction"},
+        29: {keyword: "ISO-TP4", protocol: "ISO Transport Protocol Class 4"},
+        30: {keyword: "NETBLT", protocol: "Bulk Data Transfer Protocol"},
+        31: {keyword: "MFE-NSP", protocol: "MFE Network Services Protocol"},
+        32: {keyword: "MERIT-INP", protocol: "MERIT Internodal Protocol"},
+        33: {keyword: "DCCP", protocol: "Datagram Congestion Control Protocol"},
+        34: {keyword: "3PC", protocol: "Third Party Connect Protocol"},
+        35: {keyword: "IDPR", protocol: "Inter-Domain Policy Routing Protocol"},
+        36: {keyword: "XTP", protocol: "XTP"},
+        37: {keyword: "DDP", protocol: "Datagram Delivery Protocol"},
+        38: {keyword: "IDPR-CMTP", protocol: "IDPR Control Message Transport Proto"},
+        39: {keyword: "TP++", protocol: "TP++ Transport Protocol"},
+        40: {keyword: "IL", protocol: "IL Transport Protocol"},
+        41: {keyword: "IPv6", protocol: "IPv6 encapsulation"},
+        42: {keyword: "SDRP", protocol: "Source Demand Routing Protocol"},
+        43: {keyword: "IPv6-Route", protocol: "Routing Header for IPv6"},
+        44: {keyword: "IPv6-Frag", protocol: "Fragment Header for IPv6"},
+        45: {keyword: "IDRP", protocol: "Inter-Domain Routing Protocol"},
+        46: {keyword: "RSVP", protocol: "Reservation Protocol"},
+        47: {keyword: "GRE", protocol: "Generic Routing Encapsulation"},
+        48: {keyword: "DSR", protocol: "Dynamic Source Routing Protocol"},
+        49: {keyword: "BNA", protocol: "BNA"},
+        50: {keyword: "ESP", protocol: "Encap Security Payload"},
+        51: {keyword: "AH", protocol: "Authentication Header"},
+        52: {keyword: "I-NLSP", protocol: "Integrated Net Layer Security  TUBA"},
+        53: {keyword: "SWIPE (deprecated)", protocol: "IP with Encryption"},
+        54: {keyword: "NARP", protocol: "NBMA Address Resolution Protocol"},
+        55: {keyword: "MOBILE", protocol: "IP Mobility"},
+        56: {keyword: "TLSP", protocol: "Transport Layer Security Protocol using Kryptonet key management"},
+        57: {keyword: "SKIP", protocol: "SKIP"},
+        58: {keyword: "IPv6-ICMP", protocol: "ICMP for IPv6"},
+        59: {keyword: "IPv6-NoNxt", protocol: "No Next Header for IPv6"},
+        60: {keyword: "IPv6-Opts", protocol: "Destination Options for IPv6"},
+        61: {keyword: "", protocol: "any host internal protocol"},
+        62: {keyword: "CFTP", protocol: "CFTP"},
+        63: {keyword: "", protocol: "any local network"},
+        64: {keyword: "SAT-EXPAK", protocol: "SATNET and Backroom EXPAK"},
+        65: {keyword: "KRYPTOLAN", protocol: "Kryptolan"},
+        66: {keyword: "RVD", protocol: "MIT Remote Virtual Disk Protocol"},
+        67: {keyword: "IPPC", protocol: "Internet Pluribus Packet Core"},
+        68: {keyword: "", protocol: "any distributed file system"},
+        69: {keyword: "SAT-MON", protocol: "SATNET Monitoring"},
+        70: {keyword: "VISA", protocol: "VISA Protocol"},
+        71: {keyword: "IPCV", protocol: "Internet Packet Core Utility"},
+        72: {keyword: "CPNX", protocol: "Computer Protocol Network Executive"},
+        73: {keyword: "CPHB", protocol: "Computer Protocol Heart Beat"},
+        74: {keyword: "WSN", protocol: "Wang Span Network"},
+        75: {keyword: "PVP", protocol: "Packet Video Protocol"},
+        76: {keyword: "BR-SAT-MON", protocol: "Backroom SATNET Monitoring"},
+        77: {keyword: "SUN-ND", protocol: "SUN ND PROTOCOL-Temporary"},
+        78: {keyword: "WB-MON", protocol: "WIDEBAND Monitoring"},
+        79: {keyword: "WB-EXPAK", protocol: "WIDEBAND EXPAK"},
+        80: {keyword: "ISO-IP", protocol: "ISO Internet Protocol"},
+        81: {keyword: "VMTP", protocol: "VMTP"},
+        82: {keyword: "SECURE-VMTP", protocol: "SECURE-VMTP"},
+        83: {keyword: "VINES", protocol: "VINES"},
+        84: {keyword: "TTP", protocol: "Transaction Transport Protocol"},
+        85: {keyword: "NSFNET-IGP", protocol: "NSFNET-IGP"},
+        86: {keyword: "DGP", protocol: "Dissimilar Gateway Protocol"},
+        87: {keyword: "TCF", protocol: "TCF"},
+        88: {keyword: "EIGRP", protocol: "EIGRP"},
+        89: {keyword: "OSPFIGP", protocol: "OSPFIGP"},
+        90: {keyword: "Sprite-RPC", protocol: "Sprite RPC Protocol"},
+        91: {keyword: "LARP", protocol: "Locus Address Resolution Protocol"},
+        92: {keyword: "MTP", protocol: "Multicast Transport Protocol"},
+        93: {keyword: "AX.25", protocol: "AX.25 Frames"},
+        94: {keyword: "IPIP", protocol: "IP-within-IP Encapsulation Protocol"},
+        95: {keyword: "MICP (deprecated)", protocol: "Mobile Internetworking Control Pro."},
+        96: {keyword: "SCC-SP", protocol: "Semaphore Communications Sec. Pro."},
+        97: {keyword: "ETHERIP", protocol: "Ethernet-within-IP Encapsulation"},
+        98: {keyword: "ENCAP", protocol: "Encapsulation Header"},
+        99: {keyword: "", protocol: "any private encryption scheme"},
+        100: {keyword: "GMTP", protocol: "GMTP"},
+        101: {keyword: "IFMP", protocol: "Ipsilon Flow Management Protocol"},
+        102: {keyword: "PNNI", protocol: "PNNI over IP"},
+        103: {keyword: "PIM", protocol: "Protocol Independent Multicast"},
+        104: {keyword: "ARIS", protocol: "ARIS"},
+        105: {keyword: "SCPS", protocol: "SCPS"},
+        106: {keyword: "QNX", protocol: "QNX"},
+        107: {keyword: "A/N", protocol: "Active Networks"},
+        108: {keyword: "IPComp", protocol: "IP Payload Compression Protocol"},
+        109: {keyword: "SNP", protocol: "Sitara Networks Protocol"},
+        110: {keyword: "Compaq-Peer", protocol: "Compaq Peer Protocol"},
+        111: {keyword: "IPX-in-IP", protocol: "IPX in IP"},
+        112: {keyword: "VRRP", protocol: "Virtual Router Redundancy Protocol"},
+        113: {keyword: "PGM", protocol: "PGM Reliable Transport Protocol"},
+        114: {keyword: "", protocol: "any 0-hop protocol"},
+        115: {keyword: "L2TP", protocol: "Layer Two Tunneling Protocol"},
+        116: {keyword: "DDX", protocol: "D-II Data Exchange (DDX)"},
+        117: {keyword: "IATP", protocol: "Interactive Agent Transfer Protocol"},
+        118: {keyword: "STP", protocol: "Schedule Transfer Protocol"},
+        119: {keyword: "SRP", protocol: "SpectraLink Radio Protocol"},
+        120: {keyword: "UTI", protocol: "UTI"},
+        121: {keyword: "SMP", protocol: "Simple Message Protocol"},
+        122: {keyword: "SM (deprecated)", protocol: "Simple Multicast Protocol"},
+        123: {keyword: "PTP", protocol: "Performance Transparency Protocol"},
+        124: {keyword: "ISIS over IPv4", protocol: ""},
+        125: {keyword: "FIRE", protocol: ""},
+        126: {keyword: "CRTP", protocol: "Combat Radio Transport Protocol"},
+        127: {keyword: "CRUDP", protocol: "Combat Radio User Datagram"},
+        128: {keyword: "SSCOPMCE", protocol: ""},
+        129: {keyword: "IPLT", protocol: ""},
+        130: {keyword: "SPS", protocol: "Secure Packet Shield"},
+        131: {keyword: "PIPE", protocol: "Private IP Encapsulation within IP"},
+        132: {keyword: "SCTP", protocol: "Stream Control Transmission Protocol"},
+        133: {keyword: "FC", protocol: "Fibre Channel"},
+        134: {keyword: "RSVP-E2E-IGNORE", protocol: ""},
+        135: {keyword: "Mobility Header", protocol: ""},
+        136: {keyword: "UDPLite", protocol: ""},
+        137: {keyword: "MPLS-in-IP", protocol: ""},
+        138: {keyword: "manet", protocol: "MANET Protocols"},
+        139: {keyword: "HIP", protocol: "Host Identity Protocol"},
+        140: {keyword: "Shim6", protocol: "Shim6 Protocol"},
+        141: {keyword: "WESP", protocol: "Wrapped Encapsulating Security Payload"},
+        142: {keyword: "ROHC", protocol: "Robust Header Compression"},
+        253: {keyword: "", protocol: "Use for experimentation and testing"},
+        254: {keyword: "", protocol: "Use for experimentation and testing"},
+        255: {keyword: "Reserved", protocol: ""}
+    },
+
 
 };

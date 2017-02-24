@@ -791,10 +791,23 @@ var OperationConfig = {
     },
     "Parse IPv6 address": {
         description: "Displays the longhand and shorthand versions of a valid IPv6 address.<br><br>Recognises all reserved ranges and parses encapsulated or tunnelled addresses including Teredo and 6to4.",
-        run: IP.runParseIpv6,
+        run: IP.runParseIPv6,
         inputType: "string",
         outputType: "string",
         args: []
+    },
+    "Parse IPv4 header": {
+        description: "Given an IPv4 header, this operations parses and displays each field in an easily readable format.",
+        run: IP.runParseIPv4Header,
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Input format",
+                type: "option",
+                value: IP.IP_HEADER_FORMAT
+            }
+        ]
     },
     "Text encoding": {
         description: "Translates the data between different character encodings.<br><br>Supported charsets are:<ul><li>UTF8</li><li>UTF16</li><li>UTF16LE (little-endian)</li><li>UTF16BE (big-endian)</li><li>Hex</li><li>Base64</li><li>Latin1 (ISO-8859-1)</li><li>Windows-1251</li></ul>",
@@ -2034,7 +2047,7 @@ var OperationConfig = {
         ]
     },
     "Regular expression": {
-        description: "Define your own regular expression to search the input data with, optionally choosing from a list of pre-defined patterns.",
+        description: "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.",
         run: StrUtils.runRegex,
         manualBake: true,
         inputType: "string",

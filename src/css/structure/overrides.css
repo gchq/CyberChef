@@ -77,6 +77,10 @@ optgroup {
     content: "";
 }
 
+.table-nonfluid {
+    width: auto !important;
+}
+
 
 /* Bootstrap-switch */
 
