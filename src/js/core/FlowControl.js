@@ -225,8 +225,8 @@ var FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runWait: function(state) {
-        var ings     = state.opList[state.progress].getIngValues(),
-            sleepTime  = ings[0];
+        var ings = state.opList[state.progress].getIngValues(),
+            sleepTime = ings[0];
 
         return new Promise(function(resolve, reject) {
             setTimeout(function() {

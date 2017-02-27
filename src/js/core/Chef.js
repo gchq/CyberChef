@@ -79,7 +79,6 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
                     chef.dish.get(Dish.HTML) :
                     chef.dish.get(Dish.STRING);
                 ret.type = Dish.enumLookup(chef.dish.type);
-
                 ret.duration = new Date().getTime() - startTime;
                 ret.progress = progress;
 
@@ -90,7 +89,6 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
                     chef.dish.get(Dish.HTML) :
                     chef.dish.get(Dish.STRING);
                 ret.type = Dish.enumLookup(chef.dish.type);
-
                 ret.duration = new Date().getTime() - startTime;
                 ret.progress = err.progress;
                 ret.error = err;

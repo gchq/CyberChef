@@ -24,12 +24,10 @@ var HTMLApp = function(categories, operations, defaultFavourites, defaultOptions
     this.chef        = new Chef();
     this.manager     = new Manager(this);
 
+    this.baking      = false;
     this.autoBake_   = false;
     this.progress    = 0;
     this.ingId       = 0;
-
-    this.baking      = false;
-    this.rebake      = false;
 
     window.chef      = this.chef;
 };
@@ -70,11 +68,12 @@ HTMLApp.prototype.handleError = function(err) {
  * @param {bakingStatus}
  */
 HTMLApp.prototype.setBakingStatus = function(bakingStatus) {
-    var inputLoadingIcon = document.querySelector("#input .title .loading-icon");
-    var outputLoadingIcon = document.querySelector("#output .title .loading-icon");
+    this.baking = bakingStatus;
 
-    var inputElement = document.querySelector("#input-text");
-    var outputElement = document.querySelector("#output-text");
+    var inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
+        outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
+        inputElement = document.querySelector("#input-text"),
+        outputElement = document.querySelector("#output-text");
 
     if (bakingStatus) {
         inputLoadingIcon.style.display = "inline-block";
@@ -97,49 +96,30 @@ HTMLApp.prototype.setBakingStatus = function(bakingStatus) {
 /**
  * Calls the Chef to bake the current input using the current recipe.
  *
- * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
- *   whole recipe.
+ * @param {boolean} [step] - Set to true if we should only execute one operation instead of the whole recipe.
  */
 HTMLApp.prototype.bake = function(step) {
     var app = this;
 
-    if (app.baking) {
-        if (!app.rebake) {
-            // We do not want to keep autobaking
-            // Say that we will rebake and then try again later
-            app.rebake = true;
-            setTimeout(function() {
-                app.bake(step);
-            }, 500);
-        }
+    if (app.baking) return;
 
-        return;
-    }
-
-    app.rebake = false;
-    app.baking = true;
     app.setBakingStatus(true);
 
     try {
         app.chef.bake(
-            app.getInput(),         // The user's input
+            app.getInput(),        // The user's input
             app.getRecipeConfig(), // The configuration of the recipe
-            app.options,             // Options set by the user
-            app.progress,            // The current position in the recipe
-            step                      // Whether or not to take one step or execute the whole recipe
+            app.options,           // Options set by the user
+            app.progress,          // The current position in the recipe
+            step                   // Whether or not to take one step or execute the whole recipe
         )
             .then(function(response) {
-                app.baking = false;
                 app.setBakingStatus(false);
 
-                if (!response) {
-                    return;
-                }
-                if (response.error) {
-                    app.handleError(response.error);
-                }
+                if (!response) return;
+                if (response.error) app.handleError(response.error);
 
-                app.options  = response.options;
+                app.options = response.options;
 
                 if (response.type === "html") {
                     app.dishStr = Utils.stripHtmlTags(response.result, true);
@@ -159,10 +139,9 @@ HTMLApp.prototype.bake = function(step) {
                 }
             })
             .catch(function(err) {
-                console.error("Chef's promise was rejected, should never occur");
+                console.error("Chef's promise was rejected, this should never occur");
             });
     } catch (err) {
-        app.baking = false;
         app.setBakingStatus(false);
         app.handleError(err);
     }

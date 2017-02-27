@@ -3135,7 +3135,7 @@ var OperationConfig = {
         ]
     },
     "Wait": {
-        description: "Waits for a number of milliseconds.",
+        description: "Sleeps for a number of milliseconds.",
         run: FlowControl.runWait,
         inputType: "string",
         outputType: "string",
