@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean:test", "concat:jsTest", "copy:htmlTest", "chmod:build", "exec:tests"]);
+        ["clean:test", "concat:jsTest", "copy:htmlTest", "chmod:build", "execute:test"]);
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
@@ -35,6 +35,7 @@ module.exports = function(grunt) {
         ["eslint", "exec:stats", "exec:displayStats"]);
 
     grunt.registerTask("doc", "docs");
+    grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
 
 
@@ -50,6 +51,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-inline-alt");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
+    grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-contrib-watch");
 
 
@@ -161,22 +163,16 @@ module.exports = function(grunt) {
 
     ];
 
-    var jsAppFiles = [].concat(
-        jsIncludes,
-        [
-            // Start the main app!
-            "src/js/views/html/main.js",
-        ]
-    );
+    var jsAppFiles = jsIncludes.concat([
+        // Start the main app!
+        "src/js/views/html/main.js",
+    ]);
 
-    var jsTestFiles = [].concat(
-        jsIncludes,
-        [
-            "test/TestRegister.js",
-            "test/tests/**/*.js",
-            "test/TestRunner.js",
-        ]
-    );
+    var jsTestFiles = jsIncludes.concat([
+        "test/TestRegister.js",
+        "test/tests/**/*.js",
+        "test/TestRunner.js",
+    ]);
 
     var banner = '/**\n\
  * CyberChef - The Cyber Swiss Army Knife\n\
@@ -218,11 +214,7 @@ module.exports = function(grunt) {
             config: ["src/js/config/**/*.js"],
             views: ["src/js/views/**/*.js"],
             operations: ["src/js/operations/**/*.js"],
-            tests: [
-                "test/**/*.js",
-                "!test/PhantomRunner.js",
-                "!test/NodeRunner.js",
-            ],
+            tests: ["test/**/*.js"],
         },
         jsdoc: {
             options: {
@@ -241,8 +233,8 @@ module.exports = function(grunt) {
         },
         clean: {
             dev: ["build/dev/*"],
-            test: ["build/test/*"],
             prod: ["build/prod/*"],
+            test: ["build/test/*"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
         },
         concat: {
@@ -291,12 +283,7 @@ module.exports = function(grunt) {
                 dest: "build/dev/index.html"
             },
             htmlTest: {
-                options: {
-                    process: function(content, srcpath) {
-                        return grunt.template.process(content, templateOptions);
-                    }
-                },
-                src: "src/html/test.html",
+                src: "test/test.html",
                 dest: "build/test/index.html"
             },
             htmlProd: {
@@ -451,9 +438,6 @@ module.exports = function(grunt) {
             }
         },
         exec: {
-            tests: {
-                command: "node test/NodeRunner.js",
-            },
             repoSize: {
                 command: [
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
@@ -505,6 +489,9 @@ module.exports = function(grunt) {
                         "git checkout build/prod/index.html"
                 ].join(";")
             }
+        },
+        execute: {
+            test: "test/NodeRunner.js"
         },
         watch: {
             css: {

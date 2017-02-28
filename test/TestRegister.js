@@ -4,21 +4,22 @@
  * This is so individual files can register their tests in one place, and
  * ensure that they will get run by the frontend.
  *
- * @author tlwr [toby@toby.codes
- *
+ * @author tlwr [toby@toby.codes]
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
- *
  */
+
 (function() {
     /**
-     * Add a list of tests to the register.
+     * Object to store and run the list of tests.
      *
      * @class
+     * @constructor
      */
     function TestRegister() {
         this.tests = [];
     }
+
 
     /**
      * Add a list of tests to the register.
@@ -29,18 +30,9 @@
         this.tests = this.tests.concat(tests);
     };
 
-    /**
-     * Returns the list of tests.
-     *
-     * @returns {Object[]} tests
-     */
-    TestRegister.prototype.getTests = function() {
-        return this.tests;
-    };
 
     /**
      * Runs all the tests in the register.
-     *
      */
     TestRegister.prototype.runTests = function() {
         return Promise.all(
@@ -52,7 +44,7 @@
                     test.recipeConfig,
                     {},
                     0,
-                    0
+                    false
                 ))
                 .then(function(result) {
                     var ret = {
@@ -90,6 +82,7 @@
             })
         );
     };
+
 
     // Singleton TestRegister, keeping things simple and obvious.
     window.TestRegister = new TestRegister();

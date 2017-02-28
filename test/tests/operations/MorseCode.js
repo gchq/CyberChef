@@ -1,11 +1,10 @@
 /**
  * Base58 tests.
  *
- * @author tlwr [toby@toby.codes
+ * @author tlwr [toby@toby.codes]
  *
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
- *
  */
 TestRegister.addTests([
     {
