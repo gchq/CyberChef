@@ -9,10 +9,14 @@ module.exports = function(grunt) {
         "A persistent task which creates a development build whenever source files are modified.",
         ["clean:dev", "concat:css", "concat:js", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
 
+    grunt.registerTask("test",
+        "A task which runs all the tests in test/tests.",
+        ["clean:test", "concat:jsTest", "copy:htmlTest", "chmod:build", "execute:test"]);
+
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         ["eslint", "exec:stats", "clean", "jsdoc", "concat", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
-         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
+         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod", "test"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -31,6 +35,7 @@ module.exports = function(grunt) {
         ["eslint", "exec:stats", "exec:displayStats"]);
 
     grunt.registerTask("doc", "docs");
+    grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
 
 
@@ -46,11 +51,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-inline-alt");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
+    grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-contrib-watch");
 
 
     // JS includes
-    var jsFiles = [
+    var jsIncludes = [
         // Third party framework libraries
         "src/js/lib/jquery-2.1.1.js",
         "src/js/lib/bootstrap-3.3.6.js",
@@ -134,6 +140,7 @@ module.exports = function(grunt) {
         "src/js/lib/vkbeautify.js",
         "src/js/lib/Sortable.js",
         "src/js/lib/bootstrap-colorpicker.js",
+        "src/js/lib/es6-promise.auto.js",
         "src/js/lib/xpath.js",
 
         // Custom libraries
@@ -154,9 +161,18 @@ module.exports = function(grunt) {
         "src/js/views/html/*.js",
         "!src/js/views/html/main.js",
 
-        // Start the app!
-        "src/js/views/html/main.js",
     ];
+
+    var jsAppFiles = jsIncludes.concat([
+        // Start the main app!
+        "src/js/views/html/main.js",
+    ]);
+
+    var jsTestFiles = jsIncludes.concat([
+        "test/TestRegister.js",
+        "test/tests/**/*.js",
+        "test/TestRunner.js",
+    ]);
 
     var banner = '/**\n\
  * CyberChef - The Cyber Swiss Army Knife\n\
@@ -198,6 +214,7 @@ module.exports = function(grunt) {
             config: ["src/js/config/**/*.js"],
             views: ["src/js/views/**/*.js"],
             operations: ["src/js/operations/**/*.js"],
+            tests: ["test/**/*.js"],
         },
         jsdoc: {
             options: {
@@ -217,6 +234,7 @@ module.exports = function(grunt) {
         clean: {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
+            test: ["build/test/*"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
         },
         concat: {
@@ -243,8 +261,15 @@ module.exports = function(grunt) {
                 options: {
                     banner: '"use strict";\n'
                 },
-                src: jsFiles,
+                src: jsAppFiles,
                 dest: "build/dev/scripts.js"
+            },
+            jsTest: {
+                options: {
+                    banner: '"use strict";\n'
+                },
+                src: jsTestFiles,
+                dest: "build/test/tests.js"
             }
         },
         copy: {
@@ -256,6 +281,10 @@ module.exports = function(grunt) {
                 },
                 src: "src/html/index.html",
                 dest: "build/dev/index.html"
+            },
+            htmlTest: {
+                src: "test/test.html",
+                dest: "build/test/index.html"
             },
             htmlProd: {
                 options: {
@@ -460,6 +489,9 @@ module.exports = function(grunt) {
                         "git checkout build/prod/index.html"
                 ].join(";")
             }
+        },
+        execute: {
+            test: "test/NodeRunner.js"
         },
         watch: {
             css: {

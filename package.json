@@ -37,8 +37,10 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-eslint": "^19.0.0",
     "grunt-exec": "~1.0.1",
+    "grunt-execute": "^0.2.2",
     "grunt-inline-alt": "~0.3.10",
     "grunt-jsdoc": "^2.1.0",
-    "ink-docstrap": "^1.1.4"
+    "ink-docstrap": "^1.1.4",
+    "phantomjs-prebuilt": "^2.1.14"
   }
 }
