@@ -64,4 +64,49 @@ TestRegister.addTests([
             {"op":"To Base64", "args":["A-Za-z0-9+/="]}
         ]
     },
+    {
+        name: "Conditional Jump: Skips 0",
+        input: [
+            "match",
+            "should be changed 1",
+            "should be changed 2",
+        ].join("\n"),
+        expectedOutput: [
+            "match",
+            "should be changed 1 was changed",
+            "should be changed 2 was changed"
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "Conditional Jump",
+                args: ["match", 0, 0],
+            },
+            {
+                op: "Find / Replace",
+                args: [
+                    {
+                        "option": "Regex",
+                        "string": "should be changed 1"
+                    },
+                    "should be changed 1 was changed",
+                    true,
+                    true,
+                    true,
+                ],
+            },
+            {
+                op: "Find / Replace",
+                args: [
+                    {
+                        "option": "Regex",
+                        "string": "should be changed 2"
+                    },
+                    "should be changed 2 was changed",
+                    true,
+                    true,
+                    true,
+                ],
+            },
+        ],
+    },
 ]);

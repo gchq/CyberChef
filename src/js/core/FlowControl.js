@@ -128,7 +128,6 @@ var FlowControl = {
             maxJumps = ings[1];
 
         if (state.numJumps >= maxJumps) {
-            state.progress++;
             return state;
         }
 
@@ -156,7 +155,6 @@ var FlowControl = {
             maxJumps = ings[2];
 
         if (state.numJumps >= maxJumps) {
-            state.progress++;
             return state;
         }
 
