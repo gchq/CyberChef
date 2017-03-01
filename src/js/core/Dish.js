@@ -139,7 +139,7 @@ Dish.prototype.translate = function(toType) {
             this.type = Dish.BYTE_ARRAY;
             break;
         case Dish.HTML:
-            this.value = this.value ? Utils.strToByteArray(Utils.stripHtmlTags(this.value, true)) : [];
+            this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
             this.type = Dish.BYTE_ARRAY;
             break;
         default:

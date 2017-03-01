@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
 build/dev
+build/test
 docs/*
 !docs/*.conf.json
 !docs/*.ico

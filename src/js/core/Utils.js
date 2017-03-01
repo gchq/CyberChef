@@ -929,6 +929,33 @@ var Utils = {
 
 
     /**
+     * Unescapes HTML tags in a string to make them render again.
+     *
+     * @param {string} str
+     * @returns string
+     *
+     * @example
+     * // return "A <script> tag"
+     * Utils.unescapeHtml("A &lt;script&gt; tag");
+     */
+    unescapeHtml: function(str) {
+        var HTML_CHARS = {
+            "&amp;":  "&",
+            "&lt;":   "<",
+            "&gt;":   ">",
+            "&quot;": '"',
+            "&#x27;": "'",
+            "&#x2F;": "/",
+            "&#x60;": "`"
+        };
+
+        return str.replace(/&#?x?[a-z0-9]{2,4};/ig, function (match) {
+            return HTML_CHARS[match] || match;
+        });
+    },
+
+
+    /**
      * Expresses a number of milliseconds in a human readable format.
      *
      * Range                        | Sample Output

@@ -79,6 +79,11 @@ An installation walkthrough, how-to guides for adding new operations, descriptio
  - Submit a pull request.
 
 
+## Licencing
+
+CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/licenses/LICENSE-2.0) and is covered by [Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/).
+
+
   [1]: https://gchq.github.io/CyberChef
   [2]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22From%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%2Ctrue%5D%7D%5D&input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1
   [3]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Translate%20DateTime%20Format%22%2C%22args%22%3A%5B%22Standard%20date%20and%20time%22%2C%22DD%2FMM%2FYYYY%20HH%3Amm%3Ass%22%2C%22UTC%22%2C%22dddd%20Do%20MMMM%20YYYY%20HH%3Amm%3Ass%20Z%20z%22%2C%22Australia%2FQueensland%22%5D%7D%5D&input=MTUvMDYvMjAxNSAyMDo0NTowMA
