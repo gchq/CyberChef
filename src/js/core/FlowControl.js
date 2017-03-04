@@ -201,7 +201,7 @@ var FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runReturn: function(state) {
-        state.progress = state.opList.length;
+        state.progress = state.opList.length - 1;
         return state;
     },
 
