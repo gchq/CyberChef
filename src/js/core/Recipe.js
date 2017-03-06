@@ -159,8 +159,7 @@ Recipe.prototype.execute = function(dish, currentStep, state) {
         return e;
     };
 
-    // Operations can be asynchronous so we have to return a Promise to a
-    // future value.
+    // Operations can be asynchronous so we have to return a Promise to a future value.
     return new Promise(function(resolve, reject) {
         // Helper function to clean up recursing to the next recipe step.
         // It is a closure to avoid having to pass in resolve and reject.
@@ -180,7 +179,7 @@ Recipe.prototype.execute = function(dish, currentStep, state) {
 
         currentStep = currentStep || 0;
 
-        if (currentStep === recipe.opList.length) {
+        if (currentStep >= recipe.opList.length) {
             resolve(currentStep);
             return;
         }
