@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * File type operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var FileType = {
+var FileType = module.exports = {
 
     /**
      * Detect File Type operation.

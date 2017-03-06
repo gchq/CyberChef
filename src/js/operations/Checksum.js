@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Checksum operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Checksum = {
+var Checksum = module.exports = {
 
     /**
      * Fletcher-8 Checksum operation.

@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var Extract = {
+var Extract = module.exports = {
 
     /**
      * Runs search operations across the input data using regular expressions.

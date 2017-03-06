@@ -1,4 +1,6 @@
-/* globals CryptoJS */
+var Utils = require("../core/Utils.js"),
+    CryptoJS = require("crypto-js");
+
 
 /**
  * Character encoding operations.
@@ -9,7 +11,7 @@
  *
  * @namespace
  */
-var CharEnc = {
+var CharEnc = module.exports = {
 
     /**
      * @constant

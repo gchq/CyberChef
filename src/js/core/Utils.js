@@ -1,4 +1,7 @@
-/* globals CryptoJS, moment */
+var CryptoJS = require("crypto-js"),
+    moment = require("moment"),
+    $ = require("jquery");
+
 
 /**
  * Utility functions for use in operations, the core framework and the stage.
@@ -9,7 +12,7 @@
  *
  * @namespace
  */
-var Utils = {
+var Utils = module.exports = {
 
     /**
      * Translates an ordinal into a character.
@@ -1182,21 +1185,21 @@ var Utils = {
  * // Places the cursor at the beginning of the element #input-text.
  * $("#input-text").selectRange(0);
  */
-$.fn.selectRange = function(start, end) {
-    if (!end) end = start;
-    return this.each(function() {
-        if (this.setSelectionRange) {
-            this.focus();
-            this.setSelectionRange(start, end);
-        } else if (this.createTextRange) {
-            var range = this.createTextRange();
-            range.collapse(true);
-            range.moveEnd("character", end);
-            range.moveStart("character", start);
-            range.select();
-        }
-    });
-};
+// $.fn.selectRange = function(start, end) {
+//     if (!end) end = start;
+//     return this.each(function() {
+//         if (this.setSelectionRange) {
+//             this.focus();
+//             this.setSelectionRange(start, end);
+//         } else if (this.createTextRange) {
+//             var range = this.createTextRange();
+//             range.collapse(true);
+//             range.moveEnd("character", end);
+//             range.moveStart("character", start);
+//             range.select();
+//         }
+//     });
+// };
 
 
 /**

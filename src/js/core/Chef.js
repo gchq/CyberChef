@@ -1,3 +1,7 @@
+var Dish = require("./Dish.js"),
+    Recipe = require("./Recipe.js");
+
+
 /**
  * The main controller for CyberChef.
  *
@@ -7,7 +11,7 @@
  *
  * @class
  */
-var Chef = function() {
+var Chef = module.exports = function() {
     this.dish = new Dish();
 };
 

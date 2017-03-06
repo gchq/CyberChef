@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Sequence utility operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var SeqUtils = {
+var SeqUtils = module.exports = {
 
     /**
      * @constant

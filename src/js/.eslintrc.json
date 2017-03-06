@@ -9,7 +9,8 @@
         "browser": true,
         "jquery": true,
         "es6": true,
-        "node": false
+        "commonjs": true,
+        "node": true
     },
     "extends": "eslint:recommended",
     "rules": {

@@ -9,7 +9,7 @@
  *
  * @todo Support for UTF16
  */
-var Rotate = {
+var Rotate = module.exports = {
 
     /**
      * @constant

@@ -1,8 +1,41 @@
-/*
- * Tell eslint to ignore "'Object' is not defined" errors in this file, as it references every
- * single operation object by definition.
- */
-/* eslint no-undef: "off" */
+var FlowControl     = require("../core/FlowControl.js"),
+    Base            = require("../operations/Base.js"),
+    Base58          = require("../operations/Base58.js"),
+    Base64          = require("../operations/Base64.js"),
+    BitwiseOp       = require("../operations/BitwiseOp.js"),
+    ByteRepr        = require("../operations/ByteRepr.js"),
+    CharEnc         = require("../operations/CharEnc.js"),
+    Checksum        = require("../operations/Checksum.js"),
+    Cipher          = require("../operations/Cipher.js"),
+    Code            = require("../operations/Code.js"),
+    Compress        = require("../operations/Compress.js"),
+    Convert         = require("../operations/Convert.js"),
+    DateTime        = require("../operations/DateTime.js"),
+    Endian          = require("../operations/Endian.js"),
+    Entropy         = require("../operations/Entropy.js"),
+    Extract         = require("../operations/Extract.js"),
+    FileType        = require("../operations/FileType.js"),
+    Hash            = require("../operations/Hash.js"),
+    Hexdump         = require("../operations/Hexdump.js"),
+    HTML            = require("../operations/HTML.js"),
+    HTTP            = require("../operations/HTTP.js"),
+    IP              = require("../operations/IP.js"),
+    JS              = require("../operations/JS.js"),
+    MAC             = require("../operations/MAC.js"),
+    MorseCode       = require("../operations/MorseCode.js"),
+    NetBIOS         = require("../operations/NetBIOS.js"),
+    Numberwang      = require("../operations/Numberwang.js"),
+    OS              = require("../operations/OS.js"),
+    PublicKey       = require("../operations/PublicKey.js"),
+    Punycode        = require("../operations/Punycode.js"),
+    QuotedPrintable = require("../operations/QuotedPrintable.js"),
+    Rotate          = require("../operations/Rotate.js"),
+    SeqUtils        = require("../operations/SeqUtils.js"),
+    StrUtils        = require("../operations/StrUtils.js"),
+    Tidy            = require("../operations/Tidy.js"),
+    Unicode         = require("../operations/Unicode.js"),
+    URL_            = require("../operations/URL.js"),
+    UUID            = require("../operations/UUID.js");
 
 
 /**
@@ -45,7 +78,7 @@
  * @constant
  * @type {Object.<string, OpConf>}
  */
-var OperationConfig = {
+var OperationConfig = module.exports = {
     "Fork": {
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
         run: FlowControl.runFork,

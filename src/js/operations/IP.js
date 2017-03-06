@@ -1,4 +1,7 @@
-/* globals BigInteger, Checksum */
+var Utils = require("../core/Utils.js"),
+    Checksum = require("./Checksum.js"),
+    BigInteger = require("jsbn").BigInteger;
+
 
 /**
  * Internet Protocol address operations.
@@ -9,7 +12,7 @@
  *
  * @namespace
  */
-var IP = {
+var IP = module.exports = {
 
     /**
      * @constant

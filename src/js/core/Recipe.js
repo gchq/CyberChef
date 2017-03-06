@@ -1,3 +1,7 @@
+var OperationConfig = require("../config/OperationConfig.js"),
+    Operation = require("./Operation.js");
+
+
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
  *
@@ -8,7 +12,7 @@
  * @class
  * @param {Object} recipeConfig
  */
-var Recipe = function(recipeConfig) {
+var Recipe = module.exports = function(recipeConfig) {
     this.opList = [];
 
     if (recipeConfig) {

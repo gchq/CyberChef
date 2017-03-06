@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * HTML operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var HTML = {
+var HTML = module.exports = {
 
     /**
      * @constant

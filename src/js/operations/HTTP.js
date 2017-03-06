@@ -1,4 +1,5 @@
-/* globals UAS_parser */
+var UAParser = require("uas-parser");
+
 
 /**
  * HTTP operations.
@@ -9,7 +10,7 @@
  *
  * @namespace
  */
-var HTTP = {
+var HTTP = module.exports = {
 
     /**
      * Strip HTTP headers operation.
@@ -34,7 +35,7 @@ var HTTP = {
      * @returns {string}
      */
     runParseUserAgent: function(input, args) {
-        var ua = UAS_parser.parse(input); // eslint-disable-line camelcase
+        var ua = UAParser.parse(input);
 
         return "Type: " + ua.type + "\n" +
             "Family: " + ua.uaFamily + "\n" +

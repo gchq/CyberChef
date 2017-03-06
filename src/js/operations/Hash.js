@@ -1,4 +1,8 @@
-/* globals CryptoApi, CryptoJS, Checksum */
+var Utils = require("../core/Utils.js"),
+    CryptoJS = require("crypto-js"),
+    CryptoApi = require("crypto-api"),
+    Checksum = require("./Checksum.js");
+
 
 /**
  * Hashing operations.
@@ -9,7 +13,7 @@
  *
  * @namespace
  */
-var Hash = {
+var Hash = module.exports = {
 
     /**
      * MD2 operation.

@@ -1,4 +1,5 @@
-/* globals moment */
+var moment = require("moment-timezone");
+
 
 /**
  * Date and time operations.
@@ -9,7 +10,7 @@
  *
  * @namespace
  */
-var DateTime = {
+var DateTime = module.exports = {
 
     /**
      * @constant

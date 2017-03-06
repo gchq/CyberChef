@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Endian operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Endian = {
+var Endian = module.exports = {
 
     /**
      * @constant

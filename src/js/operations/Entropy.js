@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Entropy operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Entropy = {
+var Entropy = module.exports = {
 
     /**
      * @constant

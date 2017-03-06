@@ -1,4 +1,21 @@
-/* globals Zlib, bzip2 */
+/* globals bzip2 */
+var rawdeflate = require("zlibjs/bin/rawdeflate.min"),
+    rawinflate = require("zlibjs/bin/rawinflate.min"),
+    zlibAndGzip = require("zlibjs/bin/zlib_and_gzip.min"),
+    zip = require("zlibjs/bin/zip.min"),
+    unzip = require("zlibjs/bin/unzip.min");
+
+var Zlib = {
+    RawDeflate: rawdeflate.Zlib.RawDeflate,
+    RawInflate: rawinflate.Zlib.RawInflate,
+    Deflate: zlibAndGzip.Zlib.Deflate,
+    Inflate: zlibAndGzip.Zlib.Inflate,
+    Gzip: zlibAndGzip.Zlib.Gzip,
+    Gunzip: zlibAndGzip.Zlib.Gunzip,
+    Zip: zip.Zlib.Zip,
+    Unzip: unzip.Zlib.Unzip,
+};
+
 
 /**
  * Compression operations.
@@ -9,7 +26,7 @@
  *
  * @namespace
  */
-var Compress = {
+var Compress = module.exports = {
 
     /**
      * @constant

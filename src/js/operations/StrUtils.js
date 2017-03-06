@@ -1,4 +1,6 @@
-/* globals JsDiff */
+var Utils = require("../core/Utils.js"),
+    JsDiff = require("diff");
+
 
 /**
  * String utility operations.
@@ -9,7 +11,7 @@
  *
  * @namespace
  */
-var StrUtils = {
+var StrUtils = module.exports = {
 
     /**
      * @constant

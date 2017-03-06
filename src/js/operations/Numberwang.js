@@ -4,7 +4,7 @@
  * @author Unknown Male 282
  * @namespace
  */
-var Numberwang = {
+var Numberwang = module.exports = {
 
     /**
      * Numberwang operation. Remain indoors.

@@ -1,4 +1,6 @@
-/* globals CryptoJS */
+var Utils = require("../core/Utils.js"),
+    CryptoJS = require("crypto-js");
+
 
 /**
  * Bitwise operations.
@@ -9,7 +11,7 @@
  *
  * @namespace
  */
-var BitwiseOp = {
+var BitwiseOp = module.exports = {
 
     /**
      * Runs bitwise operations across the input data.

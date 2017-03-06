@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var FlowControl = {
+var FlowControl = module.exports = {
 
     /**
      * @constant

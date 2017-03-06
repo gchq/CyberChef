@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Morse Code translation operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var MorseCode = {
+var MorseCode = module.exports = {
 
     /**
      * @constant

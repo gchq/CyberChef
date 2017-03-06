@@ -30,7 +30,7 @@
  *
  * @namespace
  */
-var QuotedPrintable = {
+var QuotedPrintable = module.exports = {
 
     /**
      * To Quoted Printable operation.

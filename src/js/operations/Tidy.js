@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Tidy operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Tidy = {
+var Tidy = module.exports = {
 
     /**
      * @constant

@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var Convert = {
+var Convert = module.exports = {
 
     /**
      * @constant

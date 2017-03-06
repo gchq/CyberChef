@@ -1,3 +1,6 @@
+var Utils = require("./Utils.js");
+
+
 /**
  * The arguments to operations.
  *
@@ -8,7 +11,7 @@
  * @class
  * @param {Object} ingredientConfig
  */
-var Ingredient = function(ingredientConfig) {
+var Ingredient = module.exports = function(ingredientConfig) {
     this.name  = "";
     this.type  = "";
     this.value = null;

@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var Base = {
+var Base = module.exports = {
 
     /**
      * @constant

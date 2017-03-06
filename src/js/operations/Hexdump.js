@@ -1,4 +1,6 @@
 /* globals app */
+var Utils = require("../core/Utils.js");
+
 
 /**
  * Hexdump operations.
@@ -9,7 +11,7 @@
  *
  * @namespace
  */
-var Hexdump = {
+var Hexdump = module.exports = {
 
     /**
      * @constant

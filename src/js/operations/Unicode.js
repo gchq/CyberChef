@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Unicode operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Unicode = {
+var Unicode = module.exports = {
 
     /**
      * @constant

@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var UUID = {
+var UUID = module.exports = {
 
     /**
      * Generate UUID operation.

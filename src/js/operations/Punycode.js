@@ -1,4 +1,5 @@
-/* globals punycode */
+var punycode = require("punycode");
+
 
 /**
  * Punycode operations.
@@ -9,7 +10,7 @@
  *
  * @namespace
  */
-var Punycode = {
+var Punycode = module.exports = {
 
     /**
      * @constant
@@ -28,7 +29,7 @@ var Punycode = {
         var idn = args[0];
 
         if (idn) {
-            return punycode.ToASCII(input);
+            return punycode.toASCII(input);
         } else {
             return punycode.encode(input);
         }
@@ -46,7 +47,7 @@ var Punycode = {
         var idn = args[0];
 
         if (idn) {
-            return punycode.ToUnicode(input);
+            return punycode.toUnicode(input);
         } else {
             return punycode.decode(input);
         }

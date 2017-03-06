@@ -1,3 +1,7 @@
+var Dish = require("./Dish.js"),
+    Ingredient = require("./Ingredient.js");
+
+
 /**
  * The Operation specified by the user to be run.
  *
@@ -9,7 +13,7 @@
  * @param {string} operationName
  * @param {Object} operationConfig
  */
-var Operation = function(operationName, operationConfig) {
+var Operation = module.exports = function(operationName, operationConfig) {
     this.name             = operationName;
     this.description      = "";
     this.inputType        = -1;

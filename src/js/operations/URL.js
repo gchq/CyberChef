@@ -1,5 +1,8 @@
 /* globals unescape */
 
+var Utils = require("../core/Utils.js");
+
+
 /**
  * URL operations.
  * Namespace is appended with an underscore to prevent overwriting the global URL object.
@@ -10,7 +13,7 @@
  *
  * @namespace
  */
-var URL_ = {
+var URL_ = module.exports = {
 
     /**
      * @constant

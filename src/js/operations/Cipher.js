@@ -1,4 +1,7 @@
-/* globals CryptoJS, blowfish */
+var Utils = require("../core/Utils.js"),
+    CryptoJS = require("crypto-js"),
+    Blowfish = require("sladex-blowfish");
+
 
 /**
  * Cipher operations.
@@ -9,7 +12,7 @@
  *
  * @namespace
  */
-var Cipher = {
+var Cipher = module.exports = {
 
     /**
      * @constant
@@ -263,7 +266,7 @@ var Cipher = {
 
         if (key.length === 0) return "Enter a key";
 
-        var encHex = blowfish.encrypt(input, key, {
+        var encHex = Blowfish.encrypt(input, key, {
                 outputType: 1,
                 cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
             }),
@@ -289,7 +292,7 @@ var Cipher = {
 
         input = Utils.format[inputFormat].parse(input);
 
-        return blowfish.decrypt(input.toString(CryptoJS.enc.Base64), key, {
+        return Blowfish.decrypt(input.toString(CryptoJS.enc.Base64), key, {
             outputType: 0, // This actually means inputType. The library is weird.
             cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
         });

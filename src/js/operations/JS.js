@@ -1,4 +1,7 @@
-/* globals esprima, escodegen, esmangle */
+var esprima = require("esprima"),
+    escodegen = require("escodegen"),
+    esmangle = require("esmangle");
+
 
 /**
  * JavaScript operations.
@@ -9,7 +12,7 @@
  *
  * @namespace
  */
-var JS = {
+var JS = module.exports = {
 
     /**
      * @constant

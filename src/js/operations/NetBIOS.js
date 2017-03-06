@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var NetBIOS = {
+var NetBIOS = module.exports = {
 
     /**
      * @constant

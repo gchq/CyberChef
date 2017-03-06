@@ -1,4 +1,8 @@
-/* globals prettyPrintOne, vkbeautify, xpath */
+/* globals xpath */
+var Utils = require("../core/Utils.js"),
+    VKbeautify = require("vkbeautify");
+    //Prettify = require("google-code-prettify");
+
 
 /**
  * Code operations.
@@ -9,7 +13,7 @@
  *
  * @namespace
  */
-var Code = {
+var Code = module.exports = {
 
     /**
      * @constant
@@ -32,7 +36,7 @@ var Code = {
     runSyntaxHighlight: function(input, args) {
         var language = args[0],
             lineNums = args[1];
-        return "<code class='prettyprint'>" + prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
+        return "<code class='prettyprint'>" + Prettify.prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
     },
 
 
@@ -51,7 +55,7 @@ var Code = {
      */
     runXmlBeautify: function(input, args) {
         var indentStr = args[0];
-        return vkbeautify.xml(input, indentStr);
+        return VKbeautify.xml(input, indentStr);
     },
 
 
@@ -65,7 +69,7 @@ var Code = {
     runJsonBeautify: function(input, args) {
         var indentStr = args[0];
         if (!input) return "";
-        return vkbeautify.json(input, indentStr);
+        return VKbeautify.json(input, indentStr);
     },
 
 
@@ -78,7 +82,7 @@ var Code = {
      */
     runCssBeautify: function(input, args) {
         var indentStr = args[0];
-        return vkbeautify.css(input, indentStr);
+        return VKbeautify.css(input, indentStr);
     },
 
 
@@ -91,7 +95,7 @@ var Code = {
      */
     runSqlBeautify: function(input, args) {
         var indentStr = args[0];
-        return vkbeautify.sql(input, indentStr);
+        return VKbeautify.sql(input, indentStr);
     },
 
 
@@ -110,7 +114,7 @@ var Code = {
      */
     runXmlMinify: function(input, args) {
         var preserveComments = args[0];
-        return vkbeautify.xmlmin(input, preserveComments);
+        return VKbeautify.xmlmin(input, preserveComments);
     },
 
 
@@ -123,7 +127,7 @@ var Code = {
      */
     runJsonMinify: function(input, args) {
         if (!input) return "";
-        return vkbeautify.jsonmin(input);
+        return VKbeautify.jsonmin(input);
     },
 
 
@@ -136,7 +140,7 @@ var Code = {
      */
     runCssMinify: function(input, args) {
         var preserveComments = args[0];
-        return vkbeautify.cssmin(input, preserveComments);
+        return VKbeautify.cssmin(input, preserveComments);
     },
 
 
@@ -148,7 +152,7 @@ var Code = {
      * @returns {string}
      */
     runSqlMinify: function(input, args) {
-        return vkbeautify.sqlmin(input);
+        return VKbeautify.sqlmin(input);
     },
 
 

@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var OS = {
+var OS = module.exports = {
 
     /**
      * Parse UNIX file permissions operation.

@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Base64 operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Base64 = {
+var Base64 = module.exports = {
 
     /**
      * @constant

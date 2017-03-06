@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var MAC = {
+var MAC = module.exports = {
 
     /**
      * @constant

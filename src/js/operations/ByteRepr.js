@@ -1,4 +1,6 @@
 /* globals app */
+var Utils = require("../core/Utils.js");
+
 
 /**
  * Byte representation operations.
@@ -9,7 +11,7 @@
  *
  * @namespace
  */
-var ByteRepr = {
+var ByteRepr = module.exports = {
 
     /**
      * @constant

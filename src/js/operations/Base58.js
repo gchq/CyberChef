@@ -1,3 +1,6 @@
+var Utils = require("../core/Utils.js");
+
+
 /**
  * Base58 operations.
  *
@@ -7,7 +10,7 @@
  *
  * @namespace
  */
-var Base58 = {
+var Base58 = module.exports = {
 
     /**
      * @constant
