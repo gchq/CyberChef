@@ -92,6 +92,8 @@ var Categories = [
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "PGP Encrypt",
+            "PGP Decrypt",
         ]
     },
     {

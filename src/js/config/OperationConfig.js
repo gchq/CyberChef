@@ -3148,4 +3148,35 @@ var OperationConfig = {
             }
         ]
     },
+    "PGP Encrypt": {
+        description: "Input: An ASCII-Armored PGP public key.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        run: PGP.runEncrypt,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key",
+                type: "text",
+                value: "",
+            },
+        ]
+    },
+    "PGP Decrypt": {
+        description: "Input: An ASCII-Armored PGP private key (and optionally, the password needed to decrypt the private key).<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        run: PGP.runDecrypt,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key password",
+                type: "text",
+                value: "",
+            },
+        ]
+    },
 };

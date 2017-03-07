@@ -103,6 +103,7 @@ module.exports = function(grunt) {
         "src/js/lib/cryptoapi/hasher.md2.js",
         "src/js/lib/cryptoapi/hasher.md4.js",
         "src/js/lib/cryptoapi/hasher.sha0.js",
+        "src/js/lib/openpgp.js",
         "src/js/lib/jsbn/jsbn.js",
         "src/js/lib/jsbn/jsbn2.js",
         "src/js/lib/jsbn/base64.js",
