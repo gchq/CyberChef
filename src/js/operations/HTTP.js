@@ -1,4 +1,4 @@
-var UAParser = require("uas-parser");
+var UAParser = require("../lib/uas_parser.js");
 
 
 /**

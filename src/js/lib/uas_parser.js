@@ -26,7 +26,7 @@
 */
 "use strict";
 
-var UAS_parser = {
+var UAS_parser = module.exports = {
 	
 	parse: function (userAgent) {
 		var result = {

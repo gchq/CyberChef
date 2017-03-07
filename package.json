@@ -61,7 +61,6 @@
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "sladex-blowfish": "^0.8.1",
-    "uas-parser": "^0.2.2",
     "vkbeautify": "^0.99.1",
     "zlibjs": "^0.2.0"
   }

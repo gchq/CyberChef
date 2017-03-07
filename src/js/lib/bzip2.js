@@ -28,7 +28,7 @@
 */
 "use strict";
 
-var bzip2 = {};
+var bzip2 = module.exports = {};
 
 bzip2.array = function(bytes){
   var bit = 0, byte = 0;

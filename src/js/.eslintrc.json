@@ -29,7 +29,11 @@
         // modify rules from base configurations
         "no-unused-vars": ["error", {
             "args": "none",
-            "vars": "local"
+            "vars": "local",
+            // Allow vars that start with a capital letter to be unused.
+            // This is mainly for exported module names which are useful to indicate
+            // the name of the module and may be used to refer to itself in future.
+            "varsIgnorePattern": "^[A-Z]"
         }],
         "no-empty": ["error", {
             "allowEmptyCatch": true
@@ -112,7 +116,7 @@
         "SeasonalWaiter": false,
         "WindowWaiter": false,
 
-        /* tests */
+        /* test/* */
         "TestRegister": false,
         "TestRunner": false
     }
