@@ -16,7 +16,7 @@ var PGP = {
      * Encrypts the input using PGP.
      *
      * @param {string} input - plaintext to encrypt
-     * @param {function} args
+     * @param {Object[]} args
      * @returns {string}
      */
     runEncrypt: function (plaintext, args) {
@@ -32,10 +32,8 @@ var PGP = {
                 reject("Failed to read public key", error);
             }
 
-            // Timeout is so that UI can update before openpgp blocks thread
             openpgp.encrypt(options)
                 .then(function(ciphertext) {
-                    console.log(ciphertext);
                     resolve(ciphertext.data);
                 })
                 .catch(function(error) {
@@ -49,7 +47,7 @@ var PGP = {
      * Decrypts the input using PGP.
      *
      * @param {string} input - ciphertext to decrypt
-     * @param {function} args
+     * @param {Object[]} args
      * @returns {string}
      */
     runDecrypt: function (input, args) {
