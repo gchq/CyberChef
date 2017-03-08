@@ -3174,7 +3174,7 @@ var OperationConfig = {
             },
             {
                 name: "Private key password",
-                type: "text",
+                type: "string",
                 value: "",
             },
         ]
