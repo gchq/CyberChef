@@ -91,9 +91,9 @@ page.open("build/test/index.html", function(status) {
 
 
 /**
- * Fail if the process takes longer than 10 seconds.
+ * Fail if the process takes longer than 30 seconds.
  */
 setTimeout(function() {
-    console.log("Tests took longer than 10 seconds to run, returning.");
+    console.log("Tests took longer than 30 seconds to run, returning.");
     phantom.exit(1);
-}, 10 * 1000);
+}, 30 * 1000);
