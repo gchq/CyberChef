@@ -94,6 +94,13 @@ var Categories = [
             "Derive EVP key",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Sign",
+            "PGP Verify",
+            "PGP Sign Cleartext",
+            "PGP Verify Cleartext",
+            "PGP Generate Key Pair",
+            "PGP Add ASCII Armor",
+            "PGP Remove ASCII Armor",
         ]
     },
     {
@@ -105,6 +112,15 @@ var Categories = [
             "Hex to PEM",
             "Hex to Object Identifier",
             "Object Identifier to Hex",
+            "PGP Encrypt",
+            "PGP Decrypt",
+            "PGP Sign",
+            "PGP Verify",
+            "PGP Sign Cleartext",
+            "PGP Verify Cleartext",
+            "PGP Generate Key Pair",
+            "PGP Add ASCII Armor",
+            "PGP Remove ASCII Armor",
         ]
     },
     {
