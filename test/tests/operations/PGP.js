@@ -6,9 +6,92 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
+var CYBERCHEF_GENERATED_KEY_PAIRS = [
+    {
+        name: "CyberChef 1",
+        size: 1024,
+        pub: [
+            "-----BEGIN PGP PUBLIC KEY BLOCK-----",
+            "Version: OpenPGP.js v2.3.6",
+            "Comment: http://openpgpjs.org",
+            "",
+            "xo0EWMQszAEEAMY6F0o6jL6TrVVXDkqJwNVJRR6tQKr+LIt7plEJoaTRVDfL",
+            "1jetdhPg+YiE7xZI8ygf6fhsrot4ccUN1QdtwedAz6GH0xjFzpL1i4/7/f3U",
+            "ItJ0p1MO4Amy8Tei/AtXXMTy/YwE77V1AMcv7OYFw9va5S0PD87XoKK6rx7z",
+            "GFMTABEBAAHNAjw+wrUEEAEIACkFAljELMwGCwkHCAMCCRAar/puuym6vQQV",
+            "CAIKAxYCAQIZAQIbAwIeAQAA8/QEAKDVde34L3rvFECzUOFPA5w4w4gbwkg+",
+            "YwPa084WvMTdo/wBEiEhj+7P+/5eN/U96yuHD48+Cmm5AHBaaf+K1b2LbNe7",
+            "3PP5rV1rMcooUGeIhq7SFw0BdPZTLoCNbkBKFCpvrS/F4SuUQF7g+fVyOyve",
+            "zVWew+E41ZC3vsDd63Y3zo0EWMQszAEEANYNy0yka1+c3Oe2U1GqoAHXv05p",
+            "VnlHAZ+28JGs8Thq5ns0K8bxI+Fn9CFpPO7Vofrr40V3vweoJVK2Eiq2gN/X",
+            "QdxPHckcpYbFKTAZIXt2MAZfb027JxWZid5lyYSCwvY+BK7x5X4jdY5KfbKu",
+            "7WDivOkq8MhomSiX+QYDV8qrABEBAAHCnwQYAQgAEwUCWMQszAkQGq/6brsp",
+            "ur0CGwwAAIjWA/9WhpbfM+oA08m5XwXgCkuRfTymIkexzn17dZOngTzaGcbK",
+            "vpS3QN164XNu229JNKTrsdgn5zeeq3AqhQ63hTMbePajvUYSssHPqKB8qQlp",
+            "OUY/rcFEUXMirIkKBGByYBmlz56Ai855wJoSOrZJA6yfnGepyV5ChcG/cEmB",
+            "dH/6bA==",
+            "=4nW6",
+            "-----END PGP PUBLIC KEY BLOCK-----",
+        ].join("\n"),
+        sec: [
+            "-----BEGIN PGP PRIVATE KEY BLOCK-----",
+            "Version: OpenPGP.js v2.3.6",
+            "Comment: http://openpgpjs.org",
+            "",
+            "xcEYBFjELMwBBADGOhdKOoy+k61VVw5KicDVSUUerUCq/iyLe6ZRCaGk0VQ3",
+            "y9Y3rXYT4PmIhO8WSPMoH+n4bK6LeHHFDdUHbcHnQM+hh9MYxc6S9YuP+/39",
+            "1CLSdKdTDuAJsvE3ovwLV1zE8v2MBO+1dQDHL+zmBcPb2uUtDw/O16Ciuq8e",
+            "8xhTEwARAQABAAP6A0jnJeW+e1H7J1Tf+cA6n84tBQsd7Td1CYKtCN69/Psz",
+            "CBGqpRWMxVuPBwIc7COdU+bje6hhZBJE4F0QUKUy91iQRssy4MzOYmZbdZaa",
+            "eTT81MdYb6QPYdTvPBVxjeLJBL7mKB+hM2Z8SvtJMDBdLlprf/XIdZKxD/NB",
+            "R+q66OECAPPsaMb+Yv1F30pEJZkATWvUSQS57HzWoBaNGxGkDqcik7+2q3DU",
+            "fWe0586HfMFQ3ba1ziNy2SWYJDAqMAe0QekCANAKgQJwww75GGK1RwNFZRoJ",
+            "Sb/Jzx3RVbwy1xqfVbadTuvf2+oSBLy/+eGXglwrok08e2BvYWMmhB+uJSJb",
+            "M5sCAItUBCJqTszPQPZdIOi7rGomnL2fijBDAUz+kWAWBPcIf8zzexKl7Ebq",
+            "dxc621BD5xjDjE7x1Z5XX/Rd2Lt+PvOdyM0CPD7CtQQQAQgAKQUCWMQszAYL",
+            "CQcIAwIJEBqv+m67Kbq9BBUIAgoDFgIBAhkBAhsDAh4BAADz9AQAoNV17fgv",
+            "eu8UQLNQ4U8DnDjDiBvCSD5jA9rTzha8xN2j/AESISGP7s/7/l439T3rK4cP",
+            "jz4KabkAcFpp/4rVvYts17vc8/mtXWsxyihQZ4iGrtIXDQF09lMugI1uQEoU",
+            "Km+tL8XhK5RAXuD59XI7K97NVZ7D4TjVkLe+wN3rdjfHwRgEWMQszAEEANYN",
+            "y0yka1+c3Oe2U1GqoAHXv05pVnlHAZ+28JGs8Thq5ns0K8bxI+Fn9CFpPO7V",
+            "ofrr40V3vweoJVK2Eiq2gN/XQdxPHckcpYbFKTAZIXt2MAZfb027JxWZid5l",
+            "yYSCwvY+BK7x5X4jdY5KfbKu7WDivOkq8MhomSiX+QYDV8qrABEBAAEAA/0e",
+            "rqd/eunxMJjxlc7nm9+HpBdF9A9zHtx6ukxNdU62WYxkCJxlzdbozm/OAjm7",
+            "ul+XigxvvrRhMpb2/iYofTSHnj+6yGGghCic6BtstJOU7qepMrX+IKh3TNEp",
+            "YNU8z0E1fSd9fMOx1hnTZwaTroii9CzM0i4YH3pSjze7Ir7cIQIA8Cg8sBmG",
+            "IDhe7SBq5xcG2V4iNqiK5gHXbQrcit9/XJFqIeda5Ec7lRjpa6vG5f1xeT1w",
+            "KdBil2L4prnD6XDAEwIA5Cy51YIjizFyKormqQNGR1fdAl+6T/qReUcw5Cmw",
+            "cDU7tUujZwZz/utmjOcadq8JR2LG6rNwLzeMgDNCCKAOCQH/RX0h3eLXcpWq",
+            "jGBH3mJbukSLH/98ybP5LV+4jg0q5iXOOjUIXxFsPElyZZHUBvpoRrKbRG/f",
+            "PzOpx7akqEOuDJ/Dwp8EGAEIABMFAljELMwJEBqv+m67Kbq9AhsMAACI1gP/",
+            "VoaW3zPqANPJuV8F4ApLkX08piJHsc59e3WTp4E82hnGyr6Ut0DdeuFzbttv",
+            "STSk67HYJ+c3nqtwKoUOt4UzG3j2o71GErLBz6igfKkJaTlGP63BRFFzIqyJ",
+            "CgRgcmAZpc+egIvOecCaEjq2SQOsn5xnqcleQoXBv3BJgXR/+mw=",
+            "=8R+g",
+            "-----END PGP PRIVATE KEY BLOCK-----",
+        ].join("\n"),
+        messages: [
+            [
+                "-----BEGIN PGP MESSAGE-----",
+                "Version: OpenPGP.js v2.3.6",
+                "Comment: http://openpgpjs.org",
+                "",
+                "wYwDmsTgRYVqFPcBA/kBfc7BnEcbKGwac/JOSK6YWzpDERR8NjJT/3R7JDsG",
+                "ywJB/ouaHy3e5KGDulALV6pUzcPbCC0CCl5tlFVaFYAj6+BdwR/WCb7dhlRE",
+                "x+vw5VKLlY6adSgtvU9aLF0nL0YlU9Pxf9wrPdo3bvxJij7S4mbGS2iybhQO",
+                "41ZUtWhOotI9AR/e7f2WHSt8dpl7T9Uq8trAptFWVIZkj+78Gp/8u5o8/mqV",
+                "9gxmOGsViKhVZ1b554nwd243IrqlzW2szg==",
+                "=prpZ",
+                "-----END PGP MESSAGE-----",
+            ].join("\n"),
+        ],
+    },
+];
 
 var PGP_TEST_KEY_PAIRS = [
     {
+        keyID: "a9510d8fd7e352f5",
+        name: "CyberChef nopw 1024 <toby@toby.codes>",
         size: 1024,
         pub: [
             "-----BEGIN PGP PUBLIC KEY BLOCK-----",
@@ -66,6 +149,8 @@ var PGP_TEST_KEY_PAIRS = [
         ].join("\n"),
     },
     {
+        keyID: "02da58ca894c4cc7",
+        name: "CyberChef pw 1024 <toby@toby.codes>",
         size: 1024,
         password: "2NSRJYTzgsTVJfih",
         pub: [
@@ -481,7 +566,7 @@ var PGP_TEST_KEY_PAIRS = [
     );
 });
 
-TestRegister.addTests({
+TestRegister.addTests([{
     name: "PGP encrypt, PGP Decrypt: fails when incorrect password, empty string (1024)",
     input: "",
     expectedError: true,
@@ -495,9 +580,9 @@ TestRegister.addTests({
             args: [PGP_TEST_KEY_PAIRS[1].sec, "gibberish"],
         },
     ],
-});
+}]);
 
-TestRegister.addTests({
+TestRegister.addTests([{
     name: "PGP encrypt, PGP Decrypt: fails when incorrect password, hello world (1024)",
     input: "hello world",
     expectedError: true,
@@ -511,4 +596,223 @@ TestRegister.addTests({
             args: [PGP_TEST_KEY_PAIRS[1].sec, "gibberish"],
         },
     ],
+}]);
+
+["hello world"].forEach(function(input) {
+    [
+        [PGP_TEST_KEY_PAIRS[0], PGP_TEST_KEY_PAIRS[1]],
+        [PGP_TEST_KEY_PAIRS[1], PGP_TEST_KEY_PAIRS[0]],
+    ].forEach(function(pairOfKeyPairs) {
+        var alice = pairOfKeyPairs[0];
+        var bob = pairOfKeyPairs[1];
+
+        var testName = "PGP Sign ($alice), PGP Verify ($bob) '$input'";
+        testName = testName.replace("$alice", alice.name);
+        testName = testName.replace("$bob", bob.name);
+        testName = testName.replace("$input", input);
+
+        TestRegister.addTests([{
+            name: testName,
+            input: input,
+            expectedOutput: [
+                "Verified: true",
+                "Key ID: " + alice.keyID,
+                "Encrypted for: " + bob.name,
+                "Signed on: ",
+                "Signed by: " + alice.name,
+                "Signed with: ",
+                "\n",
+                input,
+            ].join("\n"),
+            recipeConfig: [
+                {
+                    op: "PGP Sign",
+                    args: [bob.pub, alice.sec, alice.password],
+                },
+                {
+                    op: "PGP Verify",
+                    args: [alice.pub, bob.sec, bob.password, true],
+                },
+            ],
+        }]);
+    });
+});
+
+["hello world"].forEach(function(input) {
+    [
+        [PGP_TEST_KEY_PAIRS[0], PGP_TEST_KEY_PAIRS[1]],
+        [PGP_TEST_KEY_PAIRS[1], PGP_TEST_KEY_PAIRS[0]],
+    ].forEach(function(pairOfKeyPairs) {
+        var alice = pairOfKeyPairs[0];
+        var bob = pairOfKeyPairs[1];
+
+        var testName = "PGP Sign ($alice), PGP Verify ($bob) '$input' (message hidden)";
+        testName = testName.replace("$alice", alice.name);
+        testName = testName.replace("$bob", bob.name);
+        testName = testName.replace("$input", input);
+
+        TestRegister.addTests([{
+            name: testName,
+            input: input,
+            expectedOutput: [
+                "Verified: true",
+                "Key ID: " + alice.keyID,
+                "Encrypted for: " + bob.name,
+                "Signed on: ",
+                "Signed by: " + alice.name,
+                "Signed with: ",
+                "\n",
+                "",
+            ].join("\n"),
+            recipeConfig: [
+                {
+                    op: "PGP Sign",
+                    args: [bob.pub, alice.sec, alice.password],
+                },
+                {
+                    op: "PGP Verify",
+                    args: [alice.pub, bob.sec, bob.password, false],
+                },
+            ],
+        }]);
+    });
+});
+
+["", "hello world"].forEach(function(input) {
+    TestRegister.addTests(
+        PGP_TEST_KEY_PAIRS.map(function(keyPair) {
+            var testName = "PGP Sign Cleartext, PGP Verify Cleartext ($pw, $ks) '$input'";
+            testName = testName.replace("$ks", keyPair.size);
+            testName = testName.replace("$pw", keyPair.password ? "pw" : "no pw");
+            testName = testName.replace("$input", input);
+
+            return {
+                name: testName,
+                input: input,
+                expectedOutput: [
+                    "Verified: true",
+                    "Key ID: " + keyPair.keyID,
+                    "Signed on: ",
+                    "Signed by: " + keyPair.name,
+                    "Signed with: ",
+                    "\n",
+                    input,
+                ].join("\n"),
+                recipeConfig: [
+                    {
+                        op: "PGP Sign Cleartext",
+                        args: [keyPair.sec, keyPair.password],
+                    },
+                    {
+                        op: "PGP Verify Cleartext",
+                        args: [keyPair.pub, true],
+                    },
+                ],
+            };
+        })
+    );
+});
+
+["", "hello world"].forEach(function(input) {
+    TestRegister.addTests(
+        PGP_TEST_KEY_PAIRS.map(function(keyPair) {
+            var testName = "PGP Sign Cleartext, PGP Verify Cleartext ($pw, $ks) '$input' (message hidden)";
+            testName = testName.replace("$ks", keyPair.size);
+            testName = testName.replace("$pw", keyPair.password ? "pw" : "no pw");
+            testName = testName.replace("$input", input);
+
+            return {
+                name: testName,
+                input: input,
+                expectedOutput: [
+                    "Verified: true",
+                    "Key ID: " + keyPair.keyID,
+                    "Signed on: ",
+                    "Signed by: " + keyPair.name,
+                    "Signed with: ",
+                    "\n",
+                    "",
+                ].join("\n"),
+                recipeConfig: [
+                    {
+                        op: "PGP Sign Cleartext",
+                        args: [keyPair.sec, keyPair.password],
+                    },
+                    {
+                        op: "PGP Verify Cleartext",
+                        args: [keyPair.pub, false],
+                    },
+                ],
+            };
+        })
+    );
+});
+
+TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
+    var testName = "PGP Remove ASCII Armor, PGP Add ASCII Armor: Public Key '$name'";
+    testName = testName.replace("$name", keyPair.name);
+
+    return {
+        name: testName,
+        input: keyPair.pub,
+        expectedOutput: keyPair.pub,
+        ignoreWhitespace: true,
+        recipeConfig: [
+            {
+                op: "PGP Remove ASCII Armor",
+                args: [],
+            },
+            {
+                op: "PGP Add ASCII Armor",
+                args: ["Public key"],
+            },
+        ],
+    }
+}));
+
+TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
+    var testName = "PGP Remove ASCII Armor, PGP Add ASCII Armor: Private Key '$name'";
+    testName = testName.replace("$name", keyPair.name);
+
+    return {
+        name: testName,
+        input: keyPair.sec,
+        expectedOutput: keyPair.sec,
+        ignoreWhitespace: true,
+        recipeConfig: [
+            {
+                op: "PGP Remove ASCII Armor",
+                args: [],
+            },
+            {
+                op: "PGP Add ASCII Armor",
+                args: ["Private key"],
+            },
+        ],
+    }
+}));
+
+CYBERCHEF_GENERATED_KEY_PAIRS.forEach(function(keyPair) {
+    TestRegister.addTests(keyPair.messages.map(function(encryptedMessage, messageIndex) {
+        var testName = "PGP Remove ASCII Armor, PGP Add ASCII Armor: Message $message '$name'";
+        testName = testName.replace("$message", messageIndex);
+        testName = testName.replace("$name", keyPair.name);
+
+        return {
+            name: testName,
+            input: encryptedMessage,
+            expectedOutput: encryptedMessage,
+            ignoreWhitespace: true,
+            recipeConfig: [
+                {
+                    op: "PGP Remove ASCII Armor",
+                    args: [],
+                },
+                {
+                    op: "PGP Add ASCII Armor",
+                    args: ["Message"],
+                },
+            ],
+        };
+    }));
 });
