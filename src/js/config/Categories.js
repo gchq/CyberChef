@@ -96,11 +96,11 @@ var Categories = [
             "PGP Decrypt",
             "PGP Sign",
             "PGP Verify",
-            "PGP Sign Cleartext",
-            "PGP Verify Cleartext",
-            "PGP Generate Key Pair",
-            "PGP Add ASCII Armor",
-            "PGP Remove ASCII Armor",
+            "Sign PGP Cleartext",
+            "Verify PGP Cleartext",
+            "Generate PGP Key Pair",
+            "Add PGP ASCII Armor",
+            "Remove PGP ASCII Armor",
         ]
     },
     {
@@ -116,11 +116,11 @@ var Categories = [
             "PGP Decrypt",
             "PGP Sign",
             "PGP Verify",
-            "PGP Sign Cleartext",
-            "PGP Verify Cleartext",
-            "PGP Generate Key Pair",
-            "PGP Add ASCII Armor",
-            "PGP Remove ASCII Armor",
+            "Sign PGP Cleartext",
+            "Verify PGP Cleartext",
+            "Generate PGP Key Pair",
+            "Add PGP ASCII Armor",
+            "Remove PGP ASCII Armor",
         ]
     },
     {

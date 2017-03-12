@@ -354,7 +354,7 @@ TestRegister.addTests([{
 ["", "hello world"].forEach(function(input) {
     TestRegister.addTests(
         PGP_TEST_KEY_PAIRS.map(function(keyPair) {
-            var testName = "PGP Sign Cleartext, PGP Verify Cleartext ($pw, $ks) '$input'";
+            var testName = "Sign PGP Cleartext, Verify PGP Cleartext ($pw, $ks) '$input'";
             testName = testName.replace("$ks", keyPair.size);
             testName = testName.replace("$pw", keyPair.password ? "pw" : "no pw");
             testName = testName.replace("$input", input);
@@ -373,11 +373,11 @@ TestRegister.addTests([{
                 ].join("\n"),
                 recipeConfig: [
                     {
-                        op: "PGP Sign Cleartext",
+                        op: "Sign PGP Cleartext",
                         args: [keyPair.sec, keyPair.password],
                     },
                     {
-                        op: "PGP Verify Cleartext",
+                        op: "Verify PGP Cleartext",
                         args: [keyPair.pub, true],
                     },
                 ],
@@ -389,7 +389,7 @@ TestRegister.addTests([{
 ["", "hello world"].forEach(function(input) {
     TestRegister.addTests(
         PGP_TEST_KEY_PAIRS.map(function(keyPair) {
-            var testName = "PGP Sign Cleartext, PGP Verify Cleartext ($pw, $ks) '$input' (message hidden)";
+            var testName = "Sign Sign Cleartext, Verify PGP Cleartext ($pw, $ks) '$input' (message hidden)";
             testName = testName.replace("$ks", keyPair.size);
             testName = testName.replace("$pw", keyPair.password ? "pw" : "no pw");
             testName = testName.replace("$input", input);
@@ -408,11 +408,11 @@ TestRegister.addTests([{
                 ].join("\n"),
                 recipeConfig: [
                     {
-                        op: "PGP Sign Cleartext",
+                        op: "Sign PGP Cleartext",
                         args: [keyPair.sec, keyPair.password],
                     },
                     {
-                        op: "PGP Verify Cleartext",
+                        op: "Verify PGP Cleartext",
                         args: [keyPair.pub, false],
                     },
                 ],
@@ -422,7 +422,7 @@ TestRegister.addTests([{
 });
 
 TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
-    var testName = "PGP Remove ASCII Armor, PGP Add ASCII Armor: Public Key '$name'";
+    var testName = "Remove PGP ASCII Armor, Add PGP ASCII Armor: Public Key '$name'";
     testName = testName.replace("$name", keyPair.name);
 
     return {
@@ -432,11 +432,11 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
         ignoreWhitespace: true,
         recipeConfig: [
             {
-                op: "PGP Remove ASCII Armor",
+                op: "Remove PGP ASCII Armor",
                 args: [],
             },
             {
-                op: "PGP Add ASCII Armor",
+                op: "Add PGP ASCII Armor",
                 args: ["Public key"],
             },
         ],
@@ -444,7 +444,7 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
 }));
 
 TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
-    var testName = "PGP Remove ASCII Armor, PGP Add ASCII Armor: Private Key '$name'";
+    var testName = "Remove PGP ASCII Armor, Add PGP ASCII Armor: Private Key '$name'";
     testName = testName.replace("$name", keyPair.name);
 
     return {
@@ -454,11 +454,11 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
         ignoreWhitespace: true,
         recipeConfig: [
             {
-                op: "PGP Remove ASCII Armor",
+                op: "Remove PGP ASCII Armor",
                 args: [],
             },
             {
-                op: "PGP Add ASCII Armor",
+                op: "Add PGP ASCII Armor",
                 args: ["Private key"],
             },
         ],
@@ -467,7 +467,7 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
 
 CYBERCHEF_GENERATED_KEY_PAIRS.forEach(function(keyPair) {
     TestRegister.addTests(keyPair.messages.map(function(encryptedMessage, messageIndex) {
-        var testName = "PGP Remove ASCII Armor, PGP Add ASCII Armor: Message $message '$name'";
+        var testName = "Remove PGP ASCII Armor, Add PGP ASCII Armor: Message $message '$name'";
         testName = testName.replace("$message", messageIndex);
         testName = testName.replace("$name", keyPair.name);
 
@@ -478,11 +478,11 @@ CYBERCHEF_GENERATED_KEY_PAIRS.forEach(function(keyPair) {
             ignoreWhitespace: true,
             recipeConfig: [
                 {
-                    op: "PGP Remove ASCII Armor",
+                    op: "Remove PGP ASCII Armor",
                     args: [],
                 },
                 {
-                    op: "PGP Add ASCII Armor",
+                    op: "Add PGP ASCII Armor",
                     args: ["Message"],
                 },
             ],
