@@ -1028,20 +1028,43 @@ var Utils = {
         };
 
         var formatFile = function(file, i) {
+            var blob = new Blob(
+                [new Uint8Array(file.bytes)],
+                {type: "octet/stream"}
+            );
+            var blobUrl = window.URL.createObjectURL(blob);
+
+            var downloadAnchorElem = $("<a></a>")
+                .html("\u21B4")
+                .attr("href", blobUrl)
+                .attr("title", "Download '" + file.fileName + "'")
+                .attr("download", file.fileName);
+
+            var expandFileContentsElem = $("<a></a>")
+                .html("&#x1F50D")
+                .addClass("collapsed")
+                .attr("data-toggle", "collapse")
+                .attr("aria-expanded", "true")
+                .attr("aria-controls", "collapse" + i)
+                .attr("href", "#collapse" + i)
+                .attr("title", "Show/hide contents of '" + file.fileName + "'");
+
             var html = "<div class='panel panel-default'>" +
                        "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
                        "<h4 class='panel-title'>" +
-                       "<a class='collapsed' role='button' data-toggle='collapse' " +
-                       "href='#collapse" + i + "' " +
-                       "aria-expanded='true' aria-controls='collapse" + i +"'>" +
+                       "<div>" +
                        file.fileName +
+                       " " +
+                       $(expandFileContentsElem).prop("outerHTML") +
+                       " " +
+                       $(downloadAnchorElem).prop("outerHTML") +
                        "<span class='pull-right'>" +
                        // These are for formatting when stripping HTML
                        "<span style='display: none'>\n</span>" +
                        file.size.toLocaleString() + " bytes" +
                        "<span style='display: none'>\n</span>" +
                        "</span>" +
-                       "</a>" +
+                       "</div>" +
                        "</h4>" +
                        "</div>" +
                        "<div id='collapse" + i + "' class='panel-collapse collapse' " +
