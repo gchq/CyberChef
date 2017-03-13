@@ -56,7 +56,7 @@
                     // Remove whitespace helper
                     var noWS = function(string) {
                         return string.replace(/\s/g, "");
-                    }
+                    };
 
                     if (result.error) {
                         if (test.expectedError) {
@@ -71,8 +71,8 @@
                             ret.output = "Expected an error but did not receive one.";
                         } else if (result.result === test.expectedOutput) {
                             ret.status = "passing";
-                        } else if (test.ignoreWhitespace
-                                   && noWS(result.result) === noWS(test.expectedOutput)) {
+                        } else if (test.ignoreWhitespace &&
+                                   noWS(result.result) === noWS(test.expectedOutput)) {
                             ret.status = "passing";
                         } else {
                             ret.status = "failing";

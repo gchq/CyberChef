@@ -440,7 +440,7 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
                 args: ["Public key"],
             },
         ],
-    }
+    };
 }));
 
 TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
@@ -462,7 +462,7 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
                 args: ["Private key"],
             },
         ],
-    }
+    };
 }));
 
 CYBERCHEF_GENERATED_KEY_PAIRS.forEach(function(keyPair) {
