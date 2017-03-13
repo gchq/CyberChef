@@ -94,12 +94,11 @@ var PGP = {
                 privateKey: privateKey,
             };
 
-            try {
-                if (password) {
-                    privateKey.decrypt(password);
-                }
-            } catch (err) {
-                return reject("Cannot decrypt password: " + err);
+            if (password) {
+                privateKey.decrypt(password);
+            }
+            if (privateKey.primaryKey.encrypted !== null) {
+                return reject("Could not decrypt private key.");
             }
 
             openpgp.decrypt(options)
@@ -138,12 +137,11 @@ var PGP = {
                 return reject("Could not read private key: " + err);
             }
 
-            try {
-                if (password) {
-                    privateKeys[0].decrypt(password);
-                }
-            } catch (err) {
-                return reject("Cannot decrypt password: " + err);
+            if (password) {
+                privateKeys[0].decrypt(password);
+            }
+            if (privateKeys[0].primaryKey.encrypted !== null) {
+                return reject("Could not decrypt private key.");
             }
 
             var options = {
@@ -189,12 +187,11 @@ var PGP = {
                 return reject("Could not read private key: " + err);
             }
 
-            try {
-                if (password) {
-                    privateKeys[0].decrypt(password);
-                }
-            } catch (err) {
-                return reject("Cannot decrypt password: " + err);
+            if (password) {
+                privateKeys[0].decrypt(password);
+            }
+            if (privateKeys[0].primaryKey.encrypted !== null) {
+                return reject("Could not decrypt private key.");
             }
 
             try {
@@ -232,7 +229,7 @@ var PGP = {
                         "Signed by: " + verification.author,
                         "Signed with: ",
                         "\n",
-                        displayDecrypt ? decrypted.data : "",
+                        displayDecrypt && verification.verified ? decrypted.data : "",
                     ].join("\n"));
 
                 })
@@ -256,14 +253,17 @@ var PGP = {
 
 
         return new Promise(function(resolve, reject) {
-            var privateKeys = openpgp.key.readArmored(privateKey).keys;
-
             try {
-                if (password) {
-                    privateKeys[0].decrypt(password);
-                }
+                var privateKeys = openpgp.key.readArmored(privateKey).keys;
             } catch (err) {
-                return reject("Cannot decrypt password: " + err);
+                return reject("Could not read private key: " + err);
+            }
+
+            if (password) {
+                privateKeys[0].decrypt(password);
+            }
+            if (privateKeys[0].primaryKey.encrypted !== null) {
+                return reject("Could not decrypt private key.");
             }
 
             var options = {
@@ -334,7 +334,7 @@ var PGP = {
                         "Signed by: " + verification.author,
                         "Signed with: ",
                         "\n",
-                        displayDecrypt ? verification.message : "",
+                        displayDecrypt && verification.verified ? verification.message : "",
                     ].join("\n"));
                 })
                 .catch(function(err) {
@@ -364,7 +364,7 @@ var PGP = {
             };
 
             if (password) {
-                options.password = password;
+                options.passphrase = password;
             }
 
             openpgp.generateKey(options)
