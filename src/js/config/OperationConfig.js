@@ -3230,6 +3230,47 @@ var OperationConfig = {
             }
         ]
     },
+    "Sign PGP Detached": {
+        description: "",
+        run: PGP.runSignDetached,
+        inputType: "string",
+        outputType: "HTML",
+        args: [
+            {
+                name: "Private key",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key password",
+                type: "string",
+                value: "",
+            },
+        ]
+    },
+    "Verify PGP Detached": {
+        description: "",
+        run: PGP.runVerifyDetached,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "ASCII armored signature",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Display message in output",
+                type: "boolean",
+                value: true,
+            }
+        ]
+    },
     "Sign PGP Cleartext": {
         description: "Input: An ASCII-Armored PGP private key (and optionally, the password needed to decrypt the private key).<br><br>This operation uses PGP to produce a digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runSignCleartext,

@@ -241,6 +241,135 @@ var PGP = {
 
 
     /**
+     * Signs the input using PGP and outputs the plaintext, the raw PGP signature, and the ASCII armored signature files.
+     *
+     * @param {string} input - data to be signed
+     * @param {Object[]} args
+     * @returns {HTML}
+     */
+    runSignDetached: function (input, args) {
+        var privateKey = args[0],
+            password = args[1];
+
+        return new Promise(function(resolve, reject) {
+            try {
+                var privateKeys = openpgp.key.readArmored(privateKey).keys;
+            } catch (err) {
+                return reject("Could not read private key: " + err);
+            }
+
+            if (password) {
+                privateKeys[0].decrypt(password);
+            }
+            if (privateKeys[0].primaryKey.encrypted !== null) {
+                return reject("Could not decrypt private key.");
+            }
+
+            var bytes = openpgp.util.str2Uint8Array(input);
+            var message = openpgp.message.fromBinary(bytes);
+
+            var signedMessage = message.sign(privateKeys);
+            var signature = signedMessage.packets.filterByTag(openpgp.enums.packet.signature);
+            var rawSignatureBytes = signature.write();
+
+            var armoredMessage = openpgp.armor.encode(
+                openpgp.enums.armor.message,
+                rawSignatureBytes
+            );
+            armoredMessage = armoredMessage.replace(
+                "-----BEGIN PGP MESSAGE-----\r\n",
+                "-----BEGIN PGP SIGNATURE-----\r\n"
+            );
+            armoredMessage = armoredMessage.replace(
+                "-----END PGP MESSAGE-----\r\n",
+                "-----END PGP SIGNATURE-----\r\n"
+            );
+
+            var files = [{
+                fileName: "msg",
+                size: input.length,
+                contents: input,
+                bytes: bytes,
+            }, {
+                fileName: "msg.asc",
+                size: armoredMessage.length,
+                contents: armoredMessage,
+                bytes: openpgp.util.str2Uint8Array(armoredMessage),
+            }, {
+                fileName: "msg.sig",
+                size: rawSignatureBytes.length,
+                contents: "Binary file",
+                bytes: rawSignatureBytes,
+            }];
+
+            resolve(Utils.displayFilesAsHTML(files));
+        });
+    },
+
+
+    /**
+     * Verifies the signature and input using PGP.
+     *
+     * @param {string} input - signed input to verify
+     * @param {Object[]} args
+     * @returns {string} - "true" or "false" depending on the validity of the signature
+     */
+    runVerifyDetached: function (input, args) {
+        var publicKey = args[0],
+            armoredSignature = args[1],
+            displayDecrypt = args[2];
+
+        return new Promise(function(resolve, reject) {
+            try {
+                var publicKeys = openpgp.key.readArmored(publicKey).keys;
+            } catch (err) {
+                return reject("Could not read public key: " + err);
+            }
+
+            try {
+                var message = openpgp.message.readSignedContent(
+                    input,
+                    armoredSignature
+                );
+            } catch (err) {
+                return reject("Could not read armored signature or message: " + err);
+            }
+
+
+            var verification = {
+                verified: false,
+                author: publicKeys[0].users[0].userId.userid,
+                date: "",
+                keyID: "",
+                message: "",
+            };
+
+            Promise.resolve(message.verify(publicKeys))
+                .then(function(signatures) {
+                    if (signatures && signatures.length) {
+                        verification.verified = !!signatures[0].valid;
+                        verification.keyID = signatures[0].keyid.toHex();
+                    }
+
+                    resolve([
+                        "Verified: " + verification.verified,
+                        "Key ID: " + verification.keyID,
+                        "Signed on: " + verification.date,
+                        "Signed by: " + verification.author,
+                        "Signed with: ",
+                        "\n",
+                        displayDecrypt && verification.verified ? input : "",
+                    ].join("\n"));
+
+                })
+                .catch(function(err) {
+                    reject("Could not verify message: " + err);
+                });
+        });
+    },
+
+
+    /**
      * Clearsigns the input using PGP.
      *
      * @param {string} input - data to be signed
