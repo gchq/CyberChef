@@ -392,7 +392,7 @@ var OperationConfig = {
         ]
     },
     "From Hex": {
-        description: "Converts a hexadecimal byte string back into a its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        description: "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
         run: ByteRepr.runFromHex,
         highlight: ByteRepr.highlightFrom,
         highlightReverse: ByteRepr.highlightTo,
@@ -418,6 +418,36 @@ var OperationConfig = {
                 name: "Delimiter",
                 type: "option",
                 value: ByteRepr.HEX_DELIM_OPTIONS
+            }
+        ]
+    },
+    "From Octal": {
+        description: "Converts a octal byte string back into its raw value.<br><br>e.g. <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        run: ByteRepr.runFromOct,
+        highlight: false,
+        highlightReverse: false,
+        inputType: "string",
+        outputType: "byteArray",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: ByteRepr.OCT_DELIM_OPTIONS
+            }
+        ]
+    },
+    "To Octal": {
+        description: "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>",
+        run: ByteRepr.runToOct,
+        highlight: false,
+        highlightReverse: false,
+        inputType: "byteArray",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: ByteRepr.OCT_DELIM_OPTIONS
             }
         ]
     },

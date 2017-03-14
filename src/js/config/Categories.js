@@ -35,6 +35,8 @@ var Categories = [
             "From Decimal",
             "To Binary",
             "From Binary",
+            "To Octal",
+            "From Octal",
             "To Base64",
             "From Base64",
             "Show Base64 offsets",
