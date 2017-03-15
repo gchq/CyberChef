@@ -3149,7 +3149,7 @@ var OperationConfig = {
         ]
     },
     "PGP Encrypt": {
-        description: "Input: An ASCII-Armored PGP public key.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        description: "Input: An ASCII-Armoured PGP public key.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runEncrypt,
         inputType: "string",
         outputType: "string",
@@ -3162,7 +3162,7 @@ var OperationConfig = {
         ]
     },
     "PGP Decrypt": {
-        description: "Input: An ASCII-Armored PGP private key (and optionally, the password needed to decrypt the private key).<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        description: "Input: An ASCII-Armoured PGP private key (and optionally, the password needed to decrypt the private key).<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runDecrypt,
         inputType: "string",
         outputType: "string",
@@ -3180,7 +3180,7 @@ var OperationConfig = {
         ]
     },
     "PGP Sign": {
-        description: "Input: An ASCII-Armored PGP private key (and optionally, the password needed to decrypt the private key); the public key of the recipient.<br><br>This operation uses PGP to produce an encrypted digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        description: "Input: An ASCII-Armoured PGP private key (and optionally, the password needed to decrypt the private key); the public key of the recipient.<br><br>This operation uses PGP to produce an encrypted digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runSign,
         inputType: "string",
         outputType: "string",
@@ -3203,7 +3203,7 @@ var OperationConfig = {
         ]
     },
     "PGP Verify": {
-        description: "Input: An ASCII-Armored PGP public key.<br><br>This operation uses PGP to decrypt and verify an encrypted digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        description: "Input: An ASCII-Armoured PGP public key.<br><br>This operation uses PGP to decrypt and verify an encrypted digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runVerify,
         inputType: "string",
         outputType: "string",
@@ -3255,14 +3255,14 @@ var OperationConfig = {
                 value: "",
             },
             {
-                name: "ASCII armored signature",
+                name: "ASCII armoured signature",
                 type: "text",
                 value: "",
             },
         ]
     },
     "Sign PGP Cleartext": {
-        description: "Input: An ASCII-Armored PGP private key (and optionally, the password needed to decrypt the private key).<br><br>This operation uses PGP to produce a digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        description: "Input: An ASCII-Armoured PGP private key (and optionally, the password needed to decrypt the private key).<br><br>This operation uses PGP to produce a digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runSignCleartext,
         inputType: "string",
         outputType: "string",
@@ -3280,7 +3280,7 @@ var OperationConfig = {
         ]
     },
     "Verify PGP Cleartext": {
-        description: "Input: An ASCII-Armored PGP public key.<br><br>This operation uses PGP to verify a cleartext digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
+        description: "Input: An ASCII-Armoured PGP public key.<br><br>This operation uses PGP to verify a cleartext digital signature.<br><br>Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.<br><br>This function relies on OpenPGP.js for the implementation of PGP.<br><br>See more at https://openpgpjs.org/",
         run: PGP.runVerifyCleartext,
         inputType: "string",
         outputType: "string",
@@ -3328,22 +3328,22 @@ var OperationConfig = {
         args: [
         ],
     },
-    "Add PGP ASCII Armor": {
+    "Add PGP ASCII Armour": {
         description: "",
-        run: PGP.runAddArmor,
+        run: PGP.runAddArmour,
         inputType: "byteArray",
         outputType: "string",
         args: [
             {
-                name: "Armor type",
+                name: "Armour type",
                 type: "option",
-                value: PGP.ARMOR_TYPES,
+                value: PGP.ARMOUR_TYPES,
             },
         ],
     },
-    "Remove PGP ASCII Armor": {
+    "Remove PGP ASCII Armour": {
         description: "",
-        run: PGP.runRemoveArmor,
+        run: PGP.runRemoveArmour,
         inputType: "string",
         outputType: "byteArray",
         args: [

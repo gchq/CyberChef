@@ -14,7 +14,7 @@ var PGP = {
      * @constant
      * @default
      */
-    ARMOR_TYPES: [
+    ARMOUR_TYPES: [
         "Message",
         "Public key",
         "Private key",
@@ -25,7 +25,7 @@ var PGP = {
      * @constant
      * @default
      */
-    ARMOR_TYPE_MAPPING: {
+    ARMOUR_TYPE_MAPPING: {
         "Message": 3,
         "Public key": 4,
         "Private key": 5,
@@ -240,7 +240,7 @@ var PGP = {
 
 
     /**
-     * Signs the input using PGP and outputs the plaintext, the raw PGP signature, and the ASCII armored signature files.
+     * Signs the input using PGP and outputs the plaintext, the raw PGP signature, and the ASCII armoured signature files.
      *
      * @param {string} input - data to be signed
      * @param {Object[]} args
@@ -271,15 +271,15 @@ var PGP = {
             var signature = signedMessage.packets.filterByTag(openpgp.enums.packet.signature);
             var rawSignatureBytes = signature.write();
 
-            var armoredMessage = openpgp.armor.encode(
+            var armouredMessage = openpgp.armor.encode(
                 openpgp.enums.armor.message,
                 rawSignatureBytes
             );
-            armoredMessage = armoredMessage.replace(
+            armouredMessage = armouredMessage.replace(
                 "-----BEGIN PGP MESSAGE-----\r\n",
                 "-----BEGIN PGP SIGNATURE-----\r\n"
             );
-            armoredMessage = armoredMessage.replace(
+            armouredMessage = armouredMessage.replace(
                 "-----END PGP MESSAGE-----\r\n",
                 "-----END PGP SIGNATURE-----\r\n"
             );
@@ -291,9 +291,9 @@ var PGP = {
                 bytes: bytes,
             }, {
                 fileName: "msg.asc",
-                size: armoredMessage.length,
-                contents: armoredMessage,
-                bytes: openpgp.util.str2Uint8Array(armoredMessage),
+                size: armouredMessage.length,
+                contents: armouredMessage,
+                bytes: openpgp.util.str2Uint8Array(armouredMessage),
             }, {
                 fileName: "msg.sig",
                 size: rawSignatureBytes.length,
@@ -315,7 +315,7 @@ var PGP = {
      */
     runVerifyDetached: function (input, args) {
         var publicKey = args[0],
-            armoredSignature = args[1];
+            armouredSignature = args[1];
 
         return new Promise(function(resolve, reject) {
             try {
@@ -327,10 +327,10 @@ var PGP = {
             try {
                 var message = openpgp.message.readSignedContent(
                     input,
-                    armoredSignature
+                    armouredSignature
                 );
             } catch (err) {
-                return reject("Could not read armored signature or message: " + err);
+                return reject("Could not read armoured signature or message: " + err);
             }
 
 
@@ -475,7 +475,7 @@ var PGP = {
      *
      * @param {string} input is ignored
      * @param {Object[]} args
-     * @returns {string} - armored public key and private key separated by whitespace.
+     * @returns {string} - armoured public key and private key separated by whitespace.
      */
     runGenKeyPair: function (input, args) {
         var password = args[0],
@@ -529,15 +529,15 @@ var PGP = {
             var signature = message.packets.filterByTag(openpgp.enums.packet.signature);
             var rawSignatureBytes = signature.write();
 
-            var armoredMessage = openpgp.armor.encode(
+            var armouredMessage = openpgp.armor.encode(
                 openpgp.enums.armor.message,
                 rawSignatureBytes
             );
-            armoredMessage = armoredMessage.replace(
+            armouredMessage = armouredMessage.replace(
                 "-----BEGIN PGP MESSAGE-----\r\n",
                 "-----BEGIN PGP SIGNATURE-----\r\n"
             );
-            armoredMessage = armoredMessage.replace(
+            armouredMessage = armouredMessage.replace(
                 "-----END PGP MESSAGE-----\r\n",
                 "-----END PGP SIGNATURE-----\r\n"
             );
@@ -549,9 +549,9 @@ var PGP = {
                 bytes: clearbytes,
             }, {
                 fileName: "msg.asc",
-                size: armoredMessage.length,
-                contents: armoredMessage,
-                bytes: openpgp.util.str2Uint8Array(armoredMessage),
+                size: armouredMessage.length,
+                contents: armouredMessage,
+                bytes: openpgp.util.str2Uint8Array(armouredMessage),
             }, {
                 fileName: "msg.sig",
                 size: rawSignatureBytes.length,
@@ -565,26 +565,26 @@ var PGP = {
 
 
     /**
-     * Turns raw PGP bytes into an ASCII armored string.
+     * Turns raw PGP bytes into an ASCII armoured string.
      *
      * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string} - armored public key and private key separated by whitespace.
+     * @returns {string} - armoured public key and private key separated by whitespace.
      */
-    runAddArmor: function (input, args) {
-        var armorType = PGP.ARMOR_TYPE_MAPPING[args[0]];
-        return openpgp.armor.encode(armorType, input);
+    runAddArmour: function (input, args) {
+        var armourType = PGP.ARMOUR_TYPE_MAPPING[args[0]];
+        return openpgp.armor.encode(armourType, input);
     },
 
 
     /**
-     * Turns an ASCII armored string into raw PGP bytes.
+     * Turns an ASCII armoured string into raw PGP bytes.
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byteArray} - armored public key and private key separated by whitespace.
+     * @returns {byteArray} - armoured public key and private key separated by whitespace.
      */
-    runRemoveArmor: function (input, args) {
+    runRemoveArmour: function (input, args) {
         var decoded = openpgp.armor.decode(input);
         var uint8bytes = decoded.data;
         var bytes = Array.prototype.slice.call(uint8bytes);

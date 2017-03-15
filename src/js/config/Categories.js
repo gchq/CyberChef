@@ -102,8 +102,8 @@ var Categories = [
             "Verify PGP Cleartext",
             "Generate PGP Key Pair",
             "Detach PGP Cleartext",
-            "Add PGP ASCII Armor",
-            "Remove PGP ASCII Armor",
+            "Add PGP ASCII Armour",
+            "Remove PGP ASCII Armour",
         ]
     },
     {
@@ -125,8 +125,8 @@ var Categories = [
             "Verify PGP Cleartext",
             "Detach PGP Cleartext",
             "Generate PGP Key Pair",
-            "Add PGP ASCII Armor",
-            "Remove PGP ASCII Armor",
+            "Add PGP ASCII Armour",
+            "Remove PGP ASCII Armour",
         ]
     },
     {

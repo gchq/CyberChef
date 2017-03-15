@@ -360,7 +360,7 @@ TestRegister.addTests([{
 });
 
 TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
-    var testName = "Remove PGP ASCII Armor, Add PGP ASCII Armor: Public Key '$name'";
+    var testName = "Remove PGP ASCII Armour, Add PGP ASCII Armour: Public Key '$name'";
     testName = testName.replace("$name", keyPair.name);
 
     return {
@@ -370,11 +370,11 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
         ignoreWhitespace: true,
         recipeConfig: [
             {
-                op: "Remove PGP ASCII Armor",
+                op: "Remove PGP ASCII Armour",
                 args: [],
             },
             {
-                op: "Add PGP ASCII Armor",
+                op: "Add PGP ASCII Armour",
                 args: ["Public key"],
             },
         ],
@@ -382,7 +382,7 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
 }));
 
 TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
-    var testName = "Remove PGP ASCII Armor, Add PGP ASCII Armor: Private Key '$name'";
+    var testName = "Remove PGP ASCII Armour, Add PGP ASCII Armour: Private Key '$name'";
     testName = testName.replace("$name", keyPair.name);
 
     return {
@@ -392,11 +392,11 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
         ignoreWhitespace: true,
         recipeConfig: [
             {
-                op: "Remove PGP ASCII Armor",
+                op: "Remove PGP ASCII Armour",
                 args: [],
             },
             {
-                op: "Add PGP ASCII Armor",
+                op: "Add PGP ASCII Armour",
                 args: ["Private key"],
             },
         ],
@@ -406,7 +406,7 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
 PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
     TestRegister.addTests(
         ["", "hello world"].map(function(message, messageIndex) {
-            var testName = "PGP Encrypt, Remove PGP ASCII Armor, Add PGP ASCII Armor, PGP Decrypt: Message $message '$name'";
+            var testName = "PGP Encrypt, Remove PGP ASCII Armour, Add PGP ASCII Armour, PGP Decrypt: Message $message '$name'";
             testName = testName.replace("$message", messageIndex);
             testName = testName.replace("$name", keyPair.name);
 
@@ -421,7 +421,7 @@ PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
                         args: [keyPair.pub],
                     },
                     {
-                        op: "Remove PGP ASCII Armor",
+                        op: "Remove PGP ASCII Armour",
                         args: [],
                     },
                     {
@@ -433,7 +433,7 @@ PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
                         args: ["None"],
                     },
                     {
-                        op: "Add PGP ASCII Armor",
+                        op: "Add PGP ASCII Armour",
                         args: ["Message"],
                     },
                     {
