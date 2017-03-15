@@ -70,21 +70,6 @@ var CYBERCHEF_GENERATED_KEY_PAIRS = [
             "=8R+g",
             "-----END PGP PRIVATE KEY BLOCK-----",
         ].join("\n"),
-        messages: [
-            [
-                "-----BEGIN PGP MESSAGE-----",
-                "Version: OpenPGP.js v2.3.6",
-                "Comment: http://openpgpjs.org",
-                "",
-                "wYwDmsTgRYVqFPcBA/kBfc7BnEcbKGwac/JOSK6YWzpDERR8NjJT/3R7JDsG",
-                "ywJB/ouaHy3e5KGDulALV6pUzcPbCC0CCl5tlFVaFYAj6+BdwR/WCb7dhlRE",
-                "x+vw5VKLlY6adSgtvU9aLF0nL0YlU9Pxf9wrPdo3bvxJij7S4mbGS2iybhQO",
-                "41ZUtWhOotI9AR/e7f2WHSt8dpl7T9Uq8trAptFWVIZkj+78Gp/8u5o8/mqV",
-                "9gxmOGsViKhVZ1b554nwd243IrqlzW2szg==",
-                "=prpZ",
-                "-----END PGP MESSAGE-----",
-            ].join("\n"),
-        ],
     },
 ];
 
@@ -465,27 +450,45 @@ TestRegister.addTests(CYBERCHEF_GENERATED_KEY_PAIRS.map(function(keyPair) {
     };
 }));
 
-CYBERCHEF_GENERATED_KEY_PAIRS.forEach(function(keyPair) {
-    TestRegister.addTests(keyPair.messages.map(function(encryptedMessage, messageIndex) {
-        var testName = "Remove PGP ASCII Armor, Add PGP ASCII Armor: Message $message '$name'";
-        testName = testName.replace("$message", messageIndex);
-        testName = testName.replace("$name", keyPair.name);
+PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
+    TestRegister.addTests(
+        ["", "hello world"].map(function(message, messageIndex) {
+            var testName = "PGP Encrypt, Remove PGP ASCII Armor, Add PGP ASCII Armor, PGP Decrypt: Message $message '$name'";
+            testName = testName.replace("$message", messageIndex);
+            testName = testName.replace("$name", keyPair.name);
 
-        return {
-            name: testName,
-            input: encryptedMessage,
-            expectedOutput: encryptedMessage,
-            ignoreWhitespace: true,
-            recipeConfig: [
-                {
-                    op: "Remove PGP ASCII Armor",
-                    args: [],
-                },
-                {
-                    op: "Add PGP ASCII Armor",
-                    args: ["Message"],
-                },
-            ],
-        };
-    }));
+            return {
+                name: testName,
+                input: message,
+                expectedOutput: message,
+                ignoreWhitespace: true,
+                recipeConfig: [
+                    {
+                        op: "PGP Encrypt",
+                        args: [keyPair.pub],
+                    },
+                    {
+                        op: "Remove PGP ASCII Armor",
+                        args: [],
+                    },
+                    {
+                        op: "To Hex",
+                        args: ["None"],
+                    },
+                    {
+                        op: "From Hex",
+                        args: ["None"],
+                    },
+                    {
+                        op: "Add PGP ASCII Armor",
+                        args: ["Message"],
+                    },
+                    {
+                        op: "PGP Decrypt",
+                        args: [keyPair.sec, keyPair.password],
+                    },
+                ],
+            };
+        })
+    )
 });
