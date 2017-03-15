@@ -171,8 +171,7 @@ var PGP = {
     runVerify: function (input, args) {
         var publicKey = args[0],
             privateKey = args[1],
-            password = args[2],
-            displayDecrypt = args[3];
+            password = args[2];
 
         return new Promise(function(resolve, reject) {
             try {
@@ -229,7 +228,7 @@ var PGP = {
                         "Signed by: " + verification.author,
                         "Signed with: ",
                         "\n",
-                        displayDecrypt && verification.verified ? decrypted.data : "",
+                        decrypted.data,
                     ].join("\n"));
 
                 })
@@ -316,8 +315,7 @@ var PGP = {
      */
     runVerifyDetached: function (input, args) {
         var publicKey = args[0],
-            armoredSignature = args[1],
-            displayDecrypt = args[2];
+            armoredSignature = args[1];
 
         return new Promise(function(resolve, reject) {
             try {
@@ -358,7 +356,7 @@ var PGP = {
                         "Signed by: " + verification.author,
                         "Signed with: ",
                         "\n",
-                        displayDecrypt && verification.verified ? input : "",
+                        input,
                     ].join("\n"));
 
                 })
@@ -419,8 +417,7 @@ var PGP = {
      * @returns {string} - "true" or "false" depending on the validity of the signature
      */
     runVerifyCleartext: function (input, args) {
-        var publicKey = args[0],
-            displayDecrypt = args[1];
+        var publicKey = args[0];
 
         return new Promise(function(resolve, reject) {
 
@@ -463,7 +460,7 @@ var PGP = {
                         "Signed by: " + verification.author,
                         "Signed with: ",
                         "\n",
-                        displayDecrypt && verification.verified ? verification.message : "",
+                        verification.message,
                     ].join("\n"));
                 })
                 .catch(function(err) {

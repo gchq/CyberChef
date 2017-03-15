@@ -317,47 +317,7 @@ TestRegister.addTests([{
                 },
                 {
                     op: "PGP Verify",
-                    args: [alice.pub, bob.sec, bob.password, true],
-                },
-            ],
-        }]);
-    });
-});
-
-["hello world"].forEach(function(input) {
-    [
-        [PGP_TEST_KEY_PAIRS[0], PGP_TEST_KEY_PAIRS[1]],
-        [PGP_TEST_KEY_PAIRS[1], PGP_TEST_KEY_PAIRS[0]],
-    ].forEach(function(pairOfKeyPairs) {
-        var alice = pairOfKeyPairs[0];
-        var bob = pairOfKeyPairs[1];
-
-        var testName = "PGP Sign ($alice), PGP Verify ($bob) '$input' (message hidden)";
-        testName = testName.replace("$alice", alice.name);
-        testName = testName.replace("$bob", bob.name);
-        testName = testName.replace("$input", input);
-
-        TestRegister.addTests([{
-            name: testName,
-            input: input,
-            expectedOutput: [
-                "Verified: true",
-                "Key ID: " + alice.keyID,
-                "Encrypted for: " + bob.name,
-                "Signed on: ",
-                "Signed by: " + alice.name,
-                "Signed with: ",
-                "\n",
-                "",
-            ].join("\n"),
-            recipeConfig: [
-                {
-                    op: "PGP Sign",
-                    args: [bob.pub, alice.sec, alice.password],
-                },
-                {
-                    op: "PGP Verify",
-                    args: [alice.pub, bob.sec, bob.password, false],
+                    args: [alice.pub, bob.sec, bob.password],
                 },
             ],
         }]);
@@ -391,42 +351,7 @@ TestRegister.addTests([{
                     },
                     {
                         op: "Verify PGP Cleartext",
-                        args: [keyPair.pub, true],
-                    },
-                ],
-            };
-        })
-    );
-});
-
-["", "hello world"].forEach(function(input) {
-    TestRegister.addTests(
-        PGP_TEST_KEY_PAIRS.map(function(keyPair) {
-            var testName = "Sign Sign Cleartext, Verify PGP Cleartext ($pw, $ks) '$input' (message hidden)";
-            testName = testName.replace("$ks", keyPair.size);
-            testName = testName.replace("$pw", keyPair.password ? "pw" : "no pw");
-            testName = testName.replace("$input", input);
-
-            return {
-                name: testName,
-                input: input,
-                expectedOutput: [
-                    "Verified: true",
-                    "Key ID: " + keyPair.keyID,
-                    "Signed on: ",
-                    "Signed by: " + keyPair.name,
-                    "Signed with: ",
-                    "\n",
-                    "",
-                ].join("\n"),
-                recipeConfig: [
-                    {
-                        op: "Sign PGP Cleartext",
-                        args: [keyPair.sec, keyPair.password],
-                    },
-                    {
-                        op: "Verify PGP Cleartext",
-                        args: [keyPair.pub, false],
+                        args: [keyPair.pub],
                     },
                 ],
             };

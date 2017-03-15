@@ -3223,11 +3223,6 @@ var OperationConfig = {
                 type: "string",
                 value: "",
             },
-            {
-                name: "Display message in output",
-                type: "boolean",
-                value: true,
-            }
         ]
     },
     "Sign PGP Detached": {
@@ -3264,11 +3259,6 @@ var OperationConfig = {
                 type: "text",
                 value: "",
             },
-            {
-                name: "Display message in output",
-                type: "boolean",
-                value: true,
-            }
         ]
     },
     "Sign PGP Cleartext": {
@@ -3300,11 +3290,6 @@ var OperationConfig = {
                 type: "text",
                 value: "",
             },
-            {
-                name: "Display message in output",
-                type: "boolean",
-                value: true,
-            }
         ]
     },
     "Generate PGP Key Pair": {
