@@ -3335,6 +3335,14 @@ var OperationConfig = {
             },
         ]
     },
+    "Detach PGP Cleartext": {
+        description: "",
+        run: PGP.runDetachClearsig,
+        inputType: "string",
+        outputType: "HTML",
+        args: [
+        ],
+    },
     "Add PGP ASCII Armor": {
         description: "",
         run: PGP.runAddArmor,

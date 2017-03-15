@@ -512,6 +512,62 @@ var PGP = {
 
 
     /**
+     * Turns a PGP clearsigned message into a detached signature.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {HTML}
+     */
+    runDetachClearsig: function (input, args) {
+        return new Promise(function(resolve, reject) {
+            try {
+                var message = openpgp.cleartext.readArmored(input);
+            } catch (err) {
+                return reject("Could not read input message: " + err);
+            }
+
+            var cleartext = message.getText();
+            var clearbytes = openpgp.util.str2Uint8Array(cleartext);
+
+            var signature = message.packets.filterByTag(openpgp.enums.packet.signature);
+            var rawSignatureBytes = signature.write();
+
+            var armoredMessage = openpgp.armor.encode(
+                openpgp.enums.armor.message,
+                rawSignatureBytes
+            );
+            armoredMessage = armoredMessage.replace(
+                "-----BEGIN PGP MESSAGE-----\r\n",
+                "-----BEGIN PGP SIGNATURE-----\r\n"
+            );
+            armoredMessage = armoredMessage.replace(
+                "-----END PGP MESSAGE-----\r\n",
+                "-----END PGP SIGNATURE-----\r\n"
+            );
+
+            var files = [{
+                fileName: "msg",
+                size: cleartext.length,
+                contents: cleartext,
+                bytes: clearbytes,
+            }, {
+                fileName: "msg.asc",
+                size: armoredMessage.length,
+                contents: armoredMessage,
+                bytes: openpgp.util.str2Uint8Array(armoredMessage),
+            }, {
+                fileName: "msg.sig",
+                size: rawSignatureBytes.length,
+                contents: openpgp.util.Uint8Array2str(rawSignatureBytes),
+                bytes: rawSignatureBytes,
+            }];
+
+            resolve(Utils.displayFilesAsHTML(files));
+        });
+    },
+
+
+    /**
      * Turns raw PGP bytes into an ASCII armored string.
      *
      * @param {byteArray} input
