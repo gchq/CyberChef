@@ -199,11 +199,16 @@ var PGP = {
                 return reject("Could not read encrypted message: " + err);
             }
 
+            var packetContainingAlgorithms = message.packets.filterByTag(
+                openpgp.enums.packet.publicKeyEncryptedSessionKey
+            )[0];
+
             var verification = {
                 verified: false,
+                pkAlgorithm: packetContainingAlgorithms.publicKeyAlgorithm,
+                sessionAlgorithm: packetContainingAlgorithms.sessionKeyAlgorithm,
                 author: publicKeys[0].users[0].userId.userid,
                 recipient: privateKeys[0].users[0].userId.userid,
-                date: "",
                 keyID: "",
                 message: "",
             };
@@ -224,9 +229,11 @@ var PGP = {
                         "Verified: " + verification.verified,
                         "Key ID: " + verification.keyID,
                         "Encrypted for: " + verification.recipient,
-                        "Signed on: " + verification.date,
                         "Signed by: " + verification.author,
-                        "Signed with: ",
+                        "Signed with: " +
+                        verification.pkAlgorithm +
+                        "/" +
+                        verification.sessionAlgorithm,
                         "\n",
                         decrypted.data,
                     ].join("\n"));
@@ -333,17 +340,22 @@ var PGP = {
                 return reject("Could not read armoured signature or message: " + err);
             }
 
+            var packetContainingSignature = message.packets.filterByTag(
+                openpgp.enums.packet.signature
+            )[0];
 
             var verification = {
                 verified: false,
+                pkAlgorithm: publicKeys[0].primaryKey.algorithm,
                 author: publicKeys[0].users[0].userId.userid,
-                date: "",
+                date: packetContainingSignature.created,
                 keyID: "",
                 message: "",
             };
 
             Promise.resolve(message.verify(publicKeys))
                 .then(function(signatures) {
+
                     if (signatures && signatures.length) {
                         verification.verified = !!signatures[0].valid;
                         verification.keyID = signatures[0].keyid.toHex();
@@ -354,7 +366,7 @@ var PGP = {
                         "Key ID: " + verification.keyID,
                         "Signed on: " + verification.date,
                         "Signed by: " + verification.author,
-                        "Signed with: ",
+                        "Signed with: " + verification.pkAlgorithm,
                         "\n",
                         input,
                     ].join("\n"));
@@ -433,10 +445,15 @@ var PGP = {
                 return reject("Could not read input message: " + err);
             }
 
+            var packetContainingSignature = message.packets.filterByTag(
+                openpgp.enums.packet.signature
+            )[0];
+
             var verification = {
                 verified: false,
+                pkAlgorithm: publicKeys[0].primaryKey.algorithm,
                 author: publicKeys[0].users[0].userId.userid,
-                date: "",
+                date: packetContainingSignature.created,
                 keyID: "",
                 message: message.text,
             };
@@ -458,7 +475,7 @@ var PGP = {
                         "Key ID: " + verification.keyID,
                         "Signed on: " + verification.date,
                         "Signed by: " + verification.author,
-                        "Signed with: ",
+                        "Signed with: " + verification.pkAlgorithm,
                         "\n",
                         verification.message,
                     ].join("\n"));

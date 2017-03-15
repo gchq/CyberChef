@@ -304,9 +304,8 @@ TestRegister.addTests([{
                 "Verified: true",
                 "Key ID: " + alice.keyID,
                 "Encrypted for: " + bob.name,
-                "Signed on: ",
                 "Signed by: " + alice.name,
-                "Signed with: ",
+                "Signed with: rsa_encrypt_sign/aes256",
                 "\n",
                 input,
             ].join("\n"),
@@ -338,9 +337,8 @@ TestRegister.addTests([{
                 expectedOutput: [
                     "Verified: true",
                     "Key ID: " + keyPair.keyID,
-                    "Signed on: ",
                     "Signed by: " + keyPair.name,
-                    "Signed with: ",
+                    "Signed with: rsa_encrypt_sign",
                     "\n",
                     input,
                 ].join("\n"),
@@ -352,6 +350,16 @@ TestRegister.addTests([{
                     {
                         op: "Verify PGP Cleartext",
                         args: [keyPair.pub],
+                    },
+                    {
+                        op: "Find / Replace",
+                        args: [
+                            {option: "Regex", string: "Signed on: .*\r?\n"},
+                            "",
+                            true,
+                            false,
+                            false,
+                        ],
                     },
                 ],
             };
