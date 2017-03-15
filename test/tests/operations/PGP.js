@@ -197,6 +197,34 @@ var PGP_TEST_KEY_PAIRS = [
     },
 ];
 
+PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
+    if (keyPair.password) {
+        TestRegister.addTests(
+            ["", "nottherightpassword"].map(function(incorrectPW) {
+            var testName = "PGP Encrypt, PGP Decrypt: ensure error for incorrect password (pw [$pw], $ks, $name)";
+            testName = testName.replace("$ks", keyPair.size);
+            testName = testName.replace("$pw", incorrectPW);
+
+            return {
+                    name: testName,
+                    input: "hello world",
+                    expectedError: true,
+                    recipeConfig: [
+                        {
+                            op: "PGP Encrypt",
+                            args: [keyPair.pub],
+                        },
+                        {
+                            op: "PGP Decrypt",
+                            args: [keyPair.sec, incorrectPW],
+                        },
+                    ],
+                };
+            })
+        );
+    }
+});
+
 ["", "hello world"].forEach(function(input) {
     TestRegister.addTests(
         PGP_TEST_KEY_PAIRS.map(function(keyPair) {
