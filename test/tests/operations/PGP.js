@@ -228,7 +228,7 @@ PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
 ["", "hello world"].forEach(function(input) {
     TestRegister.addTests(
         PGP_TEST_KEY_PAIRS.map(function(keyPair) {
-            var testName = "PGP encrypt, PGP decrypt ($pw, $ks) '$input'";
+            var testName = "PGP Encrypt, PGP Decrypt ($pw, $ks) '$input'";
             testName = testName.replace("$ks", keyPair.size);
             testName = testName.replace("$pw", keyPair.password ? "pw" : "no pw");
             testName = testName.replace("$input", input);
@@ -253,7 +253,7 @@ PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
 });
 
 TestRegister.addTests([{
-    name: "PGP encrypt, PGP Decrypt: fails when incorrect password, empty string (1024)",
+    name: "PGP Encrypt, PGP Decrypt: fails when incorrect password, empty string (1024)",
     input: "",
     expectedError: true,
     recipeConfig: [
@@ -269,7 +269,7 @@ TestRegister.addTests([{
 }]);
 
 TestRegister.addTests([{
-    name: "PGP encrypt, PGP Decrypt: fails when incorrect password, hello world (1024)",
+    name: "PGP Encrypt, PGP Decrypt: fails when incorrect password, hello world (1024)",
     input: "hello world",
     expectedError: true,
     recipeConfig: [
