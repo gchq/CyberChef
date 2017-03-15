@@ -201,11 +201,11 @@ PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
     if (keyPair.password) {
         TestRegister.addTests(
             ["", "nottherightpassword"].map(function(incorrectPW) {
-            var testName = "PGP Encrypt, PGP Decrypt: ensure error for incorrect password (pw [$pw], $ks, $name)";
-            testName = testName.replace("$ks", keyPair.size);
-            testName = testName.replace("$pw", incorrectPW);
+                var testName = "PGP Encrypt, PGP Decrypt: ensure error for incorrect password (pw [$pw], $ks, $name)";
+                testName = testName.replace("$ks", keyPair.size);
+                testName = testName.replace("$pw", incorrectPW);
 
-            return {
+                return {
                     name: testName,
                     input: "hello world",
                     expectedError: true,
@@ -443,5 +443,5 @@ PGP_TEST_KEY_PAIRS.forEach(function(keyPair) {
                 ],
             };
         })
-    )
+    );
 });

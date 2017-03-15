@@ -297,7 +297,7 @@ var PGP = {
             }, {
                 fileName: "msg.sig",
                 size: rawSignatureBytes.length,
-                contents: "Binary file",
+                contents: openpgp.util.Uint8Array2str(rawSignatureBytes),
                 bytes: rawSignatureBytes,
             }];
 
