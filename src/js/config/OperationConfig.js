@@ -3150,7 +3150,9 @@ var OperationConfig = {
     },
     "PGP Encrypt": {
         description: [
-            "Input: The ASCII-armoured PGP public key of the recipient.",
+            "Input: the message you want to encrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient.",
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
@@ -3171,7 +3173,9 @@ var OperationConfig = {
     },
     "PGP Decrypt": {
         description: [
-            "Input: The ASCII-armoured PGP private key of the recipient, ",
+            "Input: the ASCII-armoured PGP message you want to decrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the recipient, ",
             "(and the private key password if necessary).",
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
@@ -3196,8 +3200,10 @@ var OperationConfig = {
     },
     "PGP Sign": {
         description: [
-            "Input: The ASCII-armoured PGP public key of the recipient, ",
-            "the ASCII-armoured private key of the sender (and the private key password if necessary).",
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient, ",
+            "the ASCII-armoured private key of the signer (and the private key password if necessary).",
             "<br><br>",
             "This operation uses PGP to produce an encrypted digital signature.",
             "<br><br>",
@@ -3230,7 +3236,10 @@ var OperationConfig = {
     },
     "PGP Verify": {
         description: [
-            "Input: The ASCII-armoured PGP public key of the sender.",
+            "Input: the ASCII-armoured encrypted PGP message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the signer, ",
+            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
             "<br><br>",
             "This operation uses PGP to decrypt and verify an encrypted digital signature.",
             "<br><br>",
@@ -3263,7 +3272,9 @@ var OperationConfig = {
     },
     "Sign PGP Detached": {
         description: [
-            "Input: The ASCII-armoured PGP private key of the signer, ",
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the signer, ",
             " (and the private key password if necessary).",
             "<br><br>",
             "This operation uses PGP to produce a cleartext message and its digital signature. ",
@@ -3296,7 +3307,9 @@ var OperationConfig = {
     },
     "Verify PGP Detached": {
         description: [
-            "Input: The ASCII-armoured PGP public key of the sender, ",
+            "Input: the cleartext of the message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the sender, ",
             "the ASCII-armoured signature of the message.",
             "<br><br>",
             "This operation uses PGP to verify a detached cleartext PGP signature.",
@@ -3317,7 +3330,7 @@ var OperationConfig = {
                 value: "",
             },
             {
-                name: "ASCII armoured signature",
+                name: "Signature",
                 type: "text",
                 value: "",
             },
@@ -3325,7 +3338,9 @@ var OperationConfig = {
     },
     "Sign PGP Cleartext": {
         description: [
-            "Input: The ASCII-armoured PGP private key of the sender, ",
+            "Input: the cleartext of the message you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the signer, ",
             "(and the private key password if necessary).",
             "<br><br>",
             "This operation uses PGP to produce a digital signature.",
@@ -3354,7 +3369,9 @@ var OperationConfig = {
     },
     "Verify PGP Cleartext": {
         description: [
-            "Input: The ASCII-armoured PGP public key of the sender.",
+            "Input: the ASCII-armoured cleartext signature you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the sender.",
             "<br><br>",
             "This operation uses PGP to verify a cleartext digital signature.",
             "<br><br>",
@@ -3415,7 +3432,7 @@ var OperationConfig = {
     },
     "Detach PGP Cleartext": {
         description: [
-            "Input: The PGP cleartext signature you want to detach.",
+            "Input: the ASCII-armoured cleartext signature you want to verify.",
             "<br><br>",
             "This operation will detach the cleartext message from the signature.",
             "It outputs 3 files as HTML: ",
@@ -3437,8 +3454,9 @@ var OperationConfig = {
     },
     "Add PGP ASCII Armour": {
         description: [
-            "Input: The raw PGP bytes of the message or key that you want to add ASCII-armour to, ",
-            "the kind of thing the raw bytes are: message / public key / private key.",
+            "Input: the raw PGP bytes of the message or key that you want to add ASCII-armour to.",
+            "<br><br>",
+            "Arguments: the kind of the raw bytes: message / public key / private key.",
             "<br><br>",
             "This operation will output the ASCII-armoured input.",
             "<br><br>",
@@ -3461,7 +3479,7 @@ var OperationConfig = {
     },
     "Remove PGP ASCII Armour": {
         description: [
-            "Input: The ASCII-armoured PGP message or key that you want to remove the ASCII-armour from.",
+            "Input: the ASCII-armoured PGP message or key that you want to remove the ASCII-armour from.",
             "<br><br>",
             "This operation will output the raw bytes of the PGP packets.",
             "<br><br>",
