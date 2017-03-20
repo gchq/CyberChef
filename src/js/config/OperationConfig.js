@@ -3150,7 +3150,7 @@ var OperationConfig = {
     },
     "PGP Encrypt": {
         description: [
-            "Input: An ASCII-Armoured PGP public key.",
+            "Input: The ASCII-armoured PGP public key of the recipient.",
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
@@ -3171,7 +3171,8 @@ var OperationConfig = {
     },
     "PGP Decrypt": {
         description: [
-            "Input: An ASCII-Armoured PGP private key (and optionally, the password needed to decrypt the private key).",
+            "Input: The ASCII-armoured PGP private key of the recipient, ",
+            "(and the private key password if necessary).",
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
@@ -3195,7 +3196,8 @@ var OperationConfig = {
     },
     "PGP Sign": {
         description: [
-            "Input: An ASCII-Armoured PGP private key (and optionally, the password needed to decrypt the private key); the public key of the recipient.",
+            "Input: The ASCII-armoured PGP public key of the recipient, ",
+            "the ASCII-armoured private key of the sender (and the private key password if necessary).",
             "<br><br>",
             "This operation uses PGP to produce an encrypted digital signature.",
             "<br><br>",
@@ -3228,7 +3230,7 @@ var OperationConfig = {
     },
     "PGP Verify": {
         description: [
-            "Input: An ASCII-Armoured PGP public key.",
+            "Input: The ASCII-armoured PGP public key of the sender.",
             "<br><br>",
             "This operation uses PGP to decrypt and verify an encrypted digital signature.",
             "<br><br>",
@@ -3297,7 +3299,8 @@ var OperationConfig = {
     },
     "Sign PGP Cleartext": {
         description: [
-            "Input: An ASCII-Armoured PGP private key (and optionally, the password needed to decrypt the private key).",
+            "Input: The ASCII-armoured PGP private key of the sender, ",
+            "(and the private key password if necessary).",
             "<br><br>",
             "This operation uses PGP to produce a digital signature.",
             "<br><br>",
@@ -3325,7 +3328,7 @@ var OperationConfig = {
     },
     "Verify PGP Cleartext": {
         description: [
-            "Input: An ASCII-Armoured PGP public key.",
+            "Input: The ASCII-armoured PGP public key of the sender.",
             "<br><br>",
             "This operation uses PGP to verify a cleartext digital signature.",
             "<br><br>",
