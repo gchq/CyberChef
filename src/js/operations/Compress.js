@@ -1,4 +1,5 @@
-var rawdeflate = require("zlibjs/bin/rawdeflate.min"),
+var Utils = require("../core/Utils.js"),
+    rawdeflate = require("zlibjs/bin/rawdeflate.min"),
     rawinflate = require("zlibjs/bin/rawinflate.min"),
     zlibAndGzip = require("zlibjs/bin/zlib_and_gzip.min"),
     zip = require("zlibjs/bin/zip.min"),

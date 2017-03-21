@@ -1,1 +1,11 @@
-{ "presets": [ "es2015" ] }
+{
+    "presets": [
+        ["env", {
+            "targets": {
+                "chrome": 40,
+                "firefox": 35,
+                "edge": 14
+            }
+        }]
+    ]
+}

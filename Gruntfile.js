@@ -148,7 +148,7 @@ module.exports = function(grunt) {
             },
             web: {
                 target: "web",
-                entry: "./src/js/views/html/main.js",
+                entry: ["babel-polyfill", "./src/js/views/html/main.js"],
                 output: {
                     filename: "scripts.js",
                     path: "build/dev"
@@ -156,7 +156,7 @@ module.exports = function(grunt) {
             },
             tests: {
                 target: "node",
-                entry: "./test/TestRunner.js",
+                entry: ["babel-polyfill", "./test/TestRunner.js"],
                 output: {
                     filename: "index.js",
                     path: "build/test"
@@ -170,7 +170,7 @@ module.exports = function(grunt) {
             },
             node: {
                 target: "node",
-                entry: "./src/js/views/node/index.js",
+                entry: ["babel-polyfill", "./src/js/views/node/index.js"],
                 output: {
                     filename: "CyberChef.js",
                     path: "build/node",
@@ -434,7 +434,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: "src/js/**/*.js",
-                tasks: ["concat:js", "chmod:build"]
+                tasks: ["webpack:web", "chmod:build"]
             },
             html: {
                 files: "src/html/**/*.html",
@@ -446,7 +446,7 @@ module.exports = function(grunt) {
             },
             grunt: {
                 files: "Gruntfile.js",
-                tasks: ["clean:dev", "concat:css", "concat:js", "copy:htmlDev", "copy:staticDev", "chmod:build"]
+                tasks: ["clean:dev", "concat:css", "webpack:web", "copy:htmlDev", "copy:staticDev", "chmod:build"]
             }
         },
     });
