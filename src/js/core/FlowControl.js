@@ -151,6 +151,10 @@ var FlowControl = {
             jumpNum  = ings[0],
             maxJumps = ings[1];
 
+        if (jumpNum < 0) {
+            jumpNum--;
+        }
+
         if (state.numJumps >= maxJumps) {
             return state;
         }
@@ -177,6 +181,10 @@ var FlowControl = {
             regexStr = ings[0],
             jumpNum  = ings[1],
             maxJumps = ings[2];
+
+        if (jumpNum < 0) {
+            jumpNum--;
+        }
 
         if (state.numJumps >= maxJumps) {
             return state;
