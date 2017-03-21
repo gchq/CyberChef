@@ -1032,32 +1032,26 @@ var Utils = {
                 [new Uint8Array(file.bytes)],
                 {type: "octet/stream"}
             );
-            var blobUrl = window.URL.createObjectURL(blob);
+            var blobUrl = URL.createObjectURL(blob);
 
-            var downloadAnchorElem = $("<a></a>")
-                .html("\u21B4")
-                .attr("href", blobUrl)
-                .attr("title", "Download '" + file.fileName + "'")
-                .attr("download", file.fileName);
+            var downloadAnchorElem = "<a href='" + blobUrl + "' " +
+                "title='Download " + Utils.escapeHtml(file.fileName) + "' " +
+                "download='" + Utils.escapeHtml(file.fileName) + "'>\u21B4</a>";
 
-            var expandFileContentsElem = $("<a></a>")
-                .html("&#x1F50D")
-                .addClass("collapsed")
-                .attr("data-toggle", "collapse")
-                .attr("aria-expanded", "true")
-                .attr("aria-controls", "collapse" + i)
-                .attr("href", "#collapse" + i)
-                .attr("title", "Show/hide contents of '" + file.fileName + "'");
+            var expandFileContentsElem = "<a href='#collapse" + i + "' " +
+                "class='collapsed' " +
+                "data-toggle='collapse' " +
+                "aria-expanded='true' " +
+                "aria-controls='collapse" + i + "' " +
+                "title=\"Show/hide contents of '" + Utils.escapeHtml(file.fileName) + "'\">&#x1F50D</a>";
 
             var html = "<div class='panel panel-default'>" +
                        "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
                        "<h4 class='panel-title'>" +
                        "<div>" +
-                       file.fileName +
-                       " " +
-                       $(expandFileContentsElem).prop("outerHTML") +
-                       " " +
-                       $(downloadAnchorElem).prop("outerHTML") +
+                       Utils.escapeHtml(file.fileName) +
+                       " " +  expandFileContentsElem +
+                       " " + downloadAnchorElem +
                        "<span class='pull-right'>" +
                        // These are for formatting when stripping HTML
                        "<span style='display: none'>\n</span>" +
