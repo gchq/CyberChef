@@ -25,11 +25,12 @@
     "type": "git",
     "url": "https://github.com/gchq/CyberChef/"
   },
-  "scripts": {
-    "build": "webpack"
-  },
   "devDependencies": {
-    "grunt": "~1.0.1",
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.0",
+    "babel-preset-es2015": "^6.24.0",
+    "exports-loader": "^0.6.4",
+    "grunt": ">=0.4.5",
     "grunt-chmod": "~1.1.1",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-concat": "~1.0.0",
@@ -43,11 +44,18 @@
     "grunt-execute": "^0.2.2",
     "grunt-inline-alt": "~0.3.10",
     "grunt-jsdoc": "^2.1.0",
+    "grunt-webpack": "^2.0.1",
+    "import-loader": "^1.0.1",
+    "imports-loader": "^0.7.1",
     "ink-docstrap": "^1.1.4",
     "phantomjs-prebuilt": "^2.1.14",
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "bootstrap": "^3.3.7",
+    "bootstrap-colorpicker": "^2.5.1",
+    "bootstrap-switch": "^3.3.4",
     "crypto-api": "^0.6.2",
     "crypto-js": "^3.1.9-1",
     "diff": "^3.2.0",
@@ -61,7 +69,11 @@
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "sladex-blowfish": "^0.8.1",
+    "sortablejs": "^1.5.1",
+    "split.js": "^1.2.0",
     "vkbeautify": "^0.99.1",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.24",
     "zlibjs": "^0.2.0"
   }
 }

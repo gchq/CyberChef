@@ -1,4 +1,6 @@
-/* globals Sortable */
+var HTMLOperation = require("./HTMLOperation.js"),
+    Sortable = require("sortablejs");
+
 
 /**
  * Waiter to handle events related to the recipe.
@@ -11,7 +13,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var RecipeWaiter = function(app, manager) {
+var RecipeWaiter = module.exports = function(app, manager) {
     this.app = app;
     this.manager = manager;
     this.removeIntent = false;
@@ -31,7 +33,8 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
         sort: true,
         animation: 0,
         delay: 0,
-        filter: ".arg-input,.arg", // Relies on commenting out a line in Sortable.js which calls evt.preventDefault()
+        filter: ".arg-input,.arg",
+        preventOnFilter: false,
         setData: function(dataTransfer, dragEl) {
             dataTransfer.setData("Text", dragEl.querySelector(".arg-title").textContent);
         },

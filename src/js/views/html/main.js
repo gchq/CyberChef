@@ -1,10 +1,17 @@
-/* globals moment */
-
 /**
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
+
+require("bootstrap");
+require("bootstrap-colorpicker");
+require("bootstrap-switch");
+var CanvasComponents = require("../../lib/canvascomponents.js");
+
+var HTMLApp = require("./HTMLApp.js"),
+    Categories = require("../../config/Categories.js"),
+    OperationConfig = require("../../config/OperationConfig.js");
 
 /**
  * Main function used to build the CyberChef web app.

@@ -3,7 +3,7 @@ var rawdeflate = require("zlibjs/bin/rawdeflate.min"),
     zlibAndGzip = require("zlibjs/bin/zlib_and_gzip.min"),
     zip = require("zlibjs/bin/zip.min"),
     unzip = require("zlibjs/bin/unzip.min"),
-    bzip2 = require("../lib/bzip2.js");
+    bzip2 = require("exports-loader?bzip2!../lib/bzip2.js");
 
 var Zlib = {
     RawDeflate: rawdeflate.Zlib.RawDeflate,

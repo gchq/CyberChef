@@ -1,4 +1,10 @@
-/* globals Split */
+var Utils = require("../../core/Utils.js"),
+    Chef = require("../../core/Chef.js"),
+    Manager = require("./Manager.js"),
+    HTMLCategory = require("./HTMLCategory.js"),
+    HTMLOperation = require("./HTMLOperation.js"),
+    Split = require("split.js");
+
 
 /**
  * HTML view for CyberChef responsible for building the web page and dealing with all user
@@ -14,7 +20,7 @@
  * @param {String[]} defaultFavourites - A list of default favourite operations.
  * @param {Object} options - Default setting for app options.
  */
-var HTMLApp = function(categories, operations, defaultFavourites, defaultOptions) {
+var HTMLApp = module.exports = function(categories, operations, defaultFavourites, defaultOptions) {
     this.categories  = categories;
     this.operations  = operations;
     this.dfavourites = defaultFavourites;

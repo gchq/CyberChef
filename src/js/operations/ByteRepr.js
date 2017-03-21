@@ -89,11 +89,11 @@ var ByteRepr = module.exports = {
                 else if (ordinal < 4294967296) padding = 8;
                 else padding = 2;
 
-                if (padding > 2) app.options.attemptHighlight = false;
+                if (padding > 2 && app) app.options.attemptHighlight = false;
 
                 output += Utils.hex(ordinal, padding) + delim;
             } else {
-                app.options.attemptHighlight = false;
+                if (app) app.options.attemptHighlight = false;
                 output += ordinal.toString(base) + delim;
             }
         }
@@ -119,7 +119,7 @@ var ByteRepr = module.exports = {
             throw "Error: Base argument must be between 2 and 36";
         }
 
-        if (base !== 16) {
+        if (base !== 16 && app) {
             app.options.attemptHighlight = false;
         }
 

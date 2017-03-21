@@ -9,7 +9,7 @@
  * @param {string} name - The name of the category.
  * @param {boolean} selected - Whether this category is pre-selected or not.
  */
-var HTMLCategory = function(name, selected) {
+var HTMLCategory = module.exports = function(name, selected) {
     this.name = name;
     this.selected = selected;
     this.opList = [];

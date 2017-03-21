@@ -24,7 +24,7 @@ var Chef = module.exports = function() {
  * @param {Object} options - The options object storing various user choices
  * @param {boolean} options.attempHighlight - Whether or not to attempt highlighting
  * @param {number} progress - The position in the recipe to start from
- * @param {number} [step] - The number of operations to execute
+ * @param {number} [step] - Whether to only execute one operation in the recipe
  *
  * @returns {Object} response
  * @returns {string} response.result - The output of the recipe

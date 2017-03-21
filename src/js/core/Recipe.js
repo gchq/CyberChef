@@ -1,5 +1,5 @@
-var OperationConfig = require("../config/OperationConfig.js"),
-    Operation = require("./Operation.js");
+var Operation = require("./Operation.js");
+// OperationConfig required at the bottom of this file to prevent circular dependency errors
 
 
 /**
@@ -216,3 +216,8 @@ Recipe.prototype.fromString = function(recipeStr) {
     var recipeConfig = JSON.parse(recipeStr);
     this._parseConfig(recipeConfig);
 };
+
+
+// Required here to prevent circular dependency where Recipe returns an empty object
+// See http://stackoverflow.com/a/30390378
+var OperationConfig = require("../config/OperationConfig.js");

@@ -1,4 +1,5 @@
-/* globals moment */
+var Utils = require("../../core/Utils.js");
+
 
 /**
  * Waiter to handle events related to the CyberChef controls (i.e. Bake, Step, Save, Load etc.)
@@ -11,7 +12,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var ControlsWaiter = function(app, manager) {
+var ControlsWaiter = module.exports = function(app, manager) {
     this.app = app;
     this.manager = manager;
 };
@@ -78,7 +79,9 @@ ControlsWaiter.prototype.setAutoBake = function(value) {
  */
 ControlsWaiter.prototype.bakeClick = function() {
     this.app.bake();
-    $("#output-text").selectRange(0);
+    var outputText = document.getElementById("output-text");
+    outputText.focus();
+    outputText.setSelectionRange(0, 0);
 };
 
 
@@ -87,7 +90,9 @@ ControlsWaiter.prototype.bakeClick = function() {
  */
 ControlsWaiter.prototype.stepClick = function() {
     this.app.bake(true);
-    $("#output-text").selectRange(0);
+    var outputText = document.getElementById("output-text");
+    outputText.focus();
+    outputText.setSelectionRange(0, 0);
 };
 
 

@@ -1,6 +1,4 @@
-var CryptoJS = require("crypto-js"),
-    moment = require("moment"),
-    $ = require("jquery");
+var CryptoJS = require("crypto-js");
 
 
 /**
@@ -1170,36 +1168,6 @@ var Utils = module.exports = {
     },
 
 };
-
-
-/**
- * A jQuery function to select a range of text.
- *
- * @param {number} start
- * @param {number} end
- *
- * @example
- * // Highlights the 4th, 5th and 6th characters in the element #input-text.
- * $("#input-text").selectRange(3,5);
- *
- * // Places the cursor at the beginning of the element #input-text.
- * $("#input-text").selectRange(0);
- */
-// $.fn.selectRange = function(start, end) {
-//     if (!end) end = start;
-//     return this.each(function() {
-//         if (this.setSelectionRange) {
-//             this.focus();
-//             this.setSelectionRange(start, end);
-//         } else if (this.createTextRange) {
-//             var range = this.createTextRange();
-//             range.collapse(true);
-//             range.moveEnd("character", end);
-//             range.moveStart("character", start);
-//             range.select();
-//         }
-//     });
-// };
 
 
 /**

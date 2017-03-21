@@ -1,3 +1,6 @@
+var Utils = require("../../core/Utils.js");
+
+
 /**
  * Waiter to handle events related to highlighting in CyberChef.
  *
@@ -8,7 +11,7 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-var HighlighterWaiter = function(app) {
+var HighlighterWaiter = module.exports = function(app) {
     this.app = app;
 
     this.mouseButtonDown = false;

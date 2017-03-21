@@ -26,7 +26,9 @@
 */
 "use strict";
 
-var UAS_parser = module.exports = {
+var Utils = require("../core/Utils.js");
+
+var UAS_parser = {
 	
 	parse: function (userAgent) {
 		var result = {

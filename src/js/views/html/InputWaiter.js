@@ -1,3 +1,6 @@
+var Utils = require("../../core/Utils.js");
+
+
 /**
  * Waiter to handle events related to the input.
  *
@@ -9,7 +12,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var InputWaiter = function(app, manager) {
+var InputWaiter = module.exports = function(app, manager) {
     this.app = app;
     this.manager = manager;
 

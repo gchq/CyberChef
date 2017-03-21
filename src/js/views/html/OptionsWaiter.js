@@ -8,7 +8,7 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-var OptionsWaiter = function(app) {
+var OptionsWaiter = module.exports = function(app) {
     this.app = app;
 };
 

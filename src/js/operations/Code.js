@@ -1,7 +1,8 @@
-/* globals xpath */
 var Utils = require("../core/Utils.js"),
-    VKbeautify = require("vkbeautify");
-    //Prettify = require("google-code-prettify");
+    VKbeautify = require("vkbeautify"),
+    dom = require("xmldom").DOMParser,
+    xpath = require("xpath"),
+    prettyPrintOne = require("exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js");
 
 
 /**
@@ -36,7 +37,7 @@ var Code = module.exports = {
     runSyntaxHighlight: function(input, args) {
         var language = args[0],
             lineNums = args[1];
-        return "<code class='prettyprint'>" + Prettify.prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
+        return "<code class='prettyprint'>" + prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
     },
 
 
@@ -336,36 +337,25 @@ var Code = module.exports = {
         var query = args[0],
             delimiter = args[1];
 
-        var xml;
+        var doc;
         try {
-            xml = $.parseXML(input);
+            doc = new dom().parseFromString(input);
         } catch (err) {
             return "Invalid input XML.";
         }
 
-        var result;
+        var nodes;
         try {
-            result = xpath.evaluate(xml, query);
+            nodes = xpath.select(query, doc);
         } catch (err) {
             return "Invalid XPath. Details:\n" + err.message;
         }
 
-        var serializer = new XMLSerializer();
         var nodeToString = function(node) {
-            switch (node.nodeType) {
-                case Node.ELEMENT_NODE: return serializer.serializeToString(node);
-                case Node.ATTRIBUTE_NODE: return node.value;
-                case Node.COMMENT_NODE: return node.data;
-                case Node.DOCUMENT_NODE: return serializer.serializeToString(node);
-                default: throw new Error("Unknown Node Type: " + node.nodeType);
-            }
+            return node.toString();
         };
 
-        return Object.keys(result).map(function(key) {
-            return result[key];
-        }).slice(0, -1) // all values except last (length)
-        .map(nodeToString)
-        .join(delimiter);
+        return nodes.map(nodeToString).join(delimiter);
     },
 
 

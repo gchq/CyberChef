@@ -7,7 +7,6 @@
     },
     "env": {
         "browser": true,
-        "jquery": true,
         "es6": true,
         "commonjs": true,
         "node": true
@@ -88,6 +87,10 @@
         "space-in-parens": "error"
     },
     "globals": {
+        "$": false,
+        "jQuery": false,
+        "moment": false,
+
         /* core/* */
         "Chef": false,
         "Dish": false,

@@ -10,7 +10,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var HTMLIngredient = function(config, app, manager) {
+var HTMLIngredient = module.exports = function(config, app, manager) {
     this.app = app;
     this.manager = manager;
 

@@ -1,4 +1,4 @@
-/* eslint-env node */
+var webpack = require("webpack");
 
 module.exports = function(grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -7,16 +7,20 @@ module.exports = function(grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "concat:css", "concat:js", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
+        ["clean:dev", "concat:css", "webpack:web", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
+
+    grunt.registerTask("node",
+        "Compiles CyberChef into a single NodeJS module.",
+        ["clean:node", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean:test", "concat:jsTest", "copy:htmlTest", "chmod:build", "execute:test"]);
+        ["clean:test", "webpack:tests", "chmod:build", "execute:test"]);
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "exec:stats", "clean", "jsdoc", "concat", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
-         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod", "test"]);
+        ["eslint", "test", "exec:stats", "clean", "jsdoc", "webpack:web", "concat", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
+         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "docs", "chmod"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -43,6 +47,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-eslint");
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-webpack");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-uglify");
@@ -54,125 +59,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-contrib-watch");
 
-
-    // JS includes
-    var jsIncludes = [
-        // Third party framework libraries
-        "src/js/lib/jquery-2.1.1.js",
-        "src/js/lib/bootstrap-3.3.6.js",
-        "src/js/lib/split.js",
-        "src/js/lib/bootstrap-switch.js",
-        "src/js/lib/yahoo.js",
-        "src/js/lib/snowfall.jquery.js",
-
-        // Third party operation libraries
-        "src/js/lib/cryptojs/core.js",
-        "src/js/lib/cryptojs/x64-core.js",
-        "src/js/lib/cryptojs/enc-base64.js",
-        "src/js/lib/cryptojs/enc-utf16.js",
-        "src/js/lib/cryptojs/md5.js",
-        "src/js/lib/cryptojs/evpkdf.js",
-        "src/js/lib/cryptojs/cipher-core.js",
-        "src/js/lib/cryptojs/mode-cfb.js",
-        "src/js/lib/cryptojs/mode-ctr-gladman.js",
-        "src/js/lib/cryptojs/mode-ctr.js",
-        "src/js/lib/cryptojs/mode-ecb.js",
-        "src/js/lib/cryptojs/mode-ofb.js",
-        "src/js/lib/cryptojs/format-hex.js",
-        "src/js/lib/cryptojs/lib-typedarrays.js",
-        "src/js/lib/cryptojs/pad-ansix923.js",
-        "src/js/lib/cryptojs/pad-iso10126.js",
-        "src/js/lib/cryptojs/pad-iso97971.js",
-        "src/js/lib/cryptojs/pad-nopadding.js",
-        "src/js/lib/cryptojs/pad-zeropadding.js",
-        "src/js/lib/cryptojs/aes.js",
-        "src/js/lib/cryptojs/hmac.js",
-        "src/js/lib/cryptojs/rabbit-legacy.js",
-        "src/js/lib/cryptojs/rabbit.js",
-        "src/js/lib/cryptojs/ripemd160.js",
-        "src/js/lib/cryptojs/sha1.js",
-        "src/js/lib/cryptojs/sha256.js",
-        "src/js/lib/cryptojs/sha224.js",
-        "src/js/lib/cryptojs/sha512.js",
-        "src/js/lib/cryptojs/sha384.js",
-        "src/js/lib/cryptojs/sha3.js",
-        "src/js/lib/cryptojs/tripledes.js",
-        "src/js/lib/cryptojs/rc4.js",
-        "src/js/lib/cryptojs/pbkdf2.js",
-        "src/js/lib/cryptoapi/crypto-api.js",
-        "src/js/lib/cryptoapi/hasher.md2.js",
-        "src/js/lib/cryptoapi/hasher.md4.js",
-        "src/js/lib/cryptoapi/hasher.sha0.js",
-        "src/js/lib/jsbn/jsbn.js",
-        "src/js/lib/jsbn/jsbn2.js",
-        "src/js/lib/jsbn/base64.js",
-        "src/js/lib/jsbn/ec.js",
-        "src/js/lib/jsbn/prng4.js",
-        "src/js/lib/jsbn/rng.js",
-        "src/js/lib/jsbn/rsa.js",
-        "src/js/lib/jsbn/sec.js",
-        "src/js/lib/jsrasign/asn1-1.0.js",
-        "src/js/lib/jsrasign/asn1hex-1.1.js",
-        "src/js/lib/jsrasign/asn1x509-1.0.js",
-        "src/js/lib/jsrasign/base64x-1.1.js",
-        "src/js/lib/jsrasign/crypto-1.1.js",
-        "src/js/lib/jsrasign/dsa-modified-1.0.js",
-        "src/js/lib/jsrasign/ecdsa-modified-1.0.js",
-        "src/js/lib/jsrasign/ecparam-1.0.js",
-        "src/js/lib/jsrasign/keyutil-1.0.js",
-        "src/js/lib/jsrasign/x509-1.1.js",
-        "src/js/lib/blowfish.dojo.js",
-        "src/js/lib/rawdeflate.js",
-        "src/js/lib/rawinflate.js",
-        "src/js/lib/zip.js",
-        "src/js/lib/unzip.js",
-        "src/js/lib/zlib_and_gzip.js",
-        "src/js/lib/bzip2.js",
-        "src/js/lib/punycode.js",
-        "src/js/lib/uas_parser.js",
-        "src/js/lib/esprima.js",
-        "src/js/lib/escodegen.browser.js",
-        "src/js/lib/esmangle.min.js",
-        "src/js/lib/diff.js",
-        "src/js/lib/moment.js",
-        "src/js/lib/moment-timezone.js",
-        "src/js/lib/prettify.js",
-        "src/js/lib/vkbeautify.js",
-        "src/js/lib/Sortable.js",
-        "src/js/lib/bootstrap-colorpicker.js",
-        "src/js/lib/es6-promise.auto.js",
-        "src/js/lib/xpath.js",
-
-        // Custom libraries
-        "src/js/lib/canvascomponents.js",
-
-        // Utility functions
-        "src/js/core/Utils.js",
-
-        // Operation objects
-        "src/js/operations/*.js",
-
-        // Core framework objects
-        "src/js/core/*.js",
-        "src/js/config/Categories.js",
-        "src/js/config/OperationConfig.js",
-
-        // HTML view objects
-        "src/js/views/html/*.js",
-        "!src/js/views/html/main.js",
-
-    ];
-
-    var jsAppFiles = jsIncludes.concat([
-        // Start the main app!
-        "src/js/views/html/main.js",
-    ]);
-
-    var jsTestFiles = jsIncludes.concat([
-        "test/TestRegister.js",
-        "test/tests/**/*.js",
-        "test/TestRunner.js",
-    ]);
 
     var banner = '/**\n\
  * CyberChef - The Cyber Swiss Army Knife\n\
@@ -235,7 +121,69 @@ module.exports = function(grunt) {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
             test: ["build/test/*"],
+            node: ["build/node/*"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
+        },
+        webpack: {
+            options: {
+                plugins: [
+                    new webpack.ProvidePlugin({
+                        $: "jquery",
+                        jQuery: "jquery",
+                        moment: "moment-timezone"
+                    }),
+                ],
+                resolve: {
+                    alias: {
+                        jquery: "jquery/src/jquery"
+                    }
+                },
+                module: {
+                    loaders: [{
+                        test: /\.js$/,
+                        exclude: /node_modules/,
+                        loader: "babel-loader?compact=false"
+                    }]
+                }
+            },
+            web: {
+                target: "web",
+                entry: "./src/js/views/html/main.js",
+                output: {
+                    filename: "scripts.js",
+                    path: "build/dev"
+                },
+            },
+            tests: {
+                target: "node",
+                entry: "./test/TestRunner.js",
+                output: {
+                    filename: "index.js",
+                    path: "build/test"
+                },
+                module: {
+                    loaders: [{
+                        test: /prettify\.min\.js$/,
+                        use: "imports-loader?window=>global"
+                    }]
+                }
+            },
+            node: {
+                target: "node",
+                entry: "./src/js/views/node/index.js",
+                output: {
+                    filename: "CyberChef.js",
+                    path: "build/node",
+                    library: "CyberChef",
+                    libraryTarget: "commonjs2"
+                },
+                module: {
+                    loaders: [{
+                        test: /prettify\.min\.js$/,
+                        use: "imports-loader?window=>global"
+                    }]
+                }
+            }
         },
         concat: {
             options: {
@@ -256,20 +204,6 @@ module.exports = function(grunt) {
                     "src/css/themes/classic.css"
                 ],
                 dest: "build/dev/styles.css"
-            },
-            js: {
-                options: {
-                    banner: '"use strict";\n'
-                },
-                src: jsAppFiles,
-                dest: "build/dev/scripts.js"
-            },
-            jsTest: {
-                options: {
-                    banner: '"use strict";\n'
-                },
-                src: jsTestFiles,
-                dest: "build/test/tests.js"
             }
         },
         copy: {
@@ -491,7 +425,7 @@ module.exports = function(grunt) {
             }
         },
         execute: {
-            test: "test/NodeRunner.js"
+            test: "build/test/index.js"
         },
         watch: {
             css: {

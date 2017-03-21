@@ -1,6 +1,3 @@
-var moment = require("moment-timezone");
-
-
 /**
  * Date and time operations.
  *

@@ -1,3 +1,14 @@
+var WindowWaiter      = require("./WindowWaiter.js"),
+    ControlsWaiter    = require("./ControlsWaiter.js"),
+    RecipeWaiter      = require("./RecipeWaiter.js"),
+    OperationsWaiter  = require("./OperationsWaiter.js"),
+    InputWaiter       = require("./InputWaiter.js"),
+    OutputWaiter      = require("./OutputWaiter.js"),
+    OptionsWaiter     = require("./OptionsWaiter.js"),
+    HighlighterWaiter = require("./HighlighterWaiter.js"),
+    SeasonalWaiter    = require("./SeasonalWaiter.js");
+
+
 /**
  * This object controls the Waiters responsible for handling events from all areas of the app.
  *
@@ -8,7 +19,7 @@
  * @constructor
  * @param {HTMLApp} app - The main view object for CyberChef.
  */
-var Manager = function(app) {
+var Manager = module.exports = function(app) {
     this.app = app;
 
     // Define custom events

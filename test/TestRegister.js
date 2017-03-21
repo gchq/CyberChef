@@ -8,6 +8,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
+var Chef = require("../src/js/core/Chef.js");
 
 (function() {
     /**
@@ -85,5 +86,6 @@
 
 
     // Singleton TestRegister, keeping things simple and obvious.
-    window.TestRegister = new TestRegister();
+    global.TestRegister = global.TestRegister || new TestRegister();
+    module.exports = global.TestRegister;
 })();

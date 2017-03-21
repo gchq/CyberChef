@@ -6,6 +6,8 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
+var TestRegister = require("../../TestRegister.js");
+
 TestRegister.addTests([
     {
         name: "To Base58 (Bitcoin): nothing",

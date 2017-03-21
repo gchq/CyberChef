@@ -1,3 +1,6 @@
+var HTMLIngredient = require("./HTMLIngredient.js");
+
+
 /**
  * Object to handle the creation of operations.
  *
@@ -11,7 +14,7 @@
  * @param {HTMLApp} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var HTMLOperation = function(name, config, app, manager) {
+var HTMLOperation = module.exports = function(name, config, app, manager) {
     this.app         = app;
     this.manager     = manager;
 

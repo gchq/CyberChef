@@ -1,3 +1,7 @@
+var Recipe = require("./Recipe.js"),
+    Dish = require("./Dish.js");
+
+
 /**
  * Flow Control operations.
  *
