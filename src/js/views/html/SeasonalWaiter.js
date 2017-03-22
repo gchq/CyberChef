@@ -19,17 +19,7 @@ var SeasonalWaiter = module.exports = function(app, manager) {
  * Loads all relevant items depending on the current date.
  */
 SeasonalWaiter.prototype.load = function() {
-    var now = new Date();
-
-    // Snowfall
-    if (now.getMonth() === 11 && now.getDate() > 12) { // Dec 13 -> Dec 31
-        this.app.options.snow = false;
-        this.createSnowOption();
-        $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox[option='snow']", this.letItSnow.bind(this));
-        window.addEventListener("resize", this.letItSnow.bind(this));
-        this.manager.addListeners(".btn", "click", this.shakeOffSnow, this);
-        if (now.getDate() === 25) this.letItSnow();
-    }
+    //var now = new Date();
 
     // SpiderChef
     // if (now.getMonth() === 3 && now.getDate() === 1) { // Apr 1
@@ -89,99 +79,6 @@ SeasonalWaiter.prototype.insertSpiderText = function() {
 
     // Recipe title
     document.querySelector("#recipe .title").innerHTML = "Web";
-};
-
-
-/**
- * Adds an option to make it snow.
- * #letitsnow
- */
-SeasonalWaiter.prototype.createSnowOption = function() {
-    var optionsBody = document.getElementById("options-body"),
-        optionItem = document.createElement("div");
-
-    optionItem.className = "option-item";
-    optionItem.innerHTML =
-        "<input type='checkbox' option='snow' checked />\
-        Let it snow";
-    optionsBody.appendChild(optionItem);
-
-    this.manager.options.load();
-};
-
-
-/**
- * Initialises a snowstorm.
- * #letitsnow
- */
-SeasonalWaiter.prototype.letItSnow = function() {
-    $(document).snowfall("clear");
-    if (!this.app.options.snow) return;
-
-    var options = {},
-        firefoxVersion = navigator.userAgent.match(/Firefox\/(\d\d?)/);
-
-    if (firefoxVersion && parseInt(firefoxVersion[1], 10) < 30) {
-        // Firefox < 30
-        options = {
-            flakeCount: 10,
-            flakeColor: "#fff",
-            flakePosition: "absolute",
-            minSize: 1,
-            maxSize: 2,
-            minSpeed: 1,
-            maxSpeed: 5,
-            round: false,
-            shadow: false,
-            collection: false,
-            collectionHeight: 20,
-            deviceorientation: true
-        };
-    } else {
-        // All other browsers
-        options = {
-            flakeCount: 35,
-            flakeColor: "#fff",
-            flakePosition: "absolute",
-            minSize: 5,
-            maxSize: 8,
-            minSpeed: 1,
-            maxSpeed: 5,
-            round: true,
-            shadow: true,
-            collection: ".btn",
-            collectionHeight: 20,
-            deviceorientation: true
-        };
-    }
-
-    $(document).snowfall(options);
-};
-
-
-/**
- * When a button is clicked, shake the snow off that button.
- * #letitsnow
- */
-SeasonalWaiter.prototype.shakeOffSnow = function(e) {
-    var el = e.target,
-        rect = el.getBoundingClientRect(),
-        canvases = document.querySelectorAll("canvas.snowfall-canvas"),
-        canvas = null,
-        removeFunc = function() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            $(this).fadeIn();
-        };
-
-    for (var i = 0; i < canvases.length; i++) {
-        canvas = canvases[i];
-        if (canvas.style.left === rect.left + "px" && canvas.style.top === (rect.top - 20) + "px") {
-            var ctx = canvas.getContext("2d");
-
-            $(canvas).fadeOut("slow", removeFunc);
-            break;
-        }
-    }
 };
 
 

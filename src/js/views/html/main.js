@@ -39,7 +39,6 @@ var main = function() {
         errorTimeout      : 4000,
         autoBakeThreshold : 200,
         attemptHighlight  : true,
-        snow              : false,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
