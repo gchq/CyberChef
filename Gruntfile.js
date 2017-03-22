@@ -60,7 +60,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
 
 
-    var banner = '/**\n\
+    var compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
+        banner = '/**\n\
  * CyberChef - The Cyber Swiss Army Knife\n\
  *\n\
  * @copyright Crown Copyright 2016\n\
@@ -83,7 +84,7 @@ module.exports = function(grunt) {
 
     var templateOptions = {
         data: {
-            compileTime: grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
+            compileTime: compileTime,
             compileMsg: grunt.option("compile-msg") || grunt.option("msg") || "",
             codebaseStats: grunt.file.read("src/static/stats.txt").split("\n").join("<br>")
         }
@@ -131,7 +132,16 @@ module.exports = function(grunt) {
                         $: "jquery",
                         jQuery: "jquery",
                         moment: "moment-timezone"
-                    })
+                    }),
+                    new webpack.BannerPlugin({
+                        "banner": banner,
+                        "raw": true,
+                        "entryOnly": true
+                    }),
+                    new webpack.DefinePlugin({
+                        COMPILE_TIME: JSON.stringify(compileTime),
+                        COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || "")
+                    }),
                 ],
                 resolve: {
                     alias: {
@@ -232,10 +242,6 @@ module.exports = function(grunt) {
                 },
                 src: "src/html/index.html",
                 dest: "build/dev/index.html"
-            },
-            htmlTest: {
-                src: "test/test.html",
-                dest: "build/test/index.html"
             },
             htmlProd: {
                 options: {
@@ -446,7 +452,7 @@ module.exports = function(grunt) {
         },
         watch: {
             css: {
-                files: "src/css/**/*.css",
+                files: ["src/css/**/*.css", "src/css/**/*.less"],
                 tasks: ["webpack:web", "chmod:build"]
             },
             js: {

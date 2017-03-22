@@ -7,7 +7,7 @@
 var HTMLApp = require("./HTMLApp.js"),
     Categories = require("../../config/Categories.js"),
     OperationConfig = require("../../config/OperationConfig.js"),
-    CanvasComponents = require("../../lib/canvascomponents.js");;
+    CanvasComponents = require("../../lib/canvascomponents.js");
 
 /**
  * Main function used to build the CyberChef web app.
@@ -45,7 +45,7 @@ var main = function() {
 // Fix issues with browsers that don't support console.log()
 window.console = console || {log: function() {}, error: function() {}};
 
-window.compileTime = moment.tz("<%= compileTime %>", "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
-window.compileMessage = "<%= compileMsg %>";
+window.compileTime = moment.tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
+window.compileMessage = COMPILE_MSG;
 
 document.addEventListener("DOMContentLoaded", main, false);

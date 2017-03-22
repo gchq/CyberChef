@@ -91,36 +91,7 @@
         "jQuery": false,
         "moment": false,
 
-        /* core/* */
-        "Chef": false,
-        "Dish": false,
-        "Recipe": false,
-        "Ingredient": false,
-        "Operation": false,
-        "Utils": false,
-        
-        /* config/* */
-        "Categories": false,
-        "OperationConfig": false,
-        
-        /* views/html/* */
-        "HTMLApp": false,
-        "HTMLCategory": false,
-        "HTMLOperation": false,
-        "HTMLIngredient": false,
-        "Manager": false,
-        "ControlsWaiter": false,
-        "HighlighterWaiter": false,
-        "InputWaiter": false,
-        "OperationsWaiter": false,
-        "OptionsWaiter": false,
-        "OutputWaiter": false,
-        "RecipeWaiter": false,
-        "SeasonalWaiter": false,
-        "WindowWaiter": false,
-
-        /* test/* */
-        "TestRegister": false,
-        "TestRunner": false
+        "COMPILE_TIME": false,
+        "COMPILE_MSG": false
     }
 }
