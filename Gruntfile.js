@@ -1,4 +1,5 @@
-var webpack = require("webpack");
+var webpack = require("webpack"),
+    ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = function(grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -7,7 +8,7 @@ module.exports = function(grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "concat:css", "webpack:web", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
+        ["clean:dev", "webpack:web", "copy:htmlDev", "copy:staticDev", "chmod:build", "watch"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
@@ -19,7 +20,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "test", "exec:stats", "clean", "jsdoc", "webpack:web", "concat", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
+        ["eslint", "test", "exec:stats", "clean", "jsdoc", "webpack:web", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
          "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "docs", "chmod"]);
 
     grunt.registerTask("docs",
@@ -28,7 +29,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("stats",
         "Provides statistics about the code base such as how many lines there are as well as details of file sizes before and after compression.",
-        ["concat:js", "uglify:prod", "exec:stats", "exec:repoSize", "exec:displayStats"]);
+        ["webpack:web", "uglify:prod", "exec:stats", "exec:repoSize", "exec:displayStats"]);
 
     grunt.registerTask("release",
         "Prepares and deploys a production version of CyberChef to the gh-pages branch.",
@@ -48,7 +49,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-webpack");
-    grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
@@ -131,7 +131,7 @@ module.exports = function(grunt) {
                         $: "jquery",
                         jQuery: "jquery",
                         moment: "moment-timezone"
-                    }),
+                    })
                 ],
                 resolve: {
                     alias: {
@@ -139,20 +139,58 @@ module.exports = function(grunt) {
                     }
                 },
                 module: {
-                    loaders: [{
-                        test: /\.js$/,
-                        exclude: /node_modules/,
-                        loader: "babel-loader?compact=false"
-                    }]
+                    loaders: [
+                        {
+                            test: /\.js$/,
+                            exclude: /node_modules/,
+                            loader: "babel-loader?compact=false"
+                        }
+                    ]
                 }
             },
             web: {
                 target: "web",
-                entry: ["babel-polyfill", "./src/js/views/html/main.js"],
+                entry: [
+                    "babel-polyfill",
+                    "bootstrap",
+                    "bootstrap-switch",
+                    "bootstrap-colorpicker",
+                    "./src/css/index.js",
+                    "./src/js/views/html/main.js"
+                ],
                 output: {
                     filename: "scripts.js",
                     path: "build/dev"
                 },
+                module: {
+                    rules: [
+                        {
+                            test: /\.css$/,
+                            use: ExtractTextPlugin.extract({
+                                use: "css-loader"
+                            })
+                        },
+                        {
+                            test: /\.less$/,
+                            use: ExtractTextPlugin.extract({
+                                use: [
+                                    { loader: "css-loader" },
+                                    { loader: "less-loader" }
+                                ]
+                            })
+                        },
+                        {
+                            test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+                            loader: "url-loader",
+                            options: {
+                                limit: 10000
+                            }
+                        }
+                    ]
+                },
+                plugins: [
+                    new ExtractTextPlugin("styles.css"),
+                ]
             },
             tests: {
                 target: "node",
@@ -183,27 +221,6 @@ module.exports = function(grunt) {
                         use: "imports-loader?window=>global"
                     }]
                 }
-            }
-        },
-        concat: {
-            options: {
-                process: templateOptions
-            },
-            css: {
-                options: {
-                    banner: banner.replace(/\/\*\*/g, "/*!"),
-                    process: function(content, srcpath) {
-                        // Change special comments from /** to /*! to comply with cssmin
-                        content = content.replace(/^\/\*\* /g, "/*! ");
-                        return grunt.template.process(content);
-                    }
-                },
-                src: [
-                    "src/css/lib/**/*.css",
-                    "src/css/structure/**/*.css",
-                    "src/css/themes/classic.css"
-                ],
-                dest: "build/dev/styles.css"
             }
         },
         copy: {
@@ -430,7 +447,7 @@ module.exports = function(grunt) {
         watch: {
             css: {
                 files: "src/css/**/*.css",
-                tasks: ["concat:css", "chmod:build"]
+                tasks: ["webpack:web", "chmod:build"]
             },
             js: {
                 files: "src/js/**/*.js",
@@ -446,7 +463,7 @@ module.exports = function(grunt) {
             },
             grunt: {
                 files: "Gruntfile.js",
-                tasks: ["clean:dev", "concat:css", "webpack:web", "copy:htmlDev", "copy:staticDev", "chmod:build"]
+                tasks: ["clean:dev", "webpack:web", "copy:htmlDev", "copy:staticDev", "chmod:build"]
             }
         },
     });

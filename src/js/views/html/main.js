@@ -4,14 +4,10 @@
  * @license Apache-2.0
  */
 
-require("bootstrap");
-require("bootstrap-colorpicker");
-require("bootstrap-switch");
-var CanvasComponents = require("../../lib/canvascomponents.js");
-
 var HTMLApp = require("./HTMLApp.js"),
     Categories = require("../../config/Categories.js"),
-    OperationConfig = require("../../config/OperationConfig.js");
+    OperationConfig = require("../../config/OperationConfig.js"),
+    CanvasComponents = require("../../lib/canvascomponents.js");;
 
 /**
  * Main function used to build the CyberChef web app.
