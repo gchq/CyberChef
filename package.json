@@ -42,5 +42,8 @@
     "grunt-jsdoc": "^2.1.0",
     "ink-docstrap": "^1.1.4",
     "phantomjs-prebuilt": "^2.1.14"
+  },
+  "dependencies": {
+    "grunt-cli": "^1.2.0"
   }
 }

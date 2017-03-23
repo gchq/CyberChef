@@ -517,6 +517,15 @@ var OperationConfig = {
             }
         ]
     },
+    "From nTcpdump": {
+        description: "For Tcpdump conversion only. (nva-hk)",
+        run: nTcpdump.runFrom,
+        highlight: nTcpdump.highlightFrom,
+        highlightReverse: nTcpdump.highlightTo,
+        inputType: "string",
+        outputType: "byteArray",
+        args: []
+    },
     "From Hexdump": {
         description: "Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.",
         run: Hexdump.runFrom,
