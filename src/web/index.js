@@ -4,10 +4,21 @@
  * @license Apache-2.0
  */
 
+// CSS
+import "./css/index.js";
+
+// Libs
+import "babel-polyfill";
+import "bootstrap";
+import "bootstrap-switch";
+import "bootstrap-colorpicker";
+import CanvasComponents from "../core/lib/canvascomponents.js";
+
+// CyberChef
 import App from "./App.js";
 import Categories from "../core/config/Categories.js";
 import OperationConfig from "../core/config/OperationConfig.js";
-import CanvasComponents from "../core/lib/canvascomponents.js";
+
 
 /**
  * Main function used to build the CyberChef web app.
