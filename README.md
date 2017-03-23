@@ -1,5 +1,22 @@
 # CyberChef
 
+This is a fork of original CyberChef by GCHQ. This project has implemented my own operations for the daily SoC tasks. Please feel free to clone/test/share/contribute it.
+
+## Features
+
+- opeartion **nTcpdump**: tcpdump hexdump convert
+
+## Todo
+
+- operation GZip HTTP data
+- operation char() data
+- operation SQL comment strip function
+
+
+---
+
+## Original project info
+
 ####*The Cyber Swiss Army Knife*
 
 CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.
