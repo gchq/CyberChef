@@ -1,0 +1,13 @@
+128	source files
+49068	lines
+1.9M	size
+
+63	JavaScript source files
+20841	lines
+788K	size
+
+4.7M	uncompressed JavaScript size
+2.6M	compressed JavaScript size
+
+15	categories
+177	operations

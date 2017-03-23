@@ -1,7 +1,7 @@
 var webpack = require("webpack"),
     ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
     grunt.file.preserveBOM = false;
 
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         ["eslint", "test", "exec:stats", "clean", "jsdoc", "webpack:web", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
-         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "docs", "chmod"]);
+         "copy:staticDev", "copy:staticProd", "cssmin", "uglify:prod", "inline", "htmlmin", "chmod"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -61,32 +61,32 @@ module.exports = function(grunt) {
 
 
     var compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
-        banner = '/**\n\
- * CyberChef - The Cyber Swiss Army Knife\n\
- *\n\
- * @copyright Crown Copyright 2016\n\
- * @license Apache-2.0\n\
- *\n\
- *   Copyright 2016 Crown Copyright\n\
- *\n\
- * Licensed under the Apache License, Version 2.0 (the "License");\n\
- * you may not use this file except in compliance with the License.\n\
- * You may obtain a copy of the License at\n\
- *\n\
- *     http://www.apache.org/licenses/LICENSE-2.0\n\
- *\n\
- * Unless required by applicable law or agreed to in writing, software\n\
- * distributed under the License is distributed on an "AS IS" BASIS,\n\
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n\
- * See the License for the specific language governing permissions and\n\
- * limitations under the License.\n\
- */\n';
+        banner = "/**\n" +
+            "* CyberChef - The Cyber Swiss Army Knife\n" +
+            "*\n" +
+            "* @copyright Crown Copyright 2016\n" +
+            "* @license Apache-2.0\n" +
+            "*\n" +
+            "*   Copyright 2016 Crown Copyright\n" +
+            "*\n" +
+            '* Licensed under the Apache License, Version 2.0 (the "License");\n' +
+            "* you may not use this file except in compliance with the License.\n" +
+            "* You may obtain a copy of the License at\n" +
+            "*\n" +
+            "*     http://www.apache.org/licenses/LICENSE-2.0\n" +
+            "*\n" +
+            "* Unless required by applicable law or agreed to in writing, software\n" +
+            '* distributed under the License is distributed on an "AS IS" BASIS,\n' +
+            "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+            "* See the License for the specific language governing permissions and\n" +
+            "* limitations under the License.\n" +
+            "*/\n";
 
     var templateOptions = {
         data: {
             compileTime: compileTime,
             compileMsg: grunt.option("compile-msg") || grunt.option("msg") || "",
-            codebaseStats: grunt.file.read("src/static/stats.txt").split("\n").join("<br>")
+            codebaseStats: grunt.file.read("src/web/static/stats.txt").split("\n").join("<br>")
         }
     };
 
@@ -94,13 +94,12 @@ module.exports = function(grunt) {
     grunt.initConfig({
         eslint: {
             options: {
-                configFile: "src/js/.eslintrc.json"
+                configFile: "src/.eslintrc.json"
             },
             gruntfile: ["Gruntfile.js"],
-            core: ["src/js/core/**/*.js"],
-            config: ["src/js/config/**/*.js"],
-            views: ["src/js/views/**/*.js"],
-            operations: ["src/js/operations/**/*.js"],
+            core: ["src/core/**/*.js", "!src/core/lib/**/*"],
+            web: ["src/web/**/*.js"],
+            node: ["src/node/**/*.js"],
             tests: ["test/**/*.js"],
         },
         jsdoc: {
@@ -113,8 +112,8 @@ module.exports = function(grunt) {
             },
             all: {
                 src: [
-                    "src/js/**/*.js",
-                    "!src/js/lib/**/*",
+                    "src/**/*.js",
+                    "!src/core/lib/**/*",
                 ],
             }
         },
@@ -165,8 +164,8 @@ module.exports = function(grunt) {
                     "bootstrap",
                     "bootstrap-switch",
                     "bootstrap-colorpicker",
-                    "./src/css/index.js",
-                    "./src/js/views/html/main.js"
+                    "./src/web/css/index.js",
+                    "./src/web/index.js"
                 ],
                 output: {
                     filename: "scripts.js",
@@ -218,7 +217,7 @@ module.exports = function(grunt) {
             },
             node: {
                 target: "node",
-                entry: ["babel-polyfill", "./src/js/views/node/index.js"],
+                entry: ["babel-polyfill", "./src/node/index.js"],
                 output: {
                     filename: "CyberChef.js",
                     path: "build/node",
@@ -236,25 +235,25 @@ module.exports = function(grunt) {
         copy: {
             htmlDev: {
                 options: {
-                    process: function(content, srcpath) {
+                    process: function (content, srcpath) {
                         return grunt.template.process(content, templateOptions);
                     }
                 },
-                src: "src/html/index.html",
+                src: "src/web/html/index.html",
                 dest: "build/dev/index.html"
             },
             htmlProd: {
                 options: {
-                    process: function(content, srcpath) {
+                    process: function (content, srcpath) {
                         return grunt.template.process(content, templateOptions);
                     }
                 },
-                src: "src/html/index.html",
+                src: "src/web/html/index.html",
                 dest: "build/prod/index.html"
             },
             htmlInline: {
                 options: {
-                    process: function(content, srcpath) {
+                    process: function (content, srcpath) {
                         // TODO: Do all this in Jade
                         content = content.replace(
                             '<a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="images/download-24x24.png" /></a>',
@@ -262,14 +261,14 @@ module.exports = function(grunt) {
                         return grunt.template.process(content, templateOptions);
                     }
                 },
-                src: "src/html/index.html",
+                src: "src/web/html/index.html",
                 dest: "build/prod/cyberchef.htm"
             },
             staticDev: {
                 files: [
                     {
                         expand: true,
-                        cwd: "src/static/",
+                        cwd: "src/web/static/",
                         src: [
                             "**/*",
                             "**/.*",
@@ -284,7 +283,7 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: "src/static/",
+                        cwd: "src/web/static/",
                         src: [
                             "**/*",
                             "**/.*",
@@ -297,7 +296,7 @@ module.exports = function(grunt) {
             },
             ghPages: {
                 options: {
-                    process: function(content, srcpath) {
+                    process: function (content, srcpath) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
                             grunt.file.read("src/static/ga.html") + "</body></html>");
@@ -310,7 +309,7 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
-                preserveComments: function(node, comment) {
+                preserveComments: function (node, comment) {
                     if (comment.value.indexOf("* @license") === 0) return true;
                     return false;
                 },
@@ -403,47 +402,39 @@ module.exports = function(grunt) {
                 stderr: false
             },
             stats: {
-                command: "rm src/static/stats.txt;" +
-                    [
-                        "ls src/ -R1 | grep '^$' -v | grep ':$' -v | wc -l | xargs printf '%b\tsource files\n'",
-                        "find src/ -regex '.*\..*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
-                        "du -hs src/ | pcregrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
+                command: "rm src/web/static/stats.txt;" +
+                [
+                    "ls src/ -R1 | grep '^$' -v | grep ':$' -v | wc -l | xargs printf '%b\tsource files\n'",
+                    "find src/ -regex '.*\..*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
+                    "du -hs src/ | pcregrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
 
-                        "ls src/js/ -R1 | grep '\.js$' | wc -l | xargs printf '\n%b\tJavaScript source files\n'",
-                        "find src/js/ -regex '.*\.js' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
-                        "find src/js/ -regex '.*\.js' -exec du -hcs {} \+ | tail -n1 | egrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
+                    "find src/ -regex '.*\.js' -not -regex '.*/lib/.*' -print | wc -l | xargs printf '\n%b\tJavaScript source files\n'",
+                    "find src/ -regex '.*\.js' -not -regex '.*/lib/.*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
+                    "find src/ -regex '.*\.js' -not -regex '.*/lib/.*' -exec du -hcs {} \+ | tail -n1 | egrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
 
-                        "find src/js/ -regex '.*/lib/.*\.js' -print | wc -l | xargs printf '\n%b\tthird party JavaScript source files\n'",
-                        "find src/js/ -regex '.*/lib/.*\.js' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
-                        "find src/js/ -regex '.*/lib/.*\.js' -exec du -hcs {} \+ | tail -n1 | egrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
+                    "du build/dev/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '\n%b\tuncompressed JavaScript size\n'",
+                    "du build/prod/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '%b\tcompressed JavaScript size\n'",
 
-                        "find src/js/ -regex '.*\.js' -not -regex '.*/lib/.*' -print | wc -l | xargs printf '\n%b\tfirst party JavaScript source files\n'",
-                        "find src/js/ -regex '.*\.js' -not -regex '.*/lib/.*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
-                        "find src/js/ -regex '.*\.js' -not -regex '.*/lib/.*' -exec du -hcs {} \+ | tail -n1 | egrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
+                    "grep -E '^\\s+name: ' src/core/config/Categories.js | wc -l | xargs printf '\n%b\tcategories\n'",
+                    "grep -E '^\\s+\"[A-Za-z0-9 \\-]+\": {' src/core/config/OperationConfig.js | wc -l | xargs printf '%b\toperations\n'",
 
-                        "du build/dev/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '\n%b\tuncompressed JavaScript size\n'",
-                        "du build/prod/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '%b\tcompressed JavaScript size\n'",
-
-                        "grep -E '^\\s+name: ' src/js/config/Categories.js | wc -l | xargs printf '\n%b\tcategories\n'",
-                        "grep -E '^\\s+\"[A-Za-z0-9 \\-]+\": {' src/js/config/OperationConfig.js | wc -l | xargs printf '%b\toperations\n'",
-
-                    ].join(" >> src/static/stats.txt;") + " >> src/static/stats.txt;",
+                ].join(" >> src/web/static/stats.txt;") + " >> src/web/static/stats.txt;",
                 stderr: false
             },
             displayStats: {
-                command: "cat src/static/stats.txt"
+                command: "cat src/web/static/stats.txt"
             },
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
             deployGhPages: {
                 command: [
-                        "git add build/prod/index.html -v",
-                        "COMMIT_HASH=$(git rev-parse HEAD)",
-                        "git commit -m \"GitHub Pages release for ${COMMIT_HASH}\"",
-                        "git push origin `git subtree split --prefix build/prod master`:gh-pages --force",
-                        "git reset HEAD~",
-                        "git checkout build/prod/index.html"
+                    "git add build/prod/index.html -v",
+                    "COMMIT_HASH=$(git rev-parse HEAD)",
+                    "git commit -m \"GitHub Pages release for ${COMMIT_HASH}\"",
+                    "git push origin `git subtree split --prefix build/prod master`:gh-pages --force",
+                    "git reset HEAD~",
+                    "git checkout build/prod/index.html"
                 ].join(";")
             }
         },
@@ -452,19 +443,19 @@ module.exports = function(grunt) {
         },
         watch: {
             css: {
-                files: ["src/css/**/*.css", "src/css/**/*.less"],
+                files: ["src/web/css/**/*.css", "src/web/css/**/*.less"],
                 tasks: ["webpack:web", "chmod:build"]
             },
             js: {
-                files: "src/js/**/*.js",
+                files: "src/**/*.js",
                 tasks: ["webpack:web", "chmod:build"]
             },
             html: {
-                files: "src/html/**/*.html",
+                files: "src/web/html/**/*.html",
                 tasks: ["copy:htmlDev", "chmod:build"]
             },
             static: {
-                files: ["src/static/**/*", "src/static/**/.*"],
+                files: ["src/web/static/**/*", "src/web/static/**/.*"],
                 tasks: ["copy:staticDev", "chmod:build"]
             },
             grunt: {

@@ -8,7 +8,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-var Chef = require("../src/js/core/Chef.js");
+var Chef = require("../src/core/Chef.js");
 
 (function() {
     /**
