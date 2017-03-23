@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Base64 = module.exports = {
+const Base64 = {
 
     /**
      * @constant
@@ -342,3 +342,5 @@ var Base64 = module.exports = {
     },
 
 };
+
+export default Base64;

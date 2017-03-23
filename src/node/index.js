@@ -6,9 +6,9 @@
  * @license Apache-2.0
  */
 
-var Chef = require("../core/Chef.js");
+var Chef = require("../core/Chef.js").default;
 
-module.exports = {
+const CyberChef = module.exports = {
 
     bake: function(input, recipeConfig) {
         this.chef = new Chef();

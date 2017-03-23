@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var OS = module.exports = {
+const OS = {
 
     /**
      * Parse UNIX file permissions operation.
@@ -307,3 +307,5 @@ var OS = module.exports = {
     },
 
 };
+
+export default OS;

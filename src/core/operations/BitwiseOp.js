@@ -1,5 +1,5 @@
-var Utils = require("../Utils.js"),
-    CryptoJS = require("crypto-js");
+import Utils from "../Utils.js";
+import CryptoJS from "crypto-js";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var BitwiseOp = module.exports = {
+const BitwiseOp = {
 
     /**
      * Runs bitwise operations across the input data.
@@ -306,3 +306,5 @@ var BitwiseOp = module.exports = {
     },
 
 };
+
+export default BitwiseOp;

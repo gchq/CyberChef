@@ -4,7 +4,7 @@
  * @author Unknown Male 282
  * @namespace
  */
-var Numberwang = module.exports = {
+const Numberwang = {
 
     /**
      * Numberwang operation. Remain indoors.
@@ -25,3 +25,5 @@ var Numberwang = module.exports = {
     },
 
 };
+
+export default Numberwang;

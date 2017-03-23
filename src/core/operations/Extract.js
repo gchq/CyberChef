@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var Extract = module.exports = {
+const Extract = {
 
     /**
      * Runs search operations across the input data using regular expressions.
@@ -295,3 +295,5 @@ var Extract = module.exports = {
     },
 
 };
+
+export default Extract;

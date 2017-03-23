@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var SeqUtils = module.exports = {
+const SeqUtils = {
 
     /**
      * @constant
@@ -221,3 +221,5 @@ var SeqUtils = module.exports = {
     },
 
 };
+
+export default SeqUtils;

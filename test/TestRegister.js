@@ -8,7 +8,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-var Chef = require("../src/core/Chef.js");
+import Chef from "../src/core/Chef.js";
 
 (function() {
     /**
@@ -87,5 +87,7 @@ var Chef = require("../src/core/Chef.js");
 
     // Singleton TestRegister, keeping things simple and obvious.
     global.TestRegister = global.TestRegister || new TestRegister();
-    module.exports = global.TestRegister;
 })();
+
+export default global.TestRegister;
+

@@ -1,6 +1,6 @@
-var Utils = require("../Utils.js"),
-    Checksum = require("./Checksum.js"),
-    BigInteger = require("jsbn").BigInteger;
+import Utils from "../Utils.js";
+import Checksum from "./Checksum.js";
+import {BigInteger} from "jsbn";
 
 
 /**
@@ -12,7 +12,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var IP = module.exports = {
+const IP = {
 
     /**
      * @constant
@@ -1060,5 +1060,6 @@ var IP = module.exports = {
         255: {keyword: "Reserved", protocol: ""}
     },
 
-
 };
+
+export default IP;

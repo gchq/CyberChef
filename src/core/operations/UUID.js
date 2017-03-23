@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var UUID = module.exports = {
+const UUID = {
 
     /**
      * Generate UUID operation.
@@ -37,3 +37,5 @@ var UUID = module.exports = {
     },
 
 };
+
+export default UUID;

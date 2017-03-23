@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Unicode = module.exports = {
+const Unicode = {
 
     /**
      * @constant
@@ -63,3 +63,5 @@ var Unicode = module.exports = {
     },
 
 };
+
+export default Unicode;

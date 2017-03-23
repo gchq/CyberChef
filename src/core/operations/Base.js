@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var Base = module.exports = {
+const Base = {
 
     /**
      * @constant
@@ -50,3 +50,5 @@ var Base = module.exports = {
     },
 
 };
+
+export default Base;

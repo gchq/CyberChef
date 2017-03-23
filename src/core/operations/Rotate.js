@@ -9,7 +9,7 @@
  *
  * @todo Support for UTF16
  */
-var Rotate = module.exports = {
+const Rotate = {
 
     /**
      * @constant
@@ -240,3 +240,5 @@ var Rotate = module.exports = {
     },
 
 };
+
+export default Rotate;

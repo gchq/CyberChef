@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var FileType = module.exports = {
+const FileType = {
 
     /**
      * Detect File Type operation.
@@ -527,3 +527,5 @@ var FileType = module.exports = {
     },
 
 };
+
+export default FileType;

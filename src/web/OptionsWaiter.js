@@ -6,9 +6,9 @@
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  */
-var OptionsWaiter = module.exports = function(app) {
+var OptionsWaiter = function(app) {
     this.app = app;
 };
 
@@ -130,3 +130,5 @@ OptionsWaiter.prototype.setWordWrap = function() {
         document.getElementById("output-highlighter").classList.add("word-wrap");
     }
 };
+
+export default OptionsWaiter;

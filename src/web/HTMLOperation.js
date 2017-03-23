@@ -1,4 +1,4 @@
-var HTMLIngredient = require("./HTMLIngredient.js");
+import HTMLIngredient from "./HTMLIngredient.js";
 
 
 /**
@@ -11,10 +11,10 @@ var HTMLIngredient = require("./HTMLIngredient.js");
  * @constructor
  * @param {string} name - The name of the operation.
  * @param {Object} config - The configuration object for this operation.
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var HTMLOperation = module.exports = function(name, config, app, manager) {
+var HTMLOperation = function(name, config, app, manager) {
     this.app         = app;
     this.manager     = manager;
 
@@ -115,3 +115,5 @@ HTMLOperation.prototype.highlightSearchString = function(searchStr, namePos, des
             this.description.slice(descPos + searchStr.length);
     }
 };
+
+export default HTMLOperation;

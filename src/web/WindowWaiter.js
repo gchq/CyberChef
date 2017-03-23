@@ -6,9 +6,9 @@
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  */
-var WindowWaiter = module.exports = function(app) {
+var WindowWaiter = function(app) {
     this.app = app;
 };
 
@@ -50,3 +50,5 @@ WindowWaiter.prototype.windowFocus = function() {
         this.app.silentBake();
     }
 };
+
+export default WindowWaiter;

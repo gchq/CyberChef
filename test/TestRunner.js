@@ -8,24 +8,17 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-var TestRegister = require("./TestRegister.js"),
-    allTestsPassing = true,
+import TestRegister from "./TestRegister.js";
+import "./tests/operations/Base58.js";
+import "./tests/operations/Compress.js";
+import "./tests/operations/FlowControl.js";
+import "./tests/operations/MorseCode.js";
+import "./tests/operations/StrUtils.js";
+
+var allTestsPassing = true,
     testStatusCounts = {
         total: 0,
     };
-
-/**
- * Requires and returns all modules that match.
- *
- * @param {Object} requireContext
- * @returns {Object[]}
- */
-function requireAll(requireContext) {
-    return requireContext.keys().map(requireContext);
-}
-
-// Import all tests
-requireAll(require.context("./tests", true, /.+\.js$/));
 
 
 /**

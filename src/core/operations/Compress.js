@@ -1,10 +1,10 @@
-var Utils = require("../Utils.js"),
-    rawdeflate = require("zlibjs/bin/rawdeflate.min"),
-    rawinflate = require("zlibjs/bin/rawinflate.min"),
-    zlibAndGzip = require("zlibjs/bin/zlib_and_gzip.min"),
-    zip = require("zlibjs/bin/zip.min"),
-    unzip = require("zlibjs/bin/unzip.min"),
-    bzip2 = require("exports-loader?bzip2!../lib/bzip2.js");
+import Utils from "../Utils.js";
+import rawdeflate from "zlibjs/bin/rawdeflate.min";
+import rawinflate from "zlibjs/bin/rawinflate.min";
+import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
+import zip from "zlibjs/bin/zip.min";
+import unzip from "zlibjs/bin/unzip.min";
+import bzip2 from "exports-loader?bzip2!../lib/bzip2.js";
 
 var Zlib = {
     RawDeflate: rawdeflate.Zlib.RawDeflate,
@@ -27,7 +27,7 @@ var Zlib = {
  *
  * @namespace
  */
-var Compress = module.exports = {
+const Compress = {
 
     /**
      * @constant
@@ -569,3 +569,5 @@ var Compress = module.exports = {
         return Utils.displayFilesAsHTML(files);
     },
 };
+
+export default Compress;

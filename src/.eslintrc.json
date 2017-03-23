@@ -3,12 +3,12 @@
         "ecmaVersion": 6,
         "ecmaFeatures": {
             "impliedStrict": true
-        }
+        },
+        "sourceType": "module"
     },
     "env": {
         "browser": true,
         "es6": true,
-        "commonjs": true,
         "node": true
     },
     "extends": "eslint:recommended",

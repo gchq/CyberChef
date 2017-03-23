@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var DateTime = module.exports = {
+const DateTime = {
 
     /**
      * @constant
@@ -448,5 +448,6 @@ var DateTime = module.exports = {
   </tbody>\
 </table>",
 
-
 };
+
+export default DateTime;

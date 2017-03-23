@@ -1,41 +1,41 @@
-var FlowControl     = require("../FlowControl.js"),
-    Base            = require("../operations/Base.js"),
-    Base58          = require("../operations/Base58.js"),
-    Base64          = require("../operations/Base64.js"),
-    BitwiseOp       = require("../operations/BitwiseOp.js"),
-    ByteRepr        = require("../operations/ByteRepr.js"),
-    CharEnc         = require("../operations/CharEnc.js"),
-    Checksum        = require("../operations/Checksum.js"),
-    Cipher          = require("../operations/Cipher.js"),
-    Code            = require("../operations/Code.js"),
-    Compress        = require("../operations/Compress.js"),
-    Convert         = require("../operations/Convert.js"),
-    DateTime        = require("../operations/DateTime.js"),
-    Endian          = require("../operations/Endian.js"),
-    Entropy         = require("../operations/Entropy.js"),
-    Extract         = require("../operations/Extract.js"),
-    FileType        = require("../operations/FileType.js"),
-    Hash            = require("../operations/Hash.js"),
-    Hexdump         = require("../operations/Hexdump.js"),
-    HTML            = require("../operations/HTML.js"),
-    HTTP            = require("../operations/HTTP.js"),
-    IP              = require("../operations/IP.js"),
-    JS              = require("../operations/JS.js"),
-    MAC             = require("../operations/MAC.js"),
-    MorseCode       = require("../operations/MorseCode.js"),
-    NetBIOS         = require("../operations/NetBIOS.js"),
-    Numberwang      = require("../operations/Numberwang.js"),
-    OS              = require("../operations/OS.js"),
-    PublicKey       = require("../operations/PublicKey.js"),
-    Punycode        = require("../operations/Punycode.js"),
-    QuotedPrintable = require("../operations/QuotedPrintable.js"),
-    Rotate          = require("../operations/Rotate.js"),
-    SeqUtils        = require("../operations/SeqUtils.js"),
-    StrUtils        = require("../operations/StrUtils.js"),
-    Tidy            = require("../operations/Tidy.js"),
-    Unicode         = require("../operations/Unicode.js"),
-    URL_            = require("../operations/URL.js"),
-    UUID            = require("../operations/UUID.js");
+import FlowControl from "../FlowControl.js";
+import Base from "../operations/Base.js";
+import Base58 from "../operations/Base58.js";
+import Base64 from "../operations/Base64.js";
+import BitwiseOp from "../operations/BitwiseOp.js";
+import ByteRepr from "../operations/ByteRepr.js";
+import CharEnc from "../operations/CharEnc.js";
+import Checksum from "../operations/Checksum.js";
+import Cipher from "../operations/Cipher.js";
+import Code from "../operations/Code.js";
+import Compress from "../operations/Compress.js";
+import Convert from "../operations/Convert.js";
+import DateTime from "../operations/DateTime.js";
+import Endian from "../operations/Endian.js";
+import Entropy from "../operations/Entropy.js";
+import Extract from "../operations/Extract.js";
+import FileType from "../operations/FileType.js";
+import Hash from "../operations/Hash.js";
+import Hexdump from "../operations/Hexdump.js";
+import HTML from "../operations/HTML.js";
+import HTTP from "../operations/HTTP.js";
+import IP from "../operations/IP.js";
+import JS from "../operations/JS.js";
+import MAC from "../operations/MAC.js";
+import MorseCode from "../operations/MorseCode.js";
+import NetBIOS from "../operations/NetBIOS.js";
+import Numberwang from "../operations/Numberwang.js";
+import OS from "../operations/OS.js";
+import PublicKey from "../operations/PublicKey.js";
+import Punycode from "../operations/Punycode.js";
+import QuotedPrintable from "../operations/QuotedPrintable.js";
+import Rotate from "../operations/Rotate.js";
+import SeqUtils from "../operations/SeqUtils.js";
+import StrUtils from "../operations/StrUtils.js";
+import Tidy from "../operations/Tidy.js";
+import Unicode from "../operations/Unicode.js";
+import URL_ from "../operations/URL.js";
+import UUID from "../operations/UUID.js";
 
 
 /**
@@ -78,7 +78,7 @@ var FlowControl     = require("../FlowControl.js"),
  * @constant
  * @type {Object.<string, OpConf>}
  */
-var OperationConfig = module.exports = {
+const OperationConfig = {
     "Fork": {
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
         run: FlowControl.runFork,
@@ -3168,3 +3168,5 @@ var OperationConfig = module.exports = {
         ]
     }
 };
+
+export default OperationConfig;

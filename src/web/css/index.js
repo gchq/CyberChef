@@ -6,13 +6,13 @@
  * @license Apache-2.0
  */
 
-require("google-code-prettify/src/prettify.css");
+import "google-code-prettify/src/prettify.css";
 
-require("./lib/bootstrap.less");
-require("bootstrap-switch/src/less/bootstrap3/build.less");
-require("bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css");
+import "./lib/bootstrap.less";
+import "bootstrap-switch/src/less/bootstrap3/build.less";
+import "bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
 
-require("./structure/overrides.css");
-require("./structure/layout.css");
-require("./structure/utils.css");
-require("./themes/classic.css");
+import "./structure/overrides.css";
+import "./structure/layout.css";
+import "./structure/utils.css";
+import "./themes/classic.css";

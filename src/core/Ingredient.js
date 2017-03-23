@@ -1,4 +1,4 @@
-var Utils = require("./Utils.js");
+import Utils from "./Utils.js";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("./Utils.js");
  * @class
  * @param {Object} ingredientConfig
  */
-var Ingredient = module.exports = function(ingredientConfig) {
+var Ingredient = function(ingredientConfig) {
     this.name  = "";
     this.type  = "";
     this.value = null;
@@ -86,3 +86,5 @@ Ingredient.prepare = function(data, type) {
             return data;
     }
 };
+
+export default Ingredient;

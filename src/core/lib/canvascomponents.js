@@ -10,7 +10,7 @@
  * @constant
  * @namespace
  */
-var CanvasComponents = module.exports = {
+const CanvasComponents = {
 
     drawLine: function(ctx, startX, startY, endX, endY) {
         ctx.beginPath();
@@ -182,3 +182,5 @@ var CanvasComponents = module.exports = {
     },
 
 };
+
+export default CanvasComponents;

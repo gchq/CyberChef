@@ -1,4 +1,4 @@
-var CryptoJS = require("crypto-js");
+import CryptoJS from "crypto-js";
 
 
 /**
@@ -10,7 +10,7 @@ var CryptoJS = require("crypto-js");
  *
  * @namespace
  */
-var Utils = module.exports = {
+const Utils = {
 
     /**
      * Translates an ordinal into a character.
@@ -1168,6 +1168,8 @@ var Utils = module.exports = {
     },
 
 };
+
+export default Utils;
 
 
 /**

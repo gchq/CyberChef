@@ -1,4 +1,4 @@
-var punycode = require("punycode");
+import punycode from "punycode";
 
 
 /**
@@ -10,7 +10,7 @@ var punycode = require("punycode");
  *
  * @namespace
  */
-var Punycode = module.exports = {
+const Punycode = {
 
     /**
      * @constant
@@ -54,3 +54,5 @@ var Punycode = module.exports = {
     },
 
 };
+
+export default Punycode;

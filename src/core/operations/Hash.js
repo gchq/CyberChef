@@ -1,7 +1,7 @@
-var Utils = require("../Utils.js"),
-    CryptoJS = require("crypto-js"),
-    CryptoApi = require("crypto-api"),
-    Checksum = require("./Checksum.js");
+import Utils from "../Utils.js";
+import CryptoJS from "crypto-js";
+import CryptoApi from "crypto-api";
+import Checksum from "./Checksum.js";
 
 
 /**
@@ -13,7 +13,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var Hash = module.exports = {
+const Hash = {
 
     /**
      * MD2 operation.
@@ -385,3 +385,5 @@ var Hash = module.exports = {
     },
 
 };
+
+export default Hash;

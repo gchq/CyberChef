@@ -1,5 +1,5 @@
 /* globals unescape */
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -12,7 +12,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var URL_ = module.exports = {
+const URL_ = {
 
     /**
      * @constant
@@ -130,3 +130,5 @@ var URL_ = module.exports = {
     },
 
 };
+
+export default URL_;

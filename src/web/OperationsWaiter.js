@@ -1,5 +1,5 @@
-var HTMLOperation = require("./HTMLOperation.js"),
-    Sortable = require("sortablejs");
+import HTMLOperation from "./HTMLOperation.js";
+import Sortable from "sortablejs";
 
 
 /**
@@ -10,10 +10,10 @@ var HTMLOperation = require("./HTMLOperation.js"),
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var OperationsWaiter = module.exports = function(app, manager) {
+var OperationsWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 
@@ -283,3 +283,5 @@ OperationsWaiter.prototype.opIconMouseleave = function(e) {
         $(opEl).popover("show");
     }
 };
+
+export default OperationsWaiter;

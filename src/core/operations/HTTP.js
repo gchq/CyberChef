@@ -1,4 +1,4 @@
-var UAParser = require("exports-loader?UAS_parser!../lib/uas_parser.js");
+import {UAS_parser as UAParser} from "../lib/uas_parser.js";
 
 
 /**
@@ -10,7 +10,7 @@ var UAParser = require("exports-loader?UAS_parser!../lib/uas_parser.js");
  *
  * @namespace
  */
-var HTTP = module.exports = {
+const HTTP = {
 
     /**
      * Strip HTTP headers operation.
@@ -52,3 +52,5 @@ var HTTP = module.exports = {
     },
 
 };
+
+export default HTTP;

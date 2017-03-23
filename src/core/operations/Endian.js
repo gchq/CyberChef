@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Endian = module.exports = {
+const Endian = {
 
     /**
      * @constant
@@ -95,3 +95,5 @@ var Endian = module.exports = {
     },
 
 };
+
+export default Endian;

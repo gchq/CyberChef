@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Tidy = module.exports = {
+const Tidy = {
 
     /**
      * @constant
@@ -239,3 +239,5 @@ var Tidy = module.exports = {
     },
 
 };
+
+export default Tidy;

@@ -1,4 +1,4 @@
-var Utils = require("../core/Utils.js");
+import Utils from "../core/Utils.js";
 
 
 /**
@@ -9,10 +9,10 @@ var Utils = require("../core/Utils.js");
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var InputWaiter = module.exports = function(app, manager) {
+var InputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 
@@ -218,3 +218,5 @@ InputWaiter.prototype.clearIoClick = function() {
     document.getElementById("output-selection-info").innerHTML = "";
     window.dispatchEvent(this.manager.statechange);
 };
+
+export default InputWaiter;

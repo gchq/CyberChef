@@ -1,5 +1,5 @@
 /* globals app */
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var ByteRepr = module.exports = {
+const ByteRepr = {
 
     /**
      * @constant
@@ -394,3 +394,5 @@ var ByteRepr = module.exports = {
     },
 
 };
+
+export default ByteRepr;

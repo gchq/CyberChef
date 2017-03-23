@@ -1,6 +1,6 @@
-var Utils = require("../Utils.js"),
-    CryptoJS = require("crypto-js"),
-    Blowfish = require("sladex-blowfish");
+import Utils from "../Utils.js";
+import CryptoJS from "crypto-js";
+import {blowfish as Blowfish} from "sladex-blowfish";
 
 
 /**
@@ -12,7 +12,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var Cipher = module.exports = {
+const Cipher = {
 
     /**
      * @constant
@@ -616,6 +616,8 @@ var Cipher = module.exports = {
     },
 
 };
+
+export default Cipher;
 
 
 /**

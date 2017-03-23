@@ -1,5 +1,5 @@
-var Dish = require("./Dish.js"),
-    Recipe = require("./Recipe.js");
+import Dish from "./Dish.js";
+import Recipe from "./Recipe.js";
 
 
 /**
@@ -11,7 +11,7 @@ var Dish = require("./Dish.js"),
  *
  * @class
  */
-var Chef = module.exports = function() {
+var Chef = function() {
     this.dish = new Dish();
 };
 
@@ -122,3 +122,5 @@ Chef.prototype.silentBake = function(recipeConfig) {
     }
     return new Date().getTime() - startTime;
 };
+
+export default Chef;

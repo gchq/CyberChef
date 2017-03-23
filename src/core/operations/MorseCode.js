@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var MorseCode = module.exports = {
+const MorseCode = {
 
     /**
      * @constant
@@ -186,3 +186,5 @@ var MorseCode = module.exports = {
     })(),
 
 };
+
+export default MorseCode;

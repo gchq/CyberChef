@@ -1,5 +1,5 @@
-var Utils = require("../Utils.js"),
-    CryptoJS = require("crypto-js");
+import Utils from "../Utils.js";
+import CryptoJS from "crypto-js";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var CharEnc = module.exports = {
+const CharEnc = {
 
     /**
      * @constant
@@ -46,3 +46,5 @@ var CharEnc = module.exports = {
     },
 
 };
+
+export default CharEnc;

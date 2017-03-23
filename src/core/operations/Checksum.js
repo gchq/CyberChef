@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Checksum = module.exports = {
+const Checksum = {
 
     /**
      * Fletcher-8 Checksum operation.
@@ -191,3 +191,5 @@ var Checksum = module.exports = {
     },
 
 };
+
+export default Checksum;

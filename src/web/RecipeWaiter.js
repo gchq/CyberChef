@@ -1,5 +1,5 @@
-var HTMLOperation = require("./HTMLOperation.js"),
-    Sortable = require("sortablejs");
+import HTMLOperation from "./HTMLOperation.js";
+import Sortable from "sortablejs";
 
 
 /**
@@ -10,10 +10,10 @@ var HTMLOperation = require("./HTMLOperation.js"),
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var RecipeWaiter = module.exports = function(app, manager) {
+var RecipeWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
     this.removeIntent = false;
@@ -424,3 +424,5 @@ RecipeWaiter.prototype.opAdd = function(e) {
 RecipeWaiter.prototype.opRemove = function(e) {
     window.dispatchEvent(this.manager.statechange);
 };
+
+export default RecipeWaiter;

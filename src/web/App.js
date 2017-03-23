@@ -1,9 +1,9 @@
-var Utils = require("../core/Utils.js"),
-    Chef = require("../core/Chef.js"),
-    Manager = require("./Manager.js"),
-    HTMLCategory = require("./HTMLCategory.js"),
-    HTMLOperation = require("./HTMLOperation.js"),
-    Split = require("split.js");
+import Utils from "../core/Utils.js";
+import Chef from "../core/Chef.js";
+import Manager from "./Manager.js";
+import HTMLCategory from "./HTMLCategory.js";
+import HTMLOperation from "./HTMLOperation.js";
+import Split from "split.js";
 
 
 /**
@@ -20,7 +20,7 @@ var Utils = require("../core/Utils.js"),
  * @param {String[]} defaultFavourites - A list of default favourite operations.
  * @param {Object} options - Default setting for app options.
  */
-var HTMLApp = module.exports = function(categories, operations, defaultFavourites, defaultOptions) {
+var App = function(categories, operations, defaultFavourites, defaultOptions) {
     this.categories  = categories;
     this.operations  = operations;
     this.dfavourites = defaultFavourites;
@@ -43,7 +43,7 @@ var HTMLApp = module.exports = function(categories, operations, defaultFavourite
  *
  * @fires Manager#appstart
  */
-HTMLApp.prototype.setup = function() {
+App.prototype.setup = function() {
     document.dispatchEvent(this.manager.appstart);
     this.initialiseSplitter();
     this.loadLocalStorage();
@@ -60,7 +60,7 @@ HTMLApp.prototype.setup = function() {
  *
  * @param {Error} err
  */
-HTMLApp.prototype.handleError = function(err) {
+App.prototype.handleError = function(err) {
     console.error(err);
     var msg = err.displayStr || err.toString();
     this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
@@ -73,7 +73,7 @@ HTMLApp.prototype.handleError = function(err) {
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
-HTMLApp.prototype.bake = function(step) {
+App.prototype.bake = function(step) {
     var response;
 
     try {
@@ -112,7 +112,7 @@ HTMLApp.prototype.bake = function(step) {
 /**
  * Runs Auto Bake if it is set.
  */
-HTMLApp.prototype.autoBake = function() {
+App.prototype.autoBake = function() {
     if (this.autoBake_) {
         this.bake();
     }
@@ -128,7 +128,7 @@ HTMLApp.prototype.autoBake = function() {
  *
  * @returns {number} - The number of miliseconds it took to run the silent bake.
  */
-HTMLApp.prototype.silentBake = function() {
+App.prototype.silentBake = function() {
     var startTime = new Date().getTime(),
         recipeConfig = this.getRecipeConfig();
 
@@ -145,7 +145,7 @@ HTMLApp.prototype.silentBake = function() {
  *
  * @returns {string}
  */
-HTMLApp.prototype.getInput = function() {
+App.prototype.getInput = function() {
     var input = this.manager.input.get();
 
     // Save to session storage in case we need to restore it later
@@ -161,7 +161,7 @@ HTMLApp.prototype.getInput = function() {
  *
  * @param {string} input - The string to set the input to
  */
-HTMLApp.prototype.setInput = function(input) {
+App.prototype.setInput = function(input) {
     sessionStorage.setItem("inputLength", input.length);
     sessionStorage.setItem("input", input);
     this.manager.input.set(input);
@@ -174,7 +174,7 @@ HTMLApp.prototype.setInput = function(input) {
  *
  * @fires Manager#oplistcreate
  */
-HTMLApp.prototype.populateOperationsList = function() {
+App.prototype.populateOperationsList = function() {
     // Move edit button away before we overwrite it
     document.body.appendChild(document.getElementById("edit-favourites"));
 
@@ -210,7 +210,7 @@ HTMLApp.prototype.populateOperationsList = function() {
 /**
  * Sets up the adjustable splitter to allow the user to resize areas of the page.
  */
-HTMLApp.prototype.initialiseSplitter = function() {
+App.prototype.initialiseSplitter = function() {
     this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
         minSize: [240, 325, 440],
@@ -234,7 +234,7 @@ HTMLApp.prototype.initialiseSplitter = function() {
  * Loads the information previously saved to the HTML5 local storage object so that user options
  * and favourites can be restored.
  */
-HTMLApp.prototype.loadLocalStorage = function() {
+App.prototype.loadLocalStorage = function() {
     // Load options
     var lOptions;
     if (localStorage.options !== undefined) {
@@ -252,7 +252,7 @@ HTMLApp.prototype.loadLocalStorage = function() {
  * Favourites category with them.
  * If the user currently has no saved favourites, the defaults from the view constructor are used.
  */
-HTMLApp.prototype.loadFavourites = function() {
+App.prototype.loadFavourites = function() {
     var favourites = localStorage.favourites &&
         localStorage.favourites.length > 2 ?
         JSON.parse(localStorage.favourites) :
@@ -283,7 +283,7 @@ HTMLApp.prototype.loadFavourites = function() {
  * @param {string[]} favourites - A list of the user's favourite operations
  * @returns {string[]} A list of the valid favourites
  */
-HTMLApp.prototype.validFavourites = function(favourites) {
+App.prototype.validFavourites = function(favourites) {
     var validFavs = [];
     for (var i = 0; i < favourites.length; i++) {
         if (this.operations.hasOwnProperty(favourites[i])) {
@@ -302,7 +302,7 @@ HTMLApp.prototype.validFavourites = function(favourites) {
  *
  * @param {string[]} favourites - A list of the user's favourite operations
  */
-HTMLApp.prototype.saveFavourites = function(favourites) {
+App.prototype.saveFavourites = function(favourites) {
     localStorage.setItem("favourites", JSON.stringify(this.validFavourites(favourites)));
 };
 
@@ -311,7 +311,7 @@ HTMLApp.prototype.saveFavourites = function(favourites) {
  * Resets favourite operations back to the default as specified in the view constructor and
  * refreshes the operation list.
  */
-HTMLApp.prototype.resetFavourites = function() {
+App.prototype.resetFavourites = function() {
     this.saveFavourites(this.dfavourites);
     this.loadFavourites();
     this.populateOperationsList();
@@ -324,7 +324,7 @@ HTMLApp.prototype.resetFavourites = function() {
  *
  * @param {string} name - The name of the operation
  */
-HTMLApp.prototype.addFavourite = function(name) {
+App.prototype.addFavourite = function(name) {
     var favourites = JSON.parse(localStorage.favourites);
 
     if (favourites.indexOf(name) >= 0) {
@@ -343,7 +343,7 @@ HTMLApp.prototype.addFavourite = function(name) {
 /**
  * Checks for input and recipe in the URI parameters and loads them if present.
  */
-HTMLApp.prototype.loadURIParams = function() {
+App.prototype.loadURIParams = function() {
     // Load query string from URI
     this.queryString = (function(a) {
         if (a === "") return {};
@@ -408,7 +408,7 @@ HTMLApp.prototype.loadURIParams = function() {
  *
  * @returns {number}
  */
-HTMLApp.prototype.nextIngId = function() {
+App.prototype.nextIngId = function() {
     return this.ingId++;
 };
 
@@ -418,7 +418,7 @@ HTMLApp.prototype.nextIngId = function() {
  *
  * @returns {Object[]}
  */
-HTMLApp.prototype.getRecipeConfig = function() {
+App.prototype.getRecipeConfig = function() {
     var recipeConfig = this.manager.recipe.getConfig();
     sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     return recipeConfig;
@@ -430,7 +430,7 @@ HTMLApp.prototype.getRecipeConfig = function() {
  *
  * @param {Object[]} recipeConfig - The recipe configuration
  */
-HTMLApp.prototype.setRecipeConfig = function(recipeConfig) {
+App.prototype.setRecipeConfig = function(recipeConfig) {
     sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     document.getElementById("rec-list").innerHTML = null;
 
@@ -471,7 +471,7 @@ HTMLApp.prototype.setRecipeConfig = function(recipeConfig) {
 /**
  * Resets the splitter positions to default.
  */
-HTMLApp.prototype.resetLayout = function() {
+App.prototype.resetLayout = function() {
     this.columnSplitter.setSizes([20, 30, 50]);
     this.ioSplitter.setSizes([50, 50]);
 
@@ -483,7 +483,7 @@ HTMLApp.prototype.resetLayout = function() {
 /**
  * Sets the compile message.
  */
-HTMLApp.prototype.setCompileMessage = function() {
+App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
     var now = new Date(),
         timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
@@ -522,7 +522,7 @@ HTMLApp.prototype.setCompileMessage = function() {
  * // that will disappear after 5 seconds.
  * this.alert("Happy Christmas!", "info", 5000);
  */
-HTMLApp.prototype.alert = function(str, style, timeout, silent) {
+App.prototype.alert = function(str, style, timeout, silent) {
     var time = new Date();
 
     console.log("[" + time.toLocaleString() + "] " + str);
@@ -576,7 +576,7 @@ HTMLApp.prototype.alert = function(str, style, timeout, silent) {
  * // Pops up a box asking if the user would like a cookie. Prints the answer to the console.
  * this.confirm("Question", "Would you like a cookie?", function(answer) {console.log(answer);});
  */
-HTMLApp.prototype.confirm = function(title, body, callback, scope) {
+App.prototype.confirm = function(title, body, callback, scope) {
     scope = scope || this;
     document.getElementById("confirm-title").innerHTML = title;
     document.getElementById("confirm-body").innerHTML = body;
@@ -604,7 +604,7 @@ HTMLApp.prototype.confirm = function(title, body, callback, scope) {
  * Handler for the alert close button click event.
  * Closes the alert box.
  */
-HTMLApp.prototype.alertCloseClick = function() {
+App.prototype.alertCloseClick = function() {
     document.getElementById("alert").style.display = "none";
 };
 
@@ -616,7 +616,7 @@ HTMLApp.prototype.alertCloseClick = function() {
  * @listens Manager#statechange
  * @param {event} e
  */
-HTMLApp.prototype.stateChange = function(e) {
+App.prototype.stateChange = function(e) {
     this.autoBake();
 
     // Update the current history state (not creating a new one)
@@ -633,7 +633,7 @@ HTMLApp.prototype.stateChange = function(e) {
  *
  * @param {event} e
  */
-HTMLApp.prototype.popState = function(e) {
+App.prototype.popState = function(e) {
     if (window.location.href.split("#")[0] !== this.lastStateUrl) {
         this.loadURIParams();
     }
@@ -643,7 +643,7 @@ HTMLApp.prototype.popState = function(e) {
 /**
  * Function to call an external API from this view.
  */
-HTMLApp.prototype.callApi = function(url, type, data, dataType, contentType) {
+App.prototype.callApi = function(url, type, data, dataType, contentType) {
     type = type || "POST";
     data = data || {};
     dataType = dataType || undefined;
@@ -674,3 +674,5 @@ HTMLApp.prototype.callApi = function(url, type, data, dataType, contentType) {
         response: response
     };
 };
+
+export default App;

@@ -1,4 +1,4 @@
-var Utils = require("../core/Utils.js");
+import Utils from "../core/Utils.js";
 
 
 /**
@@ -9,9 +9,9 @@ var Utils = require("../core/Utils.js");
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  */
-var HighlighterWaiter = module.exports = function(app) {
+var HighlighterWaiter = function(app) {
     this.app = app;
 
     this.mouseButtonDown = false;
@@ -507,3 +507,5 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     highlighter.scrollTop = textarea.scrollTop;
     highlighter.scrollLeft = textarea.scrollLeft;
 };
+
+export default HighlighterWaiter;

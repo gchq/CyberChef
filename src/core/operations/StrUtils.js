@@ -1,5 +1,5 @@
-var Utils = require("../Utils.js"),
-    JsDiff = require("diff");
+import Utils from "../Utils.js";
+import JsDiff from "diff";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var StrUtils = module.exports = {
+const StrUtils = {
 
     /**
      * @constant
@@ -538,3 +538,5 @@ var StrUtils = module.exports = {
     },
 
 };
+
+export default StrUtils;

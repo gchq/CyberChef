@@ -6,7 +6,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-var TestRegister = require("../../TestRegister.js");
+import TestRegister from "../../TestRegister.js";
 
 TestRegister.addTests([
     {

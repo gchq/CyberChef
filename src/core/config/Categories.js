@@ -17,7 +17,7 @@
  * @constant
  * @type {CatConf[]}
  */
-var Categories = module.exports = [
+const Categories = [
     {
         name: "Favourites",
         ops: []
@@ -291,3 +291,5 @@ var Categories = module.exports = [
         ]
     },
 ];
+
+export default Categories;

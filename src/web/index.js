@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-var HTMLApp = require("./HTMLApp.js"),
-    Categories = require("../core/config/Categories.js"),
-    OperationConfig = require("../core/config/OperationConfig.js"),
-    CanvasComponents = require("../core/lib/canvascomponents.js");
+import App from "./App.js";
+import Categories from "../core/config/Categories.js";
+import OperationConfig from "../core/config/OperationConfig.js";
+import CanvasComponents from "../core/lib/canvascomponents.js";
 
 /**
  * Main function used to build the CyberChef web app.
@@ -38,7 +38,7 @@ var main = function() {
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
-    window.app = new HTMLApp(Categories, OperationConfig, defaultFavourites, defaultOptions);
+    window.app = new App(Categories, OperationConfig, defaultFavourites, defaultOptions);
     window.app.setup();
 };
 

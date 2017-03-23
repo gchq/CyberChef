@@ -1,6 +1,6 @@
-var esprima = require("esprima"),
-    escodegen = require("escodegen"),
-    esmangle = require("esmangle");
+import esprima from "esprima";
+import escodegen from "escodegen";
+import esmangle from "esmangle";
 
 
 /**
@@ -12,7 +12,7 @@ var esprima = require("esprima"),
  *
  * @namespace
  */
-var JS = module.exports = {
+const JS = {
 
     /**
      * @constant
@@ -160,3 +160,5 @@ var JS = module.exports = {
     },
 
 };
+
+export default JS;

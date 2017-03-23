@@ -1,12 +1,12 @@
-var WindowWaiter      = require("./WindowWaiter.js"),
-    ControlsWaiter    = require("./ControlsWaiter.js"),
-    RecipeWaiter      = require("./RecipeWaiter.js"),
-    OperationsWaiter  = require("./OperationsWaiter.js"),
-    InputWaiter       = require("./InputWaiter.js"),
-    OutputWaiter      = require("./OutputWaiter.js"),
-    OptionsWaiter     = require("./OptionsWaiter.js"),
-    HighlighterWaiter = require("./HighlighterWaiter.js"),
-    SeasonalWaiter    = require("./SeasonalWaiter.js");
+import WindowWaiter from "./WindowWaiter.js";
+import ControlsWaiter from "./ControlsWaiter.js";
+import RecipeWaiter from "./RecipeWaiter.js";
+import OperationsWaiter from "./OperationsWaiter.js";
+import InputWaiter from "./InputWaiter.js";
+import OutputWaiter from "./OutputWaiter.js";
+import OptionsWaiter from "./OptionsWaiter.js";
+import HighlighterWaiter from "./HighlighterWaiter.js";
+import SeasonalWaiter from "./SeasonalWaiter.js";
 
 
 /**
@@ -17,9 +17,9 @@ var WindowWaiter      = require("./WindowWaiter.js"),
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  */
-var Manager = module.exports = function(app) {
+var Manager = function(app) {
     this.app = app;
 
     // Define custom events
@@ -274,3 +274,5 @@ Manager.prototype.dynamicListenerHandler = function(e) {
         }
     }
 };
+
+export default Manager;

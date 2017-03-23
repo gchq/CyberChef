@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var MAC = module.exports = {
+const MAC = {
 
     /**
      * @constant
@@ -86,3 +86,5 @@ var MAC = module.exports = {
     },
 
 };
+
+export default MAC;

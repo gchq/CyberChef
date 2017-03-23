@@ -1,4 +1,4 @@
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -10,7 +10,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Entropy = module.exports = {
+const Entropy = {
 
     /**
      * @constant
@@ -167,3 +167,5 @@ var Entropy = module.exports = {
     },
 
 };
+
+export default Entropy;

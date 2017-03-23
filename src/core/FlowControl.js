@@ -1,5 +1,5 @@
-var Recipe = require("./Recipe.js"),
-    Dish = require("./Dish.js");
+import Recipe from "./Recipe.js";
+import Dish from "./Dish.js";
 
 
 /**
@@ -11,7 +11,7 @@ var Recipe = require("./Recipe.js"),
  *
  * @namespace
  */
-var FlowControl = module.exports = {
+const FlowControl = {
 
     /**
      * @constant
@@ -186,3 +186,5 @@ var FlowControl = module.exports = {
     },
 
 };
+
+export default FlowControl;

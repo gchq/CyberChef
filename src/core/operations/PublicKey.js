@@ -1,5 +1,5 @@
-var Utils = require("../Utils.js"),
-    r = require("jsrsasign");
+import Utils from "../Utils.js";
+import * as r from "jsrsasign";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("../Utils.js"),
  *
  * @namespace
  */
-var PublicKey = module.exports = {
+const PublicKey = {
 
     /**
      * @constant
@@ -335,6 +335,8 @@ var PublicKey = module.exports = {
     },
 
 };
+
+export default PublicKey;
 
 
 /**

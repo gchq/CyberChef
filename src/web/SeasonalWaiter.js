@@ -6,10 +6,10 @@
  * @license Apache-2.0
  *
  * @constructor
- * @param {HTMLApp} app - The main view object for CyberChef.
+ * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var SeasonalWaiter = module.exports = function(app, manager) {
+var SeasonalWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 };
@@ -150,3 +150,5 @@ SeasonalWaiter.treeWalk = (function() {
         }
     };
 })();
+
+export default SeasonalWaiter;

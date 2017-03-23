@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var NetBIOS = module.exports = {
+const NetBIOS = {
 
     /**
      * @constant
@@ -55,3 +55,5 @@ var NetBIOS = module.exports = {
     },
 
 };
+
+export default NetBIOS;

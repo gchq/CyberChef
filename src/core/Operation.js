@@ -1,5 +1,5 @@
-var Dish = require("./Dish.js"),
-    Ingredient = require("./Ingredient.js");
+import Dish from "./Dish.js";
+import Ingredient from "./Ingredient.js";
 
 
 /**
@@ -13,7 +13,7 @@ var Dish = require("./Dish.js"),
  * @param {string} operationName
  * @param {Object} operationConfig
  */
-var Operation = module.exports = function(operationName, operationConfig) {
+var Operation = function(operationName, operationConfig) {
     this.name             = operationName;
     this.description      = "";
     this.inputType        = -1;
@@ -159,3 +159,5 @@ Operation.prototype.isDisabled = function() {
 Operation.prototype.isFlowControl = function() {
     return this.flowControl;
 };
+
+export default Operation;

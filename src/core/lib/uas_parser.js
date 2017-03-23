@@ -24,11 +24,10 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-"use strict";
 
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
-var UAS_parser = {
+const UAS_parser = {
 	
 	parse: function (userAgent) {
 		var result = {
@@ -135,7 +134,7 @@ var UAS_parser = {
 	}
 };
 
-var UAS_cache = {
+const UAS_cache = {
 	version: '20131025-01',
 	robots: {
 		'3': {
@@ -25817,3 +25816,6 @@ var UAS_cache = {
 		]
 	}
 };
+
+export {UAS_parser, UAS_cache};
+export default UAS_parser;

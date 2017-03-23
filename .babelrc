@@ -5,7 +5,8 @@
                 "chrome": 40,
                 "firefox": 35,
                 "edge": 14
-            }
+            },
+            "modules": false
         }]
     ]
 }

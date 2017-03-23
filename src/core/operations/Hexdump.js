@@ -1,5 +1,5 @@
 /* globals app */
-var Utils = require("../Utils.js");
+import Utils from "../Utils.js";
 
 
 /**
@@ -11,7 +11,7 @@ var Utils = require("../Utils.js");
  *
  * @namespace
  */
-var Hexdump = module.exports = {
+const Hexdump = {
 
     /**
      * @constant
@@ -198,3 +198,5 @@ var Hexdump = module.exports = {
     },
 
 };
+
+export default Hexdump;

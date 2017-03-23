@@ -1,5 +1,5 @@
-var Operation = require("./Operation.js");
-// OperationConfig required at the bottom of this file to prevent circular dependency errors
+import Operation from "./Operation.js";
+import OperationConfig from "./config/OperationConfig.js";
 
 
 /**
@@ -12,7 +12,7 @@ var Operation = require("./Operation.js");
  * @class
  * @param {Object} recipeConfig
  */
-var Recipe = module.exports = function(recipeConfig) {
+var Recipe = function(recipeConfig) {
     this.opList = [];
 
     if (recipeConfig) {
@@ -217,7 +217,4 @@ Recipe.prototype.fromString = function(recipeStr) {
     this._parseConfig(recipeConfig);
 };
 
-
-// Required here to prevent circular dependency where Recipe returns an empty object
-// See http://stackoverflow.com/a/30390378
-var OperationConfig = require("./config/OperationConfig.js");
+export default Recipe;

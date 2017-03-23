@@ -1,4 +1,4 @@
-var Utils = require("./Utils.js");
+import Utils from "./Utils.js";
 
 
 /**
@@ -12,7 +12,7 @@ var Utils = require("./Utils.js");
  * @param {byteArray|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
-var Dish = module.exports = function(value, type) {
+var Dish = function(value, type) {
     this.value = value || typeof value == "string" ? value : null;
     this.type  = type || Dish.BYTE_ARRAY;
 };
@@ -203,3 +203,5 @@ Dish.prototype.valid = function() {
             return false;
     }
 };
+
+export default Dish;

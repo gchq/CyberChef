@@ -30,7 +30,7 @@
  *
  * @namespace
  */
-var QuotedPrintable = module.exports = {
+const QuotedPrintable = {
 
     /**
      * To Quoted Printable operation.
@@ -268,3 +268,5 @@ var QuotedPrintable = module.exports = {
     },
 
 };
+
+export default QuotedPrintable;

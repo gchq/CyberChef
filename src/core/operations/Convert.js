@@ -7,7 +7,7 @@
  *
  * @namespace
  */
-var Convert = module.exports = {
+const Convert = {
 
     /**
      * @constant
@@ -410,3 +410,5 @@ var Convert = module.exports = {
     },
 
 };
+
+export default Convert;
