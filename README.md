@@ -5,6 +5,7 @@ This is a fork of original CyberChef by GCHQ. This project has implemented my ow
 ## Features
 
 - opeartion **nTcpdump**: tcpdump hexdump convert
+- operation **From 0x[Hex]**: e.g. <code>0x217e21</code> to <code>!~!</code>
 
 ## Todo
 

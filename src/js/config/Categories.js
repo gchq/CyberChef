@@ -28,6 +28,7 @@ var Categories = [
             "To Hexdump",
             "From Hexdump",
             "From nTcpdump",
+			"From 0x[Hex]",
             "To Hex",
             "From Hex",
             "To Charcode",

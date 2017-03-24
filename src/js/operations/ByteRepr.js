@@ -51,6 +51,24 @@ var ByteRepr = {
         var delim = args[0] || "Space";
         return Utils.fromHex(input, delim, 2);
     },
+	
+	
+	/**
+     * From 0xHex operation.
+     *
+     * @param {string} input (Starting with 0x only in the raw input)
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+	runFrom0xHex: function(input, args) {
+		var data = input.replace(/0x([0-9a-f]{2,})/ig, 
+		function(match, p1) {
+			if (p1) {
+				return Utils.byteArrayToChars(Utils.fromHex(p1));
+			};
+		});
+		return data;
+    },
 
 
     /**
