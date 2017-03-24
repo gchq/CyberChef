@@ -82,7 +82,6 @@ var ByteRepr = {
 		var data = input.replace(/cha?r\((\d{1,3})\)/ig, 
 		function(match, p1) {
 			if (p1) {
-				console.log(p1);
 				return Utils.byteArrayToChars([parseInt(p1)]);
 			};
 		});
