@@ -103,7 +103,7 @@ var Base64 = {
             enc3 = (chr2 >> 1) & 31;
             enc4 = ((chr2 & 1) << 4) | (chr3 >> 4);
             enc5 = ((chr3 & 15) << 1) | (chr4 >> 7);
-            enc6 = (chr4 >> 2) & 63;
+            enc6 = (chr4 >> 2) & 31;
             enc7 = ((chr4 & 3) << 3) | (chr5 >> 5);
             enc8 = chr5 & 31;
 
