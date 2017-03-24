@@ -166,7 +166,7 @@ var PGP = {
      *
      * @param {string} input - signed input to verify
      * @param {Object[]} args
-     * @returns {string} - "true" or "false" depending on the validity of the signature
+     * @returns {string} - the original message, and a summary of the verification process
      */
     runVerify: function (input, args) {
         var publicKey = args[0],
@@ -251,7 +251,7 @@ var PGP = {
      *
      * @param {string} input - data to be signed
      * @param {Object[]} args
-     * @returns {HTML}
+     * @returns {HTML} - HTML file display of message, armoured signature, and bytes signature
      */
     runSignDetached: function (input, args) {
         var privateKey = args[0],
@@ -314,11 +314,11 @@ var PGP = {
 
 
     /**
-     * Verifies the signature and input using PGP.
+     * Verifies the detached signature and input using PGP.
      *
      * @param {string} input - signed input to verify
      * @param {Object[]} args
-     * @returns {string} - "true" or "false" depending on the validity of the signature
+     * @returns {string} - the original message, and a summary of the verification process
      */
     runVerifyDetached: function (input, args) {
         var publicKey = args[0],
@@ -426,7 +426,7 @@ var PGP = {
      *
      * @param {string} input - signed input to verify
      * @param {Object[]} args
-     * @returns {string} - "true" or "false" depending on the validity of the signature
+     * @returns {string} - the original message, and a summary of the verification process
      */
     runVerifyCleartext: function (input, args) {
         var publicKey = args[0];
@@ -530,7 +530,7 @@ var PGP = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {HTML}
+     * @returns {HTML} - HTML file display of message, armoured signature, and bytes signature
      */
     runDetachClearsig: function (input, args) {
         return new Promise(function(resolve, reject) {
@@ -599,7 +599,7 @@ var PGP = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byteArray} - armoured public key and private key separated by whitespace.
+     * @returns {byteArray}
      */
     runRemoveArmour: function (input, args) {
         var decoded = openpgp.armor.decode(input);
