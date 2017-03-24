@@ -400,6 +400,15 @@ var OperationConfig = {
         outputType: "string",
         args: []
     },
+    "From Char(Hex)": {
+        description: "Converts a hexadecimal byte string back into a its raw value.<br><br>e.g. <code>chr(33)</code> becomes the UTF-8 encoded string <code>!</code>",
+        run: ByteRepr.runFromCharHex,
+        highlight: ByteRepr.highlightFrom,
+        highlightReverse: ByteRepr.highlightTo,
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
     "From Hex": {
         description: "Converts a hexadecimal byte string back into a its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
         run: ByteRepr.runFromHex,

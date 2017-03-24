@@ -69,6 +69,25 @@ var ByteRepr = {
 		});
 		return data;
     },
+	
+	
+	/**
+     * From char(hex) operation.
+     *
+     * @param {string} input (Starting with chr or char only in the raw input)
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+	runFromCharHex: function(input, args) {
+		var data = input.replace(/cha?r\((\d{1,3})\)/ig, 
+		function(match, p1) {
+			if (p1) {
+				console.log(p1);
+				return Utils.byteArrayToChars([parseInt(p1)]);
+			};
+		});
+		return data;
+    },
 
 
     /**
