@@ -4,7 +4,7 @@
  * PGP operations.
  *
  * @author tlwr [toby@toby.codes]
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2017
  * @license Apache-2.0
  *
  * @namespace
