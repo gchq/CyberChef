@@ -31,6 +31,7 @@ var Base64 = {
         {name: "Xxencoding: +-0-9A-Za-z", value: "+\\-0-9A-Za-z"},
         {name: "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r", value: "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"},
         {name: "ROT13: N-ZA-Mn-za-m0-9+/=", value: "N-ZA-Mn-za-m0-9+/="},
+        {name: "UNIX crypt: ./0-9A-Za-z", value: "./0-9A-Za-z"},
     ],
 
     /**

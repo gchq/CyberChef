@@ -209,6 +209,22 @@ var IP = {
                 output += "\nThis is a reserved multicast address.";
                 output += "\nMulticast addresses range: ff00::/8";
             }
+
+
+            // Detect possible EUI-64 addresses
+            if ((ipv6[5] & 0xff === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
+                output += "\n\nThis IPv6 address contains a modified EUI-64 address, identified by the presence of FF:FE in the 12th and 13th octets.";
+
+                var intIdent = Utils.hex(ipv6[4] >>> 8) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +
+                    Utils.hex(ipv6[5] >>> 8) + ":" + Utils.hex(ipv6[5] & 0xff) + ":" +
+                    Utils.hex(ipv6[6] >>> 8) + ":" + Utils.hex(ipv6[6] & 0xff) + ":" +
+                    Utils.hex(ipv6[7] >>> 8) + ":" + Utils.hex(ipv6[7] & 0xff),
+                    mac = Utils.hex((ipv6[4] >>> 8) ^ 2) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +
+                    Utils.hex(ipv6[5] >>> 8) + ":" + Utils.hex(ipv6[6] & 0xff) + ":" +
+                    Utils.hex(ipv6[7] >>> 8) + ":" + Utils.hex(ipv6[7] & 0xff);
+                output += "\nInterface identifier: " + intIdent +
+                    "\nMAC address:          " + mac;
+            }
         } else {
             return "Invalid IPv6 address";
         }
