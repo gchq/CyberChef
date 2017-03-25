@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-import "babel-polyfill";
+require("babel-polyfill");
 
 var Chef = require("../core/Chef.js").default;
 

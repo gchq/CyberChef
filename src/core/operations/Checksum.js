@@ -124,7 +124,7 @@ const Checksum = {
      * @returns {string}
      */
     runCRC32: function(input, args) {
-        var crcTable = window.crcTable || (window.crcTable = Checksum._genCRCTable()),
+        var crcTable = global.crcTable || (global.crcTable = Checksum._genCRCTable()),
             crc = 0 ^ (-1);
 
         for (var i = 0; i < input.length; i++) {
