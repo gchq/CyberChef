@@ -2,7 +2,7 @@ import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser as dom} from "xmldom";
 import xpath from "xpath";
-import prettyPrintOne from "exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js";
+import prettyPrintOne from "imports-loader?window=>global!exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js";
 
 
 /**

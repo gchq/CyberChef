@@ -8,6 +8,8 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
+import "babel-polyfill";
+
 import TestRegister from "./TestRegister.js";
 import "./tests/operations/Base58.js";
 import "./tests/operations/Compress.js";

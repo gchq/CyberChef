@@ -210,32 +210,20 @@ module.exports = function (grunt) {
             },
             tests: {
                 target: "node",
-                entry: ["babel-polyfill", "./test/TestRunner.js"],
+                entry: "./test/index.js",
                 output: {
                     filename: "index.js",
                     path: "build/test"
-                },
-                module: {
-                    loaders: [{
-                        test: /prettify\.min\.js$/,
-                        use: "imports-loader?window=>global"
-                    }]
                 }
             },
             node: {
                 target: "node",
-                entry: ["babel-polyfill", "./src/node/index.js"],
+                entry: "./src/node/index.js",
                 output: {
                     filename: "CyberChef.js",
                     path: "build/node",
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
-                },
-                module: {
-                    loaders: [{
-                        test: /prettify\.min\.js$/,
-                        use: "imports-loader?window=>global"
-                    }]
                 }
             }
         },
