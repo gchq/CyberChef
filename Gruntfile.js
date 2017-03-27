@@ -222,7 +222,7 @@ module.exports = function (grunt) {
                 entry: "./src/web/index.js",
                 output: {
                     filename: "scripts.js",
-                    path: "build/dev"
+                    path: __dirname + "/build/dev"
                 },
                 plugins: [
                     new HtmlWebpackPlugin({
@@ -239,7 +239,7 @@ module.exports = function (grunt) {
                 entry: "./src/web/index.js",
                 output: {
                     filename: "scripts.js",
-                    path: "build/prod"
+                    path: __dirname + "/build/prod"
                 },
                 plugins: [
                     new webpack.optimize.UglifyJsPlugin({
@@ -278,45 +278,12 @@ module.exports = function (grunt) {
                     }),
                 ]
             },
-            // webInline: {
-            //     target: "web",
-            //     entry: "./src/web/index.js",
-            //     output: {
-            //         filename: "scripts.js",
-            //         path: "build/prod"
-            //     },
-            //     plugins: [
-            //         new webpack.optimize.UglifyJsPlugin({
-            //             compress: {
-            //                 "screw_ie8": true,
-            //                 "dead_code": true,
-            //                 "unused": true,
-            //                 "warnings": false
-            //             },
-            //             comments: false,
-            //         }),
-            //         new HtmlWebpackPlugin({
-            //             filename: "cyberchef.htm",
-            //             template: "./src/web/html/index.html",
-            //             compileTime: compileTime,
-            //             codebaseStats: codebaseStats,
-            //             inline: true,
-            //             minify: {
-            //                 removeComments: true,
-            //                 collapseWhitespace: true,
-            //                 minifyJS: true,
-            //                 minifyCSS: true
-            //             }
-            //         }),
-            //         new StyleExtHtmlWebpackPlugin()
-            //     ]
-            // },
             tests: {
                 target: "node",
                 entry: "./test/index.js",
                 output: {
                     filename: "index.js",
-                    path: "build/test"
+                    path: __dirname + "/build/test"
                 }
             },
             node: {
@@ -324,7 +291,7 @@ module.exports = function (grunt) {
                 entry: "./src/node/index.js",
                 output: {
                     filename: "CyberChef.js",
-                    path: "build/node",
+                    path: __dirname + "/build/node",
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
                 }
@@ -344,18 +311,6 @@ module.exports = function (grunt) {
                 dest: "build/prod/index.html"
             }
         },
-        // inline: {
-        //     options: {
-        //         tag: "",
-        //         inlineTagAttributes: {
-        //             js: "type='application/javascript'",
-        //             css: "type='text/css'"
-        //         }
-        //     },
-        //     compiled: {
-        //         src: "build/prod/cyberchef.htm"
-        //     }
-        // },
         chmod: {
             build: {
                 options: {
