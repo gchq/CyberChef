@@ -59,4 +59,7 @@ window.console = console || {log: function() {}, error: function() {}};
 window.compileTime = moment.tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
 window.compileMessage = COMPILE_MSG;
 
+// Make libs available to operation outputs
+window.CanvasComponents = CanvasComponents;
+
 document.addEventListener("DOMContentLoaded", main, false);
