@@ -1,4 +1,4 @@
-128	source files
+129	source files
 49196	lines
 1.9M	size
 
@@ -6,7 +6,7 @@
 21013	lines
 788K	size
 
-	uncompressed JavaScript size
+4.7M	uncompressed JavaScript size
 	compressed JavaScript size
 
 15	categories

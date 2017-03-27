@@ -121,7 +121,7 @@ module.exports = function (grunt) {
             options: {
                 configFile: "src/.eslintrc.json"
             },
-            gruntfile: ["Gruntfile.js"],
+            configs: ["Gruntfile.js"],
             core: ["src/core/**/*.js", "!src/core/lib/**/*"],
             web: ["src/web/**/*.js"],
             node: ["src/node/**/*.js"],

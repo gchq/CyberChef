@@ -23,4 +23,15 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Diff, basic usage",
+        input: "testing23\n\ntesting123",
+        expectedOutput: "testing<span class='hlgreen'>1</span>23",
+        recipeConfig: [
+            {
+                "op": "Diff",
+                "args": ["\\n\\n", "Character", true, true, false]
+            }
+        ],
+    },
 ]);

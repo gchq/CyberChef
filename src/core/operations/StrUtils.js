@@ -1,5 +1,5 @@
 import Utils from "../Utils.js";
-import JsDiff from "diff";
+import * as JsDiff from "diff";
 
 
 /**
