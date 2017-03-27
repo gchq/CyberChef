@@ -432,7 +432,7 @@ var OperationConfig = {
             {
                 name: "Delimiter",
                 type: "option",
-                value: ByteRepr.OCT_DELIM_OPTIONS
+                value: ByteRepr.DELIM_OPTIONS
             }
         ]
     },
@@ -447,7 +447,7 @@ var OperationConfig = {
             {
                 name: "Delimiter",
                 type: "option",
-                value: ByteRepr.OCT_DELIM_OPTIONS
+                value: ByteRepr.DELIM_OPTIONS
             }
         ]
     },

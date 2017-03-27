@@ -25,11 +25,6 @@ var ByteRepr = {
      * @constant
      * @default
      */
-    OCT_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF"],
-    /**
-     * @constant
-     * @default
-     */
     BIN_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "None"],
 
     /**
@@ -67,8 +62,10 @@ var ByteRepr = {
      * @returns {string}
      */
     runToOct: function(input, args) {
-        var delim = Utils.charRep[args[0] || "Space"];
-        return Utils.toOct(input, delim, 2);
+        var delim = Utils.charRep[args[0] || "Space"],
+            output = "";
+        input.map(val => output += (parseInt(Utils.bin(val), 2).toString(8) + delim));
+        return output.slice(0, -delim.length);
     },
 
     /**
@@ -81,7 +78,7 @@ var ByteRepr = {
      */
     runFromOct: function(input, args) {
         var delim = Utils.charRep[args[0] || "Space"];
-        return Utils.fromOct(input, delim);
+        return input.split(delim).map(val => parseInt(val, 8));
     },
 
     /**

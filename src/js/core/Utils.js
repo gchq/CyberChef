@@ -829,38 +829,6 @@ var Utils = {
 
 
     /**
-     * Convert an byte array into a octal string
-     *
-     * @author Matt C [matt@artemisbot.pw]
-     * @param {byteArray} data
-     * @param {string} [delim]
-     * @returns {string}
-     *
-     */
-    toOct: function(data, delim) {
-        var output = "";
-        delim = delim || "Space";
-        data.map(val => output += (parseInt(Utils.bin(val), 2).toString(8) + delim));
-        return output.slice(0, -delim.length);
-    },
-
-
-    /**
-     * Convert an Octal string into a byte array.
-     *
-     * @author Matt C [matt@artemisbot.pw]
-     * @param {string} data
-     * @param {string} [delim]
-     * @returns {byteArray}
-     *
-     */
-    fromOct: function(data, delim) {
-        delim = delim || "Space";
-        return data.split(delim).map(val => parseInt(val, 8));
-    },
-
-
-    /**
      * Parses CSV data and returns it as a two dimensional array or strings.
      *
      * @param {string} data
