@@ -327,9 +327,8 @@ const Compress = {
             files = [];
 
         filenames.forEach(function(fileName) {
-            var contents = unzip.decompress(fileName);
-
-            contents = Utils.byteArrayToUtf8(contents);
+            var bytes = unzip.decompress(fileName);
+            var contents = Utils.byteArrayToUtf8(bytes);
 
             var file = {
                 fileName: fileName,
@@ -338,6 +337,7 @@ const Compress = {
 
             var isDir = contents.length === 0 && fileName.endsWith("/");
             if (!isDir) {
+                file.bytes = bytes;
                 file.contents = contents;
             }
 
@@ -495,6 +495,13 @@ const Compress = {
             this.position = 0;
         };
 
+        Stream.prototype.getBytes = function(bytesToGet) {
+            var newPosition = this.position + bytesToGet;
+            var bytes = this.bytes.slice(this.position, newPosition);
+            this.position = newPosition;
+            return bytes;
+        };
+
         Stream.prototype.readString = function(numBytes) {
             var result = "";
             for (var i = this.position; i < this.position + numBytes; i++) {
@@ -553,11 +560,9 @@ const Compress = {
                     endPosition += 512 - (file.size % 512);
                 }
 
-                file.contents = "";
-
-                while (stream.position < endPosition) {
-                    file.contents += stream.readString(512);
-                }
+                file.bytes = stream.getBytes(file.size);
+                file.contents = Utils.byteArrayToUtf8(file.bytes);
+                stream.position = endPosition;
             } else if (file.type === "5") {
                 // Directory
                 files.push(file);

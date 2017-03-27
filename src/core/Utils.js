@@ -1029,20 +1029,37 @@ const Utils = {
         };
 
         var formatFile = function(file, i) {
+            var blob = new Blob(
+                [new Uint8Array(file.bytes)],
+                {type: "octet/stream"}
+            );
+            var blobUrl = URL.createObjectURL(blob);
+
+            var downloadAnchorElem = "<a href='" + blobUrl + "' " +
+                "title='Download " + Utils.escapeHtml(file.fileName) + "' " +
+                "download='" + Utils.escapeHtml(file.fileName) + "'>\u21B4</a>";
+
+            var expandFileContentsElem = "<a href='#collapse" + i + "' " +
+                "class='collapsed' " +
+                "data-toggle='collapse' " +
+                "aria-expanded='true' " +
+                "aria-controls='collapse" + i + "' " +
+                "title=\"Show/hide contents of '" + Utils.escapeHtml(file.fileName) + "'\">&#x1F50D</a>";
+
             var html = "<div class='panel panel-default'>" +
                        "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
                        "<h4 class='panel-title'>" +
-                       "<a class='collapsed' role='button' data-toggle='collapse' " +
-                       "href='#collapse" + i + "' " +
-                       "aria-expanded='true' aria-controls='collapse" + i +"'>" +
-                       file.fileName +
+                       "<div>" +
+                       Utils.escapeHtml(file.fileName) +
+                       " " +  expandFileContentsElem +
+                       " " + downloadAnchorElem +
                        "<span class='pull-right'>" +
                        // These are for formatting when stripping HTML
                        "<span style='display: none'>\n</span>" +
                        file.size.toLocaleString() + " bytes" +
                        "<span style='display: none'>\n</span>" +
                        "</span>" +
-                       "</a>" +
+                       "</div>" +
                        "</h4>" +
                        "</div>" +
                        "<div id='collapse" + i + "' class='panel-collapse collapse' " +
