@@ -1,5 +1,7 @@
 var webpack = require("webpack"),
-    ExtractTextPlugin = require("extract-text-webpack-plugin");
+    ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    HtmlWebpackPlugin = require("html-webpack-plugin"),
+    Inliner = require("web-resource-inliner");
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -8,7 +10,7 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "copy:htmlDev", "copy:staticDev", "chmod:build", "webpack:webDev", "watch"]);
+        ["clean:dev", "webpack:webDev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
@@ -16,16 +18,15 @@ module.exports = function (grunt) {
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean:test", "webpack:tests", "chmod:build", "execute:test"]);
-
-    grunt.registerTask("prod",
-        "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "test", "exec:stats", "clean", "jsdoc", "webpack:webProd", "copy:htmlDev", "copy:htmlProd", "copy:htmlInline",
-         "copy:staticDev", "copy:staticProd", "cssmin", "inline", "htmlmin", "chmod"]);
+        ["clean:test", "webpack:tests", "execute:test"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
         ["clean:docs", "jsdoc", "chmod:docs"]);
+
+    grunt.registerTask("prod",
+        "Creates a production-ready build. Use the --msg flag to add a compile message.",
+        ["eslint", "test", "clean:prod", "clean:docs", "jsdoc", "exec:stats", "webpack:webProd", "inline", "chmod"]);
 
     grunt.registerTask("stats",
         "Provides statistics about the code base such as how many lines there are as well as details of file sizes before and after compression.",
@@ -39,6 +40,10 @@ module.exports = function (grunt) {
         "Lints the code base and shows stats",
         ["eslint", "exec:stats", "exec:displayStats"]);
 
+    grunt.registerTask("inline",
+        "Compiles a production build of CyberChef into a single, portable web page.",
+        runInliner);
+
     grunt.registerTask("doc", "docs");
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
@@ -46,20 +51,18 @@ module.exports = function (grunt) {
 
     // Load tasks provided by each plugin
     grunt.loadNpmTasks("grunt-eslint");
+    grunt.loadNpmTasks("grunt-webpack");
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-webpack");
     grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-contrib-cssmin");
-    grunt.loadNpmTasks("grunt-contrib-htmlmin");
-    grunt.loadNpmTasks("grunt-inline-alt");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-execute");
-    grunt.loadNpmTasks("grunt-contrib-watch");
 
 
+    // Project configuration
     var compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
+        codebaseStats = grunt.file.read("src/web/static/stats.txt").split("\n").join("<br>"),
         banner = "/**\n" +
             "* CyberChef - The Cyber Swiss Army Knife\n" +
             "*\n" +
@@ -81,16 +84,39 @@ module.exports = function (grunt) {
             "* limitations under the License.\n" +
             "*/\n";
 
-    var templateOptions = {
-        data: {
-            compileTime: compileTime,
-            compileMsg: grunt.option("compile-msg") || grunt.option("msg") || "",
-            codebaseStats: grunt.file.read("src/web/static/stats.txt").split("\n").join("<br>")
-        }
-    };
+    /**
+     * Compiles a production build of CyberChef into a single, portable web page.
+     */
+    function runInliner() {
+        var inlinerError = false;
+        Inliner.html({
+            relativeTo: "build/prod/",
+            fileContent: grunt.file.read("build/prod/cyberchef.htm"),
+            images: true,
+            svgs: true,
+            scripts: true,
+            links: true,
+            strict: true
+        }, function(error, result) {
+            if (error) {
+                console.log(error);
+                inlinerError = true;
+                return false;
+            }
+            grunt.file.write("build/prod/cyberchef.htm", result);
+        });
 
-    // Project configuration
+        return !inlinerError;
+    }
+
     grunt.initConfig({
+        clean: {
+            dev: ["build/dev/*"],
+            prod: ["build/prod/*"],
+            test: ["build/test/*"],
+            node: ["build/node/*"],
+            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
+        },
         eslint: {
             options: {
                 configFile: "src/.eslintrc.json"
@@ -116,13 +142,6 @@ module.exports = function (grunt) {
                 ],
             }
         },
-        clean: {
-            dev: ["build/dev/*"],
-            prod: ["build/prod/*"],
-            test: ["build/test/*"],
-            node: ["build/node/*"],
-            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
-        },
         webpack: {
             options: {
                 plugins: [
@@ -132,9 +151,9 @@ module.exports = function (grunt) {
                         moment: "moment-timezone"
                     }),
                     new webpack.BannerPlugin({
-                        "banner": banner,
-                        "raw": true,
-                        "entryOnly": true
+                        banner: banner,
+                        raw: true,
+                        entryOnly: true
                     }),
                     new webpack.DefinePlugin({
                         COMPILE_TIME: JSON.stringify(compileTime),
@@ -148,37 +167,54 @@ module.exports = function (grunt) {
                     }
                 },
                 module: {
-                    loaders: [
+                    rules: [
                         {
                             test: /\.js$/,
                             exclude: /node_modules/,
                             loader: "babel-loader?compact=false"
-                        }
-                    ],
-                    rules: [
+                        },
                         {
                             test: /\.css$/,
                             use: ExtractTextPlugin.extract({
-                                use: "css-loader"
+                                use: "css-loader?minimize"
                             })
                         },
                         {
                             test: /\.less$/,
                             use: ExtractTextPlugin.extract({
                                 use: [
-                                    { loader: "css-loader" },
+                                    { loader: "css-loader?minimize" },
                                     { loader: "less-loader" }
                                 ]
                             })
                         },
                         {
-                            test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+                            test: /\.(ico|eot|ttf|woff|woff2)$/,
                             loader: "url-loader",
                             options: {
                                 limit: 10000
                             }
-                        }
+                        },
+                        { // First party images are saved as files to be cached
+                            test: /\.(png|jpg|gif|svg)$/,
+                            exclude: /node_modules/,
+                            loader: "file-loader",
+                            options: {
+                                name: "images/[name].[ext]"
+                            }
+                        },
+                        { // Third party images are inlined
+                            test: /\.(png|jpg|gif|svg)$/,
+                            exclude: /web\/static/,
+                            loader: "url-loader",
+                            options: {
+                                limit: 10000
+                            }
+                        },
                     ]
+                },
+                stats: {
+                    children: false
                 }
             },
             webDev: {
@@ -187,7 +223,16 @@ module.exports = function (grunt) {
                 output: {
                     filename: "scripts.js",
                     path: "build/dev"
-                }
+                },
+                plugins: [
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        compileTime: compileTime,
+                        codebaseStats: codebaseStats
+                    })
+                ],
+                watch: true
             },
             webProd: {
                 target: "web",
@@ -206,8 +251,66 @@ module.exports = function (grunt) {
                         },
                         comments: false,
                     }),
+                    new HtmlWebpackPlugin({ // Main version
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        compileTime: compileTime,
+                        codebaseStats: codebaseStats,
+                        minify: {
+                            removeComments: true,
+                            collapseWhitespace: true,
+                            minifyJS: true,
+                            minifyCSS: true
+                        }
+                    }),
+                    new HtmlWebpackPlugin({ // Inline version
+                        filename: "cyberchef.htm",
+                        template: "./src/web/html/index.html",
+                        compileTime: compileTime,
+                        codebaseStats: codebaseStats,
+                        inline: true,
+                        minify: {
+                            removeComments: true,
+                            collapseWhitespace: true,
+                            minifyJS: true,
+                            minifyCSS: true
+                        }
+                    }),
                 ]
             },
+            // webInline: {
+            //     target: "web",
+            //     entry: "./src/web/index.js",
+            //     output: {
+            //         filename: "scripts.js",
+            //         path: "build/prod"
+            //     },
+            //     plugins: [
+            //         new webpack.optimize.UglifyJsPlugin({
+            //             compress: {
+            //                 "screw_ie8": true,
+            //                 "dead_code": true,
+            //                 "unused": true,
+            //                 "warnings": false
+            //             },
+            //             comments: false,
+            //         }),
+            //         new HtmlWebpackPlugin({
+            //             filename: "cyberchef.htm",
+            //             template: "./src/web/html/index.html",
+            //             compileTime: compileTime,
+            //             codebaseStats: codebaseStats,
+            //             inline: true,
+            //             minify: {
+            //                 removeComments: true,
+            //                 collapseWhitespace: true,
+            //                 minifyJS: true,
+            //                 minifyCSS: true
+            //             }
+            //         }),
+            //         new StyleExtHtmlWebpackPlugin()
+            //     ]
+            // },
             tests: {
                 target: "node",
                 entry: "./test/index.js",
@@ -228,134 +331,37 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            htmlDev: {
-                options: {
-                    process: function (content, srcpath) {
-                        return grunt.template.process(content, templateOptions);
-                    }
-                },
-                src: "src/web/html/index.html",
-                dest: "build/dev/index.html"
-            },
-            htmlProd: {
-                options: {
-                    process: function (content, srcpath) {
-                        return grunt.template.process(content, templateOptions);
-                    }
-                },
-                src: "src/web/html/index.html",
-                dest: "build/prod/index.html"
-            },
-            htmlInline: {
-                options: {
-                    process: function (content, srcpath) {
-                        // TODO: Do all this in Jade
-                        content = content.replace(
-                            '<a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="images/download-24x24.png" /></a>',
-                            '<span style="float: left; margin-left: 10px;">Compile time: ' + grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC</span>");
-                        return grunt.template.process(content, templateOptions);
-                    }
-                },
-                src: "src/web/html/index.html",
-                dest: "build/prod/cyberchef.htm"
-            },
-            staticDev: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "src/web/static/",
-                        src: [
-                            "**/*",
-                            "**/.*",
-                            "!stats.txt",
-                            "!ga.html"
-                        ],
-                        dest: "build/dev/"
-                    }
-                ]
-            },
-            staticProd: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "src/web/static/",
-                        src: [
-                            "**/*",
-                            "**/.*",
-                            "!stats.txt",
-                            "!ga.html"
-                        ],
-                        dest: "build/prod/"
-                    }
-                ]
-            },
             ghPages: {
                 options: {
                     process: function (content, srcpath) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
                             grunt.file.read("src/static/ga.html") + "</body></html>");
-                        return grunt.template.process(content, templateOptions);
+                        return grunt.template.process(content);
                     }
                 },
                 src: "build/prod/index.html",
                 dest: "build/prod/index.html"
             }
         },
-        cssmin: {
-            prod: {
-                src: "build/dev/styles.css",
-                dest: "build/prod/styles.css"
-            }
-        },
-        htmlmin: {
-            prod: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true,
-                    minifyJS: true,
-                    minifyCSS: true
-                },
-                src: "build/prod/index.html",
-                dest: "build/prod/index.html"
-            },
-            inline: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true,
-                    minifyJS: false,
-                    minifyCSS: false
-                },
-                src: "build/prod/cyberchef.htm",
-                dest: "build/prod/cyberchef.htm"
-            }
-        },
-        inline: {
-            options: {
-                tag: "",
-                inlineTagAttributes: {
-                    js: "type='application/javascript'",
-                    css: "type='text/css'"
-                }
-            },
-            compiled: {
-                src: "build/prod/cyberchef.htm",
-                dest: "build/prod/cyberchef.htm"
-            },
-            prod: {
-                options: {
-                    tag: "__inline"
-                },
-                src: "build/prod/index.html",
-                dest: "build/prod/index.html"
-            }
-        },
+        // inline: {
+        //     options: {
+        //         tag: "",
+        //         inlineTagAttributes: {
+        //             js: "type='application/javascript'",
+        //             css: "type='text/css'"
+        //         }
+        //     },
+        //     compiled: {
+        //         src: "build/prod/cyberchef.htm"
+        //     }
+        // },
         chmod: {
             build: {
                 options: {
                     mode: "755",
                 },
-                src: ["build/**/*", "build/**/.htaccess", "build/"]
+                src: ["build/**/*", "build/"]
             },
             docs: {
                 options: {
@@ -411,28 +417,6 @@ module.exports = function (grunt) {
         },
         execute: {
             test: "build/test/index.js"
-        },
-        watch: {
-            css: {
-                files: ["src/web/css/**/*.css", "src/web/css/**/*.less"],
-                tasks: ["webpack:webDev", "chmod:build"]
-            },
-            js: {
-                files: "src/**/*.js",
-                tasks: ["webpack:webDev", "chmod:build"]
-            },
-            html: {
-                files: "src/web/html/**/*.html",
-                tasks: ["copy:htmlDev", "chmod:build"]
-            },
-            static: {
-                files: ["src/web/static/**/*", "src/web/static/**/.*"],
-                tasks: ["copy:staticDev", "chmod:build"]
-            },
-            grunt: {
-                files: "Gruntfile.js",
-                tasks: ["clean:dev", "webpack:webDev", "copy:htmlDev", "copy:staticDev", "chmod:build"]
-            }
         },
     });
 
