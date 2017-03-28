@@ -62,10 +62,8 @@ var ByteRepr = {
      * @returns {string}
      */
     runToOct: function(input, args) {
-        var delim = Utils.charRep[args[0] || "Space"],
-            output = "";
-        input.map(val => output += (parseInt(Utils.bin(val), 2).toString(8) + delim));
-        return output.slice(0, -delim.length);
+        var delim = Utils.charRep[args[0] || "Space"];
+        return input.map(val => parseInt(Utils.bin(val), 2).toString(8)).join(delim);
     },
 
     /**
@@ -78,6 +76,7 @@ var ByteRepr = {
      */
     runFromOct: function(input, args) {
         var delim = Utils.charRep[args[0] || "Space"];
+        if (input.length === 0) return [];
         return input.split(delim).map(val => parseInt(val, 8));
     },
 
