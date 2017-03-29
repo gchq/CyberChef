@@ -66,6 +66,15 @@ function handleTestResult(testResult) {
 }
 
 
+/**
+ * Fail if the process takes longer than 10 seconds.
+ */
+setTimeout(function() {
+    console.log("Tests took longer than 10 seconds to run, returning.");
+    process.exit(1);
+}, 1 * 1000);
+
+
 TestRegister.runTests()
     .then(function(results) {
         results.forEach(handleTestResult);
