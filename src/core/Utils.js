@@ -388,7 +388,7 @@ const Utils = {
         var wordArray = CryptoJS.enc.Utf8.parse(str),
             byteArray = Utils.wordArrayToByteArray(wordArray);
 
-        if (str.length !== wordArray.sigBytes)
+        if (window && str.length !== wordArray.sigBytes)
             window.app.options.attemptHighlight = false;
         return byteArray;
     },
@@ -440,7 +440,7 @@ const Utils = {
             var wordArray = new CryptoJS.lib.WordArray.init(words, byteArray.length),
                 str = CryptoJS.enc.Utf8.stringify(wordArray);
 
-            if (str.length !== wordArray.sigBytes)
+            if (window && str.length !== wordArray.sigBytes)
                 window.app.options.attemptHighlight = false;
             return str;
         } catch (err) {
