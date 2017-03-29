@@ -292,10 +292,6 @@
                                     <img src="<%- require('../static/images/bug-16x16.png') %>" />
                                     Report a bug
                                 </a></li>
-                                <li role="presentation"><a href="#stats" aria-controls="messages" role="tab" data-toggle="tab">
-                                    <img src="<%- require('../static/images/stats-16x16.png') %>" />
-                                    Stats
-                                </a></li>
                                 <li role="presentation"><a href="#about" aria-controls="messages" role="tab" data-toggle="tab">
                                     <img src="<%- require('../static/images/speech-16x16.png') %>" />
                                     About
@@ -347,11 +343,6 @@
                                     <pre id="report-bug-info"></pre>
                                     <br>
                                     <a class="btn btn-primary" href="https://github.com/gchq/CyberChef/issues/new" role="button">Raise issue on GitHub</a>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="stats">
-                                    <br>
-                                    <p>If you're a nerd like me, you might find statistics really fun! Here's some about the CyberChef code base:</p>
-                                    <br><pre><%= htmlWebpackPlugin.options.codebaseStats %></pre>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="about" style="padding: 20px;">
                                     <h4>What</h4>

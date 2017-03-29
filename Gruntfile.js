@@ -26,19 +26,15 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "test", "clean:prod", "clean:docs", "jsdoc", "exec:stats", "webpack:webProd", "inline", "chmod"]);
-
-    grunt.registerTask("stats",
-        "Provides statistics about the code base such as how many lines there are as well as details of file sizes before and after compression.",
-        ["webpack:webDev", "webpack:webProd", "exec:stats", "exec:repoSize", "exec:displayStats"]);
+        ["eslint", "test", "clean:prod", "clean:docs", "jsdoc", "webpack:webProd", "inline", "chmod"]);
 
     grunt.registerTask("release",
         "Prepares and deploys a production version of CyberChef to the gh-pages branch.",
         ["copy:ghPages", "exec:deployGhPages"]);
 
     grunt.registerTask("default",
-        "Lints the code base and shows stats",
-        ["eslint", "exec:stats", "exec:displayStats"]);
+        "Lints the code base",
+        ["eslint", "exec:repoSize"]);
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
@@ -62,7 +58,6 @@ module.exports = function (grunt) {
 
     // Project configuration
     var compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
-        codebaseStats = grunt.file.read("src/web/static/stats.txt").split("\n").join("<br>"),
         banner = "/**\n" +
             "* CyberChef - The Cyber Swiss Army Knife\n" +
             "*\n" +
@@ -228,8 +223,7 @@ module.exports = function (grunt) {
                     new HtmlWebpackPlugin({
                         filename: "index.html",
                         template: "./src/web/html/index.html",
-                        compileTime: compileTime,
-                        codebaseStats: codebaseStats
+                        compileTime: compileTime
                     })
                 ],
                 watch: true
@@ -255,7 +249,6 @@ module.exports = function (grunt) {
                         filename: "index.html",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
-                        codebaseStats: codebaseStats,
                         minify: {
                             removeComments: true,
                             collapseWhitespace: true,
@@ -267,7 +260,6 @@ module.exports = function (grunt) {
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
-                        codebaseStats: codebaseStats,
                         inline: true,
                         minify: {
                             removeComments: true,
@@ -332,29 +324,6 @@ module.exports = function (grunt) {
                     "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
                 ].join(";"),
                 stderr: false
-            },
-            stats: {
-                command: "rm src/web/static/stats.txt;" +
-                [
-                    "ls src/ -R1 | grep '^$' -v | grep ':$' -v | wc -l | xargs printf '%b\tsource files\n'",
-                    "find src/ -regex '.*\..*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
-                    "du -hs src/ | pcregrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
-
-                    "find src/ -regex '.*\.js' -not -regex '.*/lib/.*' -print | wc -l | xargs printf '\n%b\tJavaScript source files\n'",
-                    "find src/ -regex '.*\.js' -not -regex '.*/lib/.*' -print | xargs cat | wc -l | xargs printf '%b\tlines\n'",
-                    "find src/ -regex '.*\.js' -not -regex '.*/lib/.*' -exec du -hcs {} \+ | tail -n1 | egrep -o '^[^\t]*' | xargs printf '%b\tsize\n'",
-
-                    "du build/dev/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '\n%b\tuncompressed JavaScript size\n'",
-                    "du build/prod/scripts.js -h | egrep -o '^[^\t]*' | xargs printf '%b\tcompressed JavaScript size\n'",
-
-                    "grep -E '^\\s+name: ' src/core/config/Categories.js | wc -l | xargs printf '\n%b\tcategories\n'",
-                    "grep -E '^\\s+\"[A-Za-z0-9 \\-]+\": {' src/core/config/OperationConfig.js | wc -l | xargs printf '%b\toperations\n'",
-
-                ].join(" >> src/web/static/stats.txt;") + " >> src/web/static/stats.txt;",
-                stderr: false
-            },
-            displayStats: {
-                command: "cat src/web/static/stats.txt"
             },
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
