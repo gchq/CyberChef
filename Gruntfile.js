@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "test", "clean:prod", "clean:docs", "jsdoc", "webpack:webProd", "inline", "chmod"]);
+        ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
 
     grunt.registerTask("release",
         "Prepares and deploys a production version of CyberChef to the gh-pages branch.",

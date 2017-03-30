@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "node"
+install: npm install
+before_script:
+  - npm install -g grunt
+script:
+  - grunt lint
+  - grunt test
+  - grunt docs
+  - grunt node
+  - grunt prod
+deploy:
+  skip_cleanup: true

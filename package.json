@@ -78,7 +78,7 @@
     "zlibjs": "^0.2.0"
   },
   "scripts": {
-    "build": "grunt dev",
+    "build": "grunt prod",
     "test": "grunt test",
     "docs": "grunt docs"
   }
