@@ -61,7 +61,7 @@ const URL_ = {
         if (!document) {
             throw "This operation only works in a browser.";
         }
-        
+
         var a = document.createElement("a");
 
         // Overwrite base href which will be the current CyberChef URL to reduce confusion.
