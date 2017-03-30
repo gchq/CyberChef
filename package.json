@@ -76,5 +76,10 @@
     "xmldom": "^0.1.27",
     "xpath": "0.0.24",
     "zlibjs": "^0.2.0"
+  },
+  "scripts": {
+    "build": "grunt dev",
+    "test": "grunt test",
+    "docs": "grunt docs"
   }
 }
