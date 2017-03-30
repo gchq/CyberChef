@@ -22,8 +22,9 @@ deploy:
     skip_cleaup: true
     api_key:
       secure: Lbya9e1a6bUeJLKsjuqRaNF/BNr7iqSjV0/9rhWbTCc5d1cd+A6DGnDqvw47S2x/+8b08XR5Umas5dS6KU4lLAZQ5DFJgKEuOqUDqz7fOfIZyaRKe8HBTrUn3c1zaqpbrIDQHAOwwEMSx3W+SXmFuniIHRkBFALfK/luyHb4u6e1vq9AsX59A6ICOl5fpGD8kHDtdFZtgCrrZ5tkX5wweiRUbro+LBNlfBCaXeuUwnigU0chAGx8wJWeSvHrndGoPPFEXc0MT4QPlI+q6R3AiO/mwS2/nLhEIGt4jrWUtyFQD9gFLZXg7Z6GC5pKqyf2EQXzgC8Kggybmbg5/MiWj1ns0d1XMK26r50bHD/9K7Kzlh5vq8Sum4DYWtuT4AsWgL/PfUEvB1FbF4InRJoIlbT3pWj9zNFKTyBNcvUchPk1uBE1Ldn5yPPZoSgdKO0ZiGjn/Qx0ByaDMGJbM5KMg3ALewJmaCiCbnvAaVvAm2UY6GrVK15JiGVn08GhliSzsx6E48ZcFtNJBwHK8MAimbTRyHR6aStJbEYIgoNiAjVv5m0twee/XknDvhULG2tor9chwhnqKb4kvaYPqbVuHNPyDT8VkLsHcpgeD2MKxGTq81NBgPz3rP3T1yWMxsuvhxoH91tIT8mU1jo8/e3BJYogKyRZXxwIHaF7ScDQZ4c=
-    file_glob: true
-    file: build/prod/**/*
+    file:
+      - build/prod/cyberchef.htm
+      - build/node/CyberChef.js
     on:
       repo: gchq/CyberChef
       tags: true
