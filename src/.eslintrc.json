@@ -1,0 +1,97 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "impliedStrict": true
+        },
+        "sourceType": "module"
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        // enable additional rules
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "dot-notation": "error",
+        "eqeqeq": ["error", "smart"],
+        "no-caller": "error",
+        "no-extra-bind": "error",
+        "no-unused-expressions": "error",
+        "no-useless-call": "error",
+        "no-useless-return": "error",
+        "radix": "warn",
+
+        // modify rules from base configurations
+        "no-unused-vars": ["error", {
+            "args": "none",
+            "vars": "local",
+            // Allow vars that start with a capital letter to be unused.
+            // This is mainly for exported module names which are useful to indicate
+            // the name of the module and may be used to refer to itself in future.
+            "varsIgnorePattern": "^[A-Z]"
+        }],
+        "no-empty": ["error", {
+            "allowEmptyCatch": true
+        }],
+
+        // disable rules from base configurations
+        "no-console": "off",
+        "no-control-regex": "off",
+
+        // stylistic conventions
+        "brace-style": ["error", "1tbs"],
+        "block-spacing": "error",
+        "array-bracket-spacing": "error",
+        "comma-spacing": "error",
+        "comma-style": "error",
+        "computed-property-spacing": "error",
+        "no-trailing-spaces": "warn",
+        "eol-last": "error",
+        "func-call-spacing": "error",
+        "indent": ["error", 4, {
+            "ArrayExpression": "first",
+            "SwitchCase": 1
+        }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double", {
+            "avoidEscape": true
+        }],
+        "camelcase": ["error", {
+            "properties": "always"
+        }],
+        "semi": ["error", "always"],
+        "unicode-bom": "error",
+        "require-jsdoc": ["error", {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true,
+                "ArrowFunctionExpression": true
+            }
+        }],
+        "keyword-spacing": ["error", {
+            "before": true,
+            "after": true
+        }],
+        "no-multiple-empty-lines": ["warn", {
+            "max": 2,
+            "maxEOF": 1,
+            "maxBOF": 0
+        }],
+        "no-whitespace-before-property": "error",
+        "operator-linebreak": ["error", "after"],
+        "space-in-parens": "error"
+    },
+    "globals": {
+        "$": false,
+        "jQuery": false,
+        "moment": false,
+
+        "COMPILE_TIME": false,
+        "COMPILE_MSG": false
+    }
+}
