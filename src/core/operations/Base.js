@@ -46,7 +46,19 @@ const Base = {
         if (radix < 2 || radix > 36) {
             throw "Error: Radix argument must be between 2 and 36";
         }
-        return parseInt(input.replace(/\s/g, ""), radix);
+
+        var number = input.replace(/\s/g, "").split("."),
+            result = parseInt(number[0], radix) || 0;
+
+        if (number.length === 1) return result;
+
+        // Fractional part
+        for (var i = 0; i < number[1].length; i++) {
+            var digit = parseInt(number[1][i], radix);
+            result += digit / Math.pow(radix, i+1);
+        }
+
+        return result;
     },
 
 };
