@@ -28,10 +28,6 @@ module.exports = function (grunt) {
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
 
-    grunt.registerTask("release",
-        "Prepares and deploys a production version of CyberChef to the gh-pages branch.",
-        ["copy:ghPages", "exec:deployGhPages"]);
-
     grunt.registerTask("default",
         "Lints the code base",
         ["eslint", "exec:repoSize"]);
@@ -295,7 +291,7 @@ module.exports = function (grunt) {
                     process: function (content, srcpath) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
-                            grunt.file.read("src/static/ga.html") + "</body></html>");
+                            grunt.file.read("src/web/static/ga.html") + "</body></html>");
                         return grunt.template.process(content);
                     }
                 },
@@ -328,16 +324,6 @@ module.exports = function (grunt) {
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
-            deployGhPages: {
-                command: [
-                    "git add build/prod/index.html -v",
-                    "COMMIT_HASH=$(git rev-parse HEAD)",
-                    "git commit -m \"GitHub Pages release for ${COMMIT_HASH}\"",
-                    "git push origin `git subtree split --prefix build/prod master`:gh-pages --force",
-                    "git reset HEAD~",
-                    "git checkout build/prod/index.html"
-                ].join(";")
-            }
         },
         execute: {
             test: "build/test/index.js"
