@@ -35,6 +35,7 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "grunt": ">=0.4.5",
+    "grunt-accessibility": "~5.0.0",
     "grunt-chmod": "~1.1.1",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
