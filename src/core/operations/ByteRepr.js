@@ -56,7 +56,7 @@ const ByteRepr = {
 
 
     /**
-     * To Oct operation.
+     * To Octal operation.
      *
      * @author Matt C [matt@artemisbot.pw]
      * @param {byteArray} input
@@ -65,11 +65,12 @@ const ByteRepr = {
      */
     runToOct: function(input, args) {
         var delim = Utils.charRep[args[0] || "Space"];
-        return input.map(val => parseInt(Utils.bin(val), 2).toString(8)).join(delim);
+        return input.map(val => val.toString(8)).join(delim);
     },
 
+
     /**
-     * From Oct operation.
+     * From Octal operation.
      *
      * @author Matt C [matt@artemisbot.pw]
      * @param {string} input
@@ -81,6 +82,7 @@ const ByteRepr = {
         if (input.length === 0) return [];
         return input.split(delim).map(val => parseInt(val, 8));
     },
+
 
     /**
      * @constant
