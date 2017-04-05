@@ -12,6 +12,7 @@ import "babel-polyfill";
 
 import TestRegister from "./TestRegister.js";
 import "./tests/operations/Base58.js";
+import "./tests/operations/ByteRepr.js";
 import "./tests/operations/Compress.js";
 import "./tests/operations/FlowControl.js";
 import "./tests/operations/MorseCode.js";

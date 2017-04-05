@@ -56,6 +56,35 @@ const ByteRepr = {
 
 
     /**
+     * To Octal operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runToOct: function(input, args) {
+        var delim = Utils.charRep[args[0] || "Space"];
+        return input.map(val => val.toString(8)).join(delim);
+    },
+
+
+    /**
+     * From Octal operation.
+     *
+     * @author Matt C [matt@artemisbot.pw]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    runFromOct: function(input, args) {
+        var delim = Utils.charRep[args[0] || "Space"];
+        if (input.length === 0) return [];
+        return input.split(delim).map(val => parseInt(val, 8));
+    },
+
+
+    /**
      * @constant
      * @default
      */
