@@ -226,24 +226,14 @@ const Code = {
         }
 
         // Create newlines after ;
-        code = code.replace(/;/g, ";\n");
-
-        // Create newlines after { and around }
-        code = code.replace(/{/g, "{\n");
-        code = code.replace(/}/g, "\n}\n");
-
-        // Remove carriage returns
-        code = code.replace(/\r/g, "");
-
-        // Remove all indentation
-        code = code.replace(/^\s+/g, "");
-        code = code.replace(/\n\s+/g, "\n");
-
-        // Remove trailing spaces
-        code = code.replace(/\s*$/g, "");
-
-        // Remove newlines before {
-        code = code.replace(/\n{/g, "{");
+        code = code.replace(/;/g, ";\n")
+                   .replace(/{/g, "{\n")
+                   .replace(/}/g, "\n}\n")
+                   .replace(/\r/g, "")
+                   .replace(/^\s+/g, "")
+                   .replace(/\n\s+/g, "\n")
+                   .replace(/\s*$/g, "")
+                   .replace(/\n{/g, "{");
 
         // Indent
         var i = 0,
