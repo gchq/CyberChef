@@ -43,6 +43,9 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
                 evt.item.remove();
                 evt.target.dispatchEvent(this.manager.operationremove);
             }
+        }.bind(this),
+        onSort: function(evt) {
+            document.dispatchEvent(this.manager.statechange);
         }.bind(this)
     });
 
