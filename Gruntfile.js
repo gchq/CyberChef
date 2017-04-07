@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
+        ["eslint", "clean:prod", "webpack:webProd", "accessibility:test", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -136,7 +136,11 @@ module.exports = function (grunt) {
         },
         accessibility: {
             options: {
-                accessibilityLevel: "WCAG2A"
+                accessibilityLevel: "WCAG2A",
+                verbose: false,
+                ignore: [
+                    "WCAG2A.Principle1.Guideline1_3.1_3_1.H42.2"
+                ]
             },
             test: {
                 src: ["build/**/*.html"]
