@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:webProd", "accessibility:test", "inline", "chmod"]);
+        ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
