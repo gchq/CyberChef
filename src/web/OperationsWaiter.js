@@ -73,7 +73,9 @@ OperationsWaiter.prototype.searchOperations = function(e) {
             str = el.value;
 
         while (searchResultsEl.firstChild) {
-            $(searchResultsEl.firstChild).popover("destroy");
+            try {
+                $(searchResultsEl.firstChild).popover("destroy");
+            } catch (err) {}
             searchResultsEl.removeChild(searchResultsEl.firstChild);
         }
 
@@ -209,7 +211,10 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
             }
         },
         onEnd: function(evt) {
-            if (this.removeIntent) evt.item.remove();
+            if (this.removeIntent) {
+                $(evt.item).popover("destroy");
+                evt.item.remove();
+            }
         }.bind(this),
     });
 
