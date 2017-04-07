@@ -20,7 +20,7 @@
 -->
 <!-- htmlmin:ignore -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>CyberChef</title>
@@ -32,7 +32,7 @@
         <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico') %>" />
     </head>
     <body>
-        <span id="edit-favourites" class="btn btn-default btn-sm"><img src="<%- require('../static/images/favourite-16x16.png') %>" /> Edit</span>
+        <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
         <div id="alert" class="alert alert-danger">
             <button type="button" class="close" id="alert-close">&times;</button>
             <span id="alert-content"></span>
@@ -42,7 +42,7 @@
                 <% if (htmlWebpackPlugin.options.inline) { %>
                     <span style="float: left; margin-left: 10px;">Compile time: <%= htmlWebpackPlugin.options.compileTime %></span>
                 <% } else { %>
-                    <a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img src="<%- require('../static/images/download-24x24.png') %>" /></a>
+                    <a href="cyberchef.htm" style="float: left; margin-left: 10px; margin-right: 80px;" download>Download CyberChef<img aria-hidden="true" src="<%- require('../static/images/download-24x24.png') %>" alt="Download Icon"/></a>
                 <% } %>
                 <span id="notice">
                     <script type="text/javascript">
@@ -54,8 +54,8 @@
                     </script>
                     <noscript>JavaScript is not enabled. Good luck.</noscript>
                 </span>
-                <a href="#" id="support" class="banner-right" data-toggle="modal" data-target="#support-modal">About / Support<img src="<%- require('../static/images/help-22x22.png') %>" /></a>
-                <a href="#" id="options" class="banner-right">Options<img src="<%- require('../static/images/settings-22x22.png') %>" /></a>
+                <a href="#" id="support" class="banner-right" data-toggle="modal" data-target="#support-modal">About / Support<img aria-hidden="true" src="<%- require('../static/images/help-22x22.png') %>" alt="Question Mark Icon"/></a>
+                <a href="#" id="options" class="banner-right">Options<img aria-hidden="true" src="<%- require('../static/images/settings-22x22.png') %>" alt="Settings Icon"/></a>
             </div>
             <div id="wrapper">
                 <div id="operations" class="split split-horizontal no-select">
@@ -73,25 +73,25 @@
                         <div id="operational-controls">
                             <div id="bake-group">
                                 <button type="button" class="btn btn-success btn-lg" id="bake">
-                                    <img src="<%- require('../static/images/cook_male-32x32.png') %>" />
+                                    <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
                                     Bake!
                                 </button>
-                                <label class="btn btn-success btn-lg" id="auto-bake-label">
+                                <label class="btn btn-success btn-lg" id="auto-bake-label" for="auto-bake">
                                     <input type="checkbox" checked="checked" id="auto-bake">
                                     <div>Auto Bake</div>
                                 </label>
                             </div>
                             
                             <div class="btn-group" style="padding-top: 10px;">
-                                <button type="button" class="btn btn-default" id="step"><img src="<%- require('../static/images/step-16x16.png') %>" /> Step through</button>
-                                <button type="button" class="btn btn-default" id="clr-breaks"><img src="<%- require('../static/images/erase-16x16.png') %>" /> Clear breakpoints</button>
+                                <button type="button" class="btn btn-default" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
+                                <button type="button" class="btn btn-default" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
                             </div>
                         </div>
                         
                         <div class="btn-group-vertical" id="extra-controls">
-                            <button type="button" class="btn btn-default" id="save"><img src="<%- require('../static/images/save-16x16.png') %>" /> Save recipe</button>
-                            <button type="button" class="btn btn-default" id="load"><img src="<%- require('../static/images/open_yellow-16x16.png') %>" /> Load recipe</button>
-                            <button type="button" class="btn btn-default" id="clr-recipe"><img src="<%- require('../static/images/clean-16x16.png') %>" /> Clear recipe</button>
+                            <button type="button" class="btn btn-default" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
+                            <button type="button" class="btn btn-default" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
+                            <button type="button" class="btn btn-default" id="clr-recipe"><img aria-hidden="true" src="<%- require('../static/images/clean-16x16.png') %>" alt="Broom Icon"/> Clear recipe</button>
                         </div>
                     </div>
                 </div>
@@ -99,10 +99,10 @@
                 <div class="split split-horizontal" id="IO">
                     <div id="input" class="split no-select">
                         <div class="title no-select">
-                            Input
+                            <label for="input-text">Input</label>
                             <div class="btn-group io-btn-group">
-                                <button type="button" class="btn btn-default btn-sm" id="clr-io"><img src="<%- require('../static/images/recycle-16x16.png') %>" /> Clear I/O</button>
-                                <button type="button" class="btn btn-default btn-sm" id="reset-layout"><img src="<%- require('../static/images/layout-16x16.png') %>" /> Reset layout</button>
+                                <button type="button" class="btn btn-default btn-sm" id="clr-io"><img aria-hidden="true" src="<%- require('../static/images/recycle-16x16.png') %>" alt="Recycle Icon"/> Clear I/O</button>
+                                <button type="button" class="btn btn-default btn-sm" id="reset-layout"><img aria-hidden="true" src="<%- require('../static/images/layout-16x16.png') %>" alt="Grid Icon"/> Reset layout</button>
                             </div>
                             <div class="io-info" id="input-info"></div>
                             <div class="io-info" id="input-selection-info"></div>
@@ -115,12 +115,12 @@
                     
                     <div id="output" class="split">
                         <div class="title no-select">
-                            Output
+                            <label for="output-text">Output</label>
                             <div class="btn-group io-btn-group">
-                                <button type="button" class="btn btn-default btn-sm" id="save-to-file" title="Save to file"><img src="<%- require('../static/images/save_as-16x16.png') %>" /> Save to file</button>
-                                <button type="button" class="btn btn-default btn-sm" id="switch" title="Move output to input"><img src="<%- require('../static/images/switch-16x16.png') %>" /> Move output to input</button>
-                                <button type="button" class="btn btn-default btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img src="<%- require('../static/images/undo-16x16.png') %>" /> Undo</button>
-                                <button type="button" class="btn btn-default btn-sm" id="maximise-output" title="Maximise"><img src="<%- require('../static/images/maximise-16x16.png') %>" /> Max</button>
+                                <button type="button" class="btn btn-default btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
+                                <button type="button" class="btn btn-default btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
+                                <button type="button" class="btn btn-default btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img aria-hidden="true" src="<%- require('../static/images/undo-16x16.png') %>" alt="Undo Icon"/> Undo</button>
+                                <button type="button" class="btn btn-default btn-sm" id="maximise-output" title="Maximise"><img aria-hidden="true" src="<%- require('../static/images/maximise-16x16.png') %>" alt="Maximise Icon"/> Max</button>
                             </div>
                             <div class="io-info" id="output-info"></div>
                             <div class="io-info" id="output-selection-info"></div>
@@ -139,7 +139,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img class="pull-right" src="<%- require('../static/images/save-22x22.png') %>" />
+                        <img aria-hidden="true" class="pull-right" src="<%- require('../static/images/save-22x22.png') %>" alt="Save Icon"/>
                         <h4 class="modal-title">Save recipe</h4>
                     </div>
                     <div class="modal-body">
@@ -160,8 +160,8 @@
                         <div class="form-group" id="save-link-group">
                             <label>Data link</label>
                             <div class="save-link-options">
-                                <input type="checkbox" id="save-link-recipe-checkbox" checked> Include recipe
-                                <input type="checkbox" id="save-link-input-checkbox" checked> Include input
+                                <input type="checkbox" id="save-link-recipe-checkbox" checked> <label for="save-link-recipe-checkbox"> Include recipe </label>
+                                <input type="checkbox" id="save-link-input-checkbox" checked> <label for="save-link-input-checkbox"> Include input </label>
                             </div>
                             <a id="save-link" style="word-wrap: break-word;"></a>
                         </div>
@@ -174,15 +174,16 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img class="pull-right" src="<%- require('../static/images/open_yellow-24x24.png') %>" />
+                        <img aria-hidden="true" class="pull-right" src="<%- require('../static/images/open_yellow-24x24.png') %>" alt="Open Icon"/>
                         <h4 class="modal-title">Load recipe</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="load-name">Load your recipe from local storage or paste it into the box below</label>
+                            <label for="load-name">Load your recipe from local storage by selecting its name from the drop-down</label>
                             <select class="form-control" id="load-name"></select>
                         </div>
                         <div class="form-group">
+                            <label for="load-text">Load your recipe by pasting it in the box below</label>
                             <textarea class="form-control" id="load-text" rows="5"></textarea>
                         </div>
                     </div>
@@ -199,38 +200,38 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img class="pull-right" src="<%- require('../static/images/settings-22x22.png') %>" />
+                        <img aria-hidden="true" class="pull-right" src="<%- require('../static/images/settings-22x22.png') %>" alt="Settings Icon"/>
                         <h4 class="modal-title">Options</h4>
                     </div>
                     <div class="modal-body" id="options-body">
                         <p style="font-weight: bold">Please note that these options will persist between sessions.</p>
                         <div class="option-item">
-                            <input type="checkbox" option="update_url" checked />
-                            Update the URL when the input or recipe changes
+                            <input type="checkbox" option="update_url" id="update_url" checked />
+                            <label for="update_url"> Update the URL when the input or recipe changes </label>
                         </div>
                         <div class="option-item">
-                            <input type="checkbox" option="show_highlighter" checked />
-                            Highlight selected bytes in output and input (when possible)
+                            <input type="checkbox" option="show_highlighter" id="show_highlighter" checked />
+                            <label for="show_highlighter"> Highlight selected bytes in output and input (when possible) </label>
                         </div>
                         <div class="option-item">
-                            <input type="checkbox" option="treat_as_utf8" checked />
-                            Treat output as UTF-8 if possible
+                            <input type="checkbox" option="treat_as_utf8" id="treat_as_utf8" checked />
+                            <label for="treat_as_utf8"> Treat output as UTF-8 if possible </label>
                         </div>
                         <div class="option-item">
-                            <input type="checkbox" option="word_wrap" checked />
-                            Word wrap the input and output
+                            <input type="checkbox" option="word_wrap" id="word_wrap" checked />
+                            <label for="word_wrap"> Word wrap the input and output </label>
                         </div>
                         <div class="option-item">
-                            <input type="checkbox" option="show_errors" checked />
-                            Operation error reporting (recommended)
+                            <input type="checkbox" option="show_errors" id="show_errors" checked />
+                            <label for="show_errors"> Operation error reporting (recommended) </label>
                         </div>
                         <div class="option-item">
-                            <input type="number" option="error_timeout" />
-                            Operation error timeout in ms (0 for never)
+                            <input type="number" option="error_timeout" id="error_timeout" />
+                            <label for="error_timeout"> Operation error timeout in ms (0 for never) </label>
                         </div>
                         <div class="option-item">
-                            <input type="number" option="auto_bake_threshold" />
-                            Auto Bake threshold in ms
+                            <input type="number" option="auto_bake_threshold" id="auto_bake_threshold"/>
+                            <label for="auto_bake_threshold"> Auto Bake threshold in ms </label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -245,10 +246,10 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img class="pull-right" src="<%- require('../static/images/favourite-24x24.png') %>" />
+                        <img aria-hidden="true" class="pull-right" src="<%- require('../static/images/favourite-24x24.png') %>" alt="Star Icon"/>
                         <h4 class="modal-title">Edit Favourites</h4>
                     </div>
-                    <div class="modal-body" id="options-body">
+                    <div class="modal-body" id="favourites-body">
                         <ul>
                             <li><span style="font-weight: bold">To add:</span> drag the operation over the favourites category</li>
                             <li><span style="font-weight: bold">To reorder:</span> drag up and down in the list below</li>
@@ -272,11 +273,11 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img class="pull-right" src="<%- require('../static/images/help-22x22.png') %>" />
+                        <img aria-hidden="true" class="pull-right" src="<%- require('../static/images/help-22x22.png') %>" alt="Question Mark Icon"/>
                         <h4 class="modal-title">CyberChef - The Cyber Swiss Army Knife</h4>
                     </div>
                     <div class="modal-body">
-                        <img class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" />
+                        <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" alt="CyberChef Logo"/>
                         <p class="subtext">Compile time: <%= htmlWebpackPlugin.options.compileTime %></p>
                         <p>&copy Crown Copyright 2016.</p>
                         <p>Licenced under the Apache Licence, Version 2.0.</p>
@@ -285,15 +286,15 @@
                         <div>
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="active"><a href="#faqs" aria-controls="profile" role="tab" data-toggle="tab">
-                                    <img src="<%- require('../static/images/help-16x16.png') %>" />
+                                    <img aria-hidden="true" src="<%- require('../static/images/help-16x16.png') %>" alt="Question Mark Icon"/>
                                     FAQs
                                 </a></li>
                                 <li role="presentation"><a href="#report-bug" aria-controls="messages" role="tab" data-toggle="tab">
-                                    <img src="<%- require('../static/images/bug-16x16.png') %>" />
+                                    <img aria-hidden="true" src="<%- require('../static/images/bug-16x16.png') %>" alt="Bug Icon"/>
                                     Report a bug
                                 </a></li>
                                 <li role="presentation"><a href="#about" aria-controls="messages" role="tab" data-toggle="tab">
-                                    <img src="<%- require('../static/images/speech-16x16.png') %>" />
+                                    <img aria-hidden="true" src="<%- require('../static/images/speech-16x16.png') %>" alt="Speech Balloon Icon"/>
                                     About
                                 </a></li>
                             </ul>
@@ -372,7 +373,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                     <a href="https://github.com/gchq/CyberChef">
-                        <img style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png') %>" alt="Fork me on GitHub">
+                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png') %>" alt="Fork me on GitHub">
                     </a>
                 </div>
             </div>
@@ -387,11 +388,11 @@
                     <div class="modal-body" id="confirm-body"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="confirm-yes">
-                            <img src="<%- require('../static/images/thumb_up-16x16.png') %>" />
+                            <img aria-hidden="true" src="<%- require('../static/images/thumb_up-16x16.png') %>" alt="Thumbs Up"/>
                             Yes
                         </button>
                         <button type="button" class="btn btn-danger" id="confirm-no" data-dismiss="modal">
-                            <img src="<%- require('../static/images/thumb_down-16x16.png') %>" />
+                            <img aria-hidden="true" src="<%- require('../static/images/thumb_down-16x16.png') %>" alt="Thumbs Down"/>
                             No
                         </button>
                     </div>

@@ -136,7 +136,11 @@ module.exports = function (grunt) {
         },
         accessibility: {
             options: {
-                accessibilityLevel: "WCAG2A"
+                accessibilityLevel: "WCAG2A",
+                verbose: false,
+                ignore: [
+                    "WCAG2A.Principle1.Guideline1_3.1_3_1.H42.2"
+                ]
             },
             test: {
                 src: ["build/**/*.html"]
