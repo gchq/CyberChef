@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-// CSS
-import "./css/index.js";
+// Styles
+import "./stylesheets/main.scss";
 
 // Libs
 import "babel-polyfill";
-import "bootstrap";
+import "bootstrap-sass";
 import "bootstrap-switch";
 import "bootstrap-colorpicker";
 import CanvasComponents from "../core/lib/canvascomponents.js";

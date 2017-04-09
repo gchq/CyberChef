@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 
 
     // Project configuration
-    var compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
+    var compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         banner = "/**\n" +
             "* CyberChef - The Cyber Swiss Army Knife\n" +
             "*\n" +
@@ -184,11 +184,11 @@ module.exports = function (grunt) {
                             })
                         },
                         {
-                            test: /\.less$/,
-                            use: ExtractTextPlugin.extract({
+                            test: /\.scss$/,
+                            loader: ExtractTextPlugin.extract({
                                 use: [
                                     { loader: "css-loader?minimize" },
-                                    { loader: "less-loader" }
+                                    { loader: "sass-loader" }
                                 ]
                             })
                         },
