@@ -273,8 +273,7 @@ const Code = {
                 .replace(/\s*,\s*/g, ", ")
                 .replace(/\s*{/g, " {")
                 .replace(/}\n/g, "}\n\n")
-                // I was told not to look at this.
-                // I looked anyhow. 
+                // Hacky horribleness
                 .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
                 .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
                 .replace(/else\s*\n([^{])/gim, "else\n    $1")
