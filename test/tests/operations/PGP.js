@@ -8,7 +8,7 @@
  */
 import TestRegister from "../../TestRegister.js";
 
-var CYBERCHEF_GENERATED_KEY_PAIRS = [
+const CYBERCHEF_GENERATED_KEY_PAIRS = [
     {
         name: "CyberChef 1",
         size: 1024,
@@ -75,7 +75,7 @@ var CYBERCHEF_GENERATED_KEY_PAIRS = [
     },
 ];
 
-var PGP_TEST_KEY_PAIRS = [
+const PGP_TEST_KEY_PAIRS = [
     {
         keyID: "a9510d8fd7e352f5",
         name: "CyberChef nopw 1024 <toby@toby.codes>",
