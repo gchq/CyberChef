@@ -42,25 +42,23 @@ var PGP = {
     runEncrypt: function (plaintext, args) {
         var publicKey = args[0];
 
-        return new Promise(function(resolve, reject) {
-            try {
-                var publicKeys = openpgp.key.readArmored(publicKey).keys;
-            } catch (err) {
-                return reject("Cannot read public key: " + err);
-            }
+        try {
+            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+        } catch (err) {
+            throw "Cannot read public key: " + err;
+        }
 
-            var options = {
-                data: plaintext,
-                publicKeys: publicKeys,
-            };
+        var options = {
+            data: plaintext,
+            publicKeys: publicKeys,
+        };
 
-            openpgp.encrypt(options)
-                .then(function(ciphertext) {
-                    resolve(ciphertext.data);
-                })
-                .catch(function(err) {
-                    reject("Could not encrypt text: " + err);
-                });
+        return openpgp.encrypt(options)
+        .then(function(ciphertext) {
+            return ciphertext.data;
+        })
+        .catch(function(err) {
+            throw "Could not encrypt text: " + err;
         });
     },
 
@@ -76,38 +74,36 @@ var PGP = {
         var privateKey = args[0],
             password = args[1];
 
-        return new Promise(function(resolve, reject) {
-            try {
-                privateKey = openpgp.key.readArmored(privateKey).keys[0];
-            } catch (err) {
-                return reject("Cannot read private key: " + err);
-            }
+        try {
+            privateKey = openpgp.key.readArmored(privateKey).keys[0];
+        } catch (err) {
+            throw "Cannot read private key: " + err;
+        }
 
-            try {
-                var message = openpgp.message.readArmored(input);
-            } catch (err) {
-                return reject("Cannot read message: " + err);
-            }
+        try {
+            var message = openpgp.message.readArmored(input);
+        } catch (err) {
+            throw "Cannot read message: " + err;
+        }
 
-            var options = {
-                message: message,
-                privateKey: privateKey,
-            };
+        var options = {
+            message: message,
+            privateKey: privateKey,
+        };
 
-            if (password) {
-                privateKey.decrypt(password);
-            }
-            if (privateKey.primaryKey.encrypted !== null) {
-                return reject("Could not decrypt private key.");
-            }
+        if (password) {
+            privateKey.decrypt(password);
+        }
+        if (privateKey.primaryKey.encrypted !== null) {
+            throw "Could not decrypt private key.";
+        }
 
-            openpgp.decrypt(options)
-                .then(function(plaintext) {
-                    resolve(plaintext.data);
-                })
-                .catch(function(err) {
-                    reject("Could not decrypt message: " + err);
-                });
+        return openpgp.decrypt(options)
+        .then(function(plaintext) {
+            return plaintext.data;
+        })
+        .catch(function(err) {
+            throw "Could not decrypt message: " + err;
         });
     },
 
@@ -124,39 +120,37 @@ var PGP = {
             privateKey = args[1],
             password = args[2];
 
-        return new Promise(function(resolve, reject) {
-            try {
-                var publicKeys = openpgp.key.readArmored(publicKey).keys;
-            } catch (err) {
-                return reject("Could not read public key: " + err);
-            }
+        try {
+            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+        } catch (err) {
+            throw "Could not read public key: " + err;
+        }
 
-            try {
-                var privateKeys = openpgp.key.readArmored(privateKey).keys;
-            } catch (err) {
-                return reject("Could not read private key: " + err);
-            }
+        try {
+            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+        } catch (err) {
+            throw "Could not read private key: " + err;
+        }
 
-            if (password) {
-                privateKeys[0].decrypt(password);
-            }
-            if (privateKeys[0].primaryKey.encrypted !== null) {
-                return reject("Could not decrypt private key.");
-            }
+        if (password) {
+            privateKeys[0].decrypt(password);
+        }
+        if (privateKeys[0].primaryKey.encrypted !== null) {
+            throw "Could not decrypt private key.";
+        }
 
-            var options = {
-                data: input,
-                publicKeys: publicKeys,
-                privateKeys: privateKeys,
-            };
+        var options = {
+            data: input,
+            publicKeys: publicKeys,
+            privateKeys: privateKeys,
+        };
 
-            openpgp.encrypt(options)
-                .then(function(signedData) {
-                    resolve(signedData.data);
-                })
-                .catch(function(err) {
-                    reject("Could not sign input: " + err);
-                });
+        return openpgp.encrypt(options)
+        .then(function(signedData) {
+            return signedData.data;
+        })
+        .catch(function(err) {
+            throw "Could not sign input: " + err;
         });
     },
 
@@ -173,75 +167,73 @@ var PGP = {
             privateKey = args[1],
             password = args[2];
 
-        return new Promise(function(resolve, reject) {
-            try {
-                var publicKeys = openpgp.key.readArmored(publicKey).keys;
-            } catch (err) {
-                return reject("Could not read public key: " + err);
+        try {
+            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+        } catch (err) {
+            throw "Could not read public key: " + err;
+        }
+
+        try {
+            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+        } catch (err) {
+            throw "Could not read private key: " + err;
+        }
+
+        if (password) {
+            privateKeys[0].decrypt(password);
+        }
+        if (privateKeys[0].primaryKey.encrypted !== null) {
+            throw "Could not decrypt private key.";
+        }
+
+        try {
+            var message = openpgp.message.readArmored(input);
+        } catch (err) {
+            throw "Could not read encrypted message: " + err;
+        }
+
+        var packetContainingAlgorithms = message.packets.filterByTag(
+            openpgp.enums.packet.publicKeyEncryptedSessionKey
+        )[0];
+
+        var verification = {
+            verified: false,
+            pkAlgorithm: packetContainingAlgorithms.publicKeyAlgorithm,
+            sessionAlgorithm: packetContainingAlgorithms.sessionKeyAlgorithm,
+            author: publicKeys[0].users[0].userId.userid,
+            recipient: privateKeys[0].users[0].userId.userid,
+            keyID: "",
+            message: "",
+        };
+
+        return openpgp.decrypt({
+            message: message,
+            publicKeys: publicKeys,
+            privateKey: privateKeys[0],
+        })
+        .then(function(decrypted) {
+            if (decrypted.signatures) {
+                // valid is either true or null, casting required.
+                verification.verified = !!decrypted.signatures[0].valid;
+                verification.keyID = decrypted.signatures[0].keyid.toHex();
             }
 
-            try {
-                var privateKeys = openpgp.key.readArmored(privateKey).keys;
-            } catch (err) {
-                return reject("Could not read private key: " + err);
-            }
+            return [
+                "Verified: " + verification.verified,
+                "Key ID: " + verification.keyID,
+                "Encrypted for: " + verification.recipient,
+                "Signed by: " + verification.author,
+                "Signed with: " +
+                verification.pkAlgorithm +
+                "/" +
+                verification.sessionAlgorithm,
+                "\n",
+                decrypted.data,
+            ].join("\n");
 
-            if (password) {
-                privateKeys[0].decrypt(password);
-            }
-            if (privateKeys[0].primaryKey.encrypted !== null) {
-                return reject("Could not decrypt private key.");
-            }
-
-            try {
-                var message = openpgp.message.readArmored(input);
-            } catch (err) {
-                return reject("Could not read encrypted message: " + err);
-            }
-
-            var packetContainingAlgorithms = message.packets.filterByTag(
-                openpgp.enums.packet.publicKeyEncryptedSessionKey
-            )[0];
-
-            var verification = {
-                verified: false,
-                pkAlgorithm: packetContainingAlgorithms.publicKeyAlgorithm,
-                sessionAlgorithm: packetContainingAlgorithms.sessionKeyAlgorithm,
-                author: publicKeys[0].users[0].userId.userid,
-                recipient: privateKeys[0].users[0].userId.userid,
-                keyID: "",
-                message: "",
-            };
-
-            openpgp.decrypt({
-                message: message,
-                publicKeys: publicKeys,
-                privateKey: privateKeys[0],
-            })
-                .then(function(decrypted) {
-                    if (decrypted.signatures) {
-                        // valid is either true or null, casting required.
-                        verification.verified = !!decrypted.signatures[0].valid;
-                        verification.keyID = decrypted.signatures[0].keyid.toHex();
-                    }
-
-                    resolve([
-                        "Verified: " + verification.verified,
-                        "Key ID: " + verification.keyID,
-                        "Encrypted for: " + verification.recipient,
-                        "Signed by: " + verification.author,
-                        "Signed with: " +
-                        verification.pkAlgorithm +
-                        "/" +
-                        verification.sessionAlgorithm,
-                        "\n",
-                        decrypted.data,
-                    ].join("\n"));
-
-                })
-                .catch(function(err) {
-                    reject("Could not decrypt and verify message: " + err);
-                });
+        })
+        .catch(function(err) {
+            throw "Could not decrypt and verify message: " + err;
         });
     },
 
@@ -257,59 +249,57 @@ var PGP = {
         var privateKey = args[0],
             password = args[1];
 
-        return new Promise(function(resolve, reject) {
-            try {
-                var privateKeys = openpgp.key.readArmored(privateKey).keys;
-            } catch (err) {
-                return reject("Could not read private key: " + err);
-            }
+        try {
+            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+        } catch (err) {
+            throw "Could not read private key: " + err;
+        }
 
-            if (password) {
-                privateKeys[0].decrypt(password);
-            }
-            if (privateKeys[0].primaryKey.encrypted !== null) {
-                return reject("Could not decrypt private key.");
-            }
+        if (password) {
+            privateKeys[0].decrypt(password);
+        }
+        if (privateKeys[0].primaryKey.encrypted !== null) {
+            throw "Could not decrypt private key.";
+        }
 
-            var bytes = openpgp.util.str2Uint8Array(input);
-            var message = openpgp.message.fromBinary(bytes);
+        var bytes = openpgp.util.str2Uint8Array(input);
+        var message = openpgp.message.fromBinary(bytes);
 
-            var signedMessage = message.sign(privateKeys);
-            var signature = signedMessage.packets.filterByTag(openpgp.enums.packet.signature);
-            var rawSignatureBytes = signature.write();
+        var signedMessage = message.sign(privateKeys);
+        var signature = signedMessage.packets.filterByTag(openpgp.enums.packet.signature);
+        var rawSignatureBytes = signature.write();
 
-            var armouredMessage = openpgp.armor.encode(
-                openpgp.enums.armor.message,
-                rawSignatureBytes
-            );
-            armouredMessage = armouredMessage.replace(
-                "-----BEGIN PGP MESSAGE-----\r\n",
-                "-----BEGIN PGP SIGNATURE-----\r\n"
-            );
-            armouredMessage = armouredMessage.replace(
-                "-----END PGP MESSAGE-----\r\n",
-                "-----END PGP SIGNATURE-----\r\n"
-            );
+        var armouredMessage = openpgp.armor.encode(
+            openpgp.enums.armor.message,
+            rawSignatureBytes
+        );
+        armouredMessage = armouredMessage.replace(
+            "-----BEGIN PGP MESSAGE-----\r\n",
+            "-----BEGIN PGP SIGNATURE-----\r\n"
+        );
+        armouredMessage = armouredMessage.replace(
+            "-----END PGP MESSAGE-----\r\n",
+            "-----END PGP SIGNATURE-----\r\n"
+        );
 
-            var files = [{
-                fileName: "msg",
-                size: input.length,
-                contents: input,
-                bytes: bytes,
-            }, {
-                fileName: "msg.asc",
-                size: armouredMessage.length,
-                contents: armouredMessage,
-                bytes: openpgp.util.str2Uint8Array(armouredMessage),
-            }, {
-                fileName: "msg.sig",
-                size: rawSignatureBytes.length,
-                contents: openpgp.util.Uint8Array2str(rawSignatureBytes),
-                bytes: rawSignatureBytes,
-            }];
+        var files = [{
+            fileName: "msg",
+            size: input.length,
+            contents: input,
+            bytes: bytes,
+        }, {
+            fileName: "msg.asc",
+            size: armouredMessage.length,
+            contents: armouredMessage,
+            bytes: openpgp.util.str2Uint8Array(armouredMessage),
+        }, {
+            fileName: "msg.sig",
+            size: rawSignatureBytes.length,
+            contents: openpgp.util.Uint8Array2str(rawSignatureBytes),
+            bytes: rawSignatureBytes,
+        }];
 
-            resolve(Utils.displayFilesAsHTML(files));
-        });
+        return Utils.displayFilesAsHTML(files);
     },
 
 
@@ -324,57 +314,55 @@ var PGP = {
         var publicKey = args[0],
             armouredSignature = args[1];
 
-        return new Promise(function(resolve, reject) {
-            try {
-                var publicKeys = openpgp.key.readArmored(publicKey).keys;
-            } catch (err) {
-                return reject("Could not read public key: " + err);
+        try {
+            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+        } catch (err) {
+            throw "Could not read public key: " + err;
+        }
+
+        try {
+            var message = openpgp.message.readSignedContent(
+                input,
+                armouredSignature
+            );
+        } catch (err) {
+            throw "Could not read armoured signature or message: " + err;
+        }
+
+        var packetContainingSignature = message.packets.filterByTag(
+            openpgp.enums.packet.signature
+        )[0];
+
+        var verification = {
+            verified: false,
+            pkAlgorithm: publicKeys[0].primaryKey.algorithm,
+            author: publicKeys[0].users[0].userId.userid,
+            date: packetContainingSignature.created,
+            keyID: "",
+            message: "",
+        };
+
+        return Promise.resolve(message.verify(publicKeys))
+        .then(function(signatures) {
+
+            if (signatures && signatures.length) {
+                verification.verified = !!signatures[0].valid;
+                verification.keyID = signatures[0].keyid.toHex();
             }
 
-            try {
-                var message = openpgp.message.readSignedContent(
-                    input,
-                    armouredSignature
-                );
-            } catch (err) {
-                return reject("Could not read armoured signature or message: " + err);
-            }
+            return [
+                "Verified: " + verification.verified,
+                "Key ID: " + verification.keyID,
+                "Signed on: " + verification.date,
+                "Signed by: " + verification.author,
+                "Signed with: " + verification.pkAlgorithm,
+                "\n",
+                input,
+            ].join("\n");
 
-            var packetContainingSignature = message.packets.filterByTag(
-                openpgp.enums.packet.signature
-            )[0];
-
-            var verification = {
-                verified: false,
-                pkAlgorithm: publicKeys[0].primaryKey.algorithm,
-                author: publicKeys[0].users[0].userId.userid,
-                date: packetContainingSignature.created,
-                keyID: "",
-                message: "",
-            };
-
-            Promise.resolve(message.verify(publicKeys))
-                .then(function(signatures) {
-
-                    if (signatures && signatures.length) {
-                        verification.verified = !!signatures[0].valid;
-                        verification.keyID = signatures[0].keyid.toHex();
-                    }
-
-                    resolve([
-                        "Verified: " + verification.verified,
-                        "Key ID: " + verification.keyID,
-                        "Signed on: " + verification.date,
-                        "Signed by: " + verification.author,
-                        "Signed with: " + verification.pkAlgorithm,
-                        "\n",
-                        input,
-                    ].join("\n"));
-
-                })
-                .catch(function(err) {
-                    reject("Could not verify message: " + err);
-                });
+        })
+        .catch(function(err) {
+            throw "Could not verify message: " + err;
         });
     },
 
@@ -390,33 +378,30 @@ var PGP = {
         var privateKey = args[0],
             password = args[1];
 
+        try {
+            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+        } catch (err) {
+            throw "Could not read private key: " + err;
+        }
 
-        return new Promise(function(resolve, reject) {
-            try {
-                var privateKeys = openpgp.key.readArmored(privateKey).keys;
-            } catch (err) {
-                return reject("Could not read private key: " + err);
-            }
+        if (password) {
+            privateKeys[0].decrypt(password);
+        }
+        if (privateKeys[0].primaryKey.encrypted !== null) {
+            throw "Could not decrypt private key.";
+        }
 
-            if (password) {
-                privateKeys[0].decrypt(password);
-            }
-            if (privateKeys[0].primaryKey.encrypted !== null) {
-                return reject("Could not decrypt private key.");
-            }
+        var options = {
+            data: input,
+            privateKeys: privateKeys,
+        };
 
-            var options = {
-                data: input,
-                privateKeys: privateKeys,
-            };
-
-            openpgp.sign(options)
-                .then(function(signedData) {
-                    resolve(signedData.data);
-                })
-                .catch(function(err) {
-                    reject("Could not clearsign input: " + err);
-                });
+        return openpgp.sign(options)
+        .then(function(signedData) {
+            return signedData.data;
+        })
+        .catch(function(err) {
+            throw "Could not clearsign input: " + err;
         });
     },
 
@@ -431,58 +416,54 @@ var PGP = {
     runVerifyCleartext: function (input, args) {
         var publicKey = args[0];
 
-        return new Promise(function(resolve, reject) {
+        try {
+            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+        } catch (err) {
+            throw "Could not read public key: " + err;
+        }
 
-            try {
-                var publicKeys = openpgp.key.readArmored(publicKey).keys;
-            } catch (err) {
-                return reject("Could not read public key: " + err);
+        try {
+            var message = openpgp.cleartext.readArmored(input);
+        } catch (err) {
+            throw "Could not read input message: " + err;
+        }
+
+        var packetContainingSignature = message.packets.filterByTag(
+            openpgp.enums.packet.signature
+        )[0];
+
+        var verification = {
+            verified: false,
+            pkAlgorithm: publicKeys[0].primaryKey.algorithm,
+            author: publicKeys[0].users[0].userId.userid,
+            date: packetContainingSignature.created,
+            keyID: "",
+            message: message.text,
+        };
+
+        return openpgp.verify({
+            message: message,
+            publicKeys: publicKeys,
+        })
+        .then(function(verifiedData) {
+            if (verifiedData.signatures) {
+                // valid is either true or null, casting required.
+                verification.verified = !!verifiedData.signatures[0].valid;
+                verification.keyID = verifiedData.signatures[0].keyid.toHex();
             }
 
-            try {
-                var message = openpgp.cleartext.readArmored(input);
-            } catch (err) {
-                return reject("Could not read input message: " + err);
-            }
-
-            var packetContainingSignature = message.packets.filterByTag(
-                openpgp.enums.packet.signature
-            )[0];
-
-            var verification = {
-                verified: false,
-                pkAlgorithm: publicKeys[0].primaryKey.algorithm,
-                author: publicKeys[0].users[0].userId.userid,
-                date: packetContainingSignature.created,
-                keyID: "",
-                message: message.text,
-            };
-
-            openpgp.verify({
-                message: message,
-                publicKeys: publicKeys,
-            })
-                .then(function(verifiedData) {
-
-                    if (verifiedData.signatures) {
-                        // valid is either true or null, casting required.
-                        verification.verified = !!verifiedData.signatures[0].valid;
-                        verification.keyID = verifiedData.signatures[0].keyid.toHex();
-                    }
-
-                    resolve([
-                        "Verified: " + verification.verified,
-                        "Key ID: " + verification.keyID,
-                        "Signed on: " + verification.date,
-                        "Signed by: " + verification.author,
-                        "Signed with: " + verification.pkAlgorithm,
-                        "\n",
-                        verification.message,
-                    ].join("\n"));
-                })
-                .catch(function(err) {
-                    reject("Could not verify message: " + err);
-                });
+            return [
+                "Verified: " + verification.verified,
+                "Key ID: " + verification.keyID,
+                "Signed on: " + verification.date,
+                "Signed by: " + verification.author,
+                "Signed with: " + verification.pkAlgorithm,
+                "\n",
+                verification.message,
+            ].join("\n");
+        })
+        .catch(function(err) {
+            throw "Could not verify message: " + err;
         });
     },
 
@@ -500,27 +481,25 @@ var PGP = {
             name = args[2],
             email = args[3];
 
-        return new Promise(function(resolve, reject) {
-            var options = {
-                numBits: keySize,
-                userIds: [{name: name, email: email}],
-            };
+        var options = {
+            numBits: keySize,
+            userIds: [{name: name, email: email}],
+        };
 
-            if (password) {
-                options.passphrase = password;
-            }
+        if (password) {
+            options.passphrase = password;
+        }
 
-            openpgp.generateKey(options)
-                .then(function(key) {
-                    var output = [
-                        key.publicKeyArmored,
-                        key.privateKeyArmored,
-                    ].join(""); // Preceding and trailing newlines are already generated.
-                    resolve(output);
-                })
-                .catch(function(err) {
-                    reject("Could not generate key pair: " + err);
-                });
+        throw openpgp.generateKey(options)
+        .then(function(key) {
+            var output = [
+                key.publicKeyArmored,
+                key.privateKeyArmored,
+            ].join(""); // Preceding and trailing newlines are already generated.
+            return output;
+        })
+        .catch(function(err) {
+            throw "Could not generate key pair: " + err;
         });
     },
 
@@ -533,51 +512,49 @@ var PGP = {
      * @returns {HTML} - HTML file display of message, armoured signature, and bytes signature
      */
     runDetachClearsig: function (input, args) {
-        return new Promise(function(resolve, reject) {
-            try {
-                var message = openpgp.cleartext.readArmored(input);
-            } catch (err) {
-                return reject("Could not read input message: " + err);
-            }
+        try {
+            var message = openpgp.cleartext.readArmored(input);
+        } catch (err) {
+            throw "Could not read input message: " + err;
+        }
 
-            var cleartext = message.getText();
-            var clearbytes = openpgp.util.str2Uint8Array(cleartext);
+        var cleartext = message.getText();
+        var clearbytes = openpgp.util.str2Uint8Array(cleartext);
 
-            var signature = message.packets.filterByTag(openpgp.enums.packet.signature);
-            var rawSignatureBytes = signature.write();
+        var signature = message.packets.filterByTag(openpgp.enums.packet.signature);
+        var rawSignatureBytes = signature.write();
 
-            var armouredMessage = openpgp.armor.encode(
-                openpgp.enums.armor.message,
-                rawSignatureBytes
-            );
-            armouredMessage = armouredMessage.replace(
-                "-----BEGIN PGP MESSAGE-----\r\n",
-                "-----BEGIN PGP SIGNATURE-----\r\n"
-            );
-            armouredMessage = armouredMessage.replace(
-                "-----END PGP MESSAGE-----\r\n",
-                "-----END PGP SIGNATURE-----\r\n"
-            );
+        var armouredMessage = openpgp.armor.encode(
+            openpgp.enums.armor.message,
+            rawSignatureBytes
+        );
+        armouredMessage = armouredMessage.replace(
+            "-----BEGIN PGP MESSAGE-----\r\n",
+            "-----BEGIN PGP SIGNATURE-----\r\n"
+        );
+        armouredMessage = armouredMessage.replace(
+            "-----END PGP MESSAGE-----\r\n",
+            "-----END PGP SIGNATURE-----\r\n"
+        );
 
-            var files = [{
-                fileName: "msg",
-                size: cleartext.length,
-                contents: cleartext,
-                bytes: clearbytes,
-            }, {
-                fileName: "msg.asc",
-                size: armouredMessage.length,
-                contents: armouredMessage,
-                bytes: openpgp.util.str2Uint8Array(armouredMessage),
-            }, {
-                fileName: "msg.sig",
-                size: rawSignatureBytes.length,
-                contents: openpgp.util.Uint8Array2str(rawSignatureBytes),
-                bytes: rawSignatureBytes,
-            }];
+        var files = [{
+            fileName: "msg",
+            size: cleartext.length,
+            contents: cleartext,
+            bytes: clearbytes,
+        }, {
+            fileName: "msg.asc",
+            size: armouredMessage.length,
+            contents: armouredMessage,
+            bytes: openpgp.util.str2Uint8Array(armouredMessage),
+        }, {
+            fileName: "msg.sig",
+            size: rawSignatureBytes.length,
+            contents: openpgp.util.Uint8Array2str(rawSignatureBytes),
+            bytes: rawSignatureBytes,
+        }];
 
-            resolve(Utils.displayFilesAsHTML(files));
-        });
+        return Utils.displayFilesAsHTML(files);
     },
 
 
