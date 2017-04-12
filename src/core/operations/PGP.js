@@ -42,23 +42,22 @@ const PGP = {
      * @returns {string}
      */
     runEncrypt: function (plaintext, args) {
-        var publicKey = args[0];
+        let publicKey = args[0],
+            publicKeys;
 
         try {
-            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+            publicKeys = openpgp.key.readArmored(publicKey).keys;
         } catch (err) {
             throw "Cannot read public key: " + err;
         }
 
-        var options = {
+        let options = {
             data: plaintext,
             publicKeys: publicKeys,
         };
 
         return openpgp.encrypt(options)
-        .then(function(ciphertext) {
-            return ciphertext.data;
-        })
+        .then(ciphertext => ciphertext.data)
         .catch(function(err) {
             throw "Could not encrypt text: " + err;
         });
@@ -73,8 +72,9 @@ const PGP = {
      * @returns {string}
      */
     runDecrypt: function (input, args) {
-        var privateKey = args[0],
-            password = args[1];
+        let privateKey = args[0],
+            password = args[1],
+            message;
 
         try {
             privateKey = openpgp.key.readArmored(privateKey).keys[0];
@@ -83,12 +83,12 @@ const PGP = {
         }
 
         try {
-            var message = openpgp.message.readArmored(input);
+            message = openpgp.message.readArmored(input);
         } catch (err) {
             throw "Cannot read message: " + err;
         }
 
-        var options = {
+        let options = {
             message: message,
             privateKey: privateKey,
         };
@@ -101,9 +101,7 @@ const PGP = {
         }
 
         return openpgp.decrypt(options)
-        .then(function(plaintext) {
-            return plaintext.data;
-        })
+        .then(plaintext => plaintext.data)
         .catch(function(err) {
             throw "Could not decrypt message: " + err;
         });
@@ -118,18 +116,20 @@ const PGP = {
      * @returns {string}
      */
     runSign: function (input, args) {
-        var publicKey = args[0],
+        let publicKey = args[0],
             privateKey = args[1],
-            password = args[2];
+            password = args[2],
+            publicKeys,
+            privateKeys;
 
         try {
-            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+            publicKeys = openpgp.key.readArmored(publicKey).keys;
         } catch (err) {
             throw "Could not read public key: " + err;
         }
 
         try {
-            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+            privateKeys = openpgp.key.readArmored(privateKey).keys;
         } catch (err) {
             throw "Could not read private key: " + err;
         }
@@ -141,16 +141,14 @@ const PGP = {
             throw "Could not decrypt private key.";
         }
 
-        var options = {
+        let options = {
             data: input,
             publicKeys: publicKeys,
             privateKeys: privateKeys,
         };
 
         return openpgp.encrypt(options)
-        .then(function(signedData) {
-            return signedData.data;
-        })
+        .then(signedData => signedData.data)
         .catch(function(err) {
             throw "Could not sign input: " + err;
         });
@@ -165,18 +163,21 @@ const PGP = {
      * @returns {string} - the original message, and a summary of the verification process
      */
     runVerify: function (input, args) {
-        var publicKey = args[0],
+        let publicKey = args[0],
             privateKey = args[1],
-            password = args[2];
+            password = args[2],
+            publicKeys,
+            privateKeys,
+            message;
 
         try {
-            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+            publicKeys = openpgp.key.readArmored(publicKey).keys;
         } catch (err) {
             throw "Could not read public key: " + err;
         }
 
         try {
-            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+            privateKeys = openpgp.key.readArmored(privateKey).keys;
         } catch (err) {
             throw "Could not read private key: " + err;
         }
@@ -189,16 +190,16 @@ const PGP = {
         }
 
         try {
-            var message = openpgp.message.readArmored(input);
+            message = openpgp.message.readArmored(input);
         } catch (err) {
             throw "Could not read encrypted message: " + err;
         }
 
-        var packetContainingAlgorithms = message.packets.filterByTag(
+        let packetContainingAlgorithms = message.packets.filterByTag(
             openpgp.enums.packet.publicKeyEncryptedSessionKey
         )[0];
 
-        var verification = {
+        let verification = {
             verified: false,
             pkAlgorithm: packetContainingAlgorithms.publicKeyAlgorithm,
             sessionAlgorithm: packetContainingAlgorithms.sessionKeyAlgorithm,
@@ -213,7 +214,7 @@ const PGP = {
             publicKeys: publicKeys,
             privateKey: privateKeys[0],
         })
-        .then(function(decrypted) {
+        .then(decrypted => {
             if (decrypted.signatures) {
                 // valid is either true or null, casting required.
                 verification.verified = !!decrypted.signatures[0].valid;
@@ -248,11 +249,12 @@ const PGP = {
      * @returns {HTML} - HTML file display of message, armoured signature, and bytes signature
      */
     runSignDetached: function (input, args) {
-        var privateKey = args[0],
-            password = args[1];
+        let privateKey = args[0],
+            password = args[1],
+            privateKeys;
 
         try {
-            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+            privateKeys = openpgp.key.readArmored(privateKey).keys;
         } catch (err) {
             throw "Could not read private key: " + err;
         }
@@ -264,14 +266,14 @@ const PGP = {
             throw "Could not decrypt private key.";
         }
 
-        var bytes = openpgp.util.str2Uint8Array(input);
-        var message = openpgp.message.fromBinary(bytes);
+        let bytes = openpgp.util.str2Uint8Array(input);
+        let message = openpgp.message.fromBinary(bytes);
 
-        var signedMessage = message.sign(privateKeys);
-        var signature = signedMessage.packets.filterByTag(openpgp.enums.packet.signature);
-        var rawSignatureBytes = signature.write();
+        let signedMessage = message.sign(privateKeys);
+        let signature = signedMessage.packets.filterByTag(openpgp.enums.packet.signature);
+        let rawSignatureBytes = signature.write();
 
-        var armouredMessage = openpgp.armor.encode(
+        let armouredMessage = openpgp.armor.encode(
             openpgp.enums.armor.message,
             rawSignatureBytes
         );
@@ -284,7 +286,7 @@ const PGP = {
             "-----END PGP SIGNATURE-----\r\n"
         );
 
-        var files = [{
+        let files = [{
             fileName: "msg",
             size: input.length,
             contents: input,
@@ -313,17 +315,19 @@ const PGP = {
      * @returns {string} - the original message, and a summary of the verification process
      */
     runVerifyDetached: function (input, args) {
-        var publicKey = args[0],
-            armouredSignature = args[1];
+        let publicKey = args[0],
+            armouredSignature = args[1],
+            publicKeys,
+            message;
 
         try {
-            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+            publicKeys = openpgp.key.readArmored(publicKey).keys;
         } catch (err) {
             throw "Could not read public key: " + err;
         }
 
         try {
-            var message = openpgp.message.readSignedContent(
+            message = openpgp.message.readSignedContent(
                 input,
                 armouredSignature
             );
@@ -331,11 +335,11 @@ const PGP = {
             throw "Could not read armoured signature or message: " + err;
         }
 
-        var packetContainingSignature = message.packets.filterByTag(
+        let packetContainingSignature = message.packets.filterByTag(
             openpgp.enums.packet.signature
         )[0];
 
-        var verification = {
+        let verification = {
             verified: false,
             pkAlgorithm: publicKeys[0].primaryKey.algorithm,
             author: publicKeys[0].users[0].userId.userid,
@@ -346,7 +350,6 @@ const PGP = {
 
         return Promise.resolve(message.verify(publicKeys))
         .then(function(signatures) {
-
             if (signatures && signatures.length) {
                 verification.verified = !!signatures[0].valid;
                 verification.keyID = signatures[0].keyid.toHex();
@@ -377,11 +380,12 @@ const PGP = {
      * @returns {string}
      */
     runSignCleartext: function (input, args) {
-        var privateKey = args[0],
-            password = args[1];
+        let privateKey = args[0],
+            password = args[1],
+            privateKeys;
 
         try {
-            var privateKeys = openpgp.key.readArmored(privateKey).keys;
+            privateKeys = openpgp.key.readArmored(privateKey).keys;
         } catch (err) {
             throw "Could not read private key: " + err;
         }
@@ -393,15 +397,13 @@ const PGP = {
             throw "Could not decrypt private key.";
         }
 
-        var options = {
+        let options = {
             data: input,
             privateKeys: privateKeys,
         };
 
         return openpgp.sign(options)
-        .then(function(signedData) {
-            return signedData.data;
-        })
+        .then(signedData => signedData.data)
         .catch(function(err) {
             throw "Could not clearsign input: " + err;
         });
@@ -416,25 +418,27 @@ const PGP = {
      * @returns {string} - the original message, and a summary of the verification process
      */
     runVerifyCleartext: function (input, args) {
-        var publicKey = args[0];
+        let publicKey = args[0],
+            publicKeys,
+            message;
 
         try {
-            var publicKeys = openpgp.key.readArmored(publicKey).keys;
+            publicKeys = openpgp.key.readArmored(publicKey).keys;
         } catch (err) {
             throw "Could not read public key: " + err;
         }
 
         try {
-            var message = openpgp.cleartext.readArmored(input);
+            message = openpgp.cleartext.readArmored(input);
         } catch (err) {
             throw "Could not read input message: " + err;
         }
 
-        var packetContainingSignature = message.packets.filterByTag(
+        let packetContainingSignature = message.packets.filterByTag(
             openpgp.enums.packet.signature
         )[0];
 
-        var verification = {
+        let verification = {
             verified: false,
             pkAlgorithm: publicKeys[0].primaryKey.algorithm,
             author: publicKeys[0].users[0].userId.userid,
@@ -447,7 +451,7 @@ const PGP = {
             message: message,
             publicKeys: publicKeys,
         })
-        .then(function(verifiedData) {
+        .then(verifiedData => {
             if (verifiedData.signatures) {
                 // valid is either true or null, casting required.
                 verification.verified = !!verifiedData.signatures[0].valid;
@@ -478,12 +482,12 @@ const PGP = {
      * @returns {string} - armoured public key and private key separated by whitespace.
      */
     runGenKeyPair: function (input, args) {
-        var password = args[0],
+        let password = args[0],
             keySize = parseInt(args[1], 10),
             name = args[2],
             email = args[3];
 
-        var options = {
+        let options = {
             numBits: keySize,
             userIds: [{name: name, email: email}],
         };
@@ -493,12 +497,11 @@ const PGP = {
         }
 
         return openpgp.generateKey(options)
-        .then(function(key) {
-            var output = [
+        .then(key => {
+            return [
                 key.publicKeyArmored,
                 key.privateKeyArmored,
             ].join(""); // Preceding and trailing newlines are already generated.
-            return output;
         })
         .catch(function(err) {
             throw "Could not generate key pair: " + err;
@@ -514,19 +517,21 @@ const PGP = {
      * @returns {HTML} - HTML file display of message, armoured signature, and bytes signature
      */
     runDetachClearsig: function (input, args) {
+        let message;
+
         try {
-            var message = openpgp.cleartext.readArmored(input);
+            message = openpgp.cleartext.readArmored(input);
         } catch (err) {
             throw "Could not read input message: " + err;
         }
 
-        var cleartext = message.getText();
-        var clearbytes = openpgp.util.str2Uint8Array(cleartext);
+        let cleartext = message.getText();
+        let clearbytes = openpgp.util.str2Uint8Array(cleartext);
 
-        var signature = message.packets.filterByTag(openpgp.enums.packet.signature);
-        var rawSignatureBytes = signature.write();
+        let signature = message.packets.filterByTag(openpgp.enums.packet.signature);
+        let rawSignatureBytes = signature.write();
 
-        var armouredMessage = openpgp.armor.encode(
+        let armouredMessage = openpgp.armor.encode(
             openpgp.enums.armor.message,
             rawSignatureBytes
         );
@@ -539,7 +544,7 @@ const PGP = {
             "-----END PGP SIGNATURE-----\r\n"
         );
 
-        var files = [{
+        let files = [{
             fileName: "msg",
             size: cleartext.length,
             contents: cleartext,
@@ -568,7 +573,7 @@ const PGP = {
      * @returns {string} - armoured public key and private key separated by whitespace.
      */
     runAddArmour: function (input, args) {
-        var armourType = PGP.ARMOUR_TYPE_MAPPING[args[0]];
+        let armourType = PGP.ARMOUR_TYPE_MAPPING[args[0]];
         return openpgp.armor.encode(armourType, input);
     },
 
@@ -581,9 +586,9 @@ const PGP = {
      * @returns {byteArray}
      */
     runRemoveArmour: function (input, args) {
-        var decoded = openpgp.armor.decode(input);
-        var uint8bytes = decoded.data;
-        var bytes = Array.prototype.slice.call(uint8bytes);
+        let decoded = openpgp.armor.decode(input);
+        let uint8bytes = decoded.data;
+        let bytes = Array.prototype.slice.call(uint8bytes);
         return bytes;
     },
 };
