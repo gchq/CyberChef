@@ -1,6 +1,6 @@
 # CyberChef
 
-####*The Cyber Swiss Army Knife*
+#### *The Cyber Swiss Army Knife*
 
 CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.
 
@@ -13,7 +13,6 @@ CyberChef is still under active development. As a result, it shouldn't be consid
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
 [A live demo can be found here][1] - have fun!
-Note: Use Chrome or Firefox, see the Browser Support section below for details.
 
 
 ## How it works
@@ -63,11 +62,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 ## Browser support
 
-CyberChef works well in modern versions of Google Chrome and Mozilla Firefox.
-
-To aid in the efficient development of new features and operations, there has been no attempt to maintain support for any version of Microsoft Internet Explorer.
-
-Microsoft Edge is currently unsupported, but if anyone would like to contribute compatibility fixes, they would be appreciated.
+CyberChef is built to support Google Chrome 40+, Mozilla Firefox 35+ and Microsoft Edge 14+.
 
 
 ## Contributing
