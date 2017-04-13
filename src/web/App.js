@@ -112,41 +112,45 @@ App.prototype.bake = function(step) {
     app.setBakingStatus(true);
 
     try {
-        app.chef.bake(
-            app.getInput(),        // The user's input
-            app.getRecipeConfig(), // The configuration of the recipe
-            app.options,           // Options set by the user
-            app.progress,          // The current position in the recipe
-            step                   // Whether or not to take one step or execute the whole recipe
-        )
-            .then(function(response) {
-                app.setBakingStatus(false);
+        // This timeout is so the UI has time to update the baking status
+        // before any blocking operations delay it until after the operation.
+        setTimeout(function() {
+            app.chef.bake(
+                app.getInput(),        // The user's input
+                app.getRecipeConfig(), // The configuration of the recipe
+                app.options,           // Options set by the user
+                app.progress,          // The current position in the recipe
+                step                   // Whether or not to take one step or execute the whole recipe
+            )
+                .then(function(response) {
+                    app.setBakingStatus(false);
 
-                if (!response) return;
-                if (response.error) app.handleError(response.error);
+                    if (!response) return;
+                    if (response.error) app.handleError(response.error);
 
-                app.options = response.options;
+                    app.options = response.options;
 
-                if (response.type === "html") {
-                    app.dishStr = Utils.stripHtmlTags(response.result, true);
-                } else {
-                    app.dishStr = response.result;
-                }
+                    if (response.type === "html") {
+                        app.dishStr = Utils.stripHtmlTags(response.result, true);
+                    } else {
+                        app.dishStr = response.result;
+                    }
 
-                app.progress = response.progress;
-                app.manager.recipe.updateBreakpointIndicator(response.progress);
-                app.manager.output.set(response.result, response.type, response.duration);
+                    app.progress = response.progress;
+                    app.manager.recipe.updateBreakpointIndicator(response.progress);
+                    app.manager.output.set(response.result, response.type, response.duration);
 
-                // If baking took too long, disable auto-bake
-                if (response.duration > app.options.autoBakeThreshold && app.autoBake_) {
-                    app.manager.controls.setAutoBake(false);
-                    app.alert("Baking took longer than " + app.options.autoBakeThreshold +
-                        "ms, Auto Bake has been disabled.", "warning", 5000);
-                }
-            })
-            .catch(function(err) {
-                console.error("Chef's promise was rejected, this should never occur");
-            });
+                    // If baking took too long, disable auto-bake
+                    if (response.duration > app.options.autoBakeThreshold && app.autoBake_) {
+                        app.manager.controls.setAutoBake(false);
+                        app.alert("Baking took longer than " + app.options.autoBakeThreshold +
+                            "ms, Auto Bake has been disabled.", "warning", 5000);
+                    }
+                })
+                .catch(function(err) {
+                    console.error("Chef's promise was rejected, this should never occur");
+                });
+        }, 10);
     } catch (err) {
         app.setBakingStatus(false);
         app.handleError(err);
