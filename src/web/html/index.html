@@ -38,7 +38,7 @@
             <span id="alert-content"></span>
         </div>
         <div id="content-wrapper">
-            <div id="banner" class="green">
+            <div id="banner">
                 <% if (htmlWebpackPlugin.options.inline) { %>
                     <span style="float: left; margin-left: 10px;">Compile time: <%= htmlWebpackPlugin.options.compileTime %></span>
                 <% } else { %>
@@ -57,7 +57,7 @@
                 <a href="#" id="support" class="banner-right" data-toggle="modal" data-target="#support-modal">About / Support<img aria-hidden="true" src="<%- require('../static/images/help-22x22.png') %>" alt="Question Mark Icon"/></a>
                 <a href="#" id="options" class="banner-right">Options<img aria-hidden="true" src="<%- require('../static/images/settings-22x22.png') %>" alt="Settings Icon"/></a>
             </div>
-            <div id="wrapper">
+            <div id="workspace-wrapper">
                 <div id="operations" class="split split-horizontal no-select">
                     <div class="title no-select">Operations</div>
                     <input type="search" class="form-control" id="search" placeholder="Search..." autocomplete="off">
@@ -163,6 +163,7 @@
                                 <input type="checkbox" id="save-link-recipe-checkbox" checked> <label for="save-link-recipe-checkbox"> Include recipe </label>
                                 <input type="checkbox" id="save-link-input-checkbox" checked> <label for="save-link-input-checkbox"> Include input </label>
                             </div>
+                            <br>
                             <a id="save-link" style="word-wrap: break-word;"></a>
                         </div>
                     </div>

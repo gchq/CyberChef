@@ -1,0 +1,65 @@
+/**
+ * Operation area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+#op-list {
+    @extend .list-area;
+}
+
+.category-title {
+    display: block;
+    padding: 10px;
+    background-color: $secondaryBackgroundColour;
+    border-bottom: 1px solid $secondaryBorderColour;
+    font-weight: $titleWeight;
+}
+
+.category-title[href='#catFavourites'] {
+    border-bottom-color: $primaryBorderColour;
+}
+
+.category-title[aria-expanded=true] {
+    border-bottom-color: $primaryBorderColour;
+}
+
+.category-title.collapsed {
+    border-bottom-color: $secondaryBorderColour;
+}
+
+.category-title:hover {
+    color: $opListOperationFontColour;
+}
+
+.category {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none;
+}
+
+.op-list .operation {
+    color: $opListOperationFontColour;
+    background-color: $opListOperationBgColour;
+    border-color: $opListOperationBorderColour;
+}
+
+#search {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid $primaryBorderColour;
+}
+
+#edit-favourites {
+    float: right;
+    margin-top: -5px;
+}
+
+.favourites-hover {
+    color: $recListOperationFontColour;
+    background-color: $recListOperationBgColour;
+    border: 2px dashed $recListOperationFontColour !important;
+    padding: 8px 8px 9px 8px;
+}

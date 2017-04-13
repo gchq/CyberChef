@@ -10,12 +10,32 @@
 @import "~google-code-prettify/src/prettify.css";
 
 // Frameworks
-@import "vendors/bootstrap.scss";
+@import "vendors/bootstrap";
 @import "~bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css";
 @import "~bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
 
+
 // CyberChef styles
-@import "structure/overrides.scss";
-@import "structure/layout.scss";
-@import "structure/utils.scss";
-@import "themes/classic.scss";
+// Theme
+@import "themes/_classic";
+
+// Utilities
+@import "utils/_mixins";
+@import "utils/_overrides";
+@import "utils/_general";
+
+// Components
+@import "components/_alert";
+@import "components/_button";
+@import "components/_list";
+@import "components/_operation";
+@import "components/_pane";
+
+// Layout
+@import "layout/_banner";
+@import "layout/_controls";
+@import "layout/_io";
+@import "layout/_modals";
+@import "layout/_operations";
+@import "layout/_recipe";
+@import "layout/_structure";

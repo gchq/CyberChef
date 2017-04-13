@@ -1,0 +1,29 @@
+/**
+ * Mixins to cover vendor prefixes
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+@mixin box-sizing($value) {
+    -webkit-box-sizing: $value;
+       -moz-box-sizing: $value;
+            box-sizing: $value;
+}
+
+@mixin user-select($value) {
+    -webkit-touch-callout: $value;
+    -webkit-user-select: $value;
+    -khtml-user-select: $value;
+    -moz-user-select: $value;
+    -ms-user-select: $value;
+    user-select: $value;
+}
+
+@mixin transform($value) {
+    -ms-transform: rotate($value);
+    -webkit-transform: rotate($value);
+    -moz-transform: rotate($value);
+    transform: rotate($value);
+}

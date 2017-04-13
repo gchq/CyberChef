@@ -1,0 +1,80 @@
+/**
+ * Modal layout styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+.option-item .bootstrap-switch {
+    margin: 15px 10px;
+}
+
+.option-item button {
+    margin: 10px;
+}
+
+.option-item input[type=number] {
+    margin: 15px 10px;
+    width: 80px;
+    height: 28px;
+    padding: 3px 10px;
+    vertical-align: middle;
+    font-size: $argInputFontSize - 1px;
+    line-height: $argInputLineHeight;
+    color: $argFontColour;
+    background-color: $argBackground;
+    border: 1px solid $primaryBorderColour;
+}
+
+.option-item select {
+    margin: 10px;
+    display: inline-block;
+}
+
+#edit-favourites-list {
+    margin: 10px;
+    border: 1px solid $opListOperationBorderColour;
+}
+
+#edit-favourites-list .operation {
+    border-left: none;
+    border-right: none;
+}
+
+#edit-favourites-list .operation:last-child {
+    border-bottom: none;
+}
+
+.about-img-left {
+    float: left;
+    margin: 10px 20px 20px 0;
+}
+
+.about-img-right {
+    float: right;
+    margin: 10px 0 20px 20px;
+}
+
+.save-link-options {
+    float: right;
+}
+
+.save-link-options input{
+    margin-left: 10px;
+}
+
+#save-footer {
+    border-top: none;
+    margin-top: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#support-modal textarea {
+    font-family: $primaryFontFamily;
+}
+
+#save-text,
+#load-text {
+    font-family: $fixedWidthFontFamily;
+}

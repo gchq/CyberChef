@@ -1,0 +1,63 @@
+/**
+ * Controls area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+$controlsHeight: 120px;
+$controlsDivision: 65%;
+
+#controls {
+    position: absolute;
+    width: 100%;
+    height: $controlsHeight;
+    bottom: 0;
+    padding: 10px;
+    border-top: 1px solid $primaryBorderColour;
+    background-color: $secondaryBackgroundColour;
+}
+
+#operational-controls {
+    width: $controlsDivision;
+    float: left;
+    text-align: center;
+}
+
+#bake-group {
+    display: table;
+    width: 100%;
+}
+
+#bake {
+    display: table-cell;
+    width: 100%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#auto-bake-label {
+    display: table-cell;
+    padding: 1px;
+    line-height: 1.35;
+    width: 60px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid #5cb85c;
+}
+
+#auto-bake-label:hover {
+    border-left-color: #398439;
+}
+
+#auto-bake-label div {
+    font-size: 10px;
+    padding: 2px;
+}
+
+#extra-controls {
+    float: right;
+    width: 100% - $controlsDivision;
+    padding-left: 10px;
+}

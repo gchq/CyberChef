@@ -1,0 +1,90 @@
+/**
+ * Classic theme definitions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+$primaryFontFamily: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$primaryFontColour: #333;
+$primaryFontSize: 14px;
+$primaryLineHeight: 20px;
+
+$fixedWidthFontFamily: "Consolas", monospace;
+$fixedWidthFontColour: inherit;
+$fixedWidthFontSize: inherit;
+
+$subtextFontColour: #999;
+$subtextFontSize: 13px;
+
+$primaryBackgroundColour: #fff;
+$secondaryBackgroundColour: #fafafa;
+
+$primaryBorderColour: #ddd;
+$secondaryBorderColour: #eee;
+
+$titleColour: #424242;
+$titleWeight: bold;
+
+
+// Operation colours
+$opListOperationFontColour: #3a87ad;
+$opListOperationBgColour: #d9edf7;
+$opListOperationBorderColour: #bce8f1;
+
+$recListOperationFontColour: #468847;
+$recListOperationBgColour: #dff0d8;
+$recListOperationBorderColour: #d6e9c6;
+
+$selectedOperationFontColor: #c09853;
+$selectedOperationBgColour: #fcf8e3;
+$selectedOperationBorderColour: #fbeed5;
+
+$breakpointFontColour: #b94a48;
+$breakpointBgColour: #f2dede;
+$breakpointBorderColour: #eed3d7;
+
+$breakpointFontColour: #b94a48;
+$breakpointBgColour: #f2dede;
+$breakpointBorderColour: #eed3d7;
+
+$disabledFontColour: #999;
+$disabledBgColour: #dfdfdf;
+$disabledBorderColour: #cdcdcd;
+
+$fcOperationFontColour: #396f3a;
+$fcOperationBgColour: #c7e4ba;
+$fcOperationBorderColour: #b3dba2;
+
+$fcBreakpointOperationFontColour: #94312f;
+$fcBreakpointOperationBgColour: #eabfbf;
+$fcBreakpointOperationBorderColour: #e2aeb5;
+
+
+// Operation arguments
+$argTitleFontWeight: bold;
+$argInputHeight: 34px;
+$argInputLineHeight: 20px;
+$argInputFontSize: 15px;
+$argFontColour: #424242;
+$argBackground: #fff;
+$argDisabledBackground: #eee;
+
+
+// Misc.
+$dropFileBorderColour: #3a87ad;
+
+$bannerFontColour: #468847;
+$bannerBgColour: #dff0d8;
+
+$scrollbarTrack: $secondaryBackgroundColour;
+$scrollbarThumb: #ccc;
+$scrollbarHover: #bbb;
+
+// Highlighter colours
+$hl1: #fff000;
+$hl2: #95dfff;
+$hl3: #ffb6b6;
+$hl4: #fcf8e3;
+$hl5: #8de768;
