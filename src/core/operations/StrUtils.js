@@ -397,9 +397,7 @@ const StrUtils = {
         }
 
         // Initialise output strings
-        for (s = 0; s < samples.length; s++) {
-            outputs[s] = "";
-        }
+        outputs.fill("", 0, samples.length);
 
         // Loop through each character in the first sample
         for (i = 0; i < samples[0].length; i++) {
