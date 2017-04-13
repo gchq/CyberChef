@@ -160,7 +160,7 @@ const HTML = {
      * @returns {html}
      */
     runParseColourCode: function(input, args) {
-        var m = null,
+        let m = null,
             r = 0, g = 0, b = 0, a = 1;
 
         // Read in the input
@@ -198,14 +198,15 @@ const HTML = {
             b = Math.round(255 * (1 - y_) * (1 - k_));
         }
 
-        var hsl_ = HTML._rgbToHsl(r, g, b),
+        let hsl_ = HTML._rgbToHsl(r, g, b),
             h = Math.round(hsl_[0] * 360),
             s = Math.round(hsl_[1] * 100),
             l = Math.round(hsl_[2] * 100),
             k = 1 - Math.max(r/255, g/255, b/255),
             c = (1 - r/255 - k) / (1 - k),
-            m = (1 - g/255 - k) / (1 - k), // eslint-disable-line no-redeclare
             y = (1 - b/255 - k) / (1 - k);
+
+        m = (1 - g/255 - k) / (1 - k);
 
         c = isNaN(c) ? "0" : c.toFixed(2);
         m = isNaN(m) ? "0" : m.toFixed(2);

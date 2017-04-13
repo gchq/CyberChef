@@ -1,6 +1,5 @@
 import Utils from "./Utils.js";
 
-
 /**
  * The data being operated on by each operation.
  *
@@ -12,10 +11,10 @@ import Utils from "./Utils.js";
  * @param {byteArray|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
-var Dish = function(value, type) {
+function Dish(value, type) {
     this.value = value || typeof value == "string" ? value : null;
     this.type  = type || Dish.BYTE_ARRAY;
-};
+}
 
 
 /**

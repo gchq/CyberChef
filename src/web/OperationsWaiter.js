@@ -201,7 +201,7 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
     editFavouritesList.innerHTML = html;
     this.removeIntent = false;
 
-    var editableList = Sortable.create(editFavouritesList, {
+    const editableList = Sortable.create(editFavouritesList, {
         filter: ".remove-icon",
         onFilter: function (evt) {
             const el = editableList.closest(evt.item);

@@ -91,8 +91,8 @@ const URL_ = {
             if (a.search && a.search !== window.location.search) {
                 output += "Arguments:\n";
                 const args_ = (a.search.slice(1, a.search.length)).split("&");
-                let splitArgs = [], padding = 0;
-                for (var i = 0; i < args_.length; i++) {
+                let splitArgs = [], padding = 0, i;
+                for (i = 0; i < args_.length; i++) {
                     splitArgs.push(args_[i].split("="));
                     padding = (splitArgs[i][0].length > padding) ? splitArgs[i][0].length : padding;
                 }

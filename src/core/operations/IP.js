@@ -259,6 +259,8 @@ const IP = {
         for (let i = 0; i < lines.length; i++) {
             if (lines[i] === "") continue;
             let baIp = [];
+            let octets;
+            let decimal;
 
             if (inFormat === outFormat) {
                 output += lines[i] + "\n";
@@ -268,13 +270,13 @@ const IP = {
             // Convert to byte array IP from input format
             switch (inFormat) {
                 case "Dotted Decimal":
-                    var octets = lines[i].split(".");
+                    octets = lines[i].split(".");
                     for (j = 0; j < octets.length; j++) {
                         baIp.push(parseInt(octets[j], 10));
                     }
                     break;
                 case "Decimal":
-                    var decimal = lines[i].toString();
+                    decimal = lines[i].toString();
                     baIp.push(decimal >> 24 & 255);
                     baIp.push(decimal >> 16 & 255);
                     baIp.push(decimal >> 8 & 255);
@@ -287,21 +289,25 @@ const IP = {
                     throw "Unsupported input IP format";
             }
 
+            let ddIp;
+            let decIp;
+            let hexIp;
+
             // Convert byte array IP to output format
             switch (outFormat) {
                 case "Dotted Decimal":
-                    var ddIp = "";
+                    ddIp = "";
                     for (j = 0; j < baIp.length; j++) {
                         ddIp += baIp[j] + ".";
                     }
                     output += ddIp.slice(0, ddIp.length-1) + "\n";
                     break;
                 case "Decimal":
-                    var decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
+                    decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
                     output += decIp.toString() + "\n";
                     break;
                 case "Hex":
-                    var hexIp = "";
+                    hexIp = "";
                     for (j = 0; j < baIp.length; j++) {
                         hexIp += Utils.hex(baIp[j]);
                     }
@@ -352,14 +358,15 @@ const IP = {
             output = "",
             ip = null,
             network = null,
-            networkStr = "";
+            networkStr = "",
+            i;
 
         if (cidr < 0 || cidr > 127) {
             return "CIDR must be less than 32 for IPv4 or 128 for IPv6";
         }
 
         // Parse all IPs and add to network dictionary
-        for (var i = 0; i < ips.length; i++) {
+        for (i = 0; i < ips.length; i++) {
             if ((match = IP.IPV4_REGEX.exec(ips[i]))) {
                 ip = IP._strToIpv4(match[1]) >>> 0;
                 network = ip & ipv4Mask;
@@ -706,10 +713,11 @@ const IP = {
             ip2 = IP._strToIpv6(range[14]);
 
         let t = "",
-            total = new Array(128);
+            total = new Array(128),
+            i;
 
         // Initialise total array to "0"
-        for (var i = 0; i < 128; i++)
+        for (i = 0; i < 128; i++)
             total[i] = "0";
 
         for (i = 0; i < 8; i++) {

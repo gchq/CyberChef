@@ -242,7 +242,8 @@ const Code = {
 
         // Indent
         let i = 0,
-            level = 0;
+            level = 0,
+            indent;
         while (i < code.length) {
             switch (code[i]) {
                 case "{":
@@ -252,7 +253,7 @@ const Code = {
                     if (i+1 >= code.length) break;
 
                     if (code[i+1] === "}") level--;
-                    var indent = (level >= 0) ? Array(level*4+1).join(" ") : "";
+                    indent = (level >= 0) ? Array(level*4+1).join(" ") : "";
 
                     code = code.substring(0, i+1) + indent + code.substring(i+1);
                     if (level > 0) i += level*4;

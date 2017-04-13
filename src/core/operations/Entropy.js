@@ -91,10 +91,11 @@ const Entropy = {
         let distrib = new Array(256),
             percentages = new Array(256),
             len = input.length,
-            showZeroes = args[0];
+            showZeroes = args[0],
+            i;
 
         // Initialise distrib to 0
-        for (var i = 0; i < 256; i++) {
+        for (i = 0; i < 256; i++) {
             distrib[i] = 0;
         }
 
@@ -149,9 +150,10 @@ const Entropy = {
     _calcEntropy: function(data) {
         let prob = [],
             uniques = data.unique(),
-            str = Utils.byteArrayToChars(data);
+            str = Utils.byteArrayToChars(data),
+            i;
 
-        for (var i = 0; i < uniques.length; i++) {
+        for (i = 0; i < uniques.length; i++) {
             prob.push(str.count(Utils.chr(uniques[i])) / data.length);
         }
 

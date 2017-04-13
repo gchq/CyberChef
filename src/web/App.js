@@ -179,8 +179,9 @@ App.prototype.populateOperationsList = function() {
     document.body.appendChild(document.getElementById("edit-favourites"));
 
     let html = "";
+    let i;
 
-    for (var i = 0; i < this.categories.length; i++) {
+    for (i = 0; i < this.categories.length; i++) {
         let catConf = this.categories[i],
             selected = i === 0,
             cat = new HTMLCategory(catConf.name, selected);

@@ -117,11 +117,12 @@ const SeqUtils = {
      * @returns {byteArray}
      */
     runReverse: function (input, args) {
+        let i;
         if (args[0] === "Line") {
             let lines = [],
                 line = [],
                 result = [];
-            for (var i = 0; i < input.length; i++) {
+            for (i = 0; i < input.length; i++) {
                 if (input[i] === 0x0a) {
                     lines.push(line);
                     line = [];

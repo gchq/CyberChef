@@ -267,9 +267,10 @@ const PublicKey = {
             maxKeyLen = 0,
             key,
             value,
+            i,
             str;
 
-        for (var i = 0; i < fields.length; i++) {
+        for (i = 0; i < fields.length; i++) {
             if (!fields[i].length) continue;
 
             key = fields[i].split("=")[0];

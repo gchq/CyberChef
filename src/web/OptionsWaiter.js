@@ -30,7 +30,8 @@ OptionsWaiter.prototype.load = function(options) {
 
     // Set options to match object
     const cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
-    for (var i = 0; i < cboxes.length; i++) {
+    let i;
+    for (i = 0; i < cboxes.length; i++) {
         $(cboxes[i]).bootstrapSwitch("state", this.app.options[cboxes[i].getAttribute("option")]);
     }
 

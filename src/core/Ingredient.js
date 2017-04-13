@@ -63,6 +63,7 @@ Ingredient.prototype.setValue = function(value) {
  * @param {string} type - The name of the data type.
 */
 Ingredient.prepare = function(data, type) {
+    let number;
     switch (type) {
         case "binaryString":
         case "binaryShortString":
@@ -76,7 +77,7 @@ Ingredient.prepare = function(data, type) {
                 return data;
             }
         case "number":
-            var number = parseFloat(data);
+            number = parseFloat(data);
             if (isNaN(number)) {
                 const sample = Utils.truncate(data.toString(), 10);
                 throw "Invalid ingredient value. Not a number: " + sample;

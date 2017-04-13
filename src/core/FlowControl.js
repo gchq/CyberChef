@@ -48,14 +48,15 @@ const FlowControl = {
             mergeDelim   = ings[1],
             ignoreErrors = ings[2],
             subOpList    = [],
-            inputs       = [];
+            inputs       = [],
+            i;
 
         if (input)
             inputs = input.split(splitDelim);
 
         // Create subOpList for each tranche to operate on
         // (all remaining operations unless we encounter a Merge)
-        for (var i = state.progress + 1; i < opList.length; i++) {
+        for (i = state.progress + 1; i < opList.length; i++) {
             if (opList[i].name === "Merge" && !opList[i].isDisabled()) {
                 break;
             } else {

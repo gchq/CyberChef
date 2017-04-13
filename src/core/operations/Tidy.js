@@ -121,9 +121,10 @@ const Tidy = {
 
         // Split input into lines
         let lines = [],
-            line = [];
+            line = [],
+            i;
 
-        for (var i = 0; i < input.length; i++) {
+        for (i = 0; i < input.length; i++) {
             if (input[i] === 0x0a) {
                 lines.push(line);
                 line = [];
@@ -174,8 +175,9 @@ const Tidy = {
         // Split input into lines
         let lines = [],
             line = [];
+        let i;
 
-        for (var i = 0; i < input.length; i++) {
+        for (i = 0; i < input.length; i++) {
             if (input[i] === 0x0a) {
                 lines.push(line);
                 line = [];

@@ -23,7 +23,7 @@ import OperationConfig from "../core/config/OperationConfig.js";
 /**
  * Main function used to build the CyberChef web app.
  */
-var main = function() {
+function main() {
     const defaultFavourites = [
         "To Base64",
         "From Base64",
@@ -51,7 +51,7 @@ var main = function() {
     document.removeEventListener("DOMContentLoaded", main, false);
     window.app = new App(Categories, OperationConfig, defaultFavourites, defaultOptions);
     window.app.setup();
-};
+}
 
 // Fix issues with browsers that don't support console.log()
 window.console = console || {log: function() {}, error: function() {}};

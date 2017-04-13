@@ -275,10 +275,11 @@ const StrUtils = {
      */
     runFilter: function(input, args) {
         let delim = Utils.charRep[args[0]],
+            regex,
             reverse = args[2];
 
         try {
-            var regex = new RegExp(args[1]);
+            regex = new RegExp(args[1]);
         } catch (err) {
             return "Invalid regex. Details: " + err.message;
         }
