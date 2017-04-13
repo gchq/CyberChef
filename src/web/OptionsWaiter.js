@@ -8,7 +8,7 @@
  * @constructor
  * @param {App} app - The main view object for CyberChef.
  */
-var OptionsWaiter = function(app) {
+const OptionsWaiter = function(app) {
     this.app = app;
 };
 
@@ -24,23 +24,23 @@ OptionsWaiter.prototype.load = function(options) {
         animate: false,
     });
 
-    for (var option in options) {
+    for (const option in options) {
         this.app.options[option] = options[option];
     }
 
     // Set options to match object
-    var cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
+    const cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
     for (var i = 0; i < cboxes.length; i++) {
         $(cboxes[i]).bootstrapSwitch("state", this.app.options[cboxes[i].getAttribute("option")]);
     }
 
-    var nboxes = document.querySelectorAll("#options-body input[type=number]");
+    const nboxes = document.querySelectorAll("#options-body input[type=number]");
     for (i = 0; i < nboxes.length; i++) {
         nboxes[i].value = this.app.options[nboxes[i].getAttribute("option")];
         nboxes[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
     }
 
-    var selects = document.querySelectorAll("#options-body select");
+    const selects = document.querySelectorAll("#options-body select");
     for (i = 0; i < selects.length; i++) {
         selects[i].value = this.app.options[selects[i].getAttribute("option")];
         selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
@@ -74,7 +74,7 @@ OptionsWaiter.prototype.resetOptionsClick = function() {
  * @param {boolean} state
  */
 OptionsWaiter.prototype.switchChange = function(e, state) {
-    var el = e.target,
+    let el = e.target,
         option = el.getAttribute("option");
 
     this.app.options[option] = state;
@@ -89,7 +89,7 @@ OptionsWaiter.prototype.switchChange = function(e, state) {
  * @param {event} e
  */
 OptionsWaiter.prototype.numberChange = function(e) {
-    var el = e.target,
+    let el = e.target,
         option = el.getAttribute("option");
 
     this.app.options[option] = parseInt(el.value, 10);
@@ -104,7 +104,7 @@ OptionsWaiter.prototype.numberChange = function(e) {
  * @param {event} e
  */
 OptionsWaiter.prototype.selectChange = function(e) {
-    var el = e.target,
+    let el = e.target,
         option = el.getAttribute("option");
 
     this.app.options[option] = el.value;

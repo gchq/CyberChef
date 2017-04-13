@@ -15,7 +15,7 @@ const Numberwang = {
      */
     run: function(input, args) {
         if (!input) return "Let's play Wangernumb!";
-        var match = input.match(/\d+/);
+        const match = input.match(/\d+/);
         if (match) {
             return match[0] + "! That's Numberwang!";
         } else {

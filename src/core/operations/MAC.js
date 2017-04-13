@@ -45,7 +45,7 @@ const MAC = {
     runFormat: function(input, args) {
         if (!input) return "";
 
-        var outputCase = args[0],
+        let outputCase = args[0],
             noDelim = args[1],
             dashDelim = args[2],
             colonDelim = args[3],
@@ -54,7 +54,7 @@ const MAC = {
             macs = input.toLowerCase().split(/[,\s\r\n]+/);
 
         macs.forEach(function(mac) {
-            var cleanMac = mac.replace(/[:.-]+/g, ""),
+            let cleanMac = mac.replace(/[:.-]+/g, ""),
                 macHyphen = cleanMac.replace(/(.{2}(?=.))/g, "$1-"),
                 macColon = cleanMac.replace(/(.{2}(?=.))/g, "$1:"),
                 macCisco = cleanMac.replace(/(.{4}(?=.))/g, "$1.");

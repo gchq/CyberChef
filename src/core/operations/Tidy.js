@@ -51,7 +51,7 @@ const Tidy = {
      * @returns {string}
      */
     runRemoveWhitespace: function (input, args) {
-        var removeSpaces = args[0],
+        let removeSpaces = args[0],
             removeCariageReturns = args[1],
             removeLineFeeds = args[2],
             removeTabs = args[3],
@@ -77,8 +77,8 @@ const Tidy = {
      * @returns {byteArray}
      */
     runRemoveNulls: function (input, args) {
-        var output = [];
-        for (var i = 0; i < input.length; i++) {
+        const output = [];
+        for (let i = 0; i < input.length; i++) {
             if (input[i] !== 0) output.push(input[i]);
         }
         return output;
@@ -109,7 +109,7 @@ const Tidy = {
      * @returns {byteArray}
      */
     runDropBytes: function(input, args) {
-        var start = args[0],
+        let start = args[0],
             length = args[1],
             applyToEachLine = args[2];
 
@@ -120,7 +120,7 @@ const Tidy = {
             return input.slice(0, start).concat(input.slice(start+length, input.length));
 
         // Split input into lines
-        var lines = [],
+        let lines = [],
             line = [];
 
         for (var i = 0; i < input.length; i++) {
@@ -133,7 +133,7 @@ const Tidy = {
         }
         lines.push(line);
 
-        var output = [];
+        let output = [];
         for (i = 0; i < lines.length; i++) {
             output = output.concat(lines[i].slice(0, start).concat(lines[i].slice(start+length, lines[i].length)));
             output.push(0x0a);
@@ -161,7 +161,7 @@ const Tidy = {
      * @returns {byteArray}
      */
     runTakeBytes: function(input, args) {
-        var start = args[0],
+        let start = args[0],
             length = args[1],
             applyToEachLine = args[2];
 
@@ -172,7 +172,7 @@ const Tidy = {
             return input.slice(start, start+length);
 
         // Split input into lines
-        var lines = [],
+        let lines = [],
             line = [];
 
         for (var i = 0; i < input.length; i++) {
@@ -185,7 +185,7 @@ const Tidy = {
         }
         lines.push(line);
 
-        var output = [];
+        let output = [];
         for (i = 0; i < lines.length; i++) {
             output = output.concat(lines[i].slice(start, start+length));
             output.push(0x0a);
@@ -218,7 +218,7 @@ const Tidy = {
      * @returns {string}
      */
     runPad: function(input, args) {
-        var position = args[0],
+        let position = args[0],
             len = args[1],
             chr = args[2],
             lines = input.split("\n"),

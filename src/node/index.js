@@ -7,7 +7,7 @@
  */
 require("babel-polyfill");
 
-var Chef = require("../core/Chef.js").default;
+const Chef = require("../core/Chef.js").default;
 
 const CyberChef = module.exports = {
 

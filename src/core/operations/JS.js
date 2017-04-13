@@ -48,7 +48,7 @@ const JS = {
      * @returns {string}
      */
     runParse: function (input, args) {
-        var parseLoc = args[0],
+        let parseLoc = args[0],
             parseRange = args[1],
             parseTokens = args[2],
             parseComment = args[3],
@@ -96,7 +96,7 @@ const JS = {
      * @returns {string}
      */
     runBeautify: function(input, args) {
-        var beautifyIndent = args[0] || JS.BEAUTIFY_INDENT,
+        let beautifyIndent = args[0] || JS.BEAUTIFY_INDENT,
             quotes = args[1].toLowerCase(),
             beautifySemicolons = args[2],
             beautifyComment = args[3],
@@ -110,7 +110,7 @@ const JS = {
                 comment: true
             });
 
-            var options = {
+            const options = {
                 format: {
                     indent: {
                         style: beautifyIndent
@@ -141,7 +141,7 @@ const JS = {
      * @returns {string}
      */
     runMinify: function(input, args) {
-        var result = "",
+        let result = "",
             AST = esprima.parse(input),
             optimisedAST = esmangle.optimize(AST, null),
             mangledAST = esmangle.mangle(optimisedAST);

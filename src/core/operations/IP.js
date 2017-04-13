@@ -38,12 +38,12 @@ const IP = {
      * @returns {string}
      */
     runParseIpRange: function (input, args) {
-        var includeNetworkInfo = args[0],
+        let includeNetworkInfo = args[0],
             enumerateAddresses = args[1],
             allowLargeList = args[2];
 
         // Check what type of input we are looking at
-        var ipv4CidrRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\/(\d\d?)\s*$/,
+        let ipv4CidrRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\/(\d\d?)\s*$/,
             ipv4RangeRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*-\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/,
             ipv6CidrRegex = /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\/(\d\d?\d?)\s*$/i,
             ipv6RangeRegex = /^\s*(((?=.*::)(?!.*::[^-]+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*-\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\17)::|:\b|(?![\dA-F])))|(?!\16\17)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
@@ -82,11 +82,11 @@ const IP = {
      * @returns {string}
      */
     runParseIPv6: function (input, args) {
-        var match,
+        let match,
             output = "";
 
         if ((match = IP.IPV6_REGEX.exec(input))) {
-            var ipv6 = IP._strToIpv6(match[1]),
+            let ipv6 = IP._strToIpv6(match[1]),
                 longhand = IP._ipv6ToStr(ipv6),
                 shorthand = IP._ipv6ToStr(ipv6, true);
 
@@ -126,7 +126,7 @@ const IP = {
             } else if (ipv6[0] === 0x2001 && ipv6[1] === 0) {
                 // Teredo tunneling
                 output += "\nTeredo tunneling IPv6 address detected\n";
-                var serverIpv4  = (ipv6[2] << 16) + ipv6[3],
+                let serverIpv4  = (ipv6[2] << 16) + ipv6[3],
                     udpPort     = (~ipv6[5]) & 0xffff,
                     clientIpv4  = ~((ipv6[6] << 16) + ipv6[7]),
                     flagCone    = (ipv6[4] >>> 15) & 1,
@@ -190,7 +190,7 @@ const IP = {
                 output += "\n6to4 transition IPv6 address detected. See RFC 3056 for more details." +
                     "\n6to4 prefix range: 2002::/16";
 
-                var v4Addr = IP._ipv4ToStr((ipv6[1] << 16) + ipv6[2]),
+                let v4Addr = IP._ipv4ToStr((ipv6[1] << 16) + ipv6[2]),
                     slaId = ipv6[3],
                     interfaceIdStr = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
                     interfaceId = new BigInteger(interfaceIdStr, 16);
@@ -218,7 +218,7 @@ const IP = {
             if ((ipv6[5] & 0xff === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
                 output += "\n\nThis IPv6 address contains a modified EUI-64 address, identified by the presence of FF:FE in the 12th and 13th octets.";
 
-                var intIdent = Utils.hex(ipv6[4] >>> 8) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +
+                let intIdent = Utils.hex(ipv6[4] >>> 8) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +
                     Utils.hex(ipv6[5] >>> 8) + ":" + Utils.hex(ipv6[5] & 0xff) + ":" +
                     Utils.hex(ipv6[6] >>> 8) + ":" + Utils.hex(ipv6[6] & 0xff) + ":" +
                     Utils.hex(ipv6[7] >>> 8) + ":" + Utils.hex(ipv6[7] & 0xff),
@@ -249,16 +249,16 @@ const IP = {
      * @returns {string}
      */
     runChangeIpFormat: function(input, args) {
-        var inFormat = args[0],
+        let inFormat = args[0],
             outFormat = args[1],
             lines = input.split("\n"),
             output = "",
             j = 0;
 
 
-        for (var i = 0; i < lines.length; i++) {
+        for (let i = 0; i < lines.length; i++) {
             if (lines[i] === "") continue;
-            var baIp = [];
+            let baIp = [];
 
             if (inFormat === outFormat) {
                 output += lines[i] + "\n";
@@ -340,7 +340,7 @@ const IP = {
      * @returns {string}
      */
     runGroupIps: function(input, args) {
-        var delim = Utils.charRep[args[0]],
+        let delim = Utils.charRep[args[0]],
             cidr = args[1],
             onlySubnets = args[2],
             ipv4Mask = cidr < 32 ? ~(0xFFFFFFFF >>> cidr) : 0xFFFFFFFF,
@@ -374,7 +374,7 @@ const IP = {
                 network = [];
                 networkStr = "";
 
-                for (var j = 0; j < 8; j++) {
+                for (let j = 0; j < 8; j++) {
                     network.push(ip[j] & ipv6Mask[j]);
                 }
 
@@ -434,7 +434,7 @@ const IP = {
      * @returns {html}
      */
     runParseIPv4Header: function(input, args) {
-        var format = args[0],
+        let format = args[0],
             output;
 
         if (format === "Hex") {
@@ -445,7 +445,7 @@ const IP = {
             return "Unrecognised input format.";
         }
 
-        var version = (input[0] >>> 4) & 0x0f,
+        let version = (input[0] >>> 4) & 0x0f,
             ihl = input[0] & 0x0f,
             dscp = (input[1] >>> 2) & 0x3f,
             ecn = input[1] & 0x03,
@@ -471,15 +471,15 @@ const IP = {
             ihl = ihl + " (Error: this should always be at least 5)";
         } else if (ihl > 5) {
             // sort out options...
-            var optionsLen = ihl * 4 - 20;
+            const optionsLen = ihl * 4 - 20;
             options = input.slice(20, optionsLen + 20);
         }
 
         // Protocol
-        var protocolInfo = IP._protocolLookup[protocol] || {keyword: "", protocol: ""};
+        const protocolInfo = IP._protocolLookup[protocol] || {keyword: "", protocol: ""};
 
         // Checksum
-        var correctChecksum = Checksum.runTCPIP(checksumHeader, []),
+        let correctChecksum = Checksum.runTCPIP(checksumHeader, []),
             givenChecksum = Utils.hex(checksum),
             checksumResult;
         if (correctChecksum === givenChecksum) {
@@ -534,7 +534,7 @@ const IP = {
      * @returns {string}
      */
     _ipv4CidrRange: function(cidr, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-        var output = "",
+        let output = "",
             network = IP._strToIpv4(cidr[1]),
             cidrRange = parseInt(cidr[2], 10);
 
@@ -542,7 +542,7 @@ const IP = {
             return "IPv4 CIDR must be less than 32";
         }
 
-        var mask = ~(0xFFFFFFFF >>> cidrRange),
+        let mask = ~(0xFFFFFFFF >>> cidrRange),
             ip1 = network & mask,
             ip2 = ip1 | ~mask;
 
@@ -574,7 +574,7 @@ const IP = {
      * @returns {string}
      */
     _ipv6CidrRange: function(cidr, includeNetworkInfo) {
-        var output = "",
+        let output = "",
             network = IP._strToIpv6(cidr[1]),
             cidrRange = parseInt(cidr[cidr.length-1], 10);
 
@@ -582,19 +582,19 @@ const IP = {
             return "IPv6 CIDR must be less than 128";
         }
 
-        var mask = IP._genIpv6Mask(cidrRange),
+        let mask = IP._genIpv6Mask(cidrRange),
             ip1 = new Array(8),
             ip2 = new Array(8),
             totalDiff = "",
             total = new Array(128);
 
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             ip1[i] = network[i] & mask[i];
             ip2[i] = ip1[i] | (~mask[i] & 0x0000FFFF);
             totalDiff = (ip2[i] - ip1[i]).toString(2);
 
             if (totalDiff !== "0") {
-                for (var n = 0; n < totalDiff.length; n++) {
+                for (let n = 0; n < totalDiff.length; n++) {
                     total[i*16 + 16-(totalDiff.length-n)] = totalDiff[n];
                 }
             }
@@ -621,10 +621,10 @@ const IP = {
      * @returns {number[]}
      */
     _genIpv6Mask: function(cidr) {
-        var mask = new Array(8),
+        let mask = new Array(8),
             shift;
 
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             if (cidr > ((i+1)*16)) {
                 mask[i] = 0x0000FFFF;
             } else {
@@ -650,12 +650,12 @@ const IP = {
      * @returns {string}
      */
     _ipv4HyphenatedRange: function(range, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-        var output = "",
+        let output = "",
             ip1 = IP._strToIpv4(range[1]),
             ip2 = IP._strToIpv4(range[2]);
 
         // Calculate mask
-        var diff = ip1 ^ ip2,
+        let diff = ip1 ^ ip2,
             cidr = 32,
             mask = 0;
 
@@ -666,7 +666,7 @@ const IP = {
         }
 
         mask = ~mask >>> 0;
-        var network = ip1 & mask,
+        let network = ip1 & mask,
             subIp1 = network & mask,
             subIp2 = subIp1 | ~mask;
 
@@ -701,11 +701,11 @@ const IP = {
      * @returns {string}
      */
     _ipv6HyphenatedRange: function(range, includeNetworkInfo) {
-        var output = "",
+        let output = "",
             ip1 = IP._strToIpv6(range[1]),
             ip2 = IP._strToIpv6(range[14]);
 
-        var t = "",
+        let t = "",
             total = new Array(128);
 
         // Initialise total array to "0"
@@ -715,7 +715,7 @@ const IP = {
         for (i = 0; i < 8; i++) {
             t = (ip2[i] - ip1[i]).toString(2);
             if (t !== "0") {
-                for (var n = 0; n < t.length; n++) {
+                for (let n = 0; n < t.length; n++) {
                     total[i*16 + 16-(t.length-n)] = t[n];
                 }
             }
@@ -743,7 +743,7 @@ const IP = {
      * IP._strToIpv4("10.10.0.0");
      */
     _strToIpv4: function (ipStr) {
-        var blocks = ipStr.split("."),
+        let blocks = ipStr.split("."),
             numBlocks = parseBlocks(blocks),
             result = 0;
 
@@ -761,8 +761,8 @@ const IP = {
             if (blocks.length !== 4)
                 throw "More than 4 blocks.";
 
-            var numBlocks = [];
-            for (var i = 0; i < 4; i++) {
+            const numBlocks = [];
+            for (let i = 0; i < 4; i++) {
                 numBlocks[i] = parseInt(blocks[i], 10);
                 if (numBlocks[i] < 0 || numBlocks[i] > 255)
                     throw "Block out of range.";
@@ -784,7 +784,7 @@ const IP = {
      * IP._ipv4ToStr(168427520);
      */
     _ipv4ToStr: function(ipInt) {
-        var blockA = (ipInt >> 24) & 255,
+        let blockA = (ipInt >> 24) & 255,
             blockB = (ipInt >> 16) & 255,
             blockC = (ipInt >> 8) & 255,
             blockD = ipInt & 255;
@@ -805,12 +805,12 @@ const IP = {
      * IP._strToIpv6("ff00::1111:2222");
      */
     _strToIpv6: function(ipStr) {
-        var blocks = ipStr.split(":"),
+        let blocks = ipStr.split(":"),
             numBlocks = parseBlocks(blocks),
             j = 0,
             ipv6 = new Array(8);
 
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             if (isNaN(numBlocks[j])) {
                 ipv6[i] = 0;
                 if (i === (8-numBlocks.slice(j).length)) j++;
@@ -827,8 +827,8 @@ const IP = {
         function parseBlocks(blocks) {
             if (blocks.length < 3 || blocks.length > 8)
                 throw "Badly formatted IPv6 address.";
-            var numBlocks = [];
-            for (var i = 0; i < blocks.length; i++) {
+            const numBlocks = [];
+            for (let i = 0; i < blocks.length; i++) {
                 numBlocks[i] = parseInt(blocks[i], 16);
                 if (numBlocks[i] < 0 || numBlocks[i] > 65535)
                     throw "Block out of range.";
@@ -854,11 +854,11 @@ const IP = {
      * IP._ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], false);
      */
     _ipv6ToStr: function(ipv6, compact) {
-        var output = "",
+        let output = "",
             i = 0;
 
         if (compact) {
-            var start = -1,
+            let start = -1,
                 end = -1,
                 s = 0,
                 e = -1;
@@ -908,7 +908,7 @@ const IP = {
      * IP._generateIpv4Range(1, 3);
      */
     _generateIpv4Range: function(ip, endIp) {
-        var range = [];
+        const range = [];
         if (endIp >= ip) {
             for (; ip <= endIp; ip++) {
                 range.push(IP._ipv4ToStr(ip));

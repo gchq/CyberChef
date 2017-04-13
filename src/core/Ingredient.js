@@ -11,7 +11,7 @@ import Utils from "./Utils.js";
  * @class
  * @param {Object} ingredientConfig
  */
-var Ingredient = function(ingredientConfig) {
+const Ingredient = function(ingredientConfig) {
     this.name  = "";
     this.type  = "";
     this.value = null;
@@ -78,7 +78,7 @@ Ingredient.prepare = function(data, type) {
         case "number":
             var number = parseFloat(data);
             if (isNaN(number)) {
-                var sample = Utils.truncate(data.toString(), 10);
+                const sample = Utils.truncate(data.toString(), 10);
                 throw "Invalid ingredient value. Not a number: " + sample;
             }
             return number;

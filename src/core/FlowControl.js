@@ -39,7 +39,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runFork: function(state) {
-        var opList       = state.opList,
+        let opList       = state.opList,
             inputType    = opList[state.progress].inputType,
             outputType   = opList[state.progress].outputType,
             input        = state.dish.get(inputType),
@@ -63,7 +63,7 @@ const FlowControl = {
             }
         }
 
-        var recipe = new Recipe(),
+        let recipe = new Recipe(),
             output = "",
             progress = 0;
 
@@ -71,7 +71,7 @@ const FlowControl = {
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
-            var dish = new Dish(inputs[i], inputType);
+            const dish = new Dish(inputs[i], inputType);
             try {
                 progress = recipe.execute(dish, 0);
             } catch (err) {
@@ -127,7 +127,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runJump: function(state) {
-        var ings     = state.opList[state.progress].getIngValues(),
+        let ings     = state.opList[state.progress].getIngValues(),
             jumpNum  = ings[0],
             maxJumps = ings[1];
 
@@ -156,7 +156,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runCondJump: function(state) {
-        var ings     = state.opList[state.progress].getIngValues(),
+        let ings     = state.opList[state.progress].getIngValues(),
             dish     = state.dish,
             regexStr = ings[0],
             jumpNum  = ings[1],

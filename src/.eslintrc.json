@@ -84,7 +84,8 @@
         }],
         "no-whitespace-before-property": "error",
         "operator-linebreak": ["error", "after"],
-        "space-in-parens": "error"
+        "space-in-parens": "error",
+        "no-var": "error"
     },
     "globals": {
         "$": false,

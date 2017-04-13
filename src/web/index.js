@@ -24,7 +24,7 @@ import OperationConfig from "../core/config/OperationConfig.js";
  * Main function used to build the CyberChef web app.
  */
 var main = function() {
-    var defaultFavourites = [
+    const defaultFavourites = [
         "To Base64",
         "From Base64",
         "To Hex",
@@ -37,7 +37,7 @@ var main = function() {
         "Fork"
     ];
 
-    var defaultOptions = {
+    const defaultOptions = {
         updateUrl         : true,
         showHighlighter   : true,
         treatAsUtf8       : true,
