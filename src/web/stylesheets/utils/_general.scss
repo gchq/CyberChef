@@ -41,7 +41,7 @@ body {
 }
 
 .konami {
-    @include transform(180deg);
+    @include rotate(180deg);
 }
 
 ::-webkit-scrollbar {

@@ -52,6 +52,23 @@ App.prototype.setup = function() {
     this.resetLayout();
     this.setCompileMessage();
     this.loadURIParams();
+    this.loaded();
+};
+
+
+/**
+ * Fires once all setup activities have completed.
+ */
+App.prototype.loaded = function() {
+    // Trigger CSS animations to remove preloader
+    document.body.classList.add("loaded");
+
+    // Wait for animations to complete then remove the preloader and loaded style
+    // so that the animations for existing elements don't play again.
+    setTimeout(function() {
+        document.getElementById("loader-wrapper").remove();
+        document.body.classList.remove("loaded");
+    }, 1000);
 };
 
 

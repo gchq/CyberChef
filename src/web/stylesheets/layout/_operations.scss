@@ -10,36 +10,6 @@
     @extend .list-area;
 }
 
-.category-title {
-    display: block;
-    padding: 10px;
-    background-color: $secondaryBackgroundColour;
-    border-bottom: 1px solid $secondaryBorderColour;
-    font-weight: $titleWeight;
-}
-
-.category-title[href='#catFavourites'] {
-    border-bottom-color: $primaryBorderColour;
-}
-
-.category-title[aria-expanded=true] {
-    border-bottom-color: $primaryBorderColour;
-}
-
-.category-title.collapsed {
-    border-bottom-color: $secondaryBorderColour;
-}
-
-.category-title:hover {
-    color: $opListOperationFontColour;
-}
-
-.category {
-    margin: 0 !important;
-    border-radius: 0 !important;
-    border: none;
-}
-
 .op-list .operation {
     color: $opListOperationFontColour;
     background-color: $opListOperationBgColour;

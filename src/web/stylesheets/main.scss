@@ -16,13 +16,16 @@
 
 
 // CyberChef styles
-// Theme
+// Default theme
 @import "themes/_classic";
 
 // Utilities
 @import "utils/_mixins";
 @import "utils/_overrides";
 @import "utils/_general";
+
+// Preloader styles
+@import "preloader.scss";
 
 // Components
 @import "components/_alert";

@@ -32,6 +32,11 @@
         <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico') %>" />
     </head>
     <body>
+        <!-- Preloader overlay -->
+        <div id="loader-wrapper">
+            <div id="preloader"></div>
+        </div>
+        <!-- End preloader overlay -->
         <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
         <div id="alert" class="alert alert-danger">
             <button type="button" class="close" id="alert-close">&times;</button>

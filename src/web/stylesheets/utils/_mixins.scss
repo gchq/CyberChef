@@ -21,9 +21,40 @@
     user-select: $value;
 }
 
-@mixin transform($value) {
+@mixin rotate($value) {
     -ms-transform: rotate($value);
     -webkit-transform: rotate($value);
     -moz-transform: rotate($value);
     transform: rotate($value);
+}
+
+@mixin translateX($value) {
+    -ms-transform: translateX($value);
+    -webkit-transform: translateX($value);
+    -moz-transform: translateX($value);
+    transform: translateX($value);
+}
+
+@mixin translateY($value) {
+    -ms-transform: translateY($value);
+    -webkit-transform: translateY($value);
+    -moz-transform: translateY($value);
+    transform: translateY($value);
+}
+
+@mixin translate3d($x, $y, $z) {
+    -ms-transform: translate3d($x, $y, $z);
+    -webkit-transform: translate3d($x, $y, $z);
+    -moz-transform: translate3d($x, $y, $z);
+    transform: translate3d($x, $y, $z);
+}
+
+@mixin transition($value) {
+    -webkit-transition: $value; 
+    transition: $value;
+}
+
+@mixin animation($value) {
+    -webkit-animation: $value;
+    animation: $value;
 }
