@@ -1,5 +1,7 @@
 # CyberChef
 
+[![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
+
 #### *The Cyber Swiss Army Knife*
 
 CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.
