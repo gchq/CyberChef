@@ -47,6 +47,7 @@
     "html-webpack-plugin": "^2.28.0",
     "imports-loader": "^0.7.1",
     "ink-docstrap": "^1.1.4",
+    "jsdoc-babel": "^0.3.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.2",
     "style-loader": "^0.15.0",
