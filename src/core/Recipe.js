@@ -145,7 +145,7 @@ Recipe.prototype.lastOpIndex = function(startIndex) {
  * @param {number} [startFrom=0] - The index of the Operation to start executing from
  * @returns {number} - The final progress through the recipe
  */
-Recipe.prototype.execute = function(dish, startFrom) {
+Recipe.prototype.execute = async function(dish, startFrom) {
     startFrom = startFrom || 0;
     var op, input, output, numJumps = 0;
 
@@ -170,11 +170,11 @@ Recipe.prototype.execute = function(dish, startFrom) {
                     "numJumps" : numJumps
                 };
 
-                state = op.run(state);
+                state = await op.run(state);
                 i = state.progress;
                 numJumps = state.numJumps;
             } else {
-                output = op.run(input, op.getIngValues());
+                output = await op.run(input, op.getIngValues());
                 dish.set(output, op.outputType);
             }
         } catch (err) {

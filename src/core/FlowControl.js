@@ -38,7 +38,7 @@ const FlowControl = {
      * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    runFork: function(state) {
+    runFork: async function(state) {
         var opList       = state.opList,
             inputType    = opList[state.progress].inputType,
             outputType   = opList[state.progress].outputType,
@@ -73,7 +73,7 @@ const FlowControl = {
         for (i = 0; i < inputs.length; i++) {
             var dish = new Dish(inputs[i], inputType);
             try {
-                progress = recipe.execute(dish, 0);
+                progress = await recipe.execute(dish, 0);
             } catch (err) {
                 if (!ignoreErrors) {
                     throw err;

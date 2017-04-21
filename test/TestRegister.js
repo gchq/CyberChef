@@ -40,13 +40,13 @@ import Chef from "../src/core/Chef.js";
             this.tests.map(function(test, i) {
                 var chef = new Chef();
 
-                return Promise.resolve(chef.bake(
+                return chef.bake(
                     test.input,
                     test.recipeConfig,
                     {},
                     0,
                     false
-                ))
+                )
                 .then(function(result) {
                     var ret = {
                         test: test,

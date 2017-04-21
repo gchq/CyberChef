@@ -73,11 +73,11 @@ App.prototype.handleError = function(err) {
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
-App.prototype.bake = function(step) {
+App.prototype.bake = async function(step) {
     var response;
 
     try {
-        response = this.chef.bake(
+        response = await this.chef.bake(
             this.getInput(),         // The user's input
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,             // Options set by the user
