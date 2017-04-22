@@ -34,4 +34,224 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Head 0",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 0, false]
+            }
+        ],
+    },
+    {
+        name: "Head 1",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 1, false]
+            }
+        ],
+    },
+    {
+        name: "Head 2",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 2, false]
+            }
+        ],
+    },
+    {
+        name: "Head 6",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 6, false]
+            }
+        ],
+    },
+    {
+        name: "Head big",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 100, false]
+            }
+        ],
+    },
+    {
+        name: "Head all but 0",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 0, true]
+            }
+        ],
+    },
+    {
+        name: "Head all but 1",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 1, true]
+            }
+        ],
+    },
+    {
+        name: "Head all but 2",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 2, true]
+            }
+        ],
+    },
+    {
+        name: "Head all but 6",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 6, true]
+            }
+        ],
+    },
+    {
+        name: "Head all but big",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Head",
+                "args": ["Line feed", 100, true]
+            }
+        ],
+    },
+    {
+        name: "Tail 0",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 0, false]
+            }
+        ],
+    },
+    {
+        name: "Tail 1",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 1, false]
+            }
+        ],
+    },
+    {
+        name: "Tail 2",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 2, false]
+            }
+        ],
+    },
+    {
+        name: "Tail 6",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 6, false]
+            }
+        ],
+    },
+    {
+        name: "Tail big",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 100, false]
+            }
+        ],
+    },
+    {
+        name: "Tail all but 0",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 0, true]
+            }
+        ],
+    },
+    {
+        name: "Tail all but 1",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 1, true]
+            }
+        ],
+    },
+    {
+        name: "Tail all but 2",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [2, 3, 4, 5, 6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 2, true]
+            }
+        ],
+    },
+    {
+        name: "Tail all but 6",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [6].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 6, true]
+            }
+        ],
+    },
+    {
+        name: "Tail all but big",
+        input: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [].join("\n"),
+        recipeConfig: [
+            {
+                "op": "Tail",
+                "args": ["Line feed", 100, true]
+            }
+        ],
+    },
 ]);

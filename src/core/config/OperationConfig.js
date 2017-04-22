@@ -3196,7 +3196,69 @@ const OperationConfig = {
         outputType: "html",
         args: [
         ]
-    }
+    },
+    "Head": {
+        description: [
+            "Like the UNIX head utility.",
+            "<br>",
+            "Gets the first $Number of lines.",
+            "<br>",
+            "Optionally you can select all but the last $Number of lines.",
+            "<br>",
+            "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
+        ].join("\n"),
+        run: StrUtils.runHead,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: StrUtils.DELIMITER_OPTIONS
+            },
+            {
+                name: "Number",
+                type: "number",
+                value: 10,
+            },
+            {
+                name: "All but last $Number of lines",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
+    "Tail": {
+        description: [
+            "Like the UNIX tail utility.",
+            "<br>",
+            "Gets the last $Number of lines.",
+            "<br>",
+            "Optionally you can select all lines after line $Number.",
+            "<br>",
+            "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
+        ].join("\n"),
+        run: StrUtils.runTail,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: StrUtils.DELIMITER_OPTIONS
+            },
+            {
+                name: "Number",
+                type: "number",
+                value: 10,
+            },
+            {
+                name: "Start from line $Number",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
 };
 
 export default OperationConfig;
