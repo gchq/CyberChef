@@ -30,6 +30,7 @@ var App = function(categories, operations, defaultFavourites, defaultOptions) {
     this.chef        = new Chef();
     this.manager     = new Manager(this);
 
+    this.baking      = false;
     this.autoBake_   = false;
     this.progress    = 0;
     this.ingId       = 0;
@@ -68,6 +69,37 @@ App.prototype.handleError = function(err) {
 
 
 /**
+ * Updates the UI to show if baking is in process or not.
+ *
+ * @param {bakingStatus}
+ */
+App.prototype.setBakingStatus = function(bakingStatus) {
+    this.baking = bakingStatus;
+
+    var inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
+        outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
+        inputElement = document.querySelector("#input-text"),
+        outputElement = document.querySelector("#output-text");
+
+    if (bakingStatus) {
+        inputLoadingIcon.style.display = "inline-block";
+        outputLoadingIcon.style.display = "inline-block";
+        inputElement.classList.add("disabled");
+        outputElement.classList.add("disabled");
+        inputElement.disabled = true;
+        outputElement.disabled = true;
+    } else {
+        inputLoadingIcon.style.display = "none";
+        outputLoadingIcon.style.display = "none";
+        inputElement.classList.remove("disabled");
+        outputElement.classList.remove("disabled");
+        inputElement.disabled = false;
+        outputElement.disabled = false;
+    }
+};
+
+
+/**
  * Calls the Chef to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
@@ -75,6 +107,10 @@ App.prototype.handleError = function(err) {
  */
 App.prototype.bake = async function(step) {
     var response;
+
+    if (this.baking) return;
+
+    this.setBakingStatus(true);
 
     try {
         response = await this.chef.bake(
@@ -93,6 +129,8 @@ App.prototype.bake = async function(step) {
     if (response.error) {
         this.handleError(response.error);
     }
+
+    this.setBakingStatus(false);
 
     this.options  = response.options;
     this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
