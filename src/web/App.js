@@ -124,13 +124,13 @@ App.prototype.bake = async function(step) {
         this.handleError(err);
     }
 
+    this.setBakingStatus(false);
+
     if (!response) return;
 
     if (response.error) {
         this.handleError(response.error);
     }
-
-    this.setBakingStatus(false);
 
     this.options  = response.options;
     this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
