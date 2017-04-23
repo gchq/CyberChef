@@ -36,6 +36,8 @@ var App = function(categories, operations, defaultFavourites, defaultOptions) {
     this.ingId       = 0;
 
     window.chef      = this.chef;
+
+    this.autoBake = Utils.debounce(this.autoBake, 300);
 };
 
 
