@@ -41,7 +41,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 0, false]
+                "args": ["Line feed", 0]
             }
         ],
     },
@@ -52,7 +52,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 1, false]
+                "args": ["Line feed", 1]
             }
         ],
     },
@@ -63,7 +63,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 2, false]
+                "args": ["Line feed", 2]
             }
         ],
     },
@@ -74,7 +74,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 6, false]
+                "args": ["Line feed", 6]
             }
         ],
     },
@@ -85,18 +85,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 100, false]
-            }
-        ],
-    },
-    {
-        name: "Head all but 0",
-        input: [1, 2, 3, 4, 5, 6].join("\n"),
-        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
-        recipeConfig: [
-            {
-                "op": "Head",
-                "args": ["Line feed", 0, true]
+                "args": ["Line feed", 100]
             }
         ],
     },
@@ -107,7 +96,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 1, true]
+                "args": ["Line feed", -1]
             }
         ],
     },
@@ -118,7 +107,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 2, true]
+                "args": ["Line feed", -2]
             }
         ],
     },
@@ -129,7 +118,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 6, true]
+                "args": ["Line feed", -6]
             }
         ],
     },
@@ -140,7 +129,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Head",
-                "args": ["Line feed", 100, true]
+                "args": ["Line feed", -100]
             }
         ],
     },
@@ -151,7 +140,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 0, false]
+                "args": ["Line feed", 0]
             }
         ],
     },
@@ -162,7 +151,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 1, false]
+                "args": ["Line feed", 1]
             }
         ],
     },
@@ -173,7 +162,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 2, false]
+                "args": ["Line feed", 2]
             }
         ],
     },
@@ -184,7 +173,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 6, false]
+                "args": ["Line feed", 6]
             }
         ],
     },
@@ -195,51 +184,40 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 100, false]
-            }
-        ],
-    },
-    {
-        name: "Tail all but 0",
-        input: [1, 2, 3, 4, 5, 6].join("\n"),
-        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
-        recipeConfig: [
-            {
-                "op": "Tail",
-                "args": ["Line feed", 0, true]
+                "args": ["Line feed", 100]
             }
         ],
     },
     {
         name: "Tail all but 1",
         input: [1, 2, 3, 4, 5, 6].join("\n"),
-        expectedOutput: [1, 2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [2, 3, 4, 5, 6].join("\n"),
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 1, true]
+                "args": ["Line feed", -1]
             }
         ],
     },
     {
         name: "Tail all but 2",
         input: [1, 2, 3, 4, 5, 6].join("\n"),
-        expectedOutput: [2, 3, 4, 5, 6].join("\n"),
+        expectedOutput: [3, 4, 5, 6].join("\n"),
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 2, true]
+                "args": ["Line feed", -2]
             }
         ],
     },
     {
         name: "Tail all but 6",
         input: [1, 2, 3, 4, 5, 6].join("\n"),
-        expectedOutput: [6].join("\n"),
+        expectedOutput: [].join("\n"),
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 6, true]
+                "args": ["Line feed", -6]
             }
         ],
     },
@@ -250,7 +228,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Tail",
-                "args": ["Line feed", 100, true]
+                "args": ["Line feed", -100]
             }
         ],
     },
