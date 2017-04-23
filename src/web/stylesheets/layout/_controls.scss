@@ -44,11 +44,11 @@ $controlsDivision: 65%;
     width: 60px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-left: 1px solid #5cb85c;
+    border-left: 1px solid $btnSuccessBgColour;
 }
 
 #auto-bake-label:hover {
-    border-left-color: #398439;
+    border-left-color: $btnSuccessHoverBorderColour;
 }
 
 #auto-bake-label div {

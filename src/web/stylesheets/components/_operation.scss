@@ -13,7 +13,9 @@
     position: relative;
     border-width: 1px;
     border-style: solid;
-    border-top-width: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }
 
 .arg-group {
@@ -55,7 +57,7 @@
     line-height: $argInputLineHeight;
     color: $argFontColour;
     background-color: $argBackground;
-    border: 1px solid $primaryBorderColour;
+    border: 1px solid $argBorderColour;
     font-family: $fixedWidthFontFamily;
 }
 
@@ -67,7 +69,7 @@ select {
     display: block;
     padding: 6px 8px;
     height: 34px;
-    border: 1px solid $primaryBorderColour;
+    border: 1px solid $argBorderColour;
     background-color: $argBackground;
     color: $argFontColour;
 }
@@ -83,9 +85,10 @@ textarea.arg {
     min-height: 50px;
     height: 70px;
     margin-top: 5px;
-    border: 1px solid $primaryBorderColour;
+    border: 1px solid $argBorderColour;
     resize: vertical;
     color: $argFontColour;
+    background-color: $argBackground;
     font-family: $fixedWidthFontFamily;
 }
 

@@ -27,6 +27,9 @@ $secondaryBorderColour: #eee;
 $titleColour: #424242;
 $titleWeight: bold;
 
+$bannerFontColour: #468847;
+$bannerBgColour: #dff0d8;
+
 
 // Operation colours
 $opListOperationFontColour: #3a87ad;
@@ -69,7 +72,26 @@ $argInputLineHeight: 20px;
 $argInputFontSize: 15px;
 $argFontColour: #424242;
 $argBackground: #fff;
+$argBorderColour: #ddd;
 $argDisabledBackground: #eee;
+
+
+// Buttons
+$btnDefaultFontColour: #333;
+$btnDefaultBgColour: #fff;
+$btnDefaultBorderColour: #ddd;
+
+$btnDefaultHoverFontColour: #333;
+$btnDefaultHoverBgColour: #ebebeb;
+$btnDefaultHoverBorderColour: #adadad;
+
+$btnSuccessFontColour: #fff;
+$btnSuccessBgColour: #5cb85c;
+$btnSuccessBorderColour: #4cae4c;
+
+$btnSuccessHoverFontColour: #fff;
+$btnSuccessHoverBgColour: #449d44;
+$btnSuccessHoverBorderColour: #398439;
 
 
 // Highlighter colours
@@ -80,12 +102,13 @@ $hl4: #fcf8e3;
 $hl5: #8de768;
 
 
-// Misc.
-$dropFileBorderColour: #3a87ad;
-
-$bannerFontColour: #468847;
-$bannerBgColour: #dff0d8;
-
+// Scrollbar
 $scrollbarTrack: $secondaryBackgroundColour;
 $scrollbarThumb: #ccc;
 $scrollbarHover: #bbb;
+
+
+// Misc.
+$dropFileBorderColour: #3a87ad;
+$popoverBackground: #fff;
+$popoverBorderColour: #ccc;

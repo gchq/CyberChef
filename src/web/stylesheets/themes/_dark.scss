@@ -1,0 +1,121 @@
+/**
+ * Dark theme definitions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+// tabs
+// links
+// disabled buttons
+// popovers
+// toggle-string dropdowns
+// alerts
+
+$primaryFontFamily: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$primaryFontColour: #c5c5c5;
+$primaryFontSize: 14px;
+$primaryLineHeight: 20px;
+
+$fixedWidthFontFamily: "Monaco", "Droid Sans Mono", "Consolas", monospace;
+$fixedWidthFontColour: inherit;
+$fixedWidthFontSize: inherit;
+
+$subtextFontColour: #999;
+$subtextFontSize: 13px;
+
+$primaryBackgroundColour: #1e1e1e;
+$secondaryBackgroundColour: #252525;
+
+$primaryBorderColour: #444;
+$secondaryBorderColour: #3c3c3c; //todo
+
+$titleColour: #fff;
+$titleWeight: bold;
+
+$bannerFontColour: #c5c5c5;
+$bannerBgColour: #333;
+
+
+// Operation colours
+$opListOperationFontColour: #c5c5c5;
+$opListOperationBgColour: #333;
+$opListOperationBorderColour: #444;
+
+$recListOperationFontColour: #c5c5c5; //todo
+$recListOperationBgColour: #333;
+$recListOperationBorderColour: #444;
+
+$selectedOperationFontColor: #c09853; //todo
+$selectedOperationBgColour: #fcf8e3;
+$selectedOperationBorderColour: #fbeed5;
+
+$breakpointFontColour: #b94a48; //todo
+$breakpointBgColour: #f2dede;
+$breakpointBorderColour: #eed3d7;
+
+$breakpointFontColour: #b94a48; //todo
+$breakpointBgColour: #f2dede;
+$breakpointBorderColour: #eed3d7;
+
+$disabledFontColour: #999; //todo
+$disabledBgColour: #dfdfdf;
+$disabledBorderColour: #cdcdcd;
+
+$fcOperationFontColour: #396f3a; //todo
+$fcOperationBgColour: #c7e4ba;
+$fcOperationBorderColour: #b3dba2;
+
+$fcBreakpointOperationFontColour: #94312f; //todo
+$fcBreakpointOperationBgColour: #eabfbf;
+$fcBreakpointOperationBorderColour: #e2aeb5;
+
+
+// Operation arguments
+$argTitleFontWeight: bold; //todo
+$argInputHeight: 34px;
+$argInputLineHeight: 20px;
+$argInputFontSize: 15px;
+$argFontColour: #bbb;
+$argBackground: #252525;
+$argBorderColour: #205375;
+$argDisabledBackground: #eee; //todo
+
+
+// Buttons
+$btnDefaultFontColour: #c5c5c5;
+$btnDefaultBgColour: #3c3c3c;
+$btnDefaultBorderColour: #205375;
+
+$btnDefaultHoverFontColour: #c5c5c5;
+$btnDefaultHoverBgColour: #2d2d2d;
+$btnDefaultHoverBorderColour: #205375;
+
+$btnSuccessFontColour: #fff;
+$btnSuccessBgColour: #073655;
+$btnSuccessBorderColour: #0e639c;
+
+$btnSuccessHoverFontColour: #fff;
+$btnSuccessHoverBgColour: #0e639c;
+$btnSuccessHoverBorderColour: #0e639c;
+
+
+// Highlighter colours
+$hl1: #fff000; //todo
+$hl2: #95dfff;
+$hl3: #ffb6b6;
+$hl4: #fcf8e3;
+$hl5: #8de768;
+
+
+// Scrollbar
+$scrollbarTrack: #1e1e1e;
+$scrollbarThumb: #424242;
+$scrollbarHover: #4e4e4e;
+
+
+// Misc.
+$dropFileBorderColour: #3a87ad; //todo
+$popoverBackground: #444;
+$popoverBorderColour: #666;

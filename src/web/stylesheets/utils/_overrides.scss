@@ -15,18 +15,38 @@ a:focus {
 }
 
 .btn-default {
-    border-color: #ddd;
-}
-
-.btn-default:focus {
-    background-color: #fff;
-    border-color: #adadad;
+    color: $btnDefaultFontColour;
+    background-color: $btnDefaultBgColour;
+    border-color: $btnDefaultBorderColour;
 }
 
 .btn-default:hover,
-.btn-default:active {
-    background-color: #ebebeb;
-    border-color: #adadad;
+.btn-default:active,
+.btn-default:hover:active {
+    color: $btnDefaultHoverFontColour;
+    background-color: $btnDefaultHoverBgColour;
+    border-color: $btnDefaultHoverBorderColour;
+}
+
+.btn-default:focus {
+    color: $btnDefaultFontColour;
+    background-color: $btnDefaultBgColour;
+    border-color: $btnDefaultHoverBorderColour;
+}
+
+.btn-success {
+    color: $btnSuccessFontColour;
+    background-color: $btnSuccessBgColour;
+    border-color: $btnSuccessBorderColour;
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success:focus,
+.btn-success:hover:active {
+    color: $btnSuccessHoverFontColour;
+    background-color: $btnSuccessHoverBgColour;
+    border-color: $btnSuccessHoverBorderColour;
 }
 
 .btn,
@@ -52,6 +72,15 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .modal {
     overflow-y: auto;
+}
+
+.modal-content {
+    background-color: $primaryBackgroundColour;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: $primaryBorderColour;
 }
 
 .form-control {
@@ -87,6 +116,17 @@ optgroup {
 
 .table-nonfluid {
     width: auto !important;
+}
+
+.popover,
+.popover.right>.arrow {
+    background-color: $popoverBackground;
+    border-color: $popoverBorderColour;
+}
+
+.popover.right>.arrow:after {
+    // border-color: $popoverBorderColour;
+    border-right-color: $popoverBackground;
 }
 
 
