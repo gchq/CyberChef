@@ -461,6 +461,62 @@ const StrUtils = {
 
 
     /**
+     * Head lines operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runHead: function(input, args) {
+        let delimiter = args[0],
+            number = args[1];
+
+        delimiter = Utils.charRep[delimiter];
+        let splitInput = input.split(delimiter);
+
+        return splitInput
+        .filter((line, lineIndex) => {
+            lineIndex += 1;
+
+            if (number < 0) {
+                return lineIndex <= splitInput.length + number;
+            } else {
+                return lineIndex <= number;
+            }
+        })
+        .join(delimiter);
+    },
+
+
+    /**
+     * Tail lines operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runTail: function(input, args) {
+        let delimiter = args[0],
+            number = args[1];
+
+        delimiter = Utils.charRep[delimiter];
+        let splitInput = input.split(delimiter);
+
+        return splitInput
+        .filter((line, lineIndex) => {
+            lineIndex += 1;
+
+            if (number < 0) {
+                return lineIndex > -number;
+            } else {
+                return lineIndex > splitInput.length - number;
+            }
+        })
+        .join(delimiter);
+    },
+
+
+    /**
      * Adds HTML highlights to matches within a string.
      *
      * @private
@@ -537,61 +593,6 @@ const StrUtils = {
         return output;
     },
 
-    /**
-     * Head lines operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runHead: function(input, args) {
-        let delimiter = args[0],
-            number = args[1],
-            allBut = args[2];
-
-        delimiter = Utils.charRep[delimiter];
-        let splitInput = input.split(delimiter);
-
-        return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
-
-            if (allBut) {
-                return lineIndex <= splitInput.length - number;
-            } else {
-                return lineIndex <= number;
-            }
-        })
-        .join(delimiter);
-    },
-
-    /**
-     * Tail lines operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runTail: function(input, args) {
-        let delimiter = args[0],
-            number = args[1],
-            allBut = args[2];
-
-        delimiter = Utils.charRep[delimiter];
-        let splitInput = input.split(delimiter);
-
-        return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
-
-            if (allBut) {
-                return lineIndex >= number;
-            } else {
-                return lineIndex > splitInput.length - number;
-            }
-        })
-        .join(delimiter);
-    },
 };
 
 export default StrUtils;

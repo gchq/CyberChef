@@ -3201,9 +3201,9 @@ const OperationConfig = {
         description: [
             "Like the UNIX head utility.",
             "<br>",
-            "Gets the first $Number of lines.",
+            "Gets the first n lines.",
             "<br>",
-            "Optionally you can select all but the last $Number of lines.",
+            "You can select all but the last n lines by entering a negative value for n.",
             "<br>",
             "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
         ].join("\n"),
@@ -3221,20 +3221,15 @@ const OperationConfig = {
                 type: "number",
                 value: 10,
             },
-            {
-                name: "All but last $Number of lines",
-                type: "boolean",
-                value: false,
-            },
         ]
     },
     "Tail": {
         description: [
             "Like the UNIX tail utility.",
             "<br>",
-            "Gets the last $Number of lines.",
+            "Gets the last n lines.",
             "<br>",
-            "Optionally you can select all lines after line $Number.",
+            "Optionally you can select all lines after line n by entering a negative value for n.",
             "<br>",
             "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
         ].join("\n"),
@@ -3251,11 +3246,6 @@ const OperationConfig = {
                 name: "Number",
                 type: "number",
                 value: 10,
-            },
-            {
-                name: "Start from line $Number",
-                type: "boolean",
-                value: false,
             },
         ]
     },
