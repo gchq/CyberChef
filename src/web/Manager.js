@@ -154,6 +154,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
+    document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
 
     // Misc
     document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));

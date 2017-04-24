@@ -46,6 +46,7 @@ var main = function() {
         errorTimeout      : 4000,
         autoBakeThreshold : 200,
         attemptHighlight  : true,
+        theme             : "classic",
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
