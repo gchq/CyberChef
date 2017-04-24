@@ -244,7 +244,7 @@ ControlsWaiter.prototype.loadClick = function() {
  * Saves the recipe specified in the save textarea to local storage.
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
-    var recipeName = document.getElementById("save-name").value,
+    var recipeName = Utils.escapeHtml(document.getElementById("save-name").value),
         recipeStr  = document.getElementById("save-text").value;
 
     if (!recipeName) {
@@ -288,7 +288,8 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
     for (i = 0; i < savedRecipes.length; i++) {
         var opt = document.createElement("option");
         opt.value = savedRecipes[i].id;
-        opt.innerHTML = savedRecipes[i].name;
+        // Unescape then re-escape in case localStorage has been corrupted
+        opt.innerHTML = Utils.escapeHtml(Utils.unescapeHtml(savedRecipes[i].name));
 
         loadNameEl.appendChild(opt);
     }
