@@ -12,9 +12,9 @@
     width: 100%;
     text-align: center;
     line-height: 30px;
-    border-bottom: 1px solid $primaryBorderColour;
-    color: $bannerFontColour;
-    background-color: $bannerBgColour;
+    border-bottom: 1px solid var(--primary-border-colour);
+    color: var(--banner-font-colour);
+    background-color: var(--banner-bg-colour);
 }
 
 .banner-right {

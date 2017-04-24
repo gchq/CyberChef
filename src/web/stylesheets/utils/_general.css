@@ -1,0 +1,73 @@
+/**
+ * General styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+body {
+    font-family: var(--primary-font-family);
+    font-size: var(--primary-font-size);
+    line-height: var(--primary-line-height);
+    color: var(--primary-font-colour);
+    background-color: var(--primary-background-colour);
+}
+
+.subtext {
+    font-style: italic;
+    font-size: var(--subtext-font-size);
+    color: var(--subtext-font-colour);
+}
+
+.word-wrap {
+    white-space: pre !important;
+    word-wrap: normal !important;
+    overflow-x: scroll !important;
+}
+
+.clearfix {
+    clear: both;
+    height: 0;
+}
+
+.blur {
+    color: transparent !important;
+    text-shadow: rgba(0, 0, 0, 0.95) 0 0 10px !important;
+}
+
+.no-select { 
+    user-select: none;
+}
+
+.konami {
+    transform: rotate(180deg);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-hover);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--scrollbar-track);
+}
+
+/* Highlighters */
+.hl1, { background-color: var(--hl1); }
+.hl2, { background-color: var(--hl2); }
+.hl3, { background-color: var(--hl3); } /* Half-Life 3 confirmed :O */
+.hl4, { background-color: var(--hl4); }
+.hl5, { background-color: var(--hl5); }

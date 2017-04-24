@@ -1,0 +1,126 @@
+/**
+ * Dark theme definitions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+/*
+tabs
+links
+disabled buttons
+popovers
+toggle-string dropdowns
+alerts
+loading-file background
+*/
+
+:root.dark {
+    --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --primary-font-colour: #c5c5c5;
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family: "Monaco", "Droid Sans Mono", "Consolas", monospace;
+    --fixed-width-font-colour: inherit;
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: #999;
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: #1e1e1e;
+    --secondary-background-colour: #252525;
+
+    --primary-border-colour: #444;
+    --secondary-border-colour: #3c3c3c; /*todo*/
+
+    --title-colour: #fff;
+    --title-weight: bold;
+
+    --banner-font-colour: #c5c5c5;
+    --banner-bg-colour: #333;
+
+
+    /* Operation colours */
+    --op-list-operation-font-colour: #c5c5c5;
+    --op-list-operation-bg-colour: #333;
+    --op-list-operation-border-colour: #444;
+
+    --rec-list-operation-font-colour: #c5c5c5; /*todo*/
+    --rec-list-operation-bg-colour: #333;
+    --rec-list-operation-border-colour: #444;
+
+    --selected-operation-font-color: #c09853; /*todo*/
+    --selected-operation-bg-colour: #fcf8e3;
+    --selected-operation-border-colour: #fbeed5;
+
+    --breakpoint-font-colour: #b94a48; /*todo*/
+    --breakpoint-bg-colour: #f2dede;
+    --breakpoint-border-colour: #eed3d7;
+
+    --breakpoint-font-colour: #b94a48; /*todo*/
+    --breakpoint-bg-colour: #f2dede;
+    --breakpoint-border-colour: #eed3d7;
+
+    --disabled-font-colour: #999; /*todo*/
+    --disabled-bg-colour: #dfdfdf;
+    --disabled-border-colour: #cdcdcd;
+
+    --fc-operation-font-colour: #396f3a; /*todo*/
+    --fc-operation-bg-colour: #c7e4ba;
+    --fc-operation-border-colour: #b3dba2;
+
+    --fc-breakpoint-operation-font-colour: #94312f; /*todo*/
+    --fc-breakpoint-operation-bg-colour: #eabfbf;
+    --fc-breakpoint-operation-border-colour: #e2aeb5;
+
+
+    /* Operation arguments */
+    --arg-title-font-weight: bold; /*todo*/
+    --arg-input-height: 34px;
+    --arg-input-line-height: 20px;
+    --arg-input-font-size: 15px;
+    --arg-font-colour: #bbb;
+    --arg-background: #252525;
+    --arg-border-colour: #205375;
+    --arg-disabled-background: #eee; /*todo*/
+
+
+    /* Buttons */
+    --btn-default-font-colour: #c5c5c5;
+    --btn-default-bg-colour: #3c3c3c;
+    --btn-default-border-colour: #205375;
+
+    --btn-default-hover-font-colour: #c5c5c5;
+    --btn-default-hover-bg-colour: #2d2d2d;
+    --btn-default-hover-border-colour: #205375;
+
+    --btn-success-font-colour: #fff;
+    --btn-success-bg-colour: #073655;
+    --btn-success-border-colour: #0e639c;
+
+    --btn-success-hover-font-colour: #fff;
+    --btn-success-hover-bg-colour: #0e639c;
+    --btn-success-hover-border-colour: #0e639c;
+
+
+    /* Highlighter colours */
+    --hl1: #fff000; /*todo*/
+    --hl2: #95dfff;
+    --hl3: #ffb6b6;
+    --hl4: #fcf8e3;
+    --hl5: #8de768;
+
+
+    /* Scrollbar */
+    --scrollbar-track: #1e1e1e; /* never used */
+    --scrollbar-thumb: #424242;
+    --scrollbar-hover: #4e4e4e;
+
+
+    /* Misc. */
+    --drop-file-border-colour: #3a87ad; /*todo*/
+    --popover-background: #444;
+    --popover-border-colour: #666; /* still working on this */
+}

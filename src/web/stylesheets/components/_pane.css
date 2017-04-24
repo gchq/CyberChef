@@ -6,20 +6,22 @@
  * @license Apache-2.0
  */
 
-$titleHeight: 43px;
+:root {
+    --title-height: 43px;
+}
 
 .title {
     padding: 10px;
-    height: $titleHeight;
-    border-bottom: 1px solid $primaryBorderColour;
-    font-weight: $titleWeight;
-    color: $titleColour;
-    background-color: $secondaryBackgroundColour;
+    height: var(--title-height);
+    border-bottom: 1px solid var(--primary-border-colour);
+    font-weight: var(--title-weight);
+    color: var(--title-colour);
+    background-color: var(--secondary-background-colour);
 }
 
 .list-area {
     position: absolute;
-    top: $titleHeight;
+    top: var(--title-height);
     bottom: 0;
     width: 100%;
     list-style-type: none;

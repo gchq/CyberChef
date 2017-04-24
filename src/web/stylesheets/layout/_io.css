@@ -6,7 +6,9 @@
  * @license Apache-2.0
  */
 
-.io-textarea {
+#input-text,
+#output-text,
+#output-html {
     position: relative;
     width: 100%;
     height: 100%;
@@ -22,13 +24,7 @@
     word-wrap: break-word;
 }
 
-#input-text,
-#output-text {
-    @extend .io-textarea;
-}
-
 #output-html {
-    @extend .io-textarea;
     display: none;
     overflow-y: auto;
     -moz-padding-start: 1px; /* Fixes bug in Firefox */
@@ -44,9 +40,9 @@
 
 .textarea-wrapper textarea,
 .textarea-wrapper div {
-    font-family: $fixedWidthFontFamily;
-    font-size: $fixedWidthFontSize;
-    color: $fixedWidthFontColour;
+    font-family: var(--fixed-width-font-family);
+    font-size: var(--fixed-width-font-size);
+    color: var(--fixed-width-font-colour);
 }
 
 #input-highlighter,
@@ -79,7 +75,7 @@
     height: 30px;
     text-align: right;
     line-height: 10px;
-    font-family: $fixedWidthFontFamily;
+    font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
 }
@@ -89,7 +85,7 @@
 }
 
 .dropping-file {
-    border: 5px dashed $dropFileBorderColour !important;
+    border: 5px dashed var(--drop-file-border-colour) !important;
 }
 
 .loading_file {

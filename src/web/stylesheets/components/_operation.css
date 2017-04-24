@@ -44,7 +44,7 @@
 }
 
 .arg-title {
-    font-weight: $argTitleFontWeight;
+    font-weight: var(--arg-title-font-weight);
 }
 
 .arg-input {
@@ -52,13 +52,13 @@
     width: 100%;
     padding: 6px 12px;
     vertical-align: middle;
-    height: $argInputHeight;
-    font-size: $argInputFontSize;
-    line-height: $argInputLineHeight;
-    color: $argFontColour;
-    background-color: $argBackground;
-    border: 1px solid $argBorderColour;
-    font-family: $fixedWidthFontFamily;
+    height: var(--arg-input-height);
+    font-size: var(--arg-input-font-size);
+    line-height: var(--arg-input-line-height);
+    color: var(--arg-font-colour);
+    background-color: var(--arg-background);
+    border: 1px solid var(--arg-border-colour);
+    font-family: var(--fixed-width-font-family);
 }
 
 .short-string {
@@ -69,15 +69,15 @@ select {
     display: block;
     padding: 6px 8px;
     height: 34px;
-    border: 1px solid $argBorderColour;
-    background-color: $argBackground;
-    color: $argFontColour;
+    border: 1px solid var(--arg-border-colour);
+    background-color: var(--arg-background);
+    color: var(--arg-font-colour);
 }
 
 .arg[disabled] {
     cursor: not-allowed;
     opacity: 1;
-    background-color: $argDisabledBackground;
+    background-color: var(--arg-disabled-background);
 }
 
 textarea.arg {
@@ -85,11 +85,11 @@ textarea.arg {
     min-height: 50px;
     height: 70px;
     margin-top: 5px;
-    border: 1px solid $argBorderColour;
+    border: 1px solid var(--arg-border-colour);
     resize: vertical;
-    color: $argFontColour;
-    background-color: $argBackground;
-    font-family: $fixedWidthFontFamily;
+    color: var(--arg-font-colour);
+    background-color: var(--arg-background);
+    font-family: var(--fixed-width-font-family);
 }
 
 .arg-label {
@@ -120,7 +120,7 @@ textarea.arg {
 }
 
 button.dropdown-toggle {
-    background-color: $secondaryBackgroundColour;
+    background-color: var(--secondary-background-colour);
 }
 
 .op-icon {
@@ -166,31 +166,31 @@ button.dropdown-toggle {
 }
 
 .break {
-    color: $breakpointFontColour !important;
-    background-color: $breakpointBgColour !important;
-    border-color: $breakpointBorderColour !important;
+    color: var(--breakpoint-font-colour) !important;
+    background-color: var(--breakpoint-bg-colour) !important;
+    border-color: var(--breakpoint-border-colour) !important;
 }
 
 .selected-op {
-    color: $selectedOperationFontColor !important;
-    background-color: $selectedOperationBgColour !important;
-    border-color: $selectedOperationBorderColour !important;
+    color: var(--selected-operation-font-color) !important;
+    background-color: var(--selected-operation-bg-colour) !important;
+    border-color: var(--selected-operation-border-colour) !important;
 }
 
 .flow-control-op {
-    color: $fcOperationFontColour !important;
-    background-color: $fcOperationBgColour !important;
-    border-color: $fcOperationBorderColour !important;
+    color: var(--fc-operation-font-colour) !important;
+    background-color: var(--fc-operation-bg-colour) !important;
+    border-color: var(--fc-operation-border-colour) !important;
 }
 
 .flow-control-op.break {
-    color: $fcBreakpointOperationFontColour !important;
-    background-color: $fcBreakpointOperationBgColour !important;
-    border-color: $fcBreakpointOperationBorderColour !important;
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+    background-color: var(--fc-breakpoint-operation-bg-colour) !important;
+    border-color: var(--fc-breakpoint-operation-border-colour) !important;
 }
 
 .disabled {
-    color: $disabledFontColour !important;
-    background-color: $disabledBgColour !important;
-    border-color: $disabledBorderColour !important;
+    color: var(--disabled-font-colour) !important;
+    background-color: var(--disabled-bg-colour) !important;
+    border-color: var(--disabled-border-colour) !important;
 }

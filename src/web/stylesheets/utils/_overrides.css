@@ -15,38 +15,38 @@ a:focus {
 }
 
 .btn-default {
-    color: $btnDefaultFontColour;
-    background-color: $btnDefaultBgColour;
-    border-color: $btnDefaultBorderColour;
+    color: var(--btn-default-font-colour);
+    background-color: var(--btn-default-bg-colour);
+    border-color: var(--btn-default-border-colour);
 }
 
 .btn-default:hover,
 .btn-default:active,
 .btn-default:hover:active {
-    color: $btnDefaultHoverFontColour;
-    background-color: $btnDefaultHoverBgColour;
-    border-color: $btnDefaultHoverBorderColour;
+    color: var(--btn-default-hover-font-colour);
+    background-color: var(--btn-default-hover-bg-colour);
+    border-color: var(--btn-default-hover-border-colour);
 }
 
 .btn-default:focus {
-    color: $btnDefaultFontColour;
-    background-color: $btnDefaultBgColour;
-    border-color: $btnDefaultHoverBorderColour;
+    color: var(--btn-default-font-colour);
+    background-color: var(--btn-default-bg-colour);
+    border-color: var(--btn-default-hover-border-colour);
 }
 
 .btn-success {
-    color: $btnSuccessFontColour;
-    background-color: $btnSuccessBgColour;
-    border-color: $btnSuccessBorderColour;
+    color: var(--btn-success-font-colour);
+    background-color: var(--btn-success-bg-colour);
+    border-color: var(--btn-success-border-colour);
 }
 
 .btn-success:hover,
 .btn-success:active,
 .btn-success:focus,
 .btn-success:hover:active {
-    color: $btnSuccessHoverFontColour;
-    background-color: $btnSuccessHoverBgColour;
-    border-color: $btnSuccessHoverBorderColour;
+    color: var(--btn-success-hover-font-colour);
+    background-color: var(--btn-success-hover-bg-colour);
+    border-color: var(--btn-success-hover-border-colour);
 }
 
 .btn,
@@ -75,12 +75,12 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .modal-content {
-    background-color: $primaryBackgroundColour;
+    background-color: var(--primary-background-colour);
 }
 
 .modal-header,
 .modal-footer {
-    border-color: $primaryBorderColour;
+    border-color: var(--primary-border-colour);
 }
 
 .form-control {
@@ -120,13 +120,13 @@ optgroup {
 
 .popover,
 .popover.right>.arrow {
-    background-color: $popoverBackground;
-    border-color: $popoverBorderColour;
+    background-color: var(--popover-background);
+    border-color: var(--popover-border-colour);
 }
 
 .popover.right>.arrow:after {
-    // border-color: $popoverBorderColour;
-    border-right-color: $popoverBackground;
+    /*border-color: var(--popover-border-colour);*/
+    border-right-color: var(--popover-background);
 }
 
 

@@ -34,7 +34,7 @@ div#output {
 }
 
 .split {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     overflow: auto;
     position: relative;
 }
@@ -45,7 +45,7 @@ div#output {
 }
 
 .gutter {
-    background-color: $secondaryBorderColour;
+    background-color: var(--secondary-border-colour);
     background-repeat: no-repeat;
     background-position: 50%;
 }

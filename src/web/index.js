@@ -5,7 +5,7 @@
  */
 
 // Styles
-import "./stylesheets/main.scss";
+import "./stylesheets/main.js";
 
 // Libs
 import "babel-polyfill";

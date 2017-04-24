@@ -20,11 +20,11 @@
     height: 28px;
     padding: 3px 10px;
     vertical-align: middle;
-    font-size: $argInputFontSize - 1px;
-    line-height: $argInputLineHeight;
-    color: $argFontColour;
-    background-color: $argBackground;
-    border: 1px solid $primaryBorderColour;
+    font-size: calc(var(--arg-input-font-size) - 1px);
+    line-height: var(--arg-input-line-height);
+    color: var(--arg-font-colour);
+    background-color: var(--arg-background);
+    border: 1px solid var(--primary-border-colour);
 }
 
 .option-item select {
@@ -34,7 +34,7 @@
 
 #edit-favourites-list {
     margin: 10px;
-    border: 1px solid $opListOperationBorderColour;
+    border: 1px solid var(--op-list-operation-border-colour);
 }
 
 #edit-favourites-list .operation {
@@ -67,14 +67,14 @@
 #save-footer {
     border-top: none;
     margin-top: 0;
-    border-bottom: 1px solid $primaryBorderColour;
+    border-bottom: 1px solid var(--primary-border-colour);
 }
 
 #support-modal textarea {
-    font-family: $primaryFontFamily;
+    font-family: var(--primary-font-family);
 }
 
 #save-text,
 #load-text {
-    font-family: $fixedWidthFontFamily;
+    font-family: var(--fixed-width-font-family);
 }

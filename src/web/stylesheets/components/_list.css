@@ -15,25 +15,25 @@
 .category-title {
     display: block;
     padding: 10px;
-    background-color: $secondaryBackgroundColour;
-    border-bottom: 1px solid $secondaryBorderColour;
-    font-weight: $titleWeight;
+    background-color: var(--secondary-background-colour);
+    border-bottom: 1px solid var(--secondary-border-colour);
+    font-weight: var(--title-weight);
 }
 
 .category-title[href='#catFavourites'] {
-    border-bottom-color: $primaryBorderColour;
+    border-bottom-color: var(--primary-border-colour);
 }
 
 .category-title[aria-expanded=true] {
-    border-bottom-color: $primaryBorderColour;
+    border-bottom-color: var(--primary-border-colour);
 }
 
 .category-title.collapsed {
-    border-bottom-color: $secondaryBorderColour;
+    border-bottom-color: var(--secondary-border-colour);
 }
 
 .category-title:hover {
-    color: $opListOperationFontColour;
+    color: var(--op-list-operation-font-colour);
 }
 
 .category {

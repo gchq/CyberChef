@@ -6,21 +6,23 @@
  * @license Apache-2.0
  */
 
-$controlsHeight: 120px;
-$controlsDivision: 65%;
+:root {
+    --controls-height: 120px;
+    --controls-division: 65%;
+}
 
 #controls {
     position: absolute;
     width: 100%;
-    height: $controlsHeight;
+    height: var(--controls-height);
     bottom: 0;
     padding: 10px;
-    border-top: 1px solid $primaryBorderColour;
-    background-color: $secondaryBackgroundColour;
+    border-top: 1px solid var(--primary-border-colour);
+    background-color: var(--secondary-background-colour);
 }
 
 #operational-controls {
-    width: $controlsDivision;
+    width: var(--controls-division);
     float: left;
     text-align: center;
 }
@@ -44,11 +46,11 @@ $controlsDivision: 65%;
     width: 60px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-left: 1px solid $btnSuccessBgColour;
+    border-left: 1px solid var(--btn-success-bg-colour);
 }
 
 #auto-bake-label:hover {
-    border-left-color: $btnSuccessHoverBorderColour;
+    border-left-color: var(--btn-success-hover-border-colour);
 }
 
 #auto-bake-label div {
@@ -58,6 +60,6 @@ $controlsDivision: 65%;
 
 #extra-controls {
     float: right;
-    width: 100% - $controlsDivision;
+    width: calc(100% - var(--controls-division));
     padding-left: 10px;
 }
