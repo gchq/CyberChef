@@ -26,7 +26,6 @@ var RecipeWaiter = function(app, manager) {
 RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
     var recList = document.getElementById("rec-list");
 
-
     // Recipe list
     Sortable.create(recList, {
         group: "recipe",
@@ -45,7 +44,9 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
             }
         }.bind(this),
         onSort: function(evt) {
-            document.dispatchEvent(this.manager.statechange);
+            if (evt.from.id === "rec-list") {
+                document.dispatchEvent(this.manager.statechange);
+            }
         }.bind(this)
     });
 
