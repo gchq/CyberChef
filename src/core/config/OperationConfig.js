@@ -162,6 +162,20 @@ const OperationConfig = {
         flowControl: true,
         args: []
     },
+    "Comment": {
+        description: "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.",
+        run: FlowControl.runComment,
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "",
+                type: "text",
+                value: ""
+            }
+        ]
+    },
     "From Base64": {
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
         run: Base64.runFrom,
