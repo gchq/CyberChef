@@ -129,7 +129,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Fork",
-                "args": ["\\n","\\n",false]
+                "args": ["\\n", "\\n", false]
             },
             {
                 "op": "Comment",
