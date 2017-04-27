@@ -1,7 +1,7 @@
 {
   "name": "cyberchef",
   "version": "5.2.3",
-  "description": "CyberChef is a simple, intuitive web app for analysing and decoding data within a web browser.",
+  "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
   "copyright": "Crown copyright 2016",
@@ -25,6 +25,7 @@
     "type": "git",
     "url": "https://github.com/gchq/CyberChef/"
   },
+  "main": "build/node/CyberChef.js",
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.0",
