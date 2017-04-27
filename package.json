@@ -19,13 +19,16 @@
     "hex",
     "encoding",
     "format",
-    "cybersecurity"
+    "cybersecurity",
+    "data manipulation",
+    "data analysis"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/gchq/CyberChef/"
   },
   "main": "build/node/CyberChef.js",
+  "bugs": "https://github.com/gchq/CyberChef/issues",
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.0",
