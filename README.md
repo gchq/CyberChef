@@ -1,6 +1,8 @@
 # CyberChef
 
 [![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
+[![npm](https://badge.fury.io/js/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
+![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=brightgreen)
 
 #### *The Cyber Swiss Army Knife*
 
