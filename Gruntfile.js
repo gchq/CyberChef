@@ -92,13 +92,13 @@ module.exports = function (grunt) {
         }, function(error, result) {
             if (error) {
                 if (error instanceof Error) {
-                  done(error)
+                    done(error);
                 } else {
-                  done(new Error(error));
+                    done(new Error(error));
                 }
             } else {
-              grunt.file.write("build/prod/cyberchef.htm", result);
-              done(true);
+                grunt.file.write("build/prod/cyberchef.htm", result);
+                done(true);
             }
         });
     }
@@ -113,7 +113,7 @@ module.exports = function (grunt) {
         },
         eslint: {
             options: {
-                configFile: "src/.eslintrc.json"
+                configFile: "./.eslintrc.json"
             },
             configs: ["Gruntfile.js"],
             core: ["src/core/**/*.js", "!src/core/lib/**/*"],
