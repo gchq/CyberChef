@@ -13,8 +13,10 @@ This is a fork of original CyberChef by GCHQ. This project has implemented my ow
 
 ## Todo
 
-- operation GZip HTTP data
-- operation SQL comment strip function
+- Operation GZip HTTP data
+- Operation SQL comment strip function
+- Adding more support to char(hex, hex)
+- Adding support of themes
 
 
 ---

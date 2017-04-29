@@ -253,7 +253,8 @@ module.exports = function(grunt) {
                 src: [
                     "src/css/lib/**/*.css",
                     "src/css/structure/**/*.css",
-                    "src/css/themes/classic.css"
+                    //"src/css/themes/classic.css"
+					"src/css/themes/orange.css"
                 ],
                 dest: "build/dev/styles.css"
             },
