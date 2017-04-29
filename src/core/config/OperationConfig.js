@@ -15,6 +15,7 @@ import Endian from "../operations/Endian.js";
 import Entropy from "../operations/Entropy.js";
 import Extract from "../operations/Extract.js";
 import FileType from "../operations/FileType.js";
+import Image from "../operations/Image.js";
 import Hash from "../operations/Hash.js";
 import Hexdump from "../operations/Hexdump.js";
 import HTML from "../operations/HTML.js";
@@ -3247,6 +3248,15 @@ const OperationConfig = {
                 type: "number",
                 value: 10,
             },
+        ]
+    },
+    "Extract EXIF": {
+        description: [
+        ].join("\n"),
+        run: Image.runEXIF,
+        inputType: "byteArray",
+        outputType: "string",
+        args: [
         ]
     },
 };

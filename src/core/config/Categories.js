@@ -207,6 +207,7 @@ const Categories = [
             "Regular expression",
             "XPath expression",
             "CSS selector",
+            "Extract EXIF",
         ]
     },
     {

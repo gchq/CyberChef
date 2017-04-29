@@ -15,6 +15,7 @@ import "./tests/operations/Base58.js";
 import "./tests/operations/ByteRepr.js";
 import "./tests/operations/Compress.js";
 import "./tests/operations/FlowControl.js";
+import "./tests/operations/Image.js";
 import "./tests/operations/MorseCode.js";
 import "./tests/operations/StrUtils.js";
 
