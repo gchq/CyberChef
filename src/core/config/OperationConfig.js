@@ -3249,6 +3249,48 @@ const OperationConfig = {
             },
         ]
     },
+    "To Snake case": {
+        description: [
+            "Converts the input string to snake case.",
+            "<br><br>",
+            "Snake case is all lower case with underscores as word boundaries.",
+            "<br><br>",
+            "e.g. this_is_snake_case",
+        ].join("\n"),
+        run: StrUtils.runToSnakeCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+        ]
+    },
+    "To Camel case": {
+        description: [
+            "Converts the input string to camel case.",
+            "<br><br>",
+            "Camel case is all lower case except letters after word boundaries which are uppercase.",
+            "<br><br>",
+            "e.g. thisIsCamelCase",
+        ].join("\n"),
+        run: StrUtils.runToCamelCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+        ]
+    },
+    "To Kebab case": {
+        description: [
+            "Converts the input string to kebab case.",
+            "<br><br>",
+            "Kebab case is all lower case with dashes as word boundaries.",
+            "<br><br>",
+            "e.g. this-is-kebab-case",
+        ].join("\n"),
+        run: StrUtils.runToKebabCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+        ]
+    },
 };
 
 export default OperationConfig;

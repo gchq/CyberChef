@@ -181,6 +181,9 @@ const Categories = [
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
+            "To Snake case",
+            "To Camel case",
+            "To Kebab case",
         ]
     },
     {
