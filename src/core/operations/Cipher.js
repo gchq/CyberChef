@@ -61,7 +61,7 @@ const Cipher = {
      * @returns {string}
      */
     _enc: function (algo, input, args) {
-        var key = Utils.format[args[0].option].parse(args[0].string || ""),
+        let key = Utils.format[args[0].option].parse(args[0].string || ""),
             iv = Utils.format[args[1].option].parse(args[1].string || ""),
             salt = Utils.format[args[2].option].parse(args[2].string || ""),
             mode = CryptoJS.mode[args[3]],
@@ -74,14 +74,14 @@ const Cipher = {
             key = key.toString(CryptoJS.enc.Latin1);
         }
 
-        var encrypted = algo.encrypt(input, key, {
+        const encrypted = algo.encrypt(input, key, {
             salt: salt.sigBytes > 0 ? salt : false,
             iv: iv.sigBytes > 0 ? iv : null,
             mode: mode,
             padding: padding
         });
 
-        var result = "";
+        let result = "";
         if (resultOption === "show all") {
             result += "Key:  " + encrypted.key.toString(Utils.format[outputFormat]);
             result += "\nIV:   " + encrypted.iv.toString(Utils.format[outputFormat]);
@@ -105,7 +105,7 @@ const Cipher = {
      * @returns {string}
      */
     _dec: function (algo, input, args) {
-        var key = Utils.format[args[0].option].parse(args[0].string || ""),
+        let key = Utils.format[args[0].option].parse(args[0].string || ""),
             iv = Utils.format[args[1].option].parse(args[1].string || ""),
             salt = Utils.format[args[2].option].parse(args[2].string || ""),
             mode = CryptoJS.mode[args[3]],
@@ -118,14 +118,14 @@ const Cipher = {
             return "No input";
         }
 
-        var ciphertext = Utils.format[inputFormat].parse(input);
+        const ciphertext = Utils.format[inputFormat].parse(input);
 
         if (iv.sigBytes === 0) {
             // Use passphrase rather than key. Need to convert it to a string.
             key = key.toString(CryptoJS.enc.Latin1);
         }
 
-        var decrypted = algo.decrypt({
+        const decrypted = algo.decrypt({
             ciphertext: ciphertext,
             salt: salt.sigBytes > 0 ? salt : false
         }, key, {
@@ -134,7 +134,7 @@ const Cipher = {
             padding: padding
         });
 
-        var result;
+        let result;
         try {
             result = decrypted.toString(Utils.format[outputFormat]);
         } catch (err) {
@@ -260,13 +260,13 @@ const Cipher = {
      * @returns {string}
      */
     runBlowfishEnc: function (input, args) {
-        var key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
+        let key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
             mode = args[1],
             outputFormat = args[2];
 
         if (key.length === 0) return "Enter a key";
 
-        var encHex = Blowfish.encrypt(input, key, {
+        let encHex = Blowfish.encrypt(input, key, {
                 outputType: 1,
                 cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
             }),
@@ -284,7 +284,7 @@ const Cipher = {
      * @returns {string}
      */
     runBlowfishDec: function (input, args) {
-        var key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
+        let key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
             mode = args[1],
             inputFormat = args[2];
 
@@ -318,7 +318,7 @@ const Cipher = {
      * @returns {string}
      */
     runPbkdf2: function (input, args) {
-        var keySize = args[0] / 32,
+        let keySize = args[0] / 32,
             iterations = args[1],
             salt = CryptoJS.enc.Hex.parse(args[2] || ""),
             inputFormat = args[3],
@@ -338,7 +338,7 @@ const Cipher = {
      * @returns {string}
      */
     runEvpkdf: function (input, args) {
-        var keySize = args[0] / 32,
+        let keySize = args[0] / 32,
             iterations = args[1],
             salt = CryptoJS.enc.Hex.parse(args[2] || ""),
             inputFormat = args[3],
@@ -358,7 +358,7 @@ const Cipher = {
      * @returns {string}
      */
     runRc4: function (input, args) {
-        var message = Utils.format[args[1]].parse(input),
+        let message = Utils.format[args[1]].parse(input),
             passphrase = Utils.format[args[0].option].parse(args[0].string),
             encrypted = CryptoJS.RC4.encrypt(message, passphrase);
 
@@ -380,7 +380,7 @@ const Cipher = {
      * @returns {string}
      */
     runRc4drop: function (input, args) {
-        var message = Utils.format[args[1]].parse(input),
+        let message = Utils.format[args[1]].parse(input),
             passphrase = Utils.format[args[0].option].parse(args[0].string),
             drop = args[3],
             encrypted = CryptoJS.RC4Drop.encrypt(message, passphrase, { drop: drop });
@@ -398,7 +398,7 @@ const Cipher = {
      * @returns {string}
      */
     runVigenereEnc: function (input, args) {
-        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+        let alphabet = "abcdefghijklmnopqrstuvwxyz",
             key = args[0].toLowerCase(),
             output = "",
             fail = 0,
@@ -409,7 +409,7 @@ const Cipher = {
         if (!key) return "No key entered";
         if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 // Get the corresponding character of key for the current letter, accounting
                 // for chars not in alphabet
@@ -445,7 +445,7 @@ const Cipher = {
      * @returns {string}
      */
     runVigenereDec: function (input, args) {
-        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+        let alphabet = "abcdefghijklmnopqrstuvwxyz",
             key = args[0].toLowerCase(),
             output = "",
             fail = 0,
@@ -456,7 +456,7 @@ const Cipher = {
         if (!key) return "No key entered";
         if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 chr = key[(i - fail) % key.length];
                 keyIndex = alphabet.indexOf(chr);
@@ -499,7 +499,7 @@ const Cipher = {
      * @returns {string}
      */
     runAffineEnc: function (input, args) {
-        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+        let alphabet = "abcdefghijklmnopqrstuvwxyz",
             a = args[0],
             b = args[1],
             output = "";
@@ -508,7 +508,7 @@ const Cipher = {
             return "The values of a and b can only be integers.";
         }
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 // Uses the affine function ax+b % m = y (where m is length of the alphabet)
                 output += alphabet[((a * alphabet.indexOf(input[i])) + b) % 26];
@@ -533,7 +533,7 @@ const Cipher = {
      * @returns {string}
      */
     runAffineDec: function (input, args) {
-        var alphabet = "abcdefghijklmnopqrstuvwxyz",
+        let alphabet = "abcdefghijklmnopqrstuvwxyz",
             a = args[0],
             b = args[1],
             output = "",
@@ -550,7 +550,7 @@ const Cipher = {
         // Calculates modular inverse of a
         aModInv = Utils.modInv(a, 26);
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 // Uses the affine decode function (y-b * A') % m = x (where m is length of the alphabet and A' is modular inverse)
                 output += alphabet[Utils.mod((alphabet.indexOf(input[i]) - b) * aModInv, 26)];
@@ -598,7 +598,7 @@ const Cipher = {
      * @returns {byteArray}
      */
     runSubstitute: function (input, args) {
-        var plaintext = Utils.strToByteArray(Utils.expandAlphRange(args[0]).join()),
+        let plaintext = Utils.strToByteArray(Utils.expandAlphRange(args[0]).join()),
             ciphertext = Utils.strToByteArray(Utils.expandAlphRange(args[1]).join()),
             output = [],
             index = -1;
@@ -607,7 +607,7 @@ const Cipher = {
             output = Utils.strToByteArray("Warning: Plaintext and Ciphertext lengths differ\n\n");
         }
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             index = plaintext.indexOf(input[i]);
             output.push(index > -1 && index < ciphertext.length ? ciphertext[index] : input[i]);
         }
@@ -650,10 +650,10 @@ CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
     }
 
     // Derive key and IV
-    var key = CryptoJS.algo.EvpKDF.create({ keySize: keySize + ivSize }).compute(password, salt);
+    const key = CryptoJS.algo.EvpKDF.create({ keySize: keySize + ivSize }).compute(password, salt);
 
     // Separate key and IV
-    var iv = CryptoJS.lib.WordArray.create(key.words.slice(keySize), ivSize * 4);
+    const iv = CryptoJS.lib.WordArray.create(key.words.slice(keySize), ivSize * 4);
     key.sigBytes = keySize * 4;
 
     // Return params

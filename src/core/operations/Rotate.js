@@ -32,10 +32,10 @@ const Rotate = {
      * @returns {byteArray}
      */
     _rot: function(data, amount, algo) {
-        var result = [];
-        for (var i = 0; i < data.length; i++) {
-            var b = data[i];
-            for (var j = 0; j < amount; j++) {
+        const result = [];
+        for (let i = 0; i < data.length; i++) {
+            let b = data[i];
+            for (let j = 0; j < amount; j++) {
                 b = algo(b);
             }
             result.push(b);
@@ -100,7 +100,7 @@ const Rotate = {
      * @returns {byteArray}
      */
     runRot13: function(input, args) {
-        var amount = args[2],
+        let amount = args[2],
             output = input,
             chr,
             rot13Lowercase = args[0],
@@ -111,7 +111,7 @@ const Rotate = {
                 amount = 26 - (Math.abs(amount) % 26);
             }
 
-            for (var i = 0; i < input.length; i++) {
+            for (let i = 0; i < input.length; i++) {
                 chr = input[i];
                 if (rot13Upperacse && chr >= 65 && chr <= 90) { // Upper case
                     chr = (chr - 65 + amount) % 26;
@@ -141,7 +141,7 @@ const Rotate = {
      * @returns {byteArray}
      */
     runRot47: function(input, args) {
-        var amount = args[0],
+        let amount = args[0],
             output = input,
             chr;
 
@@ -150,7 +150,7 @@ const Rotate = {
                 amount = 94 - (Math.abs(amount) % 94);
             }
 
-            for (var i = 0; i < input.length; i++) {
+            for (let i = 0; i < input.length; i++) {
                 chr = input[i];
                 if (chr >= 33 && chr <= 126) {
                     chr = (chr - 33 + amount) % 94;
@@ -170,7 +170,7 @@ const Rotate = {
      * @returns {byte}
      */
     _rotr: function(b) {
-        var bit = (b & 1) << 7;
+        const bit = (b & 1) << 7;
         return (b >> 1) | bit;
     },
 
@@ -183,7 +183,7 @@ const Rotate = {
      * @returns {byte}
      */
     _rotl: function(b) {
-        var bit = (b >> 7) & 1;
+        const bit = (b >> 7) & 1;
         return ((b << 1) | bit) & 0xFF;
     },
 
@@ -198,13 +198,13 @@ const Rotate = {
      * @returns {byteArray}
      */
     _rotrWhole: function(data, amount) {
-        var carryBits = 0,
+        let carryBits = 0,
             newByte,
             result = [];
 
         amount = amount % 8;
-        for (var i = 0; i < data.length; i++) {
-            var oldByte = data[i] >>> 0;
+        for (let i = 0; i < data.length; i++) {
+            const oldByte = data[i] >>> 0;
             newByte = (oldByte >> amount) | carryBits;
             carryBits = (oldByte & (Math.pow(2, amount)-1)) << (8-amount);
             result.push(newByte);
@@ -224,13 +224,13 @@ const Rotate = {
      * @returns {byteArray}
      */
     _rotlWhole: function(data, amount) {
-        var carryBits = 0,
+        let carryBits = 0,
             newByte,
             result = [];
 
         amount = amount % 8;
-        for (var i = data.length-1; i >= 0; i--) {
-            var oldByte = data[i];
+        for (let i = data.length-1; i >= 0; i--) {
+            const oldByte = data[i];
             newByte = ((oldByte << amount) | carryBits) & 0xFF;
             carryBits = (oldByte >> (8-amount)) & (Math.pow(2, amount)-1);
             result[i] = (newByte);

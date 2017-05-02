@@ -14,7 +14,7 @@ import HTMLIngredient from "./HTMLIngredient.js";
  * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var HTMLOperation = function(name, config, app, manager) {
+const HTMLOperation = function(name, config, app, manager) {
     this.app         = app;
     this.manager     = manager;
 
@@ -24,8 +24,8 @@ var HTMLOperation = function(name, config, app, manager) {
     this.config      = config;
     this.ingList     = [];
 
-    for (var i = 0; i < config.args.length; i++) {
-        var ing = new HTMLIngredient(config.args[i], this.app, this.manager);
+    for (let i = 0; i < config.args.length; i++) {
+        const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
         this.ingList.push(ing);
     }
 };
@@ -47,7 +47,7 @@ HTMLOperation.REMOVE_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABwkl
  * @returns {string}
  */
 HTMLOperation.prototype.toStubHtml = function(removeIcon) {
-    var html = "<li class='operation'";
+    let html = "<li class='operation'";
 
     if (this.description) {
         html += " data-container='body' data-toggle='popover' data-placement='auto right'\
@@ -77,9 +77,9 @@ HTMLOperation.prototype.toStubHtml = function(removeIcon) {
  * @returns {string}
  */
 HTMLOperation.prototype.toFullHtml = function() {
-    var html = "<div class='arg-title'>" + this.name + "</div>";
+    let html = "<div class='arg-title'>" + this.name + "</div>";
 
-    for (var i = 0; i < this.ingList.length; i++) {
+    for (let i = 0; i < this.ingList.length; i++) {
         html += this.ingList[i].toHtml();
     }
 

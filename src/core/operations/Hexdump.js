@@ -37,19 +37,19 @@ const Hexdump = {
      * @returns {string}
      */
     runTo: function(input, args) {
-        var length = args[0] || Hexdump.WIDTH;
-        var upperCase = args[1];
-        var includeFinalLength = args[2];
+        const length = args[0] || Hexdump.WIDTH;
+        const upperCase = args[1];
+        const includeFinalLength = args[2];
 
-        var output = "", padding = 2;
-        for (var i = 0; i < input.length; i += length) {
-            var buff = input.slice(i, i+length);
-            var hexa = "";
-            for (var j = 0; j < buff.length; j++) {
+        let output = "", padding = 2;
+        for (let i = 0; i < input.length; i += length) {
+            const buff = input.slice(i, i+length);
+            let hexa = "";
+            for (let j = 0; j < buff.length; j++) {
                 hexa += Utils.hex(buff[j], padding) + " ";
             }
 
-            var lineNo = Utils.hex(i, 8);
+            let lineNo = Utils.hex(i, 8);
 
             if (upperCase) {
                 hexa = hexa.toUpperCase();
@@ -77,19 +77,19 @@ const Hexdump = {
      * @returns {byteArray}
      */
     runFrom: function(input, args) {
-        var output = [],
+        let output = [],
             regex = /^\s*(?:[\dA-F]{4,16}:?)?\s*((?:[\dA-F]{2}\s){1,8}(?:\s|[\dA-F]{2}-)(?:[\dA-F]{2}\s){1,8}|(?:[\dA-F]{2}\s|[\dA-F]{4}\s)+)/igm,
             block, line;
 
         while ((block = regex.exec(input))) {
             line = Utils.fromHex(block[1].replace(/-/g, " "));
-            for (var i = 0; i < line.length; i++) {
+            for (let i = 0; i < line.length; i++) {
                 output.push(line[i]);
             }
         }
         // Is this a CyberChef hexdump or is it from a different tool?
-        var width = input.indexOf("\n");
-        var w = (width - 13) / 4;
+        const width = input.indexOf("\n");
+        const w = (width - 13) / 4;
         // w should be the specified width of the hexdump and therefore a round number
         if (Math.floor(w) !== w || input.indexOf("\r") !== -1 || output.indexOf(13) !== -1) {
             if (app) app.options.attemptHighlight = false;
@@ -109,7 +109,7 @@ const Hexdump = {
      */
     highlightTo: function(pos, args) {
         // Calculate overall selection
-        var w = args[0] || 16,
+        let w = args[0] || 16,
             width = 14 + (w*4),
             line = Math.floor(pos[0].start / w),
             offset = pos[0].start % w,
@@ -127,8 +127,8 @@ const Hexdump = {
         pos[0].end = line*width + 10 + offset*3 - 1;
 
         // Set up multiple selections for bytes
-        var startLineNum = Math.floor(pos[0].start / width);
-        var endLineNum = Math.floor(pos[0].end / width);
+        let startLineNum = Math.floor(pos[0].start / width);
+        const endLineNum = Math.floor(pos[0].end / width);
 
         if (startLineNum === endLineNum) {
             pos.push(pos[0]);
@@ -146,10 +146,10 @@ const Hexdump = {
         }
 
         // Set up multiple selections for ASCII
-        var len = pos.length, lineNum = 0;
+        let len = pos.length, lineNum = 0;
         start = 0;
         end = 0;
-        for (var i = 1; i < len; i++) {
+        for (let i = 1; i < len; i++) {
             lineNum = Math.floor(pos[i].start / width);
             start = (((pos[i].start - (lineNum * width)) - 10) / 3) + (width - w -2) + (lineNum * width);
             end = (((pos[i].end + 1 - (lineNum * width)) - 10) / 3) + (width - w -2) + (lineNum * width);
@@ -169,11 +169,11 @@ const Hexdump = {
      * @returns {Object[]} pos
      */
     highlightFrom: function(pos, args) {
-        var w = args[0] || 16;
-        var width = 14 + (w*4);
+        const w = args[0] || 16;
+        const width = 14 + (w*4);
 
-        var line = Math.floor(pos[0].start / width);
-        var offset = pos[0].start % width;
+        let line = Math.floor(pos[0].start / width);
+        let offset = pos[0].start % width;
 
         if (offset < 10) { // In line number section
             pos[0].start = line*w;

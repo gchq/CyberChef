@@ -27,7 +27,7 @@ const CharEnc = {
      * @returns {string}
      */
     run: function(input, args) {
-        var inputFormat = args[0],
+        let inputFormat = args[0],
             outputFormat = args[1];
 
         if (inputFormat === "Windows-1251") {

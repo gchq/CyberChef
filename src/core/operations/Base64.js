@@ -45,7 +45,7 @@ const Base64 = {
      * @returns {string}
      */
     runTo: function(input, args) {
-        var alphabet = args[0] || Base64.ALPHABET;
+        const alphabet = args[0] || Base64.ALPHABET;
         return Utils.toBase64(input, alphabet);
     },
 
@@ -64,7 +64,7 @@ const Base64 = {
      * @returns {byteArray}
      */
     runFrom: function(input, args) {
-        var alphabet = args[0] || Base64.ALPHABET,
+        let alphabet = args[0] || Base64.ALPHABET,
             removeNonAlphChars = args[1];
 
         return Utils.fromBase64(input, alphabet, "byteArray", removeNonAlphChars);
@@ -87,7 +87,7 @@ const Base64 = {
     runTo32: function(input, args) {
         if (!input) return "";
 
-        var alphabet = args[0] ?
+        let alphabet = args[0] ?
                 Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
             output = "",
             chr1, chr2, chr3, chr4, chr5,
@@ -139,17 +139,17 @@ const Base64 = {
     runFrom32: function(input, args) {
         if (!input) return [];
 
-        var alphabet = args[0] ?
+        let alphabet = args[0] ?
                 Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
             removeNonAlphChars = args[0];
 
-        var output = [],
+        let output = [],
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;
 
         if (removeNonAlphChars) {
-            var re = new RegExp("[^" + alphabet.replace(/[\]\\\-^]/g, "\\$&") + "]", "g");
+            const re = new RegExp("[^" + alphabet.replace(/[\]\\\-^]/g, "\\$&") + "]", "g");
             input = input.replace(re, "");
         }
 
@@ -199,7 +199,7 @@ const Base64 = {
      * @returns {html}
      */
     runOffsets: function(input, args) {
-        var alphabet = args[0] || Base64.ALPHABET,
+        let alphabet = args[0] || Base64.ALPHABET,
             showVariable = args[1],
             offset0 = Utils.toBase64(input, alphabet),
             offset1 = Utils.toBase64([0].concat(input), alphabet),
