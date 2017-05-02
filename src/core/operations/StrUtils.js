@@ -471,7 +471,7 @@ const StrUtils = {
             number = args[1];
 
         delimiter = Utils.charRep[delimiter];
-        let splitInput = input.split(delimiter);
+        const splitInput = input.split(delimiter);
 
         return splitInput
         .filter((line, lineIndex) => {
@@ -499,7 +499,7 @@ const StrUtils = {
             number = args[1];
 
         delimiter = Utils.charRep[delimiter];
-        let splitInput = input.split(delimiter);
+        const splitInput = input.split(delimiter);
 
         return splitInput
         .filter((line, lineIndex) => {

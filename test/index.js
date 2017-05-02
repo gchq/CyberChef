@@ -32,7 +32,7 @@ let allTestsPassing = true,
  * @returns {string}
  */
 function statusToIcon(status) {
-    let icons = {
+    const icons = {
         erroring: "🔥",
         failing: "❌",
         passing: "✔️️",
@@ -48,7 +48,7 @@ function statusToIcon(status) {
  */
 function handleTestResult(testResult) {
     allTestsPassing = allTestsPassing && testResult.status === "passing";
-    let newCount = (testStatusCounts[testResult.status] || 0) + 1;
+    const newCount = (testStatusCounts[testResult.status] || 0) + 1;
     testStatusCounts[testResult.status] = newCount;
     testStatusCounts.total += 1;
 
@@ -83,8 +83,8 @@ TestRegister.runTests()
 
         console.log("\n");
 
-        for (let testStatus in testStatusCounts) {
-            let count = testStatusCounts[testStatus];
+        for (const testStatus in testStatusCounts) {
+            const count = testStatusCounts[testStatus];
             if (count > 0) {
                 console.log(testStatus.toUpperCase(), count);
             }

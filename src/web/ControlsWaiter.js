@@ -244,8 +244,8 @@ ControlsWaiter.prototype.loadClick = function() {
  * Saves the recipe specified in the save textarea to local storage.
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
-    let recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
-    let recipeStr  = document.getElementById("save-text").value;
+    const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
+    const recipeStr  = document.getElementById("save-text").value;
 
     if (!recipeName) {
         this.app.alert("Please enter a recipe name", "danger", 2000);
