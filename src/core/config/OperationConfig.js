@@ -162,6 +162,20 @@ const OperationConfig = {
         flowControl: true,
         args: []
     },
+    "Comment": {
+        description: "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.",
+        run: FlowControl.runComment,
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "",
+                type: "text",
+                value: ""
+            }
+        ]
+    },
     "From Base64": {
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
         run: Base64.runFrom,
@@ -3196,7 +3210,122 @@ const OperationConfig = {
         outputType: "html",
         args: [
         ]
-    }
+    },
+    "Head": {
+        description: [
+            "Like the UNIX head utility.",
+            "<br>",
+            "Gets the first n lines.",
+            "<br>",
+            "You can select all but the last n lines by entering a negative value for n.",
+            "<br>",
+            "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
+        ].join("\n"),
+        run: StrUtils.runHead,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: StrUtils.DELIMITER_OPTIONS
+            },
+            {
+                name: "Number",
+                type: "number",
+                value: 10,
+            },
+        ]
+    },
+    "Tail": {
+        description: [
+            "Like the UNIX tail utility.",
+            "<br>",
+            "Gets the last n lines.",
+            "<br>",
+            "Optionally you can select all lines after line n by entering a negative value for n.",
+            "<br>",
+            "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
+        ].join("\n"),
+        run: StrUtils.runTail,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: StrUtils.DELIMITER_OPTIONS
+            },
+            {
+                name: "Number",
+                type: "number",
+                value: 10,
+            },
+        ]
+    },
+    "To Snake case": {
+        description: [
+            "Converts the input string to snake case.",
+            "<br><br>",
+            "Snake case is all lower case with underscores as word boundaries.",
+            "<br><br>",
+            "e.g. this_is_snake_case",
+            "<br><br>",
+            "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
+        ].join("\n"),
+        run: Code.runToSnakeCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
+    "To Camel case": {
+        description: [
+            "Converts the input string to camel case.",
+            "<br><br>",
+            "Camel case is all lower case except letters after word boundaries which are uppercase.",
+            "<br><br>",
+            "e.g. thisIsCamelCase",
+            "<br><br>",
+            "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
+        ].join("\n"),
+        run: Code.runToCamelCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
+    "To Kebab case": {
+        description: [
+            "Converts the input string to kebab case.",
+            "<br><br>",
+            "Kebab case is all lower case with dashes as word boundaries.",
+            "<br><br>",
+            "e.g. this-is-kebab-case",
+            "<br><br>",
+            "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
+        ].join("\n"),
+        run: Code.runToKebabCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
 };
 
 export default OperationConfig;

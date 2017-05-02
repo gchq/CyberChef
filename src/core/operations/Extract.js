@@ -21,7 +21,7 @@ const Extract = {
      * @returns {string}
      */
     _search: function(input, searchRegex, removeRegex, includeTotal) {
-        var output = "",
+        let output = "",
             total = 0,
             match;
 
@@ -58,7 +58,7 @@ const Extract = {
      * @returns {string}
      */
     runStrings: function(input, args) {
-        var minLen = args[0] || Extract.MIN_STRING_LEN,
+        let minLen = args[0] || Extract.MIN_STRING_LEN,
             displayTotal = args[1],
             strings = "[A-Z\\d/\\-:.,_$%'\"()<>= !\\[\\]{}@]",
             regex = new RegExp(strings + "{" + minLen + ",}", "ig");
@@ -91,7 +91,7 @@ const Extract = {
      * @returns {string}
      */
     runIp: function(input, args) {
-        var includeIpv4  = args[0],
+        let includeIpv4  = args[0],
             includeIpv6  = args[1],
             removeLocal  = args[2],
             displayTotal = args[3],
@@ -108,10 +108,10 @@ const Extract = {
         }
 
         if (ips) {
-            var regex = new RegExp(ips, "ig");
+            const regex = new RegExp(ips, "ig");
 
             if (removeLocal) {
-                var ten = "10\\..+",
+                let ten = "10\\..+",
                     oneninetwo = "192\\.168\\..+",
                     oneseventwo = "172\\.(?:1[6-9]|2\\d|3[01])\\..+",
                     onetwoseven = "127\\..+",
@@ -136,7 +136,7 @@ const Extract = {
      * @returns {string}
      */
     runEmail: function(input, args) {
-        var displayTotal = args[0],
+        let displayTotal = args[0],
             regex = /\w[-.\w]*@[-\w]+(?:\.[-\w]+)*\.[A-Z]{2,4}/ig;
 
         return Extract._search(input, regex, null, displayTotal);
@@ -151,7 +151,7 @@ const Extract = {
      * @returns {string}
      */
     runMac: function(input, args) {
-        var displayTotal = args[0],
+        let displayTotal = args[0],
             regex = /[A-F\d]{2}(?:[:-][A-F\d]{2}){5}/ig;
 
         return Extract._search(input, regex, null, displayTotal);
@@ -166,14 +166,14 @@ const Extract = {
      * @returns {string}
      */
     runUrls: function(input, args) {
-        var displayTotal = args[0],
+        let displayTotal = args[0],
             protocol = "[A-Z]+://",
             hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
             port = ":\\d+",
             path = "/[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]*";
 
         path += "(?:[.!,?]+[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]+)*";
-        var regex = new RegExp(protocol + hostname + "(?:" + port +
+        const regex = new RegExp(protocol + hostname + "(?:" + port +
             ")?(?:" + path + ")?", "ig");
         return Extract._search(input, regex, null, displayTotal);
     },
@@ -187,7 +187,7 @@ const Extract = {
      * @returns {string}
      */
     runDomains: function(input, args) {
-        var displayTotal = args[0],
+        let displayTotal = args[0],
             protocol = "https?://",
             hostname = "[-\\w\\.]+",
             tld = "\\.(?:com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+",
@@ -216,7 +216,7 @@ const Extract = {
      * @returns {string}
      */
     runFilePaths: function(input, args) {
-        var includeWinPath = args[0],
+        let includeWinPath = args[0],
             includeUnixPath = args[1],
             displayTotal = args[2],
             winDrive = "[A-Z]:\\\\",
@@ -236,7 +236,7 @@ const Extract = {
         }
 
         if (filePaths) {
-            var regex = new RegExp(filePaths, "ig");
+            const regex = new RegExp(filePaths, "ig");
             return Extract._search(input, regex, null, displayTotal);
         } else {
             return "";
@@ -252,7 +252,7 @@ const Extract = {
      * @returns {string}
      */
     runDates: function(input, args) {
-        var displayTotal = args[0],
+        let displayTotal = args[0],
             date1 = "(?:19|20)\\d\\d[- /.](?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])", // yyyy-mm-dd
             date2 = "(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\\d\\d", // dd/mm/yyyy
             date3 = "(?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])[- /.](?:19|20)\\d\\d", // mm/dd/yyyy
@@ -270,7 +270,7 @@ const Extract = {
      * @returns {string}
      */
     runAllIdents: function(input, args) {
-        var output = "";
+        let output = "";
         output += "IP addresses\n";
         output += Extract.runIp(input, [true, true, false]);
 

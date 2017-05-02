@@ -36,7 +36,7 @@ const SeqUtils = {
      * @returns {string}
      */
     runSort: function (input, args) {
-        var delim = Utils.charRep[args[0]],
+        let delim = Utils.charRep[args[0]],
             sortReverse = args[1],
             order = args[2],
             sorted = input.split(delim);
@@ -62,7 +62,7 @@ const SeqUtils = {
      * @returns {string}
      */
     runUnique: function (input, args) {
-        var delim = Utils.charRep[args[0]];
+        const delim = Utils.charRep[args[0]];
         return input.split(delim).unique().join(delim);
     },
 
@@ -81,12 +81,12 @@ const SeqUtils = {
      * @returns {number}
      */
     runCount: function(input, args) {
-        var search = args[0].string,
+        let search = args[0].string,
             type = args[0].option;
 
         if (type === "Regex" && search) {
             try {
-                var regex = new RegExp(search, "gi"),
+                let regex = new RegExp(search, "gi"),
                     matches = input.match(regex);
                 return matches.length;
             } catch (err) {
@@ -117,11 +117,12 @@ const SeqUtils = {
      * @returns {byteArray}
      */
     runReverse: function (input, args) {
+        let i;
         if (args[0] === "Line") {
-            var lines = [],
+            let lines = [],
                 line = [],
                 result = [];
-            for (var i = 0; i < input.length; i++) {
+            for (i = 0; i < input.length; i++) {
                 if (input[i] === 0x0a) {
                     lines.push(line);
                     line = [];
@@ -150,11 +151,11 @@ const SeqUtils = {
      * @returns {string}
      */
     runAddLineNumbers: function(input, args) {
-        var lines = input.split("\n"),
+        let lines = input.split("\n"),
             output = "",
             width = lines.length.toString().length;
 
-        for (var n = 0; n < lines.length; n++) {
+        for (let n = 0; n < lines.length; n++) {
             output += Utils.pad((n+1).toString(), width, " ") + " " + lines[n] + "\n";
         }
         return output.slice(0, output.length-1);
@@ -207,7 +208,7 @@ const SeqUtils = {
      * @returns {number}
      */
     _ipSort: function(a, b) {
-        var a_ = a.split("."),
+        let a_ = a.split("."),
             b_ = b.split(".");
 
         a_ = a_[0] * 0x1000000 + a_[1] * 0x10000 + a_[2] * 0x100 + a_[3] * 1;

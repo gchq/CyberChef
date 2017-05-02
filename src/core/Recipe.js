@@ -12,7 +12,7 @@ import OperationConfig from "./config/OperationConfig.js";
  * @class
  * @param {Object} recipeConfig
  */
-var Recipe = function(recipeConfig) {
+const Recipe = function(recipeConfig) {
     this.opList = [];
 
     if (recipeConfig) {
@@ -28,10 +28,10 @@ var Recipe = function(recipeConfig) {
  * @param {Object} recipeConfig
  */
 Recipe.prototype._parseConfig = function(recipeConfig) {
-    for (var c = 0; c < recipeConfig.length; c++) {
-        var operationName = recipeConfig[c].op;
-        var operationConfig = OperationConfig[operationName];
-        var operation = new Operation(operationName, operationConfig);
+    for (let c = 0; c < recipeConfig.length; c++) {
+        const operationName = recipeConfig[c].op;
+        const operationConfig = OperationConfig[operationName];
+        const operation = new Operation(operationName, operationConfig);
         operation.setIngValues(recipeConfig[c].args);
         operation.setBreakpoint(recipeConfig[c].breakpoint);
         operation.setDisabled(recipeConfig[c].disabled);
@@ -46,9 +46,9 @@ Recipe.prototype._parseConfig = function(recipeConfig) {
  * @returns {*}
  */
 Recipe.prototype.getConfig = function() {
-    var recipeConfig = [];
+    const recipeConfig = [];
 
-    for (var o = 0; o < this.opList.length; o++) {
+    for (let o = 0; o < this.opList.length; o++) {
         recipeConfig.push(this.opList[o].getConfig());
     }
 
@@ -98,7 +98,7 @@ Recipe.prototype.setBreakpoint = function(position, value) {
  * @param {number} pos
  */
 Recipe.prototype.removeBreaksUpTo = function(pos) {
-    for (var i = 0; i < pos; i++) {
+    for (let i = 0; i < pos; i++) {
         this.opList[i].setBreakpoint(false);
     }
 };
@@ -110,7 +110,7 @@ Recipe.prototype.removeBreaksUpTo = function(pos) {
  * @returns {boolean}
  */
 Recipe.prototype.containsFlowControl = function() {
-    for (var i = 0; i < this.opList.length; i++) {
+    for (let i = 0; i < this.opList.length; i++) {
         if (this.opList[i].isFlowControl()) return true;
     }
     return false;
@@ -125,7 +125,7 @@ Recipe.prototype.containsFlowControl = function() {
  * @returns (number}
  */
 Recipe.prototype.lastOpIndex = function(startIndex) {
-    var i = startIndex + 1 || 0,
+    let i = startIndex + 1 || 0,
         op;
 
     for (; i < this.opList.length; i++) {
@@ -147,9 +147,9 @@ Recipe.prototype.lastOpIndex = function(startIndex) {
  */
 Recipe.prototype.execute = function(dish, startFrom) {
     startFrom = startFrom || 0;
-    var op, input, output, numJumps = 0;
+    let op, input, output, numJumps = 0;
 
-    for (var i = startFrom; i < this.opList.length; i++) {
+    for (let i = startFrom; i < this.opList.length; i++) {
         op = this.opList[i];
         if (op.isDisabled()) {
             continue;
@@ -163,7 +163,7 @@ Recipe.prototype.execute = function(dish, startFrom) {
 
             if (op.isFlowControl()) {
                 // Package up the current state
-                var state = {
+                let state = {
                     "progress" : i,
                     "dish"     : dish,
                     "opList"  : this.opList,
@@ -178,7 +178,7 @@ Recipe.prototype.execute = function(dish, startFrom) {
                 dish.set(output, op.outputType);
             }
         } catch (err) {
-            var e = typeof err == "string" ? { message: err } : err;
+            const e = typeof err == "string" ? { message: err } : err;
 
             e.progress = i;
             if (e.fileName) {
@@ -213,7 +213,7 @@ Recipe.prototype.toString = function() {
  * @param {string} recipeStr
  */
 Recipe.prototype.fromString = function(recipeStr) {
-    var recipeConfig = JSON.parse(recipeStr);
+    const recipeConfig = JSON.parse(recipeStr);
     this._parseConfig(recipeConfig);
 };
 

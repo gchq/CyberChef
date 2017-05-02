@@ -1,3 +1,5 @@
+import {camelCase, kebabCase, snakeCase} from "lodash";
+
 import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser as dom} from "xmldom";
@@ -35,7 +37,7 @@ const Code = {
      * @returns {html}
      */
     runSyntaxHighlight: function(input, args) {
-        var language = args[0],
+        let language = args[0],
             lineNums = args[1];
         return "<code class='prettyprint'>" + prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
     },
@@ -55,7 +57,7 @@ const Code = {
      * @returns {string}
      */
     runXmlBeautify: function(input, args) {
-        var indentStr = args[0];
+        const indentStr = args[0];
         return vkbeautify.xml(input, indentStr);
     },
 
@@ -68,7 +70,7 @@ const Code = {
      * @returns {string}
      */
     runJsonBeautify: function(input, args) {
-        var indentStr = args[0];
+        const indentStr = args[0];
         if (!input) return "";
         return vkbeautify.json(input, indentStr);
     },
@@ -82,7 +84,7 @@ const Code = {
      * @returns {string}
      */
     runCssBeautify: function(input, args) {
-        var indentStr = args[0];
+        const indentStr = args[0];
         return vkbeautify.css(input, indentStr);
     },
 
@@ -95,7 +97,7 @@ const Code = {
      * @returns {string}
      */
     runSqlBeautify: function(input, args) {
-        var indentStr = args[0];
+        const indentStr = args[0];
         return vkbeautify.sql(input, indentStr);
     },
 
@@ -114,7 +116,7 @@ const Code = {
      * @returns {string}
      */
     runXmlMinify: function(input, args) {
-        var preserveComments = args[0];
+        const preserveComments = args[0];
         return vkbeautify.xmlmin(input, preserveComments);
     },
 
@@ -140,7 +142,7 @@ const Code = {
      * @returns {string}
      */
     runCssMinify: function(input, args) {
-        var preserveComments = args[0];
+        const preserveComments = args[0];
         return vkbeautify.cssmin(input, preserveComments);
     },
 
@@ -181,73 +183,69 @@ const Code = {
      * @returns {string}
      */
     runGenericBeautify: function(input, args) {
-        var code = input,
+        let code = input,
             t = 0,
             preservedTokens = [],
             m;
 
         // Remove strings
-        var sstrings = /'([^'\\]|\\.)*'/g;
+        const sstrings = /'([^'\\]|\\.)*'/g;
         while ((m = sstrings.exec(code))) {
             code = preserveToken(code, m, t++);
             sstrings.lastIndex = m.index;
         }
 
-        var dstrings = /"([^"\\]|\\.)*"/g;
+        const dstrings = /"([^"\\]|\\.)*"/g;
         while ((m = dstrings.exec(code))) {
             code = preserveToken(code, m, t++);
             dstrings.lastIndex = m.index;
         }
 
         // Remove comments
-        var scomments = /\/\/[^\n\r]*/g;
+        const scomments = /\/\/[^\n\r]*/g;
         while ((m = scomments.exec(code))) {
             code = preserveToken(code, m, t++);
             scomments.lastIndex = m.index;
         }
 
-        var mcomments = /\/\*[\s\S]*?\*\//gm;
+        const mcomments = /\/\*[\s\S]*?\*\//gm;
         while ((m = mcomments.exec(code))) {
             code = preserveToken(code, m, t++);
             mcomments.lastIndex = m.index;
         }
 
-        var hcomments = /(^|\n)#[^\n\r#]+/g;
+        const hcomments = /(^|\n)#[^\n\r#]+/g;
         while ((m = hcomments.exec(code))) {
             code = preserveToken(code, m, t++);
             hcomments.lastIndex = m.index;
         }
 
         // Remove regexes
-        var regexes = /\/.*?[^\\]\/[gim]{0,3}/gi;
+        const regexes = /\/.*?[^\\]\/[gim]{0,3}/gi;
         while ((m = regexes.exec(code))) {
             code = preserveToken(code, m, t++);
             regexes.lastIndex = m.index;
         }
 
-        // Create newlines after ;
-        code = code.replace(/;/g, ";\n");
-
-        // Create newlines after { and around }
-        code = code.replace(/{/g, "{\n");
-        code = code.replace(/}/g, "\n}\n");
-
-        // Remove carriage returns
-        code = code.replace(/\r/g, "");
-
-        // Remove all indentation
-        code = code.replace(/^\s+/g, "");
-        code = code.replace(/\n\s+/g, "\n");
-
-        // Remove trailing spaces
-        code = code.replace(/\s*$/g, "");
-
-        // Remove newlines before {
-        code = code.replace(/\n{/g, "{");
+        code = code
+                // Create newlines after ;
+                .replace(/;/g, ";\n")
+                // Create newlines after { and around }
+                .replace(/{/g, "{\n")
+                .replace(/}/g, "\n}\n")
+                // Remove carriage returns
+                .replace(/\r/g, "")
+                // Remove all indentation
+                .replace(/^\s+/g, "")
+                .replace(/\n\s+/g, "\n")
+                // Remove trailing spaces
+                .replace(/\s*$/g, "")
+                .replace(/\n{/g, "{");
 
         // Indent
-        var i = 0,
-            level = 0;
+        let i = 0,
+            level = 0,
+            indent;
         while (i < code.length) {
             switch (code[i]) {
                 case "{":
@@ -257,7 +255,7 @@ const Code = {
                     if (i+1 >= code.length) break;
 
                     if (code[i+1] === "}") level--;
-                    var indent = (level >= 0) ? Array(level*4+1).join(" ") : "";
+                    indent = (level >= 0) ? Array(level*4+1).join(" ") : "";
 
                     code = code.substring(0, i+1) + indent + code.substring(i+1);
                     if (level > 0) i += level*4;
@@ -266,35 +264,33 @@ const Code = {
             i++;
         }
 
-        // Add strategic spaces
-        code = code.replace(/\s*([!<>=+-/*]?)=\s*/g, " $1= ");
-        code = code.replace(/\s*<([=]?)\s*/g, " <$1 ");
-        code = code.replace(/\s*>([=]?)\s*/g, " >$1 ");
-        code = code.replace(/([^+])\+([^+=])/g, "$1 + $2");
-        code = code.replace(/([^-])-([^-=])/g, "$1 - $2");
-        code = code.replace(/([^*])\*([^*=])/g, "$1 * $2");
-        code = code.replace(/([^/])\/([^/=])/g, "$1 / $2");
-        code = code.replace(/\s*,\s*/g, ", ");
-        code = code.replace(/\s*{/g, " {");
-        code = code.replace(/}\n/g, "}\n\n");
-
-        // Just... don't look at this
-        code = code.replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3");
-        code = code.replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3");
-        code = code.replace(/else\s*\n([^{])/gim, "else\n    $1");
-        code = code.replace(/else\s+([^{])/gim, "else $1");
-
-        // Remove strategic spaces
-        code = code.replace(/\s+;/g, ";");
-        code = code.replace(/\{\s+\}/g, "{}");
-        code = code.replace(/\[\s+\]/g, "[]");
-        code = code.replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
-
+        code = code
+                // Add strategic spaces
+                .replace(/\s*([!<>=+-/*]?)=\s*/g, " $1= ")
+                .replace(/\s*<([=]?)\s*/g, " <$1 ")
+                .replace(/\s*>([=]?)\s*/g, " >$1 ")
+                .replace(/([^+])\+([^+=])/g, "$1 + $2")
+                .replace(/([^-])-([^-=])/g, "$1 - $2")
+                .replace(/([^*])\*([^*=])/g, "$1 * $2")
+                .replace(/([^/])\/([^/=])/g, "$1 / $2")
+                .replace(/\s*,\s*/g, ", ")
+                .replace(/\s*{/g, " {")
+                .replace(/}\n/g, "}\n\n")
+                // Hacky horribleness
+                .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
+                .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
+                .replace(/else\s*\n([^{])/gim, "else\n    $1")
+                .replace(/else\s+([^{])/gim, "else $1")
+                // Remove strategic spaces
+                .replace(/\s+;/g, ";")
+                .replace(/\{\s+\}/g, "{}")
+                .replace(/\[\s+\]/g, "[]")
+                .replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
 
         // Replace preserved tokens
-        var ptokens = /###preservedToken(\d+)###/g;
+        const ptokens = /###preservedToken(\d+)###/g;
         while ((m = ptokens.exec(code))) {
-            var ti = parseInt(m[1], 10);
+            const ti = parseInt(m[1], 10);
             code = code.substring(0, m.index) + preservedTokens[ti] + code.substring(m.index + m[0].length);
             ptokens.lastIndex = m.index;
         }
@@ -334,24 +330,24 @@ const Code = {
      * @returns {string}
      */
     runXpath:function(input, args) {
-        var query = args[0],
+        let query = args[0],
             delimiter = args[1];
 
-        var doc;
+        let doc;
         try {
             doc = new dom().parseFromString(input);
         } catch (err) {
             return "Invalid input XML.";
         }
 
-        var nodes;
+        let nodes;
         try {
             nodes = xpath.select(query, doc);
         } catch (err) {
             return "Invalid XPath. Details:\n" + err.message;
         }
 
-        var nodeToString = function(node) {
+        const nodeToString = function(node) {
             return node.toString();
         };
 
@@ -381,7 +377,7 @@ const Code = {
      * @returns {string}
      */
     runCSSQuery: function(input, args) {
-        var query = args[0],
+        let query = args[0],
             delimiter = args[1],
             parser = new DOMParser(),
             html,
@@ -403,7 +399,7 @@ const Code = {
             return "Invalid CSS Selector. Details:\n" + err.message;
         }
 
-        var nodeToString = function(node) {
+        const nodeToString = function(node) {
             switch (node.nodeType) {
                 case Node.ELEMENT_NODE: return node.outerHTML;
                 case Node.ATTRIBUTE_NODE: return node.value;
@@ -422,6 +418,84 @@ const Code = {
             .join(delimiter);
     },
 
+    /**
+     * This tries to rename variable names in a code snippet according to a function.
+     *
+     * @param {string} input
+     * @param {function} replacer - this function will be fed the token which should be renamed.
+     * @returns {string}
+     */
+    _replaceVariableNames(input, replacer) {
+        let tokenRegex = /\\"|"(?:\\"|[^"])*"|(\b[a-z0-9\-_]+\b)/ig;
+
+        return input.replace(tokenRegex, (...args) => {
+            let match = args[0],
+                quotes = args[1];
+
+            if (!quotes) {
+                return match;
+            } else {
+                return replacer(match);
+            }
+        });
+    },
+
+
+    /**
+     * Converts to snake_case.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     */
+    runToSnakeCase(input, args) {
+        let smart = args[0];
+
+        if (smart) {
+            return Code._replaceVariableNames(input, snakeCase);
+        } else {
+            return snakeCase(input);
+        }
+    },
+
+
+    /**
+     * Converts to camelCase.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     */
+    runToCamelCase(input, args) {
+        let smart = args[0];
+
+        if (smart) {
+            return Code._replaceVariableNames(input, camelCase);
+        } else {
+            return camelCase(input);
+        }
+    },
+
+
+    /**
+     * Converts to kebab-case.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     */
+    runToKebabCase(input, args) {
+        let smart = args[0];
+
+        if (smart) {
+            return Code._replaceVariableNames(input, kebabCase);
+        } else {
+            return kebabCase(input);
+        }
+    },
 };
 
 export default Code;

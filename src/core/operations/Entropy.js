@@ -26,7 +26,7 @@ const Entropy = {
      * @returns {html}
      */
     runEntropy: function(input, args) {
-        var chunkSize = args[0],
+        let chunkSize = args[0],
             output = "",
             entropy = Entropy._calcEntropy(input);
 
@@ -58,9 +58,9 @@ const Entropy = {
                 ]);\
             </script>";
 
-        var chunkEntropy = 0;
+        let chunkEntropy = 0;
         if (chunkSize !== 0) {
-            for (var i = 0; i < input.length; i += chunkSize) {
+            for (let i = 0; i < input.length; i += chunkSize) {
                 chunkEntropy = Entropy._calcEntropy(input.slice(i, i+chunkSize));
                 output += "Bytes " + i + " to " + (i+chunkSize) + ": " + chunkEntropy + "\n";
             }
@@ -88,13 +88,14 @@ const Entropy = {
     runFreqDistrib: function (input, args) {
         if (!input.length) return "No data";
 
-        var distrib = new Array(256),
+        let distrib = new Array(256),
             percentages = new Array(256),
             len = input.length,
-            showZeroes = args[0];
+            showZeroes = args[0],
+            i;
 
         // Initialise distrib to 0
-        for (var i = 0; i < 256; i++) {
+        for (i = 0; i < 256; i++) {
             distrib[i] = 0;
         }
 
@@ -104,14 +105,14 @@ const Entropy = {
         }
 
         // Calculate percentages
-        var repr = 0;
+        let repr = 0;
         for (i = 0; i < 256; i++) {
             if (distrib[i] > 0) repr++;
             percentages[i] = distrib[i] / len * 100;
         }
 
         // Print
-        var output = "<canvas id='chart-area'></canvas><br>" +
+        let output = "<canvas id='chart-area'></canvas><br>" +
             "Total data length: " + len +
             "\nNumber of bytes represented: " + repr +
             "\nNumber of bytes not represented: " + (256-repr) +
@@ -147,15 +148,16 @@ const Entropy = {
      * @returns {number}
      */
     _calcEntropy: function(data) {
-        var prob = [],
+        let prob = [],
             uniques = data.unique(),
-            str = Utils.byteArrayToChars(data);
+            str = Utils.byteArrayToChars(data),
+            i;
 
-        for (var i = 0; i < uniques.length; i++) {
+        for (i = 0; i < uniques.length; i++) {
             prob.push(str.count(Utils.chr(uniques[i])) / data.length);
         }
 
-        var entropy = 0,
+        let entropy = 0,
             p;
 
         for (i = 0; i < prob.length; i++) {

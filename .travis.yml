@@ -30,3 +30,12 @@ deploy:
     on:
       repo: gchq/CyberChef
       tags: true
+  - provider: npm
+    skip_cleanup: true
+    email: "n1474335@gmail.com"
+    api_key:
+      secure: "Z3FK6bm4RfQEIRXZ1lBNzQkVIoHpivThr9U+XBHmsBgIfdrK/XUnzs/slugo+NIz8nPiGmMx4gxyJonBCLHDGb1ysky2aEWTl26c0teaF4DeQEjWC1ZaGzv8MV1/GkUamnr1qouXjyUhyEAp33rd8ccN9Rq3QNYB/qLDcA9/FCme7JCW6sCd4zWO0LGEYMJEMc2FzAUkqhqsI05hegGhSDgKXRn5PmLARek4yHD+Hx7pstaTeQIy0WoGJjdzoB3iJIMmo/hWZGzZafktUOh223c5qzx4zMpDRNmMngBUw6R94nKd4KvplYRgB87Y3L/aiVU4CF+axwLmK8RPaC1wbJnlHf06zxHPdiFmsY/zKPpNel+nOnxzRrF5l2KMU4TU6gug3s9Jnzp9T5UMfhp0jW3YkxHGeuOPOeE1i0lTUWUGWrPHLQquAhLfkr2zxaU4ETk/y85hq9W4LAy0ENEDVXX2jP7FnI4Z1fdpmljpmVNJR+outPg6t+Coqgvil7v7XpMtDm8lKQanVYuxwmkb/ncOWFRWuM2j5zIEg3CHnFDcJ9bYrfKRg0b0tb/2BWD14pQnV76goVwzJQYVzdPc8TKIYJw2BZ1Nh9c0iruQVebe/6l1FX9fDCkz8VMmltni61/LxZrf8y0NT1YaU1raeNY2dH5UWvEa9p72FPMI6Eg="
+    on:
+      tags: true
+      branch: master
+

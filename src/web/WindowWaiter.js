@@ -8,7 +8,7 @@
  * @constructor
  * @param {App} app - The main view object for CyberChef.
  */
-var WindowWaiter = function(app) {
+const WindowWaiter = function(app) {
     this.app = app;
 };
 
@@ -45,7 +45,7 @@ WindowWaiter.prototype.windowBlur = function() {
  * a long time and the browser has swapped out all its memory.
  */
 WindowWaiter.prototype.windowFocus = function() {
-    var unfocusedTime = new Date().getTime() - this.windowBlurTime;
+    const unfocusedTime = new Date().getTime() - this.windowBlurTime;
     if (unfocusedTime > 60000) {
         this.app.silentBake();
     }

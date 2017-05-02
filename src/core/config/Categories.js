@@ -162,6 +162,8 @@ const Categories = [
             "Unique",
             "Split",
             "Filter",
+            "Head",
+            "Tail",
             "Count occurrences",
             "Expand alphabet range",
             "Parse escaped string",
@@ -269,6 +271,9 @@ const Categories = [
             "CSS selector",
             "Strip HTML tags",
             "Diff",
+            "To Snake case",
+            "To Camel case",
+            "To Kebab case",
         ]
     },
     {
@@ -290,6 +295,7 @@ const Categories = [
             "Jump",
             "Conditional Jump",
             "Return",
+            "Comment"
         ]
     },
 ];

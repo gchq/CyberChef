@@ -20,7 +20,7 @@ import Split from "split.js";
  * @param {String[]} defaultFavourites - A list of default favourite operations.
  * @param {Object} options - Default setting for app options.
  */
-var App = function(categories, operations, defaultFavourites, defaultOptions) {
+const App = function(categories, operations, defaultFavourites, defaultOptions) {
     this.categories  = categories;
     this.operations  = operations;
     this.dfavourites = defaultFavourites;
@@ -79,7 +79,7 @@ App.prototype.loaded = function() {
  */
 App.prototype.handleError = function(err) {
     console.error(err);
-    var msg = err.displayStr || err.toString();
+    const msg = err.displayStr || err.toString();
     this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
 };
 
@@ -91,7 +91,7 @@ App.prototype.handleError = function(err) {
  *   whole recipe.
  */
 App.prototype.bake = function(step) {
-    var response;
+    let response;
 
     try {
         response = this.chef.bake(
@@ -146,7 +146,7 @@ App.prototype.autoBake = function() {
  * @returns {number} - The number of miliseconds it took to run the silent bake.
  */
 App.prototype.silentBake = function() {
-    var startTime = new Date().getTime(),
+    let startTime = new Date().getTime(),
         recipeConfig = this.getRecipeConfig();
 
     if (this.autoBake_) {
@@ -163,7 +163,7 @@ App.prototype.silentBake = function() {
  * @returns {string}
  */
 App.prototype.getInput = function() {
-    var input = this.manager.input.get();
+    const input = this.manager.input.get();
 
     // Save to session storage in case we need to restore it later
     sessionStorage.setItem("inputLength", input.length);
@@ -195,15 +195,16 @@ App.prototype.populateOperationsList = function() {
     // Move edit button away before we overwrite it
     document.body.appendChild(document.getElementById("edit-favourites"));
 
-    var html = "";
+    let html = "";
+    let i;
 
-    for (var i = 0; i < this.categories.length; i++) {
-        var catConf = this.categories[i],
+    for (i = 0; i < this.categories.length; i++) {
+        let catConf = this.categories[i],
             selected = i === 0,
             cat = new HTMLCategory(catConf.name, selected);
 
-        for (var j = 0; j < catConf.ops.length; j++) {
-            var opName = catConf.ops[j],
+        for (let j = 0; j < catConf.ops.length; j++) {
+            let opName = catConf.ops[j],
                 op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
             cat.addOperation(op);
         }
@@ -213,7 +214,7 @@ App.prototype.populateOperationsList = function() {
 
     document.getElementById("categories").innerHTML = html;
 
-    var opLists = document.querySelectorAll("#categories .op-list");
+    const opLists = document.querySelectorAll("#categories .op-list");
 
     for (i = 0; i < opLists.length; i++) {
         opLists[i].dispatchEvent(this.manager.oplistcreate);
@@ -253,7 +254,7 @@ App.prototype.initialiseSplitter = function() {
  */
 App.prototype.loadLocalStorage = function() {
     // Load options
-    var lOptions;
+    let lOptions;
     if (localStorage.options !== undefined) {
         lOptions = JSON.parse(localStorage.options);
     }
@@ -270,7 +271,7 @@ App.prototype.loadLocalStorage = function() {
  * If the user currently has no saved favourites, the defaults from the view constructor are used.
  */
 App.prototype.loadFavourites = function() {
-    var favourites = localStorage.favourites &&
+    let favourites = localStorage.favourites &&
         localStorage.favourites.length > 2 ?
         JSON.parse(localStorage.favourites) :
         this.dfavourites;
@@ -278,7 +279,7 @@ App.prototype.loadFavourites = function() {
     favourites = this.validFavourites(favourites);
     this.saveFavourites(favourites);
 
-    var favCat = this.categories.filter(function(c) {
+    const favCat = this.categories.filter(function(c) {
         return c.name === "Favourites";
     })[0];
 
@@ -301,8 +302,8 @@ App.prototype.loadFavourites = function() {
  * @returns {string[]} A list of the valid favourites
  */
 App.prototype.validFavourites = function(favourites) {
-    var validFavs = [];
-    for (var i = 0; i < favourites.length; i++) {
+    const validFavs = [];
+    for (let i = 0; i < favourites.length; i++) {
         if (this.operations.hasOwnProperty(favourites[i])) {
             validFavs.push(favourites[i]);
         } else {
@@ -342,7 +343,7 @@ App.prototype.resetFavourites = function() {
  * @param {string} name - The name of the operation
  */
 App.prototype.addFavourite = function(name) {
-    var favourites = JSON.parse(localStorage.favourites);
+    const favourites = JSON.parse(localStorage.favourites);
 
     if (favourites.indexOf(name) >= 0) {
         this.alert("'" + name + "' is already in your favourites", "info", 2000);
@@ -364,9 +365,9 @@ App.prototype.loadURIParams = function() {
     // Load query string from URI
     this.queryString = (function(a) {
         if (a === "") return {};
-        var b = {};
-        for (var i = 0; i < a.length; i++) {
-            var p = a[i].split("=");
+        const b = {};
+        for (let i = 0; i < a.length; i++) {
+            const p = a[i].split("=");
             if (p.length !== 2) {
                 b[a[i]] = true;
             } else {
@@ -377,13 +378,13 @@ App.prototype.loadURIParams = function() {
     })(window.location.search.substr(1).split("&"));
 
     // Turn off auto-bake while loading
-    var autoBakeVal = this.autoBake_;
+    const autoBakeVal = this.autoBake_;
     this.autoBake_ = false;
 
     // Read in recipe from query string
     if (this.queryString.recipe) {
         try {
-            var recipeConfig = JSON.parse(this.queryString.recipe);
+            const recipeConfig = JSON.parse(this.queryString.recipe);
             this.setRecipeConfig(recipeConfig);
         } catch (err) {}
     } else if (this.queryString.op) {
@@ -393,13 +394,13 @@ App.prototype.loadURIParams = function() {
             this.manager.recipe.addOperation(this.queryString.op);
         } catch (err) {
             // If no exact match, search for nearest match and add that
-            var matchedOps = this.manager.ops.filterOperations(this.queryString.op, false);
+            const matchedOps = this.manager.ops.filterOperations(this.queryString.op, false);
             if (matchedOps.length) {
                 this.manager.recipe.addOperation(matchedOps[0].name);
             }
 
             // Populate search with the string
-            var search = document.getElementById("search");
+            const search = document.getElementById("search");
 
             search.value = this.queryString.op;
             search.dispatchEvent(new Event("search"));
@@ -409,7 +410,7 @@ App.prototype.loadURIParams = function() {
     // Read in input data from query string
     if (this.queryString.input) {
         try {
-            var inputData = Utils.fromBase64(this.queryString.input);
+            const inputData = Utils.fromBase64(this.queryString.input);
             this.setInput(inputData);
         } catch (err) {}
     }
@@ -436,7 +437,7 @@ App.prototype.nextIngId = function() {
  * @returns {Object[]}
  */
 App.prototype.getRecipeConfig = function() {
-    var recipeConfig = this.manager.recipe.getConfig();
+    const recipeConfig = this.manager.recipe.getConfig();
     sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     return recipeConfig;
 };
@@ -451,12 +452,12 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
     sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     document.getElementById("rec-list").innerHTML = null;
 
-    for (var i = 0; i < recipeConfig.length; i++) {
-        var item = this.manager.recipe.addOperation(recipeConfig[i].op);
+    for (let i = 0; i < recipeConfig.length; i++) {
+        const item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
         // Populate arguments
-        var args = item.querySelectorAll(".arg");
-        for (var j = 0; j < args.length; j++) {
+        const args = item.querySelectorAll(".arg");
+        for (let j = 0; j < args.length; j++) {
             if (args[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 args[j].checked = recipeConfig[i].args[j];
@@ -502,7 +503,7 @@ App.prototype.resetLayout = function() {
  */
 App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
-    var now = new Date(),
+    let now = new Date(),
         timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
         compileInfo = "<span style=\"font-weight: normal\">Last build: " +
             timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1) + " ago";
@@ -540,7 +541,7 @@ App.prototype.setCompileMessage = function() {
  * this.alert("Happy Christmas!", "info", 5000);
  */
 App.prototype.alert = function(str, style, timeout, silent) {
-    var time = new Date();
+    const time = new Date();
 
     console.log("[" + time.toLocaleString() + "] " + str);
     if (silent) return;
@@ -548,7 +549,7 @@ App.prototype.alert = function(str, style, timeout, silent) {
     style = style || "danger";
     timeout = timeout || 0;
 
-    var alertEl = document.getElementById("alert"),
+    let alertEl = document.getElementById("alert"),
         alertContent = document.getElementById("alert-content");
 
     alertEl.classList.remove("alert-danger");
@@ -666,7 +667,7 @@ App.prototype.callApi = function(url, type, data, dataType, contentType) {
     dataType = dataType || undefined;
     contentType = contentType || "application/json";
 
-    var response = null,
+    let response = null,
         success = false;
 
     $.ajax({

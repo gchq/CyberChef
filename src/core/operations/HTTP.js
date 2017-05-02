@@ -20,7 +20,7 @@ const HTTP = {
      * @returns {string}
      */
     runStripHeaders: function(input, args) {
-        var headerEnd = input.indexOf("\r\n\r\n");
+        let headerEnd = input.indexOf("\r\n\r\n");
         headerEnd = (headerEnd < 0) ? input.indexOf("\n\n") + 2 : headerEnd + 4;
 
         return (headerEnd < 2) ? input : input.slice(headerEnd, input.length);
@@ -35,7 +35,7 @@ const HTTP = {
      * @returns {string}
      */
     runParseUserAgent: function(input, args) {
-        var ua = UAParser.parse(input);
+        const ua = UAParser.parse(input);
 
         return "Type: " + ua.type + "\n" +
             "Family: " + ua.uaFamily + "\n" +

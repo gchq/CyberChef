@@ -26,7 +26,7 @@ const Base = {
         if (!input) {
             throw ("Error: Input must be a number");
         }
-        var radix = args[0] || Base.DEFAULT_RADIX;
+        const radix = args[0] || Base.DEFAULT_RADIX;
         if (radix < 2 || radix > 36) {
             throw "Error: Radix argument must be between 2 and 36";
         }
@@ -42,19 +42,19 @@ const Base = {
      * @returns {number}
      */
     runFrom: function(input, args) {
-        var radix = args[0] || Base.DEFAULT_RADIX;
+        const radix = args[0] || Base.DEFAULT_RADIX;
         if (radix < 2 || radix > 36) {
             throw "Error: Radix argument must be between 2 and 36";
         }
 
-        var number = input.replace(/\s/g, "").split("."),
+        let number = input.replace(/\s/g, "").split("."),
             result = parseInt(number[0], radix) || 0;
 
         if (number.length === 1) return result;
 
         // Fractional part
-        for (var i = 0; i < number[1].length; i++) {
-            var digit = parseInt(number[1][i], radix);
+        for (let i = 0; i < number[1].length; i++) {
+            const digit = parseInt(number[1][i], radix);
             result += digit / Math.pow(radix, i+1);
         }
 

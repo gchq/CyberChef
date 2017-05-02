@@ -13,12 +13,13 @@ import "babel-polyfill";
 import TestRegister from "./TestRegister.js";
 import "./tests/operations/Base58.js";
 import "./tests/operations/ByteRepr.js";
+import "./tests/operations/Code.js";
 import "./tests/operations/Compress.js";
 import "./tests/operations/FlowControl.js";
 import "./tests/operations/MorseCode.js";
 import "./tests/operations/StrUtils.js";
 
-var allTestsPassing = true,
+let allTestsPassing = true,
     testStatusCounts = {
         total: 0,
     };
@@ -31,7 +32,7 @@ var allTestsPassing = true,
  * @returns {string}
  */
 function statusToIcon(status) {
-    var icons = {
+    let icons = {
         erroring: "🔥",
         failing: "❌",
         passing: "✔️️",
@@ -47,7 +48,7 @@ function statusToIcon(status) {
  */
 function handleTestResult(testResult) {
     allTestsPassing = allTestsPassing && testResult.status === "passing";
-    var newCount = (testStatusCounts[testResult.status] || 0) + 1;
+    let newCount = (testStatusCounts[testResult.status] || 0) + 1;
     testStatusCounts[testResult.status] = newCount;
     testStatusCounts.total += 1;
 
@@ -82,8 +83,8 @@ TestRegister.runTests()
 
         console.log("\n");
 
-        for (var testStatus in testStatusCounts) {
-            var count = testStatusCounts[testStatus];
+        for (let testStatus in testStatusCounts) {
+            let count = testStatusCounts[testStatus];
             if (count > 0) {
                 console.log(testStatus.toUpperCase(), count);
             }
