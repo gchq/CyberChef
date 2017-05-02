@@ -36,10 +36,10 @@ OutputWaiter.prototype.get = function() {
  * @param {number} duration - The length of time (ms) it took to generate the output
  */
 OutputWaiter.prototype.set = function(dataStr, type, duration) {
-    let outputText = document.getElementById("output-text"),
-        outputHtml = document.getElementById("output-html"),
-        outputHighlighter = document.getElementById("output-highlighter"),
-        inputHighlighter = document.getElementById("input-highlighter");
+    const outputText = document.getElementById("output-text");
+    const outputHtml = document.getElementById("output-html");
+    const outputHighlighter = document.getElementById("output-highlighter");
+    const inputHighlighter = document.getElementById("input-highlighter");
 
     if (type === "html") {
         outputText.style.display = "none";
@@ -103,11 +103,11 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
  * without wrapping or overflowing.
  */
 OutputWaiter.prototype.adjustWidth = function() {
-    let output         = document.getElementById("output"),
-        saveToFile     = document.getElementById("save-to-file"),
-        switchIO       = document.getElementById("switch"),
-        undoSwitch     = document.getElementById("undo-switch"),
-        maximiseOutput = document.getElementById("maximise-output");
+    const output         = document.getElementById("output");
+    const saveToFile     = document.getElementById("save-to-file");
+    const switchIO       = document.getElementById("switch");
+    const undoSwitch     = document.getElementById("undo-switch");
+    const maximiseOutput = document.getElementById("maximise-output");
 
     if (output.clientWidth < 680) {
         saveToFile.childNodes[1].nodeValue = "";
@@ -129,8 +129,8 @@ OutputWaiter.prototype.adjustWidth = function() {
  * Saves the current output to a file, downloaded as a URL octet stream.
  */
 OutputWaiter.prototype.saveClick = function() {
-    let data = Utils.toBase64(this.app.dishStr),
-        filename = window.prompt("Please enter a filename:", "download.dat");
+    const data = Utils.toBase64(this.app.dishStr);
+    const filename = window.prompt("Please enter a filename:", "download.dat");
 
     if (filename) {
         const el = document.createElement("a");

@@ -158,13 +158,12 @@ HTMLIngredient.prototype.toHtml = function() {
  * @param {event} e
  */
 HTMLIngredient.prototype.toggleDisableArgs = function(e) {
-    let el = e.target,
-        op = el.parentNode.parentNode,
-        args = op.querySelectorAll(".arg-group"),
-        els;
+    const el = e.target;
+    const op = el.parentNode.parentNode;
+    const args = op.querySelectorAll(".arg-group");
 
     for (let i = 0; i < this.disableArgs.length; i++) {
-        els = args[this.disableArgs[i]].querySelectorAll("input, select, button");
+        const els = args[this.disableArgs[i]].querySelectorAll("input, select, button");
 
         for (let j = 0; j < els.length; j++) {
             if (els[j].getAttribute("disabled")) {
@@ -186,9 +185,9 @@ HTMLIngredient.prototype.toggleDisableArgs = function(e) {
  * @param {event} e
  */
 HTMLIngredient.prototype.populateOptionChange = function(e) {
-    let el = e.target,
-        op = el.parentNode.parentNode,
-        target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
+    const el = e.target;
+    const op = el.parentNode.parentNode;
+    const target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
 
     target.value = el.childNodes[el.selectedIndex].getAttribute("populate-value");
 

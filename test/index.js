@@ -19,10 +19,10 @@ import "./tests/operations/FlowControl.js";
 import "./tests/operations/MorseCode.js";
 import "./tests/operations/StrUtils.js";
 
-let allTestsPassing = true,
-    testStatusCounts = {
-        total: 0,
-    };
+let allTestsPassing = true;
+const testStatusCounts = {
+    total: 0,
+};
 
 
 /**
