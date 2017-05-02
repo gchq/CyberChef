@@ -11,7 +11,7 @@ import Recipe from "./Recipe.js";
  *
  * @class
  */
-var Chef = function() {
+const Chef = function() {
     this.dish = new Dish();
 };
 
@@ -35,7 +35,7 @@ var Chef = function() {
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
 Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step) {
-    var startTime  = new Date().getTime(),
+    let startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
         error      = false;
@@ -111,7 +111,7 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
  * @returns {number} The time it took to run the silent bake in milliseconds.
 */
 Chef.prototype.silentBake = function(recipeConfig) {
-    var startTime = new Date().getTime(),
+    let startTime = new Date().getTime(),
         recipe    = new Recipe(recipeConfig),
         dish      = new Dish("", Dish.STRING);
 

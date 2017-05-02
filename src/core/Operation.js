@@ -13,7 +13,7 @@ import Ingredient from "./Ingredient.js";
  * @param {string} operationName
  * @param {Object} operationConfig
  */
-var Operation = function(operationName, operationConfig) {
+const Operation = function(operationName, operationConfig) {
     this.name             = operationName;
     this.description      = "";
     this.inputType        = -1;
@@ -46,9 +46,9 @@ Operation.prototype._parseConfig = function(operationConfig) {
     this.highlightReverse = operationConfig.highlightReverse;
     this.flowControl      = operationConfig.flowControl;
 
-    for (var a = 0; a < operationConfig.args.length; a++) {
-        var ingredientConfig = operationConfig.args[a];
-        var ingredient = new Ingredient(ingredientConfig);
+    for (let a = 0; a < operationConfig.args.length; a++) {
+        const ingredientConfig = operationConfig.args[a];
+        const ingredient = new Ingredient(ingredientConfig);
         this.addIngredient(ingredient);
     }
 };
@@ -60,13 +60,13 @@ Operation.prototype._parseConfig = function(operationConfig) {
  * @returns {Object}
  */
 Operation.prototype.getConfig = function() {
-    var ingredientConfig = [];
+    const ingredientConfig = [];
 
-    for (var o = 0; o < this.ingList.length; o++) {
+    for (let o = 0; o < this.ingList.length; o++) {
         ingredientConfig.push(this.ingList[o].getConfig());
     }
 
-    var operationConfig = {
+    const operationConfig = {
         "op": this.name,
         "args": ingredientConfig
     };
@@ -91,7 +91,7 @@ Operation.prototype.addIngredient = function(ingredient) {
  * @param {Object[]} ingValues
  */
 Operation.prototype.setIngValues = function(ingValues) {
-    for (var i = 0; i < ingValues.length; i++) {
+    for (let i = 0; i < ingValues.length; i++) {
         this.ingList[i].setValue(ingValues[i]);
     }
 };
@@ -103,8 +103,8 @@ Operation.prototype.setIngValues = function(ingValues) {
  * @returns {Object[]}
  */
 Operation.prototype.getIngValues = function() {
-    var ingValues = [];
-    for (var i = 0; i < this.ingList.length; i++) {
+    const ingValues = [];
+    for (let i = 0; i < this.ingList.length; i++) {
         ingValues.push(this.ingList[i].value);
     }
     return ingValues;

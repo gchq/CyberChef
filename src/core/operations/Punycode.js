@@ -26,7 +26,7 @@ const Punycode = {
      * @returns {string}
      */
     runToAscii: function(input, args) {
-        var idn = args[0];
+        const idn = args[0];
 
         if (idn) {
             return punycode.toASCII(input);
@@ -44,7 +44,7 @@ const Punycode = {
      * @returns {string}
      */
     runToUnicode: function(input, args) {
-        var idn = args[0];
+        const idn = args[0];
 
         if (idn) {
             return punycode.toUnicode(input);

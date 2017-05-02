@@ -36,7 +36,7 @@ const Endian = {
      * @returns {string}
      */
     runSwapEndianness: function(input, args) {
-        var dataFormat = args[0],
+        let dataFormat = args[0],
             wordLength = args[1],
             padIncompleteWords = args[2],
             data = [],
@@ -63,7 +63,7 @@ const Endian = {
 
         // Split up into words
         for (i = 0; i < data.length; i += wordLength) {
-            var word = data.slice(i, i + wordLength);
+            const word = data.slice(i, i + wordLength);
 
             // Pad word if too short
             if (padIncompleteWords && word.length < wordLength){

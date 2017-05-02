@@ -65,7 +65,7 @@ const Convert = {
      * @returns {number}
      */
     runDistance: function (input, args) {
-        var inputUnits = args[0],
+        let inputUnits = args[0],
             outputUnits = args[1];
 
         input = input * Convert.DISTANCE_FACTOR[inputUnits];
@@ -146,7 +146,7 @@ const Convert = {
      * @returns {number}
      */
     runDataSize: function (input, args) {
-        var inputUnits = args[0],
+        let inputUnits = args[0],
             outputUnits = args[1];
 
         input = input * Convert.DATA_FACTOR[inputUnits];
@@ -226,7 +226,7 @@ const Convert = {
      * @returns {number}
      */
     runArea: function (input, args) {
-        var inputUnits = args[0],
+        let inputUnits = args[0],
             outputUnits = args[1];
 
         input = input * Convert.AREA_FACTOR[inputUnits];
@@ -337,7 +337,7 @@ const Convert = {
      * @returns {number}
      */
     runMass: function (input, args) {
-        var inputUnits = args[0],
+        let inputUnits = args[0],
             outputUnits = args[1];
 
         input = input * Convert.MASS_FACTOR[inputUnits];
@@ -402,7 +402,7 @@ const Convert = {
      * @returns {number}
      */
     runSpeed: function (input, args) {
-        var inputUnits = args[0],
+        let inputUnits = args[0],
             outputUnits = args[1];
 
         input = input * Convert.SPEED_FACTOR[inputUnits];

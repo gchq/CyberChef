@@ -97,19 +97,19 @@ const MorseCode = {
      * @returns {string}
      */
     runTo: function(input, args) {
-        var format = args[0].split("/");
-        var dash = format[0];
-        var dot = format[1];
+        const format = args[0].split("/");
+        const dash = format[0];
+        const dot = format[1];
 
-        var letterDelim = Utils.charRep[args[1]];
-        var wordDelim = Utils.charRep[args[2]];
+        const letterDelim = Utils.charRep[args[1]];
+        const wordDelim = Utils.charRep[args[2]];
 
         input = input.split(/\r?\n/);
         input = Array.prototype.map.call(input, function(line) {
-            var words = line.split(/ +/);
+            let words = line.split(/ +/);
             words = Array.prototype.map.call(words, function(word) {
-                var letters = Array.prototype.map.call(word, function(character) {
-                    var letter = character.toUpperCase();
+                const letters = Array.prototype.map.call(word, function(character) {
+                    const letter = character.toUpperCase();
                     if (typeof MorseCode.MORSE_TABLE[letter] == "undefined") {
                         return "";
                     }
@@ -148,12 +148,12 @@ const MorseCode = {
      * @returns {string}
      */
     runFrom: (function() {
-        var reversedTable = null;
-        var reverseTable = function() {
+        let reversedTable = null;
+        const reverseTable = function() {
             reversedTable = {};
 
-            for (var letter in MorseCode.MORSE_TABLE) {
-                var signal = MorseCode.MORSE_TABLE[letter];
+            for (const letter in MorseCode.MORSE_TABLE) {
+                const signal = MorseCode.MORSE_TABLE[letter];
                 reversedTable[signal] = letter;
             }
         };
@@ -163,17 +163,17 @@ const MorseCode = {
                 reverseTable();
             }
 
-            var letterDelim = Utils.charRep[args[0]];
-            var wordDelim = Utils.charRep[args[1]];
+            const letterDelim = Utils.charRep[args[0]];
+            const wordDelim = Utils.charRep[args[1]];
 
             input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); //hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
             input = input.replace(/\.|·|dot/ig, "<dot>");
 
-            var words = input.split(wordDelim);
+            let words = input.split(wordDelim);
             words = Array.prototype.map.call(words, function(word) {
-                var signals = word.split(letterDelim);
+                const signals = word.split(letterDelim);
 
-                var letters = signals.map(function(signal) {
+                const letters = signals.map(function(signal) {
                     return reversedTable[signal];
                 });
 

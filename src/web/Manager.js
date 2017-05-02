@@ -19,7 +19,7 @@ import SeasonalWaiter from "./SeasonalWaiter.js";
  * @constructor
  * @param {App} app - The main view object for CyberChef.
  */
-var Manager = function(app) {
+const Manager = function(app) {
     this.app = app;
 
     // Define custom events
@@ -195,8 +195,8 @@ Manager.prototype.addListeners = function(selector, eventType, callback, scope) 
  * this.addMultiEventListener("search", "keyup paste search", this.search, this);
  */
 Manager.prototype.addMultiEventListener = function(selector, eventTypes, callback, scope) {
-    var evs = eventTypes.split(" ");
-    for (var i = 0; i < evs.length; i++) {
+    const evs = eventTypes.split(" ");
+    for (let i = 0; i < evs.length; i++) {
         document.querySelector(selector).addEventListener(evs[i], callback.bind(scope));
     }
 };
@@ -216,8 +216,8 @@ Manager.prototype.addMultiEventListener = function(selector, eventTypes, callbac
  * this.addMultiEventListener(".saveable", "keyup paste", this.save, this);
  */
 Manager.prototype.addMultiEventListeners = function(selector, eventTypes, callback, scope) {
-    var evs = eventTypes.split(" ");
-    for (var i = 0; i < evs.length; i++) {
+    const evs = eventTypes.split(" ");
+    for (let i = 0; i < evs.length; i++) {
         this.addListeners(selector, evs[i], callback, scope);
     }
 };
@@ -238,7 +238,7 @@ Manager.prototype.addMultiEventListeners = function(selector, eventTypes, callba
  * this.addDynamicListener("button", "click", alert, this);
  */
 Manager.prototype.addDynamicListener = function(selector, eventType, callback, scope) {
-    var eventConfig = {
+    const eventConfig = {
         selector: selector,
         callback: callback.bind(scope || this)
     };
@@ -261,14 +261,14 @@ Manager.prototype.addDynamicListener = function(selector, eventType, callback, s
  * @param {Event} e - The event to be handled
  */
 Manager.prototype.dynamicListenerHandler = function(e) {
-    var handlers = this.dynamicHandlers[e.type],
+    let handlers = this.dynamicHandlers[e.type],
         matches = e.target.matches ||
             e.target.webkitMatchesSelector ||
             e.target.mozMatchesSelector ||
             e.target.msMatchesSelector ||
             e.target.oMatchesSelector;
 
-    for (var i = 0; i < handlers.length; i++) {
+    for (let i = 0; i < handlers.length; i++) {
         if (matches && e.target[matches.name](handlers[i].selector)) {
             handlers[i].callback(e);
         }

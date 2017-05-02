@@ -27,7 +27,7 @@ const PublicKey = {
      * @returns {string}
      */
     runParseX509: function (input, args) {
-        var cert = new r.X509(),
+        let cert = new r.X509(),
             inputFormat = args[0];
 
         if (!input.length) {
@@ -56,7 +56,7 @@ const PublicKey = {
                 throw "Undefined input format";
         }
 
-        var version = r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 0, 0]),
+        let version = r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 0, 0]),
             sn = cert.getSerialNumberHex(),
             algorithm = r.KJUR.asn1.x509.OID.oid2name(r.KJUR.asn1.ASN1Util.oidHexToInt(r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 2, 0]))),
             issuer = cert.getIssuerString(),
@@ -132,7 +132,7 @@ const PublicKey = {
         }
 
         // Format Public Key fields
-        for (var i = 0; i < pkFields.length; i++) {
+        for (let i = 0; i < pkFields.length; i++) {
             pkStr += "  " + pkFields[i].key + ":" +
                 Utils.padLeft(
                     pkFields[i].value + "\n",
@@ -141,12 +141,12 @@ const PublicKey = {
                 );
         }
 
-        var issuerStr = PublicKey._formatDnStr(issuer, 2),
+        let issuerStr = PublicKey._formatDnStr(issuer, 2),
             nbDate = PublicKey._formatDate(notBefore),
             naDate = PublicKey._formatDate(notAfter),
             subjectStr = PublicKey._formatDnStr(subject, 2);
 
-        var output = "Version:          " + (parseInt(version, 16) + 1) + " (0x" + version + ")\n" +
+        const output = "Version:          " + (parseInt(version, 16) + 1) + " (0x" + version + ")\n" +
             "Serial number:    " + new r.BigInteger(sn, 16).toString() + " (0x" + sn + ")\n" +
             "Algorithm ID:     " + algorithm + "\n" +
             "Validity\n" +
@@ -245,7 +245,7 @@ const PublicKey = {
      * @returns {string}
      */
     runParseAsn1HexString: function(input, args) {
-        var truncateLen = args[1],
+        let truncateLen = args[1],
             index = args[0];
         return r.ASN1HEX.dump(input.replace(/\s/g, ""), {
             "ommitLongOctet": truncateLen
@@ -262,14 +262,15 @@ const PublicKey = {
      * @returns {string}
      */
     _formatDnStr: function(dnStr, indent) {
-        var output = "",
+        let output = "",
             fields = dnStr.split(",/|"),
             maxKeyLen = 0,
             key,
             value,
+            i,
             str;
 
-        for (var i = 0; i < fields.length; i++) {
+        for (i = 0; i < fields.length; i++) {
             if (!fields[i].length) continue;
 
             key = fields[i].split("=")[0];
@@ -303,10 +304,10 @@ const PublicKey = {
     _formatByteStr: function(byteStr, length, indent) {
         byteStr = Utils.toHex(Utils.fromHex(byteStr), ":");
         length = length * 3;
-        var output = "";
+        let output = "";
 
-        for (var i = 0; i < byteStr.length; i += length) {
-            var str = byteStr.slice(i, i + length) + "\n";
+        for (let i = 0; i < byteStr.length; i += length) {
+            const str = byteStr.slice(i, i + length) + "\n";
             if (i === 0) {
                 output += str;
             } else {
@@ -347,10 +348,10 @@ export default PublicKey;
  * @returns {string}
  */
 r.X509.hex2dn = function(hDN) {
-    var s = "";
-    var a = r.ASN1HEX.getPosArrayOfChildren_AtObj(hDN, 0);
-    for (var i = 0; i < a.length; i++) {
-        var hRDN = r.ASN1HEX.getHexOfTLV_AtObj(hDN, a[i]);
+    let s = "";
+    const a = r.ASN1HEX.getPosArrayOfChildren_AtObj(hDN, 0);
+    for (let i = 0; i < a.length; i++) {
+        const hRDN = r.ASN1HEX.getHexOfTLV_AtObj(hDN, a[i]);
         s = s + ",/|" + r.X509.hex2rdn(hRDN);
     }
     return s;

@@ -9,7 +9,7 @@
  * @param {string} name - The name of the category.
  * @param {boolean} selected - Whether this category is pre-selected or not.
  */
-var HTMLCategory = function(name, selected) {
+const HTMLCategory = function(name, selected) {
     this.name = name;
     this.selected = selected;
     this.opList = [];
@@ -32,8 +32,8 @@ HTMLCategory.prototype.addOperation = function(operation) {
  * @returns {string}
  */
 HTMLCategory.prototype.toHtml = function() {
-    var catName = "cat" + this.name.replace(/[\s/-:_]/g, "");
-    var html = "<div class='panel category'>\
+    const catName = "cat" + this.name.replace(/[\s/-:_]/g, "");
+    let html = "<div class='panel category'>\
         <a class='category-title' data-toggle='collapse'\
             data-parent='#categories' href='#" + catName + "'>\
             " + this.name + "\
@@ -41,7 +41,7 @@ HTMLCategory.prototype.toHtml = function() {
         <div id='" + catName + "' class='panel-collapse collapse\
         " + (this.selected ? " in" : "") + "'><ul class='op-list'>";
 
-    for (var i = 0; i < this.opList.length; i++) {
+    for (let i = 0; i < this.opList.length; i++) {
         html += this.opList[i].toStubHtml();
     }
 
