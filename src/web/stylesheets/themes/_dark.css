@@ -115,7 +115,7 @@ option text for inputs is invisible
 
 
     /* Scrollbar */
-    --scrollbar-track: #1e1e1e; /* never used */
+    --scrollbar-track: #1e1e1e;
     --scrollbar-thumb: #424242;
     --scrollbar-hover: #4e4e4e;
 
