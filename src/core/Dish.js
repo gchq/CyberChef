@@ -11,10 +11,10 @@ import Utils from "./Utils.js";
  * @param {byteArray|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
-function Dish(value, type) {
+const Dish = function(value, type) {
     this.value = value || typeof value == "string" ? value : null;
     this.type  = type || Dish.BYTE_ARRAY;
-}
+};
 
 
 /**

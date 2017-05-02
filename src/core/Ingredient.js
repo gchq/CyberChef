@@ -64,6 +64,7 @@ Ingredient.prototype.setValue = function(value) {
 */
 Ingredient.prepare = function(data, type) {
     let number;
+
     switch (type) {
         case "binaryString":
         case "binaryShortString":
