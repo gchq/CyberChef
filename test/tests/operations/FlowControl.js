@@ -111,4 +111,34 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Comment: nothing",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Comment",
+                "args": [""]
+            }
+        ]
+    },
+    {
+        name: "Fork, Comment, Base64",
+        input: "cat\nsat\nmat",
+        expectedOutput: "Y2F0\nc2F0\nbWF0\n",
+        recipeConfig: [
+            {
+                "op": "Fork",
+                "args": ["\\n", "\\n", false]
+            },
+            {
+                "op": "Comment",
+                "args": ["Testing 123"]
+            },
+            {
+                "op": "To Base64",
+                "args": ["A-Za-z0-9+/="]
+            }
+        ]
+    },
 ]);

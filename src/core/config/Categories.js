@@ -295,6 +295,7 @@ const Categories = [
             "Jump",
             "Conditional Jump",
             "Return",
+            "Comment"
         ]
     },
 ];
