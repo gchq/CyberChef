@@ -1,3 +1,5 @@
+import {camelCase, kebabCase, snakeCase} from "lodash";
+
 import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser as dom} from "xmldom";
@@ -415,6 +417,84 @@ const Code = {
             .join(delimiter);
     },
 
+    /**
+     * This tries to rename variable names in a code snippet according to a function.
+     *
+     * @param {string} input
+     * @param {function} replacer - this function will be fed the token which should be renamed.
+     * @returns {string}
+     */
+    _replaceVariableNames(input, replacer) {
+        let tokenRegex = /\\"|"(?:\\"|[^"])*"|(\b[a-z0-9\-_]+\b)/ig;
+
+        return input.replace(tokenRegex, (...args) => {
+            let match = args[0],
+                quotes = args[1];
+
+            if (!quotes) {
+                return match;
+            } else {
+                return replacer(match);
+            }
+        });
+    },
+
+
+    /**
+     * Converts to snake_case.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     */
+    runToSnakeCase(input, args) {
+        let smart = args[0];
+
+        if (smart) {
+            return Code._replaceVariableNames(input, snakeCase);
+        } else {
+            return snakeCase(input);
+        }
+    },
+
+
+    /**
+     * Converts to camelCase.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     */
+    runToCamelCase(input, args) {
+        let smart = args[0];
+
+        if (smart) {
+            return Code._replaceVariableNames(input, camelCase);
+        } else {
+            return camelCase(input);
+        }
+    },
+
+
+    /**
+     * Converts to kebab-case.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     */
+    runToKebabCase(input, args) {
+        let smart = args[0];
+
+        if (smart) {
+            return Code._replaceVariableNames(input, kebabCase);
+        } else {
+            return kebabCase(input);
+        }
+    },
 };
 
 export default Code;
