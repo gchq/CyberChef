@@ -1,5 +1,3 @@
-import {camelCase, kebabCase, snakeCase} from "lodash";
-
 import Utils from "../Utils.js";
 import * as JsDiff from "diff";
 
@@ -593,45 +591,6 @@ const StrUtils = {
             output = "Total found: " + total + "\n\n" + output;
 
         return output;
-    },
-
-
-    /**
-     * Converts to snake_case.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     *
-     */
-    runToSnakeCase(input, args) {
-        return snakeCase(input);
-    },
-
-
-    /**
-     * Converts to camelCase.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     *
-     */
-    runToCamelCase(input, args) {
-        return camelCase(input);
-    },
-
-
-    /**
-     * Converts to kebab-case.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     *
-     */
-    runToKebabCase(input, args) {
-        return kebabCase(input);
     },
 };
 

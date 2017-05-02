@@ -181,9 +181,6 @@ const Categories = [
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
-            "To Snake case",
-            "To Camel case",
-            "To Kebab case",
         ]
     },
     {
@@ -274,6 +271,9 @@ const Categories = [
             "CSS selector",
             "Strip HTML tags",
             "Diff",
+            "To Snake case",
+            "To Camel case",
+            "To Kebab case",
         ]
     },
     {

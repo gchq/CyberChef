@@ -3257,10 +3257,15 @@ const OperationConfig = {
             "<br><br>",
             "e.g. this_is_snake_case",
         ].join("\n"),
-        run: StrUtils.runToSnakeCase,
+        run: Code.runToSnakeCase,
         inputType: "string",
         outputType: "string",
         args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
         ]
     },
     "To Camel case": {
@@ -3271,10 +3276,15 @@ const OperationConfig = {
             "<br><br>",
             "e.g. thisIsCamelCase",
         ].join("\n"),
-        run: StrUtils.runToCamelCase,
+        run: Code.runToCamelCase,
         inputType: "string",
         outputType: "string",
         args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
         ]
     },
     "To Kebab case": {
@@ -3285,10 +3295,15 @@ const OperationConfig = {
             "<br><br>",
             "e.g. this-is-kebab-case",
         ].join("\n"),
-        run: StrUtils.runToKebabCase,
+        run: Code.runToKebabCase,
         inputType: "string",
         outputType: "string",
         args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
         ]
     },
 };
