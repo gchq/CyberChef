@@ -1185,33 +1185,6 @@ const Utils = {
         "Latin1":  CryptoJS.enc.Latin1,
     },
 
-
-    /**
-     * A utility for "debouncing" functions.
-     * Debouncing is when you want to ensure events triggered by an event are rate-limited.
-     * @constant
-     */
-    debounce(fn, delay) {
-        let timeout;
-
-        return function() {
-            /**
-             * later calls the debounced function with arguments.
-             * If the debounced function is called again, then the timeout
-             * which calls later is cancelled.
-             */
-            let later = () => {
-                fn.apply(this, arguments);
-            };
-
-            if (timeout) {
-                clearTimeout(timeout);
-            }
-
-            timeout = setTimeout(later, delay);
-        };
-    },
-
 };
 
 export default Utils;
