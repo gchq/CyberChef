@@ -36,8 +36,6 @@ var App = function(categories, operations, defaultFavourites, defaultOptions) {
     this.ingId       = 0;
 
     window.chef      = this.chef;
-
-    this.autoBake = Utils.debounce(this.autoBake, 300);
 };
 
 
@@ -80,22 +78,17 @@ App.prototype.setBakingStatus = function(bakingStatus) {
 
     var inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
         outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
-        inputElement = document.querySelector("#input-text"),
         outputElement = document.querySelector("#output-text");
 
     if (bakingStatus) {
         inputLoadingIcon.style.display = "inline-block";
         outputLoadingIcon.style.display = "inline-block";
-        inputElement.classList.add("disabled");
         outputElement.classList.add("disabled");
-        inputElement.disabled = true;
         outputElement.disabled = true;
     } else {
         inputLoadingIcon.style.display = "none";
         outputLoadingIcon.style.display = "none";
-        inputElement.classList.remove("disabled");
         outputElement.classList.remove("disabled");
-        inputElement.disabled = false;
         outputElement.disabled = false;
     }
 };
