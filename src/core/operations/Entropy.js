@@ -88,16 +88,11 @@ const Entropy = {
     runFreqDistrib: function (input, args) {
         if (!input.length) return "No data";
 
-        let distrib = new Array(256),
+        let distrib = new Array(256).fill(0),
             percentages = new Array(256),
             len = input.length,
             showZeroes = args[0],
             i;
-
-        // Initialise distrib to 0
-        for (i = 0; i < 256; i++) {
-            distrib[i] = 0;
-        }
 
         // Count bytes
         for (i = 0; i < len; i++) {
