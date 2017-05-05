@@ -385,7 +385,7 @@ const StrUtils = {
     runOffsetChecker: function(input, args) {
         let sampleDelim = args[0],
             samples = input.split(sampleDelim),
-            outputs = [],
+            outputs = new Array(samples.length),
             i = 0,
             s = 0,
             match = false,
