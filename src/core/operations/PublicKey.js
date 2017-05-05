@@ -124,10 +124,17 @@ const PublicKey = {
         }
 
         // Signature fields
-        if (r.ASN1HEX.dump(certSig).indexOf("SEQUENCE") === 0) { // DSA or ECDSA
+        let breakoutSig = false;
+        try {
+            breakoutSig = r.ASN1HEX.dump(certSig).indexOf("SEQUENCE") === 0;
+        } catch (err) {
+            // Error processing signature, output without further breakout
+        }
+
+        if (breakoutSig) { // DSA or ECDSA
             sigStr = "  r:              " + PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [0]), 16, 18) + "\n" +
                 "  s:              " + PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [1]), 16, 18) + "\n";
-        } else { // RSA
+        } else { // RSA or unknown
             sigStr = "  Signature:      " + PublicKey._formatByteStr(certSig, 16, 18) + "\n";
         }
 
