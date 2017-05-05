@@ -124,10 +124,10 @@ const PublicKey = {
         }
 
         // Signature fields
-        var breakoutSig = false;
+        let breakoutSig = false;
         try {
             breakoutSig = r.ASN1HEX.dump(certSig).indexOf("SEQUENCE") === 0;
-        } catch(err) {
+        } catch (err) {
             // Error processing signature, output without further breakout
         }
 
