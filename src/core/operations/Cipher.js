@@ -309,6 +309,11 @@ const Cipher = {
      * @default
      */
     KDF_ITERATIONS: 1,
+    /**
+     * @constant
+     * @default
+     */
+    HASHERS: ["MD5", "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3", "RIPEMD160"],
 
     /**
      * Derive PBKDF2 key operation.
@@ -320,11 +325,16 @@ const Cipher = {
     runPbkdf2: function (input, args) {
         let keySize = args[0] / 32,
             iterations = args[1],
-            salt = CryptoJS.enc.Hex.parse(args[2] || ""),
-            inputFormat = args[3],
-            outputFormat = args[4],
+            hasher = args[2],
+            salt = CryptoJS.enc.Hex.parse(args[3] || ""),
+            inputFormat = args[4],
+            outputFormat = args[5],
             passphrase = Utils.format[inputFormat].parse(input),
-            key = CryptoJS.PBKDF2(passphrase, salt, { keySize: keySize, iterations: iterations });
+            key = CryptoJS.PBKDF2(passphrase, salt, {
+                keySize: keySize,
+                hasher: CryptoJS.algo[hasher],
+                iterations: iterations,
+            });
 
         return key.toString(Utils.format[outputFormat]);
     },
@@ -340,11 +350,16 @@ const Cipher = {
     runEvpkdf: function (input, args) {
         let keySize = args[0] / 32,
             iterations = args[1],
-            salt = CryptoJS.enc.Hex.parse(args[2] || ""),
-            inputFormat = args[3],
-            outputFormat = args[4],
+            hasher = args[2],
+            salt = CryptoJS.enc.Hex.parse(args[3] || ""),
+            inputFormat = args[4],
+            outputFormat = args[5],
             passphrase = Utils.format[inputFormat].parse(input),
-            key = CryptoJS.EvpKDF(passphrase, salt, { keySize: keySize, iterations: iterations });
+            key = CryptoJS.EvpKDF(passphrase, salt, {
+                keySize: keySize,
+                hasher: CryptoJS.algo[hasher],
+                iterations: iterations,
+            });
 
         return key.toString(Utils.format[outputFormat]);
     },
