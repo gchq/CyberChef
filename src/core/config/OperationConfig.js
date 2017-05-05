@@ -1402,6 +1402,11 @@ const OperationConfig = {
                 value: Cipher.KDF_ITERATIONS
             },
             {
+                name: "Hashing function",
+                type: "option",
+                value: Cipher.HASHERS
+            },
+            {
                 name: "Salt (hex)",
                 type: "string",
                 value: ""
@@ -1433,6 +1438,11 @@ const OperationConfig = {
                 name: "Iterations",
                 type: "number",
                 value: Cipher.KDF_ITERATIONS
+            },
+            {
+                name: "Hashing function",
+                type: "option",
+                value: Cipher.HASHERS
             },
             {
                 name: "Salt (hex)",
