@@ -76,7 +76,7 @@ App.prototype.handleError = function(err) {
 App.prototype.setBakingStatus = function(bakingStatus) {
     this.baking = bakingStatus;
 
-    var inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
+    let inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
         outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
         outputElement = document.querySelector("#output-text");
 
@@ -109,8 +109,8 @@ App.prototype.bake = async function(step) {
 
     try {
         response = await this.chef.bake(
-            this.getInput(),         // The user's input
-            this.getRecipeConfig(), // The configuration of the recipe
+            this.getInput(),          // The user's input
+            this.getRecipeConfig(),   // The configuration of the recipe
             this.options,             // Options set by the user
             this.progress,            // The current position in the recipe
             step                      // Whether or not to take one step or execute the whole recipe
