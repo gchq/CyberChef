@@ -220,7 +220,8 @@ module.exports = function (grunt) {
                     ]
                 },
                 stats: {
-                    children: false
+                    children: false,
+                    warningsFilter: /source-map/
                 }
             },
             webDev: {
@@ -237,10 +238,7 @@ module.exports = function (grunt) {
                         compileTime: compileTime
                     })
                 ],
-                watch: true,
-                stats: {
-                    warningsFilter: /source-map/
-                }
+                watch: true
             },
             webProd: {
                 target: "web",
