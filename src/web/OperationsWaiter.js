@@ -68,9 +68,9 @@ OperationsWaiter.prototype.searchOperations = function(e) {
             ops[selected-1].classList.add("selected-op");
         }
     } else {
-        let searchResultsEl = document.getElementById("search-results"),
-            el = e.target,
-            str = el.value;
+        const searchResultsEl = document.getElementById("search-results");
+        const el = e.target;
+        const str = el.value;
 
         while (searchResultsEl.firstChild) {
             try {
@@ -81,12 +81,10 @@ OperationsWaiter.prototype.searchOperations = function(e) {
 
         $("#categories .in").collapse("hide");
         if (str) {
-            let matchedOps = this.filterOperations(str, true),
-                matchedOpsHtml = "";
-
-            for (let i = 0; i < matchedOps.length; i++) {
-                matchedOpsHtml += matchedOps[i].toStubHtml();
-            }
+            const matchedOps = this.filterOperations(str, true);
+            const matchedOpsHtml = matchedOps
+                .map(v => v.toStubHtml())
+                .join("");
 
             searchResultsEl.innerHTML = matchedOpsHtml;
             searchResultsEl.dispatchEvent(this.manager.oplistcreate);
@@ -103,16 +101,16 @@ OperationsWaiter.prototype.searchOperations = function(e) {
  *   name and description
  * @returns {string[]}
  */
-OperationsWaiter.prototype.filterOperations = function(searchStr, highlight) {
-    let matchedOps = [],
-        matchedDescs = [];
+OperationsWaiter.prototype.filterOperations = function(inStr, highlight) {
+    const matchedOps = [];
+    const matchedDescs = [];
 
-    searchStr = searchStr.toLowerCase();
+    const searchStr = inStr.toLowerCase();
 
     for (const opName in this.app.operations) {
-        let op = this.app.operations[opName],
-            namePos = opName.toLowerCase().indexOf(searchStr),
-            descPos = op.description.toLowerCase().indexOf(searchStr);
+        const op = this.app.operations[opName];
+        const namePos = opName.toLowerCase().indexOf(searchStr);
+        const descPos = op.description.toLowerCase().indexOf(searchStr);
 
         if (namePos >= 0 || descPos >= 0) {
             const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
@@ -236,12 +234,8 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
  * Saves the selected favourites and reloads them.
  */
 OperationsWaiter.prototype.saveFavouritesClick = function() {
-    let favouritesList = [],
-        favs = document.querySelectorAll("#edit-favourites-list li");
-
-    for (let i = 0; i < favs.length; i++) {
-        favouritesList.push(favs[i].textContent);
-    }
+    const favs = document.querySelectorAll("#edit-favourites-list li");
+    const favouritesList = Array.from(favs, e => e.textContent);
 
     this.app.saveFavourites(favouritesList);
     this.app.loadFavourites();
@@ -281,8 +275,8 @@ OperationsWaiter.prototype.opIconMouseover = function(e) {
  * @param {event} e
  */
 OperationsWaiter.prototype.opIconMouseleave = function(e) {
-    let opEl = e.target.parentNode,
-        toEl = e.toElement || e.relatedElement;
+    const opEl = e.target.parentNode;
+    const toEl = e.toElement || e.relatedElement;
 
     if (e.target.getAttribute("data-toggle") === "popover" && toEl === opEl) {
         $(opEl).popover("show");

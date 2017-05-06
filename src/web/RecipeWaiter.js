@@ -60,8 +60,8 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
     }.bind(this));
 
     Sortable.utils.on(recList, "touchend", function(e) {
-        let loc = e.changedTouches[0],
-            target = document.elementFromPoint(loc.clientX, loc.clientY);
+        const loc = e.changedTouches[0];
+        const target = document.elementFromPoint(loc.clientX, loc.clientY);
 
         this.removeIntent = !recList.contains(target);
     }.bind(this));
@@ -276,8 +276,9 @@ RecipeWaiter.prototype.operationChildDblclick = function(e) {
  * @returns {recipeConfig}
  */
 RecipeWaiter.prototype.getConfig = function() {
-    let config = [], ingredients, ingList, disabled, bp, item,
-        operations = document.querySelectorAll("#rec-list li.operation");
+    const config = [];
+    let ingredients, ingList, disabled, bp, item;
+    const operations = document.querySelectorAll("#rec-list li.operation");
 
     for (let i = 0; i < operations.length; i++) {
         ingredients = [];
@@ -402,8 +403,8 @@ RecipeWaiter.prototype.clearRecipe = function() {
  * @param {event} e
  */
 RecipeWaiter.prototype.dropdownToggleClick = function(e) {
-    let el = e.target,
-        button = el.parentNode.parentNode.previousSibling;
+    const el = e.target;
+    const button = el.parentNode.parentNode.previousSibling;
 
     button.innerHTML = el.textContent + " <span class='caret'></span>";
     this.ingChange();
