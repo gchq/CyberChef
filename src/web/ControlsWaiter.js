@@ -168,17 +168,17 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
     const link = baseURL || window.location.protocol + "//" +
-                window.location.host +
-                window.location.pathname;
+        window.location.host +
+        window.location.pathname;
     const recipeStr = JSON.stringify(recipeConfig);
     const inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
-    const myIncludeRecipe = includeRecipe && (recipeConfig.length > 0);
-    const myIncludeInput = includeInput && (inputStr.length > 0) && (inputStr.length < 8000);
+    includeRecipe = includeRecipe && (recipeConfig.length > 0);
+    includeInput = includeInput && (inputStr.length > 0) && (inputStr.length < 8000);
 
     const params = [
-        myIncludeRecipe ? ["recipe", recipeStr] : undefined,
-        myIncludeInput ? ["input", inputStr] : undefined,
+        includeRecipe ? ["recipe", recipeStr] : undefined,
+        includeInput ? ["input", inputStr] : undefined,
     ];
 
     const query = params

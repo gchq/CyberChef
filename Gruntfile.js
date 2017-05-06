@@ -237,7 +237,10 @@ module.exports = function (grunt) {
                         compileTime: compileTime
                     })
                 ],
-                watch: true
+                watch: true,
+                stats: {
+                    warningsFilter: /source-map/
+                }
             },
             webProd: {
                 target: "web",

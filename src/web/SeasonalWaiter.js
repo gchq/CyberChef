@@ -1,8 +1,3 @@
-import spiderImages from "./spiderImages.json";
-
-
-const { spider16, spider32, spider64 } = spiderImages;
-
 /**
  * Waiter to handle seasonal events and easter eggs.
  *
@@ -24,63 +19,9 @@ const SeasonalWaiter = function(app, manager) {
  * Loads all relevant items depending on the current date.
  */
 SeasonalWaiter.prototype.load = function() {
-    //var now = new Date();
-
-    // SpiderChef
-    // if (now.getMonth() === 3 && now.getDate() === 1) { // Apr 1
-        // this.insertSpiderIcons();
-        // this.insertSpiderText();
-    // }
-
     // Konami code
     this.kkeys = [];
     window.addEventListener("keydown", this.konamiCodeListener.bind(this));
-};
-
-
-/**
- * Replaces chef icons with spider icons.
- * #spiderchef
- */
-SeasonalWaiter.prototype.insertSpiderIcons = function() {
-
-    // Favicon
-    document.querySelector("link[rel=icon]").setAttribute("href", "data:image/png;base64," + spider16);
-
-    // Bake button
-    document.querySelector("#bake img").setAttribute("src", "data:image/png;base64," + spider32);
-
-    // About box
-    document.querySelector(".about-img-left").setAttribute("src", "data:image/png;base64," + spider64);
-};
-
-
-/**
- * Replaces all instances of the word "cyber" with "spider".
- * #spiderchef
- */
-SeasonalWaiter.prototype.insertSpiderText = function() {
-    // Title
-    document.title = document.title.replace(/Cyber/g, "Spider");
-
-    // Body
-    SeasonalWaiter.treeWalk(document.body, function(node) {
-        // process only text nodes
-        if (node.nodeType === 3) {
-            node.nodeValue = node.nodeValue.replace(/Cyber/g, "Spider");
-        }
-    }, true);
-
-    // Bake button
-    SeasonalWaiter.treeWalk(document.getElementById("bake-group"), function(node) {
-        // process only text nodes
-        if (node.nodeType === 3) {
-            node.nodeValue = node.nodeValue.replace(/Bake/g, "Spin");
-        }
-    }, true);
-
-    // Recipe title
-    document.querySelector("#recipe .title").innerHTML = "Web";
 };
 
 
@@ -103,54 +44,5 @@ SeasonalWaiter.prototype.konamiCodeListener = function(e) {
         }
     }
 };
-
-
-/**
- * Walks through the entire DOM starting at the specified element and operates on each node.
- *
- * @static
- * @param {element} parent - The DOM node to start from
- * @param {Function} fn - The callback function to operate on each node
- * @param {booleam} allNodes - Whether to operate on every node or not
- */
-SeasonalWaiter.treeWalk = (function() {
-    // Create closure for constants
-    const skipTags = {
-        "SCRIPT": true, "IFRAME": true, "OBJECT": true,
-        "EMBED": true, "STYLE": true, "LINK": true, "META": true
-    };
-
-    return function(parent, fn, allNodes) {
-        let node = parent.firstChild;
-
-        while (node && node !== parent) {
-            if (allNodes || node.nodeType === 1) {
-                if (fn(node) === false) {
-                    return false;
-                }
-            }
-            // If it's an element &&
-            //    has children &&
-            //    has a tagname && is not in the skipTags list
-            // then, we can enumerate children
-            if (node.nodeType === 1 &&
-                node.firstChild &&
-                !(node.tagName && skipTags[node.tagName])) {
-                node = node.firstChild;
-            } else if (node.nextSibling) {
-                node = node.nextSibling;
-            } else {
-                // No child and no nextsibling
-                // Find parent that has a nextSibling
-                while ((node = node.parentNode) !== parent) {
-                    if (node.nextSibling) {
-                        node = node.nextSibling;
-                        break;
-                    }
-                }
-            }
-        }
-    };
-})();
 
 export default SeasonalWaiter;
