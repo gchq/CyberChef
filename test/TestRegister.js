@@ -38,7 +38,7 @@ import Chef from "../src/core/Chef.js";
     TestRegister.prototype.runTests = function() {
         return Promise.all(
             this.tests.map(function(test, i) {
-                let chef = new Chef();
+                const chef = new Chef();
 
                 return chef.bake(
                     test.input,
@@ -48,7 +48,7 @@ import Chef from "../src/core/Chef.js";
                     false
                 )
                 .then(function(result) {
-                    let ret = {
+                    const ret = {
                         test: test,
                         status: null,
                         output: null,

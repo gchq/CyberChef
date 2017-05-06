@@ -220,7 +220,8 @@ module.exports = function (grunt) {
                     ]
                 },
                 stats: {
-                    children: false
+                    children: false,
+                    warningsFilter: /source-map/
                 }
             },
             webDev: {
