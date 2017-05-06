@@ -23,14 +23,14 @@ const ControlsWaiter = function(app, manager) {
  * without wrapping or overflowing.
  */
 ControlsWaiter.prototype.adjustWidth = function() {
-    let controls     = document.getElementById("controls"),
-        step         = document.getElementById("step"),
-        clrBreaks    = document.getElementById("clr-breaks"),
-        saveImg      = document.querySelector("#save img"),
-        loadImg      = document.querySelector("#load img"),
-        stepImg      = document.querySelector("#step img"),
-        clrRecipImg  = document.querySelector("#clr-recipe img"),
-        clrBreaksImg = document.querySelector("#clr-breaks img");
+    const controls     = document.getElementById("controls");
+    const step         = document.getElementById("step");
+    const clrBreaks    = document.getElementById("clr-breaks");
+    const saveImg      = document.querySelector("#save img");
+    const loadImg      = document.querySelector("#load img");
+    const stepImg      = document.querySelector("#step img");
+    const clrRecipImg  = document.querySelector("#clr-recipe img");
+    const clrBreaksImg = document.querySelector("#clr-breaks img");
 
     if (controls.clientWidth < 470) {
         step.childNodes[1].nodeValue = " Step";
@@ -100,8 +100,8 @@ ControlsWaiter.prototype.stepClick = function() {
  * Handler for changes made to the Auto Bake checkbox.
  */
 ControlsWaiter.prototype.autoBakeChange = function() {
-    let autoBakeLabel    = document.getElementById("auto-bake-label"),
-        autoBakeCheckbox = document.getElementById("auto-bake");
+    const autoBakeLabel    = document.getElementById("auto-bake-label");
+    const autoBakeCheckbox = document.getElementById("auto-bake");
 
     this.app.autoBake_ = autoBakeCheckbox.checked;
 
@@ -145,10 +145,10 @@ ControlsWaiter.prototype.clearBreaksClick = function() {
 ControlsWaiter.prototype.initialiseSaveLink = function(recipeConfig) {
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
-    let includeRecipe = document.getElementById("save-link-recipe-checkbox").checked,
-        includeInput = document.getElementById("save-link-input-checkbox").checked,
-        saveLinkEl = document.getElementById("save-link"),
-        saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
+    const includeRecipe = document.getElementById("save-link-recipe-checkbox").checked;
+    const includeInput = document.getElementById("save-link-input-checkbox").checked;
+    const saveLinkEl = document.getElementById("save-link");
+    const saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
 
     saveLinkEl.innerHTML = Utils.truncate(saveLink, 120);
     saveLinkEl.setAttribute("href", saveLink);
@@ -167,23 +167,27 @@ ControlsWaiter.prototype.initialiseSaveLink = function(recipeConfig) {
 ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput, recipeConfig, baseURL) {
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
-    let link = baseURL || window.location.protocol + "//" +
-                window.location.host +
-                window.location.pathname,
-        recipeStr = JSON.stringify(recipeConfig),
-        inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
+    const link = baseURL || window.location.protocol + "//" +
+        window.location.host +
+        window.location.pathname;
+    const recipeStr = JSON.stringify(recipeConfig);
+    const inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
     includeRecipe = includeRecipe && (recipeConfig.length > 0);
     includeInput = includeInput && (inputStr.length > 0) && (inputStr.length < 8000);
 
-    if (includeRecipe) {
-        link += "?recipe=" + encodeURIComponent(recipeStr);
-    }
+    const params = [
+        includeRecipe ? ["recipe", recipeStr] : undefined,
+        includeInput ? ["input", inputStr] : undefined,
+    ];
 
-    if (includeRecipe && includeInput) {
-        link += "&input=" + encodeURIComponent(inputStr);
-    } else if (includeInput) {
-        link += "?input=" + encodeURIComponent(inputStr);
+    const query = params
+       .filter(v => v)
+       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+       .join("&");
+
+    if (query) {
+        return `${link}?${query}`;
     }
 
     return link;
@@ -205,8 +209,8 @@ ControlsWaiter.prototype.saveTextChange = function() {
  * Handler for the 'Save' command. Pops up the save dialog box.
  */
 ControlsWaiter.prototype.saveClick = function() {
-    let recipeConfig = this.app.getRecipeConfig(),
-        recipeStr = JSON.stringify(recipeConfig).replace(/},{/g, "},\n{");
+    const recipeConfig = this.app.getRecipeConfig();
+    const recipeStr = JSON.stringify(recipeConfig).replace(/},{/g, "},\n{");
 
     document.getElementById("save-text").value = recipeStr;
 
@@ -244,8 +248,8 @@ ControlsWaiter.prototype.loadClick = function() {
  * Saves the recipe specified in the save textarea to local storage.
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
-    let recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
-    let recipeStr  = document.getElementById("save-text").value;
+    const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
+    const recipeStr  = document.getElementById("save-text").value;
 
     if (!recipeName) {
         this.app.alert("Please enter a recipe name", "danger", 2000);
@@ -303,13 +307,11 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
  * Removes the currently selected recipe from local storage.
  */
 ControlsWaiter.prototype.loadDeleteClick = function() {
-    let id = parseInt(document.getElementById("load-name").value, 10),
-        savedRecipes = localStorage.savedRecipes ?
+    const id = parseInt(document.getElementById("load-name").value, 10);
+    const rawSavedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [];
 
-    savedRecipes = savedRecipes.filter(function(r) {
-        return r.id !== id;
-    });
+    const savedRecipes = rawSavedRecipes.filter(r => r.id !== id);
 
     localStorage.savedRecipes = JSON.stringify(savedRecipes);
     this.populateLoadRecipesList();
@@ -320,14 +322,12 @@ ControlsWaiter.prototype.loadDeleteClick = function() {
  * Displays the selected recipe in the load text box.
  */
 ControlsWaiter.prototype.loadNameChange = function(e) {
-    let el = e.target,
-        savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [],
-        id = parseInt(el.value, 10);
+    const el = e.target;
+    const savedRecipes = localStorage.savedRecipes ?
+            JSON.parse(localStorage.savedRecipes) : [];
+    const id = parseInt(el.value, 10);
 
-    const recipe = savedRecipes.filter(function(r) {
-        return r.id === id;
-    })[0];
+    const recipe = savedRecipes.find(r => r.id === id);
 
     document.getElementById("load-text").value = recipe.recipe;
 };
@@ -352,8 +352,8 @@ ControlsWaiter.prototype.loadButtonClick = function() {
  * Populates the bug report information box with useful technical info.
  */
 ControlsWaiter.prototype.supportButtonClick = function() {
-    let reportBugInfo = document.getElementById("report-bug-info"),
-        saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
+    const reportBugInfo = document.getElementById("report-bug-info");
+    const saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
 
     reportBugInfo.innerHTML = "* CyberChef compile time: " + COMPILE_TIME + "\n" +
         "* User-Agent: \n" + navigator.userAgent + "\n" +

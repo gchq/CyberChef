@@ -426,7 +426,7 @@ const Code = {
      * @returns {string}
      */
     _replaceVariableNames(input, replacer) {
-        let tokenRegex = /\\"|"(?:\\"|[^"])*"|(\b[a-z0-9\-_]+\b)/ig;
+        const tokenRegex = /\\"|"(?:\\"|[^"])*"|(\b[a-z0-9\-_]+\b)/ig;
 
         return input.replace(tokenRegex, (...args) => {
             let match = args[0],
@@ -450,7 +450,7 @@ const Code = {
      *
      */
     runToSnakeCase(input, args) {
-        let smart = args[0];
+        const smart = args[0];
 
         if (smart) {
             return Code._replaceVariableNames(input, snakeCase);
@@ -469,7 +469,7 @@ const Code = {
      *
      */
     runToCamelCase(input, args) {
-        let smart = args[0];
+        const smart = args[0];
 
         if (smart) {
             return Code._replaceVariableNames(input, camelCase);
@@ -488,7 +488,7 @@ const Code = {
      *
      */
     runToKebabCase(input, args) {
-        let smart = args[0];
+        const smart = args[0];
 
         if (smart) {
             return Code._replaceVariableNames(input, kebabCase);

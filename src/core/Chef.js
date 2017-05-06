@@ -34,7 +34,7 @@ const Chef = function() {
  * @returns {number} response.duration - The number of ms it took to execute the recipe
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
-Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step) {
+Chef.prototype.bake = async function(inputText, recipeConfig, options, progress, step) {
     let startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
@@ -72,7 +72,7 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
     }
 
     try {
-        progress = recipe.execute(this.dish, progress);
+        progress = await recipe.execute(this.dish, progress);
     } catch (err) {
         // Return the error in the result so that everything else gets correctly updated
         // rather than throwing it here and losing state info.

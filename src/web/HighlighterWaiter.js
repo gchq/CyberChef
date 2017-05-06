@@ -64,8 +64,8 @@ HighlighterWaiter.prototype._isSelectionBackwards = function() {
  * @returns {number}
  */
 HighlighterWaiter.prototype._getOutputHtmlOffset = function(node, offset) {
-    let sel = window.getSelection(),
-        range = document.createRange();
+    const sel = window.getSelection();
+    const range = document.createRange();
 
     range.selectNodeContents(document.getElementById("output-html"));
     range.setEnd(node, offset);
@@ -85,8 +85,8 @@ HighlighterWaiter.prototype._getOutputHtmlOffset = function(node, offset) {
  * @returns {number} pos.end
  */
 HighlighterWaiter.prototype._getOutputHtmlSelectionOffsets = function() {
-    let sel = window.getSelection(),
-        range,
+    const sel = window.getSelection();
+    let range,
         start = 0,
         end = 0,
         backwards = false;
@@ -151,9 +151,9 @@ HighlighterWaiter.prototype.inputMousedown = function(e) {
     this.mouseTarget = HighlighterWaiter.INPUT;
     this.removeHighlights();
 
-    let el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -173,9 +173,9 @@ HighlighterWaiter.prototype.outputMousedown = function(e) {
     this.mouseTarget = HighlighterWaiter.OUTPUT;
     this.removeHighlights();
 
-    let el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -244,9 +244,9 @@ HighlighterWaiter.prototype.inputMousemove = function(e) {
         this.mouseTarget !== HighlighterWaiter.INPUT)
         return;
 
-    let el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -268,9 +268,9 @@ HighlighterWaiter.prototype.outputMousemove = function(e) {
         this.mouseTarget !== HighlighterWaiter.OUTPUT)
         return;
 
-    let el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -308,11 +308,11 @@ HighlighterWaiter.prototype.outputHtmlMousemove = function(e) {
  * @returns {string}
  */
 HighlighterWaiter.prototype.selectionInfo = function(start, end) {
-    let width = end.toString().length;
-    width = width < 2 ? 2 : width;
-    let startStr = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;"),
-        endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;"),
-        lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
+    const len = end.toString().length;
+    const width = len < 2 ? 2 : len;
+    const startStr = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
 
     return "start: " + startStr + "<br>end: " + endStr + "<br>length: " + lenStr;
 };
@@ -339,8 +339,8 @@ HighlighterWaiter.prototype.removeHighlights = function() {
  * @returns {Object[]} highlights[].args
  */
 HighlighterWaiter.prototype.generateHighlightList = function() {
-    let recipeConfig = this.app.getRecipeConfig(),
-        highlights = [];
+    const recipeConfig = this.app.getRecipeConfig();
+    const highlights = [];
 
     for (let i = 0; i < recipeConfig.length; i++) {
         if (recipeConfig[i].disabled) continue;
@@ -452,11 +452,11 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     // be displayed by the HTML textarea and will mess up highlighting offsets.
     if (!this.app.dishStr || this.app.dishStr.indexOf("\r") >= 0) return false;
 
-    let startPlaceholder = "[startHighlight]",
-        startPlaceholderRegex = /\[startHighlight\]/g,
-        endPlaceholder = "[endHighlight]",
-        endPlaceholderRegex = /\[endHighlight\]/g,
-        text = textarea.value;
+    const startPlaceholder = "[startHighlight]";
+    const startPlaceholderRegex = /\[startHighlight\]/g;
+    const endPlaceholder = "[endHighlight]";
+    const endPlaceholderRegex = /\[endHighlight\]/g;
+    let text = textarea.value;
 
     // Put placeholders in position
     // If there's only one value, select that

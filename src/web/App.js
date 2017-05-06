@@ -30,6 +30,7 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.chef        = new Chef();
     this.manager     = new Manager(this);
 
+    this.baking      = false;
     this.autoBake_   = false;
     this.progress    = 0;
     this.ingId       = 0;
@@ -85,18 +86,48 @@ App.prototype.handleError = function(err) {
 
 
 /**
+ * Updates the UI to show if baking is in process or not.
+ *
+ * @param {bakingStatus}
+ */
+App.prototype.setBakingStatus = function(bakingStatus) {
+    this.baking = bakingStatus;
+
+    let inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
+        outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
+        outputElement = document.querySelector("#output-text");
+
+    if (bakingStatus) {
+        inputLoadingIcon.style.display = "inline-block";
+        outputLoadingIcon.style.display = "inline-block";
+        outputElement.classList.add("disabled");
+        outputElement.disabled = true;
+    } else {
+        inputLoadingIcon.style.display = "none";
+        outputLoadingIcon.style.display = "none";
+        outputElement.classList.remove("disabled");
+        outputElement.disabled = false;
+    }
+};
+
+
+/**
  * Calls the Chef to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
-App.prototype.bake = function(step) {
+App.prototype.bake = async function(step) {
     let response;
 
+    if (this.baking) return;
+
+    this.setBakingStatus(true);
+
     try {
-        response = this.chef.bake(
-            this.getInput(),         // The user's input
-            this.getRecipeConfig(), // The configuration of the recipe
+        response = await this.chef.bake(
+            this.getInput(),          // The user's input
+            this.getRecipeConfig(),   // The configuration of the recipe
             this.options,             // Options set by the user
             this.progress,            // The current position in the recipe
             step                      // Whether or not to take one step or execute the whole recipe
@@ -104,6 +135,8 @@ App.prototype.bake = function(step) {
     } catch (err) {
         this.handleError(err);
     }
+
+    this.setBakingStatus(false);
 
     if (!response) return;
 

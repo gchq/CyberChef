@@ -75,8 +75,8 @@ OptionsWaiter.prototype.resetOptionsClick = function() {
  * @param {boolean} state
  */
 OptionsWaiter.prototype.switchChange = function(e, state) {
-    let el = e.target,
-        option = el.getAttribute("option");
+    const el = e.target;
+    const option = el.getAttribute("option");
 
     this.app.options[option] = state;
     localStorage.setItem("options", JSON.stringify(this.app.options));
@@ -90,8 +90,8 @@ OptionsWaiter.prototype.switchChange = function(e, state) {
  * @param {event} e
  */
 OptionsWaiter.prototype.numberChange = function(e) {
-    let el = e.target,
-        option = el.getAttribute("option");
+    const el = e.target;
+    const option = el.getAttribute("option");
 
     this.app.options[option] = parseInt(el.value, 10);
     localStorage.setItem("options", JSON.stringify(this.app.options));
@@ -105,8 +105,8 @@ OptionsWaiter.prototype.numberChange = function(e) {
  * @param {event} e
  */
 OptionsWaiter.prototype.selectChange = function(e) {
-    let el = e.target,
-        option = el.getAttribute("option");
+    const el = e.target;
+    const option = el.getAttribute("option");
 
     this.app.options[option] = el.value;
     localStorage.setItem("options", JSON.stringify(this.app.options));

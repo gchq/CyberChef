@@ -92,8 +92,8 @@ InputWaiter.prototype.inputChange = function(e) {
     this.app.progress = 0;
 
     // Update the input metadata info
-    let inputText = this.get(),
-        lines = inputText.count("\n") + 1;
+    const inputText = this.get();
+    const lines = inputText.count("\n") + 1;
 
     this.setInputInfo(inputText.length, lines);
 
@@ -149,13 +149,13 @@ InputWaiter.prototype.inputDrop = function(e) {
     e.stopPropagation();
     e.preventDefault();
 
-    let el = e.target,
-        file = e.dataTransfer.files[0],
-        text = e.dataTransfer.getData("Text"),
-        reader = new FileReader(),
-        inputCharcode = "",
-        offset = 0,
-        CHUNK_SIZE = 20480; // 20KB
+    const el = e.target;
+    const file = e.dataTransfer.files[0];
+    const text = e.dataTransfer.getData("Text");
+    const reader = new FileReader();
+    let inputCharcode = "";
+    let offset = 0;
+    const CHUNK_SIZE = 20480; // 20KB
 
     const setInput = function() {
         if (inputCharcode.length > 100000 && this.app.autoBake_) {

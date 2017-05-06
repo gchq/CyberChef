@@ -385,7 +385,7 @@ const StrUtils = {
     runOffsetChecker: function(input, args) {
         let sampleDelim = args[0],
             samples = input.split(sampleDelim),
-            outputs = [],
+            outputs = new Array(samples.length),
             i = 0,
             s = 0,
             match = false,
@@ -397,9 +397,7 @@ const StrUtils = {
         }
 
         // Initialise output strings
-        for (s = 0; s < samples.length; s++) {
-            outputs[s] = "";
-        }
+        outputs.fill("", 0, samples.length);
 
         // Loop through each character in the first sample
         for (i = 0; i < samples[0].length; i++) {
@@ -473,7 +471,7 @@ const StrUtils = {
             number = args[1];
 
         delimiter = Utils.charRep[delimiter];
-        let splitInput = input.split(delimiter);
+        const splitInput = input.split(delimiter);
 
         return splitInput
         .filter((line, lineIndex) => {
@@ -501,7 +499,7 @@ const StrUtils = {
             number = args[1];
 
         delimiter = Utils.charRep[delimiter];
-        let splitInput = input.split(delimiter);
+        const splitInput = input.split(delimiter);
 
         return splitInput
         .filter((line, lineIndex) => {

@@ -713,12 +713,8 @@ const IP = {
             ip2 = IP._strToIpv6(range[14]);
 
         let t = "",
-            total = new Array(128),
+            total = new Array(128).fill(),
             i;
-
-        // Initialise total array to "0"
-        for (i = 0; i < 128; i++)
-            total[i] = "0";
 
         for (i = 0; i < 8; i++) {
             t = (ip2[i] - ip1[i]).toString(2);
