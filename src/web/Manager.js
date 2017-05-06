@@ -261,15 +261,16 @@ Manager.prototype.addDynamicListener = function(selector, eventType, callback, s
  * @param {Event} e - The event to be handled
  */
 Manager.prototype.dynamicListenerHandler = function(e) {
-    let handlers = this.dynamicHandlers[e.type],
-        matches = e.target.matches ||
-            e.target.webkitMatchesSelector ||
-            e.target.mozMatchesSelector ||
-            e.target.msMatchesSelector ||
-            e.target.oMatchesSelector;
+    const { type, target } = e;
+    const handlers = this.dynamicHandlers[type];
+    const matches = target.matches ||
+            target.webkitMatchesSelector ||
+            target.mozMatchesSelector ||
+            target.msMatchesSelector ||
+            target.oMatchesSelector;
 
     for (let i = 0; i < handlers.length; i++) {
-        if (matches && e.target[matches.name](handlers[i].selector)) {
+        if (matches && matches.call(target, handlers[i].selector)) {
             handlers[i].callback(e);
         }
     }
