@@ -38,8 +38,8 @@ const FlowControl = {
      * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    runFork: function(state) {
-        var opList       = state.opList,
+    runFork: async function(state) {
+        let opList       = state.opList,
             inputType    = opList[state.progress].inputType,
             outputType   = opList[state.progress].outputType,
             input        = state.dish.get(inputType),
@@ -48,14 +48,15 @@ const FlowControl = {
             mergeDelim   = ings[1],
             ignoreErrors = ings[2],
             subOpList    = [],
-            inputs       = [];
+            inputs       = [],
+            i;
 
         if (input)
             inputs = input.split(splitDelim);
 
         // Create subOpList for each tranche to operate on
         // (all remaining operations unless we encounter a Merge)
-        for (var i = state.progress + 1; i < opList.length; i++) {
+        for (i = state.progress + 1; i < opList.length; i++) {
             if (opList[i].name === "Merge" && !opList[i].isDisabled()) {
                 break;
             } else {
@@ -63,7 +64,7 @@ const FlowControl = {
             }
         }
 
-        var recipe = new Recipe(),
+        let recipe = new Recipe(),
             output = "",
             progress = 0;
 
@@ -71,9 +72,9 @@ const FlowControl = {
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
-            var dish = new Dish(inputs[i], inputType);
+            const dish = new Dish(inputs[i], inputType);
             try {
-                progress = recipe.execute(dish, 0);
+                progress = await recipe.execute(dish, 0);
             } catch (err) {
                 if (!ignoreErrors) {
                     throw err;
@@ -127,7 +128,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runJump: function(state) {
-        var ings     = state.opList[state.progress].getIngValues(),
+        let ings     = state.opList[state.progress].getIngValues(),
             jumpNum  = ings[0],
             maxJumps = ings[1];
 
@@ -156,7 +157,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runCondJump: function(state) {
-        var ings     = state.opList[state.progress].getIngValues(),
+        let ings     = state.opList[state.progress].getIngValues(),
             dish     = state.dish,
             regexStr = ings[0],
             jumpNum  = ings[1],
@@ -190,6 +191,20 @@ const FlowControl = {
      */
     runReturn: function(state) {
         state.progress = state.opList.length;
+        return state;
+    },
+
+
+    /**
+     * Comment operation.
+     *
+     * @param {Object} state - The current state of the recipe.
+     * @param {number} state.progress - The current position in the recipe.
+     * @param {Dish} state.dish - The Dish being operated on.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
+     * @returns {Object} The updated state of the recipe.
+     */
+    runComment: function(state) {
         return state;
     },
 

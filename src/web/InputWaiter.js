@@ -12,7 +12,7 @@ import Utils from "../core/Utils.js";
  * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var InputWaiter = function(app, manager) {
+const InputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 
@@ -66,11 +66,11 @@ InputWaiter.prototype.set = function(input) {
  * @param {number} lines - The number of the lines in the current input string
  */
 InputWaiter.prototype.setInputInfo = function(length, lines) {
-    var width = length.toString().length;
+    let width = length.toString().length;
     width = width < 2 ? 2 : width;
 
-    var lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    var linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
 
     document.getElementById("input-info").innerHTML = "length: " + lengthStr + "<br>lines: " + linesStr;
 };
@@ -92,8 +92,8 @@ InputWaiter.prototype.inputChange = function(e) {
     this.app.progress = 0;
 
     // Update the input metadata info
-    var inputText = this.get(),
-        lines = inputText.count("\n") + 1;
+    const inputText = this.get();
+    const lines = inputText.count("\n") + 1;
 
     this.setInputInfo(inputText.length, lines);
 
@@ -149,22 +149,22 @@ InputWaiter.prototype.inputDrop = function(e) {
     e.stopPropagation();
     e.preventDefault();
 
-    var el = e.target,
-        file = e.dataTransfer.files[0],
-        text = e.dataTransfer.getData("Text"),
-        reader = new FileReader(),
-        inputCharcode = "",
-        offset = 0,
-        CHUNK_SIZE = 20480; // 20KB
+    const el = e.target;
+    const file = e.dataTransfer.files[0];
+    const text = e.dataTransfer.getData("Text");
+    const reader = new FileReader();
+    let inputCharcode = "";
+    let offset = 0;
+    const CHUNK_SIZE = 20480; // 20KB
 
-    var setInput = function() {
+    const setInput = function() {
         if (inputCharcode.length > 100000 && this.app.autoBake_) {
             this.manager.controls.setAutoBake(false);
             this.app.alert("Turned off Auto Bake as the input is large", "warning", 5000);
         }
 
         this.set(inputCharcode);
-        var recipeConfig = this.app.getRecipeConfig();
+        const recipeConfig = this.app.getRecipeConfig();
         if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
             recipeConfig.unshift({op:"From Hex", args:["Space"]});
             this.app.setRecipeConfig(recipeConfig);
@@ -173,18 +173,18 @@ InputWaiter.prototype.inputDrop = function(e) {
         el.classList.remove("loadingFile");
     }.bind(this);
 
-    var seek = function() {
+    const seek = function() {
         if (offset >= file.size) {
             setInput();
             return;
         }
         el.value = "Processing... " + Math.round(offset / file.size * 100) + "%";
-        var slice = file.slice(offset, offset + CHUNK_SIZE);
+        const slice = file.slice(offset, offset + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
     };
 
     reader.onload = function(e) {
-        var data = new Uint8Array(reader.result);
+        const data = new Uint8Array(reader.result);
         inputCharcode += Utils.toHexFast(data);
         offset += CHUNK_SIZE;
         seek();

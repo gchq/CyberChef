@@ -2,7 +2,10 @@
     "tags": {
         "allowUnknownTags": true
     },
-    "plugins": ["plugins/markdown"],
+    "plugins": [
+        "plugins/markdown",
+        "node_modules/jsdoc-babel"
+    ],
     "templates": {
         "systemName": "CyberChef",
         "footer": "",

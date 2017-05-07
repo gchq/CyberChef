@@ -13,7 +13,7 @@ import Sortable from "sortablejs";
  * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var OperationsWaiter = function(app, manager) {
+const OperationsWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 
@@ -29,7 +29,7 @@ var OperationsWaiter = function(app, manager) {
  * @param {event} e
  */
 OperationsWaiter.prototype.searchOperations = function(e) {
-    var ops, selected;
+    let ops, selected;
 
     if (e.type === "search") { // Search
         e.preventDefault();
@@ -68,9 +68,9 @@ OperationsWaiter.prototype.searchOperations = function(e) {
             ops[selected-1].classList.add("selected-op");
         }
     } else {
-        var searchResultsEl = document.getElementById("search-results"),
-            el = e.target,
-            str = el.value;
+        const searchResultsEl = document.getElementById("search-results");
+        const el = e.target;
+        const str = el.value;
 
         while (searchResultsEl.firstChild) {
             try {
@@ -81,12 +81,10 @@ OperationsWaiter.prototype.searchOperations = function(e) {
 
         $("#categories .in").collapse("hide");
         if (str) {
-            var matchedOps = this.filterOperations(str, true),
-                matchedOpsHtml = "";
-
-            for (var i = 0; i < matchedOps.length; i++) {
-                matchedOpsHtml += matchedOps[i].toStubHtml();
-            }
+            const matchedOps = this.filterOperations(str, true);
+            const matchedOpsHtml = matchedOps
+                .map(v => v.toStubHtml())
+                .join("");
 
             searchResultsEl.innerHTML = matchedOpsHtml;
             searchResultsEl.dispatchEvent(this.manager.oplistcreate);
@@ -103,19 +101,19 @@ OperationsWaiter.prototype.searchOperations = function(e) {
  *   name and description
  * @returns {string[]}
  */
-OperationsWaiter.prototype.filterOperations = function(searchStr, highlight) {
-    var matchedOps = [],
-        matchedDescs = [];
+OperationsWaiter.prototype.filterOperations = function(inStr, highlight) {
+    const matchedOps = [];
+    const matchedDescs = [];
 
-    searchStr = searchStr.toLowerCase();
+    const searchStr = inStr.toLowerCase();
 
-    for (var opName in this.app.operations) {
-        var op = this.app.operations[opName],
-            namePos = opName.toLowerCase().indexOf(searchStr),
-            descPos = op.description.toLowerCase().indexOf(searchStr);
+    for (const opName in this.app.operations) {
+        const op = this.app.operations[opName];
+        const namePos = opName.toLowerCase().indexOf(searchStr);
+        const descPos = op.description.toLowerCase().indexOf(searchStr);
 
         if (namePos >= 0 || descPos >= 0) {
-            var operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+            const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
             if (highlight) {
                 operation.highlightSearchString(searchStr, namePos, descPos);
             }
@@ -140,7 +138,7 @@ OperationsWaiter.prototype.filterOperations = function(searchStr, highlight) {
  * @returns {number}
  */
 OperationsWaiter.prototype.getSelectedOp = function(ops) {
-    for (var i = 0; i < ops.length; i++) {
+    for (let i = 0; i < ops.length; i++) {
         if (ops[i].classList.contains("selected-op")) {
             return i;
         }
@@ -168,7 +166,7 @@ OperationsWaiter.prototype.opListCreate = function(e) {
  * @param {event} e
  */
 OperationsWaiter.prototype.operationDblclick = function(e) {
-    var li = e.target;
+    const li = e.target;
 
     this.manager.recipe.addOperation(li.textContent);
     this.app.autoBake();
@@ -186,25 +184,25 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
     e.stopPropagation();
 
     // Add favourites to modal
-    var favCat = this.app.categories.filter(function(c) {
+    const favCat = this.app.categories.filter(function(c) {
         return c.name === "Favourites";
     })[0];
 
-    var html = "";
-    for (var i = 0; i < favCat.ops.length; i++) {
-        var opName = favCat.ops[i];
-        var operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+    let html = "";
+    for (let i = 0; i < favCat.ops.length; i++) {
+        const opName = favCat.ops[i];
+        const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         html += operation.toStubHtml(true);
     }
 
-    var editFavouritesList = document.getElementById("edit-favourites-list");
+    const editFavouritesList = document.getElementById("edit-favourites-list");
     editFavouritesList.innerHTML = html;
     this.removeIntent = false;
 
-    var editableList = Sortable.create(editFavouritesList, {
+    const editableList = Sortable.create(editFavouritesList, {
         filter: ".remove-icon",
         onFilter: function (evt) {
-            var el = editableList.closest(evt.item);
+            const el = editableList.closest(evt.item);
             if (el) {
                 $(el).popover("destroy");
                 el.parentNode.removeChild(el);
@@ -236,12 +234,8 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
  * Saves the selected favourites and reloads them.
  */
 OperationsWaiter.prototype.saveFavouritesClick = function() {
-    var favouritesList = [],
-        favs = document.querySelectorAll("#edit-favourites-list li");
-
-    for (var i = 0; i < favs.length; i++) {
-        favouritesList.push(favs[i].textContent);
-    }
+    const favs = document.querySelectorAll("#edit-favourites-list li");
+    const favouritesList = Array.from(favs, e => e.textContent);
 
     this.app.saveFavourites(favouritesList);
     this.app.loadFavourites();
@@ -266,7 +260,7 @@ OperationsWaiter.prototype.resetFavouritesClick = function() {
  * @param {event} e
  */
 OperationsWaiter.prototype.opIconMouseover = function(e) {
-    var opEl = e.target.parentNode;
+    const opEl = e.target.parentNode;
     if (e.target.getAttribute("data-toggle") === "popover") {
         $(opEl).popover("hide");
     }
@@ -281,8 +275,8 @@ OperationsWaiter.prototype.opIconMouseover = function(e) {
  * @param {event} e
  */
 OperationsWaiter.prototype.opIconMouseleave = function(e) {
-    var opEl = e.target.parentNode,
-        toEl = e.toElement || e.relatedElement;
+    const opEl = e.target.parentNode;
+    const toEl = e.toElement || e.relatedElement;
 
     if (e.target.getAttribute("data-toggle") === "popover" && toEl === opEl) {
         $(opEl).popover("show");

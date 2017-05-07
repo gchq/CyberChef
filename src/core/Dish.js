@@ -1,6 +1,5 @@
 import Utils from "./Utils.js";
 
-
 /**
  * The data being operated on by each operation.
  *
@@ -12,7 +11,7 @@ import Utils from "./Utils.js";
  * @param {byteArray|string|number} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
-var Dish = function(value, type) {
+const Dish = function(value, type) {
     this.value = value || typeof value == "string" ? value : null;
     this.type  = type || Dish.BYTE_ARRAY;
 };
@@ -105,7 +104,7 @@ Dish.prototype.set = function(value, type) {
     this.type  = type;
 
     if (!this.valid()) {
-        var sample = Utils.truncate(JSON.stringify(this.value), 13);
+        const sample = Utils.truncate(JSON.stringify(this.value), 13);
         throw "Data is not a valid " + Dish.enumLookup(type) + ": " + sample;
     }
 };
@@ -180,7 +179,7 @@ Dish.prototype.valid = function() {
             }
 
             // Check that every value is a number between 0 - 255
-            for (var i = 0; i < this.value.length; i++) {
+            for (let i = 0; i < this.value.length; i++) {
                 if (typeof this.value[i] != "number" ||
                     this.value[i] < 0 ||
                     this.value[i] > 255) {

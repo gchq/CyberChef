@@ -17,7 +17,7 @@ const OS = {
      * @returns {string}
      */
     runParseUnixPerms: function(input, args) {
-        var perms = {
+        let perms = {
                 d : false,  // directory
                 sl : false, // symbolic link
                 np : false, // named pipe
@@ -202,7 +202,7 @@ const OS = {
      * @returns {string}
      */
     _permsToStr: function(perms) {
-        var str = "",
+        let str = "",
             type = "-";
 
         if (perms.d) type = "d";
@@ -263,7 +263,7 @@ const OS = {
      * @returns {string}
      */
     _permsToOctal: function(perms) {
-        var d = 0,
+        let d = 0,
             u = 0,
             g = 0,
             o = 0;

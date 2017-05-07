@@ -31,14 +31,14 @@ const HTML = {
      * @returns {string}
      */
     runToEntity: function(input, args) {
-        var convertAll = args[0],
+        let convertAll = args[0],
             numeric = args[1] === "Numeric entities",
             hexa = args[1] === "Hex entities";
 
-        var charcodes = Utils.strToCharcode(input);
-        var output = "";
+        const charcodes = Utils.strToCharcode(input);
+        let output = "";
 
-        for (var i = 0; i < charcodes.length; i++) {
+        for (let i = 0; i < charcodes.length; i++) {
             if (convertAll && numeric) {
                 output += "&#" + charcodes[i] + ";";
             } else if (convertAll && hexa) {
@@ -77,7 +77,7 @@ const HTML = {
      * @returns {string}
      */
     runFromEntity: function(input, args) {
-        var regex = /&(#?x?[a-zA-Z0-9]{1,8});/g,
+        let regex = /&(#?x?[a-zA-Z0-9]{1,8});/g,
             output = "",
             m,
             i = 0;
@@ -88,16 +88,16 @@ const HTML = {
                 output += input[i++];
 
             // Add match
-            var bite = HTML._entityToByte[m[1]];
+            const bite = HTML._entityToByte[m[1]];
             if (bite) {
                 output += Utils.chr(bite);
             } else if (!bite && m[1][0] === "#" && m[1].length > 1 && /^#\d{1,5}$/.test(m[1])) {
                 // Numeric entity (e.g. &#10;)
-                var num = m[1].slice(1, m[1].length);
+                const num = m[1].slice(1, m[1].length);
                 output += Utils.chr(parseInt(num, 10));
             } else if (!bite && m[1][0] === "#" && m[1].length > 3 && /^#x[\dA-F]{2,8}$/i.test(m[1])) {
                 // Hex entity (e.g. &#x3A;)
-                var hex = m[1].slice(2, m[1].length);
+                const hex = m[1].slice(2, m[1].length);
                 output += Utils.chr(parseInt(hex, 16));
             } else {
                 // Not a valid entity, print as normal
@@ -134,7 +134,7 @@ const HTML = {
      * @returns {string}
      */
     runStripTags: function(input, args) {
-        var removeIndentation = args[0],
+        let removeIndentation = args[0],
             removeLineBreaks = args[1];
 
         input = Utils.stripHtmlTags(input);
@@ -160,7 +160,7 @@ const HTML = {
      * @returns {html}
      */
     runParseColourCode: function(input, args) {
-        var m = null,
+        let m = null,
             r = 0, g = 0, b = 0, a = 1;
 
         // Read in the input
@@ -177,7 +177,7 @@ const HTML = {
             a = m[4] ? parseFloat(m[4]) : 1;
         } else if ((m = input.match(/hsla?\((\d{1,3}(?:\.\d+)?),\s?(\d{1,3}(?:\.\d+)?)%,\s?(\d{1,3}(?:\.\d+)?)%(?:,\s?(\d(?:\.\d+)?))?\)/i))) {
             // HSL or HSLA - hsl(200, 65%, 91%) or hsla(200, 65%, 91%, 1)
-            var h_ = parseFloat(m[1]) / 360,
+            let h_ = parseFloat(m[1]) / 360,
                 s_ = parseFloat(m[2]) / 100,
                 l_ = parseFloat(m[3]) / 100,
                 rgb_ = HTML._hslToRgb(h_, s_, l_);
@@ -188,7 +188,7 @@ const HTML = {
             a = m[4] ? parseFloat(m[4]) : 1;
         } else if ((m = input.match(/cmyk\((\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?),\s?(\d(?:\.\d+)?)\)/i))) {
             // CMYK - cmyk(0.12, 0.04, 0.00, 0.03)
-            var c_ = parseFloat(m[1]),
+            let c_ = parseFloat(m[1]),
                 m_ = parseFloat(m[2]),
                 y_ = parseFloat(m[3]),
                 k_ = parseFloat(m[4]);
@@ -198,21 +198,22 @@ const HTML = {
             b = Math.round(255 * (1 - y_) * (1 - k_));
         }
 
-        var hsl_ = HTML._rgbToHsl(r, g, b),
+        let hsl_ = HTML._rgbToHsl(r, g, b),
             h = Math.round(hsl_[0] * 360),
             s = Math.round(hsl_[1] * 100),
             l = Math.round(hsl_[2] * 100),
             k = 1 - Math.max(r/255, g/255, b/255),
             c = (1 - r/255 - k) / (1 - k),
-            m = (1 - g/255 - k) / (1 - k), // eslint-disable-line no-redeclare
             y = (1 - b/255 - k) / (1 - k);
+
+        m = (1 - g/255 - k) / (1 - k);
 
         c = isNaN(c) ? "0" : c.toFixed(2);
         m = isNaN(m) ? "0" : m.toFixed(2);
         y = isNaN(y) ? "0" : y.toFixed(2);
         k = k.toFixed(2);
 
-        var hex = "#" +
+        let hex = "#" +
                 Utils.padLeft(Math.round(r).toString(16), 2) +
                 Utils.padLeft(Math.round(g).toString(16), 2) +
                 Utils.padLeft(Math.round(b).toString(16), 2),
@@ -261,12 +262,12 @@ const HTML = {
      * @return {Array} The RGB representation
      */
     _hslToRgb: function(h, s, l){
-        var r, g, b;
+        let r, g, b;
 
         if (s === 0){
             r = g = b = l; // achromatic
         } else {
-            var hue2rgb = function hue2rgb(p, q, t) {
+            const hue2rgb = function hue2rgb(p, q, t) {
                 if (t < 0) t += 1;
                 if (t > 1) t -= 1;
                 if (t < 1/6) return p + (q - p) * 6 * t;
@@ -275,8 +276,8 @@ const HTML = {
                 return p;
             };
 
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
             r = hue2rgb(p, q, h + 1/3);
             g = hue2rgb(p, q, h);
             b = hue2rgb(p, q, h - 1/3);
@@ -302,14 +303,14 @@ const HTML = {
      */
     _rgbToHsl: function(r, g, b) {
         r /= 255; g /= 255; b /= 255;
-        var max = Math.max(r, g, b),
+        let max = Math.max(r, g, b),
             min = Math.min(r, g, b),
             h, s, l = (max + min) / 2;
 
         if (max === min) {
             h = s = 0; // achromatic
         } else {
-            var d = max - min;
+            const d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
             switch (max) {
                 case r: h = (g - b) / d + (g < b ? 6 : 0); break;

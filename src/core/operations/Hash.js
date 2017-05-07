@@ -144,7 +144,7 @@ const Hash = {
      */
     runSHA3: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input);
-        var sha3Length = args[0],
+        let sha3Length = args[0],
             options = {
                 outputLength: parseInt(sha3Length, 10)
             };
@@ -179,9 +179,9 @@ const Hash = {
      * @returns {string}
      */
     runHMAC: function (input, args) {
-        var hashFunc = args[1];
+        const hashFunc = args[1];
         input = CryptoJS.enc.Latin1.parse(input);
-        var execute = {
+        const execute = {
             "MD5": CryptoJS.HmacMD5(input, args[0]),
             "SHA1": CryptoJS.HmacSHA1(input, args[0]),
             "SHA224": CryptoJS.HmacSHA224(input, args[0]),
@@ -203,7 +203,7 @@ const Hash = {
      * @returns {string}
      */
     runAll: function (input, args) {
-        var byteArray = Utils.strToByteArray(input),
+        let byteArray = Utils.strToByteArray(input),
             output = "MD2:         " + Hash.runMD2(input, []) +
                 "\nMD4:         " + Hash.runMD4(input, []) +
                 "\nMD5:         " + Hash.runMD5(input, []) +
@@ -240,7 +240,7 @@ const Hash = {
     runAnalyse: function(input, args) {
         input = input.replace(/\s/g, "");
 
-        var output = "",
+        let output = "",
             byteLength = input.length / 2,
             bitLength = byteLength * 8,
             possibleHashFunctions = [];

@@ -38,17 +38,17 @@ import Chef from "../src/core/Chef.js";
     TestRegister.prototype.runTests = function() {
         return Promise.all(
             this.tests.map(function(test, i) {
-                var chef = new Chef();
+                const chef = new Chef();
 
-                return Promise.resolve(chef.bake(
+                return chef.bake(
                     test.input,
                     test.recipeConfig,
                     {},
                     0,
                     false
-                ))
+                )
                 .then(function(result) {
-                    var ret = {
+                    const ret = {
                         test: test,
                         status: null,
                         output: null,

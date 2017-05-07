@@ -40,7 +40,7 @@ const QuotedPrintable = {
      * @returns {string}
      */
     runTo: function (input, args) {
-        var mimeEncodedStr = QuotedPrintable.mimeEncode(input);
+        let mimeEncodedStr = QuotedPrintable.mimeEncode(input);
 
         // fix line breaks
         mimeEncodedStr = mimeEncodedStr.replace(/\r?\n|\r/g, function() {
@@ -61,7 +61,7 @@ const QuotedPrintable = {
      * @returns {byteArray}
      */
     runFrom: function (input, args) {
-        var str = input.replace(/\=(?:\r?\n|$)/g, "");
+        const str = input.replace(/\=(?:\r?\n|$)/g, "");
         return QuotedPrintable.mimeDecode(str);
     },
 
@@ -73,13 +73,13 @@ const QuotedPrintable = {
      * @returns {byteArray}
      */
     mimeDecode: function(str) {
-        var encodedBytesCount = (str.match(/\=[\da-fA-F]{2}/g) || []).length,
+        let encodedBytesCount = (str.match(/\=[\da-fA-F]{2}/g) || []).length,
             bufferLength = str.length - encodedBytesCount * 2,
             chr, hex,
             buffer = new Array(bufferLength),
             bufferPos = 0;
 
-        for (var i = 0, len = str.length; i < len; i++) {
+        for (let i = 0, len = str.length; i < len; i++) {
             chr = str.charAt(i);
             if (chr === "=" && (hex = str.substr(i + 1, 2)) && /[\da-fA-F]{2}/.test(hex)) {
                 buffer[bufferPos++] = parseInt(hex, 16);
@@ -100,7 +100,7 @@ const QuotedPrintable = {
      * @returns {string}
      */
     mimeEncode: function(buffer) {
-        var ranges = [
+        let ranges = [
                 [0x09],
                 [0x0A],
                 [0x0D],
@@ -113,7 +113,7 @@ const QuotedPrintable = {
             ],
             result = "";
 
-        for (var i = 0, len = buffer.length; i < len; i++) {
+        for (let i = 0, len = buffer.length; i < len; i++) {
             if (this._checkRanges(buffer[i], ranges)) {
                 result += String.fromCharCode(buffer[i]);
                 continue;
@@ -134,7 +134,7 @@ const QuotedPrintable = {
      * @returns {bolean}
      */
     _checkRanges: function(nr, ranges) {
-        for (var i = ranges.length - 1; i >= 0; i--) {
+        for (let i = ranges.length - 1; i >= 0; i--) {
             if (!ranges[i].length)
                 continue;
             if (ranges[i].length === 1 && nr === ranges[i][0])
@@ -157,7 +157,7 @@ const QuotedPrintable = {
      * @returns {string}
      */
     _addSoftLinebreaks: function(str, encoding) {
-        var lineLengthMax = 76;
+        const lineLengthMax = 76;
 
         encoding = (encoding || "base64").toString().toLowerCase().trim();
 
@@ -192,7 +192,7 @@ const QuotedPrintable = {
      * @returns {string}
      */
     _addQPSoftLinebreaks: function(mimeEncodedStr, lineLengthMax) {
-        var pos = 0,
+        let pos = 0,
             len = mimeEncodedStr.length,
             match, code, line,
             lineMargin = Math.floor(lineLengthMax / 3),
