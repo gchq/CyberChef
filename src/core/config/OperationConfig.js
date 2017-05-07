@@ -3249,6 +3249,44 @@ const OperationConfig = {
             },
         ]
     },
+    "To EBCDIC": {
+        description: [
+            "This operation converts ASCII text to EBCDIC.",
+            "<br>",
+            "You can choose between a few versions of EBCDIC.",
+            "<br>",
+            "EBCDIC is a proprietary encoding pre-dating ASCII that originated at IBM.",
+        ].join("\n"),
+        run: CharEnc.runToEBCDIC,
+        inputType: "string",
+        outputType: "byteArray",
+        args: [
+            {
+                name: "EBCDIC version",
+                type: "option",
+                value: Object.keys(CharEnc.EBCDIC_CODEPAGES_MAPPING),
+            },
+        ]
+    },
+    "From EBCDIC": {
+        description: [
+            "This operation converts ASCII text from EBCDIC.",
+            "<br>",
+            "You can choose between a few versions of EBCDIC.",
+            "<br>",
+            "EBCDIC is a proprietary encoding pre-dating ASCII that originated at IBM.",
+        ].join("\n"),
+        run: CharEnc.runFromEBCDIC,
+        inputType: "byteArray",
+        outputType: "string",
+        args: [
+            {
+                name: "EBCDIC version",
+                type: "option",
+                value: Object.keys(CharEnc.EBCDIC_CODEPAGES_MAPPING),
+            },
+        ]
+    },
 };
 
 export default OperationConfig;

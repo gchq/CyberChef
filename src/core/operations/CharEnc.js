@@ -1,3 +1,4 @@
+import cptable from "../lib/codepage.js";
 import Utils from "../Utils.js";
 import CryptoJS from "crypto-js";
 
@@ -43,6 +44,52 @@ const CharEnc = {
         } else {
             return Utils.format[outputFormat].stringify(input);
         }
+    },
+
+    /**
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @constant
+     * @default
+     */
+    EBCDIC_CODEPAGES_MAPPING: {
+        "IBM EBCDIC International": 500,
+        "IBM EBCDIC US-Canada": 37,
+    },
+
+    /**
+     * To EBCDIC operation.
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    runToEBCDIC: function(input, args) {
+        let pageNum = CharEnc.EBCDIC_CODEPAGES_MAPPING[args[0]];
+
+        let output = cptable.utils.encode(pageNum, input);
+
+        return Array.from(output);
+    },
+
+    /**
+     * From EBCDIC operation.
+     *
+     * @author tlwr [toby@toby.codes]
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runFromEBCDIC: function(input, args) {
+        let pageNum = CharEnc.EBCDIC_CODEPAGES_MAPPING[args[0]];
+
+        let output = cptable.utils.decode(pageNum, input);
+
+        return output;
     },
 
 };
