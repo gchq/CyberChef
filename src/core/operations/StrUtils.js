@@ -592,7 +592,6 @@ const StrUtils = {
 
         return output;
     },
-
 };
 
 export default StrUtils;

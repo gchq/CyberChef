@@ -3250,6 +3250,69 @@ const OperationConfig = {
             },
         ]
     },
+    "To Snake case": {
+        description: [
+            "Converts the input string to snake case.",
+            "<br><br>",
+            "Snake case is all lower case with underscores as word boundaries.",
+            "<br><br>",
+            "e.g. this_is_snake_case",
+            "<br><br>",
+            "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
+        ].join("\n"),
+        run: Code.runToSnakeCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
+    "To Camel case": {
+        description: [
+            "Converts the input string to camel case.",
+            "<br><br>",
+            "Camel case is all lower case except letters after word boundaries which are uppercase.",
+            "<br><br>",
+            "e.g. thisIsCamelCase",
+            "<br><br>",
+            "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
+        ].join("\n"),
+        run: Code.runToCamelCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
+    "To Kebab case": {
+        description: [
+            "Converts the input string to kebab case.",
+            "<br><br>",
+            "Kebab case is all lower case with dashes as word boundaries.",
+            "<br><br>",
+            "e.g. this-is-kebab-case",
+            "<br><br>",
+            "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
+        ].join("\n"),
+        run: Code.runToKebabCase,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
     "Extract EXIF": {
         description: [
         ].join("\n"),
@@ -3257,7 +3320,7 @@ const OperationConfig = {
         inputType: "byteArray",
         outputType: "string",
         args: [
-        ]
+        ],
     },
 };
 

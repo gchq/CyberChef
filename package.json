@@ -73,6 +73,7 @@
     "jquery": "^3.1.1",
     "jsbn": "^1.1.0",
     "jsrsasign": "^7.1.0",
+    "lodash": "^4.17.4",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "sladex-blowfish": "^0.8.1",
