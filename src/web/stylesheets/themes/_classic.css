@@ -27,6 +27,7 @@
 
     --title-colour: #424242;
     --title-weight: bold;
+    --title-background-colour: #eee;
 
     --banner-font-colour: #468847;
     --banner-bg-colour: #dff0d8;
@@ -44,10 +45,6 @@
     --selected-operation-font-color: #c09853;
     --selected-operation-bg-colour: #fcf8e3;
     --selected-operation-border-colour: #fbeed5;
-
-    --breakpoint-font-colour: #b94a48;
-    --breakpoint-bg-colour: #f2dede;
-    --breakpoint-border-colour: #eed3d7;
 
     --breakpoint-font-colour: #b94a48;
     --breakpoint-bg-colour: #f2dede;

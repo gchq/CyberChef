@@ -66,8 +66,8 @@ body {
 }
 
 /* Highlighters */
-.hl1, { background-color: var(--hl1); }
-.hl2, { background-color: var(--hl2); }
-.hl3, { background-color: var(--hl3); } /* Half-Life 3 confirmed :O */
-.hl4, { background-color: var(--hl4); }
-.hl5, { background-color: var(--hl5); }
+.hl1 { background-color: var(--hl1); }
+.hl2 { background-color: var(--hl2); }
+.hl3 { background-color: var(--hl3); } /* Half-Life 3 confirmed :O */
+.hl4 { background-color: var(--hl4); }
+.hl5 { background-color: var(--hl5); }

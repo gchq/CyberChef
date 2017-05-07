@@ -61,6 +61,10 @@ a:focus {
     border-radius: 0 !important;
 }
 
+.btn.dropdown-toggle {
+    height: 34px;
+}
+
 input[type="search"] {
     -webkit-appearance: searchfield;
     box-shadow: none;

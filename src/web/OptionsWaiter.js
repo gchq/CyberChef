@@ -137,7 +137,7 @@ OptionsWaiter.prototype.setWordWrap = function() {
  * Changes the theme by setting the class of the <html> element.
  */
 OptionsWaiter.prototype.themeChange = function (e) {
-    var themeClass = e.target.value;
+    const themeClass = e.target.value;
 
     document.querySelector(":root").className = themeClass;
 };

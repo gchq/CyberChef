@@ -16,6 +16,7 @@
     border-radius: 0;
     border: none;
     border-bottom: 1px solid var(--primary-border-colour);
+    color: var(--primary-font-colour);
 }
 
 #edit-favourites {

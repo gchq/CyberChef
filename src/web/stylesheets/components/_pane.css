@@ -16,7 +16,7 @@
     border-bottom: 1px solid var(--primary-border-colour);
     font-weight: var(--title-weight);
     color: var(--title-colour);
-    background-color: var(--secondary-background-colour);
+    background-color: var(--title-background-colour);
 }
 
 .list-area {

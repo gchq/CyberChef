@@ -921,7 +921,6 @@ const OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-
             },
             {
                 name: "Salt",
@@ -968,7 +967,6 @@ const OperationConfig = {
                 type: "toggleString",
                 value: "",
                 toggleValues: Cipher.IO_FORMAT1
-
             },
             {
                 name: "Salt",
