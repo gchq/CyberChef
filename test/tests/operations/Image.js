@@ -15,10 +15,6 @@ TestRegister.addTests([
         expectedOutput: "Found 0 tags.\n",
         recipeConfig: [
             {
-                op: "From Hex",
-                args: ["Space"]
-            },
-            {
                 op: "Extract EXIF",
                 args: [],
             },
@@ -29,10 +25,6 @@ TestRegister.addTests([
         input: "hello world",
         expectedError: true,
         recipeConfig: [
-            {
-                op: "From Hex",
-                args: ["Space"]
-            },
             {
                 op: "Extract EXIF",
                 args: [],
@@ -77,7 +69,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["None"]
             },
             {
                 op: "Extract EXIF",
@@ -92,7 +84,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["None"]
             },
             {
                 op: "Extract EXIF",
