@@ -118,7 +118,7 @@ const QuotedPrintable = {
                 result += String.fromCharCode(buffer[i]);
                 continue;
             }
-            result += "=" + (buffer[i] < 0x10 ? "0" : "") + buffer[i].toString(16).toUpperCase();
+            result += `=${buffer[i] < 0x10 ? "0" : ""}${buffer[i].toString(16).toUpperCase()}`;
         }
 
         return result;
@@ -179,7 +179,7 @@ const QuotedPrintable = {
      */
     _addBase64SoftLinebreaks: function(base64EncodedStr, lineLengthMax) {
         base64EncodedStr = (base64EncodedStr || "").toString().trim();
-        return base64EncodedStr.replace(new RegExp(".{" + lineLengthMax + "}", "g"), "$&\r\n").trim();
+        return base64EncodedStr.replace(new RegExp(`.{${lineLengthMax}}`, "g"), "$&\r\n").trim();
     },
 
 

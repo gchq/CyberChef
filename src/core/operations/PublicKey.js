@@ -80,7 +80,7 @@ const PublicKey = {
             });
             pkFields.push({
                 key: "Length",
-                value: (((new r.BigInteger(pk.pubKeyHex, 16)).bitLength()-3) /2) + " bits"
+                value: `${((new r.BigInteger(pk.pubKeyHex, 16)).bitLength()-3) /2} bits`
             });
             pkFields.push({
                 key: "pub",
@@ -106,7 +106,7 @@ const PublicKey = {
         } else if (pk.e) { // RSA
             pkFields.push({
                 key: "Length",
-                value: pk.n.bitLength() + " bits"
+                value: `${pk.n.bitLength()} bits`
             });
             pkFields.push({
                 key: "Modulus",
@@ -114,7 +114,7 @@ const PublicKey = {
             });
             pkFields.push({
                 key: "Exponent",
-                value: pk.e + " (0x" + pk.e.toString(16) + ")"
+                value: `${pk.e} (0x${pk.e.toString(16)})`
             });
         } else {
             pkFields.push({
@@ -132,20 +132,20 @@ const PublicKey = {
         }
 
         if (breakoutSig) { // DSA or ECDSA
-            sigStr = "  r:              " + PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [0]), 16, 18) + "\n" +
-                "  s:              " + PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [1]), 16, 18) + "\n";
+            sigStr = `  r:              ${PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [0]), 16, 18)}\n` +
+                `  s:              ${PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [1]), 16, 18)}\n`;
         } else { // RSA or unknown
-            sigStr = "  Signature:      " + PublicKey._formatByteStr(certSig, 16, 18) + "\n";
+            sigStr = `  Signature:      ${PublicKey._formatByteStr(certSig, 16, 18)}\n`;
         }
 
         // Format Public Key fields
         for (let i = 0; i < pkFields.length; i++) {
-            pkStr += "  " + pkFields[i].key + ":" +
+            pkStr += `  ${pkFields[i].key}:${
                 Utils.padLeft(
-                    pkFields[i].value + "\n",
+                    `${pkFields[i].value}\n`,
                     18 - (pkFields[i].key.length + 3) + pkFields[i].value.length + 1,
                     " "
-                );
+                )}`;
         }
 
         let issuerStr = PublicKey._formatDnStr(issuer, 2),
@@ -153,24 +153,24 @@ const PublicKey = {
             naDate = PublicKey._formatDate(notAfter),
             subjectStr = PublicKey._formatDnStr(subject, 2);
 
-        const output = "Version:          " + (parseInt(version, 16) + 1) + " (0x" + version + ")\n" +
-            "Serial number:    " + new r.BigInteger(sn, 16).toString() + " (0x" + sn + ")\n" +
-            "Algorithm ID:     " + algorithm + "\n" +
+        const output = `Version:          ${parseInt(version, 16) + 1} (0x${version})\n` +
+            `Serial number:    ${new r.BigInteger(sn, 16).toString()} (0x${sn})\n` +
+            `Algorithm ID:     ${algorithm}\n` +
             "Validity\n" +
-            "  Not Before:     " + nbDate + " (dd-mm-yy hh:mm:ss) (" + notBefore + ")\n" +
-            "  Not After:      " + naDate + " (dd-mm-yy hh:mm:ss) (" + notAfter + ")\n" +
-            "Issuer\n" +
-            issuerStr +
-            "Subject\n" +
-            subjectStr +
-            "Public Key\n" +
-            "  Algorithm:      " + pkAlgorithm + "\n" +
-            pkStr +
-            "Certificate Signature\n" +
-            "  Algorithm:      " + certSigAlg + "\n" +
-            sigStr +
-            "\nExtensions (parsed ASN.1)\n" +
-            extensions;
+            `  Not Before:     ${nbDate} (dd-mm-yy hh:mm:ss) (${notBefore})\n` +
+            `  Not After:      ${naDate} (dd-mm-yy hh:mm:ss) (${notAfter})\n` +
+            `Issuer\n${
+            issuerStr
+            }Subject\n${
+            subjectStr
+            }Public Key\n` +
+            `  Algorithm:      ${pkAlgorithm}\n${
+            pkStr
+            }Certificate Signature\n` +
+            `  Algorithm:      ${certSigAlg}\n${
+            sigStr
+            }\nExtensions (parsed ASN.1)\n${
+            extensions}`;
 
         return output;
     },
@@ -186,11 +186,11 @@ const PublicKey = {
     runPemToHex: function(input, args) {
         if (input.indexOf("-----BEGIN") < 0) {
             // Add header so that the KEYUTIL function works
-            input = "-----BEGIN CERTIFICATE-----" + input;
+            input = `-----BEGIN CERTIFICATE-----${input}`;
         }
         if (input.indexOf("-----END") < 0) {
             // Add footer so that the KEYUTIL function works
-            input = input + "-----END CERTIFICATE-----";
+            input = `${input}-----END CERTIFICATE-----`;
         }
         return r.KEYUTIL.getHexFromPEM(input);
     },
@@ -290,7 +290,7 @@ const PublicKey = {
 
             key = fields[i].split("=")[0];
             value = fields[i].split("=")[1];
-            str = Utils.padRight(key, maxKeyLen) + " = " + value + "\n";
+            str = `${Utils.padRight(key, maxKeyLen)} = ${value}\n`;
 
             output += Utils.padLeft(str, indent + str.length, " ");
         }
@@ -314,7 +314,7 @@ const PublicKey = {
         let output = "";
 
         for (let i = 0; i < byteStr.length; i += length) {
-            const str = byteStr.slice(i, i + length) + "\n";
+            const str = `${byteStr.slice(i, i + length)}\n`;
             if (i === 0) {
                 output += str;
             } else {
@@ -334,12 +334,12 @@ const PublicKey = {
      * @returns {string}
      */
     _formatDate: function(dateStr) {
-        return dateStr[4] + dateStr[5] + "/" +
-            dateStr[2] + dateStr[3] + "/" +
-            dateStr[0] + dateStr[1] + " " +
-            dateStr[6] + dateStr[7] + ":" +
-            dateStr[8] + dateStr[9] + ":" +
-            dateStr[10] + dateStr[11];
+        return `${dateStr[4] + dateStr[5]}/${
+            dateStr[2]}${dateStr[3]}/${
+            dateStr[0]}${dateStr[1]} ${
+            dateStr[6]}${dateStr[7]}:${
+            dateStr[8]}${dateStr[9]}:${
+            dateStr[10]}${dateStr[11]}`;
     },
 
 };
@@ -359,7 +359,7 @@ r.X509.hex2dn = function(hDN) {
     const a = r.ASN1HEX.getPosArrayOfChildren_AtObj(hDN, 0);
     for (let i = 0; i < a.length; i++) {
         const hRDN = r.ASN1HEX.getHexOfTLV_AtObj(hDN, a[i]);
-        s = s + ",/|" + r.X509.hex2rdn(hRDN);
+        s = `${s},/|${r.X509.hex2rdn(hRDN)}`;
     }
     return s;
 };

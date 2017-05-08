@@ -158,12 +158,12 @@ const OS = {
             return "Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.";
         }
 
-        output += "Textual representation: " + OS._permsToStr(perms);
-        output += "\nOctal representation:   " + OS._permsToOctal(perms);
+        output += `Textual representation: ${OS._permsToStr(perms)}`;
+        output += `\nOctal representation:   ${OS._permsToOctal(perms)}`;
 
         // File type
         if (textual) {
-            output += "\nFile type: " + OS._ftFromPerms(perms);
+            output += `\nFile type: ${OS._ftFromPerms(perms)}`;
         }
 
         // setuid, setgid
@@ -180,14 +180,14 @@ const OS = {
         }
 
         // Permission matrix
-        output += "\n\n +---------+-------+-------+-------+\n" +
+        output += `${"\n\n +---------+-------+-------+-------+\n" +
             " |         | User  | Group | Other |\n" +
             " +---------+-------+-------+-------+\n" +
-            " |    Read |   " + (perms.ru ? "X" : " ") + "   |   " + (perms.rg ? "X" : " ") + "   |   " + (perms.ro ? "X" : " ") + "   |\n" +
+            " |    Read |   "}${perms.ru ? "X" : " "}   |   ${perms.rg ? "X" : " "}   |   ${perms.ro ? "X" : " "}   |\n` +
             " +---------+-------+-------+-------+\n" +
-            " |   Write |   " + (perms.wu ? "X" : " ") + "   |   " + (perms.wg ? "X" : " ") + "   |   " + (perms.wo ? "X" : " ") + "   |\n" +
+            ` |   Write |   ${perms.wu ? "X" : " "}   |   ${perms.wg ? "X" : " "}   |   ${perms.wo ? "X" : " "}   |\n` +
             " +---------+-------+-------+-------+\n" +
-            " | Execute |   " + (perms.eu ? "X" : " ") + "   |   " + (perms.eg ? "X" : " ") + "   |   " + (perms.eo ? "X" : " ") + "   |\n" +
+            ` | Execute |   ${perms.eu ? "X" : " "}   |   ${perms.eg ? "X" : " "}   |   ${perms.eo ? "X" : " "}   |\n` +
             " +---------+-------+-------+-------+\n";
 
         return output;

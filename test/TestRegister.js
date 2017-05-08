@@ -71,9 +71,9 @@ import Chef from "../src/core/Chef.js";
                             ret.status = "failing";
                             ret.output = [
                                 "Expected",
-                                "\t" + test.expectedOutput.replace(/\n/g, "\n\t"),
+                                `\t${test.expectedOutput.replace(/\n/g, "\n\t")}`,
                                 "Received",
-                                "\t" + result.result.replace(/\n/g, "\n\t"),
+                                `\t${result.result.replace(/\n/g, "\n\t")}`,
                             ].join("\n");
                         }
                     }

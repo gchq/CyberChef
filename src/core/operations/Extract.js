@@ -29,11 +29,11 @@ const Extract = {
             if (removeRegex && removeRegex.test(match[0]))
                 continue;
             total++;
-            output += match[0] + "\n";
+            output += `${match[0]}\n`;
         }
 
         if (includeTotal)
-            output = "Total found: " + total + "\n\n" + output;
+            output = `Total found: ${total}\n\n${output}`;
 
         return output;
     },
@@ -61,7 +61,7 @@ const Extract = {
         let minLen = args[0] || Extract.MIN_STRING_LEN,
             displayTotal = args[1],
             strings = "[A-Z\\d/\\-:.,_$%'\"()<>= !\\[\\]{}@]",
-            regex = new RegExp(strings + "{" + minLen + ",}", "ig");
+            regex = new RegExp(`${strings}{${minLen},}`, "ig");
 
         return Extract._search(input, regex, null, displayTotal);
     },
@@ -100,7 +100,7 @@ const Extract = {
             ips  = "";
 
         if (includeIpv4 && includeIpv6) {
-            ips = ipv4 + "|" + ipv6;
+            ips = `${ipv4}|${ipv6}`;
         } else if (includeIpv4) {
             ips = ipv4;
         } else if (includeIpv6) {
@@ -115,8 +115,8 @@ const Extract = {
                     oneninetwo = "192\\.168\\..+",
                     oneseventwo = "172\\.(?:1[6-9]|2\\d|3[01])\\..+",
                     onetwoseven = "127\\..+",
-                    removeRegex = new RegExp("^(?:" + ten + "|" + oneninetwo +
-                        "|" + oneseventwo + "|" + onetwoseven + ")");
+                    removeRegex = new RegExp(`^(?:${ten}|${oneninetwo
+                        }|${oneseventwo}|${onetwoseven})`);
 
                 return Extract._search(input, regex, removeRegex, displayTotal);
             } else {
@@ -173,8 +173,8 @@ const Extract = {
             path = "/[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]*";
 
         path += "(?:[.!,?]+[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]+)*";
-        const regex = new RegExp(protocol + hostname + "(?:" + port +
-            ")?(?:" + path + ")?", "ig");
+        const regex = new RegExp(`${protocol + hostname}(?:${port
+            })?(?:${path})?`, "ig");
         return Extract._search(input, regex, null, displayTotal);
     },
 
@@ -191,7 +191,7 @@ const Extract = {
             protocol = "https?://",
             hostname = "[-\\w\\.]+",
             tld = "\\.(?:com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+",
-            regex = new RegExp("(?:" + protocol + ")?" + hostname + tld, "ig");
+            regex = new RegExp(`(?:${protocol})?${hostname}${tld}`, "ig");
 
         return Extract._search(input, regex, null, displayTotal);
     },
@@ -222,13 +222,13 @@ const Extract = {
             winDrive = "[A-Z]:\\\\",
             winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)]{0,61}",
             winExt = "[A-Z\\d]{1,6}",
-            winPath = winDrive + "(?:" + winName + "\\\\?)*" + winName +
-                "(?:\\." + winExt + ")?",
+            winPath = `${winDrive}(?:${winName}\\\\?)*${winName
+                }(?:\\.${winExt})?`,
             unixPath = "(?:/[A-Z\\d.][A-Z\\d\\-.]{0,61})+",
             filePaths = "";
 
         if (includeWinPath && includeUnixPath) {
-            filePaths = winPath + "|" + unixPath;
+            filePaths = `${winPath}|${unixPath}`;
         } else if (includeWinPath) {
             filePaths = winPath;
         } else if (includeUnixPath) {
@@ -256,7 +256,7 @@ const Extract = {
             date1 = "(?:19|20)\\d\\d[- /.](?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])", // yyyy-mm-dd
             date2 = "(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\\d\\d", // dd/mm/yyyy
             date3 = "(?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])[- /.](?:19|20)\\d\\d", // mm/dd/yyyy
-            regex = new RegExp(date1 + "|" + date2 + "|" + date3, "ig");
+            regex = new RegExp(`${date1}|${date2}|${date3}`, "ig");
 
         return Extract._search(input, regex, null, displayTotal);
     },

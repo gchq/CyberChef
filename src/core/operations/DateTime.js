@@ -30,16 +30,16 @@ const DateTime = {
 
         if (units === "Seconds (s)") {
             d = moment.unix(input);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
+            return `${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC`;
         } else if (units === "Milliseconds (ms)") {
             d = moment(input);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+            return `${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS")} UTC`;
         } else if (units === "Microseconds (μs)") {
             d = moment(input / 1000);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+            return `${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS")} UTC`;
         } else if (units === "Nanoseconds (ns)") {
             d = moment(input / 1000000);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+            return `${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS")} UTC`;
         } else {
             throw "Unrecognised unit";
         }
@@ -139,7 +139,7 @@ const DateTime = {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch (err) {
-            return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
+            return `Invalid format.\n\n${DateTime.FORMAT_EXAMPLES}`;
         }
 
         return date.tz(outputTimezone).format(outputFormat);
@@ -163,20 +163,20 @@ const DateTime = {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch (err) {
-            return "Invalid format.\n\n" + DateTime.FORMAT_EXAMPLES;
+            return `Invalid format.\n\n${DateTime.FORMAT_EXAMPLES}`;
         }
 
-        output += "Date: " + date.format("dddd Do MMMM YYYY") +
-            "\nTime: " + date.format("HH:mm:ss") +
-            "\nPeriod: " + date.format("A") +
-            "\nTimezone: " + date.format("z") +
-            "\nUTC offset: " + date.format("ZZ") +
-            "\n\nDaylight Saving Time: " + date.isDST() +
-            "\nLeap year: " + date.isLeapYear() +
-            "\nDays in this month: " + date.daysInMonth() +
-            "\n\nDay of year: " + date.dayOfYear() +
-            "\nWeek number: " + date.weekYear() +
-            "\nQuarter: " + date.quarter();
+        output += `Date: ${date.format("dddd Do MMMM YYYY")
+            }\nTime: ${date.format("HH:mm:ss")
+            }\nPeriod: ${date.format("A")
+            }\nTimezone: ${date.format("z")
+            }\nUTC offset: ${date.format("ZZ")
+            }\n\nDaylight Saving Time: ${date.isDST()
+            }\nLeap year: ${date.isLeapYear()
+            }\nDays in this month: ${date.daysInMonth()
+            }\n\nDay of year: ${date.dayOfYear()
+            }\nWeek number: ${date.weekYear()
+            }\nQuarter: ${date.quarter()}`;
 
         return output;
     },

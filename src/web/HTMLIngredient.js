@@ -22,7 +22,7 @@ const HTMLIngredient = function(config, app, manager) {
     this.placeholder = config.placeholder || false;
     this.target = config.target;
     this.toggleValues = config.toggleValues;
-    this.id = "ing-" + this.app.nextIngId();
+    this.id = `ing-${this.app.nextIngId()}`;
 };
 
 
@@ -40,107 +40,107 @@ HTMLIngredient.prototype.toHtml = function() {
         html = inline ? "" : "<div class='clearfix'>&nbsp;</div>",
         i, m;
 
-    html += "<div class='arg-group" + (inline ? " inline-args" : "") +
-        (this.type === "text" ? " arg-group-text" : "") + "'><label class='arg-label' for='" +
-        this.id + "'>" + this.name + "</label>";
+    html += `<div class='arg-group${inline ? " inline-args" : ""
+        }${this.type === "text" ? " arg-group-text" : ""}'><label class='arg-label' for='${
+        this.id}'>${this.name}</label>`;
 
     switch (this.type) {
         case "string":
         case "binaryString":
         case "byteArray":
-            html += "<input type='text' id='" + this.id + "' class='arg arg-input' arg-name='" +
-                this.name + "' value='" + this.value + "'" +
-                (this.disabled ? " disabled='disabled'" : "") +
-                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            html += `<input type='text' id='${this.id}' class='arg arg-input' arg-name='${
+                this.name}' value='${this.value}'${
+                this.disabled ? " disabled='disabled'" : ""
+                }${this.placeholder ? ` placeholder='${this.placeholder}'` : ""}>`;
             break;
         case "shortString":
         case "binaryShortString":
-            html += "<input type='text' id='" + this.id +
-                "'class='arg arg-input short-string' arg-name='" + this.name + "'value='" +
-                this.value + "'" + (this.disabled ? " disabled='disabled'" : "") +
-                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            html += `<input type='text' id='${this.id
+                }'class='arg arg-input short-string' arg-name='${this.name}'value='${
+                this.value}'${this.disabled ? " disabled='disabled'" : ""
+                }${this.placeholder ? ` placeholder='${this.placeholder}'` : ""}>`;
             break;
         case "toggleString":
-            html += "<div class='input-group'><div class='input-group-btn'>\
+            html += `<div class='input-group'><div class='input-group-btn'>\
                 <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown'\
-                aria-haspopup='true' aria-expanded='false'" +
-                (this.disabled ? " disabled='disabled'" : "") + ">" + this.toggleValues[0] +
-                " <span class='caret'></span></button><ul class='dropdown-menu'>";
+                aria-haspopup='true' aria-expanded='false'${
+                this.disabled ? " disabled='disabled'" : ""}>${this.toggleValues[0]
+                } <span class='caret'></span></button><ul class='dropdown-menu'>`;
             for (i = 0; i < this.toggleValues.length; i++) {
-                html += "<li><a href='#'>" + this.toggleValues[i] + "</a></li>";
+                html += `<li><a href='#'>${this.toggleValues[i]}</a></li>`;
             }
-            html += "</ul></div><input type='text' class='arg arg-input toggle-string'" +
-                (this.disabled ? " disabled='disabled'" : "") +
-                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + "></div>";
+            html += `</ul></div><input type='text' class='arg arg-input toggle-string'${
+                this.disabled ? " disabled='disabled'" : ""
+                }${this.placeholder ? ` placeholder='${this.placeholder}'` : ""}></div>`;
             break;
         case "number":
-            html += "<input type='number' id='" + this.id + "'class='arg arg-input' arg-name='" +
-                this.name + "'value='" + this.value + "'" +
-                (this.disabled ? " disabled='disabled'" : "") +
-                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            html += `<input type='number' id='${this.id}'class='arg arg-input' arg-name='${
+                this.name}'value='${this.value}'${
+                this.disabled ? " disabled='disabled'" : ""
+                }${this.placeholder ? ` placeholder='${this.placeholder}'` : ""}>`;
             break;
         case "boolean":
-            html += "<input type='checkbox' id='" + this.id + "'class='arg' arg-name='" +
-                this.name + "'" + (this.value ? " checked='checked' " : "") +
-                (this.disabled ? " disabled='disabled'" : "") + ">";
+            html += `<input type='checkbox' id='${this.id}'class='arg' arg-name='${
+                this.name}'${this.value ? " checked='checked' " : ""
+                }${this.disabled ? " disabled='disabled'" : ""}>`;
 
             if (this.disableArgs) {
-                this.manager.addDynamicListener("#" + this.id, "click", this.toggleDisableArgs, this);
+                this.manager.addDynamicListener(`#${this.id}`, "click", this.toggleDisableArgs, this);
             }
             break;
         case "option":
-            html += "<select class='arg' id='" + this.id + "'arg-name='" + this.name + "'" +
-                (this.disabled ? " disabled='disabled'" : "") + ">";
+            html += `<select class='arg' id='${this.id}'arg-name='${this.name}'${
+                this.disabled ? " disabled='disabled'" : ""}>`;
             for (i = 0; i < this.value.length; i++) {
                 if ((m = this.value[i].match(/\[([a-z0-9 -()^]+)\]/i))) {
-                    html += "<optgroup label='" + m[1] + "'>";
+                    html += `<optgroup label='${m[1]}'>`;
                 } else if ((m = this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                     html += "</optgroup>";
                 } else {
-                    html += "<option>" + this.value[i] + "</option>";
+                    html += `<option>${this.value[i]}</option>`;
                 }
             }
             html += "</select>";
             break;
         case "populateOption":
-            html += "<select class='arg' id='" + this.id + "'arg-name='" + this.name + "'" +
-                (this.disabled ? " disabled='disabled'" : "") + ">";
+            html += `<select class='arg' id='${this.id}'arg-name='${this.name}'${
+                this.disabled ? " disabled='disabled'" : ""}>`;
             for (i = 0; i < this.value.length; i++) {
                 if ((m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
-                    html += "<optgroup label='" + m[1] + "'>";
+                    html += `<optgroup label='${m[1]}'>`;
                 } else if ((m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                     html += "</optgroup>";
                 } else {
-                    html += "<option populate-value='" + this.value[i].value + "'>" +
-                        this.value[i].name + "</option>";
+                    html += `<option populate-value='${this.value[i].value}'>${
+                        this.value[i].name}</option>`;
                 }
             }
             html += "</select>";
 
-            this.manager.addDynamicListener("#" + this.id, "change", this.populateOptionChange, this);
+            this.manager.addDynamicListener(`#${this.id}`, "change", this.populateOptionChange, this);
             break;
         case "editableOption":
             html += "<div class='editable-option'>";
-            html += "<select class='editable-option-select' id='sel-" + this.id + "'" +
-                (this.disabled ? " disabled='disabled'" : "") + ">";
+            html += `<select class='editable-option-select' id='sel-${this.id}'${
+                this.disabled ? " disabled='disabled'" : ""}>`;
             for (i = 0; i < this.value.length; i++) {
-                html += "<option value='" + this.value[i].value + "'>" + this.value[i].name + "</option>";
+                html += `<option value='${this.value[i].value}'>${this.value[i].name}</option>`;
             }
             html += "</select>";
-            html += "<input class='arg arg-input editable-option-input' id='" + this.id +
-                "'arg-name='" + this.name + "'" + " value='" + this.value[0].value + "'" +
-                (this.disabled ? " disabled='disabled'" : "") +
-                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">";
+            html += `<input class='arg arg-input editable-option-input' id='${this.id
+                }'arg-name='${this.name}'` + ` value='${this.value[0].value}'${
+                this.disabled ? " disabled='disabled'" : ""
+                }${this.placeholder ? ` placeholder='${this.placeholder}'` : ""}>`;
             html += "</div>";
 
 
-            this.manager.addDynamicListener("#sel-" + this.id, "change", this.editableOptionChange, this);
+            this.manager.addDynamicListener(`#sel-${this.id}`, "change", this.editableOptionChange, this);
             break;
         case "text":
-            html += "<textarea id='" + this.id + "' class='arg' arg-name='" +
-                this.name + "'" + (this.disabled ? " disabled='disabled'" : "") +
-                (this.placeholder ? " placeholder='" + this.placeholder + "'" : "") + ">" +
-                this.value + "</textarea>";
+            html += `<textarea id='${this.id}' class='arg' arg-name='${
+                this.name}'${this.disabled ? " disabled='disabled'" : ""
+                }${this.placeholder ? ` placeholder='${this.placeholder}'` : ""}>${
+                this.value}</textarea>`;
             break;
         default:
             break;

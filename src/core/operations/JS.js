@@ -127,7 +127,7 @@ const JS = {
             result = escodegen.generate(AST, options);
         } catch (e) {
             // Leave original error so the user can see the detail
-            throw "Unable to parse JavaScript.<br>" + e.message;
+            throw `Unable to parse JavaScript.<br>${e.message}`;
         }
         return result;
     },

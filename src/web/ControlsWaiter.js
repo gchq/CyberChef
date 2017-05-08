@@ -167,9 +167,9 @@ ControlsWaiter.prototype.initialiseSaveLink = function(recipeConfig) {
 ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput, recipeConfig, baseURL) {
     recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
-    const link = baseURL || window.location.protocol + "//" +
-        window.location.host +
-        window.location.pathname;
+    const link = baseURL || `${window.location.protocol}//${
+        window.location.host
+        }${window.location.pathname}`;
     const recipeStr = JSON.stringify(recipeConfig);
     const inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
@@ -269,7 +269,7 @@ ControlsWaiter.prototype.saveButtonClick = function() {
     localStorage.savedRecipes = JSON.stringify(savedRecipes);
     localStorage.recipeId = recipeId;
 
-    this.app.alert("Recipe saved as \"" + recipeName + "\".", "success", 2000);
+    this.app.alert(`Recipe saved as "${recipeName}".`, "success", 2000);
 };
 
 
@@ -355,9 +355,9 @@ ControlsWaiter.prototype.supportButtonClick = function() {
     const reportBugInfo = document.getElementById("report-bug-info");
     const saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
 
-    reportBugInfo.innerHTML = "* CyberChef compile time: " + COMPILE_TIME + "\n" +
-        "* User-Agent: \n" + navigator.userAgent + "\n" +
-        "* [Link to reproduce](" + saveLink + ")\n\n";
+    reportBugInfo.innerHTML = `* CyberChef compile time: ${COMPILE_TIME}\n` +
+        `* User-Agent: \n${navigator.userAgent}\n` +
+        `* [Link to reproduce](${saveLink})\n\n`;
 };
 
 export default ControlsWaiter;

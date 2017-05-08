@@ -37,18 +37,18 @@ const HTTP = {
     runParseUserAgent: function(input, args) {
         const ua = UAParser.parse(input);
 
-        return "Type: " + ua.type + "\n" +
-            "Family: " + ua.uaFamily + "\n" +
-            "Name: " + ua.uaName + "\n" +
-            "URL: " + ua.uaUrl + "\n" +
-            "Company: " + ua.uaCompany + "\n" +
-            "Company URL: " + ua.uaCompanyUrl + "\n\n" +
-            "OS Family: " + ua.osFamily + "\n" +
-            "OS Name: " + ua.osName + "\n" +
-            "OS URL: " + ua.osUrl + "\n" +
-            "OS Company: " + ua.osCompany + "\n" +
-            "OS Company URL: " + ua.osCompanyUrl + "\n" +
-            "Device Type: " + ua.deviceType + "\n";
+        return `Type: ${ua.type}\n` +
+            `Family: ${ua.uaFamily}\n` +
+            `Name: ${ua.uaName}\n` +
+            `URL: ${ua.uaUrl}\n` +
+            `Company: ${ua.uaCompany}\n` +
+            `Company URL: ${ua.uaCompanyUrl}\n\n` +
+            `OS Family: ${ua.osFamily}\n` +
+            `OS Name: ${ua.osName}\n` +
+            `OS URL: ${ua.osUrl}\n` +
+            `OS Company: ${ua.osCompany}\n` +
+            `OS Company URL: ${ua.osCompanyUrl}\n` +
+            `Device Type: ${ua.deviceType}\n`;
     },
 
 };

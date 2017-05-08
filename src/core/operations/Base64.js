@@ -149,7 +149,7 @@ const Base64 = {
             i = 0;
 
         if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[\]\\\-^]/g, "\\$&") + "]", "g");
+            const re = new RegExp(`[^${alphabet.replace(/[\]\\\-^]/g, "\\$&")}]`, "g");
             input = input.replace(re, "");
         }
 
@@ -218,23 +218,23 @@ const Base64 = {
         // Highlight offset 0
         if (len0 % 4 === 2) {
             staticSection = offset0.slice(0, -3);
-            offset0 = "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet).slice(0, -2)) + "'>" +
-                staticSection + "</span>" +
-                "<span class='hlgreen'>" + offset0.substr(offset0.length - 3, 1) + "</span>" +
-                "<span class='hlred'>" + offset0.substr(offset0.length - 2) + "</span>";
+            offset0 = `<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet).slice(0, -2))}'>${
+                staticSection}</span>` +
+                `<span class='hlgreen'>${offset0.substr(offset0.length - 3, 1)}</span>` +
+                `<span class='hlred'>${offset0.substr(offset0.length - 2)}</span>`;
         } else if (len0 % 4 === 3) {
             staticSection = offset0.slice(0, -2);
-            offset0 = "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet).slice(0, -1)) + "'>" +
-                staticSection + "</span>" +
-                "<span class='hlgreen'>" + offset0.substr(offset0.length - 2, 1) + "</span>" +
-                "<span class='hlred'>" + offset0.substr(offset0.length - 1) + "</span>";
+            offset0 = `<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet).slice(0, -1))}'>${
+                staticSection}</span>` +
+                `<span class='hlgreen'>${offset0.substr(offset0.length - 2, 1)}</span>` +
+                `<span class='hlred'>${offset0.substr(offset0.length - 1)}</span>`;
         } else {
             staticSection = offset0;
-            offset0 = "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet)) + "'>" +
-                staticSection + "</span>";
+            offset0 = `<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(staticSection, alphabet))}'>${
+                staticSection}</span>`;
         }
 
         if (!showVariable) {
@@ -243,28 +243,28 @@ const Base64 = {
 
 
         // Highlight offset 1
-        padding = "<span class='hlred'>" + offset1.substr(0, 1) + "</span>" +
-            "<span class='hlgreen'>" + offset1.substr(1, 1) + "</span>";
+        padding = `<span class='hlred'>${offset1.substr(0, 1)}</span>` +
+            `<span class='hlgreen'>${offset1.substr(1, 1)}</span>`;
         offset1 = offset1.substr(2);
         if (len1 % 4 === 2) {
             staticSection = offset1.slice(0, -3);
-            offset1 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64("AA" + staticSection, alphabet).slice(1, -2)) + "'>" +
-                staticSection + "</span>" +
-                "<span class='hlgreen'>" + offset1.substr(offset1.length - 3, 1) + "</span>" +
-                "<span class='hlred'>" + offset1.substr(offset1.length - 2) + "</span>";
+            offset1 = `${padding}<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(`AA${staticSection}`, alphabet).slice(1, -2))}'>${
+                staticSection}</span>` +
+                `<span class='hlgreen'>${offset1.substr(offset1.length - 3, 1)}</span>` +
+                `<span class='hlred'>${offset1.substr(offset1.length - 2)}</span>`;
         } else if (len1 % 4 === 3) {
             staticSection = offset1.slice(0, -2);
-            offset1 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64("AA" + staticSection, alphabet).slice(1, -1)) + "'>" +
-                staticSection + "</span>" +
-                "<span class='hlgreen'>" + offset1.substr(offset1.length - 2, 1) + "</span>" +
-                "<span class='hlred'>" + offset1.substr(offset1.length - 1) + "</span>";
+            offset1 = `${padding}<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(`AA${staticSection}`, alphabet).slice(1, -1))}'>${
+                staticSection}</span>` +
+                `<span class='hlgreen'>${offset1.substr(offset1.length - 2, 1)}</span>` +
+                `<span class='hlred'>${offset1.substr(offset1.length - 1)}</span>`;
         } else {
             staticSection = offset1;
-            offset1 = padding +  "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64("AA" + staticSection, alphabet).slice(1)) + "'>" +
-                staticSection + "</span>";
+            offset1 = `${padding}<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(`AA${staticSection}`, alphabet).slice(1))}'>${
+                staticSection}</span>`;
         }
 
         if (!showVariable) {
@@ -272,43 +272,43 @@ const Base64 = {
         }
 
         // Highlight offset 2
-        padding = "<span class='hlred'>" + offset2.substr(0, 2) + "</span>" +
-            "<span class='hlgreen'>" + offset2.substr(2, 1) + "</span>";
+        padding = `<span class='hlred'>${offset2.substr(0, 2)}</span>` +
+            `<span class='hlgreen'>${offset2.substr(2, 1)}</span>`;
         offset2 = offset2.substr(3);
         if (len2 % 4 === 2) {
             staticSection = offset2.slice(0, -3);
-            offset2 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64("AAA" + staticSection, alphabet).slice(2, -2)) + "'>" +
-                staticSection + "</span>" +
-                "<span class='hlgreen'>" + offset2.substr(offset2.length - 3, 1) + "</span>" +
-                "<span class='hlred'>" + offset2.substr(offset2.length - 2) + "</span>";
+            offset2 = `${padding}<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(`AAA${staticSection}`, alphabet).slice(2, -2))}'>${
+                staticSection}</span>` +
+                `<span class='hlgreen'>${offset2.substr(offset2.length - 3, 1)}</span>` +
+                `<span class='hlred'>${offset2.substr(offset2.length - 2)}</span>`;
         } else if (len2 % 4 === 3) {
             staticSection = offset2.slice(0, -2);
-            offset2 = padding + "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64("AAA" + staticSection, alphabet).slice(2, -2)) + "'>" +
-                staticSection + "</span>" +
-                "<span class='hlgreen'>" + offset2.substr(offset2.length - 2, 1) + "</span>" +
-                "<span class='hlred'>" + offset2.substr(offset2.length - 1) + "</span>";
+            offset2 = `${padding}<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(`AAA${staticSection}`, alphabet).slice(2, -2))}'>${
+                staticSection}</span>` +
+                `<span class='hlgreen'>${offset2.substr(offset2.length - 2, 1)}</span>` +
+                `<span class='hlred'>${offset2.substr(offset2.length - 1)}</span>`;
         } else {
             staticSection = offset2;
-            offset2 = padding +  "<span data-toggle='tooltip' data-placement='top' title='" +
-                Utils.escapeHtml(Utils.fromBase64("AAA" + staticSection, alphabet).slice(2)) + "'>" +
-                staticSection + "</span>";
+            offset2 = `${padding}<span data-toggle='tooltip' data-placement='top' title='${
+                Utils.escapeHtml(Utils.fromBase64(`AAA${staticSection}`, alphabet).slice(2))}'>${
+                staticSection}</span>`;
         }
 
         if (!showVariable) {
             offset2 = staticSection;
         }
 
-        return (showVariable ? "Characters highlighted in <span class='hlgreen'>green</span> could change if the input is surrounded by more data." +
+        return (showVariable ? `${"Characters highlighted in <span class='hlgreen'>green</span> could change if the input is surrounded by more data." +
             "\nCharacters highlighted in <span class='hlred'>red</span> are for padding purposes only." +
             "\nUnhighlighted characters are <span data-toggle='tooltip' data-placement='top' title='Tooltip on left'>static</span>." +
             "\nHover over the static sections to see what they decode to on their own.\n" +
-            "\nOffset 0: " + offset0 +
-            "\nOffset 1: " + offset1 +
-            "\nOffset 2: " + offset2 +
-            script :
-            offset0 + "\n" + offset1 + "\n" + offset2);
+            "\nOffset 0: "}${offset0
+            }\nOffset 1: ${offset1
+            }\nOffset 2: ${offset2
+            }${script}` :
+            `${offset0}\n${offset1}\n${offset2}`);
     },
 
 

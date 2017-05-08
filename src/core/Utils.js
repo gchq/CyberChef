@@ -240,7 +240,7 @@ const Utils = {
      */
     parseEscapedChars: function(str) {
         return str.replace(/(\\)?\\([nrtbf]|x[\da-f]{2})/g, function(m, a, b) {
-            if (a === "\\") return "\\"+b;
+            if (a === "\\") return `\\${b}`;
             switch (b[0]) {
                 case "n":
                     return "\n";
@@ -338,7 +338,7 @@ const Utils = {
         if (!byteArray) return "";
         let hexStr = "";
         for (let i = 0; i < byteArray.length; i++) {
-            hexStr += Utils.hex(byteArray[i]) + " ";
+            hexStr += `${Utils.hex(byteArray[i])} `;
         }
         return hexStr.slice(0, hexStr.length-1);
     },
@@ -587,7 +587,7 @@ const Utils = {
         for (let i = 0; i < unicStr.length; i++) {
             const ord = unicStr.charCodeAt(i);
             if (!(ord in Utils.UNIC_WIN1251_MAP))
-                throw "Character '" + unicStr.charAt(i) + "' isn't supported by Windows-1251";
+                throw `Character '${unicStr.charAt(i)}' isn't supported by Windows-1251`;
             res.push(String.fromCharCode(Utils.UNIC_WIN1251_MAP[ord]));
         }
 
@@ -611,7 +611,7 @@ const Utils = {
         for (let i = 0; i < win1251Str.length; i++) {
             const ord = win1251Str.charCodeAt(i);
             if (!(ord in Utils.WIN1251_UNIC_MAP))
-                throw "Character '" + win1251Str.charAt(i) + "' isn't supported by Windows-1251";
+                throw `Character '${win1251Str.charAt(i)}' isn't supported by Windows-1251`;
             res.push(String.fromCharCode(Utils.WIN1251_UNIC_MAP[ord]));
         }
 
@@ -706,7 +706,7 @@ const Utils = {
             i = 0;
 
         if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[\[\]\\\-^$]/g, "\\$&") + "]", "g");
+            const re = new RegExp(`[^${alphabet.replace(/[\[\]\\\-^$]/g, "\\$&")}]`, "g");
             data = data.replace(re, "");
         }
 
@@ -765,8 +765,8 @@ const Utils = {
         }
 
         // Add \x or 0x to beginning
-        if (delim === "0x") output = "0x" + output;
-        if (delim === "\\x") output = "\\x" + output;
+        if (delim === "0x") output = `0x${output}`;
+        if (delim === "\\x") output = `\\x${output}`;
 
         if (delim.length)
             return output.slice(0, -delim.length);
@@ -1017,12 +1017,12 @@ const Utils = {
      */
     displayFilesAsHTML: function(files){
         const formatDirectory = function(file) {
-            const html = "<div class='panel panel-default'>" +
+            const html = `${"<div class='panel panel-default'>" +
                    "<div class='panel-heading' role='tab'>" +
-                   "<h4 class='panel-title'>" +
-                   file.fileName +
+                   "<h4 class='panel-title'>"}${
+                   file.fileName
                    // The following line is for formatting when HTML is stripped
-                   "<span style='display: none'>\n0 bytes\n</span>" +
+                   }<span style='display: none'>\n0 bytes\n</span>` +
                    "</h4>" +
                    "</div>" +
                    "</div>";
@@ -1036,45 +1036,45 @@ const Utils = {
             );
             const blobUrl = URL.createObjectURL(blob);
 
-            const downloadAnchorElem = "<a href='" + blobUrl + "' " +
-                "title='Download " + Utils.escapeHtml(file.fileName) + "' " +
-                "download='" + Utils.escapeHtml(file.fileName) + "'>\u21B4</a>";
+            const downloadAnchorElem = `<a href='${blobUrl}' ` +
+                `title='Download ${Utils.escapeHtml(file.fileName)}' ` +
+                `download='${Utils.escapeHtml(file.fileName)}'>\u21B4</a>`;
 
-            const expandFileContentsElem = "<a href='#collapse" + i + "' " +
+            const expandFileContentsElem = `<a href='#collapse${i}' ` +
                 "class='collapsed' " +
                 "data-toggle='collapse' " +
                 "aria-expanded='true' " +
-                "aria-controls='collapse" + i + "' " +
-                "title=\"Show/hide contents of '" + Utils.escapeHtml(file.fileName) + "'\">&#x1F50D</a>";
+                `aria-controls='collapse${i}' ` +
+                `title="Show/hide contents of '${Utils.escapeHtml(file.fileName)}'">&#x1F50D</a>`;
 
-            const html = "<div class='panel panel-default'>" +
-                       "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
+            const html = `${"<div class='panel panel-default'>" +
+                       "<div class='panel-heading' role='tab' id='heading"}${i}'>` +
                        "<h4 class='panel-title'>" +
-                       "<div>" +
-                       Utils.escapeHtml(file.fileName) +
-                       " " +  expandFileContentsElem +
-                       " " + downloadAnchorElem +
-                       "<span class='pull-right'>" +
+                       `<div>${
+                       Utils.escapeHtml(file.fileName)
+                       } ${expandFileContentsElem
+                       } ${downloadAnchorElem
+                       }<span class='pull-right'>` +
                        // These are for formatting when stripping HTML
-                       "<span style='display: none'>\n</span>" +
-                       file.size.toLocaleString() + " bytes" +
+                       `<span style='display: none'>\n</span>${
+                       file.size.toLocaleString()} bytes` +
                        "<span style='display: none'>\n</span>" +
                        "</span>" +
                        "</div>" +
                        "</h4>" +
                        "</div>" +
-                       "<div id='collapse" + i + "' class='panel-collapse collapse' " +
-                       "role='tabpanel' aria-labelledby='heading" + i + "'>" +
+                       `<div id='collapse${i}' class='panel-collapse collapse' ` +
+                       `role='tabpanel' aria-labelledby='heading${i}'>` +
                        "<div class='panel-body'>" +
-                       "<pre><code>" + Utils.escapeHtml(file.contents) + "</pre></code></div>" +
+                       `<pre><code>${Utils.escapeHtml(file.contents)}</pre></code></div>` +
                        "</div>" +
                        "</div>";
             return html;
         };
 
-        let html = "<div style='padding: 5px;'>" +
-                   files.length +
-                   " file(s) found</div>\n";
+        let html = `<div style='padding: 5px;'>${
+                   files.length
+                   } file(s) found</div>\n`;
         files.forEach(function(file, i) {
             if (typeof file.contents !== "undefined") {
                 html += formatFile(file, i);

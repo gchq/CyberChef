@@ -25,11 +25,11 @@ const FileType = {
         if (!type) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
         } else {
-            let output = "File extension: " + type.ext + "\n" +
-                "MIME type:      " + type.mime;
+            let output = `File extension: ${type.ext}\n` +
+                `MIME type:      ${type.mime}`;
 
             if (type.desc && type.desc.length) {
-                output += "\nDescription:    " + type.desc;
+                output += `\nDescription:    ${type.desc}`;
             }
 
             return output;
@@ -66,12 +66,12 @@ const FileType = {
                     continue;
                 }
                 numFound++;
-                output += "\nOffset " + i + " (0x" + Utils.hex(i) + "):\n" +
-                    "  File extension: " + type.ext + "\n" +
-                    "  MIME type:      " + type.mime + "\n";
+                output += `\nOffset ${i} (0x${Utils.hex(i)}):\n` +
+                    `  File extension: ${type.ext}\n` +
+                    `  MIME type:      ${type.mime}\n`;
 
                 if (type.desc && type.desc.length) {
-                    output += "  Description:    " + type.desc + "\n";
+                    output += `  Description:    ${type.desc}\n`;
                 }
             }
         }
@@ -81,7 +81,7 @@ const FileType = {
         }
 
         if (numCommonFound > 0) {
-            output += "\n\n" + numCommonFound;
+            output += `\n\n${numCommonFound}`;
             output += numCommonFound === 1 ?
                 " file type was detected that has a common byte sequence. This is likely to be a false positive." :
                 " file types were detected that have common byte sequences. These are likely to be false positives.";

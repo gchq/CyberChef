@@ -39,7 +39,7 @@ const Code = {
     runSyntaxHighlight: function(input, args) {
         let language = args[0],
             lineNums = args[1];
-        return "<code class='prettyprint'>" + prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
+        return `<code class='prettyprint'>${prettyPrintOne(Utils.escapeHtml(input), language, lineNums)}</code>`;
     },
 
 
@@ -302,9 +302,9 @@ const Code = {
          */
         function preserveToken(str, match, t) {
             preservedTokens[t] = match[0];
-            return str.substring(0, match.index) +
-                "###preservedToken" + t + "###" +
-                str.substring(match.index + match[0].length);
+            return `${str.substring(0, match.index)
+                }###preservedToken${t}###${
+                str.substring(match.index + match[0].length)}`;
         }
     },
 
@@ -344,7 +344,7 @@ const Code = {
         try {
             nodes = xpath.select(query, doc);
         } catch (err) {
-            return "Invalid XPath. Details:\n" + err.message;
+            return `Invalid XPath. Details:\n${err.message}`;
         }
 
         const nodeToString = function(node) {
@@ -396,7 +396,7 @@ const Code = {
         try {
             result = html.querySelectorAll(query);
         } catch (err) {
-            return "Invalid CSS Selector. Details:\n" + err.message;
+            return `Invalid CSS Selector. Details:\n${err.message}`;
         }
 
         const nodeToString = function(node) {
@@ -406,7 +406,7 @@ const Code = {
                 case Node.COMMENT_NODE: return node.data;
                 case Node.TEXT_NODE: return node.wholeText;
                 case Node.DOCUMENT_NODE: return node.outerHTML;
-                default: throw new Error("Unknown Node Type: " + node.nodeType);
+                default: throw new Error(`Unknown Node Type: ${node.nodeType}`);
             }
         };
 

@@ -105,7 +105,7 @@ Dish.prototype.set = function(value, type) {
 
     if (!this.valid()) {
         const sample = Utils.truncate(JSON.stringify(this.value), 13);
-        throw "Data is not a valid " + Dish.enumLookup(type) + ": " + sample;
+        throw `Data is not a valid ${Dish.enumLookup(type)}: ${sample}`;
     }
 };
 

@@ -182,11 +182,11 @@ Recipe.prototype.execute = async function(dish, startFrom) {
 
             e.progress = i;
             if (e.fileName) {
-                e.displayStr = op.name + " - " + e.name + " in " +
-                    e.fileName + " on line " + e.lineNumber +
-                    ".<br><br>Message: " + (e.displayStr || e.message);
+                e.displayStr = `${op.name} - ${e.name} in ${
+                    e.fileName} on line ${e.lineNumber
+                    }.<br><br>Message: ${e.displayStr || e.message}`;
             } else {
-                e.displayStr = op.name + " - " + (e.displayStr || e.message);
+                e.displayStr = `${op.name} - ${e.displayStr || e.message}`;
             }
 
             throw e;

@@ -72,7 +72,7 @@ InputWaiter.prototype.setInputInfo = function(length, lines) {
     const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
     const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
 
-    document.getElementById("input-info").innerHTML = "length: " + lengthStr + "<br>lines: " + linesStr;
+    document.getElementById("input-info").innerHTML = `length: ${lengthStr}<br>lines: ${linesStr}`;
 };
 
 
@@ -178,7 +178,7 @@ InputWaiter.prototype.inputDrop = function(e) {
             setInput();
             return;
         }
-        el.value = "Processing... " + Math.round(offset / file.size * 100) + "%";
+        el.value = `Processing... ${Math.round(offset / file.size * 100)}%`;
         const slice = file.slice(offset, offset + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
     };

@@ -90,7 +90,7 @@ const IP = {
                 longhand = IP._ipv6ToStr(ipv6),
                 shorthand = IP._ipv6ToStr(ipv6, true);
 
-            output += "Longhand:  " + longhand + "\nShorthand: " + shorthand + "\n";
+            output += `Longhand:  ${longhand}\nShorthand: ${shorthand}\n`;
 
             // Detect reserved addresses
             if (shorthand === "::") {
@@ -105,13 +105,13 @@ const IP = {
                 ipv6[3] === 0 && ipv6[4] === 0 && ipv6[5] === 0xffff) {
                 // IPv4-mapped IPv6 address
                 output += "\nIPv4-mapped IPv6 address detected. IPv6 clients will be handled natively by default, and IPv4 clients appear as IPv6 clients at their IPv4-mapped IPv6 address.";
-                output += "\nMapped IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
+                output += `\nMapped IPv4 address: ${IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7])}`;
                 output += "\nIPv4-mapped IPv6 addresses range: ::ffff:0:0/96";
             } else if (ipv6[0] === 0 && ipv6[1] === 0 && ipv6[2] === 0 &&
                 ipv6[3] === 0 && ipv6[4] === 0xffff && ipv6[5] === 0) {
                 // IPv4-translated address
                 output += "\nIPv4-translated address detected. Used by Stateless IP/ICMP Translation (SIIT). See RFCs 6145 and 6052 for more details.";
-                output += "\nTranslated IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
+                output += `\nTranslated IPv4 address: ${IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7])}`;
                 output += "\nIPv4-translated addresses range: ::ffff:0:0:0/96";
             } else if (ipv6[0] === 0x100) {
                 // Discard prefix per RFC 6666
@@ -121,7 +121,7 @@ const IP = {
                 ipv6[3] === 0 && ipv6[4] === 0 && ipv6[5] === 0) {
                 // IPv4/IPv6 translation per RFC 6052
                 output += "\n'Well-Known' prefix for IPv4/IPv6 translation detected. See RFC 6052 for more details.";
-                output += "\nTranslated IPv4 address: " + IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
+                output += `\nTranslated IPv4 address: ${IP._ipv4ToStr((ipv6[6] << 16) + ipv6[7])}`;
                 output += "\n'Well-Known' prefix range: 64:ff9b::/96";
             } else if (ipv6[0] === 0x2001 && ipv6[1] === 0) {
                 // Teredo tunneling
@@ -135,11 +135,11 @@ const IP = {
                     flagUg      = (ipv6[4] >>> 8) & 3,
                     flagRandom2 = ipv6[4] & 255;
 
-                output += "\nServer IPv4 address: " + IP._ipv4ToStr(serverIpv4) +
-                    "\nClient IPv4 address: " + IP._ipv4ToStr(clientIpv4) +
-                    "\nClient UDP port:     " + udpPort +
-                    "\nFlags:" +
-                    "\n\tCone:    " + flagCone;
+                output += `\nServer IPv4 address: ${IP._ipv4ToStr(serverIpv4)
+                    }\nClient IPv4 address: ${IP._ipv4ToStr(clientIpv4)
+                    }\nClient UDP port:     ${udpPort
+                    }\nFlags:` +
+                    `\n\tCone:    ${flagCone}`;
 
                 if (flagCone) {
                     output += " (Client is behind a cone NAT)";
@@ -147,20 +147,20 @@ const IP = {
                     output += " (Client is not behind a cone NAT)";
                 }
 
-                output += "\n\tR:       " + flagR;
+                output += `\n\tR:       ${flagR}`;
 
                 if (flagR) {
                     output += " Error: This flag should be set to 0. See RFC 5991 and RFC 4380.";
                 }
 
-                output += "\n\tRandom1: " + Utils.bin(flagRandom1, 4) +
-                    "\n\tUG:      " + Utils.bin(flagUg, 2);
+                output += `\n\tRandom1: ${Utils.bin(flagRandom1, 4)
+                    }\n\tUG:      ${Utils.bin(flagUg, 2)}`;
 
                 if (flagUg) {
                     output += " Error: This flag should be set to 00. See RFC 4380.";
                 }
 
-                output += "\n\tRandom2: " + Utils.bin(flagRandom2, 8);
+                output += `\n\tRandom2: ${Utils.bin(flagRandom2, 8)}`;
 
                 if (!flagR && !flagUg && flagRandom1 && flagRandom2) {
                     output += "\n\nThis is a valid Teredo address which complies with RFC 4380 and RFC 5991.";
@@ -195,10 +195,10 @@ const IP = {
                     interfaceIdStr = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
                     interfaceId = new BigInteger(interfaceIdStr, 16);
 
-                output += "\n\nEncapsulated IPv4 address: " + v4Addr +
-                    "\nSLA ID: " + slaId +
-                    "\nInterface ID (base 16): " + interfaceIdStr +
-                    "\nInterface ID (base 10): " + interfaceId.toString();
+                output += `\n\nEncapsulated IPv4 address: ${v4Addr
+                    }\nSLA ID: ${slaId
+                    }\nInterface ID (base 16): ${interfaceIdStr
+                    }\nInterface ID (base 10): ${interfaceId.toString()}`;
             } else if (ipv6[0] >= 0xfc00 && ipv6[0] <= 0xfdff) {
                 // Unique local address
                 output += "\nThis is a unique local address comparable to the IPv4 private addresses 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. See RFC 4193 for more details.";
@@ -218,15 +218,15 @@ const IP = {
             if ((ipv6[5] & 0xff === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
                 output += "\n\nThis IPv6 address contains a modified EUI-64 address, identified by the presence of FF:FE in the 12th and 13th octets.";
 
-                let intIdent = Utils.hex(ipv6[4] >>> 8) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +
-                    Utils.hex(ipv6[5] >>> 8) + ":" + Utils.hex(ipv6[5] & 0xff) + ":" +
-                    Utils.hex(ipv6[6] >>> 8) + ":" + Utils.hex(ipv6[6] & 0xff) + ":" +
-                    Utils.hex(ipv6[7] >>> 8) + ":" + Utils.hex(ipv6[7] & 0xff),
-                    mac = Utils.hex((ipv6[4] >>> 8) ^ 2) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +
-                    Utils.hex(ipv6[5] >>> 8) + ":" + Utils.hex(ipv6[6] & 0xff) + ":" +
-                    Utils.hex(ipv6[7] >>> 8) + ":" + Utils.hex(ipv6[7] & 0xff);
-                output += "\nInterface identifier: " + intIdent +
-                    "\nMAC address:          " + mac;
+                let intIdent = `${Utils.hex(ipv6[4] >>> 8)}:${Utils.hex(ipv6[4] & 0xff)}:${
+                    Utils.hex(ipv6[5] >>> 8)}:${Utils.hex(ipv6[5] & 0xff)}:${
+                    Utils.hex(ipv6[6] >>> 8)}:${Utils.hex(ipv6[6] & 0xff)}:${
+                    Utils.hex(ipv6[7] >>> 8)}:${Utils.hex(ipv6[7] & 0xff)}`,
+                    mac = `${Utils.hex((ipv6[4] >>> 8) ^ 2)}:${Utils.hex(ipv6[4] & 0xff)}:${
+                    Utils.hex(ipv6[5] >>> 8)}:${Utils.hex(ipv6[6] & 0xff)}:${
+                    Utils.hex(ipv6[7] >>> 8)}:${Utils.hex(ipv6[7] & 0xff)}`;
+                output += `\nInterface identifier: ${intIdent
+                    }\nMAC address:          ${mac}`;
             }
         } else {
             return "Invalid IPv6 address";
@@ -263,7 +263,7 @@ const IP = {
             let decimal;
 
             if (inFormat === outFormat) {
-                output += lines[i] + "\n";
+                output += `${lines[i]}\n`;
                 continue;
             }
 
@@ -298,20 +298,20 @@ const IP = {
                 case "Dotted Decimal":
                     ddIp = "";
                     for (j = 0; j < baIp.length; j++) {
-                        ddIp += baIp[j] + ".";
+                        ddIp += `${baIp[j]}.`;
                     }
-                    output += ddIp.slice(0, ddIp.length-1) + "\n";
+                    output += `${ddIp.slice(0, ddIp.length-1)}\n`;
                     break;
                 case "Decimal":
                     decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
-                    output += decIp.toString() + "\n";
+                    output += `${decIp.toString()}\n`;
                     break;
                 case "Hex":
                     hexIp = "";
                     for (j = 0; j < baIp.length; j++) {
                         hexIp += Utils.hex(baIp[j]);
                     }
-                    output += hexIp + "\n";
+                    output += `${hexIp}\n`;
                     break;
                 default:
                     throw "Unsupported output IP format";
@@ -399,11 +399,11 @@ const IP = {
         for (network in ipv4Networks) {
             ipv4Networks[network] = ipv4Networks[network].sort();
 
-            output += IP._ipv4ToStr(network) + "/" + cidr + "\n";
+            output += `${IP._ipv4ToStr(network)}/${cidr}\n`;
 
             if (!onlySubnets) {
                 for (i = 0; i < ipv4Networks[network].length; i++) {
-                    output += "  " + IP._ipv4ToStr(ipv4Networks[network][i]) + "\n";
+                    output += `  ${IP._ipv4ToStr(ipv4Networks[network][i])}\n`;
                 }
                 output += "\n";
             }
@@ -413,11 +413,11 @@ const IP = {
         for (networkStr in ipv6Networks) {
             //ipv6Networks[networkStr] = ipv6Networks[networkStr].sort();  TODO
 
-            output += networkStr + "/" + cidr + "\n";
+            output += `${networkStr}/${cidr}\n`;
 
             if (!onlySubnets) {
                 for (i = 0; i < ipv6Networks[networkStr].length; i++) {
-                    output += "  " + IP._ipv6ToStr(ipv6Networks[networkStr][i], true) + "\n";
+                    output += `  ${IP._ipv6ToStr(ipv6Networks[networkStr][i], true)}\n`;
                 }
                 output += "\n";
             }
@@ -470,12 +470,12 @@ const IP = {
 
         // Version
         if (version !== 4) {
-            version = version + " (Error: for IPv4 headers, this should always be set to 4)";
+            version = `${version} (Error: for IPv4 headers, this should always be set to 4)`;
         }
 
         // IHL
         if (ihl < 5) {
-            ihl = ihl + " (Error: this should always be at least 5)";
+            ihl = `${ihl} (Error: this should always be at least 5)`;
         } else if (ihl > 5) {
             // sort out options...
             const optionsLen = ihl * 4 - 20;
@@ -490,36 +490,36 @@ const IP = {
             givenChecksum = Utils.hex(checksum),
             checksumResult;
         if (correctChecksum === givenChecksum) {
-            checksumResult = givenChecksum + " (correct)";
+            checksumResult = `${givenChecksum} (correct)`;
         } else {
-            checksumResult = givenChecksum + " (incorrect, should be " + correctChecksum + ")";
+            checksumResult = `${givenChecksum} (incorrect, should be ${correctChecksum})`;
         }
 
-        output = "<table class='table table-hover table-condensed table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>" +
-            "<tr><td>Version</td><td>" + version + "</td></tr>" +
-            "<tr><td>Internet Header Length (IHL)</td><td>" + ihl + " (" + (ihl * 4) + " bytes)</td></tr>" +
-            "<tr><td>Differentiated Services Code Point (DSCP)</td><td>" + dscp + "</td></tr>" +
-            "<tr><td>Explicit Congestion Notification (ECN)</td><td>" + ecn + "</td></tr>" +
-            "<tr><td>Total length</td><td>" + length + " bytes" +
-            "\n  IP header: " + (ihl * 4) + " bytes" +
-            "\n  Data: " + (length - ihl * 4) + " bytes</td></tr>" +
-            "<tr><td>Identification</td><td>0x" + Utils.hex(identification) + " (" + identification + ")</td></tr>" +
-            "<tr><td>Flags</td><td>0x" + Utils.hex(flags, 2) +
-            "\n  Reserved bit:" + (flags >> 2) + " (must be 0)" +
-            "\n  Don't fragment:" + (flags >> 1 & 1) +
-            "\n  More fragments:" + (flags & 1) + "</td></tr>" +
-            "<tr><td>Fragment offset</td><td>" + fragOffset + "</td></tr>" +
-            "<tr><td>Time-To-Live</td><td>" + ttl + "</td></tr>" +
-            "<tr><td>Protocol</td><td>" + protocol + ", " + protocolInfo.protocol + " (" + protocolInfo.keyword + ")</td></tr>" +
-            "<tr><td>Header checksum</td><td>" + checksumResult + "</td></tr>" +
-            "<tr><td>Source IP address</td><td>" + IP._ipv4ToStr(srcIP) + "</td></tr>" +
-            "<tr><td>Destination IP address</td><td>" + IP._ipv4ToStr(dstIP) + "</td></tr>";
+        output = `${"<table class='table table-hover table-condensed table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>" +
+            "<tr><td>Version</td><td>"}${version}</td></tr>` +
+            `<tr><td>Internet Header Length (IHL)</td><td>${ihl} (${ihl * 4} bytes)</td></tr>` +
+            `<tr><td>Differentiated Services Code Point (DSCP)</td><td>${dscp}</td></tr>` +
+            `<tr><td>Explicit Congestion Notification (ECN)</td><td>${ecn}</td></tr>` +
+            `<tr><td>Total length</td><td>${length} bytes` +
+            `\n  IP header: ${ihl * 4} bytes` +
+            `\n  Data: ${length - ihl * 4} bytes</td></tr>` +
+            `<tr><td>Identification</td><td>0x${Utils.hex(identification)} (${identification})</td></tr>` +
+            `<tr><td>Flags</td><td>0x${Utils.hex(flags, 2)
+            }\n  Reserved bit:${flags >> 2} (must be 0)` +
+            `\n  Don't fragment:${flags >> 1 & 1
+            }\n  More fragments:${flags & 1}</td></tr>` +
+            `<tr><td>Fragment offset</td><td>${fragOffset}</td></tr>` +
+            `<tr><td>Time-To-Live</td><td>${ttl}</td></tr>` +
+            `<tr><td>Protocol</td><td>${protocol}, ${protocolInfo.protocol} (${protocolInfo.keyword})</td></tr>` +
+            `<tr><td>Header checksum</td><td>${checksumResult}</td></tr>` +
+            `<tr><td>Source IP address</td><td>${IP._ipv4ToStr(srcIP)}</td></tr>` +
+            `<tr><td>Destination IP address</td><td>${IP._ipv4ToStr(dstIP)}</td></tr>`;
 
         if (ihl > 5) {
-            output += "<tr><td>Options</td><td>" + Utils.byteArrayToHex(options) + "</td></tr>";
+            output += `<tr><td>Options</td><td>${Utils.byteArrayToHex(options)}</td></tr>`;
         }
 
-        return output + "</table>";
+        return `${output}</table>`;
     },
 
 
@@ -554,11 +554,11 @@ const IP = {
             ip2 = ip1 | ~mask;
 
         if (includeNetworkInfo) {
-            output += "Network: " + IP._ipv4ToStr(network) + "\n";
-            output += "CIDR: " + cidrRange + "\n";
-            output += "Mask: " + IP._ipv4ToStr(mask) + "\n";
-            output += "Range: " + IP._ipv4ToStr(ip1) + " - " + IP._ipv4ToStr(ip2) + "\n";
-            output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
+            output += `Network: ${IP._ipv4ToStr(network)}\n`;
+            output += `CIDR: ${cidrRange}\n`;
+            output += `Mask: ${IP._ipv4ToStr(mask)}\n`;
+            output += `Range: ${IP._ipv4ToStr(ip1)} - ${IP._ipv4ToStr(ip2)}\n`;
+            output += `Total addresses in range: ${((ip2 - ip1) >>> 0) + 1}\n\n`;
         }
 
         if (enumerateAddresses) {
@@ -608,12 +608,12 @@ const IP = {
         }
 
         if (includeNetworkInfo) {
-            output += "Network: " + IP._ipv6ToStr(network) + "\n";
-            output += "Shorthand: " + IP._ipv6ToStr(network, true) + "\n";
-            output += "CIDR: " + cidrRange + "\n";
-            output += "Mask: " + IP._ipv6ToStr(mask) + "\n";
-            output += "Range: " + IP._ipv6ToStr(ip1) + " - " + IP._ipv6ToStr(ip2) + "\n";
-            output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
+            output += `Network: ${IP._ipv6ToStr(network)}\n`;
+            output += `Shorthand: ${IP._ipv6ToStr(network, true)}\n`;
+            output += `CIDR: ${cidrRange}\n`;
+            output += `Mask: ${IP._ipv6ToStr(mask)}\n`;
+            output += `Range: ${IP._ipv6ToStr(ip1)} - ${IP._ipv6ToStr(ip2)}\n`;
+            output += `Total addresses in range: ${parseInt(total.join(""), 2) + 1}\n\n`;
         }
 
         return output;
@@ -679,13 +679,13 @@ const IP = {
 
         if (includeNetworkInfo) {
             output += "Minimum subnet required to hold this range:\n";
-            output += "\tNetwork: " + IP._ipv4ToStr(network) + "\n";
-            output += "\tCIDR: " + cidr + "\n";
-            output += "\tMask: " + IP._ipv4ToStr(mask) + "\n";
-            output += "\tSubnet range: " + IP._ipv4ToStr(subIp1) + " - " + IP._ipv4ToStr(subIp2) + "\n";
-            output += "\tTotal addresses in subnet: " + (((subIp2 - subIp1) >>> 0) + 1) + "\n\n";
-            output += "Range: " + IP._ipv4ToStr(ip1) + " - " + IP._ipv4ToStr(ip2) + "\n";
-            output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
+            output += `\tNetwork: ${IP._ipv4ToStr(network)}\n`;
+            output += `\tCIDR: ${cidr}\n`;
+            output += `\tMask: ${IP._ipv4ToStr(mask)}\n`;
+            output += `\tSubnet range: ${IP._ipv4ToStr(subIp1)} - ${IP._ipv4ToStr(subIp2)}\n`;
+            output += `\tTotal addresses in subnet: ${((subIp2 - subIp1) >>> 0) + 1}\n\n`;
+            output += `Range: ${IP._ipv4ToStr(ip1)} - ${IP._ipv4ToStr(ip2)}\n`;
+            output += `Total addresses in range: ${((ip2 - ip1) >>> 0) + 1}\n\n`;
         }
 
         if (enumerateAddresses) {
@@ -726,9 +726,9 @@ const IP = {
         }
 
         if (includeNetworkInfo) {
-            output += "Range: " + IP._ipv6ToStr(ip1) + " - " + IP._ipv6ToStr(ip2) + "\n";
-            output += "Shorthand range: " + IP._ipv6ToStr(ip1, true) + " - " + IP._ipv6ToStr(ip2, true) + "\n";
-            output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
+            output += `Range: ${IP._ipv6ToStr(ip1)} - ${IP._ipv6ToStr(ip2)}\n`;
+            output += `Shorthand range: ${IP._ipv6ToStr(ip1, true)} - ${IP._ipv6ToStr(ip2, true)}\n`;
+            output += `Total addresses in range: ${parseInt(total.join(""), 2) + 1}\n\n`;
         }
 
         return output;
@@ -793,7 +793,7 @@ const IP = {
             blockC = (ipInt >> 8) & 255,
             blockD = ipInt & 255;
 
-        return blockA + "." + blockB + "." + blockC + "." + blockD;
+        return `${blockA}.${blockB}.${blockC}.${blockD}`;
     },
 
 
@@ -881,7 +881,7 @@ const IP = {
 
             for (i = 0; i < 8; i++) {
                 if (i !== start) {
-                    output += Utils.hex(ipv6[i], 1) + ":";
+                    output += `${Utils.hex(ipv6[i], 1)}:`;
                 } else {
                     output += ":";
                     i = end;
@@ -889,10 +889,10 @@ const IP = {
                 }
             }
             if (output[0] === ":")
-                output = ":" + output;
+                output = `:${output}`;
         } else {
             for (i = 0; i < 8; i++) {
-                output += Utils.hex(ipv6[i], 4) + ":";
+                output += `${Utils.hex(ipv6[i], 4)}:`;
             }
         }
         return output.slice(0, output.length-1);
