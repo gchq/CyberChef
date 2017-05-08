@@ -14,9 +14,9 @@ import Utils from "../Utils.js";
 const Image = {
     runEXIF(input, args) {
         try {
-            let bytes = Uint8Array.from(input);
-            let parser = ExifParser.create(bytes.buffer);
-            let result = parser.parse();
+            const bytes = Uint8Array.from(input);
+            const parser = ExifParser.create(bytes.buffer);
+            const result = parser.parse();
 
             let lines = [];
             for (let tagName in result.tags) {
@@ -24,7 +24,7 @@ const Image = {
                 lines.push(`${tagName}: ${value}`);
             }
 
-            let numTags = lines.length;
+            const numTags = lines.length;
             lines.unshift(`Found ${numTags} tags.\n`);
             return lines.join("\n");
         } catch (err) {
