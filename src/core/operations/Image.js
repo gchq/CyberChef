@@ -28,7 +28,7 @@ const Image = {
             lines.unshift(`Found ${numTags} tags.\n`);
             return lines.join("\n");
         } catch (err) {
-            throw "Could not EXIF data from image: " + err;
+            throw "Could not extract EXIF data from image: " + err;
         }
     },
 };
