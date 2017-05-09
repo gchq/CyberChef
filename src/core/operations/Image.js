@@ -12,6 +12,15 @@ import Utils from "../Utils.js";
  * @namespace
  */
 const Image = {
+    /**
+     * Extract EXIF operation.
+     *
+     * Extracts EXIF data from a byteArray, representing a JPG or a TIFF image.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     runEXIF(input, args) {
         try {
             const bytes = Uint8Array.from(input);
