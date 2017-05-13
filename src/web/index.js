@@ -9,7 +9,7 @@ import "./stylesheets/main.js";
 
 // Libs
 import "babel-polyfill";
-import "bootstrap-sass";
+import "bootstrap";
 import "bootstrap-switch";
 import "bootstrap-colorpicker";
 import CanvasComponents from "../core/lib/canvascomponents.js";

@@ -186,11 +186,11 @@ module.exports = function (grunt) {
                             })
                         },
                         {
-                            test: /\.scss$/,
+                            test: /\.less$/,
                             loader: ExtractTextPlugin.extract({
                                 use: [
                                     { loader: "css-loader?minimize" },
-                                    { loader: "sass-loader" }
+                                    { loader: "less-loader" }
                                 ]
                             })
                         },

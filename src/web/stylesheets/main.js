@@ -10,7 +10,7 @@
 import "google-code-prettify/src/prettify.css";
 
 /* Frameworks */
-import "./vendors/bootstrap.scss";
+import "./vendors/bootstrap.less";
 import "bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css";
 import "bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
 
