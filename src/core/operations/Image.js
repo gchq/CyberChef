@@ -12,6 +12,7 @@ import Utils from "../Utils.js";
  * @namespace
  */
 const Image = {
+
     /**
      * Extract EXIF operation.
      *
@@ -40,6 +41,7 @@ const Image = {
             throw "Could not extract EXIF data from image: " + err;
         }
     },
+    
 };
 
 export default Image;

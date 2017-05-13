@@ -3348,8 +3348,7 @@ const OperationConfig = {
         run: Image.runEXIF,
         inputType: "byteArray",
         outputType: "string",
-        args: [
-        ],
+        args: [],
     },
 };
 
