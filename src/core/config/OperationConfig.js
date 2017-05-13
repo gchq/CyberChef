@@ -15,6 +15,7 @@ import Endian from "../operations/Endian.js";
 import Entropy from "../operations/Entropy.js";
 import Extract from "../operations/Extract.js";
 import FileType from "../operations/FileType.js";
+import Image from "../operations/Image.js";
 import Hash from "../operations/Hash.js";
 import Hexdump from "../operations/Hexdump.js";
 import HTML from "../operations/HTML.js";
@@ -3335,6 +3336,19 @@ const OperationConfig = {
                 value: false,
             },
         ]
+    },
+    "Extract EXIF": {
+        description: [
+            "Extracts EXIF data from an image.",
+            "<br><br>",
+            "EXIF data is metadata embedded in images (JPEG, JPG, TIFF) and audio files.",
+            "<br><br>",
+            "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.runEXIF,
+        inputType: "byteArray",
+        outputType: "string",
+        args: [],
     },
 };
 
