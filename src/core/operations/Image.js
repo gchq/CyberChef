@@ -41,7 +41,7 @@ const Image = {
             throw "Could not extract EXIF data from image: " + err;
         }
     },
-    
+
 };
 
 export default Image;
