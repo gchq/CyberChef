@@ -15,11 +15,11 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Encode text",
-                "args": ["UTF-8"]
+                "args": ["UTF-8 (65001)"]
             },
             {
                 "op": "Decode text",
-                "args": ["UTF-8"]
+                "args": ["UTF-8 (65001)"]
             },
         ],
     },
@@ -30,11 +30,11 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Encode text",
-                "args": ["UTF-8"]
+                "args": ["UTF-8 (65001)"]
             },
             {
                 "op": "Decode text",
-                "args": ["UTF-8"]
+                "args": ["UTF-8 (65001)"]
             },
         ],
     },
@@ -45,7 +45,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Encode text",
-                "args": ["IBM EBCDIC International"]
+                "args": ["IBM EBCDIC International (500)"]
             },
             {
                 "op": "To Hex",
@@ -64,7 +64,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Decode text",
-                "args": ["IBM EBCDIC International"]
+                "args": ["IBM EBCDIC International (500)"]
             },
         ],
     },
