@@ -67,6 +67,7 @@ const CharEnc = {
 
     /**
      * Encode text operation.
+     * @author tlwr [toby@toby.codes]
      *
      * @param {string} input
      * @param {Object[]} args
@@ -81,6 +82,7 @@ const CharEnc = {
 
     /**
      * Decode text operation.
+     * @author tlwr [toby@toby.codes]
      *
      * @param {byteArray} input
      * @param {Object[]} args
