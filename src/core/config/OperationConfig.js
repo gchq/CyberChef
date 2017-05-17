@@ -2223,7 +2223,7 @@ const OperationConfig = {
         ]
     },
     "To UNIX Timestamp": {
-        description: "Parses a datetime string and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00 UTC</code> becomes <code>978346800</code>",
+        description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code>",
         run: DateTime.runToUnixTimestamp,
         inputType: "string",
         outputType: "number",
@@ -2232,6 +2232,11 @@ const OperationConfig = {
                 name: "Units",
                 type: "option",
                 value: DateTime.UNITS
+            },
+            {
+                name: "Treat as UTC",
+                type: "boolean",
+                value: DateTime.TREAT_AS_UTC
             }
         ]
     },
