@@ -11,7 +11,6 @@
 button,
 a:focus {
     outline: none;
-    -moz-outline-style: none;
 }
 
 .btn-default {
@@ -22,16 +21,24 @@ a:focus {
 
 .btn-default:hover,
 .btn-default:active,
-.btn-default:hover:active {
+.btn-default:hover:active,
+.open>.dropdown-toggle.btn-default {
     color: var(--btn-default-hover-font-colour);
     background-color: var(--btn-default-hover-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-default:focus {
+.btn-default:focus,
+.open>.dropdown-toggle.btn-default:hover,
+.open>.dropdown-toggle.btn-default:focus {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
+}
+
+.btn-default[disabled]:hover {
+    background-color: var(--primary-background-colour);
+    border-color: var(--primary-border-colour);
 }
 
 .btn-success {
@@ -89,20 +96,28 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .form-control {
     background-color: transparent;
+    border-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
 }
 
 code {
     border: 0;
     white-space: pre-wrap;
-    font-family: Consolas, monospace;
+    font-family: var(--fixed-width-font-family);
+    background-color: var(--code-background);
+    color: var(--code-font-colour);
 }
 
 pre {
     border-radius: 0 !important;
+    background-color: var(--secondary-background-colour);
+    border-color: var(--secondary-border-colour);
+    color: var(--fixed-width-font-colour);
 }
 
 blockquote {
     font-size: inherit;
+    border-left-color: var(--secondary-border-colour);
 }
 
 blockquote a {
@@ -122,15 +137,50 @@ optgroup {
     width: auto !important;
 }
 
-.popover,
-.popover.right>.arrow {
+.popover {
     background-color: var(--popover-background);
     border-color: var(--popover-border-colour);
 }
 
+
+.popover.right>.arrow {
+    border-right-color: var(--popover-border-colour);
+}
+
 .popover.right>.arrow:after {
-    /*border-color: var(--popover-border-colour);*/
     border-right-color: var(--popover-background);
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    background-color: var(--primary-background-colour);
+    border-color: var(--primary-border-colour);
+    border-bottom-color: transparent;
+    color: var(--primary-font-colour);
+}
+
+.nav-tabs {
+    border-color: var(--primary-border-colour);
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    background-color: var(--secondary-border-colour);
+}
+
+.nav-tabs>li>a:hover {
+    border-color: var(--secondary-border-colour) var(--secondary-border-colour) var(--primary-border-colour);
+}
+
+.dropdown-menu {
+    background-color: var(--primary-background-colour);
+}
+
+.dropdown-menu>li>a {
+    color: var(--primary-font-colour);
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    background-color: var(--secondary-background-colour);
+    color: var(--primary-font-colour);
 }
 
 
@@ -142,6 +192,14 @@ optgroup {
 .bootstrap-switch-handle-off,
 .bootstrap-switch-label {
     border-radius: 0 !important;
+}
+
+.bootstrap-switch .bootstrap-switch-label {
+    background-color: transparent;
+}
+
+.bootstrap-switch {
+    border-color: var(--primary-border-colour);
 }
 
 

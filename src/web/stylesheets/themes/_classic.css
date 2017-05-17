@@ -27,7 +27,7 @@
 
     --title-colour: #424242;
     --title-weight: bold;
-    --title-background-colour: #eee;
+    --title-background-colour: #fafafa;
 
     --banner-font-colour: #468847;
     --banner-bg-colour: #dff0d8;
@@ -110,4 +110,6 @@
     --drop-file-border-colour: #3a87ad;
     --popover-background: #fff;
     --popover-border-colour: #ccc;
+    --code-background: #f9f2f4;
+    --code-font-colour: #c7254e;
 }

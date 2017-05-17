@@ -6,17 +6,6 @@
  * @license Apache-2.0
  */
 
-/*
-tabs
-links
-disabled buttons
-popovers
-toggle-string dropdowns
-alerts
-loading-file background
-option text for inputs is invisible
-*/
-
 :root.dark {
     --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --primary-font-colour: #c5c5c5;
@@ -120,5 +109,7 @@ option text for inputs is invisible
     /* Misc. */
     --drop-file-border-colour: #0e639c;
     --popover-background: #444;
-    --popover-border-colour: #666; /* still working on this */
+    --popover-border-colour: #555;
+    --code-background: #0e639c;
+    --code-font-colour: #fff;
 }
