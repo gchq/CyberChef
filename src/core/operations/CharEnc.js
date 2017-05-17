@@ -18,80 +18,79 @@ const CharEnc = {
      * @constant
      * @default
      */
-    IO_FORMAT: ["UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1", "Windows-1251", "Hex", "Base64"],
-
-    /**
-     * Text encoding operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    run: function(input, args) {
-        var inputFormat = args[0],
-            outputFormat = args[1];
-
-        if (inputFormat === "Windows-1251") {
-            input = Utils.win1251ToUnicode(input);
-            input = CryptoJS.enc.Utf8.parse(input);
-        } else {
-            input = Utils.format[inputFormat].parse(input);
-        }
-
-        if (outputFormat === "Windows-1251") {
-            input = CryptoJS.enc.Utf8.stringify(input);
-            return Utils.unicodeToWin1251(input);
-        } else {
-            return Utils.format[outputFormat].stringify(input);
-        }
-    },
-
-    /**
-     *
-     * @author tlwr [toby@toby.codes]
-     *
-     * @constant
-     * @default
-     */
-    EBCDIC_CODEPAGES_MAPPING: {
+    IO_FORMAT: {
+        "UTF-8": 65001,
+        "UTF-7": 65000,
+        "UTF16LE": 1200,
+        "UTF16BE": 1201,
+        "UTF16": 1201,
         "IBM EBCDIC International": 500,
         "IBM EBCDIC US-Canada": 37,
+        "Windows-874 Thai": 874,
+        "Japanese Shift-JIS": 932,
+        "Simplified Chinese GBK": 936,
+        "Korean": 949,
+        "Traditional Chinese Big5": 950,
+        "Windows-1250 Central European": 1250,
+        "Windows-1251 Cyrillic": 1251,
+        "Windows-1252 Latin": 1252,
+        "Windows-1253 Greek": 1253,
+        "Windows-1254 Turkish": 1254,
+        "Windows-1255 Hebrew": 1255,
+        "Windows-1256 Arabic": 1256,
+        "Windows-1257 Baltic": 1257,
+        "Windows-1258 Vietnam": 1258,
+        "US-ASCII": 20127,
+        "Russian Cyrillic KOI8-R": 20866,
+        "Simplified Chinese GB2312": 20936,
+        "KOI8-U Ukrainian Cyrillic": 21866,
+        "ISO-8859-1 Latin 1 (Western European)": 28591,
+        "ISO-8859-2 Latin 2 (Central European)": 28592,
+        "ISO-8859-3 Latin 3": 28593,
+        "ISO-8859-4 Baltic": 28594,
+        "ISO-8859-5 Cyrillic": 28595,
+        "ISO-8859-6 Arabic": 28596,
+        "ISO-8859-7 Greek": 28597,
+        "ISO-8859-8 Hebrew": 28598,
+        "ISO-8859-9 Turkish": 28599,
+        "ISO-8859-10 Latin 6": 28600,
+        "ISO-8859-11 Latin (Thai)": 28601,
+        "ISO-8859-13 Latin 7 (Estonian)": 28603,
+        "ISO-8859-14 Latin 8 (Celtic)": 28604,
+        "ISO-8859-15 Latin 9": 28605,
+        "ISO-8859-16 Latin 10": 28606,
+        "ISO-2022 JIS Japanese": 50222,
+        "EUC Japanese": 51932,
+        "EUC Korean": 51949,
+        "Simplified Chinese GB18030": 54936,
     },
 
     /**
-     * To EBCDIC operation.
-     *
-     * @author tlwr [toby@toby.codes]
+     * Encode text operation.
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
-    runToEBCDIC: function(input, args) {
-        let pageNum = CharEnc.EBCDIC_CODEPAGES_MAPPING[args[0]];
-
-        let output = cptable.utils.encode(pageNum, input);
-
-        return Array.from(output);
+    runEncode: function(input, args) {
+        let format = CharEnc.IO_FORMAT[args[0]];
+        let encoded = cptable.utils.encode(format, input);
+        encoded = Array.from(encoded);
+        return encoded;
     },
 
     /**
-     * From EBCDIC operation.
-     *
-     * @author tlwr [toby@toby.codes]
+     * Decode text operation.
      *
      * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
-    runFromEBCDIC: function(input, args) {
-        let pageNum = CharEnc.EBCDIC_CODEPAGES_MAPPING[args[0]];
-
-        let output = cptable.utils.decode(pageNum, input);
-
-        return output;
+    runDecode: function(input, args) {
+        let format = CharEnc.IO_FORMAT[args[0]];
+        let decoded = cptable.utils.decode(format, input);
+        return decoded;
     },
-
 };
 
 export default CharEnc;

@@ -61,7 +61,8 @@ const Categories = [
             "Hex to PEM",
             "Parse ASN.1 hex string",
             "Change IP format",
-            "Text encoding",
+            "Encode text",
+            "Decode text",
             "Swap endianness",
         ]
     },
@@ -143,7 +144,8 @@ const Categories = [
     {
         name: "Language",
         ops: [
-            "Text encoding",
+            "Encode text",
+            "Decode text",
             "Unescape Unicode Characters",
         ]
     },
