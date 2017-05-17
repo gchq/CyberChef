@@ -47,6 +47,12 @@ const DateTime = {
 
 
     /**
+     * @constant
+     * @default
+     */
+    TREAT_AS_UTC: true,
+
+    /**
      * To UNIX Timestamp operation.
      *
      * @param {string} input
@@ -55,7 +61,8 @@ const DateTime = {
      */
     runToUnixTimestamp: function(input, args) {
         let units = args[0],
-            d = moment(input);
+            treatAsUTC = args[1],
+            d = treatAsUTC ? moment.utc(input) : moment(input);
 
         if (units === "Seconds (s)") {
             return d.unix();
