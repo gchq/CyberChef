@@ -85,7 +85,9 @@
         "no-whitespace-before-property": "error",
         "operator-linebreak": ["error", "after"],
         "space-in-parens": "error",
-        "no-var": "error"
+        "no-var": "error",
+        "prefer-template": "error",
+        "template-curly-spacing": ["error", "never"]
     },
     "globals": {
         "$": false,

@@ -406,7 +406,7 @@ RecipeWaiter.prototype.dropdownToggleClick = function(e) {
     const el = e.target;
     const button = el.parentNode.parentNode.previousSibling;
 
-    button.innerHTML = el.textContent + " <span class='caret'></span>";
+    button.innerHTML = `${el.textContent} <span class='caret'></span>`;
     this.ingChange();
 };
 

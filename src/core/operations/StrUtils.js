@@ -127,7 +127,7 @@ const StrUtils = {
                         return "Error: Invalid output format";
                 }
             } catch (err) {
-                return "Invalid regex. Details: " + err.message;
+                return `Invalid regex. Details: ${err.message}`;
             }
         } else {
             return Utils.escapeHtml(input);
@@ -281,7 +281,7 @@ const StrUtils = {
         try {
             regex = new RegExp(args[1]);
         } catch (err) {
-            return "Invalid regex. Details: " + err.message;
+            return `Invalid regex. Details: ${err.message}`;
         }
 
         const regexFilter = function(value) {
@@ -357,9 +357,9 @@ const StrUtils = {
 
         for (let i = 0; i < diff.length; i++) {
             if (diff[i].added) {
-                if (showAdded) output += "<span class='hlgreen'>" + Utils.escapeHtml(diff[i].value) + "</span>";
+                if (showAdded) output += `<span class='hlgreen'>${Utils.escapeHtml(diff[i].value)}</span>`;
             } else if (diff[i].removed) {
-                if (showRemoved) output += "<span class='hlred'>" + Utils.escapeHtml(diff[i].value) + "</span>";
+                if (showRemoved) output += `<span class='hlred'>${Utils.escapeHtml(diff[i].value)}</span>`;
             } else {
                 output += Utils.escapeHtml(diff[i].value);
             }
@@ -422,11 +422,11 @@ const StrUtils = {
                 }
 
                 if (match && !inMatch) {
-                    outputs[s] += "<span class='hlgreen'>" + Utils.escapeHtml(samples[s][i]);
+                    outputs[s] += `<span class='hlgreen'>${Utils.escapeHtml(samples[s][i])}`;
                     if (samples[s].length === i + 1) outputs[s] += "</span>";
                     if (s === samples.length - 1) inMatch = true;
                 } else if (!match && inMatch) {
-                    outputs[s] += "</span>" + Utils.escapeHtml(samples[s][i]);
+                    outputs[s] += `</span>${Utils.escapeHtml(samples[s][i])}`;
                     if (s === samples.length - 1) inMatch = false;
                 } else {
                     outputs[s] += Utils.escapeHtml(samples[s][i]);
@@ -536,7 +536,7 @@ const StrUtils = {
             output += Utils.escapeHtml(input.slice(i, m.index));
 
             // Add match with highlighting
-            output += "<span class='hl"+hl+"'>" + Utils.escapeHtml(m[0]) + "</span>";
+            output += `<span class='hl${hl}'>${Utils.escapeHtml(m[0])}</span>`;
 
             // Switch highlight
             hl = hl === 1 ? 2 : 1;
@@ -549,7 +549,7 @@ const StrUtils = {
         output += Utils.escapeHtml(input.slice(i, input.length));
 
         if (displayTotal)
-            output = "Total found: " + total + "\n\n" + output;
+            output = `Total found: ${total}\n\n${output}`;
 
         return output;
     },
@@ -574,20 +574,20 @@ const StrUtils = {
         while ((match = regex.exec(input))) {
             total++;
             if (matches) {
-                output += match[0] + "\n";
+                output += `${match[0]}\n`;
             }
             if (captureGroups) {
                 for (let i = 1; i < match.length; i++) {
                     if (matches) {
-                        output += "  Group " + i + ": ";
+                        output += `  Group ${i}: `;
                     }
-                    output += match[i] + "\n";
+                    output += `${match[i]}\n`;
                 }
             }
         }
 
         if (displayTotal)
-            output = "Total found: " + total + "\n\n" + output;
+            output = `Total found: ${total}\n\n${output}`;
 
         return output;
     },

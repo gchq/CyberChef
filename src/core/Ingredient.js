@@ -81,7 +81,7 @@ Ingredient.prepare = function(data, type) {
             number = parseFloat(data);
             if (isNaN(number)) {
                 const sample = Utils.truncate(data.toString(), 10);
-                throw "Invalid ingredient value. Not a number: " + sample;
+                throw `Invalid ingredient value. Not a number: ${sample}`;
             }
             return number;
         default:

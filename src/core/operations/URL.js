@@ -71,9 +71,9 @@ const URL_ = {
         if (a.protocol) {
             let output = "";
             if (a.hostname !== window.location.hostname) {
-                output = "Protocol:\t" + a.protocol + "\n";
-                if (a.hostname) output += "Hostname:\t" + a.hostname + "\n";
-                if (a.port) output += "Port:\t\t" + a.port + "\n";
+                output = `Protocol:\t${a.protocol}\n`;
+                if (a.hostname) output += `Hostname:\t${a.hostname}\n`;
+                if (a.port) output += `Port:\t\t${a.port}\n`;
             }
 
             if (a.pathname && a.pathname !== window.location.pathname) {
@@ -81,11 +81,11 @@ const URL_ = {
                 if (pathname.indexOf(window.location.pathname) === 0)
                     pathname = pathname.replace(window.location.pathname, "");
                 if (pathname)
-                    output += "Path name:\t" + pathname + "\n";
+                    output += `Path name:\t${pathname}\n`;
             }
 
             if (a.hash && a.hash !== window.location.hash) {
-                output += "Hash:\t\t" + a.hash + "\n";
+                output += `Hash:\t\t${a.hash}\n`;
             }
 
             if (a.search && a.search !== window.location.search) {
@@ -97,9 +97,9 @@ const URL_ = {
                     padding = (splitArgs[i][0].length > padding) ? splitArgs[i][0].length : padding;
                 }
                 for (i = 0; i < splitArgs.length; i++) {
-                    output += "\t" + Utils.padRight(splitArgs[i][0], padding);
+                    output += `\t${Utils.padRight(splitArgs[i][0], padding)}`;
                     if (splitArgs[i].length > 1 && splitArgs[i][1].length)
-                        output += " = " + splitArgs[i][1] + "\n";
+                        output += ` = ${splitArgs[i][1]}\n`;
                     else output += "\n";
                 }
             }

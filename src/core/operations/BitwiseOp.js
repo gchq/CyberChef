@@ -145,11 +145,11 @@ const BitwiseOp = {
             result = BitwiseOp._bitOp(input, Utils.hexToByteArray(key.toString(16)), BitwiseOp._xor, nullPreserving, differential);
             resultUtf8 = Utils.byteArrayToUtf8(result);
             if (crib !== "" && resultUtf8.search(regex) === -1) continue;
-            if (printKey) output += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
+            if (printKey) output += `Key = ${Utils.hex(key, (2*keyLength))}: `;
             if (outputHex)
-                output += Utils.byteArrayToHex(result) + "\n";
+                output += `${Utils.byteArrayToHex(result)}\n`;
             else
-                output += Utils.printable(resultUtf8, false) + "\n";
+                output += `${Utils.printable(resultUtf8, false)}\n`;
             if (printKey) output += "\n";
         }
         return output;

@@ -46,7 +46,7 @@ const Hexdump = {
             const buff = input.slice(i, i+length);
             let hexa = "";
             for (let j = 0; j < buff.length; j++) {
-                hexa += Utils.hex(buff[j], padding) + " ";
+                hexa += `${Utils.hex(buff[j], padding)} `;
             }
 
             let lineNo = Utils.hex(i, 8);
@@ -56,12 +56,12 @@ const Hexdump = {
                 lineNo = lineNo.toUpperCase();
             }
 
-            output += lineNo + "  " +
-                Utils.padRight(hexa, (length*(padding+1))) +
-                " |" + Utils.padRight(Utils.printable(Utils.byteArrayToChars(buff)), buff.length) + "|\n";
+            output += `${lineNo}  ${
+                Utils.padRight(hexa, (length*(padding+1)))
+                } |${Utils.padRight(Utils.printable(Utils.byteArrayToChars(buff)), buff.length)}|\n`;
 
             if (includeFinalLength && i+buff.length === input.length) {
-                output += Utils.hex(i+buff.length, 8) + "\n";
+                output += `${Utils.hex(i+buff.length, 8)}\n`;
             }
         }
 

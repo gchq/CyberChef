@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 
 
     // Project configuration
-    const compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
+    const compileTime = `${grunt.template.today("dd/mm/yyyy HH:MM:ss")} UTC`,
         banner = "/**\n" +
             "* CyberChef - The Cyber Swiss Army Knife\n" +
             "*\n" +
@@ -229,7 +229,7 @@ module.exports = function (grunt) {
                 entry: "./src/web/index.js",
                 output: {
                     filename: "scripts.js",
-                    path: __dirname + "/build/dev"
+                    path: `${__dirname}/build/dev`
                 },
                 plugins: [
                     new HtmlWebpackPlugin({
@@ -245,7 +245,7 @@ module.exports = function (grunt) {
                 entry: "./src/web/index.js",
                 output: {
                     filename: "scripts.js",
-                    path: __dirname + "/build/prod"
+                    path: `${__dirname}/build/prod`
                 },
                 plugins: [
                     new webpack.optimize.UglifyJsPlugin({
@@ -287,7 +287,7 @@ module.exports = function (grunt) {
                 entry: "./test/index.js",
                 output: {
                     filename: "index.js",
-                    path: __dirname + "/build/test"
+                    path: `${__dirname}/build/test`
                 }
             },
             node: {
@@ -295,7 +295,7 @@ module.exports = function (grunt) {
                 entry: "./src/node/index.js",
                 output: {
                     filename: "CyberChef.js",
-                    path: __dirname + "/build/node",
+                    path: `${__dirname}/build/node`,
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
                 }
@@ -307,7 +307,7 @@ module.exports = function (grunt) {
                     process: function (content) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
-                            grunt.file.read("src/web/static/ga.html") + "</body></html>");
+                            `${grunt.file.read("src/web/static/ga.html")}</body></html>`);
                         return grunt.template.process(content);
                     }
                 },

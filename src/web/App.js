@@ -136,8 +136,8 @@ App.prototype.bake = async function(step) {
     // If baking took too long, disable auto-bake
     if (response.duration > this.options.autoBakeThreshold && this.autoBake_) {
         this.manager.controls.setAutoBake(false);
-        this.alert("Baking took longer than " + this.options.autoBakeThreshold +
-            "ms, Auto Bake has been disabled.", "warning", 5000);
+        this.alert(`Baking took longer than ${this.options.autoBakeThreshold
+            }ms, Auto Bake has been disabled.`, "warning", 5000);
     }
 };
 
@@ -323,8 +323,8 @@ App.prototype.validFavourites = function(favourites) {
         if (this.operations.hasOwnProperty(favourites[i])) {
             validFavs.push(favourites[i]);
         } else {
-            this.alert("The operation \"" + Utils.escapeHtml(favourites[i]) +
-                "\" is no longer available. It has been removed from your favourites.", "info");
+            this.alert(`The operation "${Utils.escapeHtml(favourites[i])
+                }" is no longer available. It has been removed from your favourites.`, "info");
         }
     }
     return validFavs;
@@ -362,7 +362,7 @@ App.prototype.addFavourite = function(name) {
     const favourites = JSON.parse(localStorage.favourites);
 
     if (favourites.indexOf(name) >= 0) {
-        this.alert("'" + name + "' is already in your favourites", "info", 2000);
+        this.alert(`'${name}' is already in your favourites`, "info", 2000);
         return;
     }
 
@@ -481,8 +481,8 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
                 // toggleString
                 args[j].value = recipeConfig[i].args[j].string;
                 args[j].previousSibling.children[0].innerHTML =
-                    Utils.escapeHtml(recipeConfig[i].args[j].option) +
-                    " <span class='caret'></span>";
+                    `${Utils.escapeHtml(recipeConfig[i].args[j].option)
+                    } <span class='caret'></span>`;
             } else {
                 // all others
                 args[j].value = recipeConfig[i].args[j];
@@ -521,11 +521,11 @@ App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
     let now = new Date(),
         timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
-        compileInfo = "<span style=\"font-weight: normal\">Last build: " +
-            timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1) + " ago";
+        compileInfo = `<span style="font-weight: normal">Last build: ${
+            timeSinceCompile.substr(0, 1).toUpperCase()}${timeSinceCompile.substr(1)} ago`;
 
     if (window.compileMessage !== "") {
-        compileInfo += " - " + window.compileMessage;
+        compileInfo += ` - ${window.compileMessage}`;
     }
 
     compileInfo += "</span>";
@@ -559,7 +559,7 @@ App.prototype.setCompileMessage = function() {
 App.prototype.alert = function(str, style, timeout, silent) {
     const time = new Date();
 
-    console.log("[" + time.toLocaleString() + "] " + str);
+    console.log(`[${time.toLocaleString()}] ${str}`);
     if (silent) return;
 
     style = style || "danger";
@@ -572,15 +572,15 @@ App.prototype.alert = function(str, style, timeout, silent) {
     alertEl.classList.remove("alert-warning");
     alertEl.classList.remove("alert-info");
     alertEl.classList.remove("alert-success");
-    alertEl.classList.add("alert-" + style);
+    alertEl.classList.add(`alert-${style}`);
 
     // If the box hasn't been closed, append to it rather than replacing
     if (alertEl.style.display === "block") {
         alertContent.innerHTML +=
-            "<br><br>[" + time.toLocaleTimeString() + "] " + str;
+            `<br><br>[${time.toLocaleTimeString()}] ${str}`;
     } else {
         alertContent.innerHTML =
-            "[" + time.toLocaleTimeString() + "] " + str;
+            `[${time.toLocaleTimeString()}] ${str}`;
     }
 
     // Stop the animation if it is in progress

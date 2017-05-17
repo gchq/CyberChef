@@ -40,27 +40,27 @@ const HTML = {
 
         for (let i = 0; i < charcodes.length; i++) {
             if (convertAll && numeric) {
-                output += "&#" + charcodes[i] + ";";
+                output += `&#${charcodes[i]};`;
             } else if (convertAll && hexa) {
-                output += "&#x" + Utils.hex(charcodes[i]) + ";";
+                output += `&#x${Utils.hex(charcodes[i])};`;
             } else if (convertAll) {
-                output += HTML._byteToEntity[charcodes[i]] || "&#" + charcodes[i] + ";";
+                output += HTML._byteToEntity[charcodes[i]] || `&#${charcodes[i]};`;
             } else if (numeric) {
                 if (charcodes[i] > 255 || HTML._byteToEntity.hasOwnProperty(charcodes[i])) {
-                    output += "&#" + charcodes[i] + ";";
+                    output += `&#${charcodes[i]};`;
                 } else {
                     output += Utils.chr(charcodes[i]);
                 }
             } else if (hexa) {
                 if (charcodes[i] > 255 || HTML._byteToEntity.hasOwnProperty(charcodes[i])) {
-                    output += "&#x" + Utils.hex(charcodes[i]) + ";";
+                    output += `&#x${Utils.hex(charcodes[i])};`;
                 } else {
                     output += Utils.chr(charcodes[i]);
                 }
             } else {
                 output += HTML._byteToEntity[charcodes[i]] || (
                     charcodes[i] > 255 ?
-                        "&#" + charcodes[i] + ";" :
+                        `&#${charcodes[i]};` :
                         Utils.chr(charcodes[i])
                 );
             }
@@ -213,28 +213,28 @@ const HTML = {
         y = isNaN(y) ? "0" : y.toFixed(2);
         k = k.toFixed(2);
 
-        let hex = "#" +
-                Utils.padLeft(Math.round(r).toString(16), 2) +
-                Utils.padLeft(Math.round(g).toString(16), 2) +
-                Utils.padLeft(Math.round(b).toString(16), 2),
-            rgb  = "rgb(" + r + ", " + g + ", " + b + ")",
-            rgba = "rgba(" + r + ", " + g + ", " + b + ", " + a + ")",
-            hsl  = "hsl(" + h + ", " + s + "%, " + l + "%)",
-            hsla = "hsla(" + h + ", " + s + "%, " + l + "%, " + a + ")",
-            cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
+        let hex = `#${
+                Utils.padLeft(Math.round(r).toString(16), 2)
+                }${Utils.padLeft(Math.round(g).toString(16), 2)
+                }${Utils.padLeft(Math.round(b).toString(16), 2)}`,
+            rgb  = `rgb(${r}, ${g}, ${b})`,
+            rgba = `rgba(${r}, ${g}, ${b}, ${a})`,
+            hsl  = `hsl(${h}, ${s}%, ${l}%)`,
+            hsla = `hsla(${h}, ${s}%, ${l}%, ${a})`,
+            cmyk = `cmyk(${c}, ${m}, ${y}, ${k})`;
 
         // Generate output
-        return "<div id='colorpicker' style='display: inline-block'></div>" +
-            "Hex:  " + hex + "\n" +
-            "RGB:  " + rgb + "\n" +
-            "RGBA: " + rgba + "\n" +
-            "HSL:  " + hsl + "\n" +
-            "HSLA: " + hsla + "\n" +
-            "CMYK: " + cmyk +
-            "<script>\
+        return `${"<div id='colorpicker' style='display: inline-block'></div>" +
+            "Hex:  "}${hex}\n` +
+            `RGB:  ${rgb}\n` +
+            `RGBA: ${rgba}\n` +
+            `HSL:  ${hsl}\n` +
+            `HSLA: ${hsla}\n` +
+            `CMYK: ${cmyk
+            }<script>\
                 $('#colorpicker').colorpicker({\
                     format: 'rgba',\
-                    color: '" + rgba + "',\
+                    color: '${rgba}',\
                     container: true,\
                     inline: true,\
                 }).on('changeColor', function(e) {\
@@ -243,7 +243,7 @@ const HTML = {
                         color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';\
                     window.app.autoBake();\
                 });\
-            </script>";
+            </script>`;
     },
 
 

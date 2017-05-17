@@ -30,16 +30,16 @@ const Entropy = {
             output = "",
             entropy = Entropy._calcEntropy(input);
 
-        output += "Shannon entropy: " + entropy + "\n" +
+        output += `Shannon entropy: ${entropy}\n` +
             "<br><canvas id='chart-area'></canvas><br>\n" +
             "- 0 represents no randomness (i.e. all the bytes in the data have the same value) whereas 8, the maximum, represents a completely random string.\n" +
             "- Standard English text usually falls somewhere between 3.5 and 5.\n" +
             "- Properly encrypted or compressed data of a reasonable length should have an entropy of over 7.5.\n\n" +
             "The following results show the entropy of chunks of the input data. Chunks with particularly high entropy could suggest encrypted or compressed sections.\n\n" +
-            "<br><script>\
+            `<br><script>\
                 var canvas = document.getElementById('chart-area'),\
                     parentRect = canvas.parentNode.getBoundingClientRect(),\
-                    entropy = " + entropy + ",\
+                    entropy = ${entropy},\
                     height = parentRect.height * 0.25;\
                 \
                 canvas.width = parentRect.width * 0.95;\
@@ -56,13 +56,13 @@ const Entropy = {
                         max: 8\
                     }\
                 ]);\
-            </script>";
+            </script>`;
 
         let chunkEntropy = 0;
         if (chunkSize !== 0) {
             for (let i = 0; i < input.length; i += chunkSize) {
                 chunkEntropy = Entropy._calcEntropy(input.slice(i, i+chunkSize));
-                output += "Bytes " + i + " to " + (i+chunkSize) + ": " + chunkEntropy + "\n";
+                output += `Bytes ${i} to ${i+chunkSize}: ${chunkEntropy}\n`;
             }
         } else {
             output += "Chunk size cannot be 0.";
@@ -107,27 +107,27 @@ const Entropy = {
         }
 
         // Print
-        let output = "<canvas id='chart-area'></canvas><br>" +
-            "Total data length: " + len +
-            "\nNumber of bytes represented: " + repr +
-            "\nNumber of bytes not represented: " + (256-repr) +
-            "\n\nByte   Percentage\n" +
-            "<script>\
+        let output = `${"<canvas id='chart-area'></canvas><br>" +
+            "Total data length: "}${len
+            }\nNumber of bytes represented: ${repr
+            }\nNumber of bytes not represented: ${256-repr
+            }\n\nByte   Percentage\n` +
+            `<script>\
                 var canvas = document.getElementById('chart-area'),\
                     parentRect = canvas.parentNode.getBoundingClientRect(),\
-                    scores = " + JSON.stringify(percentages) + ";\
+                    scores = ${JSON.stringify(percentages)};\
                 \
                 canvas.width = parentRect.width * 0.95;\
                 canvas.height = parentRect.height * 0.9;\
                 \
                 CanvasComponents.drawBarChart(canvas, scores, 'Byte', 'Frequency %', 16, 6);\
-            </script>";
+            </script>`;
 
         for (i = 0; i < 256; i++) {
             if (distrib[i] || showZeroes) {
-                output += " " + Utils.hex(i, 2) + "    (" +
-                        Utils.padRight(percentages[i].toFixed(2).replace(".00", "") + "%)", 8) +
-                        Array(Math.ceil(percentages[i])+1).join("|") + "\n";
+                output += ` ${Utils.hex(i, 2)}    (${
+                        Utils.padRight(`${percentages[i].toFixed(2).replace(".00", "")}%)`, 8)
+                        }${Array(Math.ceil(percentages[i])+1).join("|")}\n`;
             }
         }
 

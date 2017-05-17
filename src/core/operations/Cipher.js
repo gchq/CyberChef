@@ -83,10 +83,10 @@ const Cipher = {
 
         let result = "";
         if (resultOption === "show all") {
-            result += "Key:  " + encrypted.key.toString(Utils.format[outputFormat]);
-            result += "\nIV:   " + encrypted.iv.toString(Utils.format[outputFormat]);
-            if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Utils.format[outputFormat]);
-            result += "\n\nCiphertext: " + encrypted.ciphertext.toString(Utils.format[outputFormat]);
+            result += `Key:  ${encrypted.key.toString(Utils.format[outputFormat])}`;
+            result += `\nIV:   ${encrypted.iv.toString(Utils.format[outputFormat])}`;
+            if (encrypted.salt) result += `\nSalt: ${encrypted.salt.toString(Utils.format[outputFormat])}`;
+            result += `\n\nCiphertext: ${encrypted.ciphertext.toString(Utils.format[outputFormat])}`;
         } else {
             result = encrypted[resultOption].toString(Utils.format[outputFormat]);
         }
@@ -138,7 +138,7 @@ const Cipher = {
         try {
             result = decrypted.toString(Utils.format[outputFormat]);
         } catch (err) {
-            result = "Decrypt error: " + err.message;
+            result = `Decrypt error: ${err.message}`;
         }
 
         return result;

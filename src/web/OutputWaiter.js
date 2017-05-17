@@ -88,11 +88,11 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
 
     const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
     const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const timeStr   = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
+    const timeStr   = Utils.pad(`${duration.toString()}ms`, width, " ").replace(/ /g, "&nbsp;");
 
-    document.getElementById("output-info").innerHTML = "time: " + timeStr +
-        "<br>length: " + lengthStr +
-        "<br>lines: " + linesStr;
+    document.getElementById("output-info").innerHTML = `time: ${timeStr
+        }<br>length: ${lengthStr
+        }<br>lines: ${linesStr}`;
     document.getElementById("input-selection-info").innerHTML = "";
     document.getElementById("output-selection-info").innerHTML = "";
 };
@@ -134,7 +134,7 @@ OutputWaiter.prototype.saveClick = function() {
 
     if (filename) {
         const el = document.createElement("a");
-        el.setAttribute("href", "data:application/octet-stream;base64;charset=utf-8," + data);
+        el.setAttribute("href", `data:application/octet-stream;base64;charset=utf-8,${data}`);
         el.setAttribute("download", filename);
 
         // Firefox requires that the element be added to the DOM before it can be clicked

@@ -357,7 +357,7 @@ const ByteRepr = {
         const convert = args[0];
         const spaces = args[1];
         if (convert === "All chars") {
-            let result = "|" + Utils.toHex(input) + "|";
+            let result = `|${Utils.toHex(input)}|`;
             if (!spaces) result = result.replace(/ /g, "");
             return result;
         }

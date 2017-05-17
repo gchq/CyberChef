@@ -50,19 +50,19 @@ HTMLOperation.prototype.toStubHtml = function(removeIcon) {
     let html = "<li class='operation'";
 
     if (this.description) {
-        html += " data-container='body' data-toggle='popover' data-placement='auto right'\
-            data-content=\"" + this.description + "\" data-html='true' data-trigger='hover'";
+        html += ` data-container='body' data-toggle='popover' data-placement='auto right'\
+            data-content="${this.description}" data-html='true' data-trigger='hover'`;
     }
 
-    html += ">" + this.name;
+    html += `>${this.name}`;
 
     if (removeIcon) {
-        html += "<img src='data:image/png;base64," + HTMLOperation.REMOVE_ICON +
-            "' class='op-icon remove-icon'>";
+        html += `<img src='data:image/png;base64,${HTMLOperation.REMOVE_ICON
+            }' class='op-icon remove-icon'>`;
     }
 
     if (this.description) {
-        html += "<img src='data:image/png;base64," + HTMLOperation.INFO_ICON + "' class='op-icon'>";
+        html += `<img src='data:image/png;base64,${HTMLOperation.INFO_ICON}' class='op-icon'>`;
     }
 
     html += "</li>";
@@ -77,7 +77,7 @@ HTMLOperation.prototype.toStubHtml = function(removeIcon) {
  * @returns {string}
  */
 HTMLOperation.prototype.toFullHtml = function() {
-    let html = "<div class='arg-title'>" + this.name + "</div>";
+    let html = `<div class='arg-title'>${this.name}</div>`;
 
     for (let i = 0; i < this.ingList.length; i++) {
         html += this.ingList[i].toHtml();
@@ -104,15 +104,15 @@ HTMLOperation.prototype.toFullHtml = function() {
  */
 HTMLOperation.prototype.highlightSearchString = function(searchStr, namePos, descPos) {
     if (namePos >= 0) {
-        this.name = this.name.slice(0, namePos) + "<b><u>" +
-            this.name.slice(namePos, namePos + searchStr.length) + "</u></b>" +
-            this.name.slice(namePos + searchStr.length);
+        this.name = `${this.name.slice(0, namePos)}<b><u>${
+            this.name.slice(namePos, namePos + searchStr.length)}</u></b>${
+            this.name.slice(namePos + searchStr.length)}`;
     }
 
     if (this.description && descPos >= 0) {
-        this.description = this.description.slice(0, descPos) + "<b><u>" +
-            this.description.slice(descPos, descPos + searchStr.length) + "</u></b>" +
-            this.description.slice(descPos + searchStr.length);
+        this.description = `${this.description.slice(0, descPos)}<b><u>${
+            this.description.slice(descPos, descPos + searchStr.length)}</u></b>${
+            this.description.slice(descPos + searchStr.length)}`;
     }
 };
 

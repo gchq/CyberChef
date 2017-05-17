@@ -229,11 +229,11 @@ const Tidy = {
 
         if (position === "Start") {
             for (i = 0; i < lines.length; i++) {
-                output += Utils.padLeft(lines[i], lines[i].length+len, chr) + "\n";
+                output += `${Utils.padLeft(lines[i], lines[i].length+len, chr)}\n`;
             }
         } else if (position === "End") {
             for (i = 0; i < lines.length; i++) {
-                output += Utils.padRight(lines[i], lines[i].length+len, chr) + "\n";
+                output += `${Utils.padRight(lines[i], lines[i].length+len, chr)}\n`;
             }
         }
 

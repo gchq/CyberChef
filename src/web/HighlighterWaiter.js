@@ -314,7 +314,7 @@ HighlighterWaiter.prototype.selectionInfo = function(start, end) {
     const endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;");
     const lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
 
-    return "start: " + startStr + "<br>end: " + endStr + "<br>length: " + lenStr;
+    return `start: ${startStr}<br>end: ${endStr}<br>length: ${lenStr}`;
 };
 
 
@@ -493,16 +493,16 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     //if (colour) cssClass += "-"+colour;
 
     // Remove HTML tags
-    text = text.replace(/&/g, "&amp;")
+    text = `${text.replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/\n/g, "&#10;")
                 // Convert placeholders to tags
-                .replace(startPlaceholderRegex, "<span class=\""+cssClass+"\">")
-                .replace(endPlaceholderRegex, "</span>") + "&nbsp;";
+                .replace(startPlaceholderRegex, `<span class="${cssClass}">`)
+                .replace(endPlaceholderRegex, "</span>")}&nbsp;`;
 
     // Adjust width to allow for scrollbars
-    highlighter.style.width = textarea.clientWidth + "px";
+    highlighter.style.width = `${textarea.clientWidth}px`;
     highlighter.innerHTML = text;
     highlighter.scrollTop = textarea.scrollTop;
     highlighter.scrollLeft = textarea.scrollLeft;

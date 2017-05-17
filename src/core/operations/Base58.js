@@ -109,7 +109,7 @@ const Base58 = {
                 if (removeNonAlphaChars) {
                     return;
                 } else {
-                    throw ("Char '" + c + "' at position " + charIndex + " not in alphabet");
+                    throw (`Char '${c}' at position ${charIndex} not in alphabet`);
                 }
             }
 
