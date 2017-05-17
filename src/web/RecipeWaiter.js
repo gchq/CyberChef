@@ -13,7 +13,7 @@ import Sortable from "sortablejs";
  * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var RecipeWaiter = function(app, manager) {
+const RecipeWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
     this.removeIntent = false;
@@ -24,7 +24,7 @@ var RecipeWaiter = function(app, manager) {
  * Sets up the drag and drop capability for operations in the operations and recipe areas.
  */
 RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
-    var recList = document.getElementById("rec-list");
+    const recList = document.getElementById("rec-list");
 
     // Recipe list
     Sortable.create(recList, {
@@ -60,8 +60,8 @@ RecipeWaiter.prototype.initialiseOperationDragNDrop = function() {
     }.bind(this));
 
     Sortable.utils.on(recList, "touchend", function(e) {
-        var loc = e.changedTouches[0],
-            target = document.elementFromPoint(loc.clientX, loc.clientY);
+        const loc = e.changedTouches[0];
+        const target = document.elementFromPoint(loc.clientX, loc.clientY);
 
         this.removeIntent = !recList.contains(target);
     }.bind(this));
@@ -182,7 +182,7 @@ RecipeWaiter.prototype.favDrop = function(e) {
     e.preventDefault();
     e.target.classList.remove("favourites-hover");
 
-    var opName = e.dataTransfer.getData("Text");
+    const opName = e.dataTransfer.getData("Text");
     this.app.addFavourite(opName);
 };
 
@@ -205,7 +205,7 @@ RecipeWaiter.prototype.ingChange = function() {
  * @param {event} e
  */
 RecipeWaiter.prototype.disableClick = function(e) {
-    var icon = e.target;
+    const icon = e.target;
 
     if (icon.getAttribute("disabled") === "false") {
         icon.setAttribute("disabled", "true");
@@ -230,7 +230,7 @@ RecipeWaiter.prototype.disableClick = function(e) {
  * @param {event} e
  */
 RecipeWaiter.prototype.breakpointClick = function(e) {
-    var bp = e.target;
+    const bp = e.target;
 
     if (bp.getAttribute("break") === "false") {
         bp.setAttribute("break", "true");
@@ -276,16 +276,17 @@ RecipeWaiter.prototype.operationChildDblclick = function(e) {
  * @returns {recipeConfig}
  */
 RecipeWaiter.prototype.getConfig = function() {
-    var config = [], ingredients, ingList, disabled, bp, item,
-        operations = document.querySelectorAll("#rec-list li.operation");
+    const config = [];
+    let ingredients, ingList, disabled, bp, item;
+    const operations = document.querySelectorAll("#rec-list li.operation");
 
-    for (var i = 0; i < operations.length; i++) {
+    for (let i = 0; i < operations.length; i++) {
         ingredients = [];
         disabled = operations[i].querySelector(".disable-icon");
         bp = operations[i].querySelector(".breakpoint");
         ingList = operations[i].querySelectorAll(".arg");
 
-        for (var j = 0; j < ingList.length; j++) {
+        for (let j = 0; j < ingList.length; j++) {
             if (ingList[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 ingredients[j] = ingList[j].checked;
@@ -327,8 +328,8 @@ RecipeWaiter.prototype.getConfig = function() {
  * @param {number} position
  */
 RecipeWaiter.prototype.updateBreakpointIndicator = function(position) {
-    var operations = document.querySelectorAll("#rec-list li.operation");
-    for (var i = 0; i < operations.length; i++) {
+    const operations = document.querySelectorAll("#rec-list li.operation");
+    for (let i = 0; i < operations.length; i++) {
         if (i === position) {
             operations[i].classList.add("break");
         } else {
@@ -345,8 +346,8 @@ RecipeWaiter.prototype.updateBreakpointIndicator = function(position) {
  * @param {element} el - The operation stub element from the operations pane
  */
 RecipeWaiter.prototype.buildRecipeOperation = function(el) {
-    var opName = el.textContent;
-    var op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+    const opName = el.textContent;
+    const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
     el.innerHTML = op.toFullHtml();
 
     if (this.app.operations[opName].flowControl) {
@@ -369,7 +370,7 @@ RecipeWaiter.prototype.buildRecipeOperation = function(el) {
  * @returns {element}
  */
 RecipeWaiter.prototype.addOperation = function(name) {
-    var item = document.createElement("li");
+    const item = document.createElement("li");
 
     item.classList.add("operation");
     item.innerHTML = name;
@@ -387,7 +388,7 @@ RecipeWaiter.prototype.addOperation = function(name) {
  * @fires Manager#operationremove
  */
 RecipeWaiter.prototype.clearRecipe = function() {
-    var recList = document.getElementById("rec-list");
+    const recList = document.getElementById("rec-list");
     while (recList.firstChild) {
         recList.removeChild(recList.firstChild);
     }
@@ -402,8 +403,8 @@ RecipeWaiter.prototype.clearRecipe = function() {
  * @param {event} e
  */
 RecipeWaiter.prototype.dropdownToggleClick = function(e) {
-    var el = e.target,
-        button = el.parentNode.parentNode.previousSibling;
+    const el = e.target;
+    const button = el.parentNode.parentNode.previousSibling;
 
     button.innerHTML = el.textContent + " <span class='caret'></span>";
     this.ingChange();

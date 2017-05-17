@@ -40,7 +40,7 @@ const Base58 = {
      * @returns {string}
      */
     runTo: function(input, args) {
-        var alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value,
+        let alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value,
             result = [0];
 
         alphabet = Utils.expandAlphRange(alphabet).join("");
@@ -53,11 +53,11 @@ const Base58 = {
         if (input.length === 0) return "";
 
         input.forEach(function(b) {
-            var carry = (result[0] << 8) + b;
+            let carry = (result[0] << 8) + b;
             result[0] = carry % 58;
             carry = (carry / 58) | 0;
 
-            for (var i = 1; i < result.length; i++) {
+            for (let i = 1; i < result.length; i++) {
                 carry += result[i] << 8;
                 result[i] = carry % 58;
                 carry = (carry / 58) | 0;
@@ -89,7 +89,7 @@ const Base58 = {
      * @returns {byteArray}
      */
     runFrom: function(input, args) {
-        var alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value,
+        let alphabet = args[0] || Base58.ALPHABET_OPTIONS[0].value,
             removeNonAlphaChars = args[1] === undefined ? true : args[1],
             result = [0];
 
@@ -103,7 +103,7 @@ const Base58 = {
         if (input.length === 0) return [];
 
         [].forEach.call(input, function(c, charIndex) {
-            var index = alphabet.indexOf(c);
+            const index = alphabet.indexOf(c);
 
             if (index === -1) {
                 if (removeNonAlphaChars) {
@@ -113,11 +113,11 @@ const Base58 = {
                 }
             }
 
-            var carry = result[0] * 58 + index;
+            let carry = result[0] * 58 + index;
             result[0] = carry & 0xFF;
             carry = carry >> 8;
 
-            for (var i = 1; i < result.length; i++) {
+            for (let i = 1; i < result.length; i++) {
                 carry += result[i] * 58;
                 result[i] = carry & 0xFF;
                 carry = carry >> 8;

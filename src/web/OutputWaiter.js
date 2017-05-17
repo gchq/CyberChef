@@ -12,7 +12,7 @@ import Utils from "../core/Utils.js";
  * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var OutputWaiter = function(app, manager) {
+const OutputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 };
@@ -36,10 +36,10 @@ OutputWaiter.prototype.get = function() {
  * @param {number} duration - The length of time (ms) it took to generate the output
  */
 OutputWaiter.prototype.set = function(dataStr, type, duration) {
-    var outputText = document.getElementById("output-text"),
-        outputHtml = document.getElementById("output-html"),
-        outputHighlighter = document.getElementById("output-highlighter"),
-        inputHighlighter = document.getElementById("input-highlighter");
+    const outputText = document.getElementById("output-text");
+    const outputHtml = document.getElementById("output-html");
+    const outputHighlighter = document.getElementById("output-highlighter");
+    const inputHighlighter = document.getElementById("input-highlighter");
 
     if (type === "html") {
         outputText.style.display = "none";
@@ -51,8 +51,8 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
         outputHtml.innerHTML = dataStr;
 
         // Execute script sections
-        var scriptElements = outputHtml.querySelectorAll("script");
-        for (var i = 0; i < scriptElements.length; i++) {
+        const scriptElements = outputHtml.querySelectorAll("script");
+        for (let i = 0; i < scriptElements.length; i++) {
             try {
                 eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
             } catch (err) {
@@ -70,7 +70,7 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
     }
 
     this.manager.highlighter.removeHighlights();
-    var lines = dataStr.count("\n") + 1;
+    const lines = dataStr.count("\n") + 1;
     this.setOutputInfo(dataStr.length, lines, duration);
 };
 
@@ -83,12 +83,12 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
  * @param {number} duration - The length of time (ms) it took to generate the output
  */
 OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
-    var width = length.toString().length;
+    let width = length.toString().length;
     width = width < 4 ? 4 : width;
 
-    var lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    var linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
-    var timeStr   = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
+    const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const timeStr   = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
 
     document.getElementById("output-info").innerHTML = "time: " + timeStr +
         "<br>length: " + lengthStr +
@@ -103,11 +103,11 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
  * without wrapping or overflowing.
  */
 OutputWaiter.prototype.adjustWidth = function() {
-    var output         = document.getElementById("output"),
-        saveToFile     = document.getElementById("save-to-file"),
-        switchIO       = document.getElementById("switch"),
-        undoSwitch     = document.getElementById("undo-switch"),
-        maximiseOutput = document.getElementById("maximise-output");
+    const output         = document.getElementById("output");
+    const saveToFile     = document.getElementById("save-to-file");
+    const switchIO       = document.getElementById("switch");
+    const undoSwitch     = document.getElementById("undo-switch");
+    const maximiseOutput = document.getElementById("maximise-output");
 
     if (output.clientWidth < 680) {
         saveToFile.childNodes[1].nodeValue = "";
@@ -129,11 +129,11 @@ OutputWaiter.prototype.adjustWidth = function() {
  * Saves the current output to a file, downloaded as a URL octet stream.
  */
 OutputWaiter.prototype.saveClick = function() {
-    var data = Utils.toBase64(this.app.dishStr),
-        filename = window.prompt("Please enter a filename:", "download.dat");
+    const data = Utils.toBase64(this.app.dishStr);
+    const filename = window.prompt("Please enter a filename:", "download.dat");
 
     if (filename) {
-        var el = document.createElement("a");
+        const el = document.createElement("a");
         el.setAttribute("href", "data:application/octet-stream;base64;charset=utf-8," + data);
         el.setAttribute("download", filename);
 
@@ -173,7 +173,7 @@ OutputWaiter.prototype.undoSwitchClick = function() {
  * Resizes the output frame to be as large as possible, or restores it to its original size.
  */
 OutputWaiter.prototype.maximiseOutputClick = function(e) {
-    var el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
+    const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
 
     if (el.getAttribute("title") === "Maximise") {
         this.app.columnSplitter.collapse(0);

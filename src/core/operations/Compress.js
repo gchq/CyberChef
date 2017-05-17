@@ -6,7 +6,7 @@ import zip from "zlibjs/bin/zip.min";
 import unzip from "zlibjs/bin/unzip.min";
 import bzip2 from "exports-loader?bzip2!../lib/bzip2.js";
 
-var Zlib = {
+const Zlib = {
     RawDeflate: rawdeflate.Zlib.RawDeflate,
     RawInflate: rawinflate.Zlib.RawInflate,
     Deflate: zlibAndGzip.Zlib.Deflate,
@@ -67,7 +67,7 @@ const Compress = {
      * @returns {byteArray}
      */
     runRawDeflate: function(input, args) {
-        var deflate = new Zlib.RawDeflate(input, {
+        const deflate = new Zlib.RawDeflate(input, {
             compressionType: Compress.RAW_COMPRESSION_TYPE_LOOKUP[args[0]]
         });
         return Array.prototype.slice.call(deflate.compress());
@@ -113,7 +113,7 @@ const Compress = {
     runRawInflate: function(input, args) {
         // Deal with character encoding issues
         input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
-        var inflate = new Zlib.RawInflate(input, {
+        let inflate = new Zlib.RawInflate(input, {
                 index: args[0],
                 bufferSize: args[1],
                 bufferType: Compress.RAW_BUFFER_TYPE_LOOKUP[args[2]],
@@ -129,8 +129,8 @@ const Compress = {
         if (result.length > 158 && result[0] === 93 && result[5] === 93) {
             // If the first two square brackets are there, check that the others
             // are also there. If they are, throw an error. If not, continue.
-            var valid = false;
-            for (var i = 0; i < 155; i += 5) {
+            let valid = false;
+            for (let i = 0; i < 155; i += 5) {
                 if (result[i] !== 93) {
                     valid = true;
                 }
@@ -163,7 +163,7 @@ const Compress = {
      * @returns {byteArray}
      */
     runZlibDeflate: function(input, args) {
-        var deflate = new Zlib.Deflate(input, {
+        const deflate = new Zlib.Deflate(input, {
             compressionType: Compress.ZLIB_COMPRESSION_TYPE_LOOKUP[args[0]]
         });
         return Array.prototype.slice.call(deflate.compress());
@@ -189,7 +189,7 @@ const Compress = {
     runZlibInflate: function(input, args) {
         // Deal with character encoding issues
         input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
-        var inflate = new Zlib.Inflate(input, {
+        const inflate = new Zlib.Inflate(input, {
             index: args[0],
             bufferSize: args[1],
             bufferType: Compress.ZLIB_BUFFER_TYPE_LOOKUP[args[2]],
@@ -214,7 +214,7 @@ const Compress = {
      * @returns {byteArray}
      */
     runGzip: function(input, args) {
-        var filename = args[1],
+        let filename = args[1],
             comment = args[2],
             options = {
                 deflateOptions: {
@@ -234,7 +234,7 @@ const Compress = {
             options.comment = comment;
         }
 
-        var gzip = new Zlib.Gzip(input, options);
+        const gzip = new Zlib.Gzip(input, options);
         return Array.prototype.slice.call(gzip.compress());
     },
 
@@ -249,7 +249,7 @@ const Compress = {
     runGunzip: function(input, args) {
         // Deal with character encoding issues
         input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
-        var gunzip = new Zlib.Gunzip(input);
+        const gunzip = new Zlib.Gunzip(input);
         return Array.prototype.slice.call(gunzip.decompress());
     },
 
@@ -285,7 +285,7 @@ const Compress = {
      * @returns {byteArray}
      */
     runPkzip: function(input, args) {
-        var password = Utils.strToByteArray(args[2]),
+        let password = Utils.strToByteArray(args[2]),
             options = {
                 filename: Utils.strToByteArray(args[0]),
                 comment: Utils.strToByteArray(args[1]),
@@ -318,7 +318,7 @@ const Compress = {
      * @returns {string}
      */
     runPkunzip: function(input, args) {
-        var options = {
+        let options = {
                 password: Utils.strToByteArray(args[0]),
                 verify: args[1]
             },
@@ -327,15 +327,15 @@ const Compress = {
             files = [];
 
         filenames.forEach(function(fileName) {
-            var bytes = unzip.decompress(fileName);
-            var contents = Utils.byteArrayToUtf8(bytes);
+            const bytes = unzip.decompress(fileName);
+            const contents = Utils.byteArrayToUtf8(bytes);
 
-            var file = {
+            const file = {
                 fileName: fileName,
                 size: contents.length,
             };
 
-            var isDir = contents.length === 0 && fileName.endsWith("/");
+            const isDir = contents.length === 0 && fileName.endsWith("/");
             if (!isDir) {
                 file.bytes = bytes;
                 file.contents = contents;
@@ -356,7 +356,7 @@ const Compress = {
      * @returns {string}
      */
     runBzip2Decompress: function(input, args) {
-        var compressed = new Uint8Array(input),
+        let compressed = new Uint8Array(input),
             bzip2Reader,
             plain = "";
 
@@ -383,19 +383,19 @@ const Compress = {
      * @returns {byteArray}
      */
     runTar: function(input, args) {
-        var Tarball = function() {
+        const Tarball = function() {
             this.bytes = new Array(512);
             this.position = 0;
         };
 
         Tarball.prototype.addEmptyBlock = function() {
-            var filler = new Array(512);
+            const filler = new Array(512);
             filler.fill(0);
             this.bytes = this.bytes.concat(filler);
         };
 
         Tarball.prototype.writeBytes = function(bytes) {
-            var self = this;
+            const self = this;
 
             if (this.position + bytes.length > this.bytes.length) {
                 this.addEmptyBlock();
@@ -412,17 +412,17 @@ const Compress = {
         };
 
         Tarball.prototype.writeEndBlocks = function() {
-            var numEmptyBlocks = 2;
-            for (var i = 0; i < numEmptyBlocks; i++) {
+            const numEmptyBlocks = 2;
+            for (let i = 0; i < numEmptyBlocks; i++) {
                 this.addEmptyBlock();
             }
         };
 
-        var fileSize = Utils.padLeft(input.length.toString(8), 11, "0");
-        var currentUnixTimestamp = Math.floor(Date.now() / 1000);
-        var lastModTime = Utils.padLeft(currentUnixTimestamp.toString(8), 11, "0");
+        const fileSize = Utils.padLeft(input.length.toString(8), 11, "0");
+        const currentUnixTimestamp = Math.floor(Date.now() / 1000);
+        const lastModTime = Utils.padLeft(currentUnixTimestamp.toString(8), 11, "0");
 
-        var file = {
+        const file = {
             fileName: Utils.padBytesRight(args[0], 100),
             fileMode: Utils.padBytesRight("0000664", 8),
             ownerUID: Utils.padBytesRight("0", 8),
@@ -441,9 +441,9 @@ const Compress = {
             fileNamePrefix: Utils.padBytesRight("", 155),
         };
 
-        var checksum = 0;
-        for (var key in file) {
-            var bytes = file[key];
+        let checksum = 0;
+        for (const key in file) {
+            const bytes = file[key];
             Array.prototype.forEach.call(bytes, function(b) {
                 if (typeof b.charCodeAt !== "undefined") {
                     checksum += b.charCodeAt();
@@ -455,7 +455,7 @@ const Compress = {
         checksum = Utils.padBytesRight(Utils.padLeft(checksum.toString(8), 7, "0"), 8);
         file.checksum = checksum;
 
-        var tarball = new Tarball();
+        const tarball = new Tarball();
         tarball.writeBytes(file.fileName);
         tarball.writeBytes(file.fileMode);
         tarball.writeBytes(file.ownerUID);
@@ -490,22 +490,22 @@ const Compress = {
      * @returns {html}
      */
     runUntar: function(input, args) {
-        var Stream = function(input) {
+        const Stream = function(input) {
             this.bytes = input;
             this.position = 0;
         };
 
         Stream.prototype.getBytes = function(bytesToGet) {
-            var newPosition = this.position + bytesToGet;
-            var bytes = this.bytes.slice(this.position, newPosition);
+            const newPosition = this.position + bytesToGet;
+            const bytes = this.bytes.slice(this.position, newPosition);
             this.position = newPosition;
             return bytes;
         };
 
         Stream.prototype.readString = function(numBytes) {
-            var result = "";
-            for (var i = this.position; i < this.position + numBytes; i++) {
-                var currentByte = this.bytes[i];
+            let result = "";
+            for (let i = this.position; i < this.position + numBytes; i++) {
+                const currentByte = this.bytes[i];
                 if (currentByte === 0) break;
                 result += String.fromCharCode(currentByte);
             }
@@ -514,7 +514,7 @@ const Compress = {
         };
 
         Stream.prototype.readInt = function(numBytes, base) {
-            var string = this.readString(numBytes);
+            const string = this.readString(numBytes);
             return parseInt(string, base);
         };
 
@@ -522,13 +522,13 @@ const Compress = {
             return this.position < this.bytes.length;
         };
 
-        var stream = new Stream(input),
+        let stream = new Stream(input),
             files = [];
 
         while (stream.hasMore()) {
-            var dataPosition = stream.position + 512;
+            const dataPosition = stream.position + 512;
 
-            var file = {
+            const file = {
                 fileName: stream.readString(100),
                 fileMode: stream.readString(8),
                 ownerUID: stream.readString(8),
@@ -555,7 +555,7 @@ const Compress = {
             if (file.type === "0") {
                 // File
                 files.push(file);
-                var endPosition = stream.position + file.size;
+                let endPosition = stream.position + file.size;
                 if (file.size % 512 !== 0) {
                     endPosition += 512 - (file.size % 512);
                 }

@@ -1,7 +1,7 @@
-var webpack = require("webpack"),
-    ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    HtmlWebpackPlugin = require("html-webpack-plugin"),
-    Inliner = require("web-resource-inliner");
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Inliner = require("web-resource-inliner");
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 
 
     // Project configuration
-    var compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
+    const compileTime = grunt.template.today("dd/mm/yyyy HH:MM:ss") + " UTC",
         banner = "/**\n" +
             "* CyberChef - The Cyber Swiss Army Knife\n" +
             "*\n" +
@@ -80,7 +80,7 @@ module.exports = function (grunt) {
      * Compiles a production build of CyberChef into a single, portable web page.
      */
     function runInliner() {
-        var inlinerError = false;
+        const done = this.async();
         Inliner.html({
             relativeTo: "build/prod/",
             fileContent: grunt.file.read("build/prod/cyberchef.htm"),
@@ -91,14 +91,16 @@ module.exports = function (grunt) {
             strict: true
         }, function(error, result) {
             if (error) {
-                console.log(error);
-                inlinerError = true;
-                return false;
+                if (error instanceof Error) {
+                    done(error);
+                } else {
+                    done(new Error(error));
+                }
+            } else {
+                grunt.file.write("build/prod/cyberchef.htm", result);
+                done(true);
             }
-            grunt.file.write("build/prod/cyberchef.htm", result);
         });
-
-        return !inlinerError;
     }
 
     grunt.initConfig({
@@ -111,7 +113,7 @@ module.exports = function (grunt) {
         },
         eslint: {
             options: {
-                configFile: "src/.eslintrc.json"
+                configFile: "./.eslintrc.json"
             },
             configs: ["Gruntfile.js"],
             core: ["src/core/**/*.js", "!src/core/lib/**/*"],
@@ -218,7 +220,8 @@ module.exports = function (grunt) {
                     ]
                 },
                 stats: {
-                    children: false
+                    children: false,
+                    warningsFilter: /source-map/
                 }
             },
             webDev: {
@@ -301,7 +304,7 @@ module.exports = function (grunt) {
         copy: {
             ghPages: {
                 options: {
-                    process: function (content, srcpath) {
+                    process: function (content) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
                             grunt.file.read("src/web/static/ga.html") + "</body></html>");
@@ -342,5 +345,4 @@ module.exports = function (grunt) {
             test: "build/test/index.js"
         },
     });
-
 };

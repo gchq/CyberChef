@@ -20,10 +20,10 @@ const Checksum = {
      * @returns {string}
      */
     runFletcher8: function(input, args) {
-        var a = 0,
+        let a = 0,
             b = 0;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xf;
             b = (b + a) % 0xf;
         }
@@ -40,10 +40,10 @@ const Checksum = {
      * @returns {string}
      */
     runFletcher16: function(input, args) {
-        var a = 0,
+        let a = 0,
             b = 0;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xff;
             b = (b + a) % 0xff;
         }
@@ -60,10 +60,10 @@ const Checksum = {
      * @returns {string}
      */
     runFletcher32: function(input, args) {
-        var a = 0,
+        let a = 0,
             b = 0;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xffff;
             b = (b + a) % 0xffff;
         }
@@ -80,10 +80,10 @@ const Checksum = {
      * @returns {string}
      */
     runFletcher64: function(input, args) {
-        var a = 0,
+        let a = 0,
             b = 0;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             a = (a + input[i]) % 0xffffffff;
             b = (b + a) % 0xffffffff;
         }
@@ -100,11 +100,11 @@ const Checksum = {
      * @returns {string}
      */
     runAdler32: function(input, args) {
-        var MOD_ADLER = 65521,
+        let MOD_ADLER = 65521,
             a = 1,
             b = 0;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             a += input[i];
             b += a;
         }
@@ -124,10 +124,10 @@ const Checksum = {
      * @returns {string}
      */
     runCRC32: function(input, args) {
-        var crcTable = global.crcTable || (global.crcTable = Checksum._genCRCTable()),
+        let crcTable = global.crcTable || (global.crcTable = Checksum._genCRCTable()),
             crc = 0 ^ (-1);
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             crc = (crc >>> 8) ^ crcTable[(crc ^ input[i]) & 0xff];
         }
 
@@ -153,9 +153,9 @@ const Checksum = {
      *                      0x00,0x00,0xac,0x11,0x00,0x03,0xac,0x11,0x00,0x04])
      */
     runTCPIP: function(input, args) {
-        var csum = 0;
+        let csum = 0;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (i % 2 === 0) {
                 csum += (input[i] << 8);
             } else {
@@ -176,12 +176,12 @@ const Checksum = {
      * @returns {array}
      */
     _genCRCTable: function() {
-        var c,
+        let c,
             crcTable = [];
 
-        for (var n = 0; n < 256; n++) {
+        for (let n = 0; n < 256; n++) {
             c = n;
-            for (var k = 0; k < 8; k++) {
+            for (let k = 0; k < 8; k++) {
                 c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
             }
             crcTable[n] = c;

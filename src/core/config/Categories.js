@@ -273,6 +273,9 @@ const Categories = [
             "CSS selector",
             "Strip HTML tags",
             "Diff",
+            "To Snake case",
+            "To Camel case",
+            "To Kebab case",
         ]
     },
     {
@@ -294,6 +297,7 @@ const Categories = [
             "Jump",
             "Conditional Jump",
             "Return",
+            "Comment"
         ]
     },
 ];

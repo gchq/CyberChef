@@ -430,3 +430,36 @@ span.btn img {
     border-top: none;
     margin-top: 0;
 }
+
+
+@-moz-keyframes spinner {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(359deg); }
+}
+@-webkit-keyframes spinner {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(359deg); }
+}
+@keyframes spinner {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(359deg);}
+}
+
+.loading-icon::before {
+    content: "\21bb";
+}
+
+.loading-icon {
+    -webkit-animation-name: spinner;
+    -webkit-animation-duration: 1000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spinner;
+    -moz-animation-duration: 1000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spinner;
+    -ms-animation-duration: 1000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+}

@@ -10,7 +10,7 @@
  * @param {App} app - The main view object for CyberChef.
  * @param {Manager} manager - The CyberChef event manager.
  */
-var HTMLIngredient = function(config, app, manager) {
+const HTMLIngredient = function(config, app, manager) {
     this.app = app;
     this.manager = manager;
 
@@ -32,7 +32,7 @@ var HTMLIngredient = function(config, app, manager) {
  * @returns {string}
  */
 HTMLIngredient.prototype.toHtml = function() {
-    var inline = (this.type === "boolean" ||
+    let inline = (this.type === "boolean" ||
                   this.type === "number" ||
                   this.type === "option" ||
                   this.type === "shortString" ||
@@ -158,15 +158,14 @@ HTMLIngredient.prototype.toHtml = function() {
  * @param {event} e
  */
 HTMLIngredient.prototype.toggleDisableArgs = function(e) {
-    var el = e.target,
-        op = el.parentNode.parentNode,
-        args = op.querySelectorAll(".arg-group"),
-        els;
+    const el = e.target;
+    const op = el.parentNode.parentNode;
+    const args = op.querySelectorAll(".arg-group");
 
-    for (var i = 0; i < this.disableArgs.length; i++) {
-        els = args[this.disableArgs[i]].querySelectorAll("input, select, button");
+    for (let i = 0; i < this.disableArgs.length; i++) {
+        const els = args[this.disableArgs[i]].querySelectorAll("input, select, button");
 
-        for (var j = 0; j < els.length; j++) {
+        for (let j = 0; j < els.length; j++) {
             if (els[j].getAttribute("disabled")) {
                 els[j].removeAttribute("disabled");
             } else {
@@ -186,9 +185,9 @@ HTMLIngredient.prototype.toggleDisableArgs = function(e) {
  * @param {event} e
  */
 HTMLIngredient.prototype.populateOptionChange = function(e) {
-    var el = e.target,
-        op = el.parentNode.parentNode,
-        target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
+    const el = e.target;
+    const op = el.parentNode.parentNode;
+    const target = op.querySelectorAll(".arg-group")[this.target].querySelector("input, select, textarea");
 
     target.value = el.childNodes[el.selectedIndex].getAttribute("populate-value");
 
@@ -203,7 +202,7 @@ HTMLIngredient.prototype.populateOptionChange = function(e) {
  * @param {event} e
  */
 HTMLIngredient.prototype.editableOptionChange = function(e) {
-    var select = e.target,
+    let select = e.target,
         input = select.nextSibling;
 
     input.value = select.childNodes[select.selectedIndex].value;

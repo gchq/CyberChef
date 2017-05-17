@@ -11,7 +11,7 @@ import Utils from "../core/Utils.js";
  * @constructor
  * @param {App} app - The main view object for CyberChef.
  */
-var HighlighterWaiter = function(app) {
+const HighlighterWaiter = function(app) {
     this.app = app;
 
     this.mouseButtonDown = false;
@@ -41,11 +41,11 @@ HighlighterWaiter.OUTPUT = 1;
  * @returns {boolean}
  */
 HighlighterWaiter.prototype._isSelectionBackwards = function() {
-    var backwards = false,
+    let backwards = false,
         sel = window.getSelection();
 
     if (!sel.isCollapsed) {
-        var range = document.createRange();
+        const range = document.createRange();
         range.setStart(sel.anchorNode, sel.anchorOffset);
         range.setEnd(sel.focusNode, sel.focusOffset);
         backwards = range.collapsed;
@@ -64,8 +64,8 @@ HighlighterWaiter.prototype._isSelectionBackwards = function() {
  * @returns {number}
  */
 HighlighterWaiter.prototype._getOutputHtmlOffset = function(node, offset) {
-    var sel = window.getSelection(),
-        range = document.createRange();
+    const sel = window.getSelection();
+    const range = document.createRange();
 
     range.selectNodeContents(document.getElementById("output-html"));
     range.setEnd(node, offset);
@@ -85,8 +85,8 @@ HighlighterWaiter.prototype._getOutputHtmlOffset = function(node, offset) {
  * @returns {number} pos.end
  */
 HighlighterWaiter.prototype._getOutputHtmlSelectionOffsets = function() {
-    var sel = window.getSelection(),
-        range,
+    const sel = window.getSelection();
+    let range,
         start = 0,
         end = 0,
         backwards = false;
@@ -121,7 +121,7 @@ HighlighterWaiter.prototype._getOutputHtmlSelectionOffsets = function() {
  * @param {event} e
  */
 HighlighterWaiter.prototype.inputScroll = function(e) {
-    var el = e.target;
+    const el = e.target;
     document.getElementById("input-highlighter").scrollTop = el.scrollTop;
     document.getElementById("input-highlighter").scrollLeft = el.scrollLeft;
 };
@@ -134,7 +134,7 @@ HighlighterWaiter.prototype.inputScroll = function(e) {
  * @param {event} e
  */
 HighlighterWaiter.prototype.outputScroll = function(e) {
-    var el = e.target;
+    const el = e.target;
     document.getElementById("output-highlighter").scrollTop = el.scrollTop;
     document.getElementById("output-highlighter").scrollLeft = el.scrollLeft;
 };
@@ -151,9 +151,9 @@ HighlighterWaiter.prototype.inputMousedown = function(e) {
     this.mouseTarget = HighlighterWaiter.INPUT;
     this.removeHighlights();
 
-    var el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -173,9 +173,9 @@ HighlighterWaiter.prototype.outputMousedown = function(e) {
     this.mouseTarget = HighlighterWaiter.OUTPUT;
     this.removeHighlights();
 
-    var el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -194,7 +194,7 @@ HighlighterWaiter.prototype.outputHtmlMousedown = function(e) {
     this.mouseButtonDown = true;
     this.mouseTarget = HighlighterWaiter.OUTPUT;
 
-    var sel = this._getOutputHtmlSelectionOffsets();
+    const sel = this._getOutputHtmlSelectionOffsets();
     if (sel.start !== 0 || sel.end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selectionInfo(sel.start, sel.end);
     }
@@ -244,9 +244,9 @@ HighlighterWaiter.prototype.inputMousemove = function(e) {
         this.mouseTarget !== HighlighterWaiter.INPUT)
         return;
 
-    var el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -268,9 +268,9 @@ HighlighterWaiter.prototype.outputMousemove = function(e) {
         this.mouseTarget !== HighlighterWaiter.OUTPUT)
         return;
 
-    var el = e.target,
-        start = el.selectionStart,
-        end = el.selectionEnd;
+    const el = e.target;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
 
     if (start !== 0 || end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
@@ -292,7 +292,7 @@ HighlighterWaiter.prototype.outputHtmlMousemove = function(e) {
         this.mouseTarget !== HighlighterWaiter.OUTPUT)
         return;
 
-    var sel = this._getOutputHtmlSelectionOffsets();
+    const sel = this._getOutputHtmlSelectionOffsets();
     if (sel.start !== 0 || sel.end !== 0) {
         document.getElementById("output-selection-info").innerHTML = this.selectionInfo(sel.start, sel.end);
     }
@@ -308,11 +308,11 @@ HighlighterWaiter.prototype.outputHtmlMousemove = function(e) {
  * @returns {string}
  */
 HighlighterWaiter.prototype.selectionInfo = function(start, end) {
-    var width = end.toString().length;
-    width = width < 2 ? 2 : width;
-    var startStr = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;"),
-        endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;"),
-        lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
+    const len = end.toString().length;
+    const width = len < 2 ? 2 : len;
+    const startStr = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
 
     return "start: " + startStr + "<br>end: " + endStr + "<br>length: " + lenStr;
 };
@@ -339,16 +339,16 @@ HighlighterWaiter.prototype.removeHighlights = function() {
  * @returns {Object[]} highlights[].args
  */
 HighlighterWaiter.prototype.generateHighlightList = function() {
-    var recipeConfig = this.app.getRecipeConfig(),
-        highlights = [];
+    const recipeConfig = this.app.getRecipeConfig();
+    const highlights = [];
 
-    for (var i = 0; i < recipeConfig.length; i++) {
+    for (let i = 0; i < recipeConfig.length; i++) {
         if (recipeConfig[i].disabled) continue;
 
         // If any breakpoints are set, do not attempt to highlight
         if (recipeConfig[i].breakpoint) return false;
 
-        var op = this.app.operations[recipeConfig[i].op];
+        const op = this.app.operations[recipeConfig[i].op];
 
         // If any of the operations do not support highlighting, fail immediately.
         if (op.highlight === false || op.highlight === undefined) return false;
@@ -376,13 +376,13 @@ HighlighterWaiter.prototype.generateHighlightList = function() {
  * @param {number} pos.end - The end offset.
  */
 HighlighterWaiter.prototype.highlightOutput = function(pos) {
-    var highlights = this.generateHighlightList();
+    const highlights = this.generateHighlightList();
 
     if (!highlights || !this.app.autoBake_) {
         return false;
     }
 
-    for (var i = 0; i < highlights.length; i++) {
+    for (let i = 0; i < highlights.length; i++) {
         // Remove multiple highlights before processing again
         pos = [pos[0]];
 
@@ -411,13 +411,13 @@ HighlighterWaiter.prototype.highlightOutput = function(pos) {
  * @param {number} pos.end - The end offset.
  */
 HighlighterWaiter.prototype.highlightInput = function(pos) {
-    var highlights = this.generateHighlightList();
+    const highlights = this.generateHighlightList();
 
     if (!highlights || !this.app.autoBake_) {
         return false;
     }
 
-    for (var i = 0; i < highlights.length; i++) {
+    for (let i = 0; i < highlights.length; i++) {
         // Remove multiple highlights before processing again
         pos = [pos[0]];
 
@@ -452,11 +452,11 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     // be displayed by the HTML textarea and will mess up highlighting offsets.
     if (!this.app.dishStr || this.app.dishStr.indexOf("\r") >= 0) return false;
 
-    var startPlaceholder = "[startHighlight]",
-        startPlaceholderRegex = /\[startHighlight\]/g,
-        endPlaceholder = "[endHighlight]",
-        endPlaceholderRegex = /\[endHighlight\]/g,
-        text = textarea.value;
+    const startPlaceholder = "[startHighlight]";
+    const startPlaceholderRegex = /\[startHighlight\]/g;
+    const endPlaceholder = "[endHighlight]";
+    const endPlaceholderRegex = /\[endHighlight\]/g;
+    let text = textarea.value;
 
     // Put placeholders in position
     // If there's only one value, select that
@@ -468,11 +468,11 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
             text.slice(pos[0].end, text.length);
     } else {
         // O(n^2) - Can anyone improve this without overwriting placeholders?
-        var result = "",
+        let result = "",
             endPlaced = true;
 
-        for (var i = 0; i < text.length; i++) {
-            for (var j = 1; j < pos.length; j++) {
+        for (let i = 0; i < text.length; i++) {
+            for (let j = 1; j < pos.length; j++) {
                 if (pos[j].end < pos[j].start) continue;
                 if (pos[j].start === i) {
                     result += startPlaceholder;
@@ -489,7 +489,7 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
         text = result;
     }
 
-    var cssClass = "hl1";
+    const cssClass = "hl1";
     //if (colour) cssClass += "-"+colour;
 
     // Remove HTML tags

@@ -23,7 +23,7 @@ const DateTime = {
      * @returns {string}
      */
     runFromUnixTimestamp: function(input, args) {
-        var units = args[0],
+        let units = args[0],
             d;
 
         input = parseFloat(input);
@@ -54,7 +54,7 @@ const DateTime = {
      * @returns {number}
      */
     runToUnixTimestamp: function(input, args) {
-        var units = args[0],
+        let units = args[0],
             d = moment(input);
 
         if (units === "Seconds (s)") {
@@ -129,7 +129,7 @@ const DateTime = {
      * @returns {html}
      */
     runTranslateFormat: function(input, args) {
-        var inputFormat = args[1],
+        let inputFormat = args[1],
             inputTimezone = args[2],
             outputFormat = args[3],
             outputTimezone = args[4],
@@ -154,7 +154,7 @@ const DateTime = {
      * @returns {html}
      */
     runParse: function(input, args) {
-        var inputFormat = args[1],
+        let inputFormat = args[1],
             inputTimezone = args[2],
             date,
             output = "";

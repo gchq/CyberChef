@@ -11,7 +11,7 @@ import Recipe from "./Recipe.js";
  *
  * @class
  */
-var Chef = function() {
+const Chef = function() {
     this.dish = new Dish();
 };
 
@@ -34,8 +34,8 @@ var Chef = function() {
  * @returns {number} response.duration - The number of ms it took to execute the recipe
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
-Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step) {
-    var startTime  = new Date().getTime(),
+Chef.prototype.bake = async function(inputText, recipeConfig, options, progress, step) {
+    let startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
         error      = false;
@@ -72,7 +72,7 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
     }
 
     try {
-        progress = recipe.execute(this.dish, progress);
+        progress = await recipe.execute(this.dish, progress);
     } catch (err) {
         // Return the error in the result so that everything else gets correctly updated
         // rather than throwing it here and losing state info.
@@ -111,7 +111,7 @@ Chef.prototype.bake = function(inputText, recipeConfig, options, progress, step)
  * @returns {number} The time it took to run the silent bake in milliseconds.
 */
 Chef.prototype.silentBake = function(recipeConfig) {
-    var startTime = new Date().getTime(),
+    let startTime = new Date().getTime(),
         recipe    = new Recipe(recipeConfig),
         dish      = new Dish("", Dish.STRING);
 
