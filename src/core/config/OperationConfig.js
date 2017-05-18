@@ -15,6 +15,7 @@ import Endian from "../operations/Endian.js";
 import Entropy from "../operations/Entropy.js";
 import Extract from "../operations/Extract.js";
 import FileType from "../operations/FileType.js";
+import Image from "../operations/Image.js";
 import Hash from "../operations/Hash.js";
 import Hexdump from "../operations/Hexdump.js";
 import HTML from "../operations/HTML.js";
@@ -2221,7 +2222,7 @@ const OperationConfig = {
         ]
     },
     "To UNIX Timestamp": {
-        description: "Parses a datetime string and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00 UTC</code> becomes <code>978346800</code>",
+        description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code>",
         run: DateTime.runToUnixTimestamp,
         inputType: "string",
         outputType: "number",
@@ -2230,6 +2231,11 @@ const OperationConfig = {
                 name: "Units",
                 type: "option",
                 value: DateTime.UNITS
+            },
+            {
+                name: "Treat as UTC",
+                type: "boolean",
+                value: DateTime.TREAT_AS_UTC
             }
         ]
     },
@@ -3333,6 +3339,19 @@ const OperationConfig = {
                 value: false,
             },
         ]
+    },
+    "Extract EXIF": {
+        description: [
+            "Extracts EXIF data from an image.",
+            "<br><br>",
+            "EXIF data is metadata embedded in images (JPEG, JPG, TIFF) and audio files.",
+            "<br><br>",
+            "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.runEXIF,
+        inputType: "byteArray",
+        outputType: "string",
+        args: [],
     },
 };
 
