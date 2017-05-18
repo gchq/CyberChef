@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 
+:root,
 :root.classic {
     --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --primary-font-colour: #333;

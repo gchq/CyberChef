@@ -182,14 +182,18 @@ module.exports = function (grunt) {
                         {
                             test: /\.css$/,
                             use: ExtractTextPlugin.extract({
-                                use: "css-loader?minimize"
+                                use: [
+                                    { loader: "css-loader?minimize" },
+                                    { loader: "postcss-loader" },
+                                ]
                             })
                         },
                         {
                             test: /\.less$/,
-                            loader: ExtractTextPlugin.extract({
+                            use: ExtractTextPlugin.extract({
                                 use: [
                                     { loader: "css-loader?minimize" },
+                                    { loader: "postcss-loader" },
                                     { loader: "less-loader" }
                                 ]
                             })
