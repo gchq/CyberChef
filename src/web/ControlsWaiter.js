@@ -106,11 +106,11 @@ ControlsWaiter.prototype.autoBakeChange = function() {
     this.app.autoBake_ = autoBakeCheckbox.checked;
 
     if (autoBakeCheckbox.checked) {
-        autoBakeLabel.classList.remove("btn-default");
         autoBakeLabel.classList.add("btn-success");
+        autoBakeLabel.classList.remove("btn-default");
     } else {
-        autoBakeLabel.classList.remove("btn-success");
         autoBakeLabel.classList.add("btn-default");
+        autoBakeLabel.classList.remove("btn-success");
     }
 };
 

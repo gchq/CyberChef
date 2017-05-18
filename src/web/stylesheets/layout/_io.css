@@ -1,0 +1,109 @@
+/**
+ * Input/Output area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+#input-text,
+#output-text,
+#output-html {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 3px;
+    -moz-padding-start: 3px;
+    -moz-padding-end: 3px;
+    border: none;
+    border-width: 0px;
+    resize: none;
+    background-color: transparent;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#output-html {
+    display: none;
+    overflow-y: auto;
+    -moz-padding-start: 1px; /* Fixes bug in Firefox */
+}
+
+.textarea-wrapper {
+    position: absolute;
+    top: 43px;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.textarea-wrapper textarea,
+.textarea-wrapper div {
+    font-family: var(--fixed-width-font-family);
+    font-size: var(--fixed-width-font-size);
+    color: var(--fixed-width-font-colour);
+}
+
+#input-highlighter,
+#output-highlighter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3px;
+    margin: 0;
+    overflow: hidden;
+    letter-spacing: normal;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #fff;
+    background-color: transparent;
+    border: none;
+}
+
+.io-btn-group {
+    float: right;
+    margin-top: -4px;
+}
+
+.io-info {
+    margin-right: 20px;
+    margin-top: -4px;
+    float: right;
+    height: 30px;
+    text-align: right;
+    line-height: 10px;
+    font-family: var(--fixed-width-font-family);
+    font-weight: normal;
+    font-size: 8pt;
+}
+
+#input-info {
+    line-height: 15px;
+}
+
+.dropping-file {
+    border: 5px dashed var(--drop-file-border-colour) !important;
+}
+
+@keyframes spinner {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(359deg);
+    }
+}
+
+.loading-icon::before {
+    content: "\21bb";
+}
+
+.loading-icon {
+    animation-name: spinner;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}

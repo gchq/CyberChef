@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-// CSS
-import "./css/index.js";
+// Styles
+import "./stylesheets/index.js";
 
 // Libs
 import "babel-polyfill";
@@ -46,6 +46,7 @@ function main() {
         errorTimeout      : 4000,
         autoBakeThreshold : 200,
         attemptHighlight  : true,
+        theme             : "classic",
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

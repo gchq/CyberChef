@@ -1,0 +1,115 @@
+/**
+ * Dark theme definitions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+:root.dark {
+    --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --primary-font-colour: #c5c5c5;
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family: "Monaco", "Droid Sans Mono", "Consolas", monospace;
+    --fixed-width-font-colour: inherit;
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: #999;
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: #1e1e1e;
+    --secondary-background-colour: #252525;
+
+    --primary-border-colour: #444;
+    --secondary-border-colour: #3c3c3c;
+
+    --title-colour: #fff;
+    --title-weight: bold;
+    --title-background-colour: #333;
+
+    --banner-font-colour: #c5c5c5;
+    --banner-bg-colour: #252525;
+
+
+    /* Operation colours */
+    --op-list-operation-font-colour: #c5c5c5;
+    --op-list-operation-bg-colour: #333;
+    --op-list-operation-border-colour: #444;
+
+    --rec-list-operation-font-colour: #c5c5c5;
+    --rec-list-operation-bg-colour: #252525;
+    --rec-list-operation-border-colour: #444;
+
+    --selected-operation-font-color: #c5c5c5;
+    --selected-operation-bg-colour: #3f3f3f;
+    --selected-operation-border-colour: #444;
+
+    --breakpoint-font-colour: #ddd;
+    --breakpoint-bg-colour: #073655;
+    --breakpoint-border-colour: #444;
+
+    --disabled-font-colour: #666;
+    --disabled-bg-colour: #444;
+    --disabled-border-colour: #444;
+
+    --fc-operation-font-colour: #c5c5c5;
+    --fc-operation-bg-colour: #2d2d2d;
+    --fc-operation-border-colour: #444;
+
+    --fc-breakpoint-operation-font-colour: #ddd;
+    --fc-breakpoint-operation-bg-colour: #072b49;
+    --fc-breakpoint-operation-border-colour: #444;
+
+
+    /* Operation arguments */
+    --arg-title-font-weight: bold;
+    --arg-input-height: 34px;
+    --arg-input-line-height: 20px;
+    --arg-input-font-size: 15px;
+    --arg-font-colour: #bbb;
+    --arg-background: #3c3c3c;
+    --arg-border-colour: #3c3c3c;
+    --arg-disabled-background: #4f4f4f;
+
+
+    /* Buttons */
+    --btn-default-font-colour: #c5c5c5;
+    --btn-default-bg-colour: #2d2d2d;
+    --btn-default-border-colour: #3c3c3c;
+
+    --btn-default-hover-font-colour: #c5c5c5;
+    --btn-default-hover-bg-colour: #2d2d2d;
+    --btn-default-hover-border-colour: #205375;
+
+    --btn-success-font-colour: #fff;
+    --btn-success-bg-colour: #073655;
+    --btn-success-border-colour: #0e639c;
+
+    --btn-success-hover-font-colour: #fff;
+    --btn-success-hover-bg-colour: #0e639c;
+    --btn-success-hover-border-colour: #0e639c;
+
+
+    /* Highlighter colours */
+    --hl1: #264f78;
+    --hl2: #675351;
+    --hl3: #ffb6b6;
+    --hl4: #fcf8e3;
+    --hl5: #8de768;
+
+
+    /* Scrollbar */
+    --scrollbar-track: #1e1e1e;
+    --scrollbar-thumb: #424242;
+    --scrollbar-hover: #4e4e4e;
+
+
+    /* Misc. */
+    --drop-file-border-colour: #0e639c;
+    --popover-background: #444;
+    --popover-border-colour: #555;
+    --code-background: #0e639c;
+    --code-font-colour: #fff;
+}
