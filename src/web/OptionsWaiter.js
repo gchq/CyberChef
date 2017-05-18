@@ -43,8 +43,11 @@ OptionsWaiter.prototype.load = function(options) {
 
     const selects = document.querySelectorAll("#options-body select");
     for (i = 0; i < selects.length; i++) {
-        selects[i].value = this.app.options[selects[i].getAttribute("option")];
-        selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
+        const val = this.app.options[selects[i].getAttribute("option")];
+        if (val) {
+            selects[i].value = val;
+            selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
+        }
     }
 };
 
