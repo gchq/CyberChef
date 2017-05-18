@@ -75,7 +75,7 @@ module.exports = function (grunt) {
             "* See the License for the specific language governing permissions and\n" +
             "* limitations under the License.\n" +
             "*/\n",
-            pkg = grunt.file.readJSON("package.json");
+        pkg = grunt.file.readJSON("package.json");
 
     /**
      * Compiles a production build of CyberChef into a single, portable web page.
