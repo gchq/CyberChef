@@ -74,7 +74,8 @@ module.exports = function (grunt) {
             "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
             "* See the License for the specific language governing permissions and\n" +
             "* limitations under the License.\n" +
-            "*/\n";
+            "*/\n",
+            pkg = grunt.file.readJSON("package.json");
 
     /**
      * Compiles a production build of CyberChef into a single, portable web page.
@@ -239,7 +240,8 @@ module.exports = function (grunt) {
                     new HtmlWebpackPlugin({
                         filename: "index.html",
                         template: "./src/web/html/index.html",
-                        compileTime: compileTime
+                        compileTime: compileTime,
+                        version: pkg.version,
                     })
                 ],
                 watch: true
@@ -265,6 +267,7 @@ module.exports = function (grunt) {
                         filename: "index.html",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
+                        version: pkg.version,
                         minify: {
                             removeComments: true,
                             collapseWhitespace: true,
@@ -276,6 +279,7 @@ module.exports = function (grunt) {
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
+                        version: pkg.version,
                         inline: true,
                         minify: {
                             removeComments: true,
