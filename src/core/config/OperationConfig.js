@@ -887,21 +887,43 @@ const OperationConfig = {
             }
         ]
     },
-    "Text encoding": {
-        description: "Translates the data between different character encodings.<br><br>Supported charsets are:<ul><li>UTF8</li><li>UTF16</li><li>UTF16LE (little-endian)</li><li>UTF16BE (big-endian)</li><li>Hex</li><li>Base64</li><li>Latin1 (ISO-8859-1)</li><li>Windows-1251</li></ul>",
-        run: CharEnc.run,
+    "Encode text": {
+        description: [
+            "Encodes text into the chosen character encoding.",
+            "<br><br>",
+            "Supported charsets are:",
+            "<ul>",
+            Object.keys(CharEnc.IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
+            "</ul>",
+        ].join("\n"),
+        run: CharEnc.runEncode,
         inputType: "string",
+        outputType: "byteArray",
+        args: [
+            {
+                name: "Encoding",
+                type: "option",
+                value: Object.keys(CharEnc.IO_FORMAT),
+            },
+        ]
+    },
+    "Decode text": {
+        description: [
+            "Decodes text from the chosen character encoding.",
+            "<br><br>",
+            "Supported charsets are:",
+            "<ul>",
+            Object.keys(CharEnc.IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
+            "</ul>",
+        ].join("\n"),
+        run: CharEnc.runDecode,
+        inputType: "byteArray",
         outputType: "string",
         args: [
             {
-                name: "Input type",
+                name: "Encoding",
                 type: "option",
-                value: CharEnc.IO_FORMAT
-            },
-            {
-                name: "Output type",
-                type: "option",
-                value: CharEnc.IO_FORMAT
+                value: Object.keys(CharEnc.IO_FORMAT),
             },
         ]
     },
