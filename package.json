@@ -34,7 +34,6 @@
     "babel-loader": "^6.4.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.2.2",
-    "bootstrap": "^3.3.7",
     "css-loader": "^0.27.3",
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^2.1.0",
@@ -64,8 +63,8 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "bootstrap-colorpicker": "^2.5.1",
-    "bootstrap-sass": "^3.3.7",
     "bootstrap-switch": "^3.3.4",
     "crypto-api": "^0.6.2",
     "crypto-js": "^3.1.9-1",
