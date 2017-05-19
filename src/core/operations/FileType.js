@@ -20,7 +20,7 @@ const FileType = {
      * @returns {string}
      */
     runDetect: function(input, args) {
-        const type = FileType._magicType(input);
+        const type = FileType.magicType(input);
 
         if (!type) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
@@ -59,7 +59,7 @@ const FileType = {
             numCommonFound = 0;
 
         for (let i = 0; i < input.length; i++) {
-            type = FileType._magicType(input.slice(i));
+            type = FileType.magicType(input.slice(i));
             if (type) {
                 if (ignoreCommon && commonExts.indexOf(type.ext) > -1) {
                     numCommonFound++;
@@ -96,14 +96,13 @@ const FileType = {
      * Given a buffer, detects magic byte sequences at specific positions and returns the
      * extension and mime type.
      *
-     * @private
      * @param {byteArray} buf
      * @returns {Object} type
      * @returns {string} type.ext - File extension
      * @returns {string} type.mime - Mime type
      * @returns {string} [type.desc] - Description
      */
-    _magicType: function (buf) {
+    magicType: function (buf) {
         if (!(buf && buf.length > 1)) {
             return null;
         }

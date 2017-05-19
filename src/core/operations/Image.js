@@ -1,5 +1,6 @@
 import * as ExifParser from "exif-parser";
 import Utils from "../Utils.js";
+import FileType from "./FileType.js";
 
 
 /**
@@ -40,6 +41,57 @@ const Image = {
         } catch (err) {
             throw "Could not extract EXIF data from image: " + err;
         }
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    INPUT_FORMAT: ["Raw", "Base64", "Hex"],
+
+    /**
+     * Render Image operation.
+     *
+     * @author n1474335 [n1474335@gmail.com]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    runRenderImage(input, args) {
+        const inputFormat = args[0];
+        let dataURI = "data:";
+
+        if (!input.length) return "";
+
+        // Convert input to raw bytes
+        switch (inputFormat) {
+            case "Hex":
+                input = Utils.fromHex(input);
+                break;
+            case "Base64":
+                // Don't trust the Base64 entered by the user.
+                // Unwrap it first, then re-encode later.
+                input = Utils.fromBase64(input, null, "byteArray");
+                break;
+            case "Raw":
+            default:
+                input = Utils.strToByteArray(input);
+                break;
+        }
+
+        // Determine file type
+        const type = FileType.magicType(input);
+        if (type && type.mime.indexOf("image") === 0) {
+            dataURI += type.mime + ";";
+        } else {
+            throw "Invalid file type";
+        }
+
+        // Add image data to URI
+        dataURI += "base64," + Utils.toBase64(input);
+
+        return "<img src='" + dataURI + "'>";
     },
 
 };

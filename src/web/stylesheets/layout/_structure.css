@@ -6,6 +6,10 @@
  * @license Apache-2.0
  */
 
+body {
+    overflow: hidden;
+}
+
 #content-wrapper {
     position: absolute;
     top: 0;

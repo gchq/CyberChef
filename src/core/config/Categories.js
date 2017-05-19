@@ -285,6 +285,7 @@ const Categories = [
             "Detect File Type",
             "Scan for Embedded Files",
             "Generate UUID",
+            "Render Image",
             "Numberwang",
         ]
     },
