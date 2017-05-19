@@ -3354,7 +3354,7 @@ const OperationConfig = {
         args: [],
     },
     "Render Image": {
-        description: "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>tiff</li><li>bmp</li></ul>",
+        description: "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>bmp</li><li>ico</li></ul>",
         run: Image.runRenderImage,
         inputType: "string",
         outputType: "html",
