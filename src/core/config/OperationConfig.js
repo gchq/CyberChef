@@ -3353,6 +3353,19 @@ const OperationConfig = {
         outputType: "string",
         args: [],
     },
+    "Render Image": {
+        description: "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>bmp</li><li>ico</li></ul>",
+        run: Image.runRenderImage,
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Input format",
+                type: "option",
+                value: Image.INPUT_FORMAT
+            }
+        ]
+    },
 };
 
 export default OperationConfig;

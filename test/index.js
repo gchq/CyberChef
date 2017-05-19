@@ -75,7 +75,7 @@ function handleTestResult(testResult) {
 setTimeout(function() {
     console.log("Tests took longer than 10 seconds to run, returning.");
     process.exit(1);
-}, 1 * 1000);
+}, 10 * 1000);
 
 
 TestRegister.runTests()
