@@ -41,22 +41,22 @@ const CharEnc = {
         "Windows-1257 Baltic (1257)": 1257,
         "Windows-1258 Vietnam (1258)": 1258,
         "US-ASCII (20127)": 20127,
-        "Russian Cyrillic KOI8-R (20866)": 20866,
         "Simplified Chinese GB2312 (20936)": 20936,
+        "KOI8-R Russian Cyrillic (20866)": 20866,
         "KOI8-U Ukrainian Cyrillic (21866)": 21866,
-        "ISO-8859-1 Latin 1 (Western European) (28591)": 28591,
-        "ISO-8859-2 Latin 2 (Central European) (28592)": 28592,
-        "ISO-8859-3 Latin 3 (28593)": 28593,
-        "ISO-8859-4 Baltic (28594)": 28594,
-        "ISO-8859-5 Cyrillic (28595)": 28595,
-        "ISO-8859-6 Arabic (28596)": 28596,
-        "ISO-8859-7 Greek (28597)": 28597,
-        "ISO-8859-8 Hebrew (28598)": 28598,
-        "ISO-8859-9 Turkish (28599)": 28599,
-        "ISO-8859-10 Latin 6 (28600)": 28600,
-        "ISO-8859-11 Latin (Thai) (28601)": 28601,
-        "ISO-8859-13 Latin 7 (Estonian) (28603)": 28603,
-        "ISO-8859-14 Latin 8 (Celtic) (28604)": 28604,
+        "ISO-8859-1 Latin 1 Western European (28591)": 28591,
+        "ISO-8859-2 Latin 2 Central European (28592)": 28592,
+        "ISO-8859-3 Latin 3 South European (28593)": 28593,
+        "ISO-8859-4 Latin 4 North European (28594)": 28594,
+        "ISO-8859-5 Latin/Cyrillic (28595)": 28595,
+        "ISO-8859-6 Latin/Arabic (28596)": 28596,
+        "ISO-8859-7 Latin/Greek (28597)": 28597,
+        "ISO-8859-8 Latin/Hebrew (28598)": 28598,
+        "ISO-8859-9 Latin 5 Turkish (28599)": 28599,
+        "ISO-8859-10 Latin 6 Nordic (28600)": 28600,
+        "ISO-8859-11 Latin/Thai (28601)": 28601,
+        "ISO-8859-13 Latin 7 Baltic Rim (28603)": 28603,
+        "ISO-8859-14 Latin 8 Celtic (28604)": 28604,
         "ISO-8859-15 Latin 9 (28605)": 28605,
         "ISO-8859-16 Latin 10 (28606)": 28606,
         "ISO-2022 JIS Japanese (50222)": 50222,
@@ -74,11 +74,12 @@ const CharEnc = {
      * @returns {byteArray}
      */
     runEncode: function(input, args) {
-        let format = CharEnc.IO_FORMAT[args[0]];
+        const format = CharEnc.IO_FORMAT[args[0]];
         let encoded = cptable.utils.encode(format, input);
         encoded = Array.from(encoded);
         return encoded;
     },
+
 
     /**
      * Decode text operation.
@@ -89,7 +90,7 @@ const CharEnc = {
      * @returns {string}
      */
     runDecode: function(input, args) {
-        let format = CharEnc.IO_FORMAT[args[0]];
+        const format = CharEnc.IO_FORMAT[args[0]];
         let decoded = cptable.utils.decode(format, input);
         return decoded;
     },
