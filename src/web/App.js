@@ -70,6 +70,9 @@ App.prototype.loaded = function() {
         document.getElementById("loader-wrapper").remove();
         document.body.classList.remove("loaded");
     }, 1000);
+
+    // Clear the loading message interval
+    clearInterval(window.loadingMsgInt);
 };
 
 

@@ -34,12 +34,37 @@
         <script type="application/javascript">
             // Load theme before the preloader is shown
             document.querySelector(":root").className = JSON.parse(localStorage.getItem("options")).theme;
+
+            // Cycle loading messages
+            const loadingMsgs = [
+                "Proving P = NP...",
+                "Computing 6 x 9...",
+                "Mining bitcoin...",
+                "Dividing by 0...",
+                "Initialising Skynet...",
+                "[REDACTED]",
+                "Downloading more RAM...",
+                "Loading more loading messages...",
+                "Ordering 1s and 0s...",
+                "Navigating neural network...",
+                "Importing machine learning..."
+            ];
+            function changeLoadingMsg() {
+                try {
+                    const el = document.getElementById("preloader-msg");
+                    el.className = "loading"; // Causes CSS transition on first message
+                    el.innerHTML = loadingMsgs[Math.floor(Math.random()*loadingMsgs.length)];
+                } catch (err) {}
+            }
+            changeLoadingMsg();
+            window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random()*500) + 500);
         </script>
     </head>
     <body>
         <!-- Preloader overlay -->
         <div id="loader-wrapper">
             <div id="preloader"></div>
+            <div id="preloader-msg"></div>
         </div>
         <!-- End preloader overlay -->
         <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
