@@ -68,4 +68,23 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Generate Base64 Windows Powershell",
+        input: "ZABpAHIAIAAiAGMAOgBcAHAAcgBvAGcAcgBhAG0AIABmAGkAbABlAHMAIgAgAA==",
+        expectedOutput: "dir \"c:\\program files\" ",
+        recipeConfig: [
+            {
+                "op": "From Base64",
+                "args": ["A-Za-z0-9+/=", true]
+            },
+            {
+                "op": "Decode text",
+                "args": ["UTF16LE (1200)"]
+            },
+            {
+                "op": "Encode text",
+                "args": ["UTF-8 (65001)"]
+            },
+        ],
+    },
 ]);
