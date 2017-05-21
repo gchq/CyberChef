@@ -19,6 +19,7 @@ deploy:
     local_dir: build/prod/
     target_branch: gh-pages
     on:
+      repo: gchq/CyberChef
       branch: master
   - provider: releases
     skip_cleaup: true
