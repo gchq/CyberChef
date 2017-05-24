@@ -1,0 +1,37 @@
+.word-wrap {
+    white-space: pre !important;
+    word-wrap: normal !important;
+    overflow-x: scroll !important;
+}
+
+.clearfix {
+    clear: both;
+    height: 0;
+}
+
+.blur {
+    color: transparent !important;
+    text-shadow: rgba(0, 0, 0, 0.95) 0 0 10px !important;
+}
+
+.no-select { 
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.konami {
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+}
+
+.hl1, .hlyellow { background-color: #fff000; }
+.hl2, .hlblue   { background-color: #95dfff; }
+.hl3, .hlred    { background-color: #ffb6b6; } /* Half-Life 3 confirmed :O */
+.hl4, .hlorange { background-color: #fcf8e3; }
+.hl5, .hlgreen  { background-color: #8de768; }
