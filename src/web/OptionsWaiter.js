@@ -47,6 +47,8 @@ OptionsWaiter.prototype.load = function(options) {
         if (val) {
             selects[i].value = val;
             selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
+        } else {
+            selects[i].selectedIndex = 0;
         }
     }
 };
