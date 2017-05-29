@@ -26,7 +26,7 @@ const SeqUtils = {
      * @constant
      * @default
      */
-    SORT_ORDER: ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address"],
+    SORT_ORDER: ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric"],
 
     /**
      * Sort operation.
@@ -47,6 +47,8 @@ const SeqUtils = {
             sorted = sorted.sort(SeqUtils._caseInsensitiveSort);
         } else if (order === "IP address") {
             sorted = sorted.sort(SeqUtils._ipSort);
+        } else if (order === "Numeric") {
+            sorted = sorted.sort(SeqUtils._numericSort);
         }
 
         if (sortReverse) sorted.reverse();
@@ -219,6 +221,33 @@ const SeqUtils = {
         if (isNaN(a_) && isNaN(b_)) return a.localeCompare(b);
 
         return a_ - b_;
+    },
+
+    /**
+     * Comparison operation for sorting of numeric values.
+     *
+     * @private
+     * @param {string} a
+     * @param {string} b
+     * @returns {number}
+     */
+    _numericSort: function _numericSort(a, b) {
+        let a_ = a.split(/([^\d]+)/),
+            b_ = b.split(/([^\d]+)/);
+
+        for (let i=0; i<a_.length && i<b.length; ++i) {
+            if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
+            if (!isNaN(a_[i]) && isNaN(b_[i])) return -1;
+            if (isNaN(a_[i]) && isNaN(b_[i])) {
+                let ret = a_[i].localeCompare(b_[i]); // Compare strings
+                if (ret !== 0) return ret;
+            }
+            if (!isNaN(a_[i]) && !isNaN(a_[i])) { // Compare numbers
+                if (a_[i] - b_[i] !== 0) return a_[i] - b_[i];
+            }
+        }
+
+        return 0;
     },
 
 };
