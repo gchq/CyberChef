@@ -78,12 +78,13 @@ const Charts = {
     runHexDensityChart: function (input, args) {
         const recordDelimiter = Utils.charRep[args[0]],
             fieldDelimiter = Utils.charRep[args[1]],
-            radius = args[2],
-            columnHeadingsAreIncluded = args[3],
+            packRadius = args[2],
+            drawRadius = args[3],
+            columnHeadingsAreIncluded = args[4],
             dimension = 500;
 
-        let xLabel = args[4],
-            yLabel = args[5],
+        let xLabel = args[5],
+            yLabel = args[6],
             { headings, values } = Charts._getScatterValues(
                 input,
                 recordDelimiter,
@@ -114,7 +115,7 @@ const Charts = {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         let hexbin = d3hexbin()
-            .radius(radius)
+            .radius(packRadius)
             .extent([0, 0], [width, height]);
 
         let hexPoints = hexbin(values),
@@ -122,10 +123,10 @@ const Charts = {
 
         let xExtent = d3.extent(hexPoints, d => d.x),
             yExtent = d3.extent(hexPoints, d => d.y);
-        xExtent[0] -= 2 * radius;
-        xExtent[1] += 2 * radius;
-        yExtent[0] -= 2 * radius;
-        yExtent[1] += 2 * radius;
+        xExtent[0] -= 2 * packRadius;
+        xExtent[1] += 2 * packRadius;
+        yExtent[0] -= 2 * packRadius;
+        yExtent[1] += 2 * packRadius;
 
         let xAxis = d3.scaleLinear()
             .domain(xExtent)
@@ -151,7 +152,7 @@ const Charts = {
             .enter()
             .append("path")
             .attr("d", d => {
-                return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(radius * 0.75)}`;
+                return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(drawRadius)}`;
             })
             .attr("fill", (d) => color(d.length))
             .append("title")

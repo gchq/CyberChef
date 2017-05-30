@@ -3406,9 +3406,14 @@ const OperationConfig = {
                 value: Charts.FIELD_DELIMITER_OPTIONS,
             },
             {
-                name: "Radius",
+                name: "Pack radius",
                 type: "number",
                 value: 25,
+            },
+            {
+                name: "Draw radius",
+                type: "number",
+                value: 15,
             },
             {
                 name: "Use column headers as labels",
