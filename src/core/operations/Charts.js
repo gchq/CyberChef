@@ -69,6 +69,19 @@ const Charts = {
 
 
     /**
+     * Default from colour
+     *
+     * @constant
+     * @default
+     */
+    COLOURS: {
+        min: "white",
+        max: "black",
+    },
+
+
+
+    /**
      * Hex Bin chart operation.
      *
      * @param {string} input
@@ -81,6 +94,9 @@ const Charts = {
             packRadius = args[2],
             drawRadius = args[3],
             columnHeadingsAreIncluded = args[4],
+            drawEdges = args[7],
+            minColour = args[8],
+            maxColour = args[9],
             dimension = 500;
 
         let xLabel = args[5],
@@ -135,7 +151,7 @@ const Charts = {
             .domain(yExtent)
             .range([height, 0]);
 
-        let color = d3.scaleSequential(d3.interpolateLab("white", "steelblue"))
+        let colour = d3.scaleSequential(d3.interpolateLab(minColour, maxColour))
             .domain([0, maxCount]);
 
         marginedSpace.append("clipPath")
@@ -154,7 +170,9 @@ const Charts = {
             .attr("d", d => {
                 return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(drawRadius)}`;
             })
-            .attr("fill", (d) => color(d.length))
+            .attr("fill", (d) => colour(d.length))
+            .attr("stroke", drawEdges ? "black" : "none")
+            .attr("stroke-width", drawEdges ? "0.5" : "none")
             .append("title")
             .text(d => {
                 let count = d.length,

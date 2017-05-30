@@ -3430,6 +3430,21 @@ const OperationConfig = {
                 type: "string",
                 value: "",
             },
+            {
+                name: "Draw hexagon edges",
+                type: "boolean",
+                value: false,
+            },
+            {
+                name: "Min colour value",
+                type: "string",
+                value: Charts.COLOURS.min,
+            },
+            {
+                name: "Max colour value",
+                type: "string",
+                value: Charts.COLOURS.max,
+            },
         ]
     }
 };
