@@ -5,6 +5,7 @@ import Base64 from "../operations/Base64.js";
 import BitwiseOp from "../operations/BitwiseOp.js";
 import ByteRepr from "../operations/ByteRepr.js";
 import CharEnc from "../operations/CharEnc.js";
+import Charts from "../operations/Charts.js";
 import Checksum from "../operations/Checksum.js";
 import Cipher from "../operations/Cipher.js";
 import Code from "../operations/Code.js";
@@ -3388,6 +3389,44 @@ const OperationConfig = {
             }
         ]
     },
+    "Hex Density chart": {
+        description: [].join("\n"),
+        run: Charts.runHexDensityChart,
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Record delimiter",
+                type: "option",
+                value: Charts.RECORD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Field delimiter",
+                type: "option",
+                value: Charts.FIELD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Radius",
+                type: "number",
+                value: 25,
+            },
+            {
+                name: "Use column headers as labels",
+                type: "boolean",
+                value: true,
+            },
+            {
+                name: "X label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Y label",
+                type: "string",
+                value: "",
+            },
+        ]
+    }
 };
 
 export default OperationConfig;
