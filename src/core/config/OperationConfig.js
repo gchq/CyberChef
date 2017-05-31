@@ -3445,6 +3445,11 @@ const OperationConfig = {
                 type: "string",
                 value: Charts.COLOURS.max,
             },
+            {
+                name: "Draw empty hexagons within data boundaries",
+                type: "boolean",
+                value: false,
+            },
         ]
     }
 };

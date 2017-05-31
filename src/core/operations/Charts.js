@@ -80,6 +80,36 @@ const Charts = {
     },
 
 
+    /**
+     * Hex Bin chart operation.
+     *
+     * @param {Object[]} - centres
+     * @param {number} - radius
+     * @returns {Object[]}
+     */
+    _getEmptyHexagons(centres, radius) {
+        const emptyCentres = [];
+        let boundingRect = [d3.extent(centres, d => d.x), d3.extent(centres, d => d.y)],
+            indent = false,
+            hexagonCenterToEdge = Math.cos(2 * Math.PI / 12) * radius,
+            hexagonEdgeLength = Math.sin(2 * Math.PI / 12) * radius;
+
+        for (let y = boundingRect[1][0]; y <= boundingRect[1][1] + radius; y += hexagonEdgeLength + radius) {
+            for (let x = boundingRect[0][0]; x <= boundingRect[0][1] + radius; x += 2 * hexagonCenterToEdge) {
+                let cx = x,
+                    cy = y;
+
+                if (indent && x >= boundingRect[0][1]) break;
+                if (indent) cx += hexagonCenterToEdge;
+
+                emptyCentres.push({x: cx, y: cy});
+            }
+            indent = !indent;
+        }
+
+        return emptyCentres;
+    },
+
 
     /**
      * Hex Bin chart operation.
@@ -97,6 +127,7 @@ const Charts = {
             drawEdges = args[7],
             minColour = args[8],
             maxColour = args[9],
+            drawEmptyHexagons = args[10],
             dimension = 500;
 
         let xLabel = args[5],
@@ -159,6 +190,31 @@ const Charts = {
             .append("rect")
             .attr("width", width)
             .attr("height", height);
+
+        if (drawEmptyHexagons) {
+            marginedSpace.append("g")
+                .attr("class", "empty-hexagon")
+                .selectAll("path")
+                .data(Charts._getEmptyHexagons(hexPoints, packRadius))
+                .enter()
+                .append("path")
+                .attr("d", d => {
+                    return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(drawRadius)}`;
+                })
+                .attr("fill", (d) => colour(0))
+                .attr("stroke", drawEdges ? "black" : "none")
+                .attr("stroke-width", drawEdges ? "0.5" : "none")
+                .append("title")
+                .text(d => {
+                    let count = 0,
+                        perc = 0,
+                        tooltip = `Count: ${count}\n
+                                Percentage: ${perc.toFixed(2)}%\n
+                                Center: ${d.x.toFixed(2)}, ${d.y.toFixed(2)}\n
+                        `.replace(/\s{2,}/g, "\n");
+                    return tooltip;
+                });
+        }
 
         marginedSpace.append("g")
             .attr("class", "hexagon")
