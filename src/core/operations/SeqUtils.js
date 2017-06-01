@@ -223,9 +223,11 @@ const SeqUtils = {
         return a_ - b_;
     },
 
+
     /**
      * Comparison operation for sorting of numeric values.
      *
+     * @author Chris van Marle
      * @private
      * @param {string} a
      * @param {string} b
@@ -235,7 +237,7 @@ const SeqUtils = {
         let a_ = a.split(/([^\d]+)/),
             b_ = b.split(/([^\d]+)/);
 
-        for (let i=0; i<a_.length && i<b.length; ++i) {
+        for (let i = 0; i < a_.length && i < b.length; ++i) {
             if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
             if (!isNaN(a_[i]) && isNaN(b_[i])) return -1;
             if (isNaN(a_[i]) && isNaN(b_[i])) {
