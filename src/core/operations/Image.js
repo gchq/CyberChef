@@ -65,7 +65,7 @@ const Image = {
             return newImage;
         } catch (err) {
             // Simply return input if no EXIF data is found
-            if (err == "Exif not found.") return input;
+            if (err === "Exif not found.") return input;
             throw "Could not remove EXIF data from image: " + err;
         }
     },
