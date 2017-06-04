@@ -3388,6 +3388,19 @@ const OperationConfig = {
             }
         ]
     },
+    "Remove EXIF": {
+        description: [
+            "Removes EXIF data from an image.",
+            "<br><br>",
+            "EXIF data is metadata embedded in images (JPEG, JPG, TIFF) and audio files.",
+            "<br><br>",
+            "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.removeEXIF,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: [],
+    },
 };
 
 export default OperationConfig;
