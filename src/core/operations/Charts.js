@@ -151,9 +151,9 @@ const Charts = {
             .attr("viewBox", `0 0 ${dimension} ${dimension}`);
 
         let margin = {
-                top: 0,
+                top: 10,
                 right: 0,
-                bottom: 30,
+                bottom: 40,
                 left: 30,
             },
             width = dimension - margin.left - margin.right,
