@@ -3451,6 +3451,64 @@ const OperationConfig = {
                 value: false,
             },
         ]
+    },
+    "Heatmap chart": {
+        description: [].join("\n"),
+        run: Charts.runHeatmapChart,
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Record delimiter",
+                type: "option",
+                value: Charts.RECORD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Field delimiter",
+                type: "option",
+                value: Charts.FIELD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Number of vertical bins",
+                type: "number",
+                value: 25,
+            },
+            {
+                name: "Number of horizontal bins",
+                type: "number",
+                value: 25,
+            },
+            {
+                name: "Use column headers as labels",
+                type: "boolean",
+                value: true,
+            },
+            {
+                name: "X label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Y label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Draw bin edges",
+                type: "boolean",
+                value: false,
+            },
+            {
+                name: "Min colour value",
+                type: "string",
+                value: Charts.COLOURS.min,
+            },
+            {
+                name: "Max colour value",
+                type: "string",
+                value: Charts.COLOURS.max,
+            },
+        ]
     }
 };
 

@@ -275,6 +275,182 @@ const Charts = {
 
         return svg._groups[0][0].outerHTML;
     },
+
+
+    /**
+     * Packs a list of x, y coordinates into a number of bins for use in a heatmap.
+     * 
+     * @param {Object[]} points
+     * @param {number} number of vertical bins
+     * @param {number} number of horizontal bins
+     * @returns {Object[]} a list of bins (each bin is an Array) with x y coordinates, filled with the points
+     */
+    _getHeatmapPacking(values, vBins, hBins) {
+        const xBounds = d3.extent(values, d => d[0]),
+            yBounds = d3.extent(values, d => d[1]),
+            bins = [];
+
+        if (xBounds[0] === xBounds[1]) throw "Cannot pack points. There is no difference between the minimum and maximum X coordinate.";
+        if (yBounds[0] === yBounds[1]) throw "Cannot pack points. There is no difference between the minimum and maximum Y coordinate.";
+
+        for (let y = 0; y < vBins; y++) {
+            bins.push([]);
+            for (let x = 0; x < hBins; x++) {
+                let item = [];
+                item.y = y;
+                item.x = x;
+
+                bins[y].push(item);
+            } // x
+        } // y
+
+        let epsilon = 0.000000001; // This is to clamp values that are exactly the maximum;
+
+        values.forEach(v => {
+            let fractionOfY = (v[1] - yBounds[0]) / ((yBounds[1] + epsilon) - yBounds[0]),
+                fractionOfX = (v[0] - xBounds[0]) / ((xBounds[1] + epsilon) - xBounds[0]);
+            let y = Math.floor(vBins * fractionOfY),
+                x = Math.floor(hBins * fractionOfX);
+
+            bins[y][x].push({x: v[0], y: v[1]});
+        });
+
+        return bins;
+    },
+
+
+    /**
+     * Heatmap chart operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    runHeatmapChart: function (input, args) {
+        const recordDelimiter = Utils.charRep[args[0]],
+            fieldDelimiter = Utils.charRep[args[1]],
+            vBins = args[2],
+            hBins = args[3],
+            columnHeadingsAreIncluded = args[4],
+            drawEdges = args[7],
+            minColour = args[8],
+            maxColour = args[9],
+            dimension = 500;
+        
+        if (vBins <= 0) throw "Number of vertical bins must be greater than 0";
+        if (hBins <= 0) throw "Number of horizontal bins must be greater than 0";
+
+        let xLabel = args[5],
+            yLabel = args[6],
+            { headings, values } = Charts._getScatterValues(
+                input,
+                recordDelimiter,
+                fieldDelimiter,
+                columnHeadingsAreIncluded
+            );
+
+        if (headings) {
+            xLabel = headings.x;
+            yLabel = headings.y;
+        }
+
+        let svg = document.createElement("svg");
+        svg = d3.select(svg)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${dimension} ${dimension}`);
+
+        let margin = {
+                top: 10,
+                right: 0,
+                bottom: 40,
+                left: 30,
+            },
+            width = dimension - margin.left - margin.right,
+            height = dimension - margin.top - margin.bottom,
+            binWidth = width / hBins,
+            binHeight = height/ vBins,
+            marginedSpace = svg.append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        let bins = Charts._getHeatmapPacking(values, vBins, hBins),
+            maxCount = Math.max(...bins.map(row => {
+                let lengths = row.map(cell => cell.length);
+                return Math.max(...lengths);
+            }));
+
+        let xExtent = d3.extent(values, d => d[0]),
+            yExtent = d3.extent(values, d => d[1]);
+
+        let xAxis = d3.scaleLinear()
+            .domain(xExtent)
+            .range([0, width]);
+        let yAxis = d3.scaleLinear()
+            .domain(yExtent)
+            .range([height, 0]);
+
+        let colour = d3.scaleSequential(d3.interpolateLab(minColour, maxColour))
+            .domain([0, maxCount]);
+
+        marginedSpace.append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+        marginedSpace.append("g")
+            .attr("class", "bins")
+            .attr("clip-path", "url(#clip)")
+            .selectAll("g")
+            .data(bins)
+            .enter()
+            .append("g")
+            .selectAll("rect")
+            .data(d => d)
+            .enter()
+            .append("rect")
+            .attr("x", (d) => binWidth * d.x)
+            .attr("y", (d) => (height - binHeight * (d.y + 1)))
+            .attr("width", binWidth)
+            .attr("height", binHeight)
+            .attr("fill", (d) => colour(d.length))
+            .attr("stroke", drawEdges ? "rgba(0, 0, 0, 0.5)" : "none")
+            .attr("stroke-width", drawEdges ? "0.5" : "none")
+            .append("title")
+            .text(d => {
+                let count = d.length,
+                    perc = 100.0 * d.length / values.length,
+                    tooltip = `Count: ${count}\n
+                               Percentage: ${perc.toFixed(2)}%\n
+                    `.replace(/\s{2,}/g, "\n");
+                return tooltip;
+            });
+
+        marginedSpace.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(yAxis).tickSizeOuter(-width));
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -margin.left)
+            .attr("x", -(height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text(yLabel);
+
+        marginedSpace.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xAxis).tickSizeOuter(-height));
+
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", dimension)
+            .style("text-anchor", "middle")
+            .text(xLabel);
+
+        return svg._groups[0][0].outerHTML;
+    },
 };
 
 export default Charts;
