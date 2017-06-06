@@ -171,7 +171,7 @@ const Charts = {
         let xExtent = d3.extent(hexPoints, d => d.x),
             yExtent = d3.extent(hexPoints, d => d.y);
         xExtent[0] -= 2 * packRadius;
-        xExtent[1] += 2 * packRadius;
+        xExtent[1] += 3 * packRadius;
         yExtent[0] -= 2 * packRadius;
         yExtent[1] += 2 * packRadius;
 
