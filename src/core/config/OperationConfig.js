@@ -3510,6 +3510,54 @@ const OperationConfig = {
             },
         ]
     },
+    "Scatter chart": {
+        description: [].join("\n"),
+        run: Charts.runScatterChart,
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Record delimiter",
+                type: "option",
+                value: Charts.RECORD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Field delimiter",
+                type: "option",
+                value: Charts.FIELD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Use column headers as labels",
+                type: "boolean",
+                value: true,
+            },
+            {
+                name: "X label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Y label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Colour",
+                type: "string",
+                value: Charts.COLOURS.max,
+            },
+            {
+                name: "Point radius",
+                type: "number",
+                value: 10,
+            },
+            {
+                name: "Use colour from third column",
+                type: "boolean",
+                value: false,
+            },
+        ]
+    },
     "HTML to Text": {
         description: [].join("\n"),
         run: HTML.runHTMLToText,

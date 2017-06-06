@@ -27,6 +27,49 @@ const Charts = {
 
 
     /**
+     * Default from colour
+     *
+     * @constant
+     * @default
+     */
+    COLOURS: {
+        min: "white",
+        max: "black",
+    },
+
+
+    /**
+     * Gets values from input for a plot.
+     *
+     * @param {string} input
+     * @param {string} recordDelimiter
+     * @param {string} fieldDelimiter
+     * @param {boolean} columnHeadingsAreIncluded - whether we should skip the first record
+     * @returns {Object[]}
+     */
+    _getValues(input, recordDelimiter, fieldDelimiter, columnHeadingsAreIncluded, length) {
+        let headings;
+        const values = [];
+
+        input
+            .split(recordDelimiter)
+            .forEach((row, rowIndex) => {
+                let split = row.split(fieldDelimiter);
+
+                if (split.length !== length) throw `Each row must have length ${length}.`;
+
+                if (columnHeadingsAreIncluded && rowIndex === 0) {
+                    headings = split;
+                } else {
+                    values.push(split);
+                }
+            });
+
+        return { headings, values};
+    },
+
+
+    /**
      * Gets values from input for a scatter plot.
      *
      * @param {string} input
@@ -36,47 +79,64 @@ const Charts = {
      * @returns {Object[]}
      */
     _getScatterValues(input, recordDelimiter, fieldDelimiter, columnHeadingsAreIncluded) {
-        let headings;
-        const values = [];
+        let { headings, values } = Charts._getValues(
+            input,
+            recordDelimiter, fieldDelimiter,
+            columnHeadingsAreIncluded,
+            2
+        );
 
-        input
-            .split(recordDelimiter)
-            .forEach((row, rowIndex) => {
-                let split = row.split(fieldDelimiter);
+        if (headings) {
+            headings = {x: headings[0], y: headings[1]};
+        }
 
-                if (split.length !== 2) throw "Each row must have length 2.";
+        values = values.map(row => {
+            let x = parseFloat(row[0], 10),
+                y = parseFloat(row[1], 10);
 
-                if (columnHeadingsAreIncluded && rowIndex === 0) {
-                    headings = {};
-                    headings.x = split[0];
-                    headings.y = split[1];
-                } else {
-                    let x = split[0],
-                        y = split[1];
+            if (Number.isNaN(x)) throw "Values must be numbers in base 10.";
+            if (Number.isNaN(y)) throw "Values must be numbers in base 10.";
 
-                    x = parseFloat(x, 10);
-                    if (Number.isNaN(x)) throw "Values must be numbers in base 10.";
+            return [x, y];
+        });
 
-                    y = parseFloat(y, 10);
-                    if (Number.isNaN(y)) throw "Values must be numbers in base 10.";
-
-                    values.push([x, y]);
-                }
-            });
-
-        return { headings, values};
+        return { headings, values };
     },
 
-
+    
     /**
-     * Default from colour
+     * Gets values from input for a scatter plot with colour from the third column.
      *
-     * @constant
-     * @default
+     * @param {string} input
+     * @param {string} recordDelimiter
+     * @param {string} fieldDelimiter
+     * @param {boolean} columnHeadingsAreIncluded - whether we should skip the first record
+     * @returns {Object[]}
      */
-    COLOURS: {
-        min: "white",
-        max: "black",
+    _getScatterValuesWithColour(input, recordDelimiter, fieldDelimiter, columnHeadingsAreIncluded) {
+        let { headings, values } = Charts._getValues(
+            input,
+            recordDelimiter, fieldDelimiter,
+            columnHeadingsAreIncluded,
+            3
+        );
+
+        if (headings) {
+            headings = {x: headings[0], y: headings[1]};
+        }
+
+        values = values.map(row => {
+            let x = parseFloat(row[0], 10),
+                y = parseFloat(row[1], 10),
+                colour = row[2];
+
+            if (Number.isNaN(x)) throw "Values must be numbers in base 10.";
+            if (Number.isNaN(y)) throw "Values must be numbers in base 10.";
+
+            return [x, y, colour];
+        });
+
+        return { headings, values };
     },
 
 
@@ -422,6 +482,125 @@ const Charts = {
                     perc = 100.0 * d.length / values.length,
                     tooltip = `Count: ${count}\n
                                Percentage: ${perc.toFixed(2)}%\n
+                    `.replace(/\s{2,}/g, "\n");
+                return tooltip;
+            });
+
+        marginedSpace.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(yAxis).tickSizeOuter(-width));
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -margin.left)
+            .attr("x", -(height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text(yLabel);
+
+        marginedSpace.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xAxis).tickSizeOuter(-height));
+
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", dimension)
+            .style("text-anchor", "middle")
+            .text(xLabel);
+
+        return svg._groups[0][0].outerHTML;
+    },
+
+
+    /**
+     * Scatter chart operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    runScatterChart: function (input, args) {
+        const recordDelimiter = Utils.charRep[args[0]],
+            fieldDelimiter = Utils.charRep[args[1]],
+            columnHeadingsAreIncluded = args[2],
+            fillColour = args[5],
+            radius = args[6],
+            colourInInput = args[7],
+            dimension = 500;
+
+        let xLabel = args[3],
+            yLabel = args[4];
+
+        let dataFunction = colourInInput ? Charts._getScatterValuesWithColour : Charts._getScatterValues;
+
+        let { headings, values } = dataFunction(
+                input,
+                recordDelimiter,
+                fieldDelimiter,
+                columnHeadingsAreIncluded
+            );
+
+        if (headings) {
+            xLabel = headings.x;
+            yLabel = headings.y;
+        }
+
+        let svg = document.createElement("svg");
+        svg = d3.select(svg)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${dimension} ${dimension}`);
+
+        let margin = {
+                top: 10,
+                right: 0,
+                bottom: 40,
+                left: 30,
+            },
+            width = dimension - margin.left - margin.right,
+            height = dimension - margin.top - margin.bottom,
+            marginedSpace = svg.append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        let xExtent = d3.extent(values, d => d[0]),
+            xDelta = xExtent[1] - xExtent[0],
+            yExtent = d3.extent(values, d => d[1]),
+            yDelta = yExtent[1] - yExtent[0],
+            xAxis = d3.scaleLinear()
+                .domain([xExtent[0] - (0.1 * xDelta), xExtent[1] + (0.1 * xDelta)])
+                .range([0, width]),
+            yAxis = d3.scaleLinear()
+                .domain([yExtent[0] - (0.1 * yDelta), yExtent[1] + (0.1 * yDelta)])
+                .range([height, 0]);
+
+        marginedSpace.append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+        marginedSpace.append("g")
+            .attr("class", "points")
+            .attr("clip-path", "url(#clip)")
+            .selectAll("circle")
+            .data(values)
+            .enter()
+            .append("circle")
+            .attr("cx", (d) => xAxis(d[0]))
+            .attr("cy", (d) => yAxis(d[1]))
+            .attr("r", d => radius)
+            .attr("fill", d => {
+                return colourInInput ? d[2] : fillColour;
+            })
+            .attr("stroke", "rgba(0, 0, 0, 0.5)")
+            .attr("stroke-width", "0.5")
+            .append("title")
+            .text(d => {
+                let x = d[0],
+                    y = d[1],
+                    tooltip = `X: ${x}\n
+                               Y: ${y}\n
                     `.replace(/\s{2,}/g, "\n");
                 return tooltip;
             });
