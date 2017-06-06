@@ -851,6 +851,16 @@ const HTML = {
         "diams" : 9830,
     },
 
+    /**
+     * HTML to text operation
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runHTMLToText(input, args) {
+        return input;
+    },
 };
 
 export default HTML;

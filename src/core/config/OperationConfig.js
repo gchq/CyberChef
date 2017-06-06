@@ -3509,6 +3509,14 @@ const OperationConfig = {
                 value: Charts.COLOURS.max,
             },
         ]
+    },
+    "HTML to Text": {
+        description: [].join("\n"),
+        run: HTML.runHTMLToText,
+        inputType: "html",
+        outputType: "string",
+        args: [
+        ]
     }
 };
 
