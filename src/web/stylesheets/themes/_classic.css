@@ -1,0 +1,116 @@
+/**
+ * Classic theme definitions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+:root,
+:root.classic {
+    --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --primary-font-colour: #333;
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family: "Consolas", monospace;
+    --fixed-width-font-colour: inherit;
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: #999;
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: #fff;
+    --secondary-background-colour: #fafafa;
+
+    --primary-border-colour: #ddd;
+    --secondary-border-colour: #eee;
+
+    --title-colour: #424242;
+    --title-weight: bold;
+    --title-background-colour: #fafafa;
+
+    --banner-font-colour: #468847;
+    --banner-bg-colour: #dff0d8;
+
+
+    /* Operation colours */
+    --op-list-operation-font-colour: #3a87ad;
+    --op-list-operation-bg-colour: #d9edf7;
+    --op-list-operation-border-colour: #bce8f1;
+
+    --rec-list-operation-font-colour: #468847;
+    --rec-list-operation-bg-colour: #dff0d8;
+    --rec-list-operation-border-colour: #d6e9c6;
+
+    --selected-operation-font-color: #c09853;
+    --selected-operation-bg-colour: #fcf8e3;
+    --selected-operation-border-colour: #fbeed5;
+
+    --breakpoint-font-colour: #b94a48;
+    --breakpoint-bg-colour: #f2dede;
+    --breakpoint-border-colour: #eed3d7;
+
+    --disabled-font-colour: #999;
+    --disabled-bg-colour: #dfdfdf;
+    --disabled-border-colour: #cdcdcd;
+
+    --fc-operation-font-colour: #396f3a;
+    --fc-operation-bg-colour: #c7e4ba;
+    --fc-operation-border-colour: #b3dba2;
+
+    --fc-breakpoint-operation-font-colour: #94312f;
+    --fc-breakpoint-operation-bg-colour: #eabfbf;
+    --fc-breakpoint-operation-border-colour: #e2aeb5;
+
+
+    /* Operation arguments */
+    --arg-title-font-weight: bold;
+    --arg-input-height: 34px;
+    --arg-input-line-height: 20px;
+    --arg-input-font-size: 15px;
+    --arg-font-colour: #424242;
+    --arg-background: #fff;
+    --arg-border-colour: #ddd;
+    --arg-disabled-background: #eee;
+
+
+    /* Buttons */
+    --btn-default-font-colour: #333;
+    --btn-default-bg-colour: #fff;
+    --btn-default-border-colour: #ddd;
+
+    --btn-default-hover-font-colour: #333;
+    --btn-default-hover-bg-colour: #ebebeb;
+    --btn-default-hover-border-colour: #adadad;
+
+    --btn-success-font-colour: #fff;
+    --btn-success-bg-colour: #5cb85c;
+    --btn-success-border-colour: #4cae4c;
+
+    --btn-success-hover-font-colour: #fff;
+    --btn-success-hover-bg-colour: #449d44;
+    --btn-success-hover-border-colour: #398439;
+
+
+    /* Highlighter colours */
+    --hl1: #fff000;
+    --hl2: #95dfff;
+    --hl3: #ffb6b6;
+    --hl4: #fcf8e3;
+    --hl5: #8de768;
+
+
+    /* Scrollbar */
+    --scrollbar-track: var(--secondary-background-colour);
+    --scrollbar-thumb: #ccc;
+    --scrollbar-hover: #bbb;
+
+
+    /* Misc. */
+    --drop-file-border-colour: #3a87ad;
+    --popover-background: #fff;
+    --popover-border-colour: #ccc;
+    --code-background: #f9f2f4;
+    --code-font-colour: #c7254e;
+}

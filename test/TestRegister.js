@@ -8,6 +8,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
+import Chef from "../src/core/Chef.js";
 
 (function() {
     /**
@@ -37,17 +38,17 @@
     TestRegister.prototype.runTests = function() {
         return Promise.all(
             this.tests.map(function(test, i) {
-                var chef = new Chef();
+                const chef = new Chef();
 
-                return Promise.resolve(chef.bake(
+                return chef.bake(
                     test.input,
                     test.recipeConfig,
                     {},
                     0,
                     false
-                ))
+                )
                 .then(function(result) {
-                    var ret = {
+                    const ret = {
                         test: test,
                         status: null,
                         output: null,
@@ -85,5 +86,8 @@
 
 
     // Singleton TestRegister, keeping things simple and obvious.
-    window.TestRegister = new TestRegister();
+    global.TestRegister = global.TestRegister || new TestRegister();
 })();
+
+export default global.TestRegister;
+

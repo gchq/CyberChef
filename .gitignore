@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
-build/*
+travis.log
+build
 docs/*
 !docs/*.conf.json
 !docs/*.ico

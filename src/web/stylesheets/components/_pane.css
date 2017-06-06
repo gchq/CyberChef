@@ -1,0 +1,30 @@
+/**
+ * Workspace pane styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+:root {
+    --title-height: 43px;
+}
+
+.title {
+    padding: 10px;
+    height: var(--title-height);
+    border-bottom: 1px solid var(--primary-border-colour);
+    font-weight: var(--title-weight);
+    color: var(--title-colour);
+    background-color: var(--title-background-colour);
+}
+
+.list-area {
+    position: absolute;
+    top: var(--title-height);
+    bottom: 0;
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}

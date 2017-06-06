@@ -1,0 +1,28 @@
+/**
+ * Banner area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+#banner {
+    position: absolute;
+    height: 30px;
+    width: 100%;
+    text-align: center;
+    line-height: 30px;
+    border-bottom: 1px solid var(--primary-border-colour);
+    color: var(--banner-font-colour);
+    background-color: var(--banner-bg-colour);
+}
+
+.banner-right {
+    float: right;
+    margin-right: 10px;
+}
+
+#banner img {
+    margin-bottom: 2px;
+    margin-left: 8px;
+}

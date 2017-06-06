@@ -1,0 +1,223 @@
+/**
+ * Overrides for vendor styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+/* Bootstrap */
+
+button,
+a:focus {
+    outline: none;
+}
+
+.btn-default {
+    color: var(--btn-default-font-colour);
+    background-color: var(--btn-default-bg-colour);
+    border-color: var(--btn-default-border-colour);
+}
+
+.btn-default:hover,
+.btn-default:active,
+.btn-default:hover:active,
+.open>.dropdown-toggle.btn-default {
+    color: var(--btn-default-hover-font-colour);
+    background-color: var(--btn-default-hover-bg-colour);
+    border-color: var(--btn-default-hover-border-colour);
+}
+
+.btn-default:focus,
+.open>.dropdown-toggle.btn-default:hover,
+.open>.dropdown-toggle.btn-default:focus {
+    color: var(--btn-default-font-colour);
+    background-color: var(--btn-default-bg-colour);
+    border-color: var(--btn-default-hover-border-colour);
+}
+
+.btn-default[disabled]:hover {
+    background-color: var(--primary-background-colour);
+    border-color: var(--primary-border-colour);
+}
+
+.btn-success {
+    color: var(--btn-success-font-colour);
+    background-color: var(--btn-success-bg-colour);
+    border-color: var(--btn-success-border-colour);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success:focus,
+.btn-success:hover:active {
+    color: var(--btn-success-hover-font-colour);
+    background-color: var(--btn-success-hover-bg-colour);
+    border-color: var(--btn-success-hover-border-colour);
+}
+
+.btn,
+.btn-lg,
+.nav-tabs>li>a,
+.form-control,
+.popover,
+.alert,
+.modal-content,
+.tooltip-inner,
+.dropdown-menu {
+    border-radius: 0 !important;
+}
+
+.btn.dropdown-toggle {
+    height: 34px;
+}
+
+input[type="search"] {
+    -webkit-appearance: searchfield;
+    box-shadow: none;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+.modal {
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: var(--primary-background-colour);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--primary-border-colour);
+}
+
+.form-control {
+    background-color: transparent;
+    border-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
+}
+
+code {
+    border: 0;
+    white-space: pre-wrap;
+    font-family: var(--fixed-width-font-family);
+    background-color: var(--code-background);
+    color: var(--code-font-colour);
+}
+
+pre {
+    border-radius: 0 !important;
+    background-color: var(--secondary-background-colour);
+    border-color: var(--secondary-border-colour);
+    color: var(--fixed-width-font-colour);
+}
+
+blockquote {
+    font-size: inherit;
+    border-left-color: var(--secondary-border-colour);
+}
+
+blockquote a {
+    cursor: pointer;
+}
+
+optgroup {
+    font-weight: bold;
+}
+
+.panel-body:before,
+.panel-body:after {
+    content: "";
+}
+
+.table-nonfluid {
+    width: auto !important;
+}
+
+.popover {
+    background-color: var(--popover-background);
+    border-color: var(--popover-border-colour);
+}
+
+
+.popover.right>.arrow {
+    border-right-color: var(--popover-border-colour);
+}
+
+.popover.right>.arrow:after {
+    border-right-color: var(--popover-background);
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    background-color: var(--primary-background-colour);
+    border-color: var(--primary-border-colour);
+    border-bottom-color: transparent;
+    color: var(--primary-font-colour);
+}
+
+.nav-tabs {
+    border-color: var(--primary-border-colour);
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+    background-color: var(--secondary-border-colour);
+}
+
+.nav-tabs>li>a:hover {
+    border-color: var(--secondary-border-colour) var(--secondary-border-colour) var(--primary-border-colour);
+}
+
+.dropdown-menu {
+    background-color: var(--primary-background-colour);
+}
+
+.dropdown-menu>li>a {
+    color: var(--primary-font-colour);
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    background-color: var(--secondary-background-colour);
+    color: var(--primary-font-colour);
+}
+
+
+/* Bootstrap-switch */
+
+.bootstrap-switch,
+.bootstrap-switch-container,
+.bootstrap-switch-handle-on,
+.bootstrap-switch-handle-off,
+.bootstrap-switch-label {
+    border-radius: 0 !important;
+}
+
+.bootstrap-switch .bootstrap-switch-label {
+    background-color: transparent;
+}
+
+.bootstrap-switch {
+    border-color: var(--primary-border-colour);
+}
+
+
+/* Sortable */
+
+.sortable-ghost {
+    opacity: 0.6;
+}
+
+
+/* Bootstrap Colorpicker */
+
+.colorpicker-element {
+    float: left;
+    margin-right: 15px;
+}
+
+.colorpicker-color,
+.colorpicker-color div {
+    height: 100px;
+}

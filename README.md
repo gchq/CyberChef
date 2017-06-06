@@ -1,5 +1,8 @@
 # CyberChef
 
+[![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
+[![npm](https://badge.fury.io/js/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
+![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=brightgreen)
 This is a fork of original CyberChef by GCHQ. This project has implemented my own operations for the daily SoC tasks. Please feel free to clone/test/share/contribute it.
 
 ## Features
@@ -25,6 +28,8 @@ This is a fork of original CyberChef by GCHQ. This project has implemented my ow
 
 ####*The Cyber Swiss Army Knife*
 
+#### *The Cyber Swiss Army Knife*
+
 CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.
 
 The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer and the code has not been peer-reviewed for compliance with a formal specification.
@@ -36,7 +41,6 @@ CyberChef is still under active development. As a result, it shouldn't be consid
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
 [A live demo can be found here][1] - have fun!
-Note: Use Chrome or Firefox, see the Browser Support section below for details.
 
 
 ## How it works
@@ -86,11 +90,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 ## Browser support
 
-CyberChef works well in modern versions of Google Chrome and Mozilla Firefox.
-
-To aid in the efficient development of new features and operations, there has been no attempt to maintain support for any version of Microsoft Internet Explorer.
-
-Microsoft Edge is currently unsupported, but if anyone would like to contribute compatibility fixes, they would be appreciated.
+CyberChef is built to support Google Chrome 40+, Mozilla Firefox 35+ and Microsoft Edge 14+.
 
 
 ## Contributing
