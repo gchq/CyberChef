@@ -18,22 +18,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-function bin2String(array) {
-  return String.fromCharCode.apply(String, array);
-}
-
-function string2Bin(str) {
-  var result = [];
-  for (var i = 0; i < str.length; i++) {
-    result.push(str.charCodeAt(i));
-  }
-  return result;
-}
+import Utils from "../Utils.js";
 
 // Param jpeg should be a binaryArray
 function removeEXIF(jpeg) {
   // Convert binaryArray to char string
-  jpeg = bin2String(jpeg);
+  jpeg = Utils.byteArrayToChars(jpeg);
   if (jpeg.slice(0, 2) != "\xff\xd8") {
     throw ("Given data is not jpeg.");
   }
@@ -52,7 +42,7 @@ function removeEXIF(jpeg) {
   var new_data = segments.join("");
 
   // Convert back to binaryArray
-  new_data = string2Bin(new_data);
+  new_data = Utils.strToCharcode(new_data);
 
   return new_data;
 };
