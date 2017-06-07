@@ -92,8 +92,5 @@
     "build": "grunt prod",
     "test": "grunt test",
     "docs": "grunt docs"
-  },
-  "dependencies": {
-    "grunt-cli": "^1.2.0"
   }
 }

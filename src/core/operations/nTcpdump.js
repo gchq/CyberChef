@@ -1,4 +1,6 @@
 /* globals app */
+import Utils from "../Utils.js";
+
 
 /**
  * Hexdump operations.
@@ -9,7 +11,7 @@
  *
  * @namespace
  */
-var nTcpdump = {
+const nTcpdump = {
 
     /**
      * @constant
@@ -198,3 +200,5 @@ var nTcpdump = {
     },
 
 };
+
+export default nTcpdump;

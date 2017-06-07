@@ -38,6 +38,7 @@ import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
 import UUID from "../operations/UUID.js";
 
+import nTcpdump from "../operations/nTcpdump.js";
 
 /**
  * Type definition for an OpConf.
@@ -614,7 +615,7 @@ const OperationConfig = {
         ]
     },
     "From nTcpdump": {
-        description: "For Tcpdump conversion only. (nva-hk)",
+        description: "For Tcpdump conversion only.",
         run: nTcpdump.runFrom,
         highlight: nTcpdump.highlightFrom,
         highlightReverse: nTcpdump.highlightTo,
