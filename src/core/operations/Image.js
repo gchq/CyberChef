@@ -55,6 +55,9 @@ const Image = {
      * @returns {string}
      */
     removeEXIF(input, args) {
+        // Do nothing if input is empty
+        if (input.length === 0) return input;
+
         try {
             return removeEXIF(input);
         } catch (err) {
