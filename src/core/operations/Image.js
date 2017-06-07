@@ -1,5 +1,5 @@
 import * as ExifParser from "exif-parser";
-import * as Piexifjs from "piexifjs";
+import removeEXIF from "../lib/remove-exif.js";
 import Utils from "../Utils.js";
 import FileType from "./FileType.js";
 
@@ -56,13 +56,7 @@ const Image = {
      */
     removeEXIF(input, args) {
         try {
-            // Piexifjs seems to work best with base64 input
-            const base64 = "data:image/jpeg;base64," + Utils.toBase64(input);
-            const newImageB64 = Piexifjs.remove(base64);
-
-            // Convert the base64 back to byteArray
-            const newImage = Utils.fromBase64(newImageB64.split(",")[1], null, "byteArray");
-            return newImage;
+            return removeEXIF(input);
         } catch (err) {
             // Simply return input if no EXIF data is found
             if (err === "Exif not found.") return input;
