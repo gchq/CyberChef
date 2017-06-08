@@ -24,7 +24,7 @@ const Image = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runEXIF(input, args) {
+    runExtractEXIF(input, args) {
         try {
             const bytes = Uint8Array.from(input);
             const parser = ExifParser.create(bytes.buffer);
@@ -44,6 +44,7 @@ const Image = {
         }
     },
 
+
     /**
      * Remove EXIF operation.
      *
@@ -54,7 +55,7 @@ const Image = {
      * @param {Object[]} args
      * @returns {string}
      */
-    removeEXIF(input, args) {
+    runRemoveEXIF(input, args) {
         // Do nothing if input is empty
         if (input.length === 0) return input;
 
@@ -66,6 +67,7 @@ const Image = {
             throw "Could not remove EXIF data from image: " + err;
         }
     },
+
 
     /**
      * @constant
