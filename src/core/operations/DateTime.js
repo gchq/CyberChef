@@ -1,4 +1,4 @@
-import Decimal from '../lib/decimal.min.js';
+import Decimal from "../lib/decimal.min.js";
 
 /**
  * Date and time operations.
@@ -90,7 +90,7 @@ const DateTime = {
     runFromFiletimeToUnix: function(input, args) {
         input = new Decimal(input);
         input = input.sub(116444736000000000).div(10000000);
-        if(input.gte(0) && input.lt(Math.pow(2,31))){
+        if (input.gte(0) && input.lt(Math.pow(2, 31))){
             return input.toString();
         } else {
             throw "Date " + input + " is not a valid date";
@@ -107,7 +107,7 @@ const DateTime = {
      */
     runToFiletimeFromUnix: function(input, args) {
         input = new Decimal(input);
-        if(input.gte(0) && input.lt(Math.pow(2,31))){
+        if (input.gte(0) && input.lt(Math.pow(2, 31))){
             return input.mul(10000000).add(116444736000000000).toHex();
         } else {
             throw "Date " + input + " is not a valid date";
