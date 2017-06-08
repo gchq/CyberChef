@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js';
+import Decimal from '../lib/decimal.min.js';
 
 /**
  * Date and time operations.
