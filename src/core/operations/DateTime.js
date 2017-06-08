@@ -1,3 +1,5 @@
+import Decimal from 'decimal.js';
+
 /**
  * Date and time operations.
  *
@@ -74,6 +76,41 @@ const DateTime = {
             return d.valueOf() * 1000000;
         } else {
             throw "Unrecognised unit";
+        }
+    },
+
+
+    /**
+     * Converts a Windows FILETIME to Unix Epoch time.
+     *
+     * @param {string} input
+     * @param {Object[]} args (not used)
+     * @returns {string}
+     */
+    runFromFiletimeToUnix: function(input, args) {
+        input = new Decimal(input);
+        input = input.sub(116444736000000000).div(10000000);
+        if(input.gte(0) && input.lt(Math.pow(2,31))){
+            return input.toString();
+        } else {
+            throw "Date " + input + " is not a valid date";
+        }
+    },
+
+
+    /**
+     * Converts a Unix Epoch time to Windows FILETIME.
+     *
+     * @param {string} input
+     * @param {Object[]} args (not used)
+     * @returns {string}
+     */
+    runToFiletimeFromUnix: function(input, args) {
+        input = new Decimal(input);
+        if(input.gte(0) && input.lt(Math.pow(2,31))){
+            return input.mul(10000000).add(116444736000000000).toHex();
+        } else {
+            throw "Date " + input + " is not a valid date";
         }
     },
 

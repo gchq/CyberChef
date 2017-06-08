@@ -2261,6 +2261,20 @@ const OperationConfig = {
             }
         ]
     },
+    "From Windows Filetime To UNIX":{
+        description: "Converts a Windows Filetime timestamp to a datetime format",
+        run: DateTime.runFromFiletimeToUnix,
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "To Windows Filetime From UNIX":{
+        description: "Parses a datetime string in UTC and returns the corresponding Windows Filetime timestamp",
+        run: DateTime.runToFiletimeFromUnix,
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
     "Translate DateTime Format": {
         description: "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.",
         run: DateTime.runTranslateFormat,
