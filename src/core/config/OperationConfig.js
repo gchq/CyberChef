@@ -3370,7 +3370,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        run: Image.runEXIF,
+        run: Image.runExtractEXIF,
         inputType: "byteArray",
         outputType: "string",
         args: [],
@@ -3387,6 +3387,17 @@ const OperationConfig = {
                 value: Image.INPUT_FORMAT
             }
         ]
+    },
+    "Remove EXIF": {
+        description: [
+            "Removes EXIF data from a JPEG image.",
+            "<br><br>",
+            "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.runRemoveEXIF,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: [],
     },
 };
 

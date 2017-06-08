@@ -288,6 +288,8 @@ const Categories = [
             "Scan for Embedded Files",
             "Generate UUID",
             "Render Image",
+            "Remove EXIF",
+            "Extract EXIF",
             "Numberwang",
         ]
     },
