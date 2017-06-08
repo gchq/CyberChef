@@ -11,6 +11,14 @@ import {UAS_parser as UAParser} from "../lib/uas_parser.js";
  * @namespace
  */
 const HTTP = {
+    /**
+     * @constant
+     * @default
+     */
+    METHODS: [
+        "GET", "POST", "HEAD",
+        "PUT", "PATCH", "DELETE",
+    ],
 
     /**
      * Strip HTTP headers operation.
@@ -49,6 +57,55 @@ const HTTP = {
             "OS Company: " + ua.osCompany + "\n" +
             "OS Company URL: " + ua.osCompanyUrl + "\n" +
             "Device Type: " + ua.deviceType + "\n";
+    },
+
+
+    /**
+     * HTTP request operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runHTTPRequest(input, args) {
+        const method = args[0],
+            url = args[1],
+            headersText = args[2],
+            ignoreStatusCode = args[3];
+
+        if (url.length === 0) return "";
+
+        let headers = new Headers();
+        headersText.split(/\r?\n/).forEach(line => {
+            line = line.trim();
+
+            if (line.length === 0) return;
+
+            let split = line.split(":");
+            if (split.length !== 2) throw `Could not parse header in line: ${line}`;
+
+            headers.set(split[0].trim(), split[1].trim());
+        });
+
+        let config = {
+            method,
+            headers,
+            mode: "cors",
+            cache: "no-cache",
+        };
+
+        if (method !== "GET" && method !== "HEAD") {
+            config.body = input;
+        }
+
+        return fetch(url, config)
+        .then(r => {
+            if (ignoreStatusCode || r.status === 200) {
+                return r.text();
+            } else {
+                throw `HTTP response code was ${r.status}.`;
+            }
+        });
     },
 
 };
