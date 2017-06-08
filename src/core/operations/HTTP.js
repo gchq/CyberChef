@@ -11,6 +11,7 @@ import {UAS_parser as UAParser} from "../lib/uas_parser.js";
  * @namespace
  */
 const HTTP = {
+
     /**
      * @constant
      * @default
@@ -18,7 +19,9 @@ const HTTP = {
     METHODS: [
         "GET", "POST", "HEAD",
         "PUT", "PATCH", "DELETE",
+        "CONNECT", "TRACE", "OPTIONS"
     ],
+
 
     /**
      * Strip HTTP headers operation.
@@ -61,8 +64,30 @@ const HTTP = {
 
 
     /**
+     * @constant
+     * @default
+     */
+    MODE: [
+        "Cross-Origin Resource Sharing",
+        "No CORS (limited to HEAD, GET or POST)",
+    ],
+
+    /**
+     * Lookup table for HTTP modes
+     *
+     * @private
+     * @constant
+     */
+    _modeLookup: {
+        "Cross-Origin Resource Sharing": "cors",
+        "No CORS (limited to HEAD, GET or POST)": "no-cors",
+    },
+
+    /**
      * HTTP request operation.
      *
+     * @author tlwr [toby@toby.codes]
+     * @author n1474335 [n1474335@gmail.com]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -71,7 +96,8 @@ const HTTP = {
         const method = args[0],
             url = args[1],
             headersText = args[2],
-            ignoreStatusCode = args[3];
+            mode = args[3],
+            showResponseMetadata = args[4];
 
         if (url.length === 0) return "";
 
@@ -88,9 +114,9 @@ const HTTP = {
         });
 
         let config = {
-            method,
-            headers,
-            mode: "cors",
+            method: method,
+            headers: headers,
+            mode: HTTP._modeLookup[mode],
             cache: "no-cache",
         };
 
@@ -100,11 +126,23 @@ const HTTP = {
 
         return fetch(url, config)
         .then(r => {
-            if (ignoreStatusCode || r.status === 200) {
-                return r.text();
-            } else {
-                throw `HTTP response code was ${r.status}.`;
+            if (showResponseMetadata) {
+                let headers = "";
+                for (let pair of r.headers.entries()) {
+                    headers += "    " + pair[0] + ": " + pair[1] + "\n";
+                }
+                return r.text().then(b => {
+                    return "####\n  Status: " + r.status + " " + r.statusText +
+                        "\n  Exposed headers:\n" + headers + "####\n\n" + b;
+                });
             }
+            return r.text();
+        })
+        .catch(e => {
+            return e.toString() +
+                "\n\nThis error could be caused by one of the following:\n" +
+                " - An invalid URL\n" +
+                " - Making a cross-origin request to a server which does not support CORS\n";
         });
     },
 

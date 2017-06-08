@@ -3370,7 +3370,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        run: Image.runEXIF,
+        run: Image.runExtractEXIF,
         inputType: "byteArray",
         outputType: "string",
         args: [],
@@ -3388,9 +3388,20 @@ const OperationConfig = {
             }
         ]
     },
+    "Remove EXIF": {
+        description: [
+            "Removes EXIF data from a JPEG image.",
+            "<br><br>",
+            "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.runRemoveEXIF,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: []
+    },
     "HTTP request": {
         description: [
-            "Makes a HTTP request and returns the response body.",
+            "Makes an HTTP request and returns the response.",
             "<br><br>",
             "This operation supports different HTTP verbs like GET, POST, PUT, etc.",
             "<br><br>",
@@ -3401,24 +3412,33 @@ const OperationConfig = {
         run: HTTP.runHTTPRequest,
         inputType: "string",
         outputType: "string",
+        manualBake: true,
         args: [
             {
                 name: "Method",
                 type: "option",
                 value: HTTP.METHODS,
-            }, {
+            },
+            {
                 name: "URL",
                 type: "string",
                 value: "",
-            }, {
+            },
+            {
                 name: "Headers",
                 type: "text",
                 value: "",
-            }, {
-                name: "Ignore status code",
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: HTTP.MODE,
+            },
+            {
+                name: "Show response metadata",
                 type: "boolean",
                 value: false,
-            },
+            }
         ]
     },
 };
