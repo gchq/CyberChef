@@ -126,6 +126,10 @@ const HTTP = {
 
         return fetch(url, config)
         .then(r => {
+            if (r.status === 0 && r.type === "opaque") {
+                return "Error: Null response. Try setting the connection mode to CORS.";
+            }
+
             if (showResponseMetadata) {
                 let headers = "";
                 for (let pair of r.headers.entries()) {

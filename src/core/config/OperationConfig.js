@@ -3407,7 +3407,7 @@ const OperationConfig = {
             "<br><br>",
             "You can add headers line by line in the format <code>Key: Value</code>",
             "<br><br>",
-            "This operation will throw an error for any status code that is not 200, unless the 'Ignore status code' option is checked.",
+            "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
         ].join("\n"),
         run: HTTP.runHTTPRequest,
         inputType: "string",
