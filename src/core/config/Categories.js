@@ -126,6 +126,7 @@ const Categories = [
     {
         name: "Networking",
         ops: [
+            "HTTP request",
             "Strip HTTP headers",
             "Parse User Agent",
             "Parse IP range",

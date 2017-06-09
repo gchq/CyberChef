@@ -3397,7 +3397,49 @@ const OperationConfig = {
         run: Image.runRemoveEXIF,
         inputType: "byteArray",
         outputType: "byteArray",
-        args: [],
+        args: []
+    },
+    "HTTP request": {
+        description: [
+            "Makes an HTTP request and returns the response.",
+            "<br><br>",
+            "This operation supports different HTTP verbs like GET, POST, PUT, etc.",
+            "<br><br>",
+            "You can add headers line by line in the format <code>Key: Value</code>",
+            "<br><br>",
+            "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
+        ].join("\n"),
+        run: HTTP.runHTTPRequest,
+        inputType: "string",
+        outputType: "string",
+        manualBake: true,
+        args: [
+            {
+                name: "Method",
+                type: "option",
+                value: HTTP.METHODS,
+            },
+            {
+                name: "URL",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Headers",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: HTTP.MODE,
+            },
+            {
+                name: "Show response metadata",
+                type: "boolean",
+                value: false,
+            }
+        ]
     },
 };
 
