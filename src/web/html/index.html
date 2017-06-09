@@ -35,7 +35,7 @@
             // Load theme before the preloader is shown
             document.querySelector(":root").className = JSON.parse(localStorage.getItem("options")).theme;
 
-            // Cycle loading messages
+            // Define loading messages
             const loadingMsgs = [
                 "Proving P = NP...",
                 "Computing 6 x 9...",
@@ -49,15 +49,28 @@
                 "Navigating neural network...",
                 "Importing machine learning..."
             ];
+
+            // Shuffle array using Durstenfeld algorithm
+            for (let i = loadingMsgs.length - 1; i > 0; --i) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = loadingMsgs[i];
+                loadingMsgs[i] = loadingMsgs[j];
+                loadingMsgs[j] = temp;
+            }
+
+            // Show next loading message then move it to the end of the array
             function changeLoadingMsg() {
+                const msg = loadingMsgs.shift();
                 try {
                     const el = document.getElementById("preloader-msg");
                     el.className = "loading"; // Causes CSS transition on first message
-                    el.innerHTML = loadingMsgs[Math.floor(Math.random()*loadingMsgs.length)];
-                } catch (err) {}
+                    el.innerHTML = msg;
+                } catch (err) {} // Ignore errors if DOM not yet ready
+                loadingMsgs.push(msg);
             }
+
             changeLoadingMsg();
-            window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random()*500) + 500);
+            window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random() * 1000) + 1000);
         </script>
     </head>
     <body>
