@@ -354,8 +354,7 @@ RecipeWaiter.prototype.buildRecipeOperation = function(el) {
         el.classList.add("flow-control-op");
     }
 
-    // Disable auto-bake if this is a manual op - this should be moved to the 'operationadd'
-    // handler after event restructuring
+    // Disable auto-bake if this is a manual op
     if (op.manualBake && this.app.autoBake_) {
         this.manager.controls.setAutoBake(false);
         this.app.alert("Auto-Bake is disabled by default when using this operation.", "info", 5000);

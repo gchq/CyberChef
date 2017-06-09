@@ -21,21 +21,22 @@ import Split from "split.js";
  * @param {Object} options - Default setting for app options.
  */
 const App = function(categories, operations, defaultFavourites, defaultOptions) {
-    this.categories  = categories;
-    this.operations  = operations;
-    this.dfavourites = defaultFavourites;
-    this.doptions    = defaultOptions;
-    this.options     = Utils.extend({}, defaultOptions);
+    this.categories    = categories;
+    this.operations    = operations;
+    this.dfavourites   = defaultFavourites;
+    this.doptions      = defaultOptions;
+    this.options       = Utils.extend({}, defaultOptions);
 
-    this.chef        = new Chef();
-    this.manager     = new Manager(this);
+    this.chef          = new Chef();
+    this.manager       = new Manager(this);
 
-    this.baking      = false;
-    this.autoBake_   = false;
-    this.progress    = 0;
-    this.ingId       = 0;
+    this.baking        = false;
+    this.autoBake_     = false;
+    this.autoBakePause = false;
+    this.progress      = 0;
+    this.ingId         = 0;
 
-    window.chef      = this.chef;
+    window.chef        = this.chef;
 };
 
 
@@ -166,7 +167,7 @@ App.prototype.bake = async function(step) {
  * Runs Auto Bake if it is set.
  */
 App.prototype.autoBake = function() {
-    if (this.autoBake_) {
+    if (this.autoBake_ && !this.autoBakePause) {
         this.bake();
     }
 };
@@ -413,9 +414,9 @@ App.prototype.loadURIParams = function() {
         return b;
     })(window.location.search.substr(1).split("&"));
 
-    // Turn off auto-bake while loading
-    const autoBakeVal = this.autoBake_;
-    this.autoBake_ = false;
+    // Pause auto-bake while loading but don't modify `this.autoBake_`
+    // otherwise `manualBake` cannot trigger.
+    this.autoBakePause = true;
 
     // Read in recipe from query string
     if (this.queryString.recipe) {
@@ -451,8 +452,8 @@ App.prototype.loadURIParams = function() {
         } catch (err) {}
     }
 
-    // Restore auto-bake state
-    this.autoBake_ = autoBakeVal;
+    // Unpause auto-bake
+    this.autoBakePause = false;
     this.autoBake();
 };
 
