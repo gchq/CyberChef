@@ -1,4 +1,6 @@
-import Decimal from "../lib/decimal.min.js";
+//import Decimal from "../lib/decimal.min.js";
+import Utils from "../Utils.js";
+import {BigInteger} from "jsbn";
 
 /**
  * Date and time operations.
@@ -83,35 +85,52 @@ const DateTime = {
     /**
      * Converts a Windows FILETIME to Unix Epoch time.
      *
+     * @author bwhitn [brian.m.whitney@outlook.com]
      * @param {string} input
      * @param {Object[]} args (not used)
      * @returns {string}
      */
     runFromFiletimeToUnix: function(input, args) {
-        input = new Decimal(input);
-        input = input.sub(116444736000000000).div(10000000);
-        if (input.gte(0) && input.lt(Math.pow(2, 31))){
-            return input.toString();
+        let units = args[0], offset = new BigInteger("116444736000000000");
+        input = new BigInteger(input,16).subtract(offset);
+        if (units === "Seconds (s)"){
+            input = input.divide(new BigInteger("10000000"));
+        } else if (units === "Milliseconds (ms)") {
+            input = input.divide(new BigInteger("10000"));
+        } else if (units === "Microseconds (μs)") {
+            input = input.divide(new BigInteger("10"));
+        } else if (units === "Nanoseconds (ns)") {
+            input = input.multiply(new BigInteger("100"));
         } else {
-            throw "Date " + input + " is not a valid date";
+            throw "The value " + input + " cannot be expressed as a UNIX timestamp.";
         }
+        return input.toString();
     },
 
 
     /**
      * Converts a Unix Epoch time to Windows FILETIME.
      *
+     * @author bwhitn [brian.m.whitney@outlook.com]
      * @param {string} input
      * @param {Object[]} args (not used)
      * @returns {string}
      */
     runToFiletimeFromUnix: function(input, args) {
-        input = new Decimal(input);
-        if (input.gte(0) && input.lt(Math.pow(2, 31))){
-            return input.mul(10000000).add(116444736000000000).toHex();
+        let units = args[0], offset = new BigInteger("116444736000000000");
+        input = new BigInteger(input);
+        if (units === "Seconds (s)"){
+            input = input.multiply(new BigInteger("10000000")).add(offset);
+        } else if (units === "Milliseconds (ms)") {
+            input = input.multiply(new BigInteger("10000")).add(offset);
+        } else if (units === "Microseconds (μs)") {
+            input = input.multiply(new BigInteger("10")).add(offset);
+        } else if (units === "Nanoseconds (ns)") {
+            input = input.divide(new BigInteger("100")).add(offset);
         } else {
-            throw "Date " + input + " is not a valid date";
+            throw "The value " + input + " cannot be expressed as a UNIX timestamp.";
         }
+        return input.toString();
     },
 
 
