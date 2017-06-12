@@ -81,13 +81,6 @@ const DateTime = {
 
 
     /**
-     *@constant
-     *@default
-     */
-    RADIX: ["Decimal", "Hex"],
-
-
-    /**
      * Converts a Windows FILETIME to Unix Epoch time.
      *
      * @author bwhitn [brian.m.whitney@outlook.com]
