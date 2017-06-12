@@ -89,8 +89,8 @@ const DateTime = {
      * @returns {string}
      */
     runFromFiletimeToUnix: function(input, args) {
-        let units = args[0], offset = new BigInteger("116444736000000000");
-        input = new BigInteger(input).subtract(offset);
+        let units = args[0];
+        input = new BigInteger(input).subtract(new BigInteger("116444736000000000"));
         if (units === "Seconds (s)"){
             input = input.divide(new BigInteger("10000000"));
         } else if (units === "Milliseconds (ms)") {
@@ -100,7 +100,7 @@ const DateTime = {
         } else if (units === "Nanoseconds (ns)") {
             input = input.multiply(new BigInteger("100"));
         } else {
-            throw "The value " + input + " cannot be expressed as a UNIX timestamp.";
+            throw "Unrecognised unit";
         }
         return input.toString();
     },
@@ -115,20 +115,20 @@ const DateTime = {
      * @returns {string}
      */
     runToFiletimeFromUnix: function(input, args) {
-        let units = args[0], offset = new BigInteger("116444736000000000");
+        let units = args[0];
         input = new BigInteger(input);
         if (units === "Seconds (s)"){
-            input = input.multiply(new BigInteger("10000000")).add(offset);
+            input = input.multiply(new BigInteger("10000000"));
         } else if (units === "Milliseconds (ms)") {
-            input = input.multiply(new BigInteger("10000")).add(offset);
+            input = input.multiply(new BigInteger("10000"));
         } else if (units === "Microseconds (μs)") {
-            input = input.multiply(new BigInteger("10")).add(offset);
+            input = input.multiply(new BigInteger("10"));
         } else if (units === "Nanoseconds (ns)") {
-            input = input.divide(new BigInteger("100")).add(offset);
+            input = input.divide(new BigInteger("100"));
         } else {
-            throw "The value " + input + " cannot be expressed as a UNIX timestamp.";
+            throw "Unrecognised unit";
         }
-        return input.toString();
+        return input.add(new BigInteger("116444736000000000")).toString();
     },
 
 
