@@ -1,5 +1,3 @@
-//import Decimal from "../lib/decimal.min.js";
-import Utils from "../Utils.js";
 import {BigInteger} from "jsbn";
 
 /**
@@ -83,6 +81,13 @@ const DateTime = {
 
 
     /**
+     *@constant
+     *@default
+     */
+    RADIX: ["Decimal", "Hex"],
+
+
+    /**
      * Converts a Windows FILETIME to Unix Epoch time.
      *
      * @author bwhitn [brian.m.whitney@outlook.com]
@@ -92,7 +97,7 @@ const DateTime = {
      */
     runFromFiletimeToUnix: function(input, args) {
         let units = args[0], offset = new BigInteger("116444736000000000");
-        input = new BigInteger(input,16).subtract(offset);
+        input = new BigInteger(input).subtract(offset);
         if (units === "Seconds (s)"){
             input = input.divide(new BigInteger("10000000"));
         } else if (units === "Milliseconds (ms)") {

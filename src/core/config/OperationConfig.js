@@ -2268,7 +2268,7 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "Units",
+                name: "Output Units",
                 type: "Option",
                 value: DateTime.UNITS
             }
@@ -2281,7 +2281,7 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "Units",
+                name: "Input Units",
                 type: "Option",
                 value: DateTime.UNITS
             }
