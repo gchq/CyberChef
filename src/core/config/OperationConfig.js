@@ -2231,7 +2231,7 @@ const OperationConfig = {
         ]
     },
     "From UNIX Timestamp": {
-        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code>",
+        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
         run: DateTime.runFromUnixTimestamp,
         inputType: "number",
         outputType: "string",
@@ -2244,7 +2244,7 @@ const OperationConfig = {
         ]
     },
     "To UNIX Timestamp": {
-        description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code>",
+        description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
         run: DateTime.runToUnixTimestamp,
         inputType: "string",
         outputType: "number",
@@ -2262,27 +2262,27 @@ const OperationConfig = {
         ]
     },
     "Windows Filetime to UNIX Timestamp":{
-        description: "Converts a Windows Filetime timestamp to a datetime format",
+        description: "Converts a Windows Filetime value to a UNIX timestamp.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
         run: DateTime.runFromFiletimeToUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Output Units",
-                type: "Option",
+                name: "Output units",
+                type: "option",
                 value: DateTime.UNITS
             }
         ]
     },
     "UNIX Timestamp to Windows Filetime":{
-        description: "Parses a datetime string in UTC and returns the corresponding Windows Filetime timestamp",
+        description: "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
         run: DateTime.runToFiletimeFromUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Input Units",
-                type: "Option",
+                name: "Input units",
+                type: "option",
                 value: DateTime.UNITS
             }
         ]
