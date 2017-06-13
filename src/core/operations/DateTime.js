@@ -1,3 +1,5 @@
+import {BigInteger} from "jsbn";
+
 /**
  * Date and time operations.
  *
@@ -75,6 +77,58 @@ const DateTime = {
         } else {
             throw "Unrecognised unit";
         }
+    },
+
+
+    /**
+     * Converts a Windows FILETIME to Unix Epoch time.
+     *
+     * @author bwhitn [brian.m.whitney@outlook.com]
+     * @param {string} input
+     * @param {Object[]} args (not used)
+     * @returns {string}
+     */
+    runFromFiletimeToUnix: function(input, args) {
+        let units = args[0];
+        input = new BigInteger(input).subtract(new BigInteger("116444736000000000"));
+        if (units === "Seconds (s)"){
+            input = input.divide(new BigInteger("10000000"));
+        } else if (units === "Milliseconds (ms)") {
+            input = input.divide(new BigInteger("10000"));
+        } else if (units === "Microseconds (μs)") {
+            input = input.divide(new BigInteger("10"));
+        } else if (units === "Nanoseconds (ns)") {
+            input = input.multiply(new BigInteger("100"));
+        } else {
+            throw "Unrecognised unit";
+        }
+        return input.toString();
+    },
+
+
+    /**
+     * Converts a Unix Epoch time to Windows FILETIME.
+     *
+     * @author bwhitn [brian.m.whitney@outlook.com]
+     * @param {string} input
+     * @param {Object[]} args (not used)
+     * @returns {string}
+     */
+    runToFiletimeFromUnix: function(input, args) {
+        let units = args[0];
+        input = new BigInteger(input);
+        if (units === "Seconds (s)"){
+            input = input.multiply(new BigInteger("10000000"));
+        } else if (units === "Milliseconds (ms)") {
+            input = input.multiply(new BigInteger("10000"));
+        } else if (units === "Microseconds (μs)") {
+            input = input.multiply(new BigInteger("10"));
+        } else if (units === "Nanoseconds (ns)") {
+            input = input.divide(new BigInteger("100"));
+        } else {
+            throw "Unrecognised unit";
+        }
+        return input.add(new BigInteger("116444736000000000")).toString();
     },
 
 
