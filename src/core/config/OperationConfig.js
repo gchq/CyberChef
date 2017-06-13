@@ -3398,7 +3398,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        run: Image.runEXIF,
+        run: Image.runExtractEXIF,
         inputType: "byteArray",
         outputType: "string",
         args: [],
@@ -3413,6 +3413,59 @@ const OperationConfig = {
                 name: "Input format",
                 type: "option",
                 value: Image.INPUT_FORMAT
+            }
+        ]
+    },
+    "Remove EXIF": {
+        description: [
+            "Removes EXIF data from a JPEG image.",
+            "<br><br>",
+            "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.runRemoveEXIF,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: []
+    },
+    "HTTP request": {
+        description: [
+            "Makes an HTTP request and returns the response.",
+            "<br><br>",
+            "This operation supports different HTTP verbs like GET, POST, PUT, etc.",
+            "<br><br>",
+            "You can add headers line by line in the format <code>Key: Value</code>",
+            "<br><br>",
+            "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
+        ].join("\n"),
+        run: HTTP.runHTTPRequest,
+        inputType: "string",
+        outputType: "string",
+        manualBake: true,
+        args: [
+            {
+                name: "Method",
+                type: "option",
+                value: HTTP.METHODS,
+            },
+            {
+                name: "URL",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Headers",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: HTTP.MODE,
+            },
+            {
+                name: "Show response metadata",
+                type: "boolean",
+                value: false,
             }
         ]
     },
