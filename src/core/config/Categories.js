@@ -193,6 +193,8 @@ const Categories = [
             "Translate DateTime Format",
             "From UNIX Timestamp",
             "To UNIX Timestamp",
+            "Windows Filetime to UNIX Timestamp",
+            "UNIX Timestamp to Windows Filetime",
             "Extract dates",
         ]
     },
