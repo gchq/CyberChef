@@ -146,6 +146,7 @@ const HTTP = {
             return e.toString() +
                 "\n\nThis error could be caused by one of the following:\n" +
                 " - An invalid URL\n" +
+                " - Making a request to an insecure resource (HTTP) from a secure source (HTTPS)\n" +
                 " - Making a cross-origin request to a server which does not support CORS\n";
         });
     },
