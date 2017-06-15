@@ -1919,7 +1919,7 @@ const OperationConfig = {
         args: []
     },
     "Find / Replace": {
-        description: "Replaces all occurrences of the first string with the second.<br><br>The three match options are only relevant to regex search strings.",
+        description: "Replaces all occurrences of the first string with the second.<br><br> Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).",
         run: StrUtils.runFindReplace,
         manualBake: true,
         inputType: "string",

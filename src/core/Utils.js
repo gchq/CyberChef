@@ -260,6 +260,22 @@ const Utils = {
 
 
     /**
+     * Escape a string containing regex control characters so that it can be safely
+     * used in a regex without causing unintended behaviours.
+     *
+     * @param {string} str
+     * @returns {string}
+     *
+     * @example
+     * // returns "\[example\]"
+     * Utils.escapeRegex("[example]");
+     */
+    escapeRegex: function(str) {
+        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    },
+
+
+    /**
      * Expand an alphabet range string into a list of the characters in that range.
      *
      * @param {string} alphStr
