@@ -81,11 +81,11 @@ const DateTime = {
 
 
     /**
-     * Converts a Windows FILETIME to Unix Epoch time.
+     * Windows Filetime to Unix Timestamp operation.
      *
      * @author bwhitn [brian.m.whitney@outlook.com]
      * @param {string} input
-     * @param {Object[]} args (not used)
+     * @param {Object[]} args
      * @returns {string}
      */
     runFromFiletimeToUnix: function(input, args) {
@@ -107,11 +107,11 @@ const DateTime = {
 
 
     /**
-     * Converts a Unix Epoch time to Windows FILETIME.
+     * Unix Timestamp to Windows Filetime operation.
      *
      * @author bwhitn [brian.m.whitney@outlook.com]
      * @param {string} input
-     * @param {Object[]} args (not used)
+     * @param {Object[]} args
      * @returns {string}
      */
     runToFiletimeFromUnix: function(input, args) {

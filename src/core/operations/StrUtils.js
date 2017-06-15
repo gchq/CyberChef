@@ -227,14 +227,16 @@ const StrUtils = {
 
         if (type === "Regex") {
             find = new RegExp(find, modifiers);
-        } else if (type.indexOf("Extended") === 0) {
+            return input.replace(find, replace);
+        }
+
+        if (type.indexOf("Extended") === 0) {
             find = Utils.parseEscapedChars(find);
         }
 
-        return input.replace(find, replace, modifiers);
-        // Non-standard addition of flags in the third argument. This will work in Firefox but
-        // probably nowhere else. The purpose is to allow global matching when the `find` parameter
-        // is just a string.
+        find = new RegExp(Utils.escapeRegex(find), modifiers);
+
+        return input.replace(find, replace);
     },
 
 

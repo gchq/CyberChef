@@ -1919,7 +1919,7 @@ const OperationConfig = {
         args: []
     },
     "Find / Replace": {
-        description: "Replaces all occurrences of the first string with the second.<br><br>The three match options are only relevant to regex search strings.",
+        description: "Replaces all occurrences of the first string with the second.<br><br> Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).",
         run: StrUtils.runFindReplace,
         manualBake: true,
         inputType: "string",
@@ -2231,7 +2231,7 @@ const OperationConfig = {
         ]
     },
     "From UNIX Timestamp": {
-        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code>",
+        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
         run: DateTime.runFromUnixTimestamp,
         inputType: "number",
         outputType: "string",
@@ -2244,7 +2244,7 @@ const OperationConfig = {
         ]
     },
     "To UNIX Timestamp": {
-        description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code>",
+        description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
         run: DateTime.runToUnixTimestamp,
         inputType: "string",
         outputType: "number",
@@ -2262,27 +2262,27 @@ const OperationConfig = {
         ]
     },
     "Windows Filetime to UNIX Timestamp":{
-        description: "Converts a Windows Filetime timestamp to a datetime format",
+        description: "Converts a Windows Filetime value to a UNIX timestamp.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
         run: DateTime.runFromFiletimeToUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Output Units",
-                type: "Option",
+                name: "Output units",
+                type: "option",
                 value: DateTime.UNITS
             }
         ]
     },
     "UNIX Timestamp to Windows Filetime":{
-        description: "Parses a datetime string in UTC and returns the corresponding Windows Filetime timestamp",
+        description: "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
         run: DateTime.runToFiletimeFromUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Input Units",
-                type: "Option",
+                name: "Input units",
+                type: "option",
                 value: DateTime.UNITS
             }
         ]
@@ -3396,7 +3396,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        run: Image.runEXIF,
+        run: Image.runExtractEXIF,
         inputType: "byteArray",
         outputType: "string",
         args: [],
@@ -3411,6 +3411,59 @@ const OperationConfig = {
                 name: "Input format",
                 type: "option",
                 value: Image.INPUT_FORMAT
+            }
+        ]
+    },
+    "Remove EXIF": {
+        description: [
+            "Removes EXIF data from a JPEG image.",
+            "<br><br>",
+            "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n"),
+        run: Image.runRemoveEXIF,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: []
+    },
+    "HTTP request": {
+        description: [
+            "Makes an HTTP request and returns the response.",
+            "<br><br>",
+            "This operation supports different HTTP verbs like GET, POST, PUT, etc.",
+            "<br><br>",
+            "You can add headers line by line in the format <code>Key: Value</code>",
+            "<br><br>",
+            "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
+        ].join("\n"),
+        run: HTTP.runHTTPRequest,
+        inputType: "string",
+        outputType: "string",
+        manualBake: true,
+        args: [
+            {
+                name: "Method",
+                type: "option",
+                value: HTTP.METHODS,
+            },
+            {
+                name: "URL",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Headers",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: HTTP.MODE,
+            },
+            {
+                name: "Show response metadata",
+                type: "boolean",
+                value: false,
             }
         ]
     },

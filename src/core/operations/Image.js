@@ -1,4 +1,5 @@
 import * as ExifParser from "exif-parser";
+import removeEXIF from "../lib/remove-exif.js";
 import Utils from "../Utils.js";
 import FileType from "./FileType.js";
 
@@ -23,7 +24,7 @@ const Image = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runEXIF(input, args) {
+    runExtractEXIF(input, args) {
         try {
             const bytes = Uint8Array.from(input);
             const parser = ExifParser.create(bytes.buffer);
@@ -40,6 +41,30 @@ const Image = {
             return lines.join("\n");
         } catch (err) {
             throw "Could not extract EXIF data from image: " + err;
+        }
+    },
+
+
+    /**
+     * Remove EXIF operation.
+     *
+     * Removes EXIF data from a byteArray, representing a JPG.
+     *
+     * @author David Moodie [davidmoodie12@gmail.com]
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runRemoveEXIF(input, args) {
+        // Do nothing if input is empty
+        if (input.length === 0) return input;
+
+        try {
+            return removeEXIF(input);
+        } catch (err) {
+            // Simply return input if no EXIF data is found
+            if (err === "Exif not found.") return input;
+            throw "Could not remove EXIF data from image: " + err;
         }
     },
 
