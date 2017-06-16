@@ -174,20 +174,21 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
     const inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
     includeRecipe = includeRecipe && (recipeConfig.length > 0);
-    includeInput = includeInput && (inputStr.length > 0) && (inputStr.length < 8000);
+    // Only inlcude input if it is less than 50KB (51200 * 4/3 as it is Base64 encoded)
+    includeInput = includeInput && (inputStr.length > 0) && (inputStr.length <= 68267);
 
     const params = [
         includeRecipe ? ["recipe", recipeStr] : undefined,
         includeInput ? ["input", inputStr] : undefined,
     ];
 
-    const query = params
+    const hash = params
        .filter(v => v)
        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
        .join("&");
 
-    if (query) {
-        return `${link}?${query}`;
+    if (hash) {
+        return `${link}#${hash}`;
     }
 
     return link;

@@ -982,6 +982,37 @@ const Utils = {
 
 
     /**
+     * Parses URI parameters into a JSON object.
+     *
+     * @param {string} paramStr - The serialised query or hash section of a URI
+     * @returns {object}
+     *
+     * @example
+     * // returns {a: 'abc', b: '123'}
+     * Utils.parseURIParams("?a=abc&b=123")
+     * Utils.parseURIParams("#a=abc&b=123")
+     */
+    parseURIParams: function(paramStr) {
+        if (paramStr === "") return {};
+
+        // Cut off ? or # and split on &
+        const params = paramStr.substr(1).split("&");
+
+        const result = {};
+        for (let i = 0; i < params.length; i++) {
+            const param = params[i].split("=");
+            if (param.length !== 2) {
+                result[params[i]] = true;
+            } else {
+                result[param[0]] = decodeURIComponent(param[1].replace(/\+/g, " "));
+            }
+        }
+
+        return result;
+    },
+
+
+    /**
      * Actual modulo function, since % is actually the remainder function in JS.
      *
      * @author Matt C [matt@artemisbot.pw]

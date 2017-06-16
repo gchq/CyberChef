@@ -399,39 +399,28 @@ App.prototype.addFavourite = function(name) {
  * Checks for input and recipe in the URI parameters and loads them if present.
  */
 App.prototype.loadURIParams = function() {
-    // Load query string from URI
-    this.queryString = (function(a) {
-        if (a === "") return {};
-        const b = {};
-        for (let i = 0; i < a.length; i++) {
-            const p = a[i].split("=");
-            if (p.length !== 2) {
-                b[a[i]] = true;
-            } else {
-                b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-            }
-        }
-        return b;
-    })(window.location.search.substr(1).split("&"));
+    // Load query string or hash from URI (depending on which is populated)
+    const params = window.location.search || window.location.hash;
+    this.uriParams = Utils.parseURIParams(params);
 
     // Pause auto-bake while loading but don't modify `this.autoBake_`
     // otherwise `manualBake` cannot trigger.
     this.autoBakePause = true;
 
-    // Read in recipe from query string
-    if (this.queryString.recipe) {
+    // Read in recipe from URI params
+    if (this.uriParams.recipe) {
         try {
-            const recipeConfig = JSON.parse(this.queryString.recipe);
+            const recipeConfig = JSON.parse(this.uriParams.recipe);
             this.setRecipeConfig(recipeConfig);
         } catch (err) {}
-    } else if (this.queryString.op) {
+    } else if (this.uriParams.op) {
         // If there's no recipe, look for single operations
         this.manager.recipe.clearRecipe();
         try {
-            this.manager.recipe.addOperation(this.queryString.op);
+            this.manager.recipe.addOperation(this.uriParams.op);
         } catch (err) {
             // If no exact match, search for nearest match and add that
-            const matchedOps = this.manager.ops.filterOperations(this.queryString.op, false);
+            const matchedOps = this.manager.ops.filterOperations(this.uriParams.op, false);
             if (matchedOps.length) {
                 this.manager.recipe.addOperation(matchedOps[0].name);
             }
@@ -439,15 +428,15 @@ App.prototype.loadURIParams = function() {
             // Populate search with the string
             const search = document.getElementById("search");
 
-            search.value = this.queryString.op;
+            search.value = this.uriParams.op;
             search.dispatchEvent(new Event("search"));
         }
     }
 
-    // Read in input data from query string
-    if (this.queryString.input) {
+    // Read in input data from URI params
+    if (this.uriParams.input) {
         try {
-            const inputData = Utils.fromBase64(this.queryString.input);
+            const inputData = Utils.fromBase64(this.uriParams.input);
             this.setInput(inputData);
         } catch (err) {}
     }
