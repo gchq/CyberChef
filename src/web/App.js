@@ -678,9 +678,7 @@ App.prototype.stateChange = function(e) {
  * @param {event} e
  */
 App.prototype.popState = function(e) {
-    if (window.location.href.split("#")[0] !== this.lastStateUrl) {
-        this.loadURIParams();
-    }
+    this.loadURIParams();
 };
 
 

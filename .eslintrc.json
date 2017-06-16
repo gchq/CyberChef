@@ -93,6 +93,7 @@
         "moment": false,
 
         "COMPILE_TIME": false,
-        "COMPILE_MSG": false
+        "COMPILE_MSG": false,
+        "PKG_VERSION": false
     }
 }
