@@ -207,14 +207,14 @@ module.exports = function (grunt) {
                                 limit: 10000
                             }
                         },
-                        { // First party images are saved as files to be cached
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /node_modules/,
-                            loader: "file-loader",
-                            options: {
-                                name: "images/[name].[ext]"
-                            }
-                        },
+                        // { // First party images are saved as files to be cached
+                            // test: /\.(png|jpg|gif|svg)$/,
+                            // exclude: /node_modules/,
+                            // loader: "file-loader",
+                            // options: {
+                                // name: "images/[name].[ext]"
+                            // }
+                        // },
                         { // Third party images are inlined
                             test: /\.(png|jpg|gif|svg)$/,
                             exclude: /web\/static/,
@@ -322,7 +322,7 @@ module.exports = function (grunt) {
                 },
                 src: "build/prod/index.html",
                 dest: "build/prod/index.html"
-            }
+            },
         },
         chmod: {
             build: {
