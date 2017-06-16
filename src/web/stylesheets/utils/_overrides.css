@@ -202,6 +202,11 @@ optgroup {
     border-color: var(--primary-border-colour);
 }
 
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
+    background-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
+}
+
 
 /* Sortable */
 

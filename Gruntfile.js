@@ -164,7 +164,8 @@ module.exports = function (grunt) {
                     }),
                     new webpack.DefinePlugin({
                         COMPILE_TIME: JSON.stringify(compileTime),
-                        COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || "")
+                        COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
+                        PKG_VERSION: JSON.stringify(pkg.version)
                     }),
                     new ExtractTextPlugin("styles.css"),
                 ],

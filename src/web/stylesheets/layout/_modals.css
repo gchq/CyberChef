@@ -14,6 +14,10 @@
     margin: 10px;
 }
 
+.option-item label {
+    font-weight: normal;
+}
+
 .option-item input[type=number] {
     margin: 15px 10px;
     width: 80px;

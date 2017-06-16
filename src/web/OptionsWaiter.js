@@ -57,8 +57,11 @@ OptionsWaiter.prototype.load = function(options) {
 /**
  * Handler for options click events.
  * Dispays the options pane.
+ *
+ * @param {event} e
  */
-OptionsWaiter.prototype.optionsClick = function() {
+OptionsWaiter.prototype.optionsClick = function(e) {
+    e.preventDefault();
     $("#options-modal").modal();
 };
 
