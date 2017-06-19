@@ -605,7 +605,7 @@ const OperationConfig = {
         args: []
     },
     "To Hexdump": {
-        description: "Creates a hexdump of the input data, displaying both the hexademinal values of each byte and an ASCII representation alongside.",
+        description: "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.",
         run: Hexdump.runTo,
         highlight: Hexdump.highlightTo,
         highlightReverse: Hexdump.highlightFrom,

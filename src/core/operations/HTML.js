@@ -91,7 +91,7 @@ const HTML = {
             const bite = HTML._entityToByte[m[1]];
             if (bite) {
                 output += Utils.chr(bite);
-            } else if (!bite && m[1][0] === "#" && m[1].length > 1 && /^#\d{1,5}$/.test(m[1])) {
+            } else if (!bite && m[1][0] === "#" && m[1].length > 1 && /^#\d{1,6}$/.test(m[1])) {
                 // Numeric entity (e.g. &#10;)
                 const num = m[1].slice(1, m[1].length);
                 output += Utils.chr(parseInt(num, 10));

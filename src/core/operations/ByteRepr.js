@@ -108,8 +108,9 @@ const ByteRepr = {
             throw "Error: Base argument must be between 2 and 36";
         }
 
-        for (let i = 0; i < input.length; i++) {
-            ordinal = Utils.ord(input[i]);
+        const charcode = Utils.strToCharcode(input);
+        for (let i = 0; i < charcode.length; i++) {
+            ordinal = charcode[i];
 
             if (base === 16) {
                 if (ordinal < 256) padding = 2;
