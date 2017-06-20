@@ -3558,6 +3558,39 @@ const OperationConfig = {
             },
         ]
     },
+    "Series chart": {
+        description: [].join("\n"),
+        run: Charts.runSeriesChart,
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Record delimiter",
+                type: "option",
+                value: Charts.RECORD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "Field delimiter",
+                type: "option",
+                value: Charts.FIELD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "X label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Point radius",
+                type: "number",
+                value: 1,
+            },
+            {
+                name: "Series colours",
+                type: "string",
+                value: "mediumseagreen, dodgerblue, tomato",
+            },
+        ]
+    },
     "HTML to Text": {
         description: [].join("\n"),
         run: HTML.runHTMLToText,
