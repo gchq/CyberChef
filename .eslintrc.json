@@ -56,7 +56,7 @@
             "ArrayExpression": "first",
             "SwitchCase": 1
         }],
-        "linebreak-style": ["error", "unix"],
+        // "linebreak-style": ["error", "unix"], // Disabling this to let Windows run
         "quotes": ["error", "double", {
             "avoidEscape": true
         }],
