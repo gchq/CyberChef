@@ -135,7 +135,7 @@ const Rotate = {
     /**
      * ROT47 operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {byteArray} input
      * @param {Object[]} args
      * @returns {byteArray}

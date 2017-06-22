@@ -1048,7 +1048,7 @@ const Utils = {
     /**
      * Actual modulo function, since % is actually the remainder function in JS.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {number} x
      * @param {number} y
      * @returns {number}
@@ -1061,7 +1061,7 @@ const Utils = {
     /**
      * Finds the greatest common divisor of two numbers.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {number} x
      * @param {number} y
      * @returns {number}
@@ -1077,7 +1077,7 @@ const Utils = {
     /**
      * Finds the modular inverse of two values.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {number} x
      * @param {number} y
      * @returns {number}

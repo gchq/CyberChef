@@ -58,7 +58,7 @@ const ByteRepr = {
     /**
      * To Octal operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
@@ -72,7 +72,7 @@ const ByteRepr = {
     /**
      * From Octal operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {byteArray}

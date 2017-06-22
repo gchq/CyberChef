@@ -596,12 +596,12 @@ const Cipher = {
     /**
      * Generates a polybius square for the given keyword
      *
+     * @private
      * @author Matt C [matt@artemisbot.uk]
-     * @param {string} input
-     * @param {Object[]} args
+     * @param {string} keyword
      * @returns {string}
      */
-    genPolybiusSquare: function (keyword) {
+    _genPolybiusSquare: function (keyword) {
         const alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
         let polybius = [],
             polString = "";
@@ -634,7 +634,7 @@ const Cipher = {
             trans;
         if (keyword.split("").unique().length > 25) return "The alphabet keyword must be less than 25 characters.";
         if (!/^[a-zA-Z]+$/.test(keyword) && keyword.split("").unique().length > 0) return "The key must consist only of letters";
-        const polybius = Cipher.genPolybiusSquare(keyword);
+        const polybius = Cipher._genPolybiusSquare(keyword);
         input.replace("J", "I").split("").forEach((letter) => {
             let alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0,
                 polInd;
@@ -689,7 +689,7 @@ const Cipher = {
             trans = "";
         if (keyword.split("").unique().length > 25) return "The alphabet keyword must be less than 25 characters.";
         if (!/^[a-zA-Z]+$/.test(keyword) && keyword.split("").unique().length > 0) return "The key must consist only of letters";
-        const polybius = Cipher.genPolybiusSquare(keyword);
+        const polybius = Cipher._genPolybiusSquare(keyword);
         input.replace("J", "I").split("").forEach((letter) => {
             let alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0,
                 polInd;
