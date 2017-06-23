@@ -608,23 +608,23 @@ const Cipher = {
     /**
      * Substitute operation.
      *
-     * @param {byteArray} input
+     * @param {string} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {string}
      */
     runSubstitute: function (input, args) {
-        let plaintext = Utils.strToByteArray(Utils.expandAlphRange(args[0]).join()),
-            ciphertext = Utils.strToByteArray(Utils.expandAlphRange(args[1]).join()),
-            output = [],
+        let plaintext = Utils.expandAlphRange(args[0]).join(),
+            ciphertext = Utils.expandAlphRange(args[1]).join(),
+            output = "",
             index = -1;
 
         if (plaintext.length !== ciphertext.length) {
-            output = Utils.strToByteArray("Warning: Plaintext and Ciphertext lengths differ\n\n");
+            output = "Warning: Plaintext and Ciphertext lengths differ\n\n";
         }
 
         for (let i = 0; i < input.length; i++) {
             index = plaintext.indexOf(input[i]);
-            output.push(index > -1 && index < ciphertext.length ? ciphertext[index] : input[i]);
+            output += index > -1 && index < ciphertext.length ? ciphertext[index] : input[i];
         }
 
         return output;
