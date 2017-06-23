@@ -366,19 +366,21 @@ const Utils = {
      * Translates an array of bytes to a hex string.
      *
      * @param {byteArray} byteArray
+     * @param {string} [delim=" "]
      * @returns {string}
      *
      * @example
      * // returns "fe09a7"
-     * Utils.byteArrayToHex([0xfe, 0x09, 0xa7]);
+     * Utils.byteArrayToHex([0xfe, 0x09, 0xa7], "");
      */
-    byteArrayToHex: function(byteArray) {
+    byteArrayToHex: function(byteArray, delim) {
         if (!byteArray) return "";
+        delim = typeof delim === "undefined" ? " " : delim;
         let hexStr = "";
         for (let i = 0; i < byteArray.length; i++) {
-            hexStr += Utils.hex(byteArray[i]) + " ";
+            hexStr += Utils.hex(byteArray[i]) + delim;
         }
-        return hexStr.slice(0, hexStr.length-1);
+        return hexStr.slice(0, hexStr.length - delim.length);
     },
 
 
