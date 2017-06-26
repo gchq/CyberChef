@@ -73,7 +73,7 @@ App.prototype.loaded = function() {
     }, 1000);
 
     // Clear the loading message interval
-    clearInterval(window.loadingMsgInt);
+    clearInterval(window.loadingMsgsInt);
 };
 
 
