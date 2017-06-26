@@ -6,9 +6,9 @@
 
 #### *The Cyber Swiss Army Knife*
 
-CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.
+CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
 
-The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer and the code has not been peer-reviewed for compliance with a formal specification.
+The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer.
 
 ## Live demo
 
@@ -24,9 +24,9 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 There are four main areas in CyberChef:
 
  1. The **input** box in the top right, where you can paste, type or drag the data you want to operate on.
- 2. The **output** box in the bottom right, where the outcome of the specified processing will be displayed.
+ 2. The **output** box in the bottom right, where the outcome of your processing will be displayed.
  3. The **operations** list on the far left, where you can find all the operations that CyberChef is capable of in categorised lists, or by searching.
- 4. The **recipe** area in the middle, where you drag the operations that you want to use and specify arguments and options.
+ 4. The **recipe** area in the middle, where you can drag the operations that you want to use and specify arguments and options.
 
 You can use as many operations as you like in simple or complex ways. Some examples are as follows:
 
@@ -66,12 +66,16 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 ## Browser support
 
-CyberChef is built to support Google Chrome 40+, Mozilla Firefox 35+ and Microsoft Edge 14+.
+CyberChef is built to support
+
+ - Google Chrome 40+
+ - Mozilla Firefox 35+
+ - Microsoft Edge 14+
 
 
 ## Contributing
 
-An installation walkthrough, how-to guides for adding new operations, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
+An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
 
  - Sign the [GCHQ Contributor Licence Agreement](https://github.com/gchq/Gaffer/wiki/GCHQ-OSS-Contributor-License-Agreement-V1.0)
  - Push your changes to your fork.
