@@ -37,20 +37,24 @@
 #preloader:after {
     content: "";
     position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
     border: 3px solid transparent;
     border-radius: 50%;
 }
 
 #preloader:before {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
     border-top-color: #e74c3c;
     animation: spin 3s linear infinite;
 }
 
 #preloader:after {
+    top: 13px;
+    left: 13px;
+    right: 13px;
+    bottom: 13px;
     border-top-color: #f9c922;
     animation: spin 1.5s linear infinite;
 }
