@@ -945,12 +945,12 @@ const Utils = {
      * @param {Object[]} files
      * @returns {html}
      */
-    displayFilesAsHTML: function(files){
+    displayFilesAsHTML: function(files) {
         const formatDirectory = function(file) {
             const html = "<div class='panel panel-default'>" +
                    "<div class='panel-heading' role='tab'>" +
                    "<h4 class='panel-title'>" +
-                   file.fileName +
+                   Utils.escapeHtml(file.fileName) +
                    // The following line is for formatting when HTML is stripped
                    "<span style='display: none'>\n0 bytes\n</span>" +
                    "</h4>" +
