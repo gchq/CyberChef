@@ -407,7 +407,7 @@ const Cipher = {
     /**
      * Vigenère Encode operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -454,7 +454,7 @@ const Cipher = {
     /**
      * Vigenère Decode operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -508,7 +508,7 @@ const Cipher = {
     /**
      * Affine Cipher Encode operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -540,9 +540,9 @@ const Cipher = {
 
 
     /**
-     * Affine Cipher Encode operation.
+     * Affine Cipher Decode operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -584,13 +584,166 @@ const Cipher = {
     /**
      * Atbash Cipher Encode operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
     runAtbash: function (input, args) {
         return Cipher.runAffineEnc(input, [25, 25]);
+    },
+
+
+    /**
+     * Generates a polybius square for the given keyword
+     *
+     * @private
+     * @author Matt C [matt@artemisbot.uk]
+     * @param {string} keyword - Must be upper case
+     * @returns {string}
+     */
+    _genPolybiusSquare: function (keyword) {
+        const alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+        const polArray = `${keyword}${alpha}`.split("").unique();
+        let polybius = [];
+
+        for (let i = 0; i < 5; i++) {
+            polybius[i] = polArray.slice(i*5, i*5 + 5);
+        }
+
+        return polybius;
+    },
+
+    /**
+     * Bifid Cipher Encode operation
+     *
+     * @author Matt C [matt@artemisbot.uk]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runBifidEnc: function (input, args) {
+        const keywordStr = args[0].toUpperCase().replace("J", "I"),
+            keyword = keywordStr.split("").unique(),
+            alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
+        let output = "",
+            xCo = [],
+            yCo = [],
+            structure = [],
+            count = 0;
+
+        if (keyword.length > 25)
+            return "The alphabet keyword must be less than 25 characters.";
+
+        if (!/^[a-zA-Z]+$/.test(keywordStr) && keyword.length > 0)
+            return "The key must consist only of letters";
+
+        const polybius = Cipher._genPolybiusSquare(keywordStr);
+
+        input.replace("J", "I").split("").forEach(letter => {
+            let alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0,
+                polInd;
+
+            if (alpInd) {
+                for (let i = 0; i < 5; i++) {
+                    polInd = polybius[i].indexOf(letter.toLocaleUpperCase());
+                    if (polInd >= 0) {
+                        xCo.push(polInd);
+                        yCo.push(i);
+                    }
+                }
+
+                if (alpha.split("").indexOf(letter) >= 0) {
+                    structure.push(true);
+                } else if (alpInd) {
+                    structure.push(false);
+                }
+            } else {
+                structure.push(letter);
+            }
+        });
+
+        const trans = `${yCo.join("")}${xCo.join("")}`;
+
+        structure.forEach(pos => {
+            if (typeof pos === "boolean") {
+                let coords = trans.substr(2*count, 2).split("");
+
+                output += pos ?
+                    polybius[coords[0]][coords[1]] :
+                    polybius[coords[0]][coords[1]].toLocaleLowerCase();
+                count++;
+            } else {
+                output += pos;
+            }
+        });
+
+        return output;
+    },
+
+    /**
+     * Bifid Cipher Decode operation
+     *
+     * @author Matt C [matt@artemisbot.uk]
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runBifidDec: function (input, args) {
+        const keywordStr = args[0].toUpperCase().replace("J", "I"),
+            keyword = keywordStr.split("").unique(),
+            alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
+        let output = "",
+            structure = [],
+            count = 0,
+            trans = "";
+
+        if (keyword.length > 25)
+            return "The alphabet keyword must be less than 25 characters.";
+
+        if (!/^[a-zA-Z]+$/.test(keywordStr) && keyword.length > 0)
+            return "The key must consist only of letters";
+
+        const polybius = Cipher._genPolybiusSquare(keywordStr);
+
+        input.replace("J", "I").split("").forEach((letter) => {
+            let alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0,
+                polInd;
+
+            if (alpInd) {
+                for (let i = 0; i < 5; i++) {
+                    polInd = polybius[i].indexOf(letter.toLocaleUpperCase());
+                    if (polInd >= 0) {
+                        trans += `${i}${polInd}`;
+                    }
+                }
+
+                if (alpha.split("").indexOf(letter) >= 0) {
+                    structure.push(true);
+                } else if (alpInd) {
+                    structure.push(false);
+                }
+            } else {
+                structure.push(letter);
+            }
+        });
+
+        structure.forEach(pos => {
+            if (typeof pos === "boolean") {
+                let coords = [trans[count], trans[count+trans.length/2]];
+
+                output += pos ?
+                    polybius[coords[0]][coords[1]] :
+                    polybius[coords[0]][coords[1]].toLocaleLowerCase();
+                count++;
+            } else {
+                output += pos;
+            }
+        });
+
+        return output;
     },
 
 

@@ -1512,6 +1512,36 @@ const OperationConfig = {
             }
         ]
     },
+    "Bifid Cipher Encode": {
+        description: "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
+        run: Cipher.runBifidEnc,
+        highlight: true,
+        highlightReverse: true,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Keyword",
+                type: "string",
+                value: ""
+            }
+        ]
+    },
+    "Bifid Cipher Decode": {
+        description: "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
+        run: Cipher.runBifidDec,
+        highlight: true,
+        highlightReverse: true,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Keyword",
+                type: "string",
+                value: ""
+            }
+        ]
+    },
     "Affine Cipher Encode": {
         description: "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.",
         run: Cipher.runAffineEnc,

@@ -1,7 +1,7 @@
 /**
  * ByteRepr tests.
  *
- * @author Matt C [matt@artemisbot.pw]
+ * @author Matt C [matt@artemisbot.uk]
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
