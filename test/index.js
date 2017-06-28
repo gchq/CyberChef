@@ -14,6 +14,7 @@ import TestRegister from "./TestRegister.js";
 import "./tests/operations/Base58.js";
 import "./tests/operations/ByteRepr.js";
 import "./tests/operations/CharEnc.js";
+import "./tests/operations/Cipher.js";
 import "./tests/operations/Code.js";
 import "./tests/operations/Compress.js";
 import "./tests/operations/DateTime.js";

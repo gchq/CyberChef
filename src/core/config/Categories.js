@@ -89,6 +89,8 @@ const Categories = [
             "Vigenère Decode",
             "To Morse Code",
             "From Morse Code",
+            "Bifid Cipher Encode",
+            "Bifid Cipher Decode",
             "Affine Cipher Encode",
             "Affine Cipher Decode",
             "Atbash Cipher",
