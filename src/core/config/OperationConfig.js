@@ -1521,7 +1521,7 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "Alphabet Key",
+                name: "Keyword",
                 type: "string",
                 value: ""
             }
@@ -1536,7 +1536,7 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "Alphabet Key",
+                name: "Keyword",
                 type: "string",
                 value: ""
             }

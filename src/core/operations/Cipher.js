@@ -593,25 +593,24 @@ const Cipher = {
         return Cipher.runAffineEnc(input, [25, 25]);
     },
 
+
     /**
      * Generates a polybius square for the given keyword
      *
      * @private
      * @author Matt C [matt@artemisbot.uk]
-     * @param {string} keyword
+     * @param {string} keyword - Must be upper case
      * @returns {string}
      */
     _genPolybiusSquare: function (keyword) {
         const alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
-        let polybius = [],
-            polString = "";
-        keyword.split("").unique().forEach(letter => {
-            polString += letter;
-        });
-        polString = `${polString}${alpha}`.split("").unique().join("");
+        const polArray = `${keyword}${alpha}`.split("").unique();
+        let polybius = [];
+
         for (let i = 0; i < 5; i++) {
-            polybius[i] = polString.substr(i*5, 5).split("");
+            polybius[i] = polArray.slice(i*5, i*5 + 5);
         }
+
         return polybius;
     },
 
@@ -624,20 +623,28 @@ const Cipher = {
      * @returns {string}
      */
     runBifidEnc: function (input, args) {
-        const keyword = args[0].toUpperCase().replace("J", "I"),
+        const keywordStr = args[0].toUpperCase().replace("J", "I"),
+            keyword = keywordStr.split("").unique(),
             alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
         let output = "",
             xCo = [],
             yCo = [],
             structure = [],
-            count = 0,
-            trans;
-        if (keyword.split("").unique().length > 25) return "The alphabet keyword must be less than 25 characters.";
-        if (!/^[a-zA-Z]+$/.test(keyword) && keyword.split("").unique().length > 0) return "The key must consist only of letters";
-        const polybius = Cipher._genPolybiusSquare(keyword);
-        input.replace("J", "I").split("").forEach((letter) => {
+            count = 0;
+
+        if (keyword.length > 25)
+            return "The alphabet keyword must be less than 25 characters.";
+
+        if (!/^[a-zA-Z]+$/.test(keywordStr) && keyword.length > 0)
+            return "The key must consist only of letters";
+
+        const polybius = Cipher._genPolybiusSquare(keywordStr);
+
+        input.replace("J", "I").split("").forEach(letter => {
             let alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0,
                 polInd;
+
             if (alpInd) {
                 for (let i = 0; i < 5; i++) {
                     polInd = polybius[i].indexOf(letter.toLocaleUpperCase());
@@ -646,6 +653,7 @@ const Cipher = {
                         yCo.push(i);
                     }
                 }
+
                 if (alpha.split("").indexOf(letter) >= 0) {
                     structure.push(true);
                 } else if (alpInd) {
@@ -655,20 +663,22 @@ const Cipher = {
                 structure.push(letter);
             }
         });
-        trans = `${yCo.join("")}${xCo.join("")}`;
+
+        const trans = `${yCo.join("")}${xCo.join("")}`;
+
         structure.forEach(pos => {
             if (typeof pos === "boolean") {
                 let coords = trans.substr(2*count, 2).split("");
-                if (pos) {
-                    output += polybius[coords[0]][coords[1]];
-                } else {
-                    output += polybius[coords[0]][coords[1]].toLocaleLowerCase();
-                }
+
+                output += pos ?
+                    polybius[coords[0]][coords[1]] :
+                    polybius[coords[0]][coords[1]].toLocaleLowerCase();
                 count++;
             } else {
                 output += pos;
             }
         });
+
         return output;
     },
 
@@ -681,18 +691,27 @@ const Cipher = {
      * @returns {string}
      */
     runBifidDec: function (input, args) {
-        const keyword = args[0].toUpperCase().replace("J", "I"),
+        const keywordStr = args[0].toUpperCase().replace("J", "I"),
+            keyword = keywordStr.split("").unique(),
             alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
         let output = "",
             structure = [],
             count = 0,
             trans = "";
-        if (keyword.split("").unique().length > 25) return "The alphabet keyword must be less than 25 characters.";
-        if (!/^[a-zA-Z]+$/.test(keyword) && keyword.split("").unique().length > 0) return "The key must consist only of letters";
-        const polybius = Cipher._genPolybiusSquare(keyword);
+
+        if (keyword.length > 25)
+            return "The alphabet keyword must be less than 25 characters.";
+
+        if (!/^[a-zA-Z]+$/.test(keywordStr) && keyword.length > 0)
+            return "The key must consist only of letters";
+
+        const polybius = Cipher._genPolybiusSquare(keywordStr);
+
         input.replace("J", "I").split("").forEach((letter) => {
             let alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0,
                 polInd;
+
             if (alpInd) {
                 for (let i = 0; i < 5; i++) {
                     polInd = polybius[i].indexOf(letter.toLocaleUpperCase());
@@ -700,6 +719,7 @@ const Cipher = {
                         trans += `${i}${polInd}`;
                     }
                 }
+
                 if (alpha.split("").indexOf(letter) >= 0) {
                     structure.push(true);
                 } else if (alpInd) {
@@ -709,21 +729,23 @@ const Cipher = {
                 structure.push(letter);
             }
         });
+
         structure.forEach(pos => {
             if (typeof pos === "boolean") {
                 let coords = [trans[count], trans[count+trans.length/2]];
-                if (pos) {
-                    output += polybius[coords[0]][coords[1]];
-                } else {
-                    output += polybius[coords[0]][coords[1]].toLocaleLowerCase();
-                }
+
+                output += pos ?
+                    polybius[coords[0]][coords[1]] :
+                    polybius[coords[0]][coords[1]].toLocaleLowerCase();
                 count++;
             } else {
                 output += pos;
             }
         });
+
         return output;
     },
+
 
     /**
      * @constant
