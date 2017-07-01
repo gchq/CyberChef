@@ -942,6 +942,12 @@ const Utils = {
                 "aria-controls='collapse" + i + "' " +
                 "title=\"Show/hide contents of '" + Utils.escapeHtml(file.fileName) + "'\">&#x1F50D</a>";
 
+            const hexFileData = Utils.byteArrayToHex(new Uint8Array(file.bytes));
+
+            const switchFileDataToInput = "<a href='#switchFileToInput" + i + "' " +
+                "class='file-switch' " +
+                "fileValue='" + hexFileData + "'>&#x21E7</a>";
+
             const html = "<div class='panel panel-default'>" +
                        "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
                        "<h4 class='panel-title'>" +
@@ -949,6 +955,7 @@ const Utils = {
                        Utils.escapeHtml(file.fileName) +
                        " " +  expandFileContentsElem +
                        " " + downloadAnchorElem +
+                       " " + switchFileDataToInput +
                        "<span class='pull-right'>" +
                        // These are for formatting when stripping HTML
                        "<span style='display: none'>\n</span>" +
