@@ -158,6 +158,7 @@ Manager.prototype.initialiseEventListeners = function() {
 
     // Misc
     document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
+    this.addDynamicListener(".file-switch", "click", this.output.fileSwitch, this.output);
 };
 
 

@@ -167,6 +167,16 @@ OutputWaiter.prototype.undoSwitchClick = function() {
     document.getElementById("undo-switch").disabled = true;
 };
 
+/**
+ * Handler for file switch click events.
+ * Moves a files data for items created via Utils.displayFilesAsHTML to the input.
+ */
+OutputWaiter.prototype.fileSwitch = function(e) {
+    this.switchOrigData = this.manager.input.get();
+    this.app.setInput(e.target.getAttribute("fileValue"));
+    document.getElementById("undo-switch").disabled = false;
+};
+
 
 /**
  * Handler for maximise output click events.
