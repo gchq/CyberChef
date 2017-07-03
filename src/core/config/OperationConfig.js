@@ -2301,6 +2301,11 @@ const OperationConfig = {
                 name: "Output units",
                 type: "option",
                 value: DateTime.UNITS
+            },
+            {
+                name: "Input format",
+                type: "option",
+                value: DateTime.FILETIME_FORMATS
             }
         ]
     },
@@ -2314,6 +2319,11 @@ const OperationConfig = {
                 name: "Input units",
                 type: "option",
                 value: DateTime.UNITS
+            },
+            {
+                name: "Output format",
+                type: "option",
+                value: DateTime.FILETIME_FORMATS
             }
         ]
     },
