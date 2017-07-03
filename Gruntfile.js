@@ -1,7 +1,14 @@
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Inliner = require("web-resource-inliner");
+
+/**
+ * Grunt configuration for building the app in various formats.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -10,7 +17,7 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "webpack:webDev"]);
+        ["clean:dev", "webpack-dev-server:start"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
@@ -26,7 +33,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
+        ["eslint", "clean:prod", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -55,27 +62,13 @@ module.exports = function (grunt) {
 
     // Project configuration
     const compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
-        banner = "/**\n" +
-            "* CyberChef - The Cyber Swiss Army Knife\n" +
-            "*\n" +
-            "* @copyright Crown Copyright 2016\n" +
-            "* @license Apache-2.0\n" +
-            "*\n" +
-            "*   Copyright 2016 Crown Copyright\n" +
-            "*\n" +
-            '* Licensed under the Apache License, Version 2.0 (the "License");\n' +
-            "* you may not use this file except in compliance with the License.\n" +
-            "* You may obtain a copy of the License at\n" +
-            "*\n" +
-            "*     http://www.apache.org/licenses/LICENSE-2.0\n" +
-            "*\n" +
-            "* Unless required by applicable law or agreed to in writing, software\n" +
-            '* distributed under the License is distributed on an "AS IS" BASIS,\n' +
-            "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-            "* See the License for the specific language governing permissions and\n" +
-            "* limitations under the License.\n" +
-            "*/\n",
-        pkg = grunt.file.readJSON("package.json");
+        pkg = grunt.file.readJSON("package.json"),
+        webpackConfig = require("./webpack.config.js"),
+        BUILD_CONSTANTS = {
+            COMPILE_TIME: JSON.stringify(compileTime),
+            COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
+            PKG_VERSION: JSON.stringify(pkg.version)
+        };
 
     /**
      * Compiles a production build of CyberChef into a single, portable web page.
@@ -150,104 +143,8 @@ module.exports = function (grunt) {
             }
         },
         webpack: {
-            options: {
-                plugins: [
-                    new webpack.ProvidePlugin({
-                        $: "jquery",
-                        jQuery: "jquery",
-                        moment: "moment-timezone"
-                    }),
-                    new webpack.BannerPlugin({
-                        banner: banner,
-                        raw: true,
-                        entryOnly: true
-                    }),
-                    new webpack.DefinePlugin({
-                        COMPILE_TIME: JSON.stringify(compileTime),
-                        COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
-                        PKG_VERSION: JSON.stringify(pkg.version)
-                    }),
-                    new ExtractTextPlugin("styles.css"),
-                ],
-                resolve: {
-                    alias: {
-                        jquery: "jquery/src/jquery"
-                    }
-                },
-                module: {
-                    rules: [
-                        {
-                            test: /\.js$/,
-                            exclude: /node_modules/,
-                            loader: "babel-loader?compact=false"
-                        },
-                        {
-                            test: /\.css$/,
-                            use: ExtractTextPlugin.extract({
-                                use: [
-                                    { loader: "css-loader?minimize" },
-                                    { loader: "postcss-loader" },
-                                ]
-                            })
-                        },
-                        {
-                            test: /\.less$/,
-                            use: ExtractTextPlugin.extract({
-                                use: [
-                                    { loader: "css-loader?minimize" },
-                                    { loader: "postcss-loader" },
-                                    { loader: "less-loader" }
-                                ]
-                            })
-                        },
-                        {
-                            test: /\.(ico|eot|ttf|woff|woff2)$/,
-                            loader: "url-loader",
-                            options: {
-                                limit: 10000
-                            }
-                        },
-                        { // First party images are saved as files to be cached
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /node_modules/,
-                            loader: "file-loader",
-                            options: {
-                                name: "images/[name].[ext]"
-                            }
-                        },
-                        { // Third party images are inlined
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /web\/static/,
-                            loader: "url-loader",
-                            options: {
-                                limit: 10000
-                            }
-                        },
-                    ]
-                },
-                stats: {
-                    children: false,
-                    warningsFilter: /source-map/
-                }
-            },
-            webDev: {
-                target: "web",
-                entry: "./src/web/index.js",
-                output: {
-                    filename: "scripts.js",
-                    path: __dirname + "/build/dev"
-                },
-                plugins: [
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        compileTime: compileTime,
-                        version: pkg.version,
-                    })
-                ],
-                watch: true
-            },
-            webProd: {
+            options: webpackConfig,
+            web: {
                 target: "web",
                 entry: "./src/web/index.js",
                 output: {
@@ -255,6 +152,7 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/prod"
                 },
                 plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
                     new webpack.optimize.UglifyJsPlugin({
                         compress: {
                             "screw_ie8": true,
@@ -307,6 +205,30 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/node",
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
+                }
+            }
+        },
+        "webpack-dev-server": {
+            options: {
+                webpack: webpackConfig,
+                stats: {
+                    children: false,
+                    warningsFilter: /source-map/
+                },
+            },
+            start: {
+                webpack: {
+                    target: "web",
+                    entry: "./src/web/index.js",
+                    plugins: [
+                        new webpack.DefinePlugin(BUILD_CONSTANTS),
+                        new HtmlWebpackPlugin({
+                            filename: "index.html",
+                            template: "./src/web/html/index.html",
+                            compileTime: compileTime,
+                            version: pkg.version,
+                        })
+                    ]
                 }
             }
         },

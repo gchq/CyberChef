@@ -60,7 +60,9 @@
     "style-loader": "^0.15.0",
     "url-loader": "^0.5.8",
     "web-resource-inliner": "^4.1.0",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.5.0",
+    "worker-loader": "^0.8.0"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
@@ -89,6 +91,7 @@
     "zlibjs": "^0.2.0"
   },
   "scripts": {
+    "start": "grunt dev",
     "build": "grunt prod",
     "test": "grunt test",
     "docs": "grunt docs"

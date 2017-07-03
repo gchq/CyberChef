@@ -33,7 +33,7 @@
 
         <script type="application/javascript">
             // Load theme before the preloader is shown
-            document.querySelector(":root").className = JSON.parse(localStorage.getItem("options")).theme;
+            document.querySelector(":root").className = (JSON.parse(localStorage.getItem("options")) || {}).theme;
 
             // Define loading messages
             const loadingMsgs = [
