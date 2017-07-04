@@ -13,10 +13,10 @@ This is a fork of original CyberChef by GCHQ. This project has implemented my ow
 	- e.g. <code>chr(33)</code> to <code>!</code>
 	- This operation supports char() and chr()
 	- Combining the usage of **From 0x[Hex]** and **From char(hex)** can decode <code>chr(0x3333)</code> to <code>!</code>
+- operation **HTTP gzip decrypt**: Decrypt gzip payload in HTTP
 
 ## Todo
 
-- Operation GZip HTTP data
 - Operation SQL comment strip function
 - Adding more support to char(hex, hex)
 - Adding support of themes
