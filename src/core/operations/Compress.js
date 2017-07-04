@@ -5,6 +5,7 @@ import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
 import zip from "zlibjs/bin/zip.min";
 import unzip from "zlibjs/bin/unzip.min";
 import bzip2 from "exports-loader?bzip2!../lib/bzip2.js";
+import pako from "pako/index.js";
 
 const Zlib = {
     RawDeflate: rawdeflate.Zlib.RawDeflate,
@@ -251,6 +252,26 @@ const Compress = {
         input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
         const gunzip = new Zlib.Gunzip(input);
         return Array.prototype.slice.call(gunzip.decompress());
+    },
+
+
+    /**
+     * HTTP Gzip operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    runHttpGzip: function(input, args) {
+        input = Utils.byteArrayToHex(input, "");
+
+        let regexStr = /1f8b080[0-8][0-9a-f]{12}/;
+        let gzipPos = input.search(regexStr);
+        let plainData = input.substr(0, gzipPos);
+        let gzipData = input.substr(gzipPos);
+
+        gzipData = Utils.hexToByteArray(gzipData);
+        return Utils.hexToByteArray(plainData).concat(Array.prototype.slice.call(pako.ungzip(gzipData)));
     },
 
 
