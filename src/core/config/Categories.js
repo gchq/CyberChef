@@ -131,6 +131,7 @@ const Categories = [
         ops: [
             "HTTP request",
             "Strip HTTP headers",
+            "HTTP gzip decrypt",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",

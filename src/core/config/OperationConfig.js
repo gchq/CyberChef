@@ -1676,6 +1676,13 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
+    "HTTP gzip decrypt": {
+        description: "Decrypts Gzip payload from a request or response and returning plaintext of the header and decrypted payload.",
+        run: Compress.runHttpGzip,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        args: []
+    },
     "Parse User Agent": {
         description: "Attempts to identify and categorise information contained in a user-agent string.",
         run: HTTP.runParseUserAgent,
