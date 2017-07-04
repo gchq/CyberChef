@@ -1,5 +1,5 @@
 import Utils from "../core/Utils.js";
-import Chef from "../core/Chef.js";
+import ChefWorker from "worker-loader!../core/ChefWorker.js";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -27,7 +27,7 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.doptions      = defaultOptions;
     this.options       = Utils.extend({}, defaultOptions);
 
-    this.chef          = new Chef();
+    this.chefWorker    = new ChefWorker();
     this.manager       = new Manager(this);
 
     this.baking        = false;
@@ -36,7 +36,7 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.progress      = 0;
     this.ingId         = 0;
 
-    window.chef        = this.chef;
+    this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
 };
 
 
@@ -99,16 +99,21 @@ App.prototype.setBakingStatus = function(bakingStatus) {
 
     let inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
         outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
+        inputElement = document.querySelector("#input-text"),
         outputElement = document.querySelector("#output-text");
 
     if (bakingStatus) {
         inputLoadingIcon.style.display = "inline-block";
         outputLoadingIcon.style.display = "inline-block";
+        inputElement.classList.add("disabled");
+        inputElement.disabled = true;
         outputElement.classList.add("disabled");
         outputElement.disabled = true;
     } else {
         inputLoadingIcon.style.display = "none";
         outputLoadingIcon.style.display = "none";
+        inputElement.classList.remove("disabled");
+        inputElement.disabled = false;
         outputElement.classList.remove("disabled");
         outputElement.disabled = false;
     }
@@ -116,30 +121,58 @@ App.prototype.setBakingStatus = function(bakingStatus) {
 
 
 /**
- * Calls the Chef to bake the current input using the current recipe.
+ * Asks the ChefWorker to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
-App.prototype.bake = async function(step) {
-    let response;
-
+App.prototype.bake = function(step) {
     if (this.baking) return;
 
     this.setBakingStatus(true);
 
-    try {
-        response = await this.chef.bake(
-            this.getInput(),          // The user's input
-            this.getRecipeConfig(),   // The configuration of the recipe
-            this.options,             // Options set by the user
-            this.progress,            // The current position in the recipe
-            step                      // Whether or not to take one step or execute the whole recipe
-        );
-    } catch (err) {
-        this.handleError(err);
-    }
+    this.chefWorker.postMessage({
+        action: "bake",
+        data: {
+            input: this.getInput(),                 // The user's input
+            recipeConfig: this.getRecipeConfig(),   // The configuration of the recipe
+            options: this.options,                  // Options set by the user
+            progress: this.progress,                // The current position in the recipe
+            step: step                              // Whether or not to take one step or execute the whole recipe
+        }
+    });
+};
 
+
+/**
+ * Handler for messages sent back by the ChefWorker.
+ *
+ * @param {MessageEvent} e
+ */
+App.prototype.handleChefMessage = function(e) {
+    switch (e.data.action) {
+        case "bakeSuccess":
+            this.bakingComplete(e.data.data);
+            break;
+        case "bakeError":
+            this.handleError(e.data.data);
+            this.setBakingStatus(false);
+            break;
+        case "silentBakeComplete":
+            break;
+        default:
+            console.error("Unrecognised message from ChefWorker", e);
+            break;
+    }
+};
+
+
+/**
+ * Handler for completed bakes.
+ *
+ * @param {Object} response
+ */
+App.prototype.bakingComplete = function(response) {
     this.setBakingStatus(false);
 
     if (!response) return;
@@ -174,23 +207,27 @@ App.prototype.autoBake = function() {
 
 
 /**
- * Runs a silent bake forcing the browser to load and cache all the relevant JavaScript code needed
- * to do a real bake.
+ * Asks the ChefWorker to run a silent bake, forcing the browser to load and cache all the relevant
+ * JavaScript code needed to do a real bake.
  *
- * The output will not be modified (hence "silent" bake). This will only actually execute the
- * recipe if auto-bake is enabled, otherwise it will just load the recipe, ingredients and dish.
- *
- * @returns {number} - The number of miliseconds it took to run the silent bake.
+ * The output will not be modified (hence "silent" bake). This will only actually execute the recipe
+ * if auto-bake is enabled, otherwise it will just wake up the ChefWorker with an empty recipe.
  */
 App.prototype.silentBake = function() {
-    let startTime = new Date().getTime(),
-        recipeConfig = this.getRecipeConfig();
+    let recipeConfig = [];
 
     if (this.autoBake_) {
-        this.chef.silentBake(recipeConfig);
+        // If auto-bake is not enabled we don't want to actually run the recipe as it may be disabled
+        // for a good reason.
+        recipeConfig = this.getRecipeConfig();
     }
 
-    return new Date().getTime() - startTime;
+    this.chefWorker.postMessage({
+        action: "silentBake",
+        data: {
+            recipeConfig: recipeConfig
+        }
+    });
 };
 
 
