@@ -172,6 +172,7 @@ OutputWaiter.prototype.undoSwitchClick = function() {
  * Moves a files data for items created via Utils.displayFilesAsHTML to the input.
  */
 OutputWaiter.prototype.fileSwitch = function(e) {
+    e.preventDefault();
     this.switchOrigData = this.manager.input.get();
     this.app.setInput(e.target.getAttribute("fileValue"));
     document.getElementById("undo-switch").disabled = false;
