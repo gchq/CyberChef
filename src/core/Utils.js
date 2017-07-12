@@ -1000,9 +1000,14 @@ const Utils = {
         if (paramStr === "") return {};
 
         // Cut off ? or # and split on &
-        const params = paramStr.substr(1).split("&");
+        if (paramStr[0] === "?" ||
+            paramStr[0] === "#") {
+            paramStr = paramStr.substr(1);
+        }
 
+        const params = paramStr.split("&");
         const result = {};
+
         for (let i = 0; i < params.length; i++) {
             const param = params[i].split("=");
             if (param.length !== 2) {

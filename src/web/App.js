@@ -400,7 +400,12 @@ App.prototype.addFavourite = function(name) {
  */
 App.prototype.loadURIParams = function() {
     // Load query string or hash from URI (depending on which is populated)
-    const params = window.location.search || window.location.hash;
+    // We prefer getting the hash by splitting the href rather than referencing
+    // location.hash as some browsers (Firefox) automatically URL decode it,
+    // which cause issues.
+    const params = window.location.search ||
+        window.location.href.split("#")[1] ||
+        window.location.hash;
     this.uriParams = Utils.parseURIParams(params);
 
     // Pause auto-bake while loading but don't modify `this.autoBake_`
