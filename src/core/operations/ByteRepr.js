@@ -53,8 +53,8 @@ const ByteRepr = {
         const delim = args[0] || "Space";
         return Utils.fromHex(input, delim, 2);
     },
-	
-	
+
+
 	/**
      * From 0xHex operation.
      *
@@ -63,7 +63,7 @@ const ByteRepr = {
      * @returns {byteArray}
      */
 	runFrom0xHex: function(input, args) {
-		var data = input.replace(/0x([0-9a-f]{2,})/ig, 
+		var data = input.replace(/0x([0-9a-f]{2,})/ig,
 		function(match, p1) {
 			if (p1) {
 				return Utils.byteArrayToChars(Utils.fromHex(p1));
@@ -71,8 +71,8 @@ const ByteRepr = {
 		});
 		return data;
     },
-	
-	
+
+
 	/**
      * From char(hex) operation.
      *
@@ -81,13 +81,16 @@ const ByteRepr = {
      * @returns {byteArray}
      */
 	runFromCharHex: function(input, args) {
-		var data = input.replace(/cha?r\((\d{1,3})\)/ig, 
-		function(match, p1) {
-			if (p1) {
-				return Utils.byteArrayToChars([parseInt(p1)]);
-			};
-		});
-		return data;
+        var re = /cha?r\((((\d{1,3})(,\s?)?)+)\)/ig;
+        var inner_re = /(\d{1,3}),?/g;
+        var match, inner_match;
+        var result = "";
+        while ((match = re.exec(input)) != null) {
+            while ((inner_match = inner_re.exec(match[1])) != null) {
+                result += Utils.byteArrayToChars([parseInt(inner_match[1])]);
+            }
+        }
+        return input.replace(re, result);
     },
 
 
