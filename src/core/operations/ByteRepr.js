@@ -82,15 +82,18 @@ const ByteRepr = {
      */
 	runFromCharHex: function(input, args) {
         var re = /cha?r\((((\d{1,3})(,\s?)?)+)\)/ig;
-        var inner_re = /(\d{1,3}),?/g;
-        var match, inner_match;
-        var result = "";
-        while ((match = re.exec(input)) != null) {
-            while ((inner_match = inner_re.exec(match[1])) != null) {
-                result += Utils.byteArrayToChars([parseInt(inner_match[1])]);
+        var inner_re = /(\d{1,3}),?/g
+        var data = input.replace(re,
+            function(match, p1) {
+                if (p1) {
+                    var result = "", inner_match;
+                    while ((inner_match = inner_re.exec(p1)) != null) {
+                        result += Utils.byteArrayToChars([parseInt(inner_match[1])]);
+                    }
+                    return result;
             }
-        }
-        return input.replace(re, result);
+        });
+        return data;
     },
 
 
