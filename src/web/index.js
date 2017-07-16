@@ -17,7 +17,7 @@ import CanvasComponents from "../core/lib/canvascomponents.js";
 // CyberChef
 import App from "./App.js";
 import Categories from "../core/config/Categories.js";
-import OperationConfig from "../core/config/OperationConfig.js";
+import OperationConfig from "value-loader?name=default!../core/config/MetaConfig.js";
 
 
 /**
