@@ -359,9 +359,9 @@ const StrUtils = {
 
         for (let i = 0; i < diff.length; i++) {
             if (diff[i].added) {
-                if (showAdded) output += "<span class='hlgreen'>" + Utils.escapeHtml(diff[i].value) + "</span>";
+                if (showAdded) output += "<span class='hl5'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else if (diff[i].removed) {
-                if (showRemoved) output += "<span class='hlred'>" + Utils.escapeHtml(diff[i].value) + "</span>";
+                if (showRemoved) output += "<span class='hl3'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else {
                 output += Utils.escapeHtml(diff[i].value);
             }
@@ -424,7 +424,7 @@ const StrUtils = {
                 }
 
                 if (match && !inMatch) {
-                    outputs[s] += "<span class='hlgreen'>" + Utils.escapeHtml(samples[s][i]);
+                    outputs[s] += "<span class='hl5'>" + Utils.escapeHtml(samples[s][i]);
                     if (samples[s].length === i + 1) outputs[s] += "</span>";
                     if (s === samples.length - 1) inMatch = true;
                 } else if (!match && inMatch) {
