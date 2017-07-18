@@ -200,13 +200,7 @@ App.prototype.silentBake = function() {
  * @returns {string}
  */
 App.prototype.getInput = function() {
-    const input = this.manager.input.get();
-
-    // Save to session storage in case we need to restore it later
-    sessionStorage.setItem("inputLength", input.length);
-    sessionStorage.setItem("input", input);
-
-    return input;
+    return this.manager.input.get();
 };
 
 
@@ -216,8 +210,6 @@ App.prototype.getInput = function() {
  * @param {string} input - The string to set the input to
  */
 App.prototype.setInput = function(input) {
-    sessionStorage.setItem("inputLength", input.length);
-    sessionStorage.setItem("input", input);
     this.manager.input.set(input);
 };
 
@@ -468,9 +460,7 @@ App.prototype.nextIngId = function() {
  * @returns {Object[]}
  */
 App.prototype.getRecipeConfig = function() {
-    const recipeConfig = this.manager.recipe.getConfig();
-    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
-    return recipeConfig;
+    return this.manager.recipe.getConfig();
 };
 
 
@@ -480,7 +470,6 @@ App.prototype.getRecipeConfig = function() {
  * @param {Object[]} recipeConfig - The recipe configuration
  */
 App.prototype.setRecipeConfig = function(recipeConfig) {
-    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     document.getElementById("rec-list").innerHTML = null;
 
     for (let i = 0; i < recipeConfig.length; i++) {
