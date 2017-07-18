@@ -330,29 +330,24 @@ const OperationConfig = {
                 value: BitwiseOp.XOR_BRUTE_KEY_LENGTH
             },
             {
-                name: "Length of sample",
+                name: "Sample length",
                 type: "number",
                 value: BitwiseOp.XOR_BRUTE_SAMPLE_LENGTH
             },
             {
-                name: "Offset of sample",
+                name: "Sample offset",
                 type: "number",
                 value: BitwiseOp.XOR_BRUTE_SAMPLE_OFFSET
+            },
+            {
+                name: "Scheme",
+                type: "option",
+                value: BitwiseOp.XOR_SCHEME
             },
             {
                 name: "Null preserving",
                 type: "boolean",
                 value: BitwiseOp.XOR_PRESERVE_NULLS
-            },
-            {
-                name: "Differential",
-                type: "boolean",
-                value: BitwiseOp.XOR_DIFFERENTIAL
-            },
-            {
-                name: "Crib (known plaintext string)",
-                type: "binaryString",
-                value: ""
             },
             {
                 name: "Print key",
@@ -363,6 +358,11 @@ const OperationConfig = {
                 name: "Output as hex",
                 type: "boolean",
                 value: BitwiseOp.XOR_BRUTE_OUTPUT_HEX
+            },
+            {
+                name: "Crib (known plaintext string)",
+                type: "binaryString",
+                value: ""
             }
         ]
     },
