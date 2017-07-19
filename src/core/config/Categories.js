@@ -46,6 +46,8 @@ const Categories = [
             "From Base58",
             "To Base",
             "From Base",
+            "To BCD",
+            "From BCD",
             "To HTML Entity",
             "From HTML Entity",
             "URL Encode",
