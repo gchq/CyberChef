@@ -2,6 +2,7 @@ import FlowControl from "../FlowControl.js";
 import Base from "../operations/Base.js";
 import Base58 from "../operations/Base58.js";
 import Base64 from "../operations/Base64.js";
+import BCD from "../operations/BCD.js";
 import BitwiseOp from "../operations/BitwiseOp.js";
 import ByteRepr from "../operations/ByteRepr.js";
 import CharEnc from "../operations/CharEnc.js";
@@ -3506,6 +3507,64 @@ const OperationConfig = {
                 value: false,
             }
         ]
+    },
+    "From BCD": {
+        description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
+        run: BCD.runFromBCD,
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Scheme",
+                type: "option",
+                value: BCD.ENCODING_SCHEME
+            },
+            {
+                name: "Packed",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Signed",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Input format",
+                type: "option",
+                value: BCD.FORMAT
+            }
+        ]
+
+    },
+    "To BCD": {
+        description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
+        run: BCD.runToBCD,
+        inputType: "number",
+        outputType: "string",
+        args: [
+            {
+                name: "Scheme",
+                type: "option",
+                value: BCD.ENCODING_SCHEME
+            },
+            {
+                name: "Packed",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Signed",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Output format",
+                type: "option",
+                value: BCD.FORMAT
+            }
+        ]
+
     },
 };
 
