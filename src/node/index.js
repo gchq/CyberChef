@@ -14,12 +14,12 @@ const CyberChef = module.exports = {
     bake: function(input, recipeConfig) {
         this.chef = new Chef();
         return this.chef.bake(
-		input,
-		recipeConfig,
-		{},
-		0,
-		false
-	);
+            input,
+            recipeConfig,
+            {},
+            0,
+            false
+        );
     }
 
 };

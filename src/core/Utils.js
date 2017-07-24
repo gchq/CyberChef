@@ -293,7 +293,7 @@ const Utils = {
      * Utils.escapeRegex("[example]");
      */
     escapeRegex: function(str) {
-        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        return str.replace(/([.*+?^=!:${}()|[\]/\\])/g, "\\$1");
     },
 
 
@@ -592,7 +592,7 @@ const Utils = {
             i = 0;
 
         if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[\[\]\\\-^$]/g, "\\$&") + "]", "g");
+            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
             data = data.replace(re, "");
         }
 
@@ -810,7 +810,7 @@ const Utils = {
             "`": "&#x60;"
         };
 
-        return str.replace(/[&<>"'\/`]/g, function (match) {
+        return str.replace(/[&<>"'/`]/g, function (match) {
             return HTML_CHARS[match];
         });
     },

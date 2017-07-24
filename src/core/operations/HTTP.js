@@ -125,30 +125,30 @@ const HTTP = {
         }
 
         return fetch(url, config)
-        .then(r => {
-            if (r.status === 0 && r.type === "opaque") {
-                return "Error: Null response. Try setting the connection mode to CORS.";
-            }
-
-            if (showResponseMetadata) {
-                let headers = "";
-                for (let pair of r.headers.entries()) {
-                    headers += "    " + pair[0] + ": " + pair[1] + "\n";
+            .then(r => {
+                if (r.status === 0 && r.type === "opaque") {
+                    return "Error: Null response. Try setting the connection mode to CORS.";
                 }
-                return r.text().then(b => {
-                    return "####\n  Status: " + r.status + " " + r.statusText +
-                        "\n  Exposed headers:\n" + headers + "####\n\n" + b;
-                });
-            }
-            return r.text();
-        })
-        .catch(e => {
-            return e.toString() +
-                "\n\nThis error could be caused by one of the following:\n" +
-                " - An invalid URL\n" +
-                " - Making a request to an insecure resource (HTTP) from a secure source (HTTPS)\n" +
-                " - Making a cross-origin request to a server which does not support CORS\n";
-        });
+
+                if (showResponseMetadata) {
+                    let headers = "";
+                    for (let pair of r.headers.entries()) {
+                        headers += "    " + pair[0] + ": " + pair[1] + "\n";
+                    }
+                    return r.text().then(b => {
+                        return "####\n  Status: " + r.status + " " + r.statusText +
+                            "\n  Exposed headers:\n" + headers + "####\n\n" + b;
+                    });
+                }
+                return r.text();
+            })
+            .catch(e => {
+                return e.toString() +
+                    "\n\nThis error could be caused by one of the following:\n" +
+                    " - An invalid URL\n" +
+                    " - Making a request to an insecure resource (HTTP) from a secure source (HTTPS)\n" +
+                    " - Making a cross-origin request to a server which does not support CORS\n";
+            });
     },
 
 };

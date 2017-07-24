@@ -164,10 +164,10 @@ Recipe.prototype.execute = async function(dish, startFrom) {
             if (op.isFlowControl()) {
                 // Package up the current state
                 let state = {
-                    "progress" : i,
-                    "dish"     : dish,
-                    "opList"  : this.opList,
-                    "numJumps" : numJumps
+                    "progress": i,
+                    "dish":     dish,
+                    "opList":   this.opList,
+                    "numJumps": numJumps
                 };
 
                 state = await op.run(state);
