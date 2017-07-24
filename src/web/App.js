@@ -524,15 +524,24 @@ App.prototype.resetLayout = function() {
 App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
     let now = new Date(),
-        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
-        compileInfo = "<span style=\"font-weight: normal\">Last build: " +
-            timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1) + " ago";
+        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime);
+
+    // Calculate previous version to compare to
+    let prev = PKG_VERSION.split(".").map(n => {
+        return parseInt(n, 10);
+    });
+    if (prev[2] > 0) prev[2]--;
+    else if (prev[1] > 0) prev[1]--;
+    else prev[0]--;
+
+    const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
+
+    let compileInfo = `<a href='${compareURL}'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
 
     if (window.compileMessage !== "") {
         compileInfo += " - " + window.compileMessage;
     }
 
-    compileInfo += "</span>";
     document.getElementById("notice").innerHTML = compileInfo;
 };
 
