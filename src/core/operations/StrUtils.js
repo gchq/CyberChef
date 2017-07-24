@@ -193,17 +193,17 @@ const StrUtils = {
      * @constant
      * @default
      */
-    FIND_REPLACE_GLOBAL : true,
+    FIND_REPLACE_GLOBAL: true,
     /**
      * @constant
      * @default
      */
-    FIND_REPLACE_CASE : false,
+    FIND_REPLACE_CASE: false,
     /**
      * @constant
      * @default
      */
-    FIND_REPLACE_MULTILINE : true,
+    FIND_REPLACE_MULTILINE: true,
 
     /**
      * Find / Replace operation.

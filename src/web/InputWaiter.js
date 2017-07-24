@@ -166,7 +166,7 @@ InputWaiter.prototype.inputDrop = function(e) {
         this.set(inputCharcode);
         const recipeConfig = this.app.getRecipeConfig();
         if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
-            recipeConfig.unshift({op:"From Hex", args:["Space"]});
+            recipeConfig.unshift({op: "From Hex", args: ["Space"]});
             this.app.setRecipeConfig(recipeConfig);
         }
 

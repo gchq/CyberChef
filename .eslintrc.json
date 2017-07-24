@@ -52,9 +52,9 @@
         "no-trailing-spaces": "warn",
         "eol-last": "error",
         "func-call-spacing": "error",
-        //"key-spacing": ["warn", {
-        //    "mode": "minimum"
-        //}],
+        "key-spacing": ["warn", {
+            "mode": "minimum"
+        }],
         "indent": ["error", 4, {
             "ArrayExpression": "first",
             "SwitchCase": 1

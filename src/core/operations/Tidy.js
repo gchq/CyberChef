@@ -16,32 +16,32 @@ const Tidy = {
      * @constant
      * @default
      */
-    REMOVE_SPACES : true,
+    REMOVE_SPACES: true,
     /**
      * @constant
      * @default
      */
-    REMOVE_CARIAGE_RETURNS : true,
+    REMOVE_CARIAGE_RETURNS: true,
     /**
      * @constant
      * @default
      */
-    REMOVE_LINE_FEEDS : true,
+    REMOVE_LINE_FEEDS: true,
     /**
      * @constant
      * @default
      */
-    REMOVE_TABS : true,
+    REMOVE_TABS: true,
     /**
      * @constant
      * @default
      */
-    REMOVE_FORM_FEEDS : true,
+    REMOVE_FORM_FEEDS: true,
     /**
      * @constant
      * @default
      */
-    REMOVE_FULL_STOPS : false,
+    REMOVE_FULL_STOPS: false,
 
     /**
      * Remove whitespace operation.
@@ -89,17 +89,17 @@ const Tidy = {
      * @constant
      * @default
      */
-    APPLY_TO_EACH_LINE : false,
+    APPLY_TO_EACH_LINE: false,
     /**
      * @constant
      * @default
      */
-    DROP_START : 0,
+    DROP_START: 0,
     /**
      * @constant
      * @default
      */
-    DROP_LENGTH : 5,
+    DROP_LENGTH: 5,
 
     /**
      * Drop bytes operation.
@@ -200,17 +200,17 @@ const Tidy = {
      * @constant
      * @default
      */
-    PAD_POSITION : ["Start", "End"],
+    PAD_POSITION: ["Start", "End"],
     /**
      * @constant
      * @default
      */
-    PAD_LENGTH : 5,
+    PAD_LENGTH: 5,
     /**
      * @constant
      * @default
      */
-    PAD_CHAR : " ",
+    PAD_CHAR: " ",
 
     /**
      * Pad lines operation.

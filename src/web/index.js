@@ -38,15 +38,15 @@ function main() {
     ];
 
     const defaultOptions = {
-        updateUrl         : true,
-        showHighlighter   : true,
-        treatAsUtf8       : true,
-        wordWrap          : true,
-        showErrors        : true,
-        errorTimeout      : 4000,
-        autoBakeThreshold : 200,
-        attemptHighlight  : true,
-        theme             : "classic",
+        updateUrl:         true,
+        showHighlighter:   true,
+        treatAsUtf8:       true,
+        wordWrap:          true,
+        showErrors:        true,
+        errorTimeout:      4000,
+        autoBakeThreshold: 200,
+        attemptHighlight:  true,
+        theme:             "classic",
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

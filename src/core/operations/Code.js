@@ -329,7 +329,7 @@ const Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runXpath:function(input, args) {
+    runXpath: function(input, args) {
         let query = args[0],
             delimiter = args[1];
 
