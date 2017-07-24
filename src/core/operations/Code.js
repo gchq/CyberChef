@@ -228,19 +228,19 @@ const Code = {
         }
 
         code = code
-                // Create newlines after ;
-                .replace(/;/g, ";\n")
-                // Create newlines after { and around }
-                .replace(/{/g, "{\n")
-                .replace(/}/g, "\n}\n")
-                // Remove carriage returns
-                .replace(/\r/g, "")
-                // Remove all indentation
-                .replace(/^\s+/g, "")
-                .replace(/\n\s+/g, "\n")
-                // Remove trailing spaces
-                .replace(/\s*$/g, "")
-                .replace(/\n{/g, "{");
+            // Create newlines after ;
+            .replace(/;/g, ";\n")
+            // Create newlines after { and around }
+            .replace(/{/g, "{\n")
+            .replace(/}/g, "\n}\n")
+            // Remove carriage returns
+            .replace(/\r/g, "")
+            // Remove all indentation
+            .replace(/^\s+/g, "")
+            .replace(/\n\s+/g, "\n")
+            // Remove trailing spaces
+            .replace(/\s*$/g, "")
+            .replace(/\n{/g, "{");
 
         // Indent
         let i = 0,
@@ -265,27 +265,27 @@ const Code = {
         }
 
         code = code
-                // Add strategic spaces
-                .replace(/\s*([!<>=+-/*]?)=\s*/g, " $1= ")
-                .replace(/\s*<([=]?)\s*/g, " <$1 ")
-                .replace(/\s*>([=]?)\s*/g, " >$1 ")
-                .replace(/([^+])\+([^+=])/g, "$1 + $2")
-                .replace(/([^-])-([^-=])/g, "$1 - $2")
-                .replace(/([^*])\*([^*=])/g, "$1 * $2")
-                .replace(/([^/])\/([^/=])/g, "$1 / $2")
-                .replace(/\s*,\s*/g, ", ")
-                .replace(/\s*{/g, " {")
-                .replace(/}\n/g, "}\n\n")
-                // Hacky horribleness
-                .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
-                .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
-                .replace(/else\s*\n([^{])/gim, "else\n    $1")
-                .replace(/else\s+([^{])/gim, "else $1")
-                // Remove strategic spaces
-                .replace(/\s+;/g, ";")
-                .replace(/\{\s+\}/g, "{}")
-                .replace(/\[\s+\]/g, "[]")
-                .replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
+            // Add strategic spaces
+            .replace(/\s*([!<>=+-/*]?)=\s*/g, " $1= ")
+            .replace(/\s*<([=]?)\s*/g, " <$1 ")
+            .replace(/\s*>([=]?)\s*/g, " >$1 ")
+            .replace(/([^+])\+([^+=])/g, "$1 + $2")
+            .replace(/([^-])-([^-=])/g, "$1 - $2")
+            .replace(/([^*])\*([^*=])/g, "$1 * $2")
+            .replace(/([^/])\/([^/=])/g, "$1 / $2")
+            .replace(/\s*,\s*/g, ", ")
+            .replace(/\s*{/g, " {")
+            .replace(/}\n/g, "}\n\n")
+            // Hacky horribleness
+            .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
+            .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
+            .replace(/else\s*\n([^{])/gim, "else\n    $1")
+            .replace(/else\s+([^{])/gim, "else $1")
+            // Remove strategic spaces
+            .replace(/\s+;/g, ";")
+            .replace(/\{\s+\}/g, "{}")
+            .replace(/\[\s+\]/g, "[]")
+            .replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
 
         // Replace preserved tokens
         const ptokens = /###preservedToken(\d+)###/g;

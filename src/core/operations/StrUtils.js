@@ -476,16 +476,16 @@ const StrUtils = {
         const splitInput = input.split(delimiter);
 
         return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
+            .filter((line, lineIndex) => {
+                lineIndex += 1;
 
-            if (number < 0) {
-                return lineIndex <= splitInput.length + number;
-            } else {
-                return lineIndex <= number;
-            }
-        })
-        .join(delimiter);
+                if (number < 0) {
+                    return lineIndex <= splitInput.length + number;
+                } else {
+                    return lineIndex <= number;
+                }
+            })
+            .join(delimiter);
     },
 
 
@@ -504,16 +504,16 @@ const StrUtils = {
         const splitInput = input.split(delimiter);
 
         return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
+            .filter((line, lineIndex) => {
+                lineIndex += 1;
 
-            if (number < 0) {
-                return lineIndex > -number;
-            } else {
-                return lineIndex > splitInput.length - number;
-            }
-        })
-        .join(delimiter);
+                if (number < 0) {
+                    return lineIndex > -number;
+                } else {
+                    return lineIndex > splitInput.length - number;
+                }
+            })
+            .join(delimiter);
     },
 
 

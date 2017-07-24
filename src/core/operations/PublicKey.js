@@ -27,52 +27,49 @@ const PublicKey = {
      * @returns {string}
      */
     runParseX509: function (input, args) {
-        let cert = new r.X509(),
-            inputFormat = args[0];
-
         if (!input.length) {
             return "No input";
         }
 
+        let cert = new r.X509(),
+            inputFormat = args[0];
+
         switch (inputFormat) {
             case "DER Hex":
                 input = input.replace(/\s/g, "");
-                cert.hex = input;
-                cert.pem = r.KJUR.asn1.ASN1Util.getPEMStringFromHex(input, "CERTIFICATE");
+                cert.readCertHex(input);
                 break;
             case "PEM":
-                cert.hex = r.X509.pemToHex(input);
-                cert.pem = input;
+                cert.readCertPEM(input);
                 break;
             case "Base64":
-                cert.hex = Utils.toHex(Utils.fromBase64(input, null, "byteArray"), "");
-                cert.pem = r.KJUR.asn1.ASN1Util.getPEMStringFromHex(cert.hex, "CERTIFICATE");
+                cert.readCertHex(Utils.toHex(Utils.fromBase64(input, null, "byteArray"), ""));
                 break;
             case "Raw":
-                cert.hex = Utils.toHex(Utils.strToByteArray(input), "");
-                cert.pem = r.KJUR.asn1.ASN1Util.getPEMStringFromHex(cert.hex, "CERTIFICATE");
+                cert.readCertHex(Utils.toHex(Utils.strToByteArray(input), ""));
                 break;
             default:
                 throw "Undefined input format";
         }
 
-        let version = r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 0, 0]),
-            sn = cert.getSerialNumberHex(),
-            algorithm = r.KJUR.asn1.x509.OID.oid2name(r.KJUR.asn1.ASN1Util.oidHexToInt(r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 2, 0]))),
+        let sn = cert.getSerialNumberHex(),
             issuer = cert.getIssuerString(),
-            notBefore = cert.getNotBefore(),
-            notAfter = cert.getNotAfter(),
             subject = cert.getSubjectString(),
-            pkAlgorithm = r.KJUR.asn1.x509.OID.oid2name(r.KJUR.asn1.ASN1Util.oidHexToInt(r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 6, 0, 0]))),
-            pk = r.X509.getPublicKeyFromCertPEM(cert.pem),
+            pk = cert.getPublicKey(),
             pkFields = [],
             pkStr = "",
-            certSigAlg = r.KJUR.asn1.x509.OID.oid2name(r.KJUR.asn1.ASN1Util.oidHexToInt(r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [1, 0]))),
-            certSig = r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [2]).substr(2),
+            sig = cert.getSignatureValueHex(),
             sigStr = "",
-            extensions = r.ASN1HEX.dump(r.ASN1HEX.getDecendantHexVByNthList(cert.hex, 0, [0, 7]));
+            extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
+        window.cert = cert;
+        window.r = r;
 
         // Public Key fields
+        pkFields.push({
+            key: "Algorithm",
+            value: pk.type
+        });
+
         if (pk.type === "EC") { // ECDSA
             pkFields.push({
                 key: "Curve Name",
@@ -123,21 +120,6 @@ const PublicKey = {
             });
         }
 
-        // Signature fields
-        let breakoutSig = false;
-        try {
-            breakoutSig = r.ASN1HEX.dump(certSig).indexOf("SEQUENCE") === 0;
-        } catch (err) {
-            // Error processing signature, output without further breakout
-        }
-
-        if (breakoutSig) { // DSA or ECDSA
-            sigStr = "  r:              " + PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [0]), 16, 18) + "\n" +
-                "  s:              " + PublicKey._formatByteStr(r.ASN1HEX.getDecendantHexVByNthList(certSig, 0, [1]), 16, 18) + "\n";
-        } else { // RSA or unknown
-            sigStr = "  Signature:      " + PublicKey._formatByteStr(certSig, 16, 18) + "\n";
-        }
-
         // Format Public Key fields
         for (let i = 0; i < pkFields.length; i++) {
             pkStr += "  " + pkFields[i].key + ":" +
@@ -148,31 +130,45 @@ const PublicKey = {
                 );
         }
 
+        // Signature fields
+        let breakoutSig = false;
+        try {
+            breakoutSig = r.ASN1HEX.dump(sig).indexOf("SEQUENCE") === 0;
+        } catch (err) {
+            // Error processing signature, output without further breakout
+        }
+
+        if (breakoutSig) { // DSA or ECDSA
+            sigStr = "  r:              " + PublicKey._formatByteStr(r.ASN1HEX.getV(sig, 4), 16, 18) + "\n" +
+                "  s:              " + PublicKey._formatByteStr(r.ASN1HEX.getV(sig, 48), 16, 18);
+        } else { // RSA or unknown
+            sigStr = "  Signature:      " + PublicKey._formatByteStr(sig, 16, 18);
+        }
+
+
         let issuerStr = PublicKey._formatDnStr(issuer, 2),
-            nbDate = PublicKey._formatDate(notBefore),
-            naDate = PublicKey._formatDate(notAfter),
+            nbDate = PublicKey._formatDate(cert.getNotBefore()),
+            naDate = PublicKey._formatDate(cert.getNotAfter()),
             subjectStr = PublicKey._formatDnStr(subject, 2);
 
-        const output = "Version:          " + (parseInt(version, 16) + 1) + " (0x" + version + ")\n" +
-            "Serial number:    " + new r.BigInteger(sn, 16).toString() + " (0x" + sn + ")\n" +
-            "Algorithm ID:     " + algorithm + "\n" +
-            "Validity\n" +
-            "  Not Before:     " + nbDate + " (dd-mm-yy hh:mm:ss) (" + notBefore + ")\n" +
-            "  Not After:      " + naDate + " (dd-mm-yy hh:mm:ss) (" + notAfter + ")\n" +
-            "Issuer\n" +
-            issuerStr +
-            "Subject\n" +
-            subjectStr +
-            "Public Key\n" +
-            "  Algorithm:      " + pkAlgorithm + "\n" +
-            pkStr +
-            "Certificate Signature\n" +
-            "  Algorithm:      " + certSigAlg + "\n" +
-            sigStr +
-            "\nExtensions (parsed ASN.1)\n" +
-            extensions;
+        return `Version:          ${cert.version} (0x${Utils.hex(cert.version - 1)})
+Serial number:    ${new r.BigInteger(sn, 16).toString()} (0x${sn})
+Algorithm ID:     ${cert.getSignatureAlgorithmField()}
+Validity
+  Not Before:     ${nbDate} (dd-mm-yy hh:mm:ss) (${cert.getNotBefore()})
+  Not After:      ${naDate} (dd-mm-yy hh:mm:ss) (${cert.getNotAfter()})
+Issuer
+${issuerStr}
+Subject
+${subjectStr}
+Public Key
+${pkStr.slice(0, -1)}
+Certificate Signature
+  Algorithm:      ${cert.getSignatureAlgorithmName()}
+${sigStr}
 
-        return output;
+Extensions
+${extensions}`;
     },
 
 
@@ -192,7 +188,9 @@ const PublicKey = {
             // Add footer so that the KEYUTIL function works
             input = input + "-----END CERTIFICATE-----";
         }
-        return r.KEYUTIL.getHexFromPEM(input);
+        let cert = new r.X509();
+        cert.readCertPEM(input);
+        return cert.hex;
     },
 
 
@@ -270,7 +268,7 @@ const PublicKey = {
      */
     _formatDnStr: function(dnStr, indent) {
         let output = "",
-            fields = dnStr.split(",/|"),
+            fields = dnStr.substr(1).replace(/([^\\])\//g, "$1$1/").split(/[^\\]\//),
             maxKeyLen = 0,
             key,
             value,
@@ -295,7 +293,7 @@ const PublicKey = {
             output += Utils.padLeft(str, indent + str.length, " ");
         }
 
-        return output;
+        return output.slice(0, -1);
     },
 
 
@@ -345,24 +343,6 @@ const PublicKey = {
 };
 
 export default PublicKey;
-
-
-/**
- * Overwrite X509.hex2dn function so as to join RDNs with a string which can be split on without
- * causing problems later (I hope).
- *
- * @param {string} hDN - Hex DN string
- * @returns {string}
- */
-r.X509.hex2dn = function(hDN) {
-    let s = "";
-    const a = r.ASN1HEX.getPosArrayOfChildren_AtObj(hDN, 0);
-    for (let i = 0; i < a.length; i++) {
-        const hRDN = r.ASN1HEX.getHexOfTLV_AtObj(hDN, a[i]);
-        s = s + ",/|" + r.X509.hex2rdn(hRDN);
-    }
-    return s;
-};
 
 
 /**

@@ -144,8 +144,9 @@ const HTML = {
         }
 
         if (removeLineBreaks) {
-            input = input.replace(/^\s*\n/, "") // first line
-                         .replace(/(\n\s*){2,}/g, "\n"); // all others
+            input = input
+                .replace(/^\s*\n/, "") // first line
+                .replace(/(\n\s*){2,}/g, "\n"); // all others
         }
 
         return input;

@@ -127,7 +127,7 @@ const URL_ = {
             .replace(/\(/g, "%28")
             .replace(/\)/g, "%29")
             .replace(/\*/g, "%2A")
-            .replace(/\-/g, "%2D")
+            .replace(/-/g, "%2D")
             .replace(/\./g, "%2E")
             .replace(/_/g, "%5F")
             .replace(/~/g, "%7E");
