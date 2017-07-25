@@ -215,6 +215,7 @@ const Categories = [
             "Extract dates",
             "Regular expression",
             "XPath expression",
+            "JPath expression",
             "CSS selector",
             "Extract EXIF",
         ]
@@ -278,6 +279,7 @@ const Categories = [
             "CSS Beautify",
             "CSS Minify",
             "XPath expression",
+            "JPath expression",
             "CSS selector",
             "Strip HTML tags",
             "Diff",
