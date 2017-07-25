@@ -140,6 +140,8 @@ optgroup {
 .popover {
     background-color: var(--popover-background);
     border-color: var(--popover-border-colour);
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 

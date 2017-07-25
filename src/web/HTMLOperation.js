@@ -51,7 +51,7 @@ HTMLOperation.prototype.toStubHtml = function(removeIcon) {
 
     if (this.description) {
         html += " data-container='body' data-toggle='popover' data-placement='auto right'\
-            data-content=\"" + this.description + "\" data-html='true' data-trigger='hover'";
+            data-content=\"" + this.description + "\" data-html='true' data-trigger='focus' tabindex='0'";
     }
 
     html += ">" + this.name;
