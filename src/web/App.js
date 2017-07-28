@@ -27,7 +27,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.doptions      = defaultOptions;
     this.options       = Utils.extend({}, defaultOptions);
 
-    this.chefWorker    = new ChefWorker();
     this.manager       = new Manager(this);
 
     this.baking        = false;
@@ -35,8 +34,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.autoBakePause = false;
     this.progress      = 0;
     this.ingId         = 0;
-
-    this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
 };
 
 
@@ -47,6 +44,7 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
  */
 App.prototype.setup = function() {
     document.dispatchEvent(this.manager.appstart);
+    this.registerChefWorker();
     this.initialiseSplitter();
     this.loadLocalStorage();
     this.populateOperationsList();
@@ -61,12 +59,22 @@ App.prototype.setup = function() {
 
 
 /**
+ * Sets up the ChefWorker and associated listeners.
+ */
+App.prototype.registerChefWorker = function() {
+    this.chefWorker = new ChefWorker();
+    this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
+};
+
+
+/**
  * Fires once all setup activities have completed.
  */
 App.prototype.loaded = function() {
-    // Check that both the app and the worker have loaded successfully before
-    // removing the loading screen.
-    if (!this.worderLoaded || !this.appLoaded) return;
+    // Check that both the app and the worker have loaded successfully, and that
+    // we haven't already loaded before attempting to remove the loading screen.
+    if (!this.workerLoaded || !this.appLoaded ||
+        !document.getElementById("loader-wrapper")) return;
 
     // Trigger CSS animations to remove preloader
     document.body.classList.add("loaded");
@@ -112,12 +120,14 @@ App.prototype.setBakingStatus = function(bakingStatus) {
             outputElement.disabled = true;
             outputLoader.style.visibility = "visible";
             outputLoader.style.opacity = 1;
-        }, 200);
+            this.manager.controls.toggleBakeButtonFunction(true);
+        }.bind(this), 200);
     } else {
         clearTimeout(this.bakingStatusTimeout);
         outputElement.disabled = false;
         outputLoader.style.opacity = 0;
         outputLoader.style.visibility = "hidden";
+        this.manager.controls.toggleBakeButtonFunction(false);
     }
 };
 
@@ -147,6 +157,17 @@ App.prototype.bake = function(step) {
 
 
 /**
+ * Cancels the current bake by terminating the ChefWorker and creating a new one.
+ */
+App.prototype.cancelBake = function() {
+    this.chefWorker.terminate();
+    this.registerChefWorker();
+    this.setBakingStatus(false);
+    this.manager.controls.showStaleIndicator();
+};
+
+
+/**
  * Handler for messages sent back by the ChefWorker.
  *
  * @param {MessageEvent} e
@@ -163,7 +184,7 @@ App.prototype.handleChefMessage = function(e) {
         case "silentBakeComplete":
             break;
         case "workerLoaded":
-            this.worderLoaded = true;
+            this.workerLoaded = true;
             this.loaded();
             break;
         default:

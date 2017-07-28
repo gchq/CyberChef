@@ -78,7 +78,11 @@ ControlsWaiter.prototype.setAutoBake = function(value) {
  * Handler to trigger baking.
  */
 ControlsWaiter.prototype.bakeClick = function() {
-    this.app.bake();
+    if (document.getElementById("bake").textContent.indexOf("Bake") > 0) {
+        this.app.bake();
+    } else {
+        this.app.cancelBake();
+    }
 };
 
 
@@ -384,6 +388,27 @@ ControlsWaiter.prototype.hideStaleIndicator = function() {
 
     staleIndicator.style.opacity = 0;
     staleIndicator.style.visibility = "hidden";
+};
+
+
+/**
+ * Switches the Bake button between 'Bake' and 'Cancel' functions.
+ *
+ * @param {boolean} cancel - Whether to change to cancel or not
+ */
+ControlsWaiter.prototype.toggleBakeButtonFunction = function(cancel) {
+    const bakeButton = document.getElementById("bake"),
+        btnText = bakeButton.querySelector("span");
+
+    if (cancel) {
+        btnText.innerText = "Cancel";
+        bakeButton.classList.remove("btn-success");
+        bakeButton.classList.add("btn-danger");
+    } else {
+        btnText.innerText = "Bake!";
+        bakeButton.classList.remove("btn-danger");
+        bakeButton.classList.add("btn-success");
+    }
 };
 
 export default ControlsWaiter;
