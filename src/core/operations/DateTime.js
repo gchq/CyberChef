@@ -89,8 +89,17 @@ const DateTime = {
      * @returns {string}
      */
     runFromFiletimeToUnix: function(input, args) {
-        let units = args[0];
-        input = new BigInteger(input).subtract(new BigInteger("116444736000000000"));
+        let units = args[0],
+            format = args[1];
+
+        if (format === "Hex") {
+            input = new BigInteger(input, 16);
+        } else {
+            input = new BigInteger(input);
+        }
+
+        input = input.subtract(new BigInteger("116444736000000000"));
+
         if (units === "Seconds (s)"){
             input = input.divide(new BigInteger("10000000"));
         } else if (units === "Milliseconds (ms)") {
@@ -102,6 +111,7 @@ const DateTime = {
         } else {
             throw "Unrecognised unit";
         }
+
         return input.toString();
     },
 
@@ -115,8 +125,11 @@ const DateTime = {
      * @returns {string}
      */
     runToFiletimeFromUnix: function(input, args) {
-        let units = args[0];
+        let units = args[0],
+            format = args[1];
+
         input = new BigInteger(input);
+
         if (units === "Seconds (s)"){
             input = input.multiply(new BigInteger("10000000"));
         } else if (units === "Milliseconds (ms)") {
@@ -128,8 +141,22 @@ const DateTime = {
         } else {
             throw "Unrecognised unit";
         }
-        return input.add(new BigInteger("116444736000000000")).toString();
+
+        input = input.add(new BigInteger("116444736000000000"));
+
+        if (format === "Hex"){
+            return input.toString(16);
+        } else {
+            return input.toString();
+        }
     },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    FILETIME_FORMATS: ["Decimal", "Hex"],
 
 
     /**

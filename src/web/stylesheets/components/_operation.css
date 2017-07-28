@@ -59,6 +59,7 @@
     background-color: var(--arg-background);
     border: 1px solid var(--arg-border-colour);
     font-family: var(--fixed-width-font-family);
+    text-overflow: ellipsis;
 }
 
 .short-string {

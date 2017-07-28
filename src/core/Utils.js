@@ -293,7 +293,7 @@ const Utils = {
      * Utils.escapeRegex("[example]");
      */
     escapeRegex: function(str) {
-        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        return str.replace(/([.*+?^=!:${}()|[\]/\\])/g, "\\$1");
     },
 
 
@@ -337,50 +337,6 @@ const Utils = {
             }
         }
         return alphArr;
-    },
-
-
-    /**
-     * Translates a hex string into an array of bytes.
-     *
-     * @param {string} hexStr
-     * @returns {byteArray}
-     *
-     * @example
-     * // returns [0xfe, 0x09, 0xa7]
-     * Utils.hexToByteArray("fe09a7");
-     */
-    hexToByteArray: function(hexStr) {
-        // TODO: Handle errors i.e. input string is not hex
-        if (!hexStr) return [];
-        hexStr = hexStr.replace(/\s+/g, "");
-        const byteArray = [];
-        for (let i = 0; i < hexStr.length; i += 2) {
-            byteArray.push(parseInt(hexStr.substr(i, 2), 16));
-        }
-        return byteArray;
-    },
-
-
-    /**
-     * Translates an array of bytes to a hex string.
-     *
-     * @param {byteArray} byteArray
-     * @param {string} [delim=" "]
-     * @returns {string}
-     *
-     * @example
-     * // returns "fe09a7"
-     * Utils.byteArrayToHex([0xfe, 0x09, 0xa7], "");
-     */
-    byteArrayToHex: function(byteArray, delim) {
-        if (!byteArray) return "";
-        delim = typeof delim === "undefined" ? " " : delim;
-        let hexStr = "";
-        for (let i = 0; i < byteArray.length; i++) {
-            hexStr += Utils.hex(byteArray[i]) + delim;
-        }
-        return hexStr.slice(0, hexStr.length - delim.length);
     },
 
 
@@ -636,7 +592,7 @@ const Utils = {
             i = 0;
 
         if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[\[\]\\\-^$]/g, "\\$&") + "]", "g");
+            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
             data = data.replace(re, "");
         }
 
@@ -828,7 +784,7 @@ const Utils = {
         if (removeScriptAndStyle) {
             htmlStr = htmlStr.replace(/<(script|style)[^>]*>.*<\/(script|style)>/gmi, "");
         }
-        return htmlStr.replace(/<[^>\n]+>/g, "");
+        return htmlStr.replace(/<[^>]+>/g, "");
     },
 
 
@@ -854,7 +810,7 @@ const Utils = {
             "`": "&#x60;"
         };
 
-        return str.replace(/[&<>"'\/`]/g, function (match) {
+        return str.replace(/[&<>"'/`]/g, function (match) {
             return HTML_CHARS[match];
         });
     },
@@ -946,16 +902,19 @@ const Utils = {
      * @returns {html}
      */
     displayFilesAsHTML: function(files) {
+        /* <NL> and <SP> used to denote newlines and spaces in HTML markup.
+         * If a non-html operation is used, all markup will be removed but these
+         * whitespace chars will remain for formatting purposes.
+         */
+
         const formatDirectory = function(file) {
-            const html = "<div class='panel panel-default'>" +
-                   "<div class='panel-heading' role='tab'>" +
-                   "<h4 class='panel-title'>" +
-                   Utils.escapeHtml(file.fileName) +
-                   // The following line is for formatting when HTML is stripped
-                   "<span style='display: none'>\n0 bytes\n</span>" +
-                   "</h4>" +
-                   "</div>" +
-                   "</div>";
+            const html = `<div class='panel panel-default' style='white-space: normal;'>
+                    <div class='panel-heading' role='tab'>
+                        <h4 class='panel-title'>
+                            <NL>${Utils.escapeHtml(file.fileName)}
+                        </h4>
+                    </div>
+                </div>`;
             return html;
         };
 
@@ -966,45 +925,52 @@ const Utils = {
             );
             const blobUrl = URL.createObjectURL(blob);
 
-            const downloadAnchorElem = "<a href='" + blobUrl + "' " +
-                "title='Download " + Utils.escapeHtml(file.fileName) + "' " +
-                "download='" + Utils.escapeHtml(file.fileName) + "'>\u21B4</a>";
+            const viewFileElem = `<a href='#collapse${i}'
+                class='collapsed'
+                data-toggle='collapse'
+                aria-expanded='true'
+                aria-controls='collapse${i}'
+                title="Show/hide contents of '${Utils.escapeHtml(file.fileName)}'">&#x1f441;&#xfe0f;</a>`;
 
-            const expandFileContentsElem = "<a href='#collapse" + i + "' " +
-                "class='collapsed' " +
-                "data-toggle='collapse' " +
-                "aria-expanded='true' " +
-                "aria-controls='collapse" + i + "' " +
-                "title=\"Show/hide contents of '" + Utils.escapeHtml(file.fileName) + "'\">&#x1F50D</a>";
+            const downloadFileElem = `<a href='${blobUrl}'
+                title='Download ${Utils.escapeHtml(file.fileName)}'
+                download='${Utils.escapeHtml(file.fileName)}'>&#x1f4be;</a>`;
 
-            const html = "<div class='panel panel-default'>" +
-                       "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
-                       "<h4 class='panel-title'>" +
-                       "<div>" +
-                       Utils.escapeHtml(file.fileName) +
-                       " " +  expandFileContentsElem +
-                       " " + downloadAnchorElem +
-                       "<span class='pull-right'>" +
-                       // These are for formatting when stripping HTML
-                       "<span style='display: none'>\n</span>" +
-                       file.size.toLocaleString() + " bytes" +
-                       "<span style='display: none'>\n</span>" +
-                       "</span>" +
-                       "</div>" +
-                       "</h4>" +
-                       "</div>" +
-                       "<div id='collapse" + i + "' class='panel-collapse collapse' " +
-                       "role='tabpanel' aria-labelledby='heading" + i + "'>" +
-                       "<div class='panel-body'>" +
-                       "<pre><code>" + Utils.escapeHtml(file.contents) + "</pre></code></div>" +
-                       "</div>" +
-                       "</div>";
+            const hexFileData = Utils.toHexFast(new Uint8Array(file.bytes));
+
+            const switchToInputElem = `<a href='#switchFileToInput${i}'
+                class='file-switch'
+                title='Move file to input as hex'
+                fileValue='${hexFileData}'>&#x21e7;</a>`;
+
+            const html = `<div class='panel panel-default' style='white-space: normal;'>
+                    <div class='panel-heading' role='tab' id='heading${i}'>
+                        <h4 class='panel-title'>
+                            <div>
+                                ${Utils.escapeHtml(file.fileName)}<NL>
+                                ${viewFileElem}<SP>
+                                ${downloadFileElem}<SP>
+                                ${switchToInputElem}<SP>
+                                <span class='pull-right'>
+                                    <NL>${file.size.toLocaleString()} bytes
+                                </span>
+                            </div>
+                        </h4>
+                    </div>
+                    <div id='collapse${i}' class='panel-collapse collapse'
+                        role='tabpanel' aria-labelledby='heading${i}'>
+                        <div class='panel-body'>
+                            <NL><NL><pre><code>${Utils.escapeHtml(file.contents)}</code></pre>
+                        </div>
+                    </div>
+                </div>`;
             return html;
         };
 
-        let html = "<div style='padding: 5px;'>" +
-                   files.length +
-                   " file(s) found</div>\n";
+        let html = `<div style='padding: 5px; white-space: normal;'>
+                ${files.length} file(s) found<NL>
+            </div>`;
+
         files.forEach(function(file, i) {
             if (typeof file.contents !== "undefined") {
                 html += formatFile(file, i);
@@ -1012,7 +978,10 @@ const Utils = {
                 html += formatDirectory(file);
             }
         });
-        return html;
+
+        return html.replace(/(?:(<pre>(?:\n|.)*<\/pre>)|\s{2,})/g, "$1") // Remove whitespace from markup
+            .replace(/<NL>/g, "\n") // Replace <NP> with newlines
+            .replace(/<SP>/g, " "); // Replace <SP> with spaces
     },
 
 
@@ -1031,9 +1000,14 @@ const Utils = {
         if (paramStr === "") return {};
 
         // Cut off ? or # and split on &
-        const params = paramStr.substr(1).split("&");
+        if (paramStr[0] === "?" ||
+            paramStr[0] === "#") {
+            paramStr = paramStr.substr(1);
+        }
 
+        const params = paramStr.split("&");
         const result = {};
+
         for (let i = 0; i < params.length; i++) {
             const param = params[i].split("=");
             if (param.length !== 2) {

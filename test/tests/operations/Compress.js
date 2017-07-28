@@ -14,12 +14,12 @@ TestRegister.addTests([
         expectedOutput: "The cat sat on the mat.",
         recipeConfig: [
             {
-                "op" : "From Hex",
-                "args" : ["Space"]
+                "op": "From Hex",
+                "args": ["Space"]
             },
             {
-                "op" : "Bzip2 Decompress",
-                "args" : []
+                "op": "Bzip2 Decompress",
+                "args": []
             }
         ],
     },

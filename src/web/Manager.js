@@ -145,6 +145,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
     this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
     this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
+    this.addDynamicListener(".file-switch", "click", this.output.fileSwitch, this.output);
 
     // Options
     document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));

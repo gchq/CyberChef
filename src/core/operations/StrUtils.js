@@ -193,17 +193,17 @@ const StrUtils = {
      * @constant
      * @default
      */
-    FIND_REPLACE_GLOBAL : true,
+    FIND_REPLACE_GLOBAL: true,
     /**
      * @constant
      * @default
      */
-    FIND_REPLACE_CASE : false,
+    FIND_REPLACE_CASE: false,
     /**
      * @constant
      * @default
      */
-    FIND_REPLACE_MULTILINE : true,
+    FIND_REPLACE_MULTILINE: true,
 
     /**
      * Find / Replace operation.
@@ -359,9 +359,9 @@ const StrUtils = {
 
         for (let i = 0; i < diff.length; i++) {
             if (diff[i].added) {
-                if (showAdded) output += "<span class='hlgreen'>" + Utils.escapeHtml(diff[i].value) + "</span>";
+                if (showAdded) output += "<span class='hl5'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else if (diff[i].removed) {
-                if (showRemoved) output += "<span class='hlred'>" + Utils.escapeHtml(diff[i].value) + "</span>";
+                if (showRemoved) output += "<span class='hl3'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else {
                 output += Utils.escapeHtml(diff[i].value);
             }
@@ -424,7 +424,7 @@ const StrUtils = {
                 }
 
                 if (match && !inMatch) {
-                    outputs[s] += "<span class='hlgreen'>" + Utils.escapeHtml(samples[s][i]);
+                    outputs[s] += "<span class='hl5'>" + Utils.escapeHtml(samples[s][i]);
                     if (samples[s].length === i + 1) outputs[s] += "</span>";
                     if (s === samples.length - 1) inMatch = true;
                 } else if (!match && inMatch) {
@@ -476,16 +476,16 @@ const StrUtils = {
         const splitInput = input.split(delimiter);
 
         return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
+            .filter((line, lineIndex) => {
+                lineIndex += 1;
 
-            if (number < 0) {
-                return lineIndex <= splitInput.length + number;
-            } else {
-                return lineIndex <= number;
-            }
-        })
-        .join(delimiter);
+                if (number < 0) {
+                    return lineIndex <= splitInput.length + number;
+                } else {
+                    return lineIndex <= number;
+                }
+            })
+            .join(delimiter);
     },
 
 
@@ -504,16 +504,16 @@ const StrUtils = {
         const splitInput = input.split(delimiter);
 
         return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
+            .filter((line, lineIndex) => {
+                lineIndex += 1;
 
-            if (number < 0) {
-                return lineIndex > -number;
-            } else {
-                return lineIndex > splitInput.length - number;
-            }
-        })
-        .join(delimiter);
+                if (number < 0) {
+                    return lineIndex > -number;
+                } else {
+                    return lineIndex > splitInput.length - number;
+                }
+            })
+            .join(delimiter);
     },
 
 

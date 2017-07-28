@@ -181,9 +181,9 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
     ];
 
     const hash = params
-       .filter(v => v)
-       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-       .join("&");
+        .filter(v => v)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join("&");
 
     if (hash) {
         return `${link}#${hash}`;
@@ -286,7 +286,7 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
 
     // Add recipes to select
     const savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        JSON.parse(localStorage.savedRecipes) : [];
 
     for (i = 0; i < savedRecipes.length; i++) {
         const opt = document.createElement("option");
@@ -308,7 +308,7 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
 ControlsWaiter.prototype.loadDeleteClick = function() {
     const id = parseInt(document.getElementById("load-name").value, 10);
     const rawSavedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        JSON.parse(localStorage.savedRecipes) : [];
 
     const savedRecipes = rawSavedRecipes.filter(r => r.id !== id);
 
@@ -323,7 +323,7 @@ ControlsWaiter.prototype.loadDeleteClick = function() {
 ControlsWaiter.prototype.loadNameChange = function(e) {
     const el = e.target;
     const savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        JSON.parse(localStorage.savedRecipes) : [];
     const id = parseInt(el.value, 10);
 
     const recipe = savedRecipes.find(r => r.id === id);

@@ -26,7 +26,7 @@ TestRegister.addTests([
     {
         name: "Diff, basic usage",
         input: "testing23\n\ntesting123",
-        expectedOutput: "testing<span class='hlgreen'>1</span>23",
+        expectedOutput: "testing<span class='hl5'>1</span>23",
         recipeConfig: [
             {
                 "op": "Diff",

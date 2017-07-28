@@ -283,7 +283,7 @@ const IP = {
                     baIp.push(decimal & 255);
                     break;
                 case "Hex":
-                    baIp = Utils.hexToByteArray(lines[i]);
+                    baIp = Utils.fromHex(lines[i]);
                     break;
                 default:
                     throw "Unsupported input IP format";
@@ -516,7 +516,7 @@ const IP = {
             "<tr><td>Destination IP address</td><td>" + IP._ipv4ToStr(dstIP) + "</td></tr>";
 
         if (ihl > 5) {
-            output += "<tr><td>Options</td><td>" + Utils.byteArrayToHex(options) + "</td></tr>";
+            output += "<tr><td>Options</td><td>" + Utils.toHex(options) + "</td></tr>";
         }
 
         return output + "</table>";

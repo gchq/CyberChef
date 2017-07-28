@@ -2,6 +2,7 @@ import FlowControl from "../FlowControl.js";
 import Base from "../operations/Base.js";
 import Base58 from "../operations/Base58.js";
 import Base64 from "../operations/Base64.js";
+import BCD from "../operations/BCD.js";
 import BitwiseOp from "../operations/BitwiseOp.js";
 import ByteRepr from "../operations/ByteRepr.js";
 import CharEnc from "../operations/CharEnc.js";
@@ -330,29 +331,24 @@ const OperationConfig = {
                 value: BitwiseOp.XOR_BRUTE_KEY_LENGTH
             },
             {
-                name: "Length of sample",
+                name: "Sample length",
                 type: "number",
                 value: BitwiseOp.XOR_BRUTE_SAMPLE_LENGTH
             },
             {
-                name: "Offset of sample",
+                name: "Sample offset",
                 type: "number",
                 value: BitwiseOp.XOR_BRUTE_SAMPLE_OFFSET
+            },
+            {
+                name: "Scheme",
+                type: "option",
+                value: BitwiseOp.XOR_SCHEME
             },
             {
                 name: "Null preserving",
                 type: "boolean",
                 value: BitwiseOp.XOR_PRESERVE_NULLS
-            },
-            {
-                name: "Differential",
-                type: "boolean",
-                value: BitwiseOp.XOR_DIFFERENTIAL
-            },
-            {
-                name: "Crib (known plaintext string)",
-                type: "binaryString",
-                value: ""
             },
             {
                 name: "Print key",
@@ -363,6 +359,11 @@ const OperationConfig = {
                 name: "Output as hex",
                 type: "boolean",
                 value: BitwiseOp.XOR_BRUTE_OUTPUT_HEX
+            },
+            {
+                name: "Crib (known plaintext string)",
+                type: "binaryString",
+                value: ""
             }
         ]
     },
@@ -2301,6 +2302,11 @@ const OperationConfig = {
                 name: "Output units",
                 type: "option",
                 value: DateTime.UNITS
+            },
+            {
+                name: "Input format",
+                type: "option",
+                value: DateTime.FILETIME_FORMATS
             }
         ]
     },
@@ -2314,6 +2320,11 @@ const OperationConfig = {
                 name: "Input units",
                 type: "option",
                 value: DateTime.UNITS
+            },
+            {
+                name: "Output format",
+                type: "option",
+                value: DateTime.FILETIME_FORMATS
             }
         ]
     },
@@ -3496,6 +3507,64 @@ const OperationConfig = {
                 value: false,
             }
         ]
+    },
+    "From BCD": {
+        description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
+        run: BCD.runFromBCD,
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Scheme",
+                type: "option",
+                value: BCD.ENCODING_SCHEME
+            },
+            {
+                name: "Packed",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Signed",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Input format",
+                type: "option",
+                value: BCD.FORMAT
+            }
+        ]
+
+    },
+    "To BCD": {
+        description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
+        run: BCD.runToBCD,
+        inputType: "number",
+        outputType: "string",
+        args: [
+            {
+                name: "Scheme",
+                type: "option",
+                value: BCD.ENCODING_SCHEME
+            },
+            {
+                name: "Packed",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Signed",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Output format",
+                type: "option",
+                value: BCD.FORMAT
+            }
+        ]
+
     },
 };
 

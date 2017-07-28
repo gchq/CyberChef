@@ -493,13 +493,14 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
     //if (colour) cssClass += "-"+colour;
 
     // Remove HTML tags
-    text = text.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\n/g, "&#10;")
-                // Convert placeholders to tags
-                .replace(startPlaceholderRegex, "<span class=\""+cssClass+"\">")
-                .replace(endPlaceholderRegex, "</span>") + "&nbsp;";
+    text = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\n/g, "&#10;")
+        // Convert placeholders to tags
+        .replace(startPlaceholderRegex, "<span class=\""+cssClass+"\">")
+        .replace(endPlaceholderRegex, "</span>") + "&nbsp;";
 
     // Adjust width to allow for scrollbars
     highlighter.style.width = textarea.clientWidth + "px";

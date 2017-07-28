@@ -266,13 +266,7 @@ App.prototype.silentBake = function() {
  * @returns {string}
  */
 App.prototype.getInput = function() {
-    const input = this.manager.input.get();
-
-    // Save to session storage in case we need to restore it later
-    sessionStorage.setItem("inputLength", input.length);
-    sessionStorage.setItem("input", input);
-
-    return input;
+    return this.manager.input.get();
 };
 
 
@@ -282,8 +276,6 @@ App.prototype.getInput = function() {
  * @param {string} input - The string to set the input to
  */
 App.prototype.setInput = function(input) {
-    sessionStorage.setItem("inputLength", input.length);
-    sessionStorage.setItem("input", input);
     this.manager.input.set(input);
 };
 
@@ -466,7 +458,12 @@ App.prototype.addFavourite = function(name) {
  */
 App.prototype.loadURIParams = function() {
     // Load query string or hash from URI (depending on which is populated)
-    const params = window.location.search || window.location.hash;
+    // We prefer getting the hash by splitting the href rather than referencing
+    // location.hash as some browsers (Firefox) automatically URL decode it,
+    // which cause issues.
+    const params = window.location.search ||
+        window.location.href.split("#")[1] ||
+        window.location.hash;
     this.uriParams = Utils.parseURIParams(params);
 
     // Pause auto-bake while loading but don't modify `this.autoBake_`
@@ -529,9 +526,7 @@ App.prototype.nextIngId = function() {
  * @returns {Object[]}
  */
 App.prototype.getRecipeConfig = function() {
-    const recipeConfig = this.manager.recipe.getConfig();
-    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
-    return recipeConfig;
+    return this.manager.recipe.getConfig();
 };
 
 
@@ -541,7 +536,6 @@ App.prototype.getRecipeConfig = function() {
  * @param {Object[]} recipeConfig - The recipe configuration
  */
 App.prototype.setRecipeConfig = function(recipeConfig) {
-    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     document.getElementById("rec-list").innerHTML = null;
 
     for (let i = 0; i < recipeConfig.length; i++) {
@@ -596,15 +590,24 @@ App.prototype.resetLayout = function() {
 App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
     let now = new Date(),
-        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
-        compileInfo = "<span style=\"font-weight: normal\">Last build: " +
-            timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1) + " ago";
+        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime);
+
+    // Calculate previous version to compare to
+    let prev = PKG_VERSION.split(".").map(n => {
+        return parseInt(n, 10);
+    });
+    if (prev[2] > 0) prev[2]--;
+    else if (prev[1] > 0) prev[1]--;
+    else prev[0]--;
+
+    const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
+
+    let compileInfo = `<a href='${compareURL}'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
 
     if (window.compileMessage !== "") {
         compileInfo += " - " + window.compileMessage;
     }
 
-    compileInfo += "</span>";
     document.getElementById("notice").innerHTML = compileInfo;
 };
 
@@ -729,10 +732,20 @@ App.prototype.alertCloseClick = function() {
 App.prototype.stateChange = function(e) {
     this.autoBake();
 
+    // Set title
+    const recipeConfig = this.getRecipeConfig();
+    let title = "CyberChef";
+    if (recipeConfig.length === 1) {
+        title = `${recipeConfig[0].op} - ${title}`;
+    } else if (recipeConfig.length > 1) {
+        title = `${recipeConfig.length} operations - ${title}`;
+    }
+    document.title = title;
+
     // Update the current history state (not creating a new one)
     if (this.options.updateUrl) {
-        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true);
-        window.history.replaceState({}, "CyberChef", this.lastStateUrl);
+        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
+        window.history.replaceState({}, title, this.lastStateUrl);
     }
 };
 

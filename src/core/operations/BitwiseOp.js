@@ -36,7 +36,9 @@ const BitwiseOp = {
             o = input[i];
             x = nullPreserving && (o === 0 || o === k) ? o : func(o, k);
             result.push(x);
-            if (scheme !== "Standard" && !(nullPreserving && (o === 0 || o === k))) {
+            if (scheme &&
+                scheme !== "Standard" &&
+                !(nullPreserving && (o === 0 || o === k))) {
                 switch (scheme) {
                     case "Input differential":
                         key[i % key.length] = x;
@@ -120,19 +122,19 @@ const BitwiseOp = {
      * @returns {string}
      */
     runXorBrute: function (input, args) {
-        let keyLength = parseInt(args[0], 10),
+        const keyLength = parseInt(args[0], 10),
             sampleLength = args[1],
             sampleOffset = args[2],
-            nullPreserving = args[3],
-            differential = args[4],
-            crib = args[5],
-            printKey = args[6],
-            outputHex = args[7],
-            regex;
+            scheme = args[3],
+            nullPreserving = args[4],
+            printKey = args[5],
+            outputHex = args[6],
+            crib = args[7];
 
         let output = "",
             result,
-            resultUtf8;
+            resultUtf8,
+            regex;
 
         input = input.slice(sampleOffset, sampleOffset + sampleLength);
 
@@ -142,14 +144,12 @@ const BitwiseOp = {
 
 
         for (let key = 1, l = Math.pow(256, keyLength); key < l; key++) {
-            result = BitwiseOp._bitOp(input, Utils.hexToByteArray(key.toString(16)), BitwiseOp._xor, nullPreserving, differential);
+            result = BitwiseOp._bitOp(input, Utils.fromHex(key.toString(16)), BitwiseOp._xor, nullPreserving, scheme);
             resultUtf8 = Utils.byteArrayToUtf8(result);
             if (crib !== "" && resultUtf8.search(regex) === -1) continue;
             if (printKey) output += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
-            if (outputHex)
-                output += Utils.byteArrayToHex(result) + "\n";
-            else
-                output += Utils.printable(resultUtf8, false) + "\n";
+            if (outputHex) output += Utils.toHex(result) + "\n";
+            else output += Utils.printable(resultUtf8, false) + "\n";
             if (printKey) output += "\n";
         }
         return output;

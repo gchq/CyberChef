@@ -1,4 +1,4 @@
-import esprima from "esprima";
+import * as esprima from "esprima";
 import escodegen from "escodegen";
 import esmangle from "esmangle";
 
@@ -62,7 +62,7 @@ const JS = {
                 tolerant: parseTolerant
             };
 
-        result = esprima.parse(input, options);
+        result = esprima.parseScript(input, options);
         return JSON.stringify(result, null, 2);
     },
 
@@ -104,7 +104,7 @@ const JS = {
             AST;
 
         try {
-            AST = esprima.parse(input, {
+            AST = esprima.parseScript(input, {
                 range: true,
                 tokens: true,
                 comment: true
@@ -142,7 +142,7 @@ const JS = {
      */
     runMinify: function(input, args) {
         let result = "",
-            AST = esprima.parse(input),
+            AST = esprima.parseScript(input),
             optimisedAST = esmangle.optimize(AST, null),
             mangledAST = esmangle.mangle(optimisedAST);
 
