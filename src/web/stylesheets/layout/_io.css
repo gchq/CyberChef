@@ -101,3 +101,11 @@
 .dropping-file {
     border: 5px dashed var(--drop-file-border-colour) !important;
 }
+
+#stale-indicator {
+    visibility: hidden;
+    transition: all 0.3s;
+    margin-left: 5px;
+    font-size: larger;
+    font-weight: normal;
+}

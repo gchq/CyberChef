@@ -107,6 +107,7 @@ App.prototype.setBakingStatus = function(bakingStatus) {
         outputElement = document.getElementById("output-text");
 
     if (bakingStatus) {
+        this.manager.controls.hideStaleIndicator();
         this.bakingStatusTimeout = setTimeout(function() {
             outputElement.disabled = true;
             outputLoader.style.visibility = "visible";
@@ -205,8 +206,10 @@ App.prototype.bakingComplete = function(response) {
  * Runs Auto Bake if it is set.
  */
 App.prototype.autoBake = function() {
-    if (this.autoBake_ && !this.autoBakePause) {
+    if (this.autoBake_ && !this.autoBakePause && !this.baking) {
         this.bake();
+    } else {
+        this.manager.controls.showStaleIndicator();
     }
 };
 
@@ -310,7 +313,7 @@ App.prototype.populateOperationsList = function() {
 App.prototype.initialiseSplitter = function() {
     this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
-        minSize: [240, 325, 440],
+        minSize: [240, 325, 450],
         gutterSize: 4,
         onDrag: function() {
             this.manager.controls.adjustWidth();

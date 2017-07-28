@@ -362,4 +362,28 @@ ControlsWaiter.prototype.supportButtonClick = function(e) {
     }
 };
 
+
+/**
+ * Shows the stale indicator to show that the input or recipe has changed
+ * since the last bake.
+ */
+ControlsWaiter.prototype.showStaleIndicator = function() {
+    const staleIndicator = document.getElementById("stale-indicator");
+
+    staleIndicator.style.visibility = "visible";
+    staleIndicator.style.opacity = 1;
+};
+
+
+/**
+ * Hides the stale indicator to show that the input or recipe has not changed
+ * since the last bake.
+ */
+ControlsWaiter.prototype.hideStaleIndicator = function() {
+    const staleIndicator = document.getElementById("stale-indicator");
+
+    staleIndicator.style.opacity = 0;
+    staleIndicator.style.visibility = "hidden";
+};
+
 export default ControlsWaiter;
