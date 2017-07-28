@@ -16,7 +16,7 @@
     background-color: var(--secondary-border-colour);
 }
 
-#preloader {
+.loader {
     display: block;
     position: relative;
     left: 50%;
@@ -28,20 +28,19 @@
     border: 3px solid transparent;
     border-top-color: #3498db;
     border-radius: 50%;
-    z-index: 1500;
 
     animation: spin 2s linear infinite;
 }
 
-#preloader:before,
-#preloader:after {
+.loader:before,
+.loader:after {
     content: "";
     position: absolute;
     border: 3px solid transparent;
     border-radius: 50%;
 }
 
-#preloader:before {
+.loader:before {
     top: 5px;
     left: 5px;
     right: 5px;
@@ -50,7 +49,7 @@
     animation: spin 3s linear infinite;
 }
 
-#preloader:after {
+.loader:after {
     top: 13px;
     left: 13px;
     right: 13px;
@@ -77,7 +76,6 @@
 
 
 /* Loaded */
-.loaded #preloader,
 .loaded #preloader-msg {
     opacity: 0;
     transition: all 0.3s ease-out;

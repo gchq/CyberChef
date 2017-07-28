@@ -12,6 +12,12 @@ import Chef from "./Chef.js";
 // Set up Chef instance
 self.chef = new Chef();
 
+// Tell the app that the worker has loaded and is ready to operate
+self.postMessage({
+    action: "workerLoaded",
+    data: {}
+});
+
 /**
  * Respond to message from parent thread.
  *

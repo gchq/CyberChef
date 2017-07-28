@@ -54,6 +54,8 @@ App.prototype.setup = function() {
     this.resetLayout();
     this.setCompileMessage();
     this.loadURIParams();
+
+    this.appLoaded = true;
     this.loaded();
 };
 
@@ -62,6 +64,10 @@ App.prototype.setup = function() {
  * Fires once all setup activities have completed.
  */
 App.prototype.loaded = function() {
+    // Check that both the app and the worker have loaded successfully before
+    // removing the loading screen.
+    if (!this.worderLoaded || !this.appLoaded) return;
+
     // Trigger CSS animations to remove preloader
     document.body.classList.add("loaded");
 
@@ -97,25 +103,20 @@ App.prototype.handleError = function(err) {
 App.prototype.setBakingStatus = function(bakingStatus) {
     this.baking = bakingStatus;
 
-    let inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
-        outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
-        inputElement = document.querySelector("#input-text"),
-        outputElement = document.querySelector("#output-text");
+    let outputLoader = document.getElementById("output-loader"),
+        outputElement = document.getElementById("output-text");
 
     if (bakingStatus) {
-        inputLoadingIcon.style.display = "inline-block";
-        outputLoadingIcon.style.display = "inline-block";
-        inputElement.classList.add("disabled");
-        inputElement.disabled = true;
-        outputElement.classList.add("disabled");
-        outputElement.disabled = true;
+        this.bakingStatusTimeout = setTimeout(function() {
+            outputElement.disabled = true;
+            outputLoader.style.visibility = "visible";
+            outputLoader.style.opacity = 1;
+        }, 200);
     } else {
-        inputLoadingIcon.style.display = "none";
-        outputLoadingIcon.style.display = "none";
-        inputElement.classList.remove("disabled");
-        inputElement.disabled = false;
-        outputElement.classList.remove("disabled");
+        clearTimeout(this.bakingStatusTimeout);
         outputElement.disabled = false;
+        outputLoader.style.opacity = 0;
+        outputLoader.style.visibility = "hidden";
     }
 };
 
@@ -159,6 +160,10 @@ App.prototype.handleChefMessage = function(e) {
             this.setBakingStatus(false);
             break;
         case "silentBakeComplete":
+            break;
+        case "workerLoaded":
+            this.worderLoaded = true;
+            this.loaded();
             break;
         default:
             console.error("Unrecognised message from ChefWorker", e);

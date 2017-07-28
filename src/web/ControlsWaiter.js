@@ -79,9 +79,6 @@ ControlsWaiter.prototype.setAutoBake = function(value) {
  */
 ControlsWaiter.prototype.bakeClick = function() {
     this.app.bake();
-    const outputText = document.getElementById("output-text");
-    outputText.focus();
-    outputText.setSelectionRange(0, 0);
 };
 
 
@@ -90,9 +87,6 @@ ControlsWaiter.prototype.bakeClick = function() {
  */
 ControlsWaiter.prototype.stepClick = function() {
     this.app.bake(true);
-    const outputText = document.getElementById("output-text");
-    outputText.focus();
-    outputText.setSelectionRange(0, 0);
 };
 
 
