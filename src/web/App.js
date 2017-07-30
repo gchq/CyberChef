@@ -213,13 +213,6 @@ App.prototype.bakingComplete = function(response) {
     this.progress = response.progress;
     this.manager.recipe.updateBreakpointIndicator(response.progress);
     this.manager.output.set(response.result, response.type, response.duration);
-
-    // If baking took too long, disable auto-bake
-    if (response.duration > this.options.autoBakeThreshold && this.autoBake_) {
-        this.manager.controls.setAutoBake(false);
-        this.alert("Baking took longer than " + this.options.autoBakeThreshold +
-            "ms, Auto Bake has been disabled.", "warning", 5000);
-    }
 };
 
 

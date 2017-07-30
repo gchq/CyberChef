@@ -44,7 +44,6 @@ function main() {
         wordWrap:          true,
         showErrors:        true,
         errorTimeout:      4000,
-        autoBakeThreshold: 200,
         attemptHighlight:  true,
         theme:             "classic",
     };
