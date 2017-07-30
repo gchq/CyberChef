@@ -12,9 +12,11 @@ import Code from "../operations/Code.js";
 import Compress from "../operations/Compress.js";
 import Convert from "../operations/Convert.js";
 import DateTime from "../operations/DateTime.js";
+import Diff from "../operations/Diff.js";
 import Endian from "../operations/Endian.js";
 import Entropy from "../operations/Entropy.js";
 import Extract from "../operations/Extract.js";
+import Filetime from "../operations/Filetime.js";
 import FileType from "../operations/FileType.js";
 import Image from "../operations/Image.js";
 import Hash from "../operations/Hash.js";
@@ -2294,37 +2296,37 @@ const OperationConfig = {
     },
     "Windows Filetime to UNIX Timestamp": {
         description: "Converts a Windows Filetime value to a UNIX timestamp.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
-        run: DateTime.runFromFiletimeToUnix,
+        run: Filetime.runFromFiletimeToUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
                 name: "Output units",
                 type: "option",
-                value: DateTime.UNITS
+                value: Filetime.UNITS
             },
             {
                 name: "Input format",
                 type: "option",
-                value: DateTime.FILETIME_FORMATS
+                value: Filetime.FILETIME_FORMATS
             }
         ]
     },
     "UNIX Timestamp to Windows Filetime": {
         description: "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
-        run: DateTime.runToFiletimeFromUnix,
+        run: Filetime.runToFiletimeFromUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
                 name: "Input units",
                 type: "option",
-                value: DateTime.UNITS
+                value: Filetime.UNITS
             },
             {
                 name: "Output format",
                 type: "option",
-                value: DateTime.FILETIME_FORMATS
+                value: Filetime.FILETIME_FORMATS
             }
         ]
     },
@@ -3123,19 +3125,19 @@ const OperationConfig = {
     },
     "Diff": {
         description: "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.",
-        run: StrUtils.runDiff,
+        run: Diff.runDiff,
         inputType: "string",
         outputType: "html",
         args: [
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: StrUtils.DIFF_SAMPLE_DELIMITER
+                value: Diff.DIFF_SAMPLE_DELIMITER
             },
             {
                 name: "Diff by",
                 type: "option",
-                value: StrUtils.DIFF_BY
+                value: Diff.DIFF_BY
             },
             {
                 name: "Show added",
