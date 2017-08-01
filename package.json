@@ -32,7 +32,6 @@
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^7.1.1",
-    "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.4",
     "exports-loader": "^0.6.4",
@@ -60,11 +59,13 @@
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.8",
     "web-resource-inliner": "^4.1.0",
-    "webpack": "^3.3.0"
+    "webpack": "^3.3.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "bootstrap-colorpicker": "^2.5.1",
+    "babel-polyfill": "^6.23.0",
     "bootstrap-switch": "^3.3.4",
     "crypto-api": "^0.6.2",
     "crypto-js": "^3.1.9-1",

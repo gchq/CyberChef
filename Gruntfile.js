@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 
 module.exports = function (grunt) {
@@ -294,6 +295,7 @@ module.exports = function (grunt) {
             tests: {
                 target: "node",
                 entry: "./test/index.js",
+                externals: [NodeExternals()],
                 output: {
                     filename: "index.js",
                     path: __dirname + "/build/test"
@@ -302,6 +304,7 @@ module.exports = function (grunt) {
             node: {
                 target: "node",
                 entry: "./src/node/index.js",
+                externals: [NodeExternals()],
                 output: {
                     filename: "CyberChef.js",
                     path: __dirname + "/build/node",
