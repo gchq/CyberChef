@@ -666,10 +666,20 @@ App.prototype.alertCloseClick = function() {
 App.prototype.stateChange = function(e) {
     this.autoBake();
 
+    // Set title
+    const recipeConfig = this.getRecipeConfig();
+    let title = "CyberChef";
+    if (recipeConfig.length === 1) {
+        title = `${recipeConfig[0].op} - ${title}`;
+    } else if (recipeConfig.length > 1) {
+        title = `${recipeConfig.length} operations - ${title}`;
+    }
+    document.title = title;
+
     // Update the current history state (not creating a new one)
     if (this.options.updateUrl) {
-        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true);
-        window.history.replaceState({}, "CyberChef", this.lastStateUrl);
+        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
+        window.history.replaceState({}, title, this.lastStateUrl);
     }
 };
 
