@@ -155,7 +155,22 @@ OperationsWaiter.prototype.getSelectedOp = function(ops) {
  */
 OperationsWaiter.prototype.opListCreate = function(e) {
     this.manager.recipe.createSortableSeedList(e.target);
-    $("[data-toggle=popover]").popover();
+    // Allows popover to gain focus for eg. pressing buttons/scrolling
+    $(".operation").popover({trigger: "manual", html: true, animation: true})
+        .on("mouseenter", function () {
+            const _this = this;
+            $(this).popover("show");
+            $(".popover").on("mouseleave", function () {
+                $(_this).popover("hide");
+            });
+        }).on("mouseleave", function () {
+            const _this = this;
+            setTimeout(function () {
+                if (!$(".popover:hover").length) {
+                    $(_this).popover("hide");
+                }
+            }, 50);
+        });
 };
 
 
