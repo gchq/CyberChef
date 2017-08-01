@@ -142,6 +142,10 @@ optgroup {
     border-color: var(--popover-border-colour);
 }
 
+.popover-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
 
 .popover.right>.arrow {
     border-right-color: var(--popover-border-colour);

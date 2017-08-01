@@ -155,7 +155,35 @@ OperationsWaiter.prototype.getSelectedOp = function(ops) {
  */
 OperationsWaiter.prototype.opListCreate = function(e) {
     this.manager.recipe.createSortableSeedList(e.target);
-    $("[data-toggle=popover]").popover();
+    this.enableOpsListPopovers(e.target);
+};
+
+
+/**
+ * Sets up popovers, allowing the popover itself to gain focus which enables scrolling
+ * and other interactions.
+ *
+ * @param {Element} el - The element to start selecting from
+ */
+OperationsWaiter.prototype.enableOpsListPopovers = function(el) {
+    $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
+        .popover({trigger: "manual"})
+        .on("mouseenter", function() {
+            const _this = this;
+            $(this).popover("show");
+            $(".popover").on("mouseleave", function () {
+                $(_this).popover("hide");
+            });
+        }).on("mouseleave", function () {
+            const _this = this;
+            setTimeout(function() {
+                // Determine if the popover associated with this element is being hovered over
+                if ($(_this).data("bs.popover") &&
+                    !$(_this).data("bs.popover").$tip.is(":hover")) {
+                    $(_this).popover("hide");
+                }
+            }, 50);
+        });
 };
 
 
