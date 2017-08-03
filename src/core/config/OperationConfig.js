@@ -2244,7 +2244,7 @@ const OperationConfig = {
         ]
     },
     "JPath expression": {
-        description: "Extract information from a JSON object with an JPath query",
+        description: "Extract information from a JSON object with a JPath query.",
         run: Code.runJpath,
         inputType: "string",
         outputType: "string",

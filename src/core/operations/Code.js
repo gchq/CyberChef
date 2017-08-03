@@ -4,7 +4,7 @@ import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser as dom} from "xmldom";
 import xpath from "xpath";
-import jpath from "node-jpath";
+import jpath from "../lib/jsonpath.js";
 import prettyPrintOne from "imports-loader?window=>global!exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js";
 
 
@@ -377,16 +377,19 @@ const Code = {
      */
     runJpath: function(input, args) {
         let query = args[0],
-            delimiter = args[1];
-
-        let obj;
+            delimiter = args[1],
+            results,
+            obj;
         try {
             obj = JSON.parse(input);
         } catch (err) {
             return "Invalid input JSON.";
         }
-
-        let results = jpath.filter(obj, query);
+        try {
+            results = jpath.query(obj, query);
+        } catch (e) {
+            return "Invalid JPath expression.";
+        }
         return results.map(result => JSON.stringify(result)).join(delimiter);
     },
 
