@@ -62,8 +62,8 @@
 #preloader-msg {
     display: block;
     position: relative;
-    width: 300px;
-    left: calc(50% - 150px);
+    width: 400px;
+    left: calc(50% - 200px);
     top: calc(50% + 50px);
     text-align: center;
     margin-top: 50px;

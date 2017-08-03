@@ -48,10 +48,15 @@
                 "Initialising Skynet...",
                 "[REDACTED]",
                 "Downloading more RAM...",
-                "Loading more loading messages...",
                 "Ordering 1s and 0s...",
                 "Navigating neural network...",
-                "Importing machine learning..."
+                "Importing machine learning...",
+                "Issuing Alice and Bob one-time pads...",
+                "Mining bitcoin cash...",
+                "Generating key material by trying to escape vim...",
+                "for i in range(additional): Pylon()",
+                "(creating unresolved tension...",
+                "Symlinking emacs and vim to ed...",
             ];
 
             // Shuffle array using Durstenfeld algorithm
@@ -62,19 +67,19 @@
                 loadingMsgs[j] = temp;
             }
 
-            // Show next loading message then move it to the end of the array
+            // Show next loading message and move it to the end of the array
             function changeLoadingMsg() {
                 const msg = loadingMsgs.shift();
+                loadingMsgs.push(msg);
                 try {
                     const el = document.getElementById("preloader-msg");
                     el.className = "loading"; // Causes CSS transition on first message
                     el.innerHTML = msg;
                 } catch (err) {} // Ignore errors if DOM not yet ready
-                loadingMsgs.push(msg);
             }
 
             changeLoadingMsg();
-            window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random() * 1000) + 1000);
+            window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random() * 2000) + 1500);
         </script>
         <% if (!htmlWebpackPlugin.options.inline) { %>
             <script type="application/ld+json">
