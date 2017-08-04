@@ -448,18 +448,6 @@ const StrUtils = {
         return outputs.join(sampleDelim);
     },
 
-
-    /**
-     * Parse escaped string operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runParseEscapedString: function(input, args) {
-        return Utils.parseEscapedChars(input);
-    },
-
     /**
      * @constant
      * @default
@@ -475,31 +463,41 @@ const StrUtils = {
     /**
      * Escapes a string for embedding in another string.
      *
-     * Example: "Don't do that" -> "Don\'t do that"
-     *
      * @author Vel0x [dalemy@microsoft.com]
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @example
+     * StrUtils.runUnescape("Don't do that", [])
+     * > "Don\'t do that"
+     * StrUtils.runUnescape(`Hello
+     * World`, [])
+     * > "Hello\nWorld"
      */
     runEscape: function(input, args) {
-        return StrUtils._replace_by_keys(input, "unescaped", "escaped");
+        return StrUtils._replaceByKeys(input, "unescaped", "escaped");
     },
 
     /**
      * Unescapes a string that was part of another string
      *
-     * Example: "Don\'t do that" -> "Don't do that"
-     *
      * @author Vel0x [dalemy@microsoft.com]
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @example
+     * StrUtils.runUnescape("Don\'t do that", [])
+     * > "Don't do that"
+     * StrUtils.runUnescape("Hello\nWorld", [])
+     * > `Hello
+     * World`
      */
     runUnescape: function(input, args) {
-        return StrUtils._replace_by_keys(input, "escaped", "unescaped");
+        return StrUtils._replaceByKeys(Utils.parseEscapedChars(input), "escaped", "unescaped");
     },
 
     /**
@@ -515,12 +513,10 @@ const StrUtils = {
      * @returns {string}
      */
     _replaceByKeys: function(input, patternKey, replacementKey) {
-        const replacementsLength = StrUtils.ESCAPE_REPLACEMENTS.length;
         let output = input;
-        for (let i = 0; i < replacementsLength; i++) {
-            const replacement = StrUtils.ESCAPE_REPLACEMENTS[i];
+        StrUtils.ESCAPE_REPLACEMENTS.forEach(replacement => {
             output = output.split(replacement[patternKey]).join(replacement[replacementKey]);
-        }
+        });
         return output;
     },
 

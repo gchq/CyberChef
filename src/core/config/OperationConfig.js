@@ -3254,14 +3254,14 @@ const OperationConfig = {
     },
     "Escape String": {
         description: "Escapes a string so that it can be embedded in another. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
-        run: StrUtils.run_escape,
+        run: StrUtils.runEscape,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Unescape String": {
         description: "Unescapes a string that was embedded inside another so that it can be used in it's own right. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
-        run: StrUtils.run_unescape,
+        run: StrUtils.runUnescape,
         inputType: "string",
         outputType: "string",
         args: []
