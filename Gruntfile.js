@@ -229,6 +229,9 @@ module.exports = function (grunt) {
                 stats: {
                     children: false,
                     warningsFilter: /source-map/
+                },
+                node: {
+                    fs: "empty"
                 }
             },
             webDev: {

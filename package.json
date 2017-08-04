@@ -77,6 +77,7 @@
     "google-code-prettify": "^1.0.5",
     "jquery": "^3.1.1",
     "jsbn": "^1.1.0",
+    "jsonpath": "^0.2.12",
     "jsrsasign": "8.0.3",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",

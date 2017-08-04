@@ -2250,7 +2250,7 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "JPath",
+                name: "Query",
                 type: "string",
                 value: Code.JPATH_INITIAL
             },

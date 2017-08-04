@@ -4,7 +4,7 @@ import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser as dom} from "xmldom";
 import xpath from "xpath";
-import jpath from "../lib/jsonpath.js";
+import jpath from "jsonpath";
 import prettyPrintOne from "imports-loader?window=>global!exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js";
 
 
@@ -355,6 +355,7 @@ const Code = {
         return nodes.map(nodeToString).join(delimiter);
     },
 
+
     /**
      * @constant
      * @default
@@ -368,7 +369,7 @@ const Code = {
     JPATH_DELIMITER: "\\n",
 
     /**
-     * XPath expression operation.
+     * JPath expression operation.
      *
      * @author Matt C (matt@artemisbot.uk)
      * @param {string} input
@@ -380,16 +381,19 @@ const Code = {
             delimiter = args[1],
             results,
             obj;
+
         try {
             obj = JSON.parse(input);
         } catch (err) {
-            return "Invalid input JSON.";
+            return "Invalid input JSON: " + err.message;
         }
+
         try {
             results = jpath.query(obj, query);
-        } catch (e) {
-            return "Invalid JPath expression.";
+        } catch (err) {
+            return "Invalid JPath expression: " + err.message;
         }
+
         return results.map(result => JSON.stringify(result)).join(delimiter);
     },
 

@@ -174,7 +174,7 @@ TestRegister.addTests([
     {
         name: "JPath Expression: Empty JSON",
         input: "",
-        expectedOutput: "Invalid input JSON.",
+        expectedOutput: "Invalid input JSON: Unexpected end of JSON input",
         recipeConfig: [
             {
                 "op": "JPath expression",
@@ -185,7 +185,7 @@ TestRegister.addTests([
     {
         name: "JPath Expression: Empty expression",
         input: JSON.stringify(JPATH_TEST_DATA),
-        expectedOutput: "Invalid JPath expression.",
+        expectedOutput: "Invalid JPath expression: we need a path",
         recipeConfig: [
             {
                 "op": "JPath expression",
