@@ -2243,6 +2243,24 @@ const OperationConfig = {
             }
         ]
     },
+    "JPath expression": {
+        description: "Extract information from a JSON object with a JPath query.",
+        run: Code.runJpath,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "JPath",
+                type: "string",
+                value: Code.JPATH_INITIAL
+            },
+            {
+                name: "Result delimiter",
+                type: "binaryShortString",
+                value: Code.JPATH_DELIMITER
+            }
+        ]
+    },
     "CSS selector": {
         description: "Extract information from an HTML document with a CSS selector",
         run: Code.runCSSQuery,
