@@ -460,6 +460,70 @@ const StrUtils = {
         return Utils.parseEscapedChars(input);
     },
 
+    /**
+     * @constant
+     * @default
+     */
+    ESCAPE_REPLACEMENTS: [
+        {"escaped": "\\\\", "unescaped": "\\"}, // Must be first
+        {"escaped": "\\'", "unescaped": "'"},
+        {"escaped": "\\\"", "unescaped": "\""},
+        {"escaped": "\\n", "unescaped": "\n"},
+        {"escaped": "\\r", "unescaped": "\r"},
+    ],
+
+    /**
+     * Escapes a string for embedding in another string.
+     *
+     * Example: "Don't do that" -> "Don\'t do that"
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runEscape: function(input, args) {
+        return StrUtils._replace_by_keys(input, "unescaped", "escaped");
+    },
+
+    /**
+     * Unescapes a string that was part of another string
+     *
+     * Example: "Don\'t do that" -> "Don't do that"
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runUnescape: function(input, args) {
+        return StrUtils._replace_by_keys(input, "escaped", "unescaped");
+    },
+
+    /**
+     * Replaces all matching tokens in ESCAPE_REPLACEMENTS with the correction. The
+     * ordering is determined by the pattern_key and the replacement_key.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     * @author Matt C [matt@artemisbot.uk]
+     *
+     * @param {string} input
+     * @param {string} pattern_key
+     * @param {string} replacement_key
+     * @returns {string}
+     */
+    _replaceByKeys: function(input, patternKey, replacementKey) {
+        const replacementsLength = StrUtils.ESCAPE_REPLACEMENTS.length;
+        let output = input;
+        for (let i = 0; i < replacementsLength; i++) {
+            const replacement = StrUtils.ESCAPE_REPLACEMENTS[i];
+            output = output.split(replacement[patternKey]).join(replacement[replacementKey]);
+        }
+        return output;
+    },
+
 
     /**
      * Head lines operation.

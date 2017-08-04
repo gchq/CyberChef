@@ -3252,6 +3252,20 @@ const OperationConfig = {
             }
         ]
     },
+    "Escape String": {
+        description: "Escapes a string so that it can be embedded in another. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
+        run: StrUtils.run_escape,
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "Unescape String": {
+        description: "Unescapes a string that was embedded inside another so that it can be used in it's own right. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
+        run: StrUtils.run_unescape,
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
     "To Morse Code": {
         description: "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>",
         run: MorseCode.runTo,
