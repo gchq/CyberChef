@@ -61,8 +61,6 @@ const PublicKey = {
             sig = cert.getSignatureValueHex(),
             sigStr = "",
             extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
-        window.cert = cert;
-        window.r = r;
 
         // Public Key fields
         pkFields.push({
