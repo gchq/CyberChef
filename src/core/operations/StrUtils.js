@@ -458,6 +458,9 @@ const StrUtils = {
         {"escaped": "\\\"", "unescaped": "\""},
         {"escaped": "\\n", "unescaped": "\n"},
         {"escaped": "\\r", "unescaped": "\r"},
+        {"escaped": "\\t", "unescaped": "\t"},
+        {"escaped": "\\b", "unescaped": "\b"},
+        {"escaped": "\\f", "unescaped": "\f"},
     ],
 
     /**
@@ -497,7 +500,7 @@ const StrUtils = {
      * World`
      */
     runUnescape: function(input, args) {
-        return StrUtils._replaceByKeys(Utils.parseEscapedChars(input), "escaped", "unescaped");
+        return StrUtils._replaceByKeys(input, "escaped", "unescaped");
     },
 
     /**
@@ -514,6 +517,7 @@ const StrUtils = {
      */
     _replaceByKeys: function(input, patternKey, replacementKey) {
         let output = input;
+        if (patternKey === "escaped") output = Utils.parseEscapedChars(input); // I've wrapped this to catch the \\x encoded characters
         StrUtils.ESCAPE_REPLACEMENTS.forEach(replacement => {
             output = output.split(replacement[patternKey]).join(replacement[replacementKey]);
         });

@@ -173,7 +173,6 @@ const Categories = [
             "Tail",
             "Count occurrences",
             "Expand alphabet range",
-            "Parse escaped string",
             "Drop bytes",
             "Take bytes",
             "Pad lines",

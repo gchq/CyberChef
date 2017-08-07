@@ -3206,13 +3206,6 @@ const OperationConfig = {
             }
         ]
     },
-    "Parse escaped string": {
-        description: "Replaces escaped characters with the bytes they represent.<br><br>e.g.<code>Hello\\nWorld</code> becomes <code>Hello<br>World</code>",
-        run: StrUtils.runParseEscapedString,
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
     "TCP/IP Checksum": {
         description: "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.",
         run: Checksum.runTCPIP,
