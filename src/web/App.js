@@ -60,6 +60,8 @@ App.prototype.setup = function() {
 
 /**
  * Fires once all setup activities have completed.
+ *
+ * @fires Manager#apploaded
  */
 App.prototype.loaded = function() {
     // Trigger CSS animations to remove preloader
@@ -74,6 +76,8 @@ App.prototype.loaded = function() {
 
     // Clear the loading message interval
     clearInterval(window.loadingMsgsInt);
+
+    document.dispatchEvent(this.manager.apploaded);
 };
 
 

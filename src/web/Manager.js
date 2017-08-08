@@ -28,6 +28,10 @@ const Manager = function(app) {
      */
     this.appstart = new CustomEvent("appstart", {bubbles: true});
     /**
+     * @event Manager#apploaded
+     */
+    this.apploaded = new CustomEvent("apploaded", {bubbles: true});
+    /**
      * @event Manager#operationadd
      */
     this.operationadd = new CustomEvent("operationadd", {bubbles: true});
