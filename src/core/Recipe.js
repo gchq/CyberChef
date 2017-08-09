@@ -1,5 +1,4 @@
 import Operation from "./Operation.js";
-import OperationConfig from "./config/OperationConfig.js";
 
 
 /**
@@ -30,8 +29,7 @@ const Recipe = function(recipeConfig) {
 Recipe.prototype._parseConfig = function(recipeConfig) {
     for (let c = 0; c < recipeConfig.length; c++) {
         const operationName = recipeConfig[c].op;
-        const operationConfig = OperationConfig[operationName];
-        const operation = new Operation(operationName, operationConfig);
+        const operation = new Operation(operationName);
         operation.setIngValues(recipeConfig[c].args);
         operation.setBreakpoint(recipeConfig[c].breakpoint);
         operation.setDisabled(recipeConfig[c].disabled);

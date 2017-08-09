@@ -14,22 +14,6 @@ import Dish from "./Dish.js";
 const FlowControl = {
 
     /**
-     * @constant
-     * @default
-     */
-    FORK_DELIM: "\\n",
-    /**
-     * @constant
-     * @default
-     */
-    MERGE_DELIM: "\\n",
-    /**
-     * @constant
-     * @default
-     */
-    FORK_IGNORE_ERRORS: false,
-
-    /**
      * Fork operation.
      *
      * @param {Object} state - The current state of the recipe.
@@ -105,17 +89,6 @@ const FlowControl = {
         return state;
     },
 
-
-    /**
-     * @constant
-     * @default
-     */
-    JUMP_NUM: 0,
-    /**
-     * @constant
-     * @default
-     */
-    MAX_JUMPS: 10,
 
     /**
      * Jump operation.

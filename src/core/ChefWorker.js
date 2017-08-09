@@ -8,9 +8,13 @@
 
 import "babel-polyfill";
 import Chef from "./Chef.js";
+import OperationConfig from "value-loader?name=conf!./config/OperationConfig.js";
+import OpModules from "./config/modules/Default.js";
+
 
 // Set up Chef instance
 self.chef = new Chef();
+self.OpModules = OpModules;
 
 // Tell the app that the worker has loaded and is ready to operate
 self.postMessage({
@@ -50,8 +54,13 @@ self.addEventListener("message", function(e) {
 
 /**
  * Baking handler
+ *
+ * @param {Object} data
  */
 async function bake(data) {
+    // Ensure the relevant modules are loaded
+    loadRequiredModules(data.recipeConfig);
+
     try {
         const response = await self.chef.bake(
             data.input,          // The user's input
@@ -68,7 +77,7 @@ async function bake(data) {
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: err
+            data: err.message
         });
     }
 }
@@ -83,5 +92,22 @@ function silentBake(data) {
     self.postMessage({
         action: "silentBakeComplete",
         data: duration
+    });
+}
+
+
+/**
+ * Checks that all required modules are loaded and loads them if not.
+ *
+ * @param {Object} recipeConfig
+ */
+function loadRequiredModules(recipeConfig) {
+    recipeConfig.forEach(op => {
+        let module = OperationConfig[op.op].module;
+
+        if (!OpModules.hasOwnProperty(module)) {
+            console.log("Loading module " + module);
+            self.importScripts(module + ".js");
+        }
     });
 }

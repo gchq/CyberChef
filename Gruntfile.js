@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Inliner = require("web-resource-inliner");
+const fs = require("fs");
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -68,7 +69,8 @@ module.exports = function (grunt) {
             COMPILE_TIME: JSON.stringify(compileTime),
             COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
             PKG_VERSION: JSON.stringify(pkg.version)
-        };
+        },
+        moduleEntryPoints = listEntryModules();
 
     /**
      * Compiles a production build of CyberChef into a single, portable web page.
@@ -95,6 +97,21 @@ module.exports = function (grunt) {
                 done(true);
             }
         });
+    }
+
+    /**
+     * Generates an entry list for all the modules.
+     */
+    function listEntryModules() {
+        const path = "./src/core/config/modules/";
+        let entryModules = {};
+
+        fs.readdirSync(path).forEach(file => {
+            if (file !== "Default.js")
+                entryModules[file.split(".js")[0]] = path + file;
+        });
+
+        return entryModules;
     }
 
     grunt.initConfig({
@@ -146,7 +163,9 @@ module.exports = function (grunt) {
             options: webpackConfig,
             web: {
                 target: "web",
-                entry: "./src/web/index.js",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
                 output: {
                     filename: "scripts.js",
                     path: __dirname + "/build/prod"
@@ -165,6 +184,7 @@ module.exports = function (grunt) {
                     new HtmlWebpackPlugin({ // Main version
                         filename: "index.html",
                         template: "./src/web/html/index.html",
+                        chunks: ["main"],
                         compileTime: compileTime,
                         version: pkg.version,
                         minify: {
@@ -177,6 +197,7 @@ module.exports = function (grunt) {
                     new HtmlWebpackPlugin({ // Inline version
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
+                        chunks: ["main"],
                         compileTime: compileTime,
                         version: pkg.version,
                         inline: true,
@@ -219,12 +240,15 @@ module.exports = function (grunt) {
             start: {
                 webpack: {
                     target: "web",
-                    entry: "./src/web/index.js",
+                    entry: Object.assign({
+                        main: "./src/web/index.js"
+                    }, moduleEntryPoints),
                     plugins: [
                         new webpack.DefinePlugin(BUILD_CONSTANTS),
                         new HtmlWebpackPlugin({
                             filename: "index.html",
                             template: "./src/web/html/index.html",
+                            chunks: ["main"],
                             compileTime: compileTime,
                             version: pkg.version,
                         })
