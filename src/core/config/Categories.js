@@ -173,7 +173,6 @@ const Categories = [
             "Tail",
             "Count occurrences",
             "Expand alphabet range",
-            "Parse escaped string",
             "Drop bytes",
             "Take bytes",
             "Pad lines",
@@ -188,6 +187,8 @@ const Categories = [
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
+            "Escape String",
+            "Unescape String",
         ]
     },
     {

@@ -3224,13 +3224,6 @@ const OperationConfig = {
             }
         ]
     },
-    "Parse escaped string": {
-        description: "Replaces escaped characters with the bytes they represent.<br><br>e.g.<code>Hello\\nWorld</code> becomes <code>Hello<br>World</code>",
-        run: StrUtils.runParseEscapedString,
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
     "TCP/IP Checksum": {
         description: "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.",
         run: Checksum.runTCPIP,
@@ -3269,6 +3262,20 @@ const OperationConfig = {
                 value: Cipher.SUBS_CIPHERTEXT
             }
         ]
+    },
+    "Escape String": {
+        description: "Escapes a string so that it can be embedded in another. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
+        run: StrUtils.runEscape,
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "Unescape String": {
+        description: "Unescapes a string that was embedded inside another so that it can be used in it's own right. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
+        run: StrUtils.runUnescape,
+        inputType: "string",
+        outputType: "string",
+        args: []
     },
     "To Morse Code": {
         description: "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>",
