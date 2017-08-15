@@ -238,7 +238,7 @@ TestRegister.addTests([
         expectedOutput: "Hello \\\"World\\\"! Escape \\'these\\' quotes.",
         recipeConfig: [
             {
-                "op": "Escape String",
+                "op": "Escape string",
                 "args": []
             }
         ],
@@ -249,7 +249,7 @@ TestRegister.addTests([
         expectedOutput: "Fizz & buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
         recipeConfig: [
             {
-                "op": "Escape String",
+                "op": "Escape string",
                 "args": []
             }
         ],
@@ -260,7 +260,7 @@ TestRegister.addTests([
         expectedOutput: "Hello \"World\"! Escape 'these' quotes.",
         recipeConfig: [
             {
-                "op": "Unescape String",
+                "op": "Unescape string",
                 "args": []
             }
         ],
@@ -271,7 +271,7 @@ TestRegister.addTests([
         expectedOutput: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
         recipeConfig: [
             {
-                "op": "Unescape String",
+                "op": "Unescape string",
                 "args": []
             }
         ],
