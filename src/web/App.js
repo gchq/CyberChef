@@ -411,7 +411,7 @@ App.prototype.loadURIParams = function() {
     // Read in recipe from URI params
     if (this.uriParams.recipe) {
         try {
-            const recipeConfig = JSON.parse(this.uriParams.recipe);
+            const recipeConfig = Utils.parseRecipeConfig(this.uriParams.recipe);
             this.setRecipeConfig(recipeConfig);
         } catch (err) {}
     } else if (this.uriParams.op) {

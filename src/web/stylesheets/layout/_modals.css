@@ -78,7 +78,13 @@
     font-family: var(--primary-font-family);
 }
 
-#save-text,
+#save-texts textarea,
 #load-text {
     font-family: var(--fixed-width-font-family);
+}
+
+#save-texts textarea {
+    border-top: none;
+    box-shadow: none;
+    height: 200px;
 }

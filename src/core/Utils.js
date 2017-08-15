@@ -844,6 +844,139 @@ const Utils = {
 
 
     /**
+     * Encodes a URI fragment (#) or query (?) using a minimal amount of percent-encoding.
+     *
+     * RFC 3986 defines legal characters for the fragment and query parts of a URL to be as follows:
+     *
+     * fragment      = *( pchar / "/" / "?" )
+     * query         = *( pchar / "/" / "?" )
+     * pchar         = unreserved / pct-encoded / sub-delims / ":" / "@" 
+     * unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+     * pct-encoded   = "%" HEXDIG HEXDIG
+     * sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
+     *                  / "*" / "+" / "," / ";" / "="
+     *
+     * Meaning that the list of characters that need not be percent-encoded are alphanumeric plus:
+     * -._~!$&'()*+,;=:@/?
+     *
+     * & and = are still escaped as they are used to serialise the key-value pairs in CyberChef
+     * fragments. + is also escaped so as to prevent it being decoded to a space.
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    encodeURIFragment: function(str) {
+        const LEGAL_CHARS = {
+            "%2D": "-",
+            "%2E": ".",
+            "%5F": "_",
+            "%7E": "~",
+            "%21": "!",
+            "%24": "$",
+            //"%26": "&",
+            "%27": "'",
+            "%28": "(",
+            "%29": ")",
+            "%2A": "*",
+            //"%2B": "+",
+            "%2C": ",",
+            "%3B": ";",
+            //"%3D": "=",
+            "%3A": ":",
+            "%40": "@",
+            "%2F": "/",
+            "%3F": "?"
+        };
+        str = encodeURIComponent(str);
+
+        return str.replace(/%[0-9A-F]{2}/g, function (match) {
+            return LEGAL_CHARS[match] || match;
+        });
+    },
+
+
+    /**
+     * Generates a "pretty" recipe format from a recipeConfig object.
+     *
+     * "Pretty" CyberChef recipe formats are designed to be included in the fragment (#) or query (?)
+     * parts of the URL. They can also be loaded into CyberChef through the 'Load' interface. In order
+     * to make this format as readable as possible, various special characters are used unescaped. This
+     * reduces the amount of percent-encoding included in the URL which is typically difficult to read,
+     * as well as substantially increasing the overall length. These characteristics can be quite
+     * offputting for users.
+     *
+     * @param {Object[]} recipeConfig
+     * @param {boolean} newline - whether to add a newline after each operation
+     * @returns {string}
+     */
+    generatePrettyRecipe: function(recipeConfig, newline) {
+        let prettyConfig = "",
+            name = "",
+            args = "",
+            disabled = "",
+            bp = "";
+
+        recipeConfig.forEach(op => {
+            name = op.op.replace(/ /g, "_");
+            args = JSON.stringify(op.args)
+                .slice(1, -1) // Remove [ and ] as they are implied
+                // We now need to switch double-quoted (") strings to single-quotes (') as these do not
+                // need to be percent-encoded.
+                .replace(/'/g, "\\'") // Escape single quotes
+                .replace(/\\"/g, '"') // Unescape double quotes
+                .replace(/(^|,)"/g, "$1'") // Replace opening " with '
+                .replace(/"(,|$)/g, "'$1"); // Replace closing " with '
+
+            disabled = op.disabled ? "/disabled": "";
+            bp = op.breakpoint ? "/breakpoint" : "";
+            prettyConfig += `${name}(${args}${disabled}${bp})`;
+            if (newline) prettyConfig += "\n";
+        });
+        return prettyConfig;
+    },
+
+
+    /**
+     * Converts a recipe string to the JSON representation of the recipe.
+     * Accepts either stringified JSON or bespoke "pretty" recipe format.
+     *
+     * @param {string} recipe
+     * @returns {Object[]}
+     */
+    parseRecipeConfig: function(recipe) {
+        recipe = recipe.trim();
+        if (recipe.length === 0) return [];
+        if (recipe[0] === "[") return JSON.parse(recipe);
+
+        // Parse bespoke recipe format
+        recipe = recipe.replace(/\n/g, "");
+        let m,
+            recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/])*)(\/[^)]+)?\)/g,
+            recipeConfig = [],
+            args;
+
+        while ((m = recipeRegex.exec(recipe))) {
+            // Translate strings in args back to double-quotes
+            args = m[2]
+                .replace(/"/g, '\\"') // Escape double quotes
+                .replace(/(^|,)'/g, '$1"') // Replace opening ' with "
+                .replace(/([^\\])'(,|$)/g, '$1"$2') // Replace closing ' with "
+                .replace(/\\'/g, "'"); // Unescape single quotes
+            args = "[" + args + "]";
+
+            let op = {
+                op: m[1].replace(/_/g, " "),
+                args: JSON.parse(args)
+            };
+            if (m[3] && m[3].indexOf("disabled") > 0) op.disabled = true;
+            if (m[3] && m[3].indexOf("breakpoint") > 0) op.breakpoint = true;
+            recipeConfig.push(op);
+        }
+        return recipeConfig;
+    },
+
+
+    /**
      * Expresses a number of milliseconds in a human readable format.
      *
      * Range                        | Sample Output
