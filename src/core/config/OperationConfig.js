@@ -3263,15 +3263,15 @@ const OperationConfig = {
             }
         ]
     },
-    "Escape String": {
-        description: "Escapes a string so that it can be embedded in another. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
+    "Escape string": {
+        description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
         run: StrUtils.runEscape,
         inputType: "string",
         outputType: "string",
         args: []
     },
-    "Unescape String": {
-        description: "Unescapes a string that was embedded inside another so that it can be used in it's own right. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
+    "Unescape string": {
+        description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
         run: StrUtils.runUnescape,
         inputType: "string",
         outputType: "string",

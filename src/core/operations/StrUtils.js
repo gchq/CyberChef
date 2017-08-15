@@ -448,6 +448,7 @@ const StrUtils = {
         return outputs.join(sampleDelim);
     },
 
+
     /**
      * @constant
      * @default
@@ -464,7 +465,7 @@ const StrUtils = {
     ],
 
     /**
-     * Escapes a string for embedding in another string.
+     * Escape string operation.
      *
      * @author Vel0x [dalemy@microsoft.com]
      *
@@ -483,8 +484,9 @@ const StrUtils = {
         return StrUtils._replaceByKeys(input, "unescaped", "escaped");
     },
 
+
     /**
-     * Unescapes a string that was part of another string
+     * Unescape string operation.
      *
      * @author Vel0x [dalemy@microsoft.com]
      *
@@ -503,9 +505,10 @@ const StrUtils = {
         return StrUtils._replaceByKeys(input, "escaped", "unescaped");
     },
 
+
     /**
      * Replaces all matching tokens in ESCAPE_REPLACEMENTS with the correction. The
-     * ordering is determined by the pattern_key and the replacement_key.
+     * ordering is determined by the patternKey and the replacementKey.
      *
      * @author Vel0x [dalemy@microsoft.com]
      * @author Matt C [matt@artemisbot.uk]
@@ -517,7 +520,10 @@ const StrUtils = {
      */
     _replaceByKeys: function(input, patternKey, replacementKey) {
         let output = input;
-        if (patternKey === "escaped") output = Utils.parseEscapedChars(input); // I've wrapped this to catch the \\x encoded characters
+
+        // Catch the \\x encoded characters
+        if (patternKey === "escaped") output = Utils.parseEscapedChars(input);
+
         StrUtils.ESCAPE_REPLACEMENTS.forEach(replacement => {
             output = output.split(replacement[patternKey]).join(replacement[replacementKey]);
         });
