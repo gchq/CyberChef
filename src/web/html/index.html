@@ -215,7 +215,22 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="save-text">Save your recipe to local storage or copy the following string to load later</label>
-                            <textarea class="form-control" id="save-text" rows="5"></textarea>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#chef-format" role="tab" data-toggle="tab">Chef format</a></li>
+                                <li role="presentation"><a href="#clean-json" role="tab" data-toggle="tab">Clean JSON</a></li>
+                                <li role="presentation"><a href="#compact-json" role="tab" data-toggle="tab">Compact JSON</a></li>
+                            </ul>
+                            <div class="tab-content" id="save-texts">
+                                <div role="tabpanel" class="tab-pane active" id="chef-format">
+                                    <textarea class="form-control" id="save-text-chef" rows="5"></textarea>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="clean-json">
+                                    <textarea class="form-control" id="save-text-clean" rows="5"></textarea>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="compact-json">
+                                    <textarea class="form-control" id="save-text-compact" rows="5"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="save-name">Recipe name</label>

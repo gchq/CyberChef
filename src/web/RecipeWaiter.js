@@ -295,6 +295,9 @@ RecipeWaiter.prototype.getConfig = function() {
                     option: ingList[j].previousSibling.children[0].textContent.slice(0, -1),
                     string: ingList[j].value
                 };
+            } else if (ingList[j].getAttribute("type") === "number") {
+                // number
+                ingredients[j] = parseFloat(ingList[j].value, 10);
             } else {
                 // all others
                 ingredients[j] = ingList[j].value;

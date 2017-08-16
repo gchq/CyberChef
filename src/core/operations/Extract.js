@@ -170,9 +170,9 @@ const Extract = {
             protocol = "[A-Z]+://",
             hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
             port = ":\\d+",
-            path = "/[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]*";
+            path = "/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*";
 
-        path += "(?:[.!,?]+[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]+)*";
+        path += "(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*";
         const regex = new RegExp(protocol + hostname + "(?:" + port +
             ")?(?:" + path + ")?", "ig");
         return Extract._search(input, regex, null, displayTotal);
