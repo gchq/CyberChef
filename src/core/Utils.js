@@ -924,8 +924,8 @@ const Utils = {
                 // need to be percent-encoded.
                 .replace(/'/g, "\\'") // Escape single quotes
                 .replace(/\\"/g, '"') // Unescape double quotes
-                .replace(/(^|,)"/g, "$1'") // Replace opening " with '
-                .replace(/"(,|$)/g, "'$1"); // Replace closing " with '
+                .replace(/(^|,|{|:)"/g, "$1'") // Replace opening " with '
+                .replace(/"(,|:|}|$)/g, "'$1"); // Replace closing " with '
 
             disabled = op.disabled ? "/disabled": "";
             bp = op.breakpoint ? "/breakpoint" : "";
@@ -959,8 +959,8 @@ const Utils = {
             // Translate strings in args back to double-quotes
             args = m[2]
                 .replace(/"/g, '\\"') // Escape double quotes
-                .replace(/(^|,)'/g, '$1"') // Replace opening ' with "
-                .replace(/([^\\])'(,|$)/g, '$1"$2') // Replace closing ' with "
+                .replace(/(^|,|{|:)'/g, '$1"') // Replace opening ' with "
+                .replace(/([^\\])'(,|:|}|$)/g, '$1"$2') // Replace closing ' with "
                 .replace(/\\'/g, "'"); // Unescape single quotes
             args = "[" + args + "]";
 
