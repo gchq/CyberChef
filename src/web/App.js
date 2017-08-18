@@ -482,6 +482,7 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
         // Populate arguments
         const args = item.querySelectorAll(".arg");
         for (let j = 0; j < args.length; j++) {
+            if (recipeConfig[i].args[j] === undefined) continue;
             if (args[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 args[j].checked = recipeConfig[i].args[j];
