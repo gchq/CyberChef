@@ -676,7 +676,14 @@ App.prototype.stateChange = function(e) {
     if (recipeConfig.length === 1) {
         title = `${recipeConfig[0].op} - ${title}`;
     } else if (recipeConfig.length > 1) {
-        title = `${recipeConfig.length} operations - ${title}`;
+        // See how long the full recipe is
+        const ops = recipeConfig.map(op => op.op).join(", ");
+        if (ops.length < 45) {
+            title = `${ops} - ${title}`;
+        } else {
+            // If it's too long, just use the first one and say how many more there are
+            title = `${recipeConfig[0].op}, ${recipeConfig.length - 1} more - ${title}`;
+        }
     }
     document.title = title;
 
