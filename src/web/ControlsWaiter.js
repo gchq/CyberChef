@@ -257,7 +257,7 @@ ControlsWaiter.prototype.loadClick = function() {
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
     const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
-    const recipeStr  = document.getElementById("save-text").value;
+    const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
     if (!recipeName) {
         this.app.alert("Please enter a recipe name", "danger", 2000);
