@@ -11,7 +11,7 @@ import PublicKey from "../../operations/PublicKey.js";
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-let OpModules = self.OpModules || {};
+let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.PublicKey = {
     "Parse X.509 certificate":  PublicKey.runParseX509,

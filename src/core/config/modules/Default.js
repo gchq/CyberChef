@@ -42,7 +42,7 @@ import UUID from "../../operations/UUID.js";
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-let OpModules = self.OpModules || {};
+let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.Default = {
     "To Hexdump":           Hexdump.runTo,

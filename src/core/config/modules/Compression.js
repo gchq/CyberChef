@@ -12,7 +12,7 @@ import Compress from "../../operations/Compress.js";
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-let OpModules = self.OpModules || {};
+let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.Compression = {
     "Raw Deflate":      Compress.runRawDeflate,
