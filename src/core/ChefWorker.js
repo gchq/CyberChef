@@ -46,6 +46,11 @@ self.addEventListener("message", function(e) {
         case "silentBake":
             silentBake(e.data.data);
             break;
+        case "docURL":
+            // Used to set the URL of the current document so that scripts can be
+            // imported into an inline worker.
+            self.docURL = e.data.data;
+            break;
         default:
             break;
     }
@@ -107,7 +112,7 @@ function loadRequiredModules(recipeConfig) {
 
         if (!OpModules.hasOwnProperty(module)) {
             console.log("Loading module " + module);
-            self.importScripts(module + ".js");
+            self.importScripts(self.docURL + "/" + module + ".js");
         }
     });
 }

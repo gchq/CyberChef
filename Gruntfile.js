@@ -42,8 +42,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        runInliner);
+        ["webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
+
+    grunt.registerTask("runInliner", runInliner);
     grunt.registerTask("doc", "docs");
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
@@ -107,7 +109,7 @@ module.exports = function (grunt) {
         let entryModules = {};
 
         fs.readdirSync(path).forEach(file => {
-            if (file !== "Default.js")
+            if (file !== "Default.js" && file !== "OpModules.js")
                 entryModules[file.split(".js")[0]] = path + file;
         });
 
@@ -121,6 +123,7 @@ module.exports = function (grunt) {
             test: ["build/test/*"],
             node: ["build/node/*"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
+            inlineScripts: ["build/prod/scripts.js"]
         },
         eslint: {
             options: {
@@ -167,6 +170,43 @@ module.exports = function (grunt) {
                     main: "./src/web/index.js"
                 }, moduleEntryPoints),
                 output: {
+                    path: __dirname + "/build/prod"
+                },
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.js": "./config/modules/Default.js"
+                    }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new webpack.optimize.UglifyJsPlugin({
+                        compress: {
+                            "screw_ie8": true,
+                            "dead_code": true,
+                            "unused": true,
+                            "warnings": false
+                        },
+                        comments: false,
+                    }),
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        chunks: ["main"],
+                        compileTime: compileTime,
+                        version: pkg.version,
+                        minify: {
+                            removeComments: true,
+                            collapseWhitespace: true,
+                            minifyJS: true,
+                            minifyCSS: true
+                        }
+                    }),
+                ]
+            },
+            webInline: {
+                target: "web",
+                entry: "./src/web/index.js",
+                output: {
                     filename: "scripts.js",
                     path: __dirname + "/build/prod"
                 },
@@ -181,23 +221,9 @@ module.exports = function (grunt) {
                         },
                         comments: false,
                     }),
-                    new HtmlWebpackPlugin({ // Main version
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        chunks: ["main"],
-                        compileTime: compileTime,
-                        version: pkg.version,
-                        minify: {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            minifyJS: true,
-                            minifyCSS: true
-                        }
-                    }),
-                    new HtmlWebpackPlugin({ // Inline version
+                    new HtmlWebpackPlugin({
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
-                        chunks: ["main"],
                         compileTime: compileTime,
                         version: pkg.version,
                         inline: true,
@@ -243,6 +269,11 @@ module.exports = function (grunt) {
                     entry: Object.assign({
                         main: "./src/web/index.js"
                     }, moduleEntryPoints),
+                    resolve: {
+                        alias: {
+                            "./config/modules/OpModules.js": "./config/modules/Default.js"
+                        }
+                    },
                     plugins: [
                         new webpack.DefinePlugin(BUILD_CONSTANTS),
                         new HtmlWebpackPlugin({

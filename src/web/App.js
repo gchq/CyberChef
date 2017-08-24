@@ -1,5 +1,5 @@
 import Utils from "../core/Utils.js";
-import ChefWorker from "worker-loader!../core/ChefWorker.js";
+import ChefWorker from "worker-loader?inline&fallback=false!../core/ChefWorker.js";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -64,6 +64,13 @@ App.prototype.setup = function() {
 App.prototype.registerChefWorker = function() {
     this.chefWorker = new ChefWorker();
     this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
+
+    let docURL = document.location.href.split(/[#?]/)[0];
+    const index = docURL.lastIndexOf("/");
+    if (index > 0) {
+        docURL = docURL.substring(0, index);
+    }
+    this.chefWorker.postMessage({"action": "docURL", "data": docURL});
 };
 
 
