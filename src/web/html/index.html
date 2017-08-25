@@ -65,7 +65,8 @@
                 const msg = loadingMsgs.shift();
                 try {
                     const el = document.getElementById("preloader-msg");
-                    el.className = "loading"; // Causes CSS transition on first message
+                    if (!el.classList.contains("loading"))
+                        el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
                 } catch (err) {} // Ignore errors if DOM not yet ready
                 loadingMsgs.push(msg);
@@ -84,7 +85,7 @@
         <!-- Preloader overlay -->
         <div id="loader-wrapper">
             <div id="preloader" class="loader"></div>
-            <div id="preloader-msg"></div>
+            <div id="preloader-msg" class="loading-msg"></div>
         </div>
         <!-- End preloader overlay -->
         <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
@@ -193,6 +194,7 @@
                             <textarea id="output-text" readonly="readonly"></textarea>
                             <div id="output-loader">
                                 <div class="loader"></div>
+                                <div class="loading-msg"></div>
                             </div>
                         </div>
                     </div>

@@ -118,24 +118,7 @@ App.prototype.handleError = function(err) {
 App.prototype.setBakingStatus = function(bakingStatus) {
     this.baking = bakingStatus;
 
-    let outputLoader = document.getElementById("output-loader"),
-        outputElement = document.getElementById("output-text");
-
-    if (bakingStatus) {
-        this.manager.controls.hideStaleIndicator();
-        this.bakingStatusTimeout = setTimeout(function() {
-            outputElement.disabled = true;
-            outputLoader.style.visibility = "visible";
-            outputLoader.style.opacity = 1;
-            this.manager.controls.toggleBakeButtonFunction(true);
-        }.bind(this), 200);
-    } else {
-        clearTimeout(this.bakingStatusTimeout);
-        outputElement.disabled = false;
-        outputLoader.style.opacity = 0;
-        outputLoader.style.visibility = "hidden";
-        this.manager.controls.toggleBakeButtonFunction(false);
-    }
+    this.manager.output.toggleLoader(bakingStatus);
 };
 
 
@@ -193,6 +176,9 @@ App.prototype.handleChefMessage = function(e) {
         case "workerLoaded":
             this.workerLoaded = true;
             this.loaded();
+            break;
+        case "statusMessage":
+            this.manager.output.setStatusMsg(e.data.data);
             break;
         default:
             console.error("Unrecognised message from ChefWorker", e);

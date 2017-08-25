@@ -110,3 +110,11 @@
     font-weight: normal;
     cursor: help;
 }
+
+#output-loader .loading-msg {
+    opacity: 1;
+    font-family: var(--primary-font-family);
+    line-height: var(--primary-line-height);
+    color: var(--primary-font-colour);
+    top: 50%;
+}

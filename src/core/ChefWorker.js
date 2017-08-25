@@ -112,7 +112,21 @@ function loadRequiredModules(recipeConfig) {
 
         if (!OpModules.hasOwnProperty(module)) {
             console.log("Loading module " + module);
+            sendStatusMessage("Loading module " + module);
             self.importScripts(self.docURL + "/" + module + ".js");
         }
+    });
+}
+
+
+/**
+ * Send status update to the app.
+ *
+ * @param {string} msg
+ */
+function sendStatusMessage(msg) {
+    self.postMessage({
+        action: "statusMessage",
+        data: msg
     });
 }

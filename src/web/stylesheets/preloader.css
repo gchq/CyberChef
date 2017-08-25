@@ -58,7 +58,7 @@
     animation: spin 1.5s linear infinite;
 }
 
-#preloader-msg {
+.loading-msg {
     display: block;
     position: relative;
     width: 300px;
@@ -69,14 +69,14 @@
     opacity: 0;
 }
 
-#preloader-msg.loading {
+.loading-msg.loading {
     opacity: 1;
     transition: all 0.1s ease-in;
 }
 
 
 /* Loaded */
-.loaded #preloader-msg {
+.loaded .loading-msg {
     opacity: 0;
     transition: all 0.3s ease-out;
 }
