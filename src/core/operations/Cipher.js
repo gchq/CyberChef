@@ -766,8 +766,8 @@ const Cipher = {
      * @returns {string}
      */
     runSubstitute: function (input, args) {
-        let plaintext = Utils.expandAlphRange(args[0]).join(),
-            ciphertext = Utils.expandAlphRange(args[1]).join(),
+        let plaintext = Utils.expandAlphRange(args[0]).join(""),
+            ciphertext = Utils.expandAlphRange(args[1]).join(""),
             output = "",
             index = -1;
 
