@@ -245,7 +245,7 @@ const VBE = {
      * @returns {string}
      */
     runDecodeVBE: function (data, args) {
-        let matcher = /#@~\^......==(.+)......==\^#~@/gm,
+        let matcher = /#@~\^......==(.+)......==\^#~@/,
             result = "",
             encodedData;
         while ((encodedData = matcher.exec(data))) {
