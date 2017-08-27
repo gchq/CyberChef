@@ -219,24 +219,25 @@ const VBE = {
      * @returns {string}
      */
     decode: function (data) {
-        let result = "";
+        let result = [];
         let index = -1;
-        data = data.replace("@&", String.fromCharCode(10));
-        data = data.replace("@#", String.fromCharCode(13));
-        data = data.replace("@*", ">");
-        data = data.replace("@!", "<");
-        data = data.replace("@$", "@");
+        data = data.split("@&").join(String.fromCharCode(10));
+        data = data.split("@#").join(String.fromCharCode(13));
+        data = data.split("@*").join(">");
+        data = data.split("@!").join("<");
+        data = data.split("@$").join("@");
         for (let i = 0; i < data.length; i++) {
             let byte = data.charCodeAt(i);
-            if (byte < 128){
+            let char = data.charAt(i);
+            if (byte < 128) {
                 index++;
             }
-            if ((9 === byte || 31 < byte && 128 > byte) && 60 !== byte && 62 !== byte && 64 !== byte) {
-                let char = VBE.D_DECODE[byte].charAt([VBE.D_COMBINATION[index % 64]]);
-                result = result.concat(char);
+            if ((byte === 9 || byte > 31 && byte < 128) && byte !== 60 && byte !== 62 && byte !== 64) {
+                char = VBE.D_DECODE[byte].charAt([VBE.D_COMBINATION[index % 64]]);
             }
+            result.push(char);
         }
-        return result;
+        return result.join("");
     },
 
     /**
@@ -245,13 +246,10 @@ const VBE = {
      * @returns {string}
      */
     runDecodeVBE: function (data, args) {
-        let matcher = /#@~\^......==(.+)......==\^#~@/,
-            result = "",
-            encodedData;
-        while ((encodedData = matcher.exec(data))) {
-            result = result.concat(VBE.decode(encodedData[1]));
-        }
-        return result;
+        let matcher = /#@~\^......==(.+)......==\^#~@/;
+        let encodedData = matcher.exec(data);
+        console.log(encodedData[1]);
+        return VBE.decode(encodedData[1]);
     },
 };
 
