@@ -38,7 +38,7 @@ import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
 import UUID from "../operations/UUID.js";
-
+import VBE from "../operations/VBE.js";
 
 /**
  * Type definition for an OpConf.
@@ -3203,6 +3203,13 @@ const OperationConfig = {
                 value: Endian.PAD_INCOMPLETE_WORDS
             }
         ]
+    },
+    "Decode VBE": {
+        description: "Decodes Microsoft VBE files that have been encoded with Microsoft's custom encoding.",
+        run: VBE.runDecodeVBE,
+        inputType: "string",
+        outputType: "string",
+        args: []
     },
     "Syntax highlighter": {
         description: "Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.",

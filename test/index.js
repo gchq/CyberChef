@@ -24,6 +24,7 @@ import "./tests/operations/Image.js";
 import "./tests/operations/MorseCode.js";
 import "./tests/operations/StrUtils.js";
 import "./tests/operations/SeqUtils.js";
+import "./tests/operations/VBE.js"
 
 let allTestsPassing = true;
 const testStatusCounts = {
