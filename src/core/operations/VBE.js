@@ -248,7 +248,6 @@ const VBE = {
     runDecodeVBE: function (data, args) {
         let matcher = /#@~\^......==(.+)......==\^#~@/;
         let encodedData = matcher.exec(data);
-        console.log(encodedData[1]);
         return VBE.decode(encodedData[1]);
     },
 };
