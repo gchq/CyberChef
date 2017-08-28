@@ -1,12 +1,12 @@
 /**
- * Decodes Microsft Encoded VBS files that can be read and executed by cscript.exe/wscript.exe.
+ * Decodes Microsft Encoded Script files that can be read and executed by cscript.exe/wscript.exe.
  * This is a conversion of a Python script that was originally created by Didier Stevens (https://DidierStevens.com).
  *
  * @author bmwhitn [brian.m.whitney@outlook.com]
  *
  * @namespace
  */
-const VBE = {
+const MS = {
 
     /**
      * @constant
@@ -215,17 +215,17 @@ const VBE = {
     ],
 
     /**
-     * @param {string} input
+     * @param {string} data
      * @returns {string}
      */
     decode: function (data) {
         let result = [];
         let index = -1;
-        data = data.split("@&").join(String.fromCharCode(10));
-        data = data.split("@#").join(String.fromCharCode(13));
-        data = data.split("@*").join(">");
-        data = data.split("@!").join("<");
-        data = data.split("@$").join("@");
+        data = data.replace(/@&/g, String.fromCharCode(10));
+        data = data.replace(/@#/g, String.fromCharCode(13));
+        data = data.replace(/@\*/g, ">");
+        data = data.replace(/@!/g, "<");
+        data = data.replace(/@\$/g, "@");
         for (let i = 0; i < data.length; i++) {
             let byte = data.charCodeAt(i);
             let char = data.charAt(i);
@@ -233,7 +233,7 @@ const VBE = {
                 index++;
             }
             if ((byte === 9 || byte > 31 && byte < 128) && byte !== 60 && byte !== 62 && byte !== 64) {
-                char = VBE.D_DECODE[byte].charAt([VBE.D_COMBINATION[index % 64]]);
+                char = MS.D_DECODE[byte].charAt(MS.D_COMBINATION[index % 64]);
             }
             result.push(char);
         }
@@ -245,11 +245,15 @@ const VBE = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runDecodeVBE: function (data, args) {
+    runDecodeScript: function (input, args) {
         let matcher = /#@~\^......==(.+)......==\^#~@/;
-        let encodedData = matcher.exec(data);
-        return VBE.decode(encodedData[1]);
+        let encodedData = matcher.exec(input);
+        if (encodedData){
+            return MS.decode(encodedData[1]);
+        } else {
+            return "";
+        }
     },
 };
 
-export default VBE;
+export default MS;

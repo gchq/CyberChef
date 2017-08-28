@@ -25,6 +25,7 @@ import IP from "../operations/IP.js";
 import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
+import MS from "../operations/MS.js";
 import NetBIOS from "../operations/NetBIOS.js";
 import Numberwang from "../operations/Numberwang.js";
 import OS from "../operations/OS.js";
@@ -38,7 +39,7 @@ import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
 import UUID from "../operations/UUID.js";
-import VBE from "../operations/VBE.js";
+
 
 /**
  * Type definition for an OpConf.
@@ -3204,9 +3205,9 @@ const OperationConfig = {
             }
         ]
     },
-    "Decode VBE": {
-        description: "Decodes Microsoft VBE files that have been encoded with Microsoft's custom encoding.",
-        run: VBE.runDecodeVBE,
+    "Micrsoft Script Decoder": {
+        description: "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding.",
+        run: MS.runDecodeScript,
         inputType: "string",
         outputType: "string",
         args: []

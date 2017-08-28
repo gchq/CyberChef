@@ -9,12 +9,12 @@ import TestRegister from "../../TestRegister.js";
 
 TestRegister.addTests([
     {
-        name: "VBE Decode",
+        name: "Micrsoft Script Decoder",
         input: "##@~^DgAAAA==\\ko$K6,JCV^GJqAQAAA==^#~@",
         expectedOutput: "MsgBox \"Hello\"",
         recipeConfig: [
             {
-                "op": "Decode VBE",
+                "op": "Micrsoft Script Decoder",
                 "args": []
             },
         ],

@@ -66,7 +66,7 @@ const Categories = [
             "Encode text",
             "Decode text",
             "Swap endianness",
-            "Decode VBE",
+            "Micrsoft Script Decoder",
         ]
     },
     {
