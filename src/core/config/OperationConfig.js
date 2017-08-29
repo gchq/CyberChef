@@ -521,6 +521,7 @@ const OperationConfig = {
             }
         ]
     },
+
     "To Charcode": {
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
         run: ByteRepr.runToCharcode,
@@ -3205,8 +3206,8 @@ const OperationConfig = {
             }
         ]
     },
-    "Micrsoft Script Decoder": {
-        description: "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding.",
+    "Microsoft Script Decoder": {
+        description: "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and often renamed &#34;.vbe&#34; extention or JS (JScript) files renamed with &#34;.jse&#34; extention.",
         run: MS.runDecodeScript,
         inputType: "string",
         outputType: "string",

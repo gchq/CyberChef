@@ -1,7 +1,7 @@
 /**
- * CharEnc tests.
+ * MS tests.
  *
- * @author tlwr [toby@toby.codes]
+ * @author bwhitn [brian.m.whitney@outlook.com]
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
@@ -9,12 +9,12 @@ import TestRegister from "../../TestRegister.js";
 
 TestRegister.addTests([
     {
-        name: "Micrsoft Script Decoder",
-        input: "##@~^DgAAAA==\\ko$K6,JCV^GJqAQAAA==^#~@",
-        expectedOutput: "MsgBox \"Hello\"",
+        name: "Microsoft Script Decoder",
+        input: "#@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&@*eEI@#@&@#@&\x7fjm.raY 214Wv:zms/obI0xEAAA==^#~@",
+        expectedOutput: "var my_msg = \"Testing <1><2><3>!\";\r\n\r\nWScript.Echo(my_msg);",
         recipeConfig: [
             {
-                "op": "Micrsoft Script Decoder",
+                "op": "Microsoft Script Decoder",
                 "args": []
             },
         ],

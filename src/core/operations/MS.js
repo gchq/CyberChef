@@ -1,5 +1,5 @@
 /**
- * Decodes Microsft Encoded Script files that can be read and executed by cscript.exe/wscript.exe.
+ * Decodes Microsoft Encoded Script files that can be read and executed by cscript.exe/wscript.exe.
  * This is a conversion of a Python script that was originally created by Didier Stevens (https://DidierStevens.com).
  *
  * @author bmwhitn [brian.m.whitney@outlook.com]
@@ -215,17 +215,18 @@ const MS = {
     ],
 
     /**
+     * @private
      * @param {string} data
      * @returns {string}
      */
-    decode: function (data) {
+    _decode: function (data) {
         let result = [];
         let index = -1;
-        data = data.replace(/@&/g, String.fromCharCode(10));
-        data = data.replace(/@#/g, String.fromCharCode(13));
-        data = data.replace(/@\*/g, ">");
-        data = data.replace(/@!/g, "<");
-        data = data.replace(/@\$/g, "@");
+        data = data.replace(/@&/g, String.fromCharCode(10))
+            .replace(/@#/g, String.fromCharCode(13))
+            .replace(/@\*/g, ">")
+            .replace(/@!/g, "<")
+            .replace(/@\$/g, "@");
         for (let i = 0; i < data.length; i++) {
             let byte = data.charCodeAt(i);
             let char = data.charAt(i);
@@ -241,15 +242,17 @@ const MS = {
     },
 
     /**
+     * Microsoft Script Decoder operation
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
     runDecodeScript: function (input, args) {
-        let matcher = /#@~\^......==(.+)......==\^#~@/;
+        let matcher = /#@~\^.{6}==(.+).{6}==\^#~@/;
         let encodedData = matcher.exec(input);
         if (encodedData){
-            return MS.decode(encodedData[1]);
+            return MS._decode(encodedData[1]);
         } else {
             return "";
         }

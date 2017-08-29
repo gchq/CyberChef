@@ -66,7 +66,7 @@ const Categories = [
             "Encode text",
             "Decode text",
             "Swap endianness",
-            "Micrsoft Script Decoder",
+            "Microsoft Script Decoder",
         ]
     },
     {
