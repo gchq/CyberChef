@@ -91,7 +91,7 @@ const BitwiseOp = {
      * @constant
      * @default
      */
-    XOR_BRUTE_KEY_LENGTH: ["1", "2"],
+    XOR_BRUTE_KEY_LENGTH: 1,
     /**
      * @constant
      * @default
@@ -121,37 +121,61 @@ const BitwiseOp = {
      * @returns {string}
      */
     runXorBrute: function (input, args) {
-        const keyLength = parseInt(args[0], 10),
+        const keyLength = args[0],
             sampleLength = args[1],
             sampleOffset = args[2],
             scheme = args[3],
             nullPreserving = args[4],
             printKey = args[5],
             outputHex = args[6],
-            crib = args[7];
+            crib = args[7].toLowerCase();
 
-        let output = "",
+        let output = [],
             result,
             resultUtf8,
-            regex;
+            record = "";
 
         input = input.slice(sampleOffset, sampleOffset + sampleLength);
 
-        if (crib !== "") {
-            regex = new RegExp(crib, "im");
-        }
+        if (self) self.sendStatusMessage("Calculating " + Math.pow(256, keyLength) + " values...");
 
+        /**
+         * Converts an integer to an array of bytes expressing that number.
+         *
+         * @param {number} int
+         * @param {number} len - Length of the resulting array
+         * @returns {array}
+         */
+        const intToByteArray = (int, len) => {
+            let res = Array(len).fill(0);
+            for (let i = len - 1; i >= 0; i--) {
+                res[i] = int & 0xff;
+                int = int >>> 8;
+            }
+            return res;
+        };
 
         for (let key = 1, l = Math.pow(256, keyLength); key < l; key++) {
-            result = BitwiseOp._bitOp(input, Utils.fromHex(key.toString(16)), BitwiseOp._xor, nullPreserving, scheme);
+            if (key % 10000 === 0) {
+                if (self) self.sendStatusMessage("Calculating " + l + " values... " + Math.floor(key / l * 100) + "%");
+            }
+
+            result = BitwiseOp._bitOp(input, intToByteArray(key, keyLength), BitwiseOp._xor, nullPreserving, scheme);
             resultUtf8 = Utils.byteArrayToUtf8(result);
-            if (crib !== "" && resultUtf8.search(regex) === -1) continue;
-            if (printKey) output += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
-            if (outputHex) output += Utils.toHex(result) + "\n";
-            else output += Utils.printable(resultUtf8, false) + "\n";
-            if (printKey) output += "\n";
+            record = "";
+
+            if (crib && resultUtf8.toLowerCase().indexOf(crib) < 0) continue;
+            if (printKey) record += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
+            if (outputHex) {
+                record += Utils.toHex(result);
+            } else {
+                record += Utils.printable(resultUtf8, false);
+            }
+
+            output.push(record);
         }
-        return output;
+
+        return output.join("\n");
     },
 
 

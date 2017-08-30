@@ -325,13 +325,13 @@ const OperationConfig = {
     },
     "XOR Brute Force": {
         module: "Default",
-        description: "Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance.<br><br>Optionally enter a regex string that you expect to find in the plaintext to filter results (crib).",
+        description: "Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance.<br><br>Optionally enter a string that you expect to find in the plaintext to filter results (crib).",
         inputType: "byteArray",
         outputType: "string",
         args: [
             {
                 name: "Key length",
-                type: "option",
+                type: "number",
                 value: BitwiseOp.XOR_BRUTE_KEY_LENGTH
             },
             {
