@@ -1,8 +1,9 @@
 /**
- * Decodes Microsoft Encoded Script files that can be read and executed by cscript.exe/wscript.exe.
- * This is a conversion of a Python script that was originally created by Didier Stevens (https://DidierStevens.com).
+ * Microsoft operations. 
  *
  * @author bmwhitn [brian.m.whitney@outlook.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
  *
  * @namespace
  */
@@ -148,73 +149,16 @@ const MS = {
      * @default
      */
     D_COMBINATION: [
-        0,
-        1,
-        2,
-        0,
-        1,
-        2,
-        1,
-        2,
-        2,
-        1,
-        2,
-        1,
-        0,
-        2,
-        1,
-        2,
-        0,
-        2,
-        1,
-        2,
-        0,
-        0,
-        1,
-        2,
-        2,
-        1,
-        0,
-        2,
-        1,
-        2,
-        2,
-        1,
-        0,
-        0,
-        2,
-        1,
-        2,
-        1,
-        2,
-        0,
-        2,
-        0,
-        0,
-        1,
-        2,
-        0,
-        2,
-        1,
-        0,
-        2,
-        1,
-        2,
-        0,
-        0,
-        1,
-        2,
-        2,
-        0,
-        0,
-        1,
-        2,
-        0,
-        2,
-        1
+        0, 1, 2, 0, 1, 2, 1, 2, 2, 1, 2, 1, 0, 2, 1, 2, 0, 2, 1, 2, 0, 0, 1, 2, 2, 1, 0, 2, 1, 2, 2, 1,
+        0, 0, 2, 1, 2, 1, 2, 0, 2, 0, 0, 1, 2, 0, 2, 1, 0, 2, 1, 2, 0, 0, 1, 2, 2, 0, 0, 1, 2, 0, 2, 1
     ],
 
+
     /**
+     * Decodes Microsoft Encoded Script files that can be read and executed by cscript.exe/wscript.exe.
+     * This is a conversion of a Python script that was originally created by Didier Stevens
+     * (https://DidierStevens.com).
+     *
      * @private
      * @param {string} data
      * @returns {string}
@@ -227,13 +171,18 @@ const MS = {
             .replace(/@\*/g, ">")
             .replace(/@!/g, "<")
             .replace(/@\$/g, "@");
+
         for (let i = 0; i < data.length; i++) {
             let byte = data.charCodeAt(i);
             let char = data.charAt(i);
             if (byte < 128) {
                 index++;
             }
-            if ((byte === 9 || byte > 31 && byte < 128) && byte !== 60 && byte !== 62 && byte !== 64) {
+
+            if ((byte === 9 || byte > 31 && byte < 128) &&
+                byte !== 60 &&
+                byte !== 62 &&
+                byte !== 64) {
                 char = MS.D_DECODE[byte].charAt(MS.D_COMBINATION[index % 64]);
             }
             result.push(char);
@@ -241,8 +190,9 @@ const MS = {
         return result.join("");
     },
 
+
     /**
-     * Microsoft Script Decoder operation
+     * Microsoft Script Decoder operation.
      *
      * @param {string} input
      * @param {Object[]} args
@@ -256,7 +206,8 @@ const MS = {
         } else {
             return "";
         }
-    },
+    }
+
 };
 
 export default MS;
