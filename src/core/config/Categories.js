@@ -282,6 +282,7 @@ const Categories = [
             "XPath expression",
             "JPath expression",
             "CSS selector",
+            "Microsoft Script Decoder",
             "Strip HTML tags",
             "Diff",
             "To Snake case",

@@ -25,6 +25,7 @@ import IP from "../operations/IP.js";
 import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
+import MS from "../operations/MS.js";
 import NetBIOS from "../operations/NetBIOS.js";
 import Numberwang from "../operations/Numberwang.js";
 import OS from "../operations/OS.js";
@@ -520,6 +521,7 @@ const OperationConfig = {
             }
         ]
     },
+
     "To Charcode": {
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
         run: ByteRepr.runToCharcode,
@@ -3203,6 +3205,13 @@ const OperationConfig = {
                 value: Endian.PAD_INCOMPLETE_WORDS
             }
         ]
+    },
+    "Microsoft Script Decoder": {
+        description: "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and renamed with a '.vbe' extention or JS (JScript) files renamed with a '.jse' extention.<br><br><b>Sample</b><br><br>Encoded:<br><code>#@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&amp;@*eEI@#@&amp;@#@&amp;.jm.raY 214Wv:zms/obI0xEAAA==^#~@</code><br><br>Decoded:<br><code>var my_msg = &#34;Testing <1><2><3>!&#34;;\n\nVScript.Echo(my_msg);</code>",
+        run: MS.runDecodeScript,
+        inputType: "string",
+        outputType: "string",
+        args: []
     },
     "Syntax highlighter": {
         description: "Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.",
