@@ -118,6 +118,7 @@ Manager.prototype.initialiseEventListeners = function() {
     // Recipe
     this.addDynamicListener(".arg", "keyup", this.recipe.ingChange, this.recipe);
     this.addDynamicListener(".arg", "change", this.recipe.ingChange, this.recipe);
+    this.addDynamicListener(".arg", "input", this.recipe.ingChange, this.recipe);
     this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
     this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
     this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
