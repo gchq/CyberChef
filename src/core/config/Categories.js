@@ -300,6 +300,8 @@ const Categories = [
             "Detect File Type",
             "Scan for Embedded Files",
             "Generate UUID",
+            "Generate TOTP",
+            "Generate HOTP",
             "Render Image",
             "Remove EXIF",
             "Extract EXIF",

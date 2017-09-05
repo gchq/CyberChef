@@ -82,6 +82,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
+    "otp": "^0.1.3",
     "sladex-blowfish": "^0.8.1",
     "sortablejs": "^1.5.1",
     "split.js": "^1.2.0",
