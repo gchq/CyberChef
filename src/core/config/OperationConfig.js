@@ -1595,7 +1595,7 @@ const OperationConfig = {
         args: []
     },
     "Rotate right": {
-        description: "Rotates each byte to the right by the number of bits specified. Currently only supports 8-bit values.",
+        description: "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
         run: Rotate.runRotr,
         highlight: true,
         highlightReverse: true,
@@ -1603,19 +1603,19 @@ const OperationConfig = {
         outputType: "byteArray",
         args: [
             {
-                name: "Number of bits",
+                name: "Amount",
                 type: "number",
                 value: Rotate.ROTATE_AMOUNT
             },
             {
-                name: "Rotate as a whole",
+                name: "Carry through",
                 type: "boolean",
-                value: Rotate.ROTATE_WHOLE
+                value: Rotate.ROTATE_CARRY
             }
         ]
     },
     "Rotate left": {
-        description: "Rotates each byte to the left by the number of bits specified. Currently only supports 8-bit values.",
+        description: "Rotates each byte to the left by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
         run: Rotate.runRotl,
         highlight: true,
         highlightReverse: true,
@@ -1623,14 +1623,14 @@ const OperationConfig = {
         outputType: "byteArray",
         args: [
             {
-                name: "Number of bits",
+                name: "Amount",
                 type: "number",
                 value: Rotate.ROTATE_AMOUNT
             },
             {
-                name: "Rotate as a whole",
+                name: "Carry through",
                 type: "boolean",
-                value: Rotate.ROTATE_WHOLE
+                value: Rotate.ROTATE_CARRY
             }
         ]
     },
@@ -3600,6 +3600,42 @@ const OperationConfig = {
         ]
 
     },
+    "Bit shift left": {
+        description: "Shifts the bits in each byte towards the left by the specified amount.",
+        run: BitwiseOp.runBitShiftLeft,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        highlight: true,
+        highlightReverse: true,
+        args: [
+            {
+                name: "Amount",
+                type: "number",
+                value: 1
+            },
+        ]
+    },
+    "Bit shift right": {
+        description: "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).",
+        run: BitwiseOp.runBitShiftRight,
+        inputType: "byteArray",
+        outputType: "byteArray",
+        highlight: true,
+        highlightReverse: true,
+        args: [
+            {
+                name: "Amount",
+                type: "number",
+                value: 1
+            },
+            {
+                name: "Type",
+                type: "option",
+                value: BitwiseOp.BIT_SHIFT_TYPE
+            }
+        ]
+    },
+
 };
 
 export default OperationConfig;

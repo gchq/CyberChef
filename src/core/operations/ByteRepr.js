@@ -196,7 +196,7 @@ const ByteRepr = {
 
 
     /**
-     * Highlight to hex
+     * Highlight from hex
      *
      * @param {Object[]} pos
      * @param {number} pos[].start
