@@ -288,10 +288,8 @@ const ByteRepr = {
      * @returns {byteArray}
      */
     runFromBinary: function(input, args) {
-        if (args[0] !== "None") {
-            const delimRegex = Utils.regexRep[args[0] || "Space"];
-            input = input.replace(delimRegex, "");
-        }
+        const delimRegex = Utils.regexRep[args[0] || "Space"];
+        input = input.replace(delimRegex, "");
 
         const output = [];
         const byteLen = 8;

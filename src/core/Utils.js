@@ -1235,7 +1235,8 @@ const Utils = {
         "Forward slash": /\//g,
         "Backslash":     /\\/g,
         "0x":            /0x/g,
-        "\\x":           /\\x/g
+        "\\x":           /\\x/g,
+        "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
     },
 
 
