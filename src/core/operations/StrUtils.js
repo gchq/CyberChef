@@ -40,7 +40,7 @@ const StrUtils = {
         },
         {
             name: "Domain",
-            value: "(?:(https?):\\/\\/)?([-\\w.]+)\\.(com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+"
+            value: "\\b((?=[a-z0-9-]{1,63}\\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,63}\\b"
         },
         {
             name: "Windows file path",

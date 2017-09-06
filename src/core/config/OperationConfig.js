@@ -2140,7 +2140,7 @@ const OperationConfig = {
         ]
     },
     "Extract domains": {
-        description: "Extracts domain names with common Top-Level Domains (TLDs).<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.",
+        description: "Extracts domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.",
         run: Extract.runDomains,
         inputType: "string",
         outputType: "string",
