@@ -4,6 +4,7 @@ node_js:
 install: npm install
 before_script:
   - npm install -g grunt
+  - if [ -z "$TRAVIS_TAG" ]; then git checkout -b travis-build; fi
 script:
   - grunt lint
   - grunt test
