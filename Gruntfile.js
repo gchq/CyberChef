@@ -323,6 +323,11 @@ module.exports = function (grunt) {
                         // Add Google Analytics code to index.html
                         content = content.replace("</body></html>",
                             grunt.file.read("src/web/static/ga.html") + "</body></html>");
+
+                        // Add Google Translate code to index.html
+                        content = content.replace("<!-- Google Translate placeholder -->",
+                            grunt.file.read("src/web/static/gt.html"));
+
                         return grunt.template.process(content);
                     }
                 },
