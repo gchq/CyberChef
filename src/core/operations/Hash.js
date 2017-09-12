@@ -333,6 +333,12 @@ const Hash = {
                 "\nSHA3 256:    " + Hash.runSHA3(input, ["256"]) +
                 "\nSHA3 384:    " + Hash.runSHA3(input, ["384"]) +
                 "\nSHA3 512:    " + Hash.runSHA3(input, ["512"]) +
+                "\nKeccak 224:  " + Hash.runKeccak(input, ["224"]) +
+                "\nKeccak 256:  " + Hash.runKeccak(input, ["256"]) +
+                "\nKeccak 384:  " + Hash.runKeccak(input, ["384"]) +
+                "\nKeccak 512:  " + Hash.runKeccak(input, ["512"]) +
+                "\nShake 128:   " + Hash.runShake(input, ["128", 256]) +
+                "\nShake 256:   " + Hash.runShake(input, ["256", 512]) +
                 "\nRIPEMD-160:  " + Hash.runRIPEMD160(input, []) +
                 "\n\nChecksums:" +
                 "\nFletcher-8:  " + Checksum.runFletcher8(byteArray, []) +
