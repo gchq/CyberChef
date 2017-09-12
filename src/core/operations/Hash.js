@@ -346,7 +346,8 @@ const Hash = {
                 "\nFletcher-32: " + Checksum.runFletcher32(byteArray, []) +
                 "\nFletcher-64: " + Checksum.runFletcher64(byteArray, []) +
                 "\nAdler-32:    " + Checksum.runAdler32(byteArray, []) +
-                "\nCRC-32:      " + Checksum.runCRC32(byteArray, []);
+                "\nCRC-16:      " + Checksum.runCRC16(input, []) +
+                "\nCRC-32:      " + Checksum.runCRC32(input, []);
 
         return output;
     },

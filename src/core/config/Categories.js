@@ -261,6 +261,7 @@ const Categories = [
             "Fletcher-32 Checksum",
             "Fletcher-64 Checksum",
             "Adler-32 Checksum",
+            "CRC-16 Checksum",
             "CRC-32 Checksum",
             "TCP/IP Checksum",
         ]
