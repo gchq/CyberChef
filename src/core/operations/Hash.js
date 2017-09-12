@@ -240,6 +240,7 @@ const Hash = {
             output = "MD2:         " + Hash.runMD2(input, []) +
                 "\nMD4:         " + Hash.runMD4(input, []) +
                 "\nMD5:         " + Hash.runMD5(input, []) +
+                "\nMD6:         " + Hash.runMD6(input, []) +
                 "\nSHA0:        " + Hash.runSHA0(input, []) +
                 "\nSHA1:        " + Hash.runSHA1(input, []) +
                 "\nSHA2 224:    " + Hash.runSHA224(input, []) +
