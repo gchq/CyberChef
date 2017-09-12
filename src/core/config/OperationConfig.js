@@ -2920,7 +2920,7 @@ const OperationConfig = {
         args: []
     },
     "SHA2": {
-        description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><ul><li>SHA-256 operates on 32-bit words.</li><li>SHA-512 operates on 64-bit words.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li></ul>",
+        description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><ul><li>SHA-512 operates on 64-bit words.</li><li>SHA-256 operates on 32-bit words.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li></ul>",
         run: Hash.runSHA2,
         inputType: "string",
         outputType: "string",
@@ -2933,7 +2933,7 @@ const OperationConfig = {
         ]
     },
     "SHA3": {
-        description: "This is an implementation of Keccak[c=2d]. SHA3 functions based on different implementations of Keccak will give different results.",
+        description: "The SHA-3 (Secure Hash Algorithm 3) hash functions were released by NIST on August 5, 2015. Although part of the same series of standards, SHA-3 is internally quite different from the MD5-like structure of SHA-1 and SHA-2.<br><br>SHA-3 is a subset of the broader cryptographic primitive family Keccak designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún.",
         run: Hash.runSHA3,
         inputType: "string",
         outputType: "string",
@@ -2944,6 +2944,38 @@ const OperationConfig = {
                 value: Hash.SHA3_SIZE
             }
         ]
+    },
+    "Keccak": {
+        description: "The Keccak hash algorithm was designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún. It was selected as the winner of the SHA-3 design competition.<br><br>This version of the algorithm is Keccak[c=2d] and differs from the SHA-3 specification.",
+        run: Hash.runKeccak,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Size",
+                type: "option",
+                value: Hash.KECCAK_SIZE
+            }
+        ]
+    },
+    "Shake": {
+        description: "Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.",
+        run: Hash.runShake,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Capacity",
+                type: "option",
+                value: Hash.SHAKE_CAPACITY
+            },
+            {
+                name: "Size",
+                type: "number",
+                value: Hash.SHAKE_SIZE
+            }
+        ]
+
     },
     "RIPEMD-160": {
         description: "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>RIPEMD-160 is an improved, 160-bit version of the original RIPEMD, and the most common version in the family.",

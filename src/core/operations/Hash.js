@@ -2,6 +2,7 @@ import Utils from "../Utils.js";
 import CryptoJS from "crypto-js";
 import CryptoApi from "crypto-api";
 import MD6 from "node-md6";
+import * as SHA3 from "js-sha3";
 import Checksum from "./Checksum.js";
 
 
@@ -114,7 +115,7 @@ const Hash = {
      * @constant
      * @default
      */
-    SHA2_SIZE: ["256", "512", "224", "384"],
+    SHA2_SIZE: ["512", "256", "384", "224"],
 
     /**
      * SHA2 operation.
@@ -163,12 +164,106 @@ const Hash = {
      * @returns {string}
      */
     runSHA3: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input);
-        let sha3Length = args[0],
-            options = {
-                outputLength: parseInt(sha3Length, 10)
-            };
-        return CryptoJS.SHA3(input, options).toString(CryptoJS.enc.Hex);
+        const size = parseInt(args[0], 10);
+        let algo;
+
+        switch (size) {
+            case 224:
+                algo = SHA3.sha3_224;
+                break;
+            case 384:
+                algo = SHA3.sha3_384;
+                break;
+            case 256:
+                algo = SHA3.sha3_256;
+                break;
+            case 512:
+                algo = SHA3.sha3_512;
+                break;
+            default:
+                return "Invalid size";
+        }
+
+        return algo(input);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    KECCAK_SIZE: ["512", "384", "256", "224"],
+
+    /**
+     * Keccak operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runKeccak: function (input, args) {
+        const size = parseInt(args[0], 10);
+        let algo;
+
+        switch (size) {
+            case 224:
+                algo = SHA3.keccak224;
+                break;
+            case 384:
+                algo = SHA3.keccak384;
+                break;
+            case 256:
+                algo = SHA3.keccak256;
+                break;
+            case 512:
+                algo = SHA3.keccak512;
+                break;
+            default:
+                return "Invalid size";
+        }
+
+        return algo(input);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    SHAKE_CAPACITY: ["256", "128"],
+    /**
+     * @constant
+     * @default
+     */
+    SHAKE_SIZE: 512,
+
+    /**
+     * Shake operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runShake: function (input, args) {
+        const capacity = parseInt(args[0], 10),
+            size = args[1];
+        let algo;
+
+        if (size < 0)
+            return "Size must be greater than 0";
+
+        switch (capacity) {
+            case 128:
+                algo = SHA3.shake128;
+                break;
+            case 256:
+                algo = SHA3.shake256;
+                break;
+            default:
+                return "Invalid size";
+        }
+
+        return algo(input, size);
     },
 
 

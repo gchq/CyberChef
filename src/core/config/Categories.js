@@ -252,6 +252,8 @@ const Categories = [
             "SHA1",
             "SHA2",
             "SHA3",
+            "Keccak",
+            "Shake",
             "RIPEMD-160",
             "HMAC",
             "Fletcher-8 Checksum",
