@@ -1,6 +1,7 @@
 import Utils from "../Utils.js";
 import CryptoJS from "crypto-js";
 import CryptoApi from "crypto-api";
+import MD6 from "node-md6";
 import Checksum from "./Checksum.js";
 
 
@@ -49,6 +50,38 @@ const Hash = {
     runMD5: function (input, args) {
         input = CryptoJS.enc.Latin1.parse(input); // Cast to WordArray
         return CryptoJS.MD5(input).toString(CryptoJS.enc.Hex);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    MD6_SIZE: 256,
+    /**
+     * @constant
+     * @default
+     */
+    MD6_LEVELS: 64,
+
+    /**
+     * MD6 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runMD6: function (input, args) {
+        const size = args[0],
+            levels = args[1],
+            key = args[2];
+
+        if (size < 0 || size > 512)
+            return "Size must be between 0 and 512";
+        if (levels < 0)
+            return "Levels must be greater than 0";
+
+        return MD6.getHashOfText(input, size, key, levels);
     },
 
 

@@ -247,6 +247,7 @@ const Categories = [
             "MD2",
             "MD4",
             "MD5",
+            "MD6",
             "SHA0",
             "SHA1",
             "SHA224",

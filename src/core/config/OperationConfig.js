@@ -2882,6 +2882,29 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
+    "MD6": {
+        description: "TODO",
+        run: Hash.runMD6,
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Size",
+                type: "number",
+                value: Hash.MD6_SIZE
+            },
+            {
+                name: "Levels",
+                type: "number",
+                value: Hash.MD6_LEVELS
+            },
+            {
+                name: "Key",
+                type: "string",
+                value: ""
+            }
+        ]
+    },
     "SHA0": {
         description: "SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1.",
         run: Hash.runSHA0,
