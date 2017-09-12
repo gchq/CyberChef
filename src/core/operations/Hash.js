@@ -111,54 +111,41 @@ const Hash = {
 
 
     /**
-     * SHA224 operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
+     * @constant
+     * @default
      */
-    runSHA224: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input);
-        return CryptoJS.SHA224(input).toString(CryptoJS.enc.Hex);
-    },
-
+    SHA2_SIZE: ["256", "512", "224", "384"],
 
     /**
-     * SHA256 operation.
+     * SHA2 operation.
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
-    runSHA256: function (input, args) {
+    runSHA2: function (input, args) {
+        const size = parseInt(args[0], 10);
+        let algo;
+
+        switch (size) {
+            case 224:
+                algo = CryptoJS.SHA224;
+                break;
+            case 384:
+                algo = CryptoJS.SHA384;
+                break;
+            case 256:
+                algo = CryptoJS.SHA256;
+                break;
+            case 512:
+                algo = CryptoJS.SHA512;
+                break;
+            default:
+                return "Invalid size";
+        }
+
         input = CryptoJS.enc.Latin1.parse(input);
-        return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
-    },
-
-
-    /**
-     * SHA384 operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runSHA384: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input);
-        return CryptoJS.SHA384(input).toString(CryptoJS.enc.Hex);
-    },
-
-
-    /**
-     * SHA512 operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runSHA512: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input);
-        return CryptoJS.SHA512(input).toString(CryptoJS.enc.Hex);
+        return algo(input).toString(CryptoJS.enc.Hex);
     },
 
 
@@ -166,7 +153,7 @@ const Hash = {
      * @constant
      * @default
      */
-    SHA3_LENGTH: ["512", "384", "256", "224"],
+    SHA3_SIZE: ["512", "384", "256", "224"],
 
     /**
      * SHA3 operation.
@@ -243,10 +230,10 @@ const Hash = {
                 "\nMD6:         " + Hash.runMD6(input, []) +
                 "\nSHA0:        " + Hash.runSHA0(input, []) +
                 "\nSHA1:        " + Hash.runSHA1(input, []) +
-                "\nSHA2 224:    " + Hash.runSHA224(input, []) +
-                "\nSHA2 256:    " + Hash.runSHA256(input, []) +
-                "\nSHA2 384:    " + Hash.runSHA384(input, []) +
-                "\nSHA2 512:    " + Hash.runSHA512(input, []) +
+                "\nSHA2 224:    " + Hash.runSHA2(input, ["224"]) +
+                "\nSHA2 256:    " + Hash.runSHA2(input, ["256"]) +
+                "\nSHA2 384:    " + Hash.runSHA2(input, ["384"]) +
+                "\nSHA2 512:    " + Hash.runSHA2(input, ["512"]) +
                 "\nSHA3 224:    " + Hash.runSHA3(input, ["224"]) +
                 "\nSHA3 256:    " + Hash.runSHA3(input, ["256"]) +
                 "\nSHA3 384:    " + Hash.runSHA3(input, ["384"]) +

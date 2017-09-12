@@ -2883,7 +2883,7 @@ const OperationConfig = {
         args: []
     },
     "MD6": {
-        description: "TODO",
+        description: "The MD6 (Message-Digest 6) algorithm is a cryptographic hash function. It uses a Merkle tree-like structure to allow for immense parallel computation of hashes for very long inputs.",
         run: Hash.runMD6,
         inputType: "string",
         outputType: "string",
@@ -2919,33 +2919,18 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
-    "SHA224": {
-        description: "SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.",
-        run: Hash.runSHA224,
+    "SHA2": {
+        description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><ul><li>SHA-256 operates on 32-bit words.</li><li>SHA-512 operates on 64-bit words.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li></ul>",
+        run: Hash.runSHA2,
         inputType: "string",
         outputType: "string",
-        args: []
-    },
-    "SHA256": {
-        description: "SHA-256 is one of the four variants in the SHA-2 set. It isn't as widely used as SHA-1, though it provides much better security.",
-        run: Hash.runSHA256,
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
-    "SHA384": {
-        description: "SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.",
-        run: Hash.runSHA384,
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
-    "SHA512": {
-        description: "SHA-512 is largely identical to SHA-256 but operates on 64-bit words rather than 32.",
-        run: Hash.runSHA512,
-        inputType: "string",
-        outputType: "string",
-        args: []
+        args: [
+            {
+                name: "Size",
+                type: "option",
+                value: Hash.SHA2_SIZE
+            }
+        ]
     },
     "SHA3": {
         description: "This is an implementation of Keccak[c=2d]. SHA3 functions based on different implementations of Keccak will give different results.",
@@ -2954,9 +2939,9 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "Output length",
+                name: "Size",
                 type: "option",
-                value: Hash.SHA3_LENGTH
+                value: Hash.SHA3_SIZE
             }
         ]
     },
