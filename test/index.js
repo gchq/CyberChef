@@ -21,6 +21,7 @@ import "./tests/operations/Code.js";
 import "./tests/operations/Compress.js";
 import "./tests/operations/DateTime.js";
 import "./tests/operations/FlowControl.js";
+import "./tests/operations/Hash.js";
 import "./tests/operations/Image.js";
 import "./tests/operations/MorseCode.js";
 import "./tests/operations/MS.js";
