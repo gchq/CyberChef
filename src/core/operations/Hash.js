@@ -1,5 +1,4 @@
 import Utils from "../Utils.js";
-import CryptoJS from "crypto-js";
 import CryptoApi from "crypto-api";
 import MD6 from "node-md6";
 import * as SHA3 from "js-sha3";
@@ -25,7 +24,7 @@ const Hash = {
      * @returns {string}
      */
     runMD2: function (input, args) {
-        return Utils.toHexFast(CryptoApi.hash("md2", input, {}));
+        return CryptoApi.hash("md2", input, {}).stringify("hex");
     },
 
 
@@ -37,7 +36,7 @@ const Hash = {
      * @returns {string}
      */
     runMD4: function (input, args) {
-        return Utils.toHexFast(CryptoApi.hash("md4", input, {}));
+        return CryptoApi.hash("md4", input, {}).stringify("hex");
     },
 
 
@@ -49,8 +48,7 @@ const Hash = {
      * @returns {string}
      */
     runMD5: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input); // Cast to WordArray
-        return CryptoJS.MD5(input).toString(CryptoJS.enc.Hex);
+        return CryptoApi.hash("md5", input, {}).stringify("hex");
     },
 
 
@@ -94,7 +92,7 @@ const Hash = {
      * @returns {string}
      */
     runSHA0: function (input, args) {
-        return Utils.toHexFast(CryptoApi.hash("sha0", input, {}));
+        return CryptoApi.hash("sha0", input, {}).stringify("hex");
     },
 
 
@@ -106,8 +104,7 @@ const Hash = {
      * @returns {string}
      */
     runSHA1: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input);
-        return CryptoJS.SHA1(input).toString(CryptoJS.enc.Hex);
+        return CryptoApi.hash("sha1", input, {}).stringify("hex");
     },
 
 
@@ -115,7 +112,7 @@ const Hash = {
      * @constant
      * @default
      */
-    SHA2_SIZE: ["512", "256", "384", "224"],
+    SHA2_SIZE: ["512", "256", "384", "224", "512/256", "512/224"],
 
     /**
      * SHA2 operation.
@@ -125,28 +122,8 @@ const Hash = {
      * @returns {string}
      */
     runSHA2: function (input, args) {
-        const size = parseInt(args[0], 10);
-        let algo;
-
-        switch (size) {
-            case 224:
-                algo = CryptoJS.SHA224;
-                break;
-            case 384:
-                algo = CryptoJS.SHA384;
-                break;
-            case 256:
-                algo = CryptoJS.SHA256;
-                break;
-            case 512:
-                algo = CryptoJS.SHA512;
-                break;
-            default:
-                return "Invalid size";
-        }
-
-        input = CryptoJS.enc.Latin1.parse(input);
-        return algo(input).toString(CryptoJS.enc.Hex);
+        const size = args[0];
+        return CryptoApi.hash("sha" + size, input, {}).stringify("hex");
     },
 
 
@@ -268,15 +245,21 @@ const Hash = {
 
 
     /**
-     * RIPEMD-160 operation.
+     * @constant
+     * @default
+     */
+    RIPEMD_SIZE: ["320", "256", "160", "128"],
+
+    /**
+     * RIPEMD operation.
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
-    runRIPEMD160: function (input, args) {
-        input = CryptoJS.enc.Latin1.parse(input);
-        return CryptoJS.RIPEMD160(input).toString(CryptoJS.enc.Hex);
+    runRIPEMD: function (input, args) {
+        const size = args[0];
+        return CryptoApi.hash("ripemd" + size, input, {}).stringify("hex");
     },
 
 
@@ -284,7 +267,23 @@ const Hash = {
      * @constant
      * @default
      */
-    HMAC_FUNCTIONS: ["MD5", "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3", "RIPEMD-160"],
+    HMAC_FUNCTIONS: [
+        "MD2",
+        "MD4",
+        "MD5",
+        "SHA0",
+        "SHA1",
+        "SHA224",
+        "SHA256",
+        "SHA384",
+        "SHA512",
+        "SHA512/224",
+        "SHA512/256",
+        "RIPEMD128",
+        "RIPEMD160",
+        "RIPEMD256",
+        "RIPEMD320",
+    ],
 
     /**
      * HMAC operation.
@@ -294,19 +293,12 @@ const Hash = {
      * @returns {string}
      */
     runHMAC: function (input, args) {
-        const hashFunc = args[1];
-        input = CryptoJS.enc.Latin1.parse(input);
-        const execute = {
-            "MD5": CryptoJS.HmacMD5(input, args[0]),
-            "SHA1": CryptoJS.HmacSHA1(input, args[0]),
-            "SHA224": CryptoJS.HmacSHA224(input, args[0]),
-            "SHA256": CryptoJS.HmacSHA256(input, args[0]),
-            "SHA384": CryptoJS.HmacSHA384(input, args[0]),
-            "SHA512": CryptoJS.HmacSHA512(input, args[0]),
-            "SHA3": CryptoJS.HmacSHA3(input, args[0]),
-            "RIPEMD-160": CryptoJS.HmacRIPEMD160(input, args[0]),
-        };
-        return execute[hashFunc].toString(CryptoJS.enc.Hex);
+        const password = args[0],
+            hashFunc = args[1].toLowerCase(),
+            hmac = CryptoApi.mac("hmac", password, hashFunc, {});
+
+        hmac.update(input);
+        return hmac.finalize().stringify("hex");
     },
 
 
@@ -339,7 +331,10 @@ const Hash = {
                 "\nKeccak 512:  " + Hash.runKeccak(input, ["512"]) +
                 "\nShake 128:   " + Hash.runShake(input, ["128", 256]) +
                 "\nShake 256:   " + Hash.runShake(input, ["256", 512]) +
-                "\nRIPEMD-160:  " + Hash.runRIPEMD160(input, []) +
+                "\nRIPEMD-128:  " + Hash.runRIPEMD(input, ["128"]) +
+                "\nRIPEMD-160:  " + Hash.runRIPEMD(input, ["160"]) +
+                "\nRIPEMD-256:  " + Hash.runRIPEMD(input, ["256"]) +
+                "\nRIPEMD-320:  " + Hash.runRIPEMD(input, ["320"]) +
                 "\n\nChecksums:" +
                 "\nFletcher-8:  " + Checksum.runFletcher8(byteArray, []) +
                 "\nFletcher-16: " + Checksum.runFletcher16(byteArray, []) +
