@@ -111,7 +111,7 @@ module.exports = function (grunt) {
             prod: ["build/prod/*"],
             test: ["build/test/*"],
             node: ["build/node/*"],
-            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
+            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
         },
         eslint: {
             options: {
@@ -319,15 +319,29 @@ module.exports = function (grunt) {
         copy: {
             ghPages: {
                 options: {
-                    process: function (content) {
+                    process: function (content, srcpath) {
                         // Add Google Analytics code to index.html
-                        content = content.replace("</body></html>",
-                            grunt.file.read("src/web/static/ga.html") + "</body></html>");
-                        return grunt.template.process(content);
-                    }
+                        if (srcpath.indexOf("index.html") >= 0) {
+                            content = content.replace("</body></html>",
+                                grunt.file.read("src/web/static/ga.html") + "</body></html>");
+                            return grunt.template.process(content, srcpath);
+                        } else {
+                            return content;
+                        }
+                    },
+                    noProcess: ["**", "!**/*.html"]
                 },
-                src: "build/prod/index.html",
-                dest: "build/prod/index.html"
+                files: [
+                    {
+                        src: "build/prod/index.html",
+                        dest: "build/prod/index.html"
+                    },
+                    {
+                        expand: true,
+                        src: "docs/**",
+                        dest: "build/prod/"
+                    }
+                ]
             }
         },
         chmod: {

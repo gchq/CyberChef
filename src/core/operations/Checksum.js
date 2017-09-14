@@ -1,3 +1,4 @@
+import * as CRC from "js-crc";
 import Utils from "../Utils.js";
 
 
@@ -119,19 +120,24 @@ const Checksum = {
     /**
      * CRC-32 Checksum operation.
      *
-     * @param {byteArray} input
+     * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
     runCRC32: function(input, args) {
-        let crcTable = global.crcTable || (global.crcTable = Checksum._genCRCTable()),
-            crc = 0 ^ (-1);
+        return CRC.crc32(input);
+    },
 
-        for (let i = 0; i < input.length; i++) {
-            crc = (crc >>> 8) ^ crcTable[(crc ^ input[i]) & 0xff];
-        }
 
-        return Utils.hex((crc ^ (-1)) >>> 0);
+    /**
+     * CRC-16 Checksum operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runCRC16: function(input, args) {
+        return CRC.crc16(input);
     },
 
 
@@ -166,28 +172,6 @@ const Checksum = {
         csum = (csum >> 16) + (csum & 0xffff);
 
         return Utils.hex(0xffff - csum);
-    },
-
-
-    /**
-     * Generates a CRC table for use with CRC checksums.
-     *
-     * @private
-     * @returns {array}
-     */
-    _genCRCTable: function() {
-        let c,
-            crcTable = [];
-
-        for (let n = 0; n < 256; n++) {
-            c = n;
-            for (let k = 0; k < 8; k++) {
-                c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
-            }
-            crcTable[n] = c;
-        }
-
-        return crcTable;
     },
 
 };
