@@ -149,6 +149,7 @@ module.exports = function (grunt) {
                 src: [
                     "src/**/*.js",
                     "!src/core/lib/**/*",
+                    "!src/core/config/MetaConfig.js"
                 ],
             }
         },
