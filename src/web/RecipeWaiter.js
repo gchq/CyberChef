@@ -93,7 +93,7 @@ RecipeWaiter.prototype.createSortableSeedList = function(listEl) {
             // Removes popover element and event bindings from the dragged operation but not the
             // event bindings from the one left in the operations list. Without manually removing
             // these bindings, we cannot re-initialise the popover on the stub operation.
-            $(evt.item).popover("destroy");
+            $(evt.item).popover("destroy").removeData("bs.popover").off("mouseenter").off("mouseleave");
             $(evt.clone).off(".popover").removeData("bs.popover");
             evt.item.setAttribute("data-toggle", "popover-disabled");
         },
@@ -120,8 +120,7 @@ RecipeWaiter.prototype.opSortEnd = function(evt) {
 
     // Reinitialise the popover on the original element in the ops list because for some reason it
     // gets destroyed and recreated.
-    $(evt.clone).popover();
-    $(evt.clone).children("[data-toggle=popover]").popover();
+    this.manager.ops.enableOpsListPopovers(evt.clone);
 
     if (evt.item.parentNode.id !== "rec-list") {
         return;
@@ -296,6 +295,9 @@ RecipeWaiter.prototype.getConfig = function() {
                     option: ingList[j].previousSibling.children[0].textContent.slice(0, -1),
                     string: ingList[j].value
                 };
+            } else if (ingList[j].getAttribute("type") === "number") {
+                // number
+                ingredients[j] = parseFloat(ingList[j].value, 10);
             } else {
                 // all others
                 ingredients[j] = ingList[j].value;

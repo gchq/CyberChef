@@ -170,9 +170,9 @@ const Extract = {
             protocol = "[A-Z]+://",
             hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
             port = ":\\d+",
-            path = "/[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]*";
+            path = "/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*";
 
-        path += "(?:[.!,?]+[^.!,?;\"'<>()\\[\\]{}\\s\\x7F-\\xFF]+)*";
+        path += "(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*";
         const regex = new RegExp(protocol + hostname + "(?:" + port +
             ")?(?:" + path + ")?", "ig");
         return Extract._search(input, regex, null, displayTotal);
@@ -187,11 +187,8 @@ const Extract = {
      * @returns {string}
      */
     runDomains: function(input, args) {
-        let displayTotal = args[0],
-            protocol = "https?://",
-            hostname = "[-\\w\\.]+",
-            tld = "\\.(?:com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+",
-            regex = new RegExp("(?:" + protocol + ")?" + hostname + tld, "ig");
+        const displayTotal = args[0],
+            regex = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
 
         return Extract._search(input, regex, null, displayTotal);
     },

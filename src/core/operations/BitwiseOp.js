@@ -252,6 +252,46 @@ const BitwiseOp = {
 
 
     /**
+     * Bit shift left operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    runBitShiftLeft: function(input, args) {
+        const amount = args[0];
+
+        return input.map(b => {
+            return (b << amount) & 0xff;
+        });
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    BIT_SHIFT_TYPE: ["Logical shift", "Arithmetic shift"],
+
+    /**
+     * Bit shift right operation.
+     *
+     * @param {byteArray} input
+     * @param {Object[]} args
+     * @returns {byteArray}
+     */
+    runBitShiftRight: function(input, args) {
+        const amount = args[0],
+            type = args[1],
+            mask = type === "Logical shift" ? 0 : 0x80;
+
+        return input.map(b => {
+            return (b >>> amount) ^ (b & mask);
+        });
+    },
+
+
+    /**
      * XOR bitwise calculation.
      *
      * @private

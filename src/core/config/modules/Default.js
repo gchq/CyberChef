@@ -15,9 +15,11 @@ import Hexdump from "../../operations/Hexdump.js";
 import HTML from "../../operations/HTML.js";
 import MAC from "../../operations/MAC.js";
 import MorseCode from "../../operations/MorseCode.js";
+import MS from "../../operations/MS.js";
 import NetBIOS from "../../operations/NetBIOS.js";
 import Numberwang from "../../operations/Numberwang.js";
 import OS from "../../operations/OS.js";
+import OTP from "../../operations/OTP.js";
 import QuotedPrintable from "../../operations/QuotedPrintable.js";
 import Rotate from "../../operations/Rotate.js";
 import SeqUtils from "../../operations/SeqUtils.js";
@@ -37,6 +39,7 @@ import UUID from "../../operations/UUID.js";
  * Libraries:
  *  - Utils.js
  *    - CryptoJS
+ *  - otp
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -85,6 +88,8 @@ OpModules.Default = {
     "ROT47":                Rotate.runRot47,
     "Rotate left":          Rotate.runRotl,
     "Rotate right":         Rotate.runRotr,
+    "Bit shift left":       BitwiseOp.runBitShiftLeft,
+    "Bit shift right":      BitwiseOp.runBitShiftRight,
     "XOR":                  BitwiseOp.runXor,
     "XOR Brute Force":      BitwiseOp.runXorBrute,
     "OR":                   BitwiseOp.runXor,
@@ -104,7 +109,8 @@ OpModules.Default = {
     "Find / Replace":       StrUtils.runFindReplace,
     "Split":                StrUtils.runSplit,
     "Filter":               StrUtils.runFilter,
-    "Parse escaped string": StrUtils.runParseEscapedString,
+    "Escape string":        StrUtils.runEscape,
+    "Unescape string":      StrUtils.runUnescape,
     "Head":                 StrUtils.runHead,
     "Tail":                 StrUtils.runTail,
     "Remove whitespace":    Tidy.runRemoveWhitespace,
@@ -137,12 +143,15 @@ OpModules.Default = {
     "Extract domains":      Extract.runDomains,
     "Extract file paths":   Extract.runFilePaths,
     "Extract dates":        Extract.runDates,
+    "Microsoft Script Decoder": MS.runDecodeScript,
     "Entropy":              Entropy.runEntropy,
     "Frequency distribution": Entropy.runFreqDistrib,
     "Detect File Type":     FileType.runDetect,
     "Scan for Embedded Files": FileType.runScanForEmbeddedFiles,
     "Generate UUID":        UUID.runGenerateV4,
     "Numberwang":           Numberwang.run,
+    "Generate TOTP":        OTP.runTOTP,
+    "Generate HOTP":        OTP.runHOTP,
     "Fork":                 FlowControl.runFork,
     "Merge":                FlowControl.runMerge,
     "Jump":                 FlowControl.runJump,

@@ -76,6 +76,8 @@ App.prototype.registerChefWorker = function() {
 
 /**
  * Fires once all setup activities have completed.
+ *
+ * @fires Manager#apploaded
  */
 App.prototype.loaded = function() {
     // Check that both the app and the worker have loaded successfully, and that
@@ -95,6 +97,8 @@ App.prototype.loaded = function() {
 
     // Clear the loading message interval
     clearInterval(window.loadingMsgsInt);
+
+    document.dispatchEvent(this.manager.apploaded);
 };
 
 
@@ -459,7 +463,7 @@ App.prototype.loadURIParams = function() {
     // Read in recipe from URI params
     if (this.uriParams.recipe) {
         try {
-            const recipeConfig = JSON.parse(this.uriParams.recipe);
+            const recipeConfig = Utils.parseRecipeConfig(this.uriParams.recipe);
             this.setRecipeConfig(recipeConfig);
         } catch (err) {}
     } else if (this.uriParams.op) {
@@ -530,6 +534,7 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
         // Populate arguments
         const args = item.querySelectorAll(".arg");
         for (let j = 0; j < args.length; j++) {
+            if (recipeConfig[i].args[j] === undefined) continue;
             if (args[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 args[j].checked = recipeConfig[i].args[j];
@@ -724,7 +729,14 @@ App.prototype.stateChange = function(e) {
     if (recipeConfig.length === 1) {
         title = `${recipeConfig[0].op} - ${title}`;
     } else if (recipeConfig.length > 1) {
-        title = `${recipeConfig.length} operations - ${title}`;
+        // See how long the full recipe is
+        const ops = recipeConfig.map(op => op.op).join(", ");
+        if (ops.length < 45) {
+            title = `${ops} - ${title}`;
+        } else {
+            // If it's too long, just use the first one and say how many more there are
+            title = `${recipeConfig[0].op}, ${recipeConfig.length - 1} more - ${title}`;
+        }
     }
     document.title = title;
 

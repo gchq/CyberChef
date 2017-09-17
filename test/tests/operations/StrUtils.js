@@ -232,4 +232,48 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Escape String: quotes",
+        input: "Hello \"World\"! Escape 'these' quotes.",
+        expectedOutput: "Hello \\\"World\\\"! Escape \\'these\\' quotes.",
+        recipeConfig: [
+            {
+                "op": "Escape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Escape String: special characters",
+        input: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
+        expectedOutput: "Fizz & buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
+        recipeConfig: [
+            {
+                "op": "Escape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Unescape String: quotes",
+        input: "Hello \\\"World\\\"! Escape \\'these\\' quotes.",
+        expectedOutput: "Hello \"World\"! Escape 'these' quotes.",
+        recipeConfig: [
+            {
+                "op": "Unescape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Unescape String: special characters",
+        input: "Fizz \x26 buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
+        expectedOutput: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
+        recipeConfig: [
+            {
+                "op": "Unescape string",
+                "args": []
+            }
+        ],
+    },
 ]);

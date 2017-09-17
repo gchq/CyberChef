@@ -26,9 +26,11 @@ import IP from "../operations/IP.js";
 import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
+import MS from "../operations/MS.js";
 import NetBIOS from "../operations/NetBIOS.js";
 import Numberwang from "../operations/Numberwang.js";
 import OS from "../operations/OS.js";
+import OTP from "../operations/OTP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
 import QuotedPrintable from "../operations/QuotedPrintable.js";
@@ -521,6 +523,7 @@ const OperationConfig = {
             }
         ]
     },
+
     "To Charcode": {
         module: "Default",
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
@@ -1595,41 +1598,41 @@ const OperationConfig = {
     },
     "Rotate right": {
         module: "Default",
-        description: "Rotates each byte to the right by the number of bits specified. Currently only supports 8-bit values.",
+        description: "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
             {
-                name: "Number of bits",
+                name: "Amount",
                 type: "number",
                 value: Rotate.ROTATE_AMOUNT
             },
             {
-                name: "Rotate as a whole",
+                name: "Carry through",
                 type: "boolean",
-                value: Rotate.ROTATE_WHOLE
+                value: Rotate.ROTATE_CARRY
             }
         ]
     },
     "Rotate left": {
         module: "Default",
-        description: "Rotates each byte to the left by the number of bits specified. Currently only supports 8-bit values.",
+        description: "Rotates each byte to the left by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
             {
-                name: "Number of bits",
+                name: "Amount",
                 type: "number",
                 value: Rotate.ROTATE_AMOUNT
             },
             {
-                name: "Rotate as a whole",
+                name: "Carry through",
                 type: "boolean",
-                value: Rotate.ROTATE_WHOLE
+                value: Rotate.ROTATE_CARRY
             }
         ]
     },
@@ -2139,7 +2142,7 @@ const OperationConfig = {
     },
     "Extract domains": {
         module: "Default",
-        description: "Extracts domain names with common Top-Level Domains (TLDs).<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.",
+        description: "Extracts domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.",
         inputType: "string",
         outputType: "string",
         args: [
@@ -2241,6 +2244,24 @@ const OperationConfig = {
                 name: "Result delimiter",
                 type: "binaryShortString",
                 value: Code.XPATH_DELIMITER
+            }
+        ]
+    },
+    "JPath expression": {
+        module: "Code",
+        description: "Extract information from a JSON object with a JPath query.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Query",
+                type: "string",
+                value: Code.JPATH_INITIAL
+            },
+            {
+                name: "Result delimiter",
+                type: "binaryShortString",
+                value: Code.JPATH_DELIMITER
             }
         ]
     },
@@ -2862,6 +2883,29 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
+    "MD6": {
+        module: "Hashing",
+        description: "The MD6 (Message-Digest 6) algorithm is a cryptographic hash function. It uses a Merkle tree-like structure to allow for immense parallel computation of hashes for very long inputs.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Size",
+                type: "number",
+                value: Hash.MD6_SIZE
+            },
+            {
+                name: "Levels",
+                type: "number",
+                value: Hash.MD6_LEVELS
+            },
+            {
+                name: "Key",
+                type: "string",
+                value: ""
+            }
+        ]
+    },
     "SHA0": {
         module: "Hashing",
         description: "SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1.",
@@ -2876,53 +2920,76 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
-    "SHA224": {
+    "SHA2": {
         module: "Hashing",
-        description: "SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.",
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
-    "SHA256": {
-        module: "Hashing",
-        description: "SHA-256 is one of the four variants in the SHA-2 set. It isn't as widely used as SHA-1, though it provides much better security.",
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
-    "SHA384": {
-        module: "Hashing",
-        description: "SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.",
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
-    "SHA512": {
-        module: "Hashing",
-        description: "SHA-512 is largely identical to SHA-256 but operates on 64-bit words rather than 32.",
-        inputType: "string",
-        outputType: "string",
-        args: []
-    },
-    "SHA3": {
-        module: "Hashing",
-        description: "This is an implementation of Keccak[c=2d]. SHA3 functions based on different implementations of Keccak will give different results.",
+        description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><br><ul><li>SHA-512 operates on 64-bit words.</li><li>SHA-256 operates on 32-bit words.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li><li>SHA-512/224 and SHA-512/256 are truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.</li></ul>",
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Output length",
+                name: "Size",
                 type: "option",
-                value: Hash.SHA3_LENGTH
+                value: Hash.SHA2_SIZE
             }
         ]
     },
-    "RIPEMD-160": {
+    "SHA3": {
         module: "Hashing",
-        description: "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>RIPEMD-160 is an improved, 160-bit version of the original RIPEMD, and the most common version in the family.",
+        description: "The SHA-3 (Secure Hash Algorithm 3) hash functions were released by NIST on August 5, 2015. Although part of the same series of standards, SHA-3 is internally quite different from the MD5-like structure of SHA-1 and SHA-2.<br><br>SHA-3 is a subset of the broader cryptographic primitive family Keccak designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún.",
         inputType: "string",
         outputType: "string",
-        args: []
+        args: [
+            {
+                name: "Size",
+                type: "option",
+                value: Hash.SHA3_SIZE
+            }
+        ]
+    },
+    "Keccak": {
+        module: "Hashing",
+        description: "The Keccak hash algorithm was designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún. It was selected as the winner of the SHA-3 design competition.<br><br>This version of the algorithm is Keccak[c=2d] and differs from the SHA-3 specification.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Size",
+                type: "option",
+                value: Hash.KECCAK_SIZE
+            }
+        ]
+    },
+    "Shake": {
+        module: "Hashing",
+        description: "Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Capacity",
+                type: "option",
+                value: Hash.SHAKE_CAPACITY
+            },
+            {
+                name: "Size",
+                type: "number",
+                value: Hash.SHAKE_SIZE
+            }
+        ]
+
+    },
+    "RIPEMD": {
+        module: "Hashing",
+        description: "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Size",
+                type: "option",
+                value: Hash.RIPEMD_SIZE
+            }
+        ]
     },
     "HMAC": {
         module: "Hashing",
@@ -2980,7 +3047,14 @@ const OperationConfig = {
     "CRC-32 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961; the 32-bit CRC function of Ethernet and many other standards is the work of several researchers and was published in 1975.",
-        inputType: "byteArray",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "CRC-16 Checksum": {
+        module: "Hashing",
+        description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.",
+        inputType: "string",
         outputType: "string",
         args: []
     },
@@ -3187,6 +3261,13 @@ const OperationConfig = {
             }
         ]
     },
+    "Microsoft Script Decoder": {
+        module: "Default",
+        description: "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and renamed with a '.vbe' extention or JS (JScript) files renamed with a '.jse' extention.<br><br><b>Sample</b><br><br>Encoded:<br><code>#@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&amp;@*eEI@#@&amp;@#@&amp;.jm.raY 214Wv:zms/obI0xEAAA==^#~@</code><br><br>Decoded:<br><code>var my_msg = &#34;Testing <1><2><3>!&#34;;\n\nVScript.Echo(my_msg);</code>",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
     "Syntax highlighter": {
         module: "Code",
         description: "Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.",
@@ -3206,13 +3287,6 @@ const OperationConfig = {
                 value: Code.LINE_NUMS
             }
         ]
-    },
-    "Parse escaped string": {
-        module: "Default",
-        description: "Replaces escaped characters with the bytes they represent.<br><br>e.g.<code>Hello\\nWorld</code> becomes <code>Hello<br>World</code>",
-        inputType: "string",
-        outputType: "string",
-        args: []
     },
     "TCP/IP Checksum": {
         module: "Hashing",
@@ -3252,6 +3326,20 @@ const OperationConfig = {
                 value: Cipher.SUBS_CIPHERTEXT
             }
         ]
+    },
+    "Escape string": {
+        module: "Default",
+        description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "Unescape string": {
+        module: "Default",
+        description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
+        inputType: "string",
+        outputType: "string",
+        args: []
     },
     "To Morse Code": {
         module: "Default",
@@ -3566,6 +3654,102 @@ const OperationConfig = {
             }
         ]
 
+    },
+    "Bit shift left": {
+        module: "Default",
+        description: "Shifts the bits in each byte towards the left by the specified amount.",
+        inputType: "byteArray",
+        outputType: "byteArray",
+        highlight: true,
+        highlightReverse: true,
+        args: [
+            {
+                name: "Amount",
+                type: "number",
+                value: 1
+            },
+        ]
+    },
+    "Bit shift right": {
+        module: "Default",
+        description: "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).",
+        inputType: "byteArray",
+        outputType: "byteArray",
+        highlight: true,
+        highlightReverse: true,
+        args: [
+            {
+                name: "Amount",
+                type: "number",
+                value: 1
+            },
+            {
+                name: "Type",
+                type: "option",
+                value: BitwiseOp.BIT_SHIFT_TYPE
+            }
+        ]
+    },
+    "Generate TOTP": {
+        module: "Default",
+        description: "The Time-based One-Time Password algorithm (TOTP) is an algorithm that computes a one-time password from a shared secret key and the current time. It has been adopted as Internet Engineering Task Force standard RFC 6238, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems. A TOTP is an HOTP where the counter is the current time.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated. T0 and T1 are in seconds.",
+        inputType: "byteArray",
+        outputType: "string",
+        args: [
+            {
+                name: "Name",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Key size",
+                type: "number",
+                value: 32
+            },
+            {
+                name: "Code length",
+                type: "number",
+                value: 6
+            },
+            {
+                name: "Epoch offset (T0)",
+                type: "number",
+                value: 0
+            },
+            {
+                name: "Interval (T1)",
+                type: "number",
+                value: 30
+            }
+        ]
+    },
+    "Generate HOTP": {
+        module: "Default",
+        description: "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Name",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Key size",
+                type: "number",
+                value: 32
+            },
+            {
+                name: "Code length",
+                type: "number",
+                value: 6
+            },
+            {
+                name: "Counter",
+                type: "number",
+                value: 0
+            }
+        ]
     },
 };
 

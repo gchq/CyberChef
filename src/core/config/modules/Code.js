@@ -10,6 +10,7 @@ import Code from "../../operations/Code.js";
  *  - vkbeautify
  *  - xmldom
  *  - xpath
+ *  - jpath
  *  - googlecodeprettify
  *
  * @author n1474335 [n1474335@gmail.com]
@@ -37,6 +38,7 @@ OpModules.Code = {
     "To Snake case":         Code.runToSnakeCase,
     "To Camel case":         Code.runToCamelCase,
     "To Kebab case":         Code.runToKebabCase,
+    "JPath expression":      Code.runJpath,
 };
 
 export default OpModules;

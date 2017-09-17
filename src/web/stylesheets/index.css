@@ -9,6 +9,7 @@
 /* Themes */
 @import "./themes/_classic.css";
 @import "./themes/_dark.css";
+@import "./themes/_geocities.css";
 
 /* Utilities */
 @import "./utils/_overrides.css";

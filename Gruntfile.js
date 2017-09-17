@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 const fs = require("fs");
 
@@ -123,7 +124,7 @@ module.exports = function (grunt) {
             prod: ["build/prod/*", "src/core/config/MetaConfig.js"],
             test: ["build/test/*", "src/core/config/MetaConfig.js"],
             node: ["build/node/*", "src/core/config/MetaConfig.js"],
-            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
+            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             inlineScripts: ["build/prod/scripts.js"],
         },
         eslint: {
@@ -180,7 +181,8 @@ module.exports = function (grunt) {
                     library: "MetaConfig",
                     libraryTarget: "commonjs2",
                     libraryExport: "default"
-                }
+                },
+                externals: [NodeExternals()],
             },
             metaConfDev: {
                 target: "node",
@@ -192,6 +194,7 @@ module.exports = function (grunt) {
                     libraryTarget: "commonjs2",
                     libraryExport: "default"
                 },
+                externals: [NodeExternals()],
                 watch: true
             },
             web: {
@@ -269,6 +272,7 @@ module.exports = function (grunt) {
             tests: {
                 target: "node",
                 entry: "./test/index.js",
+                externals: [NodeExternals()],
                 output: {
                     filename: "index.js",
                     path: __dirname + "/build/test"
@@ -277,6 +281,7 @@ module.exports = function (grunt) {
             node: {
                 target: "node",
                 entry: "./src/node/index.js",
+                externals: [NodeExternals()],
                 output: {
                     filename: "CyberChef.js",
                     path: __dirname + "/build/node",
@@ -324,15 +329,29 @@ module.exports = function (grunt) {
         copy: {
             ghPages: {
                 options: {
-                    process: function (content) {
+                    process: function (content, srcpath) {
                         // Add Google Analytics code to index.html
-                        content = content.replace("</body></html>",
-                            grunt.file.read("src/web/static/ga.html") + "</body></html>");
-                        return grunt.template.process(content);
-                    }
+                        if (srcpath.indexOf("index.html") >= 0) {
+                            content = content.replace("</body></html>",
+                                grunt.file.read("src/web/static/ga.html") + "</body></html>");
+                            return grunt.template.process(content, srcpath);
+                        } else {
+                            return content;
+                        }
+                    },
+                    noProcess: ["**", "!**/*.html"]
                 },
-                src: "build/prod/index.html",
-                dest: "build/prod/index.html"
+                files: [
+                    {
+                        src: "build/prod/index.html",
+                        dest: "build/prod/index.html"
+                    },
+                    {
+                        expand: true,
+                        src: "docs/**",
+                        dest: "build/prod/"
+                    }
+                ]
             }
         },
         chmod: {

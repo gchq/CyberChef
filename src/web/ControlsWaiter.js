@@ -168,7 +168,7 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
     const link = baseURL || window.location.protocol + "//" +
         window.location.host +
         window.location.pathname;
-    const recipeStr = JSON.stringify(recipeConfig);
+    const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
     const inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
     includeRecipe = includeRecipe && (recipeConfig.length > 0);
@@ -182,7 +182,7 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
 
     const hash = params
         .filter(v => v)
-        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .map(([key, value]) => `${key}=${Utils.encodeURIFragment(value)}`)
         .join("&");
 
     if (hash) {
@@ -196,9 +196,9 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
 /**
  * Handler for changes made to the save dialog text area. Re-initialises the save link.
  */
-ControlsWaiter.prototype.saveTextChange = function() {
+ControlsWaiter.prototype.saveTextChange = function(e) {
     try {
-        const recipeConfig = JSON.parse(document.getElementById("save-text").value);
+        const recipeConfig = Utils.parseRecipeConfig(e.target.value);
         this.initialiseSaveLink(recipeConfig);
     } catch (err) {}
 };
@@ -209,9 +209,16 @@ ControlsWaiter.prototype.saveTextChange = function() {
  */
 ControlsWaiter.prototype.saveClick = function() {
     const recipeConfig = this.app.getRecipeConfig();
-    const recipeStr = JSON.stringify(recipeConfig).replace(/},{/g, "},\n{");
+    const recipeStr = JSON.stringify(recipeConfig);
 
-    document.getElementById("save-text").value = recipeStr;
+    document.getElementById("save-text-chef").value = Utils.generatePrettyRecipe(recipeConfig, true);
+    document.getElementById("save-text-clean").value = JSON.stringify(recipeConfig, null, 2)
+        .replace(/{\n\s+"/g, "{ \"")
+        .replace(/\[\n\s{3,}/g, "[")
+        .replace(/\n\s{3,}]/g, "]")
+        .replace(/\s*\n\s*}/g, " }")
+        .replace(/\n\s{6,}/g, " ");
+    document.getElementById("save-text-compact").value = recipeStr;
 
     this.initialiseSaveLink(recipeConfig);
     $("#save-modal").modal();
@@ -248,7 +255,7 @@ ControlsWaiter.prototype.loadClick = function() {
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
     const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
-    const recipeStr  = document.getElementById("save-text").value;
+    const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
     if (!recipeName) {
         this.app.alert("Please enter a recipe name", "danger", 2000);
@@ -337,7 +344,7 @@ ControlsWaiter.prototype.loadNameChange = function(e) {
  */
 ControlsWaiter.prototype.loadButtonClick = function() {
     try {
-        const recipeConfig = JSON.parse(document.getElementById("load-text").value);
+        const recipeConfig = Utils.parseRecipeConfig(document.getElementById("load-text").value);
         this.app.setRecipeConfig(recipeConfig);
 
         $("#rec-list [data-toggle=popover]").popover();

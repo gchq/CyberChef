@@ -35,11 +35,11 @@ const StrUtils = {
         },
         {
             name: "URL",
-            value: "([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?;\"\\x27<>()\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?;\"\\x27<>()\\[\\]{}\\s\\x7F-\\xFF]+)*)?"
+            value: "([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*)?"
         },
         {
             name: "Domain",
-            value: "(?:(https?):\\/\\/)?([-\\w.]+)\\.(com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+"
+            value: "\\b((?=[a-z0-9-]{1,63}\\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,63}\\b"
         },
         {
             name: "Windows file path",
@@ -372,14 +372,84 @@ const StrUtils = {
 
 
     /**
-     * Parse escaped string operation.
+     * @constant
+     * @default
+     */
+    ESCAPE_REPLACEMENTS: [
+        {"escaped": "\\\\", "unescaped": "\\"}, // Must be first
+        {"escaped": "\\'", "unescaped": "'"},
+        {"escaped": "\\\"", "unescaped": "\""},
+        {"escaped": "\\n", "unescaped": "\n"},
+        {"escaped": "\\r", "unescaped": "\r"},
+        {"escaped": "\\t", "unescaped": "\t"},
+        {"escaped": "\\b", "unescaped": "\b"},
+        {"escaped": "\\f", "unescaped": "\f"},
+    ],
+
+    /**
+     * Escape string operation.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @example
+     * StrUtils.runUnescape("Don't do that", [])
+     * > "Don\'t do that"
+     * StrUtils.runUnescape(`Hello
+     * World`, [])
+     * > "Hello\nWorld"
      */
-    runParseEscapedString: function(input, args) {
-        return Utils.parseEscapedChars(input);
+    runEscape: function(input, args) {
+        return StrUtils._replaceByKeys(input, "unescaped", "escaped");
+    },
+
+
+    /**
+     * Unescape string operation.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     * @example
+     * StrUtils.runUnescape("Don\'t do that", [])
+     * > "Don't do that"
+     * StrUtils.runUnescape("Hello\nWorld", [])
+     * > `Hello
+     * World`
+     */
+    runUnescape: function(input, args) {
+        return StrUtils._replaceByKeys(input, "escaped", "unescaped");
+    },
+
+
+    /**
+     * Replaces all matching tokens in ESCAPE_REPLACEMENTS with the correction. The
+     * ordering is determined by the patternKey and the replacementKey.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     * @author Matt C [matt@artemisbot.uk]
+     *
+     * @param {string} input
+     * @param {string} pattern_key
+     * @param {string} replacement_key
+     * @returns {string}
+     */
+    _replaceByKeys: function(input, patternKey, replacementKey) {
+        let output = input;
+
+        // Catch the \\x encoded characters
+        if (patternKey === "escaped") output = Utils.parseEscapedChars(input);
+
+        StrUtils.ESCAPE_REPLACEMENTS.forEach(replacement => {
+            output = output.split(replacement[patternKey]).join(replacement[replacementKey]);
+        });
+        return output;
     },
 
 
