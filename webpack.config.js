@@ -57,6 +57,10 @@ module.exports = {
                 loader: "babel-loader?compact=false"
             },
             {
+                test: /MetaConfig\.js$/,
+                loader: "val-loader"
+            },
+            {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     use: [
@@ -102,6 +106,8 @@ module.exports = {
     },
     stats: {
         children: false,
-        warningsFilter: /source-map/
-    }
+        chunks: false,
+        modules: false,
+        warningsFilter: /source-map/,
+    },
 };

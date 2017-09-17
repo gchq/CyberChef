@@ -1,6 +1,6 @@
 import Dish from "./Dish.js";
 import Ingredient from "./Ingredient.js";
-import OperationConfig from "value-loader?name=conf!./config/OperationConfig.js";
+import OperationConfig from "./config/MetaConfig.js";
 import OpModules from "./config/modules/OpModules.js";
 
 

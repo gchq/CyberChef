@@ -8,13 +8,15 @@
 
 import "babel-polyfill";
 import Chef from "./Chef.js";
-import OperationConfig from "value-loader?name=conf!./config/OperationConfig.js";
+import OperationConfig from "./config/MetaConfig.js";
 import OpModules from "./config/modules/Default.js";
 
 
 // Set up Chef instance
 self.chef = new Chef();
+
 self.OpModules = OpModules;
+self.OperationConfig = OperationConfig;
 
 // Tell the app that the worker has loaded and is ready to operate
 self.postMessage({
@@ -108,7 +110,7 @@ function silentBake(data) {
  */
 function loadRequiredModules(recipeConfig) {
     recipeConfig.forEach(op => {
-        let module = OperationConfig[op.op].module;
+        let module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
             console.log("Loading module " + module);

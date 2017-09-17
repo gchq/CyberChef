@@ -18,15 +18,15 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "webpack-dev-server:start"]);
+        ["clean:dev", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "webpack:node", "chmod:build"]);
+        ["clean:node", "webpack:metaConf", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean:test", "webpack:tests", "execute:test"]);
+        ["clean:test", "webpack:metaConf", "webpack:tests", "execute:test"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:web", "inline", "chmod"]);
+        ["eslint", "clean:prod", "webpack:metaConf", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -61,6 +61,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-accessibility");
+    grunt.loadNpmTasks("grunt-concurrent");
 
 
     // Project configuration
@@ -118,19 +119,19 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         clean: {
-            dev: ["build/dev/*"],
-            prod: ["build/prod/*"],
-            test: ["build/test/*"],
-            node: ["build/node/*"],
+            dev: ["build/dev/*", "src/core/config/MetaConfig.js"],
+            prod: ["build/prod/*", "src/core/config/MetaConfig.js"],
+            test: ["build/test/*", "src/core/config/MetaConfig.js"],
+            node: ["build/node/*", "src/core/config/MetaConfig.js"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
-            inlineScripts: ["build/prod/scripts.js"]
+            inlineScripts: ["build/prod/scripts.js"],
         },
         eslint: {
             options: {
                 configFile: "./.eslintrc.json"
             },
             configs: ["Gruntfile.js"],
-            core: ["src/core/**/*.js", "!src/core/lib/**/*"],
+            core: ["src/core/**/*.js", "!src/core/lib/**/*", "!src/core/config/MetaConfig.js"],
             web: ["src/web/**/*.js"],
             node: ["src/node/**/*.js"],
             tests: ["test/**/*.js"],
@@ -150,6 +151,12 @@ module.exports = function (grunt) {
                 ],
             }
         },
+        concurrent: {
+            options: {
+                logConcurrentOutput: true
+            },
+            dev: ["webpack:metaConfDev", "webpack-dev-server:start"]
+        },
         accessibility: {
             options: {
                 accessibilityLevel: "WCAG2A",
@@ -164,6 +171,29 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
+            metaConf: {
+                target: "node",
+                entry: "./src/core/config/OperationConfig.js",
+                output: {
+                    filename: "MetaConfig.js",
+                    path: __dirname + "/src/core/config/",
+                    library: "MetaConfig",
+                    libraryTarget: "commonjs2",
+                    libraryExport: "default"
+                }
+            },
+            metaConfDev: {
+                target: "node",
+                entry: "./src/core/config/OperationConfig.js",
+                output: {
+                    filename: "MetaConfig.js",
+                    path: __dirname + "/src/core/config/",
+                    library: "MetaConfig",
+                    libraryTarget: "commonjs2",
+                    libraryExport: "default"
+                },
+                watch: true
+            },
             web: {
                 target: "web",
                 entry: Object.assign({
@@ -258,10 +288,14 @@ module.exports = function (grunt) {
         "webpack-dev-server": {
             options: {
                 webpack: webpackConfig,
+                overlay: true,
+                clientLogLevel: "error",
                 stats: {
                     children: false,
-                    warningsFilter: /source-map/
-                },
+                    chunks: false,
+                    modules: false,
+                    warningsFilter: /source-map/,
+                }
             },
             start: {
                 webpack: {

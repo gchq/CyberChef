@@ -6,3 +6,4 @@ docs/*
 !docs/*.conf.json
 !docs/*.ico
 .vscode
+src/core/config/MetaConfig.js

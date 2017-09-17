@@ -156,8 +156,8 @@ const BitwiseOp = {
         };
 
         for (let key = 1, l = Math.pow(256, keyLength); key < l; key++) {
-            if (key % 10000 === 0) {
-                if (self) self.sendStatusMessage("Calculating " + l + " values... " + Math.floor(key / l * 100) + "%");
+            if (key % 10000 === 0 && self) {
+                self.sendStatusMessage("Calculating " + l + " values... " + Math.floor(key / l * 100) + "%");
             }
 
             result = BitwiseOp._bitOp(input, intToByteArray(key, keyLength), BitwiseOp._xor, nullPreserving, scheme);

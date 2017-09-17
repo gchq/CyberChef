@@ -1,6 +1,3 @@
-import "babel-regenerator-runtime";
-import Utils from "../Utils.js";
-
 import Base from "../operations/Base.js";
 import Base58 from "../operations/Base58.js";
 import Base64 from "../operations/Base64.js";
@@ -3572,10 +3569,19 @@ const OperationConfig = {
     },
 };
 
-export default OperationConfig;
 
 /**
- * Also export OperationConfig in value-loader format allowing access to metadata
- * about operations without having to import all the dependencies.
+ * Exports the OperationConfig JSON object in val-loader format so that it can be loaded
+ * into the app without also importing all the dependencies.
+ *
+ * See https://github.com/webpack-contrib/val-loader
+ *
+ * @returns {Object}
  */
-export const conf = "module.exports = " + JSON.stringify(OperationConfig) + ";";
+function valExport() {
+    return {
+        code: "module.exports = " + JSON.stringify(OperationConfig) + ";"
+    };
+}
+
+export default valExport;
