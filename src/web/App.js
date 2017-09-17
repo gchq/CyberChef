@@ -1,5 +1,4 @@
 import Utils from "../core/Utils.js";
-import ChefWorker from "worker-loader?inline&fallback=false!../core/ChefWorker.js";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -44,7 +43,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
  */
 App.prototype.setup = function() {
     document.dispatchEvent(this.manager.appstart);
-    this.registerChefWorker();
     this.initialiseSplitter();
     this.loadLocalStorage();
     this.populateOperationsList();
@@ -55,22 +53,6 @@ App.prototype.setup = function() {
 
     this.appLoaded = true;
     this.loaded();
-};
-
-
-/**
- * Sets up the ChefWorker and associated listeners.
- */
-App.prototype.registerChefWorker = function() {
-    this.chefWorker = new ChefWorker();
-    this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
-
-    let docURL = document.location.href.split(/[#?]/)[0];
-    const index = docURL.lastIndexOf("/");
-    if (index > 0) {
-        docURL = docURL.substring(0, index);
-    }
-    this.chefWorker.postMessage({"action": "docURL", "data": docURL});
 };
 
 
@@ -115,18 +97,6 @@ App.prototype.handleError = function(err) {
 
 
 /**
- * Updates the UI to show if baking is in process or not.
- *
- * @param {bakingStatus}
- */
-App.prototype.setBakingStatus = function(bakingStatus) {
-    this.baking = bakingStatus;
-
-    this.manager.output.toggleLoader(bakingStatus);
-};
-
-
-/**
  * Asks the ChefWorker to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
@@ -135,81 +105,13 @@ App.prototype.setBakingStatus = function(bakingStatus) {
 App.prototype.bake = function(step) {
     if (this.baking) return;
 
-    this.setBakingStatus(true);
-
-    this.chefWorker.postMessage({
-        action: "bake",
-        data: {
-            input: this.getInput(),                 // The user's input
-            recipeConfig: this.getRecipeConfig(),   // The configuration of the recipe
-            options: this.options,                  // Options set by the user
-            progress: this.progress,                // The current position in the recipe
-            step: step                              // Whether or not to take one step or execute the whole recipe
-        }
-    });
-};
-
-
-/**
- * Cancels the current bake by terminating the ChefWorker and creating a new one.
- */
-App.prototype.cancelBake = function() {
-    this.chefWorker.terminate();
-    this.registerChefWorker();
-    this.setBakingStatus(false);
-    this.manager.controls.showStaleIndicator();
-};
-
-
-/**
- * Handler for messages sent back by the ChefWorker.
- *
- * @param {MessageEvent} e
- */
-App.prototype.handleChefMessage = function(e) {
-    switch (e.data.action) {
-        case "bakeSuccess":
-            this.bakingComplete(e.data.data);
-            break;
-        case "bakeError":
-            this.handleError(e.data.data);
-            this.setBakingStatus(false);
-            break;
-        case "silentBakeComplete":
-            break;
-        case "workerLoaded":
-            this.workerLoaded = true;
-            this.loaded();
-            break;
-        case "statusMessage":
-            this.manager.output.setStatusMsg(e.data.data);
-            break;
-        default:
-            console.error("Unrecognised message from ChefWorker", e);
-            break;
-    }
-};
-
-
-/**
- * Handler for completed bakes.
- *
- * @param {Object} response
- */
-App.prototype.bakingComplete = function(response) {
-    this.setBakingStatus(false);
-
-    if (!response) return;
-
-    if (response.error) {
-        this.handleError(response.error);
-    }
-
-    this.options  = response.options;
-    this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
-    this.progress = response.progress;
-    this.manager.recipe.updateBreakpointIndicator(response.progress);
-    this.manager.output.set(response.result, response.type, response.duration);
+    this.manager.worker.bake(
+        this.getInput(),        // The user's input
+        this.getRecipeConfig(), // The configuration of the recipe
+        this.options,           // Options set by the user
+        this.progress,          // The current position in the recipe
+        step                    // Whether or not to take one step or execute the whole recipe
+    );
 };
 
 
@@ -226,8 +128,8 @@ App.prototype.autoBake = function() {
 
 
 /**
- * Asks the ChefWorker to run a silent bake, forcing the browser to load and cache all the relevant
- * JavaScript code needed to do a real bake.
+ * Runs a silent bake, forcing the browser to load and cache all the relevant JavaScript code needed
+ * to do a real bake.
  *
  * The output will not be modified (hence "silent" bake). This will only actually execute the recipe
  * if auto-bake is enabled, otherwise it will just wake up the ChefWorker with an empty recipe.
@@ -241,12 +143,7 @@ App.prototype.silentBake = function() {
         recipeConfig = this.getRecipeConfig();
     }
 
-    this.chefWorker.postMessage({
-        action: "silentBake",
-        data: {
-            recipeConfig: recipeConfig
-        }
-    });
+    this.manager.worker.silentBake(recipeConfig);
 };
 
 

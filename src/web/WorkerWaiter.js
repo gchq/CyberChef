@@ -1,0 +1,153 @@
+import Utils from "../core/Utils.js";
+import ChefWorker from "worker-loader?inline&fallback=false!../core/ChefWorker.js";
+
+/**
+ * Waiter to handle conversations with the ChefWorker.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ *
+ * @constructor
+ * @param {App} app - The main view object for CyberChef.
+ * @param {Manager} manager - The CyberChef event manager.
+ */
+const WorkerWaiter = function(app, manager) {
+    this.app = app;
+    this.manager = manager;
+};
+
+
+/**
+ * Sets up the ChefWorker and associated listeners.
+ */
+WorkerWaiter.prototype.registerChefWorker = function() {
+    this.chefWorker = new ChefWorker();
+    this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
+
+    let docURL = document.location.href.split(/[#?]/)[0];
+    const index = docURL.lastIndexOf("/");
+    if (index > 0) {
+        docURL = docURL.substring(0, index);
+    }
+    this.chefWorker.postMessage({"action": "docURL", "data": docURL});
+};
+
+
+/**
+ * Handler for messages sent back by the ChefWorker.
+ *
+ * @param {MessageEvent} e
+ */
+WorkerWaiter.prototype.handleChefMessage = function(e) {
+    switch (e.data.action) {
+        case "bakeSuccess":
+            this.bakingComplete(e.data.data);
+            break;
+        case "bakeError":
+            this.app.handleError(e.data.data);
+            this.setBakingStatus(false);
+            break;
+        case "silentBakeComplete":
+            break;
+        case "workerLoaded":
+            this.app.workerLoaded = true;
+            this.app.loaded();
+            break;
+        case "statusMessage":
+            this.manager.output.setStatusMsg(e.data.data);
+            break;
+        default:
+            console.error("Unrecognised message from ChefWorker", e);
+            break;
+    }
+};
+
+
+/**
+ * Updates the UI to show if baking is in process or not.
+ *
+ * @param {bakingStatus}
+ */
+WorkerWaiter.prototype.setBakingStatus = function(bakingStatus) {
+    this.app.baking = bakingStatus;
+
+    this.manager.output.toggleLoader(bakingStatus);
+};
+
+
+/**
+ * Cancels the current bake by terminating the ChefWorker and creating a new one.
+ */
+WorkerWaiter.prototype.cancelBake = function() {
+    this.chefWorker.terminate();
+    this.registerChefWorker();
+    this.setBakingStatus(false);
+    this.manager.controls.showStaleIndicator();
+};
+
+
+/**
+ * Handler for completed bakes.
+ *
+ * @param {Object} response
+ */
+WorkerWaiter.prototype.bakingComplete = function(response) {
+    this.setBakingStatus(false);
+
+    if (!response) return;
+
+    if (response.error) {
+        this.app.handleError(response.error);
+    }
+
+    this.app.options  = response.options;
+    this.app.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
+    this.app.progress = response.progress;
+    this.manager.recipe.updateBreakpointIndicator(response.progress);
+    this.manager.output.set(response.result, response.type, response.duration);
+};
+
+
+/**
+ * Asks the ChefWorker to bake the current input using the current recipe.
+ *
+ * @param {string} input
+ * @param {Object[]} recipeConfig
+ * @param {Object} options
+ * @param {number} progress
+ * @param {boolean} step
+ */
+WorkerWaiter.prototype.bake = function(input, recipeConfig, options, progress, step) {
+    this.setBakingStatus(true);
+
+    this.chefWorker.postMessage({
+        action: "bake",
+        data: {
+            input: input,
+            recipeConfig: recipeConfig,
+            options: options,
+            progress: progress,
+            step: step
+        }
+    });
+};
+
+
+/**
+ * Asks the ChefWorker to run a silent bake, forcing the browser to load and cache all the relevant
+ * JavaScript code needed to do a real bake.
+ *
+ * @param {Objectp[]} [recipeConfig]
+ */
+WorkerWaiter.prototype.silentBake = function(recipeConfig) {
+    this.chefWorker.postMessage({
+        action: "silentBake",
+        data: {
+            recipeConfig: recipeConfig
+        }
+    });
+};
+
+
+export default WorkerWaiter;

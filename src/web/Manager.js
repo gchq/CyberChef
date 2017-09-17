@@ -1,3 +1,4 @@
+import WorkerWaiter from "./WorkerWaiter.js";
 import WindowWaiter from "./WindowWaiter.js";
 import ControlsWaiter from "./ControlsWaiter.js";
 import RecipeWaiter from "./RecipeWaiter.js";
@@ -49,6 +50,7 @@ const Manager = function(app) {
     this.statechange = new CustomEvent("statechange", {bubbles: true});
 
     // Define Waiter objects to handle various areas
+    this.worker      = new WorkerWaiter(this.app, this);
     this.window      = new WindowWaiter(this.app);
     this.controls    = new ControlsWaiter(this.app, this);
     this.recipe      = new RecipeWaiter(this.app, this);
@@ -70,6 +72,7 @@ const Manager = function(app) {
  * Sets up the various components and listeners.
  */
 Manager.prototype.setup = function() {
+    this.worker.registerChefWorker();
     this.recipe.initialiseOperationDragNDrop();
     this.controls.autoBakeChange();
     this.seasonal.load();
