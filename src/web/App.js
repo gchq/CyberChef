@@ -105,6 +105,9 @@ App.prototype.handleError = function(err) {
 App.prototype.bake = function(step) {
     if (this.baking) return;
 
+    // Reset attemptHighlight flag
+    this.options.attemptHighlight = true;
+
     this.manager.worker.bake(
         this.getInput(),        // The user's input
         this.getRecipeConfig(), // The configuration of the recipe

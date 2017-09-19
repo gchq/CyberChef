@@ -30,7 +30,6 @@ const Chef = function() {
  * @returns {string} response.result - The output of the recipe
  * @returns {string} response.type - The data type of the result
  * @returns {number} response.progress - The position that we have got to in the recipe
- * @returns {number} response.options - The app options object (which may have been changed)
  * @returns {number} response.duration - The number of ms it took to execute the recipe
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
@@ -40,12 +39,7 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
         containsFc = recipe.containsFlowControl(),
         error      = false;
 
-    // Reset attemptHighlight flag
-    if (options.hasOwnProperty("attemptHighlight")) {
-        options.attemptHighlight = true;
-    }
-
-    if (containsFc) options.attemptHighlight = false;
+    if (containsFc && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
     // Clean up progress
     if (progress >= recipeConfig.length) {
@@ -86,7 +80,6 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
             this.dish.get(Dish.STRING),
         type: Dish.enumLookup(this.dish.type),
         progress: progress,
-        options: options,
         duration: new Date().getTime() - startTime,
         error: error
     };

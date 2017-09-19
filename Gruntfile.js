@@ -72,7 +72,16 @@ module.exports = function (grunt) {
         BUILD_CONSTANTS = {
             COMPILE_TIME: JSON.stringify(compileTime),
             COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
-            PKG_VERSION: JSON.stringify(pkg.version)
+            PKG_VERSION: JSON.stringify(pkg.version),
+            ENVIRONMENT_IS_WORKER: function() {
+                return typeof importScripts === "function";
+            },
+            ENVIRONMENT_IS_NODE: function() {
+                return typeof process === "object" && typeof require === "function";
+            },
+            ENVIRONMENT_IS_WEB: function() {
+                return typeof window === "object";
+            }
         },
         moduleEntryPoints = listEntryModules();
 
@@ -277,7 +286,10 @@ module.exports = function (grunt) {
                 output: {
                     filename: "index.js",
                     path: __dirname + "/build/test"
-                }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                ]
             },
             node: {
                 target: "node",
@@ -288,7 +300,10 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/node",
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
-                }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                ]
             }
         },
         "webpack-dev-server": {

@@ -41,23 +41,24 @@ self.postMessage({
  */
 self.addEventListener("message", function(e) {
     // Handle message
-    switch (e.data.action) {
+    const r = e.data;
+    switch (r.action) {
         case "bake":
-            bake(e.data.data);
+            bake(r.data);
             break;
         case "silentBake":
-            silentBake(e.data.data);
+            silentBake(r.data);
             break;
         case "docURL":
             // Used to set the URL of the current document so that scripts can be
             // imported into an inline worker.
-            self.docURL = e.data.data;
+            self.docURL = r.data;
             break;
         case "highlight":
             calculateHighlights(
-                e.data.data.recipeConfig,
-                e.data.data.direction,
-                e.data.data.pos
+                r.data.recipeConfig,
+                r.data.direction,
+                r.data.pos
             );
             break;
         default:
@@ -156,5 +157,22 @@ self.sendStatusMessage = function(msg) {
     self.postMessage({
         action: "statusMessage",
         data: msg
+    });
+};
+
+
+/**
+ * Send an option value update to the app.
+ *
+ * @param {string} option
+ * @param {*} value
+ */
+self.setOption = function(option, value) {
+    self.postMessage({
+        action: "optionUpdate",
+        data: {
+            option: option,
+            value: value
+        }
     });
 };

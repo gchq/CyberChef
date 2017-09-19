@@ -137,7 +137,8 @@ const BitwiseOp = {
 
         input = input.slice(sampleOffset, sampleOffset + sampleLength);
 
-        if (self) self.sendStatusMessage("Calculating " + Math.pow(256, keyLength) + " values...");
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Calculating " + Math.pow(256, keyLength) + " values...");
 
         /**
          * Converts an integer to an array of bytes expressing that number.
@@ -156,7 +157,7 @@ const BitwiseOp = {
         };
 
         for (let key = 1, l = Math.pow(256, keyLength); key < l; key++) {
-            if (key % 10000 === 0 && self) {
+            if (key % 10000 === 0 && ENVIRONMENT_IS_WORKER()) {
                 self.sendStatusMessage("Calculating " + l + " values... " + Math.floor(key / l * 100) + "%");
             }
 

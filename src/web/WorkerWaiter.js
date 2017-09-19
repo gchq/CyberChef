@@ -40,12 +40,13 @@ WorkerWaiter.prototype.registerChefWorker = function() {
  * @param {MessageEvent} e
  */
 WorkerWaiter.prototype.handleChefMessage = function(e) {
-    switch (e.data.action) {
+    const r = e.data;
+    switch (r.action) {
         case "bakeSuccess":
-            this.bakingComplete(e.data.data);
+            this.bakingComplete(r.data);
             break;
         case "bakeError":
-            this.app.handleError(e.data.data);
+            this.app.handleError(r.data);
             this.setBakingStatus(false);
             break;
         case "silentBakeComplete":
@@ -55,10 +56,13 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
             this.app.loaded();
             break;
         case "statusMessage":
-            this.manager.output.setStatusMsg(e.data.data);
+            this.manager.output.setStatusMsg(r.data);
+            break;
+        case "optionUpdate":
+            this.app.options[r.data.option] = r.data.value;
             break;
         case "highlightsCalculated":
-            this.manager.highlighter.displayHighlights(e.data.data.pos, e.data.data.direction);
+            this.manager.highlighter.displayHighlights(r.data.pos, r.data.direction);
             break;
         default:
             console.error("Unrecognised message from ChefWorker", e);
@@ -104,7 +108,6 @@ WorkerWaiter.prototype.bakingComplete = function(response) {
         this.app.handleError(response.error);
     }
 
-    this.app.options  = response.options;
     this.app.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
     this.app.progress = response.progress;
     this.manager.recipe.updateBreakpointIndicator(response.progress);
