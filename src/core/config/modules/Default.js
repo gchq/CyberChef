@@ -158,6 +158,34 @@ OpModules.Default = {
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
+
+
+    /*
+        Highlighting functions.
+
+        This is a temporary solution as highlighting should be entirely
+        overhauled at some point.
+    */
+    "From Base64-highlight":          Base64.highlightFrom,
+    "From Base64-highlightReverse":   Base64.highlightTo,
+    "To Base64-highlight":            Base64.highlightTo,
+    "To Base64-highlightReverse":     Base64.highlightFrom,
+    "From Hex-highlight":             ByteRepr.highlightFrom,
+    "From Hex-highlightReverse":      ByteRepr.highlightTo,
+    "To Hex-highlight":               ByteRepr.highlightTo,
+    "To Hex-highlightReverse":        ByteRepr.highlightFrom,
+    "From Charcode-highlight":        ByteRepr.highlightFrom,
+    "From Charcode-highlightReverse": ByteRepr.highlightTo,
+    "To Charcode-highlight":          ByteRepr.highlightTo,
+    "To Charcode-highlightReverse":   ByteRepr.highlightFrom,
+    "From Binary-highlight":          ByteRepr.highlightFromBinary,
+    "From Binary-highlightReverse":   ByteRepr.highlightToBinary,
+    "To Binary-highlight":            ByteRepr.highlightToBinary,
+    "To Binary-highlightReverse":     ByteRepr.highlightFromBinary,
+    "From Hexdump-highlight":         Hexdump.highlightFrom,
+    "From Hexdump-highlightReverse":  Hexdump.highlightTo,
+    "To Hexdump-highlight":           Hexdump.highlightTo,
+    "To Hexdump-highlightReverse":    Hexdump.highlightFrom,
 };
 
 export default OpModules;

@@ -54,6 +54,14 @@ Operation.prototype._parseConfig = function(operationConfig) {
         const ingredient = new Ingredient(ingredientConfig);
         this.addIngredient(ingredient);
     }
+
+    if (this.highlight === "func") {
+        this.highlight = OpModules[this.module][`${this.name}-highlight`];
+    }
+
+    if (this.highlightReverse === "func") {
+        this.highlightReverse = OpModules[this.module][`${this.name}-highlightReverse`];
+    }
 };
 
 

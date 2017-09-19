@@ -53,6 +53,13 @@ self.addEventListener("message", function(e) {
             // imported into an inline worker.
             self.docURL = e.data.data;
             break;
+        case "highlight":
+            calculateHighlights(
+                e.data.data.recipeConfig,
+                e.data.data.direction,
+                e.data.data.pos
+            );
+            break;
         default:
             break;
     }
@@ -117,6 +124,25 @@ function loadRequiredModules(recipeConfig) {
             self.sendStatusMessage("Loading module " + module);
             self.importScripts(self.docURL + "/" + module + ".js");
         }
+    });
+}
+
+
+/**
+ * Calculates highlight offsets if possible.
+ *
+ * @param {Object[]} recipeConfig
+ * @param {string} direction
+ * @param {Object} pos - The position object for the highlight.
+ * @param {number} pos.start - The start offset.
+ * @param {number} pos.end - The end offset.
+ */
+function calculateHighlights(recipeConfig, direction, pos) {
+    pos = self.chef.calculateHighlights(recipeConfig, direction, pos);
+
+    self.postMessage({
+        action: "highlightsCalculated",
+        data: pos
     });
 }
 

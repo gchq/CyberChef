@@ -215,4 +215,37 @@ Recipe.prototype.fromString = function(recipeStr) {
     this._parseConfig(recipeConfig);
 };
 
+
+/**
+ * Generates a list of all the highlight functions assigned to operations in the recipe, if the
+ * entire recipe supports highlighting.
+ *
+ * @returns {Object[]} highlights
+ * @returns {function} highlights[].f
+ * @returns {function} highlights[].b
+ * @returns {Object[]} highlights[].args
+ */
+Recipe.prototype.generateHighlightList = function() {
+    const highlights = [];
+
+    for (let i = 0; i < this.opList.length; i++) {
+        let op = this.opList[i];
+        if (op.isDisabled()) continue;
+
+        // If any breakpoints are set, do not attempt to highlight
+        if (op.isBreakpoint()) return false;
+
+        // If any of the operations do not support highlighting, fail immediately.
+        if (op.highlight === false || op.highlight === undefined) return false;
+
+        highlights.push({
+            f: op.highlight,
+            b: op.highlightReverse,
+            args: op.getIngValues()
+        });
+    }
+
+    return highlights;
+};
+
 export default Recipe;

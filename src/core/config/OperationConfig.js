@@ -184,8 +184,8 @@ const OperationConfig = {
     "From Base64": {
         module: "Default",
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
-        highlight: Base64.highlightFrom,
-        highlightReverse: Base64.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -195,7 +195,7 @@ const OperationConfig = {
                 value: Base64.ALPHABET_OPTIONS
             },
             {
-                name: "Remove non&#8209;alphabet chars",
+                name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base64.REMOVE_NON_ALPH_CHARS
             }
@@ -204,8 +204,8 @@ const OperationConfig = {
     "To Base64": {
         module: "Default",
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes data in an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
-        highlight: Base64.highlightTo,
-        highlightReverse: Base64.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -228,7 +228,7 @@ const OperationConfig = {
                 value: Base58.ALPHABET_OPTIONS
             },
             {
-                name: "Remove non&#8209;alphabet chars",
+                name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base58.REMOVE_NON_ALPH_CHARS
             }
@@ -259,7 +259,7 @@ const OperationConfig = {
                 value: Base64.BASE32_ALPHABET
             },
             {
-                name: "Remove non&#8209;alphabet chars",
+                name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base64.REMOVE_NON_ALPH_CHARS
             }
@@ -446,8 +446,8 @@ const OperationConfig = {
     "From Hex": {
         module: "Default",
         description: "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
-        highlight: ByteRepr.highlightFrom,
-        highlightReverse: ByteRepr.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -461,8 +461,8 @@ const OperationConfig = {
     "To Hex": {
         module: "Default",
         description: "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
-        highlight: ByteRepr.highlightTo,
-        highlightReverse: ByteRepr.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -506,8 +506,8 @@ const OperationConfig = {
     "From Charcode": {
         module: "Default",
         description: "Converts unicode character codes back into text.<br><br>e.g. <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> becomes <code>Γειά σου</code>",
-        highlight: ByteRepr.highlightFrom,
-        highlightReverse: ByteRepr.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -527,8 +527,8 @@ const OperationConfig = {
     "To Charcode": {
         module: "Default",
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
-        highlight: ByteRepr.highlightTo,
-        highlightReverse: ByteRepr.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "string",
         args: [
@@ -547,8 +547,8 @@ const OperationConfig = {
     "From Binary": {
         module: "Default",
         description: "Converts a binary string back into its raw form.<br><br>e.g. <code>01001000 01101001</code> becomes <code>Hi</code>",
-        highlight: ByteRepr.highlightFromBinary,
-        highlightReverse: ByteRepr.highlightToBinary,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -562,8 +562,8 @@ const OperationConfig = {
     "To Binary": {
         module: "Default",
         description: "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>",
-        highlight: ByteRepr.highlightToBinary,
-        highlightReverse: ByteRepr.highlightFromBinary,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -603,8 +603,8 @@ const OperationConfig = {
     "From Hexdump": {
         module: "Default",
         description: "Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.",
-        highlight: Hexdump.highlightFrom,
-        highlightReverse: Hexdump.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: []
@@ -612,8 +612,8 @@ const OperationConfig = {
     "To Hexdump": {
         module: "Default",
         description: "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.",
-        highlight: Hexdump.highlightTo,
-        highlightReverse: Hexdump.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [

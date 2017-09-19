@@ -58,7 +58,7 @@ const Manager = function(app) {
     this.input       = new InputWaiter(this.app, this);
     this.output      = new OutputWaiter(this.app, this);
     this.options     = new OptionsWaiter(this.app);
-    this.highlighter = new HighlighterWaiter(this.app);
+    this.highlighter = new HighlighterWaiter(this.app, this);
     this.seasonal    = new SeasonalWaiter(this.app, this);
 
     // Object to store dynamic handlers to fire on elements that may not exist yet

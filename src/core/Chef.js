@@ -123,4 +123,38 @@ Chef.prototype.silentBake = function(recipeConfig) {
     return new Date().getTime() - startTime;
 };
 
+
+/**
+ * Calculates highlight offsets if possible.
+ *
+ * @param {Object[]} recipeConfig
+ * @param {string} direction
+ * @param {Object} pos - The position object for the highlight.
+ * @param {number} pos.start - The start offset.
+ * @param {number} pos.end - The end offset.
+ * @returns {Object}
+ */
+Chef.prototype.calculateHighlights = function(recipeConfig, direction, pos) {
+    const recipe = new Recipe(recipeConfig);
+    const highlights = recipe.generateHighlightList();
+
+    if (!highlights) return false;
+
+    for (let i = 0; i < highlights.length; i++) {
+        // Remove multiple highlights before processing again
+        pos = [pos[0]];
+
+        const func = direction === "forward" ? highlights[i].f : highlights[i].b;
+
+        if (typeof func == "function") {
+            pos = func(pos, highlights[i].args);
+        }
+    }
+
+    return {
+        pos: pos,
+        direction: direction
+    };
+};
+
 export default Chef;

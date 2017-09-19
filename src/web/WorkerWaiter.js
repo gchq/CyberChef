@@ -57,6 +57,9 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
         case "statusMessage":
             this.manager.output.setStatusMsg(e.data.data);
             break;
+        case "highlightsCalculated":
+            this.manager.highlighter.displayHighlights(e.data.data.pos, e.data.data.direction);
+            break;
         default:
             console.error("Unrecognised message from ChefWorker", e);
             break;
@@ -145,6 +148,27 @@ WorkerWaiter.prototype.silentBake = function(recipeConfig) {
         action: "silentBake",
         data: {
             recipeConfig: recipeConfig
+        }
+    });
+};
+
+
+/**
+ * Asks the ChefWorker to calculate highlight offsets if possible.
+ *
+ * @param {Object[]} recipeConfig
+ * @param {string} direction
+ * @param {Object} pos - The position object for the highlight.
+ * @param {number} pos.start - The start offset.
+ * @param {number} pos.end - The end offset.
+ */
+WorkerWaiter.prototype.highlight = function(recipeConfig, direction, pos) {
+    this.chefWorker.postMessage({
+        action: "highlight",
+        data: {
+            recipeConfig: recipeConfig,
+            direction: direction,
+            pos: pos
         }
     });
 };
