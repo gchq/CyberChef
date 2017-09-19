@@ -201,4 +201,44 @@ OutputWaiter.prototype.maximiseOutputClick = function(e) {
     }
 };
 
+
+/**
+ * Shows or hides the loading icon.
+ *
+ * @param {boolean} value
+ */
+OutputWaiter.prototype.toggleLoader = function(value) {
+    const outputLoader = document.getElementById("output-loader"),
+        outputElement = document.getElementById("output-text");
+
+    if (value) {
+        this.manager.controls.hideStaleIndicator();
+        this.bakingStatusTimeout = setTimeout(function() {
+            outputElement.disabled = true;
+            outputLoader.style.visibility = "visible";
+            outputLoader.style.opacity = 1;
+            this.manager.controls.toggleBakeButtonFunction(true);
+        }.bind(this), 200);
+    } else {
+        clearTimeout(this.bakingStatusTimeout);
+        outputElement.disabled = false;
+        outputLoader.style.opacity = 0;
+        outputLoader.style.visibility = "hidden";
+        this.manager.controls.toggleBakeButtonFunction(false);
+        this.setStatusMsg("");
+    }
+};
+
+
+/**
+ * Sets the baking status message value.
+ *
+ * @param {string} msg
+ */
+OutputWaiter.prototype.setStatusMsg = function(msg) {
+    const el = document.querySelector("#output-loader .loading-msg");
+
+    el.textContent = msg;
+};
+
 export default OutputWaiter;

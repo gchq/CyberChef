@@ -1,4 +1,3 @@
-import FlowControl from "../FlowControl.js";
 import Base from "../operations/Base.js";
 import Base58 from "../operations/Base58.js";
 import Base64 from "../operations/Base64.js";
@@ -12,9 +11,11 @@ import Code from "../operations/Code.js";
 import Compress from "../operations/Compress.js";
 import Convert from "../operations/Convert.js";
 import DateTime from "../operations/DateTime.js";
+import Diff from "../operations/Diff.js";
 import Endian from "../operations/Endian.js";
 import Entropy from "../operations/Entropy.js";
 import Extract from "../operations/Extract.js";
+import Filetime from "../operations/Filetime.js";
 import FileType from "../operations/FileType.js";
 import Image from "../operations/Image.js";
 import Hash from "../operations/Hash.js";
@@ -46,8 +47,8 @@ import UUID from "../operations/UUID.js";
  * Type definition for an OpConf.
  *
  * @typedef {Object} OpConf
+ * @property {string} module - The module to which the operation belongs
  * @property {html} description - A description of the operation with optional HTML tags
- * @property {Function} run - The function which can be called the run the operation
  * @property {string} inputType
  * @property {string} outputType
  * @property {Function|boolean} [highlight] - A function to calculate the highlight offset, or true
@@ -84,8 +85,8 @@ import UUID from "../operations/UUID.js";
  */
 const OperationConfig = {
     "Fork": {
+        module: "Default",
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
-        run: FlowControl.runFork,
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -93,31 +94,31 @@ const OperationConfig = {
             {
                 name: "Split delimiter",
                 type: "binaryShortString",
-                value: FlowControl.FORK_DELIM
+                value: "\\n"
             },
             {
                 name: "Merge delimiter",
                 type: "binaryShortString",
-                value: FlowControl.MERGE_DELIM
+                value: "\\n"
             },
             {
                 name: "Ignore errors",
                 type: "boolean",
-                value: FlowControl.FORK_IGNORE_ERRORS
+                value: false
             }
         ]
     },
     "Merge": {
+        module: "Default",
         description: "Consolidate all branches back into a single trunk. The opposite of Fork.",
-        run: FlowControl.runMerge,
         inputType: "string",
         outputType: "string",
         flowControl: true,
         args: []
     },
     "Jump": {
+        module: "Default",
         description: "Jump forwards or backwards over the specified number of operations.",
-        run: FlowControl.runJump,
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -125,18 +126,18 @@ const OperationConfig = {
             {
                 name: "Number of operations to jump over",
                 type: "number",
-                value: FlowControl.JUMP_NUM
+                value: 0
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
                 type: "number",
-                value: FlowControl.MAX_JUMPS
+                value: 10
             }
         ]
     },
     "Conditional Jump": {
+        module: "Default",
         description: "Conditionally jump forwards or backwards over the specified number of operations based on whether the data matches the specified regular expression.",
-        run: FlowControl.runCondJump,
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -149,26 +150,26 @@ const OperationConfig = {
             {
                 name: "Number of operations to jump over if match found",
                 type: "number",
-                value: FlowControl.JUMP_NUM
+                value: 0
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
                 type: "number",
-                value: FlowControl.MAX_JUMPS
+                value: 10
             }
         ]
     },
     "Return": {
+        module: "Default",
         description: "End execution of operations at this point in the recipe.",
-        run: FlowControl.runReturn,
         inputType: "string",
         outputType: "string",
         flowControl: true,
         args: []
     },
     "Comment": {
+        module: "Default",
         description: "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.",
-        run: FlowControl.runComment,
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -181,10 +182,10 @@ const OperationConfig = {
         ]
     },
     "From Base64": {
+        module: "Default",
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
-        run: Base64.runFrom,
-        highlight: Base64.highlightFrom,
-        highlightReverse: Base64.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -194,17 +195,17 @@ const OperationConfig = {
                 value: Base64.ALPHABET_OPTIONS
             },
             {
-                name: "Remove non&#8209;alphabet chars",
+                name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base64.REMOVE_NON_ALPH_CHARS
             }
         ]
     },
     "To Base64": {
+        module: "Default",
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes data in an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
-        run: Base64.runTo,
-        highlight: Base64.highlightTo,
-        highlightReverse: Base64.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -216,8 +217,8 @@ const OperationConfig = {
         ]
     },
     "From Base58": {
+        module: "Default",
         description: "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included) back into its raw form.<br><br>e.g. <code>StV1DL6CwTryKyV</code> becomes <code>hello world</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).",
-        run: Base58.runFrom,
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -227,15 +228,15 @@ const OperationConfig = {
                 value: Base58.ALPHABET_OPTIONS
             },
             {
-                name: "Remove non&#8209;alphabet chars",
+                name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base58.REMOVE_NON_ALPH_CHARS
             }
         ]
     },
     "To Base58": {
+        module: "Default",
         description: "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>hello world</code> becomes <code>StV1DL6CwTryKyV</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).",
-        run: Base58.runTo,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -247,8 +248,8 @@ const OperationConfig = {
         ]
     },
     "From Base32": {
+        module: "Default",
         description: "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
-        run: Base64.runFrom32,
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -258,15 +259,15 @@ const OperationConfig = {
                 value: Base64.BASE32_ALPHABET
             },
             {
-                name: "Remove non&#8209;alphabet chars",
+                name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base64.REMOVE_NON_ALPH_CHARS
             }
         ]
     },
     "To Base32": {
+        module: "Default",
         description: "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
-        run: Base64.runTo32,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -278,8 +279,8 @@ const OperationConfig = {
         ]
     },
     "Show Base64 offsets": {
+        module: "Default",
         description: "When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block.<br><br>This operation shows all possible offsets for a given string so that each possible encoding can be considered.",
-        run: Base64.runOffsets,
         inputType: "byteArray",
         outputType: "html",
         args: [
@@ -296,8 +297,8 @@ const OperationConfig = {
         ]
     },
     "XOR": {
+        module: "Default",
         description: "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Scheme:</u><ul><li>Standard - key is unchanged after each round</li><li>Input differential - key is set to the value of the previous unprocessed byte</li><li>Output differential - key is set to the value of the previous processed byte</li></ul>",
-        run: BitwiseOp.runXor,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -322,14 +323,14 @@ const OperationConfig = {
         ]
     },
     "XOR Brute Force": {
-        description: "Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance.<br><br>Optionally enter a regex string that you expect to find in the plaintext to filter results (crib).",
-        run: BitwiseOp.runXorBrute,
+        module: "Default",
+        description: "Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance.<br><br>Optionally enter a string that you expect to find in the plaintext to filter results (crib).",
         inputType: "byteArray",
         outputType: "string",
         args: [
             {
                 name: "Key length",
-                type: "option",
+                type: "number",
                 value: BitwiseOp.XOR_BRUTE_KEY_LENGTH
             },
             {
@@ -370,8 +371,8 @@ const OperationConfig = {
         ]
     },
     "NOT": {
+        module: "Default",
         description: "Returns the inverse of each byte.",
-        run: BitwiseOp.runNot,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -379,8 +380,8 @@ const OperationConfig = {
         args: []
     },
     "AND": {
+        module: "Default",
         description: "AND the input with the given key.<br>e.g. <code>fe023da5</code>",
-        run: BitwiseOp.runAnd,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -395,8 +396,8 @@ const OperationConfig = {
         ]
     },
     "OR": {
+        module: "Default",
         description: "OR the input with the given key.<br>e.g. <code>fe023da5</code>",
-        run: BitwiseOp.runOr,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -411,8 +412,8 @@ const OperationConfig = {
         ]
     },
     "ADD": {
+        module: "Default",
         description: "ADD the input with the given key (e.g. <code>fe023da5</code>), MOD 255",
-        run: BitwiseOp.runAdd,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -427,8 +428,8 @@ const OperationConfig = {
         ]
     },
     "SUB": {
+        module: "Default",
         description: "SUB the input with the given key (e.g. <code>fe023da5</code>), MOD 255",
-        run: BitwiseOp.runSub,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -443,10 +444,10 @@ const OperationConfig = {
         ]
     },
     "From Hex": {
+        module: "Default",
         description: "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
-        run: ByteRepr.runFromHex,
-        highlight: ByteRepr.highlightFrom,
-        highlightReverse: ByteRepr.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -458,10 +459,10 @@ const OperationConfig = {
         ]
     },
     "To Hex": {
+        module: "Default",
         description: "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
-        run: ByteRepr.runToHex,
-        highlight: ByteRepr.highlightTo,
-        highlightReverse: ByteRepr.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -473,8 +474,8 @@ const OperationConfig = {
         ]
     },
     "From Octal": {
+        module: "Default",
         description: "Converts an octal byte string back into its raw value.<br><br>e.g. <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
-        run: ByteRepr.runFromOct,
         highlight: false,
         highlightReverse: false,
         inputType: "string",
@@ -488,8 +489,8 @@ const OperationConfig = {
         ]
     },
     "To Octal": {
+        module: "Default",
         description: "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>",
-        run: ByteRepr.runToOct,
         highlight: false,
         highlightReverse: false,
         inputType: "byteArray",
@@ -503,10 +504,10 @@ const OperationConfig = {
         ]
     },
     "From Charcode": {
+        module: "Default",
         description: "Converts unicode character codes back into text.<br><br>e.g. <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> becomes <code>Γειά σου</code>",
-        run: ByteRepr.runFromCharcode,
-        highlight: ByteRepr.highlightFrom,
-        highlightReverse: ByteRepr.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -524,10 +525,10 @@ const OperationConfig = {
     },
 
     "To Charcode": {
+        module: "Default",
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
-        run: ByteRepr.runToCharcode,
-        highlight: ByteRepr.highlightTo,
-        highlightReverse: ByteRepr.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "string",
         args: [
@@ -544,10 +545,10 @@ const OperationConfig = {
         ]
     },
     "From Binary": {
+        module: "Default",
         description: "Converts a binary string back into its raw form.<br><br>e.g. <code>01001000 01101001</code> becomes <code>Hi</code>",
-        run: ByteRepr.runFromBinary,
-        highlight: ByteRepr.highlightFromBinary,
-        highlightReverse: ByteRepr.highlightToBinary,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -559,10 +560,10 @@ const OperationConfig = {
         ]
     },
     "To Binary": {
+        module: "Default",
         description: "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>",
-        run: ByteRepr.runToBinary,
-        highlight: ByteRepr.highlightToBinary,
-        highlightReverse: ByteRepr.highlightFromBinary,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -574,8 +575,8 @@ const OperationConfig = {
         ]
     },
     "From Decimal": {
+        module: "Default",
         description: "Converts the data from an ordinal integer array back into its raw form.<br><br>e.g. <code>72 101 108 108 111</code> becomes <code>Hello</code>",
-        run: ByteRepr.runFromDecimal,
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -587,8 +588,8 @@ const OperationConfig = {
         ]
     },
     "To Decimal": {
+        module: "Default",
         description: "Converts the input data to an ordinal integer array.<br><br>e.g. <code>Hello</code> becomes <code>72 101 108 108 111</code>",
-        run: ByteRepr.runToDecimal,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -600,19 +601,19 @@ const OperationConfig = {
         ]
     },
     "From Hexdump": {
+        module: "Default",
         description: "Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.",
-        run: Hexdump.runFrom,
-        highlight: Hexdump.highlightFrom,
-        highlightReverse: Hexdump.highlightTo,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
         args: []
     },
     "To Hexdump": {
+        module: "Default",
         description: "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.",
-        run: Hexdump.runTo,
-        highlight: Hexdump.highlightTo,
-        highlightReverse: Hexdump.highlightFrom,
+        highlight: "func",
+        highlightReverse: "func",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -634,8 +635,8 @@ const OperationConfig = {
         ]
     },
     "From Base": {
+        module: "Default",
         description: "Converts a number to decimal from a given numerical base.",
-        run: Base.runFrom,
         inputType: "string",
         outputType: "number",
         args: [
@@ -647,8 +648,8 @@ const OperationConfig = {
         ]
     },
     "To Base": {
+        module: "Default",
         description: "Converts a decimal number to a given numerical base.",
-        run: Base.runTo,
         inputType: "number",
         outputType: "string",
         args: [
@@ -660,15 +661,15 @@ const OperationConfig = {
         ]
     },
     "From HTML Entity": {
+        module: "Default",
         description: "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>", // <span> tags required to stop the browser just printing &
-        run: HTML.runFromEntity,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "To HTML Entity": {
+        module: "Default",
         description: "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>", // <span> tags required to stop the browser just printing &
-        run: HTML.runToEntity,
         inputType: "string",
         outputType: "string",
         args: [
@@ -685,8 +686,8 @@ const OperationConfig = {
         ]
     },
     "Strip HTML tags": {
+        module: "Default",
         description: "Removes all HTML tags from the input.",
-        run: HTML.runStripTags,
         inputType: "string",
         outputType: "string",
         args: [
@@ -703,15 +704,15 @@ const OperationConfig = {
         ]
     },
     "URL Decode": {
+        module: "Default",
         description: "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
-        run: URL_.runFrom,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "URL Encode": {
+        module: "Default",
         description: "Encodes problematic characters into percent-encoding, a format supported by URIs/URLs.<br><br>e.g. <code>=</code> becomes <code>%3d</code>",
-        run: URL_.runTo,
         inputType: "string",
         outputType: "string",
         args: [
@@ -723,15 +724,15 @@ const OperationConfig = {
         ]
     },
     "Parse URI": {
+        module: "Default",
         description: "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.",
-        run: URL_.runParse,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Unescape Unicode Characters": {
+        module: "Default",
         description: "Converts unicode-escaped character notation back into raw characters.<br><br>Supports the prefixes:<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>e.g. <code>\\u03c3\\u03bf\\u03c5</code> becomes <code>σου</code>",
-        run: Unicode.runUnescape,
         inputType: "string",
         outputType: "string",
         args: [
@@ -743,22 +744,22 @@ const OperationConfig = {
         ]
     },
     "From Quoted Printable": {
+        module: "Default",
         description: "Converts QP-encoded text back to standard text.",
-        run: QuotedPrintable.runFrom,
         inputType: "string",
         outputType: "byteArray",
         args: []
     },
     "To Quoted Printable": {
+        module: "Default",
         description: "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in e-mail.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.",
-        run: QuotedPrintable.runTo,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "From Punycode": {
+        module: "Encodings",
         description: "Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System.<br><br>e.g. <code>mnchen-3ya</code> decodes to <code>münchen</code>",
-        run: Punycode.runToUnicode,
         inputType: "string",
         outputType: "string",
         args: [
@@ -770,8 +771,8 @@ const OperationConfig = {
         ]
     },
     "To Punycode": {
+        module: "Encodings",
         description: "Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System.<br><br>e.g. <code>münchen</code> encodes to <code>mnchen-3ya</code>",
-        run: Punycode.runToAscii,
         inputType: "string",
         outputType: "string",
         args: [
@@ -783,15 +784,15 @@ const OperationConfig = {
         ]
     },
     "From Hex Content": {
+        module: "Default",
         description: "Translates hexadecimal bytes in text back to raw bytes.<br><br>e.g. <code>foo|3d|bar</code> becomes <code>foo=bar</code>.",
-        run: ByteRepr.runFromHexContent,
         inputType: "string",
         outputType: "byteArray",
         args: []
     },
     "To Hex Content": {
+        module: "Default",
         description: "Converts special characters in a string to hexadecimal.<br><br>e.g. <code>foo=bar</code> becomes <code>foo|3d|bar</code>.",
-        run: ByteRepr.runToHexContent,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -808,8 +809,8 @@ const OperationConfig = {
         ]
     },
     "Change IP format": {
+        module: "JSBN",
         description: "Convert an IP address from one format to another, e.g. <code>172.20.23.54</code> to <code>ac141736</code>",
-        run: IP.runChangeIpFormat,
         inputType: "string",
         outputType: "string",
         args: [
@@ -826,8 +827,8 @@ const OperationConfig = {
         ]
     },
     "Parse IP range": {
+        module: "JSBN",
         description: "Given a CIDR range (e.g. <code>10.0.0.0/24</code>) or a hyphenated range (e.g. <code>10.0.0.0 - 10.0.1.0</code>), this operation provides network information and enumerates all IP addresses in the range.<br><br>IPv6 is supported but will not be enumerated.",
-        run: IP.runParseIpRange,
         inputType: "string",
         outputType: "string",
         args: [
@@ -849,8 +850,8 @@ const OperationConfig = {
         ]
     },
     "Group IP addresses": {
+        module: "JSBN",
         description: "Groups a list of IP addresses into subnets. Supports both IPv4 and IPv6 addresses.",
-        run: IP.runGroupIps,
         inputType: "string",
         outputType: "string",
         args: [
@@ -872,15 +873,15 @@ const OperationConfig = {
         ]
     },
     "Parse IPv6 address": {
+        module: "JSBN",
         description: "Displays the longhand and shorthand versions of a valid IPv6 address.<br><br>Recognises all reserved ranges and parses encapsulated or tunnelled addresses including Teredo and 6to4.",
-        run: IP.runParseIPv6,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Parse IPv4 header": {
+        module: "JSBN",
         description: "Given an IPv4 header, this operations parses and displays each field in an easily readable format.",
-        run: IP.runParseIPv4Header,
         inputType: "string",
         outputType: "html",
         args: [
@@ -892,6 +893,7 @@ const OperationConfig = {
         ]
     },
     "Encode text": {
+        module: "CharEnc",
         description: [
             "Encodes text into the chosen character encoding.",
             "<br><br>",
@@ -900,7 +902,6 @@ const OperationConfig = {
             Object.keys(CharEnc.IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
             "</ul>",
         ].join("\n"),
-        run: CharEnc.runEncode,
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -912,6 +913,7 @@ const OperationConfig = {
         ]
     },
     "Decode text": {
+        module: "CharEnc",
         description: [
             "Decodes text from the chosen character encoding.",
             "<br><br>",
@@ -920,7 +922,6 @@ const OperationConfig = {
             Object.keys(CharEnc.IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
             "</ul>",
         ].join("\n"),
-        run: CharEnc.runDecode,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -932,8 +933,8 @@ const OperationConfig = {
         ]
     },
     "AES Decrypt": {
+        module: "Ciphers",
         description: "To successfully decrypt AES, you need either:<ul><li>The passphrase</li><li>Or the key and IV</li></ul>The IV should be the first 16 bytes of encrypted material.",
-        run: Cipher.runAesDec,
         inputType: "string",
         outputType: "string",
         args: [
@@ -978,8 +979,8 @@ const OperationConfig = {
         ]
     },
     "AES Encrypt": {
+        module: "Ciphers",
         description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br>AES-128, AES-192, and AES-256 are supported.  The variant will be chosen based on the size of the key passed in.  If a passphrase is used, a 256-bit key will be generated.",
-        run: Cipher.runAesEnc,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1024,8 +1025,8 @@ const OperationConfig = {
         ]
     },
     "DES Decrypt": {
+        module: "Ciphers",
         description: "To successfully decrypt DES, you need either:<ul><li>The passphrase</li><li>Or the key and IV</li></ul>The IV should be the first 8 bytes of encrypted material.",
-        run: Cipher.runDesDec,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1071,8 +1072,8 @@ const OperationConfig = {
         ]
     },
     "DES Encrypt": {
+        module: "Ciphers",
         description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.",
-        run: Cipher.runDesEnc,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1118,8 +1119,8 @@ const OperationConfig = {
         ]
     },
     "Triple DES Decrypt": {
+        module: "Ciphers",
         description: "To successfully decrypt Triple DES, you need either:<ul><li>The passphrase</li><li>Or the key and IV</li></ul>The IV should be the first 8 bytes of encrypted material.",
-        run: Cipher.runTripleDesDec,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1165,8 +1166,8 @@ const OperationConfig = {
         ]
     },
     "Triple DES Encrypt": {
+        module: "Ciphers",
         description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>Triple DES applies DES three times to each block to increase key size.",
-        run: Cipher.runTripleDesEnc,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1212,8 +1213,8 @@ const OperationConfig = {
         ]
     },
     "Blowfish Decrypt": {
+        module: "Ciphers",
         description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.",
-        run: Cipher.runBlowfishDec,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1236,8 +1237,8 @@ const OperationConfig = {
         ]
     },
     "Blowfish Encrypt": {
+        module: "Ciphers",
         description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.",
-        run: Cipher.runBlowfishEnc,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1260,8 +1261,8 @@ const OperationConfig = {
         ]
     },
     "Rabbit Decrypt": {
+        module: "Ciphers",
         description: "To successfully decrypt Rabbit, you need either:<ul><li>The passphrase</li><li>Or the key and IV (This is currently broken. You need the key and salt at the moment.)</li></ul>The IV should be the first 8 bytes of encrypted material.",
-        run: Cipher.runRabbitDec,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1307,8 +1308,8 @@ const OperationConfig = {
         ]
     },
     "Rabbit Encrypt": {
+        module: "Ciphers",
         description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>Rabbit is a high-performance stream cipher and a finalist in the eSTREAM Portfolio.  It is one of the four designs selected after a 3 1/2 year process where 22 designs were evaluated.",
-        run: Cipher.runRabbitEnc,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1354,8 +1355,8 @@ const OperationConfig = {
         ]
     },
     "RC4": {
+        module: "Ciphers",
         description: "RC4 is a widely-used stream cipher. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.",
-        run: Cipher.runRc4,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1380,8 +1381,8 @@ const OperationConfig = {
         ]
     },
     "RC4 Drop": {
+        module: "Ciphers",
         description: "It was discovered that the first few bytes of the RC4 keystream are strongly non-random and leak information about the key. We can defend against this attack by discarding the initial portion of the keystream. This modified algorithm is traditionally called RC4-drop.",
-        run: Cipher.runRc4drop,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1411,8 +1412,8 @@ const OperationConfig = {
         ]
     },
     "Derive PBKDF2 key": {
+        module: "Ciphers",
         description: "PBKDF2 is a password-based key derivation function. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>Enter your passphrase as the input and then set the relevant options to generate a key.",
-        run: Cipher.runPbkdf2,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1449,8 +1450,8 @@ const OperationConfig = {
         ]
     },
     "Derive EVP key": {
+        module: "Ciphers",
         description: "EVP is a password-based key derivation function used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>Enter your passphrase as the input and then set the relevant options to generate a key.",
-        run: Cipher.runEvpkdf,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1487,8 +1488,8 @@ const OperationConfig = {
         ]
     },
     "Vigenère Encode": {
+        module: "Ciphers",
         description: "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
-        run: Cipher.runVigenereEnc,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1502,8 +1503,8 @@ const OperationConfig = {
         ]
     },
     "Vigenère Decode": {
+        module: "Ciphers",
         description: "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
-        run: Cipher.runVigenereDec,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1517,8 +1518,8 @@ const OperationConfig = {
         ]
     },
     "Bifid Cipher Encode": {
+        module: "Ciphers",
         description: "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
-        run: Cipher.runBifidEnc,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1532,8 +1533,8 @@ const OperationConfig = {
         ]
     },
     "Bifid Cipher Decode": {
+        module: "Ciphers",
         description: "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
-        run: Cipher.runBifidDec,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1547,8 +1548,8 @@ const OperationConfig = {
         ]
     },
     "Affine Cipher Encode": {
+        module: "Ciphers",
         description: "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.",
-        run: Cipher.runAffineEnc,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1567,8 +1568,8 @@ const OperationConfig = {
         ]
     },
     "Affine Cipher Decode": {
+        module: "Ciphers",
         description: "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.",
-        run: Cipher.runAffineDec,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1587,8 +1588,8 @@ const OperationConfig = {
         ]
     },
     "Atbash Cipher": {
+        module: "Ciphers",
         description: "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.",
-        run: Cipher.runAtbash,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1596,8 +1597,8 @@ const OperationConfig = {
         args: []
     },
     "Rotate right": {
+        module: "Default",
         description: "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
-        run: Rotate.runRotr,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -1616,8 +1617,8 @@ const OperationConfig = {
         ]
     },
     "Rotate left": {
+        module: "Default",
         description: "Rotates each byte to the left by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
-        run: Rotate.runRotl,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -1636,8 +1637,8 @@ const OperationConfig = {
         ]
     },
     "ROT13": {
+        module: "Default",
         description: "A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).",
-        run: Rotate.runRot13,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -1661,8 +1662,8 @@ const OperationConfig = {
         ]
     },
     "ROT47": {
+        module: "Default",
         description: "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.",
-        run: Rotate.runRot47,
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -1676,22 +1677,22 @@ const OperationConfig = {
         ]
     },
     "Strip HTTP headers": {
+        module: "HTTP",
         description: "Removes HTTP headers from a request or response by looking for the first instance of a double newline.",
-        run: HTTP.runStripHeaders,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Parse User Agent": {
+        module: "HTTP",
         description: "Attempts to identify and categorise information contained in a user-agent string.",
-        run: HTTP.runParseUserAgent,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Format MAC addresses": {
+        module: "Default",
         description: "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.",
-        run: MAC.runFormat,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1723,8 +1724,8 @@ const OperationConfig = {
         ]
     },
     "Encode NetBIOS Name": {
+        module: "Default",
         description: "NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used.<br><br>There are two levels of encoding. The first level maps a NetBIOS name into a domain system name.  The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system.<br><br>This operation carries out the first level of encoding. See RFC 1001 for full details.",
-        run: NetBIOS.runEncodeName,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1736,8 +1737,8 @@ const OperationConfig = {
         ]
     },
     "Decode NetBIOS Name": {
+        module: "Default",
         description: "NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used.<br><br>There are two levels of encoding. The first level maps a NetBIOS name into a domain system name.  The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system.<br><br>This operation decodes the first level of encoding. See RFC 1001 for full details.",
-        run: NetBIOS.runDecodeName,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1749,8 +1750,8 @@ const OperationConfig = {
         ]
     },
     "Offset checker": {
+        module: "Default",
         description: "Compares multiple inputs (separated by the specified delimiter) and highlights matching characters which appear at the same position in all samples.",
-        run: StrUtils.runOffsetChecker,
         inputType: "string",
         outputType: "html",
         args: [
@@ -1762,8 +1763,8 @@ const OperationConfig = {
         ]
     },
     "Remove whitespace": {
+        module: "Default",
         description: "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.",
-        run: Tidy.runRemoveWhitespace,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1800,15 +1801,15 @@ const OperationConfig = {
         ]
     },
     "Remove null bytes": {
+        module: "Default",
         description: "Removes all null bytes (<code>0x00</code>) from the input.",
-        run: Tidy.runRemoveNulls,
         inputType: "byteArray",
         outputType: "byteArray",
         args: []
     },
     "Drop bytes": {
+        module: "Default",
         description: "Cuts the specified number of bytes out of the data.",
-        run: Tidy.runDropBytes,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1830,8 +1831,8 @@ const OperationConfig = {
         ]
     },
     "Take bytes": {
+        module: "Default",
         description: "Takes a slice of the specified number of bytes from the data.",
-        run: Tidy.runTakeBytes,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1853,8 +1854,8 @@ const OperationConfig = {
         ]
     },
     "Pad lines": {
+        module: "Default",
         description: "Add the specified number of the specified character to the beginning or end of each line",
-        run: Tidy.runPad,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1876,8 +1877,8 @@ const OperationConfig = {
         ]
     },
     "Reverse": {
+        module: "Default",
         description: "Reverses the input string.",
-        run: SeqUtils.runReverse,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1889,8 +1890,8 @@ const OperationConfig = {
         ]
     },
     "Sort": {
+        module: "Default",
         description: "Alphabetically sorts strings separated by the specified delimiter.<br><br>The IP address option supports IPv4 only.",
-        run: SeqUtils.runSort,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1912,8 +1913,8 @@ const OperationConfig = {
         ]
     },
     "Unique": {
+        module: "Default",
         description: "Removes duplicate strings from the input.",
-        run: SeqUtils.runUnique,
         inputType: "string",
         outputType: "string",
         args: [
@@ -1925,8 +1926,8 @@ const OperationConfig = {
         ]
     },
     "Count occurrences": {
+        module: "Default",
         description: "Counts the number of times the provided string occurs in the input.",
-        run: SeqUtils.runCount,
         inputType: "string",
         outputType: "number",
         args: [
@@ -1939,22 +1940,22 @@ const OperationConfig = {
         ]
     },
     "Add line numbers": {
+        module: "Default",
         description: "Adds line numbers to the output.",
-        run: SeqUtils.runAddLineNumbers,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Remove line numbers": {
+        module: "Default",
         description: "Removes line numbers from the output if they can be trivially detected.",
-        run: SeqUtils.runRemoveLineNumbers,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Find / Replace": {
+        module: "Default",
         description: "Replaces all occurrences of the first string with the second.<br><br> Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).",
-        run: StrUtils.runFindReplace,
         manualBake: true,
         inputType: "string",
         outputType: "string",
@@ -1989,8 +1990,8 @@ const OperationConfig = {
         ]
     },
     "To Upper case": {
+        module: "Default",
         description: "Converts the input string to upper case, optionally limiting scope to only the first character in each word, sentence or paragraph.",
-        run: StrUtils.runUpper,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -2004,8 +2005,8 @@ const OperationConfig = {
         ]
     },
     "To Lower case": {
+        module: "Default",
         description: "Converts every character in the input to lower case.",
-        run: StrUtils.runLower,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -2013,8 +2014,8 @@ const OperationConfig = {
         args: []
     },
     "Split": {
+        module: "Default",
         description: "Splits a string into sections around a given delimiter.",
-        run: StrUtils.runSplit,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2031,8 +2032,8 @@ const OperationConfig = {
         ]
     },
     "Filter": {
+        module: "Default",
         description: "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.",
-        run: StrUtils.runFilter,
         manualBake: true,
         inputType: "string",
         outputType: "string",
@@ -2055,8 +2056,8 @@ const OperationConfig = {
         ]
     },
     "Strings": {
+        module: "Default",
         description: "Extracts all strings from the input.",
-        run: Extract.runStrings,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2073,8 +2074,8 @@ const OperationConfig = {
         ]
     },
     "Extract IP addresses": {
+        module: "Default",
         description: "Extracts all IPv4 and IPv6 addresses.<br><br>Warning: Given a string <code>710.65.0.456</code>, this will match <code>10.65.0.45</code> so always check the original input!",
-        run: Extract.runIp,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2101,8 +2102,8 @@ const OperationConfig = {
         ]
     },
     "Extract email addresses": {
+        module: "Default",
         description: "Extracts all email addresses from the input.",
-        run: Extract.runEmail,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2114,8 +2115,8 @@ const OperationConfig = {
         ]
     },
     "Extract MAC addresses": {
+        module: "Default",
         description: "Extracts all Media Access Control (MAC) addresses from the input.",
-        run: Extract.runMac,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2127,8 +2128,8 @@ const OperationConfig = {
         ]
     },
     "Extract URLs": {
+        module: "Default",
         description: "Extracts Uniform Resource Locators (URLs) from the input. The protocol (http, ftp etc.) is required otherwise there will be far too many false positives.",
-        run: Extract.runUrls,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2140,8 +2141,8 @@ const OperationConfig = {
         ]
     },
     "Extract domains": {
+        module: "Default",
         description: "Extracts domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.",
-        run: Extract.runDomains,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2153,8 +2154,8 @@ const OperationConfig = {
         ]
     },
     "Extract file paths": {
+        module: "Default",
         description: "Extracts anything that looks like a Windows or UNIX file path.<br><br>Note that if UNIX is selected, there will likely be a lot of false positives.",
-        run: Extract.runFilePaths,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2176,8 +2177,8 @@ const OperationConfig = {
         ]
     },
     "Extract dates": {
+        module: "Default",
         description: "Extracts dates in the following formats<ul><li><code>yyyy-mm-dd</code></li><li><code>dd/mm/yyyy</code></li><li><code>mm/dd/yyyy</code></li></ul>Dividers can be any of /, -, . or space",
-        run: Extract.runDates,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2189,8 +2190,8 @@ const OperationConfig = {
         ]
     },
     "Regular expression": {
+        module: "Default",
         description: "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.",
-        run: StrUtils.runRegex,
         manualBake: true,
         inputType: "string",
         outputType: "html",
@@ -2229,8 +2230,8 @@ const OperationConfig = {
         ]
     },
     "XPath expression": {
+        module: "Code",
         description: "Extract information from an XML document with an XPath query",
-        run: Code.runXpath,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2247,8 +2248,8 @@ const OperationConfig = {
         ]
     },
     "JPath expression": {
+        module: "Code",
         description: "Extract information from a JSON object with a JPath query.",
-        run: Code.runJpath,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2265,8 +2266,8 @@ const OperationConfig = {
         ]
     },
     "CSS selector": {
+        module: "Code",
         description: "Extract information from an HTML document with a CSS selector",
-        run: Code.runCSSQuery,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2283,8 +2284,8 @@ const OperationConfig = {
         ]
     },
     "From UNIX Timestamp": {
+        module: "Default",
         description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
-        run: DateTime.runFromUnixTimestamp,
         inputType: "number",
         outputType: "string",
         args: [
@@ -2296,8 +2297,8 @@ const OperationConfig = {
         ]
     },
     "To UNIX Timestamp": {
+        module: "Default",
         description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
-        run: DateTime.runToUnixTimestamp,
         inputType: "string",
         outputType: "number",
         args: [
@@ -2314,44 +2315,44 @@ const OperationConfig = {
         ]
     },
     "Windows Filetime to UNIX Timestamp": {
+        module: "JSBN",
         description: "Converts a Windows Filetime value to a UNIX timestamp.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
-        run: DateTime.runFromFiletimeToUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
                 name: "Output units",
                 type: "option",
-                value: DateTime.UNITS
+                value: Filetime.UNITS
             },
             {
                 name: "Input format",
                 type: "option",
-                value: DateTime.FILETIME_FORMATS
+                value: Filetime.FILETIME_FORMATS
             }
         ]
     },
     "UNIX Timestamp to Windows Filetime": {
+        module: "JSBN",
         description: "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
-        run: DateTime.runToFiletimeFromUnix,
         inputType: "string",
         outputType: "string",
         args: [
             {
                 name: "Input units",
                 type: "option",
-                value: DateTime.UNITS
+                value: Filetime.UNITS
             },
             {
                 name: "Output format",
                 type: "option",
-                value: DateTime.FILETIME_FORMATS
+                value: Filetime.FILETIME_FORMATS
             }
         ]
     },
     "Translate DateTime Format": {
+        module: "Default",
         description: "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.",
-        run: DateTime.runTranslateFormat,
         inputType: "string",
         outputType: "html",
         args: [
@@ -2384,8 +2385,8 @@ const OperationConfig = {
         ]
     },
     "Parse DateTime": {
+        module: "Default",
         description: "Parses a DateTime string in your specified format and displays it in whichever timezone you choose with the following information:<ul><li>Date</li><li>Time</li><li>Period (AM/PM)</li><li>Timezone</li><li>UTC offset</li><li>Daylight Saving Time</li><li>Leap year</li><li>Days in this month</li><li>Day of year</li><li>Week number</li><li>Quarter</li></ul>Run with no input to see format string examples if required.",
-        run: DateTime.runParse,
         inputType: "string",
         outputType: "html",
         args: [
@@ -2408,8 +2409,8 @@ const OperationConfig = {
         ]
     },
     "Convert distance": {
+        module: "Default",
         description: "Converts a unit of distance to another format.",
-        run: Convert.runDistance,
         inputType: "number",
         outputType: "number",
         args: [
@@ -2426,8 +2427,8 @@ const OperationConfig = {
         ]
     },
     "Convert area": {
+        module: "Default",
         description: "Converts a unit of area to another format.",
-        run: Convert.runArea,
         inputType: "number",
         outputType: "number",
         args: [
@@ -2444,8 +2445,8 @@ const OperationConfig = {
         ]
     },
     "Convert mass": {
+        module: "Default",
         description: "Converts a unit of mass to another format.",
-        run: Convert.runMass,
         inputType: "number",
         outputType: "number",
         args: [
@@ -2462,8 +2463,8 @@ const OperationConfig = {
         ]
     },
     "Convert speed": {
+        module: "Default",
         description: "Converts a unit of speed to another format.",
-        run: Convert.runSpeed,
         inputType: "number",
         outputType: "number",
         args: [
@@ -2480,8 +2481,8 @@ const OperationConfig = {
         ]
     },
     "Convert data units": {
+        module: "Default",
         description: "Converts a unit of data to another format.",
-        run: Convert.runDataSize,
         inputType: "number",
         outputType: "number",
         args: [
@@ -2498,8 +2499,8 @@ const OperationConfig = {
         ]
     },
     "Raw Deflate": {
+        module: "Compression",
         description: "Compresses data using the deflate algorithm with no headers.",
-        run: Compress.runRawDeflate,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2511,8 +2512,8 @@ const OperationConfig = {
         ]
     },
     "Raw Inflate": {
+        module: "Compression",
         description: "Decompresses data which has been compressed using the deflate algorithm with no headers.",
-        run: Compress.runRawInflate,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2544,8 +2545,8 @@ const OperationConfig = {
         ]
     },
     "Zlib Deflate": {
+        module: "Compression",
         description: "Compresses data using the deflate algorithm adding zlib headers.",
-        run: Compress.runZlibDeflate,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2557,8 +2558,8 @@ const OperationConfig = {
         ]
     },
     "Zlib Inflate": {
+        module: "Compression",
         description: "Decompresses data which has been compressed using the deflate algorithm with zlib headers.",
-        run: Compress.runZlibInflate,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2590,8 +2591,8 @@ const OperationConfig = {
         ]
     },
     "Gzip": {
+        module: "Compression",
         description: "Compresses data using the deflate algorithm with gzip headers.",
-        run: Compress.runGzip,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2618,15 +2619,15 @@ const OperationConfig = {
         ]
     },
     "Gunzip": {
+        module: "Compression",
         description: "Decompresses data which has been compressed using the deflate algorithm with gzip headers.",
-        run: Compress.runGunzip,
         inputType: "byteArray",
         outputType: "byteArray",
         args: []
     },
     "Zip": {
+        module: "Compression",
         description: "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.",
-        run: Compress.runPkzip,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2663,8 +2664,8 @@ const OperationConfig = {
         ]
     },
     "Unzip": {
+        module: "Compression",
         description: "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.",
-        run: Compress.runPkunzip,
         inputType: "byteArray",
         outputType: "html",
         args: [
@@ -2681,22 +2682,22 @@ const OperationConfig = {
         ]
     },
     "Bzip2 Decompress": {
+        module: "Compression",
         description: "Decompresses data using the Bzip2 algorithm.",
-        run: Compress.runBzip2Decompress,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Generic Code Beautify": {
+        module: "Code",
         description: "Attempts to pretty print C-style languages such as C, C++, C#, Java, PHP, JavaScript etc.<br><br>This will not do a perfect job, and the resulting code may not work any more. This operation is designed purely to make obfuscated or minified code more easy to read and understand.<br><br>Things which will not work properly:<ul><li>For loop formatting</li><li>Do-While loop formatting</li><li>Switch/Case indentation</li><li>Certain bit shift operators</li></ul>",
-        run: Code.runGenericBeautify,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "JavaScript Parser": {
+        module: "Code",
         description: "Returns an Abstract Syntax Tree for valid JavaScript code.",
-        run: JS.runParse,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2728,8 +2729,8 @@ const OperationConfig = {
         ]
     },
     "JavaScript Beautify": {
+        module: "Code",
         description: "Parses and pretty prints valid JavaScript code. Also works with JavaScript Object Notation (JSON).",
-        run: JS.runBeautify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2756,15 +2757,15 @@ const OperationConfig = {
         ]
     },
     "JavaScript Minify": {
+        module: "Code",
         description: "Compresses JavaScript code.",
-        run: JS.runMinify,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "XML Beautify": {
+        module: "Code",
         description: "Indents and prettifies eXtensible Markup Language (XML) code.",
-        run: Code.runXmlBeautify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2776,8 +2777,8 @@ const OperationConfig = {
         ]
     },
     "JSON Beautify": {
+        module: "Code",
         description: "Indents and prettifies JavaScript Object Notation (JSON) code.",
-        run: Code.runJsonBeautify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2789,8 +2790,8 @@ const OperationConfig = {
         ]
     },
     "CSS Beautify": {
+        module: "Code",
         description: "Indents and prettifies Cascading Style Sheets (CSS) code.",
-        run: Code.runCssBeautify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2802,8 +2803,8 @@ const OperationConfig = {
         ]
     },
     "SQL Beautify": {
+        module: "Code",
         description: "Indents and prettifies Structured Query Language (SQL) code.",
-        run: Code.runSqlBeautify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2815,8 +2816,8 @@ const OperationConfig = {
         ]
     },
     "XML Minify": {
+        module: "Code",
         description: "Compresses eXtensible Markup Language (XML) code.",
-        run: Code.runXmlMinify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2828,15 +2829,15 @@ const OperationConfig = {
         ]
     },
     "JSON Minify": {
+        module: "Code",
         description: "Compresses JavaScript Object Notation (JSON) code.",
-        run: Code.runJsonMinify,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "CSS Minify": {
+        module: "Code",
         description: "Compresses Cascading Style Sheets (CSS) code.",
-        run: Code.runCssMinify,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2848,43 +2849,43 @@ const OperationConfig = {
         ]
     },
     "SQL Minify": {
+        module: "Code",
         description: "Compresses Structured Query Language (SQL) code.",
-        run: Code.runSqlMinify,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Analyse hash": {
+        module: "Hashing",
         description: "Tries to determine information about a given hash and suggests which algorithm may have been used to generate it based on its length.",
-        run: Hash.runAnalyse,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "MD2": {
+        module: "Hashing",
         description: "The MD2 (Message-Digest 2) algorithm is a cryptographic hash function developed by Ronald Rivest in 1989. The algorithm is optimized for 8-bit computers.<br><br>Although MD2 is no longer considered secure, even as of 2014, it remains in use in public key infrastructures as part of certificates generated with MD2 and RSA.",
-        run: Hash.runMD2,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "MD4": {
+        module: "Hashing",
         description: "The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms.<br><br>The security of MD4 has been severely compromised.",
-        run: Hash.runMD4,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "MD5": {
+        module: "Hashing",
         description: "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
-        run: Hash.runMD5,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "MD6": {
+        module: "Hashing",
         description: "The MD6 (Message-Digest 6) algorithm is a cryptographic hash function. It uses a Merkle tree-like structure to allow for immense parallel computation of hashes for very long inputs.",
-        run: Hash.runMD6,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2906,22 +2907,22 @@ const OperationConfig = {
         ]
     },
     "SHA0": {
+        module: "Hashing",
         description: "SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1.",
-        run: Hash.runSHA0,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "SHA1": {
+        module: "Hashing",
         description: "The SHA (Secure Hash Algorithm) hash functions were designed by the NSA. SHA-1 is the most established of the existing SHA hash functions and it is used in a variety of security applications and protocols.<br><br>However, SHA-1's collision resistance has been weakening as new attacks are discovered or improved.",
-        run: Hash.runSHA1,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "SHA2": {
+        module: "Hashing",
         description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><br><ul><li>SHA-512 operates on 64-bit words.</li><li>SHA-256 operates on 32-bit words.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li><li>SHA-512/224 and SHA-512/256 are truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.</li></ul>",
-        run: Hash.runSHA2,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2933,8 +2934,8 @@ const OperationConfig = {
         ]
     },
     "SHA3": {
+        module: "Hashing",
         description: "The SHA-3 (Secure Hash Algorithm 3) hash functions were released by NIST on August 5, 2015. Although part of the same series of standards, SHA-3 is internally quite different from the MD5-like structure of SHA-1 and SHA-2.<br><br>SHA-3 is a subset of the broader cryptographic primitive family Keccak designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún.",
-        run: Hash.runSHA3,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2946,8 +2947,8 @@ const OperationConfig = {
         ]
     },
     "Keccak": {
+        module: "Hashing",
         description: "The Keccak hash algorithm was designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún. It was selected as the winner of the SHA-3 design competition.<br><br>This version of the algorithm is Keccak[c=2d] and differs from the SHA-3 specification.",
-        run: Hash.runKeccak,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2959,8 +2960,8 @@ const OperationConfig = {
         ]
     },
     "Shake": {
+        module: "Hashing",
         description: "Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.",
-        run: Hash.runShake,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2978,8 +2979,8 @@ const OperationConfig = {
 
     },
     "RIPEMD": {
+        module: "Hashing",
         description: "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>",
-        run: Hash.runRIPEMD,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2991,8 +2992,8 @@ const OperationConfig = {
         ]
     },
     "HMAC": {
+        module: "Hashing",
         description: "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.",
-        run: Hash.runHMAC,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3009,64 +3010,64 @@ const OperationConfig = {
         ]
     },
     "Fletcher-8 Checksum": {
+        module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
-        run: Checksum.runFletcher8,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Fletcher-16 Checksum": {
+        module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
-        run: Checksum.runFletcher16,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Fletcher-32 Checksum": {
+        module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
-        run: Checksum.runFletcher32,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Fletcher-64 Checksum": {
+        module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
-        run: Checksum.runFletcher64,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Adler-32 Checksum": {
+        module: "Hashing",
         description: "Adler-32 is a checksum algorithm which was invented by Mark Adler in 1995, and is a modification of the Fletcher checksum. Compared to a cyclic redundancy check of the same length, it trades reliability for speed (preferring the latter).<br><br>Adler-32 is more reliable than Fletcher-16, and slightly less reliable than Fletcher-32.",
-        run: Checksum.runAdler32,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "CRC-32 Checksum": {
+        module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961; the 32-bit CRC function of Ethernet and many other standards is the work of several researchers and was published in 1975.",
-        run: Checksum.runCRC32,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "CRC-16 Checksum": {
+        module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.",
-        run: Checksum.runCRC16,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Generate all hashes": {
+        module: "Hashing",
         description: "Generates all available hashes and checksums for the input.",
-        run: Hash.runAll,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Entropy": {
+        module: "Default",
         description: "Calculates the Shannon entropy of the input data which gives an idea of its randomness. 8 is the maximum.",
-        run: Entropy.runEntropy,
         inputType: "byteArray",
         outputType: "html",
         args: [
@@ -3078,8 +3079,8 @@ const OperationConfig = {
         ]
     },
     "Frequency distribution": {
+        module: "Default",
         description: "Displays the distribution of bytes in the data as a graph.",
-        run: Entropy.runFreqDistrib,
         inputType: "byteArray",
         outputType: "html",
         args: [
@@ -3091,15 +3092,15 @@ const OperationConfig = {
         ]
     },
     "Numberwang": {
+        module: "Default",
         description: "Based on the popular gameshow by Mitchell and Webb.",
-        run: Numberwang.run,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Parse X.509 certificate": {
+        module: "PublicKey",
         description: "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.",
-        run: PublicKey.runParseX509,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3111,15 +3112,15 @@ const OperationConfig = {
         ]
     },
     "PEM to Hex": {
+        module: "PublicKey",
         description: "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.",
-        run: PublicKey.runPemToHex,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Hex to PEM": {
+        module: "PublicKey",
         description: "Converts a hexadecimal DER (Distinguished Encoding Rules) string into PEM (Privacy Enhanced Mail) format.",
-        run: PublicKey.runHexToPem,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3131,22 +3132,22 @@ const OperationConfig = {
         ]
     },
     "Hex to Object Identifier": {
+        module: "PublicKey",
         description: "Converts a hexadecimal string into an object identifier (OID).",
-        run: PublicKey.runHexToObjectIdentifier,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Object Identifier to Hex": {
+        module: "PublicKey",
         description: "Converts an object identifier (OID) into a hexadecimal string.",
-        run: PublicKey.runObjectIdentifierToHex,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Parse ASN.1 hex string": {
+        module: "PublicKey",
         description: "Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking.<br><br>This operation parses arbitrary ASN.1 data and presents the resulting tree.",
-        run: PublicKey.runParseAsn1HexString,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3163,15 +3164,15 @@ const OperationConfig = {
         ]
     },
     "Detect File Type": {
+        module: "Default",
         description: "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: 7z, amr, avi, bmp, bz2, class, cr2, crx, dex, dmg, doc, elf, eot, epub, exe, flac, flv, gif, gz, ico, iso, jpg, jxr, m4a, m4v, mid, mkv, mov, mp3, mp4, mpg, ogg, otf, pdf, png, ppt, ps, psd, rar, rtf, sqlite, swf, tar, tar.z, tif, ttf, utf8, vmdk, wav, webm, webp, wmv, woff, woff2, xls, xz, zip.",
-        run: FileType.runDetect,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Scan for Embedded Files": {
+        module: "Default",
         description: "Scans the data for potential embedded files by looking for magic bytes at all offsets. This operation is prone to false positives.<br><br>WARNING: Files over about 100KB in size will take a VERY long time to process.",
-        run: FileType.runScanForEmbeddedFiles,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -3183,8 +3184,8 @@ const OperationConfig = {
         ]
     },
     "Expand alphabet range": {
+        module: "Default",
         description: "Expand an alphabet range string into a list of the characters in that range.<br><br>e.g. <code>a-z</code> becomes <code>abcdefghijklmnopqrstuvwxyz</code>.",
-        run: SeqUtils.runExpandAlphRange,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3196,20 +3197,20 @@ const OperationConfig = {
         ]
     },
     "Diff": {
+        module: "Diff",
         description: "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.",
-        run: StrUtils.runDiff,
         inputType: "string",
         outputType: "html",
         args: [
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: StrUtils.DIFF_SAMPLE_DELIMITER
+                value: Diff.DIFF_SAMPLE_DELIMITER
             },
             {
                 name: "Diff by",
                 type: "option",
-                value: StrUtils.DIFF_BY
+                value: Diff.DIFF_BY
             },
             {
                 name: "Show added",
@@ -3229,15 +3230,15 @@ const OperationConfig = {
         ]
     },
     "Parse UNIX file permissions": {
+        module: "Default",
         description: "Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups.<br><br>Input should be in either octal (e.g. <code>755</code>) or textual (e.g. <code>drwxr-xr-x</code>) format.",
-        run: OS.runParseUnixPerms,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Swap endianness": {
+        module: "Default",
         description: "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.",
-        run: Endian.runSwapEndianness,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -3261,15 +3262,15 @@ const OperationConfig = {
         ]
     },
     "Microsoft Script Decoder": {
+        module: "Default",
         description: "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and renamed with a '.vbe' extention or JS (JScript) files renamed with a '.jse' extention.<br><br><b>Sample</b><br><br>Encoded:<br><code>#@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&amp;@*eEI@#@&amp;@#@&amp;.jm.raY 214Wv:zms/obI0xEAAA==^#~@</code><br><br>Decoded:<br><code>var my_msg = &#34;Testing <1><2><3>!&#34;;\n\nVScript.Echo(my_msg);</code>",
-        run: MS.runDecodeScript,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Syntax highlighter": {
+        module: "Code",
         description: "Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.",
-        run: Code.runSyntaxHighlight,
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -3288,29 +3289,29 @@ const OperationConfig = {
         ]
     },
     "TCP/IP Checksum": {
+        module: "Hashing",
         description: "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.",
-        run: Checksum.runTCPIP,
         inputType: "byteArray",
         outputType: "string",
         args: []
     },
     "Parse colour code": {
+        module: "Default",
         description: "Converts a colour code in a standard format to other standard formats and displays the colour itself.<br><br><strong>Example inputs</strong><ul><li><code>#d9edf7</code></li><li><code>rgba(217,237,247,1)</code></li><li><code>hsla(200,65%,91%,1)</code></li><li><code>cmyk(0.12, 0.04, 0.00, 0.03)</code></li></ul>",
-        run: HTML.runParseColourCode,
         inputType: "string",
         outputType: "html",
         args: []
     },
     "Generate UUID": {
+        module: "Default",
         description: "Generates an RFC 4122 version 4 compliant Universally Unique Identifier (UUID), also known as a Globally Unique Identifier (GUID).<br><br>A version 4 UUID relies on random numbers, in this case generated using <code>window.crypto</code> if available and falling back to <code>Math.random</code> if not.",
-        run: UUID.runGenerateV4,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Substitute": {
+        module: "Ciphers",
         description: "A substitution cipher allowing you to specify bytes to replace with other byte values. This can be used to create Caesar ciphers but is more powerful as any byte value can be substituted, not just letters, and the substitution values need not be in order.<br><br>Enter the bytes you want to replace in the Plaintext field and the bytes to replace them with in the Ciphertext field.<br><br>Non-printable bytes can be specified using string escape notation. For example, a line feed character can be written as either <code>\\n</code> or <code>\\x0a</code>.<br><br>Byte ranges can be specified using a hyphen. For example, the sequence <code>0123456789</code> can be written as <code>0-9</code>.",
-        run: Cipher.runSubstitute,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3327,22 +3328,22 @@ const OperationConfig = {
         ]
     },
     "Escape string": {
+        module: "Default",
         description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
-        run: StrUtils.runEscape,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Unescape string": {
+        module: "Default",
         description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
-        run: StrUtils.runUnescape,
         inputType: "string",
         outputType: "string",
         args: []
     },
     "To Morse Code": {
+        module: "Default",
         description: "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>",
-        run: MorseCode.runTo,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3364,8 +3365,8 @@ const OperationConfig = {
         ]
     },
     "From Morse Code": {
+        module: "Default",
         description: "Translates Morse Code into (upper case) alphanumeric characters.",
-        run: MorseCode.runFrom,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3382,8 +3383,8 @@ const OperationConfig = {
         ]
     },
     "Tar": {
+        module: "Compression",
         description: "Packs the input into a tarball.<br><br>No support for multiple files at this time.",
-        run: Compress.runTar,
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -3395,14 +3396,15 @@ const OperationConfig = {
         ]
     },
     "Untar": {
+        module: "Compression",
         description: "Unpacks a tarball and displays it per file.",
-        run: Compress.runUntar,
         inputType: "byteArray",
         outputType: "html",
         args: [
         ]
     },
     "Head": {
+        module: "Default",
         description: [
             "Like the UNIX head utility.",
             "<br>",
@@ -3412,7 +3414,6 @@ const OperationConfig = {
             "<br>",
             "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
         ].join("\n"),
-        run: StrUtils.runHead,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3429,6 +3430,7 @@ const OperationConfig = {
         ]
     },
     "Tail": {
+        module: "Default",
         description: [
             "Like the UNIX tail utility.",
             "<br>",
@@ -3438,7 +3440,6 @@ const OperationConfig = {
             "<br>",
             "The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
         ].join("\n"),
-        run: StrUtils.runTail,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3455,6 +3456,7 @@ const OperationConfig = {
         ]
     },
     "To Snake case": {
+        module: "Code",
         description: [
             "Converts the input string to snake case.",
             "<br><br>",
@@ -3464,7 +3466,6 @@ const OperationConfig = {
             "<br><br>",
             "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
         ].join("\n"),
-        run: Code.runToSnakeCase,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3476,6 +3477,7 @@ const OperationConfig = {
         ]
     },
     "To Camel case": {
+        module: "Code",
         description: [
             "Converts the input string to camel case.",
             "<br><br>",
@@ -3485,7 +3487,6 @@ const OperationConfig = {
             "<br><br>",
             "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
         ].join("\n"),
-        run: Code.runToCamelCase,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3497,6 +3498,7 @@ const OperationConfig = {
         ]
     },
     "To Kebab case": {
+        module: "Code",
         description: [
             "Converts the input string to kebab case.",
             "<br><br>",
@@ -3506,7 +3508,6 @@ const OperationConfig = {
             "<br><br>",
             "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
         ].join("\n"),
-        run: Code.runToKebabCase,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3518,6 +3519,7 @@ const OperationConfig = {
         ]
     },
     "Extract EXIF": {
+        module: "Image",
         description: [
             "Extracts EXIF data from an image.",
             "<br><br>",
@@ -3525,14 +3527,13 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        run: Image.runExtractEXIF,
         inputType: "byteArray",
         outputType: "string",
         args: [],
     },
     "Render Image": {
+        module: "Image",
         description: "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>bmp</li><li>ico</li></ul>",
-        run: Image.runRenderImage,
         inputType: "string",
         outputType: "html",
         args: [
@@ -3544,17 +3545,18 @@ const OperationConfig = {
         ]
     },
     "Remove EXIF": {
+        module: "Image",
         description: [
             "Removes EXIF data from a JPEG image.",
             "<br><br>",
             "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        run: Image.runRemoveEXIF,
         inputType: "byteArray",
         outputType: "byteArray",
         args: []
     },
     "HTTP request": {
+        module: "HTTP",
         description: [
             "Makes an HTTP request and returns the response.",
             "<br><br>",
@@ -3564,7 +3566,6 @@ const OperationConfig = {
             "<br><br>",
             "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
         ].join("\n"),
-        run: HTTP.runHTTPRequest,
         inputType: "string",
         outputType: "string",
         manualBake: true,
@@ -3597,8 +3598,8 @@ const OperationConfig = {
         ]
     },
     "From BCD": {
+        module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
-        run: BCD.runFromBCD,
         inputType: "string",
         outputType: "number",
         args: [
@@ -3626,8 +3627,8 @@ const OperationConfig = {
 
     },
     "To BCD": {
+        module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
-        run: BCD.runToBCD,
         inputType: "number",
         outputType: "string",
         args: [
@@ -3655,8 +3656,8 @@ const OperationConfig = {
 
     },
     "Bit shift left": {
+        module: "Default",
         description: "Shifts the bits in each byte towards the left by the specified amount.",
-        run: BitwiseOp.runBitShiftLeft,
         inputType: "byteArray",
         outputType: "byteArray",
         highlight: true,
@@ -3670,8 +3671,8 @@ const OperationConfig = {
         ]
     },
     "Bit shift right": {
+        module: "Default",
         description: "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).",
-        run: BitwiseOp.runBitShiftRight,
         inputType: "byteArray",
         outputType: "byteArray",
         highlight: true,
@@ -3690,8 +3691,8 @@ const OperationConfig = {
         ]
     },
     "Generate TOTP": {
+        module: "Default",
         description: "The Time-based One-Time Password algorithm (TOTP) is an algorithm that computes a one-time password from a shared secret key and the current time. It has been adopted as Internet Engineering Task Force standard RFC 6238, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems. A TOTP is an HOTP where the counter is the current time.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated. T0 and T1 are in seconds.",
-        run: OTP.runTOTP,
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -3723,8 +3724,8 @@ const OperationConfig = {
         ]
     },
     "Generate HOTP": {
+        module: "Default",
         description: "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.",
-        run: OTP.runHOTP,
         inputType: "string",
         outputType: "string",
         args: [
@@ -3752,4 +3753,19 @@ const OperationConfig = {
     },
 };
 
-export default OperationConfig;
+
+/**
+ * Exports the OperationConfig JSON object in val-loader format so that it can be loaded
+ * into the app without also importing all the dependencies.
+ *
+ * See https://github.com/webpack-contrib/val-loader
+ *
+ * @returns {Object}
+ */
+function valExport() {
+    return {
+        code: "module.exports = " + JSON.stringify(OperationConfig) + ";"
+    };
+}
+
+export default valExport;

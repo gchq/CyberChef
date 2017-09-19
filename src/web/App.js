@@ -1,5 +1,4 @@
 import Utils from "../core/Utils.js";
-import Chef from "../core/Chef.js";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -27,7 +26,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.doptions      = defaultOptions;
     this.options       = Utils.extend({}, defaultOptions);
 
-    this.chef          = new Chef();
     this.manager       = new Manager(this);
 
     this.baking        = false;
@@ -35,8 +33,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.autoBakePause = false;
     this.progress      = 0;
     this.ingId         = 0;
-
-    window.chef        = this.chef;
 };
 
 
@@ -54,6 +50,8 @@ App.prototype.setup = function() {
     this.resetLayout();
     this.setCompileMessage();
     this.loadURIParams();
+
+    this.appLoaded = true;
     this.loaded();
 };
 
@@ -64,6 +62,11 @@ App.prototype.setup = function() {
  * @fires Manager#apploaded
  */
 App.prototype.loaded = function() {
+    // Check that both the app and the worker have loaded successfully, and that
+    // we haven't already loaded before attempting to remove the loading screen.
+    if (!this.workerLoaded || !this.appLoaded ||
+        !document.getElementById("loader-wrapper")) return;
+
     // Trigger CSS animations to remove preloader
     document.body.classList.add("loaded");
 
@@ -94,76 +97,24 @@ App.prototype.handleError = function(err) {
 
 
 /**
- * Updates the UI to show if baking is in process or not.
- *
- * @param {bakingStatus}
- */
-App.prototype.setBakingStatus = function(bakingStatus) {
-    this.baking = bakingStatus;
-
-    let inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
-        outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
-        outputElement = document.querySelector("#output-text");
-
-    if (bakingStatus) {
-        inputLoadingIcon.style.display = "inline-block";
-        outputLoadingIcon.style.display = "inline-block";
-        outputElement.classList.add("disabled");
-        outputElement.disabled = true;
-    } else {
-        inputLoadingIcon.style.display = "none";
-        outputLoadingIcon.style.display = "none";
-        outputElement.classList.remove("disabled");
-        outputElement.disabled = false;
-    }
-};
-
-
-/**
- * Calls the Chef to bake the current input using the current recipe.
+ * Asks the ChefWorker to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
-App.prototype.bake = async function(step) {
-    let response;
-
+App.prototype.bake = function(step) {
     if (this.baking) return;
 
-    this.setBakingStatus(true);
+    // Reset attemptHighlight flag
+    this.options.attemptHighlight = true;
 
-    try {
-        response = await this.chef.bake(
-            this.getInput(),          // The user's input
-            this.getRecipeConfig(),   // The configuration of the recipe
-            this.options,             // Options set by the user
-            this.progress,            // The current position in the recipe
-            step                      // Whether or not to take one step or execute the whole recipe
-        );
-    } catch (err) {
-        this.handleError(err);
-    }
-
-    this.setBakingStatus(false);
-
-    if (!response) return;
-
-    if (response.error) {
-        this.handleError(response.error);
-    }
-
-    this.options  = response.options;
-    this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
-    this.progress = response.progress;
-    this.manager.recipe.updateBreakpointIndicator(response.progress);
-    this.manager.output.set(response.result, response.type, response.duration);
-
-    // If baking took too long, disable auto-bake
-    if (response.duration > this.options.autoBakeThreshold && this.autoBake_) {
-        this.manager.controls.setAutoBake(false);
-        this.alert("Baking took longer than " + this.options.autoBakeThreshold +
-            "ms, Auto Bake has been disabled.", "warning", 5000);
-    }
+    this.manager.worker.bake(
+        this.getInput(),        // The user's input
+        this.getRecipeConfig(), // The configuration of the recipe
+        this.options,           // Options set by the user
+        this.progress,          // The current position in the recipe
+        step                    // Whether or not to take one step or execute the whole recipe
+    );
 };
 
 
@@ -171,30 +122,31 @@ App.prototype.bake = async function(step) {
  * Runs Auto Bake if it is set.
  */
 App.prototype.autoBake = function() {
-    if (this.autoBake_ && !this.autoBakePause) {
+    if (this.autoBake_ && !this.autoBakePause && !this.baking) {
         this.bake();
+    } else {
+        this.manager.controls.showStaleIndicator();
     }
 };
 
 
 /**
- * Runs a silent bake forcing the browser to load and cache all the relevant JavaScript code needed
+ * Runs a silent bake, forcing the browser to load and cache all the relevant JavaScript code needed
  * to do a real bake.
  *
- * The output will not be modified (hence "silent" bake). This will only actually execute the
- * recipe if auto-bake is enabled, otherwise it will just load the recipe, ingredients and dish.
- *
- * @returns {number} - The number of miliseconds it took to run the silent bake.
+ * The output will not be modified (hence "silent" bake). This will only actually execute the recipe
+ * if auto-bake is enabled, otherwise it will just wake up the ChefWorker with an empty recipe.
  */
 App.prototype.silentBake = function() {
-    let startTime = new Date().getTime(),
-        recipeConfig = this.getRecipeConfig();
+    let recipeConfig = [];
 
     if (this.autoBake_) {
-        this.chef.silentBake(recipeConfig);
+        // If auto-bake is not enabled we don't want to actually run the recipe as it may be disabled
+        // for a good reason.
+        recipeConfig = this.getRecipeConfig();
     }
 
-    return new Date().getTime() - startTime;
+    this.manager.worker.silentBake(recipeConfig);
 };
 
 
@@ -264,7 +216,7 @@ App.prototype.populateOperationsList = function() {
 App.prototype.initialiseSplitter = function() {
     this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
-        minSize: [240, 325, 440],
+        minSize: [240, 325, 450],
         gutterSize: 4,
         onDrag: function() {
             this.manager.controls.adjustWidth();
