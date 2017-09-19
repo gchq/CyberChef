@@ -81,7 +81,7 @@ ControlsWaiter.prototype.bakeClick = function() {
     if (document.getElementById("bake").textContent.indexOf("Bake") > 0) {
         this.app.bake();
     } else {
-        this.app.cancelBake();
+        this.manager.worker.cancelBake();
     }
 };
 

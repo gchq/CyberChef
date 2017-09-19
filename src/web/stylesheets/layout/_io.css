@@ -72,7 +72,7 @@
     margin: 0;
     background-color: var(--primary-background-colour);
     visibility: hidden;
-    opacity: 0; 
+    opacity: 0;
 
     transition: all 0.5s ease;
 }
@@ -117,4 +117,6 @@
     line-height: var(--primary-line-height);
     color: var(--primary-font-colour);
     top: 50%;
+    
+    transition: all 0.5s ease;
 }
