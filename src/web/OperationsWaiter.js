@@ -38,7 +38,6 @@ OperationsWaiter.prototype.searchOperations = function(e) {
             selected = this.getSelectedOp(ops);
             if (selected > -1) {
                 this.manager.recipe.addOperation(ops[selected].innerHTML);
-                this.app.autoBake();
             }
         }
     }
@@ -197,7 +196,6 @@ OperationsWaiter.prototype.operationDblclick = function(e) {
     const li = e.target;
 
     this.manager.recipe.addOperation(li.textContent);
-    this.app.autoBake();
 };
 
 
