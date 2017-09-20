@@ -67,7 +67,7 @@
     "bootstrap": "^3.3.7",
     "bootstrap-colorpicker": "^2.5.1",
     "bootstrap-switch": "^3.3.4",
-    "crypto-api": "^0.7.3",
+    "crypto-api": "^0.7.4",
     "crypto-js": "^3.1.9-1",
     "diff": "^3.3.1",
     "escodegen": "^1.9.0",
