@@ -35,7 +35,11 @@
             "use strict";
 
             // Load theme before the preloader is shown
-            document.querySelector(":root").className = (JSON.parse(localStorage.getItem("options")) || {}).theme;
+            try {
+                document.querySelector(":root").className = (JSON.parse(localStorage.getItem("options")) || {}).theme;
+            } catch (err) {
+                // LocalStorage access is denied by security settings
+            }
 
             // Define loading messages
             const loadingMsgs = [

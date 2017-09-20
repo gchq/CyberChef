@@ -240,7 +240,7 @@ App.prototype.initialiseSplitter = function() {
 App.prototype.loadLocalStorage = function() {
     // Load options
     let lOptions;
-    if (localStorage.options !== undefined) {
+    if (this.isLocalStorageAvailable() && localStorage.options !== undefined) {
         lOptions = JSON.parse(localStorage.options);
     }
     this.manager.options.load(lOptions);
@@ -256,13 +256,17 @@ App.prototype.loadLocalStorage = function() {
  * If the user currently has no saved favourites, the defaults from the view constructor are used.
  */
 App.prototype.loadFavourites = function() {
-    let favourites = localStorage.favourites &&
-        localStorage.favourites.length > 2 ?
-        JSON.parse(localStorage.favourites) :
-        this.dfavourites;
+    let favourites;
 
-    favourites = this.validFavourites(favourites);
-    this.saveFavourites(favourites);
+    if (this.isLocalStorageAvailable()) {
+        favourites = localStorage.favourites && localStorage.favourites.length > 2 ?
+            JSON.parse(localStorage.favourites) :
+            this.dfavourites;
+        favourites = this.validFavourites(favourites);
+        this.saveFavourites(favourites);
+    } else {
+        favourites = this.dfavourites;
+    }
 
     const favCat = this.categories.filter(function(c) {
         return c.name === "Favourites";
@@ -306,6 +310,15 @@ App.prototype.validFavourites = function(favourites) {
  * @param {string[]} favourites - A list of the user's favourite operations
  */
 App.prototype.saveFavourites = function(favourites) {
+    if (!this.isLocalStorageAvailable()) {
+        this.alert(
+            "Your security settings do not allow access to local storage so your favourites cannot be saved.",
+            "danger",
+            5000
+        );
+        return false;
+    }
+
     localStorage.setItem("favourites", JSON.stringify(this.validFavourites(favourites)));
 };
 
@@ -500,6 +513,22 @@ App.prototype.setCompileMessage = function() {
     }
 
     document.getElementById("notice").innerHTML = compileInfo;
+};
+
+
+/**
+ * Determines whether the browser supports Local Storage and if it is accessible.
+ * 
+ * @returns {boolean}
+ */
+App.prototype.isLocalStorageAvailable = function() {
+    try {
+        if (!localStorage) return false;
+        return true;
+    } catch (err) {
+        // Access to LocalStorage is denied
+        return false;
+    }
 };
 
 

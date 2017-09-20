@@ -254,6 +254,15 @@ ControlsWaiter.prototype.loadClick = function() {
  * Saves the recipe specified in the save textarea to local storage.
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
+    if (!this.app.isLocalStorageAvailable()) {
+        this.app.alert(
+            "Your security settings do not allow access to local storage so your recipe cannot be saved.",
+            "danger",
+            5000
+        );
+        return false;
+    }
+
     const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
     const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
@@ -283,6 +292,8 @@ ControlsWaiter.prototype.saveButtonClick = function() {
  * Populates the list of saved recipes in the load dialog box from local storage.
  */
 ControlsWaiter.prototype.populateLoadRecipesList = function() {
+    if (!this.app.isLocalStorageAvailable()) return false;
+
     const loadNameEl = document.getElementById("load-name");
 
     // Remove current recipes from select
@@ -313,6 +324,8 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
  * Removes the currently selected recipe from local storage.
  */
 ControlsWaiter.prototype.loadDeleteClick = function() {
+    if (!this.app.isLocalStorageAvailable()) return false;
+
     const id = parseInt(document.getElementById("load-name").value, 10);
     const rawSavedRecipes = localStorage.savedRecipes ?
         JSON.parse(localStorage.savedRecipes) : [];
@@ -328,6 +341,8 @@ ControlsWaiter.prototype.loadDeleteClick = function() {
  * Displays the selected recipe in the load text box.
  */
 ControlsWaiter.prototype.loadNameChange = function(e) {
+    if (!this.app.isLocalStorageAvailable()) return false;
+
     const el = e.target;
     const savedRecipes = localStorage.savedRecipes ?
         JSON.parse(localStorage.savedRecipes) : [];
