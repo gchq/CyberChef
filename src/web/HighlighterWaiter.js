@@ -10,9 +10,11 @@ import Utils from "../core/Utils.js";
  *
  * @constructor
  * @param {App} app - The main view object for CyberChef.
+ * @param {Manager} manager - The CyberChef event manager.
  */
-const HighlighterWaiter = function(app) {
+const HighlighterWaiter = function(app, manager) {
     this.app = app;
+    this.manager = manager;
 
     this.mouseButtonDown = false;
     this.mouseTarget = null;
@@ -330,41 +332,6 @@ HighlighterWaiter.prototype.removeHighlights = function() {
 
 
 /**
- * Generates a list of all the highlight functions assigned to operations in the recipe, if the
- * entire recipe supports highlighting.
- *
- * @returns {Object[]} highlights
- * @returns {function} highlights[].f
- * @returns {function} highlights[].b
- * @returns {Object[]} highlights[].args
- */
-HighlighterWaiter.prototype.generateHighlightList = function() {
-    const recipeConfig = this.app.getRecipeConfig();
-    const highlights = [];
-
-    for (let i = 0; i < recipeConfig.length; i++) {
-        if (recipeConfig[i].disabled) continue;
-
-        // If any breakpoints are set, do not attempt to highlight
-        if (recipeConfig[i].breakpoint) return false;
-
-        const op = this.app.operations[recipeConfig[i].op];
-
-        // If any of the operations do not support highlighting, fail immediately.
-        if (op.highlight === false || op.highlight === undefined) return false;
-
-        highlights.push({
-            f: op.highlight,
-            b: op.highlightReverse,
-            args: recipeConfig[i].args
-        });
-    }
-
-    return highlights;
-};
-
-
-/**
  * Highlights the given offsets in the output.
  * We will only highlight if:
  *     - input hasn't changed since last bake
@@ -376,26 +343,8 @@ HighlighterWaiter.prototype.generateHighlightList = function() {
  * @param {number} pos.end - The end offset.
  */
 HighlighterWaiter.prototype.highlightOutput = function(pos) {
-    const highlights = this.generateHighlightList();
-
-    if (!highlights || !this.app.autoBake_) {
-        return false;
-    }
-
-    for (let i = 0; i < highlights.length; i++) {
-        // Remove multiple highlights before processing again
-        pos = [pos[0]];
-
-        if (typeof highlights[i].f == "function") {
-            pos = highlights[i].f(pos, highlights[i].args);
-        }
-    }
-
-    document.getElementById("output-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
-    this.highlight(
-        document.getElementById("output-text"),
-        document.getElementById("output-highlighter"),
-        pos);
+    if (!this.app.autoBake_ || this.app.baking) return false;
+    this.manager.worker.highlight(this.app.getRecipeConfig(), "forward", pos);
 };
 
 
@@ -411,25 +360,28 @@ HighlighterWaiter.prototype.highlightOutput = function(pos) {
  * @param {number} pos.end - The end offset.
  */
 HighlighterWaiter.prototype.highlightInput = function(pos) {
-    const highlights = this.generateHighlightList();
+    if (!this.app.autoBake_ || this.app.baking) return false;
+    this.manager.worker.highlight(this.app.getRecipeConfig(), "reverse", pos);
+};
 
-    if (!highlights || !this.app.autoBake_) {
-        return false;
-    }
 
-    for (let i = 0; i < highlights.length; i++) {
-        // Remove multiple highlights before processing again
-        pos = [pos[0]];
+/**
+ * Displays highlight offsets sent back from the Chef.
+ *
+ * @param {Object} pos - The position object for the highlight.
+ * @param {number} pos.start - The start offset.
+ * @param {number} pos.end - The end offset.
+ * @param {string} direction
+ */
+HighlighterWaiter.prototype.displayHighlights = function(pos, direction) {
+    if (!pos) return;
 
-        if (typeof highlights[i].b == "function") {
-            pos = highlights[i].b(pos, highlights[i].args);
-        }
-    }
+    const io = direction === "forward" ? "output" : "input";
 
-    document.getElementById("input-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
+    document.getElementById(io + "-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
     this.highlight(
-        document.getElementById("input-text"),
-        document.getElementById("input-highlighter"),
+        document.getElementById(io + "-text"),
+        document.getElementById(io + "-highlighter"),
         pos);
 };
 

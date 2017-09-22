@@ -1,5 +1,4 @@
 import Operation from "./Operation.js";
-import OperationConfig from "./config/OperationConfig.js";
 
 
 /**
@@ -30,8 +29,7 @@ const Recipe = function(recipeConfig) {
 Recipe.prototype._parseConfig = function(recipeConfig) {
     for (let c = 0; c < recipeConfig.length; c++) {
         const operationName = recipeConfig[c].op;
-        const operationConfig = OperationConfig[operationName];
-        const operation = new Operation(operationName, operationConfig);
+        const operation = new Operation(operationName);
         operation.setIngValues(recipeConfig[c].args);
         operation.setBreakpoint(recipeConfig[c].breakpoint);
         operation.setDisabled(recipeConfig[c].disabled);
@@ -215,6 +213,39 @@ Recipe.prototype.toString = function() {
 Recipe.prototype.fromString = function(recipeStr) {
     const recipeConfig = JSON.parse(recipeStr);
     this._parseConfig(recipeConfig);
+};
+
+
+/**
+ * Generates a list of all the highlight functions assigned to operations in the recipe, if the
+ * entire recipe supports highlighting.
+ *
+ * @returns {Object[]} highlights
+ * @returns {function} highlights[].f
+ * @returns {function} highlights[].b
+ * @returns {Object[]} highlights[].args
+ */
+Recipe.prototype.generateHighlightList = function() {
+    const highlights = [];
+
+    for (let i = 0; i < this.opList.length; i++) {
+        let op = this.opList[i];
+        if (op.isDisabled()) continue;
+
+        // If any breakpoints are set, do not attempt to highlight
+        if (op.isBreakpoint()) return false;
+
+        // If any of the operations do not support highlighting, fail immediately.
+        if (op.highlight === false || op.highlight === undefined) return false;
+
+        highlights.push({
+            f: op.highlight,
+            b: op.highlightReverse,
+            args: op.getIngValues()
+        });
+    }
+
+    return highlights;
 };
 
 export default Recipe;

@@ -1,6 +1,6 @@
 {
   "name": "cyberchef",
-  "version": "5.20.0",
+  "version": "6.0.2",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
@@ -40,6 +40,7 @@
     "grunt": ">=1.0.1",
     "grunt-accessibility": "~5.0.0",
     "grunt-chmod": "~1.1.1",
+    "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "~1.1.0",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-eslint": "^20.1.0",
@@ -58,9 +59,12 @@
     "postcss-loader": "^2.0.6",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
+    "val-loader": "^1.0.2",
     "web-resource-inliner": "^4.1.1",
     "webpack": "^3.5.6",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-dev-server": "^2.5.0",
+    "webpack-node-externals": "^1.6.0",
+    "worker-loader": "^0.8.0"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
@@ -95,6 +99,7 @@
     "zlibjs": "^0.3.1"
   },
   "scripts": {
+    "start": "grunt dev",
     "build": "grunt prod",
     "test": "grunt test",
     "docs": "grunt docs"

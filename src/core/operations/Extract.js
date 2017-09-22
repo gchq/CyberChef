@@ -258,39 +258,6 @@ const Extract = {
         return Extract._search(input, regex, null, displayTotal);
     },
 
-
-    /**
-     * Extract all identifiers operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runAllIdents: function(input, args) {
-        let output = "";
-        output += "IP addresses\n";
-        output += Extract.runIp(input, [true, true, false]);
-
-        output += "\nEmail addresses\n";
-        output += Extract.runEmail(input, []);
-
-        output += "\nMAC addresses\n";
-        output += Extract.runMac(input, []);
-
-        output += "\nURLs\n";
-        output += Extract.runUrls(input, []);
-
-        output += "\nDomain names\n";
-        output += Extract.runDomains(input, []);
-
-        output += "\nFile paths\n";
-        output += Extract.runFilePaths(input, [true, true]);
-
-        output += "\nDates\n";
-        output += Extract.runDates(input, []);
-        return output;
-    },
-
 };
 
 export default Extract;

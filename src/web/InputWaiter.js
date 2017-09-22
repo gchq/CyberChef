@@ -158,17 +158,15 @@ InputWaiter.prototype.inputDrop = function(e) {
     const CHUNK_SIZE = 20480; // 20KB
 
     const setInput = function() {
-        if (inputCharcode.length > 100000 && this.app.autoBake_) {
-            this.manager.controls.setAutoBake(false);
-            this.app.alert("Turned off Auto Bake as the input is large", "warning", 5000);
-        }
-
-        this.set(inputCharcode);
+        this.app.autoBakePause = true;
         const recipeConfig = this.app.getRecipeConfig();
         if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
             recipeConfig.unshift({op: "From Hex", args: ["Space"]});
             this.app.setRecipeConfig(recipeConfig);
         }
+        this.app.autoBakePause = false;
+
+        this.set(inputCharcode);
 
         el.classList.remove("loadingFile");
     }.bind(this);

@@ -1,8 +1,18 @@
+"use strict";
+
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
+const fs = require("fs");
+
+/**
+ * Grunt configuration for building the app in various formats.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -11,15 +21,15 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "webpack:webDev"]);
+        ["clean:dev", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "webpack:node", "chmod:build"]);
+        ["clean:node", "webpack:metaConf", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean:test", "webpack:tests", "execute:test"]);
+        ["clean:test", "webpack:metaConf", "webpack:tests", "execute:test"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -27,7 +37,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
+        ["eslint", "clean:prod", "webpack:metaConf", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -35,8 +45,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        runInliner);
+        ["webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
+
+    grunt.registerTask("runInliner", runInliner);
     grunt.registerTask("doc", "docs");
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
@@ -52,31 +64,28 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-accessibility");
+    grunt.loadNpmTasks("grunt-concurrent");
 
 
     // Project configuration
     const compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
-        banner = "/**\n" +
-            "* CyberChef - The Cyber Swiss Army Knife\n" +
-            "*\n" +
-            "* @copyright Crown Copyright 2016\n" +
-            "* @license Apache-2.0\n" +
-            "*\n" +
-            "*   Copyright 2016 Crown Copyright\n" +
-            "*\n" +
-            '* Licensed under the Apache License, Version 2.0 (the "License");\n' +
-            "* you may not use this file except in compliance with the License.\n" +
-            "* You may obtain a copy of the License at\n" +
-            "*\n" +
-            "*     http://www.apache.org/licenses/LICENSE-2.0\n" +
-            "*\n" +
-            "* Unless required by applicable law or agreed to in writing, software\n" +
-            '* distributed under the License is distributed on an "AS IS" BASIS,\n' +
-            "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-            "* See the License for the specific language governing permissions and\n" +
-            "* limitations under the License.\n" +
-            "*/\n",
-        pkg = grunt.file.readJSON("package.json");
+        pkg = grunt.file.readJSON("package.json"),
+        webpackConfig = require("./webpack.config.js"),
+        BUILD_CONSTANTS = {
+            COMPILE_TIME: JSON.stringify(compileTime),
+            COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
+            PKG_VERSION: JSON.stringify(pkg.version),
+            ENVIRONMENT_IS_WORKER: function() {
+                return typeof importScripts === "function";
+            },
+            ENVIRONMENT_IS_NODE: function() {
+                return typeof process === "object" && typeof require === "function";
+            },
+            ENVIRONMENT_IS_WEB: function() {
+                return typeof window === "object";
+            }
+        },
+        moduleEntryPoints = listEntryModules();
 
     /**
      * Compiles a production build of CyberChef into a single, portable web page.
@@ -105,20 +114,36 @@ module.exports = function (grunt) {
         });
     }
 
+    /**
+     * Generates an entry list for all the modules.
+     */
+    function listEntryModules() {
+        const path = "./src/core/config/modules/";
+        let entryModules = {};
+
+        fs.readdirSync(path).forEach(file => {
+            if (file !== "Default.js" && file !== "OpModules.js")
+                entryModules[file.split(".js")[0]] = path + file;
+        });
+
+        return entryModules;
+    }
+
     grunt.initConfig({
         clean: {
-            dev: ["build/dev/*"],
-            prod: ["build/prod/*"],
-            test: ["build/test/*"],
-            node: ["build/node/*"],
+            dev: ["build/dev/*", "src/core/config/MetaConfig.js"],
+            prod: ["build/prod/*", "src/core/config/MetaConfig.js"],
+            test: ["build/test/*", "src/core/config/MetaConfig.js"],
+            node: ["build/node/*", "src/core/config/MetaConfig.js"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
+            inlineScripts: ["build/prod/scripts.js"],
         },
         eslint: {
             options: {
                 configFile: "./.eslintrc.json"
             },
             configs: ["Gruntfile.js"],
-            core: ["src/core/**/*.js", "!src/core/lib/**/*"],
+            core: ["src/core/**/*.js", "!src/core/lib/**/*", "!src/core/config/MetaConfig.js"],
             web: ["src/web/**/*.js"],
             node: ["src/node/**/*.js"],
             tests: ["test/**/*.js"],
@@ -135,8 +160,15 @@ module.exports = function (grunt) {
                 src: [
                     "src/**/*.js",
                     "!src/core/lib/**/*",
+                    "!src/core/config/MetaConfig.js"
                 ],
             }
+        },
+        concurrent: {
+            options: {
+                logConcurrentOutput: true
+            },
+            dev: ["webpack:metaConfDev", "webpack-dev-server:start"]
         },
         accessibility: {
             options: {
@@ -151,114 +183,47 @@ module.exports = function (grunt) {
             }
         },
         webpack: {
-            options: {
-                plugins: [
-                    new webpack.ProvidePlugin({
-                        $: "jquery",
-                        jQuery: "jquery",
-                        moment: "moment-timezone"
-                    }),
-                    new webpack.BannerPlugin({
-                        banner: banner,
-                        raw: true,
-                        entryOnly: true
-                    }),
-                    new webpack.DefinePlugin({
-                        COMPILE_TIME: JSON.stringify(compileTime),
-                        COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
-                        PKG_VERSION: JSON.stringify(pkg.version)
-                    }),
-                    new ExtractTextPlugin("styles.css"),
-                ],
-                resolve: {
-                    alias: {
-                        jquery: "jquery/src/jquery"
-                    }
-                },
-                module: {
-                    rules: [
-                        {
-                            test: /\.js$/,
-                            exclude: /node_modules/,
-                            loader: "babel-loader?compact=false"
-                        },
-                        {
-                            test: /\.css$/,
-                            use: ExtractTextPlugin.extract({
-                                use: [
-                                    { loader: "css-loader?minimize" },
-                                    { loader: "postcss-loader" },
-                                ]
-                            })
-                        },
-                        {
-                            test: /\.less$/,
-                            use: ExtractTextPlugin.extract({
-                                use: [
-                                    { loader: "css-loader?minimize" },
-                                    { loader: "postcss-loader" },
-                                    { loader: "less-loader" }
-                                ]
-                            })
-                        },
-                        {
-                            test: /\.(ico|eot|ttf|woff|woff2)$/,
-                            loader: "url-loader",
-                            options: {
-                                limit: 10000
-                            }
-                        },
-                        { // First party images are saved as files to be cached
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /node_modules/,
-                            loader: "file-loader",
-                            options: {
-                                name: "images/[name].[ext]"
-                            }
-                        },
-                        { // Third party images are inlined
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /web\/static/,
-                            loader: "url-loader",
-                            options: {
-                                limit: 10000
-                            }
-                        },
-                    ]
-                },
-                stats: {
-                    children: false,
-                    warningsFilter: /source-map/
-                },
-                node: {
-                    fs: "empty"
-                }
-            },
-            webDev: {
-                target: "web",
-                entry: "./src/web/index.js",
+            options: webpackConfig,
+            metaConf: {
+                target: "node",
+                entry: "./src/core/config/OperationConfig.js",
                 output: {
-                    filename: "scripts.js",
-                    path: __dirname + "/build/dev"
+                    filename: "MetaConfig.js",
+                    path: __dirname + "/src/core/config/",
+                    library: "MetaConfig",
+                    libraryTarget: "commonjs2",
+                    libraryExport: "default"
                 },
-                plugins: [
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        compileTime: compileTime,
-                        version: pkg.version,
-                    })
-                ],
+                externals: [NodeExternals()],
+            },
+            metaConfDev: {
+                target: "node",
+                entry: "./src/core/config/OperationConfig.js",
+                output: {
+                    filename: "MetaConfig.js",
+                    path: __dirname + "/src/core/config/",
+                    library: "MetaConfig",
+                    libraryTarget: "commonjs2",
+                    libraryExport: "default"
+                },
+                externals: [NodeExternals()],
                 watch: true
             },
-            webProd: {
+            web: {
                 target: "web",
-                entry: "./src/web/index.js",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
                 output: {
-                    filename: "scripts.js",
                     path: __dirname + "/build/prod"
                 },
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.js": "./config/modules/Default.js"
+                    }
+                },
                 plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
                     new webpack.optimize.UglifyJsPlugin({
                         compress: {
                             "screw_ie8": true,
@@ -268,9 +233,10 @@ module.exports = function (grunt) {
                         },
                         comments: false,
                     }),
-                    new HtmlWebpackPlugin({ // Main version
+                    new HtmlWebpackPlugin({
                         filename: "index.html",
                         template: "./src/web/html/index.html",
+                        chunks: ["main"],
                         compileTime: compileTime,
                         version: pkg.version,
                         minify: {
@@ -280,7 +246,27 @@ module.exports = function (grunt) {
                             minifyCSS: true
                         }
                     }),
-                    new HtmlWebpackPlugin({ // Inline version
+                ]
+            },
+            webInline: {
+                target: "web",
+                entry: "./src/web/index.js",
+                output: {
+                    filename: "scripts.js",
+                    path: __dirname + "/build/prod"
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new webpack.optimize.UglifyJsPlugin({
+                        compress: {
+                            "screw_ie8": true,
+                            "dead_code": true,
+                            "unused": true,
+                            "warnings": false
+                        },
+                        comments: false,
+                    }),
+                    new HtmlWebpackPlugin({
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
@@ -302,7 +288,10 @@ module.exports = function (grunt) {
                 output: {
                     filename: "index.js",
                     path: __dirname + "/build/test"
-                }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                ]
             },
             node: {
                 target: "node",
@@ -313,6 +302,48 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/node",
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                ]
+            }
+        },
+        "webpack-dev-server": {
+            options: {
+                webpack: webpackConfig,
+                host: "0.0.0.0",
+                disableHostCheck: true,
+                overlay: true,
+                inline: false,
+                clientLogLevel: "error",
+                stats: {
+                    children: false,
+                    chunks: false,
+                    modules: false,
+                    warningsFilter: /source-map/,
+                }
+            },
+            start: {
+                webpack: {
+                    target: "web",
+                    entry: Object.assign({
+                        main: "./src/web/index.js"
+                    }, moduleEntryPoints),
+                    resolve: {
+                        alias: {
+                            "./config/modules/OpModules.js": "./config/modules/Default.js"
+                        }
+                    },
+                    plugins: [
+                        new webpack.DefinePlugin(BUILD_CONSTANTS),
+                        new HtmlWebpackPlugin({
+                            filename: "index.html",
+                            template: "./src/web/html/index.html",
+                            chunks: ["main"],
+                            compileTime: compileTime,
+                            version: pkg.version,
+                        })
+                    ]
                 }
             }
         },

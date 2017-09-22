@@ -36,8 +36,10 @@
 
             // Load theme before the preloader is shown
             try {
-                document.querySelector(":root").className = JSON.parse(localStorage.getItem("options")).theme;
-            } catch (e) {}
+                document.querySelector(":root").className = (JSON.parse(localStorage.getItem("options")) || {}).theme;
+            } catch (err) {
+                // LocalStorage access is denied by security settings
+            }
 
             // Define loading messages
             const loadingMsgs = [
@@ -73,7 +75,8 @@
                 loadingMsgs.push(msg);
                 try {
                     const el = document.getElementById("preloader-msg");
-                    el.className = "loading"; // Causes CSS transition on first message
+                    if (!el.classList.contains("loading"))
+                        el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
                 } catch (err) {} // Ignore errors if DOM not yet ready
             }
@@ -90,8 +93,8 @@
     <body>
         <!-- Preloader overlay -->
         <div id="loader-wrapper">
-            <div id="preloader"></div>
-            <div id="preloader-msg"></div>
+            <div id="preloader" class="loader"></div>
+            <div id="preloader-msg" class="loading-msg"></div>
         </div>
         <!-- End preloader overlay -->
         <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
@@ -142,7 +145,7 @@
                             <div id="bake-group">
                                 <button type="button" class="btn btn-success btn-lg" id="bake">
                                     <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
-                                    Bake!
+                                    <span>Bake!</span>
                                 </button>
                                 <label class="btn btn-success btn-lg" id="auto-bake-label" for="auto-bake">
                                     <input type="checkbox" checked="checked" id="auto-bake">
@@ -168,7 +171,6 @@
                     <div id="input" class="split no-select">
                         <div class="title no-select">
                             <label for="input-text">Input</label>
-                            <div class="loading-icon" style="display: none"></div>
                             <div class="btn-group io-btn-group">
                                 <button type="button" class="btn btn-default btn-sm" id="clr-io"><img aria-hidden="true" src="<%- require('../static/images/recycle-16x16.png') %>" alt="Recycle Icon"/> Clear I/O</button>
                                 <button type="button" class="btn btn-default btn-sm" id="reset-layout"><img aria-hidden="true" src="<%- require('../static/images/layout-16x16.png') %>" alt="Grid Icon"/> Reset layout</button>
@@ -185,7 +187,6 @@
                     <div id="output" class="split">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
-                            <div class="loading-icon" style="display: none"></div>
                             <div class="btn-group io-btn-group">
                                 <button type="button" class="btn btn-default btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
                                 <button type="button" class="btn btn-default btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
@@ -194,11 +195,16 @@
                             </div>
                             <div class="io-info" id="output-info"></div>
                             <div class="io-info" id="output-selection-info"></div>
+                            <span id="stale-indicator" title="The output is stale.&#10;The input or recipe has changed since this output was generated. Bake again to get the new value.">&#x1F551;</span>
                         </div>
                         <div class="textarea-wrapper">
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
                             <textarea id="output-text" readonly="readonly"></textarea>
+                            <div id="output-loader">
+                                <div class="loader"></div>
+                                <div class="loading-msg"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -322,10 +328,6 @@
                         <div class="option-item">
                             <input type="number" option="errorTimeout" id="errorTimeout" />
                             <label for="errorTimeout"> Operation error timeout in ms (0 for never) </label>
-                        </div>
-                        <div class="option-item">
-                            <input type="number" option="autoBakeThreshold" id="autoBakeThreshold"/>
-                            <label for="autoBakeThreshold"> Auto Bake threshold in ms </label>
                         </div>
                     </div>
                     <div class="modal-footer">
