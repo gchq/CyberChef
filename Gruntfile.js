@@ -1,3 +1,5 @@
+"use strict";
+
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodeExternals = require("webpack-node-externals");
@@ -309,7 +311,10 @@ module.exports = function (grunt) {
         "webpack-dev-server": {
             options: {
                 webpack: webpackConfig,
+                host: "0.0.0.0",
+                disableHostCheck: true,
                 overlay: true,
+                inline: false,
                 clientLogLevel: "error",
                 stats: {
                     children: false,
