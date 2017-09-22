@@ -229,7 +229,7 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
         filter: ".remove-icon",
         onFilter: function (evt) {
             const el = editableList.closest(evt.item);
-            if (el) {
+            if (el && el.parentNode) {
                 $(el).popover("destroy");
                 el.parentNode.removeChild(el);
             }
