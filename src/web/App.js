@@ -122,7 +122,12 @@ App.prototype.bake = function(step) {
  * Runs Auto Bake if it is set.
  */
 App.prototype.autoBake = function() {
-    if (this.autoBake_ && !this.autoBakePause && !this.baking) {
+    // If autoBakePause is set, we are loading a full recipe (and potentially input), so there is no
+    // need to set the staleness indicator. Just exit and wait until auto bake is called after loading
+    // has completed.
+    if (this.autoBakePause) return false;
+
+    if (this.autoBake_ && !this.baking) {
         this.bake();
     } else {
         this.manager.controls.showStaleIndicator();
@@ -369,10 +374,6 @@ App.prototype.loadURIParams = function() {
         window.location.hash;
     this.uriParams = Utils.parseURIParams(params);
 
-    // Pause auto-bake while loading but don't modify `this.autoBake_`
-    // otherwise `manualBake` cannot trigger.
-    this.autoBakePause = true;
-
     // Read in recipe from URI params
     if (this.uriParams.recipe) {
         try {
@@ -407,8 +408,6 @@ App.prototype.loadURIParams = function() {
         } catch (err) {}
     }
 
-    // Unpause auto-bake
-    this.autoBakePause = false;
     this.autoBake();
 };
 
@@ -440,6 +439,10 @@ App.prototype.getRecipeConfig = function() {
  */
 App.prototype.setRecipeConfig = function(recipeConfig) {
     document.getElementById("rec-list").innerHTML = null;
+
+    // Pause auto-bake while loading but don't modify `this.autoBake_`
+    // otherwise `manualBake` cannot trigger.
+    this.autoBakePause = true;
 
     for (let i = 0; i < recipeConfig.length; i++) {
         const item = this.manager.recipe.addOperation(recipeConfig[i].op);
@@ -473,6 +476,9 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
 
         this.progress = 0;
     }
+
+    // Unpause auto bake
+    this.autoBakePause = false;
 };
 
 

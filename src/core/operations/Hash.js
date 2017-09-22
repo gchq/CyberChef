@@ -280,7 +280,7 @@ const Hash = {
      * @default
      */
     WHIRLPOOL_VARIANT: ["Whirlpool", "Whirlpool-T", "Whirlpool-0"],
-    
+
     /**
      * Whirlpool operation.
      *

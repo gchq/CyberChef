@@ -158,13 +158,11 @@ InputWaiter.prototype.inputDrop = function(e) {
     const CHUNK_SIZE = 20480; // 20KB
 
     const setInput = function() {
-        this.app.autoBakePause = true;
         const recipeConfig = this.app.getRecipeConfig();
         if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
             recipeConfig.unshift({op: "From Hex", args: ["Space"]});
             this.app.setRecipeConfig(recipeConfig);
         }
-        this.app.autoBakePause = false;
 
         this.set(inputCharcode);
 

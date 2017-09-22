@@ -361,6 +361,7 @@ ControlsWaiter.prototype.loadButtonClick = function() {
     try {
         const recipeConfig = Utils.parseRecipeConfig(document.getElementById("load-text").value);
         this.app.setRecipeConfig(recipeConfig);
+        this.app.autoBake();
 
         $("#rec-list [data-toggle=popover]").popover();
     } catch (e) {
