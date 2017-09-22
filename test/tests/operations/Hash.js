@@ -295,6 +295,50 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "HAS-160",
+        input: "Hello, World!",
+        expectedOutput: "8f6dd8d7c8a04b1cb3831adc358b1e4ac2ed5984",
+        recipeConfig: [
+            {
+                "op": "HAS-160",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "Whirlpool-0",
+        input: "Hello, World!",
+        expectedOutput: "1c327026f565a0105a827efbfb3d3635cdb042c0aabb8416e96deb128e6c5c8684b13541cf31c26c1488949df050311c6999a12eb0e7002ad716350f5c7700ca",
+        recipeConfig: [
+            {
+                "op": "Whirlpool",
+                "args": ["Whirlpool-0"]
+            }
+        ]
+    },
+    {
+        name: "Whirlpool-T",
+        input: "Hello, World!",
+        expectedOutput: "16c581089b6a6f356ae56e16a63a4c613eecd82a2a894b293f5ee45c37a31d09d7a8b60bfa7e414bd4a7166662cea882b5cf8c96b7d583fc610ad202591bcdb1",
+        recipeConfig: [
+            {
+                "op": "Whirlpool",
+                "args": ["Whirlpool-T"]
+            }
+        ]
+    },
+    {
+        name: "Whirlpool",
+        input: "Hello, World!",
+        expectedOutput: "3d837c9ef7bb291bd1dcfc05d3004af2eeb8c631dd6a6c4ba35159b8889de4b1ec44076ce7a8f7bfa497e4d9dcb7c29337173f78d06791f3c3d9e00cc6017f0b",
+        recipeConfig: [
+            {
+                "op": "Whirlpool",
+                "args": ["Whirlpool"]
+            }
+        ]
+    },
+    {
         name: "HMAC SHA256",
         input: "Hello, World!",
         expectedOutput: "52589bd80ccfa4acbb3f9512dfaf4f700fa5195008aae0b77a9e47dcca75beac",

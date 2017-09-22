@@ -2991,6 +2991,26 @@ const OperationConfig = {
             }
         ]
     },
+    "HAS-160": {
+        module: "Hashing",
+        description: "HAS-160 is a cryptographic hash function designed for use with the Korean KCDSA digital signature algorithm. It is derived from SHA-1, with assorted changes intended to increase its security. It produces a 160-bit output.<br><br>HAS-160 is used in the same way as SHA-1. First it divides input in blocks of 512 bits each and pads the final block. A digest function updates the intermediate hash value by processing the input blocks in turn.<br><br>The message digest algorithm consists of 80 rounds.",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "Whirlpool": {
+        module: "Hashing",
+        description: "Whirlpool is a cryptographic hash function designed by Vincent Rijmen (co-creator of AES) and Paulo S. L. M. Barreto, who first described it in 2000.<br><br>Several variants exist:<ul><li>Whirlpool-0 is the original version released in 2000.</li><li>Whirlpool-T is the first revision, released in 2001, improving the generation of the s-box.</li><li>Wirlpool is the latest revision, released in 2003, fixing a flaw in the difusion matrix.</li></ul>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Variant",
+                type: "option",
+                value: Hash.WHIRLPOOL_VARIANT
+            }
+        ]
+    },
     "HMAC": {
         module: "Hashing",
         description: "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.",

@@ -264,6 +264,37 @@ const Hash = {
 
 
     /**
+     * HAS-160 operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runHAS: function (input, args) {
+        return CryptoApi.hash("has160", input, {}).stringify("hex");
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    WHIRLPOOL_VARIANT: ["Whirlpool", "Whirlpool-T", "Whirlpool-0"],
+
+    /**
+     * Whirlpool operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runWhirlpool: function (input, args) {
+        const variant = args[0].toLowerCase();
+        return CryptoApi.hash(variant, input, {}).stringify("hex");
+    },
+
+
+    /**
      * @constant
      * @default
      */
@@ -283,6 +314,10 @@ const Hash = {
         "RIPEMD160",
         "RIPEMD256",
         "RIPEMD320",
+        "HAS160",
+        "Whirlpool",
+        "Whirlpool-0",
+        "Whirlpool-T"
     ],
 
     /**
@@ -335,6 +370,10 @@ const Hash = {
                 "\nRIPEMD-160:  " + Hash.runRIPEMD(input, ["160"]) +
                 "\nRIPEMD-256:  " + Hash.runRIPEMD(input, ["256"]) +
                 "\nRIPEMD-320:  " + Hash.runRIPEMD(input, ["320"]) +
+                "\nHAS-160:     " + Hash.runHAS(input, []) +
+                "\nWhirlpool-0: " + Hash.runWhirlpool(input, ["Whirlpool-0"]) +
+                "\nWhirlpool-T: " + Hash.runWhirlpool(input, ["Whirlpool-T"]) +
+                "\nWhirlpool:   " + Hash.runWhirlpool(input, ["Whirlpool"]) +
                 "\n\nChecksums:" +
                 "\nFletcher-8:  " + Checksum.runFletcher8(byteArray, []) +
                 "\nFletcher-16: " + Checksum.runFletcher16(byteArray, []) +

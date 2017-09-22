@@ -191,7 +191,7 @@ RecipeWaiter.prototype.favDrop = function(e) {
  *
  * @fires Manager#statechange
  */
-RecipeWaiter.prototype.ingChange = function() {
+RecipeWaiter.prototype.ingChange = function(e) {
     window.dispatchEvent(this.manager.statechange);
 };
 
