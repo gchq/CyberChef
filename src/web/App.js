@@ -402,10 +402,14 @@ App.prototype.loadURIParams = function() {
 
     // Read in input data from URI params
     if (this.uriParams.input) {
+        this.autoBakePause = true;
         try {
             const inputData = Utils.fromBase64(this.uriParams.input);
             this.setInput(inputData);
-        } catch (err) {}
+        } catch (err) {
+        } finally {
+            this.autoBakePause = false;
+        }
     }
 
     this.autoBake();
