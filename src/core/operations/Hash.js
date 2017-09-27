@@ -298,6 +298,31 @@ const Hash = {
      * @constant
      * @default
      */
+    SNEFRU_ROUNDS: ["8", "4", "2"],
+    /**
+     * @constant
+     * @default
+     */
+    SNEFRU_SIZE: ["256", "128"],
+
+    /**
+     * Snefru operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runSnefru: function (input, args) {
+        const rounds = args[0],
+            size = args[1];
+        return CryptoApi.hash(`snefru-${rounds}-${size}`, input, {}).stringify("hex");
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
     HMAC_FUNCTIONS: [
         "MD2",
         "MD4",

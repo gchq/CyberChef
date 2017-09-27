@@ -257,6 +257,7 @@ const Categories = [
             "RIPEMD",
             "HAS-160",
             "Whirlpool",
+            "Snefru",
             "HMAC",
             "Fletcher-8 Checksum",
             "Fletcher-16 Checksum",

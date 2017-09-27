@@ -339,6 +339,72 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Snefru 2 128",
+        input: "Hello, World!",
+        expectedOutput: "a4ad2b8848580511d0884fb4233a7e7a",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": ["2", "128"]
+            }
+        ]
+    },
+    {
+        name: "Snefru 4 128",
+        input: "Hello, World!",
+        expectedOutput: "d154eae2c9ffbcd2e1bdaf0b84736126",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": ["4", "128"]
+            }
+        ]
+    },
+    {
+        name: "Snefru 8 128",
+        input: "Hello, World!",
+        expectedOutput: "6f3d55b69557abb0a3c4e9de9d29ba5d",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": ["8", "128"]
+            }
+        ]
+    },
+    {
+        name: "Snefru 2 256",
+        input: "Hello, World!",
+        expectedOutput: "65736daba648de28ef4c4a316b4684584ecf9f22ddb5c457729e6bf0f40113c4",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": ["2", "256"]
+            }
+        ]
+    },
+    {
+        name: "Snefru 4 256",
+        input: "Hello, World!",
+        expectedOutput: "71b0ea4b3e33f2e58bcc67c8a8de060b99ec0107355bbfdc18d8f65f0194ffcc",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": ["4", "256"]
+            }
+        ]
+    },
+    {
+        name: "Snefru 8 256",
+        input: "Hello, World!",
+        expectedOutput: "255cd401414c79588cf689e8d5ff0536a2cfab83fcae36e654f202b09bc4b8a7",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": ["8", "256"]
+            }
+        ]
+    },
+    {
         name: "HMAC SHA256",
         input: "Hello, World!",
         expectedOutput: "52589bd80ccfa4acbb3f9512dfaf4f700fa5195008aae0b77a9e47dcca75beac",

@@ -33,6 +33,7 @@ OpModules.Hashing = {
     "RIPEMD":               Hash.runRIPEMD,
     "HAS-160":              Hash.runHAS,
     "Whirlpool":            Hash.runWhirlpool,
+    "Snefru":               Hash.runSnefru,
     "HMAC":                 Hash.runHMAC,
     "Fletcher-8 Checksum":  Checksum.runFletcher8,
     "Fletcher-16 Checksum": Checksum.runFletcher16,
