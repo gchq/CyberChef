@@ -127,14 +127,13 @@ const FlowControl = {
          */
         function replaceRegister(str) {
             // Replace references to registers ($Rn) with contents of registers
-            str = str ? str.replace(/((?:^|[^\\])(?:\\.|[^\\])*?)\$R(\d{1,2})/g, (match, pre, regNum) => {
+            return str.replace(/(\\*)\$R(\d{1,2})/g, (match, slashes, regNum) => {
                 const index = parseInt(regNum, 10) + 1;
-                return (index <= state.numRegisters || index >= state.numRegisters + registers.length) ?
-                    match : pre + registers[index - state.numRegisters];
-            }) : str;
-
-            // Unescape remaining register references
-            return str ? str.replace(/\\\$R(\d{1,2})/, "$R$1") : str;
+                if (index <= state.numRegisters || index >= state.numRegisters + registers.length)
+                    return match;
+                if (slashes.length % 2 !== 0) return match.slice(1); // Remove escape
+                return slashes + registers[index - state.numRegisters];
+            });
         }
 
         // Step through all subsequent ops and replace registers in args with extracted content
