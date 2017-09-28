@@ -92,7 +92,7 @@ async function bake(data) {
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: err.message
+            data: err.message.split(":").slice(1).join(":").slice(1) // Cut off worker blurb
         });
     }
 }
@@ -173,6 +173,25 @@ self.setOption = function(option, value) {
         data: {
             option: option,
             value: value
+        }
+    });
+};
+
+
+/**
+ * Send register values back to the app.
+ *
+ * @param {number} opIndex
+ * @param {number} numPrevRegisters
+ * @param {string[]} registers
+ */
+self.setRegisters = function(opIndex, numPrevRegisters, registers) {
+    self.postMessage({
+        action: "setRegisters",
+        data: {
+            opIndex: opIndex,
+            numPrevRegisters: numPrevRegisters,
+            registers: registers
         }
     });
 };

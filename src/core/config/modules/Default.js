@@ -154,6 +154,7 @@ OpModules.Default = {
     "Generate HOTP":        OTP.runHOTP,
     "Fork":                 FlowControl.runFork,
     "Merge":                FlowControl.runMerge,
+    "Register":             FlowControl.runRegister,
     "Jump":                 FlowControl.runJump,
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,

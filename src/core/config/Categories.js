@@ -317,6 +317,7 @@ const Categories = [
         ops: [
             "Fork",
             "Merge",
+            "Register",
             "Jump",
             "Conditional Jump",
             "Return",

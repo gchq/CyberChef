@@ -124,6 +124,12 @@ button.dropdown-toggle {
     background-color: var(--secondary-background-colour);
 }
 
+.register-list {
+    background-color: var(--fc-operation-border-colour);
+    font-family: var(--fixed-width-font-family);
+    padding: 10px;
+}
+
 .op-icon {
     float: right;
     margin-left: 10px;
@@ -194,4 +200,14 @@ button.dropdown-toggle {
     color: var(--disabled-font-colour) !important;
     background-color: var(--disabled-bg-colour) !important;
     border-color: var(--disabled-border-colour) !important;
+}
+
+.break .register-list {
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+    background-color: var(--fc-breakpoint-operation-border-colour) !important;
+}
+
+.disabled .register-list {
+    color: var(--disabled-font-colour) !important;
+    background-color: var(--disabled-border-colour) !important;
 }
