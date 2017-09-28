@@ -113,6 +113,12 @@ const FlowControl = {
             input = state.dish.get(Dish.STRING),
             registers = input.match(extractor);
 
+        if (!registers) return state;
+
+        if (ENVIRONMENT_IS_WORKER()) {
+            self.setRegisters(state.progress, registers.slice(1));
+        }
+
         /**
          * Replaces references to registers (e.g. $R0) with the contents of those registers.
          *

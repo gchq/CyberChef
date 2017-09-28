@@ -176,3 +176,20 @@ self.setOption = function(option, value) {
         }
     });
 };
+
+
+/**
+ * Send register values back to the app.
+ *
+ * @param {number} opIndex
+ * @param {string[]} registers
+ */
+self.setRegisters = function(opIndex, registers) {
+    self.postMessage({
+        action: "setRegisters",
+        data: {
+            opIndex: opIndex,
+            registers: registers
+        }
+    });
+};

@@ -124,6 +124,12 @@ button.dropdown-toggle {
     background-color: var(--secondary-background-colour);
 }
 
+.register-list {
+    background-color: var(--fc-operation-border-colour);
+    font-family: var(--fixed-width-font-family);
+    padding: 10px;
+}
+
 .op-icon {
     float: right;
     margin-left: 10px;
