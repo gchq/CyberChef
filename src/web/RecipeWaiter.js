@@ -450,7 +450,7 @@ RecipeWaiter.prototype.setRegisters = function(opIndex, numPrevRegisters, regist
 
     // Remove previous div
     if (prevRegList) prevRegList.remove();
-window.Utils = Utils;
+
     let registerList = [];
     for (let i = 0; i < registers.length; i++) {
         registerList.push(`$R${numPrevRegisters + i} = ${Utils.escapeHtml(Utils.truncate(Utils.printable(registers[i]), 100))}`);
