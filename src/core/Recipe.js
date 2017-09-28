@@ -145,7 +145,7 @@ Recipe.prototype.lastOpIndex = function(startIndex) {
  */
 Recipe.prototype.execute = async function(dish, startFrom) {
     startFrom = startFrom || 0;
-    let op, input, output, numJumps = 0;
+    let op, input, output, numJumps = 0, numRegisters = 0;
 
     for (let i = startFrom; i < this.opList.length; i++) {
         op = this.opList[i];
@@ -162,15 +162,17 @@ Recipe.prototype.execute = async function(dish, startFrom) {
             if (op.isFlowControl()) {
                 // Package up the current state
                 let state = {
-                    "progress": i,
-                    "dish":     dish,
-                    "opList":   this.opList,
-                    "numJumps": numJumps
+                    "progress":     i,
+                    "dish":         dish,
+                    "opList":       this.opList,
+                    "numJumps":     numJumps,
+                    "numRegisters": numRegisters
                 };
 
                 state = await op.run(state);
                 i = state.progress;
                 numJumps = state.numJumps;
+                numRegisters = state.numRegisters;
             } else {
                 output = await op.run(input, op.getIngValues());
                 dish.set(output, op.outputType);

@@ -201,3 +201,13 @@ button.dropdown-toggle {
     background-color: var(--disabled-bg-colour) !important;
     border-color: var(--disabled-border-colour) !important;
 }
+
+.break .register-list {
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+    background-color: var(--fc-breakpoint-operation-border-colour) !important;
+}
+
+.disabled .register-list {
+    color: var(--disabled-font-colour) !important;
+    background-color: var(--disabled-border-colour) !important;
+}

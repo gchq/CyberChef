@@ -62,7 +62,7 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
             this.app.options[r.data.option] = r.data.value;
             break;
         case "setRegisters":
-            this.manager.recipe.setRegisters(r.data.opIndex, r.data.registers);
+            this.manager.recipe.setRegisters(r.data.opIndex, r.data.numPrevRegisters, r.data.registers);
             break;
         case "highlightsCalculated":
             this.manager.highlighter.displayHighlights(r.data.pos, r.data.direction);

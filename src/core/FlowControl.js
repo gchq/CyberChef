@@ -116,7 +116,7 @@ const FlowControl = {
         if (!registers) return state;
 
         if (ENVIRONMENT_IS_WORKER()) {
-            self.setRegisters(state.progress, registers.slice(1));
+            self.setRegisters(state.progress, state.numRegisters, registers.slice(1));
         }
 
         /**
@@ -127,31 +127,34 @@ const FlowControl = {
          */
         function replaceRegister(str) {
             // Replace references to registers ($Rn) with contents of registers
-            str = str.replace(/((?:^|[^\\])(?:\\.|[^\\])*?)\$R(\d{1,2})/g, (match, pre, regNum) => {
+            str = str ? str.replace(/((?:^|[^\\])(?:\\.|[^\\])*?)\$R(\d{1,2})/g, (match, pre, regNum) => {
                 const index = parseInt(regNum, 10) + 1;
-                return (index >= registers.length) ? match : pre + registers[index];
-            });
+                return (index <= state.numRegisters || index >= state.numRegisters + registers.length) ?
+                    match : pre + registers[index - state.numRegisters];
+            }) : str;
 
             // Unescape remaining register references
-            return str.replace(/\\\$R(\d{1,2})/, "$R$1");
+            return str ? str.replace(/\\\$R(\d{1,2})/, "$R$1") : str;
         }
 
         // Step through all subsequent ops and replace registers in args with extracted content
         for (let i = state.progress + 1; i < state.opList.length; i++) {
+            if (state.opList[i].isDisabled()) continue;
+
             let args = state.opList[i].getIngValues();
             args = args.map(arg => {
                 if (typeof arg !== "string" && typeof arg !== "object") return arg;
 
-                if (typeof arg === "object" && arg.string) {
+                if (typeof arg === "object" && arg.hasOwnProperty("string")) {
                     arg.string = replaceRegister(arg.string);
                     return arg;
                 }
-
                 return replaceRegister(arg);
             });
             state.opList[i].setIngValues(args);
         }
 
+        state.numRegisters += registers.length - 1;
         return state;
     },
 
