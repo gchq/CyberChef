@@ -409,7 +409,7 @@ const Utils = {
      * Utils.strToCharcode("你好");
      */
     strToCharcode: function(str) {
-        const charcode = new Array();
+        const charcode = [];
 
         for (let i = 0; i < str.length; i++) {
             let ord = str.charCodeAt(i);
