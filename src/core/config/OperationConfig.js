@@ -5,7 +5,6 @@ import BCD from "../operations/BCD.js";
 import BitwiseOp from "../operations/BitwiseOp.js";
 import ByteRepr from "../operations/ByteRepr.js";
 import CharEnc from "../operations/CharEnc.js";
-import Checksum from "../operations/Checksum.js";
 import Cipher from "../operations/Cipher.js";
 import Code from "../operations/Code.js";
 import Compress from "../operations/Compress.js";
@@ -26,21 +25,16 @@ import IP from "../operations/IP.js";
 import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
-import MS from "../operations/MS.js";
 import NetBIOS from "../operations/NetBIOS.js";
-import Numberwang from "../operations/Numberwang.js";
-import OS from "../operations/OS.js";
-import OTP from "../operations/OTP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
-import QuotedPrintable from "../operations/QuotedPrintable.js";
 import Rotate from "../operations/Rotate.js";
 import SeqUtils from "../operations/SeqUtils.js";
+import Shellcode from "../operations/Shellcode.js";
 import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
-import UUID from "../operations/UUID.js";
 
 
 /**
@@ -317,6 +311,44 @@ const OperationConfig = {
                 name: "Show variable chars and padding",
                 type: "boolean",
                 value: Base64.OFFSETS_SHOW_VARIABLE
+            }
+        ]
+    },
+    "Disassemble x86": {
+        module: "Shellcode",
+        description: "Disassembly is the process of translating machine language into assembly language.<br><br>This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode.<br><br>Input should be in hexadecimal.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Bit mode",
+                type: "option",
+                value: Shellcode.MODE
+            },
+            {
+                name: "Compatibility",
+                type: "option",
+                value: Shellcode.COMPATIBILITY
+            },
+            {
+                name: "Code Segment (CS)",
+                type: "number",
+                value: 16
+            },
+            {
+                name: "Offset (IP)",
+                type: "number",
+                value: 0
+            },
+            {
+                name: "Show instruction hex",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Show instruction position",
+                type: "boolean",
+                value: true
             }
         ]
     },
