@@ -3831,3 +3831,5 @@ function valExport() {
 }
 
 export default valExport;
+
+export { OperationConfig };
