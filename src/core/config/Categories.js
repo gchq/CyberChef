@@ -300,6 +300,7 @@ const Categories = [
             "Frequency distribution",
             "Detect File Type",
             "Scan for Embedded Files",
+            "Disassemble x86",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",

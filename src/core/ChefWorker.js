@@ -92,7 +92,7 @@ async function bake(data) {
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: err.message
+            data: err
         });
     }
 }
