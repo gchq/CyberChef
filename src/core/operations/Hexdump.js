@@ -1,4 +1,3 @@
-/* globals app */
 import Utils from "../Utils.js";
 
 
