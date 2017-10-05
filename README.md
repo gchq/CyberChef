@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
 [![dependencies Status](https://david-dm.org/gchq/CyberChef/status.svg)](https://david-dm.org/gchq/CyberChef)
-[![devDependencies Status](https://david-dm.org/gchq/CyberChef/dev-status.svg)](https://david-dm.org/gchq/CyberChef?type=dev)
 [![npm](http://img.shields.io/npm/v/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
 ![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=blue)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
