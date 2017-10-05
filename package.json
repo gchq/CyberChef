@@ -58,7 +58,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.6",
     "style-loader": "^0.19.0",
-    "url-loader": "^0.5.9",
+    "url-loader": "^0.6.2",
     "val-loader": "^1.0.2",
     "web-resource-inliner": "^4.2.0",
     "webpack": "^3.6.0",
