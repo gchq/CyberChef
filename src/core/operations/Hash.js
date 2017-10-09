@@ -16,19 +16,21 @@ import Checksum from "./Checksum.js";
  */
 const Hash = {
 
-    /** Generic hash function
+    /**
+     * Generic hash function.
      *
      * @param {string} name
      * @param {string} input
      * @returns {string}
      */
     runHash: function(name, input) {
-        let hasher = CryptoApi.hasher(name);
+        const hasher = CryptoApi.hasher(name);
         hasher.state.message = input;
         hasher.state.length += input.length;
         hasher.process();
         return hasher.finalize().stringify("hex");
     },
+
 
     /**
      * MD2 operation.
