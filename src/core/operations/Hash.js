@@ -16,6 +16,14 @@ import Checksum from "./Checksum.js";
  */
 const Hash = {
 
+    runHash: function(name, input) {
+        var hasher = CryptoApi.hasher(name);
+        hasher.state.message = input;
+        hasher.state.length += input.length;
+        hasher.process();
+        return hasher.finalize().stringify('hex');
+    },
+
     /**
      * MD2 operation.
      *
@@ -24,7 +32,7 @@ const Hash = {
      * @returns {string}
      */
     runMD2: function (input, args) {
-        return CryptoApi.hash("md2", input, {}).stringify("hex");
+        return Hash.runHash("md2", input);
     },
 
 
@@ -36,7 +44,7 @@ const Hash = {
      * @returns {string}
      */
     runMD4: function (input, args) {
-        return CryptoApi.hash("md4", input, {}).stringify("hex");
+        return Hash.runHash("md4", input);
     },
 
 
@@ -48,7 +56,7 @@ const Hash = {
      * @returns {string}
      */
     runMD5: function (input, args) {
-        return CryptoApi.hash("md5", input, {}).stringify("hex");
+        return Hash.runHash("md5", input);
     },
 
 
@@ -92,7 +100,7 @@ const Hash = {
      * @returns {string}
      */
     runSHA0: function (input, args) {
-        return CryptoApi.hash("sha0", input, {}).stringify("hex");
+        return Hash.runHash("sha0", input);
     },
 
 
@@ -104,7 +112,7 @@ const Hash = {
      * @returns {string}
      */
     runSHA1: function (input, args) {
-        return CryptoApi.hash("sha1", input, {}).stringify("hex");
+        return Hash.runHash("sha1", input);
     },
 
 
@@ -123,7 +131,7 @@ const Hash = {
      */
     runSHA2: function (input, args) {
         const size = args[0];
-        return CryptoApi.hash("sha" + size, input, {}).stringify("hex");
+        return Hash.runHash("sha" + size, input);
     },
 
 
@@ -259,7 +267,7 @@ const Hash = {
      */
     runRIPEMD: function (input, args) {
         const size = args[0];
-        return CryptoApi.hash("ripemd" + size, input, {}).stringify("hex");
+        return Hash.runHash("ripemd" + size, input);
     },
 
 
@@ -271,7 +279,7 @@ const Hash = {
      * @returns {string}
      */
     runHAS: function (input, args) {
-        return CryptoApi.hash("has160", input, {}).stringify("hex");
+        return Hash.runHash("has160", input);
     },
 
 
@@ -290,7 +298,7 @@ const Hash = {
      */
     runWhirlpool: function (input, args) {
         const variant = args[0].toLowerCase();
-        return CryptoApi.hash(variant, input, {}).stringify("hex");
+        return Hash.runHash(variant, input);
     },
 
 
@@ -315,7 +323,7 @@ const Hash = {
     runSnefru: function (input, args) {
         const rounds = args[0],
             size = args[1];
-        return CryptoApi.hash(`snefru-${rounds}-${size}`, input, {}).stringify("hex");
+        return Hash.runHash(`snefru-${rounds}-${size}`, input);
     },
 
 
