@@ -760,14 +760,14 @@ const OperationConfig = {
         ]
     },
     "URL Decode": {
-        module: "Default",
+        module: "URL",
         description: "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
         inputType: "string",
         outputType: "string",
         args: []
     },
     "URL Encode": {
-        module: "Default",
+        module: "URL",
         description: "Encodes problematic characters into percent-encoding, a format supported by URIs/URLs.<br><br>e.g. <code>=</code> becomes <code>%3d</code>",
         inputType: "string",
         outputType: "string",
@@ -780,7 +780,7 @@ const OperationConfig = {
         ]
     },
     "Parse URI": {
-        module: "Default",
+        module: "URL",
         description: "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.",
         inputType: "string",
         outputType: "string",
