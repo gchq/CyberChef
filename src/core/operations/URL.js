@@ -1,5 +1,6 @@
 /* globals unescape */
 import Utils from "../Utils.js";
+import url from "url";
 
 
 /**
@@ -58,56 +59,36 @@ const URL_ = {
      * @returns {string}
      */
     runParse: function(input, args) {
-        if (!document) {
-            throw "This operation only works in a browser.";
-        }
+        const uri = url.parse(input, true);
 
-        const a = document.createElement("a");
+        let output = "";
 
-        // Overwrite base href which will be the current CyberChef URL to reduce confusion.
-        a.href = "http://example.com/";
-        a.href = input;
+        if (uri.protocol) output += "Protocol:\t" + uri.protocol + "\n";
+        if (uri.auth) output += "Auth:\t\t" + uri.auth + "\n";
+        if (uri.hostname) output += "Hostname:\t" + uri.hostname + "\n";
+        if (uri.port) output += "Port:\t\t" + uri.port + "\n";
+        if (uri.pathname) output += "Path name:\t" + uri.pathname + "\n";
+        if (uri.query) {
+            let keys = Object.keys(uri.query),
+                padding = 0;
 
-        if (a.protocol) {
-            let output = "";
-            if (a.hostname !== window.location.hostname) {
-                output = "Protocol:\t" + a.protocol + "\n";
-                if (a.hostname) output += "Hostname:\t" + a.hostname + "\n";
-                if (a.port) output += "Port:\t\t" + a.port + "\n";
-            }
+            keys.forEach(k => {
+                padding = (k.length > padding) ? k.length : padding;
+            });
 
-            if (a.pathname && a.pathname !== window.location.pathname) {
-                let pathname = a.pathname;
-                if (pathname.indexOf(window.location.pathname) === 0)
-                    pathname = pathname.replace(window.location.pathname, "");
-                if (pathname)
-                    output += "Path name:\t" + pathname + "\n";
-            }
-
-            if (a.hash && a.hash !== window.location.hash) {
-                output += "Hash:\t\t" + a.hash + "\n";
-            }
-
-            if (a.search && a.search !== window.location.search) {
-                output += "Arguments:\n";
-                const args_ = (a.search.slice(1, a.search.length)).split("&");
-                let splitArgs = [], padding = 0, i;
-                for (i = 0; i < args_.length; i++) {
-                    splitArgs.push(args_[i].split("="));
-                    padding = (splitArgs[i][0].length > padding) ? splitArgs[i][0].length : padding;
-                }
-                for (i = 0; i < splitArgs.length; i++) {
-                    output += "\t" + Utils.padRight(splitArgs[i][0], padding);
-                    if (splitArgs[i].length > 1 && splitArgs[i][1].length)
-                        output += " = " + splitArgs[i][1] + "\n";
-                    else output += "\n";
+            output += "Arguments:\n";
+            for (let key in uri.query) {
+                output += "\t" + Utils.padRight(key, padding);
+                if (uri.query[key].length) {
+                    output += " = " + uri.query[key] + "\n";
+                } else {
+                    output += "\n";
                 }
             }
-
-            return output;
         }
+        if (uri.hash) output += "Hash:\t\t" + uri.hash + "\n";
 
-        return "Invalid URI";
+        return output;
     },
 
 

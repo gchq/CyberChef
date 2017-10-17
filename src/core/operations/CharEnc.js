@@ -1,6 +1,4 @@
 import cptable from "../lib/js-codepage/cptable.js";
-import Utils from "../Utils.js";
-import CryptoJS from "crypto-js";
 
 
 /**

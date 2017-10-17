@@ -92,7 +92,7 @@ async function bake(data) {
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: err.message.split(":").slice(1).join(":").slice(1) // Cut off worker blurb
+            data: err
         });
     }
 }

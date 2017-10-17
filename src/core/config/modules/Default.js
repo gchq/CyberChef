@@ -26,7 +26,6 @@ import SeqUtils from "../../operations/SeqUtils.js";
 import StrUtils from "../../operations/StrUtils.js";
 import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
-import URL_ from "../../operations/URL.js";
 import UUID from "../../operations/UUID.js";
 
 
@@ -77,9 +76,6 @@ OpModules.Default = {
     "From HTML Entity":     HTML.runFromEntity,
     "Strip HTML tags":      HTML.runStripTags,
     "Parse colour code":    HTML.runParseColourCode,
-    "URL Encode":           URL_.runTo,
-    "URL Decode":           URL_.runFrom,
-    "Parse URI":            URL_.runParse,
     "Unescape Unicode Characters": Unicode.runUnescape,
     "To Quoted Printable":  QuotedPrintable.runTo,
     "From Quoted Printable": QuotedPrintable.runFrom,

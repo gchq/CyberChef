@@ -68,9 +68,10 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
     try {
         progress = await recipe.execute(this.dish, progress);
     } catch (err) {
-        // Return the error in the result so that everything else gets correctly updated
-        // rather than throwing it here and losing state info.
-        error = err;
+        console.log(err);
+        error = {
+            displayStr: err.displayStr,
+        };
         progress = err.progress;
     }
 

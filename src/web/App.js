@@ -88,9 +88,10 @@ App.prototype.loaded = function() {
  * An error handler for displaying the error to the user.
  *
  * @param {Error} err
+ * @param {boolean} [logToConsole=false]
  */
-App.prototype.handleError = function(err) {
-    console.error(err);
+App.prototype.handleError = function(err, logToConsole) {
+    if (logToConsole) console.error(err);
     const msg = err.displayStr || err.toString();
     this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
 };
