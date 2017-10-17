@@ -1,17 +1,17 @@
 <!-- htmlmin:ignore --><!--
     CyberChef - The Cyber Swiss Army Knife
-    
+
     @copyright Crown Copyright 2016
     @license Apache-2.0
-    
+
       Copyright 2016 Crown Copyright
-    
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
         http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@
     <head>
         <meta charset="UTF-8">
         <title>CyberChef</title>
-        
+
         <meta name="copyright" content="Crown Copyright 2016" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
@@ -135,11 +135,11 @@
                     <ul id="search-results" class="op-list"></ul>
                     <div id="categories" class="panel-group no-select"></div>
                 </div>
-                
+
                 <div id="recipe" class="split split-horizontal no-select">
                     <div class="title no-select">Recipe</div>
                     <ul id="rec-list" class="list-area no-select"></ul>
-                    
+
                     <div id="controls" class="no-select">
                         <div id="operational-controls">
                             <div id="bake-group">
@@ -152,13 +152,13 @@
                                     <div>Auto Bake</div>
                                 </label>
                             </div>
-                            
+
                             <div class="btn-group" style="padding-top: 10px;">
                                 <button type="button" class="btn btn-default" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
                                 <button type="button" class="btn btn-default" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
                             </div>
                         </div>
-                        
+
                         <div class="btn-group-vertical" id="extra-controls">
                             <button type="button" class="btn btn-default" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
                             <button type="button" class="btn btn-default" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
@@ -166,7 +166,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="split split-horizontal" id="IO">
                     <div id="input" class="split no-select">
                         <div class="title no-select">
@@ -183,7 +183,7 @@
                             <textarea id="input-text"></textarea>
                         </div>
                     </div>
-                    
+
                     <div id="output" class="split">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
@@ -210,7 +210,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="save-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -261,7 +261,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="load-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -287,7 +287,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="options-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -337,7 +337,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="favourites-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -364,7 +364,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="support-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -395,6 +395,11 @@
                                 <li role="presentation"><a href="#about" aria-controls="messages" role="tab" data-toggle="tab">
                                     <img aria-hidden="true" src="<%- require('../static/images/speech-16x16.png') %>" alt="Speech Balloon Icon"/>
                                     About
+                                </a></li>
+                                <li role="presentation"><a href="#keybindings" aria-controls="messages" role="tab" data-toggle="tab">
+                                    <!-- Icon is a placeholder -->
+                                    <img aria-hidden="true" src="<%- require('../static/images/code-16x16.png') %>" alt="Code Icon"/>
+                                    Keybindings
                                 </a></li>
                             </ul>
                             <div class="tab-content">
@@ -448,20 +453,20 @@
                                 <div role="tabpanel" class="tab-pane" id="about" style="padding: 20px;">
                                     <h5><strong>What</strong></h5>
                                     <p>A simple, intuitive web app for analysing and decoding data without having to deal with complex tools or programming languages. CyberChef encourages both technical and non-technical people to explore data formats, encryption and compression.</p><br>
-                                    
+
                                     <h5><strong>Why</strong></h5>
                                     <p>Digital data comes in all shapes, sizes and formats in the modern world – CyberChef helps to make sense of this data all on one easy-to-use platform.</p><br>
 
-                                    
+
                                     <h5><strong>How</strong></h5>
                                     <p>The interface is designed with simplicity at its heart. Complex techniques are now as trivial as drag-and-drop. Simple functions can be combined to build up a "recipe", potentially resulting in complex analysis, which can be shared with other users and used with their input.</p>
                                     <p>For those comfortable writing code, CyberChef is a quick and efficient way to prototype solutions to a problem which can then be scripted once proven to work.</p><br>
 
-                                    
+
                                     <h5><strong>Who</strong></h5>
                                     <p>It is expected that CyberChef will be useful for cybersecurity and antivirus companies. It should also appeal to the academic world and any individuals or companies involved in the analysis of digital data, be that software developers, analysts, mathematicians or casual puzzle solvers.</p><br>
 
-                                    
+
                                     <h5><strong>Aim</strong></h5>
                                     <p>It is hoped that by releasing CyberChef through <a href="https://github.com/gchq/CyberChef">GitHub</a>, contributions can be added which can be rolled out into future versions of the tool.</p><br>
 
@@ -469,6 +474,79 @@
                                     <br>
                                     <p>There are around 150 useful operations in CyberChef for anyone working on anything vaguely Internet-related, whether you just want to convert a timestamp to a different format, decompress gzipped data, create a SHA3 hash, or parse an X.509 certificate to find out who issued it.</p>
                                     <p>It’s the Cyber Swiss Army Knife.</p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="keybindings" style="padding: 20px;">
+                                    <table class="table table-condensed table-bordered">
+                                        <tr>
+                                            <td><b>Command</b></td>
+                                            <td><b>Shortcut (Win/Linux)</b></td>
+                                            <td><b>Shortcut (Mac)</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Place cursor in search field</td>
+                                            <td>Ctrl+Alt+f</td>
+                                            <td>Ctrl+Opt+f</td>
+                                        <tr>
+                                            <td>Place cursor in input box</td>
+                                            <td>Ctrl+Alt+i</td>
+                                            <td>Ctrl+Opt+i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Place cursor in output box</td>
+                                            <td>Ctrl+Alt+o</td>
+                                            <td>Ctrl+Opt+o</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Place cursor in first argument field<br>of the next operation in the recipe</td>
+                                            <td>Ctrl+Alt+.</td>
+                                            <td>Ctrl+Opt+.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Place cursor in first argument field<br>of the nth operation in the recipe</td>
+                                            <td>Ctrl+Alt+[1-9]</td>
+                                            <td>Ctrl+Opt+[1-9]</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Disable current operation</td>
+                                            <td>Ctrl+Alt+d</td>
+                                            <td>Ctrl+Opt+d</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Set/clear breakpoint</td>
+                                            <td>Ctrl+Alt+b</td>
+                                            <td>Ctrl+Opt+b</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bake</td>
+                                            <td>Ctrl+Alt+Space</td>
+                                            <td>Ctrl+Opt+Space</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Step</td>
+                                            <td>Ctrl+Alt+'</td>
+                                            <td>Ctrl+Opt+'</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Clear recipe</td>
+                                            <td>Ctrl+Alt+c</td>
+                                            <td>Ctrl+Opt+c</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Save to file</td>
+                                            <td>Ctrl+Alt+s</td>
+                                            <td>Ctrl+Opt+s</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Load recipe</td>
+                                            <td>Ctrl+Alt+l</td>
+                                            <td>Ctrl+Opt+l</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Move output to input</td>
+                                            <td>Ctrl+Alt+m</td>
+                                            <td>Ctrl+Opt+m</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -482,7 +560,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="confirm-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -503,6 +581,6 @@
                 </div>
             </div>
         </div>
-        
+
     </body>
 </html>
