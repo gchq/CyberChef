@@ -54,44 +54,44 @@ const ByteRepr = {
     },
 
 
-	/**
+    /**
      * From 0xHex operation.
      *
      * @param {string} input (Starting with 0x only in the raw input)
      * @param {Object[]} args
      * @returns {byteArray}
      */
-	runFrom0xHex: function(input, args) {
-		var data = input.replace(/0x([0-9a-f]{2,})/ig,
-		function(match, p1) {
-			if (p1) {
-				return Utils.byteArrayToChars(Utils.fromHex(p1));
-			};
-		});
-		return data;
+    runFrom0xHex: function(input, args) {
+        let data = input.replace(/0x([0-9a-f]{2,})/ig,
+            function(match, p1) {
+                if (p1) {
+                    return Utils.byteArrayToChars(Utils.fromHex(p1));
+                }
+            });
+        return data;
     },
 
 
-	/**
+    /**
      * From char(hex) operation.
      *
      * @param {string} input (Starting with chr or char only in the raw input)
      * @param {Object[]} args
      * @returns {byteArray}
      */
-	runFromCharHex: function(input, args) {
-        var re = /cha?r\((((\d{1,3})(,\s?)?)+)\)/ig;
-        var inner_re = /(\d{1,3}),?/g
-        var data = input.replace(re,
+    runFromCharHex: function(input, args) {
+        let re = /cha?r\((((\d{1,3})(,\s?)?)+)\)/ig;
+        let innerRe = /(\d{1,3}),?/g;
+        let data = input.replace(re,
             function(match, p1) {
                 if (p1) {
-                    var result = "", inner_match;
-                    while ((inner_match = inner_re.exec(p1)) != null) {
-                        result += Utils.byteArrayToChars([parseInt(inner_match[1])]);
+                    let result = "", innerMatch;
+                    while ((innerMatch = innerRe.exec(p1)) != null) {
+                        result += Utils.byteArrayToChars([parseInt(innerMatch[1], 10)]);
                     }
                     return result;
-            }
-        });
+                }
+            });
         return data;
     },
 

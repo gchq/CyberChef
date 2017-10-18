@@ -267,7 +267,9 @@ const Compress = {
 
         let regexStr = /1f8b080[0-8][0-9a-f]{12}/;
         let gzipPos = input.search(regexStr);
-        if (gzipPos == -1) {return Utils.hexToByteArray(input);}
+        if (gzipPos === -1) {
+            return Utils.hexToByteArray(input);
+        }
         let plainData = input.substr(0, gzipPos);
         let gzipData = input.substr(gzipPos);
 

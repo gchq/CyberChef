@@ -37,19 +37,19 @@ const nTcpdump = {
      * @returns {string}
      */
     runTo: function(input, args) {
-        var length = args[0] || nTcpdump.WIDTH;
-        var upperCase = args[1];
-        var includeFinalLength = args[2];
+        let length = args[0] || nTcpdump.WIDTH;
+        let upperCase = args[1];
+        let includeFinalLength = args[2];
 
-        var output = "", padding = 2;
-        for (var i = 0; i < input.length; i += length) {
-            var buff = input.slice(i, i+length);
-            var hexa = "";
-            for (var j = 0; j < buff.length; j++) {
+        let output = "", padding = 2;
+        for (let i = 0; i < input.length; i += length) {
+            let buff = input.slice(i, i+length);
+            let hexa = "";
+            for (let j = 0; j < buff.length; j++) {
                 hexa += Utils.hex(buff[j], padding) + " ";
             }
 
-            var lineNo = Utils.hex(i, 8);
+            let lineNo = Utils.hex(i, 8);
 
             if (upperCase) {
                 hexa = hexa.toUpperCase();
@@ -77,21 +77,18 @@ const nTcpdump = {
      * @returns {byteArray}
      */
     runFrom: function(input, args) {
-        var output = [],
-            regex = /^\s*(?:0x[\dA-F]{4}:?)?\s*((?:[\dA-F]{4}\s?){1,8})/igm,
-			regex_header = /^\s*(?:0x0000:){1}\s*((?:[\dA-F]{4}\s?){6})/igm,
-            block, line;
-
-        while ((block = regex.exec(input))) {
-			// block[1].replace(regex_header, "0x0000:");
-            line = Utils.fromHex(block[1].replace(/-/g, " "));
-            for (var i = 0; i < line.length; i++) {
+        let output = [];
+        let regex = /^\s*(?:0x[\dA-F]{4}:?)?\s*((?:[\dA-F]{4}\s?){1,8})/igm;
+        let block = regex.exec(input);
+        while (block) {
+            let line = Utils.fromHex(block[1].replace(/-/g, " "));
+            for (let i = 0; i < line.length; i++) {
                 output.push(line[i]);
             }
         }
         // Is this a CyberChef hexdump or is it from a different tool?
-        var width = input.indexOf("\n");
-        var w = (width - 13) / 4;
+        let width = input.indexOf("\n");
+        let w = (width - 13) / 4;
         // w should be the specified width of the hexdump and therefore a round number
         if (Math.floor(w) !== w || input.indexOf("\r") !== -1 || output.indexOf(13) !== -1) {
             app.options.attemptHighlight = false;
@@ -111,7 +108,7 @@ const nTcpdump = {
      */
     highlightTo: function(pos, args) {
         // Calculate overall selection
-        var w = args[0] || 16,
+        let w = args[0] || 16,
             width = 14 + (w*4),
             line = Math.floor(pos[0].start / w),
             offset = pos[0].start % w,
@@ -129,8 +126,8 @@ const nTcpdump = {
         pos[0].end = line*width + 10 + offset*3 - 1;
 
         // Set up multiple selections for bytes
-        var startLineNum = Math.floor(pos[0].start / width);
-        var endLineNum = Math.floor(pos[0].end / width);
+        let startLineNum = Math.floor(pos[0].start / width);
+        let endLineNum = Math.floor(pos[0].end / width);
 
         if (startLineNum === endLineNum) {
             pos.push(pos[0]);
@@ -148,10 +145,10 @@ const nTcpdump = {
         }
 
         // Set up multiple selections for ASCII
-        var len = pos.length, lineNum = 0;
+        let len = pos.length, lineNum = 0;
         start = 0;
         end = 0;
-        for (var i = 1; i < len; i++) {
+        for (let i = 1; i < len; i++) {
             lineNum = Math.floor(pos[i].start / width);
             start = (((pos[i].start - (lineNum * width)) - 10) / 3) + (width - w -2) + (lineNum * width);
             end = (((pos[i].end + 1 - (lineNum * width)) - 10) / 3) + (width - w -2) + (lineNum * width);
@@ -171,11 +168,11 @@ const nTcpdump = {
      * @returns {Object[]} pos
      */
     highlightFrom: function(pos, args) {
-        var w = args[0] || 16;
-        var width = 14 + (w*4);
+        let w = args[0] || 16;
+        let width = 14 + (w*4);
 
-        var line = Math.floor(pos[0].start / width);
-        var offset = pos[0].start % width;
+        let line = Math.floor(pos[0].start / width);
+        let offset = pos[0].start % width;
 
         if (offset < 10) { // In line number section
             pos[0].start = line*w;
