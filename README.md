@@ -1,8 +1,11 @@
 # CyberChef
 
 [![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
-[![npm](https://badge.fury.io/js/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
-![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=brightgreen)
+[![dependencies Status](https://david-dm.org/gchq/CyberChef/status.svg)](https://david-dm.org/gchq/CyberChef)
+[![npm](http://img.shields.io/npm/v/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
+![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=blue)
+[![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
+[![Gitter](https://badges.gitter.im/gchq/CyberChef.svg)](https://gitter.im/gchq/CyberChef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 This is a fork of original CyberChef by GCHQ. This project has implemented my own operations for the daily SoC tasks. Please feel free to clone/test/share/contribute it.
 
 ## Features
@@ -30,9 +33,9 @@ This is a fork of original CyberChef by GCHQ. This project has implemented my ow
 
 #### *The Cyber Swiss Army Knife*
 
-CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include creating hexdumps, simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, data compression and decompression, calculating hashes and checksums, IPv6 and X.509 parsing, and much more.
+CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
 
-The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer and the code has not been peer-reviewed for compliance with a formal specification.
+The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years. Every effort has been made to structure the code in a readable and extendable format, however it should be noted that the analyst is not a professional developer.
 
 ## Live demo
 
@@ -48,9 +51,9 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 There are four main areas in CyberChef:
 
  1. The **input** box in the top right, where you can paste, type or drag the data you want to operate on.
- 2. The **output** box in the bottom right, where the outcome of the specified processing will be displayed.
+ 2. The **output** box in the bottom right, where the outcome of your processing will be displayed.
  3. The **operations** list on the far left, where you can find all the operations that CyberChef is capable of in categorised lists, or by searching.
- 4. The **recipe** area in the middle, where you drag the operations that you want to use and specify arguments and options.
+ 4. The **recipe** area in the middle, where you can drag the operations that you want to use and specify arguments and options.
 
 You can use as many operations as you like in simple or complex ways. Some examples are as follows:
 
@@ -58,8 +61,10 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - [Convert a date and time to a different time zone][3]
  - [Parse a Teredo IPv6 address][4]
  - [Convert data from a hexdump, then decompress][5]
- - [Display multiple timestamps as full dates][6]
- - [Carry out different operations on data of different types][7]
+ - [Decrypt and disassemble shellcode][6]
+ - [Display multiple timestamps as full dates][7]
+ - [Carry out different operations on data of different types][8]
+ - [Use parts of the input as arguments to operations][9]
 
 
 ## Features
@@ -80,7 +85,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Search
      - If you know the name of the operation you want or a word associated with it, start typing it into the search field and any matching operations will immediately be shown.
  - Highlighting
-     - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][8]).
+     - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][10]).
  - Save to file and load from file
      - You can save the output to a file at any time or load a file by dragging and dropping it into the input field (note that files larger than about 500kb may cause your browser to hang or even crash due to the way that browsers handle large amounts of textual data).
  - CyberChef is entirely client-side
@@ -90,12 +95,16 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 ## Browser support
 
-CyberChef is built to support Google Chrome 40+, Mozilla Firefox 35+ and Microsoft Edge 14+.
+CyberChef is built to support
+
+ - Google Chrome 40+
+ - Mozilla Firefox 35+
+ - Microsoft Edge 14+
 
 
 ## Contributing
 
-An installation walkthrough, how-to guides for adding new operations, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
+An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
 
  - Sign the [GCHQ Contributor Licence Agreement](https://github.com/gchq/Gaffer/wiki/GCHQ-OSS-Contributor-License-Agreement-V1.0)
  - Push your changes to your fork.
@@ -108,10 +117,12 @@ CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/lice
 
 
   [1]: https://gchq.github.io/CyberChef
-  [2]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22From%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%2Ctrue%5D%7D%5D&input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1
-  [3]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Translate%20DateTime%20Format%22%2C%22args%22%3A%5B%22Standard%20date%20and%20time%22%2C%22DD%2FMM%2FYYYY%20HH%3Amm%3Ass%22%2C%22UTC%22%2C%22dddd%20Do%20MMMM%20YYYY%20HH%3Amm%3Ass%20Z%20z%22%2C%22Australia%2FQueensland%22%5D%7D%5D&input=MTUvMDYvMjAxNSAyMDo0NTowMA
-  [4]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Parse%20IPv6%20address%22%2C%22args%22%3A%5B%5D%7D%5D&input=MjAwMTowMDAwOjQxMzY6ZTM3ODo4MDAwOjYzYmY6M2ZmZjpmZGQy
-  [5]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22From%20Hexdump%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22Gunzip%22%2C%22args%22%3A%5B%5D%7D%5D&input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu%2Fy7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb%2F3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw
-  [6]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22From%20UNIX%20Timestamp%22%2C%22args%22%3A%5B%22Seconds%20(s)%22%5D%7D%5D&input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA
-  [7]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22Fork%22%2C%22args%22%3A%5B%22%5C%5Cn%22%2C%22%5C%5Cn%22%5D%7D%2C%7B%22op%22%3A%22Conditional%20Jump%22%2C%22args%22%3A%5B%221%22%2C%222%22%2C%2210%22%5D%7D%2C%7B%22op%22%3A%22To%20Hex%22%2C%22args%22%3A%5B%22Space%22%5D%7D%2C%7B%22op%22%3A%22Return%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22op%22%3A%22To%20Base64%22%2C%22args%22%3A%5B%22A-Za-z0-9%2B%2F%3D%22%5D%7D%5D&input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA
-  [8]: https://gchq.github.io/CyberChef/?recipe=%5B%7B%22op%22%3A%22XOR%22%2C%22args%22%3A%5B%7B%22option%22%3A%22Hex%22%2C%22string%22%3A%223a%22%7D%2Cfalse%2Cfalse%5D%7D%2C%7B%22op%22%3A%22To%20Hexdump%22%2C%22args%22%3A%5B%2216%22%2Cfalse%2Cfalse%5D%7D%5D&input=VGhlIGFuc3dlciB0byB0aGUgdWx0aW1hdGUgcXVlc3Rpb24gb2YgbGlmZSwgdGhlIFVuaXZlcnNlLCBhbmQgZXZlcnl0aGluZyBpcyA0Mi4
+  [2]: https://gchq.github.io/CyberChef/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true)&input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1
+  [3]: https://gchq.github.io/CyberChef/#recipe=Translate_DateTime_Format('Standard%20date%20and%20time','DD/MM/YYYY%20HH:mm:ss','UTC','dddd%20Do%20MMMM%20YYYY%20HH:mm:ss%20Z%20z','Australia/Queensland')&input=MTUvMDYvMjAxNSAyMDo0NTowMA
+  [4]: https://gchq.github.io/CyberChef/#recipe=Parse_IPv6_address()&input=MjAwMTowMDAwOjQxMzY6ZTM3ODo4MDAwOjYzYmY6M2ZmZjpmZGQy
+  [5]: https://gchq.github.io/CyberChef/#recipe=From_Hexdump()Gunzip()&input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu/y7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb/3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw
+  [6]: https://gchq.github.io/CyberChef/#recipe=RC4(%7B'option':'UTF8','string':'secret'%7D,'Hex','Hex')Disassemble_x86('64','Full%20x86%20architecture',16,0,true,true)&input=MjFkZGQyNTQwMTYwZWU2NWZlMDc3NzEwM2YyYTM5ZmJlNWJjYjZhYTBhYWJkNDE0ZjkwYzZjYWY1MzEyNzU0YWY3NzRiNzZiM2JiY2QxOTNjYjNkZGZkYmM1YTI2NTMzYTY4NmI1OWI4ZmVkNGQzODBkNDc0NDIwMWFlYzIwNDA1MDcxMzhlMmZlMmIzOTUwNDQ2ZGIzMWQyYmM2MjliZTRkM2YyZWIwMDQzYzI5M2Q3YTVkMjk2MmMwMGZlNmRhMzAwNzJkOGM1YTZiNGZlN2Q4NTlhMDQwZWVhZjI5OTczMzYzMDJmNWEwZWMxOQ
+  [7]: https://gchq.github.io/CyberChef/#recipe=Fork('%5C%5Cn','%5C%5Cn',false)From_UNIX_Timestamp('Seconds%20(s)')&input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA
+  [8]: https://gchq.github.io/CyberChef/#recipe=Fork('%5C%5Cn','%5C%5Cn',false)Conditional_Jump('1',2,10)To_Hex('Space')Return()To_Base64('A-Za-z0-9%2B/%3D')&input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA
+  [9]: https://gchq.github.io/CyberChef/#recipe=Register('key%3D(%5B%5C%5Cda-f%5D*)',true,false)Find_/_Replace(%7B'option':'Regex','string':'.*data%3D(.*)'%7D,'$1',true,false,true)RC4(%7B'option':'Hex','string':'$R0'%7D,'Hex','Latin1')&input=aHR0cDovL21hbHdhcmV6LmJpei9iZWFjb24ucGhwP2tleT0wZTkzMmE1YyZkYXRhPThkYjdkNWViZTM4NjYzYTU0ZWNiYjMzNGUzZGIxMQ
+  [10]: https://gchq.github.io/CyberChef/#recipe=XOR(%7B'option':'Hex','string':'3a'%7D,'',false)To_Hexdump(16,false,false)&input=VGhlIGFuc3dlciB0byB0aGUgdWx0aW1hdGUgcXVlc3Rpb24gb2YgbGlmZSwgdGhlIFVuaXZlcnNlLCBhbmQgZXZlcnl0aGluZyBpcyA0Mi4

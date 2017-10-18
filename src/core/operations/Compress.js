@@ -10,12 +10,12 @@ import pako from "pako/index.js";
 const Zlib = {
     RawDeflate: rawdeflate.Zlib.RawDeflate,
     RawInflate: rawinflate.Zlib.RawInflate,
-    Deflate: zlibAndGzip.Zlib.Deflate,
-    Inflate: zlibAndGzip.Zlib.Inflate,
-    Gzip: zlibAndGzip.Zlib.Gzip,
-    Gunzip: zlibAndGzip.Zlib.Gunzip,
-    Zip: zip.Zlib.Zip,
-    Unzip: unzip.Zlib.Unzip,
+    Deflate:    zlibAndGzip.Zlib.Deflate,
+    Inflate:    zlibAndGzip.Zlib.Inflate,
+    Gzip:       zlibAndGzip.Zlib.Gzip,
+    Gunzip:     zlibAndGzip.Zlib.Gunzip,
+    Zip:        zip.Zlib.Zip,
+    Unzip:      unzip.Zlib.Unzip,
 };
 
 
@@ -55,9 +55,9 @@ const Compress = {
      * @default
      */
     RAW_COMPRESSION_TYPE_LOOKUP: {
-        "Fixed Huffman Coding"   : Zlib.RawDeflate.CompressionType.FIXED,
-        "Dynamic Huffman Coding" : Zlib.RawDeflate.CompressionType.DYNAMIC,
-        "None (Store)"           : Zlib.RawDeflate.CompressionType.NONE,
+        "Fixed Huffman Coding":   Zlib.RawDeflate.CompressionType.FIXED,
+        "Dynamic Huffman Coding": Zlib.RawDeflate.CompressionType.DYNAMIC,
+        "None (Store)":           Zlib.RawDeflate.CompressionType.NONE,
     },
 
     /**
@@ -100,8 +100,8 @@ const Compress = {
      * @default
      */
     RAW_BUFFER_TYPE_LOOKUP: {
-        "Adaptive" : Zlib.RawInflate.BufferType.ADAPTIVE,
-        "Block"    : Zlib.RawInflate.BufferType.BLOCK,
+        "Adaptive": Zlib.RawInflate.BufferType.ADAPTIVE,
+        "Block":    Zlib.RawInflate.BufferType.BLOCK,
     },
 
     /**
@@ -151,9 +151,9 @@ const Compress = {
      * @default
      */
     ZLIB_COMPRESSION_TYPE_LOOKUP: {
-        "Fixed Huffman Coding"   : Zlib.Deflate.CompressionType.FIXED,
-        "Dynamic Huffman Coding" : Zlib.Deflate.CompressionType.DYNAMIC,
-        "None (Store)"           : Zlib.Deflate.CompressionType.NONE,
+        "Fixed Huffman Coding":   Zlib.Deflate.CompressionType.FIXED,
+        "Dynamic Huffman Coding": Zlib.Deflate.CompressionType.DYNAMIC,
+        "None (Store)":           Zlib.Deflate.CompressionType.NONE,
     },
 
     /**
@@ -176,8 +176,8 @@ const Compress = {
      * @default
      */
     ZLIB_BUFFER_TYPE_LOOKUP: {
-        "Adaptive" : Zlib.Inflate.BufferType.ADAPTIVE,
-        "Block"    : Zlib.Inflate.BufferType.BLOCK,
+        "Adaptive": Zlib.Inflate.BufferType.ADAPTIVE,
+        "Block":    Zlib.Inflate.BufferType.BLOCK,
     },
 
     /**
@@ -286,17 +286,17 @@ const Compress = {
      * @default
      */
     ZIP_COMPRESSION_METHOD_LOOKUP: {
-        "Deflate"      : Zlib.Zip.CompressionMethod.DEFLATE,
-        "None (Store)" : Zlib.Zip.CompressionMethod.STORE
+        "Deflate":      Zlib.Zip.CompressionMethod.DEFLATE,
+        "None (Store)": Zlib.Zip.CompressionMethod.STORE
     },
     /**
      * @constant
      * @default
      */
     ZIP_OS_LOOKUP: {
-        "MSDOS"     : Zlib.Zip.OperatingSystem.MSDOS,
-        "Unix"      : Zlib.Zip.OperatingSystem.UNIX,
-        "Macintosh" : Zlib.Zip.OperatingSystem.MACINTOSH
+        "MSDOS":     Zlib.Zip.OperatingSystem.MSDOS,
+        "Unix":      Zlib.Zip.OperatingSystem.UNIX,
+        "Macintosh": Zlib.Zip.OperatingSystem.MACINTOSH
     },
 
     /**

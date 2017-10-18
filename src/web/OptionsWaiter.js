@@ -57,8 +57,11 @@ OptionsWaiter.prototype.load = function(options) {
 /**
  * Handler for options click events.
  * Dispays the options pane.
+ *
+ * @param {event} e
  */
-OptionsWaiter.prototype.optionsClick = function() {
+OptionsWaiter.prototype.optionsClick = function(e) {
+    e.preventDefault();
     $("#options-modal").modal();
 };
 
@@ -84,7 +87,9 @@ OptionsWaiter.prototype.switchChange = function(e, state) {
     const option = el.getAttribute("option");
 
     this.app.options[option] = state;
-    localStorage.setItem("options", JSON.stringify(this.app.options));
+
+    if (this.app.isLocalStorageAvailable())
+        localStorage.setItem("options", JSON.stringify(this.app.options));
 };
 
 
@@ -99,7 +104,9 @@ OptionsWaiter.prototype.numberChange = function(e) {
     const option = el.getAttribute("option");
 
     this.app.options[option] = parseInt(el.value, 10);
-    localStorage.setItem("options", JSON.stringify(this.app.options));
+
+    if (this.app.isLocalStorageAvailable())
+        localStorage.setItem("options", JSON.stringify(this.app.options));
 };
 
 
@@ -114,7 +121,9 @@ OptionsWaiter.prototype.selectChange = function(e) {
     const option = el.getAttribute("option");
 
     this.app.options[option] = el.value;
-    localStorage.setItem("options", JSON.stringify(this.app.options));
+
+    if (this.app.isLocalStorageAvailable())
+        localStorage.setItem("options", JSON.stringify(this.app.options));
 };
 
 

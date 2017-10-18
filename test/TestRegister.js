@@ -46,8 +46,7 @@ import Chef from "../src/core/Chef.js";
                     {},
                     0,
                     false
-                )
-                .then(function(result) {
+                ).then(function(result) {
                     const ret = {
                         test: test,
                         status: null,

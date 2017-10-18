@@ -1,5 +1,6 @@
 import HTMLOperation from "./HTMLOperation.js";
 import Sortable from "sortablejs";
+import Utils from "../core/Utils.js";
 
 
 /**
@@ -93,7 +94,7 @@ RecipeWaiter.prototype.createSortableSeedList = function(listEl) {
             // Removes popover element and event bindings from the dragged operation but not the
             // event bindings from the one left in the operations list. Without manually removing
             // these bindings, we cannot re-initialise the popover on the stub operation.
-            $(evt.item).popover("destroy");
+            $(evt.item).popover("destroy").removeData("bs.popover").off("mouseenter").off("mouseleave");
             $(evt.clone).off(".popover").removeData("bs.popover");
             evt.item.setAttribute("data-toggle", "popover-disabled");
         },
@@ -120,8 +121,7 @@ RecipeWaiter.prototype.opSortEnd = function(evt) {
 
     // Reinitialise the popover on the original element in the ops list because for some reason it
     // gets destroyed and recreated.
-    $(evt.clone).popover();
-    $(evt.clone).children("[data-toggle=popover]").popover();
+    this.manager.ops.enableOpsListPopovers(evt.clone);
 
     if (evt.item.parentNode.id !== "rec-list") {
         return;
@@ -192,7 +192,7 @@ RecipeWaiter.prototype.favDrop = function(e) {
  *
  * @fires Manager#statechange
  */
-RecipeWaiter.prototype.ingChange = function() {
+RecipeWaiter.prototype.ingChange = function(e) {
     window.dispatchEvent(this.manager.statechange);
 };
 
@@ -296,6 +296,9 @@ RecipeWaiter.prototype.getConfig = function() {
                     option: ingList[j].previousSibling.children[0].textContent.slice(0, -1),
                     string: ingList[j].value
                 };
+            } else if (ingList[j].getAttribute("type") === "number") {
+                // number
+                ingredients[j] = parseFloat(ingList[j].value, 10);
             } else {
                 // all others
                 ingredients[j] = ingList[j].value;
@@ -431,6 +434,32 @@ RecipeWaiter.prototype.opAdd = function(e) {
  */
 RecipeWaiter.prototype.opRemove = function(e) {
     window.dispatchEvent(this.manager.statechange);
+};
+
+
+/**
+ * Sets register values.
+ *
+ * @param {number} opIndex
+ * @param {number} numPrevRegisters
+ * @param {string[]} registers
+ */
+RecipeWaiter.prototype.setRegisters = function(opIndex, numPrevRegisters, registers) {
+    const op = document.querySelector(`#rec-list .operation:nth-child(${opIndex + 1})`),
+        prevRegList = op.querySelector(".register-list");
+
+    // Remove previous div
+    if (prevRegList) prevRegList.remove();
+
+    let registerList = [];
+    for (let i = 0; i < registers.length; i++) {
+        registerList.push(`$R${numPrevRegisters + i} = ${Utils.escapeHtml(Utils.truncate(Utils.printable(registers[i]), 100))}`);
+    }
+    const registerListEl = `<div class="register-list">
+            ${registerList.join("<br>")}
+        </div>`;
+
+    op.insertAdjacentHTML("beforeend", registerListEl);
 };
 
 export default RecipeWaiter;

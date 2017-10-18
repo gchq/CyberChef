@@ -61,7 +61,7 @@ const QuotedPrintable = {
      * @returns {byteArray}
      */
     runFrom: function (input, args) {
-        const str = input.replace(/\=(?:\r?\n|$)/g, "");
+        const str = input.replace(/=(?:\r?\n|$)/g, "");
         return QuotedPrintable.mimeDecode(str);
     },
 
@@ -73,7 +73,7 @@ const QuotedPrintable = {
      * @returns {byteArray}
      */
     mimeDecode: function(str) {
-        let encodedBytesCount = (str.match(/\=[\da-fA-F]{2}/g) || []).length,
+        let encodedBytesCount = (str.match(/=[\da-fA-F]{2}/g) || []).length,
             bufferLength = str.length - encodedBytesCount * 2,
             chr, hex,
             buffer = new Array(bufferLength),
@@ -219,21 +219,21 @@ const QuotedPrintable = {
                 result += line;
                 pos += line.length;
                 continue;
-            } else if (line.length > lineLengthMax - lineMargin && (match = line.substr(-lineMargin).match(/[ \t\.,!\?][^ \t\.,!\?]*$/))) {
+            } else if (line.length > lineLengthMax - lineMargin && (match = line.substr(-lineMargin).match(/[ \t.,!?][^ \t.,!?]*$/))) {
                 // truncate to nearest space
                 line = line.substr(0, line.length - (match[0].length - 1));
             } else if (line.substr(-1) === "\r") {
                 line = line.substr(0, line.length - 1);
             } else {
-                if (line.match(/\=[\da-f]{0,2}$/i)) {
+                if (line.match(/=[\da-f]{0,2}$/i)) {
 
                     // push incomplete encoding sequences to the next line
-                    if ((match = line.match(/\=[\da-f]{0,1}$/i))) {
+                    if ((match = line.match(/=[\da-f]{0,1}$/i))) {
                         line = line.substr(0, line.length - match[0].length);
                     }
 
                     // ensure that utf-8 sequences are not split
-                    while (line.length > 3 && line.length < len - pos && !line.match(/^(?:=[\da-f]{2}){1,4}$/i) && (match = line.match(/\=[\da-f]{2}$/ig))) {
+                    while (line.length > 3 && line.length < len - pos && !line.match(/^(?:=[\da-f]{2}){1,4}$/i) && (match = line.match(/=[\da-f]{2}$/ig))) {
                         code = parseInt(match[0].substr(1, 2), 16);
                         if (code < 128) {
                             break;
@@ -250,7 +250,7 @@ const QuotedPrintable = {
             }
 
             if (pos + line.length < len && line.substr(-1) !== "\n") {
-                if (line.length === 76 && line.match(/\=[\da-f]{2}$/i)) {
+                if (line.length === 76 && line.match(/=[\da-f]{2}$/i)) {
                     line = line.substr(0, line.length - 3);
                 } else if (line.length === 76) {
                     line = line.substr(0, line.length - 1);

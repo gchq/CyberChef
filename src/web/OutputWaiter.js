@@ -167,6 +167,17 @@ OutputWaiter.prototype.undoSwitchClick = function() {
     document.getElementById("undo-switch").disabled = true;
 };
 
+/**
+ * Handler for file switch click events.
+ * Moves a files data for items created via Utils.displayFilesAsHTML to the input.
+ */
+OutputWaiter.prototype.fileSwitch = function(e) {
+    e.preventDefault();
+    this.switchOrigData = this.manager.input.get();
+    this.app.setInput(e.target.getAttribute("fileValue"));
+    document.getElementById("undo-switch").disabled = false;
+};
+
 
 /**
  * Handler for maximise output click events.
@@ -188,6 +199,46 @@ OutputWaiter.prototype.maximiseOutputClick = function(e) {
         el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAi0lEQVQ4y83TMQrCQBCF4S+5g4rJEdJ7KE+RQ1lrIQQCllroEULuoM0Ww3a7aXwwLAzMPzDvLcz4hnooUItT1rsoVNy+4lgLWNL7RlcCmDBij2eCfNCrUITc0dRCrhj8m5otw0O6SV8LuAV3uhrAAa8sJ2Np7KPFawhgscVLjH9bCDhjt8WNKft88w/HjCvuVqu53QAAAABJRU5ErkJggg=='> Max";
         this.app.resetLayout();
     }
+};
+
+
+/**
+ * Shows or hides the loading icon.
+ *
+ * @param {boolean} value
+ */
+OutputWaiter.prototype.toggleLoader = function(value) {
+    const outputLoader = document.getElementById("output-loader"),
+        outputElement = document.getElementById("output-text");
+
+    if (value) {
+        this.manager.controls.hideStaleIndicator();
+        this.bakingStatusTimeout = setTimeout(function() {
+            outputElement.disabled = true;
+            outputLoader.style.visibility = "visible";
+            outputLoader.style.opacity = 1;
+            this.manager.controls.toggleBakeButtonFunction(true);
+        }.bind(this), 200);
+    } else {
+        clearTimeout(this.bakingStatusTimeout);
+        outputElement.disabled = false;
+        outputLoader.style.opacity = 0;
+        outputLoader.style.visibility = "hidden";
+        this.manager.controls.toggleBakeButtonFunction(false);
+        this.setStatusMsg("");
+    }
+};
+
+
+/**
+ * Sets the baking status message value.
+ *
+ * @param {string} msg
+ */
+OutputWaiter.prototype.setStatusMsg = function(msg) {
+    const el = document.querySelector("#output-loader .loading-msg");
+
+    el.textContent = msg;
 };
 
 export default OutputWaiter;

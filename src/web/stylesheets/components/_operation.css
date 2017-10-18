@@ -59,6 +59,7 @@
     background-color: var(--arg-background);
     border: 1px solid var(--arg-border-colour);
     font-family: var(--fixed-width-font-family);
+    text-overflow: ellipsis;
 }
 
 .short-string {
@@ -121,6 +122,12 @@ textarea.arg {
 
 button.dropdown-toggle {
     background-color: var(--secondary-background-colour);
+}
+
+.register-list {
+    background-color: var(--fc-operation-border-colour);
+    font-family: var(--fixed-width-font-family);
+    padding: 10px;
 }
 
 .op-icon {
@@ -193,4 +200,14 @@ button.dropdown-toggle {
     color: var(--disabled-font-colour) !important;
     background-color: var(--disabled-bg-colour) !important;
     border-color: var(--disabled-border-colour) !important;
+}
+
+.break .register-list {
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+    background-color: var(--fc-breakpoint-operation-border-colour) !important;
+}
+
+.disabled .register-list {
+    color: var(--disabled-font-colour) !important;
+    background-color: var(--disabled-border-colour) !important;
 }

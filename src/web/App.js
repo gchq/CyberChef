@@ -1,5 +1,4 @@
 import Utils from "../core/Utils.js";
-import Chef from "../core/Chef.js";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -27,7 +26,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.doptions      = defaultOptions;
     this.options       = Utils.extend({}, defaultOptions);
 
-    this.chef          = new Chef();
     this.manager       = new Manager(this);
 
     this.baking        = false;
@@ -35,8 +33,6 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.autoBakePause = false;
     this.progress      = 0;
     this.ingId         = 0;
-
-    window.chef        = this.chef;
 };
 
 
@@ -54,14 +50,23 @@ App.prototype.setup = function() {
     this.resetLayout();
     this.setCompileMessage();
     this.loadURIParams();
+
+    this.appLoaded = true;
     this.loaded();
 };
 
 
 /**
  * Fires once all setup activities have completed.
+ *
+ * @fires Manager#apploaded
  */
 App.prototype.loaded = function() {
+    // Check that both the app and the worker have loaded successfully, and that
+    // we haven't already loaded before attempting to remove the loading screen.
+    if (!this.workerLoaded || !this.appLoaded ||
+        !document.getElementById("loader-wrapper")) return;
+
     // Trigger CSS animations to remove preloader
     document.body.classList.add("loaded");
 
@@ -73,7 +78,9 @@ App.prototype.loaded = function() {
     }, 1000);
 
     // Clear the loading message interval
-    clearInterval(window.loadingMsgInt);
+    clearInterval(window.loadingMsgsInt);
+
+    document.dispatchEvent(this.manager.apploaded);
 };
 
 
@@ -81,85 +88,34 @@ App.prototype.loaded = function() {
  * An error handler for displaying the error to the user.
  *
  * @param {Error} err
+ * @param {boolean} [logToConsole=false]
  */
-App.prototype.handleError = function(err) {
-    console.error(err);
+App.prototype.handleError = function(err, logToConsole) {
+    if (logToConsole) console.error(err);
     const msg = err.displayStr || err.toString();
     this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
 };
 
 
 /**
- * Updates the UI to show if baking is in process or not.
- *
- * @param {bakingStatus}
- */
-App.prototype.setBakingStatus = function(bakingStatus) {
-    this.baking = bakingStatus;
-
-    let inputLoadingIcon = document.querySelector("#input .title .loading-icon"),
-        outputLoadingIcon = document.querySelector("#output .title .loading-icon"),
-        outputElement = document.querySelector("#output-text");
-
-    if (bakingStatus) {
-        inputLoadingIcon.style.display = "inline-block";
-        outputLoadingIcon.style.display = "inline-block";
-        outputElement.classList.add("disabled");
-        outputElement.disabled = true;
-    } else {
-        inputLoadingIcon.style.display = "none";
-        outputLoadingIcon.style.display = "none";
-        outputElement.classList.remove("disabled");
-        outputElement.disabled = false;
-    }
-};
-
-
-/**
- * Calls the Chef to bake the current input using the current recipe.
+ * Asks the ChefWorker to bake the current input using the current recipe.
  *
  * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
  *   whole recipe.
  */
-App.prototype.bake = async function(step) {
-    let response;
-
+App.prototype.bake = function(step) {
     if (this.baking) return;
 
-    this.setBakingStatus(true);
+    // Reset attemptHighlight flag
+    this.options.attemptHighlight = true;
 
-    try {
-        response = await this.chef.bake(
-            this.getInput(),          // The user's input
-            this.getRecipeConfig(),   // The configuration of the recipe
-            this.options,             // Options set by the user
-            this.progress,            // The current position in the recipe
-            step                      // Whether or not to take one step or execute the whole recipe
-        );
-    } catch (err) {
-        this.handleError(err);
-    }
-
-    this.setBakingStatus(false);
-
-    if (!response) return;
-
-    if (response.error) {
-        this.handleError(response.error);
-    }
-
-    this.options  = response.options;
-    this.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
-    this.progress = response.progress;
-    this.manager.recipe.updateBreakpointIndicator(response.progress);
-    this.manager.output.set(response.result, response.type, response.duration);
-
-    // If baking took too long, disable auto-bake
-    if (response.duration > this.options.autoBakeThreshold && this.autoBake_) {
-        this.manager.controls.setAutoBake(false);
-        this.alert("Baking took longer than " + this.options.autoBakeThreshold +
-            "ms, Auto Bake has been disabled.", "warning", 5000);
-    }
+    this.manager.worker.bake(
+        this.getInput(),        // The user's input
+        this.getRecipeConfig(), // The configuration of the recipe
+        this.options,           // Options set by the user
+        this.progress,          // The current position in the recipe
+        step                    // Whether or not to take one step or execute the whole recipe
+    );
 };
 
 
@@ -167,30 +123,36 @@ App.prototype.bake = async function(step) {
  * Runs Auto Bake if it is set.
  */
 App.prototype.autoBake = function() {
-    if (this.autoBake_ && !this.autoBakePause) {
+    // If autoBakePause is set, we are loading a full recipe (and potentially input), so there is no
+    // need to set the staleness indicator. Just exit and wait until auto bake is called after loading
+    // has completed.
+    if (this.autoBakePause) return false;
+
+    if (this.autoBake_ && !this.baking) {
         this.bake();
+    } else {
+        this.manager.controls.showStaleIndicator();
     }
 };
 
 
 /**
- * Runs a silent bake forcing the browser to load and cache all the relevant JavaScript code needed
+ * Runs a silent bake, forcing the browser to load and cache all the relevant JavaScript code needed
  * to do a real bake.
  *
- * The output will not be modified (hence "silent" bake). This will only actually execute the
- * recipe if auto-bake is enabled, otherwise it will just load the recipe, ingredients and dish.
- *
- * @returns {number} - The number of miliseconds it took to run the silent bake.
+ * The output will not be modified (hence "silent" bake). This will only actually execute the recipe
+ * if auto-bake is enabled, otherwise it will just wake up the ChefWorker with an empty recipe.
  */
 App.prototype.silentBake = function() {
-    let startTime = new Date().getTime(),
-        recipeConfig = this.getRecipeConfig();
+    let recipeConfig = [];
 
     if (this.autoBake_) {
-        this.chef.silentBake(recipeConfig);
+        // If auto-bake is not enabled we don't want to actually run the recipe as it may be disabled
+        // for a good reason.
+        recipeConfig = this.getRecipeConfig();
     }
 
-    return new Date().getTime() - startTime;
+    this.manager.worker.silentBake(recipeConfig);
 };
 
 
@@ -200,13 +162,7 @@ App.prototype.silentBake = function() {
  * @returns {string}
  */
 App.prototype.getInput = function() {
-    const input = this.manager.input.get();
-
-    // Save to session storage in case we need to restore it later
-    sessionStorage.setItem("inputLength", input.length);
-    sessionStorage.setItem("input", input);
-
-    return input;
+    return this.manager.input.get();
 };
 
 
@@ -216,8 +172,6 @@ App.prototype.getInput = function() {
  * @param {string} input - The string to set the input to
  */
 App.prototype.setInput = function(input) {
-    sessionStorage.setItem("inputLength", input.length);
-    sessionStorage.setItem("input", input);
     this.manager.input.set(input);
 };
 
@@ -268,7 +222,7 @@ App.prototype.populateOperationsList = function() {
 App.prototype.initialiseSplitter = function() {
     this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
         sizes: [20, 30, 50],
-        minSize: [240, 325, 440],
+        minSize: [240, 325, 450],
         gutterSize: 4,
         onDrag: function() {
             this.manager.controls.adjustWidth();
@@ -292,7 +246,7 @@ App.prototype.initialiseSplitter = function() {
 App.prototype.loadLocalStorage = function() {
     // Load options
     let lOptions;
-    if (localStorage.options !== undefined) {
+    if (this.isLocalStorageAvailable() && localStorage.options !== undefined) {
         lOptions = JSON.parse(localStorage.options);
     }
     this.manager.options.load(lOptions);
@@ -308,13 +262,17 @@ App.prototype.loadLocalStorage = function() {
  * If the user currently has no saved favourites, the defaults from the view constructor are used.
  */
 App.prototype.loadFavourites = function() {
-    let favourites = localStorage.favourites &&
-        localStorage.favourites.length > 2 ?
-        JSON.parse(localStorage.favourites) :
-        this.dfavourites;
+    let favourites;
 
-    favourites = this.validFavourites(favourites);
-    this.saveFavourites(favourites);
+    if (this.isLocalStorageAvailable()) {
+        favourites = localStorage.favourites && localStorage.favourites.length > 2 ?
+            JSON.parse(localStorage.favourites) :
+            this.dfavourites;
+        favourites = this.validFavourites(favourites);
+        this.saveFavourites(favourites);
+    } else {
+        favourites = this.dfavourites;
+    }
 
     const favCat = this.categories.filter(function(c) {
         return c.name === "Favourites";
@@ -358,6 +316,15 @@ App.prototype.validFavourites = function(favourites) {
  * @param {string[]} favourites - A list of the user's favourite operations
  */
 App.prototype.saveFavourites = function(favourites) {
+    if (!this.isLocalStorageAvailable()) {
+        this.alert(
+            "Your security settings do not allow access to local storage so your favourites cannot be saved.",
+            "danger",
+            5000
+        );
+        return false;
+    }
+
     localStorage.setItem("favourites", JSON.stringify(this.validFavourites(favourites)));
 };
 
@@ -399,39 +366,29 @@ App.prototype.addFavourite = function(name) {
  * Checks for input and recipe in the URI parameters and loads them if present.
  */
 App.prototype.loadURIParams = function() {
-    // Load query string from URI
-    this.queryString = (function(a) {
-        if (a === "") return {};
-        const b = {};
-        for (let i = 0; i < a.length; i++) {
-            const p = a[i].split("=");
-            if (p.length !== 2) {
-                b[a[i]] = true;
-            } else {
-                b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-            }
-        }
-        return b;
-    })(window.location.search.substr(1).split("&"));
+    // Load query string or hash from URI (depending on which is populated)
+    // We prefer getting the hash by splitting the href rather than referencing
+    // location.hash as some browsers (Firefox) automatically URL decode it,
+    // which cause issues.
+    const params = window.location.search ||
+        window.location.href.split("#")[1] ||
+        window.location.hash;
+    this.uriParams = Utils.parseURIParams(params);
 
-    // Pause auto-bake while loading but don't modify `this.autoBake_`
-    // otherwise `manualBake` cannot trigger.
-    this.autoBakePause = true;
-
-    // Read in recipe from query string
-    if (this.queryString.recipe) {
+    // Read in recipe from URI params
+    if (this.uriParams.recipe) {
         try {
-            const recipeConfig = JSON.parse(this.queryString.recipe);
+            const recipeConfig = Utils.parseRecipeConfig(this.uriParams.recipe);
             this.setRecipeConfig(recipeConfig);
         } catch (err) {}
-    } else if (this.queryString.op) {
+    } else if (this.uriParams.op) {
         // If there's no recipe, look for single operations
         this.manager.recipe.clearRecipe();
         try {
-            this.manager.recipe.addOperation(this.queryString.op);
+            this.manager.recipe.addOperation(this.uriParams.op);
         } catch (err) {
             // If no exact match, search for nearest match and add that
-            const matchedOps = this.manager.ops.filterOperations(this.queryString.op, false);
+            const matchedOps = this.manager.ops.filterOperations(this.uriParams.op, false);
             if (matchedOps.length) {
                 this.manager.recipe.addOperation(matchedOps[0].name);
             }
@@ -439,21 +396,23 @@ App.prototype.loadURIParams = function() {
             // Populate search with the string
             const search = document.getElementById("search");
 
-            search.value = this.queryString.op;
+            search.value = this.uriParams.op;
             search.dispatchEvent(new Event("search"));
         }
     }
 
-    // Read in input data from query string
-    if (this.queryString.input) {
+    // Read in input data from URI params
+    if (this.uriParams.input) {
+        this.autoBakePause = true;
         try {
-            const inputData = Utils.fromBase64(this.queryString.input);
+            const inputData = Utils.fromBase64(this.uriParams.input);
             this.setInput(inputData);
-        } catch (err) {}
+        } catch (err) {
+        } finally {
+            this.autoBakePause = false;
+        }
     }
 
-    // Unpause auto-bake
-    this.autoBakePause = false;
     this.autoBake();
 };
 
@@ -474,9 +433,7 @@ App.prototype.nextIngId = function() {
  * @returns {Object[]}
  */
 App.prototype.getRecipeConfig = function() {
-    const recipeConfig = this.manager.recipe.getConfig();
-    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
-    return recipeConfig;
+    return this.manager.recipe.getConfig();
 };
 
 
@@ -486,8 +443,11 @@ App.prototype.getRecipeConfig = function() {
  * @param {Object[]} recipeConfig - The recipe configuration
  */
 App.prototype.setRecipeConfig = function(recipeConfig) {
-    sessionStorage.setItem("recipeConfig", JSON.stringify(recipeConfig));
     document.getElementById("rec-list").innerHTML = null;
+
+    // Pause auto-bake while loading but don't modify `this.autoBake_`
+    // otherwise `manualBake` cannot trigger.
+    this.autoBakePause = true;
 
     for (let i = 0; i < recipeConfig.length; i++) {
         const item = this.manager.recipe.addOperation(recipeConfig[i].op);
@@ -495,6 +455,7 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
         // Populate arguments
         const args = item.querySelectorAll(".arg");
         for (let j = 0; j < args.length; j++) {
+            if (recipeConfig[i].args[j] === undefined) continue;
             if (args[j].getAttribute("type") === "checkbox") {
                 // checkbox
                 args[j].checked = recipeConfig[i].args[j];
@@ -520,6 +481,9 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
 
         this.progress = 0;
     }
+
+    // Unpause auto bake
+    this.autoBakePause = false;
 };
 
 
@@ -541,16 +505,41 @@ App.prototype.resetLayout = function() {
 App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
     let now = new Date(),
-        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime),
-        compileInfo = "<span style=\"font-weight: normal\">Last build: " +
-            timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1) + " ago";
+        timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime);
+
+    // Calculate previous version to compare to
+    let prev = PKG_VERSION.split(".").map(n => {
+        return parseInt(n, 10);
+    });
+    if (prev[2] > 0) prev[2]--;
+    else if (prev[1] > 0) prev[1]--;
+    else prev[0]--;
+
+    const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
+
+    let compileInfo = `<a href='${compareURL}'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
 
     if (window.compileMessage !== "") {
         compileInfo += " - " + window.compileMessage;
     }
 
-    compileInfo += "</span>";
     document.getElementById("notice").innerHTML = compileInfo;
+};
+
+
+/**
+ * Determines whether the browser supports Local Storage and if it is accessible.
+ * 
+ * @returns {boolean}
+ */
+App.prototype.isLocalStorageAvailable = function() {
+    try {
+        if (!localStorage) return false;
+        return true;
+    } catch (err) {
+        // Access to LocalStorage is denied
+        return false;
+    }
 };
 
 
@@ -674,10 +663,27 @@ App.prototype.alertCloseClick = function() {
 App.prototype.stateChange = function(e) {
     this.autoBake();
 
+    // Set title
+    const recipeConfig = this.getRecipeConfig();
+    let title = "CyberChef";
+    if (recipeConfig.length === 1) {
+        title = `${recipeConfig[0].op} - ${title}`;
+    } else if (recipeConfig.length > 1) {
+        // See how long the full recipe is
+        const ops = recipeConfig.map(op => op.op).join(", ");
+        if (ops.length < 45) {
+            title = `${ops} - ${title}`;
+        } else {
+            // If it's too long, just use the first one and say how many more there are
+            title = `${recipeConfig[0].op}, ${recipeConfig.length - 1} more - ${title}`;
+        }
+    }
+    document.title = title;
+
     // Update the current history state (not creating a new one)
     if (this.options.updateUrl) {
-        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true);
-        window.history.replaceState({}, "CyberChef", this.lastStateUrl);
+        this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
+        window.history.replaceState({}, title, this.lastStateUrl);
     }
 };
 
@@ -689,9 +695,7 @@ App.prototype.stateChange = function(e) {
  * @param {event} e
  */
 App.prototype.popState = function(e) {
-    if (window.location.href.split("#")[0] !== this.lastStateUrl) {
-        this.loadURIParams();
-    }
+    this.loadURIParams();
 };
 
 

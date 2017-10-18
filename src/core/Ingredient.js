@@ -73,7 +73,7 @@ Ingredient.prepare = function(data, type) {
         case "byteArray":
             if (typeof data == "string") {
                 data = data.replace(/\s+/g, "");
-                return Utils.hexToByteArray(data);
+                return Utils.fromHex(data);
             } else {
                 return data;
             }

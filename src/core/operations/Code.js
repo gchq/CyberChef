@@ -4,6 +4,7 @@ import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser as dom} from "xmldom";
 import xpath from "xpath";
+import jpath from "jsonpath";
 import prettyPrintOne from "imports-loader?window=>global!exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js";
 
 
@@ -228,19 +229,19 @@ const Code = {
         }
 
         code = code
-                // Create newlines after ;
-                .replace(/;/g, ";\n")
-                // Create newlines after { and around }
-                .replace(/{/g, "{\n")
-                .replace(/}/g, "\n}\n")
-                // Remove carriage returns
-                .replace(/\r/g, "")
-                // Remove all indentation
-                .replace(/^\s+/g, "")
-                .replace(/\n\s+/g, "\n")
-                // Remove trailing spaces
-                .replace(/\s*$/g, "")
-                .replace(/\n{/g, "{");
+            // Create newlines after ;
+            .replace(/;/g, ";\n")
+            // Create newlines after { and around }
+            .replace(/{/g, "{\n")
+            .replace(/}/g, "\n}\n")
+            // Remove carriage returns
+            .replace(/\r/g, "")
+            // Remove all indentation
+            .replace(/^\s+/g, "")
+            .replace(/\n\s+/g, "\n")
+            // Remove trailing spaces
+            .replace(/\s*$/g, "")
+            .replace(/\n{/g, "{");
 
         // Indent
         let i = 0,
@@ -265,27 +266,27 @@ const Code = {
         }
 
         code = code
-                // Add strategic spaces
-                .replace(/\s*([!<>=+-/*]?)=\s*/g, " $1= ")
-                .replace(/\s*<([=]?)\s*/g, " <$1 ")
-                .replace(/\s*>([=]?)\s*/g, " >$1 ")
-                .replace(/([^+])\+([^+=])/g, "$1 + $2")
-                .replace(/([^-])-([^-=])/g, "$1 - $2")
-                .replace(/([^*])\*([^*=])/g, "$1 * $2")
-                .replace(/([^/])\/([^/=])/g, "$1 / $2")
-                .replace(/\s*,\s*/g, ", ")
-                .replace(/\s*{/g, " {")
-                .replace(/}\n/g, "}\n\n")
-                // Hacky horribleness
-                .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
-                .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
-                .replace(/else\s*\n([^{])/gim, "else\n    $1")
-                .replace(/else\s+([^{])/gim, "else $1")
-                // Remove strategic spaces
-                .replace(/\s+;/g, ";")
-                .replace(/\{\s+\}/g, "{}")
-                .replace(/\[\s+\]/g, "[]")
-                .replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
+            // Add strategic spaces
+            .replace(/\s*([!<>=+-/*]?)=\s*/g, " $1= ")
+            .replace(/\s*<([=]?)\s*/g, " <$1 ")
+            .replace(/\s*>([=]?)\s*/g, " >$1 ")
+            .replace(/([^+])\+([^+=])/g, "$1 + $2")
+            .replace(/([^-])-([^-=])/g, "$1 - $2")
+            .replace(/([^*])\*([^*=])/g, "$1 * $2")
+            .replace(/([^/])\/([^/=])/g, "$1 / $2")
+            .replace(/\s*,\s*/g, ", ")
+            .replace(/\s*{/g, " {")
+            .replace(/}\n/g, "}\n\n")
+            // Hacky horribleness
+            .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
+            .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
+            .replace(/else\s*\n([^{])/gim, "else\n    $1")
+            .replace(/else\s+([^{])/gim, "else $1")
+            // Remove strategic spaces
+            .replace(/\s+;/g, ";")
+            .replace(/\{\s+\}/g, "{}")
+            .replace(/\[\s+\]/g, "[]")
+            .replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
 
         // Replace preserved tokens
         const ptokens = /###preservedToken(\d+)###/g;
@@ -329,7 +330,7 @@ const Code = {
      * @param {Object[]} args
      * @returns {string}
      */
-    runXpath:function(input, args) {
+    runXpath: function(input, args) {
         let query = args[0],
             delimiter = args[1];
 
@@ -352,6 +353,48 @@ const Code = {
         };
 
         return nodes.map(nodeToString).join(delimiter);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    JPATH_INITIAL: "",
+
+    /**
+     * @constant
+     * @default
+     */
+    JPATH_DELIMITER: "\\n",
+
+    /**
+     * JPath expression operation.
+     *
+     * @author Matt C (matt@artemisbot.uk)
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runJpath: function(input, args) {
+        let query = args[0],
+            delimiter = args[1],
+            results,
+            obj;
+
+        try {
+            obj = JSON.parse(input);
+        } catch (err) {
+            return "Invalid input JSON: " + err.message;
+        }
+
+        try {
+            results = jpath.query(obj, query);
+        } catch (err) {
+            return "Invalid JPath expression: " + err.message;
+        }
+
+        return results.map(result => JSON.stringify(result)).join(delimiter);
     },
 
 

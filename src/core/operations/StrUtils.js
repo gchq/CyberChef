@@ -1,5 +1,4 @@
 import Utils from "../Utils.js";
-import * as JsDiff from "diff";
 
 
 /**
@@ -36,11 +35,11 @@ const StrUtils = {
         },
         {
             name: "URL",
-            value: "([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?;\"\\x27<>()\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?;\"\\x27<>()\\[\\]{}\\s\\x7F-\\xFF]+)*)?"
+            value: "([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*)?"
         },
         {
             name: "Domain",
-            value: "(?:(https?):\\/\\/)?([-\\w.]+)\\.(com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+"
+            value: "\\b((?=[a-z0-9-]{1,63}\\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,63}\\b"
         },
         {
             name: "Windows file path",
@@ -193,17 +192,17 @@ const StrUtils = {
      * @constant
      * @default
      */
-    FIND_REPLACE_GLOBAL : true,
+    FIND_REPLACE_GLOBAL: true,
     /**
      * @constant
      * @default
      */
-    FIND_REPLACE_CASE : false,
+    FIND_REPLACE_CASE: false,
     /**
      * @constant
      * @default
      */
-    FIND_REPLACE_MULTILINE : true,
+    FIND_REPLACE_MULTILINE: true,
 
     /**
      * Find / Replace operation.
@@ -227,14 +226,16 @@ const StrUtils = {
 
         if (type === "Regex") {
             find = new RegExp(find, modifiers);
-        } else if (type.indexOf("Extended") === 0) {
+            return input.replace(find, replace);
+        }
+
+        if (type.indexOf("Extended") === 0) {
             find = Utils.parseEscapedChars(find);
         }
 
-        return input.replace(find, replace, modifiers);
-        // Non-standard addition of flags in the third argument. This will work in Firefox but
-        // probably nowhere else. The purpose is to allow global matching when the `find` parameter
-        // is just a string.
+        find = new RegExp(Utils.escapeRegex(find), modifiers);
+
+        return input.replace(find, replace);
     },
 
 
@@ -296,83 +297,6 @@ const StrUtils = {
      * @constant
      * @default
      */
-    DIFF_SAMPLE_DELIMITER: "\\n\\n",
-    /**
-     * @constant
-     * @default
-     */
-    DIFF_BY: ["Character", "Word", "Line", "Sentence", "CSS", "JSON"],
-
-    /**
-     * Diff operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {html}
-     */
-    runDiff: function(input, args) {
-        let sampleDelim = args[0],
-            diffBy = args[1],
-            showAdded = args[2],
-            showRemoved = args[3],
-            ignoreWhitespace = args[4],
-            samples = input.split(sampleDelim),
-            output = "",
-            diff;
-
-        if (!samples || samples.length !== 2) {
-            return "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?";
-        }
-
-        switch (diffBy) {
-            case "Character":
-                diff = JsDiff.diffChars(samples[0], samples[1]);
-                break;
-            case "Word":
-                if (ignoreWhitespace) {
-                    diff = JsDiff.diffWords(samples[0], samples[1]);
-                } else {
-                    diff = JsDiff.diffWordsWithSpace(samples[0], samples[1]);
-                }
-                break;
-            case "Line":
-                if (ignoreWhitespace) {
-                    diff = JsDiff.diffTrimmedLines(samples[0], samples[1]);
-                } else {
-                    diff = JsDiff.diffLines(samples[0], samples[1]);
-                }
-                break;
-            case "Sentence":
-                diff = JsDiff.diffSentences(samples[0], samples[1]);
-                break;
-            case "CSS":
-                diff = JsDiff.diffCss(samples[0], samples[1]);
-                break;
-            case "JSON":
-                diff = JsDiff.diffJson(samples[0], samples[1]);
-                break;
-            default:
-                return "Invalid 'Diff by' option.";
-        }
-
-        for (let i = 0; i < diff.length; i++) {
-            if (diff[i].added) {
-                if (showAdded) output += "<span class='hlgreen'>" + Utils.escapeHtml(diff[i].value) + "</span>";
-            } else if (diff[i].removed) {
-                if (showRemoved) output += "<span class='hlred'>" + Utils.escapeHtml(diff[i].value) + "</span>";
-            } else {
-                output += Utils.escapeHtml(diff[i].value);
-            }
-        }
-
-        return output;
-    },
-
-
-    /**
-     * @constant
-     * @default
-     */
     OFF_CHK_SAMPLE_DELIMITER: "\\n\\n",
 
     /**
@@ -422,7 +346,7 @@ const StrUtils = {
                 }
 
                 if (match && !inMatch) {
-                    outputs[s] += "<span class='hlgreen'>" + Utils.escapeHtml(samples[s][i]);
+                    outputs[s] += "<span class='hl5'>" + Utils.escapeHtml(samples[s][i]);
                     if (samples[s].length === i + 1) outputs[s] += "</span>";
                     if (s === samples.length - 1) inMatch = true;
                 } else if (!match && inMatch) {
@@ -448,14 +372,84 @@ const StrUtils = {
 
 
     /**
-     * Parse escaped string operation.
+     * @constant
+     * @default
+     */
+    ESCAPE_REPLACEMENTS: [
+        {"escaped": "\\\\", "unescaped": "\\"}, // Must be first
+        {"escaped": "\\'", "unescaped": "'"},
+        {"escaped": "\\\"", "unescaped": "\""},
+        {"escaped": "\\n", "unescaped": "\n"},
+        {"escaped": "\\r", "unescaped": "\r"},
+        {"escaped": "\\t", "unescaped": "\t"},
+        {"escaped": "\\b", "unescaped": "\b"},
+        {"escaped": "\\f", "unescaped": "\f"},
+    ],
+
+    /**
+     * Escape string operation.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @example
+     * StrUtils.runUnescape("Don't do that", [])
+     * > "Don\'t do that"
+     * StrUtils.runUnescape(`Hello
+     * World`, [])
+     * > "Hello\nWorld"
      */
-    runParseEscapedString: function(input, args) {
-        return Utils.parseEscapedChars(input);
+    runEscape: function(input, args) {
+        return StrUtils._replaceByKeys(input, "unescaped", "escaped");
+    },
+
+
+    /**
+     * Unescape string operation.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     *
+     * @example
+     * StrUtils.runUnescape("Don\'t do that", [])
+     * > "Don't do that"
+     * StrUtils.runUnescape("Hello\nWorld", [])
+     * > `Hello
+     * World`
+     */
+    runUnescape: function(input, args) {
+        return StrUtils._replaceByKeys(input, "escaped", "unescaped");
+    },
+
+
+    /**
+     * Replaces all matching tokens in ESCAPE_REPLACEMENTS with the correction. The
+     * ordering is determined by the patternKey and the replacementKey.
+     *
+     * @author Vel0x [dalemy@microsoft.com]
+     * @author Matt C [matt@artemisbot.uk]
+     *
+     * @param {string} input
+     * @param {string} pattern_key
+     * @param {string} replacement_key
+     * @returns {string}
+     */
+    _replaceByKeys: function(input, patternKey, replacementKey) {
+        let output = input;
+
+        // Catch the \\x encoded characters
+        if (patternKey === "escaped") output = Utils.parseEscapedChars(input);
+
+        StrUtils.ESCAPE_REPLACEMENTS.forEach(replacement => {
+            output = output.split(replacement[patternKey]).join(replacement[replacementKey]);
+        });
+        return output;
     },
 
 
@@ -474,16 +468,16 @@ const StrUtils = {
         const splitInput = input.split(delimiter);
 
         return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
+            .filter((line, lineIndex) => {
+                lineIndex += 1;
 
-            if (number < 0) {
-                return lineIndex <= splitInput.length + number;
-            } else {
-                return lineIndex <= number;
-            }
-        })
-        .join(delimiter);
+                if (number < 0) {
+                    return lineIndex <= splitInput.length + number;
+                } else {
+                    return lineIndex <= number;
+                }
+            })
+            .join(delimiter);
     },
 
 
@@ -502,16 +496,16 @@ const StrUtils = {
         const splitInput = input.split(delimiter);
 
         return splitInput
-        .filter((line, lineIndex) => {
-            lineIndex += 1;
+            .filter((line, lineIndex) => {
+                lineIndex += 1;
 
-            if (number < 0) {
-                return lineIndex > -number;
-            } else {
-                return lineIndex > splitInput.length - number;
-            }
-        })
-        .join(delimiter);
+                if (number < 0) {
+                    return lineIndex > -number;
+                } else {
+                    return lineIndex > splitInput.length - number;
+                }
+            })
+            .join(delimiter);
     },
 
 

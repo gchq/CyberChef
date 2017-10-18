@@ -28,11 +28,7 @@
         // modify rules from base configurations
         "no-unused-vars": ["error", {
             "args": "none",
-            "vars": "local",
-            // Allow vars that start with a capital letter to be unused.
-            // This is mainly for exported module names which are useful to indicate
-            // the name of the module and may be used to refer to itself in future.
-            "varsIgnorePattern": "^[A-Z]"
+            "vars": "all"
         }],
         "no-empty": ["error", {
             "allowEmptyCatch": true
@@ -52,6 +48,9 @@
         "no-trailing-spaces": "warn",
         "eol-last": "error",
         "func-call-spacing": "error",
+        "key-spacing": ["warn", {
+            "mode": "minimum"
+        }],
         "indent": ["error", 4, {
             "ArrayExpression": "first",
             "SwitchCase": 1
@@ -93,6 +92,10 @@
         "moment": false,
 
         "COMPILE_TIME": false,
-        "COMPILE_MSG": false
+        "COMPILE_MSG": false,
+        "PKG_VERSION": false,
+        "ENVIRONMENT_IS_WORKER": false,
+        "ENVIRONMENT_IS_NODE": false,
+        "ENVIRONMENT_IS_WEB": false
     }
 }

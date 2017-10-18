@@ -1,3 +1,4 @@
+import WorkerWaiter from "./WorkerWaiter.js";
 import WindowWaiter from "./WindowWaiter.js";
 import ControlsWaiter from "./ControlsWaiter.js";
 import RecipeWaiter from "./RecipeWaiter.js";
@@ -28,6 +29,10 @@ const Manager = function(app) {
      */
     this.appstart = new CustomEvent("appstart", {bubbles: true});
     /**
+     * @event Manager#apploaded
+     */
+    this.apploaded = new CustomEvent("apploaded", {bubbles: true});
+    /**
      * @event Manager#operationadd
      */
     this.operationadd = new CustomEvent("operationadd", {bubbles: true});
@@ -45,6 +50,7 @@ const Manager = function(app) {
     this.statechange = new CustomEvent("statechange", {bubbles: true});
 
     // Define Waiter objects to handle various areas
+    this.worker      = new WorkerWaiter(this.app, this);
     this.window      = new WindowWaiter(this.app);
     this.controls    = new ControlsWaiter(this.app, this);
     this.recipe      = new RecipeWaiter(this.app, this);
@@ -52,7 +58,7 @@ const Manager = function(app) {
     this.input       = new InputWaiter(this.app, this);
     this.output      = new OutputWaiter(this.app, this);
     this.options     = new OptionsWaiter(this.app);
-    this.highlighter = new HighlighterWaiter(this.app);
+    this.highlighter = new HighlighterWaiter(this.app, this);
     this.seasonal    = new SeasonalWaiter(this.app, this);
 
     // Object to store dynamic handlers to fire on elements that may not exist yet
@@ -66,6 +72,7 @@ const Manager = function(app) {
  * Sets up the various components and listeners.
  */
 Manager.prototype.setup = function() {
+    this.worker.registerChefWorker();
     this.recipe.initialiseOperationDragNDrop();
     this.controls.autoBakeChange();
     this.seasonal.load();
@@ -98,7 +105,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("load-name").addEventListener("change", this.controls.loadNameChange.bind(this.controls));
     document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
     document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
-    this.addMultiEventListener("#save-text", "keyup paste", this.controls.saveTextChange, this.controls);
+    this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
 
     // Operations
     this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
@@ -112,8 +119,8 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd.bind(this.recipe));
 
     // Recipe
-    this.addDynamicListener(".arg", "keyup", this.recipe.ingChange, this.recipe);
-    this.addDynamicListener(".arg", "change", this.recipe.ingChange, this.recipe);
+    this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
+    this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
     this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
     this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
     this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
@@ -145,6 +152,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
     this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
     this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
+    this.addDynamicListener(".file-switch", "click", this.output.fileSwitch, this.output);
 
     // Options
     document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));

@@ -30,7 +30,6 @@ const Chef = function() {
  * @returns {string} response.result - The output of the recipe
  * @returns {string} response.type - The data type of the result
  * @returns {number} response.progress - The position that we have got to in the recipe
- * @returns {number} response.options - The app options object (which may have been changed)
  * @returns {number} response.duration - The number of ms it took to execute the recipe
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
@@ -40,12 +39,7 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
         containsFc = recipe.containsFlowControl(),
         error      = false;
 
-    // Reset attemptHighlight flag
-    if (options.hasOwnProperty("attemptHighlight")) {
-        options.attemptHighlight = true;
-    }
-
-    if (containsFc) options.attemptHighlight = false;
+    if (containsFc && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
     // Clean up progress
     if (progress >= recipeConfig.length) {
@@ -74,9 +68,10 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
     try {
         progress = await recipe.execute(this.dish, progress);
     } catch (err) {
-        // Return the error in the result so that everything else gets correctly updated
-        // rather than throwing it here and losing state info.
-        error = err;
+        console.log(err);
+        error = {
+            displayStr: err.displayStr,
+        };
         progress = err.progress;
     }
 
@@ -86,7 +81,6 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
             this.dish.get(Dish.STRING),
         type: Dish.enumLookup(this.dish.type),
         progress: progress,
-        options: options,
         duration: new Date().getTime() - startTime,
         error: error
     };
@@ -121,6 +115,40 @@ Chef.prototype.silentBake = function(recipeConfig) {
         // Suppress all errors
     }
     return new Date().getTime() - startTime;
+};
+
+
+/**
+ * Calculates highlight offsets if possible.
+ *
+ * @param {Object[]} recipeConfig
+ * @param {string} direction
+ * @param {Object} pos - The position object for the highlight.
+ * @param {number} pos.start - The start offset.
+ * @param {number} pos.end - The end offset.
+ * @returns {Object}
+ */
+Chef.prototype.calculateHighlights = function(recipeConfig, direction, pos) {
+    const recipe = new Recipe(recipeConfig);
+    const highlights = recipe.generateHighlightList();
+
+    if (!highlights) return false;
+
+    for (let i = 0; i < highlights.length; i++) {
+        // Remove multiple highlights before processing again
+        pos = [pos[0]];
+
+        const func = direction === "forward" ? highlights[i].f : highlights[i].b;
+
+        if (typeof func == "function") {
+            pos = func(pos, highlights[i].args);
+        }
+    }
+
+    return {
+        pos: pos,
+        direction: direction
+    };
 };
 
 export default Chef;

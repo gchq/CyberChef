@@ -26,7 +26,7 @@ TestRegister.addTests([
     {
         name: "Diff, basic usage",
         input: "testing23\n\ntesting123",
-        expectedOutput: "testing<span class='hlgreen'>1</span>23",
+        expectedOutput: "testing<span class='hl5'>1</span>23",
         recipeConfig: [
             {
                 "op": "Diff",
@@ -229,6 +229,50 @@ TestRegister.addTests([
             {
                 "op": "Tail",
                 "args": ["Line feed", -100]
+            }
+        ],
+    },
+    {
+        name: "Escape String: quotes",
+        input: "Hello \"World\"! Escape 'these' quotes.",
+        expectedOutput: "Hello \\\"World\\\"! Escape \\'these\\' quotes.",
+        recipeConfig: [
+            {
+                "op": "Escape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Escape String: special characters",
+        input: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
+        expectedOutput: "Fizz & buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
+        recipeConfig: [
+            {
+                "op": "Escape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Unescape String: quotes",
+        input: "Hello \\\"World\\\"! Escape \\'these\\' quotes.",
+        expectedOutput: "Hello \"World\"! Escape 'these' quotes.",
+        recipeConfig: [
+            {
+                "op": "Unescape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Unescape String: special characters",
+        input: "Fizz \x26 buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
+        expectedOutput: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
+        recipeConfig: [
+            {
+                "op": "Unescape string",
+                "args": []
             }
         ],
     },

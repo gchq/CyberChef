@@ -1,4 +1,3 @@
-/* globals app */
 import Utils from "../Utils.js";
 
 
@@ -100,7 +99,7 @@ const ByteRepr = {
     /**
      * To Octal operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
@@ -114,7 +113,7 @@ const ByteRepr = {
     /**
      * From Octal operation.
      *
-     * @author Matt C [matt@artemisbot.pw]
+     * @author Matt C [matt@artemisbot.uk]
      * @param {string} input
      * @param {Object[]} args
      * @returns {byteArray}
@@ -150,8 +149,9 @@ const ByteRepr = {
             throw "Error: Base argument must be between 2 and 36";
         }
 
-        for (let i = 0; i < input.length; i++) {
-            ordinal = Utils.ord(input[i]);
+        const charcode = Utils.strToCharcode(input);
+        for (let i = 0; i < charcode.length; i++) {
+            ordinal = charcode[i];
 
             if (base === 16) {
                 if (ordinal < 256) padding = 2;
@@ -160,11 +160,11 @@ const ByteRepr = {
                 else if (ordinal < 4294967296) padding = 8;
                 else padding = 2;
 
-                if (padding > 2 && app) app.options.attemptHighlight = false;
+                if (padding > 2 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
                 output += Utils.hex(ordinal, padding) + delim;
             } else {
-                if (app) app.options.attemptHighlight = false;
+                if (ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
                 output += ordinal.toString(base) + delim;
             }
         }
@@ -190,9 +190,7 @@ const ByteRepr = {
             throw "Error: Base argument must be between 2 and 36";
         }
 
-        if (base !== 16 && app) {
-            app.options.attemptHighlight = false;
-        }
+        if (base !== 16 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
         // Split into groups of 2 if the whole string is concatenated and
         // too long to be a single character
@@ -237,7 +235,7 @@ const ByteRepr = {
 
 
     /**
-     * Highlight to hex
+     * Highlight from hex
      *
      * @param {Object[]} pos
      * @param {number} pos[].start
@@ -329,10 +327,8 @@ const ByteRepr = {
      * @returns {byteArray}
      */
     runFromBinary: function(input, args) {
-        if (args[0] !== "None") {
-            const delimRegex = Utils.regexRep[args[0] || "Space"];
-            input = input.replace(delimRegex, "");
-        }
+        const delimRegex = Utils.regexRep[args[0] || "Space"];
+        input = input.replace(delimRegex, "");
 
         const output = [];
         const byteLen = 8;

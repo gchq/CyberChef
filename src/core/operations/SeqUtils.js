@@ -249,7 +249,7 @@ const SeqUtils = {
             }
         }
 
-        return 0;
+        return a.localeCompare(b);
     },
 
 };
