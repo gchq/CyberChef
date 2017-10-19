@@ -35,6 +35,7 @@ import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
+import Packets from "../operations/Packets.js";
 
 /**
  * Type definition for an OpConf.
@@ -672,13 +673,6 @@ const OperationConfig = {
                 value: ByteRepr.DELIM_OPTIONS
             }
         ]
-    },
-    "From Tcpdump": {
-        module: "Packets",
-        description: "[DEPRECATED] Converts Tcpdump hex to string",
-        inputType: "string",
-        outputType: "byteArray",
-        args: []
     },
     "From Hexdump": {
         module: "Default",
@@ -3874,6 +3868,36 @@ const OperationConfig = {
                 type: "number",
                 value: 0
             }
+        ]
+    },
+    "From Tcpdump": {
+        module: "Packets",
+        description: "[DEPRECATED] Converts Tcpdump hex to string",
+        inputType: "string",
+        outputType: "byteArray",
+        args: []
+    },
+    "Strip TCP Headers": {
+        module: "Packets",
+        description: "Remove selected TCP headers from hexstream",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Ethernet Header",
+                type: "boolean",
+                value: Packets.STRIP_ETHERNET_HEADER,
+            },
+            {
+                name: "IP Header",
+                type: "boolean",
+                value: Packets.STRIP_IP_HEADER,
+            },
+            {
+                name: "Ethernet Header",
+                type: "boolean",
+                value: Packets.STRIP_TCP_HEADER,
+            },
         ]
     },
 };
