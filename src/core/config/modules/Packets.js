@@ -14,7 +14,7 @@ let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.Packets = {
     "From Tcpdump":				Packets.runFromTcpdump,
-	"Strip TCP Headers":		Packets.stripPacketHeader
+    "Strip TCP Headers":		Packets.stripPacketHeader
 };
 
 export default OpModules;

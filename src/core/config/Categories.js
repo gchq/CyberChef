@@ -303,7 +303,7 @@ const Categories = [
         ops: [
             "From Tcpdump",
             "HTTP gzip Decrypt",
-			"Strip TCP Headers",
+            "Strip TCP Headers",
         ]
     },
     {
