@@ -36,8 +36,6 @@ import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
 
-import nTcpdump from "../operations/nTcpdump.js";
-
 /**
  * Type definition for an OpConf.
  *
@@ -501,8 +499,8 @@ const OperationConfig = {
         ]
     },
     "From 0x[Hex]": {
+        module: "Default",
         description: "Converts a hexadecimal byte string back into a its raw value.<br><br>e.g. <code>0x217e21</code> becomes the UTF-8 encoded string <code>!~!</code>",
-        run: ByteRepr.runFrom0xHex,
         highlight: ByteRepr.highlightFrom,
         highlightReverse: ByteRepr.highlightTo,
         inputType: "string",
@@ -510,8 +508,8 @@ const OperationConfig = {
         args: []
     },
     "From Char(Hex)": {
+        module: "Default",
         description: "Converts a hexadecimal byte string back into a its raw value.<br><br>e.g. <code>chr(33)</code> becomes the UTF-8 encoded string <code>!</code>",
-        run: ByteRepr.runFromCharHex,
         highlight: ByteRepr.highlightFrom,
         highlightReverse: ByteRepr.highlightTo,
         inputType: "string",
@@ -675,11 +673,9 @@ const OperationConfig = {
             }
         ]
     },
-    "From nTcpdump": {
-        description: "For Tcpdump conversion only.",
-        run: nTcpdump.runFrom,
-        highlight: nTcpdump.highlightFrom,
-        highlightReverse: nTcpdump.highlightTo,
+    "From Tcpdump": {
+        module: "Packets",
+        description: "[DEPRECATED] Converts Tcpdump hex to string",
         inputType: "string",
         outputType: "byteArray",
         args: []
@@ -1767,9 +1763,9 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
-    "HTTP gzip decrypt": {
+    "HTTP gzip Decrypt": {
+        module: "Compression",
         description: "Decrypts Gzip payload from a request or response and returning plaintext of the header and decrypted payload.",
-        run: Compress.runHttpGzip,
         inputType: "byteArray",
         outputType: "byteArray",
         args: []

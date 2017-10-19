@@ -27,7 +27,6 @@ const Categories = [
         ops: [
             "To Hexdump",
             "From Hexdump",
-            "From nTcpdump",
             "From 0x[Hex]",
             "From Char(Hex)",
             "To Hex",
@@ -137,7 +136,6 @@ const Categories = [
         ops: [
             "HTTP request",
             "Strip HTTP headers",
-            "HTTP gzip decrypt",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
@@ -298,6 +296,13 @@ const Categories = [
             "To Snake case",
             "To Camel case",
             "To Kebab case",
+        ]
+    },
+    {
+        name: "Packets",
+        ops: [
+            "From Tcpdump",
+            "HTTP gzip Decrypt",
         ]
     },
     {

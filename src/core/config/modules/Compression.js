@@ -26,6 +26,7 @@ OpModules.Compression = {
     "Bzip2 Decompress": Compress.runBzip2Decompress,
     "Tar":              Compress.runTar,
     "Untar":            Compress.runUntar,
+    "HTTP gzip Decrypt":Compress.runHttpGzip,
 
 };
 

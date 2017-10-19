@@ -20,6 +20,7 @@ import JSBNModule from "./JSBN.js";
 import PublicKeyModule from "./PublicKey.js";
 import ShellcodeModule from "./Shellcode.js";
 import URLModule from "./URL.js";
+import PacketsModule from "./Packets.js";
 
 Object.assign(
     OpModules,
@@ -35,7 +36,8 @@ Object.assign(
     JSBNModule,
     PublicKeyModule,
     ShellcodeModule,
-    URLModule
+    URLModule,
+    PacketsModule
 );
 
 export default OpModules;
