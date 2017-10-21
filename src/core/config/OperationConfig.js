@@ -1759,10 +1759,21 @@ const OperationConfig = {
     },
     "HTTP gzip Decrypt": {
         module: "Compression",
-        description: "Decrypts Gzip payload from a request or response and returning plaintext of the header and decrypted payload.",
+        description: "Decrypts Gzip payload from a request or response and returning plaintext of the header and decrypted payload.<br><br>Arguments:<br>Library: The  library used for decoding GZIP data.<br>Threshold: The threshold value for searching non-GZIP data. It has to be at least 8.",
         inputType: "byteArray",
         outputType: "byteArray",
-        args: []
+        args: [
+            {
+                name: "Library",
+                type: "option",
+                value: Compress.HTTP_GZIP_OPTION
+            },
+            {
+                name: "Threshold",
+                type: "number",
+                value: Compress.HTTP_GZIP_THRESHOLD
+            },
+        ]
     },
     "Parse User Agent": {
         module: "HTTP",
@@ -3879,7 +3890,7 @@ const OperationConfig = {
     },
     "Strip TCP Headers": {
         module: "Packets",
-        description: "Remove selected TCP headers from hexstream",
+        description: "Remove selected TCP headers from hexstream using Regular Expressions.<br /><br />Ethernet Header: <code>/^(([0-9a-f]{4} ){6,8}0800 )/igm</code><br />IP Header: <code>/^((45[0-9a-f]{2} ([0-9a-f]{4} ){9}))/igm</code><br />TCP Header: <code>/^([0-9a-f]{4} ){6}((80[0-9a-f]{2} ([0-9a-f]{4} ?){9})|(50[0-9a-f]{2} ([0-9a-f]{4} ?){3}))/igm</code>",
         inputType: "string",
         outputType: "string",
         args: [

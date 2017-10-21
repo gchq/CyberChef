@@ -256,6 +256,17 @@ const Compress = {
 
 
     /**
+     * @constant
+     * @default
+     */
+    HTTP_GZIP_OPTION: ["pako.js", "zlib.js"],
+    /**
+     * @constant
+     * @default
+     */
+    HTTP_GZIP_THRESHOLD: 8,
+
+    /**
      * HTTP Gzip operation.
      *
      * @param {byteArray} input
@@ -263,18 +274,47 @@ const Compress = {
      * @returns {byteArray}
      */
     runHttpGzip: function(input, args) {
+        const library = Compress.HTTP_GZIP_OPTION.indexOf(args[0]);
+        let threshold = Compress.HTTP_GZIP_THRESHOLD;
+        if (args[1] > 8) {
+            threshold = args[1];
+        }
         input = Utils.byteArrayToHexNoSpace(input);
+        let output = input;
 
         let regexStr = /1f8b080[0-8][0-9a-f]{12}/;
         let gzipPos = input.search(regexStr);
         if (gzipPos === -1) {
             return Utils.hexToByteArray(input);
         }
-        let plainData = input.substr(0, gzipPos);
-        let gzipData = input.substr(gzipPos);
 
-        gzipData = Utils.hexToByteArray(gzipData);
-        return Utils.hexToByteArray(plainData).concat(Array.prototype.slice.call(pako.ungzip(gzipData)));
+        while (gzipPos !== -1) {
+            output = input;
+
+            let plainData = output.substr(0, gzipPos);
+            let gzipData = output.substr(gzipPos);
+            let httpDataAfter = "";
+
+            let httpDataPosRegex = new RegExp("/((3[0-9])|(6[0-9a-f])|(7[0-9a])|(4[0-9a-f])|(5[0-9a])|(2[e-f])|(2b)|(20)){" + threshold + "}/");
+            let httpDataPos = gzipData.search(httpDataPosRegex);
+            if (httpDataPos !== -1) {
+                httpDataAfter = gzipData.substr(httpDataPos);
+                gzipData = gzipData.substr(0, httpDataPos);
+            }
+
+            console.log(httpDataPos);
+            gzipData = Utils.hexToByteArray(gzipData);
+            if (library === 0) {
+                output = Utils.hexToByteArray(plainData).concat(Array.prototype.slice.call(pako.inflate(gzipData))).concat(Utils.hexToByteArray(httpDataAfter));
+            } else if (library === 1) {
+                let gzipDataRaw = new Zlib.Gunzip(gzipData);
+                output = Utils.hexToByteArray(plainData).concat(Array.prototype.slice.call(gzipDataRaw.decompress())).concat(Utils.hexToByteArray("0d0a 0d0a")).concat(Utils.hexToByteArray(httpDataAfter));
+            }
+
+            input = Utils.byteArrayToHexNoSpace(output);
+            gzipPos = input.search(regexStr);
+        }
+        return output;
     },
 
 
