@@ -65,13 +65,13 @@ const Packets = {
             stripTCP = args[2];
 
         if (stripEthernet) {
-            output = output.replace(/^(([0-9a-f]{4} ){6,8}0800 )/igm, "");
+            output = output.replace(/^(([0-9a-f]{4} ?){6,8}0800 ?)/igm, "");
         }
         if (stripIP) {
-            output = output.replace(/^((45[0-9a-f]{2} ([0-9a-f]{4} ){9}))/igm, "");
+            output = output.replace(/^((45[0-9a-f]{2} ?([0-9a-f]{4} ?){9}))/igm, "");
         }
         if (stripTCP) {
-            output = output.replace(/^([0-9a-f]{4} ){6}((80[0-9a-f]{2} ([0-9a-f]{4} ?){9})|(50[0-9a-f]{2} ([0-9a-f]{4} ?){3}))/igm, "");
+            output = output.replace(/^([0-9a-f]{4} ?){6}((80[0-9a-f]{2} ?([0-9a-f]{4} ?){9})|(50[0-9a-f]{2} ?([0-9a-f]{4} ?){3}))/igm, "");
         }
 
         return output;
