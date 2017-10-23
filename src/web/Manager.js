@@ -142,6 +142,7 @@ Manager.prototype.initialiseEventListeners = function() {
 
     // Output
     document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
+    document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
     document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
     document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
     document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
