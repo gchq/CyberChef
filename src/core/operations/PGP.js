@@ -1,4 +1,4 @@
-import * as openpgp from "openpgp";
+import * as openpgp from "imports-loader?window=>self!openpgp";
 import Utils from "../Utils.js";
 
 /**
