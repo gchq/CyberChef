@@ -326,6 +326,10 @@
                             <label for="showErrors"> Operation error reporting (recommended) </label>
                         </div>
                         <div class="option-item">
+                            <input type="checkbox" option="useMetaKey" id="useMetaKey" />
+                            <label for="errorTimeout"> Use meta (Windows/Command ⌘) key for keybindings </label>
+                        </div>
+                        <div class="option-item">
                             <input type="number" option="errorTimeout" id="errorTimeout" />
                             <label for="errorTimeout"> Operation error timeout in ms (0 for never) </label>
                         </div>
@@ -402,8 +406,7 @@
                                     About
                                 </a></li>
                                 <li role="presentation"><a href="#keybindings" aria-controls="messages" role="tab" data-toggle="tab">
-                                    <!-- Icon is a placeholder -->
-                                    <img aria-hidden="true" src="<%- require('../static/images/code-16x16.png') %>" alt="Code Icon"/>
+                                    <img aria-hidden="true" src="<%- require('../static/images/code-16x16.png') %>" alt="List Icon"/>
                                     Keybindings
                                 </a></li>
                             </ul>
@@ -482,77 +485,7 @@
                                     <p>It’s the Cyber Swiss Army Knife.</p>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="keybindings" style="padding: 20px;">
-                                    <table class="table table-condensed table-bordered">
-                                        <tr>
-                                            <td><b>Command</b></td>
-                                            <td><b>Shortcut (Win/Linux)</b></td>
-                                            <td><b>Shortcut (Mac)</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Place cursor in search field</td>
-                                            <td>Ctrl+Alt+f</td>
-                                            <td>Ctrl+Opt+f</td>
-                                        <tr>
-                                            <td>Place cursor in input box</td>
-                                            <td>Ctrl+Alt+i</td>
-                                            <td>Ctrl+Opt+i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Place cursor in output box</td>
-                                            <td>Ctrl+Alt+o</td>
-                                            <td>Ctrl+Opt+o</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Place cursor in first argument field<br>of the next operation in the recipe</td>
-                                            <td>Ctrl+Alt+.</td>
-                                            <td>Ctrl+Opt+.</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Place cursor in first argument field<br>of the nth operation in the recipe</td>
-                                            <td>Ctrl+Alt+[1-9]</td>
-                                            <td>Ctrl+Opt+[1-9]</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Disable current operation</td>
-                                            <td>Ctrl+Alt+d</td>
-                                            <td>Ctrl+Opt+d</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Set/clear breakpoint</td>
-                                            <td>Ctrl+Alt+b</td>
-                                            <td>Ctrl+Opt+b</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Bake</td>
-                                            <td>Ctrl+Alt+Space</td>
-                                            <td>Ctrl+Opt+Space</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Step</td>
-                                            <td>Ctrl+Alt+'</td>
-                                            <td>Ctrl+Opt+'</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Clear recipe</td>
-                                            <td>Ctrl+Alt+c</td>
-                                            <td>Ctrl+Opt+c</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Save to file</td>
-                                            <td>Ctrl+Alt+s</td>
-                                            <td>Ctrl+Opt+s</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Load recipe</td>
-                                            <td>Ctrl+Alt+l</td>
-                                            <td>Ctrl+Opt+l</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Move output to input</td>
-                                            <td>Ctrl+Alt+m</td>
-                                            <td>Ctrl+Opt+m</td>
-                                        </tr>
-                                    </table>
+                                    <table class="table table-condensed table-bordered" id="keybList"></table>
                                 </div>
                             </div>
                         </div>

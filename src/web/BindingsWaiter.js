@@ -23,7 +23,9 @@ const BindingsWaiter = function (app, manager) {
  * @param {event} e
  */
 BindingsWaiter.prototype.parseInput = function(e) {
-    if (e.ctrlKey && e.altKey) {
+    let modKey = e.altKey;
+    if (this.app.options.useMetaKey) modKey = e.metaKey;
+    if (e.ctrlKey && modKey) {
         let elem;
         switch (e.code) {
             case "KeyF":
@@ -113,6 +115,90 @@ BindingsWaiter.prototype.parseInput = function(e) {
                 break;
         }
     }
+};
+
+/**
+ * Updates keybinding list when metaKey option is toggled
+ *
+ */
+BindingsWaiter.prototype.updateKeybList = function() {
+    let modWinLin = "Alt";
+    let modMac = "Opt";
+    if (this.app.options.useMetaKey) {
+        modWinLin = "Win";
+        modMac = "Cmd";
+    }
+    document.getElementById("keybList").innerHTML = `
+    <tr>
+        <td><b>Command</b></td>
+        <td><b>Shortcut (Win/Linux)</b></td>
+        <td><b>Shortcut (Mac)</b></td>
+    </tr>
+    <tr>
+        <td>Place cursor in search field</td>
+        <td>Ctrl+${modWinLin}+f</td>
+        <td>Ctrl+${modMac}+f</td>
+    <tr>
+        <td>Place cursor in input box</td>
+        <td>Ctrl+${modWinLin}+i</td>
+        <td>Ctrl+${modMac}+i</td>
+    </tr>
+    <tr>
+        <td>Place cursor in output box</td>
+        <td>Ctrl+${modWinLin}+o</td>
+        <td>Ctrl+${modMac}+o</td>
+    </tr>
+    <tr>
+        <td>Place cursor in first argument field<br>of the next operation in the recipe</td>
+        <td>Ctrl+${modWinLin}+.</td>
+        <td>Ctrl+${modMac}+.</td>
+    </tr>
+    <tr>
+        <td>Place cursor in first argument field<br>of the nth operation in the recipe</td>
+        <td>Ctrl+${modWinLin}+[1-9]</td>
+        <td>Ctrl+${modMac}+[1-9]</td>
+    </tr>
+    <tr>
+        <td>Disable current operation</td>
+        <td>Ctrl+${modWinLin}+d</td>
+        <td>Ctrl+${modMac}+d</td>
+    </tr>
+    <tr>
+        <td>Set/clear breakpoint</td>
+        <td>Ctrl+${modWinLin}+b</td>
+        <td>Ctrl+${modMac}+b</td>
+    </tr>
+    <tr>
+        <td>Bake</td>
+        <td>Ctrl+${modWinLin}+Space</td>
+        <td>Ctrl+${modMac}+Space</td>
+    </tr>
+    <tr>
+        <td>Step</td>
+        <td>Ctrl+${modWinLin}+'</td>
+        <td>Ctrl+${modMac}+'</td>
+    </tr>
+    <tr>
+        <td>Clear recipe</td>
+        <td>Ctrl+${modWinLin}+c</td>
+        <td>Ctrl+${modMac}+c</td>
+    </tr>
+    <tr>
+        <td>Save to file</td>
+        <td>Ctrl+${modWinLin}+s</td>
+        <td>Ctrl+${modMac}+s</td>
+    </tr>
+    <tr>
+        <td>Load recipe</td>
+        <td>Ctrl+${modWinLin}+l</td>
+        <td>Ctrl+${modMac}+l</td>
+    </tr>
+    <tr>
+        <td>Move output to input</td>
+        <td>Ctrl+${modWinLin}+m</td>
+        <td>Ctrl+${modMac}+m</td>
+    </tr>
+    `;
 };
 
 export default BindingsWaiter;
