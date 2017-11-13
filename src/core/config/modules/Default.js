@@ -27,7 +27,7 @@ import StrUtils from "../../operations/StrUtils.js";
 import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
 import UUID from "../../operations/UUID.js";
-
+import PhpSerialization from "../../operations/PhpSerialization";
 
 /**
  * Default module.
@@ -155,6 +155,7 @@ OpModules.Default = {
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
+    "PHP Deserialize":      PhpSerialization.PhpDeserialize,
 
 
     /*
