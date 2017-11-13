@@ -27,6 +27,7 @@ import "./tests/operations/MorseCode.js";
 import "./tests/operations/MS.js";
 import "./tests/operations/StrUtils.js";
 import "./tests/operations/SeqUtils.js";
+import "./tests/operations/PhpSerialization.js";
 
 
 let allTestsPassing = true;
