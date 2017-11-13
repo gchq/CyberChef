@@ -19,6 +19,12 @@ const PhpSerialization = {
      */
     OUTPUT_VALID_JSON: true,
 
+    /**
+     * Deserializes a PHP serialized input
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     PhpDeserialize: function (input, args) {
         function handleInput() {
             function read(length) {
@@ -39,8 +45,7 @@ const PhpSerialization = {
                     let char = read(1);
                     if (char === until) {
                         break;
-                    }
-                    else {
+                    } else {
                         result += char;
                     }
                 }
@@ -57,28 +62,27 @@ const PhpSerialization = {
             }
 
             function handleArray() {
-                let items = parseInt(readUntil(':')) * 2;
-                expect('{');
+                let items = parseInt(readUntil(":"), 10) * 2;
+                expect("{");
                 let result = [];
                 let isKey = true;
-                let last_item = null;
+                let lastItem = null;
                 for (let idx = 0; idx < items; idx++) {
                     let item = handleInput();
                     if (isKey) {
-                        last_item = item;
+                        lastItem = item;
                         isKey = false;
                     } else {
-                        let numberCheck = last_item.match(/[0-9]+/);
-                        if (args[0] && numberCheck && numberCheck[0].length === last_item.length)
-                        {
-                            result.push('"' + last_item + '": ' + item);
+                        let numberCheck = lastItem.match(/[0-9]+/);
+                        if (args[0] && numberCheck && numberCheck[0].length === lastItem.length) {
+                            result.push("\"" + lastItem + "\": " + item);
                         } else {
-                            result.push(last_item + ': ' + item);
+                            result.push(lastItem + ": " + item);
                         }
                         isKey = true;
                     }
                 }
-                expect('}');
+                expect("}");
                 return result;
             }
 
@@ -86,41 +90,44 @@ const PhpSerialization = {
             let kind = read(1).toLowerCase();
 
             switch (kind) {
-                case 'n':
-                    expect(';');
-                    return '';
+                case "n":
+                    expect(";");
+                    return "";
 
-                case 'i':
-                case 'd':
-                case 'b':
-                    expect(':');
-                    let data = readUntil(';');
-                    if (kind === 'b')
-                        return (parseInt(data) !== 0);
+                case "i":
+                case "d":
+                case "b": {
+                    expect(":");
+                    let data = readUntil(";");
+                    if (kind === "b") {
+                        return (parseInt(data, 10) !== 0);
+                    }
                     return data;
+                }
 
+                case "a":
+                    expect(":");
+                    return "{" + handleArray() + "}";
 
-                case 'a':
-                    expect(':');
-                    return '{' + handleArray() + '}';
-
-                case 's':
-                    expect(':');
-                    let length = readUntil(':');
-                    expect('"');
+                case "s": {
+                    expect(":");
+                    let length = readUntil(":");
+                    expect("\"");
                     let value = read(length);
-                    expect('";');
-                    if (args[0])
-                        return '"' + value.replace(/"/g, '\\"') + '"';
-                    else
-                        return '"' + value + '"';
+                    expect("\";");
+                    if (args[0]) {
+                        return "\"" + value.replace(/"/g, "\\\"") + "\"";
+                    } else {
+                        return "\"" + value + "\"";
+                    }
+                }
 
                 default:
                     throw "Unknown type: " + kind;
             }
         }
 
-        let inputPart = input.split('');
+        let inputPart = input.split("");
         return handleInput();
     }
 };
