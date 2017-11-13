@@ -5,7 +5,7 @@
  * See: https://github.com/mitsuhiko/phpserialize/
  *
  * @author Jarmo van Lenthe [github.com/jarmovanlenthe]
- * @copyright Crown Copyright 2017
+ * @copyright Armin Ronacher 2016 some rights reserved / Jarmo van Lenthe
  * @license BSD-3-Clause
  *
  * @namespace
