@@ -26,7 +26,16 @@ const PhpSerialization = {
      * @returns {string}
      */
     PhpDeserialize: function (input, args) {
+        /**
+         * Recursive method for deserializing.
+         * @returns {*}
+         */
         function handleInput() {
+            /**
+             * Read `length` characters from the input, shifting them out the input.
+             * @param length
+             * @returns {string}
+             */
             function read(length) {
                 let result = "";
                 for (let idx = 0; idx < length; idx++) {
@@ -39,9 +48,14 @@ const PhpSerialization = {
                 return result;
             }
 
+            /**
+             * Read characters from the input until `until` is found.
+             * @param until
+             * @returns {string}
+             */
             function readUntil(until) {
                 let result = "";
-                while (true) {
+                for(;;) {
                     let char = read(1);
                     if (char === until) {
                         break;
@@ -53,6 +67,11 @@ const PhpSerialization = {
 
             }
 
+            /**
+             * Read characters from the input that must be equal to `expect`
+             * @param expect
+             * @returns {string}
+             */
             function expect(expect) {
                 let result = read(expect.length);
                 if (result !== expect) {
@@ -61,6 +80,10 @@ const PhpSerialization = {
                 return result;
             }
 
+            /**
+             * Helper function to handle deserialized arrays.
+             * @returns {Array}
+             */
             function handleArray() {
                 let items = parseInt(readUntil(":"), 10) * 2;
                 expect("{");
