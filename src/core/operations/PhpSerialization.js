@@ -55,7 +55,7 @@ const PhpSerialization = {
              */
             function readUntil(until) {
                 let result = "";
-                for(;;) {
+                for (;;) {
                     let char = read(1);
                     if (char === until) {
                         break;
