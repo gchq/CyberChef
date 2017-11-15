@@ -1,12 +1,12 @@
 /**
  * Php Serialization operations.
- * This Javascript implementation is based on the Python
- * implementation by Armin Ronacher (2016).
+ * This Javascript implementation is based on the Python implementation by
+ * Armin Ronacher (2016), who released it under the 3-Clause BSD license.
  * See: https://github.com/mitsuhiko/phpserialize/
  *
  * @author Jarmo van Lenthe [github.com/jarmovanlenthe]
- * @copyright Armin Ronacher 2016 some rights reserved / Jarmo van Lenthe
- * @license BSD-3-Clause
+ * @copyright Jarmo van Lenthe
+ * @license Apache-2.0
  *
  * @namespace
  */
