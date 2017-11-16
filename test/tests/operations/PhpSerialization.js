@@ -4,7 +4,7 @@
  * @author Jarmo van Lenthe
  *
  * @copyright Crown Copyright 2017
- * @license BSD-3-Clause
+ * @license Apache-2.0
  */
 
 import TestRegister from "../../TestRegister.js";
