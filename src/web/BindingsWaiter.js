@@ -23,36 +23,40 @@ const BindingsWaiter = function (app, manager) {
  * @param {event} e
  */
 BindingsWaiter.prototype.parseInput = function(e) {
-    let modKey = e.altKey;
-    if (this.app.options.useMetaKey) modKey = e.metaKey;
+    const modKey = this.app.options.useMetaKey ? e.metaKey : e.altKey;
+
     if (e.ctrlKey && modKey) {
         let elem;
         switch (e.code) {
-            case "KeyF":
+            case "KeyF": // Focus search
                 e.preventDefault();
-                document.getElementById("search").focus(); // Focus search
+                document.getElementById("search").focus();
                 break;
-            case "KeyI":
+            case "KeyI": // Focus input
                 e.preventDefault();
-                document.getElementById("input-text").focus(); // Focus input
+                document.getElementById("input-text").focus();
                 break;
-            case "KeyO":
+            case "KeyO": // Focus output
                 e.preventDefault();
-                document.getElementById("output-text").focus(); // Focus output
+                document.getElementById("output-text").focus();
                 break;
-            case "Period":
+            case "Period": // Focus next operation
+                e.preventDefault();
                 try {
-                    elem = document.activeElement.closest(".operation");
+                    elem = document.activeElement.closest(".operation") || document.querySelector("#rec-list .operation");
                     if (elem.parentNode.lastChild === elem) {
-                        elem.parentNode.firstChild.querySelectorAll(".arg")[0].focus(); // if operation is last in recipe, loop around to the top operation's first argument
+                        // If operation is last in recipe, loop around to the top operation's first argument
+                        elem.parentNode.firstChild.querySelectorAll(".arg")[0].focus();
                     } else {
-                        elem.nextSibling.querySelectorAll(".arg")[0].focus(); //focus first argument of next operation
+                        // Focus first argument of next operation
+                        elem.nextSibling.querySelectorAll(".arg")[0].focus();
                     }
                 } catch (e) {
                     // do nothing, just don't throw an error
                 }
                 break;
-            case "KeyB":
+            case "KeyB": // Set breakpoint
+                e.preventDefault();
                 try {
                     elem = document.activeElement.closest(".operation").querySelectorAll(".breakpoint")[0];
                     if (elem.getAttribute("break") === "false") {
@@ -67,7 +71,8 @@ BindingsWaiter.prototype.parseInput = function(e) {
                     // do nothing, just don't throw an error
                 }
                 break;
-            case "KeyD":
+            case "KeyD": // Disable operation
+                e.preventDefault();
                 try {
                     elem = document.activeElement.closest(".operation").querySelectorAll(".disable-icon")[0];
                     if (elem.getAttribute("disabled") === "false") {
@@ -85,29 +90,36 @@ BindingsWaiter.prototype.parseInput = function(e) {
                     // do nothing, just don't throw an error
                 }
                 break;
-            case "Space":
-                this.app.bake(); // bake the recipe
+            case "Space": // Bake
+                e.preventDefault();
+                this.app.bake();
                 break;
-            case "Quote":
-                this.app.bake(true); // step through the recipe
+            case "Quote": // Step through
+                e.preventDefault();
+                this.app.bake(true);
                 break;
-            case "KeyC":
-                this.manager.recipe.clearRecipe(); // clear recipe
+            case "KeyC": // Clear recipe
+                e.preventDefault();
+                this.manager.recipe.clearRecipe();
                 break;
-            case "KeyS":
-                this.manager.output.saveClick(); // save output to file
+            case "KeyS": // Save output to file
+                e.preventDefault();
+                this.manager.output.saveClick();
                 break;
-            case "KeyL":
-                this.manager.controls.loadClick(); // load a recipe
+            case "KeyL": // Load recipe
+                e.preventDefault();
+                this.manager.controls.loadClick();
                 break;
-            case "KeyM":
-                this.manager.controls.switchClick(); // switch input & output
+            case "KeyM": // Switch input and output
+                e.preventDefault();
+                this.manager.output.switchClick();
                 break;
             default:
-                if (e.code.match(/Digit[0-9]/g)) {
+                if (e.code.match(/Digit[0-9]/g)) { // Select nth operation
                     e.preventDefault();
                     try {
-                        document.querySelector(`li:nth-child(${e.code.substr(-1)}) .arg`).focus(); // select the first argument of the operation corresponding to the number pressed
+                        // Select the first argument of the operation corresponding to the number pressed
+                        document.querySelector(`li:nth-child(${e.code.substr(-1)}) .arg`).focus();
                     } catch (e) {
                         // do nothing, just don't throw an error
                     }
@@ -116,6 +128,7 @@ BindingsWaiter.prototype.parseInput = function(e) {
         }
     }
 };
+
 
 /**
  * Updates keybinding list when metaKey option is toggled
@@ -149,12 +162,12 @@ BindingsWaiter.prototype.updateKeybList = function() {
         <td>Ctrl+${modMac}+o</td>
     </tr>
     <tr>
-        <td>Place cursor in first argument field<br>of the next operation in the recipe</td>
+        <td>Place cursor in first argument field of the next operation in the recipe</td>
         <td>Ctrl+${modWinLin}+.</td>
         <td>Ctrl+${modMac}+.</td>
     </tr>
     <tr>
-        <td>Place cursor in first argument field<br>of the nth operation in the recipe</td>
+        <td>Place cursor in first argument field of the nth operation in the recipe</td>
         <td>Ctrl+${modWinLin}+[1-9]</td>
         <td>Ctrl+${modMac}+[1-9]</td>
     </tr>
