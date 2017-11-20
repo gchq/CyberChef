@@ -8,6 +8,7 @@ import OutputWaiter from "./OutputWaiter.js";
 import OptionsWaiter from "./OptionsWaiter.js";
 import HighlighterWaiter from "./HighlighterWaiter.js";
 import SeasonalWaiter from "./SeasonalWaiter.js";
+import BindingsWaiter from "./BindingsWaiter.js";
 
 
 /**
@@ -60,6 +61,7 @@ const Manager = function(app) {
     this.options     = new OptionsWaiter(this.app);
     this.highlighter = new HighlighterWaiter(this.app, this);
     this.seasonal    = new SeasonalWaiter(this.app, this);
+    this.bindings    = new BindingsWaiter(this.app, this);
 
     // Object to store dynamic handlers to fire on elements that may not exist yet
     this.dynamicHandlers = {};
@@ -76,6 +78,7 @@ Manager.prototype.setup = function() {
     this.recipe.initialiseOperationDragNDrop();
     this.controls.autoBakeChange();
     this.seasonal.load();
+    this.bindings.updateKeybList();
 };
 
 
@@ -89,7 +92,6 @@ Manager.prototype.initialiseEventListeners = function() {
     window.addEventListener("focus", this.window.windowFocus.bind(this.window));
     window.addEventListener("statechange", this.app.stateChange.bind(this.app));
     window.addEventListener("popstate", this.app.popState.bind(this.app));
-
     // Controls
     document.getElementById("bake").addEventListener("click", this.controls.bakeClick.bind(this.controls));
     document.getElementById("auto-bake").addEventListener("change", this.controls.autoBakeChange.bind(this.controls));
@@ -164,6 +166,10 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
     document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
+
+    //Keybindings
+    window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
+    $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox#useMetaKey", this.bindings.updateKeybList.bind(this.bindings));
 
     // Misc
     document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
