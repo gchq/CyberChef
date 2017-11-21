@@ -17,6 +17,7 @@ import HashingModule from "./Hashing.js";
 import HTTPModule from "./HTTP.js";
 import ImageModule from "./Image.js";
 import JSBNModule from "./JSBN.js";
+import PGPModule from "./PublicKey.js";
 import PublicKeyModule from "./PublicKey.js";
 import ShellcodeModule from "./Shellcode.js";
 import URLModule from "./URL.js";
@@ -33,6 +34,7 @@ Object.assign(
     HTTPModule,
     ImageModule,
     JSBNModule,
+    PGPModule,
     PublicKeyModule,
     ShellcodeModule,
     URLModule

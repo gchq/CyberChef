@@ -58,7 +58,10 @@ module.exports = {
             },
             {
                 test: /MetaConfig\.js$/,
-                loader: "val-loader"
+                use: [
+                    { loader: "val-loader" },
+                    { loader: "imports-loader?self=>this" }
+                ]
             },
             {
                 test: /\.css$/,
