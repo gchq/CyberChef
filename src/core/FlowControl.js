@@ -173,7 +173,7 @@ const FlowControl = {
             jmpIndex = FlowControl._getLabelIndex(ings[0], state),
             maxJumps = ings[1];
 
-        if (state.numJumps >= maxJumps || jmpIndex == -1) {
+        if (state.numJumps >= maxJumps || jmpIndex === -1) {
             return state;
         }
 
@@ -201,7 +201,7 @@ const FlowControl = {
             jmpIndex = FlowControl._getLabelIndex(ings[2], state),
             maxJumps = ings[3];
 
-        if (state.numJumps >= maxJumps || jmpIndex == -1) {
+        if (state.numJumps >= maxJumps || jmpIndex === -1) {
             return state;
         }
 
@@ -228,7 +228,7 @@ const FlowControl = {
         let index = -1;
         for (let o = 0; o < state.opList.length; o++) {
             let operation = state.opList[o];
-            if (operation.getConfig()["op"] === "Label"){
+            if (operation.getConfig().op === "Label"){
                 let ings = operation.getIngValues();
                 if (name === ings[0]) {
                     index = o;
@@ -238,8 +238,6 @@ const FlowControl = {
         }
         return index;
     },
-
-
 
 
     /**

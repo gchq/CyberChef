@@ -184,7 +184,7 @@ const OperationConfig = {
     },
     "Label": {
         module: "Default",
-        description: "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.",
+        description: "Provides a location for for conditional and fixed jumps to jump.",
         inputType: "string",
         outputType: "string",
         flowControl: true,

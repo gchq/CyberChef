@@ -260,8 +260,8 @@ TestRegister.addTests([
         ].join("\n"),
         recipeConfig: [
             {
-               op: "Label",
-               args: ["back to the beginning"],
+                op: "Label",
+                args: ["back to the beginning"],
             },
             {
                 op: "Jump",
