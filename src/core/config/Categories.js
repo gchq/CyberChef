@@ -66,7 +66,6 @@ const Categories = [
             "Encode text",
             "Decode text",
             "Swap endianness",
-            "PHP Deserialize",
         ]
     },
     {
@@ -289,6 +288,7 @@ const Categories = [
             "XPath expression",
             "JPath expression",
             "CSS selector",
+            "PHP Deserialize",
             "Microsoft Script Decoder",
             "Strip HTML tags",
             "Diff",

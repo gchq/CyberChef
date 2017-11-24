@@ -20,6 +20,7 @@ import NetBIOS from "../../operations/NetBIOS.js";
 import Numberwang from "../../operations/Numberwang.js";
 import OS from "../../operations/OS.js";
 import OTP from "../../operations/OTP.js";
+import PHP from "../../operations/PHP.js";
 import QuotedPrintable from "../../operations/QuotedPrintable.js";
 import Rotate from "../../operations/Rotate.js";
 import SeqUtils from "../../operations/SeqUtils.js";
@@ -27,7 +28,6 @@ import StrUtils from "../../operations/StrUtils.js";
 import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
 import UUID from "../../operations/UUID.js";
-import PhpSerialization from "../../operations/PhpSerialization";
 
 /**
  * Default module.
@@ -155,7 +155,7 @@ OpModules.Default = {
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
-    "PHP Deserialize":      PhpSerialization.PhpDeserialize,
+    "PHP Deserialize":      PHP.runDeserialize,
 
 
     /*

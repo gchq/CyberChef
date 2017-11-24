@@ -26,6 +26,7 @@ import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
 import NetBIOS from "../operations/NetBIOS.js";
+import PHP from "../operations/PHP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
 import Rotate from "../operations/Rotate.js";
@@ -35,7 +36,6 @@ import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
-import PhpSerialization from "../operations/PhpSerialization.js";
 
 
 /**
@@ -3848,14 +3848,14 @@ const OperationConfig = {
     },
     "PHP Deserialize": {
         module: "Default",
-        description: "PHP Deserialize a given input.<br><br>This function does not support <code>object</code> tags.<br><br><u>Output valid JSON:</u> JSON doesn't support integers as keys, where as PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.",
+        description: "Deserializes PHP serialized data, outputting keyed arrays as JSON.<br><br>This function does not support <code>object</code> tags.<br><br>Example:<br><code>a:2:{s:1:&quot;a&quot;;i:10;i:0;a:1:{s:2:&quot;ab&quot;;b:1;}}</code><br>becomes<br><code>{&quot;a&quot;: 10,0: {&quot;ab&quot;: true}}</code><br><br><u>Output valid JSON:</u> JSON doesn't support integers as keys, whereas PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.",
         inputType: "string",
         outputType: "string",
         args: [
             {
                 name: "Output valid JSON",
                 type: "boolean",
-                value: PhpSerialization.OUTPUT_VALID_JSON
+                value: PHP.OUTPUT_VALID_JSON
             }
         ]
     },

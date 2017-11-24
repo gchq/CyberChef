@@ -1,8 +1,5 @@
 /**
- * Php Serialization operations.
- * This Javascript implementation is based on the Python implementation by
- * Armin Ronacher (2016), who released it under the 3-Clause BSD license.
- * See: https://github.com/mitsuhiko/phpserialize/
+ * PHP operations.
  *
  * @author Jarmo van Lenthe [github.com/jarmovanlenthe]
  * @copyright Jarmo van Lenthe
@@ -10,8 +7,7 @@
  *
  * @namespace
  */
-
-const PhpSerialization = {
+const PHP = {
 
     /**
      * @constant
@@ -20,12 +16,17 @@ const PhpSerialization = {
     OUTPUT_VALID_JSON: true,
 
     /**
-     * Deserializes a PHP serialized input
+     * PHP Deserialize operation.
+     *
+     * This Javascript implementation is based on the Python implementation by
+     * Armin Ronacher (2016), who released it under the 3-Clause BSD license.
+     * See: https://github.com/mitsuhiko/phpserialize/
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
-    PhpDeserialize: function (input, args) {
+    runDeserialize: function (input, args) {
         /**
          * Recursive method for deserializing.
          * @returns {*}
@@ -153,6 +154,7 @@ const PhpSerialization = {
         let inputPart = input.split("");
         return handleInput();
     }
+
 };
 
-export default PhpSerialization;
+export default PHP;

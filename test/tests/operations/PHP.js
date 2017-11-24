@@ -1,5 +1,5 @@
 /**
- * PHP Serialization tests.
+ * PHP tests.
  *
  * @author Jarmo van Lenthe
  *
