@@ -201,8 +201,9 @@ const FlowControl = {
         let ings     = state.opList[state.progress].getIngValues(),
             dish     = state.dish,
             regexStr = ings[0],
-            jumpNum  = ings[1],
-            maxJumps = ings[2];
+            invert   = ings[1],
+            jumpNum  = ings[2],
+            maxJumps = ings[3];
 
         if (jumpNum < 0) {
             jumpNum--;
@@ -212,9 +213,11 @@ const FlowControl = {
             return state;
         }
 
-        if (regexStr !== "" && dish.get(Dish.STRING).search(regexStr) > -1) {
-            state.progress += jumpNum;
-            state.numJumps++;
+        if (regexStr !== "") {
+            let strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
+            if (!invert && strMatch || invert && !strMatch) {
+                state.progress += jumpNum;
+                state.numJumps++;
         }
 
         return state;

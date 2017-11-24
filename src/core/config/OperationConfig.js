@@ -166,6 +166,11 @@ const OperationConfig = {
                 value: ""
             },
             {
+                name: "Negative match (logical NOT)",
+                type: "boolean",
+                value: false
+            },
+            {
                 name: "Number of operations to jump over if match found",
                 type: "number",
                 value: 0
