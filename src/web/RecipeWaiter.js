@@ -1,5 +1,6 @@
 import HTMLOperation from "./HTMLOperation.js";
 import Sortable from "sortablejs";
+import Utils from "../core/Utils.js";
 
 
 /**
@@ -191,7 +192,7 @@ RecipeWaiter.prototype.favDrop = function(e) {
  *
  * @fires Manager#statechange
  */
-RecipeWaiter.prototype.ingChange = function() {
+RecipeWaiter.prototype.ingChange = function(e) {
     window.dispatchEvent(this.manager.statechange);
 };
 
@@ -433,6 +434,32 @@ RecipeWaiter.prototype.opAdd = function(e) {
  */
 RecipeWaiter.prototype.opRemove = function(e) {
     window.dispatchEvent(this.manager.statechange);
+};
+
+
+/**
+ * Sets register values.
+ *
+ * @param {number} opIndex
+ * @param {number} numPrevRegisters
+ * @param {string[]} registers
+ */
+RecipeWaiter.prototype.setRegisters = function(opIndex, numPrevRegisters, registers) {
+    const op = document.querySelector(`#rec-list .operation:nth-child(${opIndex + 1})`),
+        prevRegList = op.querySelector(".register-list");
+
+    // Remove previous div
+    if (prevRegList) prevRegList.remove();
+
+    let registerList = [];
+    for (let i = 0; i < registers.length; i++) {
+        registerList.push(`$R${numPrevRegisters + i} = ${Utils.escapeHtml(Utils.truncate(Utils.printable(registers[i]), 100))}`);
+    }
+    const registerListEl = `<div class="register-list">
+            ${registerList.join("<br>")}
+        </div>`;
+
+    op.insertAdjacentHTML("beforeend", registerListEl);
 };
 
 export default RecipeWaiter;

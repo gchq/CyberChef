@@ -225,26 +225,26 @@ const HTML = {
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
 
         // Generate output
-        return "<div id='colorpicker' style='display: inline-block'></div>" +
-            "Hex:  " + hex + "\n" +
-            "RGB:  " + rgb + "\n" +
-            "RGBA: " + rgba + "\n" +
-            "HSL:  " + hsl + "\n" +
-            "HSLA: " + hsla + "\n" +
-            "CMYK: " + cmyk +
-            "<script>\
-                $('#colorpicker').colorpicker({\
-                    format: 'rgba',\
-                    color: '" + rgba + "',\
-                    container: true,\
-                    inline: true,\
-                }).on('changeColor', function(e) {\
-                    var color = e.color.toRGB();\
-                    document.getElementById('input-text').value = 'rgba(' +\
-                        color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';\
-                    window.app.autoBake();\
-                });\
-            </script>";
+        return `<div id="colorpicker" style="display: inline-block"></div>
+Hex:  ${hex}
+RGB:  ${rgb}
+RGBA: ${rgba}
+HSL:  ${hsl}
+HSLA: ${hsla}
+CMYK: ${cmyk}
+<script>
+    $('#colorpicker').colorpicker({
+        format: 'rgba',
+        color: '${rgba}',
+        container: true,
+        inline: true,
+    }).on('changeColor', function(e) {
+        var color = e.color.toRGB();
+        document.getElementById('input-text').value = 'rgba(' +
+            color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';
+        window.app.autoBake();
+    });
+</script>`;
     },
 
 

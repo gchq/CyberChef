@@ -187,11 +187,8 @@ const Extract = {
      * @returns {string}
      */
     runDomains: function(input, args) {
-        let displayTotal = args[0],
-            protocol = "https?://",
-            hostname = "[-\\w\\.]+",
-            tld = "\\.(?:com|net|org|biz|info|co|uk|onion|int|mobi|name|edu|gov|mil|eu|ac|ae|af|de|ca|ch|cn|cy|es|gb|hk|il|in|io|tv|me|nl|no|nz|ro|ru|tr|us|az|ir|kz|uz|pk)+",
-            regex = new RegExp("(?:" + protocol + ")?" + hostname + tld, "ig");
+        const displayTotal = args[0],
+            regex = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
 
         return Extract._search(input, regex, null, displayTotal);
     },
@@ -259,39 +256,6 @@ const Extract = {
             regex = new RegExp(date1 + "|" + date2 + "|" + date3, "ig");
 
         return Extract._search(input, regex, null, displayTotal);
-    },
-
-
-    /**
-     * Extract all identifiers operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runAllIdents: function(input, args) {
-        let output = "";
-        output += "IP addresses\n";
-        output += Extract.runIp(input, [true, true, false]);
-
-        output += "\nEmail addresses\n";
-        output += Extract.runEmail(input, []);
-
-        output += "\nMAC addresses\n";
-        output += Extract.runMac(input, []);
-
-        output += "\nURLs\n";
-        output += Extract.runUrls(input, []);
-
-        output += "\nDomain names\n";
-        output += Extract.runDomains(input, []);
-
-        output += "\nFile paths\n";
-        output += Extract.runFilePaths(input, [true, true]);
-
-        output += "\nDates\n";
-        output += Extract.runDates(input, []);
-        return output;
     },
 
 };

@@ -234,7 +234,7 @@ const Utils = {
      * @returns {string}
      */
     printable: function(str, preserveWs) {
-        if (typeof window !== "undefined" && window.app && !window.app.options.treatAsUtf8) {
+        if (ENVIRONMENT_IS_WEB() && window.app && !window.app.options.treatAsUtf8) {
             str = Utils.byteArrayToChars(Utils.strToByteArray(str));
         }
 
@@ -384,8 +384,12 @@ const Utils = {
         let wordArray = CryptoJS.enc.Utf8.parse(str),
             byteArray = Utils.wordArrayToByteArray(wordArray);
 
-        if (typeof window !== "undefined" && str.length !== wordArray.sigBytes) {
-            window.app.options.attemptHighlight = false;
+        if (str.length !== wordArray.sigBytes) {
+            if (ENVIRONMENT_IS_WORKER()) {
+                self.setOption("attemptHighlight", false);
+            } else if (ENVIRONMENT_IS_WEB()) {
+                window.app.options.attemptHighlight = false;
+            }
         }
         return byteArray;
     },
@@ -405,7 +409,7 @@ const Utils = {
      * Utils.strToCharcode("你好");
      */
     strToCharcode: function(str) {
-        const charcode = new Array();
+        const charcode = [];
 
         for (let i = 0; i < str.length; i++) {
             let ord = str.charCodeAt(i);
@@ -448,8 +452,13 @@ const Utils = {
             let wordArray = new CryptoJS.lib.WordArray.init(words, byteArray.length),
                 str = CryptoJS.enc.Utf8.stringify(wordArray);
 
-            if (typeof window !== "undefined" && str.length !== wordArray.sigBytes)
-                window.app.options.attemptHighlight = false;
+            if (str.length !== wordArray.sigBytes) {
+                if (ENVIRONMENT_IS_WORKER()) {
+                    self.setOption("attemptHighlight", false);
+                } else if (ENVIRONMENT_IS_WEB()) {
+                    window.app.options.attemptHighlight = false;
+                }
+            }
             return str;
         } catch (err) {
             // If it fails, treat it as ANSI
@@ -1235,7 +1244,8 @@ const Utils = {
         "Forward slash": /\//g,
         "Backslash":     /\\/g,
         "0x":            /0x/g,
-        "\\x":           /\\x/g
+        "\\x":           /\\x/g,
+        "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
     },
 
 

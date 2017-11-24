@@ -19,7 +19,7 @@
         "outputSourcePath": true,
         "dateFormat": "ddd MMM Do YYYY",
         "sort": false,
-        "logoFile": "../build/prod/images/cyberchef-32x32.png",
+        "logoFile": "cyberchef-32x32.png",
         "cleverLinks": false,
         "monospaceLinks": false,
         "protocol": "html://",

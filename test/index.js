@@ -13,6 +13,7 @@ import "babel-polyfill";
 import TestRegister from "./TestRegister.js";
 import "./tests/operations/Base58.js";
 import "./tests/operations/BCD.js";
+import "./tests/operations/BitwiseOp.js";
 import "./tests/operations/ByteRepr.js";
 import "./tests/operations/CharEnc.js";
 import "./tests/operations/Cipher.js";
@@ -20,10 +21,13 @@ import "./tests/operations/Code.js";
 import "./tests/operations/Compress.js";
 import "./tests/operations/DateTime.js";
 import "./tests/operations/FlowControl.js";
+import "./tests/operations/Hash.js";
 import "./tests/operations/Image.js";
 import "./tests/operations/MorseCode.js";
+import "./tests/operations/MS.js";
 import "./tests/operations/StrUtils.js";
 import "./tests/operations/SeqUtils.js";
+
 
 let allTestsPassing = true;
 const testStatusCounts = {

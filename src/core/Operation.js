@@ -1,5 +1,7 @@
 import Dish from "./Dish.js";
 import Ingredient from "./Ingredient.js";
+import OperationConfig from "./config/MetaConfig.js";
+import OpModules from "./config/modules/OpModules.js";
 
 
 /**
@@ -11,10 +13,10 @@ import Ingredient from "./Ingredient.js";
  *
  * @class
  * @param {string} operationName
- * @param {Object} operationConfig
  */
-const Operation = function(operationName, operationConfig) {
+const Operation = function(operationName) {
     this.name             = operationName;
+    this.module           = "";
     this.description      = "";
     this.inputType        = -1;
     this.outputType       = -1;
@@ -25,8 +27,8 @@ const Operation = function(operationName, operationConfig) {
     this.disabled         = false;
     this.ingList          = [];
 
-    if (operationConfig) {
-        this._parseConfig(operationConfig);
+    if (OperationConfig.hasOwnProperty(this.name)) {
+        this._parseConfig(OperationConfig[this.name]);
     }
 };
 
@@ -38,18 +40,27 @@ const Operation = function(operationName, operationConfig) {
  * @param {Object} operationConfig
  */
 Operation.prototype._parseConfig = function(operationConfig) {
+    this.module           = operationConfig.module;
     this.description      = operationConfig.description;
     this.inputType        = Dish.typeEnum(operationConfig.inputType);
     this.outputType       = Dish.typeEnum(operationConfig.outputType);
-    this.run              = operationConfig.run;
     this.highlight        = operationConfig.highlight;
     this.highlightReverse = operationConfig.highlightReverse;
     this.flowControl      = operationConfig.flowControl;
+    this.run              = OpModules[this.module][this.name];
 
     for (let a = 0; a < operationConfig.args.length; a++) {
         const ingredientConfig = operationConfig.args[a];
         const ingredient = new Ingredient(ingredientConfig);
         this.addIngredient(ingredient);
+    }
+
+    if (this.highlight === "func") {
+        this.highlight = OpModules[this.module][`${this.name}-highlight`];
+    }
+
+    if (this.highlightReverse === "func") {
+        this.highlightReverse = OpModules[this.module][`${this.name}-highlightReverse`];
     }
 };
 

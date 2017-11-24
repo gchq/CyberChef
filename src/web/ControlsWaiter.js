@@ -78,10 +78,11 @@ ControlsWaiter.prototype.setAutoBake = function(value) {
  * Handler to trigger baking.
  */
 ControlsWaiter.prototype.bakeClick = function() {
-    this.app.bake();
-    const outputText = document.getElementById("output-text");
-    outputText.focus();
-    outputText.setSelectionRange(0, 0);
+    if (document.getElementById("bake").textContent.indexOf("Bake") > 0) {
+        this.app.bake();
+    } else {
+        this.manager.worker.cancelBake();
+    }
 };
 
 
@@ -90,9 +91,6 @@ ControlsWaiter.prototype.bakeClick = function() {
  */
 ControlsWaiter.prototype.stepClick = function() {
     this.app.bake(true);
-    const outputText = document.getElementById("output-text");
-    outputText.focus();
-    outputText.setSelectionRange(0, 0);
 };
 
 
@@ -256,6 +254,15 @@ ControlsWaiter.prototype.loadClick = function() {
  * Saves the recipe specified in the save textarea to local storage.
  */
 ControlsWaiter.prototype.saveButtonClick = function() {
+    if (!this.app.isLocalStorageAvailable()) {
+        this.app.alert(
+            "Your security settings do not allow access to local storage so your recipe cannot be saved.",
+            "danger",
+            5000
+        );
+        return false;
+    }
+
     const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
     const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
@@ -285,6 +292,8 @@ ControlsWaiter.prototype.saveButtonClick = function() {
  * Populates the list of saved recipes in the load dialog box from local storage.
  */
 ControlsWaiter.prototype.populateLoadRecipesList = function() {
+    if (!this.app.isLocalStorageAvailable()) return false;
+
     const loadNameEl = document.getElementById("load-name");
 
     // Remove current recipes from select
@@ -315,6 +324,8 @@ ControlsWaiter.prototype.populateLoadRecipesList = function() {
  * Removes the currently selected recipe from local storage.
  */
 ControlsWaiter.prototype.loadDeleteClick = function() {
+    if (!this.app.isLocalStorageAvailable()) return false;
+
     const id = parseInt(document.getElementById("load-name").value, 10);
     const rawSavedRecipes = localStorage.savedRecipes ?
         JSON.parse(localStorage.savedRecipes) : [];
@@ -330,6 +341,8 @@ ControlsWaiter.prototype.loadDeleteClick = function() {
  * Displays the selected recipe in the load text box.
  */
 ControlsWaiter.prototype.loadNameChange = function(e) {
+    if (!this.app.isLocalStorageAvailable()) return false;
+
     const el = e.target;
     const savedRecipes = localStorage.savedRecipes ?
         JSON.parse(localStorage.savedRecipes) : [];
@@ -348,6 +361,7 @@ ControlsWaiter.prototype.loadButtonClick = function() {
     try {
         const recipeConfig = Utils.parseRecipeConfig(document.getElementById("load-text").value);
         this.app.setRecipeConfig(recipeConfig);
+        this.app.autoBake();
 
         $("#rec-list [data-toggle=popover]").popover();
     } catch (e) {
@@ -372,6 +386,51 @@ ControlsWaiter.prototype.supportButtonClick = function(e) {
             "* Compile time: " + COMPILE_TIME + "\n" +
             "* User-Agent: \n" + navigator.userAgent + "\n" +
             "* [Link to reproduce](" + saveLink + ")\n\n";
+    }
+};
+
+
+/**
+ * Shows the stale indicator to show that the input or recipe has changed
+ * since the last bake.
+ */
+ControlsWaiter.prototype.showStaleIndicator = function() {
+    const staleIndicator = document.getElementById("stale-indicator");
+
+    staleIndicator.style.visibility = "visible";
+    staleIndicator.style.opacity = 1;
+};
+
+
+/**
+ * Hides the stale indicator to show that the input or recipe has not changed
+ * since the last bake.
+ */
+ControlsWaiter.prototype.hideStaleIndicator = function() {
+    const staleIndicator = document.getElementById("stale-indicator");
+
+    staleIndicator.style.opacity = 0;
+    staleIndicator.style.visibility = "hidden";
+};
+
+
+/**
+ * Switches the Bake button between 'Bake' and 'Cancel' functions.
+ *
+ * @param {boolean} cancel - Whether to change to cancel or not
+ */
+ControlsWaiter.prototype.toggleBakeButtonFunction = function(cancel) {
+    const bakeButton = document.getElementById("bake"),
+        btnText = bakeButton.querySelector("span");
+
+    if (cancel) {
+        btnText.innerText = "Cancel";
+        bakeButton.classList.remove("btn-success");
+        bakeButton.classList.add("btn-danger");
+    } else {
+        btnText.innerText = "Bake!";
+        bakeButton.classList.remove("btn-danger");
+        bakeButton.classList.add("btn-success");
     }
 };
 

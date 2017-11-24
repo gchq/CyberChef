@@ -20,7 +20,7 @@ const Rotate = {
      * @constant
      * @default
      */
-    ROTATE_WHOLE: false,
+    ROTATE_CARRY: false,
 
     /**
      * Runs rotation operations across the input data.
@@ -53,7 +53,7 @@ const Rotate = {
      */
     runRotr: function(input, args) {
         if (args[1]) {
-            return Rotate._rotrWhole(input, args[0]);
+            return Rotate._rotrCarry(input, args[0]);
         } else {
             return Rotate._rot(input, args[0], Rotate._rotr);
         }
@@ -69,7 +69,7 @@ const Rotate = {
      */
     runRotl: function(input, args) {
         if (args[1]) {
-            return Rotate._rotlWhole(input, args[0]);
+            return Rotate._rotlCarry(input, args[0]);
         } else {
             return Rotate._rot(input, args[0], Rotate._rotl);
         }
@@ -197,7 +197,7 @@ const Rotate = {
      * @param {number} amount
      * @returns {byteArray}
      */
-    _rotrWhole: function(data, amount) {
+    _rotrCarry: function(data, amount) {
         let carryBits = 0,
             newByte,
             result = [];
@@ -223,7 +223,7 @@ const Rotate = {
      * @param {number} amount
      * @returns {byteArray}
      */
-    _rotlWhole: function(data, amount) {
+    _rotlCarry: function(data, amount) {
         let carryBits = 0,
             newByte,
             result = [];

@@ -105,17 +105,20 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
 OutputWaiter.prototype.adjustWidth = function() {
     const output         = document.getElementById("output");
     const saveToFile     = document.getElementById("save-to-file");
+    const copyOutput     = document.getElementById("copy-output");
     const switchIO       = document.getElementById("switch");
     const undoSwitch     = document.getElementById("undo-switch");
     const maximiseOutput = document.getElementById("maximise-output");
 
     if (output.clientWidth < 680) {
         saveToFile.childNodes[1].nodeValue = "";
+        copyOutput.childNodes[1].nodeValue = "";
         switchIO.childNodes[1].nodeValue = "";
         undoSwitch.childNodes[1].nodeValue = "";
         maximiseOutput.childNodes[1].nodeValue = "";
     } else {
         saveToFile.childNodes[1].nodeValue = " Save to file";
+        copyOutput.childNodes[1].nodeValue = " Copy output";
         switchIO.childNodes[1].nodeValue = " Move output to input";
         undoSwitch.childNodes[1].nodeValue = " Undo";
         maximiseOutput.childNodes[1].nodeValue =
@@ -144,6 +147,44 @@ OutputWaiter.prototype.saveClick = function() {
         el.click();
         el.remove();
     }
+};
+
+
+/**
+ * Handler for copy click events.
+ * Copies the output to the clipboard.
+ */
+OutputWaiter.prototype.copyClick = function() {
+    // Create invisible textarea to populate with the raw dishStr (not the printable version that
+    // contains dots instead of the actual bytes)
+    const textarea = document.createElement("textarea");
+    textarea.style.position = "fixed";
+    textarea.style.top = 0;
+    textarea.style.left = 0;
+    textarea.style.width = 0;
+    textarea.style.height = 0;
+    textarea.style.border = "none";
+
+    textarea.value = this.app.dishStr;
+    document.body.appendChild(textarea);
+
+    // Select and copy the contents of this textarea
+    let success = false;
+    try {
+        textarea.select();
+        success = document.execCommand("copy");
+    } catch (err) {
+        success = false;
+    }
+
+    if (success) {
+        this.app.alert("Copied raw output successfully.", "success", 2000);
+    } else {
+        this.app.alert("Sorry, the output could not be copied.", "danger", 2000);
+    }
+
+    // Clean up
+    document.body.removeChild(textarea);
 };
 
 
@@ -199,6 +240,46 @@ OutputWaiter.prototype.maximiseOutputClick = function(e) {
         el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAi0lEQVQ4y83TMQrCQBCF4S+5g4rJEdJ7KE+RQ1lrIQQCllroEULuoM0Ww3a7aXwwLAzMPzDvLcz4hnooUItT1rsoVNy+4lgLWNL7RlcCmDBij2eCfNCrUITc0dRCrhj8m5otw0O6SV8LuAV3uhrAAa8sJ2Np7KPFawhgscVLjH9bCDhjt8WNKft88w/HjCvuVqu53QAAAABJRU5ErkJggg=='> Max";
         this.app.resetLayout();
     }
+};
+
+
+/**
+ * Shows or hides the loading icon.
+ *
+ * @param {boolean} value
+ */
+OutputWaiter.prototype.toggleLoader = function(value) {
+    const outputLoader = document.getElementById("output-loader"),
+        outputElement = document.getElementById("output-text");
+
+    if (value) {
+        this.manager.controls.hideStaleIndicator();
+        this.bakingStatusTimeout = setTimeout(function() {
+            outputElement.disabled = true;
+            outputLoader.style.visibility = "visible";
+            outputLoader.style.opacity = 1;
+            this.manager.controls.toggleBakeButtonFunction(true);
+        }.bind(this), 200);
+    } else {
+        clearTimeout(this.bakingStatusTimeout);
+        outputElement.disabled = false;
+        outputLoader.style.opacity = 0;
+        outputLoader.style.visibility = "hidden";
+        this.manager.controls.toggleBakeButtonFunction(false);
+        this.setStatusMsg("");
+    }
+};
+
+
+/**
+ * Sets the baking status message value.
+ *
+ * @param {string} msg
+ */
+OutputWaiter.prototype.setStatusMsg = function(msg) {
+    const el = document.querySelector("#output-loader .loading-msg");
+
+    el.textContent = msg;
 };
 
 export default OutputWaiter;

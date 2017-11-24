@@ -1,17 +1,17 @@
 <!-- htmlmin:ignore --><!--
     CyberChef - The Cyber Swiss Army Knife
-    
+
     @copyright Crown Copyright 2016
     @license Apache-2.0
-    
+
       Copyright 2016 Crown Copyright
-    
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
         http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@
     <head>
         <meta charset="UTF-8">
         <title>CyberChef</title>
-        
+
         <meta name="copyright" content="Crown Copyright 2016" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
@@ -36,8 +36,10 @@
 
             // Load theme before the preloader is shown
             try {
-                document.querySelector(":root").className = JSON.parse(localStorage.getItem("options")).theme;
-            } catch (e) {}
+                document.querySelector(":root").className = (JSON.parse(localStorage.getItem("options")) || {}).theme;
+            } catch (err) {
+                // LocalStorage access is denied by security settings
+            }
 
             // Define loading messages
             const loadingMsgs = [
@@ -73,7 +75,8 @@
                 loadingMsgs.push(msg);
                 try {
                     const el = document.getElementById("preloader-msg");
-                    el.className = "loading"; // Causes CSS transition on first message
+                    if (!el.classList.contains("loading"))
+                        el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
                 } catch (err) {} // Ignore errors if DOM not yet ready
             }
@@ -90,8 +93,8 @@
     <body>
         <!-- Preloader overlay -->
         <div id="loader-wrapper">
-            <div id="preloader"></div>
-            <div id="preloader-msg"></div>
+            <div id="preloader" class="loader"></div>
+            <div id="preloader-msg" class="loading-msg"></div>
         </div>
         <!-- End preloader overlay -->
         <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
@@ -132,30 +135,30 @@
                     <ul id="search-results" class="op-list"></ul>
                     <div id="categories" class="panel-group no-select"></div>
                 </div>
-                
+
                 <div id="recipe" class="split split-horizontal no-select">
                     <div class="title no-select">Recipe</div>
                     <ul id="rec-list" class="list-area no-select"></ul>
-                    
+
                     <div id="controls" class="no-select">
                         <div id="operational-controls">
                             <div id="bake-group">
                                 <button type="button" class="btn btn-success btn-lg" id="bake">
                                     <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
-                                    Bake!
+                                    <span>Bake!</span>
                                 </button>
                                 <label class="btn btn-success btn-lg" id="auto-bake-label" for="auto-bake">
                                     <input type="checkbox" checked="checked" id="auto-bake">
                                     <div>Auto Bake</div>
                                 </label>
                             </div>
-                            
+
                             <div class="btn-group" style="padding-top: 10px;">
                                 <button type="button" class="btn btn-default" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
                                 <button type="button" class="btn btn-default" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
                             </div>
                         </div>
-                        
+
                         <div class="btn-group-vertical" id="extra-controls">
                             <button type="button" class="btn btn-default" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
                             <button type="button" class="btn btn-default" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
@@ -163,12 +166,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="split split-horizontal" id="IO">
                     <div id="input" class="split no-select">
                         <div class="title no-select">
                             <label for="input-text">Input</label>
-                            <div class="loading-icon" style="display: none"></div>
                             <div class="btn-group io-btn-group">
                                 <button type="button" class="btn btn-default btn-sm" id="clr-io"><img aria-hidden="true" src="<%- require('../static/images/recycle-16x16.png') %>" alt="Recycle Icon"/> Clear I/O</button>
                                 <button type="button" class="btn btn-default btn-sm" id="reset-layout"><img aria-hidden="true" src="<%- require('../static/images/layout-16x16.png') %>" alt="Grid Icon"/> Reset layout</button>
@@ -181,30 +183,35 @@
                             <textarea id="input-text"></textarea>
                         </div>
                     </div>
-                    
+
                     <div id="output" class="split">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
-                            <div class="loading-icon" style="display: none"></div>
                             <div class="btn-group io-btn-group">
                                 <button type="button" class="btn btn-default btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
+                                <button type="button" class="btn btn-default btn-sm" id="copy-output" title="Copy output"><img aria-hidden="true" src="<%- require('../static/images/copy-16x16.png') %>" alt="Copy Icon"/> Copy raw output</button>
                                 <button type="button" class="btn btn-default btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
                                 <button type="button" class="btn btn-default btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img aria-hidden="true" src="<%- require('../static/images/undo-16x16.png') %>" alt="Undo Icon"/> Undo</button>
                                 <button type="button" class="btn btn-default btn-sm" id="maximise-output" title="Maximise"><img aria-hidden="true" src="<%- require('../static/images/maximise-16x16.png') %>" alt="Maximise Icon"/> Max</button>
                             </div>
                             <div class="io-info" id="output-info"></div>
                             <div class="io-info" id="output-selection-info"></div>
+                            <span id="stale-indicator" title="The output is stale.&#10;The input or recipe has changed since this output was generated. Bake again to get the new value.">&#x1F551;</span>
                         </div>
                         <div class="textarea-wrapper">
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
                             <textarea id="output-text" readonly="readonly"></textarea>
+                            <div id="output-loader">
+                                <div class="loader"></div>
+                                <div class="loading-msg"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="save-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -255,7 +262,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="load-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -281,7 +288,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="options-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -320,12 +327,12 @@
                             <label for="showErrors"> Operation error reporting (recommended) </label>
                         </div>
                         <div class="option-item">
-                            <input type="number" option="errorTimeout" id="errorTimeout" />
-                            <label for="errorTimeout"> Operation error timeout in ms (0 for never) </label>
+                            <input type="checkbox" option="useMetaKey" id="useMetaKey" />
+                            <label for="useMetaKey"> Use meta key for keybindings (Windows ⊞/Command ⌘) </label>
                         </div>
                         <div class="option-item">
-                            <input type="number" option="autoBakeThreshold" id="autoBakeThreshold"/>
-                            <label for="autoBakeThreshold"> Auto Bake threshold in ms </label>
+                            <input type="number" option="errorTimeout" id="errorTimeout" />
+                            <label for="errorTimeout"> Operation error timeout in ms (0 for never) </label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -335,7 +342,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="favourites-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -362,7 +369,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="support-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -378,6 +385,11 @@
                         </p>
                         <p>&copy; Crown Copyright 2016.</p>
                         <p>Released under the Apache Licence, Version 2.0.</p>
+                        <p>
+                            <a href="https://gitter.im/gchq/CyberChef">
+                                <img src="<%- require('../static/images/gitter-badge.svg') %>">
+                            </a>
+                        </p>
                         <br>
                         <br>
                         <div>
@@ -393,6 +405,10 @@
                                 <li role="presentation"><a href="#about" aria-controls="messages" role="tab" data-toggle="tab">
                                     <img aria-hidden="true" src="<%- require('../static/images/speech-16x16.png') %>" alt="Speech Balloon Icon"/>
                                     About
+                                </a></li>
+                                <li role="presentation"><a href="#keybindings" aria-controls="messages" role="tab" data-toggle="tab">
+                                    <img aria-hidden="true" src="<%- require('../static/images/code-16x16.png') %>" alt="List Icon"/>
+                                    Keybindings
                                 </a></li>
                             </ul>
                             <div class="tab-content">
@@ -410,8 +426,10 @@
                                             <li><a href="#recipe=Translate_DateTime_Format('Standard%20date%20and%20time','DD/MM/YYYY%20HH:mm:ss','UTC','dddd%20Do%20MMMM%20YYYY%20HH:mm:ss%20Z%20z','Australia/Queensland')&input=MTUvMDYvMjAxNSAyMDo0NTowMA">Convert a date and time to a different time zone</a></li>
                                             <li><a href="#recipe=Parse_IPv6_address()&input=MjAwMTowMDAwOjQxMzY6ZTM3ODo4MDAwOjYzYmY6M2ZmZjpmZGQy">Parse a Teredo IPv6 address</a></li>
                                             <li><a href="#recipe=From_Hexdump()Gunzip()&input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu/y7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb/3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw">Convert data from a hexdump, then decompress</a></li>
+                                            <li><a href="#recipe=RC4(%7B'option':'UTF8','string':'secret'%7D,'Hex','Hex')Disassemble_x86('64','Full%20x86%20architecture',16,0,true,true)&input=MjFkZGQyNTQwMTYwZWU2NWZlMDc3NzEwM2YyYTM5ZmJlNWJjYjZhYTBhYWJkNDE0ZjkwYzZjYWY1MzEyNzU0YWY3NzRiNzZiM2JiY2QxOTNjYjNkZGZkYmM1YTI2NTMzYTY4NmI1OWI4ZmVkNGQzODBkNDc0NDIwMWFlYzIwNDA1MDcxMzhlMmZlMmIzOTUwNDQ2ZGIzMWQyYmM2MjliZTRkM2YyZWIwMDQzYzI5M2Q3YTVkMjk2MmMwMGZlNmRhMzAwNzJkOGM1YTZiNGZlN2Q4NTlhMDQwZWVhZjI5OTczMzYzMDJmNWEwZWMxOQ">Decrypt and disassemble shellcode</a></li>
                                             <li><a href="#recipe=Fork('%5C%5Cn','%5C%5Cn',false)From_UNIX_Timestamp('Seconds%20(s)')&input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA">Display multiple timestamps as full dates</a></li>
                                             <li><a href="#recipe=Fork('%5C%5Cn','%5C%5Cn',false)Conditional_Jump('1',2,10)To_Hex('Space')Return()To_Base64('A-Za-z0-9%2B/%3D')&input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA">Carry out different operations on data of different types</a></li>
+                                            <li><a href="#recipe=Register('key%3D(%5B%5C%5Cda-f%5D*)',true,false)Find_/_Replace(%7B'option':'Regex','string':'.*data%3D(.*)'%7D,'$1',true,false,true)RC4(%7B'option':'Hex','string':'$R0'%7D,'Hex','Latin1')&input=aHR0cDovL21hbHdhcmV6LmJpei9iZWFjb24ucGhwP2tleT0wZTkzMmE1YyZkYXRhPThkYjdkNWViZTM4NjYzYTU0ZWNiYjMzNGUzZGIxMQ">Use parts of the input as arguments to operations</a></li>
                                         </ul>
                                     </div>
                                     <blockquote>
@@ -445,20 +463,20 @@
                                 <div role="tabpanel" class="tab-pane" id="about" style="padding: 20px;">
                                     <h5><strong>What</strong></h5>
                                     <p>A simple, intuitive web app for analysing and decoding data without having to deal with complex tools or programming languages. CyberChef encourages both technical and non-technical people to explore data formats, encryption and compression.</p><br>
-                                    
+
                                     <h5><strong>Why</strong></h5>
                                     <p>Digital data comes in all shapes, sizes and formats in the modern world – CyberChef helps to make sense of this data all on one easy-to-use platform.</p><br>
 
-                                    
+
                                     <h5><strong>How</strong></h5>
                                     <p>The interface is designed with simplicity at its heart. Complex techniques are now as trivial as drag-and-drop. Simple functions can be combined to build up a "recipe", potentially resulting in complex analysis, which can be shared with other users and used with their input.</p>
                                     <p>For those comfortable writing code, CyberChef is a quick and efficient way to prototype solutions to a problem which can then be scripted once proven to work.</p><br>
 
-                                    
+
                                     <h5><strong>Who</strong></h5>
                                     <p>It is expected that CyberChef will be useful for cybersecurity and antivirus companies. It should also appeal to the academic world and any individuals or companies involved in the analysis of digital data, be that software developers, analysts, mathematicians or casual puzzle solvers.</p><br>
 
-                                    
+
                                     <h5><strong>Aim</strong></h5>
                                     <p>It is hoped that by releasing CyberChef through <a href="https://github.com/gchq/CyberChef">GitHub</a>, contributions can be added which can be rolled out into future versions of the tool.</p><br>
 
@@ -466,6 +484,9 @@
                                     <br>
                                     <p>There are around 150 useful operations in CyberChef for anyone working on anything vaguely Internet-related, whether you just want to convert a timestamp to a different format, decompress gzipped data, create a SHA3 hash, or parse an X.509 certificate to find out who issued it.</p>
                                     <p>It’s the Cyber Swiss Army Knife.</p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="keybindings" style="padding: 20px;">
+                                    <table class="table table-condensed table-bordered table-hover" id="keybList"></table>
                                 </div>
                             </div>
                         </div>
@@ -479,7 +500,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="confirm-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -500,6 +521,6 @@
                 </div>
             </div>
         </div>
-        
+
     </body>
 </html>
