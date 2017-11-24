@@ -60,14 +60,15 @@ TestRegister.addTests([
         expectedOutput: "U29tZSBkYXRhIHdpdGggYSAxIGluIGl0\n53 6f 6d 65 20 64 61 74 61 20 77 69 74 68 20 61 20 32 20 69 6e 20 69 74\n",
         recipeConfig: [
             {"op": "Fork", "args": ["\\n", "\\n", false]},
-            {"op": "Conditional Jump", "args": ["1", "2", "10"]},
+            {"op": "Conditional Jump", "args": ["1", false, "skipReturn", "10"]},
             {"op": "To Hex", "args": ["Space"]},
             {"op": "Return", "args": []},
+            {"op": "Label", "args": ["skipReturn"]},
             {"op": "To Base64", "args": ["A-Za-z0-9+/="]}
         ]
     },
     {
-        name: "Jump: skips 0",
+        name: "Jump: Empty Label",
         input: [
             "should be changed",
         ].join("\n"),
@@ -77,7 +78,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Jump",
-                args: [0, 10],
+                args: ["", 10],
             },
             {
                 op: "Find / Replace",
@@ -105,7 +106,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Jump",
-                args: [1, 10],
+                args: ["skipReplace", 10],
             },
             {
                 op: "Find / Replace",
@@ -119,6 +120,10 @@ TestRegister.addTests([
                     true,
                     true,
                 ],
+            },
+            {
+                op: "Label",
+                args: ["skipReplace"]
             },
         ],
     },
@@ -137,7 +142,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Conditional Jump",
-                args: ["match", 0, 0],
+                args: ["match", false, "", 0],
             },
             {
                 op: "Find / Replace",
@@ -212,7 +217,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Conditional Jump",
-                args: ["match", 1, 10],
+                args: ["match", false, "skip match", 10],
             },
             {
                 op: "Find / Replace",
@@ -226,6 +231,9 @@ TestRegister.addTests([
                     true,
                     true,
                 ],
+            },
+            {
+                op: "Label", args: ["skip match"],
             },
             {
                 op: "Find / Replace",
@@ -252,8 +260,12 @@ TestRegister.addTests([
         ].join("\n"),
         recipeConfig: [
             {
+               op: "Label",
+               args: ["back to the beginning"],
+            },
+            {
                 op: "Jump",
-                args: [1],
+                args: ["skip replace"],
             },
             {
                 op: "Find / Replace",
@@ -269,8 +281,12 @@ TestRegister.addTests([
                 ],
             },
             {
+                op: "Label",
+                args: ["skip replace"],
+            },
+            {
                 op: "Conditional Jump",
-                args: ["match", -2, 10],
+                args: ["match", false, "back to the beginning", 10],
             },
         ],
     },

@@ -142,9 +142,9 @@ const OperationConfig = {
         flowControl: true,
         args: [
             {
-                name: "Number of operations to jump over",
-                type: "number",
-                value: 0
+                name: "The Label to Jump to",
+                type: "string",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
@@ -171,14 +171,28 @@ const OperationConfig = {
                 value: false
             },
             {
-                name: "Number of operations to jump over if match found",
-                type: "number",
-                value: 0
+                name: "The Label to Jump to",
+                type: "string",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
                 type: "number",
                 value: 10
+            }
+        ]
+    },
+    "Label": {
+        module: "Default",
+        description: "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.",
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "Jump Label",
+                type: "string",
+                value: ""
             }
         ]
     },
