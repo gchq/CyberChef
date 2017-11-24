@@ -35,6 +35,7 @@ import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
+import PhpSerialization from "../operations/PhpSerialization.js";
 
 
 /**
@@ -3842,6 +3843,19 @@ const OperationConfig = {
                 name: "Counter",
                 type: "number",
                 value: 0
+            }
+        ]
+    },
+    "PHP Deserialize": {
+        module: "Default",
+        description: "PHP Deserialize a given input.<br><br>This function does not support <code>object</code> tags.<br><br><u>Output valid JSON:</u> JSON doesn't support integers as keys, where as PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Output valid JSON",
+                type: "boolean",
+                value: PhpSerialization.OUTPUT_VALID_JSON
             }
         ]
     },

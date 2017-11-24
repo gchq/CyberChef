@@ -66,6 +66,7 @@ const Categories = [
             "Encode text",
             "Decode text",
             "Swap endianness",
+            "PHP Deserialize",
         ]
     },
     {
