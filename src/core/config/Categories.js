@@ -288,6 +288,7 @@ const Categories = [
             "XPath expression",
             "JPath expression",
             "CSS selector",
+            "PHP Deserialize",
             "Microsoft Script Decoder",
             "Strip HTML tags",
             "Diff",
