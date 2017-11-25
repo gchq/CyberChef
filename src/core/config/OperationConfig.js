@@ -26,6 +26,7 @@ import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
 import NetBIOS from "../operations/NetBIOS.js";
+import PGP from "../operations/PGP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
 import Rotate from "../operations/Rotate.js";
@@ -3843,6 +3844,39 @@ const OperationConfig = {
                 type: "number",
                 value: 0
             }
+        ]
+    },
+    "Generate PGP Key Pair": {
+        module: "PGP",
+        description: "",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key type",
+                type: "option",
+                value: PGP.KEY_TYPES
+            },
+            {
+                name: "Key size",
+                type: "option",
+                value: PGP.KEY_SIZES
+            },
+            {
+                name: "Password (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Name (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Email (optional)",
+                type: "string",
+                value: ""
+            },
         ]
     },
 };
