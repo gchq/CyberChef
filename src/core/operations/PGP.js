@@ -23,23 +23,23 @@ const PGP = {
      * @returns {Integer}
      */
     validateKeySize(keySize, keyType) {
-	if (KEY_SIZES.indexOf(keySize) < 0) {
-	    throw `Invalid key size ${keySize}, must be in ${JSON.stringify(KEY_SIZES)}`;
-	}
+        if (KEY_SIZES.indexOf(keySize) < 0) {
+            throw `Invalid key size ${keySize}, must be in ${JSON.stringify(KEY_SIZES)}`;
+        }
 
-	if (keyType === "ecc") {
-	    if (ECC_SIZES.indexOf(keySize) >= 0) {
-	        return parseInt(keySize, 10);
-	    } else {
-	        throw `Invalid key size ${keySize}, must be in ${JSON.stringify(ECC_SIZES)} for ECC`;
-	    }
-	} else {
-	    if (RSA_SIZES.indexOf(keySize) >= 0) {
-	        return parseInt(keySize, 10);
-	    } else {
-	        throw `Invalid key size ${keySize}, must be in ${JSON.stringify(RSA_SIZES)} for RSA`;
-	    }
-	}
+        if (keyType === "ecc") {
+            if (ECC_SIZES.indexOf(keySize) >= 0) {
+                return parseInt(keySize, 10);
+            } else {
+                throw `Invalid key size ${keySize}, must be in ${JSON.stringify(ECC_SIZES)} for ECC`;
+            }
+        } else {
+            if (RSA_SIZES.indexOf(keySize) >= 0) {
+                return parseInt(keySize, 10);
+            } else {
+                throw `Invalid key size ${keySize}, must be in ${JSON.stringify(RSA_SIZES)} for RSA`;
+            }
+        }
     },
 
     /**
@@ -48,13 +48,13 @@ const PGP = {
      * @returns {Integer}
      */
     getSubkeySize(keySize) {
-	return {
-	    1024: 1024,
-	    2048: 1024,
-	    4096: 2048,
-	    256:   256,
-	    384:   256,
-	}[keySize]
+        return {
+            1024: 1024,
+            2048: 1024,
+            4096: 2048,
+            256:   256,
+            384:   256,
+        }[keySize];
     },
 
 
@@ -67,7 +67,7 @@ const PGP = {
      */
     validateKeyType(keyType) {
         if (KEY_TYPES.indexOf(keyType) >= 0) return keyType.toLowerCase();
-	throw `Invalid key type ${keyType}, must be in ${JSON.stringify(KEY_TYPES)}`;
+        throw `Invalid key type ${keyType}, must be in ${JSON.stringify(KEY_TYPES)}`;
     },
 
     /**
@@ -79,76 +79,76 @@ const PGP = {
      * @returns {string}
      */
     runGenerateKeyPair(input, args) {
-	let keyType  = args[0],
-	    keySize  = args[1],
-	    password = args[2],
-	    name     = args[3],
-	    email    = args[4];
-	
-	keyType = PGP.validateKeyType(keyType);
-	keySize = PGP.validateKeySize(keySize, keyType);
+        let keyType  = args[0],
+            keySize  = args[1],
+            password = args[2],
+            name     = args[3],
+            email    = args[4];
 
-	let userIdentifier = "";
-	if (name) userIdentifier += name;
-	if (email) userIdentifier += ` <${email}>`;
+        keyType = PGP.validateKeyType(keyType);
+        keySize = PGP.validateKeySize(keySize, keyType);
 
-	let flags = kbpgp.const.openpgp.certify_keys;
-	flags = flags | kbpgp.const.openpgp.sign_data;
-	flags = flags | kbpgp.const.openpgp.auth;
-	flags = flags | kbpgp.const.openpgp.encrypt_comm;
-	flags = flags | kbpgp.const.openpgp.encrypt_storage;
+        let userIdentifier = "";
+        if (name) userIdentifier += name;
+        if (email) userIdentifier += ` <${email}>`;
 
-	let keyGenerationOptions = {
-	    userid: userIdentifier,
-	    ecc: keyType === "ecc",
-	    primary: {
-	        nbits: keySize,
-		flags: flags,
-		expire_in: 0
-	    },
-	    subkeys: [{
-	        nbits: PGP.getSubkeySize(keySize),
-		flags: kbpgp.const.openpgp.sign_data,
-		expire_in: 86400 * 365 * 8 // 8 years from kbpgp defaults
-	    }, {
-	        nbits: PGP.getSubkeySize(keySize),
-		flags: kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
-		expire_in: 86400 * 365 * 2 // 2 years from kbpgp defaults
-	    }],
-	};
+        let flags = kbpgp.const.openpgp.certify_keys;
+        flags = flags | kbpgp.const.openpgp.sign_data;
+        flags = flags | kbpgp.const.openpgp.auth;
+        flags = flags | kbpgp.const.openpgp.encrypt_comm;
+        flags = flags | kbpgp.const.openpgp.encrypt_storage;
 
-	return new Promise((resolve, reject) => {
-	    kbpgp.KeyManager.generate(keyGenerationOptions, (genErr, unsignedKey) => {
-		if (genErr) {
-		    return reject(`Error from kbpgp whilst generating key: ${genErr}`);
-		}
+        let keyGenerationOptions = {
+            userid: userIdentifier,
+            ecc: keyType === "ecc",
+            primary: {
+                nbits: keySize,
+                flags: flags,
+                expire_in: 0 // eslint-disable-line camelcase
+            },
+            subkeys: [{
+                nbits: PGP.getSubkeySize(keySize),
+                flags: kbpgp.const.openpgp.sign_data,
+                expire_in: 86400 * 365 * 8 // eslint-disable-line camelcase
+            }, {
+                nbits: PGP.getSubkeySize(keySize),
+                flags: kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
+                expire_in: 86400 * 365 * 2 // eslint-disable-line camelcase
+            }],
+        };
 
-		unsignedKey.sign({}, signErr => {
-		    let signedKey = unsignedKey;
-		    if (signErr) {
-		        return reject(`Error from kbpgp whilst signing the generated key: ${signErr}`);
-		    }
+        return new Promise((resolve, reject) => {
+            kbpgp.KeyManager.generate(keyGenerationOptions, (genErr, unsignedKey) => {
+                if (genErr) {
+                    return reject(`Error from kbpgp whilst generating key: ${genErr}`);
+                }
 
-		    let privateKeyExportOptions = {};
-		    if (password) privateKeyExportOptions.passphrase = password;
+                unsignedKey.sign({}, signErr => {
+                    let signedKey = unsignedKey;
+                    if (signErr) {
+                        return reject(`Error from kbpgp whilst signing the generated key: ${signErr}`);
+                    }
 
-		    signedKey.export_pgp_private(privateKeyExportOptions, (privateExportErr, privateKey) => {
-		        if (privateExportErr) {
-		            return reject(`Error from kbpgp whilst exporting the private part of the signed key: ${privateExportErr}`);
-			}
+                    let privateKeyExportOptions = {};
+                    if (password) privateKeyExportOptions.passphrase = password;
 
-			signedKey.export_pgp_public({}, (publicExportErr, publicKey) => {
-		            if (publicExportErr) {
-		                return reject(`Error from kbpgp whilst exporting the public part of the signed key: ${publicExportErr}`);
-			    }
+                    signedKey.export_pgp_private(privateKeyExportOptions, (privateExportErr, privateKey) => {
+                        if (privateExportErr) {
+                            return reject(`Error from kbpgp whilst exporting the private part of the signed key: ${privateExportErr}`);
+                        }
 
-			    return resolve(privateKey + "\n" + publicKey);
-			});
-		    });
+                        signedKey.export_pgp_public({}, (publicExportErr, publicKey) => {
+                            if (publicExportErr) {
+                                return reject(`Error from kbpgp whilst exporting the public part of the signed key: ${publicExportErr}`);
+                            }
 
-		});
-	    })
-	});
+                            return resolve(privateKey + "\n" + publicKey);
+                        });
+                    });
+
+                });
+            });
+        });
     },
 
 };
