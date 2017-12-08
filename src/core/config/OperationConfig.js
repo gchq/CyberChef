@@ -143,9 +143,9 @@ const OperationConfig = {
         flowControl: true,
         args: [
             {
-                name: "Number of operations to jump over",
-                type: "number",
-                value: 0
+                name: "The Label to Jump to",
+                type: "string",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
@@ -167,14 +167,33 @@ const OperationConfig = {
                 value: ""
             },
             {
-                name: "Number of operations to jump over if match found",
-                type: "number",
-                value: 0
+                name: "Negative match (logical NOT)",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "The Label to Jump to",
+                type: "string",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
                 type: "number",
                 value: 10
+            }
+        ]
+    },
+    "Label": {
+        module: "Default",
+        description: "Provides a location for for conditional and fixed jumps to jump.",
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "Jump Label",
+                type: "string",
+                value: ""
             }
         ]
     },

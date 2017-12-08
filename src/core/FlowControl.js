@@ -170,18 +170,14 @@ const FlowControl = {
      */
     runJump: function(state) {
         let ings     = state.opList[state.progress].getIngValues(),
-            jumpNum  = ings[0],
+            jmpIndex = FlowControl._getLabelIndex(ings[0], state),
             maxJumps = ings[1];
 
-        if (jumpNum < 0) {
-            jumpNum--;
-        }
-
-        if (state.numJumps >= maxJumps) {
+        if (state.numJumps >= maxJumps || jmpIndex === -1) {
             return state;
         }
 
-        state.progress += jumpNum;
+        state.progress = jmpIndex;
         state.numJumps++;
         return state;
     },
@@ -201,23 +197,46 @@ const FlowControl = {
         let ings     = state.opList[state.progress].getIngValues(),
             dish     = state.dish,
             regexStr = ings[0],
-            jumpNum  = ings[1],
-            maxJumps = ings[2];
+            invert   = ings[1],
+            jmpIndex = FlowControl._getLabelIndex(ings[2], state),
+            maxJumps = ings[3];
 
-        if (jumpNum < 0) {
-            jumpNum--;
-        }
-
-        if (state.numJumps >= maxJumps) {
+        if (state.numJumps >= maxJumps || jmpIndex === -1) {
             return state;
         }
 
-        if (regexStr !== "" && dish.get(Dish.STRING).search(regexStr) > -1) {
-            state.progress += jumpNum;
-            state.numJumps++;
+        if (regexStr !== "") {
+            let strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
+            if (!invert && strMatch || invert && !strMatch) {
+                state.progress = jmpIndex;
+                state.numJumps++;
+            }
         }
 
         return state;
+    },
+
+    /**
+     * Returns the index of a label.
+     *
+     * @param {Object} state
+     * @param {string} name
+     * @returns {number}
+     */
+
+    _getLabelIndex: function(name, state) {
+        let index = -1;
+        for (let o = 0; o < state.opList.length; o++) {
+            let operation = state.opList[o];
+            if (operation.getConfig().op === "Label"){
+                let ings = operation.getIngValues();
+                if (name === ings[0]) {
+                    index = o;
+                    break;
+                }
+            }
+        }
+        return index;
     },
 
 
