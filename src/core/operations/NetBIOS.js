@@ -54,7 +54,7 @@ const NetBIOS = {
         let output = [],
             offset = args[0];
 
-        if (input.length <= 32 && (input.length % 2) == 0) {
+        if (input.length <= 32 && (input.length % 2) === 0) {
             for (let i = 0; i < input.length; i += 2) {
                 output.push((((input[i] & 0xff) - offset) << 4) |
                             (((input[i + 1] & 0xff) - offset) & 0xf));
