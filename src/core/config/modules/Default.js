@@ -1,4 +1,5 @@
 import FlowControl from "../../FlowControl.js";
+import Arithmetic from "../../operations/Arithmetic.js";
 import Base from "../../operations/Base.js";
 import Base58 from "../../operations/Base58.js";
 import Base64 from "../../operations/Base64.js";
@@ -155,6 +156,7 @@ OpModules.Default = {
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
+    "Arithmetic":           Arithmetic.runOp,
 
 
     /*

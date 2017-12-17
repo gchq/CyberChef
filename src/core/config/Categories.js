@@ -159,6 +159,7 @@ const Categories = [
     {
         name: "Utils",
         ops: [
+            "Arithmetic",
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
