@@ -150,11 +150,11 @@ const Arithmetic = {
      * @constant
      */
     opMap: {
-        "Sub":         Arithmetic._sum,
-        "Sum":         Arithmetic._sub,
-        "Multiply":    Arithmetic._multiply,
-        "Divide":      Arithmetic._divide,
-        "Mean":        Arithmetic._mean,
+        "Sum": function(numArray) { return Arithmetic._sum(numArray); },
+        "Sub": function(numArray) { return Arithmetic._sub(numArray); },
+        "Multiply": function(numArray) { return Arithmetic._multiply(numArray); },
+        "Divide": function(numArray) { return Arithmetic._divide(numArray); },
+        "Mean": function(numArray) { return Arithmetic._mean(numArray); },
     },
 
 };
