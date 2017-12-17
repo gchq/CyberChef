@@ -24,20 +24,6 @@ const Arithmetic = {
     OPERATIONS: ["Sum", "Sub", "Multiply", "Divide", "Mean", "Median", "Mode"],
 
     /**
-     * A mapping of operation names to their function.
-     * @constant
-     */
-     opMap: {
-         "Sub":         _sub,
-         "Sum":         _sum,
-         "Multiply":    _multiply,
-         "Divide":      _divide,
-         "Mean":        _mean,
-         "Median":      _median,
-         "Mode":        _mode,
-     },
-
-    /**
      *
      *
      * @param {string} input
@@ -48,13 +34,12 @@ const Arithmetic = {
         const delim = Utils.charRep[args[0] || "Space"];
         let splitNumbers = input.split(delim),
             numbers = [],
-            num,
-            retVal;
-        for (i = 0; i < splitNumbers.length; i++) {
-            if splitNumbers[i].indexOf(".") {
+            num;
+        for (let i = 0; i < splitNumbers.length; i++) {
+            if (splitNumbers[i].indexOf(".") >= 0) {
                 num = parseFloat(splitNumbers[i].trim());
             } else {
-                num = parseInt(splitNumbers[i].trim());
+                num = parseInt(splitNumbers[i].trim(), 10);
             }
             if (num !== "NaN") {
                 numbers.append(num);
@@ -68,19 +53,33 @@ const Arithmetic = {
     },
 
 
+    /**
+     * Adds an array of numbers and returns the value.
+     *
+     * @private
+     * @param {number[]} data
+     * @returns {number}
+     */
     _sum: function(data) {
         let total = 0;
-        for (i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             total += data[i];
         }
         return total;
     },
 
+    /**
+     * Subtracts an array of numbers and returns the value.
+     *
+     * @private
+     * @param {number[]} data
+     * @returns {number}
+     */
     _sub: function(data) {
         let total = 0;
         if (data.length > 1) {
             total = data[0];
-            for (i = 1; i < data.length; i++) {
+            for (let i = 1; i < data.length; i++) {
                 total -= data[i];
             }
         } else {
@@ -89,11 +88,18 @@ const Arithmetic = {
         return total;
     },
 
+    /**
+     * Multiplies an array of numbers and returns the value.
+     *
+     * @private
+     * @param {number[]} data
+     * @returns {number}
+     */
     _multiply: function(data) {
         let total = 0;
         if (data.length > 1) {
             total = data[0];
-            for (i = 1; i < data.length; i++) {
+            for (let i = 1; i < data.length; i++) {
                 total *= data[i];
             }
         } else {
@@ -102,12 +108,19 @@ const Arithmetic = {
         return total;
     },
 
+    /**
+     * Divides an array of numbers and returns the value.
+     *
+     * @private
+     * @param {number[]} data
+     * @returns {number}
+     */
     _divide: function(data) {
         let total = 0;
         if (data.length > 1) {
             total = data[0];
-            for (i = 1; i < data.length; i++) {
-                total /= data[i]
+            for (let i = 1; i < data.length; i++) {
+                total /= data[i];
             }
         } else {
             total = null;
@@ -115,6 +128,13 @@ const Arithmetic = {
         return total;
     },
 
+    /**
+     * Finds the mean of a number array and returns the value.
+     *
+     * @private
+     * @param {number[]} data
+     * @returns {number}
+     */
     _mean: function(data) {
         let total = 0;
         if (data.length > 1) {
@@ -123,6 +143,18 @@ const Arithmetic = {
             total = null;
         }
         return total;
+    },
+
+    /**
+     * A mapping of operation names to their function.
+     * @constant
+     */
+    opMap: {
+        "Sub":         Arithmetic._sum,
+        "Sum":         Arithmetic._sub,
+        "Multiply":    Arithmetic._multiply,
+        "Divide":      Arithmetic._divide,
+        "Mean":        Arithmetic._mean,
     },
 
 };

@@ -661,8 +661,8 @@ const OperationConfig = {
     "Arithmetic": {
         module: "Default",
         description: "Conducts mathamatical operations on a list of numbers",
-        inputType: "string"
-        outputType: "string"
+        inputType: "string",
+        outputType: "string",
         args: [
             {
                 name: "Delimiter",
@@ -670,7 +670,7 @@ const OperationConfig = {
                 value: Arithmetic.DELIM_OPTIONS
             },
             {
-                name: "Operation"
+                name: "Operation",
                 type: "option",
                 value: Arithmetic.OPERATIONS
             }
