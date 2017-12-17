@@ -1,3 +1,4 @@
+import Arithmetic from "../operations/Arithmetic.js";
 import Base from "../operations/Base.js";
 import Base58 from "../operations/Base58.js";
 import Base64 from "../operations/Base64.js";
@@ -654,6 +655,24 @@ const OperationConfig = {
                 name: "Delimiter",
                 type: "option",
                 value: ByteRepr.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Arithmetic": {
+        module: "Default",
+        description: "Conducts mathamatical operations on a list of numbers",
+        inputType: "string"
+        outputType: "string"
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            },
+            {
+                name: "Operation"
+                type: "option",
+                value: Arithmetic.OPERATIONS
             }
         ]
     },
