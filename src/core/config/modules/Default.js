@@ -156,15 +156,8 @@ OpModules.Default = {
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
-<<<<<<< HEAD
-<<<<<<< HEAD
     "PHP Deserialize":      PHP.runDeserialize,
-=======
     "Arithmetic":           Arithmetic.runOp,
->>>>>>> Added additional arithmetic source
-=======
-    "Arithmetic":           Arithmetic.runOp,
->>>>>>> 2b47631f4d9c1174ca841005f4cc04c12df7225c
 
 
     /*
