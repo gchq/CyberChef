@@ -57,7 +57,7 @@ const Arithmetic = {
         if (num === null) {
             return "";
         }
-        return num;
+        return num.toString();
     },
 
 
