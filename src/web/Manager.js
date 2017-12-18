@@ -135,13 +135,14 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addMultiEventListener("#input-text", "keyup paste", this.input.inputChange, this.input);
     document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
     document.getElementById("clr-io").addEventListener("click", this.input.clearIoClick.bind(this.input));
-    document.getElementById("input-text").addEventListener("dragover", this.input.inputDragover.bind(this.input));
-    document.getElementById("input-text").addEventListener("dragleave", this.input.inputDragleave.bind(this.input));
-    document.getElementById("input-text").addEventListener("drop", this.input.inputDrop.bind(this.input));
+    this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
+    this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
+    this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
     document.getElementById("input-text").addEventListener("scroll", this.highlighter.inputScroll.bind(this.highlighter));
     document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
     document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
     this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
+    document.querySelector("#input-file .close").addEventListener("click", this.input.closeFile.bind(this.input));
 
     // Output
     document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));

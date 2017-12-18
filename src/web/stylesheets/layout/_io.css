@@ -39,7 +39,7 @@
 }
 
 .textarea-wrapper textarea,
-.textarea-wrapper div {
+.textarea-wrapper>div {
     font-family: var(--fixed-width-font-family);
     font-size: var(--fixed-width-font-size);
     color: var(--fixed-width-font-colour);
@@ -75,6 +75,16 @@
     opacity: 0;
 
     transition: all 0.5s ease;
+}
+
+#input-file {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--title-background-colour);
+    display: none;
 }
 
 .io-btn-group {
