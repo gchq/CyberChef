@@ -176,7 +176,7 @@ const Entropy = {
         let distArray = new Array(256).fill(0),
             total = 0;
         for (let i = 0; i < input.length; i++) {
-            distArray[data[i]]++;
+            distArray[input[i]]++;
         }
         for (let i = 0; i < distArray.length; i++) {
             if (distArray[i] > 0) {
@@ -184,7 +184,7 @@ const Entropy = {
             }
         }
         return total;
-    }
+    },
 };
 
 export default Entropy;
