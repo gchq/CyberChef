@@ -163,6 +163,28 @@ const Entropy = {
         return -entropy;
     },
 
+
+    /**
+     * Calculates the Chi Square distribution of values.
+     *
+     * @private
+     * @param {byteArray} data
+     * @param {Object[]} args
+     * @returns {number}
+     */
+    calcChiSq: function(input, args) {
+        let distArray = new Array(256).fill(0),
+            total = 0;
+        for (let i = 0; i < input.length; i++) {
+            distArray[data[i]]++;
+        }
+        for (let i = 0; i < distArray.length; i++) {
+            if (distArray[i] > 0) {
+                total += Math.pow(distArray[i] - input.length / 256, 2) / (input.length / 256);
+            }
+        }
+        return total;
+    }
 };
 
 export default Entropy;
