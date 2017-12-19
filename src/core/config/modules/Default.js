@@ -143,7 +143,7 @@ OpModules.Default = {
     "Microsoft Script Decoder": MS.runDecodeScript,
     "Entropy":              Entropy.runEntropy,
     "Frequency distribution": Entropy.runFreqDistrib,
-    "Chi Square":           Entropy.calcChiSq,
+    "Chi Square":           Entropy.runChiSq,
     "Detect File Type":     FileType.runDetect,
     "Scan for Embedded Files": FileType.runScanForEmbeddedFiles,
     "Generate UUID":        UUID.runGenerateV4,
