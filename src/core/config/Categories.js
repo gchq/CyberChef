@@ -302,6 +302,7 @@ const Categories = [
         ops: [
             "Entropy",
             "Frequency distribution",
+            "Chi Square",
             "Detect File Type",
             "Scan for Embedded Files",
             "Disassemble x86",

@@ -3205,6 +3205,13 @@ const OperationConfig = {
             }
         ]
     },
+    "Chi Square": {
+        module: "Default",
+        description: "Calculates the Chi Square distribution of values.",
+        inputType: "byteArray",
+        outputType: "number",
+        args: []
+    },
     "Numberwang": {
         module: "Default",
         description: "Based on the popular gameshow by Mitchell and Webb.",
