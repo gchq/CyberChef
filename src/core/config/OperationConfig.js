@@ -137,13 +137,13 @@ const OperationConfig = {
     },
     "Jump": {
         module: "Default",
-        description: "Jump forwards or backwards over the specified number of operations.",
+        description: "Jump forwards or backwards to the specified Label",
         inputType: "string",
         outputType: "string",
         flowControl: true,
         args: [
             {
-                name: "The Label to Jump to",
+                name: "Label name",
                 type: "string",
                 value: ""
             },
@@ -156,7 +156,7 @@ const OperationConfig = {
     },
     "Conditional Jump": {
         module: "Default",
-        description: "Conditionally jump forwards or backwards over the specified number of operations based on whether the data matches the specified regular expression.",
+        description: "Conditionally jump forwards or backwards to the specified Label  based on whether the data matches the specified regular expression.",
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -167,13 +167,13 @@ const OperationConfig = {
                 value: ""
             },
             {
-                name: "Negative match (logical NOT)",
+                name: "Invert match",
                 type: "boolean",
                 value: false
             },
             {
-                name: "The Label to Jump to",
-                type: "string",
+                name: "Label name",
+                type: "shortString",
                 value: ""
             },
             {
@@ -185,14 +185,14 @@ const OperationConfig = {
     },
     "Label": {
         module: "Default",
-        description: "Provides a location for for conditional and fixed jumps to jump.",
+        description: "Provides a location for conditional and fixed jumps to redirect execution to.",
         inputType: "string",
         outputType: "string",
         flowControl: true,
         args: [
             {
-                name: "Jump Label",
-                type: "string",
+                name: "Name",
+                type: "shortString",
                 value: ""
             }
         ]

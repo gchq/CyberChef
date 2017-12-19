@@ -216,29 +216,6 @@ const FlowControl = {
         return state;
     },
 
-    /**
-     * Returns the index of a label.
-     *
-     * @param {Object} state
-     * @param {string} name
-     * @returns {number}
-     */
-
-    _getLabelIndex: function(name, state) {
-        let index = -1;
-        for (let o = 0; o < state.opList.length; o++) {
-            let operation = state.opList[o];
-            if (operation.getConfig().op === "Label"){
-                let ings = operation.getIngValues();
-                if (name === ings[0]) {
-                    index = o;
-                    break;
-                }
-            }
-        }
-        return index;
-    },
-
 
     /**
      * Return operation.
@@ -268,6 +245,26 @@ const FlowControl = {
         return state;
     },
 
+
+    /**
+     * Returns the index of a label.
+     *
+     * @param {Object} state
+     * @param {string} name
+     * @returns {number}
+     */
+    _getLabelIndex: function(name, state) {
+        for (let o = 0; o < state.opList.length; o++) {
+            let operation = state.opList[o];
+            if (operation.name === "Label"){
+                let ings = operation.getIngValues();
+                if (name === ings[0]) {
+                    return o;
+                }
+            }
+        }
+        return -1;
+    },
 };
 
 export default FlowControl;
