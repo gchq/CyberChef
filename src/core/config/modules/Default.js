@@ -39,6 +39,7 @@ import UUID from "../../operations/UUID.js";
  *  - Utils.js
  *    - CryptoJS
  *  - otp
+ *  - crypto
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
