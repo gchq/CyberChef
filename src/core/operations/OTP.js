@@ -1,6 +1,6 @@
 import otp from "otp";
 import Base64 from "./Base64.js";
-import Utils from "../Utils.js";
+
 
 /**
  * One-Time Password operations.
@@ -25,7 +25,7 @@ const OTP = {
             name: args[0],
             keySize: args[1],
             codeLength: args[2],
-            secret: Base64.runTo32(Utils.strToByteArray(input), []),
+            secret: Base64.runTo32(input, []),
             epoch: args[3],
             timeSlice: args[4]
         });
@@ -45,7 +45,7 @@ const OTP = {
             name: args[0],
             keySize: args[1],
             codeLength: args[2],
-            secret: Base64.runTo32(Utils.strToByteArray(input), []),
+            secret: Base64.runTo32(input, []),
         });
         const counter = args[3];
         return `URI: ${otpObj.hotpURL}\n\nPassword: ${otpObj.hotp(counter)}`;
