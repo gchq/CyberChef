@@ -1,5 +1,3 @@
-import Utils from "../Utils.js";
-
 /**
  * NetBIOS operations.
  *
@@ -29,13 +27,12 @@ const NetBIOS = {
             offset = args[0];
 
         if (input.length <= 16) {
+            let len = input.length;
+            input.length = 16;
+            input.fill(32, len, 16);
             for (let i = 0; i < input.length; i++) {
                 output.push((input[i] >> 4) + offset);
                 output.push((input[i] & 0xf) + offset);
-            }
-            for (let i = input.length; i < 16; i++) {
-                output.push(67);
-                output.push(65);
             }
         }
 
@@ -59,7 +56,7 @@ const NetBIOS = {
                 output.push((((input[i] & 0xff) - offset) << 4) |
                             (((input[i + 1] & 0xff) - offset) & 0xf));
             }
-            output = Utils.strToByteArray(Utils.byteArrayToChars(output).trim());
+            output = output.filter(x => x !== 32);
         }
 
         return output;
