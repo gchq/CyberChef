@@ -137,15 +137,15 @@ const OperationConfig = {
     },
     "Jump": {
         module: "Default",
-        description: "Jump forwards or backwards over the specified number of operations.",
+        description: "Jump forwards or backwards to the specified Label",
         inputType: "string",
         outputType: "string",
         flowControl: true,
         args: [
             {
-                name: "Number of operations to jump over",
-                type: "number",
-                value: 0
+                name: "Label name",
+                type: "string",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
@@ -156,7 +156,7 @@ const OperationConfig = {
     },
     "Conditional Jump": {
         module: "Default",
-        description: "Conditionally jump forwards or backwards over the specified number of operations based on whether the data matches the specified regular expression.",
+        description: "Conditionally jump forwards or backwards to the specified Label  based on whether the data matches the specified regular expression.",
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -167,14 +167,33 @@ const OperationConfig = {
                 value: ""
             },
             {
-                name: "Number of operations to jump over if match found",
-                type: "number",
-                value: 0
+                name: "Invert match",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Label name",
+                type: "shortString",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
                 type: "number",
                 value: 10
+            }
+        ]
+    },
+    "Label": {
+        module: "Default",
+        description: "Provides a location for conditional and fixed jumps to redirect execution to.",
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "Name",
+                type: "shortString",
+                value: ""
             }
         ]
     },

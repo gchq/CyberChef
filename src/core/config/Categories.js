@@ -320,6 +320,7 @@ const Categories = [
             "Fork",
             "Merge",
             "Register",
+            "Label",
             "Jump",
             "Conditional Jump",
             "Return",

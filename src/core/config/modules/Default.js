@@ -151,6 +151,7 @@ OpModules.Default = {
     "Fork":                 FlowControl.runFork,
     "Merge":                FlowControl.runMerge,
     "Register":             FlowControl.runRegister,
+    "Label":                FlowControl.runComment,
     "Jump":                 FlowControl.runJump,
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
