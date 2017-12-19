@@ -56,7 +56,10 @@ const NetBIOS = {
                 output.push((((input[i] & 0xff) - offset) << 4) |
                             (((input[i + 1] & 0xff) - offset) & 0xf));
             }
-            output = output.filter(x => x !== 32);
+            for (let i = output.length - 1; i > 0; i--) {
+                if (output[i] === 32) output.splice(i, i);
+                else break;
+            }
         }
 
         return output;
