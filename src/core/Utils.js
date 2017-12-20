@@ -859,7 +859,7 @@ const Utils = {
      *
      * fragment      = *( pchar / "/" / "?" )
      * query         = *( pchar / "/" / "?" )
-     * pchar         = unreserved / pct-encoded / sub-delims / ":" / "@" 
+     * pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
      * unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
      * pct-encoded   = "%" HEXDIG HEXDIG
      * sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
