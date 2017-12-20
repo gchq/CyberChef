@@ -16,7 +16,7 @@ const Numberwang = {
     run: function(input, args) {
         let output;
         if (!input) {
-            output =  "Let's play Wangernumb!";
+            output = "Let's play Wangernumb!";
         } else {
             const match = input.match(/(f0rty-s1x|shinty-six|filth-hundred and neeb|-?√?\d+(\.\d+)?i?([a-z]?)%?)/i);
             if (match) {

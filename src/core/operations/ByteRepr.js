@@ -186,7 +186,7 @@ const ByteRepr = {
         // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
         if (delim === "0x" || delim === "\\x") {
             pos[0].start += 2;
-            pos[0].end   += 2;
+            pos[0].end += 2;
         }
         return pos;
     },
