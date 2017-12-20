@@ -89,6 +89,7 @@
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "node-md6": "^0.1.0",
+    "nwmatcher": "^1.4.3",
     "otp": "^0.1.3",
     "sladex-blowfish": "^0.8.1",
     "sortablejs": "^1.7.0",
