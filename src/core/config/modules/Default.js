@@ -1,4 +1,5 @@
 import FlowControl from "../../FlowControl.js";
+import Arithmetic from "../../operations/Arithmetic.js";
 import Base from "../../operations/Base.js";
 import Base58 from "../../operations/Base58.js";
 import Base64 from "../../operations/Base64.js";
@@ -159,6 +160,13 @@ OpModules.Default = {
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
     "PHP Deserialize":      PHP.runDeserialize,
+    "Sum":                  Arithmetic.runSum,
+    "Subtract":             Arithmetic.runSub,
+    "Multiply":             Arithmetic.runMulti,
+    "Divide":               Arithmetic.runDiv,
+    "Mean":                 Arithmetic.runMean,
+    "Median":               Arithmetic.runMedian,
+    "Standard Deviation":   Arithmetic.runStdDev,
 
 
     /*
