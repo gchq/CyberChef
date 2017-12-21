@@ -1,5 +1,6 @@
 import Utils from "../Utils.js";
 
+
 /**
  * Math operations on numbers.
  *
@@ -15,7 +16,7 @@ const Arithmetic = {
      * @constant
      * @default
      */
-    DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF"],
+    DELIM_OPTIONS: ["Line feed", "Space", "Comma", "Semi-colon", "Colon", "CRLF"],
 
 
     /**
@@ -23,11 +24,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runSum: function(input, args) {
         const val = Arithmetic._sum(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
@@ -36,11 +37,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runSub: function(input, args) {
         let val = Arithmetic._sub(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
@@ -49,11 +50,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runMulti: function(input, args) {
         let val = Arithmetic._multi(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
@@ -62,11 +63,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runDiv: function(input, args) {
         let val = Arithmetic._div(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
@@ -75,11 +76,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runMean: function(input, args) {
         let val = Arithmetic._mean(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
@@ -88,11 +89,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runMedian: function(input, args) {
         let val = Arithmetic._median(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
@@ -101,17 +102,18 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
     runStdDev: function(input, args) {
         let val = Arithmetic._stdDev(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val.toString() : "";
+        return typeof(val) === "number" ? val : NaN;
     },
 
 
     /**
      * Converts a string array to a number array.
      *
+     * @private
      * @param {string[]} input
      * @param {string} delim
      * @returns {number[]}
@@ -121,6 +123,7 @@ const Arithmetic = {
         let splitNumbers = input.split(delim),
             numbers = [],
             num;
+
         for (let i = 0; i < splitNumbers.length; i++) {
             if (splitNumbers[i].indexOf(".") >= 0) {
                 num = parseFloat(splitNumbers[i].trim());
@@ -148,6 +151,7 @@ const Arithmetic = {
         }
     },
 
+
     /**
      * Subtracts an array of numbers and returns the value.
      *
@@ -160,6 +164,7 @@ const Arithmetic = {
             return data.reduce((acc, curr) => acc - curr);
         }
     },
+
 
     /**
      * Multiplies an array of numbers and returns the value.
@@ -174,6 +179,7 @@ const Arithmetic = {
         }
     },
 
+
     /**
      * Divides an array of numbers and returns the value.
      *
@@ -187,6 +193,7 @@ const Arithmetic = {
         }
     },
 
+
     /**
      * Computes mean of a number array and returns the value.
      *
@@ -199,6 +206,7 @@ const Arithmetic = {
             return Arithmetic._sum(data) / data.length;
         }
     },
+
 
     /**
      * Computes median of a number array and returns the value.
@@ -220,6 +228,7 @@ const Arithmetic = {
             return data[Math.floor(data.length / 2)];
         }
     },
+
 
     /**
      * Computes standard deviation of a number array and returns the value.

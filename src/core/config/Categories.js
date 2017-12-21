@@ -122,11 +122,6 @@ const Categories = [
             "AND",
             "ADD",
             "SUB",
-            "Bit shift left",
-            "Bit shift right",
-            "Rotate left",
-            "Rotate right",
-            "ROT13",
             "Sum",
             "Subtract",
             "Multiply",
@@ -134,6 +129,11 @@ const Categories = [
             "Mean",
             "Median",
             "Standard Deviation",
+            "Bit shift left",
+            "Bit shift right",
+            "Rotate left",
+            "Rotate right",
+            "ROT13",
         ]
     },
     {
