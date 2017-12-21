@@ -658,9 +658,9 @@ const OperationConfig = {
             }
         ]
     },
-    "Arithmetic": {
+    "Sum": {
         module: "Default",
-        description: "Conducts mathamatical operations on a list of numbers",
+        description: "Sums a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>18.5</code>",
         inputType: "string",
         outputType: "string",
         args: [
@@ -668,11 +668,84 @@ const OperationConfig = {
                 name: "Delimiter",
                 type: "option",
                 value: Arithmetic.DELIM_OPTIONS
-            },
+            }
+        ]
+    },
+    "Subtract": {
+        module: "Default",
+        description: "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
             {
-                name: "Operation",
+                name: "Delimiter",
                 type: "option",
-                value: Arithmetic.OPERATIONS
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Multiply": {
+        module: "Default",
+        description: "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Divide": {
+        module: "Default",
+        description: "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Mean": {
+        module: "Default",
+        description: "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Median": {
+        module: "Default",
+        description: "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Standard Deviation": {
+        module: "Default",
+        description: "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
             }
         ]
     },

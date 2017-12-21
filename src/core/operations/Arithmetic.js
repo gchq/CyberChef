@@ -17,72 +17,107 @@ const Arithmetic = {
      */
     DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF"],
 
-    /**
-     * @constant
-     * @default
-     */
-    OPERATIONS: [
-        "Sum",
-        "Sub",
-        "Multiply",
-        "Divide",
-        "Mean",
-        "Median",
-        "Standard Deviation"
-    ],
-
 
     /**
-     *
+     * Splits a string based on a delimiter and calculates the sum of numbers.
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {string}
      */
-    computeSum: function(input, args) {
+    runSum: function(input, args) {
         const val = Arithmetic._sum(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
-    computeSub: function(input, args) {
+    /**
+     * Splits a string based on a delimiter and subtracts all the numbers.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runSub: function(input, args) {
         let val = Arithmetic._sub(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
-    computeMulti: function(input, args) {
+    /**
+     * Splits a string based on a delimiter and multiplies the numbers.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runMulti: function(input, args) {
         let val = Arithmetic._multi(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
-    computeDiv: function(input, args) {
+    /**
+     * Splits a string based on a delimiter and divides the numbers.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runDiv: function(input, args) {
         let val = Arithmetic._div(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
-    computeMean: function(input, args) {
+    /**
+     * Splits a string based on a delimiter and computes the mean (average).
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runMean: function(input, args) {
         let val = Arithmetic._mean(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
-    computeMedian: function(input, args) {
+    /**
+     * Splits a string based on a delimiter and finds the median.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runMedian: function(input, args) {
         let val = Arithmetic._median(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
-    computeStdDev: function(input, args) {
+    /**
+     * splits a string based on a delimiter and computes the standard deviation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runStdDev: function(input, args) {
         let val = Arithmetic._stdDev(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === 'number' ? val.toString() : "";
+        return typeof(val) === "number" ? val.toString() : "";
     },
 
 
+    /**
+     * Converts a string array to a number array.
+     *
+     * @param {string[]} input
+     * @param {string} delim
+     * @returns {number[]}
+     */
     _createNumArray: function(input, delim) {
-        const delim = Utils.charRep[delim || "Space"];
+        delim = Utils.charRep[delim || "Space"];
         let splitNumbers = input.split(delim),
             numbers = [],
             num;
@@ -153,7 +188,7 @@ const Arithmetic = {
     },
 
     /**
-     * Finds the mean of a number array and returns the value.
+     * Computes mean of a number array and returns the value.
      *
      * @private
      * @param {number[]} data
@@ -166,7 +201,7 @@ const Arithmetic = {
     },
 
     /**
-     * Finds the median of a number array and returns the value.
+     * Computes median of a number array and returns the value.
      *
      * @private
      * @param {number[]} data
@@ -187,7 +222,7 @@ const Arithmetic = {
     },
 
     /**
-     * Finds the standard deviation of a number array and returns the value.
+     * Computes standard deviation of a number array and returns the value.
      *
      * @private
      * @param {number[]} data

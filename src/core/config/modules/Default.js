@@ -157,7 +157,13 @@ OpModules.Default = {
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
     "PHP Deserialize":      PHP.runDeserialize,
-    "Arithmetic":           Arithmetic.runOp,
+    "Sum":                  Arithmetic.runSum,
+    "Subtract":             Arithmetic.runSub,
+    "Multiply":             Arithmetic.runMulti,
+    "Divide":               Arithmetic.runDiv,
+    "Mean":                 Arithmetic.runMean,
+    "Median":               Arithmetic.runMedian,
+    "Standard Deviation":   Arithmetic.runStdDev,
 
 
     /*

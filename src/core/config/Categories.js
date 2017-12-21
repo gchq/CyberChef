@@ -128,7 +128,7 @@ const Categories = [
             "Rotate right",
             "ROT13",
             "Sum",
-            "Sub",
+            "Subtract",
             "Multiply",
             "Divide",
             "Mean",
@@ -166,7 +166,6 @@ const Categories = [
     {
         name: "Utils",
         ops: [
-            "Arithmetic",
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
