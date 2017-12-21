@@ -1,4 +1,5 @@
 import * as kbpgp from "kbpgp";
+import promisify from "es6-promisify";
 
 const ECC_SIZES = ["256", "384"];
 const RSA_SIZES = ["1024", "2048", "4096"];
@@ -116,41 +117,21 @@ const PGP = {
                 expire_in: 86400 * 365 * 2 // eslint-disable-line camelcase
             }],
         };
-
-        return new Promise((resolve, reject) => {
-            kbpgp.KeyManager.generate(keyGenerationOptions, (genErr, unsignedKey) => {
-                if (genErr) {
-                    return reject(`Error from kbpgp whilst generating key: ${genErr}`);
-                }
-
-                unsignedKey.sign({}, signErr => {
-                    let signedKey = unsignedKey;
-                    if (signErr) {
-                        return reject(`Error from kbpgp whilst signing the generated key: ${signErr}`);
-                    }
-
-                    let privateKeyExportOptions = {};
-                    if (password) privateKeyExportOptions.passphrase = password;
-
-                    signedKey.export_pgp_private(privateKeyExportOptions, (privateExportErr, privateKey) => {
-                        if (privateExportErr) {
-                            return reject(`Error from kbpgp whilst exporting the private part of the signed key: ${privateExportErr}`);
-                        }
-
-                        signedKey.export_pgp_public({}, (publicExportErr, publicKey) => {
-                            if (publicExportErr) {
-                                return reject(`Error from kbpgp whilst exporting the public part of the signed key: ${publicExportErr}`);
-                            }
-
-                            return resolve(privateKey + "\n" + publicKey);
-                        });
-                    });
-
-                });
-            });
+        return new Promise(async (resolve, reject) => {
+            try {
+                const unsignedKey = await promisify(kbpgp.KeyManager.generate)(keyGenerationOptions);
+                await promisify(unsignedKey.sign, unsignedKey)({});
+                let signedKey = unsignedKey;
+                let privateKeyExportOptions = {};
+                if (password) privateKeyExportOptions.passphrase = password;
+                const privateKey = await promisify(signedKey.export_pgp_private, signedKey)(privateKeyExportOptions);
+                const publicKey = await promisify(signedKey.export_pgp_public, signedKey)({});
+                resolve(privateKey + "\n" + publicKey);
+            } catch (err) {
+                reject(`Error from kbpgp whilst generating key pair: ${err}`);
+            }
         });
-    },
-
+    }
 };
 
 export default PGP;
