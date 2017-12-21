@@ -31,15 +31,58 @@ const Arithmetic = {
         "Standard Deviation"
     ],
 
+
     /**
      *
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {number}
      */
-    runOp: function(input, args) {
-        const delim = Utils.charRep[args[0] || "Space"];
+    computeSum: function(input, args) {
+        const val = Arithmetic._sum(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    computeSub: function(input, args) {
+        let val = Arithmetic._sub(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    computeMulti: function(input, args) {
+        let val = Arithmetic._multi(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    computeDiv: function(input, args) {
+        let val = Arithmetic._div(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    computeMean: function(input, args) {
+        let val = Arithmetic._mean(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    computeMedian: function(input, args) {
+        let val = Arithmetic._median(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    computeStdDev: function(input, args) {
+        let val = Arithmetic._stdDev(Arithmetic._createNumArray(input, args[0]));
+        return typeof(val) === 'number' ? val.toString() : "";
+    },
+
+
+    _createNumArray: function(input, delim) {
+        const delim = Utils.charRep[delim || "Space"];
         let splitNumbers = input.split(delim),
             numbers = [],
             num;
@@ -53,11 +96,7 @@ const Arithmetic = {
                 numbers.push(num);
             }
         }
-        num = Arithmetic.opMap[args[1] || "Sum"](numbers);
-        if (num === null) {
-            return "";
-        }
-        return num.toString();
+        return numbers;
     },
 
 
@@ -71,8 +110,6 @@ const Arithmetic = {
     _sum: function(data) {
         if (data.length > 0) {
             return data.reduce((acc, curr) => acc + curr);
-        } else {
-            return null;
         }
     },
 
@@ -86,8 +123,6 @@ const Arithmetic = {
     _sub: function(data) {
         if (data.length > 0) {
             return data.reduce((acc, curr) => acc - curr);
-        } else {
-            return null;
         }
     },
 
@@ -98,11 +133,9 @@ const Arithmetic = {
      * @param {number[]} data
      * @returns {number}
      */
-    _multiply: function(data) {
+    _multi: function(data) {
         if (data.length > 0) {
             return data.reduce((acc, curr) => acc * curr);
-        } else {
-            return null;
         }
     },
 
@@ -113,11 +146,9 @@ const Arithmetic = {
      * @param {number[]} data
      * @returns {number}
      */
-    _divide: function(data) {
+    _div: function(data) {
         if (data.length > 0) {
             return data.reduce((acc, curr) => acc / curr);
-        } else {
-            return null;
         }
     },
 
@@ -131,8 +162,6 @@ const Arithmetic = {
     _mean: function(data) {
         if (data.length > 0) {
             return Arithmetic._sum(data) / data.length;
-        } else {
-            return null;
         }
     },
 
@@ -172,38 +201,7 @@ const Arithmetic = {
                 devSum += (data[i] - avg) ** 2;
             }
             return Math.sqrt(devSum / data.length);
-        } else {
-            return null;
         }
-    },
-
-    /**
-     * A mapping of operation names to their function.
-     *
-     * @constant
-     */
-    opMap: {
-        "Sum": function(numArray) {
-            return Arithmetic._sum(numArray);
-        },
-        "Sub": function(numArray) {
-            return Arithmetic._sub(numArray);
-        },
-        "Multiply": function(numArray) {
-            return Arithmetic._multiply(numArray);
-        },
-        "Divide": function(numArray) {
-            return Arithmetic._divide(numArray);
-        },
-        "Mean": function(numArray) {
-            return Arithmetic._mean(numArray);
-        },
-        "Median": function(numArray) {
-            return Arithmetic._median(numArray);
-        },
-        "Standard Deviation": function (numArray) {
-            return Arithmetic._stdDev(numArray);
-        },
     },
 };
 

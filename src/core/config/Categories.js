@@ -113,7 +113,7 @@ const Categories = [
         ]
     },
     {
-        name: "Logical operations",
+        name: "Arithmetic / Logic",
         ops: [
             "XOR",
             "XOR Brute Force",
@@ -127,6 +127,13 @@ const Categories = [
             "Rotate left",
             "Rotate right",
             "ROT13",
+            "Sum",
+            "Sub",
+            "Multiply",
+            "Divide",
+            "Mean",
+            "Median",
+            "Standard Deviation",
         ]
     },
     {
