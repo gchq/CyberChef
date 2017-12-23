@@ -74,6 +74,7 @@
     "crypto-api": "^0.7.5",
     "crypto-js": "^3.1.9-1",
     "diff": "^3.3.1",
+    "es6-promisify": "^5.0.0",
     "escodegen": "^1.9.0",
     "esmangle": "^1.0.1",
     "esprima": "^4.0.0",

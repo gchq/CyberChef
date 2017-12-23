@@ -3848,6 +3848,7 @@ const OperationConfig = {
     },
     "Generate PGP Key Pair": {
         module: "PGP",
+        manualBake: true,
         description: "",
         inputType: "string",
         outputType: "string",
