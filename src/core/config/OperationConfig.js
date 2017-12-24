@@ -3880,6 +3880,34 @@ const OperationConfig = {
             },
         ]
     },
+    "PGP Encrypt": {
+        module: "PGP",
+        manualBake: true,
+        description: "",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt": {
+        module: "PGP",
+        manualBake: true,
+        description: "",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
 };
 
 

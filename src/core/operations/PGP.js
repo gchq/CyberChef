@@ -1,3 +1,4 @@
+/*eslint camelcase: ["error", {properties: "never"}]*/
 import * as kbpgp from "kbpgp";
 import promisify from "es6-promisify";
 
@@ -105,16 +106,16 @@ const PGP = {
             primary: {
                 nbits: keySize,
                 flags: flags,
-                expire_in: 0 // eslint-disable-line camelcase
+                expire_in: 0
             },
             subkeys: [{
                 nbits: PGP.getSubkeySize(keySize),
                 flags: kbpgp.const.openpgp.sign_data,
-                expire_in: 86400 * 365 * 8 // eslint-disable-line camelcase
+                expire_in: 86400 * 365 * 8
             }, {
                 nbits: PGP.getSubkeySize(keySize),
                 flags: kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
-                expire_in: 86400 * 365 * 2 // eslint-disable-line camelcase
+                expire_in: 86400 * 365 * 2
             }],
         };
         return new Promise(async (resolve, reject) => {
@@ -131,7 +132,66 @@ const PGP = {
                 reject(`Error from kbpgp whilst generating key pair: ${err}`);
             }
         });
-    }
+    },
+
+    async runEncrypt(input, args) {
+        let plaintextMessage = input,
+            plainPubKey      = args[0];
+
+        let key, encryptedMessage;
+
+        try {
+            key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
+                armored: plainPubKey,
+            });
+        } catch (err) {
+            console.error(err);
+            throw `Could not import public key: ${err}`;
+        }
+
+        try {
+            encryptedMessage = await promisify(kbpgp.box)({
+                msg:         plaintextMessage,
+                encrypt_for: key,
+            });
+        } catch (err) {
+            console.error(err);
+            throw `Could encrypt message to provided public key: ${err}`;
+        }
+
+        console.log(encryptedMessage);
+
+        return encryptedMessage;
+    },
+
+    async runDecrypt(input, args) {
+        let encryptedMessage = input,
+            plainPrivateKey  = args[0],
+            keyring          = new kbpgp.keyring.KeyRing();
+
+        let key, plaintextMessage;
+
+        try {
+            key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
+                armored: plainPrivateKey,
+            });
+        } catch (err) {
+            throw `Could not import private key: ${err}`;
+        }
+
+        keyring.add_key_manager(key);
+
+        try {
+            plaintextMessage = await promisify(kbpgp.unbox)({
+                armored: encryptedMessage,
+                keyfetch: keyring,
+            });
+        } catch (err) {
+            throw `Could decrypt message to provided private key: ${err}`;
+        }
+
+        return plaintextMessage;
+    },
 };
 
 export default PGP;
