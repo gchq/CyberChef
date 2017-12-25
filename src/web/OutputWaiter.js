@@ -282,4 +282,14 @@ OutputWaiter.prototype.setStatusMsg = function(msg) {
     el.textContent = msg;
 };
 
+
+/**
+ * Returns true if the output contains carriage returns
+ *
+ * @returns {boolean}
+ */
+OutputWaiter.prototype.containsCR = function() {
+    return this.app.dishStr.indexOf("\r") >= 0;
+};
+
 export default OutputWaiter;

@@ -402,7 +402,7 @@ HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
 
     // Check if there is a carriage return in the output dish as this will not
     // be displayed by the HTML textarea and will mess up highlighting offsets.
-    if (!this.app.dishStr || this.app.dishStr.indexOf("\r") >= 0) return false;
+    if (this.manager.output.containsCR()) return false;
 
     const startPlaceholder = "[startHighlight]";
     const startPlaceholderRegex = /\[startHighlight\]/g;

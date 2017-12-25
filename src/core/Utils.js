@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js";
+import utf8 from "utf8";
 
 
 /**
@@ -341,6 +341,32 @@ const Utils = {
 
 
     /**
+     * Coverts data of varying types to a byteArray.
+     * Accepts hex, Base64, UTF8 and Latin1 strings.
+     * 
+     * @param {string} str
+     * @param {string} type - One of "Hex", "Base64", "UTF8" or "Latin1"
+     * @returns {byteArray}
+     * 
+     * @example
+     * // returns []
+     */
+    convertToByteArray: function(str, type) {
+        switch (type.toLowerCase()) {
+            case "hex":
+                return Utils.fromHex(str);
+            case "base64":
+                return Utils.fromBase64(str, null, "byteArray");
+            case "utf8":
+                return Utils.strToUtf8ByteArray(str);
+            case "latin1":
+            default:
+                return Utils.strToByteArray(str);
+        }
+    },
+
+
+    /**
      * Converts a string to a byte array.
      * Treats the string as UTF-8 if any values are over 255.
      *
@@ -381,17 +407,17 @@ const Utils = {
      * Utils.strToUtf8ByteArray("你好");
      */
     strToUtf8ByteArray: function(str) {
-        let wordArray = CryptoJS.enc.Utf8.parse(str),
-            byteArray = Utils.wordArrayToByteArray(wordArray);
+        const utf8Str = utf8.encode(str);
 
-        if (str.length !== wordArray.sigBytes) {
+        if (str.length !== utf8Str.length) {
             if (ENVIRONMENT_IS_WORKER()) {
                 self.setOption("attemptHighlight", false);
             } else if (ENVIRONMENT_IS_WEB()) {
                 window.app.options.attemptHighlight = false;
             }
         }
-        return byteArray;
+
+        return Utils.strToByteArray(utf8Str);
     },
 
 
@@ -443,26 +469,21 @@ const Utils = {
      * Utils.byteArrayToUtf8([228,189,160,229,165,189]);
      */
     byteArrayToUtf8: function(byteArray) {
+        const str = Utils.byteArrayToChars(byteArray);
         try {
-            // Try to output data as UTF-8 string
-            const words = [];
-            for (let i = 0; i < byteArray.length; i++) {
-                words[i >>> 2] |= byteArray[i] << (24 - (i % 4) * 8);
-            }
-            let wordArray = new CryptoJS.lib.WordArray.init(words, byteArray.length),
-                str = CryptoJS.enc.Utf8.stringify(wordArray);
+            const utf8Str = utf8.decode(str);
 
-            if (str.length !== wordArray.sigBytes) {
+            if (str.length !== utf8Str.length) {
                 if (ENVIRONMENT_IS_WORKER()) {
                     self.setOption("attemptHighlight", false);
                 } else if (ENVIRONMENT_IS_WEB()) {
                     window.app.options.attemptHighlight = false;
                 }
             }
-            return str;
+            return utf8Str;
         } catch (err) {
             // If it fails, treat it as ANSI
-            return Utils.byteArrayToChars(byteArray);
+            return str;
         }
     },
 
@@ -487,30 +508,6 @@ const Utils = {
             str += String.fromCharCode(byteArray[i++]);
         }
         return str;
-    },
-
-
-    /**
-     * Converts a CryptoJS.lib.WordArray to a byteArray.
-     *
-     * @param {CryptoJS.lib.WordArray} wordArray
-     * @returns {byteArray}
-     *
-     * @example
-     * // returns [84, 101, 115, 116]
-     * Utils.wordArrayToByteArray(CryptoJS.enc.Hex.parse("54657374"));
-     */
-    wordArrayToByteArray: function(wordArray) {
-        if (wordArray.sigBytes <= 0) return [];
-
-        let words = wordArray.words,
-            byteArray = [];
-
-        for (let i = 0; i < wordArray.sigBytes; i++) {
-            byteArray.push((words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff);
-        }
-
-        return byteArray;
     },
 
 
@@ -1248,21 +1245,6 @@ const Utils = {
         "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
     },
 
-
-    /**
-     * A mapping of string formats to their classes in the CryptoJS library.
-     * @constant
-     */
-    format: {
-        "Hex":     CryptoJS.enc.Hex,
-        "Base64":  CryptoJS.enc.Base64,
-        "UTF8":    CryptoJS.enc.Utf8,
-        "UTF16":   CryptoJS.enc.Utf16,
-        "UTF16LE": CryptoJS.enc.Utf16LE,
-        "UTF16BE": CryptoJS.enc.Utf16BE,
-        "Latin1":  CryptoJS.enc.Latin1,
-    },
-
 };
 
 export default Utils;
@@ -1373,32 +1355,4 @@ Array.prototype.equals = function(other) {
  */
 String.prototype.count = function(chr) {
     return this.split(chr).length - 1;
-};
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Library overrides ///////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Override for the CryptoJS Hex encoding parser to remove whitespace before attempting to parse
- * the hex string.
- *
- * @param {string} hexStr
- * @returns {CryptoJS.lib.WordArray}
- */
-CryptoJS.enc.Hex.parse = function (hexStr) {
-    // Remove whitespace
-    hexStr = hexStr.replace(/\s/g, "");
-
-    // Shortcut
-    const hexStrLength = hexStr.length;
-
-    // Convert
-    const words = [];
-    for (let i = 0; i < hexStrLength; i += 2) {
-        words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
-    }
-
-    return new CryptoJS.lib.WordArray.init(words, hexStrLength / 2);
 };

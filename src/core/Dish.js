@@ -217,4 +217,28 @@ Dish.prototype.valid = function() {
     }
 };
 
+
+/**
+ * Determines how much space the Dish takes up.
+ * Numbers in JavaScript are 64-bit floating point, however for the purposes of the Dish,
+ * we measure how many bytes are taken up when the number is written as a string.
+ *
+ * @returns {number}
+*/
+Dish.prototype.size = function() {
+    switch (this.type) {
+        case Dish.BYTE_ARRAY:
+        case Dish.STRING:
+        case Dish.HTML:
+            return this.value.length;
+        case Dish.NUMBER:
+            return this.value.toString().length;
+        case Dish.ARRAY_BUFFER:
+            return this.value.byteLength;
+        default:
+            return -1;
+    }
+};
+
+
 export default Dish;

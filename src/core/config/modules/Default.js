@@ -37,7 +37,6 @@ import UUID from "../../operations/UUID.js";
  *
  * Libraries:
  *  - Utils.js
- *    - CryptoJS
  *  - otp
  *
  * @author n1474335 [n1474335@gmail.com]

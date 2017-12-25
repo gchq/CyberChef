@@ -67,7 +67,7 @@ const BitwiseOp = {
      * @constant
      * @default
      */
-    KEY_FORMAT: ["Hex", "Base64", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1"],
+    KEY_FORMAT: ["Hex", "Base64", "UTF8", "Latin1"],
 
     /**
      * XOR operation.
@@ -77,11 +77,9 @@ const BitwiseOp = {
      * @returns {byteArray}
      */
     runXor: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || ""),
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
             scheme = args[1],
             nullPreserving = args[2];
-
-        key = Utils.wordArrayToByteArray(key);
 
         return BitwiseOp._bitOp(input, key, BitwiseOp._xor, nullPreserving, scheme);
     },
@@ -200,8 +198,7 @@ const BitwiseOp = {
      * @returns {byteArray}
      */
     runAnd: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || "");
-        key = Utils.wordArrayToByteArray(key);
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
 
         return BitwiseOp._bitOp(input, key, BitwiseOp._and);
     },
@@ -215,8 +212,7 @@ const BitwiseOp = {
      * @returns {byteArray}
      */
     runOr: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || "");
-        key = Utils.wordArrayToByteArray(key);
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
 
         return BitwiseOp._bitOp(input, key, BitwiseOp._or);
     },
@@ -230,8 +226,7 @@ const BitwiseOp = {
      * @returns {byteArray}
      */
     runAdd: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || "");
-        key = Utils.wordArrayToByteArray(key);
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
 
         return BitwiseOp._bitOp(input, key, BitwiseOp._add);
     },
@@ -245,8 +240,7 @@ const BitwiseOp = {
      * @returns {byteArray}
      */
     runSub: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || "");
-        key = Utils.wordArrayToByteArray(key);
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
 
         return BitwiseOp._bitOp(input, key, BitwiseOp._sub);
     },
