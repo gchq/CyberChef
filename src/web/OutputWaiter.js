@@ -1,4 +1,5 @@
 import Utils from "../core/Utils.js";
+import FileSaver from "file-saver";
 
 
 /**
@@ -15,6 +16,8 @@ import Utils from "../core/Utils.js";
 const OutputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
+
+    this.file = null;
 };
 
 
@@ -42,6 +45,8 @@ OutputWaiter.prototype.set = function(data, type, duration) {
     const outputHighlighter = document.getElementById("output-highlighter");
     const inputHighlighter = document.getElementById("input-highlighter");
     let scriptElements, lines, length;
+
+    this.closeFile();
 
     switch (type) {
         case "html":
@@ -104,12 +109,33 @@ OutputWaiter.prototype.set = function(data, type, duration) {
  * @param {File} file
  */
 OutputWaiter.prototype.setFile = function(file) {
+    this.file = file;
+
     // Display file overlay in output area with details
     const fileOverlay = document.getElementById("output-file"),
         fileSize = document.getElementById("output-file-size");
 
     fileOverlay.style.display = "block";
     fileSize.textContent = file.size.toLocaleString() + " bytes";
+};
+
+
+/**
+ * Removes the output file and nulls its memory.
+ */
+OutputWaiter.prototype.closeFile = function() {
+    this.file = null;
+    document.getElementById("output-file").style.display = "none";
+};
+
+
+/**
+ * Handler for file download events.
+ */
+OutputWaiter.prototype.downloadFile = function() {
+    const filename = window.prompt("Please enter a filename:", "download.dat");
+
+    if (filename) FileSaver.saveAs(this.file, filename, false);
 };
 
 
@@ -169,24 +195,13 @@ OutputWaiter.prototype.adjustWidth = function() {
 
 /**
  * Handler for save click events.
- * Saves the current output to a file, downloaded as a URL octet stream.
+ * Saves the current output to a file.
  */
 OutputWaiter.prototype.saveClick = function() {
-    const data = Utils.toBase64(this.app.dishStr);
-    const filename = window.prompt("Please enter a filename:", "download.dat");
-
-    if (filename) {
-        const el = document.createElement("a");
-        el.setAttribute("href", "data:application/octet-stream;base64;charset=utf-8," + data);
-        el.setAttribute("download", filename);
-
-        // Firefox requires that the element be added to the DOM before it can be clicked
-        el.style.display = "none";
-        document.body.appendChild(el);
-
-        el.click();
-        el.remove();
+    if (!this.file) {
+        this.file = new File([new Uint8Array(Utils.strToCharcode(this.app.dishStr))], "");
     }
+    this.downloadFile();
 };
 
 
@@ -250,7 +265,7 @@ OutputWaiter.prototype.undoSwitchClick = function() {
 
 /**
  * Handler for file switch click events.
- * Moves a files data for items created via Utils.displayFilesAsHTML to the input.
+ * Moves a file's data for items created via Utils.displayFilesAsHTML to the input.
  */
 OutputWaiter.prototype.fileSwitch = function(e) {
     e.preventDefault();

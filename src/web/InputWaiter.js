@@ -239,6 +239,7 @@ InputWaiter.prototype.closeFile = function() {
  */
 InputWaiter.prototype.clearIoClick = function() {
     this.closeFile();
+    this.manager.output.closeFile();
     this.manager.highlighter.removeHighlights();
     document.getElementById("input-text").value = "";
     document.getElementById("output-text").value = "";
@@ -246,7 +247,6 @@ InputWaiter.prototype.clearIoClick = function() {
     document.getElementById("output-info").innerHTML = "";
     document.getElementById("input-selection-info").innerHTML = "";
     document.getElementById("output-selection-info").innerHTML = "";
-    document.getElementById("output-file").style.display = "none";
     window.dispatchEvent(this.manager.statechange);
 };
 
