@@ -3261,14 +3261,14 @@ const OperationConfig = {
     "Detect File Type": {
         module: "Default",
         description: "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: 7z, amr, avi, bmp, bz2, class, cr2, crx, dex, dmg, doc, elf, eot, epub, exe, flac, flv, gif, gz, ico, iso, jpg, jxr, m4a, m4v, mid, mkv, mov, mp3, mp4, mpg, ogg, otf, pdf, png, ppt, ps, psd, rar, rtf, sqlite, swf, tar, tar.z, tif, ttf, utf8, vmdk, wav, webm, webp, wmv, woff, woff2, xls, xz, zip.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "Scan for Embedded Files": {
         module: "Default",
         description: "Scans the data for potential embedded files by looking for magic bytes at all offsets. This operation is prone to false positives.<br><br>WARNING: Files over about 100KB in size will take a VERY long time to process.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
