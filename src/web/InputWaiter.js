@@ -79,13 +79,13 @@ InputWaiter.prototype.setFile = function(file) {
         fileName = document.getElementById("input-file-name"),
         fileSize = document.getElementById("input-file-size"),
         fileType = document.getElementById("input-file-type"),
-        fileUploaded = document.getElementById("input-file-uploaded");
+        fileLoaded = document.getElementById("input-file-loaded");
 
     fileOverlay.style.display = "block";
     fileName.textContent = file.name;
     fileSize.textContent = file.size.toLocaleString() + " bytes";
     fileType.textContent = file.type;
-    fileUploaded.textContent = "0%";
+    fileLoaded.textContent = "0%";
 };
 
 
@@ -210,8 +210,8 @@ InputWaiter.prototype.inputDrop = function(e) {
 InputWaiter.prototype.handleLoaderMessage = function(e) {
     const r = e.data;
     if (r.hasOwnProperty("progress")) {
-        const fileUploaded = document.getElementById("input-file-uploaded");
-        fileUploaded.textContent = r.progress + "%";
+        const fileLoaded = document.getElementById("input-file-loaded");
+        fileLoaded.textContent = r.progress + "%";
     }
 
     if (r.hasOwnProperty("fileBuffer")) {
@@ -246,6 +246,7 @@ InputWaiter.prototype.clearIoClick = function() {
     document.getElementById("output-info").innerHTML = "";
     document.getElementById("input-selection-info").innerHTML = "";
     document.getElementById("output-selection-info").innerHTML = "";
+    document.getElementById("output-file").style.display = "none";
     window.dispatchEvent(this.manager.statechange);
 };
 

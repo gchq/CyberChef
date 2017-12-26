@@ -111,7 +111,19 @@ WorkerWaiter.prototype.bakingComplete = function(response) {
         this.app.handleError(response.error);
     }
 
-    this.app.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
+    switch (response.type) {
+        case "html":
+            this.app.dishStr = Utils.stripHtmlTags(response.result, true);
+            break;
+        case "ArrayBuffer":
+            this.app.dishStr = "";
+            break;
+        case "string":
+        default:
+            this.app.dishStr = response.result;
+            break;
+    }
+
     this.app.progress = response.progress;
     this.manager.recipe.updateBreakpointIndicator(response.progress);
     this.manager.output.set(response.result, response.type, response.duration);

@@ -31,47 +31,85 @@ OutputWaiter.prototype.get = function() {
 /**
  * Sets the output in the output textarea.
  *
- * @param {string} dataStr - The output string/HTML
+ * @param {string|ArrayBuffer} data - The output string/HTML/ArrayBuffer
  * @param {string} type - The data type of the output
  * @param {number} duration - The length of time (ms) it took to generate the output
  */
-OutputWaiter.prototype.set = function(dataStr, type, duration) {
+OutputWaiter.prototype.set = function(data, type, duration) {
     const outputText = document.getElementById("output-text");
     const outputHtml = document.getElementById("output-html");
+    const outputFile = document.getElementById("output-file");
     const outputHighlighter = document.getElementById("output-highlighter");
     const inputHighlighter = document.getElementById("input-highlighter");
+    let scriptElements, lines, length;
 
-    if (type === "html") {
-        outputText.style.display = "none";
-        outputHtml.style.display = "block";
-        outputHighlighter.display = "none";
-        inputHighlighter.display = "none";
+    switch (type) {
+        case "html":
+            outputText.style.display = "none";
+            outputHtml.style.display = "block";
+            outputFile.style.display = "none";
+            outputHighlighter.display = "none";
+            inputHighlighter.display = "none";
 
-        outputText.value = "";
-        outputHtml.innerHTML = dataStr;
+            outputText.value = "";
+            outputHtml.innerHTML = data;
+            length = data.length;
 
-        // Execute script sections
-        const scriptElements = outputHtml.querySelectorAll("script");
-        for (let i = 0; i < scriptElements.length; i++) {
-            try {
-                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-            } catch (err) {
-                console.error(err);
+            // Execute script sections
+            scriptElements = outputHtml.querySelectorAll("script");
+            for (let i = 0; i < scriptElements.length; i++) {
+                try {
+                    eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+                } catch (err) {
+                    console.error(err);
+                }
             }
-        }
-    } else {
-        outputText.style.display = "block";
-        outputHtml.style.display = "none";
-        outputHighlighter.display = "block";
-        inputHighlighter.display = "block";
+            break;
+        case "ArrayBuffer":
+            outputText.style.display = "block";
+            outputHtml.style.display = "none";
+            outputHighlighter.display = "none";
+            inputHighlighter.display = "none";
 
-        outputText.value = Utils.printable(dataStr, true);
-        outputHtml.innerHTML = "";
+            outputText.value = "";
+            outputHtml.innerHTML = "";
+            length = data.byteLength;
+
+            this.setFile(new File([data], "output.dat"));
+            break;
+        case "string":
+        default:
+            outputText.style.display = "block";
+            outputHtml.style.display = "none";
+            outputFile.style.display = "none";
+            outputHighlighter.display = "block";
+            inputHighlighter.display = "block";
+
+            outputText.value = Utils.printable(data, true);
+            outputHtml.innerHTML = "";
+
+            lines = data.count("\n") + 1;
+            length = data.length;
+            break;
     }
 
     this.manager.highlighter.removeHighlights();
-    const lines = dataStr.count("\n") + 1;
-    this.setOutputInfo(dataStr.length, lines, duration);
+    this.setOutputInfo(length, lines, duration);
+};
+
+
+/**
+ * Shows file details.
+ *
+ * @param {File} file
+ */
+OutputWaiter.prototype.setFile = function(file) {
+    // Display file overlay in output area with details
+    const fileOverlay = document.getElementById("output-file"),
+        fileSize = document.getElementById("output-file-size");
+
+    fileOverlay.style.display = "block";
+    fileSize.textContent = file.size.toLocaleString() + " bytes";
 };
 
 
@@ -85,6 +123,8 @@ OutputWaiter.prototype.set = function(dataStr, type, duration) {
 OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
     let width = length.toString().length;
     width = width < 4 ? 4 : width;
+
+    lines = typeof lines === "number" ? lines : "";
 
     const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
     const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");

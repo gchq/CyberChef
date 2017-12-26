@@ -77,7 +77,8 @@
     transition: all 0.5s ease;
 }
 
-#input-file {
+#input-file,
+#output-file {
     position: absolute;
     left: 0;
     top: 0;

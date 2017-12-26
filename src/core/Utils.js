@@ -349,7 +349,14 @@ const Utils = {
      * @returns {byteArray}
      * 
      * @example
-     * // returns []
+     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
+     * Utils.convertToByteArray("Привет", "utf8");
+     * 
+     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
+     * Utils.convertToByteArray("d097d0b4d180d0b0d0b2d181d182d0b2d183d0b9d182d0b5", "hex");
+     * 
+     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
+     * Utils.convertToByteArray("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
      */
     convertToByteArray: function(str, type) {
         switch (type.toLowerCase()) {
@@ -508,6 +515,22 @@ const Utils = {
             str += String.fromCharCode(byteArray[i++]);
         }
         return str;
+    },
+
+
+    /**
+     * Converts an ArrayBuffer to a string.
+     * 
+     * @param {ArrayBuffer} arrayBuffer
+     * @returns {string}
+     * 
+     * @example
+     * // returns "hello"
+     * Utils.arrayBufferToStr(Uint8Array.from([104,101,108,108,111]).buffer);
+     */
+    arrayBufferToStr: function(arrayBuffer) {
+        const byteArray = Array.prototype.slice.call(new Uint8Array(arrayBuffer));
+        return Utils.byteArrayToUtf8(byteArray);
     },
 
 

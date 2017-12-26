@@ -190,7 +190,7 @@
                                             Name: <span id="input-file-name"></span><br>
                                             Size: <span id="input-file-size"></span><br>
                                             Type: <span id="input-file-type"></span><br>
-                                            Uploaded: <span id="input-file-uploaded"></span>
+                                            Loaded: <span id="input-file-loaded"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -216,6 +216,19 @@
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
                             <textarea id="output-text" readonly="readonly"></textarea>
+                            <div id="output-file">
+                                <div style="position: relative; height: 100%;">
+                                    <div class="card">
+                                        <img aria-hidden="true" src="<%- require('../static/images/cyberchef-256x256.png') %>" alt="File icon"/>
+                                        <div class="card-body">
+                                            Size: <span id="output-file-size"></span><br>
+                                            Download<br>
+                                            Display in output<br>
+                                            Options for how much to display
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="output-loader">
                                 <div class="loader"></div>
                                 <div class="loading-msg"></div>
