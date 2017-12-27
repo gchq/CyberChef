@@ -310,4 +310,26 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "CSS selector",
+        input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
+        expectedOutput: '<p class="a">hello</p>\n<p class="a">again</p>',
+        recipeConfig: [
+            {
+                "op": "CSS selector",
+                "args": ["#test p.a", "\\n"]
+            }
+        ]
+    },
+    {
+        name: "XPath expression",
+        input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
+        expectedOutput: '<p class="a">hello</p>\n<p class="a">again</p>',
+        recipeConfig: [
+            {
+                "op": "XPath expression",
+                "args": ["/div/p[@class=\"a\"]", "\\n"]
+            }
+        ]
+    }
 ]);

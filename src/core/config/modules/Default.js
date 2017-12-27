@@ -1,4 +1,5 @@
 import FlowControl from "../../FlowControl.js";
+import Arithmetic from "../../operations/Arithmetic.js";
 import Base from "../../operations/Base.js";
 import Base58 from "../../operations/Base58.js";
 import Base64 from "../../operations/Base64.js";
@@ -38,6 +39,7 @@ import UUID from "../../operations/UUID.js";
  * Libraries:
  *  - Utils.js
  *  - otp
+ *  - crypto
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -141,6 +143,7 @@ OpModules.Default = {
     "Microsoft Script Decoder": MS.runDecodeScript,
     "Entropy":              Entropy.runEntropy,
     "Frequency distribution": Entropy.runFreqDistrib,
+    "Chi Square":           Entropy.runChiSq,
     "Detect File Type":     FileType.runDetect,
     "Scan for Embedded Files": FileType.runScanForEmbeddedFiles,
     "Generate UUID":        UUID.runGenerateV4,
@@ -150,11 +153,19 @@ OpModules.Default = {
     "Fork":                 FlowControl.runFork,
     "Merge":                FlowControl.runMerge,
     "Register":             FlowControl.runRegister,
+    "Label":                FlowControl.runComment,
     "Jump":                 FlowControl.runJump,
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
     "PHP Deserialize":      PHP.runDeserialize,
+    "Sum":                  Arithmetic.runSum,
+    "Subtract":             Arithmetic.runSub,
+    "Multiply":             Arithmetic.runMulti,
+    "Divide":               Arithmetic.runDiv,
+    "Mean":                 Arithmetic.runMean,
+    "Median":               Arithmetic.runMedian,
+    "Standard Deviation":   Arithmetic.runStdDev,
 
 
     /*

@@ -113,7 +113,7 @@ const Categories = [
         ]
     },
     {
-        name: "Logical operations",
+        name: "Arithmetic / Logic",
         ops: [
             "XOR",
             "XOR Brute Force",
@@ -122,6 +122,13 @@ const Categories = [
             "AND",
             "ADD",
             "SUB",
+            "Sum",
+            "Subtract",
+            "Multiply",
+            "Divide",
+            "Mean",
+            "Median",
+            "Standard Deviation",
             "Bit shift left",
             "Bit shift right",
             "Rotate left",
@@ -302,6 +309,7 @@ const Categories = [
         ops: [
             "Entropy",
             "Frequency distribution",
+            "Chi Square",
             "Detect File Type",
             "Scan for Embedded Files",
             "Disassemble x86",
@@ -320,6 +328,7 @@ const Categories = [
             "Fork",
             "Merge",
             "Register",
+            "Label",
             "Jump",
             "Conditional Jump",
             "Return",

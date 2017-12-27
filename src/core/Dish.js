@@ -13,7 +13,7 @@ import Utils from "./Utils.js";
  */
 const Dish = function(value, type) {
     this.value = value || typeof value === "string" ? value : null;
-    this.type  = type || Dish.BYTE_ARRAY;
+    this.type = type || Dish.BYTE_ARRAY;
 };
 
 
@@ -112,7 +112,7 @@ Dish.enumLookup = function(typeEnum) {
  */
 Dish.prototype.set = function(value, type) {
     this.value = value;
-    this.type  = type;
+    this.type = type;
 
     if (!this.valid()) {
         const sample = Utils.truncate(JSON.stringify(this.value), 13);
