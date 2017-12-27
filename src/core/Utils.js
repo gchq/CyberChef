@@ -341,6 +341,68 @@ const Utils = {
 
 
     /**
+     * Translates a hex string into an array of bytes.
+     *
+     * @param {string} hexStr
+     * @returns {byteArray}
+     *
+     * @example
+     * // returns [0xfe, 0x09, 0xa7]
+     * Utils.hexToByteArray("fe09a7");
+     */
+    hexToByteArray: function(hexStr) {
+        // TODO: Handle errors i.e. input string is not hex
+        if (!hexStr) return [];
+        hexStr = hexStr.replace(/\s+/g, "");
+        const byteArray = [];
+        for (let i = 0; i < hexStr.length; i += 2) {
+            byteArray.push(parseInt(hexStr.substr(i, 2), 16));
+        }
+        return byteArray;
+    },
+
+
+    /**
+     * Translates an array of bytes to a hex string.
+     *
+     * @param {byteArray} byteArray
+     * @returns {string}
+     *
+     * @example
+     * // returns "fe09a7"
+     * Utils.byteArrayToHex([0xfe, 0x09, 0xa7]);
+     */
+    byteArrayToHex: function(byteArray) {
+        if (!byteArray) return "";
+        let hexStr = "";
+        for (let i = 0; i < byteArray.length; i++) {
+            hexStr += Utils.hex(byteArray[i]) + " ";
+        }
+        return hexStr.slice(0, hexStr.length-1);
+    },
+
+
+    /**
+     * Translates an array of bytes to a hex string.
+     *
+     * @param {byteArray} byteArray
+     * @returns {string}
+     *
+     * @example
+     * // returns "fe09a7"
+     * Utils.byteArrayToHex([0xfe, 0x09, 0xa7]);
+     */
+    byteArrayToHexNoSpace: function(byteArray) {
+        if (!byteArray) return "";
+        let hexStr = "";
+        for (let i = 0; i < byteArray.length; i++) {
+            hexStr += Utils.hex(byteArray[i]);
+        }
+        return hexStr.slice(0, hexStr.length-1);
+    },
+
+
+    /**
      * Converts a string to a byte array.
      * Treats the string as UTF-8 if any values are over 255.
      *

@@ -53,6 +53,8 @@ OpModules.Default = {
     "From Hexdump":         Hexdump.runFrom,
     "To Hex":               ByteRepr.runToHex,
     "From Hex":             ByteRepr.runFromHex,
+    "From 0x[Hex]":         ByteRepr.runFrom0xHex,
+    "From Char(Hex)":       ByteRepr.runFromCharHex,
     "To Octal":             ByteRepr.runToOct,
     "From Octal":           ByteRepr.runFromOct,
     "To Charcode":          ByteRepr.runToCharcode,

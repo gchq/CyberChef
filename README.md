@@ -6,7 +6,30 @@
 ![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=blue)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
 [![Gitter](https://badges.gitter.im/gchq/CyberChef.svg)](https://gitter.im/gchq/CyberChef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+This is a fork of original CyberChef by GCHQ. This project has implemented my own operations for the daily SoC tasks. Please feel free to clone/test/share/contribute it.
 
+## Features
+
+- opeartion **nTcpdump**: tcpdump hexdump convert
+- operation **From 0x[Hex]**: e.g. <code>0x217e21</code> to <code>!~!</code>
+- operation **From char(hex)**: 
+	- e.g. <code>chr(33)</code> to <code>!</code>
+	- This operation supports char() and chr()
+	- Combining the usage of **From 0x[Hex]** and **From char(hex)** can decode <code>chr(0x3333)</code> to <code>!</code>
+- operation **HTTP gzip decrypt**: Decrypt gzip payload in HTTP
+
+## Todo
+
+- Operation SQL comment strip function
+- Adding more support to char(hex, hex)
+- Adding support of themes
+
+
+---
+
+## Original project info
+
+####*The Cyber Swiss Army Knife*
 
 #### *The Cyber Swiss Army Knife*
 
