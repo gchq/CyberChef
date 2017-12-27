@@ -58,13 +58,14 @@ InputWaiter.prototype.get = function() {
  * @fires Manager#statechange
  */
 InputWaiter.prototype.set = function(input) {
+    const inputText = document.getElementById("input-text");
     if (input instanceof File) {
         this.setFile(input);
-        input = "";
+        inputText.value = "";
+    } else {
+        inputText.value = input;
+        window.dispatchEvent(this.manager.statechange);
     }
-
-    document.getElementById("input-text").value = input;
-    window.dispatchEvent(this.manager.statechange);
 };
 
 
