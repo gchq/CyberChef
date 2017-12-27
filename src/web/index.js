@@ -38,15 +38,16 @@ function main() {
     ];
 
     const defaultOptions = {
-        updateUrl:         true,
-        showHighlighter:   true,
-        treatAsUtf8:       true,
-        wordWrap:          true,
-        showErrors:        true,
-        errorTimeout:      4000,
-        attemptHighlight:  true,
-        theme:             "classic",
-        useMetaKey:        false
+        updateUrl:           true,
+        showHighlighter:     true,
+        treatAsUtf8:         true,
+        wordWrap:            true,
+        showErrors:          true,
+        errorTimeout:        4000,
+        attemptHighlight:    true,
+        theme:               "classic",
+        useMetaKey:          false,
+        outputFileThreshold: 1024
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

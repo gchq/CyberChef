@@ -78,8 +78,9 @@ Chef.prototype.bake = async function(input, recipeConfig, options, progress, ste
 
     // Depending on the size of the output, we may send it back as a string or an ArrayBuffer.
     // This can prevent unnecessary casting as an ArrayBuffer can be easily downloaded as a file.
-    // 1048576 bytes = 1 MiB
-    const returnType = this.dish.size() > 1048576 ? Dish.ARRAY_BUFFER : Dish.STRING;
+    // The threshold is specified in KiB.
+    const threshold = (options.outputFileThreshold || 1024) * 1024;
+    const returnType = this.dish.size() > threshold ? Dish.ARRAY_BUFFER : Dish.STRING;
 
     return {
         result: this.dish.type === Dish.HTML ?
