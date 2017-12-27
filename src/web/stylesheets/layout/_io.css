@@ -111,6 +111,8 @@
     font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
+    display: flex;
+    align-items: center;
 }
 
 #input-info {

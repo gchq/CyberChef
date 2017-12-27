@@ -63,8 +63,9 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
             outputText.value = "";
             outputHtml.innerHTML = data;
-            length = data.length;
             this.dishStr = Utils.stripHtmlTags(data, true);
+            length = data.length;
+            lines = this.dishStr.count("\n") + 1;
 
             // Execute script sections
             scriptElements = outputHtml.querySelectorAll("script");
@@ -84,8 +85,8 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
             outputText.value = "";
             outputHtml.innerHTML = "";
-            length = data.byteLength;
             this.dishStr = "";
+            length = data.byteLength;
 
             this.setFile(data);
             break;
@@ -177,6 +178,7 @@ OutputWaiter.prototype.showFileOverlayClick = function(e) {
 
     outputFile.style.display = "block";
     showFileOverlay.style.display = "none";
+    this.setOutputInfo(this.dishBuffer.byteLength, null, 0);
 };
 
 
@@ -191,15 +193,17 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
     let width = length.toString().length;
     width = width < 4 ? 4 : width;
 
-    lines = typeof lines === "number" ? lines : "";
-
     const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const timeStr   = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
+    const timeStr = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
 
-    document.getElementById("output-info").innerHTML = "time: " + timeStr +
-        "<br>length: " + lengthStr +
-        "<br>lines: " + linesStr;
+    let msg = "time: " + timeStr + "<br>length: " + lengthStr;
+
+    if (typeof lines === "number") {
+        const linesStr = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+        msg += "<br>lines: " + linesStr;
+    }
+
+    document.getElementById("output-info").innerHTML = msg;
     document.getElementById("input-selection-info").innerHTML = "";
     document.getElementById("output-selection-info").innerHTML = "";
 };
