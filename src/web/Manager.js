@@ -142,7 +142,7 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
     document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
     this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
-    document.querySelector("#input-file .close").addEventListener("click", this.input.closeFile.bind(this.input));
+    document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
 
     // Output
     document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
@@ -159,6 +159,8 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
     this.addDynamicListener(".file-switch", "click", this.output.fileSwitch, this.output);
     this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
+    this.addDynamicListener("#output-file-slice", "click", this.output.displayFile, this.output);
+    document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
 
     // Options
     document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));

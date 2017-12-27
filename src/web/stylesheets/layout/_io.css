@@ -88,6 +88,14 @@
     display: none;
 }
 
+#show-file-overlay {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    display: none;
+}
+
 .io-btn-group {
     float: right;
     margin-top: -4px;

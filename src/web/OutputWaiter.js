@@ -17,7 +17,7 @@ const OutputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
 
-    this.file = null;
+    this.dishBuffer = null;
 };
 
 
@@ -37,8 +37,9 @@ OutputWaiter.prototype.get = function() {
  * @param {string|ArrayBuffer} data - The output string/HTML/ArrayBuffer
  * @param {string} type - The data type of the output
  * @param {number} duration - The length of time (ms) it took to generate the output
+ * @param {boolean} [preserveBuffer=false] - Whether to preserve the dishBuffer
  */
-OutputWaiter.prototype.set = function(data, type, duration) {
+OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
     const outputText = document.getElementById("output-text");
     const outputHtml = document.getElementById("output-html");
     const outputFile = document.getElementById("output-file");
@@ -46,7 +47,7 @@ OutputWaiter.prototype.set = function(data, type, duration) {
     const inputHighlighter = document.getElementById("input-highlighter");
     let scriptElements, lines, length;
 
-    this.closeFile();
+    if (!preserveBuffer) this.closeFile();
 
     switch (type) {
         case "html":
@@ -80,7 +81,7 @@ OutputWaiter.prototype.set = function(data, type, duration) {
             outputHtml.innerHTML = "";
             length = data.byteLength;
 
-            this.setFile(new File([data], "output.dat"));
+            this.setFile(data);
             break;
         case "string":
         default:
@@ -106,10 +107,11 @@ OutputWaiter.prototype.set = function(data, type, duration) {
 /**
  * Shows file details.
  *
- * @param {File} file
+ * @param {ArrayBuffer} buf
  */
-OutputWaiter.prototype.setFile = function(file) {
-    this.file = file;
+OutputWaiter.prototype.setFile = function(buf) {
+    this.dishBuffer = buf;
+    const file = new File([buf], "output.dat");
 
     // Display file overlay in output area with details
     const fileOverlay = document.getElementById("output-file"),
@@ -124,7 +126,7 @@ OutputWaiter.prototype.setFile = function(file) {
  * Removes the output file and nulls its memory.
  */
 OutputWaiter.prototype.closeFile = function() {
-    this.file = null;
+    this.dishBuffer = null;
     document.getElementById("output-file").style.display = "none";
 };
 
@@ -134,8 +136,40 @@ OutputWaiter.prototype.closeFile = function() {
  */
 OutputWaiter.prototype.downloadFile = function() {
     const filename = window.prompt("Please enter a filename:", "download.dat");
+    const file = new File([this.dishBuffer], filename);
 
-    if (filename) FileSaver.saveAs(this.file, filename, false);
+    if (filename) FileSaver.saveAs(file, filename, false);
+};
+
+
+/**
+ * Handler for file display events.
+ */
+OutputWaiter.prototype.displayFile = function() {
+    const startTime = new Date().getTime(),
+        showFileOverlay = document.getElementById("show-file-overlay"),
+        sliceFromEl = document.getElementById("output-file-slice-from"),
+        sliceToEl = document.getElementById("output-file-slice-to"),
+        sliceFrom = parseInt(sliceFromEl.value, 10),
+        sliceTo = parseInt(sliceToEl.value, 10),
+        str = Utils.arrayBufferToStr(this.dishBuffer.slice(sliceFrom, sliceTo));
+
+    showFileOverlay.style.display = "block";
+    this.set(str, "string", new Date().getTime() - startTime, true);
+};
+
+
+/**
+ * Handler for show file overlay events.
+ * 
+ * @param {Event} e
+ */
+OutputWaiter.prototype.showFileOverlayClick = function(e) {
+    const outputFile = document.getElementById("output-file"),
+        showFileOverlay = e.target;
+
+    outputFile.style.display = "block";
+    showFileOverlay.style.display = "none";
 };
 
 
@@ -198,8 +232,8 @@ OutputWaiter.prototype.adjustWidth = function() {
  * Saves the current output to a file.
  */
 OutputWaiter.prototype.saveClick = function() {
-    if (!this.file) {
-        this.file = new File([new Uint8Array(Utils.strToCharcode(this.app.dishStr))], "");
+    if (!this.dishBuffer) {
+        this.dishBuffer = new Uint8Array(Utils.strToCharcode(this.app.dishStr)).buffer;
     }
     this.downloadFile();
 };
@@ -227,7 +261,7 @@ OutputWaiter.prototype.copyClick = function() {
     let success = false;
     try {
         textarea.select();
-        success = document.execCommand("copy");
+        success = textarea.value && document.execCommand("copy");
     } catch (err) {
         success = false;
     }

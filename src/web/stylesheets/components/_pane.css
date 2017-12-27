@@ -50,8 +50,10 @@
 
 .card>img {
     float: left;
-    width: 150px;
-    height: 150px;
+    width: 128px;
+    height: 128px;
+    margin-left: 10px;
+    margin-top: 11px;
 }
 
 .card-body .close {
@@ -68,4 +70,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: text;
+}
+
+.card-body>.btn {
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+.card input[type=number] {
+    padding-right: 6px;
+    padding-left: 6px;
 }
