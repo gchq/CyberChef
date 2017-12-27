@@ -135,10 +135,10 @@ OutputWaiter.prototype.closeFile = function() {
  * Handler for file download events.
  */
 OutputWaiter.prototype.downloadFile = function() {
-    const filename = window.prompt("Please enter a filename:", "download.dat");
-    const file = new File([this.dishBuffer], filename);
+    this.filename = window.prompt("Please enter a filename:", this.filename || "download.dat");
+    const file = new File([this.dishBuffer], this.filename);
 
-    if (filename) FileSaver.saveAs(file, filename, false);
+    if (this.filename) FileSaver.saveAs(file, this.filename, false);
 };
 
 
