@@ -18,6 +18,7 @@ const OutputWaiter = function(app, manager) {
     this.manager = manager;
 
     this.dishBuffer = null;
+    this.dishStr = null;
 };
 
 
@@ -47,7 +48,10 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
     const inputHighlighter = document.getElementById("input-highlighter");
     let scriptElements, lines, length;
 
-    if (!preserveBuffer) this.closeFile();
+    if (!preserveBuffer) {
+        this.closeFile();
+        document.getElementById("show-file-overlay").style.display = "none";
+    }
 
     switch (type) {
         case "html":
@@ -60,6 +64,7 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
             outputText.value = "";
             outputHtml.innerHTML = data;
             length = data.length;
+            this.dishStr = Utils.stripHtmlTags(data, true);
 
             // Execute script sections
             scriptElements = outputHtml.querySelectorAll("script");
@@ -80,6 +85,7 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
             outputText.value = "";
             outputHtml.innerHTML = "";
             length = data.byteLength;
+            this.dishStr = "";
 
             this.setFile(data);
             break;
@@ -96,6 +102,7 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
             lines = data.count("\n") + 1;
             length = data.length;
+            this.dishStr = data;
             break;
     }
 
@@ -143,9 +150,9 @@ OutputWaiter.prototype.downloadFile = function() {
 
 
 /**
- * Handler for file display events.
+ * Handler for file slice display events.
  */
-OutputWaiter.prototype.displayFile = function() {
+OutputWaiter.prototype.displayFileSlice = function() {
     const startTime = new Date().getTime(),
         showFileOverlay = document.getElementById("show-file-overlay"),
         sliceFromEl = document.getElementById("output-file-slice-from"),
@@ -233,7 +240,7 @@ OutputWaiter.prototype.adjustWidth = function() {
  */
 OutputWaiter.prototype.saveClick = function() {
     if (!this.dishBuffer) {
-        this.dishBuffer = new Uint8Array(Utils.strToCharcode(this.app.dishStr)).buffer;
+        this.dishBuffer = new Uint8Array(Utils.strToCharcode(this.dishStr)).buffer;
     }
     this.downloadFile();
 };
@@ -254,14 +261,14 @@ OutputWaiter.prototype.copyClick = function() {
     textarea.style.height = 0;
     textarea.style.border = "none";
 
-    textarea.value = this.app.dishStr;
+    textarea.value = this.dishStr;
     document.body.appendChild(textarea);
 
     // Select and copy the contents of this textarea
     let success = false;
     try {
         textarea.select();
-        success = textarea.value && document.execCommand("copy");
+        success = this.dishStr && document.execCommand("copy");
     } catch (err) {
         success = false;
     }
@@ -284,7 +291,17 @@ OutputWaiter.prototype.copyClick = function() {
 OutputWaiter.prototype.switchClick = function() {
     this.switchOrigData = this.manager.input.get();
     document.getElementById("undo-switch").disabled = false;
-    this.app.setInput(this.app.dishStr);
+    if (this.dishBuffer) {
+        this.manager.input.setFile(new File([this.dishBuffer], "output.dat"));
+        this.manager.input.handleLoaderMessage({
+            data: {
+                progress: 100,
+                fileBuffer: this.dishBuffer
+            }
+        });
+    } else {
+        this.app.setInput(this.dishStr);
+    }
 };
 
 
@@ -378,7 +395,7 @@ OutputWaiter.prototype.setStatusMsg = function(msg) {
  * @returns {boolean}
  */
 OutputWaiter.prototype.containsCR = function() {
-    return this.app.dishStr.indexOf("\r") >= 0;
+    return this.dishStr.indexOf("\r") >= 0;
 };
 
 export default OutputWaiter;

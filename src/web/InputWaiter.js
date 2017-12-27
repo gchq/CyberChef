@@ -84,7 +84,7 @@ InputWaiter.prototype.setFile = function(file) {
     fileOverlay.style.display = "block";
     fileName.textContent = file.name;
     fileSize.textContent = file.size.toLocaleString() + " bytes";
-    fileType.textContent = file.type;
+    fileType.textContent = file.type || "unknown";
     fileLoaded.textContent = "0%";
 };
 
