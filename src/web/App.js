@@ -529,7 +529,7 @@ App.prototype.setCompileMessage = function() {
 
 /**
  * Determines whether the browser supports Local Storage and if it is accessible.
- * 
+ *
  * @returns {boolean}
  */
 App.prototype.isLocalStorageAvailable = function() {

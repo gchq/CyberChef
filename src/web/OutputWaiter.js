@@ -105,17 +105,20 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
 OutputWaiter.prototype.adjustWidth = function() {
     const output         = document.getElementById("output");
     const saveToFile     = document.getElementById("save-to-file");
+    const copyOutput     = document.getElementById("copy-output");
     const switchIO       = document.getElementById("switch");
     const undoSwitch     = document.getElementById("undo-switch");
     const maximiseOutput = document.getElementById("maximise-output");
 
     if (output.clientWidth < 680) {
         saveToFile.childNodes[1].nodeValue = "";
+        copyOutput.childNodes[1].nodeValue = "";
         switchIO.childNodes[1].nodeValue = "";
         undoSwitch.childNodes[1].nodeValue = "";
         maximiseOutput.childNodes[1].nodeValue = "";
     } else {
         saveToFile.childNodes[1].nodeValue = " Save to file";
+        copyOutput.childNodes[1].nodeValue = " Copy output";
         switchIO.childNodes[1].nodeValue = " Move output to input";
         undoSwitch.childNodes[1].nodeValue = " Undo";
         maximiseOutput.childNodes[1].nodeValue =
@@ -144,6 +147,44 @@ OutputWaiter.prototype.saveClick = function() {
         el.click();
         el.remove();
     }
+};
+
+
+/**
+ * Handler for copy click events.
+ * Copies the output to the clipboard.
+ */
+OutputWaiter.prototype.copyClick = function() {
+    // Create invisible textarea to populate with the raw dishStr (not the printable version that
+    // contains dots instead of the actual bytes)
+    const textarea = document.createElement("textarea");
+    textarea.style.position = "fixed";
+    textarea.style.top = 0;
+    textarea.style.left = 0;
+    textarea.style.width = 0;
+    textarea.style.height = 0;
+    textarea.style.border = "none";
+
+    textarea.value = this.app.dishStr;
+    document.body.appendChild(textarea);
+
+    // Select and copy the contents of this textarea
+    let success = false;
+    try {
+        textarea.select();
+        success = document.execCommand("copy");
+    } catch (err) {
+        success = false;
+    }
+
+    if (success) {
+        this.app.alert("Copied raw output successfully.", "success", 2000);
+    } else {
+        this.app.alert("Sorry, the output could not be copied.", "danger", 2000);
+    }
+
+    // Clean up
+    document.body.removeChild(textarea);
 };
 
 

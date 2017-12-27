@@ -8,6 +8,7 @@ import OutputWaiter from "./OutputWaiter.js";
 import OptionsWaiter from "./OptionsWaiter.js";
 import HighlighterWaiter from "./HighlighterWaiter.js";
 import SeasonalWaiter from "./SeasonalWaiter.js";
+import BindingsWaiter from "./BindingsWaiter.js";
 
 
 /**
@@ -60,6 +61,7 @@ const Manager = function(app) {
     this.options     = new OptionsWaiter(this.app);
     this.highlighter = new HighlighterWaiter(this.app, this);
     this.seasonal    = new SeasonalWaiter(this.app, this);
+    this.bindings    = new BindingsWaiter(this.app, this);
 
     // Object to store dynamic handlers to fire on elements that may not exist yet
     this.dynamicHandlers = {};
@@ -75,6 +77,7 @@ Manager.prototype.setup = function() {
     this.worker.registerChefWorker();
     this.recipe.initialiseOperationDragNDrop();
     this.controls.autoBakeChange();
+    this.bindings.updateKeybList();
     this.seasonal.load();
 };
 
@@ -142,6 +145,7 @@ Manager.prototype.initialiseEventListeners = function() {
 
     // Output
     document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
+    document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
     document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
     document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
     document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
@@ -159,12 +163,14 @@ Manager.prototype.initialiseEventListeners = function() {
     document.getElementById("reset-options").addEventListener("click", this.options.resetOptionsClick.bind(this.options));
     $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.switchChange.bind(this.options));
     $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.setWordWrap.bind(this.options));
+    $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox#useMetaKey", this.bindings.updateKeybList.bind(this.bindings));
     this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
     document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
 
     // Misc
+    window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
     document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
 };
 
