@@ -46,6 +46,7 @@ function main() {
         errorTimeout:      4000,
         attemptHighlight:  true,
         theme:             "classic",
+        useMetaKey:        false
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

@@ -1,3 +1,4 @@
+import Arithmetic from "../operations/Arithmetic.js";
 import Base from "../operations/Base.js";
 import Base58 from "../operations/Base58.js";
 import Base64 from "../operations/Base64.js";
@@ -26,6 +27,7 @@ import JS from "../operations/JS.js";
 import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
 import NetBIOS from "../operations/NetBIOS.js";
+import PHP from "../operations/PHP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
 import Rotate from "../operations/Rotate.js";
@@ -136,15 +138,15 @@ const OperationConfig = {
     },
     "Jump": {
         module: "Default",
-        description: "Jump forwards or backwards over the specified number of operations.",
+        description: "Jump forwards or backwards to the specified Label",
         inputType: "string",
         outputType: "string",
         flowControl: true,
         args: [
             {
-                name: "Number of operations to jump over",
-                type: "number",
-                value: 0
+                name: "Label name",
+                type: "string",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
@@ -155,7 +157,7 @@ const OperationConfig = {
     },
     "Conditional Jump": {
         module: "Default",
-        description: "Conditionally jump forwards or backwards over the specified number of operations based on whether the data matches the specified regular expression.",
+        description: "Conditionally jump forwards or backwards to the specified Label  based on whether the data matches the specified regular expression.",
         inputType: "string",
         outputType: "string",
         flowControl: true,
@@ -166,14 +168,33 @@ const OperationConfig = {
                 value: ""
             },
             {
-                name: "Number of operations to jump over if match found",
-                type: "number",
-                value: 0
+                name: "Invert match",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Label name",
+                type: "shortString",
+                value: ""
             },
             {
                 name: "Maximum jumps (if jumping backwards)",
                 type: "number",
                 value: 10
+            }
+        ]
+    },
+    "Label": {
+        module: "Default",
+        description: "Provides a location for conditional and fixed jumps to redirect execution to.",
+        inputType: "string",
+        outputType: "string",
+        flowControl: true,
+        args: [
+            {
+                name: "Name",
+                type: "shortString",
+                value: ""
             }
         ]
     },
@@ -516,6 +537,97 @@ const OperationConfig = {
         inputType: "string",
         outputType: "string",
         args: []
+    },
+    "Sum": {
+        module: "Default",
+        description: "Adds together a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>18.5</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Subtract": {
+        module: "Default",
+        description: "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Multiply": {
+        module: "Default",
+        description: "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Divide": {
+        module: "Default",
+        description: "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Mean": {
+        module: "Default",
+        description: "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Median": {
+        module: "Default",
+        description: "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Standard Deviation": {
+        module: "Default",
+        description: "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
+        inputType: "string",
+        outputType: "number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
     },
     "From Hex": {
         module: "Default",
@@ -3221,6 +3333,13 @@ const OperationConfig = {
             }
         ]
     },
+    "Chi Square": {
+        module: "Default",
+        description: "Calculates the Chi Square distribution of values.",
+        inputType: "byteArray",
+        outputType: "number",
+        args: []
+    },
     "Numberwang": {
         module: "Default",
         description: "Based on the popular gameshow by Mitchell and Webb.",
@@ -3856,7 +3975,7 @@ const OperationConfig = {
     "Generate HOTP": {
         module: "Default",
         description: "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.",
-        inputType: "string",
+        inputType: "byteArray",
         outputType: "string",
         args: [
             {
@@ -3909,6 +4028,19 @@ const OperationConfig = {
                 type: "boolean",
                 value: Packets.STRIP_TCP_HEADER,
             },
+        ]
+    },
+    "PHP Deserialize": {
+        module: "Default",
+        description: "Deserializes PHP serialized data, outputting keyed arrays as JSON.<br><br>This function does not support <code>object</code> tags.<br><br>Example:<br><code>a:2:{s:1:&quot;a&quot;;i:10;i:0;a:1:{s:2:&quot;ab&quot;;b:1;}}</code><br>becomes<br><code>{&quot;a&quot;: 10,0: {&quot;ab&quot;: true}}</code><br><br><u>Output valid JSON:</u> JSON doesn't support integers as keys, whereas PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Output valid JSON",
+                type: "boolean",
+                value: PHP.OUTPUT_VALID_JSON
+            }
         ]
     },
 };

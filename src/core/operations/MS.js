@@ -1,5 +1,5 @@
 /**
- * Microsoft operations. 
+ * Microsoft operations.
  *
  * @author bmwhitn [brian.m.whitney@outlook.com]
  * @copyright Crown Copyright 2017
