@@ -171,7 +171,6 @@ OptionsWaiter.prototype.themeChange = function (e) {
  */
 OptionsWaiter.prototype.logLevelChange = function (e) {
     const level = e.target.value;
-    log.info("Setting log level to " + level);
     log.setLevel(level, false);
     this.manager.worker.setLogLevel();
 };
