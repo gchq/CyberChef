@@ -149,18 +149,19 @@ Recipe.prototype.execute = async function(dish, startFrom) {
 
     for (let i = startFrom; i < this.opList.length; i++) {
         op = this.opList[i];
+        log.debug(`[${i}] ${op.name}`);
         if (op.isDisabled()) {
-            log.debug(`[${i}] '${op.name}' is disabled`);
+            log.debug("Operation is disabled, skipping");
             continue;
         }
         if (op.isBreakpoint()) {
-            log.debug(`[${i}] Pausing at breakpoint on '${op.name}'`);
+            log.debug("Pausing at breakpoint");
             return i;
         }
 
         try {
             input = dish.get(op.inputType);
-            log.debug(`[${i}] Executing '${op.name}'`);
+            log.debug("Executing operation");
 
             if (op.isFlowControl()) {
                 // Package up the current state
@@ -196,6 +197,7 @@ Recipe.prototype.execute = async function(dish, startFrom) {
         }
     }
 
+    log.debug("Recipe complete");
     return this.opList.length;
 };
 
