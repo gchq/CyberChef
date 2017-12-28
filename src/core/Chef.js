@@ -34,6 +34,7 @@ const Chef = function() {
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
 Chef.prototype.bake = async function(input, recipeConfig, options, progress, step) {
+    log.debug("Chef baking");
     let startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
@@ -69,7 +70,7 @@ Chef.prototype.bake = async function(input, recipeConfig, options, progress, ste
     try {
         progress = await recipe.execute(this.dish, progress);
     } catch (err) {
-        console.log(err);
+        log.error(err);
         error = {
             displayStr: err.displayStr,
         };
@@ -112,6 +113,8 @@ Chef.prototype.bake = async function(input, recipeConfig, options, progress, ste
  * @returns {number} The time it took to run the silent bake in milliseconds.
 */
 Chef.prototype.silentBake = function(recipeConfig) {
+    log.debug("Running silent bake");
+
     let startTime = new Date().getTime(),
         recipe    = new Recipe(recipeConfig),
         dish      = new Dish("", Dish.STRING);

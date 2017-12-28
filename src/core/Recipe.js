@@ -150,14 +150,17 @@ Recipe.prototype.execute = async function(dish, startFrom) {
     for (let i = startFrom; i < this.opList.length; i++) {
         op = this.opList[i];
         if (op.isDisabled()) {
+            log.debug(`[${i}] '${op.name}' is disabled`);
             continue;
         }
         if (op.isBreakpoint()) {
+            log.debug(`[${i}] Pausing at breakpoint on '${op.name}'`);
             return i;
         }
 
         try {
             input = dish.get(op.inputType);
+            log.debug(`[${i}] Executing '${op.name}'`);
 
             if (op.isFlowControl()) {
                 // Package up the current state

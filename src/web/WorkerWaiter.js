@@ -21,8 +21,10 @@ const WorkerWaiter = function(app, manager) {
  * Sets up the ChefWorker and associated listeners.
  */
 WorkerWaiter.prototype.registerChefWorker = function() {
+    log.debug("Registering new ChefWorker");
     this.chefWorker = new ChefWorker();
     this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
+    this.setLogLevel();
 
     let docURL = document.location.href.split(/[#?]/)[0];
     const index = docURL.lastIndexOf("/");
@@ -40,6 +42,8 @@ WorkerWaiter.prototype.registerChefWorker = function() {
  */
 WorkerWaiter.prototype.handleChefMessage = function(e) {
     const r = e.data;
+    log.debug("Receiving '" + r.action + "' from ChefWorker");
+
     switch (r.action) {
         case "bakeSuccess":
             this.bakingComplete(r.data);
@@ -58,6 +62,7 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
             this.manager.output.setStatusMsg(r.data);
             break;
         case "optionUpdate":
+            log.debug(`Setting ${r.data.option} to ${r.data.value}`);
             this.app.options[r.data.option] = r.data.value;
             break;
         case "setRegisters":
@@ -67,7 +72,7 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
             this.manager.highlighter.displayHighlights(r.data.pos, r.data.direction);
             break;
         default:
-            console.error("Unrecognised message from ChefWorker", e);
+            log.error("Unrecognised message from ChefWorker", e);
             break;
     }
 };
@@ -145,7 +150,7 @@ WorkerWaiter.prototype.bake = function(input, recipeConfig, options, progress, s
  * Asks the ChefWorker to run a silent bake, forcing the browser to load and cache all the relevant
  * JavaScript code needed to do a real bake.
  *
- * @param {Objectp[]} [recipeConfig]
+ * @param {Object[]} [recipeConfig]
  */
 WorkerWaiter.prototype.silentBake = function(recipeConfig) {
     this.chefWorker.postMessage({
@@ -174,6 +179,21 @@ WorkerWaiter.prototype.highlight = function(recipeConfig, direction, pos) {
             direction: direction,
             pos: pos
         }
+    });
+};
+
+
+/**
+ * Sets the console log level in the worker.
+ *
+ * @param {string} level
+ */
+WorkerWaiter.prototype.setLogLevel = function(level) {
+    if (!this.chefWorker) return;
+
+    this.chefWorker.postMessage({
+        action: "setLogLevel",
+        data: log.getLevel()
     });
 };
 

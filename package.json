@@ -87,6 +87,7 @@
     "jsonpath": "^1.0.0",
     "jsrsasign": "8.0.4",
     "lodash": "^4.17.4",
+    "loglevel": "^1.6.0",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "node-md6": "^0.1.0",

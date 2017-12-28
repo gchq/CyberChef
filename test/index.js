@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 /**
  * TestRunner.js
  *

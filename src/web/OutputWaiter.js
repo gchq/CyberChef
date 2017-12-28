@@ -41,6 +41,7 @@ OutputWaiter.prototype.get = function() {
  * @param {boolean} [preserveBuffer=false] - Whether to preserve the dishBuffer
  */
 OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
+    log.debug("Output type: " + type);
     const outputText = document.getElementById("output-text");
     const outputHtml = document.getElementById("output-html");
     const outputFile = document.getElementById("output-file");
@@ -73,7 +74,7 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
                 try {
                     eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
                 } catch (err) {
-                    console.error(err);
+                    log.error(err);
                 }
             }
             break;

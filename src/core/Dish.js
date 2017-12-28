@@ -111,6 +111,7 @@ Dish.enumLookup = function(typeEnum) {
  * @param {number} type - The data type of value, see Dish enums.
  */
 Dish.prototype.set = function(value, type) {
+    log.debug("Dish type: " + Dish.enumLookup(type));
     this.value = value;
     this.type = type;
 
@@ -141,6 +142,8 @@ Dish.prototype.get = function(type) {
  * @param {number} toType - The data type of value, see Dish enums.
  */
 Dish.prototype.translate = function(toType) {
+    log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
+
     // Convert data to intermediate byteArray type
     switch (this.type) {
         case Dish.STRING:

@@ -42,6 +42,8 @@ self.postMessage({
 self.addEventListener("message", function(e) {
     // Handle message
     const r = e.data;
+    log.debug("ChefWorker receiving command '" + r.action + "'");
+
     switch (r.action) {
         case "bake":
             bake(r.data);
@@ -60,6 +62,9 @@ self.addEventListener("message", function(e) {
                 r.data.direction,
                 r.data.pos
             );
+            break;
+        case "setLogLevel":
+            log.setLevel(r.data, false);
             break;
         default:
             break;
@@ -121,7 +126,7 @@ function loadRequiredModules(recipeConfig) {
         let module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
-            console.log("Loading module " + module);
+            log.info("Loading module " + module);
             self.sendStatusMessage("Loading module " + module);
             self.importScripts(self.docURL + "/" + module + ".js");
         }

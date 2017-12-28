@@ -91,7 +91,7 @@ App.prototype.loaded = function() {
  * @param {boolean} [logToConsole=false]
  */
 App.prototype.handleError = function(err, logToConsole) {
-    if (logToConsole) console.error(err);
+    if (logToConsole) log.error(err);
     const msg = err.displayStr || err.toString();
     this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
 };
@@ -129,6 +129,7 @@ App.prototype.autoBake = function() {
     if (this.autoBakePause) return false;
 
     if (this.autoBake_ && !this.baking) {
+        log.debug("Auto-baking");
         this.bake();
     } else {
         this.manager.controls.showStaleIndicator();
@@ -569,7 +570,7 @@ App.prototype.isLocalStorageAvailable = function() {
 App.prototype.alert = function(str, style, timeout, silent) {
     const time = new Date();
 
-    console.log("[" + time.toLocaleString() + "] " + str);
+    log.info("[" + time.toLocaleString() + "] " + str);
     if (silent) return;
 
     style = style || "danger";

@@ -215,6 +215,7 @@ InputWaiter.prototype.handleLoaderMessage = function(e) {
     }
 
     if (r.hasOwnProperty("fileBuffer")) {
+        log.debug("Input file loaded");
         this.fileBuffer = r.fileBuffer;
         window.dispatchEvent(this.manager.statechange);
     }
