@@ -8,11 +8,11 @@ import Utils from "./Utils.js";
  * @license Apache-2.0
  *
  * @class
- * @param {byteArray|string|number} value - The value of the input data.
+ * @param {byteArray|string|number|ArrayBuffer} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
 const Dish = function(value, type) {
-    this.value = value || typeof value == "string" ? value : null;
+    this.value = value || typeof value === "string" ? value : null;
     this.type = type || Dish.BYTE_ARRAY;
 };
 
@@ -41,6 +41,12 @@ Dish.NUMBER = 2;
  * @enum
  */
 Dish.HTML = 3;
+/**
+ * Dish data type enum for ArrayBuffers.
+ * @readonly
+ * @enum
+ */
+Dish.ARRAY_BUFFER = 4;
 
 
 /**
@@ -64,6 +70,9 @@ Dish.typeEnum = function(typeStr) {
         case "html":
         case "HTML":
             return Dish.HTML;
+        case "arrayBuffer":
+        case "ArrayBuffer":
+            return Dish.ARRAY_BUFFER;
         default:
             throw "Invalid data type string. No matching enum.";
     }
@@ -87,6 +96,8 @@ Dish.enumLookup = function(typeEnum) {
             return "number";
         case Dish.HTML:
             return "html";
+        case Dish.ARRAY_BUFFER:
+            return "ArrayBuffer";
         default:
             throw "Invalid data type enum. No matching type.";
     }
@@ -96,7 +107,7 @@ Dish.enumLookup = function(typeEnum) {
 /**
  * Sets the data value and type and then validates them.
  *
- * @param {byteArray|string|number} value - The value of the input data.
+ * @param {byteArray|string|number|ArrayBuffer} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
 Dish.prototype.set = function(value, type) {
@@ -114,7 +125,7 @@ Dish.prototype.set = function(value, type) {
  * Returns the value of the data in the type format specified.
  *
  * @param {number} type - The data type of value, see Dish enums.
- * @returns {byteArray|string|number} The value of the output data.
+ * @returns {byteArray|string|number|ArrayBuffer} The value of the output data.
  */
 Dish.prototype.get = function(type) {
     if (this.type !== type) {
@@ -134,19 +145,22 @@ Dish.prototype.translate = function(toType) {
     switch (this.type) {
         case Dish.STRING:
             this.value = this.value ? Utils.strToByteArray(this.value) : [];
-            this.type = Dish.BYTE_ARRAY;
             break;
         case Dish.NUMBER:
             this.value = typeof this.value == "number" ? Utils.strToByteArray(this.value.toString()) : [];
-            this.type = Dish.BYTE_ARRAY;
             break;
         case Dish.HTML:
             this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
-            this.type = Dish.BYTE_ARRAY;
+            break;
+        case Dish.ARRAY_BUFFER:
+            // Array.from() would be nicer here, but it's slightly slower
+            this.value = Array.prototype.slice.call(new Uint8Array(this.value));
             break;
         default:
             break;
     }
+
+    this.type = Dish.BYTE_ARRAY;
 
     // Convert from byteArray to toType
     switch (toType) {
@@ -158,6 +172,10 @@ Dish.prototype.translate = function(toType) {
         case Dish.NUMBER:
             this.value = this.value ? parseFloat(Utils.byteArrayToUtf8(this.value)) : 0;
             this.type = Dish.NUMBER;
+            break;
+        case Dish.ARRAY_BUFFER:
+            this.value = new Uint8Array(this.value).buffer;
+            this.type = Dish.ARRAY_BUFFER;
             break;
         default:
             break;
@@ -180,7 +198,7 @@ Dish.prototype.valid = function() {
 
             // Check that every value is a number between 0 - 255
             for (let i = 0; i < this.value.length; i++) {
-                if (typeof this.value[i] != "number" ||
+                if (typeof this.value[i] !== "number" ||
                     this.value[i] < 0 ||
                     this.value[i] > 255) {
                     return false;
@@ -189,18 +207,38 @@ Dish.prototype.valid = function() {
             return true;
         case Dish.STRING:
         case Dish.HTML:
-            if (typeof this.value == "string") {
-                return true;
-            }
-            return false;
+            return typeof this.value === "string";
         case Dish.NUMBER:
-            if (typeof this.value == "number") {
-                return true;
-            }
-            return false;
+            return typeof this.value === "number";
+        case Dish.ARRAY_BUFFER:
+            return this.value instanceof ArrayBuffer;
         default:
             return false;
     }
 };
+
+
+/**
+ * Determines how much space the Dish takes up.
+ * Numbers in JavaScript are 64-bit floating point, however for the purposes of the Dish,
+ * we measure how many bytes are taken up when the number is written as a string.
+ *
+ * @returns {number}
+*/
+Dish.prototype.size = function() {
+    switch (this.type) {
+        case Dish.BYTE_ARRAY:
+        case Dish.STRING:
+        case Dish.HTML:
+            return this.value.length;
+        case Dish.NUMBER:
+            return this.value.toString().length;
+        case Dish.ARRAY_BUFFER:
+            return this.value.byteLength;
+        default:
+            return -1;
+    }
+};
+
 
 export default Dish;

@@ -64,9 +64,9 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Highlighting
      - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][10]).
  - Save to file and load from file
-     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field (note that files larger than about 500kb may cause your browser to hang or even crash due to the way that browsers handle large amounts of textual data).
+     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 500MB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
  - CyberChef is entirely client-side
-     - It should be noted that none of your input or recipe configuration is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
+     - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be compiled into a single HTML file. You can download this file and drop it into a virtual machine, share it with other people, or use it independently on your desktop.
 
 

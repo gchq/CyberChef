@@ -15,12 +15,13 @@ const FileType = {
     /**
      * Detect File Type operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runDetect: function(input, args) {
-        const type = FileType.magicType(input);
+        const data = new Uint8Array(input),
+            type = FileType.magicType(data);
 
         if (!type) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
@@ -46,20 +47,21 @@ const FileType = {
     /**
      * Scan for Embedded Files operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runScanForEmbeddedFiles: function(input, args) {
         let output = "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.\n",
             type,
-            ignoreCommon = args[0],
-            commonExts = ["ico", "ttf", ""],
             numFound = 0,
             numCommonFound = 0;
+        const ignoreCommon = args[0],
+            commonExts = ["ico", "ttf", ""],
+            data = new Uint8Array(input);
 
-        for (let i = 0; i < input.length; i++) {
-            type = FileType.magicType(input.slice(i));
+        for (let i = 0; i < data.length; i++) {
+            type = FileType.magicType(data.slice(i));
             if (type) {
                 if (ignoreCommon && commonExts.indexOf(type.ext) > -1) {
                     numCommonFound++;
@@ -96,7 +98,7 @@ const FileType = {
      * Given a buffer, detects magic byte sequences at specific positions and returns the
      * extension and mime type.
      *
-     * @param {byteArray} buf
+     * @param {Uint8Array} buf
      * @returns {Object} type
      * @returns {string} type.ext - File extension
      * @returns {string} type.mime - Mime type

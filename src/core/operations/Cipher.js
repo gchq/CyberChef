@@ -61,9 +61,9 @@ const Cipher = {
      * @returns {string}
      */
     _enc: function (algo, input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || ""),
-            iv = Utils.format[args[1].option].parse(args[1].string || ""),
-            salt = Utils.format[args[2].option].parse(args[2].string || ""),
+        let key = Cipher._format[args[0].option].parse(args[0].string || ""),
+            iv = Cipher._format[args[1].option].parse(args[1].string || ""),
+            salt = Cipher._format[args[2].option].parse(args[2].string || ""),
             mode = CryptoJS.mode[args[3]],
             padding = CryptoJS.pad[args[4]],
             resultOption = args[5].toLowerCase(),
@@ -83,12 +83,12 @@ const Cipher = {
 
         let result = "";
         if (resultOption === "show all") {
-            result += "Key:  " + encrypted.key.toString(Utils.format[outputFormat]);
-            result += "\nIV:   " + encrypted.iv.toString(Utils.format[outputFormat]);
-            if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Utils.format[outputFormat]);
-            result += "\n\nCiphertext: " + encrypted.ciphertext.toString(Utils.format[outputFormat]);
+            result += "Key:  " + encrypted.key.toString(Cipher._format[outputFormat]);
+            result += "\nIV:   " + encrypted.iv.toString(Cipher._format[outputFormat]);
+            if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Cipher._format[outputFormat]);
+            result += "\n\nCiphertext: " + encrypted.ciphertext.toString(Cipher._format[outputFormat]);
         } else {
-            result = encrypted[resultOption].toString(Utils.format[outputFormat]);
+            result = encrypted[resultOption].toString(Cipher._format[outputFormat]);
         }
 
         return result;
@@ -105,9 +105,9 @@ const Cipher = {
      * @returns {string}
      */
     _dec: function (algo, input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string || ""),
-            iv = Utils.format[args[1].option].parse(args[1].string || ""),
-            salt = Utils.format[args[2].option].parse(args[2].string || ""),
+        let key = Cipher._format[args[0].option].parse(args[0].string || ""),
+            iv = Cipher._format[args[1].option].parse(args[1].string || ""),
+            salt = Cipher._format[args[2].option].parse(args[2].string || ""),
             mode = CryptoJS.mode[args[3]],
             padding = CryptoJS.pad[args[4]],
             inputFormat = args[5],
@@ -118,7 +118,7 @@ const Cipher = {
             return "No input";
         }
 
-        const ciphertext = Utils.format[inputFormat].parse(input);
+        const ciphertext = Cipher._format[inputFormat].parse(input);
 
         if (iv.sigBytes === 0) {
             // Use passphrase rather than key. Need to convert it to a string.
@@ -136,7 +136,7 @@ const Cipher = {
 
         let result;
         try {
-            result = decrypted.toString(Utils.format[outputFormat]);
+            result = decrypted.toString(Cipher._format[outputFormat]);
         } catch (err) {
             result = "Decrypt error: " + err.message;
         }
@@ -260,7 +260,7 @@ const Cipher = {
      * @returns {string}
      */
     runBlowfishEnc: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
+        let key = Cipher._format[args[0].option].parse(args[0].string).toString(Cipher._format.Latin1),
             mode = args[1],
             outputFormat = args[2];
 
@@ -272,7 +272,7 @@ const Cipher = {
             }),
             enc = CryptoJS.enc.Hex.parse(encHex);
 
-        return enc.toString(Utils.format[outputFormat]);
+        return enc.toString(Cipher._format[outputFormat]);
     },
 
 
@@ -284,13 +284,13 @@ const Cipher = {
      * @returns {string}
      */
     runBlowfishDec: function (input, args) {
-        let key = Utils.format[args[0].option].parse(args[0].string).toString(Utils.format.Latin1),
+        let key = Cipher._format[args[0].option].parse(args[0].string).toString(Cipher._format.Latin1),
             mode = args[1],
             inputFormat = args[2];
 
         if (key.length === 0) return "Enter a key";
 
-        input = Utils.format[inputFormat].parse(input);
+        input = Cipher._format[inputFormat].parse(input);
 
         return Blowfish.decrypt(input.toString(CryptoJS.enc.Base64), key, {
             outputType: 0, // This actually means inputType. The library is weird.
@@ -329,14 +329,14 @@ const Cipher = {
             salt = CryptoJS.enc.Hex.parse(args[3] || ""),
             inputFormat = args[4],
             outputFormat = args[5],
-            passphrase = Utils.format[inputFormat].parse(input),
+            passphrase = Cipher._format[inputFormat].parse(input),
             key = CryptoJS.PBKDF2(passphrase, salt, {
                 keySize: keySize,
                 hasher: CryptoJS.algo[hasher],
                 iterations: iterations,
             });
 
-        return key.toString(Utils.format[outputFormat]);
+        return key.toString(Cipher._format[outputFormat]);
     },
 
 
@@ -354,14 +354,14 @@ const Cipher = {
             salt = CryptoJS.enc.Hex.parse(args[3] || ""),
             inputFormat = args[4],
             outputFormat = args[5],
-            passphrase = Utils.format[inputFormat].parse(input),
+            passphrase = Cipher._format[inputFormat].parse(input),
             key = CryptoJS.EvpKDF(passphrase, salt, {
                 keySize: keySize,
                 hasher: CryptoJS.algo[hasher],
                 iterations: iterations,
             });
 
-        return key.toString(Utils.format[outputFormat]);
+        return key.toString(Cipher._format[outputFormat]);
     },
 
 
@@ -373,11 +373,11 @@ const Cipher = {
      * @returns {string}
      */
     runRc4: function (input, args) {
-        let message = Utils.format[args[1]].parse(input),
-            passphrase = Utils.format[args[0].option].parse(args[0].string),
+        let message = Cipher._format[args[1]].parse(input),
+            passphrase = Cipher._format[args[0].option].parse(args[0].string),
             encrypted = CryptoJS.RC4.encrypt(message, passphrase);
 
-        return encrypted.ciphertext.toString(Utils.format[args[2]]);
+        return encrypted.ciphertext.toString(Cipher._format[args[2]]);
     },
 
 
@@ -395,12 +395,12 @@ const Cipher = {
      * @returns {string}
      */
     runRc4drop: function (input, args) {
-        let message = Utils.format[args[1]].parse(input),
-            passphrase = Utils.format[args[0].option].parse(args[0].string),
+        let message = Cipher._format[args[1]].parse(input),
+            passphrase = Cipher._format[args[0].option].parse(args[0].string),
             drop = args[3],
             encrypted = CryptoJS.RC4Drop.encrypt(message, passphrase, { drop: drop });
 
-        return encrypted.ciphertext.toString(Utils.format[args[2]]);
+        return encrypted.ciphertext.toString(Cipher._format[args[2]]);
     },
 
 
@@ -783,6 +783,23 @@ const Cipher = {
         return output;
     },
 
+
+    /**
+     * A mapping of string formats to their classes in the CryptoJS library.
+     * 
+     * @private
+     * @constant
+     */
+    _format: {
+        "Hex":     CryptoJS.enc.Hex,
+        "Base64":  CryptoJS.enc.Base64,
+        "UTF8":    CryptoJS.enc.Utf8,
+        "UTF16":   CryptoJS.enc.Utf16,
+        "UTF16LE": CryptoJS.enc.Utf16LE,
+        "UTF16BE": CryptoJS.enc.Utf16BE,
+        "Latin1":  CryptoJS.enc.Latin1,
+    },
+
 };
 
 export default Cipher;
@@ -826,4 +843,28 @@ CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
 
     // Return params
     return CryptoJS.lib.CipherParams.create({ key: key, iv: iv, salt: salt });
+};
+
+
+/**
+ * Override for the CryptoJS Hex encoding parser to remove whitespace before attempting to parse
+ * the hex string.
+ *
+ * @param {string} hexStr
+ * @returns {CryptoJS.lib.WordArray}
+ */
+CryptoJS.enc.Hex.parse = function (hexStr) {
+    // Remove whitespace
+    hexStr = hexStr.replace(/\s/g, "");
+
+    // Shortcut
+    const hexStrLength = hexStr.length;
+
+    // Convert
+    const words = [];
+    for (let i = 0; i < hexStrLength; i += 2) {
+        words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
+    }
+
+    return new CryptoJS.lib.WordArray.init(words, hexStrLength / 2);
 };

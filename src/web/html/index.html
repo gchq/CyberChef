@@ -181,6 +181,20 @@
                         <div class="textarea-wrapper no-select">
                             <div id="input-highlighter" class="no-select"></div>
                             <textarea id="input-text"></textarea>
+                            <div id="input-file">
+                                <div style="position: relative; height: 100%;">
+                                    <div class="card">
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                        <div class="card-body">
+                                            <button type="button" class="close" id="input-file-close">&times;</button>
+                                            Name: <span id="input-file-name"></span><br>
+                                            Size: <span id="input-file-size"></span><br>
+                                            Type: <span id="input-file-type"></span><br>
+                                            Loaded: <span id="input-file-loaded"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -202,6 +216,26 @@
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
                             <textarea id="output-text" readonly="readonly"></textarea>
+                            <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
+                            <div id="output-file">
+                                <div style="position: relative; height: 100%;">
+                                    <div class="card">
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                        <div class="card-body">
+                                            Size: <span id="output-file-size"></span><br>
+                                            <button id="output-file-download" type="button" class="btn btn-primary">Download</button>
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button id="output-file-slice" type="button" class="btn btn-default" title="View slice">&#x1f50d;</button>
+                                                </span>
+                                                <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
+                                                <div class="input-group-addon">to</div>
+                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="1024" step="1024" min="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="output-loader">
                                 <div class="loader"></div>
                                 <div class="loading-msg"></div>
@@ -308,31 +342,35 @@
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="updateUrl" id="updateUrl" checked />
-                            <label for="updateUrl"> Update the URL when the input or recipe changes </label>
+                            <label for="updateUrl"> Update the URL when the input or recipe changes</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="showHighlighter" id="showHighlighter" checked />
-                            <label for="showHighlighter"> Highlight selected bytes in output and input (when possible) </label>
+                            <label for="showHighlighter"> Highlight selected bytes in output and input (when possible)</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="treatAsUtf8" id="treatAsUtf8" checked />
-                            <label for="treatAsUtf8"> Treat output as UTF-8 if possible </label>
+                            <label for="treatAsUtf8"> Treat output as UTF-8 if possible</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="wordWrap" id="wordWrap" checked />
-                            <label for="wordWrap"> Word wrap the input and output </label>
+                            <label for="wordWrap"> Word wrap the input and output</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="showErrors" id="showErrors" checked />
-                            <label for="showErrors"> Operation error reporting (recommended) </label>
+                            <label for="showErrors"> Operation error reporting (recommended)</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="useMetaKey" id="useMetaKey" />
-                            <label for="useMetaKey"> Use meta key for keybindings (Windows ⊞/Command ⌘) </label>
+                            <label for="useMetaKey"> Use meta key for keybindings (Windows ⊞/Command ⌘)</label>
                         </div>
                         <div class="option-item">
                             <input type="number" option="errorTimeout" id="errorTimeout" />
-                            <label for="errorTimeout"> Operation error timeout in ms (0 for never) </label>
+                            <label for="errorTimeout"> Operation error timeout in ms (0 for never)</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="number" option="outputFileThreshold" id="outputFileThreshold" />
+                            <label for="outputFileThreshold"> Size threshold for treating the output as a file (KiB)</label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -438,8 +476,9 @@
                                         </a>
                                     </blockquote>
                                     <div class="collapse" id="faq-load-files">
-                                        <p>Yes! Just drag your file over the input box and drop it. The contents of the file will be converted into hexadecimal and the 'From Hex' operation will be added to the beginning of the recipe (if it's not already there). This is so that special characters like carriage returns aren't removed by your browser.</p>
-                                        <p>Please note that loading large files is likely to cause a crash. There's not a lot that can be done about this - browsers just aren't very good at handling and displaying large amounts of data.</p>
+                                        <p>Yes! Just drag your file over the input box and drop it.</p>
+                                        <p>CyberChef can handle files up to around 500MB (depending on your browser), however some of the operations may take a very long time to run over this much data.</p>
+                                        <p>If the output is larger than a certain threshold (default 1MiB), it will be presented to you as a file available for download. Slices of the file can be viewed in the output if you need to inspect them.</p>
                                     </div>
                                     <blockquote>
                                         <a data-toggle="collapse" data-target="#faq-fork">
@@ -482,7 +521,7 @@
 
 
                                     <br>
-                                    <p>There are around 150 useful operations in CyberChef for anyone working on anything vaguely Internet-related, whether you just want to convert a timestamp to a different format, decompress gzipped data, create a SHA3 hash, or parse an X.509 certificate to find out who issued it.</p>
+                                    <p>There are around 200 useful operations in CyberChef for anyone working on anything vaguely Internet-related, whether you just want to convert a timestamp to a different format, decompress gzipped data, create a SHA3 hash, or parse an X.509 certificate to find out who issued it.</p>
                                     <p>It’s the Cyber Swiss Army Knife.</p>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="keybindings" style="padding: 20px;">

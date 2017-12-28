@@ -1,4 +1,4 @@
-import Utils from "../core/Utils.js";
+import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker.js";
 
 
 /**
@@ -33,6 +33,9 @@ const InputWaiter = function(app, manager) {
         144, //Num
         145, //Scroll
     ];
+
+    this.loaderWorker = null;
+    this.fileBuffer = null;
 };
 
 
@@ -42,20 +45,47 @@ const InputWaiter = function(app, manager) {
  * @returns {string}
  */
 InputWaiter.prototype.get = function() {
-    return document.getElementById("input-text").value;
+    return this.fileBuffer || document.getElementById("input-text").value;
 };
 
 
 /**
- * Sets the input in the input textarea.
+ * Sets the input in the input area.
  *
- * @param {string} input
+ * @param {string|File} input
  *
  * @fires Manager#statechange
  */
 InputWaiter.prototype.set = function(input) {
-    document.getElementById("input-text").value = input;
-    window.dispatchEvent(this.manager.statechange);
+    const inputText = document.getElementById("input-text");
+    if (input instanceof File) {
+        this.setFile(input);
+        inputText.value = "";
+    } else {
+        inputText.value = input;
+        window.dispatchEvent(this.manager.statechange);
+    }
+};
+
+
+/**
+ * Shows file details.
+ *
+ * @param {File} file
+ */
+InputWaiter.prototype.setFile = function(file) {
+    // Display file overlay in input area with details
+    const fileOverlay = document.getElementById("input-file"),
+        fileName = document.getElementById("input-file-name"),
+        fileSize = document.getElementById("input-file-size"),
+        fileType = document.getElementById("input-file-type"),
+        fileLoaded = document.getElementById("input-file-loaded");
+
+    fileOverlay.style.display = "block";
+    fileName.textContent = file.name;
+    fileSize.textContent = file.size.toLocaleString() + " bytes";
+    fileType.textContent = file.type || "unknown";
+    fileLoaded.textContent = "0%";
 };
 
 
@@ -69,8 +99,8 @@ InputWaiter.prototype.setInputInfo = function(length, lines) {
     let width = length.toString().length;
     width = width < 2 ? 2 : width;
 
-    const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+    const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
 
     document.getElementById("input-info").innerHTML = "length: " + lengthStr + "<br>lines: " + linesStr;
 };
@@ -118,7 +148,7 @@ InputWaiter.prototype.inputDragover = function(e) {
 
     e.stopPropagation();
     e.preventDefault();
-    e.target.classList.add("dropping-file");
+    e.target.closest("#input-text,#input-file").classList.add("dropping-file");
 };
 
 
@@ -131,7 +161,8 @@ InputWaiter.prototype.inputDragover = function(e) {
 InputWaiter.prototype.inputDragleave = function(e) {
     e.stopPropagation();
     e.preventDefault();
-    e.target.classList.remove("dropping-file");
+    document.getElementById("input-text").classList.remove("dropping-file");
+    document.getElementById("input-file").classList.remove("dropping-file");
 };
 
 
@@ -149,52 +180,54 @@ InputWaiter.prototype.inputDrop = function(e) {
     e.stopPropagation();
     e.preventDefault();
 
-    const el = e.target;
     const file = e.dataTransfer.files[0];
     const text = e.dataTransfer.getData("Text");
-    const reader = new FileReader();
-    let inputCharcode = "";
-    let offset = 0;
-    const CHUNK_SIZE = 20480; // 20KB
 
-    const setInput = function() {
-        const recipeConfig = this.app.getRecipeConfig();
-        if (!recipeConfig[0] || recipeConfig[0].op !== "From Hex") {
-            recipeConfig.unshift({op: "From Hex", args: ["Space"]});
-            this.app.setRecipeConfig(recipeConfig);
-        }
+    document.getElementById("input-text").classList.remove("dropping-file");
+    document.getElementById("input-file").classList.remove("dropping-file");
 
-        this.set(inputCharcode);
-
-        el.classList.remove("loadingFile");
-    }.bind(this);
-
-    const seek = function() {
-        if (offset >= file.size) {
-            setInput();
-            return;
-        }
-        el.value = "Processing... " + Math.round(offset / file.size * 100) + "%";
-        const slice = file.slice(offset, offset + CHUNK_SIZE);
-        reader.readAsArrayBuffer(slice);
-    };
-
-    reader.onload = function(e) {
-        const data = new Uint8Array(reader.result);
-        inputCharcode += Utils.toHexFast(data);
-        offset += CHUNK_SIZE;
-        seek();
-    };
-
-
-    el.classList.remove("dropping-file");
+    if (text) {
+        this.closeFile();
+        this.set(text);
+        return;
+    }
 
     if (file) {
-        el.classList.add("loadingFile");
-        seek();
-    } else if (text) {
-        this.set(text);
+        this.closeFile();
+        this.loaderWorker = new LoaderWorker();
+        this.loaderWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+        this.loaderWorker.postMessage({"file": file});
+        this.set(file);
     }
+};
+
+
+/**
+ * Handler for messages sent back by the LoaderWorker.
+ *
+ * @param {MessageEvent} e
+ */
+InputWaiter.prototype.handleLoaderMessage = function(e) {
+    const r = e.data;
+    if (r.hasOwnProperty("progress")) {
+        const fileLoaded = document.getElementById("input-file-loaded");
+        fileLoaded.textContent = r.progress + "%";
+    }
+
+    if (r.hasOwnProperty("fileBuffer")) {
+        this.fileBuffer = r.fileBuffer;
+        window.dispatchEvent(this.manager.statechange);
+    }
+};
+
+
+/**
+ * Handler for file close events.
+ */
+InputWaiter.prototype.closeFile = function() {
+    if (this.loaderWorker) this.loaderWorker.terminate();
+    this.fileBuffer = null;
+    document.getElementById("input-file").style.display = "none";
 };
 
 
@@ -205,6 +238,8 @@ InputWaiter.prototype.inputDrop = function(e) {
  * @fires Manager#statechange
  */
 InputWaiter.prototype.clearIoClick = function() {
+    this.closeFile();
+    this.manager.output.closeFile();
     this.manager.highlighter.removeHighlights();
     document.getElementById("input-text").value = "";
     document.getElementById("output-text").value = "";

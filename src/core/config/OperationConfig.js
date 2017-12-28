@@ -245,7 +245,7 @@ const OperationConfig = {
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes data in an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
         highlight: "func",
         highlightReverse: "func",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -631,7 +631,7 @@ const OperationConfig = {
         description: "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
         highlight: "func",
         highlightReverse: "func",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -782,7 +782,7 @@ const OperationConfig = {
         description: "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.",
         highlight: "func",
         highlightReverse: "func",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3287,7 +3287,7 @@ const OperationConfig = {
     "Frequency distribution": {
         module: "Default",
         description: "Displays the distribution of bytes in the data as a graph.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "html",
         args: [
             {
@@ -3300,7 +3300,7 @@ const OperationConfig = {
     "Chi Square": {
         module: "Default",
         description: "Calculates the Chi Square distribution of values.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "number",
         args: []
     },
@@ -3379,14 +3379,14 @@ const OperationConfig = {
     "Detect File Type": {
         module: "Default",
         description: "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: 7z, amr, avi, bmp, bz2, class, cr2, crx, dex, dmg, doc, elf, eot, epub, exe, flac, flv, gif, gz, ico, iso, jpg, jxr, m4a, m4v, mid, mkv, mov, mp3, mp4, mpg, ogg, otf, pdf, png, ppt, ps, psd, rar, rtf, sqlite, swf, tar, tar.z, tif, ttf, utf8, vmdk, wav, webm, webp, wmv, woff, woff2, xls, xz, zip.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "Scan for Embedded Files": {
         module: "Default",
         description: "Scans the data for potential embedded files by looking for magic bytes at all offsets. This operation is prone to false positives.<br><br>WARNING: Files over about 100KB in size will take a VERY long time to process.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3740,7 +3740,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [],
     },

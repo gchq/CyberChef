@@ -19,7 +19,7 @@ const Chef = function() {
 /**
  * Runs the recipe over the input.
  *
- * @param {string} inputText - The input data as a string
+ * @param {string|ArrayBuffer} input - The input data as a string or ArrayBuffer
  * @param {Object[]} recipeConfig - The recipe configuration object
  * @param {Object} options - The options object storing various user choices
  * @param {boolean} options.attempHighlight - Whether or not to attempt highlighting
@@ -33,7 +33,7 @@ const Chef = function() {
  * @returns {number} response.duration - The number of ms it took to execute the recipe
  * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
 */
-Chef.prototype.bake = async function(inputText, recipeConfig, options, progress, step) {
+Chef.prototype.bake = async function(input, recipeConfig, options, progress, step) {
     let startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
@@ -62,7 +62,8 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
 
     // If starting from scratch, load data
     if (progress === 0) {
-        this.dish.set(inputText, Dish.STRING);
+        const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
+        this.dish.set(input, type);
     }
 
     try {
@@ -75,10 +76,16 @@ Chef.prototype.bake = async function(inputText, recipeConfig, options, progress,
         progress = err.progress;
     }
 
+    // Depending on the size of the output, we may send it back as a string or an ArrayBuffer.
+    // This can prevent unnecessary casting as an ArrayBuffer can be easily downloaded as a file.
+    // The threshold is specified in KiB.
+    const threshold = (options.outputFileThreshold || 1024) * 1024;
+    const returnType = this.dish.size() > threshold ? Dish.ARRAY_BUFFER : Dish.STRING;
+
     return {
         result: this.dish.type === Dish.HTML ?
             this.dish.get(Dish.HTML) :
-            this.dish.get(Dish.STRING),
+            this.dish.get(returnType),
         type: Dish.enumLookup(this.dish.type),
         progress: progress,
         duration: new Date().getTime() - startTime,

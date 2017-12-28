@@ -1,4 +1,3 @@
-import Utils from "../core/Utils.js";
 import ChefWorker from "worker-loader?inline&fallback=false!../core/ChefWorker.js";
 
 /**
@@ -111,7 +110,6 @@ WorkerWaiter.prototype.bakingComplete = function(response) {
         this.app.handleError(response.error);
     }
 
-    this.app.dishStr  = response.type === "html" ? Utils.stripHtmlTags(response.result, true) : response.result;
     this.app.progress = response.progress;
     this.manager.recipe.updateBreakpointIndicator(response.progress);
     this.manager.output.set(response.result, response.type, response.duration);

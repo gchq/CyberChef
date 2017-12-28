@@ -20,14 +20,13 @@ const Image = {
      *
      * Extracts EXIF data from a byteArray, representing a JPG or a TIFF image.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runExtractEXIF(input, args) {
         try {
-            const bytes = Uint8Array.from(input);
-            const parser = ExifParser.create(bytes.buffer);
+            const parser = ExifParser.create(input);
             const result = parser.parse();
 
             let lines = [];
@@ -53,7 +52,7 @@ const Image = {
      * @author David Moodie [davidmoodie12@gmail.com]
      * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     runRemoveEXIF(input, args) {
         // Do nothing if input is empty

@@ -121,8 +121,7 @@ const PublicKey = {
         // Format Public Key fields
         for (let i = 0; i < pkFields.length; i++) {
             pkStr += "  " + pkFields[i].key + ":" +
-                Utils.padLeft(
-                    pkFields[i].value + "\n",
+                (pkFields[i].value + "\n").padStart(
                     18 - (pkFields[i].key.length + 3) + pkFields[i].value.length + 1,
                     " "
                 );
@@ -286,9 +285,9 @@ ${extensions}`;
 
             key = fields[i].split("=")[0];
             value = fields[i].split("=")[1];
-            str = Utils.padRight(key, maxKeyLen) + " = " + value + "\n";
+            str = key.padEnd(maxKeyLen, " ") + " = " + value + "\n";
 
-            output += Utils.padLeft(str, indent + str.length, " ");
+            output += str.padStart(indent + str.length, " ");
         }
 
         return output.slice(0, -1);
@@ -314,7 +313,7 @@ ${extensions}`;
             if (i === 0) {
                 output += str;
             } else {
-                output += Utils.padLeft(str, indent + str.length, " ");
+                output += str.padStart(indent + str.length, " ");
             }
         }
 

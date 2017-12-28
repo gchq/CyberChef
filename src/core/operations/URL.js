@@ -1,5 +1,4 @@
 /* globals unescape */
-import Utils from "../Utils.js";
 import url from "url";
 
 
@@ -78,7 +77,7 @@ const URL_ = {
 
             output += "Arguments:\n";
             for (let key in uri.query) {
-                output += "\t" + Utils.padRight(key, padding);
+                output += "\t" + key.padEnd(padding, " ");
                 if (uri.query[key].length) {
                     output += " = " + uri.query[key] + "\n";
                 } else {

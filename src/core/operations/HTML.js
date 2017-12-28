@@ -215,9 +215,9 @@ const HTML = {
         k = k.toFixed(2);
 
         let hex = "#" +
-                Utils.padLeft(Math.round(r).toString(16), 2) +
-                Utils.padLeft(Math.round(g).toString(16), 2) +
-                Utils.padLeft(Math.round(b).toString(16), 2),
+                Math.round(r).toString(16).padStart(2, "0") +
+                Math.round(g).toString(16).padStart(2, "0") +
+                Math.round(b).toString(16).padStart(2, "0"),
             rgb  = "rgb(" + r + ", " + g + ", " + b + ")",
             rgba = "rgba(" + r + ", " + g + ", " + b + ", " + a + ")",
             hsl  = "hsl(" + h + ", " + s + "%, " + l + "%)",
