@@ -3287,7 +3287,7 @@ const OperationConfig = {
     "Frequency distribution": {
         module: "Default",
         description: "Displays the distribution of bytes in the data as a graph.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "html",
         args: [
             {
@@ -3300,7 +3300,7 @@ const OperationConfig = {
     "Chi Square": {
         module: "Default",
         description: "Calculates the Chi Square distribution of values.",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "number",
         args: []
     },
@@ -3740,7 +3740,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [],
     },
