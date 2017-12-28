@@ -245,7 +245,7 @@ const OperationConfig = {
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes data in an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
         highlight: "func",
         highlightReverse: "func",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -782,7 +782,7 @@ const OperationConfig = {
         description: "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.",
         highlight: "func",
         highlightReverse: "func",
-        inputType: "byteArray",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {

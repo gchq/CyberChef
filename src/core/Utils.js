@@ -438,7 +438,7 @@ const Utils = {
     /**
      * Converts a charcode array to a string.
      *
-     * @param {byteArray} byteArray
+     * @param {byteArray|Uint8Array} byteArray
      * @returns {string}
      *
      * @example
@@ -477,7 +477,7 @@ const Utils = {
     /**
      * Base64's the input byte array using the given alphabet, returning a string.
      *
-     * @param {byteArray|string} data
+     * @param {byteArray|Uint8Array|string} data
      * @param {string} [alphabet]
      * @returns {string}
      *

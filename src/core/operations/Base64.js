@@ -40,13 +40,13 @@ const Base64 = {
     /**
      * To Base64 operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runTo: function(input, args) {
         const alphabet = args[0] || Base64.ALPHABET;
-        return Utils.toBase64(input, alphabet);
+        return Utils.toBase64(new Uint8Array(input), alphabet);
     },
 
 
