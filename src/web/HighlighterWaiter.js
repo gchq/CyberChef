@@ -1,6 +1,3 @@
-import Utils from "../core/Utils.js";
-
-
 /**
  * Waiter to handle events related to highlighting in CyberChef.
  *
@@ -312,9 +309,9 @@ HighlighterWaiter.prototype.outputHtmlMousemove = function(e) {
 HighlighterWaiter.prototype.selectionInfo = function(start, end) {
     const len = end.toString().length;
     const width = len < 2 ? 2 : len;
-    const startStr = Utils.pad(start.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const endStr   = Utils.pad(end.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const lenStr   = Utils.pad((end-start).toString(), width, " ").replace(/ /g, "&nbsp;");
+    const startStr = start.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+    const endStr = end.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+    const lenStr = (end-start).toString().padStart(width, " ").replace(/ /g, "&nbsp;");
 
     return "start: " + startStr + "<br>end: " + endStr + "<br>length: " + lenStr;
 };

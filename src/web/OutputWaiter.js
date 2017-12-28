@@ -193,13 +193,13 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
     let width = length.toString().length;
     width = width < 4 ? 4 : width;
 
-    const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const timeStr = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
+    const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+    const timeStr = (duration.toString() + "ms").padStart(width, " ").replace(/ /g, "&nbsp;");
 
     let msg = "time: " + timeStr + "<br>length: " + lengthStr;
 
     if (typeof lines === "number") {
-        const linesStr = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+        const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
         msg += "<br>lines: " + linesStr;
     }
 

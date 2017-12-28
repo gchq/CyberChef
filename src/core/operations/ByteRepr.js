@@ -31,13 +31,13 @@ const ByteRepr = {
     /**
      * To Hex operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runToHex: function(input, args) {
         const delim = Utils.charRep[args[0] || "Space"];
-        return Utils.toHex(input, delim, 2);
+        return Utils.toHex(new Uint8Array(input), delim, 2);
     },
 
 
@@ -266,7 +266,7 @@ const ByteRepr = {
             padding = 8;
 
         for (let i = 0; i < input.length; i++) {
-            output += Utils.pad(input[i].toString(2), padding) + delim;
+            output += input[i].toString(2).padStart(padding, "0") + delim;
         }
 
         if (delim.length) {

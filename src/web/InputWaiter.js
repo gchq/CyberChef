@@ -1,4 +1,3 @@
-import Utils from "../core/Utils.js";
 import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker.js";
 
 
@@ -100,8 +99,8 @@ InputWaiter.prototype.setInputInfo = function(length, lines) {
     let width = length.toString().length;
     width = width < 2 ? 2 : width;
 
-    const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
+    const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+    const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
 
     document.getElementById("input-info").innerHTML = "length: " + lengthStr + "<br>lines: " + linesStr;
 };

@@ -158,7 +158,7 @@ const SeqUtils = {
             width = lines.length.toString().length;
 
         for (let n = 0; n < lines.length; n++) {
-            output += Utils.pad((n+1).toString(), width, " ") + " " + lines[n] + "\n";
+            output += (n+1).toString().padStart(width, " ") + " " + lines[n] + "\n";
         }
         return output.slice(0, output.length-1);
     },

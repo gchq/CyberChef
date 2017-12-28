@@ -127,7 +127,7 @@ const Entropy = {
         for (i = 0; i < 256; i++) {
             if (distrib[i] || showZeroes) {
                 output += " " + Utils.hex(i, 2) + "    (" +
-                        Utils.padRight(percentages[i].toFixed(2).replace(".00", "") + "%)", 8) +
+                        (percentages[i].toFixed(2).replace(".00", "") + "%)").padEnd(8, " ") +
                         Array(Math.ceil(percentages[i])+1).join("|") + "\n";
             }
         }

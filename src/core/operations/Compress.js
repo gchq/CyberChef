@@ -418,9 +418,9 @@ const Compress = {
             }
         };
 
-        const fileSize = Utils.padLeft(input.length.toString(8), 11, "0");
+        const fileSize = input.length.toString(8).padStart(11, "0");
         const currentUnixTimestamp = Math.floor(Date.now() / 1000);
-        const lastModTime = Utils.padLeft(currentUnixTimestamp.toString(8), 11, "0");
+        const lastModTime = currentUnixTimestamp.toString(8).padStart(11, "0");
 
         const file = {
             fileName: Utils.padBytesRight(args[0], 100),
@@ -452,7 +452,7 @@ const Compress = {
                 }
             });
         }
-        checksum = Utils.padBytesRight(Utils.padLeft(checksum.toString(8), 7, "0"), 8);
+        checksum = Utils.padBytesRight(checksum.toString(8).padStart(7, "0"), 8);
         file.checksum = checksum;
 
         const tarball = new Tarball();

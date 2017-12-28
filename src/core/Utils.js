@@ -65,58 +65,6 @@ const Utils = {
 
 
     /**
-     * Adds leading zeros to strings
-     *
-     * @param {string} str - String to add leading characters to.
-     * @param {number} max - Maximum width of the string.
-     * @param {char} [chr='0'] - The character to pad with.
-     * @returns {string}
-     *
-     * @example
-     * // returns "0a"
-     * Utils.padLeft("a", 2);
-     *
-     * // returns "000a"
-     * Utils.padLeft("a", 4);
-     *
-     * // returns "xxxa"
-     * Utils.padLeft("a", 4, "x");
-     *
-     * // returns "bcabchello"
-     * Utils.padLeft("hello", 10, "abc");
-     */
-    padLeft: function(str, max, chr) {
-        chr = chr || "0";
-        let startIndex = chr.length - (max - str.length);
-        startIndex = startIndex < 0 ? 0 : startIndex;
-        return str.length < max ?
-            Utils.padLeft(chr.slice(startIndex, chr.length) + str, max, chr) : str;
-    },
-
-
-    /**
-     * Adds trailing spaces to strings.
-     *
-     * @param {string} str - String to add trailing characters to.
-     * @param {number} max - Maximum width of the string.
-     * @param {char} [chr='0'] - The character to pad with.
-     * @returns {string}
-     *
-     * @example
-     * // returns "a   "
-     * Utils.padRight("a", 4);
-     *
-     * // returns "axxx"
-     * Utils.padRight("a", 4, "x");
-     */
-    padRight: function(str, max, chr) {
-        chr = chr || " ";
-        return str.length < max ?
-            Utils.padRight(str + chr.slice(0, max-str.length), max, chr) : str;
-    },
-
-
-    /**
      * Adds trailing bytes to a byteArray.
      *
      * @author tlwr [toby@toby.codes]
@@ -149,14 +97,6 @@ const Utils = {
         });
 
         return paddedBytes;
-    },
-
-
-    /**
-     * @alias Utils.padLeft
-     */
-    pad: function(str, max, chr) {
-        return Utils.padLeft(str, max, chr);
     },
 
 
@@ -201,7 +141,7 @@ const Utils = {
     hex: function(c, length) {
         c = typeof c == "string" ? Utils.ord(c) : c;
         length = length || 2;
-        return Utils.pad(c.toString(16), length);
+        return c.toString(16).padStart(length, "0");
     },
 
 
@@ -222,7 +162,7 @@ const Utils = {
     bin: function(c, length) {
         c = typeof c == "string" ? Utils.ord(c) : c;
         length = length || 8;
-        return Utils.pad(c.toString(2), length);
+        return c.toString(2).padStart(length, "0");
     },
 
 
@@ -656,7 +596,7 @@ const Utils = {
     /**
      * Convert a byte array into a hex string.
      *
-     * @param {byteArray} data
+     * @param {Uint8Array|byteArray} data
      * @param {string} [delim=" "]
      * @param {number} [padding=2]
      * @returns {string}
@@ -676,7 +616,7 @@ const Utils = {
         let output = "";
 
         for (let i = 0; i < data.length; i++) {
-            output += Utils.pad(data[i].toString(16), padding) + delim;
+            output += data[i].toString(16).padStart(padding, "0") + delim;
         }
 
         // Add \x or 0x to beginning
@@ -1379,3 +1319,45 @@ Array.prototype.equals = function(other) {
 String.prototype.count = function(chr) {
     return this.split(chr).length - 1;
 };
+
+
+/*
+ * Polyfills
+ */
+
+// https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
+if (!String.prototype.padStart) {
+    String.prototype.padStart = function padStart(targetLength, padString) {
+        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        padString = String((typeof padString !== "undefined" ? padString : " "));
+        if (this.length > targetLength) {
+            return String(this);
+        } else {
+            targetLength = targetLength-this.length;
+            if (targetLength > padString.length) {
+                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+            }
+            return padString.slice(0, targetLength) + String(this);
+        }
+    };
+}
+
+
+// https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
+if (!String.prototype.padEnd) {
+    String.prototype.padEnd = function padEnd(targetLength, padString) {
+        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        padString = String((typeof padString !== "undefined" ? padString : " "));
+        if (this.length > targetLength) {
+            return String(this);
+        } else {
+            targetLength = targetLength-this.length;
+            if (targetLength > padString.length) {
+                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+            }
+            return String(this) + padString.slice(0, targetLength);
+        }
+    };
+}

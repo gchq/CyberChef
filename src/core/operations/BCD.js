@@ -134,11 +134,11 @@ const BCD = {
         switch (outputFormat) {
             case "Nibbles":
                 return nibbles.map(n => {
-                    return Utils.padLeft(n.toString(2), 4);
+                    return n.toString(2).padStart(4, "0");
                 }).join(" ");
             case "Bytes":
                 return bytes.map(b => {
-                    return Utils.padLeft(b.toString(2), 8);
+                    return b.toString(2).padStart(8, "0");
                 }).join(" ");
             case "Raw":
             default:

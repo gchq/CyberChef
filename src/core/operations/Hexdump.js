@@ -56,8 +56,8 @@ const Hexdump = {
             }
 
             output += lineNo + "  " +
-                Utils.padRight(hexa, (length*(padding+1))) +
-                " |" + Utils.padRight(Utils.printable(Utils.byteArrayToChars(buff)), buff.length) + "|\n";
+                hexa.padEnd(length*(padding+1), " ") +
+                " |" + Utils.printable(Utils.byteArrayToChars(buff)).padEnd(buff.length, " ") + "|\n";
 
             if (includeFinalLength && i+buff.length === input.length) {
                 output += Utils.hex(i+buff.length, 8) + "\n";
