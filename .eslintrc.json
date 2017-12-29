@@ -35,7 +35,6 @@
         }],
 
         // disable rules from base configurations
-        "no-console": "off",
         "no-control-regex": "off",
 
         // stylistic conventions
@@ -90,6 +89,7 @@
         "$": false,
         "jQuery": false,
         "moment": false,
+        "log": false,
 
         "COMPILE_TIME": false,
         "COMPILE_MSG": false,

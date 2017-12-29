@@ -372,6 +372,17 @@
                             <input type="number" option="outputFileThreshold" id="outputFileThreshold" />
                             <label for="outputFileThreshold"> Size threshold for treating the output as a file (KiB)</label>
                         </div>
+                        <div class="option-item">
+                            <select option="logLevel" id="logLevel">
+                                <option value="silent">Silent</option>
+                                <option value="error">Error</option>
+                                <option value="warn">Warn</option>
+                                <option value="info">Info</option>
+                                <option value="debug">Debug</option>
+                                <option value="trace">Trace</option>
+                            </select>
+                            <label for="logLevel"> Console logging level</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" id="reset-options">Reset options to default</button>

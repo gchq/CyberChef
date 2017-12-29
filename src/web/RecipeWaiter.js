@@ -253,7 +253,7 @@ RecipeWaiter.prototype.breakpointClick = function(e) {
  */
 RecipeWaiter.prototype.operationDblclick = function(e) {
     e.target.remove();
-    window.dispatchEvent(this.manager.statechange);
+    this.opRemove(e);
 };
 
 
@@ -266,7 +266,7 @@ RecipeWaiter.prototype.operationDblclick = function(e) {
  */
 RecipeWaiter.prototype.operationChildDblclick = function(e) {
     e.target.parentNode.remove();
-    window.dispatchEvent(this.manager.statechange);
+    this.opRemove(e);
 };
 
 
@@ -421,6 +421,7 @@ RecipeWaiter.prototype.dropdownToggleClick = function(e) {
  * @param {event} e
  */
 RecipeWaiter.prototype.opAdd = function(e) {
+    log.debug(`'${e.target.querySelector(".arg-title").textContent}' added to recipe`);
     window.dispatchEvent(this.manager.statechange);
 };
 
@@ -433,6 +434,7 @@ RecipeWaiter.prototype.opAdd = function(e) {
  * @param {event} e
  */
 RecipeWaiter.prototype.opRemove = function(e) {
+    log.debug("Operation removed from recipe");
     window.dispatchEvent(this.manager.statechange);
 };
 

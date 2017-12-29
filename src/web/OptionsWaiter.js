@@ -8,8 +8,9 @@
  * @constructor
  * @param {App} app - The main view object for CyberChef.
  */
-const OptionsWaiter = function(app) {
+const OptionsWaiter = function(app, manager) {
     this.app = app;
+    this.manager = manager;
 };
 
 
@@ -86,6 +87,7 @@ OptionsWaiter.prototype.switchChange = function(e, state) {
     const el = e.target;
     const option = el.getAttribute("option");
 
+    log.debug(`Setting ${option} to ${state}`);
     this.app.options[option] = state;
 
     if (this.app.isLocalStorageAvailable())
@@ -102,8 +104,10 @@ OptionsWaiter.prototype.switchChange = function(e, state) {
 OptionsWaiter.prototype.numberChange = function(e) {
     const el = e.target;
     const option = el.getAttribute("option");
+    const val = parseInt(el.value, 10);
 
-    this.app.options[option] = parseInt(el.value, 10);
+    log.debug(`Setting ${option} to ${val}`);
+    this.app.options[option] = val;
 
     if (this.app.isLocalStorageAvailable())
         localStorage.setItem("options", JSON.stringify(this.app.options));
@@ -120,6 +124,7 @@ OptionsWaiter.prototype.selectChange = function(e) {
     const el = e.target;
     const option = el.getAttribute("option");
 
+    log.debug(`Setting ${option} to ${el.value}`);
     this.app.options[option] = el.value;
 
     if (this.app.isLocalStorageAvailable())
@@ -149,11 +154,25 @@ OptionsWaiter.prototype.setWordWrap = function() {
 
 /**
  * Changes the theme by setting the class of the <html> element.
+ * 
+ * @param {Event} e
  */
 OptionsWaiter.prototype.themeChange = function (e) {
     const themeClass = e.target.value;
 
     document.querySelector(":root").className = themeClass;
+};
+
+
+/**
+ * Changes the console logging level.
+ * 
+ * @param {Event} e
+ */
+OptionsWaiter.prototype.logLevelChange = function (e) {
+    const level = e.target.value;
+    log.setLevel(level, false);
+    this.manager.worker.setLogLevel();
 };
 
 export default OptionsWaiter;

@@ -58,7 +58,7 @@ const Manager = function(app) {
     this.ops         = new OperationsWaiter(this.app, this);
     this.input       = new InputWaiter(this.app, this);
     this.output      = new OutputWaiter(this.app, this);
-    this.options     = new OptionsWaiter(this.app);
+    this.options     = new OptionsWaiter(this.app, this);
     this.highlighter = new HighlighterWaiter(this.app, this);
     this.seasonal    = new SeasonalWaiter(this.app, this);
     this.bindings    = new BindingsWaiter(this.app, this);
@@ -119,7 +119,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".op-list .op-icon", "mouseover", this.ops.opIconMouseover, this.ops);
     this.addDynamicListener(".op-list .op-icon", "mouseleave", this.ops.opIconMouseleave, this.ops);
     this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
-    this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd.bind(this.recipe));
+    this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
 
     // Recipe
     this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
@@ -172,6 +172,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
     document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
+    document.getElementById("logLevel").addEventListener("change", this.options.logLevelChange.bind(this.options));
 
     // Misc
     window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
