@@ -49,9 +49,11 @@ App.prototype.setup = function() {
     this.manager.setup();
     this.resetLayout();
     this.setCompileMessage();
-    this.loadURIParams();
 
+    log.debug("App loaded");
     this.appLoaded = true;
+
+    this.loadURIParams();
     this.loaded();
 };
 

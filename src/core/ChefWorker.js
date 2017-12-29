@@ -11,6 +11,15 @@ import Chef from "./Chef.js";
 import OperationConfig from "./config/MetaConfig.js";
 import OpModules from "./config/modules/Default.js";
 
+// Add ">" to the start of all log messages in the Chef Worker
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: [">"],
+    prefixFormat: "%p"
+});
+
 
 // Set up Chef instance
 self.chef = new Chef();
@@ -91,7 +100,7 @@ async function bake(data) {
         );
 
         self.postMessage({
-            action: "bakeSuccess",
+            action: "bakeComplete",
             data: response
         });
     } catch (err) {

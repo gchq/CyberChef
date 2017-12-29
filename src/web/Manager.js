@@ -119,7 +119,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".op-list .op-icon", "mouseover", this.ops.opIconMouseover, this.ops);
     this.addDynamicListener(".op-list .op-icon", "mouseleave", this.ops.opIconMouseleave, this.ops);
     this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
-    this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd.bind(this.recipe));
+    this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
 
     // Recipe
     this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);

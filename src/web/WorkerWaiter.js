@@ -45,7 +45,7 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
     log.debug("Receiving '" + r.action + "' from ChefWorker");
 
     switch (r.action) {
-        case "bakeSuccess":
+        case "bakeComplete":
             this.bakingComplete(r.data);
             break;
         case "bakeError":
@@ -56,6 +56,7 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
             break;
         case "workerLoaded":
             this.app.workerLoaded = true;
+            log.debug("ChefWorker loaded");
             this.app.loaded();
             break;
         case "statusMessage":
@@ -118,6 +119,7 @@ WorkerWaiter.prototype.bakingComplete = function(response) {
     this.app.progress = response.progress;
     this.manager.recipe.updateBreakpointIndicator(response.progress);
     this.manager.output.set(response.result, response.type, response.duration);
+    log.debug("--- Bake complete ---");
 };
 
 
