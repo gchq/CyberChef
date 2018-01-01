@@ -272,6 +272,54 @@ DES uses a key length of 8 bytes (64 bits).`;
 
 
     /**
+     * RC2 Encrypt operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runRc2Enc: function (input, args) {
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteString(args[1].string, args[1].option),
+            inputType = args[2],
+            outputType = args[3],
+            cipher = forge.rc2.createEncryptionCipher(key);
+
+        input = Utils.convertToByteString(input, inputType);
+
+        cipher.start(iv || null);
+        cipher.update(forge.util.createBuffer(input));
+        cipher.finish();
+
+        return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
+    },
+
+
+    /**
+     * RC2 Decrypt operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runRc2Dec: function (input, args) {
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteString(args[1].string, args[1].option),
+            inputType = args[2],
+            outputType = args[3],
+            decipher = forge.rc2.createDecryptionCipher(key);
+
+        input = Utils.convertToByteString(input, inputType);
+
+        decipher.start(iv || null);
+        decipher.update(forge.util.createBuffer(input));
+        decipher.finish();
+
+        return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+    },
+
+
+    /**
      * @constant
      * @default
      */

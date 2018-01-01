@@ -28,6 +28,8 @@ OpModules.Ciphers = {
     "Derive EVP key":       Cipher.runEvpkdf,
     "RC4":                  Cipher.runRc4,
     "RC4 Drop":             Cipher.runRc4drop,
+    "RC2 Encrypt":          Cipher.runRc2Enc,
+    "RC2 Decrypt":          Cipher.runRc2Dec,
     "Vigenère Encode":      Cipher.runVigenereEnc,
     "Vigenère Decode":      Cipher.runVigenereDec,
     "Bifid Cipher Encode":  Cipher.runBifidEnc,

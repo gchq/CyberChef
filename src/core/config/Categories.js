@@ -79,6 +79,8 @@ const Categories = [
             "DES Decrypt",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
+            "RC2 Encrypt",
+            "RC2 Decrypt",
             "RC4",
             "RC4 Drop",
             "ROT13",

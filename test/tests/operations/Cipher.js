@@ -1269,7 +1269,7 @@ DES uses a key length of 8 bytes (64 bits).`,
         ],
     },
     {
-        name: "Triple DES Decrypt: DES-EDE3-ECB Binary",
+        name: "Triple DES Decrypt: DES-EDE3-ECB, Binary",
         input: "aa81f23d1b3abebd68ac560e051a711c2923843beecddb0f7fe4113bd1874e73cccf3a2a494bb011e154ca2737b4d0eb5978a10316361074ed368d85d5aff5c8555ea101b0a468e58780a74c7830c561674c183c972a2b48931adf789cb16df304e169500f8c95ad",
         expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
         recipeConfig: [
@@ -1279,6 +1279,96 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
                     "ECB", "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Encrypt: no key",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "d3644d898b51a544f690b506c3fd0caeb7a1e6097f7ea28f69b909a4d8805c9a05f4cade8b281d3f044fa069374efb90e94723622c86afc17caee394ffbee0abe627de299208460eb981c9d56f9df885091c6c89e2ee173264b2820b8e67675214e6545a05dc0d3f",
+        recipeConfig: [
+            {
+                "op": "RC2 Encrypt",
+                "args": [
+                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": ""},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Encrypt: RC2-CBC, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "d25e5bc6c9311ef196d6f21cc4b0274b29fcca366aba5256406e02bf4ae628398f84e7d72ad92025ede76df4752d1510fe9c3492efb1dcf0be2cd41d619e10b9dd5a2304c2efbd3598d3b87f1a21f326d45e65537563436cfb6e4a41ec3733182ddc058f96f74a6c",
+        recipeConfig: [
+            {
+                "op": "RC2 Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    {"option": "Hex", "string": "ae817c784a097e0c"},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Encrypt: RC2-ECB, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "a160bf23b2a85eaa43d26753e51aaa899f162ec0da7280fffd41b705c5309c7fef2bbb56bf261cab4eadd3a5c69e0a67d45e426d1097187cc9a959b4d979a9d40df26f3dc8d030453fe27701438b78d3ce044330b4b5dca7832537ecf40b914f1b1dc16d4e6d7229",
+        recipeConfig: [
+            {
+                "op": "RC2 Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    {"option": "Hex", "string": ""},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Decrypt: no key",
+        input: "d3644d898b51a544f690b506c3fd0caeb7a1e6097f7ea28f69b909a4d8805c9a05f4cade8b281d3f044fa069374efb90e94723622c86afc17caee394ffbee0abe627de299208460eb981c9d56f9df885091c6c89e2ee173264b2820b8e67675214e6545a05dc0d3f",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "RC2 Decrypt",
+                "args": [
+                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": ""},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Decrypt: RC2-CBC, Binary",
+        input: "d25e5bc6c9311ef196d6f21cc4b0274b29fcca366aba5256406e02bf4ae628398f84e7d72ad92025ede76df4752d1510fe9c3492efb1dcf0be2cd41d619e10b9dd5a2304c2efbd3598d3b87f1a21f326d45e65537563436cfb6e4a41ec3733182ddc058f96f74a6c",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "RC2 Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    {"option": "Hex", "string": "ae817c784a097e0c"},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Decrypt: RC2-ECB, Binary",
+        input: "a160bf23b2a85eaa43d26753e51aaa899f162ec0da7280fffd41b705c5309c7fef2bbb56bf261cab4eadd3a5c69e0a67d45e426d1097187cc9a959b4d979a9d40df26f3dc8d030453fe27701438b78d3ce044330b4b5dca7832537ecf40b914f1b1dc16d4e6d7229",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "RC2 Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    {"option": "Hex", "string": ""},
+                    "Hex", "Hex"
                 ]
             }
         ],
