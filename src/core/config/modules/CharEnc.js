@@ -6,7 +6,6 @@ import CharEnc from "../../operations/CharEnc.js";
  *
  * Libraries:
  *  - cptable
- *  - CryptoJS
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017

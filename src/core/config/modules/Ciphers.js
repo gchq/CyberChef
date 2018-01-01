@@ -7,6 +7,7 @@ import Cipher from "../../operations/Cipher.js";
  * Libraries:
  *  - CryptoJS
  *  - Blowfish
+ *  - Forge
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -23,8 +24,6 @@ OpModules.Ciphers = {
     "DES Decrypt":          Cipher.runDesDec,
     "Triple DES Encrypt":   Cipher.runTripleDesEnc,
     "Triple DES Decrypt":   Cipher.runTripleDesDec,
-    "Rabbit Encrypt":       Cipher.runRabbitEnc,
-    "Rabbit Decrypt":       Cipher.runRabbitDec,
     "Derive PBKDF2 key":    Cipher.runPbkdf2,
     "Derive EVP key":       Cipher.runEvpkdf,
     "RC4":                  Cipher.runRc4,

@@ -1,5 +1,6 @@
 import Utils from "../Utils.js";
 import CryptoJS from "crypto-js";
+import forge from "imports-loader?jQuery=>null!node-forge/dist/forge.min.js";
 import {blowfish as Blowfish} from "sladex-blowfish";
 
 
@@ -18,132 +19,22 @@ const Cipher = {
      * @constant
      * @default
      */
-    IO_FORMAT1: ["Hex", "Base64", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1"],
+    IO_FORMAT1: ["Hex", "UTF8", "Latin1", "Base64"],
+    /**
+    * @constant
+    * @default
+    */
+    IO_FORMAT2: ["Raw", "Hex"],
+    /**
+    * @constant
+    * @default
+    */
+    IO_FORMAT3: ["Hex", "Raw"],
     /**
      * @constant
      * @default
      */
-    IO_FORMAT2: ["UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1", "Hex", "Base64"],
-    /**
-     * @constant
-     * @default
-     */
-    IO_FORMAT3: ["Hex", "Base64", "UTF16", "UTF16LE", "UTF16BE", "Latin1"],
-    /**
-     * @constant
-     * @default
-     */
-    IO_FORMAT4: ["Latin1", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Hex", "Base64"],
-    /**
-     * @constant
-     * @default
-     */
-    MODES: ["CBC", "CFB", "CTR", "OFB", "ECB"],
-    /**
-     * @constant
-     * @default
-     */
-    PADDING: ["Pkcs7", "Iso97971", "AnsiX923", "Iso10126", "ZeroPadding", "NoPadding"],
-    /**
-     * @constant
-     * @default
-     */
-    RESULT_TYPE: ["Show all", "Ciphertext", "Key", "IV", "Salt"],
-
-
-    /**
-     * Runs encryption operations using the CryptoJS framework.
-     *
-     * @private
-     * @param {function} algo - The CryptoJS algorithm to use
-     * @param {byteArray} input
-     * @param {function} args
-     * @returns {string}
-     */
-    _enc: function (algo, input, args) {
-        let key = Cipher._format[args[0].option].parse(args[0].string || ""),
-            iv = Cipher._format[args[1].option].parse(args[1].string || ""),
-            salt = Cipher._format[args[2].option].parse(args[2].string || ""),
-            mode = CryptoJS.mode[args[3]],
-            padding = CryptoJS.pad[args[4]],
-            resultOption = args[5].toLowerCase(),
-            outputFormat = args[6];
-
-        if (iv.sigBytes === 0) {
-            // Use passphrase rather than key. Need to convert it to a string.
-            key = key.toString(CryptoJS.enc.Latin1);
-        }
-
-        const encrypted = algo.encrypt(input, key, {
-            salt: salt.sigBytes > 0 ? salt : false,
-            iv: iv.sigBytes > 0 ? iv : null,
-            mode: mode,
-            padding: padding
-        });
-
-        let result = "";
-        if (resultOption === "show all") {
-            result += "Key:  " + encrypted.key.toString(Cipher._format[outputFormat]);
-            result += "\nIV:   " + encrypted.iv.toString(Cipher._format[outputFormat]);
-            if (encrypted.salt) result += "\nSalt: " + encrypted.salt.toString(Cipher._format[outputFormat]);
-            result += "\n\nCiphertext: " + encrypted.ciphertext.toString(Cipher._format[outputFormat]);
-        } else {
-            result = encrypted[resultOption].toString(Cipher._format[outputFormat]);
-        }
-
-        return result;
-    },
-
-
-    /**
-     * Runs decryption operations using the CryptoJS framework.
-     *
-     * @private
-     * @param {function} algo - The CryptoJS algorithm to use
-     * @param {byteArray} input
-     * @param {function} args
-     * @returns {string}
-     */
-    _dec: function (algo, input, args) {
-        let key = Cipher._format[args[0].option].parse(args[0].string || ""),
-            iv = Cipher._format[args[1].option].parse(args[1].string || ""),
-            salt = Cipher._format[args[2].option].parse(args[2].string || ""),
-            mode = CryptoJS.mode[args[3]],
-            padding = CryptoJS.pad[args[4]],
-            inputFormat = args[5],
-            outputFormat = args[6];
-
-        // The ZeroPadding option causes a crash when the input length is 0
-        if (!input.length) {
-            return "No input";
-        }
-
-        const ciphertext = Cipher._format[inputFormat].parse(input);
-
-        if (iv.sigBytes === 0) {
-            // Use passphrase rather than key. Need to convert it to a string.
-            key = key.toString(CryptoJS.enc.Latin1);
-        }
-
-        const decrypted = algo.decrypt({
-            ciphertext: ciphertext,
-            salt: salt.sigBytes > 0 ? salt : false
-        }, key, {
-            iv: iv.sigBytes > 0 ? iv : null,
-            mode: mode,
-            padding: padding
-        });
-
-        let result;
-        try {
-            result = decrypted.toString(Cipher._format[outputFormat]);
-        } catch (err) {
-            result = "Decrypt error: " + err.message;
-        }
-
-        return result;
-    },
-
+    AES_MODES: ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"],
 
     /**
      * AES Encrypt operation.
@@ -153,7 +44,41 @@ const Cipher = {
      * @returns {string}
      */
     runAesEnc: function (input, args) {
-        return Cipher._enc(CryptoJS.AES, input, args);
+        const key = Utils.convertToByteArray(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
+
+        if ([16, 24, 32].indexOf(key.length) < 0) {
+            return `Invalid key length: ${key.length} bytes
+
+The following algorithms will be used based on the size of the key:
+  16 bytes = AES-128
+  24 bytes = AES-192
+  32 bytes = AES-256`;
+        }
+
+        input = Utils.convertToByteString(input, inputType);
+
+        const cipher = forge.cipher.createCipher("AES-" + mode, key);
+        cipher.start({iv: iv});
+        cipher.update(forge.util.createBuffer(input));
+        cipher.finish();
+
+        if (outputType === "Hex") {
+            if (mode === "GCM") {
+                return cipher.output.toHex() + "\n\n" +
+                    "Tag: " + cipher.mode.tag.toHex();
+            }
+            return cipher.output.toHex();
+        } else {
+            if (mode === "GCM") {
+                return cipher.output.getBytes() + "\n\n" +
+                    "Tag: " + cipher.mode.tag.getBytes();
+            }
+            return cipher.output.getBytes();
+        }
     },
 
 
@@ -165,9 +90,45 @@ const Cipher = {
      * @returns {string}
      */
     runAesDec: function (input, args) {
-        return Cipher._dec(CryptoJS.AES, input, args);
+        const key = Utils.convertToByteArray(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4],
+            gcmTag = Utils.convertToByteString(args[5].string, args[5].option);
+
+        if ([16, 24, 32].indexOf(key.length) < 0) {
+            return `Invalid key length: ${key.length} bytes
+
+The following algorithms will be used based on the size of the key:
+  16 bytes = AES-128
+  24 bytes = AES-192
+  32 bytes = AES-256`;
+        }
+
+        input = Utils.convertToByteString(input, inputType);
+
+        const decipher = forge.cipher.createDecipher("AES-" + mode, key);
+        decipher.start({
+            iv: iv,
+            tag: gcmTag
+        });
+        decipher.update(forge.util.createBuffer(input));
+        const result = decipher.finish();
+
+        if (result) {
+            return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+        } else {
+            return "Unable to decrypt input with these parameters.";
+        }
     },
 
+
+    /**
+     * @constant
+     * @default
+     */
+    DES_MODES: ["CBC", "CFB", "OFB", "CTR", "ECB"],
 
     /**
      * DES Encrypt operation.
@@ -177,7 +138,27 @@ const Cipher = {
      * @returns {string}
      */
     runDesEnc: function (input, args) {
-        return Cipher._enc(CryptoJS.DES, input, args);
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
+
+        if (key.length !== 8) {
+            return `Invalid key length: ${key.length} bytes
+
+DES uses a key length of 8 bytes (64 bits).
+Triple DES uses a key length of 24 bytes (192 bits).`;
+        }
+
+        input = Utils.convertToByteString(input, inputType);
+
+        const cipher = forge.cipher.createCipher("DES-" + mode, key);
+        cipher.start({iv: iv});
+        cipher.update(forge.util.createBuffer(input));
+        cipher.finish();
+
+        return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
     },
 
 
@@ -189,7 +170,31 @@ const Cipher = {
      * @returns {string}
      */
     runDesDec: function (input, args) {
-        return Cipher._dec(CryptoJS.DES, input, args);
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
+
+        if (key.length !== 8) {
+            return `Invalid key length: ${key.length} bytes
+
+DES uses a key length of 8 bytes (64 bits).
+Triple DES uses a key length of 24 bytes (192 bits).`;
+        }
+
+        input = Utils.convertToByteString(input, inputType);
+
+        const decipher = forge.cipher.createDecipher("DES-" + mode, key);
+        decipher.start({iv: iv});
+        decipher.update(forge.util.createBuffer(input));
+        const result = decipher.finish();
+
+        if (result) {
+            return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+        } else {
+            return "Unable to decrypt input with these parameters.";
+        }
     },
 
 
@@ -201,7 +206,27 @@ const Cipher = {
      * @returns {string}
      */
     runTripleDesEnc: function (input, args) {
-        return Cipher._enc(CryptoJS.TripleDES, input, args);
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
+
+        if (key.length !== 24) {
+            return `Invalid key length: ${key.length} bytes
+
+Triple DES uses a key length of 24 bytes (192 bits).
+DES uses a key length of 8 bytes (64 bits).`;
+        }
+
+        input = Utils.convertToByteString(input, inputType);
+
+        const cipher = forge.cipher.createCipher("3DES-" + mode, key);
+        cipher.start({iv: iv});
+        cipher.update(forge.util.createBuffer(input));
+        cipher.finish();
+
+        return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
     },
 
 
@@ -213,31 +238,31 @@ const Cipher = {
      * @returns {string}
      */
     runTripleDesDec: function (input, args) {
-        return Cipher._dec(CryptoJS.TripleDES, input, args);
-    },
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
 
+        if (key.length !== 24) {
+            return `Invalid key length: ${key.length} bytes
 
-    /**
-     * Rabbit Encrypt operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runRabbitEnc: function (input, args) {
-        return Cipher._enc(CryptoJS.Rabbit, input, args);
-    },
+Triple DES uses a key length of 24 bytes (192 bits).
+DES uses a key length of 8 bytes (64 bits).`;
+        }
 
+        input = Utils.convertToByteString(input, inputType);
 
-    /**
-     * Rabbit Decrypt operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runRabbitDec: function (input, args) {
-        return Cipher._dec(CryptoJS.Rabbit, input, args);
+        const decipher = forge.cipher.createDecipher("3DES-" + mode, key);
+        decipher.start({iv: iv});
+        decipher.update(forge.util.createBuffer(input));
+        const result = decipher.finish();
+
+        if (result) {
+            return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+        } else {
+            return "Unable to decrypt input with these parameters.";
+        }
     },
 
 
@@ -363,6 +388,18 @@ const Cipher = {
 
         return key.toString(Cipher._format[outputFormat]);
     },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    RC4_KEY_FORMAT: ["UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1", "Hex", "Base64"],
+    /**
+     * @constant
+     * @default
+     */
+    CJS_IO_FORMAT: ["Latin1", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Hex", "Base64"],
 
 
     /**
