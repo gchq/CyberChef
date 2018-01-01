@@ -24,12 +24,17 @@ const Cipher = {
     * @constant
     * @default
     */
-    IO_FORMAT2: ["Raw", "Hex"],
+    IO_FORMAT2: ["UTF8", "Latin1", "Hex", "Base64"],
     /**
     * @constant
     * @default
     */
-    IO_FORMAT3: ["Hex", "Raw"],
+    IO_FORMAT3: ["Raw", "Hex"],
+    /**
+    * @constant
+    * @default
+    */
+    IO_FORMAT4: ["Hex", "Raw"],
     /**
      * @constant
      * @default
@@ -270,12 +275,29 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @constant
      * @default
      */
-    BLOWFISH_MODES: ["ECB", "CBC", "PCBC", "CFB", "OFB", "CTR"],
+    BLOWFISH_MODES: ["CBC", "PCBC", "CFB", "OFB", "CTR", "ECB"],
     /**
      * @constant
      * @default
      */
-    BLOWFISH_OUTPUT_TYPES: ["Base64", "Hex", "String", "Raw"],
+    BLOWFISH_OUTPUT_TYPES: ["Hex", "Base64", "Raw"],
+
+    /**
+     * Lookup table for Blowfish output types.
+     * 
+     * @private
+     */
+    _BLOWFISH_OUTPUT_TYPE_LOOKUP: {
+        Base64: 0, Hex: 1, String: 2, Raw: 3
+    },
+    /**
+     * Lookup table for Blowfish modes.
+     * 
+     * @private
+     */
+    _BLOWFISH_MODE_LOOKUP: {
+        ECB: 0, CBC: 1, PCBC: 2, CFB: 3, OFB: 4, CTR: 5
+    },
 
     /**
      * Blowfish Encrypt operation.
@@ -285,19 +307,24 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @returns {string}
      */
     runBlowfishEnc: function (input, args) {
-        let key = Cipher._format[args[0].option].parse(args[0].string).toString(Cipher._format.Latin1),
-            mode = args[1],
-            outputFormat = args[2];
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
 
         if (key.length === 0) return "Enter a key";
 
-        let encHex = Blowfish.encrypt(input, key, {
-                outputType: 1,
-                cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
-            }),
-            enc = CryptoJS.enc.Hex.parse(encHex);
+        input = Utils.convertToByteString(input, inputType);
 
-        return enc.toString(Cipher._format[outputFormat]);
+        Blowfish.setIV(Utils.toBase64(iv), 0);
+
+        const enc = Blowfish.encrypt(input, key, {
+            outputType: Cipher._BLOWFISH_OUTPUT_TYPE_LOOKUP[outputType],
+            cipherMode: Cipher._BLOWFISH_MODE_LOOKUP[mode]
+        });
+
+        return outputType === "Raw" ? Utils.byteArrayToChars(enc) : enc   ;
     },
 
 
@@ -309,18 +336,24 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @returns {string}
      */
     runBlowfishDec: function (input, args) {
-        let key = Cipher._format[args[0].option].parse(args[0].string).toString(Cipher._format.Latin1),
-            mode = args[1],
-            inputFormat = args[2];
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
 
         if (key.length === 0) return "Enter a key";
 
-        input = Cipher._format[inputFormat].parse(input);
+        input = inputType === "Raw" ? Utils.strToByteArray(input) : input;
 
-        return Blowfish.decrypt(input.toString(CryptoJS.enc.Base64), key, {
-            outputType: 0, // This actually means inputType. The library is weird.
-            cipherMode: Cipher.BLOWFISH_MODES.indexOf(mode)
+        Blowfish.setIV(Utils.toBase64(iv), 0);
+
+        const result = Blowfish.decrypt(input, key, {
+            outputType: Cipher._BLOWFISH_OUTPUT_TYPE_LOOKUP[inputType], // This actually means inputType. The library is weird.
+            cipherMode: Cipher._BLOWFISH_MODE_LOOKUP[mode]
         });
+
+        return outputType === "Hex" ? Utils.toHexFast(Utils.strToByteArray(result)) : result;
     },
 
 

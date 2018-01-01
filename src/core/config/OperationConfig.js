@@ -1126,12 +1126,12 @@ const OperationConfig = {
             {
                 name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT3
+                value: Cipher.IO_FORMAT4
             },
             {
                 name: "Output",
                 type: "option",
-                value: Cipher.IO_FORMAT2
+                value: Cipher.IO_FORMAT3
             },
             {
                 name: "GCM Tag",
@@ -1167,12 +1167,12 @@ const OperationConfig = {
             {
                 name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT2
+                value: Cipher.IO_FORMAT3
             },
             {
                 name: "Output",
                 type: "option",
-                value: Cipher.IO_FORMAT3
+                value: Cipher.IO_FORMAT4
             },
         ]
     },
@@ -1202,12 +1202,12 @@ const OperationConfig = {
             {
                 name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT3
+                value: Cipher.IO_FORMAT4
             },
             {
                 name: "Output",
                 type: "option",
-                value: Cipher.IO_FORMAT2
+                value: Cipher.IO_FORMAT3
             },
         ]
     },
@@ -1237,12 +1237,12 @@ const OperationConfig = {
             {
                 name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT2
+                value: Cipher.IO_FORMAT3
             },
             {
                 name: "Output",
                 type: "option",
-                value: Cipher.IO_FORMAT3
+                value: Cipher.IO_FORMAT4
             },
         ]
     },
@@ -1272,12 +1272,12 @@ const OperationConfig = {
             {
                 name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT3
+                value: Cipher.IO_FORMAT4
             },
             {
                 name: "Output",
                 type: "option",
-                value: Cipher.IO_FORMAT2
+                value: Cipher.IO_FORMAT3
             },
         ]
     },
@@ -1307,7 +1307,42 @@ const OperationConfig = {
             {
                 name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT2
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+        ]
+    },
+    "Blowfish Decrypt": {
+        module: "Ciphers",
+        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.BLOWFISH_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.BLOWFISH_OUTPUT_TYPES
             },
             {
                 name: "Output",
@@ -1316,33 +1351,9 @@ const OperationConfig = {
             },
         ]
     },
-    "Blowfish Decrypt": {
-        module: "Ciphers",
-        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.CJS_IO_FORMAT
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.BLOWFISH_MODES
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-        ]
-    },
     "Blowfish Encrypt": {
         module: "Ciphers",
-        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.",
+        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1350,7 +1361,13 @@ const OperationConfig = {
                 name: "Key",
                 type: "toggleString",
                 value: "",
-                toggleValues: Cipher.CJS_IO_FORMAT
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
             {
                 name: "Mode",
@@ -1358,9 +1375,14 @@ const OperationConfig = {
                 value: Cipher.BLOWFISH_MODES
             },
             {
-                name: "Output format",
+                name: "Input",
                 type: "option",
-                value: Cipher.IO_FORMAT1
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.BLOWFISH_OUTPUT_TYPES
             },
         ]
     },
