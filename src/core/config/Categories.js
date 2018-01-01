@@ -99,6 +99,7 @@ const Categories = [
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "Pseudo-Random Number Generator",
         ]
     },
     {
@@ -198,6 +199,7 @@ const Categories = [
             "Parse colour code",
             "Escape string",
             "Unescape string",
+            "Pseudo-Random Number Generator",
         ]
     },
     {
@@ -313,6 +315,7 @@ const Categories = [
             "Detect File Type",
             "Scan for Embedded Files",
             "Disassemble x86",
+            "Pseudo-Random Number Generator",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",

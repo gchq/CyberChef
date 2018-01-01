@@ -437,7 +437,7 @@ DES uses a key length of 8 bytes (64 bits).`;
                 forge.random.getBytesSync(keySize),
             derivedKey = forge.pkcs5.pbkdf2(passphrase, salt, iterations, keySize / 8, hasher.toLowerCase());
 
-        return Utils.toHexFast(Utils.strToCharcode(derivedKey));
+        return forge.util.bytesToHex(derivedKey);
     },
 
 
@@ -512,6 +512,53 @@ DES uses a key length of 8 bytes (64 bits).`;
             encrypted = CryptoJS.RC4Drop.encrypt(message, passphrase, { drop: drop });
 
         return encrypted.ciphertext.toString(Cipher._format[args[2]]);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    PRNG_BYTES: 32,
+    PRNG_OUTPUT: ["Hex", "Number", "Byte array", "Raw"],
+
+    /**
+     * Pseudo-Random Number Generator operation.
+     * 
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runPRNG: function(input, args) {
+        const numBytes = args[0],
+            outputAs = args[1];
+
+        let bytes;
+
+        if (ENVIRONMENT_IS_WORKER() && self.crypto) {
+            bytes = self.crypto.getRandomValues(new Uint8Array(numBytes));
+            bytes = Utils.arrayBufferToStr(bytes.buffer);
+        } else {
+            bytes = forge.random.getBytesSync(numBytes);
+        }
+
+        let value = 0,
+            i;
+
+        switch (outputAs) {
+            case "Hex":
+                return forge.util.bytesToHex(bytes);
+            case "Number":
+                for (i = bytes.length - 1; i >= 0; i--) {
+                    value = (value * 256) + bytes.charCodeAt(i);
+                }
+                return value.toString();
+            case "Byte array":
+                return JSON.stringify(Utils.strToCharcode(bytes));
+            case "Raw":
+            default:
+                return bytes;
+        }
     },
 
 

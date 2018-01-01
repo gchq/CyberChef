@@ -1503,6 +1503,24 @@ const OperationConfig = {
             },
         ]
     },
+    "Pseudo-Random Number Generator": {
+        module: "Ciphers",
+        description: "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Number of bytes",
+                type: "number",
+                value: Cipher.PRNG_BYTES
+            },
+            {
+                name: "Output as",
+                type: "option",
+                value: Cipher.PRNG_OUTPUT
+            }
+        ]
+    },
     "Derive PBKDF2 key": {
         module: "Ciphers",
         description: "PBKDF2 is a password-based key derivation function. It is part of RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, specifically PKCS #5 v2.0, also published as Internet Engineering Task Force's RFC 2898.<br><br>In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",

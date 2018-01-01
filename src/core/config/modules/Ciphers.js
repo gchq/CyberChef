@@ -38,6 +38,7 @@ OpModules.Ciphers = {
     "Affine Cipher Decode": Cipher.runAffineDec,
     "Atbash Cipher":        Cipher.runAtbash,
     "Substitute":           Cipher.runSubstitute,
+    "Pseudo-Random Number Generator": Cipher.runPRNG,
 };
 
 export default OpModules;
