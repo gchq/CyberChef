@@ -361,7 +361,7 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @constant
      * @default
      */
-    KDF_KEY_SIZE: 256,
+    KDF_KEY_SIZE: 128,
     /**
      * @constant
      * @default
@@ -371,7 +371,7 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @constant
      * @default
      */
-    HASHERS: ["MD5", "SHA1", "SHA224", "SHA256", "SHA384", "SHA512", "SHA3", "RIPEMD160"],
+    HASHERS: ["SHA1", "SHA256", "SHA384", "SHA512", "MD5"],
 
     /**
      * Derive PBKDF2 key operation.
@@ -381,20 +381,15 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @returns {string}
      */
     runPbkdf2: function (input, args) {
-        let keySize = args[0] / 32,
-            iterations = args[1],
-            hasher = args[2],
-            salt = CryptoJS.enc.Hex.parse(args[3] || ""),
-            inputFormat = args[4],
-            outputFormat = args[5],
-            passphrase = Cipher._format[inputFormat].parse(input),
-            key = CryptoJS.PBKDF2(passphrase, salt, {
-                keySize: keySize,
-                hasher: CryptoJS.algo[hasher],
-                iterations: iterations,
-            });
+        const passphrase = Utils.convertToByteString(args[0].string, args[0].option),
+            keySize = args[1],
+            iterations = args[2],
+            hasher = args[3],
+            salt = Utils.convertToByteString(args[4].string, args[4].option) ||
+                forge.random.getBytesSync(keySize),
+            derivedKey = forge.pkcs5.pbkdf2(passphrase, salt, iterations, keySize / 8, hasher.toLowerCase());
 
-        return key.toString(Cipher._format[outputFormat]);
+        return Utils.toHexFast(Utils.strToCharcode(derivedKey));
     },
 
 
@@ -406,20 +401,18 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @returns {string}
      */
     runEvpkdf: function (input, args) {
-        let keySize = args[0] / 32,
-            iterations = args[1],
-            hasher = args[2],
-            salt = CryptoJS.enc.Hex.parse(args[3] || ""),
-            inputFormat = args[4],
-            outputFormat = args[5],
-            passphrase = Cipher._format[inputFormat].parse(input),
+        const passphrase = Utils.convertToByteString(args[0].string, args[0].option),
+            keySize = args[1] / 32,
+            iterations = args[2],
+            hasher = args[3],
+            salt = Utils.convertToByteString(args[4].string, args[4].option),
             key = CryptoJS.EvpKDF(passphrase, salt, {
                 keySize: keySize,
                 hasher: CryptoJS.algo[hasher],
                 iterations: iterations,
             });
 
-        return key.toString(Cipher._format[outputFormat]);
+        return key.toString(CryptoJS.enc.Hex);
     },
 
 

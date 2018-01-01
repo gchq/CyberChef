@@ -1445,10 +1445,16 @@ const OperationConfig = {
     },
     "Derive PBKDF2 key": {
         module: "Ciphers",
-        description: "PBKDF2 is a password-based key derivation function. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>Enter your passphrase as the input and then set the relevant options to generate a key.",
+        description: "PBKDF2 is a password-based key derivation function. It is part of RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, specifically PKCS #5 v2.0, also published as Internet Engineering Task Force's RFC 2898.<br><br>In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
         inputType: "string",
         outputType: "string",
         args: [
+            {
+                name: "Passphrase",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT2
+            },
             {
                 name: "Key size",
                 type: "number",
@@ -1465,28 +1471,25 @@ const OperationConfig = {
                 value: Cipher.HASHERS
             },
             {
-                name: "Salt (hex)",
-                type: "string",
-                value: ""
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.CJS_IO_FORMAT
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
+                name: "Salt",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
         ]
     },
     "Derive EVP key": {
         module: "Ciphers",
-        description: "EVP is a password-based key derivation function used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>Enter your passphrase as the input and then set the relevant options to generate a key.",
+        description: "EVP is a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
         inputType: "string",
         outputType: "string",
         args: [
+            {
+                name: "Passphrase",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT2
+            },
             {
                 name: "Key size",
                 type: "number",
@@ -1503,19 +1506,10 @@ const OperationConfig = {
                 value: Cipher.HASHERS
             },
             {
-                name: "Salt (hex)",
-                type: "string",
-                value: ""
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.CJS_IO_FORMAT
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
+                name: "Salt",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
         ]
     },
