@@ -79,13 +79,13 @@ TestRegister.addTests([
 
     /**
      * Ciphers
-     * 
+     *
      * The following expectedOutputs were generated using the following command format:
      * > openssl enc -aes-128-cbc -in test.txt -out test.enc -K "00112233445566778899aabbccddeeff" -iv "00112233445566778899aabbccddeeff"
      * > xxd -p test.enc | tr -d '\n' | xclip -selection clipboard
-     * 
+     *
      * All random data blocks (binary input, keys and IVs) were generated from /dev/urandom using dd:
-     * > dd if=/dev/urandom of=key.txt bs=16 count=1 
+     * > dd if=/dev/urandom of=key.txt bs=16 count=1
      */
     {
         name: "AES Encrypt: no key",

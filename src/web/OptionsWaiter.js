@@ -154,7 +154,7 @@ OptionsWaiter.prototype.setWordWrap = function() {
 
 /**
  * Changes the theme by setting the class of the <html> element.
- * 
+ *
  * @param {Event} e
  */
 OptionsWaiter.prototype.themeChange = function (e) {
@@ -166,7 +166,7 @@ OptionsWaiter.prototype.themeChange = function (e) {
 
 /**
  * Changes the console logging level.
- * 
+ *
  * @param {Event} e
  */
 OptionsWaiter.prototype.logLevelChange = function (e) {

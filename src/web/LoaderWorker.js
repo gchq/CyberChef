@@ -20,7 +20,7 @@ self.addEventListener("message", function(e) {
 
 /**
  * Loads a file object into an ArrayBuffer, then transfers it back to the parent thread.
- * 
+ *
  * @param {File} file
  */
 self.loadFile = function(file) {

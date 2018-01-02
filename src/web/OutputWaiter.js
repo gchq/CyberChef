@@ -170,7 +170,7 @@ OutputWaiter.prototype.displayFileSlice = function() {
 
 /**
  * Handler for show file overlay events.
- * 
+ *
  * @param {Event} e
  */
 OutputWaiter.prototype.showFileOverlayClick = function(e) {

@@ -332,7 +332,7 @@ DES uses a key length of 8 bytes (64 bits).`;
 
     /**
      * Lookup table for Blowfish output types.
-     * 
+     *
      * @private
      */
     _BLOWFISH_OUTPUT_TYPE_LOOKUP: {
@@ -340,7 +340,7 @@ DES uses a key length of 8 bytes (64 bits).`;
     },
     /**
      * Lookup table for Blowfish modes.
-     * 
+     *
      * @private
      */
     _BLOWFISH_MODE_LOOKUP: {
@@ -524,7 +524,7 @@ DES uses a key length of 8 bytes (64 bits).`;
 
     /**
      * Pseudo-Random Number Generator operation.
-     * 
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -944,7 +944,7 @@ DES uses a key length of 8 bytes (64 bits).`;
 
     /**
      * A mapping of string formats to their classes in the CryptoJS library.
-     * 
+     *
      * @private
      * @constant
      */
