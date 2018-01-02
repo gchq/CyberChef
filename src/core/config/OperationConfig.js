@@ -1913,9 +1913,9 @@ const OperationConfig = {
     },
     "Drop bytes": {
         module: "Default",
-        description: "Cuts the specified number of bytes out of the data.",
-        inputType: "byteArray",
-        outputType: "byteArray",
+        description: "Cuts a slice of the specified number of bytes out of the data.",
+        inputType: "ArrayBuffer",
+        outputType: "ArrayBuffer",
         args: [
             {
                 name: "Start",
@@ -1937,8 +1937,8 @@ const OperationConfig = {
     "Take bytes": {
         module: "Default",
         description: "Takes a slice of the specified number of bytes from the data.",
-        inputType: "byteArray",
-        outputType: "byteArray",
+        inputType: "ArrayBuffer",
+        outputType: "ArrayBuffer",
         args: [
             {
                 name: "Start",

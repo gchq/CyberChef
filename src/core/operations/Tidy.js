@@ -101,32 +101,39 @@ const Tidy = {
     /**
      * Drop bytes operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     runDropBytes: function(input, args) {
-        let start = args[0],
+        const start = args[0],
             length = args[1],
             applyToEachLine = args[2];
 
         if (start < 0 || length < 0)
             throw "Error: Invalid value";
 
-        if (!applyToEachLine)
-            return input.slice(0, start).concat(input.slice(start+length, input.length));
+        if (!applyToEachLine) {
+            const left = input.slice(0, start),
+                right = input.slice(start + length, input.byteLength);
+            let result = new Uint8Array(left.byteLength + right.byteLength);
+            result.set(new Uint8Array(left), 0);
+            result.set(new Uint8Array(right), left.byteLength);
+            return result.buffer;
+        }
 
         // Split input into lines
+        const data = new Uint8Array(input);
         let lines = [],
             line = [],
             i;
 
-        for (i = 0; i < input.length; i++) {
-            if (input[i] === 0x0a) {
+        for (i = 0; i < data.length; i++) {
+            if (data[i] === 0x0a) {
                 lines.push(line);
                 line = [];
             } else {
-                line.push(input[i]);
+                line.push(data[i]);
             }
         }
         lines.push(line);
@@ -136,7 +143,7 @@ const Tidy = {
             output = output.concat(lines[i].slice(0, start).concat(lines[i].slice(start+length, lines[i].length)));
             output.push(0x0a);
         }
-        return output.slice(0, output.length-1);
+        return new Uint8Array(output.slice(0, output.length-1)).buffer;
     },
 
 
@@ -154,12 +161,12 @@ const Tidy = {
     /**
      * Take bytes operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     runTakeBytes: function(input, args) {
-        let start = args[0],
+        const start = args[0],
             length = args[1],
             applyToEachLine = args[2];
 
@@ -170,16 +177,17 @@ const Tidy = {
             return input.slice(start, start+length);
 
         // Split input into lines
+        const data = new Uint8Array(input);
         let lines = [],
-            line = [];
-        let i;
+            line = [],
+            i;
 
-        for (i = 0; i < input.length; i++) {
-            if (input[i] === 0x0a) {
+        for (i = 0; i < data.length; i++) {
+            if (data[i] === 0x0a) {
                 lines.push(line);
                 line = [];
             } else {
-                line.push(input[i]);
+                line.push(data[i]);
             }
         }
         lines.push(line);
@@ -189,7 +197,7 @@ const Tidy = {
             output = output.concat(lines[i].slice(start, start+length));
             output.push(0x0a);
         }
-        return output.slice(0, output.length-1);
+        return new Uint8Array(output.slice(0, output.length-1)).buffer;
     },
 
 
