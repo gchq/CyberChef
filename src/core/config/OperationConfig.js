@@ -1102,287 +1102,7 @@ const OperationConfig = {
     },
     "AES Decrypt": {
         module: "Ciphers",
-        description: "To successfully decrypt AES, you need either:<ul><li>The passphrase</li><li>Or the key and IV</li></ul>The IV should be the first 16 bytes of encrypted material.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT2
-            },
-        ]
-    },
-    "AES Encrypt": {
-        module: "Ciphers",
-        description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br>AES-128, AES-192, and AES-256 are supported.  The variant will be chosen based on the size of the key passed in.  If a passphrase is used, a 256-bit key will be generated.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Output result",
-                type: "option",
-                value: Cipher.RESULT_TYPE
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-        ]
-    },
-    "DES Decrypt": {
-        module: "Ciphers",
-        description: "To successfully decrypt DES, you need either:<ul><li>The passphrase</li><li>Or the key and IV</li></ul>The IV should be the first 8 bytes of encrypted material.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT2
-            },
-        ]
-    },
-    "DES Encrypt": {
-        module: "Ciphers",
-        description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Output result",
-                type: "option",
-                value: Cipher.RESULT_TYPE
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-        ]
-    },
-    "Triple DES Decrypt": {
-        module: "Ciphers",
-        description: "To successfully decrypt Triple DES, you need either:<ul><li>The passphrase</li><li>Or the key and IV</li></ul>The IV should be the first 8 bytes of encrypted material.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT2
-            },
-        ]
-    },
-    "Triple DES Encrypt": {
-        module: "Ciphers",
-        description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>Triple DES applies DES three times to each block to increase key size.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Output result",
-                type: "option",
-                value: Cipher.RESULT_TYPE
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-        ]
-    },
-    "Blowfish Decrypt": {
-        module: "Ciphers",
-        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.",
+        description: "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1390,7 +1110,229 @@ const OperationConfig = {
                 name: "Key",
                 type: "toggleString",
                 value: "",
-                toggleValues: Cipher.IO_FORMAT2
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.AES_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "GCM Tag",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+        ]
+    },
+    "AES Encrypt": {
+        module: "Ciphers",
+        description: "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.AES_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+        ]
+    },
+    "DES Decrypt": {
+        module: "Ciphers",
+        description: "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br>Triple DES uses a key length of 24 bytes (192 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.DES_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+        ]
+    },
+    "DES Encrypt": {
+        module: "Ciphers",
+        description: "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br>Triple DES uses a key length of 24 bytes (192 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.DES_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+        ]
+    },
+    "Triple DES Decrypt": {
+        module: "Ciphers",
+        description: "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.DES_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+        ]
+    },
+    "Triple DES Encrypt": {
+        module: "Ciphers",
+        description: "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Mode",
+                type: "option",
+                value: Cipher.DES_MODES
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+        ]
+    },
+    "Blowfish Decrypt": {
+        module: "Ciphers",
+        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
             {
                 name: "Mode",
@@ -1398,7 +1340,12 @@ const OperationConfig = {
                 value: Cipher.BLOWFISH_MODES
             },
             {
-                name: "Input format",
+                name: "Input",
+                type: "option",
+                value: Cipher.BLOWFISH_OUTPUT_TYPES
+            },
+            {
+                name: "Output",
                 type: "option",
                 value: Cipher.IO_FORMAT3
             },
@@ -1406,7 +1353,7 @@ const OperationConfig = {
     },
     "Blowfish Encrypt": {
         module: "Ciphers",
-        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.",
+        description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1414,7 +1361,13 @@ const OperationConfig = {
                 name: "Key",
                 type: "toggleString",
                 value: "",
-                toggleValues: Cipher.IO_FORMAT2
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
             {
                 name: "Mode",
@@ -1422,109 +1375,20 @@ const OperationConfig = {
                 value: Cipher.BLOWFISH_MODES
             },
             {
-                name: "Output format",
+                name: "Input",
                 type: "option",
                 value: Cipher.IO_FORMAT3
             },
-        ]
-    },
-    "Rabbit Decrypt": {
-        module: "Ciphers",
-        description: "To successfully decrypt Rabbit, you need either:<ul><li>The passphrase</li><li>Or the key and IV (This is currently broken. You need the key and salt at the moment.)</li></ul>The IV should be the first 8 bytes of encrypted material.",
-        inputType: "string",
-        outputType: "string",
-        args: [
             {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
+                name: "Output",
                 type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT2
-            },
-        ]
-    },
-    "Rabbit Encrypt": {
-        module: "Ciphers",
-        description: "Input: Either enter a passphrase (which will be used to derive a key using the OpenSSL KDF) or both the key and IV.<br><br>Rabbit is a high-performance stream cipher and a finalist in the eSTREAM Portfolio.  It is one of the four designs selected after a 3 1/2 year process where 22 designs were evaluated.",
-        inputType: "string",
-        outputType: "string",
-        args: [
-            {
-                name: "Passphrase/Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT2
-            },
-            {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-
-            },
-            {
-                name: "Salt",
-                type: "toggleString",
-                value: "",
-                toggleValues: Cipher.IO_FORMAT1
-            },
-            {
-                name: "Mode",
-                type: "option",
-                value: Cipher.MODES
-            },
-            {
-                name: "Padding",
-                type: "option",
-                value: Cipher.PADDING
-            },
-            {
-                name: "Output result",
-                type: "option",
-                value: Cipher.RESULT_TYPE
-            },
-            {
-                name: "Output format",
-                type: "option",
-                value: Cipher.IO_FORMAT1
+                value: Cipher.BLOWFISH_OUTPUT_TYPES
             },
         ]
     },
     "RC4": {
         module: "Ciphers",
-        description: "RC4 is a widely-used stream cipher. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.",
+        description: "RC4 (also known as ARC4) is a widely-used stream cipher designed by Ron Rivest. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1534,17 +1398,17 @@ const OperationConfig = {
                 name: "Passphrase",
                 type: "toggleString",
                 value: "",
-                toggleValues: Cipher.IO_FORMAT2
+                toggleValues: Cipher.RC4_KEY_FORMAT
             },
             {
                 name: "Input format",
                 type: "option",
-                value: Cipher.IO_FORMAT4
+                value: Cipher.CJS_IO_FORMAT
             },
             {
                 name: "Output format",
                 type: "option",
-                value: Cipher.IO_FORMAT4
+                value: Cipher.CJS_IO_FORMAT
             },
         ]
     },
@@ -1560,17 +1424,17 @@ const OperationConfig = {
                 name: "Passphrase",
                 type: "toggleString",
                 value: "",
-                toggleValues: Cipher.IO_FORMAT2
+                toggleValues: Cipher.RC4_KEY_FORMAT
             },
             {
                 name: "Input format",
                 type: "option",
-                value: Cipher.IO_FORMAT4
+                value: Cipher.CJS_IO_FORMAT
             },
             {
                 name: "Output format",
                 type: "option",
-                value: Cipher.IO_FORMAT4
+                value: Cipher.CJS_IO_FORMAT
             },
             {
                 name: "Number of bytes to drop",
@@ -1579,50 +1443,96 @@ const OperationConfig = {
             },
         ]
     },
-    "Derive PBKDF2 key": {
+    "RC2 Decrypt": {
         module: "Ciphers",
-        description: "PBKDF2 is a password-based key derivation function. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>Enter your passphrase as the input and then set the relevant options to generate a key.",
+        description: "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.",
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Key size",
-                type: "number",
-                value: Cipher.KDF_KEY_SIZE
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
             {
-                name: "Iterations",
-                type: "number",
-                value: Cipher.KDF_ITERATIONS
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
             {
-                name: "Hashing function",
+                name: "Input",
                 type: "option",
-                value: Cipher.HASHERS
+                value: Cipher.IO_FORMAT4
             },
             {
-                name: "Salt (hex)",
-                type: "string",
-                value: ""
-            },
-            {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT2
-            },
-            {
-                name: "Output format",
+                name: "Output",
                 type: "option",
                 value: Cipher.IO_FORMAT3
             },
         ]
     },
-    "Derive EVP key": {
+    "RC2 Encrypt": {
         module: "Ciphers",
-        description: "EVP is a password-based key derivation function used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>Enter your passphrase as the input and then set the relevant options to generate a key.",
+        description: "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.",
         inputType: "string",
         outputType: "string",
         args: [
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+            {
+                name: "Input",
+                type: "option",
+                value: Cipher.IO_FORMAT3
+            },
+            {
+                name: "Output",
+                type: "option",
+                value: Cipher.IO_FORMAT4
+            },
+        ]
+    },
+    "Pseudo-Random Number Generator": {
+        module: "Ciphers",
+        description: "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Number of bytes",
+                type: "number",
+                value: Cipher.PRNG_BYTES
+            },
+            {
+                name: "Output as",
+                type: "option",
+                value: Cipher.PRNG_OUTPUT
+            }
+        ]
+    },
+    "Derive PBKDF2 key": {
+        module: "Ciphers",
+        description: "PBKDF2 is a password-based key derivation function. It is part of RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, specifically PKCS #5 v2.0, also published as Internet Engineering Task Force's RFC 2898.<br><br>In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Passphrase",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT2
+            },
             {
                 name: "Key size",
                 type: "number",
@@ -1639,19 +1549,45 @@ const OperationConfig = {
                 value: Cipher.HASHERS
             },
             {
-                name: "Salt (hex)",
-                type: "string",
-                value: ""
+                name: "Salt",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
+            },
+        ]
+    },
+    "Derive EVP key": {
+        module: "Ciphers",
+        description: "EVP is a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Passphrase",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT2
             },
             {
-                name: "Input format",
-                type: "option",
-                value: Cipher.IO_FORMAT2
+                name: "Key size",
+                type: "number",
+                value: Cipher.KDF_KEY_SIZE
             },
             {
-                name: "Output format",
+                name: "Iterations",
+                type: "number",
+                value: Cipher.KDF_ITERATIONS
+            },
+            {
+                name: "Hashing function",
                 type: "option",
-                value: Cipher.IO_FORMAT3
+                value: Cipher.HASHERS
+            },
+            {
+                name: "Salt",
+                type: "toggleString",
+                value: "",
+                toggleValues: Cipher.IO_FORMAT1
             },
         ]
     },

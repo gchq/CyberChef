@@ -7,6 +7,7 @@ import Cipher from "../../operations/Cipher.js";
  * Libraries:
  *  - CryptoJS
  *  - Blowfish
+ *  - Forge
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -23,12 +24,12 @@ OpModules.Ciphers = {
     "DES Decrypt":          Cipher.runDesDec,
     "Triple DES Encrypt":   Cipher.runTripleDesEnc,
     "Triple DES Decrypt":   Cipher.runTripleDesDec,
-    "Rabbit Encrypt":       Cipher.runRabbitEnc,
-    "Rabbit Decrypt":       Cipher.runRabbitDec,
     "Derive PBKDF2 key":    Cipher.runPbkdf2,
     "Derive EVP key":       Cipher.runEvpkdf,
     "RC4":                  Cipher.runRc4,
     "RC4 Drop":             Cipher.runRc4drop,
+    "RC2 Encrypt":          Cipher.runRc2Enc,
+    "RC2 Decrypt":          Cipher.runRc2Dec,
     "Vigenère Encode":      Cipher.runVigenereEnc,
     "Vigenère Decode":      Cipher.runVigenereDec,
     "Bifid Cipher Encode":  Cipher.runBifidEnc,
@@ -37,6 +38,7 @@ OpModules.Ciphers = {
     "Affine Cipher Decode": Cipher.runAffineDec,
     "Atbash Cipher":        Cipher.runAtbash,
     "Substitute":           Cipher.runSubstitute,
+    "Pseudo-Random Number Generator": Cipher.runPRNG,
 };
 
 export default OpModules;

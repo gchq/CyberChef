@@ -314,6 +314,39 @@ const Utils = {
 
 
     /**
+     * Coverts data of varying types to a byte string.
+     * Accepts hex, Base64, UTF8 and Latin1 strings.
+     * 
+     * @param {string} str
+     * @param {string} type - One of "Hex", "Base64", "UTF8" or "Latin1"
+     * @returns {string}
+     * 
+     * @example
+     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
+     * Utils.convertToByteArray("Привет", "utf8");
+     * 
+     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
+     * Utils.convertToByteArray("d097d0b4d180d0b0d0b2d181d182d0b2d183d0b9d182d0b5", "hex");
+     * 
+     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
+     * Utils.convertToByteArray("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
+     */
+    convertToByteString: function(str, type) {
+        switch (type.toLowerCase()) {
+            case "hex":
+                return Utils.byteArrayToChars(Utils.fromHex(str));
+            case "base64":
+                return Utils.byteArrayToChars(Utils.fromBase64(str, null, "byteArray"));
+            case "utf8":
+                return utf8.encode(str);
+            case "latin1":
+            default:
+                return str;
+        }
+    },
+
+
+    /**
      * Converts a string to a byte array.
      * Treats the string as UTF-8 if any values are over 255.
      *
