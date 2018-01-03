@@ -806,7 +806,7 @@ const OperationConfig = {
         module: "Default",
         description: "Converts a number to decimal from a given numerical base.",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Radix",
@@ -818,7 +818,7 @@ const OperationConfig = {
     "To Base": {
         module: "Default",
         description: "Converts a decimal number to a given numerical base.",
-        inputType: "number",
+        inputType: "BigNumber",
         outputType: "string",
         args: [
             {
