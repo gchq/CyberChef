@@ -102,6 +102,7 @@
     "vkbeautify": "^0.99.3",
     "xmldom": "^0.1.27",
     "xpath": "0.0.27",
+    "xregexp": "^4.0.0",
     "zlibjs": "^0.3.1"
   },
   "scripts": {

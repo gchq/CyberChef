@@ -1,3 +1,6 @@
+import XRegExp from "xregexp";
+
+
 /**
  * Identifier extraction operations.
  *
@@ -49,6 +52,11 @@ const Extract = {
      * @default
      */
     DISPLAY_TOTAL: false,
+    /**
+     * @constant
+     * @default
+     */
+    ENCODING_LIST: ["All", "Single byte", "16-bit littleendian", "16-bit bigendian"],
 
     /**
      * Strings operation.
@@ -58,10 +66,27 @@ const Extract = {
      * @returns {string}
      */
     runStrings: function(input, args) {
-        let minLen = args[0] || Extract.MIN_STRING_LEN,
+        const minLen = args[0] || Extract.MIN_STRING_LEN,
             displayTotal = args[1],
-            strings = "[A-Z\\d/\\-:.,_$%'\"()<>= !\\[\\]{}@]",
-            regex = new RegExp(strings + "{" + minLen + ",}", "ig");
+            encoding = args[2];
+        let strings = "[A-Z\\d/\\-:.,_$%'\"()<>= !\\[\\]{}@]";
+
+        switch (encoding) {
+            case "All":
+                strings = "(\x00?" + strings + "\x00?)";
+                break;
+            case "16-bit littleendian":
+                strings = "(" + strings + "\x00)";
+                break;
+            case "16-bit bigendian":
+                strings = "(\x00" + strings + ")";
+                break;
+            case "Single byte":
+            default:
+                break;
+        }
+
+        const regex = new XRegExp(strings + "{" + minLen + ",}", "ig");
 
         return Extract._search(input, regex, null, displayTotal);
     },
