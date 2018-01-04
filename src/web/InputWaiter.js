@@ -214,6 +214,10 @@ InputWaiter.prototype.handleLoaderMessage = function(e) {
         fileLoaded.textContent = r.progress + "%";
     }
 
+    if (r.hasOwnProperty("error")) {
+        this.app.alert(r.error, "danger", 10000);
+    }
+
     if (r.hasOwnProperty("fileBuffer")) {
         log.debug("Input file loaded");
         this.fileBuffer = r.fileBuffer;
