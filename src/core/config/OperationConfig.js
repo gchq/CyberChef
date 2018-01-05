@@ -524,7 +524,7 @@ const OperationConfig = {
         module: "Default",
         description: "Adds together a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>18.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -537,7 +537,7 @@ const OperationConfig = {
         module: "Default",
         description: "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -550,7 +550,7 @@ const OperationConfig = {
         module: "Default",
         description: "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -563,7 +563,7 @@ const OperationConfig = {
         module: "Default",
         description: "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -576,7 +576,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -589,7 +589,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -602,7 +602,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -806,7 +806,7 @@ const OperationConfig = {
         module: "Default",
         description: "Converts a number to decimal from a given numerical base.",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Radix",
@@ -818,7 +818,7 @@ const OperationConfig = {
     "To Base": {
         module: "Default",
         description: "Converts a decimal number to a given numerical base.",
-        inputType: "number",
+        inputType: "BigNumber",
         outputType: "string",
         args: [
             {
@@ -2515,8 +2515,8 @@ const OperationConfig = {
     "Convert distance": {
         module: "Default",
         description: "Converts a unit of distance to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2533,8 +2533,8 @@ const OperationConfig = {
     "Convert area": {
         module: "Default",
         description: "Converts a unit of area to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2551,8 +2551,8 @@ const OperationConfig = {
     "Convert mass": {
         module: "Default",
         description: "Converts a unit of mass to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2569,8 +2569,8 @@ const OperationConfig = {
     "Convert speed": {
         module: "Default",
         description: "Converts a unit of speed to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2587,8 +2587,8 @@ const OperationConfig = {
     "Convert data units": {
         module: "Default",
         description: "Converts a unit of data to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -3750,7 +3750,7 @@ const OperationConfig = {
         module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Scheme",
@@ -3778,7 +3778,7 @@ const OperationConfig = {
     "To BCD": {
         module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
-        inputType: "number",
+        inputType: "BigNumber",
         outputType: "string",
         args: [
             {

@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import BigNumber from "bignumber.js";
 
 
 /**
@@ -24,11 +25,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runSum: function(input, args) {
         const val = Arithmetic._sum(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -37,11 +38,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runSub: function(input, args) {
         let val = Arithmetic._sub(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -50,11 +51,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runMulti: function(input, args) {
         let val = Arithmetic._multi(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -63,11 +64,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runDiv: function(input, args) {
         let val = Arithmetic._div(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -76,11 +77,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runMean: function(input, args) {
         let val = Arithmetic._mean(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -89,11 +90,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runMedian: function(input, args) {
         let val = Arithmetic._median(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -102,11 +103,11 @@ const Arithmetic = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runStdDev: function(input, args) {
         let val = Arithmetic._stdDev(Arithmetic._createNumArray(input, args[0]));
-        return typeof(val) === "number" ? val : NaN;
+        return val instanceof BigNumber ? val : new BigNumber(NaN);
     },
 
 
@@ -116,7 +117,7 @@ const Arithmetic = {
      * @private
      * @param {string[]} input
      * @param {string} delim
-     * @returns {number[]}
+     * @returns {BigNumber[]}
      */
     _createNumArray: function(input, delim) {
         delim = Utils.charRep[delim || "Space"];
@@ -125,13 +126,13 @@ const Arithmetic = {
             num;
 
         for (let i = 0; i < splitNumbers.length; i++) {
-            if (splitNumbers[i].indexOf(".") >= 0) {
-                num = parseFloat(splitNumbers[i].trim());
-            } else {
-                num = parseInt(splitNumbers[i].trim(), 0);
-            }
-            if (!isNaN(num)) {
-                numbers.push(num);
+            try {
+                num = BigNumber(splitNumbers[i].trim());
+                if (!num.isNaN()) {
+                    numbers.push(num);
+                }
+            } catch (err) {
+                // This line is not a valid number
             }
         }
         return numbers;
@@ -142,12 +143,12 @@ const Arithmetic = {
      * Adds an array of numbers and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _sum: function(data) {
         if (data.length > 0) {
-            return data.reduce((acc, curr) => acc + curr);
+            return data.reduce((acc, curr) => acc.plus(curr));
         }
     },
 
@@ -156,12 +157,12 @@ const Arithmetic = {
      * Subtracts an array of numbers and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _sub: function(data) {
         if (data.length > 0) {
-            return data.reduce((acc, curr) => acc - curr);
+            return data.reduce((acc, curr) => acc.minus(curr));
         }
     },
 
@@ -170,12 +171,12 @@ const Arithmetic = {
      * Multiplies an array of numbers and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _multi: function(data) {
         if (data.length > 0) {
-            return data.reduce((acc, curr) => acc * curr);
+            return data.reduce((acc, curr) => acc.times(curr));
         }
     },
 
@@ -184,12 +185,12 @@ const Arithmetic = {
      * Divides an array of numbers and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _div: function(data) {
         if (data.length > 0) {
-            return data.reduce((acc, curr) => acc / curr);
+            return data.reduce((acc, curr) => acc.div(curr));
         }
     },
 
@@ -198,12 +199,12 @@ const Arithmetic = {
      * Computes mean of a number array and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _mean: function(data) {
         if (data.length > 0) {
-            return Arithmetic._sum(data) / data.length;
+            return Arithmetic._sum(data).div(data.length);
         }
     },
 
@@ -212,14 +213,14 @@ const Arithmetic = {
      * Computes median of a number array and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _median: function (data) {
-        if ((data.length % 2) === 0) {
+        if ((data.length % 2) === 0 && data.length > 0) {
             let first, second;
             data.sort(function(a, b){
-                return a - b;
+                return a.minus(b);
             });
             first = data[Math.floor(data.length / 2)];
             second = data[Math.floor(data.length / 2) - 1];
@@ -234,17 +235,17 @@ const Arithmetic = {
      * Computes standard deviation of a number array and returns the value.
      *
      * @private
-     * @param {number[]} data
-     * @returns {number}
+     * @param {BigNumber[]} data
+     * @returns {BigNumber}
      */
     _stdDev: function (data) {
         if (data.length > 0) {
             let avg = Arithmetic._mean(data);
-            let devSum = 0;
+            let devSum = new BigNumber(0);
             for (let i = 0; i < data.length; i++) {
-                devSum += (data[i] - avg) ** 2;
+                devSum = devSum.plus(data[i].minus(avg).pow(2));
             }
-            return Math.sqrt(devSum / data.length);
+            return devSum.div(data.length).sqrt();
         }
     },
 };

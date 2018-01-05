@@ -68,6 +68,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "bignumber.js": "^5.0.0",
     "bootstrap": "^3.3.7",
     "bootstrap-colorpicker": "^2.5.2",
     "bootstrap-switch": "^3.3.4",

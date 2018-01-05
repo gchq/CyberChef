@@ -1,14 +1,16 @@
 import Utils from "./Utils.js";
+import BigNumber from "bignumber.js";
 
 /**
  * The data being operated on by each operation.
  *
  * @author n1474335 [n1474335@gmail.com]
+ * @author Matt C [matt@artemisbot.uk]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
  * @class
- * @param {byteArray|string|number|ArrayBuffer} value - The value of the input data.
+ * @param {byteArray|string|number|ArrayBuffer|BigNumber} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
 const Dish = function(value, type) {
@@ -47,6 +49,12 @@ Dish.HTML = 3;
  * @enum
  */
 Dish.ARRAY_BUFFER = 4;
+/**
+ * Dish data type enum for BigNumbers.
+ * @readonly
+ * @enum
+ */
+Dish.BIG_NUMBER = 5;
 
 
 /**
@@ -57,22 +65,22 @@ Dish.ARRAY_BUFFER = 4;
  * @returns {number} The data type enum value.
  */
 Dish.typeEnum = function(typeStr) {
-    switch (typeStr) {
-        case "byteArray":
-        case "Byte array":
+    switch (typeStr.toLowerCase()) {
+        case "bytearray":
+        case "byte array":
             return Dish.BYTE_ARRAY;
         case "string":
-        case "String":
             return Dish.STRING;
         case "number":
-        case "Number":
             return Dish.NUMBER;
         case "html":
-        case "HTML":
             return Dish.HTML;
-        case "arrayBuffer":
-        case "ArrayBuffer":
+        case "arraybuffer":
+        case "array buffer":
             return Dish.ARRAY_BUFFER;
+        case "bignumber":
+        case "big number":
+            return Dish.BIG_NUMBER;
         default:
             throw "Invalid data type string. No matching enum.";
     }
@@ -83,8 +91,8 @@ Dish.typeEnum = function(typeStr) {
  * Returns the data type string for the given type enum.
  *
  * @static
- * @param {string} typeEnum - The enum value of the data type.
- * @returns {number} The data type as a string.
+ * @param {number} typeEnum - The enum value of the data type.
+ * @returns {string} The data type as a string.
  */
 Dish.enumLookup = function(typeEnum) {
     switch (typeEnum) {
@@ -98,6 +106,8 @@ Dish.enumLookup = function(typeEnum) {
             return "html";
         case Dish.ARRAY_BUFFER:
             return "ArrayBuffer";
+        case Dish.BIG_NUMBER:
+            return "BigNumber";
         default:
             throw "Invalid data type enum. No matching type.";
     }
@@ -107,7 +117,7 @@ Dish.enumLookup = function(typeEnum) {
 /**
  * Sets the data value and type and then validates them.
  *
- * @param {byteArray|string|number|ArrayBuffer} value - The value of the input data.
+ * @param {byteArray|string|number|ArrayBuffer|BigNumber} value - The value of the input data.
  * @param {number} type - The data type of value, see Dish enums.
  */
 Dish.prototype.set = function(value, type) {
@@ -126,7 +136,7 @@ Dish.prototype.set = function(value, type) {
  * Returns the value of the data in the type format specified.
  *
  * @param {number} type - The data type of value, see Dish enums.
- * @returns {byteArray|string|number|ArrayBuffer} The value of the output data.
+ * @returns {byteArray|string|number|ArrayBuffer|BigNumber} The value of the output data.
  */
 Dish.prototype.get = function(type) {
     if (this.type !== type) {
@@ -159,6 +169,9 @@ Dish.prototype.translate = function(toType) {
             // Array.from() would be nicer here, but it's slightly slower
             this.value = Array.prototype.slice.call(new Uint8Array(this.value));
             break;
+        case Dish.BIG_NUMBER:
+            this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toString()) : [];
+            break;
         default:
             break;
     }
@@ -179,6 +192,14 @@ Dish.prototype.translate = function(toType) {
         case Dish.ARRAY_BUFFER:
             this.value = new Uint8Array(this.value).buffer;
             this.type = Dish.ARRAY_BUFFER;
+            break;
+        case Dish.BIG_NUMBER:
+            try {
+                this.value = new BigNumber(Utils.byteArrayToUtf8(this.value));
+            } catch (err) {
+                this.value = new BigNumber(NaN);
+            }
+            this.type = Dish.BIG_NUMBER;
             break;
         default:
             break;
@@ -215,6 +236,8 @@ Dish.prototype.valid = function() {
             return typeof this.value === "number";
         case Dish.ARRAY_BUFFER:
             return this.value instanceof ArrayBuffer;
+        case Dish.BIG_NUMBER:
+            return this.value instanceof BigNumber;
         default:
             return false;
     }
@@ -235,6 +258,7 @@ Dish.prototype.size = function() {
         case Dish.HTML:
             return this.value.length;
         case Dish.NUMBER:
+        case Dish.BIG_NUMBER:
             return this.value.toString().length;
         case Dish.ARRAY_BUFFER:
             return this.value.byteLength;
