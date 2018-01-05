@@ -60,17 +60,16 @@ const Convert = {
     /**
      * Convert distance operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runDistance: function (input, args) {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input * Convert.DISTANCE_FACTOR[inputUnits];
-        return input / Convert.DISTANCE_FACTOR[outputUnits];
-        // TODO Remove rounding errors (e.g. 1.000000000001)
+        input = input.mul(Convert.DISTANCE_FACTOR[inputUnits]);
+        return input.div(Convert.DISTANCE_FACTOR[outputUnits]);
     },
 
 
@@ -141,16 +140,16 @@ const Convert = {
     /**
      * Convert data units operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runDataSize: function (input, args) {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input * Convert.DATA_FACTOR[inputUnits];
-        return input / Convert.DATA_FACTOR[outputUnits];
+        input = input.mul(Convert.DATA_FACTOR[inputUnits]);
+        return input.div(Convert.DATA_FACTOR[outputUnits]);
     },
 
 
@@ -221,16 +220,16 @@ const Convert = {
     /**
      * Convert area operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runArea: function (input, args) {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input * Convert.AREA_FACTOR[inputUnits];
-        return input / Convert.AREA_FACTOR[outputUnits];
+        input = input.mul(Convert.AREA_FACTOR[inputUnits]);
+        return input.div(Convert.AREA_FACTOR[outputUnits]);
     },
 
 
@@ -332,16 +331,16 @@ const Convert = {
     /**
      * Convert mass operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runMass: function (input, args) {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input * Convert.MASS_FACTOR[inputUnits];
-        return input / Convert.MASS_FACTOR[outputUnits];
+        input = input.mul(Convert.MASS_FACTOR[inputUnits]);
+        return input.div(Convert.MASS_FACTOR[outputUnits]);
     },
 
 
@@ -397,16 +396,16 @@ const Convert = {
     /**
      * Convert speed operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runSpeed: function (input, args) {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input * Convert.SPEED_FACTOR[inputUnits];
-        return input / Convert.SPEED_FACTOR[outputUnits];
+        input = input.mul(Convert.SPEED_FACTOR[inputUnits]);
+        return input.div(Convert.SPEED_FACTOR[outputUnits]);
     },
 
 };

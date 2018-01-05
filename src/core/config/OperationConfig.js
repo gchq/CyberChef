@@ -2515,8 +2515,8 @@ const OperationConfig = {
     "Convert distance": {
         module: "Default",
         description: "Converts a unit of distance to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2533,8 +2533,8 @@ const OperationConfig = {
     "Convert area": {
         module: "Default",
         description: "Converts a unit of area to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2551,8 +2551,8 @@ const OperationConfig = {
     "Convert mass": {
         module: "Default",
         description: "Converts a unit of mass to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2569,8 +2569,8 @@ const OperationConfig = {
     "Convert speed": {
         module: "Default",
         description: "Converts a unit of speed to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2587,8 +2587,8 @@ const OperationConfig = {
     "Convert data units": {
         module: "Default",
         description: "Converts a unit of data to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
