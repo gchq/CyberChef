@@ -194,7 +194,11 @@ Dish.prototype.translate = function(toType) {
             this.type = Dish.ARRAY_BUFFER;
             break;
         case Dish.BIG_NUMBER:
-            this.value = new BigNumber(Utils.byteArrayToUtf8(this.value));
+            try {
+                this.value = new BigNumber(Utils.byteArrayToUtf8(this.value));
+            } catch (err) {
+                this.value = new BigNumber(NaN);
+            }
             this.type = Dish.BIG_NUMBER;
             break;
         default:
