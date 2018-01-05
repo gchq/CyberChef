@@ -524,7 +524,7 @@ const OperationConfig = {
         module: "Default",
         description: "Adds together a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>18.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -537,7 +537,7 @@ const OperationConfig = {
         module: "Default",
         description: "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -550,7 +550,7 @@ const OperationConfig = {
         module: "Default",
         description: "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -563,7 +563,7 @@ const OperationConfig = {
         module: "Default",
         description: "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -576,7 +576,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -589,7 +589,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -602,7 +602,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
