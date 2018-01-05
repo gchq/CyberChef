@@ -37,7 +37,7 @@ TestRegister.addTests([
     },
     {
         name: "Fork, (expect) Error, Merge",
-        input: "1\n2\na\n4",
+        input: "1.1\n2.5\na\n3.4",
         expectedError: true,
         recipeConfig: [
             {
@@ -45,8 +45,8 @@ TestRegister.addTests([
                 args: ["\n", "\n", false],
             },
             {
-                op: "To Base",
-                args: [16],
+                op: "Object Identifier to Hex",
+                args: [],
             },
             {
                 op: "Merge",
