@@ -521,7 +521,7 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @default
      */
     PRNG_BYTES: 32,
-    PRNG_OUTPUT: ["Hex", "Number", "Byte array", "Raw"],
+    PRNG_OUTPUT: ["Hex", "Integer", "Byte array", "Raw"],
 
     /**
      * Pseudo-Random Number Generator operation.
@@ -549,7 +549,7 @@ DES uses a key length of 8 bytes (64 bits).`;
         switch (outputAs) {
             case "Hex":
                 return forge.util.bytesToHex(bytes);
-            case "Number":
+            case "Integer":
                 for (i = bytes.length - 1; i >= 0; i--) {
                     value = value.mul(256).plus(bytes.charCodeAt(i));
                 }
