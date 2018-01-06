@@ -136,11 +136,12 @@ Dish.prototype.set = function(value, type) {
  * Returns the value of the data in the type format specified.
  *
  * @param {number} type - The data type of value, see Dish enums.
+ * @param {boolean} [notUTF8] - Do not treat strings as UTF8.
  * @returns {byteArray|string|number|ArrayBuffer|BigNumber} The value of the output data.
  */
-Dish.prototype.get = function(type) {
+Dish.prototype.get = function(type, notUTF8) {
     if (this.type !== type) {
-        this.translate(type);
+        this.translate(type, notUTF8);
     }
     return this.value;
 };
@@ -150,9 +151,11 @@ Dish.prototype.get = function(type) {
  * Translates the data to the given type format.
  *
  * @param {number} toType - The data type of value, see Dish enums.
+ * @param {boolean} [notUTF8] - Do not treat strings as UTF8.
  */
-Dish.prototype.translate = function(toType) {
+Dish.prototype.translate = function(toType, notUTF8) {
     log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
+    const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
 
     // Convert data to intermediate byteArray type
     switch (this.type) {
@@ -182,11 +185,11 @@ Dish.prototype.translate = function(toType) {
     switch (toType) {
         case Dish.STRING:
         case Dish.HTML:
-            this.value = this.value ? Utils.byteArrayToUtf8(this.value) : "";
+            this.value = this.value ? byteArrayToStr(this.value) : "";
             this.type = Dish.STRING;
             break;
         case Dish.NUMBER:
-            this.value = this.value ? parseFloat(Utils.byteArrayToUtf8(this.value)) : 0;
+            this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
             this.type = Dish.NUMBER;
             break;
         case Dish.ARRAY_BUFFER:
@@ -195,7 +198,7 @@ Dish.prototype.translate = function(toType) {
             break;
         case Dish.BIG_NUMBER:
             try {
-                this.value = new BigNumber(Utils.byteArrayToUtf8(this.value));
+                this.value = new BigNumber(byteArrayToStr(this.value));
             } catch (err) {
                 this.value = new BigNumber(NaN);
             }

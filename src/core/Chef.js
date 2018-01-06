@@ -35,10 +35,11 @@ const Chef = function() {
 */
 Chef.prototype.bake = async function(input, recipeConfig, options, progress, step) {
     log.debug("Chef baking");
-    let startTime  = new Date().getTime(),
+    const startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
-        error      = false;
+        notUTF8    = options && options.hasOwnProperty("treatAsUtf8") && !options.treatAsUtf8;
+    let error      = false;
 
     if (containsFc && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
@@ -80,13 +81,13 @@ Chef.prototype.bake = async function(input, recipeConfig, options, progress, ste
     // Depending on the size of the output, we may send it back as a string or an ArrayBuffer.
     // This can prevent unnecessary casting as an ArrayBuffer can be easily downloaded as a file.
     // The threshold is specified in KiB.
-    const threshold = (options.outputFileThreshold || 1024) * 1024;
+    const threshold = (options.ioDisplayThreshold || 1024) * 1024;
     const returnType = this.dish.size() > threshold ? Dish.ARRAY_BUFFER : Dish.STRING;
 
     return {
         result: this.dish.type === Dish.HTML ?
-            this.dish.get(Dish.HTML) :
-            this.dish.get(returnType),
+            this.dish.get(Dish.HTML, notUTF8) :
+            this.dish.get(returnType, notUTF8),
         type: Dish.enumLookup(this.dish.type),
         progress: progress,
         duration: new Date().getTime() - startTime,

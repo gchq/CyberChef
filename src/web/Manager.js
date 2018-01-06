@@ -132,7 +132,8 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
 
     // Input
-    this.addMultiEventListener("#input-text", "keyup paste", this.input.inputChange, this.input);
+    this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
+    this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
     document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
     document.getElementById("clr-io").addEventListener("click", this.input.clearIoClick.bind(this.input));
     this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
