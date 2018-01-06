@@ -85,8 +85,8 @@ Chef.prototype.bake = async function(input, recipeConfig, options, progress, ste
 
     return {
         result: this.dish.type === Dish.HTML ?
-            this.dish.get(Dish.HTML) :
-            this.dish.get(returnType),
+            this.dish.get(Dish.HTML, !options.treatAsUtf8) :
+            this.dish.get(returnType, !options.treatAsUtf8),
         type: Dish.enumLookup(this.dish.type),
         progress: progress,
         duration: new Date().getTime() - startTime,
