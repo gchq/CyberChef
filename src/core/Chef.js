@@ -35,10 +35,11 @@ const Chef = function() {
 */
 Chef.prototype.bake = async function(input, recipeConfig, options, progress, step) {
     log.debug("Chef baking");
-    let startTime  = new Date().getTime(),
+    const startTime  = new Date().getTime(),
         recipe     = new Recipe(recipeConfig),
         containsFc = recipe.containsFlowControl(),
-        error      = false;
+        notUTF8    = options && options.hasOwnProperty("treatAsUtf8") && !options.treatAsUtf8;
+    let error      = false;
 
     if (containsFc && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
@@ -85,8 +86,8 @@ Chef.prototype.bake = async function(input, recipeConfig, options, progress, ste
 
     return {
         result: this.dish.type === Dish.HTML ?
-            this.dish.get(Dish.HTML, !options.treatAsUtf8) :
-            this.dish.get(returnType, !options.treatAsUtf8),
+            this.dish.get(Dish.HTML, notUTF8) :
+            this.dish.get(returnType, notUTF8),
         type: Dish.enumLookup(this.dish.type),
         progress: progress,
         duration: new Date().getTime() - startTime,
