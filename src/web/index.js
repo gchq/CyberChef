@@ -47,7 +47,7 @@ function main() {
         attemptHighlight:    true,
         theme:               "classic",
         useMetaKey:          false,
-        outputFileThreshold: 1024,
+        ioDisplayThreshold:  512,
         logLevel:            "info"
     };
 
