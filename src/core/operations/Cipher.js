@@ -2,6 +2,7 @@ import Utils from "../Utils.js";
 import CryptoJS from "crypto-js";
 import forge from "imports-loader?jQuery=>null!node-forge/dist/forge.min.js";
 import {blowfish as Blowfish} from "sladex-blowfish";
+import BigNumber from "bignumber.js";
 
 
 /**
@@ -542,7 +543,7 @@ DES uses a key length of 8 bytes (64 bits).`;
             bytes = forge.random.getBytesSync(numBytes);
         }
 
-        let value = 0,
+        let value = new BigNumber(0),
             i;
 
         switch (outputAs) {
@@ -550,9 +551,9 @@ DES uses a key length of 8 bytes (64 bits).`;
                 return forge.util.bytesToHex(bytes);
             case "Number":
                 for (i = bytes.length - 1; i >= 0; i--) {
-                    value = (value * 256) + bytes.charCodeAt(i);
+                    value = value.mul(256).plus(bytes.charCodeAt(i));
                 }
-                return value.toString();
+                return value.toFixed();
             case "Byte array":
                 return JSON.stringify(Utils.strToCharcode(bytes));
             case "Raw":
