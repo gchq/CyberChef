@@ -208,6 +208,11 @@ const Regex = {
             total = 0;
 
         while ((m = regex.exec(input))) {
+            // Moves pointer when an empty string is matched (prevents infinite loop)
+            if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+
             // Add up to match
             output += Utils.escapeHtml(input.slice(i, m.index));
 
@@ -248,6 +253,11 @@ const Regex = {
             match;
 
         while ((match = regex.exec(input))) {
+            // Moves pointer when an empty string is matched (prevents infinite loop)
+            if (match.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+
             total++;
             if (matches) {
                 output += match[0] + "\n";

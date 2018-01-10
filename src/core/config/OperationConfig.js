@@ -2061,7 +2061,6 @@ const OperationConfig = {
     "Find / Replace": {
         module: "Regex",
         description: "Replaces all occurrences of the first string with the second.<br><br> Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).",
-        manualBake: true,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2139,7 +2138,6 @@ const OperationConfig = {
     "Filter": {
         module: "Default",
         description: "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.",
-        manualBake: true,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2302,7 +2300,6 @@ const OperationConfig = {
     "Regular expression": {
         module: "Regex",
         description: "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.",
-        manualBake: true,
         inputType: "string",
         outputType: "html",
         args: [

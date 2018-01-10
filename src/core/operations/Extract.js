@@ -29,6 +29,11 @@ const Extract = {
             match;
 
         while ((match = searchRegex.exec(input))) {
+            // Moves pointer when an empty string is matched (prevents infinite loop)
+            if (match.index === searchRegex.lastIndex) {
+                searchRegex.lastIndex++;
+            }
+
             if (removeRegex && removeRegex.test(match[0]))
                 continue;
             total++;
