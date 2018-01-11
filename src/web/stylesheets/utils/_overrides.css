@@ -64,7 +64,8 @@ a:focus {
 .alert,
 .modal-content,
 .tooltip-inner,
-.dropdown-menu {
+.dropdown-menu,
+.input-group-addon {
     border-radius: 0 !important;
 }
 
@@ -185,6 +186,15 @@ optgroup {
 .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
     background-color: var(--secondary-background-colour);
     color: var(--primary-font-colour);
+}
+
+.input-group-addon:not(:first-child):not(:last-child) {
+    border-left: 0;
+    border-right: 0;
+}
+
+.input-group-btn:first-child>.btn {
+    border-right: 0;
 }
 
 

@@ -56,6 +56,7 @@ const FlowControl = {
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
+            log.debug(`Entering tranche ${i + 1} of ${inputs.length}`);
             const dish = new Dish(inputs[i], inputType);
             try {
                 progress = await recipe.execute(dish, 0);
@@ -169,20 +170,19 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runJump: function(state) {
-        let ings     = state.opList[state.progress].getIngValues(),
-            jumpNum  = ings[0],
-            maxJumps = ings[1];
+        const ings     = state.opList[state.progress].getIngValues(),
+            label = ings[0],
+            maxJumps = ings[1],
+            jmpIndex = FlowControl._getLabelIndex(label, state);
 
-        if (jumpNum < 0) {
-            jumpNum--;
-        }
-
-        if (state.numJumps >= maxJumps) {
+        if (state.numJumps >= maxJumps || jmpIndex === -1) {
+            log.debug("Maximum jumps reached or label cannot be found");
             return state;
         }
 
-        state.progress += jumpNum;
+        state.progress = jmpIndex;
         state.numJumps++;
+        log.debug(`Jumping to label '${label}' at position ${jmpIndex} (jumps = ${state.numJumps})`);
         return state;
     },
 
@@ -198,23 +198,26 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runCondJump: function(state) {
-        let ings     = state.opList[state.progress].getIngValues(),
+        const ings     = state.opList[state.progress].getIngValues(),
             dish     = state.dish,
             regexStr = ings[0],
-            jumpNum  = ings[1],
-            maxJumps = ings[2];
+            invert   = ings[1],
+            label    = ings[2],
+            maxJumps = ings[3],
+            jmpIndex = FlowControl._getLabelIndex(label, state);
 
-        if (jumpNum < 0) {
-            jumpNum--;
-        }
-
-        if (state.numJumps >= maxJumps) {
+        if (state.numJumps >= maxJumps || jmpIndex === -1) {
+            log.debug("Maximum jumps reached or label cannot be found");
             return state;
         }
 
-        if (regexStr !== "" && dish.get(Dish.STRING).search(regexStr) > -1) {
-            state.progress += jumpNum;
-            state.numJumps++;
+        if (regexStr !== "") {
+            let strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
+            if (!invert && strMatch || invert && !strMatch) {
+                state.progress = jmpIndex;
+                state.numJumps++;
+                log.debug(`Jumping to label '${label}' at position ${jmpIndex} (jumps = ${state.numJumps})`);
+            }
         }
 
         return state;
@@ -249,6 +252,27 @@ const FlowControl = {
         return state;
     },
 
+
+    /**
+     * Returns the index of a label.
+     *
+     * @private
+     * @param {Object} state
+     * @param {string} name
+     * @returns {number}
+     */
+    _getLabelIndex: function(name, state) {
+        for (let o = 0; o < state.opList.length; o++) {
+            let operation = state.opList[o];
+            if (operation.name === "Label"){
+                let ings = operation.getIngValues();
+                if (name === ings[0]) {
+                    return o;
+                }
+            }
+        }
+        return -1;
+    },
 };
 
 export default FlowControl;

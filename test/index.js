@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 /**
  * TestRunner.js
  *
@@ -25,6 +27,9 @@ import "./tests/operations/Hash.js";
 import "./tests/operations/Image.js";
 import "./tests/operations/MorseCode.js";
 import "./tests/operations/MS.js";
+import "./tests/operations/PHP.js";
+import "./tests/operations/NetBIOS.js";
+import "./tests/operations/OTP.js";
 import "./tests/operations/StrUtils.js";
 import "./tests/operations/SeqUtils.js";
 

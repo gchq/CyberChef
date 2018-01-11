@@ -11,6 +11,15 @@ import Chef from "./Chef.js";
 import OperationConfig from "./config/MetaConfig.js";
 import OpModules from "./config/modules/Default.js";
 
+// Add ">" to the start of all log messages in the Chef Worker
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: [">"],
+    prefixFormat: "%p"
+});
+
 
 // Set up Chef instance
 self.chef = new Chef();
@@ -42,6 +51,8 @@ self.postMessage({
 self.addEventListener("message", function(e) {
     // Handle message
     const r = e.data;
+    log.debug("ChefWorker receiving command '" + r.action + "'");
+
     switch (r.action) {
         case "bake":
             bake(r.data);
@@ -60,6 +71,9 @@ self.addEventListener("message", function(e) {
                 r.data.direction,
                 r.data.pos
             );
+            break;
+        case "setLogLevel":
+            log.setLevel(r.data, false);
             break;
         default:
             break;
@@ -86,7 +100,7 @@ async function bake(data) {
         );
 
         self.postMessage({
-            action: "bakeSuccess",
+            action: "bakeComplete",
             data: response
         });
     } catch (err) {
@@ -121,7 +135,7 @@ function loadRequiredModules(recipeConfig) {
         let module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
-            console.log("Loading module " + module);
+            log.info("Loading module " + module);
             self.sendStatusMessage("Loading module " + module);
             self.importScripts(self.docURL + "/" + module + ".js");
         }

@@ -8,6 +8,7 @@ import OutputWaiter from "./OutputWaiter.js";
 import OptionsWaiter from "./OptionsWaiter.js";
 import HighlighterWaiter from "./HighlighterWaiter.js";
 import SeasonalWaiter from "./SeasonalWaiter.js";
+import BindingsWaiter from "./BindingsWaiter.js";
 
 
 /**
@@ -57,9 +58,10 @@ const Manager = function(app) {
     this.ops         = new OperationsWaiter(this.app, this);
     this.input       = new InputWaiter(this.app, this);
     this.output      = new OutputWaiter(this.app, this);
-    this.options     = new OptionsWaiter(this.app);
+    this.options     = new OptionsWaiter(this.app, this);
     this.highlighter = new HighlighterWaiter(this.app, this);
     this.seasonal    = new SeasonalWaiter(this.app, this);
+    this.bindings    = new BindingsWaiter(this.app, this);
 
     // Object to store dynamic handlers to fire on elements that may not exist yet
     this.dynamicHandlers = {};
@@ -75,6 +77,7 @@ Manager.prototype.setup = function() {
     this.worker.registerChefWorker();
     this.recipe.initialiseOperationDragNDrop();
     this.controls.autoBakeChange();
+    this.bindings.updateKeybList();
     this.seasonal.load();
 };
 
@@ -116,7 +119,7 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener(".op-list .op-icon", "mouseover", this.ops.opIconMouseover, this.ops);
     this.addDynamicListener(".op-list .op-icon", "mouseleave", this.ops.opIconMouseleave, this.ops);
     this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
-    this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd.bind(this.recipe));
+    this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
 
     // Recipe
     this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
@@ -129,19 +132,22 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
 
     // Input
-    this.addMultiEventListener("#input-text", "keyup paste", this.input.inputChange, this.input);
+    this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
+    this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
     document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
     document.getElementById("clr-io").addEventListener("click", this.input.clearIoClick.bind(this.input));
-    document.getElementById("input-text").addEventListener("dragover", this.input.inputDragover.bind(this.input));
-    document.getElementById("input-text").addEventListener("dragleave", this.input.inputDragleave.bind(this.input));
-    document.getElementById("input-text").addEventListener("drop", this.input.inputDrop.bind(this.input));
+    this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
+    this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
+    this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
     document.getElementById("input-text").addEventListener("scroll", this.highlighter.inputScroll.bind(this.highlighter));
     document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
     document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
     this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
+    document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
 
     // Output
     document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
+    document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
     document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
     document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
     document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
@@ -153,18 +159,24 @@ Manager.prototype.initialiseEventListeners = function() {
     this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
     this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
     this.addDynamicListener(".file-switch", "click", this.output.fileSwitch, this.output);
+    this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
+    this.addDynamicListener("#output-file-slice", "click", this.output.displayFileSlice, this.output);
+    document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
 
     // Options
     document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));
     document.getElementById("reset-options").addEventListener("click", this.options.resetOptionsClick.bind(this.options));
     $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.switchChange.bind(this.options));
     $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.setWordWrap.bind(this.options));
+    $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox#useMetaKey", this.bindings.updateKeybList.bind(this.bindings));
     this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
     this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
     document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
+    document.getElementById("logLevel").addEventListener("change", this.options.logLevelChange.bind(this.options));
 
     // Misc
+    window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
     document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
 };
 

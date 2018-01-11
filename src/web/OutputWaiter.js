@@ -1,4 +1,5 @@
 import Utils from "../core/Utils.js";
+import FileSaver from "file-saver";
 
 
 /**
@@ -15,6 +16,9 @@ import Utils from "../core/Utils.js";
 const OutputWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
+
+    this.dishBuffer = null;
+    this.dishStr = null;
 };
 
 
@@ -31,47 +35,151 @@ OutputWaiter.prototype.get = function() {
 /**
  * Sets the output in the output textarea.
  *
- * @param {string} dataStr - The output string/HTML
+ * @param {string|ArrayBuffer} data - The output string/HTML/ArrayBuffer
  * @param {string} type - The data type of the output
  * @param {number} duration - The length of time (ms) it took to generate the output
+ * @param {boolean} [preserveBuffer=false] - Whether to preserve the dishBuffer
  */
-OutputWaiter.prototype.set = function(dataStr, type, duration) {
+OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
+    log.debug("Output type: " + type);
     const outputText = document.getElementById("output-text");
     const outputHtml = document.getElementById("output-html");
+    const outputFile = document.getElementById("output-file");
     const outputHighlighter = document.getElementById("output-highlighter");
     const inputHighlighter = document.getElementById("input-highlighter");
+    let scriptElements, lines, length;
 
-    if (type === "html") {
-        outputText.style.display = "none";
-        outputHtml.style.display = "block";
-        outputHighlighter.display = "none";
-        inputHighlighter.display = "none";
+    if (!preserveBuffer) {
+        this.closeFile();
+        document.getElementById("show-file-overlay").style.display = "none";
+    }
 
-        outputText.value = "";
-        outputHtml.innerHTML = dataStr;
+    switch (type) {
+        case "html":
+            outputText.style.display = "none";
+            outputHtml.style.display = "block";
+            outputFile.style.display = "none";
+            outputHighlighter.display = "none";
+            inputHighlighter.display = "none";
 
-        // Execute script sections
-        const scriptElements = outputHtml.querySelectorAll("script");
-        for (let i = 0; i < scriptElements.length; i++) {
-            try {
-                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-            } catch (err) {
-                console.error(err);
+            outputText.value = "";
+            outputHtml.innerHTML = data;
+            this.dishStr = Utils.stripHtmlTags(data, true);
+            length = data.length;
+            lines = this.dishStr.count("\n") + 1;
+
+            // Execute script sections
+            scriptElements = outputHtml.querySelectorAll("script");
+            for (let i = 0; i < scriptElements.length; i++) {
+                try {
+                    eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+                } catch (err) {
+                    log.error(err);
+                }
             }
-        }
-    } else {
-        outputText.style.display = "block";
-        outputHtml.style.display = "none";
-        outputHighlighter.display = "block";
-        inputHighlighter.display = "block";
+            break;
+        case "ArrayBuffer":
+            outputText.style.display = "block";
+            outputHtml.style.display = "none";
+            outputHighlighter.display = "none";
+            inputHighlighter.display = "none";
 
-        outputText.value = Utils.printable(dataStr, true);
-        outputHtml.innerHTML = "";
+            outputText.value = "";
+            outputHtml.innerHTML = "";
+            this.dishStr = "";
+            length = data.byteLength;
+
+            this.setFile(data);
+            break;
+        case "string":
+        default:
+            outputText.style.display = "block";
+            outputHtml.style.display = "none";
+            outputFile.style.display = "none";
+            outputHighlighter.display = "block";
+            inputHighlighter.display = "block";
+
+            outputText.value = Utils.printable(data, true);
+            outputHtml.innerHTML = "";
+
+            lines = data.count("\n") + 1;
+            length = data.length;
+            this.dishStr = data;
+            break;
     }
 
     this.manager.highlighter.removeHighlights();
-    const lines = dataStr.count("\n") + 1;
-    this.setOutputInfo(dataStr.length, lines, duration);
+    this.setOutputInfo(length, lines, duration);
+};
+
+
+/**
+ * Shows file details.
+ *
+ * @param {ArrayBuffer} buf
+ */
+OutputWaiter.prototype.setFile = function(buf) {
+    this.dishBuffer = buf;
+    const file = new File([buf], "output.dat");
+
+    // Display file overlay in output area with details
+    const fileOverlay = document.getElementById("output-file"),
+        fileSize = document.getElementById("output-file-size");
+
+    fileOverlay.style.display = "block";
+    fileSize.textContent = file.size.toLocaleString() + " bytes";
+};
+
+
+/**
+ * Removes the output file and nulls its memory.
+ */
+OutputWaiter.prototype.closeFile = function() {
+    this.dishBuffer = null;
+    document.getElementById("output-file").style.display = "none";
+};
+
+
+/**
+ * Handler for file download events.
+ */
+OutputWaiter.prototype.downloadFile = function() {
+    this.filename = window.prompt("Please enter a filename:", this.filename || "download.dat");
+    const file = new File([this.dishBuffer], this.filename);
+
+    if (this.filename) FileSaver.saveAs(file, this.filename, false);
+};
+
+
+/**
+ * Handler for file slice display events.
+ */
+OutputWaiter.prototype.displayFileSlice = function() {
+    const startTime = new Date().getTime(),
+        showFileOverlay = document.getElementById("show-file-overlay"),
+        sliceFromEl = document.getElementById("output-file-slice-from"),
+        sliceToEl = document.getElementById("output-file-slice-to"),
+        sliceFrom = parseInt(sliceFromEl.value, 10),
+        sliceTo = parseInt(sliceToEl.value, 10),
+        str = Utils.arrayBufferToStr(this.dishBuffer.slice(sliceFrom, sliceTo));
+
+    showFileOverlay.style.display = "block";
+    this.set(str, "string", new Date().getTime() - startTime, true);
+};
+
+
+/**
+ * Handler for show file overlay events.
+ *
+ * @param {Event} e
+ */
+OutputWaiter.prototype.showFileOverlayClick = function(e) {
+    const outputFile = document.getElementById("output-file"),
+        showFileOverlay = e.target;
+
+    outputFile.style.display = "block";
+    showFileOverlay.style.display = "none";
+    this.setOutputInfo(this.dishBuffer.byteLength, null, 0);
 };
 
 
@@ -86,13 +194,17 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
     let width = length.toString().length;
     width = width < 4 ? 4 : width;
 
-    const lengthStr = Utils.pad(length.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const linesStr  = Utils.pad(lines.toString(), width, " ").replace(/ /g, "&nbsp;");
-    const timeStr   = Utils.pad(duration.toString() + "ms", width, " ").replace(/ /g, "&nbsp;");
+    const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+    const timeStr = (duration.toString() + "ms").padStart(width, " ").replace(/ /g, "&nbsp;");
 
-    document.getElementById("output-info").innerHTML = "time: " + timeStr +
-        "<br>length: " + lengthStr +
-        "<br>lines: " + linesStr;
+    let msg = "time: " + timeStr + "<br>length: " + lengthStr;
+
+    if (typeof lines === "number") {
+        const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        msg += "<br>lines: " + linesStr;
+    }
+
+    document.getElementById("output-info").innerHTML = msg;
     document.getElementById("input-selection-info").innerHTML = "";
     document.getElementById("output-selection-info").innerHTML = "";
 };
@@ -105,17 +217,20 @@ OutputWaiter.prototype.setOutputInfo = function(length, lines, duration) {
 OutputWaiter.prototype.adjustWidth = function() {
     const output         = document.getElementById("output");
     const saveToFile     = document.getElementById("save-to-file");
+    const copyOutput     = document.getElementById("copy-output");
     const switchIO       = document.getElementById("switch");
     const undoSwitch     = document.getElementById("undo-switch");
     const maximiseOutput = document.getElementById("maximise-output");
 
     if (output.clientWidth < 680) {
         saveToFile.childNodes[1].nodeValue = "";
+        copyOutput.childNodes[1].nodeValue = "";
         switchIO.childNodes[1].nodeValue = "";
         undoSwitch.childNodes[1].nodeValue = "";
         maximiseOutput.childNodes[1].nodeValue = "";
     } else {
         saveToFile.childNodes[1].nodeValue = " Save to file";
+        copyOutput.childNodes[1].nodeValue = " Copy output";
         switchIO.childNodes[1].nodeValue = " Move output to input";
         undoSwitch.childNodes[1].nodeValue = " Undo";
         maximiseOutput.childNodes[1].nodeValue =
@@ -126,24 +241,51 @@ OutputWaiter.prototype.adjustWidth = function() {
 
 /**
  * Handler for save click events.
- * Saves the current output to a file, downloaded as a URL octet stream.
+ * Saves the current output to a file.
  */
 OutputWaiter.prototype.saveClick = function() {
-    const data = Utils.toBase64(this.app.dishStr);
-    const filename = window.prompt("Please enter a filename:", "download.dat");
-
-    if (filename) {
-        const el = document.createElement("a");
-        el.setAttribute("href", "data:application/octet-stream;base64;charset=utf-8," + data);
-        el.setAttribute("download", filename);
-
-        // Firefox requires that the element be added to the DOM before it can be clicked
-        el.style.display = "none";
-        document.body.appendChild(el);
-
-        el.click();
-        el.remove();
+    if (!this.dishBuffer) {
+        this.dishBuffer = new Uint8Array(Utils.strToCharcode(this.dishStr)).buffer;
     }
+    this.downloadFile();
+};
+
+
+/**
+ * Handler for copy click events.
+ * Copies the output to the clipboard.
+ */
+OutputWaiter.prototype.copyClick = function() {
+    // Create invisible textarea to populate with the raw dishStr (not the printable version that
+    // contains dots instead of the actual bytes)
+    const textarea = document.createElement("textarea");
+    textarea.style.position = "fixed";
+    textarea.style.top = 0;
+    textarea.style.left = 0;
+    textarea.style.width = 0;
+    textarea.style.height = 0;
+    textarea.style.border = "none";
+
+    textarea.value = this.dishStr;
+    document.body.appendChild(textarea);
+
+    // Select and copy the contents of this textarea
+    let success = false;
+    try {
+        textarea.select();
+        success = this.dishStr && document.execCommand("copy");
+    } catch (err) {
+        success = false;
+    }
+
+    if (success) {
+        this.app.alert("Copied raw output successfully.", "success", 2000);
+    } else {
+        this.app.alert("Sorry, the output could not be copied.", "danger", 2000);
+    }
+
+    // Clean up
+    document.body.removeChild(textarea);
 };
 
 
@@ -154,7 +296,17 @@ OutputWaiter.prototype.saveClick = function() {
 OutputWaiter.prototype.switchClick = function() {
     this.switchOrigData = this.manager.input.get();
     document.getElementById("undo-switch").disabled = false;
-    this.app.setInput(this.app.dishStr);
+    if (this.dishBuffer) {
+        this.manager.input.setFile(new File([this.dishBuffer], "output.dat"));
+        this.manager.input.handleLoaderMessage({
+            data: {
+                progress: 100,
+                fileBuffer: this.dishBuffer
+            }
+        });
+    } else {
+        this.app.setInput(this.dishStr);
+    }
 };
 
 
@@ -169,7 +321,7 @@ OutputWaiter.prototype.undoSwitchClick = function() {
 
 /**
  * Handler for file switch click events.
- * Moves a files data for items created via Utils.displayFilesAsHTML to the input.
+ * Moves a file's data for items created via Utils.displayFilesAsHTML to the input.
  */
 OutputWaiter.prototype.fileSwitch = function(e) {
     e.preventDefault();
@@ -239,6 +391,16 @@ OutputWaiter.prototype.setStatusMsg = function(msg) {
     const el = document.querySelector("#output-loader .loading-msg");
 
     el.textContent = msg;
+};
+
+
+/**
+ * Returns true if the output contains carriage returns
+ *
+ * @returns {boolean}
+ */
+OutputWaiter.prototype.containsCR = function() {
+    return this.dishStr.indexOf("\r") >= 0;
 };
 
 export default OutputWaiter;

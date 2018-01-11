@@ -38,23 +38,23 @@ function main() {
     ];
 
     const defaultOptions = {
-        updateUrl:         true,
-        showHighlighter:   true,
-        treatAsUtf8:       true,
-        wordWrap:          true,
-        showErrors:        true,
-        errorTimeout:      4000,
-        attemptHighlight:  true,
-        theme:             "classic",
+        updateUrl:           true,
+        showHighlighter:     true,
+        treatAsUtf8:         true,
+        wordWrap:            true,
+        showErrors:          true,
+        errorTimeout:        4000,
+        attemptHighlight:    true,
+        theme:               "classic",
+        useMetaKey:          false,
+        ioDisplayThreshold:  512,
+        logLevel:            "info"
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
     window.app = new App(Categories, OperationConfig, defaultFavourites, defaultOptions);
     window.app.setup();
 }
-
-// Fix issues with browsers that don't support console.log()
-window.console = console || {log: function() {}, error: function() {}};
 
 window.compileTime = moment.tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
 window.compileMessage = COMPILE_MSG;

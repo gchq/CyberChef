@@ -1,11 +1,12 @@
-import CharEnc from "../../operations/CharEnc.js";
+import URL_ from "../../operations/URL.js";
 
 
 /**
- * CharEnc module.
+ * URL module.
  *
  * Libraries:
- *  - cptable
+ *  - Utils.js
+ *  - url
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -13,9 +14,10 @@ import CharEnc from "../../operations/CharEnc.js";
  */
 let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
-OpModules.CharEnc = {
-    "Encode text": CharEnc.runEncode,
-    "Decode text": CharEnc.runDecode,
+OpModules.URL = {
+    "URL Encode": URL_.runTo,
+    "URL Decode": URL_.runFrom,
+    "Parse URI":  URL_.runParse,
 };
 
 export default OpModules;

@@ -10,8 +10,8 @@ import TestRegister from "../../TestRegister.js";
 TestRegister.addTests([
     {
         name: "SeqUtils - Numeric sort photos",
-        input: "Photo-1.jpg\nPhoto-4.jpg\nPhoto-2.jpg\nPhoto-3.jpg\n",
-        expectedOutput: "Photo-1.jpg\nPhoto-2.jpg\nPhoto-3.jpg\nPhoto-4.jpg\n",
+        input: "Photo-1.jpg\nPhoto-4.jpg\nPhoto-2.jpg\nPhoto-3.jpg",
+        expectedOutput: "Photo-1.jpg\nPhoto-2.jpg\nPhoto-3.jpg\nPhoto-4.jpg",
         recipeConfig: [
             {
                 "op": "Sort",

@@ -39,4 +39,10 @@ deploy:
     on:
       tags: true
       branch: master
-
+notifications:
+    webhooks:
+        urls:
+            - https://webhooks.gitter.im/e/83c143a6822e218d5b34
+        on_success: change
+        on_failure: always
+        on_start: never
