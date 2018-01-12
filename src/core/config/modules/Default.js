@@ -10,7 +10,6 @@ import Convert from "../../operations/Convert.js";
 import DateTime from "../../operations/DateTime.js";
 import Endian from "../../operations/Endian.js";
 import Entropy from "../../operations/Entropy.js";
-import Extract from "../../operations/Extract.js";
 import FileType from "../../operations/FileType.js";
 import Hexdump from "../../operations/Hexdump.js";
 import HTML from "../../operations/HTML.js";
@@ -99,11 +98,9 @@ OpModules.Default = {
     "Format MAC addresses": MAC.runFormat,
     "Encode NetBIOS Name":  NetBIOS.runEncodeName,
     "Decode NetBIOS Name":  NetBIOS.runDecodeName,
-    "Regular expression":   StrUtils.runRegex,
     "Offset checker":       StrUtils.runOffsetChecker,
     "To Upper case":        StrUtils.runUpper,
     "To Lower case":        StrUtils.runLower,
-    "Find / Replace":       StrUtils.runFindReplace,
     "Split":                StrUtils.runSplit,
     "Filter":               StrUtils.runFilter,
     "Escape string":        StrUtils.runEscape,
@@ -133,14 +130,6 @@ OpModules.Default = {
     "Translate DateTime Format": DateTime.runTranslateFormat,
     "From UNIX Timestamp":  DateTime.runFromUnixTimestamp,
     "To UNIX Timestamp":    DateTime.runToUnixTimestamp,
-    "Strings":              Extract.runStrings,
-    "Extract IP addresses": Extract.runIp,
-    "Extract email addresses": Extract.runEmail,
-    "Extract MAC addresses": Extract.runMac,
-    "Extract URLs":         Extract.runUrls,
-    "Extract domains":      Extract.runDomains,
-    "Extract file paths":   Extract.runFilePaths,
-    "Extract dates":        Extract.runDates,
     "Microsoft Script Decoder": MS.runDecodeScript,
     "Entropy":              Entropy.runEntropy,
     "Frequency distribution": Entropy.runFreqDistrib,

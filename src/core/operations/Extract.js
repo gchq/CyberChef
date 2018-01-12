@@ -1,3 +1,6 @@
+import XRegExp from "xregexp";
+
+
 /**
  * Identifier extraction operations.
  *
@@ -26,6 +29,11 @@ const Extract = {
             match;
 
         while ((match = searchRegex.exec(input))) {
+            // Moves pointer when an empty string is matched (prevents infinite loop)
+            if (match.index === searchRegex.lastIndex) {
+                searchRegex.lastIndex++;
+            }
+
             if (removeRegex && removeRegex.test(match[0]))
                 continue;
             total++;
@@ -43,7 +51,20 @@ const Extract = {
      * @constant
      * @default
      */
-    MIN_STRING_LEN: 3,
+    MIN_STRING_LEN: 4,
+    /**
+     * @constant
+     * @default
+     */
+    STRING_MATCH_TYPE: [
+        "[ASCII]", "Alphanumeric + punctuation (A)", "All printable chars (A)", "Null-terminated strings (A)",
+        "[Unicode]", "Alphanumeric + punctuation (U)", "All printable chars (U)", "Null-terminated strings (U)"
+    ],
+    /**
+     * @constant
+     * @default
+     */
+    ENCODING_LIST: ["Single byte", "16-bit littleendian", "16-bit bigendian", "All"],
     /**
      * @constant
      * @default
@@ -58,10 +79,59 @@ const Extract = {
      * @returns {string}
      */
     runStrings: function(input, args) {
-        let minLen = args[0] || Extract.MIN_STRING_LEN,
-            displayTotal = args[1],
-            strings = "[A-Z\\d/\\-:.,_$%'\"()<>= !\\[\\]{}@]",
-            regex = new RegExp(strings + "{" + minLen + ",}", "ig");
+        const encoding = args[0],
+            minLen = args[1],
+            matchType = args[2],
+            displayTotal = args[3],
+            alphanumeric = "A-Z\\d",
+            punctuation = "/\\-:.,_$%'\"()<>= !\\[\\]{}@",
+            printable = "\x20-\x7e",
+            uniAlphanumeric = "\\pL\\pN",
+            uniPunctuation = "\\pP\\pZ",
+            uniPrintable = "\\pL\\pM\\pZ\\pS\\pN\\pP";
+
+        let strings = "";
+
+        switch (matchType) {
+            case "Alphanumeric + punctuation (A)":
+                strings = `[${alphanumeric + punctuation}]`;
+                break;
+            case "All printable chars (A)":
+            case "Null-terminated strings (A)":
+                strings = `[${printable}]`;
+                break;
+            case "Alphanumeric + punctuation (U)":
+                strings = `[${uniAlphanumeric + uniPunctuation}]`;
+                break;
+            case "All printable chars (U)":
+            case "Null-terminated strings (U)":
+                strings = `[${uniPrintable}]`;
+                break;
+        }
+
+        // UTF-16 support is hacked in by allowing null bytes on either side of the matched chars
+        switch (encoding) {
+            case "All":
+                strings = `(\x00?${strings}\x00?)`;
+                break;
+            case "16-bit littleendian":
+                strings = `(${strings}\x00)`;
+                break;
+            case "16-bit bigendian":
+                strings = `(\x00${strings})`;
+                break;
+            case "Single byte":
+            default:
+                break;
+        }
+
+        strings = `${strings}{${minLen},}`;
+
+        if (matchType.includes("Null-terminated")) {
+            strings += "\x00";
+        }
+
+        const regex = new XRegExp(strings, "ig");
 
         return Extract._search(input, regex, null, displayTotal);
     },

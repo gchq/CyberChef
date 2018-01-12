@@ -30,6 +30,7 @@ import "./tests/operations/MS.js";
 import "./tests/operations/PHP.js";
 import "./tests/operations/NetBIOS.js";
 import "./tests/operations/OTP.js";
+import "./tests/operations/Regex.js";
 import "./tests/operations/StrUtils.js";
 import "./tests/operations/SeqUtils.js";
 
