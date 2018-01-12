@@ -75,16 +75,6 @@ const Regex = {
      * @constant
      * @default
      */
-    REGEX_CASE_INSENSITIVE: true,
-    /**
-     * @constant
-     * @default
-     */
-    REGEX_MULTILINE_MATCHING: true,
-    /**
-     * @constant
-     * @default
-     */
     OUTPUT_FORMAT: ["Highlight matches", "List matches", "List capture groups", "List matches with capture groups"],
     /**
      * @constant
@@ -100,15 +90,21 @@ const Regex = {
      * @returns {html}
      */
     runRegex: function(input, args) {
-        let userRegex = args[1],
+        const userRegex = args[1],
             i = args[2],
             m = args[3],
-            displayTotal = args[4],
-            outputFormat = args[5],
-            modifiers = "g";
+            s = args[4],
+            u = args[5],
+            a = args[6],
+            displayTotal = args[7],
+            outputFormat = args[8];
+        let modifiers = "g";
 
         if (i) modifiers += "i";
         if (m) modifiers += "m";
+        if (s) modifiers += "s";
+        if (u) modifiers += "u";
+        if (a) modifiers += "A";
 
         if (userRegex && userRegex !== "^" && userRegex !== "$") {
             try {
@@ -275,7 +271,7 @@ const Regex = {
         if (displayTotal)
             output = "Total found: " + total + "\n\n" + output;
 
-        return output;
+        return output.slice(0, -1);
     },
 };
 

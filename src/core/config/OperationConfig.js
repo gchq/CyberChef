@@ -2322,12 +2322,27 @@ const OperationConfig = {
             {
                 name: "Case insensitive",
                 type: "boolean",
-                value: Regex.REGEX_CASE_INSENSITIVE
+                value: true
             },
             {
-                name: "Multiline matching",
+                name: "^ and $ match at newlines",
                 type: "boolean",
-                value: Regex.REGEX_MULTILINE_MATCHING
+                value: true
+            },
+            {
+                name: "Dot matches all",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unicode support",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Astral support",
+                type: "boolean",
+                value: false
             },
             {
                 name: "Display total",
