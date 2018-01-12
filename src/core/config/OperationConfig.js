@@ -3974,6 +3974,11 @@ const OperationConfig = {
                 type: "text",
                 value: ""
             },
+            {
+                name: "Passphrase",
+                type: "text",
+                value: ""
+            },
         ]
     },
 };

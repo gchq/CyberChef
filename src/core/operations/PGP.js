@@ -162,15 +162,25 @@ const PGP = {
 
     async runDecrypt(input, args) {
         let encryptedMessage = input,
-            plainPrivateKey  = args[0],
+            privateKey  = args[0],
+            passphrase = args[1],
             keyring          = new kbpgp.keyring.KeyRing();
 
         let key, plaintextMessage;
 
         try {
             key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
-                armored: plainPrivateKey,
+                armored: privateKey,
             });
+            if (key.is_pgp_locked() && passphrase) {
+                if (passphrase) {
+                    await promisify(key.unlock_pgp, key)({
+                        passphrase
+                    });
+                } else if (!passphrase) {
+                    throw "Did not provide passphrase with locked private key.";
+                }
+            }
         } catch (err) {
             throw `Could not import private key: ${err}`;
         }
