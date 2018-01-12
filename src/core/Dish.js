@@ -173,7 +173,7 @@ Dish.prototype.translate = function(toType, notUTF8) {
             this.value = Array.prototype.slice.call(new Uint8Array(this.value));
             break;
         case Dish.BIG_NUMBER:
-            this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toString()) : [];
+            this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
             break;
         default:
             break;
