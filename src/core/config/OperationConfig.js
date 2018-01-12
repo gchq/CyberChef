@@ -2165,19 +2165,24 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
+                name: "Encoding",
+                type: "option",
+                value: Extract.ENCODING_LIST
+            },
+            {
                 name: "Minimum length",
                 type: "number",
                 value: Extract.MIN_STRING_LEN
             },
             {
+                name: "Match",
+                type: "option",
+                value: Extract.STRING_MATCH_TYPE
+            },
+            {
                 name: "Display total",
                 type: "boolean",
                 value: Extract.DISPLAY_TOTAL
-            },
-            {
-                name: "Encoding",
-                type: "option",
-                value: Extract.ENCODING_LIST
             }
         ]
     },
