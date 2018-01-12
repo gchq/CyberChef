@@ -3951,12 +3951,20 @@ const OperationConfig = {
     "PGP Encrypt": {
         module: "PGP",
         manualBake: true,
-        description: "",
+        description: [
+            "Input: the message you want to encrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function relies on kbpgp.js for the implementation of PGP.",
+        ].join("\n"),
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Public key",
+                name: "Public key of recipient",
                 type: "text",
                 value: ""
             },
@@ -3965,19 +3973,97 @@ const OperationConfig = {
     "PGP Decrypt": {
         module: "PGP",
         manualBake: true,
-        description: "",
+        description: [
+            "Input: the ASCII-armoured PGP message you want to decrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the recipient, ",
+            "(and the private key password if necessary).",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function relies on kbpgp.js for the implementation of PGP.",
+        ].join("\n"),
         inputType: "string",
         outputType: "string",
         args: [
             {
-                name: "Private key",
+                name: "Private key of recipient",
                 type: "text",
                 value: ""
             },
             {
-                name: "Passphrase",
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Sign": {
+        module: "PGP",
+        manualBake: true,
+        description: [
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)",
+            "and the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "This operation uses PGP to produce an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function relies on kbpgp.js for the implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of signer",
                 type: "text",
                 value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Verify": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured encrypted PGP message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the signer, ",
+            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
+            "<br><br>",
+            "This operation uses PGP to decrypt and verify an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function relies on kbpgp.js for the implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of signer",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key password",
+                type: "string",
+                value: "",
             },
         ]
     },

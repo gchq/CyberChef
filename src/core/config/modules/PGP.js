@@ -8,6 +8,7 @@ import PGP from "../../operations/PGP.js";
  *  - kbpgp
  *
  * @author tlwr [toby@toby.codes]
+ * @author Matt C [matt@artemisbot.uk]
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
@@ -17,6 +18,8 @@ OpModules.PGP = {
     "Generate PGP Key Pair": PGP.runGenerateKeyPair,
     "PGP Encrypt":           PGP.runEncrypt,
     "PGP Decrypt":           PGP.runDecrypt,
+    "PGP Sign":              PGP.runSign,
+    "PGP Verify":            PGP.runVerify,
 };
 
 export default OpModules;
