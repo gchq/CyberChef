@@ -145,7 +145,6 @@ const PGP = {
                 armored: plainPubKey,
             });
         } catch (err) {
-            console.error(err);
             throw `Could not import public key: ${err}`;
         }
 
@@ -155,13 +154,10 @@ const PGP = {
                 encrypt_for: key,
             });
         } catch (err) {
-            console.error(err);
-            throw `Could encrypt message to provided public key: ${err}`;
+            throw `Couldn't encrypt message with provided public key: ${err}`;
         }
 
-        console.log(encryptedMessage);
-
-        return encryptedMessage;
+        return encryptedMessage.toString();
     },
 
     async runDecrypt(input, args) {
@@ -187,10 +183,10 @@ const PGP = {
                 keyfetch: keyring,
             });
         } catch (err) {
-            throw `Could decrypt message to provided private key: ${err}`;
+            throw `Couldn't decrypt message with provided private key: ${err}`;
         }
 
-        return plaintextMessage;
+        return plaintextMessage.toString();
     },
 };
 
