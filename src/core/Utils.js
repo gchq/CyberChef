@@ -201,7 +201,7 @@ const Utils = {
      * Utils.parseEscapedChars("\\n");
      */
     parseEscapedChars: function(str) {
-        return str.replace(/(\\)?\\([nrtbf]|x[\da-f]{2})/g, function(m, a, b) {
+        return str.replace(/(\\)?\\([nrtbf]|x[\da-fA-F]{2})/g, function(m, a, b) {
             if (a === "\\") return "\\"+b;
             switch (b[0]) {
                 case "n":

@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 /**
  * Numerical base operations.
  *
@@ -18,7 +20,7 @@ const Base = {
     /**
      * To Base operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -39,7 +41,7 @@ const Base = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runFrom: function(input, args) {
         const radix = args[0] || Base.DEFAULT_RADIX;
@@ -48,14 +50,14 @@ const Base = {
         }
 
         let number = input.replace(/\s/g, "").split("."),
-            result = parseInt(number[0], radix) || 0;
+            result = new BigNumber(number[0], radix) || 0;
 
         if (number.length === 1) return result;
 
         // Fractional part
         for (let i = 0; i < number[1].length; i++) {
-            const digit = parseInt(number[1][i], radix);
-            result += digit / Math.pow(radix, i+1);
+            const digit = new BigNumber(number[1][i], radix);
+            result += digit.div(Math.pow(radix, i+1));
         }
 
         return result;

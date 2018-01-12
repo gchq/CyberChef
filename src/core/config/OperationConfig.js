@@ -525,7 +525,7 @@ const OperationConfig = {
         module: "Default",
         description: "Adds together a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>18.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -538,7 +538,7 @@ const OperationConfig = {
         module: "Default",
         description: "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -551,7 +551,7 @@ const OperationConfig = {
         module: "Default",
         description: "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -564,7 +564,7 @@ const OperationConfig = {
         module: "Default",
         description: "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -577,7 +577,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -590,7 +590,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -603,7 +603,7 @@ const OperationConfig = {
         module: "Default",
         description: "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Delimiter",
@@ -807,7 +807,7 @@ const OperationConfig = {
         module: "Default",
         description: "Converts a number to decimal from a given numerical base.",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Radix",
@@ -819,7 +819,7 @@ const OperationConfig = {
     "To Base": {
         module: "Default",
         description: "Converts a decimal number to a given numerical base.",
-        inputType: "number",
+        inputType: "BigNumber",
         outputType: "string",
         args: [
             {
@@ -2538,8 +2538,8 @@ const OperationConfig = {
     "Convert distance": {
         module: "Default",
         description: "Converts a unit of distance to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2556,8 +2556,8 @@ const OperationConfig = {
     "Convert area": {
         module: "Default",
         description: "Converts a unit of area to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2574,8 +2574,8 @@ const OperationConfig = {
     "Convert mass": {
         module: "Default",
         description: "Converts a unit of mass to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2592,8 +2592,8 @@ const OperationConfig = {
     "Convert speed": {
         module: "Default",
         description: "Converts a unit of speed to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -2610,8 +2610,8 @@ const OperationConfig = {
     "Convert data units": {
         module: "Default",
         description: "Converts a unit of data to another format.",
-        inputType: "number",
-        outputType: "number",
+        inputType: "BigNumber",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Input units",
@@ -3501,14 +3501,14 @@ const OperationConfig = {
     },
     "Escape string": {
         module: "Default",
-        description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.",
+        description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li></ul>",
         inputType: "string",
         outputType: "string",
         args: []
     },
     "Unescape string": {
         module: "Default",
-        description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.",
+        description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li></ul>",
         inputType: "string",
         outputType: "string",
         args: []
@@ -3773,7 +3773,7 @@ const OperationConfig = {
         module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
         inputType: "string",
-        outputType: "number",
+        outputType: "BigNumber",
         args: [
             {
                 name: "Scheme",
@@ -3801,7 +3801,7 @@ const OperationConfig = {
     "To BCD": {
         module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
-        inputType: "number",
+        inputType: "BigNumber",
         outputType: "string",
         args: [
             {
@@ -3936,6 +3936,29 @@ const OperationConfig = {
             }
         ]
     },
+    "Hamming Distance": {
+        module: "Default",
+        description: "In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. In a more general context, the Hamming distance is one of several string metrics for measuring the edit distance between two sequences.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Delimiter",
+                type: "binaryShortString",
+                value: StrUtils.HAMMING_DELIM
+            },
+            {
+                name: "Unit",
+                type: "option",
+                value: StrUtils.HAMMING_UNIT
+            },
+            {
+                name: "Input type",
+                type: "option",
+                value: StrUtils.HAMMING_INPUT_TYPE
+            }
+        ]
+    }
 };
 
 

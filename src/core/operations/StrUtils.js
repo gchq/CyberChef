@@ -329,6 +329,75 @@ const StrUtils = {
             })
             .join(delimiter);
     },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    HAMMING_DELIM: "\\n\\n",
+    /**
+     * @constant
+     * @default
+     */
+    HAMMING_INPUT_TYPE: ["Raw string", "Hex"],
+    /**
+     * @constant
+     * @default
+     */
+    HAMMING_UNIT: ["Byte", "Bit"],
+
+    /**
+     * Hamming Distance operation.
+     *
+     * @author GCHQ Contributor [2]
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runHamming: function(input, args) {
+        const delim = args[0],
+            byByte = args[1] === "Byte",
+            inputType = args[2],
+            samples = input.split(delim);
+
+        if (samples.length !== 2) {
+            return "Error: You can only calculae the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.";
+        }
+
+        if (samples[0].length !== samples[1].length) {
+            return "Error: Both inputs must be of the same length.";
+        }
+
+        if (inputType === "Hex") {
+            samples[0] = Utils.fromHex(samples[0]);
+            samples[1] = Utils.fromHex(samples[1]);
+        } else {
+            samples[0] = Utils.strToByteArray(samples[0]);
+            samples[1] = Utils.strToByteArray(samples[1]);
+        }
+
+        let dist = 0;
+
+        for (let i = 0; i < samples[0].length; i++) {
+            const lhs = samples[0][i],
+                rhs = samples[1][i];
+
+            if (byByte && lhs !== rhs) {
+                dist++;
+            } else if (!byByte) {
+                let xord = lhs ^ rhs;
+
+                while (xord) {
+                    dist++;
+                    xord &= xord - 1;
+                }
+            }
+        }
+
+        return dist.toString();
+    },
 };
 
 export default StrUtils;

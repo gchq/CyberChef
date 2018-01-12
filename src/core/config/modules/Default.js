@@ -107,6 +107,7 @@ OpModules.Default = {
     "Unescape string":      StrUtils.runUnescape,
     "Head":                 StrUtils.runHead,
     "Tail":                 StrUtils.runTail,
+    "Hamming Distance":     StrUtils.runHamming,
     "Remove whitespace":    Tidy.runRemoveWhitespace,
     "Remove null bytes":    Tidy.runRemoveNulls,
     "Drop bytes":           Tidy.runDropBytes,

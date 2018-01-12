@@ -59,6 +59,9 @@
                 "for i in range(additional): Pylon()",
                 "(creating unresolved tension...",
                 "Symlinking emacs and vim to ed...",
+                "Training branch predictor...",
+                "Timing cache hits...",
+                "Speculatively executing recipes..."
             ];
 
             // Shuffle array using Durstenfeld algorithm
@@ -115,7 +118,7 @@
                     <span id="notice">
                         <script type="text/javascript">
                             // Must be text/javascript rather than application/javascript otherwise IE won't recognise it...
-                            if (navigator.userAgent && navigator.userAgent.match(/MSIE \d\d?\./)) {
+                            if (navigator.userAgent && navigator.userAgent.match(/Trident/)) {
                                 document.write("Internet Explorer is not supported, please use Firefox or Chrome instead");
                                 alert("Internet Explorer is not supported, please use Firefox or Chrome instead");
                             }
@@ -369,8 +372,8 @@
                             <label for="errorTimeout"> Operation error timeout in ms (0 for never)</label>
                         </div>
                         <div class="option-item">
-                            <input type="number" option="outputFileThreshold" id="outputFileThreshold" />
-                            <label for="outputFileThreshold"> Size threshold for treating the output as a file (KiB)</label>
+                            <input type="number" option="ioDisplayThreshold" id="ioDisplayThreshold" />
+                            <label for="ioDisplayThreshold"> Size threshold for treating the input and output as a file (KiB)</label>
                         </div>
                         <div class="option-item">
                             <select option="logLevel" id="logLevel">

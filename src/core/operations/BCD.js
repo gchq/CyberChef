@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import BigNumber from "bignumber.js";
 
 
 /**
@@ -61,14 +62,14 @@ const BCD = {
     /**
      * To BCD operation.
      *
-     * @param {number} input
+     * @param {BigNumber} input
      * @param {Object[]} args
      * @returns {string}
      */
     runToBCD: function(input, args) {
-        if (isNaN(input))
+        if (input.isNaN())
             return "Invalid input";
-        if (Math.floor(input) !== input)
+        if (!input.floor().equals(input))
             return "Fractional values are not supported by BCD";
 
         const encoding = BCD.ENCODING_LOOKUP[args[0]],
@@ -77,7 +78,7 @@ const BCD = {
             outputFormat = args[3];
 
         // Split input number up into separate digits
-        const digits = input.toString().split("");
+        const digits = input.toFixed().split("");
 
         if (digits[0] === "-" || digits[0] === "+") {
             digits.shift();
@@ -152,7 +153,7 @@ const BCD = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {BigNumber}
      */
     runFromBCD: function(input, args) {
         const encoding = BCD.ENCODING_LOOKUP[args[0]],
@@ -206,7 +207,7 @@ const BCD = {
             output += val.toString();
         });
 
-        return parseInt(output, 10);
+        return new BigNumber(output);
     },
 
 };
