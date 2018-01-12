@@ -189,6 +189,7 @@ const Categories = [
             "Find / Replace",
             "Regular expression",
             "Offset checker",
+            "Hamming Distance",
             "Convert distance",
             "Convert area",
             "Convert mass",
