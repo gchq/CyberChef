@@ -324,7 +324,7 @@ const PGP = {
                     text += [
                         `PGP fingerprint: ${km.get_pgp_fingerprint().toString("hex")}`,
                         `Signed on ${new Date(ds.sig.hashed_subpackets[0].time * 1000).toUTCString()}`,
-                        "----------------------------------"
+                        "----------------------------------\n"
                     ].join("\n");
                     text += unboxedLiterals.toString();
                     return text.trim();
