@@ -79,8 +79,8 @@ const Categories = [
             "DES Decrypt",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
-            "Rabbit Encrypt",
-            "Rabbit Decrypt",
+            "RC2 Encrypt",
+            "RC2 Decrypt",
             "RC4",
             "RC4 Drop",
             "ROT13",
@@ -99,6 +99,7 @@ const Categories = [
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "Pseudo-Random Number Generator",
         ]
     },
     {
@@ -113,7 +114,7 @@ const Categories = [
         ]
     },
     {
-        name: "Logical operations",
+        name: "Arithmetic / Logic",
         ops: [
             "XOR",
             "XOR Brute Force",
@@ -122,6 +123,13 @@ const Categories = [
             "AND",
             "ADD",
             "SUB",
+            "Sum",
+            "Subtract",
+            "Multiply",
+            "Divide",
+            "Mean",
+            "Median",
+            "Standard Deviation",
             "Bit shift left",
             "Bit shift right",
             "Rotate left",
@@ -191,6 +199,7 @@ const Categories = [
             "Parse colour code",
             "Escape string",
             "Unescape string",
+            "Pseudo-Random Number Generator",
         ]
     },
     {
@@ -288,6 +297,7 @@ const Categories = [
             "XPath expression",
             "JPath expression",
             "CSS selector",
+            "PHP Deserialize",
             "Microsoft Script Decoder",
             "Strip HTML tags",
             "Diff",
@@ -301,9 +311,11 @@ const Categories = [
         ops: [
             "Entropy",
             "Frequency distribution",
+            "Chi Square",
             "Detect File Type",
             "Scan for Embedded Files",
             "Disassemble x86",
+            "Pseudo-Random Number Generator",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
@@ -319,6 +331,7 @@ const Categories = [
             "Fork",
             "Merge",
             "Register",
+            "Label",
             "Jump",
             "Conditional Jump",
             "Return",

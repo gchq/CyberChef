@@ -81,22 +81,23 @@ const Entropy = {
     /**
      * Frequency distribution operation.
      *
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {html}
      */
     runFreqDistrib: function (input, args) {
-        if (!input.length) return "No data";
+        const data = new Uint8Array(input);
+        if (!data.length) return "No data";
 
         let distrib = new Array(256).fill(0),
             percentages = new Array(256),
-            len = input.length,
+            len = data.length,
             showZeroes = args[0],
             i;
 
         // Count bytes
         for (i = 0; i < len; i++) {
-            distrib[input[i]]++;
+            distrib[data[i]]++;
         }
 
         // Calculate percentages
@@ -126,12 +127,38 @@ const Entropy = {
         for (i = 0; i < 256; i++) {
             if (distrib[i] || showZeroes) {
                 output += " " + Utils.hex(i, 2) + "    (" +
-                        Utils.padRight(percentages[i].toFixed(2).replace(".00", "") + "%)", 8) +
+                        (percentages[i].toFixed(2).replace(".00", "") + "%)").padEnd(8, " ") +
                         Array(Math.ceil(percentages[i])+1).join("|") + "\n";
             }
         }
 
         return output;
+    },
+
+
+    /**
+     * Chi Square operation.
+     *
+     * @param {ArrayBuffer} data
+     * @param {Object[]} args
+     * @returns {number}
+     */
+    runChiSq: function(input, args) {
+        const data = new Uint8Array(input);
+        let distArray = new Array(256).fill(0),
+            total = 0;
+
+        for (let i = 0; i < data.length; i++) {
+            distArray[data[i]]++;
+        }
+
+        for (let i = 0; i < distArray.length; i++) {
+            if (distArray[i] > 0) {
+                total += Math.pow(distArray[i] - data.length / 256, 2) / (data.length / 256);
+            }
+        }
+
+        return total;
     },
 
 

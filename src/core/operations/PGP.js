@@ -11,6 +11,7 @@ const KEY_TYPES = ["RSA", "ECC"];
  * PGP operations.
  *
  * @author tlwr [toby@toby.codes]
+ * @author Matt C [matt@artemisbot.uk]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
@@ -21,10 +22,12 @@ const PGP = {
 
     /**
      * Validate PGP Key Size
+     * 
+     * @private
      * @param {string} keySize
      * @returns {Integer}
      */
-    validateKeySize(keySize, keyType) {
+    _validateKeySize(keySize, keyType) {
         if (KEY_SIZES.indexOf(keySize) < 0) {
             throw `Invalid key size ${keySize}, must be in ${JSON.stringify(KEY_SIZES)}`;
         }
@@ -46,10 +49,12 @@ const PGP = {
 
     /**
      * Get size of subkey
+     * 
+     * @private
      * @param {Integer} keySize
      * @returns {Integer}
      */
-    getSubkeySize(keySize) {
+    _getSubkeySize(keySize) {
         return {
             1024: 1024,
             2048: 1024,
@@ -64,18 +69,65 @@ const PGP = {
 
     /**
      * Validate PGP Key Type
+     * 
+     * @private
      * @param {string} keyType
      * @returns {string}
      */
-    validateKeyType(keyType) {
+    _validateKeyType(keyType) {
         if (KEY_TYPES.indexOf(keyType) >= 0) return keyType.toLowerCase();
         throw `Invalid key type ${keyType}, must be in ${JSON.stringify(KEY_TYPES)}`;
     },
 
     /**
+     * Import private key and unlock if necessary
+     * 
+     * @private
+     * @param {string} privateKey
+     * @param {string} [passphrase]
+     * @returns {Object}
+     */
+    async _importPrivateKey (privateKey, passphrase) {
+        try {
+            const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
+                armored: privateKey,
+            });
+            if (key.is_pgp_locked() && passphrase) {
+                if (passphrase) {
+                    await promisify(key.unlock_pgp, key)({
+                        passphrase
+                    });
+                } else if (!passphrase) {
+                    throw "Did not provide passphrase with locked private key.";
+                }
+            }
+            return key;
+        } catch (err) {
+            throw `Could not import private key: ${err}`;
+        }
+    },
+
+    /**
+     * Import public key
+     * 
+     * @private
+     * @param {string} publicKey
+     * @returns {Object}
+     */
+    async _importPublicKey (publicKey) {
+        try {
+            const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
+                armored: publicKey,
+            });
+            return key;
+        } catch (err) {
+            throw `Could not import public key: ${err}`;
+        }
+    },
+
+    /**
      * Generate PGP Key Pair operation.
      *
-     * @author tlwr [toby@toby.codes]
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -87,8 +139,8 @@ const PGP = {
             name     = args[3],
             email    = args[4];
 
-        keyType = PGP.validateKeyType(keyType);
-        keySize = PGP.validateKeySize(keySize, keyType);
+        keyType = PGP._validateKeyType(keyType);
+        keySize = PGP._validateKeySize(keySize, keyType);
 
         let userIdentifier = "";
         if (name) userIdentifier += name;
@@ -109,11 +161,11 @@ const PGP = {
                 expire_in: 0
             },
             subkeys: [{
-                nbits: PGP.getSubkeySize(keySize),
+                nbits: PGP._getSubkeySize(keySize),
                 flags: kbpgp.const.openpgp.sign_data,
                 expire_in: 86400 * 365 * 8
             }, {
-                nbits: PGP.getSubkeySize(keySize),
+                nbits: PGP._getSubkeySize(keySize),
                 flags: kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
                 expire_in: 86400 * 365 * 2
             }],
@@ -134,6 +186,13 @@ const PGP = {
         });
     },
 
+    /**
+     * PGP Encrypt operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     async runEncrypt(input, args) {
         let plaintextMessage = input,
             plainPubKey      = args[0];
@@ -145,7 +204,6 @@ const PGP = {
                 armored: plainPubKey,
             });
         } catch (err) {
-            console.error(err);
             throw `Could not import public key: ${err}`;
         }
 
@@ -155,30 +213,27 @@ const PGP = {
                 encrypt_for: key,
             });
         } catch (err) {
-            console.error(err);
-            throw `Could encrypt message to provided public key: ${err}`;
+            throw `Couldn't encrypt message with provided public key: ${err}`;
         }
 
-        console.log(encryptedMessage);
-
-        return encryptedMessage;
+        return encryptedMessage.toString();
     },
 
+    /**
+     * PGP Decrypt operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     async runDecrypt(input, args) {
         let encryptedMessage = input,
-            plainPrivateKey  = args[0],
+            privateKey  = args[0],
+            passphrase = args[1],
             keyring          = new kbpgp.keyring.KeyRing();
 
-        let key, plaintextMessage;
-
-        try {
-            key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
-                armored: plainPrivateKey,
-            });
-        } catch (err) {
-            throw `Could not import private key: ${err}`;
-        }
-
+        let plaintextMessage;
+        const key = await PGP._importPrivateKey(privateKey, passphrase);
         keyring.add_key_manager(key);
 
         try {
@@ -187,10 +242,97 @@ const PGP = {
                 keyfetch: keyring,
             });
         } catch (err) {
-            throw `Could decrypt message to provided private key: ${err}`;
+            throw `Couldn't decrypt message with provided private key: ${err}`;
         }
 
-        return plaintextMessage;
+        return plaintextMessage.toString();
+    },
+
+    /**
+     * PGP Sign Message operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    async runSign(input, args) {
+        let message = input,
+            privateKey  = args[0],
+            passphrase = args[1],
+            publicKey = args[2];
+
+        let signedMessage;
+        const privKey = await PGP._importPrivateKey(privateKey, passphrase);
+        const pubKey = await PGP._importPublicKey(publicKey);
+
+        try {
+            signedMessage = await promisify(kbpgp.box)({
+                msg: message,
+                encrypt_for: pubKey,
+                sign_with: privKey
+            });
+        } catch (err) {
+            throw `Couldn't sign message: ${err}`;
+        }
+
+        return signedMessage;
+    },
+
+    /**
+     * PGP Verify Message operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    async runVerify(input, args) {
+        let signedMessage = input,
+            publicKey  = args[0],
+            privateKey = args[1],
+            passphrase = args[2],
+            keyring    = new kbpgp.keyring.KeyRing();
+
+        let unboxedLiterals;
+        const privKey = await PGP._importPrivateKey(privateKey, passphrase);
+        const pubKey = await PGP._importPublicKey(publicKey);
+        keyring.add_key_manager(privKey);
+        keyring.add_key_manager(pubKey);
+
+        try {
+            unboxedLiterals = await promisify(kbpgp.unbox)({
+                armored:  signedMessage,
+                keyfetch: keyring
+            });
+            const ds = unboxedLiterals[0].get_data_signer();
+            if (ds) {
+                const km = ds.get_key_manager();
+                if (km) {
+                    const signer = km.get_userids_mark_primary()[0].components;
+                    let text = "Signed by ";
+                    if (signer.email || signer.username || signer.comment) {
+                        if (signer.username) {
+                            text += `${signer.username} `;
+                        }
+                        if (signer.comment) {
+                            text += `${signer.comment} `;
+                        }
+                        if (signer.email) {
+                            text += `<${signer.email}>`;
+                        }
+                        text += "\n";
+                    }
+                    text += [
+                        `PGP fingerprint: ${km.get_pgp_fingerprint().toString("hex")}`,
+                        `Signed on ${new Date(ds.sig.hashed_subpackets[0].time * 1000).toUTCString()}`,
+                        "----------------------------------\n"
+                    ].join("\n");
+                    text += unboxedLiterals.toString();
+                    return text.trim();
+                }
+            }
+        } catch (err) {
+            throw `Couldn't verify message: ${err}`;
+        }
     },
 };
 

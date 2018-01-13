@@ -28,3 +28,56 @@
     margin: 0;
     padding: 0;
 }
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 400px;
+    height: 150px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--primary-font-family);
+    color: var(--primary-font-colour);
+    line-height: 30px;
+    background-color: var(--primary-background-colour);
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card>img {
+    float: left;
+    width: 128px;
+    height: 128px;
+    margin-left: 10px;
+    margin-top: 11px;
+}
+
+.card-body .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.card-body {
+    float: left;
+    padding: 16px;
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: text;
+}
+
+.card-body>.btn {
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+.card input[type=number] {
+    padding-right: 6px;
+    padding-left: 6px;
+}

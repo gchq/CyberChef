@@ -1,4 +1,5 @@
 import FlowControl from "../../FlowControl.js";
+import Arithmetic from "../../operations/Arithmetic.js";
 import Base from "../../operations/Base.js";
 import Base58 from "../../operations/Base58.js";
 import Base64 from "../../operations/Base64.js";
@@ -20,15 +21,14 @@ import NetBIOS from "../../operations/NetBIOS.js";
 import Numberwang from "../../operations/Numberwang.js";
 import OS from "../../operations/OS.js";
 import OTP from "../../operations/OTP.js";
+import PHP from "../../operations/PHP.js";
 import QuotedPrintable from "../../operations/QuotedPrintable.js";
 import Rotate from "../../operations/Rotate.js";
 import SeqUtils from "../../operations/SeqUtils.js";
 import StrUtils from "../../operations/StrUtils.js";
 import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
-import URL_ from "../../operations/URL.js";
 import UUID from "../../operations/UUID.js";
-
 
 /**
  * Default module.
@@ -38,8 +38,8 @@ import UUID from "../../operations/UUID.js";
  *
  * Libraries:
  *  - Utils.js
- *    - CryptoJS
  *  - otp
+ *  - crypto
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -77,9 +77,6 @@ OpModules.Default = {
     "From HTML Entity":     HTML.runFromEntity,
     "Strip HTML tags":      HTML.runStripTags,
     "Parse colour code":    HTML.runParseColourCode,
-    "URL Encode":           URL_.runTo,
-    "URL Decode":           URL_.runFrom,
-    "Parse URI":            URL_.runParse,
     "Unescape Unicode Characters": Unicode.runUnescape,
     "To Quoted Printable":  QuotedPrintable.runTo,
     "From Quoted Printable": QuotedPrintable.runFrom,
@@ -146,6 +143,7 @@ OpModules.Default = {
     "Microsoft Script Decoder": MS.runDecodeScript,
     "Entropy":              Entropy.runEntropy,
     "Frequency distribution": Entropy.runFreqDistrib,
+    "Chi Square":           Entropy.runChiSq,
     "Detect File Type":     FileType.runDetect,
     "Scan for Embedded Files": FileType.runScanForEmbeddedFiles,
     "Generate UUID":        UUID.runGenerateV4,
@@ -155,10 +153,19 @@ OpModules.Default = {
     "Fork":                 FlowControl.runFork,
     "Merge":                FlowControl.runMerge,
     "Register":             FlowControl.runRegister,
+    "Label":                FlowControl.runComment,
     "Jump":                 FlowControl.runJump,
     "Conditional Jump":     FlowControl.runCondJump,
     "Return":               FlowControl.runReturn,
     "Comment":              FlowControl.runComment,
+    "PHP Deserialize":      PHP.runDeserialize,
+    "Sum":                  Arithmetic.runSum,
+    "Subtract":             Arithmetic.runSub,
+    "Multiply":             Arithmetic.runMulti,
+    "Divide":               Arithmetic.runDiv,
+    "Mean":                 Arithmetic.runMean,
+    "Median":               Arithmetic.runMedian,
+    "Standard Deviation":   Arithmetic.runStdDev,
 
 
     /*

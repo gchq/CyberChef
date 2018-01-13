@@ -1,17 +1,17 @@
 <!-- htmlmin:ignore --><!--
     CyberChef - The Cyber Swiss Army Knife
-    
+
     @copyright Crown Copyright 2016
     @license Apache-2.0
-    
+
       Copyright 2016 Crown Copyright
-    
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
         http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@
     <head>
         <meta charset="UTF-8">
         <title>CyberChef</title>
-        
+
         <meta name="copyright" content="Crown Copyright 2016" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
@@ -59,6 +59,9 @@
                 "for i in range(additional): Pylon()",
                 "(creating unresolved tension...",
                 "Symlinking emacs and vim to ed...",
+                "Training branch predictor...",
+                "Timing cache hits...",
+                "Speculatively executing recipes..."
             ];
 
             // Shuffle array using Durstenfeld algorithm
@@ -115,7 +118,7 @@
                     <span id="notice">
                         <script type="text/javascript">
                             // Must be text/javascript rather than application/javascript otherwise IE won't recognise it...
-                            if (navigator.userAgent && navigator.userAgent.match(/MSIE \d\d?\./)) {
+                            if (navigator.userAgent && navigator.userAgent.match(/Trident/)) {
                                 document.write("Internet Explorer is not supported, please use Firefox or Chrome instead");
                                 alert("Internet Explorer is not supported, please use Firefox or Chrome instead");
                             }
@@ -135,11 +138,11 @@
                     <ul id="search-results" class="op-list"></ul>
                     <div id="categories" class="panel-group no-select"></div>
                 </div>
-                
+
                 <div id="recipe" class="split split-horizontal no-select">
                     <div class="title no-select">Recipe</div>
                     <ul id="rec-list" class="list-area no-select"></ul>
-                    
+
                     <div id="controls" class="no-select">
                         <div id="operational-controls">
                             <div id="bake-group">
@@ -152,13 +155,13 @@
                                     <div>Auto Bake</div>
                                 </label>
                             </div>
-                            
+
                             <div class="btn-group" style="padding-top: 10px;">
                                 <button type="button" class="btn btn-default" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
                                 <button type="button" class="btn btn-default" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
                             </div>
                         </div>
-                        
+
                         <div class="btn-group-vertical" id="extra-controls">
                             <button type="button" class="btn btn-default" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
                             <button type="button" class="btn btn-default" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
@@ -166,7 +169,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="split split-horizontal" id="IO">
                     <div id="input" class="split no-select">
                         <div class="title no-select">
@@ -181,14 +184,29 @@
                         <div class="textarea-wrapper no-select">
                             <div id="input-highlighter" class="no-select"></div>
                             <textarea id="input-text"></textarea>
+                            <div id="input-file">
+                                <div style="position: relative; height: 100%;">
+                                    <div class="card">
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                        <div class="card-body">
+                                            <button type="button" class="close" id="input-file-close">&times;</button>
+                                            Name: <span id="input-file-name"></span><br>
+                                            Size: <span id="input-file-size"></span><br>
+                                            Type: <span id="input-file-type"></span><br>
+                                            Loaded: <span id="input-file-loaded"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div id="output" class="split">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
                             <div class="btn-group io-btn-group">
                                 <button type="button" class="btn btn-default btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
+                                <button type="button" class="btn btn-default btn-sm" id="copy-output" title="Copy output"><img aria-hidden="true" src="<%- require('../static/images/copy-16x16.png') %>" alt="Copy Icon"/> Copy raw output</button>
                                 <button type="button" class="btn btn-default btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
                                 <button type="button" class="btn btn-default btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img aria-hidden="true" src="<%- require('../static/images/undo-16x16.png') %>" alt="Undo Icon"/> Undo</button>
                                 <button type="button" class="btn btn-default btn-sm" id="maximise-output" title="Maximise"><img aria-hidden="true" src="<%- require('../static/images/maximise-16x16.png') %>" alt="Maximise Icon"/> Max</button>
@@ -201,6 +219,26 @@
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
                             <textarea id="output-text" readonly="readonly"></textarea>
+                            <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
+                            <div id="output-file">
+                                <div style="position: relative; height: 100%;">
+                                    <div class="card">
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                        <div class="card-body">
+                                            Size: <span id="output-file-size"></span><br>
+                                            <button id="output-file-download" type="button" class="btn btn-primary">Download</button>
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button id="output-file-slice" type="button" class="btn btn-default" title="View slice">&#x1f50d;</button>
+                                                </span>
+                                                <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
+                                                <div class="input-group-addon">to</div>
+                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="1024" step="1024" min="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="output-loader">
                                 <div class="loader"></div>
                                 <div class="loading-msg"></div>
@@ -210,7 +248,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="save-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -261,7 +299,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="load-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -287,7 +325,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="options-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -307,27 +345,46 @@
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="updateUrl" id="updateUrl" checked />
-                            <label for="updateUrl"> Update the URL when the input or recipe changes </label>
+                            <label for="updateUrl"> Update the URL when the input or recipe changes</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="showHighlighter" id="showHighlighter" checked />
-                            <label for="showHighlighter"> Highlight selected bytes in output and input (when possible) </label>
+                            <label for="showHighlighter"> Highlight selected bytes in output and input (when possible)</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="treatAsUtf8" id="treatAsUtf8" checked />
-                            <label for="treatAsUtf8"> Treat output as UTF-8 if possible </label>
+                            <label for="treatAsUtf8"> Treat output as UTF-8 if possible</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="wordWrap" id="wordWrap" checked />
-                            <label for="wordWrap"> Word wrap the input and output </label>
+                            <label for="wordWrap"> Word wrap the input and output</label>
                         </div>
                         <div class="option-item">
                             <input type="checkbox" option="showErrors" id="showErrors" checked />
-                            <label for="showErrors"> Operation error reporting (recommended) </label>
+                            <label for="showErrors"> Operation error reporting (recommended)</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" option="useMetaKey" id="useMetaKey" />
+                            <label for="useMetaKey"> Use meta key for keybindings (Windows ⊞/Command ⌘)</label>
                         </div>
                         <div class="option-item">
                             <input type="number" option="errorTimeout" id="errorTimeout" />
-                            <label for="errorTimeout"> Operation error timeout in ms (0 for never) </label>
+                            <label for="errorTimeout"> Operation error timeout in ms (0 for never)</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="number" option="ioDisplayThreshold" id="ioDisplayThreshold" />
+                            <label for="ioDisplayThreshold"> Size threshold for treating the input and output as a file (KiB)</label>
+                        </div>
+                        <div class="option-item">
+                            <select option="logLevel" id="logLevel">
+                                <option value="silent">Silent</option>
+                                <option value="error">Error</option>
+                                <option value="warn">Warn</option>
+                                <option value="info">Info</option>
+                                <option value="debug">Debug</option>
+                                <option value="trace">Trace</option>
+                            </select>
+                            <label for="logLevel"> Console logging level</label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -337,7 +394,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="favourites-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -364,7 +421,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="support-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -380,6 +437,11 @@
                         </p>
                         <p>&copy; Crown Copyright 2016.</p>
                         <p>Released under the Apache Licence, Version 2.0.</p>
+                        <p>
+                            <a href="https://gitter.im/gchq/CyberChef">
+                                <img src="<%- require('../static/images/gitter-badge.svg') %>">
+                            </a>
+                        </p>
                         <br>
                         <br>
                         <div>
@@ -395,6 +457,10 @@
                                 <li role="presentation"><a href="#about" aria-controls="messages" role="tab" data-toggle="tab">
                                     <img aria-hidden="true" src="<%- require('../static/images/speech-16x16.png') %>" alt="Speech Balloon Icon"/>
                                     About
+                                </a></li>
+                                <li role="presentation"><a href="#keybindings" aria-controls="messages" role="tab" data-toggle="tab">
+                                    <img aria-hidden="true" src="<%- require('../static/images/code-16x16.png') %>" alt="List Icon"/>
+                                    Keybindings
                                 </a></li>
                             </ul>
                             <div class="tab-content">
@@ -414,7 +480,7 @@
                                             <li><a href="#recipe=From_Hexdump()Gunzip()&input=MDAwMDAwMDAgIDFmIDhiIDA4IDAwIDEyIGJjIGYzIDU3IDAwIGZmIDBkIGM3IGMxIDA5IDAwIDIwICB8Li4uLi6881cu/y7HwS4uIHwKMDAwMDAwMTAgIDA4IDA1IGQwIDU1IGZlIDA0IDJkIGQzIDA0IDFmIGNhIDhjIDQ0IDIxIDViIGZmICB8Li7QVf4uLdMuLsouRCFb/3wKMDAwMDAwMjAgIDYwIGM3IGQ3IDAzIDE2IGJlIDQwIDFmIDc4IDRhIDNmIDA5IDg5IDBiIDlhIDdkICB8YMfXLi6%2BQC54Sj8uLi4ufXwKMDAwMDAwMzAgIDRlIGM4IDRlIDZkIDA1IDFlIDAxIDhiIDRjIDI0IDAwIDAwIDAwICAgICAgICAgICB8TshObS4uLi5MJC4uLnw">Convert data from a hexdump, then decompress</a></li>
                                             <li><a href="#recipe=RC4(%7B'option':'UTF8','string':'secret'%7D,'Hex','Hex')Disassemble_x86('64','Full%20x86%20architecture',16,0,true,true)&input=MjFkZGQyNTQwMTYwZWU2NWZlMDc3NzEwM2YyYTM5ZmJlNWJjYjZhYTBhYWJkNDE0ZjkwYzZjYWY1MzEyNzU0YWY3NzRiNzZiM2JiY2QxOTNjYjNkZGZkYmM1YTI2NTMzYTY4NmI1OWI4ZmVkNGQzODBkNDc0NDIwMWFlYzIwNDA1MDcxMzhlMmZlMmIzOTUwNDQ2ZGIzMWQyYmM2MjliZTRkM2YyZWIwMDQzYzI5M2Q3YTVkMjk2MmMwMGZlNmRhMzAwNzJkOGM1YTZiNGZlN2Q4NTlhMDQwZWVhZjI5OTczMzYzMDJmNWEwZWMxOQ">Decrypt and disassemble shellcode</a></li>
                                             <li><a href="#recipe=Fork('%5C%5Cn','%5C%5Cn',false)From_UNIX_Timestamp('Seconds%20(s)')&input=OTc4MzQ2ODAwCjEwMTI2NTEyMDAKMTA0NjY5NjQwMAoxMDgxMDg3MjAwCjExMTUzMDUyMDAKMTE0OTYwOTYwMA">Display multiple timestamps as full dates</a></li>
-                                            <li><a href="#recipe=Fork('%5C%5Cn','%5C%5Cn',false)Conditional_Jump('1',2,10)To_Hex('Space')Return()To_Base64('A-Za-z0-9%2B/%3D')&input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA">Carry out different operations on data of different types</a></li>
+                                            <li><a href="#recipe=Fork('%5C%5Cn','%5C%5Cn',false)Conditional_Jump('1',false,'base64',10)To_Hex('Space')Return()Label('base64')To_Base64('A-Za-z0-9%2B/%3D')&input=U29tZSBkYXRhIHdpdGggYSAxIGluIGl0ClNvbWUgZGF0YSB3aXRoIGEgMiBpbiBpdA">Carry out different operations on data of different types</a></li>
                                             <li><a href="#recipe=Register('key%3D(%5B%5C%5Cda-f%5D*)',true,false)Find_/_Replace(%7B'option':'Regex','string':'.*data%3D(.*)'%7D,'$1',true,false,true)RC4(%7B'option':'Hex','string':'$R0'%7D,'Hex','Latin1')&input=aHR0cDovL21hbHdhcmV6LmJpei9iZWFjb24ucGhwP2tleT0wZTkzMmE1YyZkYXRhPThkYjdkNWViZTM4NjYzYTU0ZWNiYjMzNGUzZGIxMQ">Use parts of the input as arguments to operations</a></li>
                                         </ul>
                                     </div>
@@ -424,8 +490,9 @@
                                         </a>
                                     </blockquote>
                                     <div class="collapse" id="faq-load-files">
-                                        <p>Yes! Just drag your file over the input box and drop it. The contents of the file will be converted into hexadecimal and the 'From Hex' operation will be added to the beginning of the recipe (if it's not already there). This is so that special characters like carriage returns aren't removed by your browser.</p>
-                                        <p>Please note that loading large files is likely to cause a crash. There's not a lot that can be done about this - browsers just aren't very good at handling and displaying large amounts of data.</p>
+                                        <p>Yes! Just drag your file over the input box and drop it.</p>
+                                        <p>CyberChef can handle files up to around 500MB (depending on your browser), however some of the operations may take a very long time to run over this much data.</p>
+                                        <p>If the output is larger than a certain threshold (default 1MiB), it will be presented to you as a file available for download. Slices of the file can be viewed in the output if you need to inspect them.</p>
                                     </div>
                                     <blockquote>
                                         <a data-toggle="collapse" data-target="#faq-fork">
@@ -449,27 +516,30 @@
                                 <div role="tabpanel" class="tab-pane" id="about" style="padding: 20px;">
                                     <h5><strong>What</strong></h5>
                                     <p>A simple, intuitive web app for analysing and decoding data without having to deal with complex tools or programming languages. CyberChef encourages both technical and non-technical people to explore data formats, encryption and compression.</p><br>
-                                    
+
                                     <h5><strong>Why</strong></h5>
                                     <p>Digital data comes in all shapes, sizes and formats in the modern world – CyberChef helps to make sense of this data all on one easy-to-use platform.</p><br>
 
-                                    
+
                                     <h5><strong>How</strong></h5>
                                     <p>The interface is designed with simplicity at its heart. Complex techniques are now as trivial as drag-and-drop. Simple functions can be combined to build up a "recipe", potentially resulting in complex analysis, which can be shared with other users and used with their input.</p>
                                     <p>For those comfortable writing code, CyberChef is a quick and efficient way to prototype solutions to a problem which can then be scripted once proven to work.</p><br>
 
-                                    
+
                                     <h5><strong>Who</strong></h5>
                                     <p>It is expected that CyberChef will be useful for cybersecurity and antivirus companies. It should also appeal to the academic world and any individuals or companies involved in the analysis of digital data, be that software developers, analysts, mathematicians or casual puzzle solvers.</p><br>
 
-                                    
+
                                     <h5><strong>Aim</strong></h5>
                                     <p>It is hoped that by releasing CyberChef through <a href="https://github.com/gchq/CyberChef">GitHub</a>, contributions can be added which can be rolled out into future versions of the tool.</p><br>
 
 
                                     <br>
-                                    <p>There are around 150 useful operations in CyberChef for anyone working on anything vaguely Internet-related, whether you just want to convert a timestamp to a different format, decompress gzipped data, create a SHA3 hash, or parse an X.509 certificate to find out who issued it.</p>
+                                    <p>There are around 200 useful operations in CyberChef for anyone working on anything vaguely Internet-related, whether you just want to convert a timestamp to a different format, decompress gzipped data, create a SHA3 hash, or parse an X.509 certificate to find out who issued it.</p>
                                     <p>It’s the Cyber Swiss Army Knife.</p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="keybindings" style="padding: 20px;">
+                                    <table class="table table-condensed table-bordered table-hover" id="keybList"></table>
                                 </div>
                             </div>
                         </div>
@@ -483,7 +553,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal" id="confirm-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -504,6 +574,6 @@
                 </div>
             </div>
         </div>
-        
+
     </body>
 </html>

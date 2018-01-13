@@ -39,7 +39,7 @@
 }
 
 .textarea-wrapper textarea,
-.textarea-wrapper div {
+.textarea-wrapper>div {
     font-family: var(--fixed-width-font-family);
     font-size: var(--fixed-width-font-size);
     color: var(--fixed-width-font-colour);
@@ -77,6 +77,25 @@
     transition: all 0.5s ease;
 }
 
+#input-file,
+#output-file {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--title-background-colour);
+    display: none;
+}
+
+#show-file-overlay {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    display: none;
+}
+
 .io-btn-group {
     float: right;
     margin-top: -4px;
@@ -92,6 +111,8 @@
     font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
+    display: flex;
+    align-items: center;
 }
 
 #input-info {

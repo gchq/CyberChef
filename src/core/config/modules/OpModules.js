@@ -19,6 +19,7 @@ import ImageModule from "./Image.js";
 import JSBNModule from "./JSBN.js";
 import PublicKeyModule from "./PublicKey.js";
 import ShellcodeModule from "./Shellcode.js";
+import URLModule from "./URL.js";
 
 Object.assign(
     OpModules,
@@ -33,7 +34,8 @@ Object.assign(
     ImageModule,
     JSBNModule,
     PublicKeyModule,
-    ShellcodeModule
+    ShellcodeModule,
+    URLModule
 );
 
 export default OpModules;
