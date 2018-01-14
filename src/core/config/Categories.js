@@ -329,6 +329,7 @@ const Categories = [
     {
         name: "Flow control",
         ops: [
+            "Magic",
             "Fork",
             "Merge",
             "Register",

@@ -81,6 +81,14 @@ import URL_ from "../operations/URL.js";
  * @type {Object.<string, OpConf>}
  */
 const OperationConfig = {
+    "Magic": {
+        module: "Default",
+        description: "Attempts to detect what the input data is and which operations could help to make more sense of it.",
+        inputType: "ArrayBuffer",
+        outputType: "string",
+        flowControl: true,
+        args: []
+    },
     "Fork": {
         module: "Default",
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
@@ -238,6 +246,13 @@ const OperationConfig = {
                 name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: Base64.REMOVE_NON_ALPH_CHARS
+            }
+        ],
+        patterns: [
+            {
+                match: "^(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["A-Za-z0-9+/=", false]
             }
         ]
     },
@@ -624,6 +639,53 @@ const OperationConfig = {
                 name: "Delimiter",
                 type: "option",
                 value: ByteRepr.HEX_DELIM_OPTIONS
+            }
+        ],
+        patterns: [
+            {
+                match: "^(?:[\\dA-F]{2})+$",
+                flags: "i",
+                args: ["None"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Space"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Comma"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Colon"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Line feed"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["CRLF"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["0x"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["\\x"]
             }
         ]
     },

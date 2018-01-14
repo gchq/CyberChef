@@ -1,2 +1,3 @@
 src/core/lib/**
+!src/core/lib/Magic.js
 src/core/config/MetaConfig.js

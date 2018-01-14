@@ -140,6 +140,7 @@ OpModules.Default = {
     "Numberwang":           Numberwang.run,
     "Generate TOTP":        OTP.runTOTP,
     "Generate HOTP":        OTP.runHOTP,
+    "Magic":                FlowControl.runMagic,
     "Fork":                 FlowControl.runFork,
     "Merge":                FlowControl.runMerge,
     "Register":             FlowControl.runRegister,

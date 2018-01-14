@@ -1,5 +1,6 @@
 import Recipe from "./Recipe.js";
 import Dish from "./Dish.js";
+import Magic from "./lib/Magic.js";
 
 
 /**
@@ -249,6 +250,29 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runComment: function(state) {
+        return state;
+    },
+
+
+    /**
+     * Magic operation.
+     *
+     * @param {Object} state - The current state of the recipe.
+     * @param {number} state.progress - The current position in the recipe.
+     * @param {Dish} state.dish - The Dish being operated on.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
+     * @returns {Object} The updated state of the recipe.
+     */
+    runMagic: function(state) {
+        const dish = state.dish;
+
+        const magic = new Magic(dish.get(Dish.ARRAY_BUFFER));
+
+        const output = JSON.stringify(magic.detectLanguage(), null, 2) + "\n\n" +
+            JSON.stringify(magic.detectFileType(), null, 2) + "\n\n" +
+            JSON.stringify(magic.findMatchingOps(), null, 2);
+
+        dish.set(output, Dish.STRING);
         return state;
     },
 
