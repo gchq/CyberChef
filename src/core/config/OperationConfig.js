@@ -253,7 +253,67 @@ const OperationConfig = {
                 match: "^(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
                 flags: "i",
                 args: ["A-Za-z0-9+/=", false]
-            }
+            },
+            {
+                match: "^[A-Z\\d\\-_]{20,}$",
+                flags: "i",
+                args: ["A-Za-z0-9-_", false]
+            },
+            {
+                match: "^(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?$",
+                flags: "i",
+                args: ["A-Za-z0-9+\\-=", false]
+            },
+            {
+                match: "^(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?$",
+                flags: "i",
+                args: ["./0-9A-Za-z=", false]
+            },
+            {
+                match: "^[A-Z\\d_.]{20,}$",
+                flags: "i",
+                args: ["A-Za-z0-9_.", false]
+            },
+            {
+                match: "^(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?$",
+                flags: "i",
+                args: ["A-Za-z0-9._-", false]
+            },
+            {
+                match: "^(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["0-9a-zA-Z+/=", false]
+            },
+            {
+                match: "^(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["0-9A-Za-z+/=", false]
+            },
+            {
+                match: "^[ !\"#$%&'()*+,\\-./\\d:;<=>?@A-Z[\\\\\\]^_]{20,}$",
+                flags: "",
+                args: [" -_", false]
+            },
+            {
+                match: "^[A-Z\\d+\\-]{20,}$",
+                flags: "i",
+                args: ["+\\-0-9A-Za-z", false]
+            },
+            {
+                match: "^[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}$",
+                flags: "",
+                args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", false]
+            },
+            {
+                match: "^(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["N-ZA-Mn-za-m0-9+/=", false]
+            },
+            {
+                match: "^[A-Z\\d./]{20,}$",
+                flags: "i",
+                args: ["./0-9A-Za-z", false]
+            },
         ]
     },
     "To Base64": {
@@ -287,6 +347,18 @@ const OperationConfig = {
                 type: "boolean",
                 value: Base58.REMOVE_NON_ALPH_CHARS
             }
+        ],
+        patterns: [
+            {
+                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                flags: "",
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz", false]
+            },
+            {
+                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                flags: "",
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz", false]
+            },
         ]
     },
     "To Base58": {
@@ -318,6 +390,13 @@ const OperationConfig = {
                 type: "boolean",
                 value: Base64.REMOVE_NON_ALPH_CHARS
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
+                flags: "",
+                args: ["A-Z2-7=", false]
+            },
         ]
     },
     "To Base32": {
@@ -717,6 +796,13 @@ const OperationConfig = {
                 type: "option",
                 value: ByteRepr.DELIM_OPTIONS
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "To Octal": {
@@ -754,7 +840,6 @@ const OperationConfig = {
             }
         ]
     },
-
     "To Charcode": {
         module: "Default",
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
@@ -788,6 +873,13 @@ const OperationConfig = {
                 type: "option",
                 value: ByteRepr.BIN_DELIM_OPTIONS
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "To Binary": {
@@ -816,6 +908,13 @@ const OperationConfig = {
                 type: "option",
                 value: ByteRepr.DELIM_OPTIONS
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "To Decimal": {
@@ -838,7 +937,14 @@ const OperationConfig = {
         highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
-        args: []
+        args: [],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
+        ]
     },
     "To Hexdump": {
         module: "Default",
@@ -896,7 +1002,14 @@ const OperationConfig = {
         description: "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>", // <span> tags required to stop the browser just printing &
         inputType: "string",
         outputType: "string",
-        args: []
+        args: [],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
+        ]
     },
     "To HTML Entity": {
         module: "Default",
@@ -939,7 +1052,14 @@ const OperationConfig = {
         description: "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
         inputType: "string",
         outputType: "string",
-        args: []
+        args: [],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
+        ]
     },
     "URL Encode": {
         module: "URL",
@@ -972,6 +1092,13 @@ const OperationConfig = {
                 type: "option",
                 value: Unicode.PREFIXES
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "From Quoted Printable": {
@@ -979,7 +1106,14 @@ const OperationConfig = {
         description: "Converts QP-encoded text back to standard text.",
         inputType: "string",
         outputType: "byteArray",
-        args: []
+        args: [],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
+        ]
     },
     "To Quoted Printable": {
         module: "Default",
@@ -999,6 +1133,13 @@ const OperationConfig = {
                 type: "boolean",
                 value: Punycode.IDN
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "To Punycode": {
@@ -2483,6 +2624,13 @@ const OperationConfig = {
                 type: "option",
                 value: DateTime.UNITS
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "To UNIX Timestamp": {
@@ -2777,6 +2925,13 @@ const OperationConfig = {
                 type: "boolean",
                 value: Compress.INFLATE_VERIFY
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "Gzip": {
@@ -2812,7 +2967,14 @@ const OperationConfig = {
         description: "Decompresses data which has been compressed using the deflate algorithm with gzip headers.",
         inputType: "byteArray",
         outputType: "byteArray",
-        args: []
+        args: [],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
+        ]
     },
     "Zip": {
         module: "Compression",
@@ -2868,6 +3030,13 @@ const OperationConfig = {
                 type: "boolean",
                 value: Compress.PKUNZIP_VERIFY
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "Bzip2 Decompress": {
@@ -2875,7 +3044,14 @@ const OperationConfig = {
         description: "Decompresses data using the Bzip2 algorithm.",
         inputType: "byteArray",
         outputType: "string",
-        args: []
+        args: [],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
+        ]
     },
     "Generic Code Beautify": {
         module: "Code",
@@ -3320,7 +3496,7 @@ const OperationConfig = {
     },
     "Chi Square": {
         module: "Default",
-        description: "Calculates the Chi Square distribution of values.",
+        description: "Calculates the Chi-Squared distribution of values.",
         inputType: "ArrayBuffer",
         outputType: "number",
         args: []
@@ -3343,6 +3519,13 @@ const OperationConfig = {
                 type: "option",
                 value: PublicKey.X509_INPUT_FORMAT
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "PEM to Hex": {
@@ -3614,6 +3797,13 @@ const OperationConfig = {
                 type: "option",
                 value: MorseCode.WORD_DELIM_OPTIONS
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "Tar": {
@@ -3635,6 +3825,13 @@ const OperationConfig = {
         inputType: "byteArray",
         outputType: "html",
         args: [
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "Head": {
@@ -3776,6 +3973,13 @@ const OperationConfig = {
                 type: "option",
                 value: Image.INPUT_FORMAT
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
     },
     "Remove EXIF": {
@@ -3857,8 +4061,14 @@ const OperationConfig = {
                 type: "option",
                 value: BCD.FORMAT
             }
+        ],
+        patterns: [ // TODO
+            //{
+            //    match: "^$",
+            //    flags: "",
+            //    args: []
+            //},
         ]
-
     },
     "To BCD": {
         module: "Default",

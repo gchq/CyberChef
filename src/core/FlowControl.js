@@ -264,13 +264,12 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runMagic: function(state) {
-        const dish = state.dish;
+        const dish = state.dish,
+            magic = new Magic(dish.get(Dish.ARRAY_BUFFER));
 
-        const magic = new Magic(dish.get(Dish.ARRAY_BUFFER));
-
-        const output = JSON.stringify(magic.detectLanguage(), null, 2) + "\n\n" +
+        const output = JSON.stringify(magic.findMatchingOps(), null, 2) + "\n\n" +
             JSON.stringify(magic.detectFileType(), null, 2) + "\n\n" +
-            JSON.stringify(magic.findMatchingOps(), null, 2);
+            JSON.stringify(magic.detectLanguage(), null, 2);
 
         dish.set(output, Dish.STRING);
         return state;
