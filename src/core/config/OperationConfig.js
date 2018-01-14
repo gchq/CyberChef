@@ -797,12 +797,37 @@ const OperationConfig = {
                 value: ByteRepr.DELIM_OPTIONS
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?: (?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Space"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:,(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Comma"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:;(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?::(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Colon"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Line feed"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\r\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["CRLF"]
+            },
         ]
     },
     "To Octal": {
@@ -874,12 +899,42 @@ const OperationConfig = {
                 value: ByteRepr.BIN_DELIM_OPTIONS
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^(?:[01]{8})+$",
+                flags: "",
+                args: ["None"]
+            },
+            {
+                match: "^(?:[01]{8})(?: [01]{8})*$",
+                flags: "",
+                args: ["Space"]
+            },
+            {
+                match: "^(?:[01]{8})(?:,[01]{8})*$",
+                flags: "",
+                args: ["Comma"]
+            },
+            {
+                match: "^(?:[01]{8})(?:;[01]{8})*$",
+                flags: "",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^(?:[01]{8})(?::[01]{8})*$",
+                flags: "",
+                args: ["Colon"]
+            },
+            {
+                match: "^(?:[01]{8})(?:\\n[01]{8})*$",
+                flags: "",
+                args: ["Line feed"]
+            },
+            {
+                match: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
+                flags: "",
+                args: ["CRLF"]
+            },
         ]
     },
     "To Binary": {
@@ -909,12 +964,37 @@ const OperationConfig = {
                 value: ByteRepr.DELIM_OPTIONS
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Space"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Comma"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Colon"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Line feed"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["CRLF"]
+            },
         ]
     },
     "To Decimal": {
@@ -938,12 +1018,12 @@ const OperationConfig = {
         inputType: "string",
         outputType: "byteArray",
         args: [],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^(?:(?:[\\dA-F]{4,16}:?)?\\s*((?:[\\dA-F]{2}\\s){1,8}(?:\\s|[\\dA-F]{2}-)(?:[\\dA-F]{2}\\s){1,8}|(?:[\\dA-F]{2}\\s|[\\dA-F]{4}\\s)+)[^\\n]*\\n?)+$",
+                flags: "i",
+                args: []
+            },
         ]
     },
     "To Hexdump": {
@@ -1003,12 +1083,12 @@ const OperationConfig = {
         inputType: "string",
         outputType: "string",
         args: [],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "&(?:#\\d{2,3}|#x[\\da-f]{2}|[a-z]{2,6});",
+                flags: "i",
+                args: []
+            },
         ]
     },
     "To HTML Entity": {
@@ -1053,12 +1133,12 @@ const OperationConfig = {
         inputType: "string",
         outputType: "string",
         args: [],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "%[\\da-f]{2}",
+                flags: "i",
+                args: []
+            },
         ]
     },
     "URL Encode": {
@@ -1093,12 +1173,22 @@ const OperationConfig = {
                 value: Unicode.PREFIXES
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "\\\\u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["\\u"]
+            },
+            {
+                match: "%u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["%u"]
+            },
+            {
+                match: "U\\+(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["U+"]
+            },
         ]
     },
     "From Quoted Printable": {
@@ -1107,12 +1197,12 @@ const OperationConfig = {
         inputType: "string",
         outputType: "byteArray",
         args: [],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "(?:=[\\da-f]{2}|=\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\n)*$",
+                flags: "i",
+                args: []
+            },
         ]
     },
     "To Quoted Printable": {
@@ -1133,13 +1223,6 @@ const OperationConfig = {
                 type: "boolean",
                 value: Punycode.IDN
             }
-        ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
         ]
     },
     "To Punycode": {
