@@ -65,12 +65,28 @@ const StrUtils = {
      * @constant
      * @default
      */
-    SPLIT_DELIM: ",",
+    SPLIT_DELIM_OPTIONS: [
+        {name: "Line feed", value: "\\n"},
+        {name: "CRLF", value: "\\r\\n"},
+        {name: "Space", value: " "},
+        {name: "Comma", value: ","},
+        {name: "Semi-colon", value: ";"},
+        {name: "Colon", value: ":"},
+        {name: "Nothing (separate chars)", value: ""}
+    ],
     /**
      * @constant
      * @default
      */
-    DELIMITER_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon", "Nothing (separate chars)"],
+    JOIN_DELIM_OPTIONS: [
+        {name: "Line feed", value: "\\n"},
+        {name: "CRLF", value: "\\r\\n"},
+        {name: "Space", value: " "},
+        {name: "Comma", value: ","},
+        {name: "Semi-colon", value: ";"},
+        {name: "Colon", value: ":"},
+        {name: "Nothing (join chars)", value: ""}
+    ],
 
     /**
      * Split operation.
@@ -80,8 +96,8 @@ const StrUtils = {
      * @returns {string}
      */
     runSplit: function(input, args) {
-        let splitDelim = args[0] || StrUtils.SPLIT_DELIM,
-            joinDelim = Utils.charRep[args[1]],
+        let splitDelim = args[0],
+            joinDelim = args[1],
             sections = input.split(splitDelim);
 
         return sections.join(joinDelim);
