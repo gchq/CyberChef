@@ -30,6 +30,7 @@ import NetBIOS from "../operations/NetBIOS.js";
 import PHP from "../operations/PHP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
+import Regex from "../operations/Regex.js";
 import Rotate from "../operations/Rotate.js";
 import SeqUtils from "../operations/SeqUtils.js";
 import Shellcode from "../operations/Shellcode.js";
@@ -2058,9 +2059,8 @@ const OperationConfig = {
         args: []
     },
     "Find / Replace": {
-        module: "Default",
+        module: "Regex",
         description: "Replaces all occurrences of the first string with the second.<br><br> Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).",
-        manualBake: true,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2068,7 +2068,7 @@ const OperationConfig = {
                 name: "Find",
                 type: "toggleString",
                 value: "",
-                toggleValues: StrUtils.SEARCH_TYPE
+                toggleValues: Regex.SEARCH_TYPE
             },
             {
                 name: "Replace",
@@ -2078,17 +2078,17 @@ const OperationConfig = {
             {
                 name: "Global match",
                 type: "boolean",
-                value: StrUtils.FIND_REPLACE_GLOBAL,
+                value: Regex.FIND_REPLACE_GLOBAL,
             },
             {
                 name: "Case insensitive",
                 type: "boolean",
-                value: StrUtils.FIND_REPLACE_CASE,
+                value: Regex.FIND_REPLACE_CASE,
             },
             {
                 name: "Multiline matching",
                 type: "boolean",
-                value: StrUtils.FIND_REPLACE_MULTILINE,
+                value: Regex.FIND_REPLACE_MULTILINE,
             },
 
         ]
@@ -2125,20 +2125,19 @@ const OperationConfig = {
         args: [
             {
                 name: "Split delimiter",
-                type: "binaryShortString",
-                value: StrUtils.SPLIT_DELIM
+                type: "editableOption",
+                value: StrUtils.SPLIT_DELIM_OPTIONS
             },
             {
                 name: "Join delimiter",
-                type: "option",
-                value: StrUtils.DELIMITER_OPTIONS
+                type: "editableOption",
+                value: StrUtils.JOIN_DELIM_OPTIONS
             }
         ]
     },
     "Filter": {
         module: "Default",
         description: "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.",
-        manualBake: true,
         inputType: "string",
         outputType: "string",
         args: [
@@ -2160,15 +2159,25 @@ const OperationConfig = {
         ]
     },
     "Strings": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts all strings from the input.",
         inputType: "string",
         outputType: "string",
         args: [
             {
+                name: "Encoding",
+                type: "option",
+                value: Extract.ENCODING_LIST
+            },
+            {
                 name: "Minimum length",
                 type: "number",
                 value: Extract.MIN_STRING_LEN
+            },
+            {
+                name: "Match",
+                type: "option",
+                value: Extract.STRING_MATCH_TYPE
             },
             {
                 name: "Display total",
@@ -2178,7 +2187,7 @@ const OperationConfig = {
         ]
     },
     "Extract IP addresses": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts all IPv4 and IPv6 addresses.<br><br>Warning: Given a string <code>710.65.0.456</code>, this will match <code>10.65.0.45</code> so always check the original input!",
         inputType: "string",
         outputType: "string",
@@ -2206,7 +2215,7 @@ const OperationConfig = {
         ]
     },
     "Extract email addresses": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts all email addresses from the input.",
         inputType: "string",
         outputType: "string",
@@ -2219,7 +2228,7 @@ const OperationConfig = {
         ]
     },
     "Extract MAC addresses": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts all Media Access Control (MAC) addresses from the input.",
         inputType: "string",
         outputType: "string",
@@ -2232,7 +2241,7 @@ const OperationConfig = {
         ]
     },
     "Extract URLs": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts Uniform Resource Locators (URLs) from the input. The protocol (http, ftp etc.) is required otherwise there will be far too many false positives.",
         inputType: "string",
         outputType: "string",
@@ -2245,7 +2254,7 @@ const OperationConfig = {
         ]
     },
     "Extract domains": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.",
         inputType: "string",
         outputType: "string",
@@ -2258,7 +2267,7 @@ const OperationConfig = {
         ]
     },
     "Extract file paths": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts anything that looks like a Windows or UNIX file path.<br><br>Note that if UNIX is selected, there will likely be a lot of false positives.",
         inputType: "string",
         outputType: "string",
@@ -2281,7 +2290,7 @@ const OperationConfig = {
         ]
     },
     "Extract dates": {
-        module: "Default",
+        module: "Regex",
         description: "Extracts dates in the following formats<ul><li><code>yyyy-mm-dd</code></li><li><code>dd/mm/yyyy</code></li><li><code>mm/dd/yyyy</code></li></ul>Dividers can be any of /, -, . or space",
         inputType: "string",
         outputType: "string",
@@ -2294,16 +2303,15 @@ const OperationConfig = {
         ]
     },
     "Regular expression": {
-        module: "Default",
-        description: "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.",
-        manualBake: true,
+        module: "Regex",
+        description: "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.<br><br>Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including <code>\\p{}</code> categories and scripts as well as astral codes) and recursive matching.",
         inputType: "string",
         outputType: "html",
         args: [
             {
                 name: "Built in regexes",
                 type: "populateOption",
-                value: StrUtils.REGEX_PRE_POPULATE,
+                value: Regex.REGEX_PRE_POPULATE,
                 target: 1,
             },
             {
@@ -2314,22 +2322,37 @@ const OperationConfig = {
             {
                 name: "Case insensitive",
                 type: "boolean",
-                value: StrUtils.REGEX_CASE_INSENSITIVE
+                value: true
             },
             {
-                name: "Multiline matching",
+                name: "^ and $ match at newlines",
                 type: "boolean",
-                value: StrUtils.REGEX_MULTILINE_MATCHING
+                value: true
+            },
+            {
+                name: "Dot matches all",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unicode support",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Astral support",
+                type: "boolean",
+                value: false
             },
             {
                 name: "Display total",
                 type: "boolean",
-                value: StrUtils.DISPLAY_TOTAL
+                value: Regex.DISPLAY_TOTAL
             },
             {
                 name: "Output format",
                 type: "option",
-                value: StrUtils.OUTPUT_FORMAT
+                value: Regex.OUTPUT_FORMAT
             },
         ]
     },

@@ -521,6 +521,10 @@ DES uses a key length of 8 bytes (64 bits).`;
      * @default
      */
     PRNG_BYTES: 32,
+    /**
+     * @constant
+     * @default
+     */
     PRNG_OUTPUT: ["Hex", "Integer", "Byte array", "Raw"],
 
     /**
