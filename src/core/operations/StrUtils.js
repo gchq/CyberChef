@@ -66,10 +66,10 @@ const StrUtils = {
      * @default
      */
     SPLIT_DELIM_OPTIONS: [
+        {name: "Comma", value: ","},
+        {name: "Space", value: " "},
         {name: "Line feed", value: "\\n"},
         {name: "CRLF", value: "\\r\\n"},
-        {name: "Space", value: " "},
-        {name: "Comma", value: ","},
         {name: "Semi-colon", value: ";"},
         {name: "Colon", value: ":"},
         {name: "Nothing (separate chars)", value: ""}
