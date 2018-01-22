@@ -2154,7 +2154,7 @@ const OperationConfig = {
             {
                 name: "Invert condition",
                 type: "boolean",
-                value: SeqUtils.SORT_REVERSE
+                value: false
             },
         ]
     },

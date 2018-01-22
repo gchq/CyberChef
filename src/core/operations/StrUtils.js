@@ -105,6 +105,12 @@ const StrUtils = {
 
 
     /**
+     * @constant
+     * @default
+     */
+    DELIMITER_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon", "Nothing (separate chars)"],
+
+    /**
      * Filter operation.
      *
      * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
