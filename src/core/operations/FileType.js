@@ -225,8 +225,8 @@ const FileType = {
 
         if (buf[0] === 0x78 && buf[1] === 0x01) {
             return {
-                ext: "dmg",
-                mime: "application/x-apple-diskimage"
+                ext: "dmg, zlib",
+                mime: "application/x-apple-diskimage, application/x-deflate"
             };
         }
 
@@ -434,8 +434,11 @@ const FileType = {
             };
         }
 
-        // Added by n1474335 [n1474335@gmail.com] from here on
-        // ################################################################## //
+        /**
+         *
+         * Added by n1474335 [n1474335@gmail.com] from here on
+         *
+         */
         if ((buf[0] === 0x1F && buf[1] === 0x9D) || (buf[0] === 0x1F && buf[1] === 0xA0)) {
             return {
                 ext: "z, tar.z",
@@ -521,6 +524,13 @@ const FileType = {
                 ext: "crx",
                 mime: "application/crx",
                 desc: "Google Chrome extension or packaged app"
+            };
+        }
+
+        if (buf[0] === 0x78 && (buf[1] === 0x01 || buf[1] === 0x9C || buf[1] === 0xDA || buf[1] === 0x5e)) {
+            return {
+                ext: "zlib",
+                mime: "application/x-deflate"
             };
         }
 

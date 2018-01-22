@@ -2708,12 +2708,27 @@ const OperationConfig = {
                 value: DateTime.UNITS
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^1?\\d{9}$",
+                flags: "",
+                args: ["Seconds (s)"]
+            },
+            {
+                match: "^1?\\d{12}$",
+                flags: "",
+                args: ["Milliseconds (ms)"]
+            },
+            {
+                match: "^1?\\d{15}$",
+                flags: "",
+                args: ["Microseconds (μs)"]
+            },
+            {
+                match: "^1?\\d{18}$",
+                flags: "",
+                args: ["Nanoseconds (ns)"]
+            },
         ]
     },
     "To UNIX Timestamp": {
@@ -3009,12 +3024,12 @@ const OperationConfig = {
                 value: Compress.INFLATE_VERIFY
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
+                flags: "",
+                args: [0, 0, "Adaptive", false, false]
+            },
         ]
     },
     "Gzip": {
@@ -3051,12 +3066,12 @@ const OperationConfig = {
         inputType: "byteArray",
         outputType: "byteArray",
         args: [],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^\\x1f\\x8b\\x08",
+                flags: "",
+                args: []
+            },
         ]
     },
     "Zip": {
@@ -3114,12 +3129,12 @@ const OperationConfig = {
                 value: Compress.PKUNZIP_VERIFY
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
+                flags: "",
+                args: ["", false]
+            },
         ]
     },
     "Bzip2 Decompress": {
@@ -3128,12 +3143,12 @@ const OperationConfig = {
         inputType: "byteArray",
         outputType: "string",
         args: [],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^\\x42\\x5a\\x68",
+                flags: "",
+                args: []
+            },
         ]
     },
     "Generic Code Beautify": {
