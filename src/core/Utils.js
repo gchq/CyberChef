@@ -903,9 +903,9 @@ const Utils = {
      * "Pretty" CyberChef recipe formats are designed to be included in the fragment (#) or query (?)
      * parts of the URL. They can also be loaded into CyberChef through the 'Load' interface. In order
      * to make this format as readable as possible, various special characters are used unescaped. This
-     * reduces the amount of percent-encoding included in the URL which is typically difficult to read,
-     * as well as substantially increasing the overall length. These characteristics can be quite
-     * offputting for users.
+     * reduces the amount of percent-encoding included in the URL which is typically difficult to read
+     * and substantially increases the overall length. These characteristics can be quite off-putting
+     * for users.
      *
      * @param {Object[]} recipeConfig
      * @param {boolean} newline - whether to add a newline after each operation
@@ -922,12 +922,11 @@ const Utils = {
             name = op.op.replace(/ /g, "_");
             args = JSON.stringify(op.args)
                 .slice(1, -1) // Remove [ and ] as they are implied
-                // We now need to switch double-quoted (") strings to single-quotes (') as these do not
-                // need to be percent-encoded.
+                // We now need to switch double-quoted (") strings to single quotes (') as single quotes
+                // do not need to be percent-encoded.
                 .replace(/'/g, "\\'") // Escape single quotes
-                .replace(/\\"/g, '"') // Unescape double quotes
-                .replace(/(^|,|{|:)"/g, "$1'") // Replace opening " with '
-                .replace(/"(,|:|}|$)/g, "'$1"); // Replace closing " with '
+                .replace(/"((?:[^"\\]|\\.)*)"/g, "'$1'") // Replace opening and closing " with '
+                .replace(/\\"/g, '"'); // Unescape double quotes
 
             disabled = op.disabled ? "/disabled": "";
             bp = op.breakpoint ? "/breakpoint" : "";

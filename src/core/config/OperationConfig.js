@@ -2411,13 +2411,13 @@ const OperationConfig = {
         args: [
             {
                 name: "Split delimiter",
-                type: "binaryShortString",
-                value: StrUtils.SPLIT_DELIM
+                type: "editableOption",
+                value: StrUtils.SPLIT_DELIM_OPTIONS
             },
             {
                 name: "Join delimiter",
-                type: "option",
-                value: StrUtils.DELIMITER_OPTIONS
+                type: "editableOption",
+                value: StrUtils.JOIN_DELIM_OPTIONS
             }
         ]
     },
@@ -2440,7 +2440,7 @@ const OperationConfig = {
             {
                 name: "Invert condition",
                 type: "boolean",
-                value: SeqUtils.SORT_REVERSE
+                value: false
             },
         ]
     },

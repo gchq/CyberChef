@@ -64,6 +64,7 @@ InputWaiter.prototype.set = function(input) {
         this.setInputInfo(input.size, null);
     } else {
         inputText.value = input;
+        this.closeFile();
         window.dispatchEvent(this.manager.statechange);
         const lines = input.length < (this.app.options.ioDisplayThreshold * 1024) ?
             input.count("\n") + 1 : null;

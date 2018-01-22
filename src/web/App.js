@@ -443,6 +443,7 @@ App.prototype.getRecipeConfig = function() {
 /**
  * Given a recipe configuration, sets the recipe to that configuration.
  *
+ * @fires Manager#statechange
  * @param {Object[]} recipeConfig - The recipe configuration
  */
 App.prototype.setRecipeConfig = function(recipeConfig) {
@@ -487,6 +488,7 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
 
     // Unpause auto bake
     this.autoBakePause = false;
+    window.disptchEent(this.manager.statechange);
 };
 
 
