@@ -3618,12 +3618,12 @@ const OperationConfig = {
                 value: PublicKey.X509_INPUT_FORMAT
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
+                flags: "i",
+                args: ["PEM"]
+            },
         ]
     },
     "PEM to Hex": {
@@ -3896,12 +3896,12 @@ const OperationConfig = {
                 value: MorseCode.WORD_DELIM_OPTIONS
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
+                flags: "i",
+                args: ["Space", "Line feed"]
+            },
         ]
     },
     "Tar": {
@@ -3922,14 +3922,13 @@ const OperationConfig = {
         description: "Unpacks a tarball and displays it per file.",
         inputType: "byteArray",
         outputType: "html",
-        args: [
-        ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        args: [],
+        patterns: [
+            {
+                match: "^.{257}\\x75\\x73\\x74\\x61\\x72",
+                flags: "",
+                args: []
+            },
         ]
     },
     "Head": {
@@ -4072,12 +4071,12 @@ const OperationConfig = {
                 value: Image.INPUT_FORMAT
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                flags: "",
+                args: ["Raw"]
+            },
         ]
     },
     "Remove EXIF": {
@@ -4160,12 +4159,12 @@ const OperationConfig = {
                 value: BCD.FORMAT
             }
         ],
-        patterns: [ // TODO
-            //{
-            //    match: "^$",
-            //    flags: "",
-            //    args: []
-            //},
+        patterns: [
+            {
+                match: "^(?:\\d{4} ){3,}\\d{4}$",
+                flags: "",
+                args: ["8 4 2 1", true, false, "Nibbles"]
+            },
         ]
     },
     "To BCD": {
