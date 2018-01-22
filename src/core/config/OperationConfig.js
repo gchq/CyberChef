@@ -87,7 +87,13 @@ const OperationConfig = {
         inputType: "ArrayBuffer",
         outputType: "string",
         flowControl: true,
-        args: []
+        args: [
+            {
+                name: "Depth",
+                type: "number",
+                value: 3
+            }
+        ]
     },
     "Fork": {
         module: "Default",

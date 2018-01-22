@@ -171,7 +171,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runJump: function(state) {
-        const ings     = state.opList[state.progress].getIngValues(),
+        const ings = state.opList[state.progress].getIngValues(),
             label = ings[0],
             maxJumps = ings[1],
             jmpIndex = FlowControl._getLabelIndex(label, state);
@@ -199,7 +199,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runCondJump: function(state) {
-        const ings     = state.opList[state.progress].getIngValues(),
+        const ings   = state.opList[state.progress].getIngValues(),
             dish     = state.dish,
             regexStr = ings[0],
             invert   = ings[1],
@@ -263,13 +263,14 @@ const FlowControl = {
      * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    runMagic: function(state) {
-        const dish = state.dish,
+    runMagic: async function(state) {
+        const ings = state.opList[state.progress].getIngValues(),
+            depth = ings[0],
+            dish = state.dish,
             magic = new Magic(dish.get(Dish.ARRAY_BUFFER));
 
-        const output = JSON.stringify(magic.findMatchingOps(), null, 2) + "\n\n" +
-            JSON.stringify(magic.detectFileType(), null, 2) + "\n\n" +
-            JSON.stringify(magic.detectLanguage(), null, 2);
+        const specExec = await magic.speculativeExecution(depth+1);
+        const output = JSON.stringify(specExec, null, 2);
 
         dish.set(output, Dish.STRING);
         return state;

@@ -1,5 +1,7 @@
 import OperationConfig from "../config/MetaConfig.js";
 import Utils from "../Utils.js";
+import Recipe from "../Recipe.js";
+import Dish from "../Dish.js";
 import FileType from "../operations/FileType.js";
 
 
@@ -88,6 +90,60 @@ class Magic {
      */
     detectFileType() {
         return FileType.magicType(this.inputBuffer);
+    }
+
+
+    /**
+     * Speculatively executes matching operations, recording metadata of each result.
+     * 
+     * @param {number} [depth=1] - How many levels to try to execute
+     * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
+     * @returns {Object[]} A sorted list of the recipes most likely to result in correct decoding 
+     */
+    async speculativeExecution(depth = 1, recipeConfig = []) {
+        if (depth === 0) return [];
+
+        let results = [];
+
+        // Record the properties of the current data
+        results.push({
+            recipe: recipeConfig,
+            data: this.inputStr.slice(0, 100),
+            languageScores: this.detectLanguage(),
+            fileType: this.detectFileType(),
+        });
+
+        // Find any operations that can be run on this data
+        const matchingOps = this.findMatchingOps();
+
+        // Execute each of those operations, then recursively call the speculativeExecution() method
+        // on the resulting data, recording the properties of each option.
+        await Promise.all(matchingOps.map(async op => {
+            const dish = new Dish(this.inputBuffer, Dish.ARRAY_BUFFER),
+                opConfig = {
+                    op: op.op,
+                    args: op.args
+                },
+                recipe = new Recipe([opConfig]);
+
+            await recipe.execute(dish, 0);
+            const magic = new Magic(dish.get(Dish.ARRAY_BUFFER)),
+                speculativeResults = await magic.speculativeExecution(depth-1, [...recipeConfig, opConfig]);
+            results = results.concat(speculativeResults);
+        }));
+
+        // Return a sorted list of possible recipes along with their properties
+        return results.sort((a, b) => {
+            // Each option is sorted based on its most likely language (lower is better)
+            let aScore = a.languageScores[0].chiSqr,
+                bScore = b.languageScores[0].chiSqr;
+
+            // If a recipe results in a file being detected, it receives a relatively good score
+            if (a.fileType) aScore = 500;
+            if (b.fileType) bScore = 500;
+
+            return aScore - bScore;
+        });
     }
 
     /**
