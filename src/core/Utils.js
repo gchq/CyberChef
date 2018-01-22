@@ -908,10 +908,10 @@ const Utils = {
      * for users.
      *
      * @param {Object[]} recipeConfig
-     * @param {boolean} newline - whether to add a newline after each operation
+     * @param {boolean} [newline=false] - whether to add a newline after each operation
      * @returns {string}
      */
-    generatePrettyRecipe: function(recipeConfig, newline) {
+    generatePrettyRecipe: function(recipeConfig, newline = false) {
         let prettyConfig = "",
             name = "",
             args = "",

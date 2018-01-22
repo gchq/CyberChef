@@ -85,7 +85,7 @@ const OperationConfig = {
         module: "Default",
         description: "Attempts to detect what the input data is and which operations could help to make more sense of it.",
         inputType: "ArrayBuffer",
-        outputType: "string",
+        outputType: "html",
         flowControl: true,
         args: [
             {

@@ -88,7 +88,7 @@ self.addEventListener("message", function(e) {
  */
 async function bake(data) {
     // Ensure the relevant modules are loaded
-    loadRequiredModules(data.recipeConfig);
+    self.loadRequiredModules(data.recipeConfig);
 
     try {
         const response = await self.chef.bake(
@@ -126,24 +126,6 @@ function silentBake(data) {
 
 
 /**
- * Checks that all required modules are loaded and loads them if not.
- *
- * @param {Object} recipeConfig
- */
-function loadRequiredModules(recipeConfig) {
-    recipeConfig.forEach(op => {
-        let module = self.OperationConfig[op.op].module;
-
-        if (!OpModules.hasOwnProperty(module)) {
-            log.info("Loading module " + module);
-            self.sendStatusMessage("Loading module " + module);
-            self.importScripts(self.docURL + "/" + module + ".js");
-        }
-    });
-}
-
-
-/**
  * Calculates highlight offsets if possible.
  *
  * @param {Object[]} recipeConfig
@@ -160,6 +142,24 @@ function calculateHighlights(recipeConfig, direction, pos) {
         data: pos
     });
 }
+
+
+/**
+ * Checks that all required modules are loaded and loads them if not.
+ *
+ * @param {Object} recipeConfig
+ */
+self.loadRequiredModules = function(recipeConfig) {
+    recipeConfig.forEach(op => {
+        let module = self.OperationConfig[op.op].module;
+
+        if (!OpModules.hasOwnProperty(module)) {
+            log.info("Loading module " + module);
+            self.sendStatusMessage("Loading module " + module);
+            self.importScripts(self.docURL + "/" + module + ".js");
+        }
+    });
+};
 
 
 /**

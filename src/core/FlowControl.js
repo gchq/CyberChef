@@ -1,6 +1,7 @@
 import Recipe from "./Recipe.js";
 import Dish from "./Dish.js";
 import Magic from "./lib/Magic.js";
+import Utils from "./Utils.js";
 
 
 /**
@@ -267,12 +268,47 @@ const FlowControl = {
         const ings = state.opList[state.progress].getIngValues(),
             depth = ings[0],
             dish = state.dish,
-            magic = new Magic(dish.get(Dish.ARRAY_BUFFER));
+            currentRecipeConfig = state.opList.map(op => op.getConfig()),
+            magic = new Magic(dish.get(Dish.ARRAY_BUFFER)),
+            options = await magic.speculativeExecution(depth);
 
-        const specExec = await magic.speculativeExecution(depth+1);
-        const output = JSON.stringify(specExec, null, 2);
+        let output = `<table
+                class='table table-hover table-condensed table-bordered'
+                style='table-layout: fixed;'>
+            <tr>
+                <th>Recipe (click to load)</th>
+                <th>Data snippet</th>
+                <th>Most likely language\n(lower scores are better)</th>
+                <th>File type</th>
+            </tr>`;
 
-        dish.set(output, Dish.STRING);
+        options.forEach(option => {
+            // Construct recipe URL
+            // Replace this Magic op with the generated recipe
+            const recipeConfig = currentRecipeConfig.slice(0, state.progress)
+                    .concat(option.recipe)
+                    .concat(currentRecipeConfig.slice(state.progress + 1)),
+                recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
+
+            const language = option.languageScores[0];
+            let fileType = "Unknown";
+
+            if (option.fileType) {
+                fileType = `Extension: ${option.fileType.ext}\nMime type: ${option.fileType.mime}`;
+                if (option.fileType.desc)
+                    fileType += `\nDescription: ${option.fileType.desc}`;
+            }
+
+            output += `<tr>
+                <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
+                <td>${Utils.escapeHtml(Utils.printable(option.data))}</td>
+                <td>${Magic.codeToLanguage(language.lang)}\nScore: ${language.chiSqr.toFixed()}</td>
+                <td>${fileType}</td>
+            </tr>`;
+        });
+
+        output += "</table>";
+        dish.set(output, Dish.HTML);
         return state;
     },
 
