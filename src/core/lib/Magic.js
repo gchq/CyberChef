@@ -6,13 +6,12 @@ import FileType from "../operations/FileType.js";
 
 
 /**
- * A class for detecting encodings, file types and byte frequencies.
+ * A class for detecting encodings, file types and byte frequencies and
+ * speculatively executing recipes.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
- *
- * @class
  */
 class Magic {
 
@@ -25,15 +24,6 @@ class Magic {
         this.inputBuffer = new Uint8Array(buf);
         this.inputStr = Utils.arrayBufferToStr(buf);
         this.opPatterns = Magic._generateOpPatterns();
-
-        // Match against known encodings
-        //  findMatchingOps
-        // Match against known file types
-        //  detectFileType
-        // Match against byte frequencies
-        //  detectLanguage
-        // Report info to user
-        // Offer to run various recipes based on findings
     }
 
     /**
@@ -46,8 +36,9 @@ class Magic {
         let matches = [];
 
         for (let i = 0; i < this.opPatterns.length; i++) {
-            let pattern = this.opPatterns[i];
-            const regex = new RegExp(pattern.match, pattern.flags);
+            const pattern = this.opPatterns[i],
+                regex = new RegExp(pattern.match, pattern.flags);
+
             if (regex.test(this.inputStr)) {
                 matches.push(pattern);
             }
@@ -73,6 +64,7 @@ class Magic {
             });
         }
 
+        // Sort results so that the most likely match is at the top
         chiSqrs.sort((a, b) => {
             return a.chiSqr - b.chiSqr;
         });
@@ -98,7 +90,7 @@ class Magic {
      * 
      * @param {number} [depth=0] - How many levels to try to execute
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
-     * @returns {Object[]} A sorted list of the recipes most likely to result in correct decoding 
+     * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding 
      */
     async speculativeExecution(depth = 0, recipeConfig = []) {
         if (depth < 0) return [];
@@ -176,7 +168,6 @@ class Magic {
      * Generates a list of all patterns that operations claim to be able to decode.
      *
      * @private
-     * @static
      * @returns {Object[]}
      */
     static _generateOpPatterns() {
@@ -203,7 +194,6 @@ class Magic {
      * https://en.wikipedia.org/wiki/Pearson%27s_chi-squared_test
      *
      * @private
-     * @static
      * @param {number[]} observed 
      * @param {number[]} expected 
      * @returns {number}
@@ -420,8 +410,6 @@ class Magic {
  * Byte frequencies of various languages generated from Wikipedia dumps taken in late 2017.
  * The Chi-Squared test cannot accept expected values of 0, so 0.0001 has been used to account
  * for bytes that do not normally appear in the language.
- * 
- * @constant
  */
 const LANG_FREQS = {
     "ar": [0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.65, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 9.194, 0.002, 0.102, 0.0001, 0.0001, 0.007, 0.001, 0.002, 0.109, 0.108, 0.002, 0.001, 0.03, 0.046, 0.42, 0.018, 0.182, 0.202, 0.135, 0.063, 0.065, 0.061, 0.055, 0.053, 0.062, 0.113, 0.054, 0.001, 0.002, 0.003, 0.002, 0.0001, 0.0001, 0.01, 0.006, 0.009, 0.007, 0.005, 0.004, 0.004, 0.004, 0.005, 0.002, 0.002, 0.005, 0.007, 0.005, 0.004, 0.007, 0.001, 0.005, 0.009, 0.006, 0.002, 0.002, 0.002, 0.001, 0.001, 0.001, 0.007, 0.001, 0.007, 0.0001, 0.004, 0.0001, 0.052, 0.008, 0.019, 0.018, 0.055, 0.008, 0.011, 0.016, 0.045, 0.001, 0.006, 0.028, 0.016, 0.037, 0.04, 0.012, 0.001, 0.038, 0.03, 0.035, 0.02, 0.006, 0.006, 0.002, 0.009, 0.002, 0.0001, 0.001, 0.0001, 0.0001, 0.0001, 0.055, 1.131, 0.874, 0.939, 4.804, 2.787, 2.235, 1.018, 2.407, 0.349, 3.542, 0.092, 0.4, 0.007, 0.051, 0.053, 0.022, 0.061, 0.01, 0.008, 0.001, 0.001, 0.0001, 0.001, 0.001, 0.001, 0.0001, 0.008, 0.001, 0.001, 0.0001, 0.002, 0.013, 0.133, 0.049, 0.782, 0.037, 0.335, 0.157, 6.208, 1.599, 1.486, 1.889, 0.276, 0.607, 0.762, 0.341, 1.38, 0.239, 2.041, 0.293, 1.149, 0.411, 0.383, 0.246, 0.406, 0.094, 1.401, 0.223, 0.006, 0.001, 0.001, 0.001, 0.001, 0.0001, 0.0001, 0.027, 0.003, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.003, 0.001, 0.003, 0.001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.002, 23.298, 20.414, 0.003, 0.004, 0.0001, 0.0001, 0.0001, 0.0001, 0.001, 0.0001, 0.019, 0.001, 0.0001, 0.001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001],

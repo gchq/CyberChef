@@ -301,7 +301,7 @@ const FlowControl = {
 
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
-                <td>${Utils.escapeHtml(Utils.printable(option.data))}</td>
+                <td>${Utils.escapeHtml(Utils.printable(Utils.truncate(option.data, 99)))}</td>
                 <td>${Magic.codeToLanguage(language.lang)}\nScore: ${language.chiSqr.toFixed()}</td>
                 <td>${fileType}</td>
             </tr>`;
