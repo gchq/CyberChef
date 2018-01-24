@@ -52,14 +52,23 @@ const FlowControl = {
             output = "",
             progress = 0;
 
+        state.forkOffset += state.progress + 1;
+
         recipe.addOperations(subOpList);
+        const ingValues = subOpList.map(op => op.getIngValues());
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
             log.debug(`Entering tranche ${i + 1} of ${inputs.length}`);
+
+            // Baseline ing values for each tranche so that registers are reset
+            subOpList.forEach((op, i) => {
+                op.setIngValues(ingValues[i]);
+            });
+
             const dish = new Dish(inputs[i], inputType);
             try {
-                progress = await recipe.execute(dish, 0);
+                progress = await recipe.execute(dish, 0, state);
             } catch (err) {
                 if (!ignoreErrors) {
                     throw err;
@@ -117,7 +126,7 @@ const FlowControl = {
         if (!registers) return state;
 
         if (ENVIRONMENT_IS_WORKER()) {
-            self.setRegisters(state.progress, state.numRegisters, registers.slice(1));
+            self.setRegisters(state.forkOffset + state.progress, state.numRegisters, registers.slice(1));
         }
 
         /**

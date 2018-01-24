@@ -141,11 +141,14 @@ Recipe.prototype.lastOpIndex = function(startIndex) {
  *
  * @param {Dish} dish
  * @param {number} [startFrom=0] - The index of the Operation to start executing from
+ * @param {number} [forkState={}] - If this is a forked recipe, the state of the recipe up to this point
  * @returns {number} - The final progress through the recipe
  */
-Recipe.prototype.execute = async function(dish, startFrom) {
-    startFrom = startFrom || 0;
-    let op, input, output, numJumps = 0, numRegisters = 0;
+Recipe.prototype.execute = async function(dish, startFrom = 0, forkState = {}) {
+    let op, input, output,
+        numJumps = 0,
+        numRegisters = forkState.numRegisters || 0;
+
     log.debug(`[*] Executing recipe of ${this.opList.length} operations, starting at ${startFrom}`);
 
     for (let i = startFrom; i < this.opList.length; i++) {
@@ -171,7 +174,8 @@ Recipe.prototype.execute = async function(dish, startFrom) {
                     "dish":         dish,
                     "opList":       this.opList,
                     "numJumps":     numJumps,
-                    "numRegisters": numRegisters
+                    "numRegisters": numRegisters,
+                    "forkOffset":   forkState.forkOffset || 0
                 };
 
                 state = await op.run(state);
@@ -255,5 +259,6 @@ Recipe.prototype.generateHighlightList = function() {
 
     return highlights;
 };
+
 
 export default Recipe;
