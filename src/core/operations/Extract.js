@@ -287,7 +287,7 @@ const Extract = {
             includeUnixPath = args[1],
             displayTotal = args[2],
             winDrive = "[A-Z]:\\\\",
-            winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)]{0,61}",
+            winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)~]{0,61}",
             winExt = "[A-Z\\d]{1,6}",
             winPath = winDrive + "(?:" + winName + "\\\\?)*" + winName +
                 "(?:\\." + winExt + ")?",
