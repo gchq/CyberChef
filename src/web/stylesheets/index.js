@@ -7,7 +7,7 @@
  */
 
 /* Libraries */
-import "google-code-prettify/src/prettify.css";
+import "highlight.js/styles/vs.css";
 
 /* Frameworks */
 import "./vendors/bootstrap.less";

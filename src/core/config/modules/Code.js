@@ -11,7 +11,7 @@ import Code from "../../operations/Code.js";
  *  - xmldom
  *  - xpath
  *  - jpath
- *  - googlecodeprettify
+ *  - highlight.js
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017

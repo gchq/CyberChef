@@ -1,12 +1,10 @@
 import {camelCase, kebabCase, snakeCase} from "lodash";
-
-import Utils from "../Utils.js";
 import vkbeautify from "vkbeautify";
 import {DOMParser} from "xmldom";
 import xpath from "xpath";
 import jpath from "jsonpath";
 import nwmatcher from "nwmatcher";
-import prettyPrintOne from "imports-loader?window=>global!exports-loader?prettyPrintOne!google-code-prettify/bin/prettify.min.js";
+import hljs from "highlight.js";
 
 
 /**
@@ -24,12 +22,7 @@ const Code = {
      * @constant
      * @default
      */
-    LANGUAGES: ["default-code", "default-markup", "bash", "bsh", "c", "cc", "coffee", "cpp", "cs", "csh", "cv", "cxx", "cyc", "htm", "html", "in.tag", "java", "javascript", "js", "json", "m", "mxml", "perl", "pl", "pm", "py", "python", "rb", "rc", "rs", "ruby", "rust", "sh", "uq.val", "xhtml", "xml", "xsl"],
-    /**
-     * @constant
-     * @default
-     */
-    LINE_NUMS: false,
+    LANGUAGES: ["auto detect"].concat(hljs.listLanguages()),
 
     /**
      * Syntax highlighter operation.
@@ -39,9 +32,13 @@ const Code = {
      * @returns {html}
      */
     runSyntaxHighlight: function(input, args) {
-        let language = args[0],
-            lineNums = args[1];
-        return "<code class='prettyprint'>" + prettyPrintOne(Utils.escapeHtml(input), language, lineNums) + "</code>";
+        const language = args[0];
+
+        if (language === "auto detect") {
+            return hljs.highlightAuto(input).value;
+        }
+
+        return hljs.highlight(language, input, true).value;
     },
 
 

@@ -3462,15 +3462,10 @@ const OperationConfig = {
         outputType: "html",
         args: [
             {
-                name: "Language/File extension",
+                name: "Language",
                 type: "option",
                 value: Code.LANGUAGES
             },
-            {
-                name: "Display line numbers",
-                type: "boolean",
-                value: Code.LINE_NUMS
-            }
         ]
     },
     "TCP/IP Checksum": {
