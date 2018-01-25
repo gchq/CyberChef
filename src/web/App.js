@@ -488,7 +488,7 @@ App.prototype.setRecipeConfig = function(recipeConfig) {
 
     // Unpause auto bake
     this.autoBakePause = false;
-    window.disptchEent(this.manager.statechange);
+    window.dispatchEvent(this.manager.statechange);
 };
 
 
