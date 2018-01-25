@@ -64,7 +64,7 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
             outputText.value = "";
             outputHtml.innerHTML = data;
-            this.dishStr = Utils.stripHtmlTags(data, true);
+            this.dishStr = Utils.unescapeHtml(Utils.stripHtmlTags(data, true));
             length = data.length;
             lines = this.dishStr.count("\n") + 1;
 
