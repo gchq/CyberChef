@@ -130,6 +130,7 @@ OpModules.Default = {
     "Translate DateTime Format": DateTime.runTranslateFormat,
     "From UNIX Timestamp":  DateTime.runFromUnixTimestamp,
     "To UNIX Timestamp":    DateTime.runToUnixTimestamp,
+    "Sleep":                DateTime.runSleep,
     "Microsoft Script Decoder": MS.runDecodeScript,
     "Entropy":              Entropy.runEntropy,
     "Frequency distribution": Entropy.runFreqDistrib,

@@ -201,6 +201,7 @@ const Categories = [
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
+            "Sleep",
         ]
     },
     {
@@ -213,6 +214,7 @@ const Categories = [
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
             "Extract dates",
+            "Sleep",
         ]
     },
     {

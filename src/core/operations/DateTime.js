@@ -190,6 +190,20 @@ const DateTime = {
 
 
     /**
+     * Sleep operation.
+     *
+     * @param {ArrayBuffer} input
+     * @param {Object[]} args
+     * @returns {ArrayBuffer}
+     */
+    runSleep: async function(input, args) {
+        const ms = args[0];
+        await new Promise(r => setTimeout(r, ms));
+        return input;
+    },
+
+
+    /**
      * @constant
      */
     FORMAT_EXAMPLES: `Format string tokens:

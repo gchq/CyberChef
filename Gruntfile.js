@@ -186,7 +186,10 @@ module.exports = function (grunt) {
             options: webpackConfig,
             metaConf: {
                 target: "node",
-                entry: "./src/core/config/OperationConfig.js",
+                entry: [
+                    "babel-polyfill",
+                    "./src/core/config/OperationConfig.js"
+                ],
                 output: {
                     filename: "MetaConfig.js",
                     path: __dirname + "/src/core/config/",
@@ -198,7 +201,10 @@ module.exports = function (grunt) {
             },
             metaConfDev: {
                 target: "node",
-                entry: "./src/core/config/OperationConfig.js",
+                entry: [
+                    "babel-polyfill",
+                    "./src/core/config/OperationConfig.js"
+                ],
                 output: {
                     filename: "MetaConfig.js",
                     path: __dirname + "/src/core/config/",
