@@ -55,7 +55,9 @@ const FlowControl = {
         state.forkOffset += state.progress + 1;
 
         recipe.addOperations(subOpList);
-        const ingValues = subOpList.map(op => op.getIngValues());
+
+        // Take a deep(ish) copy of the ingredient values
+        const ingValues = subOpList.map(op => JSON.parse(JSON.stringify(op.getIngValues())));
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
@@ -63,7 +65,7 @@ const FlowControl = {
 
             // Baseline ing values for each tranche so that registers are reset
             subOpList.forEach((op, i) => {
-                op.setIngValues(ingValues[i]);
+                op.setIngValues(JSON.parse(JSON.stringify(ingValues[i])));
             });
 
             const dish = new Dish(inputs[i], inputType);
