@@ -2455,7 +2455,7 @@ const OperationConfig = {
         ]
     },
     "Windows Filetime to UNIX Timestamp": {
-        module: "JSBN",
+        module: "Default",
         description: "Converts a Windows Filetime value to a UNIX timestamp.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
         inputType: "string",
         outputType: "string",
@@ -2473,7 +2473,7 @@ const OperationConfig = {
         ]
     },
     "UNIX Timestamp to Windows Filetime": {
-        module: "JSBN",
+        module: "Default",
         description: "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
         inputType: "string",
         outputType: "string",

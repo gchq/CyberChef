@@ -1,5 +1,4 @@
 import IP from "../../operations/IP.js";
-import Filetime from "../../operations/Filetime.js";
 
 
 /**
@@ -21,8 +20,6 @@ OpModules.JSBN = {
     "Parse IPv4 header":  IP.runParseIPv4Header,
     "Change IP format":   IP.runChangeIpFormat,
     "Group IP addresses": IP.runGroupIps,
-    "Windows Filetime to UNIX Timestamp": Filetime.runFromFiletimeToUnix,
-    "UNIX Timestamp to Windows Filetime": Filetime.runToFiletimeFromUnix,
 };
 
 export default OpModules;

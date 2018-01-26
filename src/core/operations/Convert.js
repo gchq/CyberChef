@@ -68,7 +68,7 @@ const Convert = {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input.mul(Convert.DISTANCE_FACTOR[inputUnits]);
+        input = input.times(Convert.DISTANCE_FACTOR[inputUnits]);
         return input.div(Convert.DISTANCE_FACTOR[outputUnits]);
     },
 
@@ -148,7 +148,7 @@ const Convert = {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input.mul(Convert.DATA_FACTOR[inputUnits]);
+        input = input.times(Convert.DATA_FACTOR[inputUnits]);
         return input.div(Convert.DATA_FACTOR[outputUnits]);
     },
 
@@ -228,7 +228,7 @@ const Convert = {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input.mul(Convert.AREA_FACTOR[inputUnits]);
+        input = input.times(Convert.AREA_FACTOR[inputUnits]);
         return input.div(Convert.AREA_FACTOR[outputUnits]);
     },
 
@@ -339,7 +339,7 @@ const Convert = {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input.mul(Convert.MASS_FACTOR[inputUnits]);
+        input = input.times(Convert.MASS_FACTOR[inputUnits]);
         return input.div(Convert.MASS_FACTOR[outputUnits]);
     },
 
@@ -404,7 +404,7 @@ const Convert = {
         let inputUnits = args[0],
             outputUnits = args[1];
 
-        input = input.mul(Convert.SPEED_FACTOR[inputUnits]);
+        input = input.times(Convert.SPEED_FACTOR[inputUnits]);
         return input.div(Convert.SPEED_FACTOR[outputUnits]);
     },
 

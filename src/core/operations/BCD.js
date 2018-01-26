@@ -69,7 +69,7 @@ const BCD = {
     runToBCD: function(input, args) {
         if (input.isNaN())
             return "Invalid input";
-        if (!input.floor().equals(input))
+        if (!input.integerValue(BigNumber.ROUND_DOWN).isEqualTo(input))
             return "Fractional values are not supported by BCD";
 
         const encoding = BCD.ENCODING_LOOKUP[args[0]],

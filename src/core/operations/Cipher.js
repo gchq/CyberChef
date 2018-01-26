@@ -555,7 +555,7 @@ DES uses a key length of 8 bytes (64 bits).`;
                 return forge.util.bytesToHex(bytes);
             case "Integer":
                 for (i = bytes.length - 1; i >= 0; i--) {
-                    value = value.mul(256).plus(bytes.charCodeAt(i));
+                    value = value.times(256).plus(bytes.charCodeAt(i));
                 }
                 return value.toFixed();
             case "Byte array":

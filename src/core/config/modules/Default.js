@@ -10,6 +10,7 @@ import Convert from "../../operations/Convert.js";
 import DateTime from "../../operations/DateTime.js";
 import Endian from "../../operations/Endian.js";
 import Entropy from "../../operations/Entropy.js";
+import Filetime from "../../operations/Filetime.js";
 import FileType from "../../operations/FileType.js";
 import Hexdump from "../../operations/Hexdump.js";
 import HTML from "../../operations/HTML.js";
@@ -39,6 +40,7 @@ import UUID from "../../operations/UUID.js";
  *  - Utils.js
  *  - otp
  *  - crypto
+ *  - bignumber.js
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -157,6 +159,8 @@ OpModules.Default = {
     "Mean":                 Arithmetic.runMean,
     "Median":               Arithmetic.runMedian,
     "Standard Deviation":   Arithmetic.runStdDev,
+    "Windows Filetime to UNIX Timestamp": Filetime.runFromFiletimeToUnix,
+    "UNIX Timestamp to Windows Filetime": Filetime.runToFiletimeFromUnix,
 
 
     /*

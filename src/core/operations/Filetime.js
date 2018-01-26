@@ -1,4 +1,4 @@
-import {BigInteger} from "jsbn";
+import BigNumber from "bignumber.js";
 
 /**
  * Windows Filetime operations.
@@ -35,27 +35,29 @@ const Filetime = {
         let units = args[0],
             format = args[1];
 
+        if (!input) return "";
+
         if (format === "Hex") {
-            input = new BigInteger(input, 16);
+            input = new BigNumber(input, 16);
         } else {
-            input = new BigInteger(input);
+            input = new BigNumber(input);
         }
 
-        input = input.subtract(new BigInteger("116444736000000000"));
+        input = input.minus(new BigNumber("116444736000000000"));
 
         if (units === "Seconds (s)"){
-            input = input.divide(new BigInteger("10000000"));
+            input = input.dividedBy(new BigNumber("10000000"));
         } else if (units === "Milliseconds (ms)") {
-            input = input.divide(new BigInteger("10000"));
+            input = input.dividedBy(new BigNumber("10000"));
         } else if (units === "Microseconds (μs)") {
-            input = input.divide(new BigInteger("10"));
+            input = input.dividedBy(new BigNumber("10"));
         } else if (units === "Nanoseconds (ns)") {
-            input = input.multiply(new BigInteger("100"));
+            input = input.multipliedBy(new BigNumber("100"));
         } else {
             throw "Unrecognised unit";
         }
 
-        return input.toString();
+        return input.toFixed();
     },
 
 
@@ -71,26 +73,28 @@ const Filetime = {
         let units = args[0],
             format = args[1];
 
-        input = new BigInteger(input);
+        if (!input) return "";
+
+        input = new BigNumber(input);
 
         if (units === "Seconds (s)"){
-            input = input.multiply(new BigInteger("10000000"));
+            input = input.multipliedBy(new BigNumber("10000000"));
         } else if (units === "Milliseconds (ms)") {
-            input = input.multiply(new BigInteger("10000"));
+            input = input.multipliedBy(new BigNumber("10000"));
         } else if (units === "Microseconds (μs)") {
-            input = input.multiply(new BigInteger("10"));
+            input = input.multiplyiedBy(new BigNumber("10"));
         } else if (units === "Nanoseconds (ns)") {
-            input = input.divide(new BigInteger("100"));
+            input = input.dividedBy(new BigNumber("100"));
         } else {
             throw "Unrecognised unit";
         }
 
-        input = input.add(new BigInteger("116444736000000000"));
+        input = input.plus(new BigNumber("116444736000000000"));
 
         if (format === "Hex"){
             return input.toString(16);
         } else {
-            return input.toString();
+            return input.toFixed();
         }
     },
 
