@@ -1,4 +1,5 @@
 import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker.js";
+import Utils from "../core/Utils.js";
 
 
 /**
@@ -263,7 +264,24 @@ InputWaiter.prototype.handleLoaderMessage = function(e) {
     if (r.hasOwnProperty("fileBuffer")) {
         log.debug("Input file loaded");
         this.fileBuffer = r.fileBuffer;
+        this.displayFilePreview();
         window.dispatchEvent(this.manager.statechange);
+    }
+};
+
+
+/**
+ * Shows a chunk of the file in the input behind the file overlay.
+ */
+InputWaiter.prototype.displayFilePreview = function() {
+    const inputText = document.getElementById("input-text"),
+        fileSlice = this.fileBuffer.slice(0, 2048);
+
+    inputText.style.overflow = "hidden";
+    inputText.classList.add("blur");
+    inputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
+    if (this.fileBuffer.byteLength > 2048) {
+        inputText.value += "[truncated]";
     }
 };
 
@@ -275,6 +293,9 @@ InputWaiter.prototype.closeFile = function() {
     if (this.loaderWorker) this.loaderWorker.terminate();
     this.fileBuffer = null;
     document.getElementById("input-file").style.display = "none";
+    const inputText = document.getElementById("input-text");
+    inputText.style.overflow = "auto";
+    inputText.classList.remove("blur");
 };
 
 

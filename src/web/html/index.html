@@ -183,8 +183,9 @@
                         </div>
                         <div class="textarea-wrapper no-select">
                             <div id="input-highlighter" class="no-select"></div>
-                            <textarea id="input-text"></textarea>
+                            <textarea id="input-text" spellcheck="false"></textarea>
                             <div id="input-file">
+                                <div class="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="card">
                                         <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
@@ -218,9 +219,10 @@
                         <div class="textarea-wrapper">
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
-                            <textarea id="output-text" readonly="readonly"></textarea>
+                            <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
                             <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
                             <div id="output-file">
+                                <div class="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="card">
                                         <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
@@ -233,7 +235,7 @@
                                                 </span>
                                                 <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
                                                 <div class="input-group-addon">to</div>
-                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="1024" step="1024" min="0">
+                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
                                             </div>
                                         </div>
                                     </div>

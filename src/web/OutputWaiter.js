@@ -128,6 +128,13 @@ OutputWaiter.prototype.setFile = function(buf) {
 
     fileOverlay.style.display = "block";
     fileSize.textContent = file.size.toLocaleString() + " bytes";
+
+    // Display preview slice in the background
+    const outputText = document.getElementById("output-text"),
+        fileSlice = this.dishBuffer.slice(0, 2048);
+
+    outputText.classList.add("blur");
+    outputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
 };
 
 
@@ -137,6 +144,7 @@ OutputWaiter.prototype.setFile = function(buf) {
 OutputWaiter.prototype.closeFile = function() {
     this.dishBuffer = null;
     document.getElementById("output-file").style.display = "none";
+    document.getElementById("output-text").classList.remove("blur");
 };
 
 
@@ -163,6 +171,7 @@ OutputWaiter.prototype.displayFileSlice = function() {
         sliceTo = parseInt(sliceToEl.value, 10),
         str = Utils.arrayBufferToStr(this.dishBuffer.slice(sliceFrom, sliceTo));
 
+    document.getElementById("output-text").classList.remove("blur");
     showFileOverlay.style.display = "block";
     this.set(str, "string", new Date().getTime() - startTime, true);
 };
@@ -177,6 +186,7 @@ OutputWaiter.prototype.showFileOverlayClick = function(e) {
     const outputFile = document.getElementById("output-file"),
         showFileOverlay = e.target;
 
+    document.getElementById("output-text").classList.add("blur");
     outputFile.style.display = "block";
     showFileOverlay.style.display = "none";
     this.setOutputInfo(this.dishBuffer.byteLength, null, 0);
