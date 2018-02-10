@@ -174,6 +174,9 @@ class Magic {
     async speculativeExecution(depth = 0, recipeConfig = []) {
         if (depth < 0) return [];
 
+        // Find any operations that can be run on this data
+        const matchingOps = this.findMatchingOps();
+
         let results = [];
 
         // Record the properties of the current data
@@ -182,11 +185,9 @@ class Magic {
             data: this.inputStr.slice(0, 100),
             languageScores: this.detectLanguage(),
             fileType: this.detectFileType(),
-            isUTF8: this.isUTF8()
+            isUTF8: this.isUTF8(),
+            matchingOps: matchingOps
         });
-
-        // Find any operations that can be run on this data
-        const matchingOps = this.findMatchingOps();
 
         // Execute each of those operations, then recursively call the speculativeExecution() method
         // on the resulting data, recording the properties of each option.

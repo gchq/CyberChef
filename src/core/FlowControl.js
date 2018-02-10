@@ -277,7 +277,7 @@ const FlowControl = {
                 style='table-layout: fixed;'>
             <tr>
                 <th>Recipe (click to load)</th>
-                <th>Data snippet</th>
+                <th>Result snippet</th>
                 <th>Properties</th>
             </tr>`;
 
@@ -290,24 +290,27 @@ const FlowControl = {
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
 
             const bestLanguage = option.languageScores[0];
-            let language = "Unknown",
-                fileType = "Unknown";
+            let language = "",
+                fileType = "",
+                matchingOps = "",
+                validUTF8 = option.isUTF8 ? "Valid UTF8\n" : "";
 
-            if (bestLanguage.probability > 0.00005) {
-                language = Magic.codeToLanguage(bestLanguage.lang) + " " +
-                    (bestLanguage.probability * 100).toFixed(2) + "%";
+            if (bestLanguage.probability > 0.00001) {
+                language = `Language: ${Magic.codeToLanguage(bestLanguage.lang)} ${(bestLanguage.probability * 100).toFixed(2)}%\n`;
             }
 
             if (option.fileType) {
-                fileType = `${option.fileType.mime} (${option.fileType.ext})`;
+                fileType = `File type: ${option.fileType.mime} (${option.fileType.ext})\n`;
+            }
+
+            if (option.matchingOps.length) {
+                matchingOps = `Matching ops: ${[...new Set(option.matchingOps.map(op => op.op))].join(", ")}\n`;
             }
 
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
                 <td>${Utils.escapeHtml(Utils.printable(Utils.truncate(option.data, 99)))}</td>
-                <td>Language: ${language}
-File type: ${fileType}
-Valid UTF8: ${option.isUTF8}</td>
+                <td>${language}${fileType}${matchingOps}${validUTF8}</td>
             </tr>`;
         });
 
