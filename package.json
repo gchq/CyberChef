@@ -72,6 +72,7 @@
     "bootstrap": "^3.3.7",
     "bootstrap-colorpicker": "^2.5.2",
     "bootstrap-switch": "^3.3.4",
+    "chi-squared": "^1.1.0",
     "crypto-api": "^0.7.5",
     "crypto-js": "^3.1.9-1",
     "diff": "^3.4.0",

@@ -3,6 +3,7 @@ import Utils from "../Utils.js";
 import Recipe from "../Recipe.js";
 import Dish from "../Dish.js";
 import FileType from "../operations/FileType.js";
+import chiSquared from "chi-squared";
 
 
 /**
@@ -19,11 +20,12 @@ class Magic {
      * Magic constructor.
      *
      * @param {ArrayBuffer} buf
+     * @param {Object[]} [opPatterns]
      */
-    constructor(buf) {
+    constructor(buf, opPatterns) {
         this.inputBuffer = new Uint8Array(buf);
         this.inputStr = Utils.arrayBufferToStr(buf);
-        this.opPatterns = Magic._generateOpPatterns();
+        this.opPatterns = opPatterns || Magic._generateOpPatterns();
     }
 
     /**
@@ -58,15 +60,17 @@ class Magic {
         let chiSqrs = [];
 
         for (let lang in LANG_FREQS) {
+            let [score, prob] = Magic._chiSqr(inputFreq, LANG_FREQS[lang]);
             chiSqrs.push({
                 lang: lang,
-                chiSqr: Magic._chiSqr(inputFreq, LANG_FREQS[lang])
+                score: score,
+                probability: prob
             });
         }
 
         // Sort results so that the most likely match is at the top
         chiSqrs.sort((a, b) => {
-            return a.chiSqr - b.chiSqr;
+            return a.score - b.score;
         });
 
         return chiSqrs;
@@ -84,6 +88,81 @@ class Magic {
         return FileType.magicType(this.inputBuffer);
     }
 
+    /**
+     * Detects whether the input buffer is valid UTF8.
+     *
+     * @returns {boolean}
+     */
+    isUTF8() {
+        const bytes = new Uint8Array(this.inputBuffer);
+        let i = 0;
+        while (i < bytes.length) {
+            if (( // ASCII
+                bytes[i] === 0x09 ||
+                bytes[i] === 0x0A ||
+                bytes[i] === 0x0D ||
+                (0x20 <= bytes[i] && bytes[i] <= 0x7E)
+            )) {
+                i += 1;
+                continue;
+            }
+
+            if (( // non-overlong 2-byte
+                (0xC2 <= bytes[i] && bytes[i] <= 0xDF) &&
+                (0x80 <= bytes[i+1] && bytes[i+1] <= 0xBF)
+            )) {
+                i += 2;
+                continue;
+            }
+
+            if (( // excluding overlongs
+                bytes[i] === 0xE0 &&
+                (0xA0 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
+                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF)
+            ) ||
+            ( // straight 3-byte
+                ((0xE1 <= bytes[i] && bytes[i] <= 0xEC) ||
+                bytes[i] === 0xEE ||
+                bytes[i] === 0xEF) &&
+                (0x80 <= bytes[i + 1] && bytes[i+1] <= 0xBF) &&
+                (0x80 <= bytes[i+2] && bytes[i+2] <= 0xBF)
+            ) ||
+            ( // excluding surrogates
+                bytes[i] === 0xED &&
+                (0x80 <= bytes[i+1] && bytes[i+1] <= 0x9F) &&
+                (0x80 <= bytes[i+2] && bytes[i+2] <= 0xBF)
+            )) {
+                i += 3;
+                continue;
+            }
+
+            if (( // planes 1-3
+                bytes[i] === 0xF0 &&
+                (0x90 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
+                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
+                (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
+            ) ||
+            ( // planes 4-15
+                (0xF1 <= bytes[i] && bytes[i] <= 0xF3) &&
+                (0x80 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
+                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
+                (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
+            ) ||
+            ( // plane 16
+                bytes[i] === 0xF4 &&
+                (0x80 <= bytes[i + 1] && bytes[i + 1] <= 0x8F) &&
+                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
+                (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
+            )) {
+                i += 4;
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Speculatively executes matching operations, recording metadata of each result.
@@ -103,6 +182,7 @@ class Magic {
             data: this.inputStr.slice(0, 100),
             languageScores: this.detectLanguage(),
             fileType: this.detectFileType(),
+            isUTF8: this.isUTF8()
         });
 
         // Find any operations that can be run on this data
@@ -122,7 +202,7 @@ class Magic {
             const recipe = new Recipe([opConfig]);
             await recipe.execute(dish, 0);
 
-            const magic = new Magic(dish.get(Dish.ARRAY_BUFFER)),
+            const magic = new Magic(dish.get(Dish.ARRAY_BUFFER), this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(depth-1, [...recipeConfig, opConfig]);
 
             results = results.concat(speculativeResults);
@@ -131,12 +211,16 @@ class Magic {
         // Return a sorted list of possible recipes along with their properties
         return results.sort((a, b) => {
             // Each option is sorted based on its most likely language (lower is better)
-            let aScore = a.languageScores[0].chiSqr,
-                bScore = b.languageScores[0].chiSqr;
+            let aScore = a.languageScores[0].score,
+                bScore = b.languageScores[0].score;
 
             // If a recipe results in a file being detected, it receives a relatively good score
             if (a.fileType) aScore = 500;
             if (b.fileType) bScore = 500;
+
+            // If the result is valid UTF8, its score gets boosted (lower being better)
+            if (a.isUTF8) aScore -= 100;
+            if (b.isUTF8) bScore -= 100;
 
             return aScore - bScore;
         });
@@ -194,19 +278,24 @@ class Magic {
      * https://en.wikipedia.org/wiki/Pearson%27s_chi-squared_test
      *
      * @private
-     * @param {number[]} observed 
-     * @param {number[]} expected 
-     * @returns {number}
+     * @param {number[]} observed
+     * @param {number[]} expected
+     * @param {number} ddof - Delta degrees of freedom
+     * @returns {number[]} - The score and the probability
      */
-    static _chiSqr(observed, expected) {
+    static _chiSqr(observed, expected, ddof=0) {
         let tmp,
-            res = 0;
+            score = 0;
 
         for (let i = 0; i < observed.length; i++) {
             tmp = observed[i] - expected[i];
-            res += tmp * tmp / expected[i];
+            score += tmp * tmp / expected[i];
         }
-        return res;
+
+        return [
+            score,
+            1 - chiSquared.cdf(score, observed.length - 1 - ddof)
+        ];
     }
 
     /**

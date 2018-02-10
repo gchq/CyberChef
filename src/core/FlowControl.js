@@ -278,8 +278,7 @@ const FlowControl = {
             <tr>
                 <th>Recipe (click to load)</th>
                 <th>Data snippet</th>
-                <th>Most likely language\n(lower scores are better)</th>
-                <th>File type</th>
+                <th>Properties</th>
             </tr>`;
 
         options.forEach(option => {
@@ -290,20 +289,25 @@ const FlowControl = {
                     .concat(currentRecipeConfig.slice(state.progress + 1)),
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
 
-            const language = option.languageScores[0];
-            let fileType = "Unknown";
+            const bestLanguage = option.languageScores[0];
+            let language = "Unknown",
+                fileType = "Unknown";
+
+            if (bestLanguage.probability > 0.00005) {
+                language = Magic.codeToLanguage(bestLanguage.lang) + " " +
+                    (bestLanguage.probability * 100).toFixed(2) + "%";
+            }
 
             if (option.fileType) {
-                fileType = `Extension: ${option.fileType.ext}\nMime type: ${option.fileType.mime}`;
-                if (option.fileType.desc)
-                    fileType += `\nDescription: ${option.fileType.desc}`;
+                fileType = `${option.fileType.mime} (${option.fileType.ext})`;
             }
 
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
                 <td>${Utils.escapeHtml(Utils.printable(Utils.truncate(option.data, 99)))}</td>
-                <td>${Magic.codeToLanguage(language.lang)}\nScore: ${language.chiSqr.toFixed()}</td>
-                <td>${fileType}</td>
+                <td>Language: ${language}
+File type: ${fileType}
+Valid UTF8: ${option.isUTF8}</td>
             </tr>`;
         });
 
