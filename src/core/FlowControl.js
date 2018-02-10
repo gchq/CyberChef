@@ -289,14 +289,17 @@ const FlowControl = {
                     .concat(currentRecipeConfig.slice(state.progress + 1)),
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
 
-            const bestLanguage = option.languageScores[0];
             let language = "",
                 fileType = "",
                 matchingOps = "",
                 validUTF8 = option.isUTF8 ? "Valid UTF8\n" : "";
 
-            if (bestLanguage.probability > 0.00001) {
-                language = `Language: ${Magic.codeToLanguage(bestLanguage.lang)} ${(bestLanguage.probability * 100).toFixed(2)}%\n`;
+            if (option.languageScores[0].probability > 0.00001) {
+                let likelyLangs = option.languageScores.filter(l => l.probability > 0.2);
+                if (likelyLangs.length < 1) likelyLangs = [option.languageScores[0]];
+                language = "Language:\n    " + likelyLangs.map(lang => {
+                    return `${Magic.codeToLanguage(lang.lang)} ${(lang.probability * 100).toFixed(2)}%`;
+                }).join("\n    ") + "\n";
             }
 
             if (option.fileType) {
