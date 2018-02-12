@@ -275,13 +275,13 @@ InputWaiter.prototype.handleLoaderMessage = function(e) {
  */
 InputWaiter.prototype.displayFilePreview = function() {
     const inputText = document.getElementById("input-text"),
-        fileSlice = this.fileBuffer.slice(0, 2048);
+        fileSlice = this.fileBuffer.slice(0, 4096);
 
     inputText.style.overflow = "hidden";
     inputText.classList.add("blur");
     inputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
-    if (this.fileBuffer.byteLength > 2048) {
-        inputText.value += "[truncated]";
+    if (this.fileBuffer.byteLength > 4096) {
+        inputText.value += "[truncated]...";
     }
 };
 

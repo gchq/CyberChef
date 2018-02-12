@@ -131,7 +131,7 @@ OutputWaiter.prototype.setFile = function(buf) {
 
     // Display preview slice in the background
     const outputText = document.getElementById("output-text"),
-        fileSlice = this.dishBuffer.slice(0, 2048);
+        fileSlice = this.dishBuffer.slice(0, 4096);
 
     outputText.classList.add("blur");
     outputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
