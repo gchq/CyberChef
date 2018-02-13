@@ -29,6 +29,8 @@ import StrUtils from "../../operations/StrUtils.js";
 import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
 import UUID from "../../operations/UUID.js";
+import XKCD from "../../operations/XKCD.js";
+
 
 /**
  * Default module.
@@ -161,6 +163,7 @@ OpModules.Default = {
     "Standard Deviation":   Arithmetic.runStdDev,
     "Windows Filetime to UNIX Timestamp": Filetime.runFromFiletimeToUnix,
     "UNIX Timestamp to Windows Filetime": Filetime.runToFiletimeFromUnix,
+    "XKCD Random Number":  XKCD.runRandomNumber,
 
 
     /*

@@ -51,6 +51,7 @@
             "mode": "minimum"
         }],
         "indent": ["error", 4, {
+            "ignoreComments": true,
             "ArrayExpression": "first",
             "SwitchCase": 1
         }],

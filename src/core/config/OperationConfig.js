@@ -3966,6 +3966,13 @@ const OperationConfig = {
                 value: StrUtils.HAMMING_INPUT_TYPE
             }
         ]
+    },
+    "XKCD Random Number": {
+        module: "Default",
+        description: "RFC 1149.5 specifies 4 as the standard IEEE-vetted random number.<br><br><a href='https://xkcd.com/221/'>XKCD #221</a>",
+        inputType: "string",
+        outputType: "number",
+        args: []
     }
 };
 

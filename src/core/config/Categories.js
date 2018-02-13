@@ -326,6 +326,7 @@ const Categories = [
             "Remove EXIF",
             "Extract EXIF",
             "Numberwang",
+            "XKCD Random Number",
         ]
     },
     {
