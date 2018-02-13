@@ -110,6 +110,15 @@ HTMLOperation.prototype.highlightSearchString = function(searchStr, namePos, des
     }
 
     if (this.description && descPos >= 0) {
+        // Find HTML tag offsets
+        const re = /<[^>]+>/g;
+        let match;
+        while ((match = re.exec(this.description))) {
+            // If the search string occurs within an HTML tag, return without highlighting it.
+            if (descPos >= match.index && descPos <= (match.index + match[0].length))
+                return;
+        }
+
         this.description = this.description.slice(0, descPos) + "<b><u>" +
             this.description.slice(descPos, descPos + searchStr.length) + "</u></b>" +
             this.description.slice(descPos + searchStr.length);
