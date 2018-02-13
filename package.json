@@ -34,6 +34,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.9",
+    "eslint": "^4.17.0",
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
