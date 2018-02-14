@@ -92,7 +92,7 @@ OpModules.Default = {
     "Bit shift right":      BitwiseOp.runBitShiftRight,
     "XOR":                  BitwiseOp.runXor,
     "XOR Brute Force":      BitwiseOp.runXorBrute,
-    "OR":                   BitwiseOp.runXor,
+    "OR":                   BitwiseOp.runOr,
     "NOT":                  BitwiseOp.runNot,
     "AND":                  BitwiseOp.runAnd,
     "ADD":                  BitwiseOp.runAdd,
