@@ -244,7 +244,9 @@ class Magic {
             if (ENVIRONMENT_IS_WORKER()) self.loadRequiredModules([opConfig]);
 
             const recipe = new Recipe([opConfig]);
-            await recipe.execute(dish, 0);
+            try {
+                await recipe.execute(dish, 0);
+            } catch (err) {} // Ignore errors
 
             const magic = new Magic(dish.get(Dish.ARRAY_BUFFER), this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
