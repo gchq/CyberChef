@@ -92,6 +92,11 @@ const OperationConfig = {
                 name: "Depth",
                 type: "number",
                 value: 3
+            },
+            {
+                name: "Extensive language support",
+                type: "boolean",
+                value: false
             }
         ]
     },

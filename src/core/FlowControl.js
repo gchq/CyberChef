@@ -267,10 +267,11 @@ const FlowControl = {
     runMagic: async function(state) {
         const ings = state.opList[state.progress].getIngValues(),
             depth = ings[0],
+            extLang = ings[1],
             dish = state.dish,
             currentRecipeConfig = state.opList.map(op => op.getConfig()),
             magic = new Magic(dish.get(Dish.ARRAY_BUFFER)),
-            options = await magic.speculativeExecution(depth);
+            options = await magic.speculativeExecution(depth, extLang);
 
         let output = `<table
                 class='table table-hover table-condensed table-bordered'
