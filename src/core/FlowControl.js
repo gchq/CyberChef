@@ -267,11 +267,12 @@ const FlowControl = {
     runMagic: async function(state) {
         const ings = state.opList[state.progress].getIngValues(),
             depth = ings[0],
-            extLang = ings[1],
+            intensive = ings[1],
+            extLang = ings[2],
             dish = state.dish,
             currentRecipeConfig = state.opList.map(op => op.getConfig()),
             magic = new Magic(dish.get(Dish.ARRAY_BUFFER)),
-            options = await magic.speculativeExecution(depth, extLang);
+            options = await magic.speculativeExecution(depth, extLang, intensive);
 
         let output = `<table
                 class='table table-hover table-condensed table-bordered'
@@ -319,6 +320,10 @@ const FlowControl = {
         });
 
         output += "</table>";
+
+        if (!options.length) {
+            output = "Nothing of interest could be detected about the input data.\nHave you tried modifying the operation arguments?";
+        }
         dish.set(output, Dish.HTML);
         return state;
     },

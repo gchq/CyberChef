@@ -472,16 +472,16 @@ const FileType = {
         // Must be before Little-endian UTF-16 BOM
         if (buf[0] === 0xFF && buf[1] === 0xFE && buf[2] === 0x00 && buf[3] === 0x00) {
             return {
-                ext: "",
-                mime: "",
+                ext: "UTF32LE",
+                mime: "charset/utf32le",
                 desc: "Little-endian UTF-32 encoded Unicode byte order mark detected."
             };
         }
 
         if (buf[0] === 0xFF && buf[1] === 0xFE) {
             return {
-                ext: "",
-                mime: "",
+                ext: "UTF16LE",
+                mime: "charset/utf16le",
                 desc: "Little-endian UTF-16 encoded Unicode byte order mark detected."
             };
         }

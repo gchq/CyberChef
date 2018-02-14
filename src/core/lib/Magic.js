@@ -168,19 +168,57 @@ class Magic {
     }
 
     /**
+     * Generate various simple brute-forced encodings of the data (trucated to 100 bytes).
+     *
+     * @returns {Object[]} - The encoded data and an operation config to generate it.
+     */
+    bruteForce() {
+        const sample = new Uint8Array(this.inputBuffer).slice(0, 100);
+
+        let results = [];
+
+        // 1-byte XOR
+        for (let i = 1; i < 256; i++) {
+            results.push({
+                data: sample.map(b => b ^ i).buffer,
+                conf: {
+                    op: "XOR",
+                    args: [{"option": "Hex", "string": i.toString(16)}, "Standard", false]
+                }
+            });
+        }
+
+        // Bit rotate
+        for (let i = 1; i < 8; i++) {
+            results.push({
+                data: sample.map(b => (b >> i) | ((b & (Math.pow(2, i) - 1)) << (8 - i))).buffer,
+                conf: {
+                    op: "Rotate right",
+                    args: [i, false]
+                }
+            });
+        }
+
+
+        return results;
+    }
+
+    /**
      * Speculatively executes matching operations, recording metadata of each result.
      * 
      * @param {number} [depth=0] - How many levels to try to execute
      * @param {boolean} [extLang=false] - Extensive language support (false = only check the most
      *                                    common Internet languages)
+     * @param {boolean} [intensive=false] - Run brute-forcing on each branch (significantly affects
+     *                                      performance)
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding 
      */
-    async speculativeExecution(depth = 0, extLang = false, recipeConfig = []) {
+    async speculativeExecution(depth = 0, extLang = false, intensive = false, recipeConfig = []) {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
-        const matchingOps = this.findMatchingOps();
+        let matchingOps = this.findMatchingOps();
 
         let results = [];
 
@@ -194,8 +232,8 @@ class Magic {
             matchingOps: matchingOps
         });
 
-        // Execute each of those operations, then recursively call the speculativeExecution() method
-        // on the resulting data, recording the properties of each option.
+        // Execute each of the matching operations, then recursively call the speculativeExecution()
+        // method on the resulting data, recording the properties of each option.
         await Promise.all(matchingOps.map(async op => {
             const dish = new Dish(this.inputBuffer, Dish.ARRAY_BUFFER),
                 opConfig = {
@@ -209,10 +247,31 @@ class Magic {
             await recipe.execute(dish, 0);
 
             const magic = new Magic(dish.get(Dish.ARRAY_BUFFER), this.opPatterns),
-                speculativeResults = await magic.speculativeExecution(depth-1, [...recipeConfig, opConfig]);
+                speculativeResults = await magic.speculativeExecution(
+                        depth-1, extLang, intensive, [...recipeConfig, opConfig]);
 
             results = results.concat(speculativeResults);
         }));
+
+        if (intensive) {
+            // Run brute forcing of various types on the data and create a new branch for each option
+            const bfEncodings = this.bruteForce();
+
+            await Promise.all(bfEncodings.map(async enc => {
+                const magic = new Magic(enc.data, this.opPatterns),
+                    bfResults = await magic.speculativeExecution(
+                        depth-1, extLang, false, [...recipeConfig, enc.conf]);
+
+                results = results.concat(bfResults);
+            }));
+        }
+
+        // Prune branches that do not match anything
+        results = results.filter(r =>
+                r.languageScores[0].probability > 0 ||
+                r.fileType ||
+                r.isUTF8 ||
+                r.matchingOps.length);
 
         // Return a sorted list of possible recipes along with their properties
         return results.sort((a, b) => {
