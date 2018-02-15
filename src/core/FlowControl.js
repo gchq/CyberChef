@@ -294,13 +294,14 @@ const FlowControl = {
             let language = "",
                 fileType = "",
                 matchingOps = "",
+                useful = "",
                 validUTF8 = option.isUTF8 ? "Valid UTF8\n" : "";
 
-            if (option.languageScores[0].probability > 0.00001) {
-                let likelyLangs = option.languageScores.filter(l => l.probability > 0.2);
+            if (option.languageScores[0].probability > 0) {
+                let likelyLangs = option.languageScores.filter(l => l.probability > 0);
                 if (likelyLangs.length < 1) likelyLangs = [option.languageScores[0]];
-                language = "Language:\n    " + likelyLangs.map(lang => {
-                    return `${Magic.codeToLanguage(lang.lang)} ${(lang.probability * 100).toFixed(2)}%`;
+                language = "Possible languages:\n    " + likelyLangs.map(lang => {
+                    return Magic.codeToLanguage(lang.lang);
                 }).join("\n    ") + "\n";
             }
 
@@ -312,10 +313,14 @@ const FlowControl = {
                 matchingOps = `Matching ops: ${[...new Set(option.matchingOps.map(op => op.op))].join(", ")}\n`;
             }
 
+            if (option.useful) {
+                useful = "Useful op detected\n";
+            }
+
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
                 <td>${Utils.escapeHtml(Utils.printable(Utils.truncate(option.data, 99)))}</td>
-                <td>${language}${fileType}${matchingOps}${validUTF8}</td>
+                <td>${language}${fileType}${matchingOps}${useful}${validUTF8}</td>
             </tr>`;
         });
 
