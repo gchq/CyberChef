@@ -214,7 +214,7 @@ class Magic {
         const testEnc = async op => {
             for (let i = 0; i < encodings.length; i++) {
                 const conf = {
-                        op: "Encode text",
+                        op: op,
                         args: [encodings[i]]
                     },
                     data = await this._runRecipe([conf], sample.buffer);
@@ -343,9 +343,11 @@ class Magic {
         const recipe = new Recipe(recipeConfig);
         try {
             await recipe.execute(dish, 0);
-        } catch (err) {} // Ignore errors
-
-        return dish.get(Dish.ARRAY_BUFFER);
+            return dish.get(Dish.ARRAY_BUFFER);
+        } catch (err) {
+            // If there are errors, return an empty buffer
+            return new ArrayBuffer();
+        }
     }
 
     /**
