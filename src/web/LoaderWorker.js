@@ -47,7 +47,7 @@ self.loadFile = function(file) {
     };
 
     reader.onerror = function(e) {
-        self.postMessage({"error": file.error.message});
+        self.postMessage({"error": reader.error.message});
     };
 
     seek();
