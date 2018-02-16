@@ -27,7 +27,7 @@ const Unicode = {
      */
     runUnescape: function(input, args) {
         let prefix = Unicode._prefixToRegex[args[0]],
-            regex = new RegExp(prefix+"([a-f\\d]{4,6})", "ig"),
+            regex = new RegExp(prefix+"([a-f\\d]{4})", "ig"),
             output = "",
             m,
             i = 0;
