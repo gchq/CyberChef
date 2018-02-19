@@ -174,6 +174,24 @@ class Magic {
     }
 
     /**
+     * Calculates the Shannon entropy of the input data.
+     *
+     * @returns {number}
+     */
+    calcEntropy() {
+        let prob = this._freqDist(),
+            entropy = 0,
+            p;
+
+        for (let i = 0; i < prob.length; i++) {
+            p = prob[i] / 100;
+            if (p === 0) continue;
+            entropy += p * Math.log(p) / Math.log(2);
+        }
+        return -entropy;
+    }
+
+    /**
      * Generate various simple brute-forced encodings of the data (trucated to 100 bytes).
      *
      * @returns {Object[]} - The encoded data and an operation config to generate it.
@@ -262,6 +280,7 @@ class Magic {
             languageScores: this.detectLanguage(extLang),
             fileType: this.detectFileType(),
             isUTF8: this.isUTF8(),
+            entropy: this.calcEntropy(),
             matchingOps: matchingOps,
             useful: useful
         });
@@ -324,6 +343,10 @@ class Magic {
             aScore += a.recipe.length;
             bScore += b.recipe.length;
 
+            // Lower entropy is "better", so we add the entropy to the score
+            aScore += a.entropy;
+            bScore += b.entropy;
+
             return aScore - bScore;
         });
     }
@@ -351,12 +374,14 @@ class Magic {
     }
 
     /**
-     * Calculates the number of times each byte appears in the input
+     * Calculates the number of times each byte appears in the input as a percentage
      *
      * @private
      * @returns {number[]}
      */
     _freqDist() {
+        if (this.freqDist) return this.freqDist;
+
         const len = this.inputBuffer.length;
         let i = len,
             counts = new Array(256).fill(0);
@@ -367,9 +392,10 @@ class Magic {
             counts[this.inputBuffer[i]]++;
         }
 
-        return counts.map(c => {
+        this.freqDist = counts.map(c => {
             return c / len * 100;
         });
+        return this.freqDist;
     }
 
     /**

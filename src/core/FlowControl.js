@@ -283,6 +283,18 @@ const FlowControl = {
                 <th>Properties</th>
             </tr>`;
 
+        /**
+         * Returns a CSS colour value based on an integer input.
+         *
+         * @param {number} val
+         * @returns {string}
+         */
+        function chooseColour(val) {
+            if (val < 3) return "green";
+            if (val < 5) return "goldenrod";
+            return "red";
+        }
+
         options.forEach(option => {
             // Construct recipe URL
             // Replace this Magic op with the generated recipe
@@ -295,18 +307,20 @@ const FlowControl = {
                 fileType = "",
                 matchingOps = "",
                 useful = "",
-                validUTF8 = option.isUTF8 ? "Valid UTF8\n" : "";
+                entropy = `<span data-toggle="tooltip" data-container="body" title="Shannon Entropy is measured from 0 to 8. High entropy suggests encrypted or compressed data. Normal text is usually around 3.5 to 5.">Entropy: <span style="color: ${chooseColour(option.entropy)}">${option.entropy.toFixed(2)}</span></span>`,
+                validUTF8 = option.isUTF8 ? "<span data-toggle='tooltip' data-container='body' title='The data could be a valid UTF8 string based on its encoding.'>Valid UTF8</span>\n" : "";
 
             if (option.languageScores[0].probability > 0) {
                 let likelyLangs = option.languageScores.filter(l => l.probability > 0);
                 if (likelyLangs.length < 1) likelyLangs = [option.languageScores[0]];
-                language = "Possible languages:\n    " + likelyLangs.map(lang => {
-                    return Magic.codeToLanguage(lang.lang);
-                }).join("\n    ") + "\n";
+                language = "<span data-toggle='tooltip' data-container='body' title='Based on a statistical comparison of the frequency of bytes in various languages. Ordered by likelihood.'>" +
+                    "Possible languages:\n    " + likelyLangs.map(lang => {
+                        return Magic.codeToLanguage(lang.lang);
+                    }).join("\n    ") + "</span>\n";
             }
 
             if (option.fileType) {
-                fileType = `File type: ${option.fileType.mime} (${option.fileType.ext})\n`;
+                fileType = `<span data-toggle="tooltip" data-container="body" title="Based on the presence of magic bytes.">File type: ${option.fileType.mime} (${option.fileType.ext})</span>\n`;
             }
 
             if (option.matchingOps.length) {
@@ -314,17 +328,17 @@ const FlowControl = {
             }
 
             if (option.useful) {
-                useful = "Useful op detected\n";
+                useful = "<span data-toggle='tooltip' data-container='body' title='This could be an operation that displays data in a useful way, such as rendering an image.'>Useful op detected</span>\n";
             }
 
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
                 <td>${Utils.escapeHtml(Utils.printable(Utils.truncate(option.data, 99)))}</td>
-                <td>${language}${fileType}${matchingOps}${useful}${validUTF8}</td>
+                <td>${language}${fileType}${matchingOps}${useful}${validUTF8}${entropy}</td>
             </tr>`;
         });
 
-        output += "</table>";
+        output += "</table><script type='application/javascript'>$('[data-toggle=\"tooltip\"]').tooltip()</script>";
 
         if (!options.length) {
             output = "Nothing of interest could be detected about the input data.\nHave you tried modifying the operation arguments?";
