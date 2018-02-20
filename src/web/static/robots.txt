@@ -1,4 +1,0 @@
-user-agent: *
-disallow: /cyberchef.htm
-
-sitemap: https://gchq.github.io/CyberChef/sitemap.xml

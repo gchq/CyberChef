@@ -379,10 +379,6 @@ module.exports = function (grunt) {
                         src: "docs/**",
                         dest: "build/prod/"
                     },
-                    {
-                        src: "src/web/static/robots.txt",
-                        dest: "build/prod/robots.txt"
-                    }
                 ]
             }
         },

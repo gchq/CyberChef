@@ -88,6 +88,7 @@
             window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random() * 2000) + 1500);
         </script>
         <% if (!htmlWebpackPlugin.options.inline) { %>
+            <meta name="robots" content="noindex" />
             <script type="application/ld+json">
                 <% print(JSON.stringify(require("../static/structuredData.json"))); %>
             </script>
