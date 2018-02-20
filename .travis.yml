@@ -11,6 +11,7 @@ script:
   - grunt node
   - grunt prod --msg="$COMPILE_MSG"
 before_deploy:
+  - grunt exec:sitemap
   - grunt copy:ghPages
 deploy:
   - provider: pages
