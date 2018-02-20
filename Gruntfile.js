@@ -381,7 +381,7 @@ module.exports = function (grunt) {
                     },
                     {
                         src: "src/web/static/robots.txt",
-                        dest: "build/prod/"
+                        dest: "build/prod/robots.txt"
                     }
                 ]
             }
