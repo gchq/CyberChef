@@ -22,7 +22,7 @@ sitemap.add({
 
 for (let op in OperationConfig) {
     sitemap.add({
-        url: `/#op=${encodeURIComponent(op)}`,
+        url: `/?op=${encodeURIComponent(op)}`,
         changeFreq: "yearly",
         priority: 0.5
     });
