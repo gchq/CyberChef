@@ -58,6 +58,7 @@
     "postcss-css-variables": "^0.8.0",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.10",
+    "sitemap": "^1.13.0",
     "style-loader": "^0.19.1",
     "url-loader": "^0.6.2",
     "val-loader": "^1.1.0",

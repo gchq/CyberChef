@@ -218,7 +218,8 @@ module.exports = function (grunt) {
             web: {
                 target: "web",
                 entry: Object.assign({
-                    main: "./src/web/index.js"
+                    main: "./src/web/index.js",
+                    sitemap: "./src/web/static/sitemap.js"
                 }, moduleEntryPoints),
                 output: {
                     path: __dirname + "/build/prod"
@@ -377,6 +378,10 @@ module.exports = function (grunt) {
                         expand: true,
                         src: "docs/**",
                         dest: "build/prod/"
+                    },
+                    {
+                        src: "src/web/static/robots.txt",
+                        dest: "build/prod/"
                     }
                 ]
             }
@@ -406,6 +411,9 @@ module.exports = function (grunt) {
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
+            sitemap: {
+                command: "node build/prod/sitemap.js > build/prod/sitemap.xml"
+            }
         },
         execute: {
             test: "build/test/index.js"

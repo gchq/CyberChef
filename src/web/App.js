@@ -377,6 +377,7 @@ App.prototype.loadURIParams = function() {
         window.location.href.split("#")[1] ||
         window.location.hash;
     this.uriParams = Utils.parseURIParams(params);
+    this.autoBakePause = true;
 
     // Read in recipe from URI params
     if (this.uriParams.recipe) {
@@ -387,35 +388,29 @@ App.prototype.loadURIParams = function() {
     } else if (this.uriParams.op) {
         // If there's no recipe, look for single operations
         this.manager.recipe.clearRecipe();
-        try {
-            this.manager.recipe.addOperation(this.uriParams.op);
-        } catch (err) {
-            // If no exact match, search for nearest match and add that
-            const matchedOps = this.manager.ops.filterOperations(this.uriParams.op, false);
-            if (matchedOps.length) {
-                this.manager.recipe.addOperation(matchedOps[0].name);
-            }
 
-            // Populate search with the string
-            const search = document.getElementById("search");
-
-            search.value = this.uriParams.op;
-            search.dispatchEvent(new Event("search"));
+        // Search for nearest match and add it
+        const matchedOps = this.manager.ops.filterOperations(this.uriParams.op, false);
+        if (matchedOps.length) {
+            this.manager.recipe.addOperation(matchedOps[0].name);
         }
+
+        // Populate search with the string
+        const search = document.getElementById("search");
+
+        search.value = this.uriParams.op;
+        search.dispatchEvent(new Event("search"));
     }
 
     // Read in input data from URI params
     if (this.uriParams.input) {
-        this.autoBakePause = true;
         try {
             const inputData = Utils.fromBase64(this.uriParams.input);
             this.setInput(inputData);
-        } catch (err) {
-        } finally {
-            this.autoBakePause = false;
-        }
+        } catch (err) {}
     }
 
+    this.autoBakePause = false;
     this.autoBake();
 };
 
