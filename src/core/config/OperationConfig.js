@@ -1825,6 +1825,11 @@ const OperationConfig = {
                 name: "Cisco style",
                 type: "boolean",
                 value: MAC.CISCO_STYLE
+            },
+            {
+                name: "IPv6 interface ID",
+                type: "boolean",
+                value: MAC.IPV6_INTERFACE_ID
             }
         ]
     },
