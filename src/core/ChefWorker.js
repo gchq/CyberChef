@@ -138,6 +138,7 @@ function loadRequiredModules(recipeConfig) {
             log.info("Loading module " + module);
             self.sendStatusMessage("Loading module " + module);
             self.importScripts(self.docURL + "/" + module + ".js");
+            self.sendStatusMessage("");
         }
     });
 }

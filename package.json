@@ -101,6 +101,7 @@
     "sladex-blowfish": "^0.8.1",
     "sortablejs": "^1.7.0",
     "split.js": "^1.3.5",
+    "ua-parser-js": "^0.7.17",
     "utf8": "^3.0.0",
     "vkbeautify": "^0.99.3",
     "xmldom": "^0.1.27",

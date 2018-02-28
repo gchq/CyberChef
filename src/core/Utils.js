@@ -952,7 +952,7 @@ const Utils = {
         // Parse bespoke recipe format
         recipe = recipe.replace(/\n/g, "");
         let m,
-            recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/])*)(\/[^)]+)?\)/g,
+            recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/'])*)(\/[^)]+)?\)/g,
             recipeConfig = [],
             args;
 

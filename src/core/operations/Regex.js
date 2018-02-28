@@ -32,7 +32,7 @@ const Regex = {
         },
         {
             name: "Email address",
-            value: "(\\w[-.\\w]*)@([-\\w]+(?:\\.[-\\w]+)*)\\.([A-Za-z]{2,4})"
+            value: "\\b(\\w[-.\\w]*)@([-\\w]+(?:\\.[-\\w]+)*)\\.([A-Za-z]{2,4})\\b"
         },
         {
             name: "URL",

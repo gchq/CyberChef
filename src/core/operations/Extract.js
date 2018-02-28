@@ -207,7 +207,7 @@ const Extract = {
      */
     runEmail: function(input, args) {
         let displayTotal = args[0],
-            regex = /\w[-.\w]*@[-\w]+(?:\.[-\w]+)*\.[A-Z]{2,4}/ig;
+            regex = /\b\w[-.\w]*@[-\w]+(?:\.[-\w]+)*\.[A-Z]{2,4}\b/ig;
 
         return Extract._search(input, regex, null, displayTotal);
     },

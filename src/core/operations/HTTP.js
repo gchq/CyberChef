@@ -1,4 +1,4 @@
-import {UAS_parser as UAParser} from "../lib/uas_parser.js";
+import UAParser from "ua-parser-js";
 
 
 /**
@@ -46,20 +46,22 @@ const HTTP = {
      * @returns {string}
      */
     runParseUserAgent: function(input, args) {
-        const ua = UAParser.parse(input);
-
-        return "Type: " + ua.type + "\n" +
-            "Family: " + ua.uaFamily + "\n" +
-            "Name: " + ua.uaName + "\n" +
-            "URL: " + ua.uaUrl + "\n" +
-            "Company: " + ua.uaCompany + "\n" +
-            "Company URL: " + ua.uaCompanyUrl + "\n\n" +
-            "OS Family: " + ua.osFamily + "\n" +
-            "OS Name: " + ua.osName + "\n" +
-            "OS URL: " + ua.osUrl + "\n" +
-            "OS Company: " + ua.osCompany + "\n" +
-            "OS Company URL: " + ua.osCompanyUrl + "\n" +
-            "Device Type: " + ua.deviceType + "\n";
+        const ua = UAParser(input);
+        return `Browser
+    Name: ${ua.browser.name || "unknown"}
+    Version: ${ua.browser.version || "unknown"}
+Device
+    Model: ${ua.device.model || "unknown"}
+    Type: ${ua.device.type || "unknown"}
+    Vendor: ${ua.device.vendor || "unknown"}
+Engine
+    Name: ${ua.engine.name || "unknown"}
+    Version: ${ua.engine.version || "unknown"}
+OS
+    Name: ${ua.os.name || "unknown"}
+    Version: ${ua.os.version || "unknown"}
+CPU
+    Architecture: ${ua.cpu.architecture || "unknown"}`;
     },
 
 
