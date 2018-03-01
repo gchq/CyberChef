@@ -382,10 +382,13 @@ ControlsWaiter.prototype.supportButtonClick = function(e) {
     const saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
 
     if (reportBugInfo) {
-        reportBugInfo.innerHTML = "* Version: " + PKG_VERSION + "\n" +
-            "* Compile time: " + COMPILE_TIME + "\n" +
-            "* User-Agent: \n" + navigator.userAgent + "\n" +
-            "* [Link to reproduce](" + saveLink + ")\n\n";
+        reportBugInfo.innerHTML = `* Version: ${PKG_VERSION + (typeof INLINE === "undefined" ? "" : "s")}
+* Compile time: ${COMPILE_TIME}
+* User-Agent: 
+${navigator.userAgent}
+* [Link to reproduce](${saveLink})
+
+`;
     }
 };
 

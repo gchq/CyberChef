@@ -258,12 +258,14 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/prod"
                 },
                 plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new webpack.DefinePlugin(Object.assign({}, BUILD_CONSTANTS, {
+                        INLINE: "true"
+                    })),
                     new HtmlWebpackPlugin({
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
-                        version: pkg.version,
+                        version: pkg.version + "s",
                         inline: true,
                         minify: {
                             removeComments: true,
