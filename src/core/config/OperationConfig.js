@@ -3181,7 +3181,7 @@ const OperationConfig = {
         outputType: "string",
         args: [
             {
-                name: "Password",
+                name: "Key",
                 type: "binaryString",
                 value: ""
             },

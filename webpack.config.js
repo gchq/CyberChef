@@ -109,9 +109,13 @@ module.exports = {
         children: false,
         chunks: false,
         modules: false,
+        entrypoints: false,
         warningsFilter: /source-map/,
     },
     node: {
         fs: "empty"
+    },
+    performance: {
+        hints: false
     }
 };

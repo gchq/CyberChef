@@ -1,5 +1,5 @@
 import Utils from "../Utils.js";
-import CryptoApi from "crypto-api";
+import CryptoApi from "babel-loader!crypto-api";
 import MD6 from "node-md6";
 import * as SHA3 from "js-sha3";
 import Checksum from "./Checksum.js";
@@ -21,14 +21,11 @@ const Hash = {
      *
      * @param {string} name
      * @param {string} input
+     * @para, {Object} [options={}]
      * @returns {string}
      */
-    runHash: function(name, input) {
-        const hasher = CryptoApi.hasher(name);
-        hasher.state.message = input;
-        hasher.state.length += input.length;
-        hasher.process();
-        return hasher.finalize().stringify("hex");
+    runHash: function(name, input, options={}) {
+        return CryptoApi.hash(name, input, options);
     },
 
 
@@ -329,9 +326,10 @@ const Hash = {
      * @returns {string}
      */
     runSnefru: function (input, args) {
-        const rounds = args[0],
-            size = args[1];
-        return Hash.runHash(`snefru-${rounds}-${size}`, input);
+        return Hash.runHash("snefru", input, {
+            rounds: args[0],
+            length: args[1]
+        });
     },
 
 
@@ -358,7 +356,8 @@ const Hash = {
         "HAS160",
         "Whirlpool",
         "Whirlpool-0",
-        "Whirlpool-T"
+        "Whirlpool-T",
+        "Snefru"
     ],
 
     /**
@@ -369,12 +368,17 @@ const Hash = {
      * @returns {string}
      */
     runHMAC: function (input, args) {
-        const password = args[0],
-            hashFunc = args[1].toLowerCase(),
-            hmac = CryptoApi.mac("hmac", password, hashFunc, {});
+        const key = args[0],
+            hashFunc = args[1].toLowerCase();
+        let hasher = CryptoApi.getHasher(hashFunc);
 
-        hmac.update(input);
-        return hmac.finalize().stringify("hex");
+        // Horrible shim to fix constructor bug. Reported in nf404/crypto-api#8
+        hasher.reset = () => {
+            hasher.state = {};
+            const tmp = new hasher.constructor();
+            hasher.state = tmp.state;
+        };
+        return CryptoApi.hmac(key, input, hasher);
     },
 
 

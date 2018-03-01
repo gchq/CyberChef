@@ -185,6 +185,7 @@ module.exports = function (grunt) {
         webpack: {
             options: webpackConfig,
             metaConf: {
+                mode: "production",
                 target: "node",
                 entry: [
                     "babel-polyfill",
@@ -200,6 +201,7 @@ module.exports = function (grunt) {
                 externals: [NodeExternals()],
             },
             metaConfDev: {
+                mode: "development",
                 target: "node",
                 entry: [
                     "babel-polyfill",
@@ -216,6 +218,7 @@ module.exports = function (grunt) {
                 watch: true
             },
             web: {
+                mode: "production",
                 target: "web",
                 entry: Object.assign({
                     main: "./src/web/index.js",
@@ -231,15 +234,6 @@ module.exports = function (grunt) {
                 },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.UglifyJsPlugin({
-                        compress: {
-                            "screw_ie8": true,
-                            "dead_code": true,
-                            "unused": true,
-                            "warnings": false
-                        },
-                        comments: false,
-                    }),
                     new HtmlWebpackPlugin({
                         filename: "index.html",
                         template: "./src/web/html/index.html",
@@ -256,6 +250,7 @@ module.exports = function (grunt) {
                 ]
             },
             webInline: {
+                mode: "production",
                 target: "web",
                 entry: "./src/web/index.js",
                 output: {
@@ -264,15 +259,6 @@ module.exports = function (grunt) {
                 },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.UglifyJsPlugin({
-                        compress: {
-                            "screw_ie8": true,
-                            "dead_code": true,
-                            "unused": true,
-                            "warnings": false
-                        },
-                        comments: false,
-                    }),
                     new HtmlWebpackPlugin({
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
@@ -289,6 +275,7 @@ module.exports = function (grunt) {
                 ]
             },
             tests: {
+                mode: "development",
                 target: "node",
                 entry: "./test/index.js",
                 externals: [NodeExternals()],
@@ -301,6 +288,7 @@ module.exports = function (grunt) {
                 ]
             },
             node: {
+                mode: "production",
                 target: "node",
                 entry: "./src/node/index.js",
                 externals: [NodeExternals()],
@@ -327,11 +315,13 @@ module.exports = function (grunt) {
                     children: false,
                     chunks: false,
                     modules: false,
+                    entrypoints: false,
                     warningsFilter: /source-map/,
                 }
             },
             start: {
                 webpack: {
+                    mode: "development",
                     target: "web",
                     entry: Object.assign({
                         main: "./src/web/index.js"
