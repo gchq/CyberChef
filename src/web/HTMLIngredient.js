@@ -62,7 +62,7 @@ HTMLIngredient.prototype.toHtml = function() {
             break;
         case "toggleString":
             html += "<div class='input-group'><div class='input-group-btn'>\
-                <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown'\
+                <button type='button' class='btn btn-secondary dropdown-toggle' data-toggle='dropdown'\
                 aria-haspopup='true' aria-expanded='false'" +
                 (this.disabled ? " disabled='disabled'" : "") + ">" + this.toggleValues[0] +
                 " <span class='caret'></span></button><ul class='dropdown-menu'>";

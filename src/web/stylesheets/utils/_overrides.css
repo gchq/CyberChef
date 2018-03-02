@@ -13,30 +13,30 @@ a:focus {
     outline: none;
 }
 
-.btn-default {
+.btn-secondary {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-border-colour);
 }
 
-.btn-default:hover,
-.btn-default:active,
-.btn-default:hover:active,
-.open>.dropdown-toggle.btn-default {
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:hover:active,
+.open>.dropdown-toggle.btn-secondary {
     color: var(--btn-default-hover-font-colour);
     background-color: var(--btn-default-hover-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-default:focus,
-.open>.dropdown-toggle.btn-default:hover,
-.open>.dropdown-toggle.btn-default:focus {
+.btn-secondary:focus,
+.open>.dropdown-toggle.btn-secondary:hover,
+.open>.dropdown-toggle.btn-secondary:focus {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-default[disabled]:hover {
+.btn-secondary[disabled]:hover {
     background-color: var(--primary-background-colour);
     border-color: var(--primary-border-colour);
 }

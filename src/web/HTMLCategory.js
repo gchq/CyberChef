@@ -33,13 +33,12 @@ HTMLCategory.prototype.addOperation = function(operation) {
  */
 HTMLCategory.prototype.toHtml = function() {
     const catName = "cat" + this.name.replace(/[\s/-:_]/g, "");
-    let html = "<div class='panel category'>\
-        <a class='category-title' data-toggle='collapse'\
-            data-parent='#categories' href='#" + catName + "'>\
-            " + this.name + "\
-        </a>\
-        <div id='" + catName + "' class='panel-collapse collapse\
-        " + (this.selected ? " in" : "") + "'><ul class='op-list'>";
+    let html = `<div class="panel category">
+        <a class="category-title" data-toggle="collapse" data-parent="#categories" href="#${catName}">
+            ${this.name}
+        </a>
+        <div id="${catName}" class="panel-collapse collapse ${(this.selected ? " show" : "")}">
+            <ul class="op-list">`;
 
     for (let i = 0; i < this.opList.length; i++) {
         html += this.opList[i].toStubHtml();

@@ -78,7 +78,7 @@ OperationsWaiter.prototype.searchOperations = function(e) {
             searchResultsEl.removeChild(searchResultsEl.firstChild);
         }
 
-        $("#categories .in").collapse("hide");
+        $("#categories .show").collapse("hide");
         if (str) {
             const matchedOps = this.filterOperations(str, true);
             const matchedOpsHtml = matchedOps

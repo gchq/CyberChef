@@ -105,9 +105,9 @@ ControlsWaiter.prototype.autoBakeChange = function() {
 
     if (autoBakeCheckbox.checked) {
         autoBakeLabel.classList.add("btn-success");
-        autoBakeLabel.classList.remove("btn-default");
+        autoBakeLabel.classList.remove("btn-secondary");
     } else {
-        autoBakeLabel.classList.add("btn-default");
+        autoBakeLabel.classList.add("btn-secondary");
         autoBakeLabel.classList.remove("btn-success");
     }
 };

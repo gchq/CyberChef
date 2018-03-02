@@ -102,7 +102,7 @@
             <div id="preloader-msg" class="loading-msg"></div>
         </div>
         <!-- End preloader overlay -->
-        <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
+        <span id="edit-favourites" class="btn btn-secondary btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
         <div id="alert" class="alert alert-danger">
             <button type="button" class="close" id="alert-close">&times;</button>
             <span id="alert-content"></span>
@@ -159,15 +159,15 @@
                             </div>
 
                             <div class="btn-group" style="padding-top: 10px;">
-                                <button type="button" class="btn btn-default" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
-                                <button type="button" class="btn btn-default" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
+                                <button type="button" class="btn btn-secondary" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
+                                <button type="button" class="btn btn-secondary" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
                             </div>
                         </div>
 
                         <div class="btn-group-vertical" id="extra-controls">
-                            <button type="button" class="btn btn-default" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
-                            <button type="button" class="btn btn-default" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
-                            <button type="button" class="btn btn-default" id="clr-recipe"><img aria-hidden="true" src="<%- require('../static/images/clean-16x16.png') %>" alt="Broom Icon"/> Clear recipe</button>
+                            <button type="button" class="btn btn-secondary" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
+                            <button type="button" class="btn btn-secondary" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
+                            <button type="button" class="btn btn-secondary" id="clr-recipe"><img aria-hidden="true" src="<%- require('../static/images/clean-16x16.png') %>" alt="Broom Icon"/> Clear recipe</button>
                         </div>
                     </div>
                 </div>
@@ -177,8 +177,8 @@
                         <div class="title no-select">
                             <label for="input-text">Input</label>
                             <div class="btn-group io-btn-group">
-                                <button type="button" class="btn btn-default btn-sm" id="clr-io"><img aria-hidden="true" src="<%- require('../static/images/recycle-16x16.png') %>" alt="Recycle Icon"/> Clear I/O</button>
-                                <button type="button" class="btn btn-default btn-sm" id="reset-layout"><img aria-hidden="true" src="<%- require('../static/images/layout-16x16.png') %>" alt="Grid Icon"/> Reset layout</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="clr-io"><img aria-hidden="true" src="<%- require('../static/images/recycle-16x16.png') %>" alt="Recycle Icon"/> Clear I/O</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="reset-layout"><img aria-hidden="true" src="<%- require('../static/images/layout-16x16.png') %>" alt="Grid Icon"/> Reset layout</button>
                             </div>
                             <div class="io-info" id="input-info"></div>
                             <div class="io-info" id="input-selection-info"></div>
@@ -208,11 +208,11 @@
                         <div class="title no-select">
                             <label for="output-text">Output</label>
                             <div class="btn-group io-btn-group">
-                                <button type="button" class="btn btn-default btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
-                                <button type="button" class="btn btn-default btn-sm" id="copy-output" title="Copy output"><img aria-hidden="true" src="<%- require('../static/images/copy-16x16.png') %>" alt="Copy Icon"/> Copy raw output</button>
-                                <button type="button" class="btn btn-default btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
-                                <button type="button" class="btn btn-default btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img aria-hidden="true" src="<%- require('../static/images/undo-16x16.png') %>" alt="Undo Icon"/> Undo</button>
-                                <button type="button" class="btn btn-default btn-sm" id="maximise-output" title="Maximise"><img aria-hidden="true" src="<%- require('../static/images/maximise-16x16.png') %>" alt="Maximise Icon"/> Max</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="copy-output" title="Copy output"><img aria-hidden="true" src="<%- require('../static/images/copy-16x16.png') %>" alt="Copy Icon"/> Copy raw output</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img aria-hidden="true" src="<%- require('../static/images/undo-16x16.png') %>" alt="Undo Icon"/> Undo</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="maximise-output" title="Maximise"><img aria-hidden="true" src="<%- require('../static/images/maximise-16x16.png') %>" alt="Maximise Icon"/> Max</button>
                             </div>
                             <div class="io-info" id="output-info"></div>
                             <div class="io-info" id="output-selection-info"></div>
@@ -233,7 +233,7 @@
                                             <button id="output-file-download" type="button" class="btn btn-primary">Download</button>
                                             <div class="input-group">
                                                 <span class="input-group-btn">
-                                                    <button id="output-file-slice" type="button" class="btn btn-default" title="View slice">&#x1f50d;</button>
+                                                    <button id="output-file-slice" type="button" class="btn btn-secondary" title="View slice">&#x1f50d;</button>
                                                 </span>
                                                 <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
                                                 <div class="input-group-addon">to</div>
@@ -287,7 +287,7 @@
                     </div>
                     <div class="modal-footer" id="save-footer">
                         <button type="button" class="btn btn-primary" id="save-button" data-dismiss="modal">Save</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group" id="save-link-group">
@@ -324,7 +324,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="load-button" data-dismiss="modal">Load</button>
                         <button type="button" class="btn btn-danger" id="load-delete-button">Delete</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -392,8 +392,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" id="reset-options">Reset options to default</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" id="reset-options">Reset options to default</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -418,7 +418,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="reset-favourites">Reset favourites to default</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="reset-favourites">Reset favourites to default</button>
                         <button type="button" class="btn btn-success" data-dismiss="modal" id="save-favourites">Save</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
@@ -549,7 +549,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     <a href="https://github.com/gchq/CyberChef">
                         <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png') %>" alt="Fork me on GitHub">
