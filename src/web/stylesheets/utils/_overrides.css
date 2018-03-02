@@ -143,8 +143,8 @@ optgroup {
     border-color: var(--popover-border-colour);
 }
 
-.popover-content {
-    max-height: 90vh;
+.popover-body {
+    max-height: 95vh;
     overflow-y: auto;
 }
 

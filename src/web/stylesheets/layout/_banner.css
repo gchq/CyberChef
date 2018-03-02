@@ -14,6 +14,7 @@
     border-bottom: 1px solid var(--primary-border-colour);
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
+    margin: 0;
 }
 
 #banner img {

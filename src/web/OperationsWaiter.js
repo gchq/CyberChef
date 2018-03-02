@@ -179,7 +179,7 @@ OperationsWaiter.prototype.enableOpsListPopovers = function(el) {
             setTimeout(function() {
                 // Determine if the popover associated with this element is being hovered over
                 if ($(_this).data("bs.popover") &&
-                    ($(_this).data("bs.popover").$tip && !$(_this).data("bs.popover").$tip.is(":hover"))) {
+                    ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
                     $(_this).popover("hide");
                 }
             }, 50);

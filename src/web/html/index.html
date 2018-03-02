@@ -108,15 +108,15 @@
             <span id="alert-content"></span>
         </div>
         <div id="content-wrapper">
-            <div id="banner">
-                <div class="col-md-4" style="text-align: left; padding-left: 10px;">
+            <div id="banner" class="row">
+                <div class="col" style="text-align: left; padding-left: 10px;">
                     <% if (htmlWebpackPlugin.options.inline) { %>
                         <span>Version <%= htmlWebpackPlugin.options.version %></span>
                     <% } else { %>
                         <a href="cyberchef.htm" download>Download CyberChef<img aria-hidden="true" src="<%- require('../static/images/download-24x24.png') %>" alt="Download Icon"/></a>
                     <% } %>
                 </div>
-                <div class="col-md-4" style="text-align: center;">
+                <div class="col" style="text-align: center;">
                     <span id="notice">
                         <script type="text/javascript">
                             // Must be text/javascript rather than application/javascript otherwise IE won't recognise it...
@@ -128,7 +128,7 @@
                         <noscript>JavaScript is not enabled. Good luck.</noscript>
                     </span>
                 </div>
-                <div class="col-md-4" style="text-align: right; padding-right: 0;">
+                <div class="col" style="text-align: right; padding-right: 0;">
                     <a href="#" id="options">Options<img aria-hidden="true" src="<%- require('../static/images/settings-22x22.png') %>" alt="Settings Icon"/></a>
                     <a href="#" id="support" data-toggle="modal" data-target="#support-modal">About / Support<img aria-hidden="true" src="<%- require('../static/images/help-22x22.png') %>" alt="Question Mark Icon"/></a>
                 </div>
