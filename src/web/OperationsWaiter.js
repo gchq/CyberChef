@@ -73,7 +73,7 @@ OperationsWaiter.prototype.searchOperations = function(e) {
 
         while (searchResultsEl.firstChild) {
             try {
-                $(searchResultsEl.firstChild).popover("destroy");
+                $(searchResultsEl.firstChild).popover("dispose");
             } catch (err) {}
             searchResultsEl.removeChild(searchResultsEl.firstChild);
         }
@@ -231,13 +231,13 @@ OperationsWaiter.prototype.editFavouritesClick = function(e) {
         onFilter: function (evt) {
             const el = editableList.closest(evt.item);
             if (el && el.parentNode) {
-                $(el).popover("destroy");
+                $(el).popover("dispose");
                 el.parentNode.removeChild(el);
             }
         },
         onEnd: function(evt) {
             if (this.removeIntent) {
-                $(evt.item).popover("destroy");
+                $(evt.item).popover("dispose");
                 evt.item.remove();
             }
         }.bind(this),

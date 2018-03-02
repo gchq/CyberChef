@@ -71,16 +71,6 @@ module.exports = {
                 })
             },
             {
-                test: /\.less$/,
-                use: ExtractTextPlugin.extract({
-                    use: [
-                        { loader: "css-loader?minimize" },
-                        { loader: "postcss-loader" },
-                        { loader: "less-loader" }
-                    ]
-                })
-            },
-            {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
                 loader: "url-loader",
                 options: {
