@@ -366,7 +366,7 @@ const Hash = {
      * @constant
      * @default
      */
-    DELIM_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon"],
+    DELIM_OPTIONS: ["Line feed", "CRLF", "Space", "Comma"],
 
     /**
      * Compare CTPH hashes operation.
