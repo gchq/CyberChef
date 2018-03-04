@@ -3174,6 +3174,46 @@ const OperationConfig = {
             }
         ]
     },
+    "SSDEEP": {
+        module: "Hashing",
+        description: "SSDEEP is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.<br><br>SSDEEP hashes are now widely used for simple identification purposes (e.g. the 'Basic Properties' section in VirusTotal). Although 'better' fuzzy hashes are available, SSDEEP is still one of the primary choices because of its speed and being a de facto standard.<br><br>This operation is fundamentally the same as the CTPH operation, however their outputs differ in format.",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "CTPH": {
+        module: "Hashing",
+        description: "Context Triggered Piecewise Hashing, also called Fuzzy Hashing, can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.<br><br>CTPH was originally based on the work of Dr. Andrew Tridgell and a spam email detector called SpamSum. This method was adapted by Jesse Kornblum and published at the DFRWS conference in 2006 in a paper 'Identifying Almost Identical Files Using Context Triggered Piecewise Hashing'.",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "Compare SSDEEP hashes": {
+        module: "Hashing",
+        description: "Compares two SSDEEP fuzzy hashes to determine the similarity between them on a scale of 0 to 100.",
+        inputType: "string",
+        outputType: "Number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Hash.DELIM_OPTIONS
+            }
+        ]
+    },
+    "Compare CTPH hashes": {
+        module: "Hashing",
+        description: "Compares two Context Triggered Piecewise Hashing (CTPH) fuzzy hashes to determine the similarity between them on a scale of 0 to 100.",
+        inputType: "string",
+        outputType: "Number",
+        args: [
+            {
+                name: "Delimiter",
+                type: "option",
+                value: Hash.DELIM_OPTIONS
+            }
+        ]
+    },
     "HMAC": {
         module: "Hashing",
         description: "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.",
