@@ -3,6 +3,8 @@ import CryptoApi from "babel-loader!crypto-api";
 import MD6 from "node-md6";
 import * as SHA3 from "js-sha3";
 import Checksum from "./Checksum.js";
+import ctph from "ctph.js";
+import ssdeep from "ssdeep.js";
 
 
 /**
@@ -337,6 +339,64 @@ const Hash = {
 
 
     /**
+     * CTPH operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runCTPH: function (input, args) {
+        return ctph.digest(input);
+    },
+
+
+    /**
+     * SSDEEP operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runSSDEEP: function (input, args) {
+        return ssdeep.digest(input);
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    DELIM_OPTIONS: ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon"],
+
+    /**
+     * Compare CTPH hashes operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {Number}
+     */
+    runCompareCTPH: function (input, args) {
+        const samples = input.split(Utils.charRep[args[0]]);
+        if (samples.length !== 2) throw "Incorrect number of samples.";
+        return ctph.similarity(samples[0], samples[1]);
+    },
+
+
+    /**
+     * Compare SSDEEP hashes operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {Number}
+     */
+    runCompareSSDEEP: function (input, args) {
+        const samples = input.split(Utils.charRep[args[0]]);
+        if (samples.length !== 2) throw "Incorrect number of samples.";
+        return ssdeep.similarity(samples[0], samples[1]);
+    },
+
+
+    /**
      * @constant
      * @default
      */
@@ -428,6 +488,8 @@ const Hash = {
                 "\nWhirlpool-0: " + Hash.runWhirlpool(arrayBuffer, ["Whirlpool-0"]) +
                 "\nWhirlpool-T: " + Hash.runWhirlpool(arrayBuffer, ["Whirlpool-T"]) +
                 "\nWhirlpool:   " + Hash.runWhirlpool(arrayBuffer, ["Whirlpool"]) +
+                "\nSSDEEP:      " + Hash.runSSDEEP(str) +
+                "\nCTPH:        " + Hash.runCTPH(str) +
                 "\n\nChecksums:" +
                 "\nFletcher-8:  " + Checksum.runFletcher8(byteArray, []) +
                 "\nFletcher-16: " + Checksum.runFletcher16(byteArray, []) +
