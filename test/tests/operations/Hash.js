@@ -415,4 +415,264 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "MD5: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "4f4f02e2646545aa8fc42f613c9aa068",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "MD5",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "SHA1: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "2c5400aaee7e8ad4cad29bfbdf8d566924e5442c",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA1",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "SHA2 224: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "66c166eba2529ecc44a7b7b218a64a8e3892f873c8d231e8e3c1ef3d",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA2",
+                "args": ["224"]
+            }
+        ]
+    },
+    {
+        name: "SHA2 256: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "186ffd22c3af83995afa4a0316023f81a7f8834fd16bd2ed358c7b1b8182ba41",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA2",
+                "args": ["256"]
+            }
+        ]
+    },
+    {
+        name: "SHA2 384: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "2a6369ffec550ea0bfb810b3b8246b7d6b7f060edfae88441f0f242b98b91549aa4ff407de38c6d03b5f377434ad2f36",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA2",
+                "args": ["384"]
+            }
+        ]
+    },
+    {
+        name: "SHA2 512: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "544ae686522c05b70d12b460b5b39ea0a758eb4027333edbded7e2b3f467aa605804f71f54db61a7bbe50e6e7898510635efd6721fd418a9ea4d05b286d12806",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA2",
+                "args": ["512"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 224: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "e2c07562ee8c2d73e3dd309efea257159abd0948ebc14619bab9ffb3",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA3",
+                "args": ["224"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 256: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "55a55275387586afd1ed64757c9ee7ad1d96ca81a5b7b742c40127856ee78a2d",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA3",
+                "args": ["256"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 384: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "39f8796dd697dc39e5a943817833793f2c29dc0d1adc7037854c0fb51e135c6bd26b113240c4fb1e3fcc16ff8690c91a",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA3",
+                "args": ["384"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 512: Complex bytes",
+        input: "10dc10e32010de10d010dc10d810d910d010e12e",
+        expectedOutput: "ee9061bed83b1ad1e2fc4a4bac72a5a65a23a0fa55193b808af0a3e2013b718a5a3e40474765b4f93d1b2747401058a5b58099cc890a159db92b2ea816287add",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "SHA3",
+                "args": ["512"]
+            }
+        ]
+    },
+    {
+        name: "MD5: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "2e93ee2b5b2a337ccb678c7db12eff1b",
+        recipeConfig: [
+            {
+                "op": "MD5",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "SHA1: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "87f483b1515dce672be044bf183ae8103e3b2d4b",
+        recipeConfig: [
+            {
+                "op": "SHA1",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "SHA2 224: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "563ca57b500157717961a5fa87ce42c6db76a488c98ea9c28d620770",
+        recipeConfig: [
+            {
+                "op": "SHA2",
+                "args": ["224"]
+            }
+        ]
+    },
+    {
+        name: "SHA2 256: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "36abbb4622ffff06aa3e3cea266765601b21457bb3755a0a2cf0a206422863c1",
+        recipeConfig: [
+            {
+                "op": "SHA2",
+                "args": ["256"]
+            }
+        ]
+    },
+    {
+        name: "SHA2 384: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "140b929391a66c9a943bcd60e6964f0d19526d3bc9ba020fbb29aae51cddb8e63a78784d8770f1d36335bf4efff8c131",
+        recipeConfig: [
+            {
+                "op": "SHA2",
+                "args": ["384"]
+            }
+        ]
+    },
+    {
+        name: "SHA2 512: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "04a7887c400bf647b7c67b9a0f1ada70d176348b5afdfebea184f7e62748849828669c7b5160be99455fdbf625589bd1689c003bc06ef60c39607d825a2f8838",
+        recipeConfig: [
+            {
+                "op": "SHA2",
+                "args": ["512"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 224: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "b3ffc9620949f879cb561fb240452494e2566cb4e4f701a85715e14f",
+        recipeConfig: [
+            {
+                "op": "SHA3",
+                "args": ["224"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 256: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "b5f247d725b46546c832502cd07bccb5d4de0c41a6665d3944ed2cc55cd9d156",
+        recipeConfig: [
+            {
+                "op": "SHA3",
+                "args": ["256"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 384: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "93e87b9aa8c9c47eba146adac357c525b418b71677f6db01d1c760d87b058682e639c8d43a8bfe91529cecd9800700e3",
+        recipeConfig: [
+            {
+                "op": "SHA3",
+                "args": ["384"]
+            }
+        ]
+    },
+    {
+        name: "SHA3 512: UTF-8",
+        input: "ნუ პანიკას",
+        expectedOutput: "1fbc484b5184982561795162757717474eebc846ca9f10029a75a54cdd897a7b48d1db42f2478fa1d5d213a0dd7de71c809cb19c60581ba57e7289d29408fb36",
+        recipeConfig: [
+            {
+                "op": "SHA3",
+                "args": ["512"]
+            }
+        ]
+    },
 ]);

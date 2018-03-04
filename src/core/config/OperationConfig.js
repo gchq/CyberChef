@@ -3010,21 +3010,21 @@ const OperationConfig = {
     "MD2": {
         module: "Hashing",
         description: "The MD2 (Message-Digest 2) algorithm is a cryptographic hash function developed by Ronald Rivest in 1989. The algorithm is optimized for 8-bit computers.<br><br>Although MD2 is no longer considered secure, even as of 2014, it remains in use in public key infrastructures as part of certificates generated with MD2 and RSA.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "MD4": {
         module: "Hashing",
         description: "The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms.<br><br>The security of MD4 has been severely compromised.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "MD5": {
         module: "Hashing",
         description: "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
@@ -3054,21 +3054,21 @@ const OperationConfig = {
     "SHA0": {
         module: "Hashing",
         description: "SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "SHA1": {
         module: "Hashing",
         description: "The SHA (Secure Hash Algorithm) hash functions were designed by the NSA. SHA-1 is the most established of the existing SHA hash functions and it is used in a variety of security applications and protocols.<br><br>However, SHA-1's collision resistance has been weakening as new attacks are discovered or improved.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "SHA2": {
         module: "Hashing",
         description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><br><ul><li>SHA-512 operates on 64-bit words.</li><li>SHA-256 operates on 32-bit words.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li><li>SHA-512/224 and SHA-512/256 are truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.</li></ul>",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3081,7 +3081,7 @@ const OperationConfig = {
     "SHA3": {
         module: "Hashing",
         description: "The SHA-3 (Secure Hash Algorithm 3) hash functions were released by NIST on August 5, 2015. Although part of the same series of standards, SHA-3 is internally quite different from the MD5-like structure of SHA-1 and SHA-2.<br><br>SHA-3 is a subset of the broader cryptographic primitive family Keccak designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3094,7 +3094,7 @@ const OperationConfig = {
     "Keccak": {
         module: "Hashing",
         description: "The Keccak hash algorithm was designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún. It was selected as the winner of the SHA-3 design competition.<br><br>This version of the algorithm is Keccak[c=2d] and differs from the SHA-3 specification.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3107,7 +3107,7 @@ const OperationConfig = {
     "Shake": {
         module: "Hashing",
         description: "Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3126,7 +3126,7 @@ const OperationConfig = {
     "RIPEMD": {
         module: "Hashing",
         description: "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3139,14 +3139,14 @@ const OperationConfig = {
     "HAS-160": {
         module: "Hashing",
         description: "HAS-160 is a cryptographic hash function designed for use with the Korean KCDSA digital signature algorithm. It is derived from SHA-1, with assorted changes intended to increase its security. It produces a 160-bit output.<br><br>HAS-160 is used in the same way as SHA-1. First it divides input in blocks of 512 bits each and pads the final block. A digest function updates the intermediate hash value by processing the input blocks in turn.<br><br>The message digest algorithm consists of 80 rounds.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "Whirlpool": {
         module: "Hashing",
         description: "Whirlpool is a cryptographic hash function designed by Vincent Rijmen (co-creator of AES) and Paulo S. L. M. Barreto, who first described it in 2000.<br><br>Several variants exist:<ul><li>Whirlpool-0 is the original version released in 2000.</li><li>Whirlpool-T is the first revision, released in 2001, improving the generation of the s-box.</li><li>Wirlpool is the latest revision, released in 2003, fixing a flaw in the difusion matrix.</li></ul>",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3159,7 +3159,7 @@ const OperationConfig = {
     "Snefru": {
         module: "Hashing",
         description: "Snefru is a cryptographic hash function invented by Ralph Merkle in 1990 while working at Xerox PARC. The function supports 128-bit and 256-bit output. It was named after the Egyptian Pharaoh Sneferu, continuing the tradition of the Khufu and Khafre block ciphers.<br><br>The original design of Snefru was shown to be insecure by Eli Biham and Adi Shamir who were able to use differential cryptanalysis to find hash collisions. The design was then modified by increasing the number of iterations of the main pass of the algorithm from two to eight.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3177,7 +3177,7 @@ const OperationConfig = {
     "HMAC": {
         module: "Hashing",
         description: "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3244,7 +3244,7 @@ const OperationConfig = {
     "Generate all hashes": {
         module: "Hashing",
         description: "Generates all available hashes and checksums for the input.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
