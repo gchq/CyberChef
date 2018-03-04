@@ -495,15 +495,16 @@ const Utils = {
      * Converts an ArrayBuffer to a string.
      *
      * @param {ArrayBuffer} arrayBuffer
+     * @param {boolean} [utf8=true] - Whether to attempt to decode the buffer as UTF-8
      * @returns {string}
      *
      * @example
      * // returns "hello"
      * Utils.arrayBufferToStr(Uint8Array.from([104,101,108,108,111]).buffer);
      */
-    arrayBufferToStr: function(arrayBuffer) {
+    arrayBufferToStr: function(arrayBuffer, utf8=true) {
         const byteArray = Array.prototype.slice.call(new Uint8Array(arrayBuffer));
-        return Utils.byteArrayToUtf8(byteArray);
+        return utf8 ? Utils.byteArrayToUtf8(byteArray) : Utils.byteArrayToChars(byteArray);
     },
 
 

@@ -20,19 +20,22 @@ const Hash = {
      * Generic hash function.
      *
      * @param {string} name
-     * @param {string} input
-     * @para, {Object} [options={}]
+     * @param {ArrayBuffer} input
+     * @param {Object} [options={}]
      * @returns {string}
      */
     runHash: function(name, input, options={}) {
-        return CryptoApi.hash(name, input, options);
+        const msg = Utils.arrayBufferToStr(input, false),
+            hasher = CryptoApi.getHasher(name, options);
+        hasher.update(msg);
+        return CryptoApi.encoder.toHex(hasher.finalize());
     },
 
 
     /**
      * MD2 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -44,7 +47,7 @@ const Hash = {
     /**
      * MD4 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -56,7 +59,7 @@ const Hash = {
     /**
      * MD5 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -100,7 +103,7 @@ const Hash = {
     /**
      * SHA0 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -112,7 +115,7 @@ const Hash = {
     /**
      * SHA1 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -130,7 +133,7 @@ const Hash = {
     /**
      * SHA2 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -149,7 +152,7 @@ const Hash = {
     /**
      * SHA3 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -187,7 +190,7 @@ const Hash = {
     /**
      * Keccak operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -230,7 +233,7 @@ const Hash = {
     /**
      * Shake operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -266,7 +269,7 @@ const Hash = {
     /**
      * RIPEMD operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -279,7 +282,7 @@ const Hash = {
     /**
      * HAS-160 operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -297,7 +300,7 @@ const Hash = {
     /**
      * Whirlpool operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -321,7 +324,7 @@ const Hash = {
     /**
      * Snefru operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -363,14 +366,15 @@ const Hash = {
     /**
      * HMAC operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runHMAC: function (input, args) {
         const key = args[0],
-            hashFunc = args[1].toLowerCase();
-        let hasher = CryptoApi.getHasher(hashFunc);
+            hashFunc = args[1].toLowerCase(),
+            msg = Utils.arrayBufferToStr(input, false),
+            hasher = CryptoApi.getHasher(hashFunc);
 
         // Horrible shim to fix constructor bug. Reported in nf404/crypto-api#8
         hasher.reset = () => {
@@ -378,55 +382,60 @@ const Hash = {
             const tmp = new hasher.constructor();
             hasher.state = tmp.state;
         };
-        return CryptoApi.hmac(key, input, hasher);
+
+        const mac = CryptoApi.getHmac(CryptoApi.encoder.fromUtf(key), hasher);
+        mac.update(msg);
+        return CryptoApi.encoder.toHex(mac.finalize());
     },
 
 
     /**
      * Generate all hashes operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     runAll: function (input, args) {
-        let byteArray = Utils.strToByteArray(input),
-            output = "MD2:         " + Hash.runMD2(input, []) +
-                "\nMD4:         " + Hash.runMD4(input, []) +
-                "\nMD5:         " + Hash.runMD5(input, []) +
-                "\nMD6:         " + Hash.runMD6(input, []) +
-                "\nSHA0:        " + Hash.runSHA0(input, []) +
-                "\nSHA1:        " + Hash.runSHA1(input, []) +
-                "\nSHA2 224:    " + Hash.runSHA2(input, ["224"]) +
-                "\nSHA2 256:    " + Hash.runSHA2(input, ["256"]) +
-                "\nSHA2 384:    " + Hash.runSHA2(input, ["384"]) +
-                "\nSHA2 512:    " + Hash.runSHA2(input, ["512"]) +
-                "\nSHA3 224:    " + Hash.runSHA3(input, ["224"]) +
-                "\nSHA3 256:    " + Hash.runSHA3(input, ["256"]) +
-                "\nSHA3 384:    " + Hash.runSHA3(input, ["384"]) +
-                "\nSHA3 512:    " + Hash.runSHA3(input, ["512"]) +
-                "\nKeccak 224:  " + Hash.runKeccak(input, ["224"]) +
-                "\nKeccak 256:  " + Hash.runKeccak(input, ["256"]) +
-                "\nKeccak 384:  " + Hash.runKeccak(input, ["384"]) +
-                "\nKeccak 512:  " + Hash.runKeccak(input, ["512"]) +
-                "\nShake 128:   " + Hash.runShake(input, ["128", 256]) +
-                "\nShake 256:   " + Hash.runShake(input, ["256", 512]) +
-                "\nRIPEMD-128:  " + Hash.runRIPEMD(input, ["128"]) +
-                "\nRIPEMD-160:  " + Hash.runRIPEMD(input, ["160"]) +
-                "\nRIPEMD-256:  " + Hash.runRIPEMD(input, ["256"]) +
-                "\nRIPEMD-320:  " + Hash.runRIPEMD(input, ["320"]) +
-                "\nHAS-160:     " + Hash.runHAS(input, []) +
-                "\nWhirlpool-0: " + Hash.runWhirlpool(input, ["Whirlpool-0"]) +
-                "\nWhirlpool-T: " + Hash.runWhirlpool(input, ["Whirlpool-T"]) +
-                "\nWhirlpool:   " + Hash.runWhirlpool(input, ["Whirlpool"]) +
+        const arrayBuffer = input,
+            str = Utils.arrayBufferToStr(arrayBuffer, false),
+            byteArray = new Uint8Array(arrayBuffer),
+            output = "MD2:         " + Hash.runMD2(arrayBuffer, []) +
+                "\nMD4:         " + Hash.runMD4(arrayBuffer, []) +
+                "\nMD5:         " + Hash.runMD5(arrayBuffer, []) +
+                "\nMD6:         " + Hash.runMD6(str, []) +
+                "\nSHA0:        " + Hash.runSHA0(arrayBuffer, []) +
+                "\nSHA1:        " + Hash.runSHA1(arrayBuffer, []) +
+                "\nSHA2 224:    " + Hash.runSHA2(arrayBuffer, ["224"]) +
+                "\nSHA2 256:    " + Hash.runSHA2(arrayBuffer, ["256"]) +
+                "\nSHA2 384:    " + Hash.runSHA2(arrayBuffer, ["384"]) +
+                "\nSHA2 512:    " + Hash.runSHA2(arrayBuffer, ["512"]) +
+                "\nSHA3 224:    " + Hash.runSHA3(arrayBuffer, ["224"]) +
+                "\nSHA3 256:    " + Hash.runSHA3(arrayBuffer, ["256"]) +
+                "\nSHA3 384:    " + Hash.runSHA3(arrayBuffer, ["384"]) +
+                "\nSHA3 512:    " + Hash.runSHA3(arrayBuffer, ["512"]) +
+                "\nKeccak 224:  " + Hash.runKeccak(arrayBuffer, ["224"]) +
+                "\nKeccak 256:  " + Hash.runKeccak(arrayBuffer, ["256"]) +
+                "\nKeccak 384:  " + Hash.runKeccak(arrayBuffer, ["384"]) +
+                "\nKeccak 512:  " + Hash.runKeccak(arrayBuffer, ["512"]) +
+                "\nShake 128:   " + Hash.runShake(arrayBuffer, ["128", 256]) +
+                "\nShake 256:   " + Hash.runShake(arrayBuffer, ["256", 512]) +
+                "\nRIPEMD-128:  " + Hash.runRIPEMD(arrayBuffer, ["128"]) +
+                "\nRIPEMD-160:  " + Hash.runRIPEMD(arrayBuffer, ["160"]) +
+                "\nRIPEMD-256:  " + Hash.runRIPEMD(arrayBuffer, ["256"]) +
+                "\nRIPEMD-320:  " + Hash.runRIPEMD(arrayBuffer, ["320"]) +
+                "\nHAS-160:     " + Hash.runHAS(arrayBuffer, []) +
+                "\nWhirlpool-0: " + Hash.runWhirlpool(arrayBuffer, ["Whirlpool-0"]) +
+                "\nWhirlpool-T: " + Hash.runWhirlpool(arrayBuffer, ["Whirlpool-T"]) +
+                "\nWhirlpool:   " + Hash.runWhirlpool(arrayBuffer, ["Whirlpool"]) +
                 "\n\nChecksums:" +
                 "\nFletcher-8:  " + Checksum.runFletcher8(byteArray, []) +
                 "\nFletcher-16: " + Checksum.runFletcher16(byteArray, []) +
                 "\nFletcher-32: " + Checksum.runFletcher32(byteArray, []) +
                 "\nFletcher-64: " + Checksum.runFletcher64(byteArray, []) +
                 "\nAdler-32:    " + Checksum.runAdler32(byteArray, []) +
-                "\nCRC-16:      " + Checksum.runCRC16(input, []) +
-                "\nCRC-32:      " + Checksum.runCRC32(input, []);
+                "\nCRC-16:      " + Checksum.runCRC16(str, []) +
+                "\nCRC-32:      " + Checksum.runCRC32(str, []);
 
         return output;
     },
