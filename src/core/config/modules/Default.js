@@ -30,6 +30,7 @@ import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
 import UUID from "../../operations/UUID.js";
 import XKCD from "../../operations/XKCD.js";
+import SetOps from "../../operations/SetOperations.js";
 
 
 /**
@@ -164,6 +165,7 @@ OpModules.Default = {
     "Windows Filetime to UNIX Timestamp": Filetime.runFromFiletimeToUnix,
     "UNIX Timestamp to Windows Filetime": Filetime.runToFiletimeFromUnix,
     "XKCD Random Number":  XKCD.runRandomNumber,
+    "Set Operations": SetOps.runSetOperation.bind(SetOps),
 
 
     /*

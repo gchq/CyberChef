@@ -38,6 +38,7 @@ import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
+import SetOps from "../operations/SetOperations.js";
 
 
 /**
@@ -4018,6 +4019,29 @@ const OperationConfig = {
         inputType: "string",
         outputType: "number",
         args: []
+    },
+    "Set Operations": {
+        module: "Default",
+        description: "Performs set operations",
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Sample delimiter",
+                type: "binaryString",
+                value: SetOps.SAMPLE_DELIMITER
+            },
+            {
+                name: "Item delimiter",
+                type: "binaryString",
+                value: SetOps.ITEM_DELIMITER
+            },
+            {
+                name: "Operation",
+                type: "option",
+                value: SetOps.OPERATION
+            }
+        ]
     }
 };
 

@@ -331,6 +331,7 @@ const Categories = [
             "Extract EXIF",
             "Numberwang",
             "XKCD Random Number",
+            "Set Operations"
         ]
     },
     {
