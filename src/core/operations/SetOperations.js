@@ -53,8 +53,8 @@ class SetOps {
         }
 
         let result = {
-            Union: this.runUnion,
-            Intersection: this.runIntersect,
+            "Union": this.runUnion,
+            "Intersection": this.runIntersect,
             "Set Difference": this.runSetDifference,
             "Symmetric Difference": this.runSymmetricDifference,
             "Cartesian Product": this.runCartesianProduct,
@@ -62,7 +62,7 @@ class SetOps {
         }[operation]
             .apply(null, sets.map(s => s.split(itemDelimiter)));
 
-        // Formatting issues due to the nested characteristics of power set.
+            // Formatting issues due to the nested characteristics of power set.
         if (operation === "Power Set") {
             result = result.map(i => `${i}\n`).join("");
         } else {
@@ -155,12 +155,18 @@ class SetOps {
      */
     runPowerSet(delimiter) {
         return function(a) {
+
+            // empty array items getting picked up
+            a = a.filter(i => i.length);
+            if (!a.length) {
+                return [];
+            }
+
             /**
              * 
              * @param {*} dec 
              */
             const toBinary = (dec) => (dec >>> 0).toString(2);
-
             const result = new Set();
             const maxBinaryValue = parseInt(Number(a.map(i => "1").reduce((p, c) => p + c)), 2);
             const binaries = [...Array(maxBinaryValue + 1).keys()]
