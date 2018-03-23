@@ -2417,7 +2417,7 @@ const OperationConfig = {
     },
     "From UNIX Timestamp": {
         module: "Default",
-        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
+        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>Note that this operation supports various date formats including the US 'MM/DD/YYYY' format, but not the international 'DD/MM/YYYY' format. For dates in this format, use the 'Translate DateTime format' operation instead.",
         inputType: "number",
         outputType: "string",
         args: [
