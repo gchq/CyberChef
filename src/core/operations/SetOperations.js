@@ -70,7 +70,7 @@ class SetOps {
             "Set Difference": this.runSetDifference,
             "Symmetric Difference": this.runSymmetricDifference,
             "Cartesian Product": this.runCartesianProduct,
-            "Power Set": this.runPowerSet(itemDelimiter),
+            "Power Set": this.runPowerSet.bind(undefined, itemDelimiter),
         }[operation]
             .apply(this, sets.map(s => s.split(itemDelimiter)));
 
@@ -113,6 +113,7 @@ class SetOps {
 
     /**
      * Get the intersection of the two sets.
+     * 
      * @param {Object[]} a 
      * @param {Object[]} b
      * @returns {Object[]} 
@@ -125,6 +126,7 @@ class SetOps {
 
     /**
      * Get elements in set a that are not in set b
+     * 
      * @param {Object[]} a 
      * @param {Object[]} b 
      * @returns {Object[]}
@@ -137,6 +139,7 @@ class SetOps {
 
     /**
      * Get elements of each set that aren't in the other set.
+     * 
      * @param {Object[]} a 
      * @param {Object[]} b 
      * @return {Object[]}
@@ -147,6 +150,7 @@ class SetOps {
     }
 
     /**
+     * Return the cartesian product of the two inputted sets.
      * 
      * @param {Object[]} a 
      * @param {Object[]} b 
@@ -159,38 +163,39 @@ class SetOps {
     }
 
     /**
+     * Return the power set of the inputted set.
      * 
      * @param {Object[]} a
      * @returns {Object[]} 
      */
-    runPowerSet(delimiter) {
-        return function(a) {
+    runPowerSet(delimiter, a) {
+        // empty array items getting picked up
+        a = a.filter(i => i.length);
+        if (!a.length) {
+            return [];
+        }
 
-            // empty array items getting picked up
-            a = a.filter(i => i.length);
-            if (!a.length) {
-                return [];
-            }
+        /**
+         * Decimal to binary function
+         * @param {*} dec 
+         */
+        const toBinary = (dec) => (dec >>> 0).toString(2);
+        const result = new Set();
+        // Get the decimal number to make a binary as long as the input
+        const maxBinaryValue = parseInt(Number(a.map(i => "1").reduce((p, c) => p + c)), 2);
+        // Make an array of each binary number from 0 to maximum
+        const binaries = [...Array(maxBinaryValue + 1).keys()]
+            .map(toBinary)
+            .map(i => i.padStart(toBinary(maxBinaryValue).length, "0"));
 
-            /**
-             * 
-             * @param {*} dec 
-             */
-            const toBinary = (dec) => (dec >>> 0).toString(2);
-            const result = new Set();
-            const maxBinaryValue = parseInt(Number(a.map(i => "1").reduce((p, c) => p + c)), 2);
-            const binaries = [...Array(maxBinaryValue + 1).keys()]
-                .map(toBinary)
-                .map(i => i.padStart(toBinary(maxBinaryValue).length, "0"));
+        // XOR the input with each binary to get each unique permutation
+        binaries.forEach((binary) => {
+            const split = binary.split("");
+            result.add(a.filter((item, index) => split[index] === "1"));
+        });
 
-            binaries.forEach((binary) => {
-                const split = binary.split("");
-                result.add(a.filter((item, index) => split[index] === "1"));
-            });
-
-            // map for formatting & put in length order.
-            return [...result].map(r => r.join(delimiter)).sort((a, b) => a.length - b.length);
-        };
+        // map for formatting & put in length order.
+        return [...result].map(r => r.join(delimiter)).sort((a, b) => a.length - b.length);
     }
 }
 
