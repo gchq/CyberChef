@@ -33,7 +33,7 @@ import "./tests/operations/OTP.js";
 import "./tests/operations/Regex.js";
 import "./tests/operations/StrUtils.js";
 import "./tests/operations/SeqUtils.js";
-import "./tests/operations/SetOperations.js"
+import "./tests/operations/SetOperations.js";
 
 
 let allTestsPassing = true;

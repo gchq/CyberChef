@@ -1,8 +1,8 @@
 /**
  * Set Operations tests.
  *
- * @author d98762625 
- * 
+ * @author d98762625
+ *
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
@@ -99,12 +99,12 @@ TestRegister.addTests([
     },
     {
         name: "Set Operations: Intersection: sample delimiter",
-        input: "1-2-3-4-5\/3-4-5-6-7",
+        input: "1-2-3-4-5z3-4-5-6-7",
         expectedOutput: "3-4-5",
         recipeConfig: [
             {
                 op: "Set Operations",
-                args: ["\/", "-", "Intersection"],
+                args: ["z", "-", "Intersection"],
             },
         ],
     },
