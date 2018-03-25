@@ -21,6 +21,7 @@ import PublicKeyModule from "./PublicKey.js";
 import RegexModule from "./Regex.js";
 import ShellcodeModule from "./Shellcode.js";
 import URLModule from "./URL.js";
+import CSVModule from "./CSVParser.js"
 
 Object.assign(
     OpModules,
@@ -37,7 +38,8 @@ Object.assign(
     PublicKeyModule,
     RegexModule,
     ShellcodeModule,
-    URLModule
+    URLModule,
+	CSVModule
 );
 
 export default OpModules;
