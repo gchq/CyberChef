@@ -139,7 +139,7 @@ class SetOps {
      * Get elements of each set that aren't in the other set.
      * @param {Object[]} a 
      * @param {Object[]} b 
-     * @return {Object}
+     * @return {Object[]}
      */
     runSymmetricDifference(a, b) {
         return this.runSetDifference(a,b)
@@ -148,8 +148,9 @@ class SetOps {
 
     /**
      * 
-     * @param {*} a 
-     * @param {*} b 
+     * @param {Object[]} a 
+     * @param {Object[]} b 
+     * @returns {String[]}
      */
     runCartesianProduct(a, b) {
         return Array(Math.max(a.length, b.length))
@@ -159,7 +160,8 @@ class SetOps {
 
     /**
      * 
-     * @param {*} a 
+     * @param {Object[]} a
+     * @returns {Object[]} 
      */
     runPowerSet(delimiter) {
         return function(a) {
