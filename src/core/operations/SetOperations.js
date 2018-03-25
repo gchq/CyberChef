@@ -72,7 +72,7 @@ class SetOps {
             "Cartesian Product": this.runCartesianProduct,
             "Power Set": this.runPowerSet(itemDelimiter),
         }[operation]
-            .apply(null, sets.map(s => s.split(itemDelimiter)));
+            .apply(this, sets.map(s => s.split(itemDelimiter)));
 
             // Formatting issues due to the nested characteristics of power set.
         if (operation === "Power Set") {
@@ -142,18 +142,8 @@ class SetOps {
      * @return {Object}
      */
     runSymmetricDifference(a, b) {
-
-        /**
-         * One-way difference function, formatted for mapping.
-         * @param {Object[]} refArray 
-         */
-        const getDifference = (refArray) => (item) => {
-            return refArray.indexOf(item) === -1;
-        };
-
-        return a
-            .filter(getDifference(b))
-            .concat(b.filter(getDifference(a)));
+        return this.runSetDifference(a,b)
+            .concat(this.runSetDifference(b, a));
     }
 
     /**
