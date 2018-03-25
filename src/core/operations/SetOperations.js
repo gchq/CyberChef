@@ -1,11 +1,18 @@
 import Utils from "../Utils.js";
 
 /**
+ * Set operations.
  * 
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license APache-2.0
+ * 
+ * @namespace
  */
 class SetOps {
+
     /**
-     * 
+     * Set default options for operation
      */
     constructor() {
         this._sampleDelimiter = "\\n\\n";
@@ -14,21 +21,24 @@ class SetOps {
     }
 
     /**
-     * 
+     * Get operations array
+     * @returns {String[]}
      */
     get OPERATION() {
         return this._operation;
     }
 
     /**
-     * 
+     * Get sample delimiter
+     * @returns {String}
      */
     get SAMPLE_DELIMITER() {
         return this._sampleDelimiter;
     }
 
     /**
-     * 
+     * Get item delimiter
+     * @returns {String}
      */
     get ITEM_DELIMITER() {
         return this._itemDelimiter;
@@ -36,9 +46,11 @@ class SetOps {
 
 
     /**
+     * Run the configured set operation.
      * 
-     * @param {*} input 
-     * @param {*} args 
+     * @param {String} input 
+     * @param {String[]} args 
+     * @returns {html}
      */
     runSetOperation(input, args) {
         const [sampleDelim, itemDelimiter, operation] = args;
@@ -73,17 +85,19 @@ class SetOps {
     }
 
     /**
+     * Get the union of the two sets.
      * 
-     * @param {*} a 
-     * @param {*} a 
+     * @param {Object[]} a
+     * @param {Object[]} b
+     * @returns {Object[]}
      */
     runUnion(a, b) {
 
         const result = {};
 
         /**
-         * 
-         * @param {*} r 
+         * Only add non-existing items
+         * @param {Object} hash 
          */
         const addUnique = (hash) => (item) => {
             if (!hash[item]) {
@@ -98,9 +112,10 @@ class SetOps {
     }
 
     /**
-     * 
-     * @param {*} a 
-     * @param {*} b 
+     * Get the intersection of the two sets.
+     * @param {Object[]} a 
+     * @param {Object[]} b
+     * @returns {Object[]} 
      */
     runIntersect(a, b) {
         return a.filter((item) => {
@@ -109,9 +124,10 @@ class SetOps {
     }
 
     /**
-     * 
-     * @param {*} a 
-     * @param {*} b 
+     * Get elements in set a that are not in set b
+     * @param {Object[]} a 
+     * @param {Object[]} b 
+     * @returns {Object[]}
      */
     runSetDifference(a, b) {
         return a.filter((item) => {
@@ -120,14 +136,16 @@ class SetOps {
     }
 
     /**
-     * 
-     * @param {*} a 
-     * @param {*} b 
+     * Get elements of each set that aren't in the other set.
+     * @param {Object[]} a 
+     * @param {Object[]} b 
+     * @return {Object}
      */
     runSymmetricDifference(a, b) {
+
         /**
-         * 
-         * @param {*} refArray 
+         * One-way difference function, formatted for mapping.
+         * @param {Object[]} refArray 
          */
         const getDifference = (refArray) => (item) => {
             return refArray.indexOf(item) === -1;
