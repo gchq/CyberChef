@@ -2,11 +2,11 @@ import Utils from "../Utils.js";
 
 /**
  * Set operations.
- * 
+ *
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018
  * @license APache-2.0
- * 
+ *
  * @namespace
  */
 class SetOps {
@@ -47,9 +47,9 @@ class SetOps {
 
     /**
      * Run the configured set operation.
-     * 
-     * @param {String} input 
-     * @param {String[]} args 
+     *
+     * @param {String} input
+     * @param {String[]} args
      * @returns {html}
      */
     runSetOperation(input, args) {
@@ -59,7 +59,7 @@ class SetOps {
         if (!sets || (sets.length !== 2 && operation !== "Power Set") || (sets.length !== 1 && operation === "Power Set")) {
             return "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?";
         }
-        
+
         if (this._operation.indexOf(operation) === -1) {
             return "Invalid 'Operation' option.";
         }
@@ -86,7 +86,7 @@ class SetOps {
 
     /**
      * Get the union of the two sets.
-     * 
+     *
      * @param {Object[]} a
      * @param {Object[]} b
      * @returns {Object[]}
@@ -97,7 +97,7 @@ class SetOps {
 
         /**
          * Only add non-existing items
-         * @param {Object} hash 
+         * @param {Object} hash
          */
         const addUnique = (hash) => (item) => {
             if (!hash[item]) {
@@ -113,10 +113,10 @@ class SetOps {
 
     /**
      * Get the intersection of the two sets.
-     * 
-     * @param {Object[]} a 
+     *
+     * @param {Object[]} a
      * @param {Object[]} b
-     * @returns {Object[]} 
+     * @returns {Object[]}
      */
     runIntersect(a, b) {
         return a.filter((item) => {
@@ -126,9 +126,9 @@ class SetOps {
 
     /**
      * Get elements in set a that are not in set b
-     * 
-     * @param {Object[]} a 
-     * @param {Object[]} b 
+     *
+     * @param {Object[]} a
+     * @param {Object[]} b
      * @returns {Object[]}
      */
     runSetDifference(a, b) {
@@ -139,21 +139,21 @@ class SetOps {
 
     /**
      * Get elements of each set that aren't in the other set.
-     * 
-     * @param {Object[]} a 
-     * @param {Object[]} b 
+     *
+     * @param {Object[]} a
+     * @param {Object[]} b
      * @return {Object[]}
      */
     runSymmetricDifference(a, b) {
-        return this.runSetDifference(a,b)
+        return this.runSetDifference(a, b)
             .concat(this.runSetDifference(b, a));
     }
 
     /**
      * Return the cartesian product of the two inputted sets.
-     * 
-     * @param {Object[]} a 
-     * @param {Object[]} b 
+     *
+     * @param {Object[]} a
+     * @param {Object[]} b
      * @returns {String[]}
      */
     runCartesianProduct(a, b) {
@@ -164,9 +164,9 @@ class SetOps {
 
     /**
      * Return the power set of the inputted set.
-     * 
+     *
      * @param {Object[]} a
-     * @returns {Object[]} 
+     * @returns {Object[]}
      */
     runPowerSet(delimiter, a) {
         // empty array items getting picked up
@@ -177,7 +177,7 @@ class SetOps {
 
         /**
          * Decimal to binary function
-         * @param {*} dec 
+         * @param {*} dec
          */
         const toBinary = (dec) => (dec >>> 0).toString(2);
         const result = new Set();
