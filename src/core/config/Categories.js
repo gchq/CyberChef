@@ -331,8 +331,8 @@ const Categories = [
             "Extract EXIF",
             "Numberwang",
             "XKCD Random Number",
-			"Parse CSV to string",
-			"Parse string to CSV"
+            "Parse CSV to string",
+            "Parse string to CSV"
         ]
     },
     {

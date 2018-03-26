@@ -4020,37 +4020,37 @@ const OperationConfig = {
         outputType: "number",
         args: []
     },
-	"CSV To String": {
-		module: "CSVParser",
-		description: "Function used to parse CSV string to a regular string.",
-		inputType: "string", 
-		outputType: "string", 
-		args: [ 
-			{
-				name: "delimeter",
-				type: "string", 
-				value: ","
-			},
-			{
-				name: "quotes",
-				type: "string", 
-				value: '"'
-			}
-		]
-	},
-	"String to CSV": {
-		module: "CSVParser",
-		description: "Function used to parse a string array to a CSV string.",
-		inputType: "string", 
-		outputType: "string", 
-		args: [ 
-			{
-				name: "delimeter",
-				type: "string", 
-				value: ","
-			}
-		]
-	}
+    "CSV To String": {
+        module: "CSVParser",
+        description: "Function used to parse CSV string to a regular string.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "delimeter",
+                type: "string",
+                value: ","
+            },
+            {
+                name: "quotes",
+                type: "string",
+                value: '"'
+            }
+        ]
+    },
+    "String to CSV": {
+        module: "CSVParser",
+        description: "Function used to parse a string array to a CSV string.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "delimeter",
+                type: "string",
+                value: ","
+            }
+        ]
+    }
 };
 
 
