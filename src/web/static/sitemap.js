@@ -1,5 +1,5 @@
 import sm from "sitemap";
-import OperationConfig from "../../core/config/MetaConfig.js";
+import OperationConfig from "../../core/config/OperationConfig.json";
 
 
 /**

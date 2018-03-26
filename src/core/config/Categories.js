@@ -21,7 +21,7 @@ const Categories = [
     {
         name: "Favourites",
         ops: []
-    },
+    }/*,
     {
         name: "Data format",
         ops: [
@@ -354,7 +354,7 @@ const Categories = [
             "Return",
             "Comment"
         ]
-    },
+    },*/
 ];
 
 export default Categories;

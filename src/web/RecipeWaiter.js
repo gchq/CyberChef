@@ -1,6 +1,6 @@
 import HTMLOperation from "./HTMLOperation.js";
 import Sortable from "sortablejs";
-import Utils from "../core/Utils.js";
+import Utils from "../core/Utils";
 
 
 /**

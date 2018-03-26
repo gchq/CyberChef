@@ -1,5 +1,5 @@
 import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker.js";
-import Utils from "../core/Utils.js";
+import Utils from "../core/Utils";
 
 
 /**

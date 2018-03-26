@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const WebpackShellPlugin = require("webpack-shell-plugin");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -43,6 +44,9 @@ module.exports = {
             entryOnly: true
         }),
         new ExtractTextPlugin("styles.css"),
+        new WebpackShellPlugin({
+            onBuildStart: ["node --experimental-modules src/core/config/generateConfig.mjs"],
+        })
     ],
     resolve: {
         alias: {
@@ -52,13 +56,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.m?js$/,
                 exclude: /node_modules/,
                 loader: "babel-loader?compact=false"
-            },
-            {
-                test: /MetaConfig\.js$/,
-                loader: "val-loader"
             },
             {
                 test: /\.css$/,

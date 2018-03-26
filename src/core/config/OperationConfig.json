@@ -1,0 +1,141 @@
+{
+    "To Base64": {
+        "module": "Default",
+        "description": "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
+        "inputType": "ArrayBuffer",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Alphabet",
+                "type": "editableOption",
+                "value": [
+                    {
+                        "name": "Standard: A-Za-z0-9+/=",
+                        "value": "A-Za-z0-9+/="
+                    },
+                    {
+                        "name": "URL safe: A-Za-z0-9-_",
+                        "value": "A-Za-z0-9-_"
+                    },
+                    {
+                        "name": "Filename safe: A-Za-z0-9+-=",
+                        "value": "A-Za-z0-9+\\-="
+                    },
+                    {
+                        "name": "itoa64: ./0-9A-Za-z=",
+                        "value": "./0-9A-Za-z="
+                    },
+                    {
+                        "name": "XML: A-Za-z0-9_.",
+                        "value": "A-Za-z0-9_."
+                    },
+                    {
+                        "name": "y64: A-Za-z0-9._-",
+                        "value": "A-Za-z0-9._-"
+                    },
+                    {
+                        "name": "z64: 0-9a-zA-Z+/=",
+                        "value": "0-9a-zA-Z+/="
+                    },
+                    {
+                        "name": "Radix-64: 0-9A-Za-z+/=",
+                        "value": "0-9A-Za-z+/="
+                    },
+                    {
+                        "name": "Uuencoding: [space]-_",
+                        "value": " -_"
+                    },
+                    {
+                        "name": "Xxencoding: +-0-9A-Za-z",
+                        "value": "+\\-0-9A-Za-z"
+                    },
+                    {
+                        "name": "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r",
+                        "value": "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"
+                    },
+                    {
+                        "name": "ROT13: N-ZA-Mn-za-m0-9+/=",
+                        "value": "N-ZA-Mn-za-m0-9+/="
+                    },
+                    {
+                        "name": "UNIX crypt: ./0-9A-Za-z",
+                        "value": "./0-9A-Za-z"
+                    }
+                ]
+            }
+        ]
+    },
+    "From Base64": {
+        "module": "Default",
+        "description": "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
+        "inputType": "string",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Alphabet",
+                "type": "editableOption",
+                "value": [
+                    {
+                        "name": "Standard: A-Za-z0-9+/=",
+                        "value": "A-Za-z0-9+/="
+                    },
+                    {
+                        "name": "URL safe: A-Za-z0-9-_",
+                        "value": "A-Za-z0-9-_"
+                    },
+                    {
+                        "name": "Filename safe: A-Za-z0-9+-=",
+                        "value": "A-Za-z0-9+\\-="
+                    },
+                    {
+                        "name": "itoa64: ./0-9A-Za-z=",
+                        "value": "./0-9A-Za-z="
+                    },
+                    {
+                        "name": "XML: A-Za-z0-9_.",
+                        "value": "A-Za-z0-9_."
+                    },
+                    {
+                        "name": "y64: A-Za-z0-9._-",
+                        "value": "A-Za-z0-9._-"
+                    },
+                    {
+                        "name": "z64: 0-9a-zA-Z+/=",
+                        "value": "0-9a-zA-Z+/="
+                    },
+                    {
+                        "name": "Radix-64: 0-9A-Za-z+/=",
+                        "value": "0-9A-Za-z+/="
+                    },
+                    {
+                        "name": "Uuencoding: [space]-_",
+                        "value": " -_"
+                    },
+                    {
+                        "name": "Xxencoding: +-0-9A-Za-z",
+                        "value": "+\\-0-9A-Za-z"
+                    },
+                    {
+                        "name": "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r",
+                        "value": "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"
+                    },
+                    {
+                        "name": "ROT13: N-ZA-Mn-za-m0-9+/=",
+                        "value": "N-ZA-Mn-za-m0-9+/="
+                    },
+                    {
+                        "name": "UNIX crypt: ./0-9A-Za-z",
+                        "value": "./0-9A-Za-z"
+                    }
+                ]
+            },
+            {
+                "name": "Remove non-alphabet chars",
+                "type": "boolean",
+                "value": true
+            }
+        ]
+    }
+}

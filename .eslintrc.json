@@ -89,7 +89,6 @@
     "globals": {
         "$": false,
         "jQuery": false,
-        "moment": false,
         "log": false,
 
         "COMPILE_TIME": false,

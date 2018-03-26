@@ -1,4 +1,4 @@
-import Utils from "../core/Utils.js";
+import Utils from "../core/Utils";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -24,7 +24,7 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.operations    = operations;
     this.dfavourites   = defaultFavourites;
     this.doptions      = defaultOptions;
-    this.options       = Utils.extend({}, defaultOptions);
+    this.options       = Object.assign({}, defaultOptions);
 
     this.manager       = new Manager(this);
 
