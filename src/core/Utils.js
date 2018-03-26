@@ -1,4 +1,5 @@
 import utf8 from "utf8";
+import moment from "moment-timezone";
 
 
 /**
@@ -201,21 +202,34 @@ const Utils = {
      * Utils.parseEscapedChars("\\n");
      */
     parseEscapedChars: function(str) {
-        return str.replace(/(\\)?\\([nrtbf]|x[\da-fA-F]{2})/g, function(m, a, b) {
+        return str.replace(/(\\)?\\([bfnrtv0'"]|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\})/g, function(m, a, b) {
             if (a === "\\") return "\\"+b;
             switch (b[0]) {
-                case "n":
-                    return "\n";
-                case "r":
-                    return "\r";
-                case "t":
-                    return "\t";
+                case "0":
+                    return "\0";
                 case "b":
                     return "\b";
+                case "t":
+                    return "\t";
+                case "n":
+                    return "\n";
+                case "v":
+                    return "\v";
                 case "f":
                     return "\f";
+                case "r":
+                    return "\r";
+                case '"':
+                    return '"';
+                case "'":
+                    return "'";
                 case "x":
-                    return Utils.chr(parseInt(b.substr(1), 16));
+                    return String.fromCharCode(parseInt(b.substr(1), 16));
+                case "u":
+                    if (b[1] === "{")
+                        return String.fromCodePoint(parseInt(b.slice(2, -1), 16));
+                    else
+                        return String.fromCharCode(parseInt(b.substr(1), 16));
             }
         });
     },
@@ -322,14 +336,14 @@ const Utils = {
      * @returns {string}
      *
      * @example
-     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
-     * Utils.convertToByteArray("Привет", "utf8");
+     * // returns "ÐÑÐ¸Ð²ÐµÑ"
+     * Utils.convertToByteString("Привет", "utf8");
      *
-     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
-     * Utils.convertToByteArray("d097d0b4d180d0b0d0b2d181d182d0b2d183d0b9d182d0b5", "hex");
+     * // returns "ÐÐ´ÑÐ°Ð²ÑÑÐ²ÑÐ¹ÑÐµ"
+     * Utils.convertToByteString("d097d0b4d180d0b0d0b2d181d182d0b2d183d0b9d182d0b5", "hex");
      *
-     * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
-     * Utils.convertToByteArray("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
+     * // returns "ÐÐ´ÑÐ°Ð²ÑÑÐ²ÑÐ¹ÑÐµ"
+     * Utils.convertToByteString("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
      */
     convertToByteString: function(str, type) {
         switch (type.toLowerCase()) {

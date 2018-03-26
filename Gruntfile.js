@@ -131,7 +131,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         clean: {
-            dev: ["build/dev/*", "src/core/config/MetaConfig.js"],
+            dev: ["build/dev/*"],
             prod: ["build/prod/*", "src/core/config/MetaConfig.js"],
             test: ["build/test/*", "src/core/config/MetaConfig.js"],
             node: ["build/node/*", "src/core/config/MetaConfig.js"],

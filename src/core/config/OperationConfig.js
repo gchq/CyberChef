@@ -912,6 +912,34 @@ const OperationConfig = {
             }
         ]
     },
+    "Escape Unicode Characters": {
+        module: "Default",
+        description: "Converts characters to their unicode-escaped notations.<br><br>Supports the prefixes:<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>e.g. <code>σου</code> becomes <code>\\u03C3\\u03BF\\u03C5</code>",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Prefix",
+                type: "option",
+                value: Unicode.PREFIXES
+            },
+            {
+                name: "Encode all chars",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Padding",
+                type: "number",
+                value: 4
+            },
+            {
+                name: "Uppercase hex",
+                type: "boolean",
+                value: true
+            }
+        ]
+    },
     "From Quoted Printable": {
         module: "Default",
         description: "Converts QP-encoded text back to standard text.",
@@ -2417,7 +2445,7 @@ const OperationConfig = {
     },
     "From UNIX Timestamp": {
         module: "Default",
-        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>Note that this operation supports various date formats including the US 'MM/DD/YYYY' format, but not the international 'DD/MM/YYYY' format. For dates in this format, use the 'Translate DateTime format' operation instead.",
+        description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
         inputType: "number",
         outputType: "string",
         args: [
@@ -2432,7 +2460,7 @@ const OperationConfig = {
         module: "Default",
         description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
         inputType: "string",
-        outputType: "number",
+        outputType: "string",
         args: [
             {
                 name: "Units",
@@ -2443,6 +2471,11 @@ const OperationConfig = {
                 name: "Treat as UTC",
                 type: "boolean",
                 value: DateTime.TREAT_AS_UTC
+            },
+            {
+                name: "Show parsed datetime",
+                type: "boolean",
+                value: true
             }
         ]
     },
@@ -3554,14 +3587,40 @@ const OperationConfig = {
     },
     "Escape string": {
         module: "Default",
-        description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li></ul>",
+        description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>",
         inputType: "string",
         outputType: "string",
-        args: []
+        args: [
+            {
+                name: "Escape level",
+                type: "option",
+                value: StrUtils.ESCAPE_LEVEL
+            },
+            {
+                name: "Escape quote",
+                type: "option",
+                value: StrUtils.QUOTE_TYPES
+            },
+            {
+                name: "JSON compatible",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "ES6 compatible",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Uppercase hex",
+                type: "boolean",
+                value: false
+            }
+        ]
     },
     "Unescape string": {
         module: "Default",
-        description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li></ul>",
+        description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>",
         inputType: "string",
         outputType: "string",
         args: []
@@ -4018,7 +4077,88 @@ const OperationConfig = {
         inputType: "string",
         outputType: "number",
         args: []
-    }
+    },
+    "Bcrypt": {
+        module: "Hashing",
+        description: "bcrypt is a password hashing function designed by Niels Provos and David Mazières, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.<br><br>Enter the password in the input to generate its hash.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Rounds",
+                type: "number",
+                value: Hash.BCRYPT_ROUNDS
+            }
+        ]
+    },
+    "Bcrypt compare": {
+        module: "Hashing",
+        description: "Tests whether the input matches the given bcrypt hash. To test multiple possible passwords, use the 'Fork' operation.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Hash",
+                type: "string",
+                value: ""
+            }
+        ]
+    },
+    "Bcrypt parse": {
+        module: "Hashing",
+        description: "Parses a bcrypt hash to determine the number of rounds used, the salt, and the password hash.",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
+    "Scrypt": {
+        module: "Hashing",
+        description: "scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914.<br><br>Enter the password in the input to generate its hash.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Salt",
+                type: "toggleString",
+                value: "",
+                toggleValues: Hash.KEY_FORMAT
+            },
+            {
+                name: "Iterations (N)",
+                type: "number",
+                value: Hash.SCRYPT_ITERATIONS
+            },
+            {
+                name: "Memory factor (r)",
+                type: "number",
+                value: Hash.SCRYPT_MEM_FACTOR
+            },
+            {
+                name: "Parallelization factor (p)",
+                type: "number",
+                value: Hash.SCRYPT_PARALLEL_FACTOR
+            },
+            {
+                name: "Key length",
+                type: "number",
+                value: Hash.SCRYPT_KEY_LENGTH
+            },
+        ]
+    },
+    "BSON serialise": {
+        module: "BSON",
+        description: "BSON is a computer data interchange format used mainly as a data storage and network transfer format in the MongoDB database. It is a binary form for representing simple data structures, associative arrays (called objects or documents in MongoDB), and various data types of specific interest to MongoDB. The name 'BSON' is based on the term JSON and stands for 'Binary JSON'.<br><br>Input data should be valid JSON.",
+        inputType: "string",
+        outputType: "ArrayBuffer",
+        args: []
+    },
+    "BSON deserialise": {
+        module: "BSON",
+        description: "BSON is a computer data interchange format used mainly as a data storage and network transfer format in the MongoDB database. It is a binary form for representing simple data structures, associative arrays (called objects or documents in MongoDB), and various data types of specific interest to MongoDB. The name 'BSON' is based on the term JSON and stands for 'Binary JSON'.<br><br>Input data should be in a raw bytes format.",
+        inputType: "ArrayBuffer",
+        outputType: "string",
+        args: []
+    },
 };
 
 

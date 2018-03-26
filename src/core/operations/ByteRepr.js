@@ -148,6 +148,10 @@ const ByteRepr = {
             throw "Error: Base argument must be between 2 and 36";
         }
 
+        if (input.length === 0) {
+            return [];
+        }
+
         if (base !== 16 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
 
         // Split into groups of 2 if the whole string is concatenated and

@@ -1,3 +1,6 @@
+import moment from "moment-timezone";
+
+
 /**
  * Date and time operations.
  *
@@ -57,24 +60,29 @@ const DateTime = {
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {number}
+     * @returns {string}
      */
     runToUnixTimestamp: function(input, args) {
-        let units = args[0],
+        const units = args[0],
             treatAsUTC = args[1],
+            showDateTime = args[2],
             d = treatAsUTC ? moment.utc(input) : moment(input);
 
+        let result = "";
+
         if (units === "Seconds (s)") {
-            return d.unix();
+            result = d.unix();
         } else if (units === "Milliseconds (ms)") {
-            return d.valueOf();
+            result = d.valueOf();
         } else if (units === "Microseconds (μs)") {
-            return d.valueOf() * 1000;
+            result = d.valueOf() * 1000;
         } else if (units === "Nanoseconds (ns)") {
-            return d.valueOf() * 1000000;
+            result = d.valueOf() * 1000000;
         } else {
             throw "Unrecognised unit";
         }
+
+        return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
     },
 
 
