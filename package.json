@@ -76,6 +76,7 @@
     "bootstrap-switch": "^3.3.4",
     "crypto-api": "^0.8.0",
     "crypto-js": "^3.1.9-1",
+    "csv-string": "^3.1.2",
     "ctph.js": "0.0.5",
     "diff": "^3.4.0",
     "escodegen": "^1.9.1",

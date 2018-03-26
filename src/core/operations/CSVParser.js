@@ -22,7 +22,7 @@ const CSVParser = {
             if (detectedDelimeter !== args[0]) {
                 args[0] = detectedDelimeter;
             }
-                array = CSV.parse(input, args[0], args[1]);
+            array = CSV.parse(input, args[0], args[1]);
         } else {
             array = "The passed in data is not a csv string. Please pass in a csv string.";
         }
@@ -42,7 +42,7 @@ const CSVParser = {
             string = "The passed in data is not a string that can be converted to a CSV.";
         }
         return string;
-    }	
+    }
 };
 
 export default CSVParser;
