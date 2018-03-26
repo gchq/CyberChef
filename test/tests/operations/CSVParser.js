@@ -46,7 +46,7 @@ TestRegister.addTests([
 	{
         name: "Testing ||| parsed to CSV",
         input: "|||",
-        expectedOutput: "|""|""|""|""|",
+        expectedOutput: "|||||",
         recipeConfig: [
             {
                 op: "String to CSV",
