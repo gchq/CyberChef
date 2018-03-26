@@ -7,6 +7,7 @@
  */
 
 import OpModules from "./Default.js";
+import BSONModule from "./BSON.js";
 import CharEncModule from "./CharEnc.js";
 import CipherModule from "./Ciphers.js";
 import CodeModule from "./Code.js";
@@ -24,6 +25,7 @@ import URLModule from "./URL.js";
 
 Object.assign(
     OpModules,
+    BSONModule,
     CharEncModule,
     CipherModule,
     CodeModule,

@@ -483,12 +483,11 @@ const Code = {
 
 
     /**
-     * Converts to snake_case.
+     * To Snake Case operation.
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
-     *
      */
     runToSnakeCase(input, args) {
         const smart = args[0];
@@ -502,12 +501,11 @@ const Code = {
 
 
     /**
-     * Converts to camelCase.
+     * To Camel Case operation.
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
-     *
      */
     runToCamelCase(input, args) {
         const smart = args[0];
@@ -521,12 +519,11 @@ const Code = {
 
 
     /**
-     * Converts to kebab-case.
+     * To Kebab Case operation.
      *
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
-     *
      */
     runToKebabCase(input, args) {
         const smart = args[0];
@@ -537,6 +534,7 @@ const Code = {
             return kebabCase(input);
         }
     },
+
 };
 
 export default Code;

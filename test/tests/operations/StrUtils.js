@@ -218,13 +218,24 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "Escape String: quotes",
-        input: "Hello \"World\"! Escape 'these' quotes.",
-        expectedOutput: "Hello \\\"World\\\"! Escape \\'these\\' quotes.",
+        name: "Escape String: single quotes",
+        input: "Escape 'these' quotes.",
+        expectedOutput: "Escape \\'these\\' quotes.",
         recipeConfig: [
             {
                 "op": "Escape string",
-                "args": []
+                "args": ["Special chars", "Single", false, true, false]
+            }
+        ],
+    },
+    {
+        name: "Escape String: double quotes",
+        input: "Hello \"World\"!",
+        expectedOutput: "Hello \\\"World\\\"!",
+        recipeConfig: [
+            {
+                "op": "Escape string",
+                "args": ["Special chars", "Double", false, true, false]
             }
         ],
     },
@@ -235,7 +246,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Escape string",
-                "args": []
+                "args": ["Special chars", "Double", false, true, false]
             }
         ],
     },
@@ -254,6 +265,28 @@ TestRegister.addTests([
         name: "Unescape String: special characters",
         input: "Fizz \x26 buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
         expectedOutput: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
+        recipeConfig: [
+            {
+                "op": "Unescape string",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Escape String: complex",
+        input: "null\0backspace\btab\tnewline\nverticaltab\vformfeed\fcarriagereturn\rdoublequote\"singlequote'hex\xa9unicode\u2665codepoint\u{1D306}",
+        expectedOutput: "null\\0backspace\\btab\\tnewline\\nverticaltab\\x0bformfeed\\fcarriagereturn\\rdoublequote\"singlequote\\'hex\\xa9unicode\\u2665codepoint\\u{1d306}",
+        recipeConfig: [
+            {
+                "op": "Escape string",
+                "args": ["Special chars", "Single", false, true, false]
+            }
+        ],
+    },
+    {
+        name: "Unescape String: complex",
+        input: "null\\0backspace\\btab\\tnewline\\nverticaltab\\vformfeed\\fcarriagereturn\\rdoublequote\\\"singlequote\\'hex\\xa9unicode\\u2665codepoint\\u{1D306}",
+        expectedOutput: "null\0backspace\btab\tnewline\nverticaltab\vformfeed\fcarriagereturn\rdoublequote\"singlequote'hex\xa9unicode\u2665codepoint\u{1D306}",
         recipeConfig: [
             {
                 "op": "Unescape string",

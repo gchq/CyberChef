@@ -43,6 +43,7 @@ import XKCD from "../../operations/XKCD.js";
  *  - otp
  *  - crypto
  *  - bignumber.js
+ *  - jsesc
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2017
@@ -81,6 +82,7 @@ OpModules.Default = {
     "Strip HTML tags":      HTML.runStripTags,
     "Parse colour code":    HTML.runParseColourCode,
     "Unescape Unicode Characters": Unicode.runUnescape,
+    "Escape Unicode Characters": Unicode.runEscape,
     "To Quoted Printable":  QuotedPrintable.runTo,
     "From Quoted Printable": QuotedPrintable.runFrom,
     "Swap endianness":      Endian.runSwapEndianness,

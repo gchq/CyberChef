@@ -52,6 +52,7 @@ const Categories = [
             "From HTML Entity",
             "URL Encode",
             "URL Decode",
+            "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "To Quoted Printable",
             "From Quoted Printable",
@@ -99,6 +100,8 @@ const Categories = [
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "Bcrypt",
+            "Scrypt",
             "Pseudo-Random Number Generator",
         ]
     },
@@ -275,6 +278,10 @@ const Categories = [
             "Compare SSDEEP hashes",
             "Compare CTPH hashes",
             "HMAC",
+            "Bcrypt",
+            "Bcrypt compare",
+            "Bcrypt parse",
+            "Scrypt",
             "Fletcher-8 Checksum",
             "Fletcher-16 Checksum",
             "Fletcher-32 Checksum",
@@ -311,6 +318,8 @@ const Categories = [
             "To Snake case",
             "To Camel case",
             "To Kebab case",
+            "BSON serialise",
+            "BSON deserialise",
         ]
     },
     {

@@ -5,6 +5,8 @@ import * as SHA3 from "js-sha3";
 import Checksum from "./Checksum.js";
 import ctph from "ctph.js";
 import ssdeep from "ssdeep.js";
+import bcrypt from "bcryptjs";
+import scrypt from "scryptsy";
 
 
 /**
@@ -446,6 +448,127 @@ const Hash = {
         const mac = CryptoApi.getHmac(CryptoApi.encoder.fromUtf(key), hasher);
         mac.update(msg);
         return CryptoApi.encoder.toHex(mac.finalize());
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    BCRYPT_ROUNDS: 10,
+
+    /**
+     * Bcrypt operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runBcrypt: async function (input, args) {
+        const rounds = args[0];
+        const salt = await bcrypt.genSalt(rounds);
+
+        return await bcrypt.hash(input, salt, null, p => {
+            // Progress callback
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
+        });
+    },
+
+
+    /**
+     * Bcrypt compare operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runBcryptCompare: async function (input, args) {
+        const hash = args[0];
+
+        const match = await bcrypt.compare(input, hash, null, p => {
+            // Progress callback
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
+        });
+
+        return match ? "Match: " + input : "No match";
+    },
+
+
+    /**
+     * Bcrypt parse operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runBcryptParse: async function (input, args) {
+        try {
+            return `Rounds: ${bcrypt.getRounds(input)}
+Salt: ${bcrypt.getSalt(input)}
+Password hash: ${input.split(bcrypt.getSalt(input))[1]}
+Full hash: ${input}`;
+        } catch (err) {
+            return "Error: " + err.toString();
+        }
+    },
+
+
+    /**
+     * @constant
+     * @default
+     */
+    KEY_FORMAT: ["Hex", "Base64", "UTF8", "Latin1"],
+    /**
+     * @constant
+     * @default
+     */
+    SCRYPT_ITERATIONS: 16384,
+    /**
+     * @constant
+     * @default
+     */
+    SCRYPT_MEM_FACTOR: 8,
+    /**
+     * @constant
+     * @default
+     */
+    SCRYPT_PARALLEL_FACTOR: 1,
+    /**
+     * @constant
+     * @default
+     */
+    SCRYPT_KEY_LENGTH: 64,
+
+    /**
+     * Scrypt operation.
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    runScrypt: function (input, args) {
+        const salt = Utils.convertToByteString(args[0].string || "", args[0].option),
+            iterations = args[1],
+            memFactor = args[2],
+            parallelFactor = args[3],
+            keyLength = args[4];
+
+        try {
+            const data = scrypt(
+                input, salt, iterations, memFactor, parallelFactor, keyLength,
+                p => {
+                    // Progress callback
+                    if (ENVIRONMENT_IS_WORKER())
+                        self.sendStatusMessage(`Progress: ${p.percent.toFixed(0)}%`);
+                }
+            );
+
+            return data.toString("hex");
+        } catch (err) {
+            return "Error: " + err.toString();
+        }
     },
 
 

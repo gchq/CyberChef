@@ -78,7 +78,7 @@ const Hexdump = {
      */
     runFrom: function(input, args) {
         let output = [],
-            regex = /^\s*(?:[\dA-F]{4,16}:?)?\s*((?:[\dA-F]{2}\s){1,8}(?:\s|[\dA-F]{2}-)(?:[\dA-F]{2}\s){1,8}|(?:[\dA-F]{2}\s|[\dA-F]{4}\s)+)/igm,
+            regex = /^\s*(?:[\dA-F]{4,16}h?:?)?\s*((?:[\dA-F]{2}\s){1,8}(?:\s|[\dA-F]{2}-)(?:[\dA-F]{2}\s){1,8}|(?:[\dA-F]{2}\s|[\dA-F]{4}\s)+)/igm,
             block, line;
 
         while ((block = regex.exec(input))) {
