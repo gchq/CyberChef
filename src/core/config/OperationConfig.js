@@ -38,7 +38,6 @@ import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
-import CSVParser from "../operations/CSVParser.js";
 
 
 /**
