@@ -79,7 +79,7 @@ TestRegister.addTests([
 	{
         name: "Testing \n\n\n parsed to String",
         input: "\n\n\n",
-        expectedOutput: "[[""],[""],[""]]",
+        expectedOutput: "[[],[],[]]",
         recipeConfig: [
             {
                 op: "CSV to String",
@@ -90,7 +90,7 @@ TestRegister.addTests([
 	{
         name: "Testing 1,2,3,4,5 parsed to String",
         input: "1,2,3,4,5",
-        expectedOutput: "[['1,'2','3','4','5']]",
+        expectedOutput: "[[1,2,3,4,5]]",
         recipeConfig: [
             {
                 op: "CSV to String",
