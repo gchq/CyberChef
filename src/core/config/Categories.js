@@ -114,6 +114,11 @@ const Categories = [
             "Hex to PEM",
             "Hex to Object Identifier",
             "Object Identifier to Hex",
+            "Generate PGP Key Pair",
+            "PGP Encrypt",
+            "PGP Decrypt",
+            "PGP Encrypt and Sign",
+            "PGP Decrypt and Verify",
         ]
     },
     {

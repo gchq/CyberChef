@@ -1,58 +1,33 @@
-/*eslint camelcase: ["error", {properties: "never"}]*/
 import * as kbpgp from "kbpgp";
 import promisify from "es6-promisify";
 
-const ECC_SIZES = ["256", "384"];
-const RSA_SIZES = ["1024", "2048", "4096"];
-const KEY_SIZES = RSA_SIZES.concat(ECC_SIZES);
-const KEY_TYPES = ["RSA", "ECC"];
 
 /**
  * PGP operations.
  *
  * @author tlwr [toby@toby.codes]
  * @author Matt C [matt@artemisbot.uk]
- * @copyright Crown Copyright 2016
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
  * @license Apache-2.0
  *
  * @namespace
  */
 const PGP = {
-    KEY_SIZES: KEY_SIZES,
 
     /**
-     * Validate PGP Key Size
-     * 
-     * @private
-     * @param {string} keySize
-     * @returns {Integer}
+     * @constant
+     * @default
      */
-    _validateKeySize(keySize, keyType) {
-        if (KEY_SIZES.indexOf(keySize) < 0) {
-            throw `Invalid key size ${keySize}, must be in ${JSON.stringify(KEY_SIZES)}`;
-        }
+    KEY_TYPES: ["RSA-1024", "RSA-2048", "RSA-4096", "ECC-256", "ECC-384"],
 
-        if (keyType === "ecc") {
-            if (ECC_SIZES.indexOf(keySize) >= 0) {
-                return parseInt(keySize, 10);
-            } else {
-                throw `Invalid key size ${keySize}, must be in ${JSON.stringify(ECC_SIZES)} for ECC`;
-            }
-        } else {
-            if (RSA_SIZES.indexOf(keySize) >= 0) {
-                return parseInt(keySize, 10);
-            } else {
-                throw `Invalid key size ${keySize}, must be in ${JSON.stringify(RSA_SIZES)} for RSA`;
-            }
-        }
-    },
 
     /**
      * Get size of subkey
-     * 
+     *
      * @private
-     * @param {Integer} keySize
-     * @returns {Integer}
+     * @param {number} keySize
+     * @returns {number}
      */
     _getSubkeySize(keySize) {
         return {
@@ -65,29 +40,53 @@ const PGP = {
     },
 
 
-    KEY_TYPES: KEY_TYPES,
-
     /**
-     * Validate PGP Key Type
-     * 
+     * Progress callback
+     *
      * @private
-     * @param {string} keyType
-     * @returns {string}
      */
-    _validateKeyType(keyType) {
-        if (KEY_TYPES.indexOf(keyType) >= 0) return keyType.toLowerCase();
-        throw `Invalid key type ${keyType}, must be in ${JSON.stringify(KEY_TYPES)}`;
-    },
+    _ASP: new kbpgp.ASP({
+        "progress_hook": info => {
+            let msg = "";
+
+            switch (info.what) {
+                case "guess":
+                    msg = "Guessing a prime";
+                    break;
+                case "fermat":
+                    msg = "Factoring prime using Fermat's factorization method";
+                    break;
+                case "mr":
+                    msg = "Performing Miller-Rabin primality test";
+                    break;
+                case "passed_mr":
+                    msg = "Passed Miller-Rabin primality test";
+                    break;
+                case "failed_mr":
+                    msg = "Failed Miller-Rabin primality test";
+                    break;
+                case "found":
+                    msg = "Prime found";
+                    break;
+                default:
+                    msg = `Stage: ${info.what}`;
+            }
+
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage(msg);
+        }
+    }),
+
 
     /**
      * Import private key and unlock if necessary
-     * 
+     *
      * @private
      * @param {string} privateKey
      * @param {string} [passphrase]
      * @returns {Object}
      */
-    async _importPrivateKey (privateKey, passphrase) {
+    async _importPrivateKey(privateKey, passphrase) {
         try {
             const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
                 armored: privateKey,
@@ -107,9 +106,10 @@ const PGP = {
         }
     },
 
+
     /**
      * Import public key
-     * 
+     *
      * @private
      * @param {string} publicKey
      * @returns {Object}
@@ -125,6 +125,7 @@ const PGP = {
         }
     },
 
+
     /**
      * Generate PGP Key Pair operation.
      *
@@ -133,43 +134,41 @@ const PGP = {
      * @returns {string}
      */
     runGenerateKeyPair(input, args) {
-        let keyType  = args[0],
-            keySize  = args[1],
-            password = args[2],
-            name     = args[3],
-            email    = args[4];
+        let [keyType, keySize] = args[0].split("-"),
+            password = args[1],
+            name = args[2],
+            email = args[3],
+            userIdentifier = "";
 
-        keyType = PGP._validateKeyType(keyType);
-        keySize = PGP._validateKeySize(keySize, keyType);
-
-        let userIdentifier = "";
         if (name) userIdentifier += name;
         if (email) userIdentifier += ` <${email}>`;
 
         let flags = kbpgp.const.openpgp.certify_keys;
-        flags = flags | kbpgp.const.openpgp.sign_data;
-        flags = flags | kbpgp.const.openpgp.auth;
-        flags = flags | kbpgp.const.openpgp.encrypt_comm;
-        flags = flags | kbpgp.const.openpgp.encrypt_storage;
+        flags |= kbpgp.const.openpgp.sign_data;
+        flags |= kbpgp.const.openpgp.auth;
+        flags |= kbpgp.const.openpgp.encrypt_comm;
+        flags |= kbpgp.const.openpgp.encrypt_storage;
 
         let keyGenerationOptions = {
             userid: userIdentifier,
             ecc: keyType === "ecc",
             primary: {
-                nbits: keySize,
-                flags: flags,
-                expire_in: 0
+                "nbits": keySize,
+                "flags": flags,
+                "expire_in": 0
             },
             subkeys: [{
-                nbits: PGP._getSubkeySize(keySize),
-                flags: kbpgp.const.openpgp.sign_data,
-                expire_in: 86400 * 365 * 8
+                "nbits": PGP._getSubkeySize(keySize),
+                "flags": kbpgp.const.openpgp.sign_data,
+                "expire_in": 86400 * 365 * 8
             }, {
-                nbits: PGP._getSubkeySize(keySize),
-                flags: kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
-                expire_in: 86400 * 365 * 2
+                "nbits": PGP._getSubkeySize(keySize),
+                "flags": kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
+                "expire_in": 86400 * 365 * 2
             }],
+            asp: PGP._ASP
         };
+
         return new Promise(async (resolve, reject) => {
             try {
                 const unsignedKey = await promisify(kbpgp.KeyManager.generate)(keyGenerationOptions);
@@ -179,12 +178,13 @@ const PGP = {
                 if (password) privateKeyExportOptions.passphrase = password;
                 const privateKey = await promisify(signedKey.export_pgp_private, signedKey)(privateKeyExportOptions);
                 const publicKey = await promisify(signedKey.export_pgp_public, signedKey)({});
-                resolve(privateKey + "\n" + publicKey);
+                resolve(privateKey + "\n" + publicKey.trim());
             } catch (err) {
-                reject(`Error from kbpgp whilst generating key pair: ${err}`);
+                reject(`Error whilst generating key pair: ${err}`);
             }
         });
     },
+
 
     /**
      * PGP Encrypt operation.
@@ -195,9 +195,11 @@ const PGP = {
      */
     async runEncrypt(input, args) {
         let plaintextMessage = input,
-            plainPubKey      = args[0];
+            plainPubKey = args[0],
+            key,
+            encryptedMessage;
 
-        let key, encryptedMessage;
+        if (!plainPubKey) return "Enter the public key of the recipient.";
 
         try {
             key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
@@ -209,8 +211,9 @@ const PGP = {
 
         try {
             encryptedMessage = await promisify(kbpgp.box)({
-                msg:         plaintextMessage,
-                encrypt_for: key,
+                "msg": plaintextMessage,
+                "encrypt_for": key,
+                "asp": PGP._ASP
             });
         } catch (err) {
             throw `Couldn't encrypt message with provided public key: ${err}`;
@@ -218,6 +221,7 @@ const PGP = {
 
         return encryptedMessage.toString();
     },
+
 
     /**
      * PGP Decrypt operation.
@@ -228,11 +232,13 @@ const PGP = {
      */
     async runDecrypt(input, args) {
         let encryptedMessage = input,
-            privateKey  = args[0],
+            privateKey = args[0],
             passphrase = args[1],
-            keyring          = new kbpgp.keyring.KeyRing();
+            keyring = new kbpgp.keyring.KeyRing(),
+            plaintextMessage;
 
-        let plaintextMessage;
+        if (!privateKey) return "Enter the private key of the recipient.";
+
         const key = await PGP._importPrivateKey(privateKey, passphrase);
         keyring.add_key_manager(key);
 
@@ -240,6 +246,7 @@ const PGP = {
             plaintextMessage = await promisify(kbpgp.unbox)({
                 armored: encryptedMessage,
                 keyfetch: keyring,
+                asp: PGP._ASP
             });
         } catch (err) {
             throw `Couldn't decrypt message with provided private key: ${err}`;
@@ -247,6 +254,7 @@ const PGP = {
 
         return plaintextMessage.toString();
     },
+
 
     /**
      * PGP Sign Message operation.
@@ -257,19 +265,22 @@ const PGP = {
      */
     async runSign(input, args) {
         let message = input,
-            privateKey  = args[0],
+            privateKey = args[0],
             passphrase = args[1],
-            publicKey = args[2];
+            publicKey = args[2],
+            signedMessage;
 
-        let signedMessage;
+        if (!privateKey) return "Enter the private key of the signer.";
+        if (!publicKey) return "Enter the public key of the recipient.";
         const privKey = await PGP._importPrivateKey(privateKey, passphrase);
         const pubKey = await PGP._importPublicKey(publicKey);
 
         try {
             signedMessage = await promisify(kbpgp.box)({
-                msg: message,
-                encrypt_for: pubKey,
-                sign_with: privKey
+                "msg": message,
+                "encrypt_for": pubKey,
+                "sign_with": privKey,
+                "asp": PGP._ASP
             });
         } catch (err) {
             throw `Couldn't sign message: ${err}`;
@@ -277,6 +288,7 @@ const PGP = {
 
         return signedMessage;
     },
+
 
     /**
      * PGP Verify Message operation.
@@ -287,12 +299,14 @@ const PGP = {
      */
     async runVerify(input, args) {
         let signedMessage = input,
-            publicKey  = args[0],
+            publicKey = args[0],
             privateKey = args[1],
             passphrase = args[2],
-            keyring    = new kbpgp.keyring.KeyRing();
+            keyring = new kbpgp.keyring.KeyRing(),
+            unboxedLiterals;
 
-        let unboxedLiterals;
+        if (!publicKey) return "Enter the public key of the signer.";
+        if (!privateKey) return "Enter the private key of the recipient.";
         const privKey = await PGP._importPrivateKey(privateKey, passphrase);
         const pubKey = await PGP._importPublicKey(publicKey);
         keyring.add_key_manager(privKey);
@@ -300,8 +314,9 @@ const PGP = {
 
         try {
             unboxedLiterals = await promisify(kbpgp.unbox)({
-                armored:  signedMessage,
-                keyfetch: keyring
+                armored: signedMessage,
+                keyfetch: keyring,
+                asp: PGP._ASP
             });
             const ds = unboxedLiterals[0].get_data_signer();
             if (ds) {
@@ -328,10 +343,14 @@ const PGP = {
                     ].join("\n");
                     text += unboxedLiterals.toString();
                     return text.trim();
+                } else {
+                    return "Could not identify a key manager.";
                 }
+            } else {
+                return "The data does not appear to be signed.";
             }
         } catch (err) {
-            throw `Couldn't verify message: ${err}`;
+            return `Couldn't verify message: ${err}`;
         }
     },
 };

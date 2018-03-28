@@ -4162,8 +4162,7 @@ const OperationConfig = {
     },
     "Generate PGP Key Pair": {
         module: "PGP",
-        manualBake: true,
-        description: "",
+        description: "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4171,11 +4170,6 @@ const OperationConfig = {
                 name: "Key type",
                 type: "option",
                 value: PGP.KEY_TYPES
-            },
-            {
-                name: "Key size",
-                type: "option",
-                value: PGP.KEY_SIZES
             },
             {
                 name: "Password (optional)",
@@ -4196,7 +4190,6 @@ const OperationConfig = {
     },
     "PGP Encrypt": {
         module: "PGP",
-        manualBake: true,
         description: [
             "Input: the message you want to encrypt.",
             "<br><br>",
@@ -4204,7 +4197,7 @@ const OperationConfig = {
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
-            "This function relies on kbpgp.js for the implementation of PGP.",
+            "This function uses the Keybase implementation of PGP.",
         ].join("\n"),
         inputType: "string",
         outputType: "string",
@@ -4218,7 +4211,6 @@ const OperationConfig = {
     },
     "PGP Decrypt": {
         module: "PGP",
-        manualBake: true,
         description: [
             "Input: the ASCII-armoured PGP message you want to decrypt.",
             "<br><br>",
@@ -4227,7 +4219,7 @@ const OperationConfig = {
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
-            "This function relies on kbpgp.js for the implementation of PGP.",
+            "This function uses the Keybase implementation of PGP.",
         ].join("\n"),
         inputType: "string",
         outputType: "string",
@@ -4244,9 +4236,8 @@ const OperationConfig = {
             },
         ]
     },
-    "PGP Sign": {
+    "PGP Encrypt and Sign": {
         module: "PGP",
-        manualBake: true,
         description: [
             "Input: the cleartext you want to sign.",
             "<br><br>",
@@ -4257,7 +4248,7 @@ const OperationConfig = {
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
-            "This function relies on kbpgp.js for the implementation of PGP.",
+            "This function uses the Keybase implementation of PGP.",
         ].join("\n"),
         inputType: "string",
         outputType: "string",
@@ -4279,7 +4270,7 @@ const OperationConfig = {
             },
         ]
     },
-    "PGP Verify": {
+    "PGP Decrypt and Verify": {
         module: "PGP",
         description: [
             "Input: the ASCII-armoured encrypted PGP message you want to verify.",
@@ -4291,7 +4282,7 @@ const OperationConfig = {
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
-            "This function relies on kbpgp.js for the implementation of PGP.",
+            "This function uses the Keybase implementation of PGP.",
         ].join("\n"),
         inputType: "string",
         outputType: "string",

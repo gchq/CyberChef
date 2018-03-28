@@ -32,6 +32,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.3",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.10",
     "eslint": "^4.18.1",
@@ -40,10 +41,6 @@
     "file-loader": "^1.1.10",
     "grunt": ">=1.0.2",
     "grunt-accessibility": "~6.0.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
     "grunt-chmod": "~1.1.1",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "~1.1.0",
