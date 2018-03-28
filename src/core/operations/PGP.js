@@ -1,5 +1,5 @@
 import * as kbpgp from "kbpgp";
-import promisify from "es6-promisify";
+import {promisify} from "es6-promisify";
 
 
 /**
@@ -93,7 +93,7 @@ const PGP = {
             });
             if (key.is_pgp_locked() && passphrase) {
                 if (passphrase) {
-                    await promisify(key.unlock_pgp, key)({
+                    await promisify(key.unlock_pgp.bind(key))({
                         passphrase
                     });
                 } else if (!passphrase) {
@@ -172,12 +172,12 @@ const PGP = {
         return new Promise(async (resolve, reject) => {
             try {
                 const unsignedKey = await promisify(kbpgp.KeyManager.generate)(keyGenerationOptions);
-                await promisify(unsignedKey.sign, unsignedKey)({});
+                await promisify(unsignedKey.sign.bind(unsignedKey))({});
                 let signedKey = unsignedKey;
                 let privateKeyExportOptions = {};
                 if (password) privateKeyExportOptions.passphrase = password;
-                const privateKey = await promisify(signedKey.export_pgp_private, signedKey)(privateKeyExportOptions);
-                const publicKey = await promisify(signedKey.export_pgp_public, signedKey)({});
+                const privateKey = await promisify(signedKey.export_pgp_private.bind(signedKey))(privateKeyExportOptions);
+                const publicKey = await promisify(signedKey.export_pgp_public.bind(signedKey))({});
                 resolve(privateKey + "\n" + publicKey.trim());
             } catch (err) {
                 reject(`Error whilst generating key pair: ${err}`);
