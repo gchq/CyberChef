@@ -28,6 +28,7 @@ import MAC from "../operations/MAC.js";
 import MorseCode from "../operations/MorseCode.js";
 import NetBIOS from "../operations/NetBIOS.js";
 import PHP from "../operations/PHP.js";
+import PGP from "../operations/PGP.js";
 import PublicKey from "../operations/PublicKey.js";
 import Punycode from "../operations/Punycode.js";
 import Regex from "../operations/Regex.js";
@@ -4158,6 +4159,150 @@ const OperationConfig = {
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
+    },
+    "Generate PGP Key Pair": {
+        module: "PGP",
+        description: "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key type",
+                type: "option",
+                value: PGP.KEY_TYPES
+            },
+            {
+                name: "Password (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Name (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Email (optional)",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Encrypt": {
+        module: "PGP",
+        description: [
+            "Input: the message you want to encrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured PGP message you want to decrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the recipient, ",
+            "(and the private key password if necessary).",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Encrypt and Sign": {
+        module: "PGP",
+        description: [
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)",
+            "and the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "This operation uses PGP to produce an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of signer",
+                type: "text",
+                value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt and Verify": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured encrypted PGP message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the signer, ",
+            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
+            "<br><br>",
+            "This operation uses PGP to decrypt and verify an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of signer",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key password",
+                type: "string",
+                value: "",
+            },
+        ]
     },
 };
 
