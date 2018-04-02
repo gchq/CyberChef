@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {toHex, fromHex} from "../lib/Hex";
 
 
 /**
@@ -21,37 +22,7 @@ const ByteRepr = {
      * @constant
      * @default
      */
-    HEX_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"],
-    /**
-     * @constant
-     * @default
-     */
     BIN_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "None"],
-
-    /**
-     * To Hex operation.
-     *
-     * @param {ArrayBuffer} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runToHex: function(input, args) {
-        const delim = Utils.charRep(args[0] || "Space");
-        return Utils.toHex(new Uint8Array(input), delim, 2);
-    },
-
-
-    /**
-     * From Hex operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {byteArray}
-     */
-    runFromHex: function(input, args) {
-        const delim = args[0] || "Space";
-        return Utils.fromHex(input, delim, 2);
-    },
 
 
     /**
@@ -168,59 +139,6 @@ const ByteRepr = {
             latin1 += Utils.chr(parseInt(bites[i], base));
         }
         return Utils.strToByteArray(latin1);
-    },
-
-
-    /**
-     * Highlight to hex
-     *
-     * @param {Object[]} pos
-     * @param {number} pos[].start
-     * @param {number} pos[].end
-     * @param {Object[]} args
-     * @returns {Object[]} pos
-     */
-    highlightTo: function(pos, args) {
-        let delim = Utils.charRep(args[0] || "Space"),
-            len = delim === "\r\n" ? 1 : delim.length;
-
-        pos[0].start = pos[0].start * (2 + len);
-        pos[0].end = pos[0].end * (2 + len) - len;
-
-        // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
-        if (delim === "0x" || delim === "\\x") {
-            pos[0].start += 2;
-            pos[0].end += 2;
-        }
-        return pos;
-    },
-
-
-    /**
-     * Highlight from hex
-     *
-     * @param {Object[]} pos
-     * @param {number} pos[].start
-     * @param {number} pos[].end
-     * @param {Object[]} args
-     * @returns {Object[]} pos
-     */
-    highlightFrom: function(pos, args) {
-        let delim = Utils.charRep(args[0] || "Space"),
-            len = delim === "\r\n" ? 1 : delim.length,
-            width = len + 2;
-
-        // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
-        if (delim === "0x" || delim === "\\x") {
-            if (pos[0].start > 1) pos[0].start -= 2;
-            else pos[0].start = 0;
-            if (pos[0].end > 1) pos[0].end -= 2;
-            else pos[0].end = 0;
-        }
-
-        pos[0].start = pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
-        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / width);
-        return pos;
     },
 
 
@@ -357,7 +275,7 @@ const ByteRepr = {
         const convert = args[0];
         const spaces = args[1];
         if (convert === "All chars") {
-            let result = "|" + Utils.toHex(input) + "|";
+            let result = "|" + toHex(input) + "|";
             if (!spaces) result = result.replace(/ /g, "");
             return result;
         }
@@ -373,7 +291,7 @@ const ByteRepr = {
                     output += "|";
                     inHex = true;
                 } else if (spaces) output += " ";
-                output += Utils.toHex([b]);
+                output += toHex([b]);
             } else {
                 if (inHex) {
                     output += "|";
@@ -403,7 +321,7 @@ const ByteRepr = {
                 output.push(Utils.ord(input[i++]));
 
             // Add match
-            const bytes = Utils.fromHex(m[1]);
+            const bytes = fromHex(m[1]);
             if (bytes) {
                 for (let a = 0; a < bytes.length;)
                     output.push(bytes[a++]);

@@ -1,5 +1,6 @@
 import Utils from "../Utils.js";
 import {fromBase64} from "../lib/Base64";
+import {toHex, fromHex} from "../lib/Hex";
 import * as r from "jsrsasign";
 
 
@@ -44,10 +45,10 @@ const PublicKey = {
                 cert.readCertPEM(input);
                 break;
             case "Base64":
-                cert.readCertHex(Utils.toHex(fromBase64(input, null, "byteArray"), ""));
+                cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
                 break;
             case "Raw":
-                cert.readCertHex(Utils.toHex(Utils.strToByteArray(input), ""));
+                cert.readCertHex(toHex(Utils.strToByteArray(input), ""));
                 break;
             default:
                 throw "Undefined input format";
@@ -305,7 +306,7 @@ ${extensions}`;
      * @returns {string}
      */
     _formatByteStr: function(byteStr, length, indent) {
-        byteStr = Utils.toHex(Utils.fromHex(byteStr), ":");
+        byteStr = toHex(fromHex(byteStr), ":");
         length = length * 3;
         let output = "";
 

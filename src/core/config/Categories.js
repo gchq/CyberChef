@@ -27,8 +27,8 @@ const Categories = [
         ops: [
     //         "To Hexdump",
     //         "From Hexdump",
-    //         "To Hex",
-    //         "From Hex",
+            "To Hex",
+            "From Hex",
     //         "To Charcode",
     //         "From Charcode",
     //         "To Decimal",

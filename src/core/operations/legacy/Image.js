@@ -3,6 +3,7 @@ import removeEXIF from "../vendor/remove-exif.js";
 import Utils from "../Utils.js";
 import FileType from "./FileType.js";
 import {fromBase64, toBase64} from "../lib/Base64";
+import {fromHex} from "../lib/Hex";
 
 
 /**
@@ -92,7 +93,7 @@ const Image = {
         // Convert input to raw bytes
         switch (inputFormat) {
             case "Hex":
-                input = Utils.fromHex(input);
+                input = fromHex(input);
                 break;
             case "Base64":
                 // Don't trust the Base64 entered by the user.

@@ -1,5 +1,6 @@
 import Utils from "../Utils.js";
 import {toBase64} from "../lib/Base64";
+import {toHexFast} from "../lib/Hex";
 import CryptoJS from "crypto-js";
 import forge from "imports-loader?jQuery=>null!node-forge/dist/forge.min.js";
 import {blowfish as Blowfish} from "sladex-blowfish";
@@ -403,7 +404,7 @@ DES uses a key length of 8 bytes (64 bits).`;
             cipherMode: Cipher._BLOWFISH_MODE_LOOKUP[mode]
         });
 
-        return outputType === "Hex" ? Utils.toHexFast(Utils.strToByteArray(result)) : result;
+        return outputType === "Hex" ? toHexFast(Utils.strToByteArray(result)) : result;
     },
 
 

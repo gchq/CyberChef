@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {toHex, fromHex} from "../lib/Hex";
 import Checksum from "./Checksum.js";
 import {BigInteger} from "jsbn";
 
@@ -283,7 +284,7 @@ const IP = {
                     baIp.push(decimal & 255);
                     break;
                 case "Hex":
-                    baIp = Utils.fromHex(lines[i]);
+                    baIp = fromHex(lines[i]);
                     break;
                 default:
                     throw "Unsupported input IP format";
@@ -445,7 +446,7 @@ const IP = {
             output;
 
         if (format === "Hex") {
-            input = Utils.fromHex(input);
+            input = fromHex(input);
         } else if (format === "Raw") {
             input = Utils.strToByteArray(input);
         } else {
@@ -516,7 +517,7 @@ const IP = {
             "<tr><td>Destination IP address</td><td>" + IP._ipv4ToStr(dstIP) + "</td></tr>";
 
         if (ihl > 5) {
-            output += "<tr><td>Options</td><td>" + Utils.toHex(options) + "</td></tr>";
+            output += "<tr><td>Options</td><td>" + toHex(options) + "</td></tr>";
         }
 
         return output + "</table>";

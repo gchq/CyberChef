@@ -5,6 +5,7 @@
  */
 
 import Utils from "./Utils";
+import {fromHex} from "./lib/Hex";
 
 /**
  * The arguments to operations.
@@ -88,7 +89,7 @@ class Ingredient {
             case "byteArray":
                 if (typeof data == "string") {
                     data = data.replace(/\s+/g, "");
-                    return Utils.fromHex(data);
+                    return fromHex(data);
                 } else {
                     return data;
                 }

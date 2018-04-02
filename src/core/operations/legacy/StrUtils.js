@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {fromHex} from "../lib/Hex";
 import jsesc from "jsesc";
 
 
@@ -380,8 +381,8 @@ const StrUtils = {
         }
 
         if (inputType === "Hex") {
-            samples[0] = Utils.fromHex(samples[0]);
-            samples[1] = Utils.fromHex(samples[1]);
+            samples[0] = fromHex(samples[0]);
+            samples[1] = fromHex(samples[1]);
         } else {
             samples[0] = Utils.strToByteArray(samples[0]);
             samples[1] = Utils.strToByteArray(samples[1]);

@@ -90,6 +90,30 @@
             }
         ]
     },
+    "From Hex": {
+        "module": "Default",
+        "description": "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        "inputType": "string",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Delimiter",
+                "type": "option",
+                "value": [
+                    "Space",
+                    "Comma",
+                    "Semi-colon",
+                    "Colon",
+                    "Line feed",
+                    "CRLF",
+                    "0x",
+                    "\\x",
+                    "None"
+                ]
+            }
+        ]
+    },
     "Show Base64 offsets": {
         "module": "Default",
         "description": "When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block.<br><br>This operation shows all possible offsets for a given string so that each possible encoding can be considered.",
@@ -186,6 +210,30 @@
                         "name": "UNIX crypt: ./0-9A-Za-z",
                         "value": "./0-9A-Za-z"
                     }
+                ]
+            }
+        ]
+    },
+    "To Hex": {
+        "module": "Default",
+        "description": "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
+        "inputType": "ArrayBuffer",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Delimiter",
+                "type": "option",
+                "value": [
+                    "Space",
+                    "Comma",
+                    "Semi-colon",
+                    "Colon",
+                    "Line feed",
+                    "CRLF",
+                    "0x",
+                    "\\x",
+                    "None"
                 ]
             }
         ]

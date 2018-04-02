@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {toHex} from "../lib/Hex";
 
 
 /**
@@ -166,7 +167,7 @@ const BitwiseOp = {
             if (crib && resultUtf8.toLowerCase().indexOf(crib) < 0) continue;
             if (printKey) record += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
             if (outputHex) {
-                record += Utils.toHex(result);
+                record += toHex(result);
             } else {
                 record += Utils.printable(resultUtf8, false);
             }

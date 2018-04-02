@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {fromHex} from "../lib/Hex";
 
 
 /**
@@ -82,7 +83,7 @@ const Hexdump = {
             block, line;
 
         while ((block = regex.exec(input))) {
-            line = Utils.fromHex(block[1].replace(/-/g, " "));
+            line = fromHex(block[1].replace(/-/g, " "));
             for (let i = 0; i < line.length; i++) {
                 output.push(line[i]);
             }

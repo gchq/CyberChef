@@ -7,6 +7,7 @@
 import utf8 from "utf8";
 import moment from "moment-timezone";
 import {fromBase64} from "./lib/Base64";
+import {toHexFast, fromHex} from "./lib/Hex";
 
 
 /**
@@ -312,7 +313,7 @@ class Utils {
     static convertToByteArray(str, type) {
         switch (type.toLowerCase()) {
             case "hex":
-                return Utils.fromHex(str);
+                return fromHex(str);
             case "base64":
                 return fromBase64(str, null, "byteArray");
             case "utf8":
@@ -345,7 +346,7 @@ class Utils {
     static convertToByteString(str, type) {
         switch (type.toLowerCase()) {
             case "hex":
-                return Utils.byteArrayToChars(Utils.fromHex(str));
+                return Utils.byteArrayToChars(fromHex(str));
             case "base64":
                 return Utils.byteArrayToChars(fromBase64(str, null, "byteArray"));
             case "utf8":
@@ -516,95 +517,6 @@ class Utils {
     static arrayBufferToStr(arrayBuffer, utf8=true) {
         const byteArray = Array.prototype.slice.call(new Uint8Array(arrayBuffer));
         return utf8 ? Utils.byteArrayToUtf8(byteArray) : Utils.byteArrayToChars(byteArray);
-    }
-
-
-    /**
-     * Convert a byte array into a hex string.
-     *
-     * @param {Uint8Array|byteArray} data
-     * @param {string} [delim=" "]
-     * @param {number} [padding=2]
-     * @returns {string}
-     *
-     * @example
-     * // returns "0a 14 1e"
-     * Utils.toHex([10,20,30]);
-     *
-     * // returns "0a:14:1e"
-     * Utils.toHex([10,20,30], ":");
-     */
-    static toHex(data, delim=" ", padding=2) {
-        if (!data) return "";
-
-        let output = "";
-
-        for (let i = 0; i < data.length; i++) {
-            output += data[i].toString(16).padStart(padding, "0") + delim;
-        }
-
-        // Add \x or 0x to beginning
-        if (delim === "0x") output = "0x" + output;
-        if (delim === "\\x") output = "\\x" + output;
-
-        if (delim.length)
-            return output.slice(0, -delim.length);
-        else
-            return output;
-    }
-
-
-    /**
-     * Convert a byte array into a hex string as efficiently as possible with no options.
-     *
-     * @param {byteArray} data
-     * @returns {string}
-     *
-     * @example
-     * // returns "0a141e"
-     * Utils.toHex([10,20,30]);
-     */
-    static toHexFast(data) {
-        if (!data) return "";
-
-        const output = [];
-
-        for (let i = 0; i < data.length; i++) {
-            output.push((data[i] >>> 4).toString(16));
-            output.push((data[i] & 0x0f).toString(16));
-        }
-
-        return output.join("");
-    }
-
-
-    /**
-     * Convert a hex string into a byte array.
-     *
-     * @param {string} data
-     * @param {string} [delim]
-     * @param {number} [byteLen=2]
-     * @returns {byteArray}
-     *
-     * @example
-     * // returns [10,20,30]
-     * Utils.fromHex("0a 14 1e");
-     *
-     * // returns [10,20,30]
-     * Utils.fromHex("0a:14:1e", "Colon");
-     */
-    static fromHex(data, delim, byteLen=2) {
-        delim = delim || (data.indexOf(" ") >= 0 ? "Space" : "None");
-        if (delim !== "None") {
-            const delimRegex = Utils.regexRep(delim);
-            data = data.replace(delimRegex, "");
-        }
-
-        const output = [];
-        for (let i = 0; i < data.length; i += byteLen) {
-            output.push(parseInt(data.substr(i, byteLen), 16));
-        }
-        return output;
     }
 
 
@@ -944,7 +856,7 @@ class Utils {
                 title='Download ${Utils.escapeHtml(file.fileName)}'
                 download='${Utils.escapeHtml(file.fileName)}'>&#x1f4be;</a>`;
 
-            const hexFileData = Utils.toHexFast(new Uint8Array(file.bytes));
+            const hexFileData = toHexFast(new Uint8Array(file.bytes));
 
             const switchToInputElem = `<a href='#switchFileToInput${i}'
                 class='file-switch'

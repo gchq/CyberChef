@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {toHex, fromHex} from "../lib/Hex";
 
 
 /**
@@ -52,7 +53,7 @@ const Endian = {
         // Convert input to raw data based on specified data format
         switch (dataFormat) {
             case "Hex":
-                data = Utils.fromHex(input);
+                data = fromHex(input);
                 break;
             case "Raw":
                 data = Utils.strToByteArray(input);
@@ -86,7 +87,7 @@ const Endian = {
         // Convert data back to specified data format
         switch (dataFormat) {
             case "Hex":
-                return Utils.toHex(result);
+                return toHex(result);
             case "Raw":
                 return Utils.byteArrayToUtf8(result);
             default:
