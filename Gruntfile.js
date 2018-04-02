@@ -133,7 +133,7 @@ module.exports = function (grunt) {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
             node: ["build/node/*"],
-            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*"],
+            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             inlineScripts: ["build/prod/scripts.js"],
         },

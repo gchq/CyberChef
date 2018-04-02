@@ -45,7 +45,10 @@ module.exports = {
         }),
         new ExtractTextPlugin("styles.css"),
         new WebpackShellPlugin({
-            onBuildStart: ["node --experimental-modules src/core/config/generateConfig.mjs"],
+            onBuildStart: [
+                "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
+                "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
+            ],
         })
     ],
     resolve: {
