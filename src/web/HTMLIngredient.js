@@ -32,12 +32,14 @@ const HTMLIngredient = function(config, app, manager) {
  * @returns {string}
  */
 HTMLIngredient.prototype.toHtml = function() {
-    let inline = (this.type === "boolean" ||
-                  this.type === "number" ||
-                  this.type === "option" ||
-                  this.type === "shortString" ||
-                  this.type === "binaryShortString"),
-        html = inline ? "" : "<div class='clearfix'>&nbsp;</div>",
+    const inline = (
+        this.type === "boolean" ||
+        this.type === "number" ||
+        this.type === "option" ||
+        this.type === "shortString" ||
+        this.type === "binaryShortString"
+    );
+    let html = inline ? "" : "<div class='clearfix'>&nbsp;</div>",
         i, m;
 
     html += "<div class='arg-group" + (inline ? " inline-args" : "") +
@@ -202,7 +204,7 @@ HTMLIngredient.prototype.populateOptionChange = function(e) {
  * @param {event} e
  */
 HTMLIngredient.prototype.editableOptionChange = function(e) {
-    let select = e.target,
+    const select = e.target,
         input = select.nextSibling;
 
     input.value = select.childNodes[select.selectedIndex].value;

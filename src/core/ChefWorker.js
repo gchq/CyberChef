@@ -132,7 +132,7 @@ function silentBake(data) {
  */
 function loadRequiredModules(recipeConfig) {
     recipeConfig.forEach(op => {
-        let module = self.OperationConfig[op.op].module;
+        const module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
             log.info("Loading module " + module);

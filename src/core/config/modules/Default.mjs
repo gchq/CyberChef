@@ -5,14 +5,20 @@
 * @copyright Crown Copyright 2018
 * @license Apache-2.0
 */
-import ToBase64 from "../../operations/ToBase64";
+import FromBase32 from "../../operations/FromBase32";
 import FromBase64 from "../../operations/FromBase64";
+import ShowBase64Offsets from "../../operations/ShowBase64Offsets";
+import ToBase32 from "../../operations/ToBase32";
+import ToBase64 from "../../operations/ToBase64";
 
-let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
+const OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.Default = {
-    "To Base64": ToBase64,
+    "From Base32": FromBase32,
     "From Base64": FromBase64,
+    "Show Base64 offsets": ShowBase64Offsets,
+    "To Base32": ToBase32,
+    "To Base64": ToBase64,
 };
 
 export default OpModules;

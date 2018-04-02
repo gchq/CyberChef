@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {fromBase64} from "../lib/Base64";
 import * as r from "jsrsasign";
 
 
@@ -43,7 +44,7 @@ const PublicKey = {
                 cert.readCertPEM(input);
                 break;
             case "Base64":
-                cert.readCertHex(Utils.toHex(Utils.fromBase64(input, null, "byteArray"), ""));
+                cert.readCertHex(Utils.toHex(fromBase64(input, null, "byteArray"), ""));
                 break;
             case "Raw":
                 cert.readCertHex(Utils.toHex(Utils.strToByteArray(input), ""));

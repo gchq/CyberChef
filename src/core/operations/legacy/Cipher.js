@@ -1,4 +1,5 @@
 import Utils from "../Utils.js";
+import {toBase64} from "../lib/Base64";
 import CryptoJS from "crypto-js";
 import forge from "imports-loader?jQuery=>null!node-forge/dist/forge.min.js";
 import {blowfish as Blowfish} from "sladex-blowfish";
@@ -366,7 +367,7 @@ DES uses a key length of 8 bytes (64 bits).`;
 
         input = Utils.convertToByteString(input, inputType);
 
-        Blowfish.setIV(Utils.toBase64(iv), 0);
+        Blowfish.setIV(toBase64(iv), 0);
 
         const enc = Blowfish.encrypt(input, key, {
             outputType: Cipher._BLOWFISH_OUTPUT_TYPE_LOOKUP[outputType],
@@ -395,7 +396,7 @@ DES uses a key length of 8 bytes (64 bits).`;
 
         input = inputType === "Raw" ? Utils.strToByteArray(input) : input;
 
-        Blowfish.setIV(Utils.toBase64(iv), 0);
+        Blowfish.setIV(toBase64(iv), 0);
 
         const result = Blowfish.decrypt(input, key, {
             outputType: Cipher._BLOWFISH_OUTPUT_TYPE_LOOKUP[inputType], // This actually means inputType. The library is weird.

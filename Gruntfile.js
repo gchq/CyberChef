@@ -117,7 +117,7 @@ module.exports = function (grunt) {
      * Generates an entry list for all the modules.
      */
     function listEntryModules() {
-        let entryModules = {};
+        const entryModules = {};
 
         glob.sync("./src/core/config/modules/*.mjs").forEach(file => {
             const basename = path.basename(file);

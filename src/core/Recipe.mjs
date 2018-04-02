@@ -226,7 +226,7 @@ class Recipe  {
         const highlights = [];
 
         for (let i = 0; i < this.opList.length; i++) {
-            let op = this.opList[i];
+            const op = this.opList[i];
             if (op.disabled) continue;
 
             // If any breakpoints are set, do not attempt to highlight

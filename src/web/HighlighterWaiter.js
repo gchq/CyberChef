@@ -40,8 +40,8 @@ HighlighterWaiter.OUTPUT = 1;
  * @returns {boolean}
  */
 HighlighterWaiter.prototype._isSelectionBackwards = function() {
-    let backwards = false,
-        sel = window.getSelection();
+    let backwards = false;
+    const sel = window.getSelection();
 
     if (!sel.isCollapsed) {
         const range = document.createRange();

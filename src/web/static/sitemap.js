@@ -20,7 +20,7 @@ sitemap.add({
     priority: 1.0
 });
 
-for (let op in OperationConfig) {
+for (const op in OperationConfig) {
     sitemap.add({
         url: `/?op=${encodeURIComponent(op)}`,
         changeFreq: "yearly",

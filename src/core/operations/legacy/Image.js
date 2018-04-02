@@ -2,6 +2,7 @@ import * as ExifParser from "exif-parser";
 import removeEXIF from "../vendor/remove-exif.js";
 import Utils from "../Utils.js";
 import FileType from "./FileType.js";
+import {fromBase64, toBase64} from "../lib/Base64";
 
 
 /**
@@ -96,7 +97,7 @@ const Image = {
             case "Base64":
                 // Don't trust the Base64 entered by the user.
                 // Unwrap it first, then re-encode later.
-                input = Utils.fromBase64(input, null, "byteArray");
+                input = fromBase64(input, null, "byteArray");
                 break;
             case "Raw":
             default:
@@ -113,7 +114,7 @@ const Image = {
         }
 
         // Add image data to URI
-        dataURI += "base64," + Utils.toBase64(input);
+        dataURI += "base64," + toBase64(input);
 
         return "<img src='" + dataURI + "'>";
     },

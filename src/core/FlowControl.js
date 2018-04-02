@@ -23,7 +23,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runFork: async function(state) {
-        let opList       = state.opList,
+        const opList     = state.opList,
             inputType    = opList[state.progress].inputType,
             outputType   = opList[state.progress].outputType,
             input        = state.dish.get(inputType),
@@ -31,8 +31,8 @@ const FlowControl = {
             splitDelim   = ings[0],
             mergeDelim   = ings[1],
             ignoreErrors = ings[2],
-            subOpList    = [],
-            inputs       = [],
+            subOpList    = [];
+        let inputs       = [],
             i;
 
         if (input)
@@ -48,8 +48,8 @@ const FlowControl = {
             }
         }
 
-        let recipe = new Recipe(),
-            output = "",
+        const recipe = new Recipe();
+        let output = "",
             progress = 0;
 
         state.forkOffset += state.progress + 1;
@@ -223,7 +223,7 @@ const FlowControl = {
         }
 
         if (regexStr !== "") {
-            let strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
+            const strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
@@ -274,9 +274,9 @@ const FlowControl = {
      */
     _getLabelIndex: function(name, state) {
         for (let o = 0; o < state.opList.length; o++) {
-            let operation = state.opList[o];
+            const operation = state.opList[o];
             if (operation.name === "Label"){
-                let ings = operation.ingValues;
+                const ings = operation.ingValues;
                 if (name === ings[0]) {
                     return o;
                 }

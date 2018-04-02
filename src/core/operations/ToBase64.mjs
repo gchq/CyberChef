@@ -5,8 +5,7 @@
  */
 
 import Operation from "../Operation";
-import Utils from "../Utils";
-import {ALPHABET, ALPHABET_OPTIONS} from "../lib/Base64";
+import {toBase64, ALPHABET_OPTIONS} from "../lib/Base64";
 
 /**
  * To Base64 operation
@@ -19,12 +18,12 @@ class ToBase64 extends Operation {
     constructor() {
         super();
 
-        this.name        = "To Base64";
-        this.module      = "Default";
+        this.name = "To Base64";
+        this.module = "Default";
         this.description = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>";
-        this.inputType   = "ArrayBuffer";
-        this.outputType  = "string";
-        this.args        = [
+        this.inputType = "ArrayBuffer";
+        this.outputType = "string";
+        this.args = [
             {
                 name: "Alphabet",
                 type: "editableOption",
@@ -39,8 +38,8 @@ class ToBase64 extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const alphabet = args[0] || ALPHABET;
-        return Utils.toBase64(new Uint8Array(input), alphabet);
+        const alphabet = args[0];
+        return toBase64(new Uint8Array(input), alphabet);
     }
 
     /**

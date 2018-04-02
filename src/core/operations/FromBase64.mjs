@@ -5,8 +5,7 @@
  */
 
 import Operation from "../Operation";
-import Utils from "../Utils";
-import {ALPHABET, ALPHABET_OPTIONS} from "../lib/Base64";
+import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64";
 
 /**
  * From Base64 operation
@@ -14,17 +13,17 @@ import {ALPHABET, ALPHABET_OPTIONS} from "../lib/Base64";
 class FromBase64 extends Operation {
 
     /**
-     * ToBase64 constructor
+     * FromBase64 constructor
      */
     constructor() {
         super();
 
-        this.name        = "From Base64";
-        this.module      = "Default";
+        this.name = "From Base64";
+        this.module = "Default";
         this.description = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>";
-        this.inputType   = "string";
-        this.outputType  = "byteArray";
-        this.args        = [
+        this.inputType = "string";
+        this.outputType = "byteArray";
+        this.args = [
             {
                 name: "Alphabet",
                 type: "editableOption",
@@ -44,10 +43,9 @@ class FromBase64 extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        let alphabet = args[0] || ALPHABET,
-            removeNonAlphChars = args[1];
+        const [alphabet, removeNonAlphChars] = args;
 
-        return Utils.fromBase64(input, alphabet, "byteArray", removeNonAlphChars);
+        return fromBase64(input, alphabet, "byteArray", removeNonAlphChars);
     }
 
     /**

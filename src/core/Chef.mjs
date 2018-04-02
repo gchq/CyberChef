@@ -121,9 +121,9 @@ class Chef {
     silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
-        let startTime = new Date().getTime(),
-            recipe    = new Recipe(recipeConfig),
-            dish      = new Dish("", Dish.STRING);
+        const startTime = new Date().getTime(),
+            recipe = new Recipe(recipeConfig),
+            dish = new Dish("", Dish.STRING);
 
         try {
             recipe.execute(dish);

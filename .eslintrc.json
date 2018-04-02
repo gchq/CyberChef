@@ -1,6 +1,6 @@
 {
     "parserOptions": {
-        "ecmaVersion": 8,
+        "ecmaVersion": 9,
         "ecmaFeatures": {
             "impliedStrict": true
         },
@@ -84,7 +84,8 @@
         "no-whitespace-before-property": "error",
         "operator-linebreak": ["error", "after"],
         "space-in-parens": "error",
-        "no-var": "error"
+        "no-var": "error",
+        "prefer-const": "error"
     },
     "globals": {
         "$": false,

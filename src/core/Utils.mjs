@@ -6,6 +6,7 @@
 
 import utf8 from "utf8";
 import moment from "moment-timezone";
+import {fromBase64} from "./lib/Base64";
 
 
 /**
@@ -270,7 +271,7 @@ class Utils {
             if (i < alphStr.length - 2 &&
                 alphStr[i+1] === "-" &&
                 alphStr[i] !== "\\") {
-                let start = Utils.ord(alphStr[i]),
+                const start = Utils.ord(alphStr[i]),
                     end = Utils.ord(alphStr[i+2]);
 
                 for (let j = start; j <= end; j++) {
@@ -313,7 +314,7 @@ class Utils {
             case "hex":
                 return Utils.fromHex(str);
             case "base64":
-                return Utils.fromBase64(str, null, "byteArray");
+                return fromBase64(str, null, "byteArray");
             case "utf8":
                 return Utils.strToUtf8ByteArray(str);
             case "latin1":
@@ -346,7 +347,7 @@ class Utils {
             case "hex":
                 return Utils.byteArrayToChars(Utils.fromHex(str));
             case "base64":
-                return Utils.byteArrayToChars(Utils.fromBase64(str, null, "byteArray"));
+                return Utils.byteArrayToChars(fromBase64(str, null, "byteArray"));
             case "utf8":
                 return utf8.encode(str);
             case "latin1":
@@ -519,118 +520,6 @@ class Utils {
 
 
     /**
-     * Base64's the input byte array using the given alphabet, returning a string.
-     *
-     * @param {byteArray|Uint8Array|string} data
-     * @param {string} [alphabet="A-Za-z0-9+/="]
-     * @returns {string}
-     *
-     * @example
-     * // returns "SGVsbG8="
-     * Utils.toBase64([72, 101, 108, 108, 111]);
-     *
-     * // returns "SGVsbG8="
-     * Utils.toBase64("Hello");
-     */
-    static toBase64(data, alphabet="A-Za-z0-9+/=") {
-        if (!data) return "";
-        if (typeof data == "string") {
-            data = Utils.strToByteArray(data);
-        }
-
-        alphabet = Utils.expandAlphRange(alphabet).join("");
-
-        let output = "",
-            chr1, chr2, chr3,
-            enc1, enc2, enc3, enc4,
-            i = 0;
-
-        while (i < data.length) {
-            chr1 = data[i++];
-            chr2 = data[i++];
-            chr3 = data[i++];
-
-            enc1 = chr1 >> 2;
-            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-            enc4 = chr3 & 63;
-
-            if (isNaN(chr2)) {
-                enc3 = enc4 = 64;
-            } else if (isNaN(chr3)) {
-                enc4 = 64;
-            }
-
-            output += alphabet.charAt(enc1) + alphabet.charAt(enc2) +
-                alphabet.charAt(enc3) + alphabet.charAt(enc4);
-        }
-
-        return output;
-    }
-
-
-    /**
-     * UnBase64's the input string using the given alphabet, returning a byte array.
-     *
-     * @param {byteArray} data
-     * @param {string} [alphabet="A-Za-z0-9+/="]
-     * @param {string} [returnType="string"] - Either "string" or "byteArray"
-     * @param {boolean} [removeNonAlphChars=true]
-     * @returns {byteArray}
-     *
-     * @example
-     * // returns "Hello"
-     * Utils.fromBase64("SGVsbG8=");
-     *
-     * // returns [72, 101, 108, 108, 111]
-     * Utils.fromBase64("SGVsbG8=", null, "byteArray");
-     */
-    static fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", removeNonAlphChars=true) {
-        if (!data) {
-            return returnType === "string" ? "" : [];
-        }
-
-        alphabet = Utils.expandAlphRange(alphabet).join("");
-
-        let output = [],
-            chr1, chr2, chr3,
-            enc1, enc2, enc3, enc4,
-            i = 0;
-
-        if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
-            data = data.replace(re, "");
-        }
-
-        while (i < data.length) {
-            enc1 = alphabet.indexOf(data.charAt(i++));
-            enc2 = alphabet.indexOf(data.charAt(i++) || "=");
-            enc3 = alphabet.indexOf(data.charAt(i++) || "=");
-            enc4 = alphabet.indexOf(data.charAt(i++) || "=");
-
-            enc2 = enc2 === -1 ? 64 : enc2;
-            enc3 = enc3 === -1 ? 64 : enc3;
-            enc4 = enc4 === -1 ? 64 : enc4;
-
-            chr1 = (enc1 << 2) | (enc2 >> 4);
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-            chr3 = ((enc3 & 3) << 6) | enc4;
-
-            output.push(chr1);
-
-            if (enc3 !== 64) {
-                output.push(chr2);
-            }
-            if (enc4 !== 64) {
-                output.push(chr3);
-            }
-        }
-
-        return returnType === "string" ? Utils.byteArrayToUtf8(output) : output;
-    }
-
-
-    /**
      * Convert a byte array into a hex string.
      *
      * @param {Uint8Array|byteArray} data
@@ -734,8 +623,8 @@ class Utils {
             ignoreNext = false,
             inString = false,
             cell = "",
-            line = [],
-            lines = [];
+            line = [];
+        const lines = [];
 
         for (let i = 0; i < data.length; i++) {
             b = data[i];
@@ -952,10 +841,9 @@ class Utils {
 
         // Parse bespoke recipe format
         recipe = recipe.replace(/\n/g, "");
-        let m,
-            recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/'])*)(\/[^)]+)?\)/g,
-            recipeConfig = [],
-            args;
+        let m, args;
+        const recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/'])*)(\/[^)]+)?\)/g,
+            recipeConfig = [];
 
         while ((m = recipeRegex.exec(recipe))) {
             // Translate strings in args back to double-quotes
@@ -966,7 +854,7 @@ class Utils {
                 .replace(/\\'/g, "'"); // Unescape single quotes
             args = "[" + args + "]";
 
-            let op = {
+            const op = {
                 op: m[1].replace(/_/g, " "),
                 args: JSON.parse(args)
             };
@@ -1252,7 +1140,7 @@ export default Utils;
  * ["One", "Two", "Three", "One"].unique();
  */
 Array.prototype.unique = function() {
-    let u = {}, a = [];
+    const u = {}, a = [];
     for (let i = 0, l = this.length; i < l; i++) {
         if (u.hasOwnProperty(this[i])) {
             continue;

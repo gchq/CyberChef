@@ -9,7 +9,7 @@
 */
 import DefaultModule from "./Default";
 
-let OpModules = {};
+const OpModules = {};
 
 Object.assign(
     OpModules,
