@@ -238,22 +238,22 @@ const Categories = [
     //         "Extract EXIF",
     //     ]
     // },
-    // {
-    //     name: "Compression",
-    //     ops: [
-    //         "Raw Deflate",
-    //         "Raw Inflate",
-    //         "Zlib Deflate",
-    //         "Zlib Inflate",
-    //         "Gzip",
-    //         "Gunzip",
-    //         "Zip",
-    //         "Unzip",
+    {
+        name: "Compression",
+        ops: [
+            "Raw Deflate",
+            "Raw Inflate",
+            "Zlib Deflate",
+            "Zlib Inflate",
+            "Gzip",
+            "Gunzip",
+            "Zip",
+            "Unzip",
     //         "Bzip2 Decompress",
     //         "Tar",
     //         "Untar",
-    //     ]
-    // },
+        ]
+    },
     // {
     //     name: "Hashing",
     //     ops: [

@@ -8,17 +8,33 @@
 import FromBase32 from "./FromBase32";
 import FromBase64 from "./FromBase64";
 import FromHex from "./FromHex";
+import Gunzip from "./Gunzip";
+import Gzip from "./Gzip";
+import RawDeflate from "./RawDeflate";
+import RawInflate from "./RawInflate";
 import ShowBase64Offsets from "./ShowBase64Offsets";
 import ToBase32 from "./ToBase32";
 import ToBase64 from "./ToBase64";
 import ToHex from "./ToHex";
+import Unzip from "./Unzip";
+import Zip from "./Zip";
+import ZlibDeflate from "./ZlibDeflate";
+import ZlibInflate from "./ZlibInflate";
 
 export {
     FromBase32,
     FromBase64,
     FromHex,
+    Gunzip,
+    Gzip,
+    RawDeflate,
+    RawInflate,
     ShowBase64Offsets,
     ToBase32,
     ToBase64,
     ToHex,
+    Unzip,
+    Zip,
+    ZlibDeflate,
+    ZlibInflate,
 };

@@ -8,12 +8,14 @@
 * @license Apache-2.0
 */
 import DefaultModule from "./Default";
+import CompressionModule from "./Compression";
 
 const OpModules = {};
 
 Object.assign(
     OpModules,
     DefaultModule,
+    CompressionModule,
 );
 
 export default OpModules;

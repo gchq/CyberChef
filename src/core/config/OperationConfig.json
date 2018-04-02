@@ -114,6 +114,102 @@
             }
         ]
     },
+    "Gunzip": {
+        "module": "Compression",
+        "description": "Decompresses data which has been compressed using the deflate algorithm with gzip headers.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": []
+    },
+    "Gzip": {
+        "module": "Compression",
+        "description": "Compresses data using the deflate algorithm with gzip headers.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Compression type",
+                "type": "option",
+                "value": [
+                    "Dynamic Huffman Coding",
+                    "Fixed Huffman Coding",
+                    "None (Store)"
+                ]
+            },
+            {
+                "name": "Filename (optional)",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "Comment (optional)",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "Include file checksum",
+                "type": "boolean",
+                "value": false
+            }
+        ]
+    },
+    "Raw Deflate": {
+        "module": "Compression",
+        "description": "Compresses data using the deflate algorithm with no headers.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Compression type",
+                "type": "option",
+                "value": [
+                    "Dynamic Huffman Coding",
+                    "Fixed Huffman Coding",
+                    "None (Store)"
+                ]
+            }
+        ]
+    },
+    "Raw Inflate": {
+        "module": "Compression",
+        "description": "Decompresses data which has been compressed using the deflate algorithm with no headers.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Start index",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Initial output buffer size",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Buffer expansion type",
+                "type": "option",
+                "value": [
+                    "Adaptive",
+                    "Block"
+                ]
+            },
+            {
+                "name": "Resize buffer after decompression",
+                "type": "boolean",
+                "value": false
+            },
+            {
+                "name": "Verify result",
+                "type": "boolean",
+                "value": false
+            }
+        ]
+    },
     "Show Base64 offsets": {
         "module": "Default",
         "description": "When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block.<br><br>This operation shows all possible offsets for a given string so that each possible encoding can be considered.",
@@ -235,6 +331,130 @@
                     "\\x",
                     "None"
                 ]
+            }
+        ]
+    },
+    "Unzip": {
+        "module": "Compression",
+        "description": "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Password",
+                "type": "binaryString",
+                "value": ""
+            },
+            {
+                "name": "Verify result",
+                "type": "boolean",
+                "value": false
+            }
+        ]
+    },
+    "Zip": {
+        "module": "Compression",
+        "description": "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Filename",
+                "type": "string",
+                "value": "file.txt"
+            },
+            {
+                "name": "Comment",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "Password",
+                "type": "binaryString",
+                "value": ""
+            },
+            {
+                "name": "Compression method",
+                "type": "option",
+                "value": [
+                    "Deflate",
+                    "None (Store)"
+                ]
+            },
+            {
+                "name": "Operating system",
+                "type": "option",
+                "value": [
+                    "MSDOS",
+                    "Unix",
+                    "Macintosh"
+                ]
+            },
+            {
+                "name": "Compression type",
+                "type": "option",
+                "value": [
+                    "Dynamic Huffman Coding",
+                    "Fixed Huffman Coding",
+                    "None (Store)"
+                ]
+            }
+        ]
+    },
+    "Zlib Deflate": {
+        "module": "Compression",
+        "description": "Compresses data using the deflate algorithm adding zlib headers.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Compression type",
+                "type": "option",
+                "value": [
+                    "Dynamic Huffman Coding",
+                    "Fixed Huffman Coding",
+                    "None (Store)"
+                ]
+            }
+        ]
+    },
+    "Zlib Inflate": {
+        "module": "Compression",
+        "description": "Decompresses data which has been compressed using the deflate algorithm with zlib headers.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Start index",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Initial output buffer size",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Buffer expansion type",
+                "type": "option",
+                "value": [
+                    "Adaptive",
+                    "Block"
+                ]
+            },
+            {
+                "name": "Resize buffer after decompression",
+                "type": "boolean",
+                "value": false
+            },
+            {
+                "name": "Verify result",
+                "type": "boolean",
+                "value": false
             }
         ]
     }
