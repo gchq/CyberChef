@@ -45,6 +45,7 @@ import "./tests/operations/Base64";
 // import "./tests/operations/NetBIOS.js";
 // import "./tests/operations/OTP.js";
 // import "./tests/operations/Regex.js";
+import "./tests/operations/Rotate.mjs";
 // import "./tests/operations/StrUtils.js";
 // import "./tests/operations/SeqUtils.js";
 
