@@ -84,8 +84,8 @@ const Categories = [
     //         "RC2 Decrypt",
     //         "RC4",
     //         "RC4 Drop",
-    //         "ROT13",
-    //         "ROT47",
+            "ROT13",
+            "ROT47",
     //         "XOR",
     //         "XOR Brute Force",
     //         "Vigenère Encode",
@@ -116,9 +116,9 @@ const Categories = [
     //         "Object Identifier to Hex",
     //     ]
     // },
-    // {
-    //     name: "Arithmetic / Logic",
-    //     ops: [
+    {
+        name: "Arithmetic / Logic",
+        ops: [
     //         "XOR",
     //         "XOR Brute Force",
     //         "OR",
@@ -135,11 +135,11 @@ const Categories = [
     //         "Standard Deviation",
     //         "Bit shift left",
     //         "Bit shift right",
-    //         "Rotate left",
-    //         "Rotate right",
-    //         "ROT13",
-    //     ]
-    // },
+            "Rotate left",
+            "Rotate right",
+            "ROT13"
+        ]
+    },
     // {
     //     name: "Networking",
     //     ops: [
