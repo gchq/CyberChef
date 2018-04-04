@@ -1,4 +1,5 @@
-import Utils from "../core/Utils.js";
+import Utils from "../core/Utils";
+import {toBase64} from "../core/lib/Base64";
 
 
 /**
@@ -169,7 +170,7 @@ ControlsWaiter.prototype.generateStateUrl = function(includeRecipe, includeInput
         window.location.host +
         window.location.pathname;
     const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
-    const inputStr = Utils.toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
+    const inputStr = toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
     includeRecipe = includeRecipe && (recipeConfig.length > 0);
     // Only inlcude input if it is less than 50KB (51200 * 4/3 as it is Base64 encoded)
@@ -271,9 +272,9 @@ ControlsWaiter.prototype.saveButtonClick = function() {
         return;
     }
 
-    let savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [],
-        recipeId = localStorage.recipeId || 0;
+    const savedRecipes = localStorage.savedRecipes ?
+        JSON.parse(localStorage.savedRecipes) : [];
+    let recipeId = localStorage.recipeId || 0;
 
     savedRecipes.push({
         id: ++recipeId,

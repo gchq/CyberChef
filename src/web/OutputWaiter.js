@@ -1,4 +1,4 @@
-import Utils from "../core/Utils.js";
+import Utils from "../core/Utils";
 import FileSaver from "file-saver";
 
 

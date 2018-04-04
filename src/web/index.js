@@ -12,12 +12,13 @@ import "babel-polyfill";
 import "bootstrap";
 import "bootstrap-switch";
 import "bootstrap-colorpicker";
-import CanvasComponents from "../core/lib/canvascomponents.js";
+import moment from "moment-timezone";
+import CanvasComponents from "../core/vendor/canvascomponents.js";
 
 // CyberChef
 import App from "./App.js";
 import Categories from "../core/config/Categories.js";
-import OperationConfig from "../core/config/MetaConfig.js";
+import OperationConfig from "../core/config/OperationConfig.json";
 
 
 /**

@@ -1,4 +1,5 @@
-import Utils from "../core/Utils.js";
+import Utils from "../core/Utils";
+import {fromBase64} from "../core/lib/Base64";
 import Manager from "./Manager.js";
 import HTMLCategory from "./HTMLCategory.js";
 import HTMLOperation from "./HTMLOperation.js";
@@ -24,7 +25,7 @@ const App = function(categories, operations, defaultFavourites, defaultOptions) 
     this.operations    = operations;
     this.dfavourites   = defaultFavourites;
     this.doptions      = defaultOptions;
-    this.options       = Utils.extend({}, defaultOptions);
+    this.options       = Object.assign({}, defaultOptions);
 
     this.manager       = new Manager(this);
 
@@ -193,12 +194,12 @@ App.prototype.populateOperationsList = function() {
     let i;
 
     for (i = 0; i < this.categories.length; i++) {
-        let catConf = this.categories[i],
+        const catConf = this.categories[i],
             selected = i === 0,
             cat = new HTMLCategory(catConf.name, selected);
 
         for (let j = 0; j < catConf.ops.length; j++) {
-            let opName = catConf.ops[j],
+            const opName = catConf.ops[j],
                 op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
             cat.addOperation(op);
         }
@@ -405,7 +406,7 @@ App.prototype.loadURIParams = function() {
     // Read in input data from URI params
     if (this.uriParams.input) {
         try {
-            const inputData = Utils.fromBase64(this.uriParams.input);
+            const inputData = fromBase64(this.uriParams.input);
             this.setInput(inputData);
         } catch (err) {}
     }
@@ -503,11 +504,11 @@ App.prototype.resetLayout = function() {
  */
 App.prototype.setCompileMessage = function() {
     // Display time since last build and compile message
-    let now = new Date(),
+    const now = new Date(),
         timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime);
 
     // Calculate previous version to compare to
-    let prev = PKG_VERSION.split(".").map(n => {
+    const prev = PKG_VERSION.split(".").map(n => {
         return parseInt(n, 10);
     });
     if (prev[2] > 0) prev[2]--;
@@ -574,7 +575,7 @@ App.prototype.alert = function(str, style, timeout, silent) {
     style = style || "danger";
     timeout = timeout || 0;
 
-    let alertEl = document.getElementById("alert"),
+    const alertEl = document.getElementById("alert"),
         alertContent = document.getElementById("alert-content");
 
     alertEl.classList.remove("alert-danger");

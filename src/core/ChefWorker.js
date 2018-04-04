@@ -7,9 +7,9 @@
  */
 
 import "babel-polyfill";
-import Chef from "./Chef.js";
-import OperationConfig from "./config/MetaConfig.js";
-import OpModules from "./config/modules/Default.js";
+import Chef from "./Chef";
+import OperationConfig from "./config/OperationConfig.json";
+import OpModules from "./config/modules/Default";
 
 // Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
@@ -132,7 +132,7 @@ function silentBake(data) {
  */
 function loadRequiredModules(recipeConfig) {
     recipeConfig.forEach(op => {
-        let module = self.OperationConfig[op.op].module;
+        const module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
             log.info("Loading module " + module);

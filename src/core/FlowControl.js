@@ -1,5 +1,5 @@
-import Recipe from "./Recipe.js";
-import Dish from "./Dish.js";
+import Recipe from "./Recipe";
+import Dish from "./Dish";
 
 
 /**
@@ -23,16 +23,16 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runFork: async function(state) {
-        let opList       = state.opList,
+        const opList     = state.opList,
             inputType    = opList[state.progress].inputType,
             outputType   = opList[state.progress].outputType,
             input        = state.dish.get(inputType),
-            ings         = opList[state.progress].getIngValues(),
+            ings         = opList[state.progress].ingValues,
             splitDelim   = ings[0],
             mergeDelim   = ings[1],
             ignoreErrors = ings[2],
-            subOpList    = [],
-            inputs       = [],
+            subOpList    = [];
+        let inputs       = [],
             i;
 
         if (input)
@@ -41,15 +41,15 @@ const FlowControl = {
         // Create subOpList for each tranche to operate on
         // (all remaining operations unless we encounter a Merge)
         for (i = state.progress + 1; i < opList.length; i++) {
-            if (opList[i].name === "Merge" && !opList[i].isDisabled()) {
+            if (opList[i].name === "Merge" && !opList[i].disabled) {
                 break;
             } else {
                 subOpList.push(opList[i]);
             }
         }
 
-        let recipe = new Recipe(),
-            output = "",
+        const recipe = new Recipe();
+        let output = "",
             progress = 0;
 
         state.forkOffset += state.progress + 1;
@@ -57,7 +57,7 @@ const FlowControl = {
         recipe.addOperations(subOpList);
 
         // Take a deep(ish) copy of the ingredient values
-        const ingValues = subOpList.map(op => JSON.parse(JSON.stringify(op.getIngValues())));
+        const ingValues = subOpList.map(op => JSON.parse(JSON.stringify(op.ingValues)));
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
@@ -65,7 +65,7 @@ const FlowControl = {
 
             // Baseline ing values for each tranche so that registers are reset
             subOpList.forEach((op, i) => {
-                op.setIngValues(JSON.parse(JSON.stringify(ingValues[i])));
+                op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
             });
 
             const dish = new Dish(inputs[i], inputType);
@@ -112,7 +112,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runRegister: function(state) {
-        const ings = state.opList[state.progress].getIngValues(),
+        const ings = state.opList[state.progress].ingValues,
             extractorStr = ings[0],
             i = ings[1],
             m = ings[2];
@@ -150,9 +150,9 @@ const FlowControl = {
 
         // Step through all subsequent ops and replace registers in args with extracted content
         for (let i = state.progress + 1; i < state.opList.length; i++) {
-            if (state.opList[i].isDisabled()) continue;
+            if (state.opList[i].disabled) continue;
 
-            let args = state.opList[i].getIngValues();
+            let args = state.opList[i].ingValues;
             args = args.map(arg => {
                 if (typeof arg !== "string" && typeof arg !== "object") return arg;
 
@@ -181,7 +181,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runJump: function(state) {
-        const ings     = state.opList[state.progress].getIngValues(),
+        const ings     = state.opList[state.progress].ingValues,
             label = ings[0],
             maxJumps = ings[1],
             jmpIndex = FlowControl._getLabelIndex(label, state);
@@ -209,7 +209,7 @@ const FlowControl = {
      * @returns {Object} The updated state of the recipe.
      */
     runCondJump: function(state) {
-        const ings     = state.opList[state.progress].getIngValues(),
+        const ings     = state.opList[state.progress].ingValues,
             dish     = state.dish,
             regexStr = ings[0],
             invert   = ings[1],
@@ -223,7 +223,7 @@ const FlowControl = {
         }
 
         if (regexStr !== "") {
-            let strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
+            const strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
@@ -274,9 +274,9 @@ const FlowControl = {
      */
     _getLabelIndex: function(name, state) {
         for (let o = 0; o < state.opList.length; o++) {
-            let operation = state.opList[o];
+            const operation = state.opList[o];
             if (operation.name === "Label"){
-                let ings = operation.getIngValues();
+                const ings = operation.ingValues;
                 if (name === ings[0]) {
                     return o;
                 }
