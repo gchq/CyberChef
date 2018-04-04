@@ -30,7 +30,6 @@ import Tidy from "../../operations/Tidy.js";
 import Unicode from "../../operations/Unicode.js";
 import UUID from "../../operations/UUID.js";
 import XKCD from "../../operations/XKCD.js";
-import SetOps from "../../operations/SetOperations.js";
 
 
 /**

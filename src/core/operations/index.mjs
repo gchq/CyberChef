@@ -12,6 +12,9 @@ import Gunzip from "./Gunzip";
 import Gzip from "./Gzip";
 import RawDeflate from "./RawDeflate";
 import RawInflate from "./RawInflate";
+import SetIntersection from "./SetIntersection";
+import SetOps from "./SetOps";
+import SetUnion from "./SetUnion";
 import ShowBase64Offsets from "./ShowBase64Offsets";
 import ToBase32 from "./ToBase32";
 import ToBase64 from "./ToBase64";
@@ -29,6 +32,9 @@ export {
     Gzip,
     RawDeflate,
     RawInflate,
+    SetIntersection,
+    SetOps,
+    SetUnion,
     ShowBase64Offsets,
     ToBase32,
     ToBase64,

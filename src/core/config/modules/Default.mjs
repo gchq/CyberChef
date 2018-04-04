@@ -8,6 +8,10 @@
 import FromBase32 from "../../operations/FromBase32";
 import FromBase64 from "../../operations/FromBase64";
 import FromHex from "../../operations/FromHex";
+import RawDeflate from "../../operations/RawDeflate";
+import SetIntersection from "../../operations/SetIntersection";
+import SetOps from "../../operations/SetOps";
+import SetUnion from "../../operations/SetUnion";
 import ShowBase64Offsets from "../../operations/ShowBase64Offsets";
 import ToBase32 from "../../operations/ToBase32";
 import ToBase64 from "../../operations/ToBase64";
@@ -19,6 +23,10 @@ OpModules.Default = {
     "From Base32": FromBase32,
     "From Base64": FromBase64,
     "From Hex": FromHex,
+    "Raw Deflate": RawDeflate,
+    "Set Intersection": SetIntersection,
+    "": SetOps,
+    "Set Union": SetUnion,
     "Show Base64 offsets": ShowBase64Offsets,
     "To Base32": ToBase32,
     "To Base64": ToBase64,

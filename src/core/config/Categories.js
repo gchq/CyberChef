@@ -116,9 +116,11 @@ const Categories = [
     //         "Object Identifier to Hex",
     //     ]
     // },
-    // {
-    //     name: "Arithmetic / Logic",
-    //     ops: [
+    {
+        name: "Arithmetic / Logic",
+        ops: [
+            "Set Union",
+            "Set Intersection"
     //         "XOR",
     //         "XOR Brute Force",
     //         "OR",
@@ -138,8 +140,8 @@ const Categories = [
     //         "Rotate left",
     //         "Rotate right",
     //         "ROT13",
-    //     ]
-    // },
+        ]
+    },
     // {
     //     name: "Networking",
     //     ops: [

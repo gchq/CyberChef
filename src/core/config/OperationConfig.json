@@ -156,7 +156,7 @@
         ]
     },
     "Raw Deflate": {
-        "module": "Compression",
+        "module": "Default",
         "description": "Compresses data using the deflate algorithm with no headers.",
         "inputType": "byteArray",
         "outputType": "byteArray",
@@ -207,6 +207,63 @@
                 "name": "Verify result",
                 "type": "boolean",
                 "value": false
+            }
+        ]
+    },
+    "Set Intersection": {
+        "module": "Default",
+        "description": "Get the intersection of two sets",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Sample delimiter",
+                "type": "binaryString",
+                "value": "\n\n"
+            },
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
+            }
+        ]
+    },
+    "": {
+        "module": "Default",
+        "description": "",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Sample delimiter",
+                "type": "binaryString",
+                "value": "\n\n"
+            },
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
+            }
+        ]
+    },
+    "Set Union": {
+        "module": "Default",
+        "description": "Get the union of two sets",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Sample delimiter",
+                "type": "binaryString",
+                "value": "\n\n"
+            },
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
             }
         ]
     },
@@ -338,7 +395,7 @@
         "module": "Compression",
         "description": "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.",
         "inputType": "byteArray",
-        "outputType": "byteArray",
+        "outputType": "html",
         "flowControl": false,
         "args": [
             {
