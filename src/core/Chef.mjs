@@ -91,8 +91,8 @@ class Chef {
 
         return {
             result: this.dish.type === Dish.HTML ?
-                this.dish.get(Dish.HTML, notUTF8) :
-                this.dish.get(returnType, notUTF8),
+                await this.dish.get(Dish.HTML, notUTF8) :
+                await this.dish.get(returnType, notUTF8),
             type: Dish.enumLookup(this.dish.type),
             progress: progress,
             duration: new Date().getTime() - startTime,

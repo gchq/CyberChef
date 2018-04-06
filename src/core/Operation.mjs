@@ -19,6 +19,7 @@ class Operation {
         // Private fields
         this._inputType       = -1;
         this._outputType      = -1;
+        this._presentType     = -1;
         this._breakpoint      = false;
         this._disabled        = false;
         this._flowControl     = false;
@@ -72,6 +73,22 @@ class Operation {
 
 
     /**
+     * Method to be called when displaying the result of an operation in a human-readable
+     * format. This allows operations to return usable data from their run() method and
+     * only format them when this method is called.
+     *
+     * The default action is to return the data unchanged, but child classes can override
+     * this behaviour.
+     *
+     * @param {*} data - The result of the run() function
+     * @returns {*} - A human-readable version of the data
+     */
+    present(data) {
+        return data;
+    }
+
+
+    /**
      * Sets the input type as a Dish enum.
      *
      * @param {string} typeStr
@@ -98,6 +115,7 @@ class Operation {
      */
     set outputType(typeStr) {
         this._outputType = Dish.typeEnum(typeStr);
+        if (this._presentType < 0) this._presentType = this._outputType;
     }
 
 
@@ -108,6 +126,26 @@ class Operation {
      */
     get outputType() {
         return Dish.enumLookup(this._outputType);
+    }
+
+
+    /**
+     * Sets the presentation type as a Dish enum.
+     *
+     * @param {string} typeStr
+     */
+    set presentType(typeStr) {
+        this._presentType = Dish.typeEnum(typeStr);
+    }
+
+
+    /**
+     * Gets the presentation type as a readable string.
+     *
+     * @returns {string}
+     */
+    get presentType() {
+        return Dish.enumLookup(this._presentType);
     }
 
 

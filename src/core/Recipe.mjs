@@ -130,7 +130,7 @@ class Recipe  {
      *     - The final progress through the recipe
      */
     async execute(dish, startFrom=0, forkState={}) {
-        let op, input, output,
+        let op, input, output, lastRunOp,
             numJumps = 0,
             numRegisters = forkState.numRegisters || 0;
 
@@ -149,7 +149,7 @@ class Recipe  {
             }
 
             try {
-                input = dish.get(op.inputType);
+                input = await dish.get(op.inputType);
                 log.debug("Executing operation");
 
                 if (op.flowControl) {
@@ -169,6 +169,7 @@ class Recipe  {
                     numRegisters = state.numRegisters;
                 } else {
                     output = await op.run(input, op.ingValues);
+                    lastRunOp = op;
                     dish.set(output, op.outputType);
                 }
             } catch (err) {
@@ -186,6 +187,11 @@ class Recipe  {
                 throw e;
             }
         }
+
+        // Present the results of the final operation
+        // TODO try/catch
+        output = await lastRunOp.present(output);
+        dish.set(output, lastRunOp.presentType);
 
         log.debug("Recipe complete");
         return this.opList.length;

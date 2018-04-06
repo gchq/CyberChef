@@ -38,7 +38,7 @@ for (const opObj in Ops) {
         module: op.module,
         description: op.description,
         inputType: op.inputType,
-        outputType: op.outputType,
+        outputType: op.presentType,
         flowControl: op.flowControl,
         args: op.args
     };
