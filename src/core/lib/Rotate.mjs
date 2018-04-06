@@ -10,13 +10,6 @@
 
 
 /**
- * Default values for rotation operations
- */
-export const ROTATE_AMOUNT = 1;
-export const ROTATE_CARRY = false;
-
-
-/**
  * Runs rotation operations across the input data.
  *
  * @param {byteArray} data
@@ -64,7 +57,6 @@ export function rotl(b) {
  * Rotates a byte array to the right by a specific amount as a whole, so that bits are wrapped
  * from the end of the array to the beginning.
  *
- * @private
  * @param {byteArray} data
  * @param {number} amount
  * @returns {byteArray}
@@ -90,7 +82,6 @@ export function rotrCarry(data, amount) {
  * Rotates a byte array to the left by a specific amount as a whole, so that bits are wrapped
  * from the beginning of the array to the end.
  *
- * @private
  * @param {byteArray} data
  * @param {number} amount
  * @returns {byteArray}

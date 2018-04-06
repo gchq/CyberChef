@@ -1,5 +1,5 @@
 /**
- * Base64 tests.
+ * Rotate tests.
  *
  * @author Matt C [matt@artemisbot.uk]
  *
@@ -7,6 +7,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../TestRegister";
+
 
 TestRegister.addTests([
     {

@@ -6,13 +6,6 @@
 
 import Operation from "../Operation";
 
-/**
- * Default arguments for ROT13 operation
- */
-const ROT13_AMOUNT = 13,
-    ROT13_LOWERCASE = true,
-    ROT13_UPPERCASE = true;
-
 
 /**
  * ROT13 operation.
@@ -34,23 +27,23 @@ class ROT13 extends Operation {
             {
                 name: "Rotate lower case chars",
                 type: "boolean",
-                value: ROT13_LOWERCASE
+                value: true
             },
             {
                 name: "Rotate upper case chars",
                 type: "boolean",
-                value: ROT13_UPPERCASE
+                value: true
             },
             {
                 name: "Amount",
                 type: "number",
-                value: ROT13_AMOUNT
+                value: 13
             },
         ];
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {byteArray}
      */

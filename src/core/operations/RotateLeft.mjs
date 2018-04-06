@@ -5,7 +5,8 @@
  */
 
 import Operation from "../Operation";
-import { rot, rotl, rotlCarry, ROTATE_AMOUNT, ROTATE_CARRY } from "../lib/Rotate";
+import {rot, rotl, rotlCarry} from "../lib/Rotate";
+
 
 /**
  * Rotate left operation.
@@ -27,18 +28,18 @@ class RotateLeft extends Operation {
             {
                 name: "Amount",
                 type: "number",
-                value: ROTATE_AMOUNT
+                value: 1
             },
             {
                 name: "Carry through",
                 type: "boolean",
-                value: ROTATE_CARRY
+                value: false
             }
         ];
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {byteArray}
      */

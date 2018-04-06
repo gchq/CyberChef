@@ -6,11 +6,6 @@
 
 import Operation from "../Operation";
 
-/**
- * Default argument for ROT47 operation
- */
-const ROT47_AMOUNT = 47;
-
 
 /**
  * ROT47 operation.
@@ -32,13 +27,13 @@ class ROT47 extends Operation {
             {
                 name: "Amount",
                 type: "number",
-                value: ROT47_AMOUNT
+                value: 47
             },
         ];
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
