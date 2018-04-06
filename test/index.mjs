@@ -48,6 +48,8 @@ import "./tests/operations/Base64";
 // import "./tests/operations/StrUtils.js";
 // import "./tests/operations/SeqUtils.js";
 import "./tests/operations/SetUnion";
+import "./tests/operations/SetIntersection";
+
 
 
 let allTestsPassing = true;

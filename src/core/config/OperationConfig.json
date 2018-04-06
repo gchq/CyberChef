@@ -220,7 +220,7 @@
             {
                 "name": "Sample delimiter",
                 "type": "binaryString",
-                "value": "\n\n"
+                "value": "\\n\\n"
             },
             {
                 "name": "Item delimiter",
@@ -256,7 +256,7 @@
         "flowControl": false,
         "args": [
             {
-                "name": "Samples delimiter",
+                "name": "Sample delimiter",
                 "type": "binaryString",
                 "value": "\\n\\n"
             },
