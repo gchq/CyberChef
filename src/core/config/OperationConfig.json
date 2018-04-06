@@ -256,9 +256,9 @@
         "flowControl": false,
         "args": [
             {
-                "name": "Sample delimiter",
+                "name": "Samples delimiter",
                 "type": "binaryString",
-                "value": "\n\n"
+                "value": "\\n\\n"
             },
             {
                 "name": "Item delimiter",

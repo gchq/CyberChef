@@ -47,6 +47,7 @@ import "./tests/operations/Base64";
 // import "./tests/operations/Regex.js";
 // import "./tests/operations/StrUtils.js";
 // import "./tests/operations/SeqUtils.js";
+import "./tests/operations/SetUnion";
 
 
 let allTestsPassing = true;

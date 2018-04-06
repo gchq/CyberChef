@@ -164,7 +164,6 @@ OpModules.Default = {
     "Windows Filetime to UNIX Timestamp": Filetime.runFromFiletimeToUnix,
     "UNIX Timestamp to Windows Filetime": Filetime.runToFiletimeFromUnix,
     "XKCD Random Number":  XKCD.runRandomNumber,
-    "Set Operations": SetOps.runSetOperation.bind(SetOps),
 
 
     /*
