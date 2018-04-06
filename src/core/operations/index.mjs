@@ -10,8 +10,12 @@ import FromBase64 from "./FromBase64";
 import FromHex from "./FromHex";
 import Gunzip from "./Gunzip";
 import Gzip from "./Gzip";
+import ROT13 from "./ROT13";
+import ROT47 from "./ROT47";
 import RawDeflate from "./RawDeflate";
 import RawInflate from "./RawInflate";
+import RotateLeft from "./RotateLeft";
+import RotateRight from "./RotateRight";
 import ShowBase64Offsets from "./ShowBase64Offsets";
 import ToBase32 from "./ToBase32";
 import ToBase64 from "./ToBase64";
@@ -27,8 +31,12 @@ export {
     FromHex,
     Gunzip,
     Gzip,
+    ROT13,
+    ROT47,
     RawDeflate,
     RawInflate,
+    RotateLeft,
+    RotateRight,
     ShowBase64Offsets,
     ToBase32,
     ToBase64,

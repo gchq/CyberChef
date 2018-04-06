@@ -155,6 +155,44 @@
             }
         ]
     },
+    "ROT13": {
+        "module": "Default",
+        "description": "A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Rotate lower case chars",
+                "type": "boolean",
+                "value": true
+            },
+            {
+                "name": "Rotate upper case chars",
+                "type": "boolean",
+                "value": true
+            },
+            {
+                "name": "Amount",
+                "type": "number",
+                "value": 13
+            }
+        ]
+    },
+    "ROT47": {
+        "module": "Default",
+        "description": "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Amount",
+                "type": "number",
+                "value": 47
+            }
+        ]
+    },
     "Raw Deflate": {
         "module": "Compression",
         "description": "Compresses data using the deflate algorithm with no headers.",
@@ -205,6 +243,44 @@
             },
             {
                 "name": "Verify result",
+                "type": "boolean",
+                "value": false
+            }
+        ]
+    },
+    "Rotate left": {
+        "module": "Default",
+        "description": "Rotates each byte to the left by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Amount",
+                "type": "number",
+                "value": 1
+            },
+            {
+                "name": "Carry through",
+                "type": "boolean",
+                "value": false
+            }
+        ]
+    },
+    "Rotate right": {
+        "module": "Default",
+        "description": "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
+        "inputType": "byteArray",
+        "outputType": "byteArray",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Amount",
+                "type": "number",
+                "value": 1
+            },
+            {
+                "name": "Carry through",
                 "type": "boolean",
                 "value": false
             }
@@ -338,7 +414,7 @@
         "module": "Compression",
         "description": "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.",
         "inputType": "byteArray",
-        "outputType": "byteArray",
+        "outputType": "html",
         "flowControl": false,
         "args": [
             {
