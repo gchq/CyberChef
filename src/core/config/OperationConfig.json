@@ -281,25 +281,6 @@
             }
         ]
     },
-    "": {
-        "module": "Default",
-        "description": "",
-        "inputType": "string",
-        "outputType": "string",
-        "flowControl": false,
-        "args": [
-            {
-                "name": "Sample delimiter",
-                "type": "binaryString",
-                "value": "\n\n"
-            },
-            {
-                "name": "Item delimiter",
-                "type": "binaryString",
-                "value": ","
-            }
-        ]
-    },
     "Set Union": {
         "module": "Default",
         "description": "Get the union of two sets",

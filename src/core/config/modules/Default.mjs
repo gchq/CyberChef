@@ -13,7 +13,6 @@ import PowerSet from "../../operations/PowerSet";
 import RawDeflate from "../../operations/RawDeflate";
 import SetDifference from "../../operations/SetDifference";
 import SetIntersection from "../../operations/SetIntersection";
-import SetOps from "../../operations/SetOps";
 import SetUnion from "../../operations/SetUnion";
 import ShowBase64Offsets from "../../operations/ShowBase64Offsets";
 import SymmetricDifference from "../../operations/SymmetricDifference";
@@ -32,7 +31,6 @@ OpModules.Default = {
     "Raw Deflate": RawDeflate,
     "Set Difference": SetDifference,
     "Set Intersection": SetIntersection,
-    "": SetOps,
     "Set Union": SetUnion,
     "Show Base64 offsets": ShowBase64Offsets,
     "Symmetric Difference": SymmetricDifference,

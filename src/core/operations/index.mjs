@@ -16,7 +16,6 @@ import RawDeflate from "./RawDeflate";
 import RawInflate from "./RawInflate";
 import SetDifference from "./SetDifference";
 import SetIntersection from "./SetIntersection";
-import SetOps from "./SetOps";
 import SetUnion from "./SetUnion";
 import ShowBase64Offsets from "./ShowBase64Offsets";
 import SymmetricDifference from "./SymmetricDifference";
@@ -40,7 +39,6 @@ export {
     RawInflate,
     SetDifference,
     SetIntersection,
-    SetOps,
     SetUnion,
     ShowBase64Offsets,
     SymmetricDifference,
