@@ -50,6 +50,9 @@ import "./tests/operations/Base64";
 import "./tests/operations/SetUnion";
 import "./tests/operations/SetIntersection";
 import "./tests/operations/SetDifference";
+import "./tests/operations/SymmetricDifference";
+import "./tests/operations/CartesianProduct";
+import "./tests/operations/PowerSet";
 
 let allTestsPassing = true;
 const testStatusCounts = {

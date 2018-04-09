@@ -8,19 +8,19 @@ import Utils from "../Utils";
 import Operation from "../Operation";
 
 /**
- * Set Difference operation
+ * Set Symmetric Difference operation
  */
-class SetDifference extends Operation {
+class SymmetricDifference extends Operation {
 
     /**
-     * Set Difference constructor
+     * Symmetric Difference constructor
      */
     constructor() {
         super();
 
-        this.name = "Set Difference";
+        this.name = "Symmetric Difference";
         this.module = "Default";
-        this.description = "Get the Difference of two sets";
+        this.description = "Get the symmetric difference of two sets";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -63,7 +63,7 @@ class SetDifference extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runSetDifference(...sets.map(s => s.split(this.itemDelimiter))));
+        return Utils.escapeHtml(this.runSymmetricDifference(...sets.map(s => s.split(this.itemDelimiter))));
     }
 
     /**
@@ -74,13 +74,24 @@ class SetDifference extends Operation {
      * @returns {Object[]}
      */
     runSetDifference(a, b) {
-        return a
-            .filter((item) => {
-                return b.indexOf(item) === -1;
-            })
+        return a.filter((item) => {
+            return b.indexOf(item) === -1;
+        });
+    }
+
+    /**
+     * Get elements of each set that aren't in the other set.
+     *
+     * @param {Object[]} a
+     * @param {Object[]} b
+     * @return {Object[]}
+     */
+    runSymmetricDifference(a, b) {
+        return this.runSetDifference(a, b)
+            .concat(this.runSetDifference(b, a))
             .join(this.itemDelimiter);
     }
 
 }
 
-export default SetDifference;
+export default SymmetricDifference;

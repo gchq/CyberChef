@@ -1,4 +1,23 @@
 {
+    "Cartesian Product": {
+        "module": "Default",
+        "description": "Get the cartesian product of two sets",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Sample delimiter",
+                "type": "binaryString",
+                "value": "\\n\\n"
+            },
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
+            }
+        ]
+    },
     "From Base32": {
         "module": "Default",
         "description": "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
@@ -155,6 +174,20 @@
             }
         ]
     },
+    "Power Set": {
+        "module": "Default",
+        "description": "Generate the power set of a set",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
+            }
+        ]
+    },
     "Raw Deflate": {
         "module": "Default",
         "description": "Compresses data using the deflate algorithm with no headers.",
@@ -302,6 +335,25 @@
                 "name": "Show variable chars and padding",
                 "type": "boolean",
                 "value": true
+            }
+        ]
+    },
+    "Symmetric Difference": {
+        "module": "Default",
+        "description": "Get the symmetric difference of two sets",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Sample delimiter",
+                "type": "binaryString",
+                "value": "\\n\\n"
+            },
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
             }
         ]
     },

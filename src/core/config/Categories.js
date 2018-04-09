@@ -120,7 +120,11 @@ const Categories = [
         name: "Arithmetic / Logic",
         ops: [
             "Set Union",
-            "Set Intersection"
+            "Set Intersection",
+            "Set Difference",
+            "Symmetric Difference",
+            "Cartesian Product",
+            "Power Set",
     //         "XOR",
     //         "XOR Brute Force",
     //         "OR",

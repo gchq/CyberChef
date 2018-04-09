@@ -5,11 +5,13 @@
 * @copyright Crown Copyright 2018
 * @license Apache-2.0
 */
+import CartesianProduct from "./CartesianProduct";
 import FromBase32 from "./FromBase32";
 import FromBase64 from "./FromBase64";
 import FromHex from "./FromHex";
 import Gunzip from "./Gunzip";
 import Gzip from "./Gzip";
+import PowerSet from "./PowerSet";
 import RawDeflate from "./RawDeflate";
 import RawInflate from "./RawInflate";
 import SetDifference from "./SetDifference";
@@ -17,6 +19,7 @@ import SetIntersection from "./SetIntersection";
 import SetOps from "./SetOps";
 import SetUnion from "./SetUnion";
 import ShowBase64Offsets from "./ShowBase64Offsets";
+import SymmetricDifference from "./SymmetricDifference";
 import ToBase32 from "./ToBase32";
 import ToBase64 from "./ToBase64";
 import ToHex from "./ToHex";
@@ -26,11 +29,13 @@ import ZlibDeflate from "./ZlibDeflate";
 import ZlibInflate from "./ZlibInflate";
 
 export {
+    CartesianProduct,
     FromBase32,
     FromBase64,
     FromHex,
     Gunzip,
     Gzip,
+    PowerSet,
     RawDeflate,
     RawInflate,
     SetDifference,
@@ -38,6 +43,7 @@ export {
     SetOps,
     SetUnion,
     ShowBase64Offsets,
+    SymmetricDifference,
     ToBase32,
     ToBase64,
     ToHex,

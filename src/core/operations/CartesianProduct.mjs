@@ -8,19 +8,19 @@ import Utils from "../Utils";
 import Operation from "../Operation";
 
 /**
- * Set Difference operation
+ * Set cartesian product operation
  */
-class SetDifference extends Operation {
+class CartesianProduct extends Operation {
 
     /**
-     * Set Difference constructor
+     * Cartesian Product constructor
      */
     constructor() {
         super();
 
-        this.name = "Set Difference";
+        this.name = "Cartesian Product";
         this.module = "Default";
-        this.description = "Get the Difference of two sets";
+        this.description = "Get the cartesian product of two sets";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -49,7 +49,7 @@ class SetDifference extends Operation {
     }
 
     /**
-     * Run the difference operation
+     * Run the product operation
      * @param input
      * @param args
      */
@@ -63,24 +63,22 @@ class SetDifference extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runSetDifference(...sets.map(s => s.split(this.itemDelimiter))));
+        return Utils.escapeHtml(this.runCartesianProduct(...sets.map(s => s.split(this.itemDelimiter))));
     }
 
     /**
-     * Get elements in set a that are not in set b
-     *
-     * @param {Object[]} a
-     * @param {Object[]} b
-     * @returns {Object[]}
-     */
-    runSetDifference(a, b) {
-        return a
-            .filter((item) => {
-                return b.indexOf(item) === -1;
-            })
+    * Return the cartesian product of the two inputted sets.
+    *
+    * @param {Object[]} a
+    * @param {Object[]} b
+    * @returns {String[]}
+    */
+    runCartesianProduct(a, b) {
+        return Array(Math.max(a.length, b.length))
+            .fill(null)
+            .map((item, index) => `(${a[index] || undefined},${b[index] || undefined})`)
             .join(this.itemDelimiter);
     }
-
 }
 
-export default SetDifference;
+export default CartesianProduct;

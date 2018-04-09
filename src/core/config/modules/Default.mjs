@@ -5,15 +5,18 @@
 * @copyright Crown Copyright 2018
 * @license Apache-2.0
 */
+import CartesianProduct from "../../operations/CartesianProduct";
 import FromBase32 from "../../operations/FromBase32";
 import FromBase64 from "../../operations/FromBase64";
 import FromHex from "../../operations/FromHex";
+import PowerSet from "../../operations/PowerSet";
 import RawDeflate from "../../operations/RawDeflate";
 import SetDifference from "../../operations/SetDifference";
 import SetIntersection from "../../operations/SetIntersection";
 import SetOps from "../../operations/SetOps";
 import SetUnion from "../../operations/SetUnion";
 import ShowBase64Offsets from "../../operations/ShowBase64Offsets";
+import SymmetricDifference from "../../operations/SymmetricDifference";
 import ToBase32 from "../../operations/ToBase32";
 import ToBase64 from "../../operations/ToBase64";
 import ToHex from "../../operations/ToHex";
@@ -21,15 +24,18 @@ import ToHex from "../../operations/ToHex";
 const OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.Default = {
+    "Cartesian Product": CartesianProduct,
     "From Base32": FromBase32,
     "From Base64": FromBase64,
     "From Hex": FromHex,
+    "Power Set": PowerSet,
     "Raw Deflate": RawDeflate,
     "Set Difference": SetDifference,
     "Set Intersection": SetIntersection,
     "": SetOps,
     "Set Union": SetUnion,
     "Show Base64 offsets": ShowBase64Offsets,
+    "Symmetric Difference": SymmetricDifference,
     "To Base32": ToBase32,
     "To Base64": ToBase64,
     "To Hex": ToHex,
