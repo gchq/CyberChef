@@ -25,7 +25,8 @@ class Unzip extends Operation {
         this.module = "Compression";
         this.description = "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.";
         this.inputType = "byteArray";
-        this.outputType = "html";
+        this.outputType = "List<File>";
+        this.presentType = "html";
         this.args = [
             {
                 name: "Password",
@@ -43,7 +44,7 @@ class Unzip extends Operation {
     /**
      * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {html}
+     * @returns {File[]}
      */
     run(input, args) {
         const options = {
@@ -51,28 +52,22 @@ class Unzip extends Operation {
                 verify: args[1]
             },
             unzip = new Zlib.Unzip(input, options),
-            filenames = unzip.getFilenames(),
-            files = [];
+            filenames = unzip.getFilenames();
 
-        filenames.forEach(function(fileName) {
+        return filenames.map(fileName => {
             const bytes = unzip.decompress(fileName);
-            const contents = Utils.byteArrayToUtf8(bytes);
-
-            const file = {
-                fileName: fileName,
-                size: contents.length,
-            };
-
-            const isDir = contents.length === 0 && fileName.endsWith("/");
-            if (!isDir) {
-                file.bytes = bytes;
-                file.contents = contents;
-            }
-
-            files.push(file);
+            return new File([bytes], fileName);
         });
+    }
 
-        return Utils.displayFilesAsHTML(files);
+    /**
+     * Displays the files in HTML for web apps.
+     *
+     * @param {File[]} files
+     * @returns {html}
+     */
+    async present(files) {
+        return await Utils.displayFilesAsHTML(files);
     }
 
 }

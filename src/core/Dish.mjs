@@ -51,6 +51,8 @@ class Dish {
             case "bignumber":
             case "big number":
                 return Dish.BIG_NUMBER;
+            case "list<file>":
+                return Dish.LIST_FILE;
             default:
                 throw "Invalid data type string. No matching enum.";
         }
@@ -77,6 +79,8 @@ class Dish {
                 return "ArrayBuffer";
             case Dish.BIG_NUMBER:
                 return "BigNumber";
+            case Dish.LIST_FILE:
+                return "List<File>";
             default:
                 throw "Invalid data type enum. No matching type.";
         }
@@ -86,7 +90,7 @@ class Dish {
     /**
      * Sets the data value and type and then validates them.
      *
-     * @param {byteArray|string|number|ArrayBuffer|BigNumber} value
+     * @param {*} value
      *     - The value of the input data.
      * @param {number} type
      *     - The data type of value, see Dish enums.
@@ -112,15 +116,14 @@ class Dish {
      *
      * @param {number} type - The data type of value, see Dish enums.
      * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
-     * @returns {byteArray|string|number|ArrayBuffer|BigNumber}
-     *     The value of the output data.
+     * @returns {*} - The value of the output data.
      */
-    get(type, notUTF8=false) {
+    async get(type, notUTF8=false) {
         if (typeof type === "string") {
             type = Dish.typeEnum(type);
         }
         if (this.type !== type) {
-            this.translate(type, notUTF8);
+            await this._translate(type, notUTF8);
         }
         return this.value;
     }
@@ -132,7 +135,7 @@ class Dish {
      * @param {number} toType - The data type of value, see Dish enums.
      * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
      */
-    translate(toType, notUTF8=false) {
+    async _translate(toType, notUTF8=false) {
         log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
         const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
 
@@ -142,7 +145,7 @@ class Dish {
                 this.value = this.value ? Utils.strToByteArray(this.value) : [];
                 break;
             case Dish.NUMBER:
-                this.value = typeof this.value == "number" ? Utils.strToByteArray(this.value.toString()) : [];
+                this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
                 break;
             case Dish.HTML:
                 this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
@@ -153,6 +156,11 @@ class Dish {
                 break;
             case Dish.BIG_NUMBER:
                 this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
+                break;
+            case Dish.LIST_FILE:
+                this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
+                this.value = this.value.map(b => Array.prototype.slice.call(b));
+                this.value = [].concat.apply([], this.value);
                 break;
             default:
                 break;
@@ -182,6 +190,10 @@ class Dish {
                     this.value = new BigNumber(NaN);
                 }
                 this.type = Dish.BIG_NUMBER;
+                break;
+            case Dish.LIST_FILE:
+                this.value = new File(this.value, "unknown");
+                this.type = Dish.LIST_FILE;
                 break;
             default:
                 break;
@@ -220,6 +232,9 @@ class Dish {
                 return this.value instanceof ArrayBuffer;
             case Dish.BIG_NUMBER:
                 return this.value instanceof BigNumber;
+            case Dish.LIST_FILE:
+                return this.value instanceof Array &&
+                    this.value.reduce((acc, curr) => acc && curr instanceof File, true);
             default:
                 return false;
         }
@@ -244,6 +259,8 @@ class Dish {
                 return this.value.toString().length;
             case Dish.ARRAY_BUFFER:
                 return this.value.byteLength;
+            case Dish.LIST_FILE:
+                return this.value.reduce((acc, curr) => acc + curr.size, 0);
             default:
                 return -1;
         }
@@ -288,6 +305,12 @@ Dish.ARRAY_BUFFER = 4;
  * @enum
  */
 Dish.BIG_NUMBER = 5;
+/**
+ * Dish data type enum for lists of files.
+ * @readonly
+ * @enum
+ */
+Dish.LIST_FILE = 6;
 
 
 export default Dish;

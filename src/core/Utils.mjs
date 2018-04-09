@@ -812,35 +812,30 @@ class Utils {
 
     /**
      * Formats a list of files or directories.
-     * A File is an object with a "fileName" and optionally a "contents".
-     * If the fileName ends with "/" and the contents is of length 0 then
-     * it is considered a directory.
      *
      * @author tlwr [toby@toby.codes]
+     * @author n1474335 [n1474335@gmail.com]
      *
-     * @param {Object[]} files
+     * @param {File[]} files
      * @returns {html}
      */
-    static displayFilesAsHTML(files) {
-        /* <NL> and <SP> used to denote newlines and spaces in HTML markup.
-         * If a non-html operation is used, all markup will be removed but these
-         * whitespace chars will remain for formatting purposes.
-         */
-
+    static async displayFilesAsHTML(files) {
         const formatDirectory = function(file) {
             const html = `<div class='panel panel-default' style='white-space: normal;'>
                     <div class='panel-heading' role='tab'>
                         <h4 class='panel-title'>
-                            <NL>${Utils.escapeHtml(file.fileName)}
+                            ${Utils.escapeHtml(file.name)}
                         </h4>
                     </div>
                 </div>`;
             return html;
         };
 
-        const formatFile = function(file, i) {
+        const formatFile = async function(file, i) {
+            const buff = await Utils.readFile(file);
+            const fileStr = Utils.arrayBufferToStr(buff.buffer);
             const blob = new Blob(
-                [new Uint8Array(file.bytes)],
+                [buff],
                 {type: "octet/stream"}
             );
             const blobUrl = URL.createObjectURL(blob);
@@ -850,13 +845,13 @@ class Utils {
                 data-toggle='collapse'
                 aria-expanded='true'
                 aria-controls='collapse${i}'
-                title="Show/hide contents of '${Utils.escapeHtml(file.fileName)}'">&#x1f441;&#xfe0f;</a>`;
+                title="Show/hide contents of '${Utils.escapeHtml(file.name)}'">&#x1f441;&#xfe0f;</a>`;
 
             const downloadFileElem = `<a href='${blobUrl}'
-                title='Download ${Utils.escapeHtml(file.fileName)}'
-                download='${Utils.escapeHtml(file.fileName)}'>&#x1f4be;</a>`;
+                title='Download ${Utils.escapeHtml(file.name)}'
+                download='${Utils.escapeHtml(file.name)}'>&#x1f4be;</a>`;
 
-            const hexFileData = toHexFast(new Uint8Array(file.bytes));
+            const hexFileData = toHexFast(buff);
 
             const switchToInputElem = `<a href='#switchFileToInput${i}'
                 class='file-switch'
@@ -867,12 +862,12 @@ class Utils {
                     <div class='panel-heading' role='tab' id='heading${i}'>
                         <h4 class='panel-title'>
                             <div>
-                                ${Utils.escapeHtml(file.fileName)}<NL>
-                                ${viewFileElem}<SP>
-                                ${downloadFileElem}<SP>
-                                ${switchToInputElem}<SP>
+                                ${Utils.escapeHtml(file.name)}
+                                ${viewFileElem}
+                                ${downloadFileElem}
+                                ${switchToInputElem}
                                 <span class='pull-right'>
-                                    <NL>${file.size.toLocaleString()} bytes
+                                    ${file.size.toLocaleString()} bytes
                                 </span>
                             </div>
                         </h4>
@@ -880,7 +875,7 @@ class Utils {
                     <div id='collapse${i}' class='panel-collapse collapse'
                         role='tabpanel' aria-labelledby='heading${i}'>
                         <div class='panel-body'>
-                            <NL><NL><pre><code>${Utils.escapeHtml(file.contents)}</code></pre>
+                            <pre><code>${Utils.escapeHtml(fileStr)}</code></pre>
                         </div>
                     </div>
                 </div>`;
@@ -891,17 +886,15 @@ class Utils {
                 ${files.length} file(s) found<NL>
             </div>`;
 
-        files.forEach(function(file, i) {
-            if (typeof file.contents !== "undefined") {
-                html += formatFile(file, i);
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].name.endsWith("/")) {
+                html += formatDirectory(files[i]);
             } else {
-                html += formatDirectory(file);
+                html += await formatFile(files[i], i);
             }
-        });
+        }
 
-        return html.replace(/(?:(<pre>(?:\n|.)*<\/pre>)|\s{2,})/g, "$1") // Remove whitespace from markup
-            .replace(/<NL>/g, "\n") // Replace <NP> with newlines
-            .replace(/<SP>/g, " "); // Replace <SP> with spaces
+        return html;
     }
 
 
@@ -938,6 +931,47 @@ class Utils {
         }
 
         return result;
+    }
+
+
+    /**
+     * Reads a File and returns the data as a Uint8Array.
+     *
+     * @param {File} file
+     * @returns {Uint8Array}
+     *
+     * @example
+     * // returns Uint8Array(5) [104, 101, 108, 108, 111]
+     * await Utils.readFile(new File(["hello"], "test"))
+     */
+    static readFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            const data = new Uint8Array(file.size);
+            let offset = 0;
+            const CHUNK_SIZE = 10485760; // 10MiB
+
+            const seek = function() {
+                if (offset >= file.size) {
+                    resolve(data);
+                    return;
+                }
+                const slice = file.slice(offset, offset + CHUNK_SIZE);
+                reader.readAsArrayBuffer(slice);
+            };
+
+            reader.onload = function(e) {
+                data.set(new Uint8Array(reader.result), offset);
+                offset += CHUNK_SIZE;
+                seek();
+            };
+
+            reader.onerror = function(e) {
+                reject(reader.error.message);
+            };
+
+            seek();
+        });
     }
 
 

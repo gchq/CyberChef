@@ -12,8 +12,12 @@ import FromHex from "./FromHex";
 import Gunzip from "./Gunzip";
 import Gzip from "./Gzip";
 import PowerSet from "./PowerSet";
+import ROT13 from "./ROT13";
+import ROT47 from "./ROT47";
 import RawDeflate from "./RawDeflate";
 import RawInflate from "./RawInflate";
+import RotateLeft from "./RotateLeft";
+import RotateRight from "./RotateRight";
 import SetDifference from "./SetDifference";
 import SetIntersection from "./SetIntersection";
 import SetUnion from "./SetUnion";
@@ -35,8 +39,12 @@ export {
     Gunzip,
     Gzip,
     PowerSet,
+    ROT13,
+    ROT47,
     RawDeflate,
     RawInflate,
+    RotateLeft,
+    RotateRight,
     SetDifference,
     SetIntersection,
     SetUnion,

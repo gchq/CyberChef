@@ -10,7 +10,11 @@ import FromBase32 from "../../operations/FromBase32";
 import FromBase64 from "../../operations/FromBase64";
 import FromHex from "../../operations/FromHex";
 import PowerSet from "../../operations/PowerSet";
+import ROT13 from "../../operations/ROT13";
+import ROT47 from "../../operations/ROT47";
 import RawDeflate from "../../operations/RawDeflate";
+import RotateLeft from "../../operations/RotateLeft";
+import RotateRight from "../../operations/RotateRight";
 import SetDifference from "../../operations/SetDifference";
 import SetIntersection from "../../operations/SetIntersection";
 import SetUnion from "../../operations/SetUnion";
@@ -28,7 +32,11 @@ OpModules.Default = {
     "From Base64": FromBase64,
     "From Hex": FromHex,
     "Power Set": PowerSet,
+    "ROT13": ROT13,
+    "ROT47": ROT47,
     "Raw Deflate": RawDeflate,
+    "Rotate left": RotateLeft,
+    "Rotate right": RotateRight,
     "Set Difference": SetDifference,
     "Set Intersection": SetIntersection,
     "Set Union": SetUnion,

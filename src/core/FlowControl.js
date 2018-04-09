@@ -26,7 +26,7 @@ const FlowControl = {
         const opList     = state.opList,
             inputType    = opList[state.progress].inputType,
             outputType   = opList[state.progress].outputType,
-            input        = state.dish.get(inputType),
+            input        = await state.dish.get(inputType),
             ings         = opList[state.progress].ingValues,
             splitDelim   = ings[0],
             mergeDelim   = ings[1],
@@ -77,7 +77,7 @@ const FlowControl = {
                 }
                 progress = err.progress + 1;
             }
-            output += dish.get(outputType) + mergeDelim;
+            output += await dish.get(outputType) + mergeDelim;
         }
 
         state.dish.set(output, outputType);
@@ -111,7 +111,7 @@ const FlowControl = {
      * @param {Operation[]} state.opList - The list of operations in the recipe.
      * @returns {Object} The updated state of the recipe.
      */
-    runRegister: function(state) {
+    runRegister: async function(state) {
         const ings = state.opList[state.progress].ingValues,
             extractorStr = ings[0],
             i = ings[1],
@@ -122,7 +122,7 @@ const FlowControl = {
         if (m) modifiers += "m";
 
         const extractor = new RegExp(extractorStr, modifiers),
-            input = state.dish.get(Dish.STRING),
+            input = await state.dish.get(Dish.STRING),
             registers = input.match(extractor);
 
         if (!registers) return state;
@@ -208,7 +208,7 @@ const FlowControl = {
      * @param {number} state.numJumps - The number of jumps taken so far.
      * @returns {Object} The updated state of the recipe.
      */
-    runCondJump: function(state) {
+    runCondJump: async function(state) {
         const ings     = state.opList[state.progress].ingValues,
             dish     = state.dish,
             regexStr = ings[0],
@@ -223,7 +223,7 @@ const FlowControl = {
         }
 
         if (regexStr !== "") {
-            const strMatch = dish.get(Dish.STRING).search(regexStr) > -1;
+            const strMatch = await dish.get(Dish.STRING).search(regexStr) > -1;
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
