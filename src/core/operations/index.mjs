@@ -12,6 +12,7 @@ import Gunzip from "./Gunzip";
 import Gzip from "./Gzip";
 import RawDeflate from "./RawDeflate";
 import RawInflate from "./RawInflate";
+import SetDifference from "./SetDifference";
 import SetIntersection from "./SetIntersection";
 import SetOps from "./SetOps";
 import SetUnion from "./SetUnion";
@@ -32,6 +33,7 @@ export {
     Gzip,
     RawDeflate,
     RawInflate,
+    SetDifference,
     SetIntersection,
     SetOps,
     SetUnion,

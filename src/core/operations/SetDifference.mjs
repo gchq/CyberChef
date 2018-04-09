@@ -8,19 +8,19 @@ import Utils from "../Utils";
 import Operation from "../Operation";
 
 /**
- * Set Union operation
+ * Set Difference operation
  */
-class SetUnion extends Operation {
+class SetDifference extends Operation {
 
     /**
-     * Set Union constructor
+     * Set Difference constructor
      */
     constructor() {
         super();
 
-        this.name = "Set Union";
+        this.name = "Set Difference";
         this.module = "Default";
-        this.description = "Get the union of two sets";
+        this.description = "Get the Difference of two sets";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -49,7 +49,7 @@ class SetUnion extends Operation {
     }
 
     /**
-     * Run the union operation
+     * Run the difference operation
      * @param input
      * @param args
      */
@@ -63,34 +63,24 @@ class SetUnion extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runUnion(...sets.map(s => s.split(this.itemDelimiter))));
+        return Utils.escapeHtml(this.runSetDifferencez(...sets.map(s => s.split(this.itemDelimiter))));
     }
 
     /**
-     * Get the union of the two sets.
+     * Get elements in set a that are not in set b
      *
      * @param {Object[]} a
      * @param {Object[]} b
      * @returns {Object[]}
      */
-    runUnion(a, b) {
-        const result = {};
-
-        /**
-         * Only add non-existing items
-         * @param {Object} hash
-         */
-        const addUnique = (hash) => (item) => {
-            if (!hash[item]) {
-                hash[item] = true;
-            }
-        };
-
-        a.map(addUnique(result));
-        b.map(addUnique(result));
-
-        return Object.keys(result).join(this.itemDelimiter);
+    runSetDifference(a, b) {
+        return a
+            .filter((item) => {
+                return b.indexOf(item) === -1;
+            })
+            .join(this.itemDelimiter);
     }
+
 }
 
-export default SetUnion;
+export default SetDifference;

@@ -1,9 +1,9 @@
 /**
- * Set Operations tests.
+ * Set Union tests.
  *
  * @author d98762625
  *
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 import TestRegister from "../../TestRegister";

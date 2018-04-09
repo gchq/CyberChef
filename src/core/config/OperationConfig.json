@@ -210,6 +210,25 @@
             }
         ]
     },
+    "Set Difference": {
+        "module": "Default",
+        "description": "Get the Difference of two sets",
+        "inputType": "string",
+        "outputType": "string",
+        "flowControl": false,
+        "args": [
+            {
+                "name": "Sample delimiter",
+                "type": "binaryString",
+                "value": "\\n\\n"
+            },
+            {
+                "name": "Item delimiter",
+                "type": "binaryString",
+                "value": ","
+            }
+        ]
+    },
     "Set Intersection": {
         "module": "Default",
         "description": "Get the intersection of two sets",

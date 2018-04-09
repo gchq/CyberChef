@@ -49,8 +49,7 @@ import "./tests/operations/Base64";
 // import "./tests/operations/SeqUtils.js";
 import "./tests/operations/SetUnion";
 import "./tests/operations/SetIntersection";
-
-
+import "./tests/operations/SetDifference";
 
 let allTestsPassing = true;
 const testStatusCounts = {
