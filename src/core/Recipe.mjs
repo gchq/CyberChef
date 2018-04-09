@@ -189,9 +189,11 @@ class Recipe  {
         }
 
         // Present the results of the final operation
-        // TODO try/catch
-        output = await lastRunOp.present(output);
-        dish.set(output, lastRunOp.presentType);
+        if (lastRunOp) {
+            // TODO try/catch
+            output = await lastRunOp.present(output);
+            dish.set(output, lastRunOp.presentType);
+        }
 
         log.debug("Recipe complete");
         return this.opList.length;

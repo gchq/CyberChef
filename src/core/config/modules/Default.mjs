@@ -12,7 +12,6 @@ import FromHex from "../../operations/FromHex";
 import PowerSet from "../../operations/PowerSet";
 import ROT13 from "../../operations/ROT13";
 import ROT47 from "../../operations/ROT47";
-import RawDeflate from "../../operations/RawDeflate";
 import RotateLeft from "../../operations/RotateLeft";
 import RotateRight from "../../operations/RotateRight";
 import SetDifference from "../../operations/SetDifference";
@@ -34,7 +33,6 @@ OpModules.Default = {
     "Power Set": PowerSet,
     "ROT13": ROT13,
     "ROT47": ROT47,
-    "Raw Deflate": RawDeflate,
     "Rotate left": RotateLeft,
     "Rotate right": RotateRight,
     "Set Difference": SetDifference,

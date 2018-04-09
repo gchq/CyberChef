@@ -7,6 +7,7 @@
 */
 import Gunzip from "../../operations/Gunzip";
 import Gzip from "../../operations/Gzip";
+import RawDeflate from "../../operations/RawDeflate";
 import RawInflate from "../../operations/RawInflate";
 import Unzip from "../../operations/Unzip";
 import Zip from "../../operations/Zip";
@@ -18,6 +19,7 @@ const OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 OpModules.Compression = {
     "Gunzip": Gunzip,
     "Gzip": Gzip,
+    "Raw Deflate": RawDeflate,
     "Raw Inflate": RawInflate,
     "Unzip": Unzip,
     "Zip": Zip,

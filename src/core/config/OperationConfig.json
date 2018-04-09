@@ -227,7 +227,7 @@
         ]
     },
     "Raw Deflate": {
-        "module": "Default",
+        "module": "Compression",
         "description": "Compresses data using the deflate algorithm with no headers.",
         "inputType": "byteArray",
         "outputType": "byteArray",
