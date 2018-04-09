@@ -4155,31 +4155,6 @@ fs.writeFile(
         outputType: "number",
         args: []
     },
-<<<<<<< HEAD:src/core/config/OperationConfig.js
-    "Set Operations": {
-        module: "Default",
-        description: "Performs set operations",
-        inputType: "string",
-        outputType: "html",
-        args: [
-            {
-                name: "Sample delimiter",
-                type: "binaryString",
-                value: SetOps.SAMPLE_DELIMITER
-            },
-            {
-                name: "Item delimiter",
-                type: "binaryString",
-                value: SetOps.ITEM_DELIMITER
-            },
-            {
-                name: "Operation",
-                type: "option",
-                value: SetOps.OPERATION
-            }
-        ]
-    }
-=======
     "Bcrypt": {
         module: "Hashing",
         description: "bcrypt is a password hashing function designed by Niels Provos and David Mazières, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.<br><br>Enter the password in the input to generate its hash.",
@@ -4261,7 +4236,6 @@ fs.writeFile(
         outputType: "string",
         args: []
     },
->>>>>>> esm:src/core/config/scripts/generateConfig.mjs
 };
 */
 

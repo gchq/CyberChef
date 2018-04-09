@@ -48,7 +48,7 @@ import XKCD from "../../operations/XKCD.js";
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
+const OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 
 OpModules.Default = {
     "To Hexdump":           Hexdump.runTo,
