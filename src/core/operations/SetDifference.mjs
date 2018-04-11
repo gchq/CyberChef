@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
 import Operation from "../Operation";
 
 /**
@@ -20,14 +19,14 @@ class SetDifference extends Operation {
 
         this.name = "Set Difference";
         this.module = "Default";
-        this.description = "Get the Difference of two sets";
+        this.description = "Calculates the difference of two sets.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: Utils.escapeHtml("\\n\\n")
+                value: "\\n\\n"
             },
             {
                 name: "Item delimiter",
@@ -39,6 +38,7 @@ class SetDifference extends Operation {
 
     /**
      * Validate input length
+     *
      * @param {Object[]} sets
      * @throws {Error} if not two sets
      */
@@ -50,8 +50,10 @@ class SetDifference extends Operation {
 
     /**
      * Run the difference operation
-     * @param input
-     * @param args
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
      */
     run(input, args) {
         [this.sampleDelim, this.itemDelimiter] = args;
@@ -63,7 +65,7 @@ class SetDifference extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runSetDifference(...sets.map(s => s.split(this.itemDelimiter))));
+        return this.runSetDifference(...sets.map(s => s.split(this.itemDelimiter)));
     }
 
     /**

@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
 import Operation from "../Operation";
 
 /**
@@ -20,7 +19,7 @@ class PowerSet extends Operation {
 
         this.name = "Power Set";
         this.module = "Default";
-        this.description = "Generate the power set of a set";
+        this.description = "Calculates all the subsets of a set.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -34,8 +33,10 @@ class PowerSet extends Operation {
 
     /**
      * Generate the power set
-     * @param input
-     * @param args
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
      */
     run(input, args) {
         [this.itemDelimiter] = args;
@@ -43,7 +44,7 @@ class PowerSet extends Operation {
         const inputArray = input.split(this.itemDelimiter).filter(a => a);
 
         if (inputArray.length) {
-            return Utils.escapeHtml(this.runPowerSet(inputArray));
+            return this.runPowerSet(inputArray);
         }
 
         return "";

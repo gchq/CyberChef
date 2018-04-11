@@ -1,4 +1,9 @@
-import Utils from "../Utils";
+/**
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
 import Operation from "../Operation";
 
 /**
@@ -14,14 +19,14 @@ class SetIntersection extends Operation {
 
         this.name = "Set Intersection";
         this.module = "Default";
-        this.description = "Get the intersection of two sets";
+        this.description = "Calculates the intersection of two sets.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: Utils.escapeHtml("\\n\\n")
+                value: "\\n\\n"
             },
             {
                 name: "Item delimiter",
@@ -33,6 +38,7 @@ class SetIntersection extends Operation {
 
     /**
      * Validate input length
+     *
      * @param {Object[]} sets
      * @throws {Error} if not two sets
      */
@@ -44,8 +50,10 @@ class SetIntersection extends Operation {
 
     /**
      * Run the intersection operation
-     * @param input
-     * @param args
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
      */
     run(input, args) {
         [this.sampleDelim, this.itemDelimiter] = args;
@@ -57,7 +65,7 @@ class SetIntersection extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runIntersect(...sets.map(s => s.split(this.itemDelimiter))));
+        return this.runIntersect(...sets.map(s => s.split(this.itemDelimiter)));
     }
 
     /**

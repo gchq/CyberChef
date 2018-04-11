@@ -20,7 +20,7 @@ class SymmetricDifference extends Operation {
 
         this.name = "Symmetric Difference";
         this.module = "Default";
-        this.description = "Get the symmetric difference of two sets";
+        this.description = "Calculates the symmetric difference of two sets.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -39,6 +39,7 @@ class SymmetricDifference extends Operation {
 
     /**
      * Validate input length
+     *
      * @param {Object[]} sets
      * @throws {Error} if not two sets
      */
@@ -50,8 +51,10 @@ class SymmetricDifference extends Operation {
 
     /**
      * Run the difference operation
-     * @param input
-     * @param args
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
      */
     run(input, args) {
         [this.sampleDelim, this.itemDelimiter] = args;
@@ -63,7 +66,7 @@ class SymmetricDifference extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runSymmetricDifference(...sets.map(s => s.split(this.itemDelimiter))));
+        return this.runSymmetricDifference(...sets.map(s => s.split(this.itemDelimiter)));
     }
 
     /**

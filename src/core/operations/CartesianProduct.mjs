@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
 import Operation from "../Operation";
 
 /**
@@ -20,14 +19,14 @@ class CartesianProduct extends Operation {
 
         this.name = "Cartesian Product";
         this.module = "Default";
-        this.description = "Get the cartesian product of two sets";
+        this.description = "Calculates the cartesian product of multiple sets of data, returning all possible combinations.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: Utils.escapeHtml("\\n\\n")
+                value: "\\n\\n"
             },
             {
                 name: "Item delimiter",
@@ -39,19 +38,22 @@ class CartesianProduct extends Operation {
 
     /**
      * Validate input length
+     *
      * @param {Object[]} sets
-     * @throws {Error} if not two sets
+     * @throws {Error} if fewer than 2 sets
      */
     validateSampleNumbers(sets) {
-        if (!sets || (sets.length !== 2)) {
+        if (!sets || sets.length < 2) {
             throw "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?";
         }
     }
 
     /**
      * Run the product operation
-     * @param input
-     * @param args
+     *
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
      */
     run(input, args) {
         [this.sampleDelim, this.itemDelimiter] = args;
@@ -63,7 +65,7 @@ class CartesianProduct extends Operation {
             return e;
         }
 
-        return Utils.escapeHtml(this.runCartesianProduct(...sets.map(s => s.split(this.itemDelimiter))));
+        return this.runCartesianProduct(...sets.map(s => s.split(this.itemDelimiter)));
     }
 
     /**
@@ -71,12 +73,23 @@ class CartesianProduct extends Operation {
     *
     * @param {Object[]} a
     * @param {Object[]} b
-    * @returns {String[]}
+    * @param {Object[]} c
+    * @returns {string}
     */
-    runCartesianProduct(a, b) {
-        return Array(Math.max(a.length, b.length))
-            .fill(null)
-            .map((item, index) => `(${a[index] || undefined},${b[index] || undefined})`)
+    runCartesianProduct(a, b, ...c) {
+        /**
+         * https://stackoverflow.com/a/43053803/7200497
+         * @returns {Object[]}
+         */
+        const f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
+        /**
+         * https://stackoverflow.com/a/43053803/7200497
+         * @returns {Object[][]}
+         */
+        const cartesian = (a, b, ...c) => (b ? cartesian(f(a, b), ...c) : a);
+
+        return cartesian(a, b, ...c)
+            .map(set => `(${set.join(",")})`)
             .join(this.itemDelimiter);
     }
 }
