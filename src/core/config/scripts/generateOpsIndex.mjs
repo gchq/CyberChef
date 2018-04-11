@@ -57,3 +57,4 @@ fs.writeFileSync(
     path.join(dir, "../operations/index.mjs"),
     code
 );
+console.log("Written operation index.");
