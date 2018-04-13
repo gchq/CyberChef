@@ -240,6 +240,26 @@ class Dish {
         }
     }
 
+    /**
+     *
+     */
+    findType() {
+        if (!this.value) {
+            throw "Dish has no value";
+        }
+
+        const types = [Dish.BYTE_ARRAY, Dish.STRING, Dish.HTML, Dish.NUMBER, Dish.ARRAY_BUFFER, Dish.BIG_NUMBER, Dish.LIST_FILE];
+
+        types.find((type) => {
+            this.type = type;
+            if (this.valid()) {
+                return true;
+            }
+        });
+
+        return this.type;
+    }
+
 
     /**
      * Determines how much space the Dish takes up.

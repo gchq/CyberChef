@@ -118,6 +118,7 @@
     "build": "grunt prod",
     "test": "grunt test",
     "docs": "grunt docs",
-    "lint": "grunt lint"
+    "lint": "grunt lint",
+    "build-node": "grunt node"
   }
 }

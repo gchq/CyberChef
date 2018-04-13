@@ -45,7 +45,6 @@ class ToBase32 extends Operation {
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;
-
         while (i < input.length) {
             chr1 = input[i++];
             chr2 = input[i++];
@@ -76,7 +75,6 @@ class ToBase32 extends Operation {
                 alphabet.charAt(enc4) + alphabet.charAt(enc5) + alphabet.charAt(enc6) +
                 alphabet.charAt(enc7) + alphabet.charAt(enc8);
         }
-
         return output;
     }
 
