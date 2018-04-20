@@ -2,10 +2,13 @@
  * Node view for CyberChef.
  *
  * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 import "babel-polyfill";
+
+import {wrap, help, decapitalise} from "./apiUtils";
+import * as operations from "../core/operations/index";
 
 // Define global environment functions
 global.ENVIRONMENT_IS_WORKER = function() {
@@ -19,24 +22,13 @@ global.ENVIRONMENT_IS_WEB = function() {
 };
 
 
-import wrap from "./Wrapper";
-
-import * as operations from "../core/operations/index";
-
-/**
- * 
- * @param name 
- */
-function decapitalise(name) {
-    return `${name.charAt(0).toLowerCase()}${name.substr(1)}`;
-}
-
-
-// console.log(operations);
 const chef = {};
+
+// Add in wrapped operations with camelCase names
 Object.keys(operations).forEach(op =>
     chef[decapitalise(op)] = wrap(operations[op]));
 
+chef.help = help.bind(null, operations);
 
 export default chef;
 export {chef};
