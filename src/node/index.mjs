@@ -18,36 +18,25 @@ global.ENVIRONMENT_IS_WEB = function() {
     return typeof window === "object";
 };
 
-// import Chef from "../core/Chef";
 
-// const CyberChef = {
-
-//     bake: function(input, recipeConfig) {
-//         this.chef = new Chef();
-//         return this.chef.bake(
-//             input,
-//             recipeConfig,
-//             {},
-//             0,
-//             false
-//         );
-//     }
-
-// };
-
-// export default CyberChef;
-// export {CyberChef};
-
-import Wrapper from "./Wrapper";
+import wrap from "./Wrapper";
 
 import * as operations from "../core/operations/index";
 
-const cyberChef = {
-    base32: {
-        from: new Wrapper().wrap(operations.FromBase32),
-        to: new Wrapper().wrap(operations.ToBase32),
-    }
-};
+/**
+ * 
+ * @param name 
+ */
+function decapitalise(name) {
+    return `${name.charAt(0).toLowerCase()}${name.substr(1)}`;
+}
 
-export default cyberChef;
-export {cyberChef};
+
+// console.log(operations);
+const chef = {};
+Object.keys(operations).forEach(op =>
+    chef[decapitalise(op)] = wrap(operations[op]));
+
+
+export default chef;
+export {chef};

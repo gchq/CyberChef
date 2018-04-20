@@ -10,68 +10,28 @@ import Dish from "../core/Dish";
 import log from "loglevel";
 
 /**
- * 
+ * Extract default arg value from operation argument
+ * @param {Object} arg - an arg from an operation
  */
-export default class Wrapper {
-
-    /**
-     * 
-     * @param arg 
-     */
-    extractArg(arg) {
-        if (arg.type === "option" || arg.type === "editableOption") {
-            return arg.value[0];
-        }
-
-        return arg.value;
+function extractArg(arg) {
+    if (arg.type === "option" || arg.type === "editableOption") {
+        return arg.value[0];
     }
 
+    return arg.value;
+}
+
+/**
+ * Wrap an operation to be consumed by node API.
+ * new Operation().run() becomes operation()
+ * @param Operation 
+ */
+export default function wrap(Operation) {
     /**
      * 
      */
-    wrap(operation) {
-        this.operation = new operation();
-        // This for just exposing run function:
-        // return this.run.bind(this);
-
-        /**
-         * 
-         * @param input 
-         * @param args 
-         */
-        const _run = async(input, args=null) => {
-            const dish = new Dish(input);
-
-            try {
-                dish.findType();
-            } catch (e) {
-                log.debug(e);
-            }
-    
-            if (!args) {
-                args = this.operation.args.map(this.extractArg);
-            } else {
-                // Allows single arg ops to have arg defined not in array
-                if (!(args instanceof Array)) {
-                    args = [args];
-                }
-            }
-            const transformedInput = await dish.get(Dish.typeEnum(this.operation.inputType));
-            return this.operation.innerRun(transformedInput, args);
-        };
-
-        // There's got to be a nicer way to do this!
-        this.operation.innerRun = this.operation.run;
-        this.operation.run = _run;
-
-        return this.operation;
-    }
-
-    /**
-     *
-     * @param input
-     */
-    async run(input, args = null) {
+    return async (input, args=null) => {
+        const operation = new Operation();
         const dish = new Dish(input);
 
         try {
@@ -81,19 +41,14 @@ export default class Wrapper {
         }
 
         if (!args) {
-            args = this.operation.args.map(this.extractArg);
+            args = operation.args.map(extractArg);
         } else {
             // Allows single arg ops to have arg defined not in array
             if (!(args instanceof Array)) {
                 args = [args];
             }
         }
-
-        const transformedInput = await dish.get(Dish.typeEnum(this.operation.inputType));
-        return this.operation.run(transformedInput, args);
-
-
-
-
-    }
+        const transformedInput = await dish.get(Dish.typeEnum(operation.inputType));
+        return operation.run(transformedInput, args);
+    };
 }
