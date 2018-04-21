@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import Utils from "../Utils";
 import {INFLATE_BUFFER_TYPE} from "../lib/Zlib";
 import rawinflate from "zlibjs/bin/rawinflate.min";
 
@@ -30,8 +29,8 @@ class RawInflate extends Operation {
         this.name = "Raw Inflate";
         this.module = "Compression";
         this.description = "Decompresses data which has been compressed using the deflate algorithm with no headers.";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 name: "Start index",
@@ -62,21 +61,19 @@ class RawInflate extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
-        // Deal with character encoding issues
-        input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
-        const inflate = new Zlib.RawInflate(input, {
+        const inflate = new Zlib.RawInflate(new Uint8Array(input), {
                 index: args[0],
                 bufferSize: args[1],
                 bufferType: RAW_BUFFER_TYPE_LOOKUP[args[2]],
                 resize: args[3],
                 verify: args[4]
             }),
-            result = Array.prototype.slice.call(inflate.decompress());
+            result = new Uint8Array(inflate.decompress());
 
         // Raw Inflate somethimes messes up and returns nonsense like this:
         // ]....]....]....]....]....]....]....]....]....]....]....]....]....]...
@@ -97,7 +94,7 @@ class RawInflate extends Operation {
             }
         }
         // This seems to be the easiest way...
-        return result;
+        return result.buffer;
     }
 
 }

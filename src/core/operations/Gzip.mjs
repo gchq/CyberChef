@@ -24,8 +24,8 @@ class Gzip extends Operation {
         this.name = "Gzip";
         this.module = "Compression";
         this.description = "Compresses data using the deflate algorithm with gzip headers.";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 name: "Compression type",
@@ -51,9 +51,9 @@ class Gzip extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
         const filename = args[1],
@@ -76,8 +76,8 @@ class Gzip extends Operation {
             options.comment = comment;
         }
 
-        const gzip = new Zlib.Gzip(input, options);
-        return Array.prototype.slice.call(gzip.compress());
+        const gzip = new Zlib.Gzip(new Uint8Array(input), options);
+        return new Uint8Array(gzip.compress()).buffer;
     }
 
 }

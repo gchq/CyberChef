@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import Utils from "../Utils";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
 
 const Zlib = zlibAndGzip.Zlib;
@@ -24,21 +23,19 @@ class Gunzip extends Operation {
         this.name = "Gunzip";
         this.module = "Compression";
         this.description = "Decompresses data which has been compressed using the deflate algorithm with gzip headers.";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {File}
      */
     run(input, args) {
-        // Deal with character encoding issues
-        input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
-        const gunzip = new Zlib.Gunzip(input);
-        return Array.prototype.slice.call(gunzip.decompress());
+        const gunzip = new Zlib.Gunzip(new Uint8Array(input));
+        return new Uint8Array(gunzip.decompress()).buffer;
     }
 
 }

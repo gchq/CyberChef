@@ -54,6 +54,10 @@ class Dish {
             case "bignumber":
             case "big number":
                 return Dish.BIG_NUMBER;
+            case "json":
+                return Dish.JSON;
+            case "file":
+                return Dish.FILE;
             case "list<file>":
                 return Dish.LIST_FILE;
             default:
@@ -82,6 +86,10 @@ class Dish {
                 return "ArrayBuffer";
             case Dish.BIG_NUMBER:
                 return "BigNumber";
+            case Dish.JSON:
+                return "JSON";
+            case Dish.FILE:
+                return "File";
             case Dish.LIST_FILE:
                 return "List<File>";
             default:
@@ -160,6 +168,13 @@ class Dish {
             case Dish.BIG_NUMBER:
                 this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
                 break;
+            case Dish.JSON:
+                this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value)) : [];
+                break;
+            case Dish.FILE:
+                this.value = await Utils.readFile(this.value);
+                this.value = Array.prototype.slice.call(this.value);
+                break;
             case Dish.LIST_FILE:
                 this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
                 this.value = this.value.map(b => Array.prototype.slice.call(b));
@@ -194,8 +209,15 @@ class Dish {
                 }
                 this.type = Dish.BIG_NUMBER;
                 break;
-            case Dish.LIST_FILE:
+            case Dish.JSON:
+                this.value = JSON.parse(byteArrayToStr(this.value));
+                this.type = Dish.JSON;
+                break;
+            case Dish.FILE:
                 this.value = new File(this.value, "unknown");
+                break;
+            case Dish.LIST_FILE:
+                this.value = [new File(this.value, "unknown")];
                 this.type = Dish.LIST_FILE;
                 break;
             default:
@@ -235,6 +257,11 @@ class Dish {
                 return this.value instanceof ArrayBuffer;
             case Dish.BIG_NUMBER:
                 return this.value instanceof BigNumber;
+            case Dish.JSON:
+                // All values can be serialised in some manner, so we return true in all cases
+                return true;
+            case Dish.FILE:
+                return this.value instanceof File;
             case Dish.LIST_FILE:
                 return this.value instanceof Array &&
                     this.value.reduce((acc, curr) => acc && curr instanceof File, true);
@@ -282,6 +309,10 @@ class Dish {
                 return this.value.toString().length;
             case Dish.ARRAY_BUFFER:
                 return this.value.byteLength;
+            case Dish.JSON:
+                return JSON.stringify(this.value).length;
+            case Dish.FILE:
+                return this.value.size;
             case Dish.LIST_FILE:
                 return this.value.reduce((acc, curr) => acc + curr.size, 0);
             default:
@@ -329,11 +360,23 @@ Dish.ARRAY_BUFFER = 4;
  */
 Dish.BIG_NUMBER = 5;
 /**
+ * Dish data type enum for JSON.
+ * @readonly
+ * @enum
+ */
+Dish.JSON = 6;
+/**
  * Dish data type enum for lists of files.
  * @readonly
  * @enum
  */
-Dish.LIST_FILE = 6;
+Dish.FILE = 7;
+/**
+* Dish data type enum for lists of files.
+* @readonly
+* @enum
+*/
+Dish.LIST_FILE = 8;
 
 
 export default Dish;
