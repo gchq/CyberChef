@@ -89,7 +89,14 @@ class Chef {
         const threshold = (options.ioDisplayThreshold || 1024) * 1024;
         const returnType = this.dish.size > threshold ? Dish.ARRAY_BUFFER : Dish.STRING;
 
+        // Create a raw version of the dish, unpresented
+        const rawDish = new Dish(this.dish);
+
+        // Present the raw result
+        await recipe.present(this.dish);
+
         return {
+            dish: rawDish,
             result: this.dish.type === Dish.HTML ?
                 await this.dish.get(Dish.HTML, notUTF8) :
                 await this.dish.get(returnType, notUTF8),
@@ -123,7 +130,7 @@ class Chef {
 
         const startTime = new Date().getTime(),
             recipe = new Recipe(recipeConfig),
-            dish = new Dish("", Dish.STRING);
+            dish = new Dish();
 
         try {
             recipe.execute(dish);
@@ -165,6 +172,19 @@ class Chef {
             pos: pos,
             direction: direction
         };
+    }
+
+
+    /**
+     * Translates the dish to a specified type and returns it.
+     *
+     * @param {Dish} dish
+     * @param {string} type
+     * @returns {Dish}
+     */
+    async getDishAs(dish, type) {
+        const newDish = new Dish(dish);
+        return await newDish.get(type);
     }
 
 }

@@ -40,7 +40,7 @@ OutputWaiter.prototype.get = function() {
  * @param {number} duration - The length of time (ms) it took to generate the output
  * @param {boolean} [preserveBuffer=false] - Whether to preserve the dishBuffer
  */
-OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
+OutputWaiter.prototype.set = async function(data, type, duration, preserveBuffer) {
     log.debug("Output type: " + type);
     const outputText = document.getElementById("output-text");
     const outputHtml = document.getElementById("output-html");
@@ -51,6 +51,7 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
     if (!preserveBuffer) {
         this.closeFile();
+        this.dishStr = null;
         document.getElementById("show-file-overlay").style.display = "none";
     }
 
@@ -64,9 +65,6 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
             outputText.value = "";
             outputHtml.innerHTML = data;
-            this.dishStr = Utils.unescapeHtml(Utils.stripHtmlTags(data, true));
-            length = data.length;
-            lines = this.dishStr.count("\n") + 1;
 
             // Execute script sections
             scriptElements = outputHtml.querySelectorAll("script");
@@ -77,6 +75,10 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
                     log.error(err);
                 }
             }
+
+            await this.getDishStr();
+            length = this.dishStr.length;
+            lines = this.dishStr.count("\n") + 1;
             break;
         case "ArrayBuffer":
             outputText.style.display = "block";
@@ -86,7 +88,6 @@ OutputWaiter.prototype.set = function(data, type, duration, preserveBuffer) {
 
             outputText.value = "";
             outputHtml.innerHTML = "";
-            this.dishStr = "";
             length = data.byteLength;
 
             this.setFile(data);
@@ -151,10 +152,10 @@ OutputWaiter.prototype.closeFile = function() {
 /**
  * Handler for file download events.
  */
-OutputWaiter.prototype.downloadFile = function() {
+OutputWaiter.prototype.downloadFile = async function() {
     this.filename = window.prompt("Please enter a filename:", this.filename || "download.dat");
+    await this.getDishBuffer();
     const file = new File([this.dishBuffer], this.filename);
-
     if (this.filename) FileSaver.saveAs(file, this.filename, false);
 };
 
@@ -254,9 +255,6 @@ OutputWaiter.prototype.adjustWidth = function() {
  * Saves the current output to a file.
  */
 OutputWaiter.prototype.saveClick = function() {
-    if (!this.dishBuffer) {
-        this.dishBuffer = new Uint8Array(Utils.strToCharcode(this.dishStr)).buffer;
-    }
     this.downloadFile();
 };
 
@@ -265,8 +263,10 @@ OutputWaiter.prototype.saveClick = function() {
  * Handler for copy click events.
  * Copies the output to the clipboard.
  */
-OutputWaiter.prototype.copyClick = function() {
-    // Create invisible textarea to populate with the raw dishStr (not the printable version that
+OutputWaiter.prototype.copyClick = async function() {
+    await this.getDishStr();
+
+    // Create invisible textarea to populate with the raw dish string (not the printable version that
     // contains dots instead of the actual bytes)
     const textarea = document.createElement("textarea");
     textarea.style.position = "fixed";
@@ -303,7 +303,7 @@ OutputWaiter.prototype.copyClick = function() {
  * Handler for switch click events.
  * Moves the current output into the input textarea.
  */
-OutputWaiter.prototype.switchClick = function() {
+OutputWaiter.prototype.switchClick = async function() {
     this.switchOrigData = this.manager.input.get();
     document.getElementById("undo-switch").disabled = false;
     if (this.dishBuffer) {
@@ -315,6 +315,7 @@ OutputWaiter.prototype.switchClick = function() {
             }
         });
     } else {
+        await this.getDishStr();
         this.app.setInput(this.dishStr);
     }
 };
@@ -327,17 +328,6 @@ OutputWaiter.prototype.switchClick = function() {
 OutputWaiter.prototype.undoSwitchClick = function() {
     this.app.setInput(this.switchOrigData);
     document.getElementById("undo-switch").disabled = true;
-};
-
-/**
- * Handler for file switch click events.
- * Moves a file's data for items created via Utils.displayFilesAsHTML to the input.
- */
-OutputWaiter.prototype.fileSwitch = function(e) {
-    e.preventDefault();
-    this.switchOrigData = this.manager.input.get();
-    this.app.setInput(e.target.getAttribute("fileValue"));
-    document.getElementById("undo-switch").disabled = false;
 };
 
 
@@ -409,8 +399,43 @@ OutputWaiter.prototype.setStatusMsg = function(msg) {
  *
  * @returns {boolean}
  */
-OutputWaiter.prototype.containsCR = function() {
+OutputWaiter.prototype.containsCR = async function() {
+    await this.getDishStr();
     return this.dishStr.indexOf("\r") >= 0;
+};
+
+
+/**
+ * Retrieves the current dish as a string, returning the cached version if possible.
+ *
+ * @returns {string}
+ */
+OutputWaiter.prototype.getDishStr = async function() {
+    if (this.dishStr) return this.dishStr;
+
+    this.dishStr = await new Promise(resolve => {
+        this.manager.worker.getDishAs(this.app.dish, "string", r => {
+            resolve(r.value);
+        });
+    });
+    return this.dishStr;
+};
+
+
+/**
+ * Retrieves the current dish as an ArrayBuffer, returning the cached version if possible.
+ *
+ * @returns {ArrayBuffer}
+ */
+OutputWaiter.prototype.getDishBuffer = async function() {
+    if (this.dishBuffer) return this.dishBuffer;
+
+    this.dishBuffer = await new Promise(resolve => {
+        this.manager.worker.getDishAs(this.app.dish, "ArrayBuffer", r => {
+            resolve(r.value);
+        });
+    });
+    return this.dishBuffer;
 };
 
 export default OutputWaiter;

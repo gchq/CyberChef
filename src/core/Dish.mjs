@@ -17,14 +17,17 @@ class Dish {
     /**
      * Dish constructor
      *
-     * @param {byteArray|string|number|ArrayBuffer|BigNumber} [value=null]
-     *     - The value of the input data.
-     * @param {number} [type=Dish.BYTE_ARRAY]
-     *     - The data type of value, see Dish enums.
+     * @param {Dish} [dish=null] - A dish to clone
      */
-    constructor(value=null, type=Dish.BYTE_ARRAY) {
-        this.value = value;
-        this.type = type;
+    constructor(dish=null) {
+        this.value = [];
+        this.type = Dish.BYTE_ARRAY;
+
+        if (dish &&
+            dish.hasOwnProperty("value") &&
+            dish.hasOwnProperty("type")) {
+            this.set(dish.value, dish.type);
+        }
     }
 
 

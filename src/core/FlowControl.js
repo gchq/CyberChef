@@ -68,7 +68,9 @@ const FlowControl = {
                 op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
             });
 
-            const dish = new Dish(inputs[i], inputType);
+            const dish = new Dish();
+            dish.set(inputs[i], inputType);
+
             try {
                 progress = await recipe.execute(dish, 0, state);
             } catch (err) {

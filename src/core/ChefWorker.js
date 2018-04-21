@@ -60,6 +60,9 @@ self.addEventListener("message", function(e) {
         case "silentBake":
             silentBake(r.data);
             break;
+        case "getDishAs":
+            getDishAs(r.data);
+            break;
         case "docURL":
             // Used to set the URL of the current document so that scripts can be
             // imported into an inline worker.
@@ -121,6 +124,22 @@ function silentBake(data) {
     self.postMessage({
         action: "silentBakeComplete",
         data: duration
+    });
+}
+
+
+/**
+ * Translates the dish to a given type.
+ */
+async function getDishAs(data) {
+    const value = await self.chef.getDishAs(data.dish, data.type);
+
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: value,
+            id: data.id
+        }
     });
 }
 

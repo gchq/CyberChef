@@ -7,7 +7,7 @@
 import utf8 from "utf8";
 import moment from "moment-timezone";
 import {fromBase64} from "./lib/Base64";
-import {toHexFast, fromHex} from "./lib/Hex";
+import {fromHex} from "./lib/Hex";
 
 
 /**
@@ -833,39 +833,24 @@ class Utils {
 
         const formatFile = async function(file, i) {
             const buff = await Utils.readFile(file);
-            const fileStr = Utils.arrayBufferToStr(buff.buffer);
             const blob = new Blob(
                 [buff],
                 {type: "octet/stream"}
             );
-            const blobUrl = URL.createObjectURL(blob);
-
-            const viewFileElem = `<a href='#collapse${i}'
-                class='collapsed'
-                data-toggle='collapse'
-                aria-expanded='true'
-                aria-controls='collapse${i}'
-                title="Show/hide contents of '${Utils.escapeHtml(file.name)}'">&#x1f441;&#xfe0f;</a>`;
-
-            const downloadFileElem = `<a href='${blobUrl}'
-                title='Download ${Utils.escapeHtml(file.name)}'
-                download='${Utils.escapeHtml(file.name)}'>&#x1f4be;</a>`;
-
-            const hexFileData = toHexFast(buff);
-
-            const switchToInputElem = `<a href='#switchFileToInput${i}'
-                class='file-switch'
-                title='Move file to input as hex'
-                fileValue='${hexFileData}'>&#x21e7;</a>`;
 
             const html = `<div class='panel panel-default' style='white-space: normal;'>
                     <div class='panel-heading' role='tab' id='heading${i}'>
                         <h4 class='panel-title'>
                             <div>
-                                ${Utils.escapeHtml(file.name)}
-                                ${viewFileElem}
-                                ${downloadFileElem}
-                                ${switchToInputElem}
+                                <a href='#collapse${i}'
+                                    class='collapsed'
+                                    data-toggle='collapse'
+                                    aria-expanded='true'
+                                    aria-controls='collapse${i}'
+                                    title="Show/hide contents of '${Utils.escapeHtml(file.name)}'">${Utils.escapeHtml(file.name)}</a>
+                                <a href='${URL.createObjectURL(blob)}'
+                                    title='Download ${Utils.escapeHtml(file.name)}'
+                                    download='${Utils.escapeHtml(file.name)}'>&#x1f4be;</a>
                                 <span class='pull-right'>
                                     ${file.size.toLocaleString()} bytes
                                 </span>
@@ -875,7 +860,7 @@ class Utils {
                     <div id='collapse${i}' class='panel-collapse collapse'
                         role='tabpanel' aria-labelledby='heading${i}'>
                         <div class='panel-body'>
-                            <pre><code>${Utils.escapeHtml(fileStr)}</code></pre>
+                            <pre><code>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</code></pre>
                         </div>
                     </div>
                 </div>`;

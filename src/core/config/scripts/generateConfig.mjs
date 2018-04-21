@@ -99,7 +99,7 @@ export default OpModules;
         path.join(dir, `modules/${module}.mjs`),
         code
     );
-    console.log(`Written ${module} module`); 
+    console.log(`Written ${module} module`);
 }
 
 
