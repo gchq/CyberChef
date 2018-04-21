@@ -30,8 +30,8 @@ class RawDeflate extends Operation {
         this.name = "Raw Deflate";
         this.module = "Compression";
         this.description = "Compresses data using the deflate algorithm with no headers.";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 name: "Compression type",
@@ -42,15 +42,15 @@ class RawDeflate extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
-        const deflate = new Zlib.RawDeflate(input, {
+        const deflate = new Zlib.RawDeflate(new Uint8Array(input), {
             compressionType: RAW_COMPRESSION_TYPE_LOOKUP[args[0]]
         });
-        return Array.prototype.slice.call(deflate.compress());
+        return new Uint8Array(deflate.compress()).buffer;
     }
 
 }

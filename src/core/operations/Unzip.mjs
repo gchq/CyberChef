@@ -24,7 +24,7 @@ class Unzip extends Operation {
         this.name = "Unzip";
         this.module = "Compression";
         this.description = "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";
         this.args = [
@@ -42,7 +42,7 @@ class Unzip extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {File[]}
      */
@@ -51,7 +51,7 @@ class Unzip extends Operation {
                 password: Utils.strToByteArray(args[0]),
                 verify: args[1]
             },
-            unzip = new Zlib.Unzip(input, options),
+            unzip = new Zlib.Unzip(new Uint8Array(input), options),
             filenames = unzip.getFilenames();
 
         return filenames.map(fileName => {

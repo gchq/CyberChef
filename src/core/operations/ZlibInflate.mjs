@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import Utils from "../Utils";
 import {INFLATE_BUFFER_TYPE} from "../lib/Zlib";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
 
@@ -30,8 +29,8 @@ class ZlibInflate extends Operation {
         this.name = "Zlib Inflate";
         this.module = "Compression";
         this.description = "Decompresses data which has been compressed using the deflate algorithm with zlib headers.";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 name: "Start index",
@@ -62,21 +61,19 @@ class ZlibInflate extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
-        // Deal with character encoding issues
-        input = Utils.strToByteArray(Utils.byteArrayToUtf8(input));
-        const inflate = new Zlib.Inflate(input, {
+        const inflate = new Zlib.Inflate(new Uint8Array(input), {
             index: args[0],
             bufferSize: args[1],
             bufferType: ZLIB_BUFFER_TYPE_LOOKUP[args[2]],
             resize: args[3],
             verify: args[4]
         });
-        return Array.prototype.slice.call(inflate.decompress());
+        return new Uint8Array(inflate.decompress()).buffer;
     }
 
 }

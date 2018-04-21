@@ -36,8 +36,8 @@ class Zip extends Operation {
         this.name = "Zip";
         this.module = "Compression";
         this.description = "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "File";
         this.args = [
             {
                 name: "Filename",
@@ -73,14 +73,15 @@ class Zip extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {File}
      */
     run(input, args) {
-        const password = Utils.strToByteArray(args[2]),
+        const filename = args[0],
+            password = Utils.strToByteArray(args[2]),
             options = {
-                filename: Utils.strToByteArray(args[0]),
+                filename: Utils.strToByteArray(filename),
                 comment: Utils.strToByteArray(args[1]),
                 compressionMethod: ZIP_COMPRESSION_METHOD_LOOKUP[args[3]],
                 os: ZIP_OS_LOOKUP[args[4]],
@@ -92,8 +93,8 @@ class Zip extends Operation {
 
         if (password.length)
             zip.setPassword(password);
-        zip.addFile(input, options);
-        return Array.prototype.slice.call(zip.compress());
+        zip.addFile(new Uint8Array(input), options);
+        return new File([zip.compress()], filename);
     }
 
 }
