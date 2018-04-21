@@ -14,6 +14,9 @@ import ChefWorker from "worker-loader?inline&fallback=false!../core/ChefWorker.j
 const WorkerWaiter = function(app, manager) {
     this.app = app;
     this.manager = manager;
+
+    this.callbacks = {};
+    this.callbackID = 0;
 };
 
 
@@ -51,6 +54,9 @@ WorkerWaiter.prototype.handleChefMessage = function(e) {
         case "bakeError":
             this.app.handleError(r.data);
             this.setBakingStatus(false);
+            break;
+        case "dishReturned":
+            this.callbacks[r.data.id](r.data);
             break;
         case "silentBakeComplete":
             break;
@@ -117,6 +123,7 @@ WorkerWaiter.prototype.bakingComplete = function(response) {
     }
 
     this.app.progress = response.progress;
+    this.app.dish = response.dish;
     this.manager.recipe.updateBreakpointIndicator(response.progress);
     this.manager.output.set(response.result, response.type, response.duration);
     log.debug("--- Bake complete ---");
@@ -180,6 +187,27 @@ WorkerWaiter.prototype.highlight = function(recipeConfig, direction, pos) {
             recipeConfig: recipeConfig,
             direction: direction,
             pos: pos
+        }
+    });
+};
+
+
+/**
+ * Asks the ChefWorker to return the dish as the specified type
+ *
+ * @param {Dish} dish
+ * @param {string} type
+ * @param {Function} callback
+ */
+WorkerWaiter.prototype.getDishAs = function(dish, type, callback) {
+    const id = this.callbackID++;
+    this.callbacks[id] = callback;
+    this.chefWorker.postMessage({
+        action: "getDishAs",
+        data: {
+            dish: dish,
+            type: type,
+            id: id
         }
     });
 };

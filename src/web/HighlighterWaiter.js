@@ -393,13 +393,13 @@ HighlighterWaiter.prototype.displayHighlights = function(pos, direction) {
  * @param {number} pos.start - The start offset.
  * @param {number} pos.end - The end offset.
  */
-HighlighterWaiter.prototype.highlight = function(textarea, highlighter, pos) {
+HighlighterWaiter.prototype.highlight = async function(textarea, highlighter, pos) {
     if (!this.app.options.showHighlighter) return false;
     if (!this.app.options.attemptHighlight) return false;
 
     // Check if there is a carriage return in the output dish as this will not
     // be displayed by the HTML textarea and will mess up highlighting offsets.
-    if (this.manager.output.containsCR()) return false;
+    if (await this.manager.output.containsCR()) return false;
 
     const startPlaceholder = "[startHighlight]";
     const startPlaceholderRegex = /\[startHighlight\]/g;
