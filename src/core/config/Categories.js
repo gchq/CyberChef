@@ -67,6 +67,7 @@ const Categories = [
             "Encode text",
             "Decode text",
             "Swap endianness",
+            "To Table",
         ]
     },
     {

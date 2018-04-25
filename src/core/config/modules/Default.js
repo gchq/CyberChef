@@ -27,6 +27,7 @@ import Rotate from "../../operations/Rotate.js";
 import SeqUtils from "../../operations/SeqUtils.js";
 import StrUtils from "../../operations/StrUtils.js";
 import Tidy from "../../operations/Tidy.js";
+import ToTable from "../../operations/ToTable.js";
 import Unicode from "../../operations/Unicode.js";
 import UUID from "../../operations/UUID.js";
 import XKCD from "../../operations/XKCD.js";
@@ -163,6 +164,7 @@ OpModules.Default = {
     "Mean":                 Arithmetic.runMean,
     "Median":               Arithmetic.runMedian,
     "Standard Deviation":   Arithmetic.runStdDev,
+    "To Table":             ToTable.runToTable,
     "Windows Filetime to UNIX Timestamp": Filetime.runFromFiletimeToUnix,
     "UNIX Timestamp to Windows Filetime": Filetime.runToFiletimeFromUnix,
     "XKCD Random Number":  XKCD.runRandomNumber,
