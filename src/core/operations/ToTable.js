@@ -1,19 +1,17 @@
-import Utils from "../Utils.js";
-
 /**
  * ToTable operations.
  *
  * @author Mark Jones [github.com/justanothermark]
  * @namespace
  */
- const ToTable = {
+const ToTable = {
     /**
      * @constant
      * @default
      */
     SEPARATORS: [
-        {name: "Comma", value:","},
-        {name: "Tab", value: escape("\t")},
+        {name: "Comma", value: ","},
+        {name: "Tab", value: "\\t"},
         {name: "Pipe", value: "|"},
         {name: "Custom", value: ""}
     ],
@@ -23,8 +21,8 @@ import Utils from "../Utils.js";
      * @default
      */
     FORMATS: [
-        'ASCII',
-        'HTML'
+        "ASCII",
+        "HTML"
     ],
 
     /**
@@ -41,23 +39,22 @@ import Utils from "../Utils.js";
         let tableData = [];
 
         // If the separator contains any tabs, convert them to tab characters.
-        separator = separator.replace('\\t', '\t');
+        separator = separator.replace("\\t", "\t");
 
         // Process the input into a nested array of elements.
-        let rows = input.split('\n');
+        let rows = input.split("\n");
         rows.forEach(function(element) {
-            if (separator == '') {
+            if (separator === "") {
                 tableData.push([element]);
-            }
-            else {
+            } else {
                 tableData.push(element.split(separator));
             }
         });
 
         // Render the data in the requested format.
-        let output = '';
+        let output = "";
         switch (format) {
-            case 'ASCII':
+            case "ASCII":
                 output = asciiOutput(tableData);
                 break;
 
@@ -75,29 +72,20 @@ import Utils from "../Utils.js";
          * @returns {string}
          */
         function asciiOutput(tableData) {
-            const horizontalBorder = '-';
-            const verticalBorder = '|';
-            const crossBorder = '+';
+            const horizontalBorder = "-";
+            const verticalBorder = "|";
+            const crossBorder = "+";
 
-            let output = '';
+            let output = "";
             let longestCells = [];
 
             // Find longestCells value per column to pad cells equally.
             tableData.forEach(function(row, index) {
                 row.forEach(function(cell, cellIndex) {
-                    if (longestCells[cellIndex] == undefined || cell.length > longestCells[cellIndex]) {
+                    if (longestCells[cellIndex] === undefined || cell.length > longestCells[cellIndex]) {
                         longestCells[cellIndex] = cell.length;
                     }
                 });
-            });
-
-            // Calculate the complete row length. This is the length of the
-            // longest cell for each column plus 3 characters per cell
-            // (1 padding each side of the value and 1 for the cell border)
-            // plus 1 for the final cell border.
-            let rowLength = (longestCells.length * 3) + 1;
-            longestCells.forEach(function(celllongestCells) {
-                rowLength += celllongestCells;
             });
 
             // Add the top border of the table to the output.
@@ -127,9 +115,9 @@ import Utils from "../Utils.js";
             function outputRow(row, longestCells) {
                 let rowOutput = verticalBorder;
                 row.forEach(function(cell, index) {
-                    rowOutput += ' ' + cell + ' '.repeat(longestCells[index] - cell.length) + ' ' + verticalBorder;
+                    rowOutput += " " + cell + " ".repeat(longestCells[index] - cell.length) + " " + verticalBorder;
                 });
-                rowOutput += '\n';
+                rowOutput += "\n";
                 return rowOutput;
             }
 
@@ -142,7 +130,7 @@ import Utils from "../Utils.js";
                 longestCells.forEach(function(cellLength) {
                     rowOutput += horizontalBorder.repeat(cellLength + 2) + crossBorder;
                 });
-                rowOutput += '\n';
+                rowOutput += "\n";
                 return rowOutput;
             }
         }
@@ -158,20 +146,26 @@ import Utils from "../Utils.js";
             if (firstRowHeader) {
                 let row = tableData.shift();
                 output += "<thead>";
-                output += outputRow(row, 'th');
+                output += outputRow(row, "th");
                 output += "</thead>";
             }
 
             // Output the rest of the rows in the <tbody>.
             output += "<tbody>";
             tableData.forEach(function(row, index) {
-                output += outputRow(row, 'td');
+                output += outputRow(row, "td");
             });
 
             // Close the body and table elements.
             output += "</tbody></table>";
             return output;
 
+          /**
+           * Outputs a table row.
+           *
+           * @param {string[]} row
+           * @param {string} cellType
+           */
             function outputRow(row, cellType) {
                 let output = "<tr>";
                 row.forEach(function(cell) {
@@ -181,8 +175,6 @@ import Utils from "../Utils.js";
                 return output;
             }
         }
-
-        return output;
     }
 };
 
