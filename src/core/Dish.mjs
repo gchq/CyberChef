@@ -39,6 +39,7 @@ class Dish {
      */
     static typeEnum(typeStr) {
         switch (typeStr.toLowerCase()) {
+            case "array":
             case "bytearray":
             case "byte array":
                 return Dish.BYTE_ARRAY;

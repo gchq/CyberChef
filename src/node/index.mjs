@@ -7,7 +7,7 @@
  */
 import "babel-polyfill";
 
-import {wrap, help, decapitalise} from "./apiUtils";
+import {wrap, help, decapitalise, translateTo} from "./apiUtils";
 import * as operations from "../core/operations/index";
 
 // Define global environment functions
@@ -29,6 +29,7 @@ Object.keys(operations).forEach(op =>
     chef[decapitalise(op)] = wrap(operations[op]));
 
 chef.help = help.bind(null, operations);
+chef.translateTo = translateTo;
 
 export default chef;
 export {chef};

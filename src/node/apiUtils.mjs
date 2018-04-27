@@ -35,13 +35,12 @@ export function wrap(Operation) {
      */
     return async (input, args=null) => {
         const operation = new Operation();
-        const dish = new Dish(input);
+        const dish = new Dish();
 
-        try {
-            dish.findType();
-        } catch (e) {
-            log.debug(e);
-        }
+        // Stolen from Recipe. Only works there as raw input is one 
+        // of these types. consider a mapping for all use cases like below.
+        const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
+        dish.set(input, type);
 
         if (!args) {
             args = operation.args.map(extractArg);
@@ -51,9 +50,23 @@ export function wrap(Operation) {
                 args = [args];
             }
         }
-        const transformedInput = await dish.get(Dish.typeEnum(operation.inputType));
+        const transformedInput = await dish.get(operation.inputType);
         return operation.run(transformedInput, args);
     };
+}
+
+/**
+ * First draft
+ * @param input 
+ * @param type 
+ */
+export async function translateTo(input, type) {
+    const dish = new Dish();
+
+    const initialType = Dish.typeEnum(input.constructor.name);
+
+    dish.set(input, initialType);
+    return await dish.get(type);
 }
 
 /**
