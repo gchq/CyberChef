@@ -6,6 +6,7 @@
 
 import Utils from "../Utils";
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 
 /**
  * Set Symmetric Difference operation
@@ -45,7 +46,7 @@ class SymmetricDifference extends Operation {
      */
     validateSampleNumbers(sets) {
         if (!sets || (sets.length !== 2)) {
-            throw "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?";
+            throw new OperationError("Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?");
         }
     }
 
@@ -55,16 +56,13 @@ class SymmetricDifference extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     * @throws {OperationError}
      */
     run(input, args) {
         [this.sampleDelim, this.itemDelimiter] = args;
         const sets = input.split(this.sampleDelim);
 
-        try {
-            this.validateSampleNumbers(sets);
-        } catch (e) {
-            return e;
-        }
+        this.validateSampleNumbers(sets);
 
         return this.runSymmetricDifference(...sets.map(s => s.split(this.itemDelimiter)));
     }
