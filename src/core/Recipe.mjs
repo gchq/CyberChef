@@ -8,6 +8,7 @@
 import OpModules from "./config/modules/OpModules";
 import OperationConfig from "./config/OperationConfig.json";
 import log from "loglevel";
+import OperationError from "./errors/OperationError";
 
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
@@ -175,18 +176,24 @@ class Recipe  {
                     dish.set(output, op.outputType);
                 }
             } catch (err) {
-                const e = typeof err == "string" ? { message: err } : err;
-
-                e.progress = i;
-                if (e.fileName) {
-                    e.displayStr = op.name + " - " + e.name + " in " +
-                        e.fileName + " on line " + e.lineNumber +
-                        ".<br><br>Message: " + (e.displayStr || e.message);
+                // print expected errors in output pane
+                if (err instanceof OperationError) {
+                    dish.set(err.message, "string");
+                    return i;
                 } else {
-                    e.displayStr = op.name + " - " + (e.displayStr || e.message);
-                }
+                    const e = typeof err == "string" ? { message: err } : err;
 
-                throw e;
+                    e.progress = i;
+                    if (e.fileName) {
+                        e.displayStr = op.name + " - " + e.name + " in " +
+                            e.fileName + " on line " + e.lineNumber +
+                            ".<br><br>Message: " + (e.displayStr || e.message);
+                    } else {
+                        e.displayStr = op.name + " - " + (e.displayStr || e.message);
+                    }
+
+                    throw e;
+                }
             }
         }
 
