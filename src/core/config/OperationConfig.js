@@ -3304,14 +3304,14 @@ const OperationConfig = {
     "CRC-32 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961; the 32-bit CRC function of Ethernet and many other standards is the work of several researchers and was published in 1975.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "CRC-16 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },

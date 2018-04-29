@@ -20,6 +20,7 @@ import "./tests/operations/BitwiseOp.js";
 import "./tests/operations/BSON.js";
 import "./tests/operations/ByteRepr.js";
 import "./tests/operations/CharEnc.js";
+import "./tests/operations/Checksum.js";
 import "./tests/operations/Cipher.js";
 import "./tests/operations/Code.js";
 import "./tests/operations/Compress.js";
