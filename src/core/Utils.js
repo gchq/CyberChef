@@ -718,10 +718,10 @@ const Utils = {
      * Utils.fromHex("0a:14:1e", "Colon");
      */
     fromHex: function(data, delim, byteLen) {
-        delim = delim || (data.indexOf(" ") >= 0 ? "Space" : "None");
+        delim = delim || "Auto";
         byteLen = byteLen || 2;
         if (delim !== "None") {
-            const delimRegex = Utils.regexRep[delim];
+            const delimRegex = delim === "Auto" ? /[^a-f\d]/gi : Utils.regexRep[delim];
             data = data.replace(delimRegex, "");
         }
 

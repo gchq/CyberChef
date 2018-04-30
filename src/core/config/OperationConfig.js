@@ -624,7 +624,7 @@ const OperationConfig = {
             {
                 name: "Delimiter",
                 type: "option",
-                value: ByteRepr.HEX_DELIM_OPTIONS
+                value: ByteRepr.FROM_HEX_DELIM_OPTIONS
             }
         ]
     },
@@ -639,7 +639,7 @@ const OperationConfig = {
             {
                 name: "Delimiter",
                 type: "option",
-                value: ByteRepr.HEX_DELIM_OPTIONS
+                value: ByteRepr.TO_HEX_DELIM_OPTIONS
             }
         ]
     },

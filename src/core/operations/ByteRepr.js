@@ -21,7 +21,12 @@ const ByteRepr = {
      * @constant
      * @default
      */
-    HEX_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"],
+    TO_HEX_DELIM_OPTIONS: ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"],
+    /**
+     * @constant
+     * @default
+     */
+    FROM_HEX_DELIM_OPTIONS: ["Auto", "Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"],
     /**
      * @constant
      * @default
