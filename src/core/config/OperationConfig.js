@@ -225,6 +225,7 @@ const OperationConfig = {
     "From Base64": {
         module: "Default",
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Base64",
         highlight: "func",
         highlightReverse: "func",
         inputType: "string",
@@ -245,6 +246,7 @@ const OperationConfig = {
     "To Base64": {
         module: "Default",
         description: "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes data in an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Base64",
         highlight: "func",
         highlightReverse: "func",
         inputType: "ArrayBuffer",
@@ -260,6 +262,7 @@ const OperationConfig = {
     "From Base58": {
         module: "Default",
         description: "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included) back into its raw form.<br><br>e.g. <code>StV1DL6CwTryKyV</code> becomes <code>hello world</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).",
+        infoURL: "https://en.wikipedia.org/wiki/Base58",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -278,6 +281,7 @@ const OperationConfig = {
     "To Base58": {
         module: "Default",
         description: "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>hello world</code> becomes <code>StV1DL6CwTryKyV</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).",
+        infoURL: "https://en.wikipedia.org/wiki/Base58",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -291,6 +295,7 @@ const OperationConfig = {
     "From Base32": {
         module: "Default",
         description: "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
+        infoURL: "https://en.wikipedia.org/wiki/Base32",
         inputType: "string",
         outputType: "byteArray",
         args: [
@@ -309,6 +314,7 @@ const OperationConfig = {
     "To Base32": {
         module: "Default",
         description: "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
+        infoURL: "https://en.wikipedia.org/wiki/Base32",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -340,6 +346,7 @@ const OperationConfig = {
     "Disassemble x86": {
         module: "Shellcode",
         description: "Disassembly is the process of translating machine language into assembly language.<br><br>This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode.<br><br>Input should be in hexadecimal.",
+        infoURL: "https://en.wikipedia.org/wiki/X86",
         inputType: "string",
         outputType: "string",
         args: [
@@ -378,6 +385,7 @@ const OperationConfig = {
     "XOR": {
         module: "Default",
         description: "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Scheme:</u><ul><li>Standard - key is unchanged after each round</li><li>Input differential - key is set to the value of the previous unprocessed byte</li><li>Output differential - key is set to the value of the previous processed byte</li><li>Cascade - key is set to the input byte shifted by one</li></ul>",
+        infoURL: "https://en.wikipedia.org/wiki/Exclusive_or",
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -603,6 +611,7 @@ const OperationConfig = {
     "Standard Deviation": {
         module: "Default",
         description: "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Standard_deviation",
         inputType: "string",
         outputType: "BigNumber",
         args: [
@@ -616,6 +625,7 @@ const OperationConfig = {
     "From Hex": {
         module: "Default",
         description: "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Hexadecimal",
         highlight: "func",
         highlightReverse: "func",
         inputType: "string",
@@ -631,6 +641,7 @@ const OperationConfig = {
     "To Hex": {
         module: "Default",
         description: "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Hexadecimal",
         highlight: "func",
         highlightReverse: "func",
         inputType: "ArrayBuffer",
@@ -646,6 +657,7 @@ const OperationConfig = {
     "From Octal": {
         module: "Default",
         description: "Converts an octal byte string back into its raw value.<br><br>e.g. <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Octal",
         highlight: false,
         highlightReverse: false,
         inputType: "string",
@@ -661,6 +673,7 @@ const OperationConfig = {
     "To Octal": {
         module: "Default",
         description: "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Octal",
         highlight: false,
         highlightReverse: false,
         inputType: "byteArray",
@@ -717,6 +730,7 @@ const OperationConfig = {
     "From Binary": {
         module: "Default",
         description: "Converts a binary string back into its raw form.<br><br>e.g. <code>01001000 01101001</code> becomes <code>Hi</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Binary_code",
         highlight: "func",
         highlightReverse: "func",
         inputType: "string",
@@ -732,6 +746,7 @@ const OperationConfig = {
     "To Binary": {
         module: "Default",
         description: "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Binary_code",
         highlight: "func",
         highlightReverse: "func",
         inputType: "byteArray",
@@ -773,6 +788,7 @@ const OperationConfig = {
     "From Hexdump": {
         module: "Default",
         description: "Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.",
+        infoURL: "https://en.wikipedia.org/wiki/Hex_dump",
         highlight: "func",
         highlightReverse: "func",
         inputType: "string",
@@ -782,6 +798,7 @@ const OperationConfig = {
     "To Hexdump": {
         module: "Default",
         description: "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.",
+        infoURL: "https://en.wikipedia.org/wiki/Hex_dump",
         highlight: "func",
         highlightReverse: "func",
         inputType: "ArrayBuffer",
@@ -896,6 +913,7 @@ const OperationConfig = {
     "Parse URI": {
         module: "URL",
         description: "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.",
+        infoURL: "https://en.wikipedia.org/wiki/Uniform_Resource_Identifier",
         inputType: "string",
         outputType: "string",
         args: []
@@ -944,6 +962,7 @@ const OperationConfig = {
     "From Quoted Printable": {
         module: "Default",
         description: "Converts QP-encoded text back to standard text.",
+        infoURL: "https://en.wikipedia.org/wiki/Quoted-printable",
         inputType: "string",
         outputType: "byteArray",
         args: []
@@ -951,6 +970,7 @@ const OperationConfig = {
     "To Quoted Printable": {
         module: "Default",
         description: "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in e-mail.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.",
+        infoURL: "https://en.wikipedia.org/wiki/Quoted-printable",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -958,6 +978,7 @@ const OperationConfig = {
     "From Punycode": {
         module: "Encodings",
         description: "Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System.<br><br>e.g. <code>mnchen-3ya</code> decodes to <code>münchen</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Punycode",
         inputType: "string",
         outputType: "string",
         args: [
@@ -971,6 +992,7 @@ const OperationConfig = {
     "To Punycode": {
         module: "Encodings",
         description: "Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System.<br><br>e.g. <code>münchen</code> encodes to <code>mnchen-3ya</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Punycode",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1073,6 +1095,7 @@ const OperationConfig = {
     "Parse IPv6 address": {
         module: "JSBN",
         description: "Displays the longhand and shorthand versions of a valid IPv6 address.<br><br>Recognises all reserved ranges and parses encapsulated or tunnelled addresses including Teredo and 6to4.",
+        infoURL: "https://en.wikipedia.org/wiki/IPv6_address",
         inputType: "string",
         outputType: "string",
         args: []
@@ -1133,6 +1156,7 @@ const OperationConfig = {
     "AES Decrypt": {
         module: "Ciphers",
         description: "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.",
+        infoURL: "https://en.wikipedia.org/wiki/Advanced_Encryption_Standard",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1174,6 +1198,7 @@ const OperationConfig = {
     "AES Encrypt": {
         module: "Ciphers",
         description: "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/Advanced_Encryption_Standard",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1209,6 +1234,7 @@ const OperationConfig = {
     "DES Decrypt": {
         module: "Ciphers",
         description: "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br>Triple DES uses a key length of 24 bytes (192 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/Data_Encryption_Standard",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1244,6 +1270,7 @@ const OperationConfig = {
     "DES Encrypt": {
         module: "Ciphers",
         description: "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br>Triple DES uses a key length of 24 bytes (192 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/Data_Encryption_Standard",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1279,6 +1306,7 @@ const OperationConfig = {
     "Triple DES Decrypt": {
         module: "Ciphers",
         description: "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/Triple_DES",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1314,6 +1342,7 @@ const OperationConfig = {
     "Triple DES Encrypt": {
         module: "Ciphers",
         description: "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/Triple_DES",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1349,6 +1378,7 @@ const OperationConfig = {
     "Blowfish Decrypt": {
         module: "Ciphers",
         description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
+        infoURL: "https://en.wikipedia.org/wiki/Blowfish_(cipher)",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1384,6 +1414,7 @@ const OperationConfig = {
     "Blowfish Encrypt": {
         module: "Ciphers",
         description: "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
+        infoURL: "https://en.wikipedia.org/wiki/Blowfish_(cipher)",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1419,6 +1450,7 @@ const OperationConfig = {
     "RC4": {
         module: "Ciphers",
         description: "RC4 (also known as ARC4) is a widely-used stream cipher designed by Ron Rivest. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.",
+        infoURL: "https://en.wikipedia.org/wiki/RC4",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1445,6 +1477,7 @@ const OperationConfig = {
     "RC4 Drop": {
         module: "Ciphers",
         description: "It was discovered that the first few bytes of the RC4 keystream are strongly non-random and leak information about the key. We can defend against this attack by discarding the initial portion of the keystream. This modified algorithm is traditionally called RC4-drop.",
+        infoURL: "https://en.wikipedia.org/wiki/RC4",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1476,6 +1509,7 @@ const OperationConfig = {
     "RC2 Decrypt": {
         module: "Ciphers",
         description: "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/RC2",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1506,6 +1540,7 @@ const OperationConfig = {
     "RC2 Encrypt": {
         module: "Ciphers",
         description: "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.",
+        infoURL: "https://en.wikipedia.org/wiki/RC2",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1536,6 +1571,7 @@ const OperationConfig = {
     "Pseudo-Random Number Generator": {
         module: "Ciphers",
         description: "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.",
+        infoURL: "https://en.wikipedia.org/wiki/Pseudorandom_number_generator",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1554,6 +1590,7 @@ const OperationConfig = {
     "Derive PBKDF2 key": {
         module: "Ciphers",
         description: "PBKDF2 is a password-based key derivation function. It is part of RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, specifically PKCS #5 v2.0, also published as Internet Engineering Task Force's RFC 2898.<br><br>In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
+        infoURL: "https://en.wikipedia.org/wiki/PBKDF2",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1624,6 +1661,7 @@ const OperationConfig = {
     "Vigenère Encode": {
         module: "Ciphers",
         description: "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
+        infoURL: "https://en.wikipedia.org/wiki/Vigenère_cipher",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1639,6 +1677,7 @@ const OperationConfig = {
     "Vigenère Decode": {
         module: "Ciphers",
         description: "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
+        infoURL: "https://en.wikipedia.org/wiki/Vigenère_cipher",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1654,6 +1693,7 @@ const OperationConfig = {
     "Bifid Cipher Encode": {
         module: "Ciphers",
         description: "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
+        infoURL: "https://en.wikipedia.org/wiki/Bifid_cipher",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1669,6 +1709,7 @@ const OperationConfig = {
     "Bifid Cipher Decode": {
         module: "Ciphers",
         description: "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
+        infoURL: "https://en.wikipedia.org/wiki/Bifid_cipher",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1684,6 +1725,7 @@ const OperationConfig = {
     "Affine Cipher Encode": {
         module: "Ciphers",
         description: "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.",
+        infoURL: "https://en.wikipedia.org/wiki/Affine_cipher",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1704,6 +1746,7 @@ const OperationConfig = {
     "Affine Cipher Decode": {
         module: "Ciphers",
         description: "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.",
+        infoURL: "https://en.wikipedia.org/wiki/Affine_cipher",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1724,6 +1767,7 @@ const OperationConfig = {
     "Atbash Cipher": {
         module: "Ciphers",
         description: "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.",
+        infoURL: "https://en.wikipedia.org/wiki/Atbash",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -1773,6 +1817,7 @@ const OperationConfig = {
     "ROT13": {
         module: "Default",
         description: "A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).",
+        infoURL: "https://en.wikipedia.org/wiki/ROT13",
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -1798,6 +1843,7 @@ const OperationConfig = {
     "ROT47": {
         module: "Default",
         description: "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.",
+        infoURL: "https://en.wikipedia.org/wiki/ROT13#Variants",
         highlight: true,
         highlightReverse: true,
         inputType: "byteArray",
@@ -1820,6 +1866,7 @@ const OperationConfig = {
     "Parse User Agent": {
         module: "HTTP",
         description: "Attempts to identify and categorise information contained in a user-agent string.",
+        infoURL: "https://en.wikipedia.org/wiki/User_agent",
         inputType: "string",
         outputType: "string",
         args: []
@@ -1827,6 +1874,7 @@ const OperationConfig = {
     "Format MAC addresses": {
         module: "Default",
         description: "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.",
+        infoURL: "https://en.wikipedia.org/wiki/MAC_address",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1865,6 +1913,7 @@ const OperationConfig = {
     "Encode NetBIOS Name": {
         module: "Default",
         description: "NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used.<br><br>There are two levels of encoding. The first level maps a NetBIOS name into a domain system name.  The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system.<br><br>This operation carries out the first level of encoding. See RFC 1001 for full details.",
+        infoURL: "https://en.wikipedia.org/wiki/NetBIOS",
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1878,6 +1927,7 @@ const OperationConfig = {
     "Decode NetBIOS Name": {
         module: "Default",
         description: "NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used.<br><br>There are two levels of encoding. The first level maps a NetBIOS name into a domain system name.  The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system.<br><br>This operation decodes the first level of encoding. See RFC 1001 for full details.",
+        infoURL: "https://en.wikipedia.org/wiki/NetBIOS",
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -1904,6 +1954,7 @@ const OperationConfig = {
     "Remove whitespace": {
         module: "Default",
         description: "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.",
+        infoURL: "https://en.wikipedia.org/wiki/Whitespace_character",
         inputType: "string",
         outputType: "string",
         args: [
@@ -1942,6 +1993,7 @@ const OperationConfig = {
     "Remove null bytes": {
         module: "Default",
         description: "Removes all null bytes (<code>0x00</code>) from the input.",
+        infoURL: "https://en.wikipedia.org/wiki/Null_character",
         inputType: "byteArray",
         outputType: "byteArray",
         args: []
@@ -2339,6 +2391,7 @@ const OperationConfig = {
     "Regular expression": {
         module: "Regex",
         description: "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.<br><br>Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including <code>\\p{}</code> categories and scripts as well as astral codes) and recursive matching.",
+        infoURL: "https://en.wikipedia.org/wiki/Regular_expression",
         inputType: "string",
         outputType: "html",
         args: [
@@ -2393,6 +2446,7 @@ const OperationConfig = {
     "XPath expression": {
         module: "Code",
         description: "Extract information from an XML document with an XPath query",
+        infoURL: "https://en.wikipedia.org/wiki/XPath",
         inputType: "string",
         outputType: "string",
         args: [
@@ -2429,6 +2483,7 @@ const OperationConfig = {
     "CSS selector": {
         module: "Code",
         description: "Extract information from an HTML document with a CSS selector",
+        infoURL: "https://en.wikipedia.org/wiki/Cascading_Style_Sheets",
         inputType: "string",
         outputType: "string",
         args: [
@@ -2447,6 +2502,7 @@ const OperationConfig = {
     "From UNIX Timestamp": {
         module: "Default",
         description: "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
+        infoURL: "https://en.wikipedia.org/wiki/Unix_time",
         inputType: "number",
         outputType: "string",
         args: [
@@ -2460,6 +2516,7 @@ const OperationConfig = {
     "To UNIX Timestamp": {
         module: "Default",
         description: "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
+        infoURL: "https://en.wikipedia.org/wiki/Unix_time",
         inputType: "string",
         outputType: "string",
         args: [
@@ -2772,6 +2829,7 @@ const OperationConfig = {
     "Gzip": {
         module: "Compression",
         description: "Compresses data using the deflate algorithm with gzip headers.",
+        infoURL: "https://en.wikipedia.org/wiki/DEFLATE",
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2807,6 +2865,7 @@ const OperationConfig = {
     "Zip": {
         module: "Compression",
         description: "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.",
+        infoURL: "https://en.wikipedia.org/wiki/Zip_(file_format)",
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -2863,6 +2922,7 @@ const OperationConfig = {
     "Bzip2 Decompress": {
         module: "Compression",
         description: "Decompresses data using the Bzip2 algorithm.",
+        infoURL: "https://en.wikipedia.org/wiki/Bzip2",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -3044,6 +3104,7 @@ const OperationConfig = {
     "MD2": {
         module: "Hashing",
         description: "The MD2 (Message-Digest 2) algorithm is a cryptographic hash function developed by Ronald Rivest in 1989. The algorithm is optimized for 8-bit computers.<br><br>Although MD2 is no longer considered secure, even as of 2014, it remains in use in public key infrastructures as part of certificates generated with MD2 and RSA.",
+        infoURL: "https://en.wikipedia.org/wiki/MD2_(cryptography)",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -3051,6 +3112,7 @@ const OperationConfig = {
     "MD4": {
         module: "Hashing",
         description: "The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms.<br><br>The security of MD4 has been severely compromised.",
+        infoURL: "https://en.wikipedia.org/wiki/MD4",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -3058,6 +3120,7 @@ const OperationConfig = {
     "MD5": {
         module: "Hashing",
         description: "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
+        infoURL: "https://en.wikipedia.org/wiki/MD5",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -3065,6 +3128,7 @@ const OperationConfig = {
     "MD6": {
         module: "Hashing",
         description: "The MD6 (Message-Digest 6) algorithm is a cryptographic hash function. It uses a Merkle tree-like structure to allow for immense parallel computation of hashes for very long inputs.",
+        infoURL: "https://en.wikipedia.org/wiki/MD6",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3088,6 +3152,7 @@ const OperationConfig = {
     "SHA0": {
         module: "Hashing",
         description: "SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1.",
+        infoURL: "https://en.wikipedia.org/wiki/SHA-1#SHA-0",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -3095,6 +3160,7 @@ const OperationConfig = {
     "SHA1": {
         module: "Hashing",
         description: "The SHA (Secure Hash Algorithm) hash functions were designed by the NSA. SHA-1 is the most established of the existing SHA hash functions and it is used in a variety of security applications and protocols.<br><br>However, SHA-1's collision resistance has been weakening as new attacks are discovered or improved.",
+        infoURL: "https://en.wikipedia.org/wiki/SHA-1",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -3102,6 +3168,7 @@ const OperationConfig = {
     "SHA2": {
         module: "Hashing",
         description: "The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512.<br><br><ul><li>SHA-512 operates on 64-bit words.</li><li>SHA-256 operates on 32-bit words.</li><li>SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.</li><li>SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.</li><li>SHA-512/224 and SHA-512/256 are truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.</li></ul>",
+        infoURL: "https://en.wikipedia.org/wiki/SHA-2",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: [
@@ -3115,6 +3182,7 @@ const OperationConfig = {
     "SHA3": {
         module: "Hashing",
         description: "The SHA-3 (Secure Hash Algorithm 3) hash functions were released by NIST on August 5, 2015. Although part of the same series of standards, SHA-3 is internally quite different from the MD5-like structure of SHA-1 and SHA-2.<br><br>SHA-3 is a subset of the broader cryptographic primitive family Keccak designed by Guido Bertoni, Joan Daemen, Michaël Peeters, and Gilles Van Assche, building upon RadioGatún.",
+        infoURL: "https://en.wikipedia.org/wiki/SHA-3",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: [
@@ -3160,6 +3228,7 @@ const OperationConfig = {
     "RIPEMD": {
         module: "Hashing",
         description: "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>",
+        infoURL: "https://en.wikipedia.org/wiki/RIPEMD",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: [
@@ -3173,6 +3242,7 @@ const OperationConfig = {
     "HAS-160": {
         module: "Hashing",
         description: "HAS-160 is a cryptographic hash function designed for use with the Korean KCDSA digital signature algorithm. It is derived from SHA-1, with assorted changes intended to increase its security. It produces a 160-bit output.<br><br>HAS-160 is used in the same way as SHA-1. First it divides input in blocks of 512 bits each and pads the final block. A digest function updates the intermediate hash value by processing the input blocks in turn.<br><br>The message digest algorithm consists of 80 rounds.",
+        infoURL: "https://en.wikipedia.org/wiki/HAS-160",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -3180,7 +3250,8 @@ const OperationConfig = {
     "Whirlpool": {
         module: "Hashing",
         description: "Whirlpool is a cryptographic hash function designed by Vincent Rijmen (co-creator of AES) and Paulo S. L. M. Barreto, who first described it in 2000.<br><br>Several variants exist:<ul><li>Whirlpool-0 is the original version released in 2000.</li><li>Whirlpool-T is the first revision, released in 2001, improving the generation of the s-box.</li><li>Wirlpool is the latest revision, released in 2003, fixing a flaw in the difusion matrix.</li></ul>",
-        inputType: "ArrayBuffer",
+        infoURL: "https://en.wikipedia.org/wiki/Whirlpool_(cryptography)",
+        nputType: "ArrayBuffer",
         outputType: "string",
         args: [
             {
@@ -3193,6 +3264,7 @@ const OperationConfig = {
     "Snefru": {
         module: "Hashing",
         description: "Snefru is a cryptographic hash function invented by Ralph Merkle in 1990 while working at Xerox PARC. The function supports 128-bit and 256-bit output. It was named after the Egyptian Pharaoh Sneferu, continuing the tradition of the Khufu and Khafre block ciphers.<br><br>The original design of Snefru was shown to be insecure by Eli Biham and Adi Shamir who were able to use differential cryptanalysis to find hash collisions. The design was then modified by increasing the number of iterations of the main pass of the algorithm from two to eight.",
+        infoURL: "https://en.wikipedia.org/wiki/Snefru",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: [
@@ -3251,6 +3323,7 @@ const OperationConfig = {
     "HMAC": {
         module: "Hashing",
         description: "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.",
+        infoURL: "https://en.wikipedia.org/wiki/HMAC",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: [
@@ -3276,6 +3349,7 @@ const OperationConfig = {
     "Fletcher-16 Checksum": {
         module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
+        infoURL: "https://en.wikipedia.org/wiki/Fletcher%27s_checksum#Fletcher-16",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -3283,6 +3357,7 @@ const OperationConfig = {
     "Fletcher-32 Checksum": {
         module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
+        infoURL: "https://en.wikipedia.org/wiki/Fletcher%27s_checksum#Fletcher-32",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -3290,6 +3365,7 @@ const OperationConfig = {
     "Fletcher-64 Checksum": {
         module: "Hashing",
         description: "The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s.<br><br>The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.",
+        infoURL: "https://en.wikipedia.org/wiki/Fletcher%27s_checksum#Fletcher-64",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -3297,6 +3373,7 @@ const OperationConfig = {
     "Adler-32 Checksum": {
         module: "Hashing",
         description: "Adler-32 is a checksum algorithm which was invented by Mark Adler in 1995, and is a modification of the Fletcher checksum. Compared to a cyclic redundancy check of the same length, it trades reliability for speed (preferring the latter).<br><br>Adler-32 is more reliable than Fletcher-16, and slightly less reliable than Fletcher-32.",
+        infoURL: "https://en.wikipedia.org/wiki/Adler-32",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -3325,6 +3402,7 @@ const OperationConfig = {
     "Entropy": {
         module: "Default",
         description: "Calculates the Shannon entropy of the input data which gives an idea of its randomness. 8 is the maximum.",
+        infoURL: "https://en.wikipedia.org/wiki/Entropy_(information_theory)",
         inputType: "byteArray",
         outputType: "html",
         args: [
@@ -3338,6 +3416,7 @@ const OperationConfig = {
     "Frequency distribution": {
         module: "Default",
         description: "Displays the distribution of bytes in the data as a graph.",
+        infoURL: "https://en.wikipedia.org/wiki/Frequency_distribution",
         inputType: "ArrayBuffer",
         outputType: "html",
         args: [
@@ -3351,6 +3430,7 @@ const OperationConfig = {
     "Chi Square": {
         module: "Default",
         description: "Calculates the Chi Square distribution of values.",
+        infoURL: "https://en.wikipedia.org/wiki/Chi-squared_distribution",
         inputType: "ArrayBuffer",
         outputType: "number",
         args: []
@@ -3365,6 +3445,7 @@ const OperationConfig = {
     "Parse X.509 certificate": {
         module: "PublicKey",
         description: "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.<br><br>Tags: X509, server hello, handshake",
+        infoURL: "https://en.wikipedia.org/wiki/X.509",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3412,6 +3493,7 @@ const OperationConfig = {
     "Parse ASN.1 hex string": {
         module: "PublicKey",
         description: "Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking.<br><br>This operation parses arbitrary ASN.1 data and presents the resulting tree.",
+        infoURL: "https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3496,6 +3578,7 @@ const OperationConfig = {
     "Parse UNIX file permissions": {
         module: "Default",
         description: "Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups.<br><br>Input should be in either octal (e.g. <code>755</code>) or textual (e.g. <code>drwxr-xr-x</code>) format.",
+        infoURL: "https://en.wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions",
         inputType: "string",
         outputType: "string",
         args: []
@@ -3503,6 +3586,7 @@ const OperationConfig = {
     "Swap endianness": {
         module: "Default",
         description: "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.",
+        infoURL: "https://en.wikipedia.org/wiki/Endianness",
         highlight: true,
         highlightReverse: true,
         inputType: "string",
@@ -3550,6 +3634,7 @@ const OperationConfig = {
     "TCP/IP Checksum": {
         module: "Hashing",
         description: "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.",
+        infoURL: "https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Checksum_computation",
         inputType: "byteArray",
         outputType: "string",
         args: []
@@ -3557,6 +3642,7 @@ const OperationConfig = {
     "Parse colour code": {
         module: "Default",
         description: "Converts a colour code in a standard format to other standard formats and displays the colour itself.<br><br><strong>Example inputs</strong><ul><li><code>#d9edf7</code></li><li><code>rgba(217,237,247,1)</code></li><li><code>hsla(200,65%,91%,1)</code></li><li><code>cmyk(0.12, 0.04, 0.00, 0.03)</code></li></ul>",
+        infoURL: "https://en.wikipedia.org/wiki/Color_code",
         inputType: "string",
         outputType: "html",
         args: []
@@ -3564,6 +3650,7 @@ const OperationConfig = {
     "Generate UUID": {
         module: "Default",
         description: "Generates an RFC 4122 version 4 compliant Universally Unique Identifier (UUID), also known as a Globally Unique Identifier (GUID).<br><br>A version 4 UUID relies on random numbers, in this case generated using <code>window.crypto</code> if available and falling back to <code>Math.random</code> if not.",
+        infoURL: "https://en.wikipedia.org/wiki/Universally_unique_identifier",
         inputType: "string",
         outputType: "string",
         args: []
@@ -3589,6 +3676,7 @@ const OperationConfig = {
     "Escape string": {
         module: "Default",
         description: "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>",
+        infoURL: "https://en.wikipedia.org/wiki/Escape_sequence",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3622,6 +3710,7 @@ const OperationConfig = {
     "Unescape string": {
         module: "Default",
         description: "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>",
+        infoURL: "https://en.wikipedia.org/wiki/Escape_sequence",
         inputType: "string",
         outputType: "string",
         args: []
@@ -3629,6 +3718,7 @@ const OperationConfig = {
     "To Morse Code": {
         module: "Default",
         description: "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>",
+        infoURL: "https://en.wikipedia.org/wiki/Morse_code",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3652,6 +3742,7 @@ const OperationConfig = {
     "From Morse Code": {
         module: "Default",
         description: "Translates Morse Code into (upper case) alphanumeric characters.",
+        infoURL: "https://en.wikipedia.org/wiki/Morse_code",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3670,6 +3761,7 @@ const OperationConfig = {
     "Tar": {
         module: "Compression",
         description: "Packs the input into a tarball.<br><br>No support for multiple files at this time.",
+        infoURL: "https://en.wikipedia.org/wiki/Tar_(computing)",
         inputType: "byteArray",
         outputType: "byteArray",
         args: [
@@ -3683,6 +3775,7 @@ const OperationConfig = {
     "Untar": {
         module: "Compression",
         description: "Unpacks a tarball and displays it per file.",
+        infoURL: "https://en.wikipedia.org/wiki/Tar_(computing)",
         inputType: "byteArray",
         outputType: "html",
         args: [
@@ -3751,6 +3844,7 @@ const OperationConfig = {
             "<br><br>",
             "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
         ].join("\n"),
+        infoURL: "https://en.wikipedia.org/wiki/Snake_case",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3772,6 +3866,7 @@ const OperationConfig = {
             "<br><br>",
             "'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.",
         ].join("\n"),
+        infoURL: "https://en.wikipedia.org/wiki/Camel_case",
         inputType: "string",
         outputType: "string",
         args: [
@@ -3812,6 +3907,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
+        infoURL: "https://en.wikipedia.org/wiki/Exif",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: [],
@@ -3836,6 +3932,7 @@ const OperationConfig = {
             "<br><br>",
             "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n"),
+        infoURL: "https://en.wikipedia.org/wiki/Exif",
         inputType: "byteArray",
         outputType: "byteArray",
         args: []
@@ -3885,6 +3982,7 @@ const OperationConfig = {
     "From BCD": {
         module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
+        infoURL: "https://en.wikipedia.org/wiki/Binary-coded_decimal",
         inputType: "string",
         outputType: "BigNumber",
         args: [
@@ -3914,6 +4012,7 @@ const OperationConfig = {
     "To BCD": {
         module: "Default",
         description: "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
+        infoURL: "https://en.wikipedia.org/wiki/Binary-coded_decimal",
         inputType: "BigNumber",
         outputType: "string",
         args: [
@@ -3978,6 +4077,7 @@ const OperationConfig = {
     "Generate TOTP": {
         module: "Default",
         description: "The Time-based One-Time Password algorithm (TOTP) is an algorithm that computes a one-time password from a shared secret key and the current time. It has been adopted as Internet Engineering Task Force standard RFC 6238, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems. A TOTP is an HOTP where the counter is the current time.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated. T0 and T1 are in seconds.",
+        infoURL: "https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -4011,6 +4111,7 @@ const OperationConfig = {
     "Generate HOTP": {
         module: "Default",
         description: "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.",
+        infoURL: "https://en.wikipedia.org/wiki/HMAC-based_One-time_Password_algorithm",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -4052,6 +4153,7 @@ const OperationConfig = {
     "Hamming Distance": {
         module: "Default",
         description: "In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. In a more general context, the Hamming distance is one of several string metrics for measuring the edit distance between two sequences.",
+        infoURL: "https://en.wikipedia.org/wiki/Hamming_distance",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4082,6 +4184,7 @@ const OperationConfig = {
     "Bcrypt": {
         module: "Hashing",
         description: "bcrypt is a password hashing function designed by Niels Provos and David Mazières, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.<br><br>Enter the password in the input to generate its hash.",
+        infoURL: "https://en.wikipedia.org/wiki/Bcrypt",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4115,6 +4218,7 @@ const OperationConfig = {
     "Scrypt": {
         module: "Hashing",
         description: "scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914.<br><br>Enter the password in the input to generate its hash.",
+        infoURL: "https://en.wikipedia.org/wiki/Scrypt",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4149,6 +4253,7 @@ const OperationConfig = {
     "BSON serialise": {
         module: "BSON",
         description: "BSON is a computer data interchange format used mainly as a data storage and network transfer format in the MongoDB database. It is a binary form for representing simple data structures, associative arrays (called objects or documents in MongoDB), and various data types of specific interest to MongoDB. The name 'BSON' is based on the term JSON and stands for 'Binary JSON'.<br><br>Input data should be valid JSON.",
+        infoURL: "https://en.wikipedia.org/wiki/BSON",
         inputType: "string",
         outputType: "ArrayBuffer",
         args: []
@@ -4156,6 +4261,7 @@ const OperationConfig = {
     "BSON deserialise": {
         module: "BSON",
         description: "BSON is a computer data interchange format used mainly as a data storage and network transfer format in the MongoDB database. It is a binary form for representing simple data structures, associative arrays (called objects or documents in MongoDB), and various data types of specific interest to MongoDB. The name 'BSON' is based on the term JSON and stands for 'Binary JSON'.<br><br>Input data should be in a raw bytes format.",
+        infoURL: "https://en.wikipedia.org/wiki/BSON",
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
@@ -4199,6 +4305,7 @@ const OperationConfig = {
             "<br><br>",
             "This function uses the Keybase implementation of PGP.",
         ].join("\n"),
+        infoURL: "https://en.wikipedia.org/wiki/Pretty_Good_Privacy",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4221,6 +4328,7 @@ const OperationConfig = {
             "<br><br>",
             "This function uses the Keybase implementation of PGP.",
         ].join("\n"),
+        infoURL: "https://en.wikipedia.org/wiki/Pretty_Good_Privacy",
         inputType: "string",
         outputType: "string",
         args: [
