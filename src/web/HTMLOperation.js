@@ -20,7 +20,6 @@ const HTMLOperation = function(name, config, app, manager) {
 
     this.name        = name;
     this.description = config.description;
-    this.infoURL     = config.infoURL;
     this.manualBake  = config.manualBake || false;
     this.config      = config;
     this.ingList     = [];
@@ -51,14 +50,8 @@ HTMLOperation.prototype.toStubHtml = function(removeIcon) {
     let html = "<li class='operation'";
 
     if (this.description) {
-        let popoverContent = this.description;
-
-        if (this.infoURL) {
-            popoverContent += "<hr><a href='" + this.infoURL + "' target='_blank'>More Information</a>";
-        }
-
         html += " data-container='body' data-toggle='popover' data-placement='auto right'\
-            data-content=\"" + popoverContent + "\" data-html='true' data-trigger='hover'";
+            data-content=\"" + this.description + "\" data-html='true' data-trigger='hover'";
     }
 
     html += ">" + this.name;
