@@ -37,6 +37,7 @@ import SeqUtils from "../operations/SeqUtils.js";
 import Shellcode from "../operations/Shellcode.js";
 import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
+import ToTable from "../operations/ToTable.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
 
@@ -610,6 +611,38 @@ const OperationConfig = {
                 name: "Delimiter",
                 type: "option",
                 value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "To Table": {
+        module: "Default",
+        description: "Renders data as a table. Data can be split on different characters and output as a HTML or ASCII table with optional header row.",
+        inputType: "string",
+        outputType: "html",
+        highlight: false,
+        highlightReverse: false,
+        manualBake: false,
+        args: [
+            {
+                name: "Select separator",
+                type: "populateOption",
+                value: ToTable.SEPARATORS,
+                target: 1
+            },
+            {
+                name: "Separator",
+                type: "string",
+                value: ","
+            },
+            {
+                name: "First row header?",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Format",
+                type: "option",
+                value: ToTable.FORMATS
             }
         ]
     },
