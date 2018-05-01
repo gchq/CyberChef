@@ -32,6 +32,7 @@ const BitwiseOp = {
 
         for (let i = 0; i < input.length; i++) {
             k = key[i % key.length];
+            if (scheme === "Cascade") k = input[i + 1] || 0;
             o = input[i];
             x = nullPreserving && (o === 0 || o === k) ? o : func(o, k);
             result.push(x);
@@ -62,7 +63,7 @@ const BitwiseOp = {
      * @constant
      * @default
      */
-    XOR_SCHEME: ["Standard", "Input differential", "Output differential"],
+    XOR_SCHEME: ["Standard", "Input differential", "Output differential", "Cascade"],
     /**
      * @constant
      * @default
