@@ -35,7 +35,6 @@ const BitwiseOp = {
             if (scheme === "Cascade") k = input[i + 1] || 0;
             o = input[i];
             x = nullPreserving && (o === 0 || o === k) ? o : func(o, k);
-            result.push(x);
             if (scheme &&
                 scheme !== "Standard" &&
                 !(nullPreserving && (o === 0 || o === k))) {
@@ -46,8 +45,13 @@ const BitwiseOp = {
                     case "Output differential":
                         key[i % key.length] = o;
                         break;
+                    case "Cascade":
+                        k ^= input[i + 1];
+                        x = nullPreserving && (o === 0 || o === k) ? o : func(o, k);
+                        break;
                 }
             }
+            result.push(x);
         }
 
         return result;
