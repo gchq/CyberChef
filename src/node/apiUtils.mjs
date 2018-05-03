@@ -76,8 +76,8 @@ export function wrap(Operation) {
 
 /**
  * First draft
- * @param input 
- * @param type 
+ * @param input
+ * @param type
  */
 export async function translateTo(input, type) {
     const dish = new Dish();
@@ -89,8 +89,8 @@ export async function translateTo(input, type) {
 }
 
 /**
- * 
- * @param searchTerm 
+ *
+ * @param searchTerm
  */
 export function search(searchTerm) {
 

@@ -9,8 +9,6 @@
  * @license Apache-2.0
  */
 
-import assert from "assert";
-
 /**
  * it - wrapper for assertions to provide a helpful description
  * to the TestRegister
@@ -27,7 +25,7 @@ import assert from "assert";
  *   assert.equal(1,1)
  *   assert.notEqual(3,4)
  * })
- * 
+ *
  * @example
  * // async assertions
  * it("should handle async", async () => {

@@ -35,7 +35,7 @@ TestRegister.addApiTests([
         try {
             const fail = chef.setUnion("1");
             // shouldnt get here
-            assert(false);
+            assert(!fail || false);
         } catch (e) {
             assert(true);
         }
