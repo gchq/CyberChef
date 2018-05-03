@@ -10,3 +10,4 @@ src/core/config/modules/*
 src/core/config/OperationConfig.json
 src/core/operations/index.mjs
 
+**/*.DS_Store

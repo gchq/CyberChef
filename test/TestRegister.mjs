@@ -5,37 +5,49 @@
  * ensure that they will get run by the frontend.
  *
  * @author tlwr [toby@toby.codes]
- * @copyright Crown Copyright 2017
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 import Chef from "../src/core/Chef";
 
-(function() {
-    /**
-     * Object to store and run the list of tests.
-     *
-     * @class
-     * @constructor
-     */
-    function TestRegister() {
-        this.tests = [];
-    }
+/**
+ * Object to store and run the list of tests.
+ *
+ * @class
+ * @constructor
+ */
+class TestRegister {
 
+    /**
+     * initialise with no tests
+     */
+    constructor() {
+        this.tests = [];
+        this.apiTests = [];
+    }
 
     /**
      * Add a list of tests to the register.
      *
      * @param {Object[]} tests
      */
-    TestRegister.prototype.addTests = function(tests) {
+    addTests(tests) {
         this.tests = this.tests.concat(tests);
-    };
+    }
 
+    /**
+     * Add a list of api tests to the register
+     * @param {Object[]} tests
+     */
+    addApiTests(tests) {
+        this.apiTests = this.apiTests.concat(tests);
+    }
 
     /**
      * Runs all the tests in the register.
      */
-    TestRegister.prototype.runTests = function() {
+    runTests () {
         return Promise.all(
             this.tests.map(function(test, i) {
                 const chef = new Chef();
@@ -81,12 +93,29 @@ import Chef from "../src/core/Chef";
                 });
             })
         );
-    };
+    }
 
+    /**
+     * Run all api related tests and wrap results in report format
+     */
+    runApiTests() {
+        return Promise.all(this.apiTests.map(async function(test, i) {
+            const result = {
+                test: test,
+                status: null,
+                output: null,
+            };
+            try {
+                await test.run();
+                result.status = "passing";
+            } catch (e) {
+                result.status = "erroring";
+                result.output = e.message;
+            }
+            return result;
+        }));
+    }
+}
 
-    // Singleton TestRegister, keeping things simple and obvious.
-    global.TestRegister = global.TestRegister || new TestRegister();
-})();
-
-export default global.TestRegister;
-
+// Export an instance to make a singleton
+export default new TestRegister();

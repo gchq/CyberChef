@@ -55,6 +55,9 @@ import "./tests/operations/SymmetricDifference";
 import "./tests/operations/CartesianProduct";
 import "./tests/operations/PowerSet";
 
+
+import "./tests/nodeApi/nodeApi";
+
 let allTestsPassing = true;
 const testStatusCounts = {
     total: 0,
@@ -112,9 +115,12 @@ setTimeout(function() {
     process.exit(1);
 }, 10 * 1000);
 
-
-TestRegister.runTests()
-    .then(function(results) {
+Promise.all([
+    TestRegister.runTests(),
+    TestRegister.runApiTests()
+])
+    .then(function(resultsPair) {
+        const results = resultsPair[0].concat(resultsPair[1]);
         results.forEach(handleTestResult);
 
         console.log("\n");
@@ -132,3 +138,4 @@ TestRegister.runTests()
 
         process.exit(allTestsPassing ? 0 : 1);
     });
+

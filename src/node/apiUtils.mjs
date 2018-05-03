@@ -7,7 +7,6 @@
  */
 
 import Dish from "../core/Dish";
-import log from "loglevel";
 
 /**
  * Extract default arg value from operation argument
@@ -33,13 +32,21 @@ export function wrap(Operation) {
     /**
      * Wrapped operation run function
      */
-    return async (input, args=null) => {
+    return async (input, args=null, callback) => {
+
+        if (callback && typeof callback !== "function") {
+            throw TypeError("Expected callback to be a function");
+        }
+
+        if (!callback && typeof args === "function") {
+            callback = args;
+            args = null;
+        }
+
         const operation = new Operation();
         const dish = new Dish();
 
-        // Stolen from Recipe. Only works there as raw input is one 
-        // of these types. consider a mapping for all use cases like below.
-        const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
+        const type = Dish.typeEnum(input.constructor.name);
         dish.set(input, type);
 
         if (!args) {
@@ -51,9 +58,21 @@ export function wrap(Operation) {
             }
         }
         const transformedInput = await dish.get(operation.inputType);
-        return operation.run(transformedInput, args);
+
+        // Allow callback or promsise / async-await
+        if (callback) {
+            try {
+                const out = operation.run(transformedInput, args);
+                callback(null, out);
+            } catch (e) {
+                callback(e);
+            }
+        } else {
+            return operation.run(transformedInput, args);
+        }
     };
 }
+
 
 /**
  * First draft
