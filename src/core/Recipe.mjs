@@ -7,8 +7,8 @@
 // import Operation from "./Operation.js";
 import OpModules from "./config/modules/OpModules";
 import OperationConfig from "./config/OperationConfig.json";
-import log from "loglevel";
 import OperationError from "./errors/OperationError";
+import log from "loglevel";
 
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
@@ -176,7 +176,7 @@ class Recipe  {
                     dish.set(output, op.outputType);
                 }
             } catch (err) {
-                // print expected errors in output pane
+                // Return expected errors as output
                 if (err instanceof OperationError) {
                     dish.set(err.message, "string");
                     return i;
@@ -185,11 +185,10 @@ class Recipe  {
 
                     e.progress = i;
                     if (e.fileName) {
-                        e.displayStr = op.name + " - " + e.name + " in " +
-                            e.fileName + " on line " + e.lineNumber +
-                            ".<br><br>Message: " + (e.displayStr || e.message);
+                        e.displayStr = `${op.name} - ${e.name} in ${e.fileName} on line ` +
+                            `${e.lineNumber}.<br><br>Message: ${e.displayStr || e.message}`;
                     } else {
-                        e.displayStr = op.name + " - " + (e.displayStr || e.message);
+                        e.displayStr = `${op.name} - ${e.displayStr || e.message}`;
                     }
 
                     throw e;
