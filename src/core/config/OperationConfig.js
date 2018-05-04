@@ -616,26 +616,22 @@ const OperationConfig = {
     },
     "To Table": {
         module: "Default",
-        description: "Renders data as a table. Data can be split on different characters and output as a HTML or ASCII table with optional header row.",
+        description: "Data can be split on different characters and rendered as an HTML or ASCII table with an optional header row.<br><br>Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to <code>\\t</code> to support TSV (Tab Separated Values) or <code>|</code> for PSV (Pipe Separated Values).<br><br>You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.",
         inputType: "string",
         outputType: "html",
-        highlight: false,
-        highlightReverse: false,
-        manualBake: false,
         args: [
             {
-                name: "Select separator",
-                type: "populateOption",
-                value: ToTable.SEPARATORS,
-                target: 1
-            },
-            {
-                name: "Separator",
-                type: "string",
+                name: "Cell delimiters",
+                type: "binaryShortString",
                 value: ","
             },
             {
-                name: "First row header?",
+                name: "Row delimiters",
+                type: "binaryShortString",
+                value: "\\n\\r"
+            },
+            {
+                name: "Make first row header",
                 type: "boolean",
                 value: false
             },

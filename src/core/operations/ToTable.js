@@ -2,19 +2,14 @@
  * ToTable operations.
  *
  * @author Mark Jones [github.com/justanothermark]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
  * @namespace
  */
+import Utils from "../Utils.js";
+
 const ToTable = {
-    /**
-     * @constant
-     * @default
-     */
-    SEPARATORS: [
-        {name: "Comma", value: ","},
-        {name: "Tab", value: "\\t"},
-        {name: "Pipe", value: "|"},
-        {name: "Custom", value: ""}
-    ],
 
     /**
      * @constant
@@ -25,6 +20,7 @@ const ToTable = {
         "HTML"
     ],
 
+
     /**
      * To Table operation.
      *
@@ -33,42 +29,26 @@ const ToTable = {
      * @returns {html}
      */
     runToTable: function (input, args) {
-        let separator = args[1];
-        let firstRowHeader = args[2];
-        let format = args[3];
-        let tableData = [];
-
-        // If the separator contains any tabs, convert them to tab characters.
-        separator = separator.replace("\\t", "\t");
+        const [cellDelims, rowDelims, firstRowHeader, format] = args;
 
         // Process the input into a nested array of elements.
-        let rows = input.split("\n");
-        rows.forEach(function(element) {
-            if (separator === "") {
-                tableData.push([element]);
-            } else {
-                tableData.push(element.split(separator));
-            }
-        });
+        const tableData = Utils.parseCSV(input, cellDelims.split(""), rowDelims.split(""));
+
+        if (!tableData.length) return "";
 
         // Render the data in the requested format.
-        let output = "";
         switch (format) {
             case "ASCII":
-                output = asciiOutput(tableData);
-                break;
-
+                return asciiOutput(tableData);
+            case "HTML":
             default:
-                output = htmlOutput(tableData);
-                break;
+                return htmlOutput(tableData);
         }
-
-        return output;
 
         /**
          * Outputs an array of data as an ASCII table.
          *
-         * @param {Array[]} tableData
+         * @param {string[][]} tableData
          * @returns {string}
          */
         function asciiOutput(tableData) {
@@ -137,6 +117,9 @@ const ToTable = {
 
         /**
          * Outputs a table of data as a HTML table.
+         *
+         * @param {string[][]} tableData
+         * @returns {string}
          */
         function htmlOutput(tableData) {
             // Start the HTML output with suitable classes for styling.

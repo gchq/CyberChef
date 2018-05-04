@@ -67,7 +67,6 @@ const Categories = [
             "Encode text",
             "Decode text",
             "Swap endianness",
-            "To Table",
         ]
     },
     {
@@ -183,6 +182,7 @@ const Categories = [
             "To Lower case",
             "Add line numbers",
             "Remove line numbers",
+            "To Table",
             "Reverse",
             "Sort",
             "Unique",
