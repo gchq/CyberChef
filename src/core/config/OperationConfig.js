@@ -37,6 +37,7 @@ import SeqUtils from "../operations/SeqUtils.js";
 import Shellcode from "../operations/Shellcode.js";
 import StrUtils from "../operations/StrUtils.js";
 import Tidy from "../operations/Tidy.js";
+import ToTable from "../operations/ToTable.js";
 import Unicode from "../operations/Unicode.js";
 import URL_ from "../operations/URL.js";
 
@@ -610,6 +611,34 @@ const OperationConfig = {
                 name: "Delimiter",
                 type: "option",
                 value: Arithmetic.DELIM_OPTIONS
+            }
+        ]
+    },
+    "To Table": {
+        module: "Default",
+        description: "Data can be split on different characters and rendered as an HTML or ASCII table with an optional header row.<br><br>Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to <code>\\t</code> to support TSV (Tab Separated Values) or <code>|</code> for PSV (Pipe Separated Values).<br><br>You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.",
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Cell delimiters",
+                type: "binaryShortString",
+                value: ","
+            },
+            {
+                name: "Row delimiters",
+                type: "binaryShortString",
+                value: "\\n\\r"
+            },
+            {
+                name: "Make first row header",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Format",
+                type: "option",
+                value: ToTable.FORMATS
             }
         ]
     },
