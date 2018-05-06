@@ -2,6 +2,7 @@ import FlowControl from "../../FlowControl.js";
 import Arithmetic from "../../operations/Arithmetic.js";
 import Base from "../../operations/Base.js";
 import Base58 from "../../operations/Base58.js";
+import Base85 from "../../operations/Base85.js";
 import Base64 from "../../operations/Base64.js";
 import BCD from "../../operations/BCD.js";
 import BitwiseOp from "../../operations/BitwiseOp.js";
@@ -74,6 +75,8 @@ OpModules.Default = {
     "From Base32":          Base64.runFrom32,
     "To Base58":            Base58.runTo,
     "From Base58":          Base58.runFrom,
+    "To Base85":            Base85.runTo,
+    "From Base85":          Base85.runFrom,
     "To Base":              Base.runTo,
     "From Base":            Base.runFrom,
     "To BCD":               BCD.runToBCD,

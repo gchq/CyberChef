@@ -44,6 +44,8 @@ const Categories = [
             "From Base32",
             "To Base58",
             "From Base58",
+            "To Base85",
+            "From Base85",
             "To Base",
             "From Base",
             "To BCD",

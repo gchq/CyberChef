@@ -15,6 +15,7 @@ import "babel-polyfill";
 import TestRegister from "./TestRegister.js";
 import "./tests/operations/Base58.js";
 import "./tests/operations/Base64.js";
+import "./tests/operations/Base85.js";
 import "./tests/operations/BCD.js";
 import "./tests/operations/BitwiseOp.js";
 import "./tests/operations/BSON.js";
