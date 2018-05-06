@@ -1,6 +1,3 @@
-import Utils from "../Utils.js";
-
-
 /**
  * Base85 operations.
  *
@@ -50,7 +47,9 @@ const Base85 = {
             encoding = Base85._alphabetName(alphabet),
             result = "";
 
-        alphabet = Utils.expandAlphRange(alphabet).join("");
+        if (alphabet.length !== 85 || [].unique.call(alphabet).length !== 85) {
+            throw ("Alphabet must be of length 85");
+        }
 
         let block;
         for (let i = 0; i < input.length; i += 4) {
@@ -61,7 +60,7 @@ const Base85 = {
                 ((input[i + 3] || 0))
             ) >>> 0;
 
-            if (block > 0) {
+            if (encoding !== "Standard" || block > 0) {
                 let digits = [];
                 for (let j = 0; j < 5; j++) {
                     digits.push(block % 85);
@@ -73,10 +72,10 @@ const Base85 = {
                 if (input.length < i + 4) {
                     digits.splice(input.length - (i + 4), 4);
                 }
-
+                
                 result += digits.map(digit => alphabet[digit]).join("");
             } else {
-                if (encoding === "Standard") result += "z";
+                result += (encoding === "Standard") ? "z" : null;
             }
         }
 
@@ -98,18 +97,21 @@ const Base85 = {
             encoding = Base85._alphabetName(alphabet),
             result = [];
 
+        if (alphabet.length !== 85 || [].unique.call(alphabet).length !== 85) {
+            throw ("Alphabet must be of length 85");
+        }
+
         let matches = input.match(/<~(.+?)~>/);
         if (matches !== null) input = matches[1];
 
-        alphabet = Utils.expandAlphRange(alphabet).join("");
-
         let i = 0;
-        let digits, block, blockBytes;
+        let block, blockBytes;
         while (i < input.length) {
             if (encoding === "Standard" && input[i] === "z") {
                 result.push(0, 0, 0, 0);
                 i++;
             } else {
+                let digits = [];
                 digits = input
                     .substr(i, 5)
                     .split("")
