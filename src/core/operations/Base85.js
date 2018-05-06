@@ -33,7 +33,7 @@ const Base85 = {
      * @constant
      * @default
      */
-    INCLUDE_DELIMETER: false,
+    INCLUDE_DELIMITER: false,
 
     /**
      * To Base85 operation.
@@ -72,14 +72,14 @@ const Base85 = {
                 if (input.length < i + 4) {
                     digits.splice(input.length - (i + 4), 4);
                 }
-                
+
                 result += digits.map(digit => alphabet[digit]).join("");
             } else {
                 result += (encoding === "Standard") ? "z" : null;
             }
         }
 
-        if (args[1] || Base85.INCLUDE_DELIMETER) result = "<~" + result + "~>";
+        if (args[1] || Base85.INCLUDE_DELIMITER) result = "<~" + result + "~>";
 
         return result;
     },

@@ -323,7 +323,7 @@ const OperationConfig = {
     },
     "To Base85": {
         module: "Default",
-        description: "Base85 (similar to Base64) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64.<br><br>This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>hello world</code> becomes <code>BOu!rD]j7BEbo7</code><br><br>Base85 is commonly used in Adobe's PostScript and PDF file formats.<br><br><strong>Options</strong><br><u>Alphabet</u><ul><li>Standard - The standard alphabet, referred to as Ascii85</li><li>Z85 (ZeroMQ) - A string-safe variant of Base85, which avoids quote marks and backslash characters</li><li>IPv6 - A variant of Base85 suitable for encoding IPv6 addresses (RFC 1924)</li></ul><u>Include delimeter</u><br>Adds a '<~' and '~>' delimeter to the start and end of the data. This is standard for Adobe's implementation of Base85.",
+        description: "Base85 (similar to Base64) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64.<br><br>This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>hello world</code> becomes <code>BOu!rD]j7BEbo7</code><br><br>Base85 is commonly used in Adobe's PostScript and PDF file formats.<br><br><strong>Options</strong><br><u>Alphabet</u><ul><li>Standard - The standard alphabet, referred to as Ascii85</li><li>Z85 (ZeroMQ) - A string-safe variant of Base85, which avoids quote marks and backslash characters</li><li>IPv6 - A variant of Base85 suitable for encoding IPv6 addresses (RFC 1924)</li></ul><u>Include delimiter</u><br>Adds a '<~' and '~>' delimiter to the start and end of the data. This is standard for Adobe's implementation of Base85.",
         inputType: "byteArray",
         outputType: "string",
         args: [
@@ -333,9 +333,9 @@ const OperationConfig = {
                 value: Base85.ALPHABET_OPTIONS
             },
             {
-                name: "Include delimeter",
+                name: "Include delimiter",
                 type: "boolean",
-                value: Base85.INCLUDE_DELIMETER
+                value: Base85.INCLUDE_DELIMITER
             },
         ]
     },
