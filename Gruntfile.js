@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "webpack-dev-server:start"]);
+        ["clean:dev", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
@@ -61,9 +61,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-accessibility");
+    grunt.loadNpmTasks("grunt-concurrent");
 
 
     // Project configuration
@@ -348,6 +350,18 @@ module.exports = function (grunt) {
                 src: ["docs/**/*", "docs/"]
             }
         },
+        watch: {
+            config: {
+                files: ["src/core/operations/**/*", "!src/core/operations/index.mjs"],
+                tasks: ["exec:generateConfig"]
+            }
+        },
+        concurrent: {
+            dev: ["watch:config", "webpack-dev-server:start"],
+            options: {
+                logConcurrentOutput: true
+            }
+        },
         exec: {
             repoSize: {
                 command: [
@@ -364,9 +378,10 @@ module.exports = function (grunt) {
             },
             generateConfig: {
                 command: [
+                    "echo '\n--- Regenerating config files. ---'",
                     "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
-                    "echo ---\nConfig scripts finished.\n---\n"
+                    "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
             tests: {

@@ -17,7 +17,7 @@ import CanvasComponents from "../core/vendor/canvascomponents.js";
 
 // CyberChef
 import App from "./App.js";
-import Categories from "../core/config/Categories.js";
+import Categories from "../core/config/Categories.json";
 import OperationConfig from "../core/config/OperationConfig.json";
 
 

@@ -199,8 +199,13 @@ App.prototype.populateOperationsList = function() {
             cat = new HTMLCategory(catConf.name, selected);
 
         for (let j = 0; j < catConf.ops.length; j++) {
-            const opName = catConf.ops[j],
-                op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
+            const opName = catConf.ops[j];
+            if (!this.operations.hasOwnProperty(opName)) {
+                log.warn(`${opName} could not be found.`);
+                continue;
+            }
+
+            const op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
             cat.addOperation(op);
         }
 

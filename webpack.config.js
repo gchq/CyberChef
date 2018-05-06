@@ -47,9 +47,10 @@ module.exports = {
         new WebpackSyncShellPlugin({
             onBuildStart: {
                 scripts: [
+                    "echo \n--- Generating config files. ---",
                     "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
-                    "echo ---\nConfig scripts finished.\n---\n"
+                    "echo --- Config scripts finished. ---\n"
                 ],
                 blocking: true,
                 parallel: false
