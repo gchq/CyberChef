@@ -70,6 +70,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "babel-plugin-transform-builtin-extend": "1.1.2",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^6.0.0",
     "bootstrap": "^3.3.7",
