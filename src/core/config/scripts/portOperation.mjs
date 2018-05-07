@@ -40,7 +40,9 @@ function main() {
     }
 
     const op = OP_CONFIG[opName];
-    const moduleName = opName.replace(/\s/g, "");
+    const moduleName = opName.replace(/\w\S*/g, txt => {
+        return txt.charAt(0).toUpperCase() + txt.substr(1);
+    }).replace(/\s/g, "");
     let legacyFile = "";
 
 

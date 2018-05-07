@@ -15,3 +15,13 @@ export const DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line fee
  * Binary sequence delimiters.
  */
 export const BIN_DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "None"];
+
+/**
+ * Letter sequence delimiters.
+ */
+export const LETTER_DELIM_OPTIONS = ["Space", "Line feed", "CRLF", "Forward slash", "Backslash", "Comma", "Semi-colon", "Colon"];
+
+/**
+ * Word sequence delimiters.
+ */
+export const WORD_DELIM_OPTIONS = ["Line feed", "CRLF", "Forward slash", "Backslash", "Comma", "Semi-colon", "Colon"];
