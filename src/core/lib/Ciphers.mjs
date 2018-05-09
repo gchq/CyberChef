@@ -39,3 +39,23 @@ export function affineEncode(input, args) {
     }
     return output;
 }
+
+/**
+ * Generates a polybius square for the given keyword
+ *
+ * @private
+ * @author Matt C [matt@artemisbot.uk]
+ * @param {string} keyword - Must be upper case
+ * @returns {string}
+ */
+export function genPolybiusSquare (keyword) {
+    const alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ",
+        polArray = `${keyword}${alpha}`.split("").unique(),
+        polybius = [];
+
+    for (let i = 0; i < 5; i++) {
+        polybius[i] = polArray.slice(i*5, i*5 + 5);
+    }
+
+    return polybius;
+}
