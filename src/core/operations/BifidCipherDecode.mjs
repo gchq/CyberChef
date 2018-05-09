@@ -1,6 +1,6 @@
 /**
- * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2016
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 
@@ -47,11 +47,8 @@ class BifidCipherDecode extends Operation {
             count = 0,
             trans = "";
 
-        if (keyword.length > 25)
-            return "The alphabet keyword must be less than 25 characters.";
-
-        if (!/^[a-zA-Z]+$/.test(keywordStr) && keyword.length > 0)
-            return "The key must consist only of letters";
+        if (!/^[A-Z]+$/.test(keywordStr) && keyword.length > 0)
+            return "The key must consist only of letters in the English alphabet";
 
         const polybius = genPolybiusSquare(keywordStr);
 

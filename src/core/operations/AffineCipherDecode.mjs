@@ -54,7 +54,7 @@ class AffineCipherDecode extends Operation {
         }
 
         if (Utils.gcd(a, 26) !== 1) {
-            return "The value of a must be coprime to 26.";
+            return "The value of `a` must be coprime to 26.";
         }
 
         for (let i = 0; i < input.length; i++) {
