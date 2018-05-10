@@ -90,13 +90,16 @@ const PGP = {
         try {
             const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
                 armored: privateKey,
+                opts: {
+                    "no_check_keys": true
+                }
             });
-            if (key.is_pgp_locked() && passphrase) {
+            if (key.is_pgp_locked()) {
                 if (passphrase) {
                     await promisify(key.unlock_pgp.bind(key))({
                         passphrase
                     });
-                } else if (!passphrase) {
+                } else {
                     throw "Did not provide passphrase with locked private key.";
                 }
             }
@@ -118,6 +121,9 @@ const PGP = {
         try {
             const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
                 armored: publicKey,
+                opts: {
+                    "no_check_keys": true
+                }
             });
             return key;
         } catch (err) {
