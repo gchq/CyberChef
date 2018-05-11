@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import OperationError from "../errors/OperationError";
 
 /**
  * Affine Cipher Decode operation
@@ -50,11 +51,11 @@ class AffineCipherDecode extends Operation {
         let output = "";
 
         if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
-            return "The values of a and b can only be integers.";
+            throw new OperationError("The values of a and b can only be integers.");
         }
 
         if (Utils.gcd(a, 26) !== 1) {
-            return "The value of `a` must be coprime to 26.";
+            throw new OperationError("The value of `a` must be coprime to 26.");
         }
 
         for (let i = 0; i < input.length; i++) {

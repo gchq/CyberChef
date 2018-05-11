@@ -6,6 +6,7 @@
  * @license Apache-2.0
  *
  */
+import OperationError from "../errors/OperationError";
 
 /**
  * Affine Cipher Encode operation.
@@ -22,7 +23,7 @@ export function affineEncode(input, args) {
     let output = "";
 
     if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
-        return "The values of a and b can only be integers.";
+        throw new OperationError("The values of a and b can only be integers.");
     }
 
     for (let i = 0; i < input.length; i++) {

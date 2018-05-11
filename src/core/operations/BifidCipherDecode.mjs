@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import { genPolybiusSquare } from "../lib/Ciphers";
-
+import OperationError from "../errors/OperationError";
 /**
  * Bifid Cipher Decode operation
  */
@@ -48,7 +48,7 @@ class BifidCipherDecode extends Operation {
             trans = "";
 
         if (!/^[A-Z]+$/.test(keywordStr) && keyword.length > 0)
-            return "The key must consist only of letters in the English alphabet";
+            throw new OperationError("The key must consist only of letters in the English alphabet");
 
         const polybius = genPolybiusSquare(keywordStr);
 

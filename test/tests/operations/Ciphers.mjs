@@ -3,7 +3,7 @@
  *
  * @author Matt C [matt@artemisbot.uk]
  * @author n1474335 [n1474335@gmail.com]
- * 
+ *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
@@ -305,6 +305,50 @@ TestRegister.addTests([
             {
                 "op": "Vigenère Decode",
                 "args": ["Edward"]
+            }
+        ],
+    },
+    {
+        name: "Substitute: no pt/ct",
+        input: "flee at once. we are discovered!",
+        expectedOutput: "flee at once. we are discovered!",
+        recipeConfig: [
+            {
+                "op": "Substitute",
+                "args": ["", ""]
+            }
+        ],
+    },
+    {
+        name: "Substitute: no input",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Substitute",
+                "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
+            }
+        ],
+    },
+    {
+        name: "Substitute: uneven pt/ct",
+        input: "flee at once. we are discovered!",
+        expectedOutput: "Warning: Plaintext and Ciphertext lengths differ\n\nsiaa zq lkba. va zoa rfpbluaoar!",
+        recipeConfig: [
+            {
+                "op": "Substitute",
+                "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwx"]
+            }
+        ],
+    },
+    {
+        name: "Substitute: normal",
+        input: "flee at once. we are discovered!",
+        expectedOutput: "siaa zq lkba. va zoa rfpbluaoar!",
+        recipeConfig: [
+            {
+                "op": "Substitute",
+                "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
             }
         ],
     },

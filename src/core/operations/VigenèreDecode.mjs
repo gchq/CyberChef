@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-
+import OperationError from "../errors/OperationError";
 /**
  * Vigenère Decode operation
  */
@@ -45,8 +45,8 @@ class VigenèreDecode extends Operation {
             msgIndex,
             chr;
 
-        if (!key) return "No key entered";
-        if (!/^[a-zA-Z]+$/.test(key)) return "The key must consist only of letters";
+        if (!key) throw new OperationError("No key entered");
+        if (!/^[a-zA-Z]+$/.test(key)) throw new OperationError("The key must consist only of letters");
 
         for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
