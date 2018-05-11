@@ -21,9 +21,40 @@ function extractArg(arg) {
 }
 
 /**
+ * transformArgs
+ *
+ * Take the default args array and update with any user-defined
+ * operation arguments. Allows user to define argyments in object style,
+ * with accommodation name matching. Using named args in the API is more
+ * clear to the user.
+ *
+ * Argument name matching is case and space insensitive
+ * @private
+ * @param {Object[]} originalArgs
+ * @param {Object} newArgs
+ */
+function transformArgs(originalArgs, newArgs) {
+    const allArgs = Object.assign([], originalArgs);
+
+    if (newArgs) {
+        Object.keys(newArgs).map((key) => {
+            const index = allArgs.findIndex((arg) => {
+                return arg.name.toLowerCase().replace(/ /g, "") ===
+                    key.toLowerCase().replace(/ /g, "");
+            });
+            if (index > -1) {
+                allArgs[index].value = newArgs[key];
+            }
+        });
+    }
+    return allArgs.map(extractArg);
+}
+
+/**
  * Wrap an operation to be consumed by node API.
  * new Operation().run() becomes operation()
  * Perform type conversion on input
+ * @private
  * @param {Operation} Operation
  * @returns {Function} The operation's run function, wrapped in
  * some type conversion logic
@@ -49,14 +80,7 @@ export function wrap(Operation) {
         const type = Dish.typeEnum(input.constructor.name);
         dish.set(input, type);
 
-        if (!args) {
-            args = operation.args.map(extractArg);
-        } else {
-            // Allows single arg ops to have arg defined not in array
-            if (!(args instanceof Array)) {
-                args = [args];
-            }
-        }
+        args = transformArgs(operation.args, args);
         const transformedInput = await dish.get(operation.inputType);
 
         // Allow callback or promsise / async-await
@@ -104,7 +128,12 @@ function extractOperationInfo(Operation) {
         description: operation.description,
         inputType: operation.inputType,
         outputType: operation.outputType,
-        args: Object.assign([], operation.args),
+        // Make arg names lowercase, no spaces to encourage non-sentence
+        // caps in repl
+        args: Object.assign([], operation.args).map((s) => {
+            s.name = decapitalise(s.name).replace(/ /g, "");
+            return s;
+        })
     };
 }
 

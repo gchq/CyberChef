@@ -59,5 +59,27 @@ TestRegister.addApiTests([
             }
             assert(false);
         });
+    }),
+
+    it("should accept arguments in object format for operations", async () => {
+        const result = await chef.setUnion("1 2 3 4:3 4 5 6", {
+            itemDelimiter: " ",
+            sampleDelimiter: ":"
+        });
+
+        assert.equal(result, "1 2 3 4 5 6");
+    }),
+
+    it("should accept just some of the optional arguments being overriden", async () => {
+        const result = await chef.setIntersection("1 2 3 4 5\\n\\n3 4 5", {
+            itemDelimiter: " ",
+        });
+
+        assert.equal(result, "3 4 5");
+    }),
+
+    it("should accept no override arguments and just use the default values", async () => {
+        const result = await chef.powerSet("1,2,3");
+        assert.equal(result, "\n3\n2\n1\n2,3\n1,3\n1,2\n1,2,3\n");
     })
 ]);

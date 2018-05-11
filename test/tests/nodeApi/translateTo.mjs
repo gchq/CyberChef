@@ -3,7 +3,7 @@
 /**
  * nodeApi.js
  *
- * Test node api utilities
+ * Test node api translateTo function
  *
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018
@@ -39,7 +39,10 @@ TestRegister.addApiTests([
     }),
 
     it("should be symmetric", async () => {
-        const result = await chef.setUnion("1 2 3 4:3 4 5 6", [":", " "]);
+        const result = await chef.setUnion("1 2 3 4:3 4 5 6", {
+            itemDelimiter: " ",
+            sampleDelimiter: ":"
+        });
         const bytearray = await chef.translateTo(result, "bytearray");
         const translated = await chef.translateTo(bytearray, "string");
         assert.equal(translated, "1 2 3 4 5 6");
