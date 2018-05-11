@@ -134,5 +134,9 @@ export function help(operations, searchTerm) {
  * @returns {String} decapitalised
  */
 export function decapitalise(name) {
+    // Don't decapitalise names that are purely uppercase
+    if (/^[A-Z0-9]+$/g.test(name)) {
+        return name;
+    }
     return `${name.charAt(0).toLowerCase()}${name.substr(1)}`;
 }
