@@ -12,6 +12,7 @@
 /**
  * it - wrapper for assertions to provide a helpful description
  * to the TestRegister
+ * @namespace ApiTests
  * @param {String} description - The description of the test
  * @param {Function} assertion - The test
  *

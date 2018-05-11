@@ -76,6 +76,7 @@ export function wrap(Operation) {
 
 /**
  * First draft
+ * @namespace Api
  * @param input
  * @param type
  */
@@ -89,7 +90,7 @@ export async function translateTo(input, type) {
 }
 
 /**
- *
+ * @namespace Api
  * @param searchTerm
  */
 export function search(searchTerm) {
@@ -117,6 +118,7 @@ function extractOperationInfo(Operation) {
 
 
 /**
+ * @namespace Api
  * @param {Object} operations - an object filled with operations.
  * @param {String} searchTerm - the name of the operation to get help for.
  * Case and whitespace are ignored in search.
