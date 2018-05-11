@@ -57,6 +57,7 @@ import "./tests/operations/PowerSet";
 
 
 import "./tests/nodeApi/nodeApi";
+import "./tests/nodeApi/translateTo";
 
 let allTestsPassing = true;
 const testStatusCounts = {

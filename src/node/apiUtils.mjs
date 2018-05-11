@@ -89,14 +89,6 @@ export async function translateTo(input, type) {
     return await dish.get(type);
 }
 
-/**
- * @namespace Api
- * @param searchTerm
- */
-export function search(searchTerm) {
-
-}
-
 
 /**
  * Extract properties from an operation by instantiating it and
