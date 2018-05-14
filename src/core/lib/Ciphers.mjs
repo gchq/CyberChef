@@ -2,11 +2,14 @@
  * Cipher functions.
  *
  * @author Matt C [matt@artemisbot.uk]
+ * @author n1474335 [n1474335@gmail.com]
+ *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  *
  */
 import OperationError from "../errors/OperationError";
+import CryptoJS from "crypto-js";
 
 /**
  * Affine Cipher Encode operation.
@@ -60,3 +63,19 @@ export function genPolybiusSquare (keyword) {
 
     return polybius;
 }
+
+/**
+ * A mapping of string formats to their classes in the CryptoJS library.
+ *
+ * @private
+ * @constant
+ */
+export const format = {
+    "Hex":     CryptoJS.enc.Hex,
+    "Base64":  CryptoJS.enc.Base64,
+    "UTF8":    CryptoJS.enc.Utf8,
+    "UTF16":   CryptoJS.enc.Utf16,
+    "UTF16LE": CryptoJS.enc.Utf16LE,
+    "UTF16BE": CryptoJS.enc.Utf16BE,
+    "Latin1":  CryptoJS.enc.Latin1,
+};
