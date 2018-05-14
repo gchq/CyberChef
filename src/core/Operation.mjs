@@ -172,7 +172,8 @@ class Operation {
             return {
                 name: ing.name,
                 type: ing.type,
-                value: ing.defaultValue
+                value: ing.defaultValue,
+                toggleValues: ing.toggleValues || []
             };
         });
     }
