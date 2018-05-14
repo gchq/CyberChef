@@ -33,6 +33,7 @@ import "./tests/operations/Base64";
 import "./tests/operations/CartesianProduct";
 // import "./tests/operations/CharEnc.js";
 import "./tests/operations/Ciphers";
+//import "./tests/operations/Checksum.js";
 // import "./tests/operations/Code.js";
 // import "./tests/operations/Compress.js";
 // import "./tests/operations/DateTime.js";

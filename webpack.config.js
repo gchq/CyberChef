@@ -66,7 +66,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules/,
+                exclude: /node_modules\/(?!jsesc)/,
                 loader: "babel-loader?compact=false"
             },
             {
@@ -118,7 +118,7 @@ module.exports = {
         chunks: false,
         modules: false,
         entrypoints: false,
-        warningsFilter: /source-map/,
+        warningsFilter: [/source-map/, /dependency is an expression/],
     },
     node: {
         fs: "empty"

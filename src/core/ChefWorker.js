@@ -154,9 +154,9 @@ function loadRequiredModules(recipeConfig) {
         const module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
-            log.info("Loading module " + module);
-            self.sendStatusMessage("Loading module " + module);
-            self.importScripts(self.docURL + "/" + module + ".js");
+            log.info(`Loading ${module} module`);
+            self.sendStatusMessage(`Loading ${module} module`);
+            self.importScripts(`${self.docURL}/${module}.js`);
             self.sendStatusMessage("");
         }
     });

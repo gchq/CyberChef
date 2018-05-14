@@ -120,7 +120,7 @@ const Checksum = {
     /**
      * CRC-32 Checksum operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -132,7 +132,7 @@ const Checksum = {
     /**
      * CRC-16 Checksum operation.
      *
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */

@@ -568,44 +568,6 @@ DES uses a key length of 8 bytes (64 bits).`;
         }
     },
 
-
-    /**
-     * @constant
-     * @default
-     */
-    SUBS_PLAINTEXT: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    /**
-     * @constant
-     * @default
-     */
-    SUBS_CIPHERTEXT: "XYZABCDEFGHIJKLMNOPQRSTUVW",
-
-    /**
-     * Substitute operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
-     */
-    runSubstitute: function (input, args) {
-        let plaintext = Utils.expandAlphRange(args[0]).join(""),
-            ciphertext = Utils.expandAlphRange(args[1]).join(""),
-            output = "",
-            index = -1;
-
-        if (plaintext.length !== ciphertext.length) {
-            output = "Warning: Plaintext and Ciphertext lengths differ\n\n";
-        }
-
-        for (let i = 0; i < input.length; i++) {
-            index = plaintext.indexOf(input[i]);
-            output += index > -1 && index < ciphertext.length ? ciphertext[index] : input[i];
-        }
-
-        return output;
-    },
-
-
     /**
      * A mapping of string formats to their classes in the CryptoJS library.
      *

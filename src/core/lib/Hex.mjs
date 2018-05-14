@@ -84,9 +84,9 @@ export function toHexFast(data) {
  * fromHex("0a:14:1e", "Colon");
  */
 export function fromHex(data, delim, byteLen=2) {
-    delim = delim || (data.indexOf(" ") >= 0 ? "Space" : "None");
+    delim = delim || "Auto";
     if (delim !== "None") {
-        const delimRegex = Utils.regexRep(delim);
+        const delimRegex = delim === "Auto" ? /[^a-f\d]/gi : Utils.regexRep(delim);
         data = data.replace(delimRegex, "");
     }
 
@@ -99,6 +99,12 @@ export function fromHex(data, delim, byteLen=2) {
 
 
 /**
- * Hexadecimal delimiters.
+ * To Hexadecimal delimiters.
  */
-export const HEX_DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
+export const TO_HEX_DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
+
+
+/**
+ * From Hexadecimal delimiters.
+ */
+export const FROM_HEX_DELIM_OPTIONS = ["Auto"].concat(TO_HEX_DELIM_OPTIONS);

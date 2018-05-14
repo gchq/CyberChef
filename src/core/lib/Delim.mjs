@@ -25,3 +25,35 @@ export const LETTER_DELIM_OPTIONS = ["Space", "Line feed", "CRLF", "Forward slas
  * Word sequence delimiters.
  */
 export const WORD_DELIM_OPTIONS = ["Line feed", "CRLF", "Forward slash", "Backslash", "Comma", "Semi-colon", "Colon"];
+
+/**
+ * Input sequence delimiters.
+ */
+export const INPUT_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon", "Nothing (separate chars)"];
+
+/**
+ * Split delimiters.
+ */
+export const SPLIT_DELIM_OPTIONS = [
+    {name: "Comma", value: ","},
+    {name: "Space", value: " "},
+    {name: "Line feed", value: "\\n"},
+    {name: "CRLF", value: "\\r\\n"},
+    {name: "Semi-colon", value: ";"},
+    {name: "Colon", value: ":"},
+    {name: "Nothing (separate chars)", value: ""}
+];
+
+/**
+ * Join delimiters.
+ */
+export const JOIN_DELIM_OPTIONS = [
+    {name: "Line feed", value: "\\n"},
+    {name: "CRLF", value: "\\r\\n"},
+    {name: "Space", value: " "},
+    {name: "Comma", value: ","},
+    {name: "Semi-colon", value: ";"},
+    {name: "Colon", value: ":"},
+    {name: "Nothing (join chars)", value: ""}
+];
+

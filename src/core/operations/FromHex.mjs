@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import {fromHex, HEX_DELIM_OPTIONS} from "../lib/Hex";
+import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex";
 import Utils from "../Utils";
 
 /**
@@ -28,7 +28,7 @@ class FromHex extends Operation {
             {
                 name: "Delimiter",
                 type: "option",
-                value: HEX_DELIM_OPTIONS
+                value: FROM_HEX_DELIM_OPTIONS
             }
         ];
     }

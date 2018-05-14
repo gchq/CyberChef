@@ -12,6 +12,7 @@
 import process from "process";
 import fs from "fs";
 import path from "path";
+import EscapeString from "../../operations/EscapeString";
 
 if (process.argv.length < 4) {
     console.log("Pass an operation name and legacy filename as arguments.");
@@ -58,6 +59,27 @@ function main() {
     const author = legacyFile.match(/@author [^\n]+/)[0];
     const copyright = legacyFile.match(/@copyright [^\n]+/)[0];
     const utilsUsed = /Utils/.test(legacyFile);
+    const esc = new EscapeString();
+    const desc = esc.run(op.description, ["Special chars", "Double"]);
+
+    // Attempt to find the operation run function based on the JSDoc comment
+    const regex = `\\* ${opName} operation[^:]+:(?: function ?\\(input, args\\))? ?{([\\s\\S]+?)\n    }`;
+    let runFunc = "\n";
+    try {
+        runFunc = legacyFile.match(new RegExp(regex, "im"))[1];
+    } catch (err) {}
+
+
+    // List all constants in legacyFile
+    const constants = [];
+    try {
+        const constantsRegex = /\* @constant[^/]+\/\s+([^\n]+)/gim;
+        let m;
+
+        while ((m = constantsRegex.exec(legacyFile)) !== null) {
+            constants.push(m[1]);
+        }
+    } catch (err) {}
 
     const template = `/**
  * ${author}
@@ -80,7 +102,7 @@ class ${moduleName} extends Operation {
 
         this.name = "${opName}";${op.flowControl ? "\n        this.flowControl = true;" : ""}
         this.module = "${op.module}";
-        this.description = "${op.description}";
+        this.description = "${desc}";
         this.inputType = "${op.inputType}";
         this.outputType = "${op.outputType}";${op.manualBake ? "\n        this.manualBake = true;" : ""}
         this.args = ${JSON.stringify(op.args, null, 4).split("\n").join("\n        ")};
@@ -91,8 +113,7 @@ class ${moduleName} extends Operation {
      * @param {Object[]} args
      * @returns {${op.outputType}}
      */
-    run(input, args) {
-
+    run(input, args) {${runFunc}
     }
 ${op.highlight ? `
     /**
@@ -126,17 +147,27 @@ ${op.highlight ? `
 export default ${moduleName};
 `;
 
-    console.log(template);
+    console.log("\nLegacy operation config\n-----------------------\n");
+    console.log(JSON.stringify(op, null, 4));
+    console.log("\n-----------------------\n");
+    console.log("\nPotentially related constants\n-----------------------\n");
+    console.log(constants.join("\n"));
     console.log("\n-----------------------\n");
 
     const filename = path.join(dir, `../operations/${moduleName}.mjs`);
     if (fs.existsSync(filename)) {
-        console.log(`${filename} already exists. It has NOT been overwritten.`);
+        console.log(`\x1b[31m\u274c ${filename} already exists. It has NOT been overwritten.\x1b[0m`);
         process.exit(0);
     }
     fs.writeFileSync(filename, template);
-    console.log("Written to " + filename);
-    console.log(`Open ${legacyFilename} and copy the relevant code over. Make sure you check imports, args and highlights.`);
+
+    console.log("\x1b[32m\u2714\x1b[0m Operation written to \x1b[32m" + filename + "\x1b[0m");
+    if (runFunc === "\n") {
+        console.log("\x1b[31m\u274c The run function could not be located automatically.\x1b[0m You will have to copy it accross manually.");
+    } else {
+        console.log("\x1b[32m\u2714\x1b[0m The run function was copied across. Double check that it was copied correctly. It may rely on other functions which have not been copied.");
+    }
+    console.log(`\nOpen \x1b[32m${legacyFilename}\x1b[0m and copy any relevant code over. Make sure you check imports, args and highlights. Code required by multiple operations should be stored in /src/core/lib/`);
 }
 
 
@@ -669,6 +700,34 @@ const OP_CONFIG = {
                 name: "Delimiter",
                 type: "option",
                 value: "Arithmetic.DELIM_OPTIONS"
+            }
+        ]
+    },
+    "To Table": {
+        module: "Default",
+        description: "Data can be split on different characters and rendered as an HTML or ASCII table with an optional header row.<br><br>Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to <code>\\t</code> to support TSV (Tab Separated Values) or <code>|</code> for PSV (Pipe Separated Values).<br><br>You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.",
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Cell delimiters",
+                type: "binaryShortString",
+                value: ","
+            },
+            {
+                name: "Row delimiters",
+                type: "binaryShortString",
+                value: "\\n\\r"
+            },
+            {
+                name: "Make first row header",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Format",
+                type: "option",
+                value: "ToTable.FORMATS"
             }
         ]
     },
@@ -3363,14 +3422,14 @@ const OP_CONFIG = {
     "CRC-32 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961; the 32-bit CRC function of Ethernet and many other standards is the work of several researchers and was published in 1975.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "CRC-16 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
@@ -3423,7 +3482,7 @@ const OP_CONFIG = {
     },
     "Parse X.509 certificate": {
         module: "PublicKey",
-        description: "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.",
+        description: "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.<br><br>Tags: X509, server hello, handshake",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4218,6 +4277,150 @@ const OP_CONFIG = {
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
+    },
+    "Generate PGP Key Pair": {
+        module: "PGP",
+        description: "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key type",
+                type: "option",
+                value: "PGP.KEY_TYPES"
+            },
+            {
+                name: "Password (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Name (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Email (optional)",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Encrypt": {
+        module: "PGP",
+        description: [
+            "Input: the message you want to encrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured PGP message you want to decrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the recipient, ",
+            "(and the private key password if necessary).",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Encrypt and Sign": {
+        module: "PGP",
+        description: [
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)",
+            "and the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "This operation uses PGP to produce an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of signer",
+                type: "text",
+                value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt and Verify": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured encrypted PGP message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the signer, ",
+            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
+            "<br><br>",
+            "This operation uses PGP to decrypt and verify an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of signer",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key password",
+                type: "string",
+                value: "",
+            },
+        ]
     },
 };
 
