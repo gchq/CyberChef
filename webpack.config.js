@@ -70,6 +70,10 @@ module.exports = {
                 loader: "babel-loader?compact=false"
             },
             {
+                test: /forge.min.js$/,
+                loader: "imports-loader?jQuery=>null"
+            },
+            {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     use: [

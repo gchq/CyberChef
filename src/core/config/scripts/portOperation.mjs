@@ -167,7 +167,7 @@ export default ${moduleName};
     } else {
         console.log("\x1b[32m\u2714\x1b[0m The run function was copied across. Double check that it was copied correctly. It may rely on other functions which have not been copied.");
     }
-    console.log(`\nOpen \x1b[32m${legacyFilename}\x1b[0m and copy any relevant code over. Make sure you check imports, args and highlights. Code required by multiple operations should be stored in /src/core/lib/`);
+    console.log(`\nOpen \x1b[32m${legacyFilename}\x1b[0m and copy any relevant code over. Make sure you check imports, args and highlights. Code required by multiple operations should be stored in /src/core/lib/.\n\nDont't forget to run \x1b[36mgrunt lint\x1b[0m!`);
 }
 
 

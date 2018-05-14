@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import { genPolybiusSquare } from "../lib/Ciphers";
 import OperationError from "../errors/OperationError";
+
 /**
  * Bifid Cipher Decode operation
  */

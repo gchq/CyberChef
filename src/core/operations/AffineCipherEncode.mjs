@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import { affineEncode } from "../lib/Ciphers";
+
 /**
  * Affine Cipher Encode operation
  */

@@ -45,8 +45,7 @@ class AffineCipherDecode extends Operation {
      */
     run(input, args) {
         const alphabet = "abcdefghijklmnopqrstuvwxyz",
-            a = args[0],
-            b = args[1],
+            [a, b] = args,
             aModInv = Utils.modInv(a, 26); // Calculates modular inverse of a
         let output = "";
 
