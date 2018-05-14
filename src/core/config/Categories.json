@@ -94,7 +94,12 @@
             "PEM to Hex",
             "Hex to PEM",
             "Hex to Object Identifier",
-            "Object Identifier to Hex"
+            "Object Identifier to Hex",
+            "Generate PGP Key Pair",
+            "PGP Encrypt",
+            "PGP Decrypt",
+            "PGP Encrypt and Sign",
+            "PGP Decrypt and Verify"
         ]
     },
     {
@@ -164,6 +169,7 @@
             "To Lower case",
             "Add line numbers",
             "Remove line numbers",
+            "To Table",
             "Reverse",
             "Sort",
             "Unique",

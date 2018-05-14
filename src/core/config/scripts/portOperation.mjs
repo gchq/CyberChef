@@ -672,6 +672,34 @@ const OP_CONFIG = {
             }
         ]
     },
+    "To Table": {
+        module: "Default",
+        description: "Data can be split on different characters and rendered as an HTML or ASCII table with an optional header row.<br><br>Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to <code>\\t</code> to support TSV (Tab Separated Values) or <code>|</code> for PSV (Pipe Separated Values).<br><br>You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.",
+        inputType: "string",
+        outputType: "html",
+        args: [
+            {
+                name: "Cell delimiters",
+                type: "binaryShortString",
+                value: ","
+            },
+            {
+                name: "Row delimiters",
+                type: "binaryShortString",
+                value: "\\n\\r"
+            },
+            {
+                name: "Make first row header",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Format",
+                type: "option",
+                value: "ToTable.FORMATS"
+            }
+        ]
+    },
     "From Hex": {
         module: "Default",
         description: "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
@@ -3363,14 +3391,14 @@ const OP_CONFIG = {
     "CRC-32 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961; the 32-bit CRC function of Ethernet and many other standards is the work of several researchers and was published in 1975.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
     "CRC-16 Checksum": {
         module: "Hashing",
         description: "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.",
-        inputType: "string",
+        inputType: "ArrayBuffer",
         outputType: "string",
         args: []
     },
@@ -3423,7 +3451,7 @@ const OP_CONFIG = {
     },
     "Parse X.509 certificate": {
         module: "PublicKey",
-        description: "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.",
+        description: "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.<br><br>Tags: X509, server hello, handshake",
         inputType: "string",
         outputType: "string",
         args: [
@@ -4218,6 +4246,150 @@ const OP_CONFIG = {
         inputType: "ArrayBuffer",
         outputType: "string",
         args: []
+    },
+    "Generate PGP Key Pair": {
+        module: "PGP",
+        description: "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.",
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Key type",
+                type: "option",
+                value: "PGP.KEY_TYPES"
+            },
+            {
+                name: "Password (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Name (optional)",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Email (optional)",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Encrypt": {
+        module: "PGP",
+        description: [
+            "Input: the message you want to encrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured PGP message you want to decrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the recipient, ",
+            "(and the private key password if necessary).",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+        ]
+    },
+    "PGP Encrypt and Sign": {
+        module: "PGP",
+        description: [
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)",
+            "and the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "This operation uses PGP to produce an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Private key of signer",
+                type: "text",
+                value: ""
+            },
+            {
+                name: "Private key passphrase",
+                type: "string",
+                value: ""
+            },
+            {
+                name: "Public key of recipient",
+                type: "text",
+                value: ""
+            },
+        ]
+    },
+    "PGP Decrypt and Verify": {
+        module: "PGP",
+        description: [
+            "Input: the ASCII-armoured encrypted PGP message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the signer, ",
+            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
+            "<br><br>",
+            "This operation uses PGP to decrypt and verify an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n"),
+        inputType: "string",
+        outputType: "string",
+        args: [
+            {
+                name: "Public key of signer",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key of recipient",
+                type: "text",
+                value: "",
+            },
+            {
+                name: "Private key password",
+                type: "string",
+                value: "",
+            },
+        ]
     },
 };
 

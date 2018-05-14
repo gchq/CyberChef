@@ -74,6 +74,14 @@
     transition: all 0.1s ease-in;
 }
 
+.loading-error {
+    display: block;
+    position: relative;
+    width: 600px;
+    left: calc(50% - 300px);
+    top: 10%;
+}
+
 
 /* Loaded */
 .loaded .loading-msg {

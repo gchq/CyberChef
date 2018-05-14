@@ -83,6 +83,9 @@ App.prototype.loaded = function() {
     // Clear the loading message interval
     clearInterval(window.loadingMsgsInt);
 
+    // Remove the loading error handler
+    window.removeEventListener("error", window.loadingErrorHandler);
+
     document.dispatchEvent(this.manager.apploaded);
 };
 
