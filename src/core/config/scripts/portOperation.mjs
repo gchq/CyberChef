@@ -12,6 +12,7 @@
 import process from "process";
 import fs from "fs";
 import path from "path";
+import EscapeString from "../../operations/EscapeString";
 
 if (process.argv.length < 4) {
     console.log("Pass an operation name and legacy filename as arguments.");
@@ -58,6 +59,8 @@ function main() {
     const author = legacyFile.match(/@author [^\n]+/)[0];
     const copyright = legacyFile.match(/@copyright [^\n]+/)[0];
     const utilsUsed = /Utils/.test(legacyFile);
+    const esc = new EscapeString();
+    const desc = esc.run(op.description, ["Special chars", "Double"]);
 
     const template = `/**
  * ${author}
@@ -80,7 +83,7 @@ class ${moduleName} extends Operation {
 
         this.name = "${opName}";${op.flowControl ? "\n        this.flowControl = true;" : ""}
         this.module = "${op.module}";
-        this.description = "${op.description}";
+        this.description = "${desc}";
         this.inputType = "${op.inputType}";
         this.outputType = "${op.outputType}";${op.manualBake ? "\n        this.manualBake = true;" : ""}
         this.args = ${JSON.stringify(op.args, null, 4).split("\n").join("\n        ")};
@@ -126,16 +129,18 @@ ${op.highlight ? `
 export default ${moduleName};
 `;
 
+    console.log("\nLegacy operation config\n-----------------------\n");
     console.log(template);
+    console.log(JSON.stringify(op, null, 4));
     console.log("\n-----------------------\n");
 
     const filename = path.join(dir, `../operations/${moduleName}.mjs`);
     if (fs.existsSync(filename)) {
-        console.log(`${filename} already exists. It has NOT been overwritten.`);
+        console.log(`\u274c ${filename} already exists. It has NOT been overwritten.`);
         process.exit(0);
     }
     fs.writeFileSync(filename, template);
-    console.log("Written to " + filename);
+    console.log("\u2714 Written to " + filename);
     console.log(`Open ${legacyFilename} and copy the relevant code over. Make sure you check imports, args and highlights.`);
 }
 
