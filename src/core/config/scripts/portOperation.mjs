@@ -62,6 +62,25 @@ function main() {
     const esc = new EscapeString();
     const desc = esc.run(op.description, ["Special chars", "Double"]);
 
+    // Attempt to find the operation run function based on the JSDoc comment
+    const regex = `\\* ${opName} operation[^:]+:(?: function ?\\(input, args\\))? ?{([\\s\\S]+?)\n    }`;
+    let runFunc = "\n";
+    try {
+        runFunc = legacyFile.match(new RegExp(regex, "im"))[1];
+    } catch (err) {}
+
+
+    // List all constants in legacyFile
+    const constants = [];
+    try {
+        const constantsRegex = /\* @constant[^/]+\/\s+([^\n]+)/gim;
+        let m;
+
+        while ((m = constantsRegex.exec(legacyFile)) !== null) {
+            constants.push(m[1]);
+        }
+    } catch (err) {}
+
     const template = `/**
  * ${author}
  * ${copyright}
@@ -94,8 +113,7 @@ class ${moduleName} extends Operation {
      * @param {Object[]} args
      * @returns {${op.outputType}}
      */
-    run(input, args) {
-
+    run(input, args) {${runFunc}
     }
 ${op.highlight ? `
     /**
@@ -130,18 +148,26 @@ export default ${moduleName};
 `;
 
     console.log("\nLegacy operation config\n-----------------------\n");
-    console.log(template);
     console.log(JSON.stringify(op, null, 4));
+    console.log("\n-----------------------\n");
+    console.log("\nPotentially related constants\n-----------------------\n");
+    console.log(constants.join("\n"));
     console.log("\n-----------------------\n");
 
     const filename = path.join(dir, `../operations/${moduleName}.mjs`);
     if (fs.existsSync(filename)) {
-        console.log(`\u274c ${filename} already exists. It has NOT been overwritten.`);
+        console.log(`\x1b[31m\u274c ${filename} already exists. It has NOT been overwritten.\x1b[0m`);
         process.exit(0);
     }
     fs.writeFileSync(filename, template);
-    console.log("\u2714 Written to " + filename);
-    console.log(`Open ${legacyFilename} and copy the relevant code over. Make sure you check imports, args and highlights.`);
+
+    console.log("\x1b[32m\u2714\x1b[0m Operation written to \x1b[32m" + filename + "\x1b[0m");
+    if (runFunc === "\n") {
+        console.log("\x1b[31m\u274c The run function could not be located automatically.\x1b[0m You will have to copy it accross manually.");
+    } else {
+        console.log("\x1b[32m\u2714\x1b[0m The run function was copied across. Double check that it was copied correctly. It may rely on other functions which have not been copied.");
+    }
+    console.log(`\nOpen \x1b[32m${legacyFilename}\x1b[0m and copy any relevant code over. Make sure you check imports, args and highlights. Code required by multiple operations should be stored in /src/core/lib/`);
 }
 
 
