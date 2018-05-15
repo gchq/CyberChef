@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import kbpgp from "kbpgp";
 import { ASP, importPrivateKey, importPublicKey } from "../lib/PGP";
+import OperationError from "../errors/OperationError";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
 
@@ -49,6 +50,8 @@ class PGPEncryptAndSign extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if failure to sign message
      */
     async run(input, args) {
         const message = input,
@@ -57,8 +60,8 @@ class PGPEncryptAndSign extends Operation {
             publicKey = args[2];
         let signedMessage;
 
-        if (!privateKey) return "Enter the private key of the signer.";
-        if (!publicKey) return "Enter the public key of the recipient.";
+        if (!privateKey) throw new OperationError("Enter the private key of the signer.");
+        if (!publicKey) throw new OperationError("Enter the public key of the recipient.");
         const privKey = await importPrivateKey(privateKey, passphrase);
         const pubKey = await importPublicKey(publicKey);
 
@@ -70,7 +73,7 @@ class PGPEncryptAndSign extends Operation {
                 "asp": ASP
             });
         } catch (err) {
-            throw `Couldn't sign message: ${err}`;
+            throw new OperationError(`Couldn't sign message: ${err}`);
         }
 
         return signedMessage;

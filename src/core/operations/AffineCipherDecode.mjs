@@ -42,6 +42,8 @@ class AffineCipherDecode extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if a or b values are invalid
      */
     run(input, args) {
         const alphabet = "abcdefghijklmnopqrstuvwxyz",

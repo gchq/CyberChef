@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import forge from "node-forge/dist/forge.min.js";
+import OperationError from "../errors/OperationError";
 
 /**
  * AES Encrypt operation
@@ -59,6 +60,8 @@ class AESEncrypt extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if invalid key length
      */
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
@@ -68,12 +71,12 @@ class AESEncrypt extends Operation {
             outputType = args[4];
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
-            return `Invalid key length: ${key.length} bytes
+            throw new OperationError(`Invalid key length: ${key.length} bytes
 
 The following algorithms will be used based on the size of the key:
   16 bytes = AES-128
   24 bytes = AES-192
-  32 bytes = AES-256`;
+  32 bytes = AES-256`);
         }
 
         input = Utils.convertToByteString(input, inputType);

@@ -7,8 +7,10 @@
 import Operation from "../Operation";
 import kbpgp from "kbpgp";
 import { ASP, importPrivateKey } from "../lib/PGP";
+import OperationError from "../errors/OperationError";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
+
 
 /**
  * PGP Decrypt operation
@@ -44,6 +46,8 @@ class PGPDecrypt extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if invalid private key
      */
     async run(input, args) {
         const encryptedMessage = input,
@@ -52,7 +56,7 @@ class PGPDecrypt extends Operation {
             keyring = new kbpgp.keyring.KeyRing();
         let plaintextMessage;
 
-        if (!privateKey) return "Enter the private key of the recipient.";
+        if (!privateKey) throw new OperationError("Enter the private key of the recipient.");
 
         const key = await importPrivateKey(privateKey, passphrase);
         keyring.add_key_manager(key);
@@ -64,7 +68,7 @@ class PGPDecrypt extends Operation {
                 asp: ASP
             });
         } catch (err) {
-            throw `Couldn't decrypt message with provided private key: ${err}`;
+            throw new OperationError(`Couldn't decrypt message with provided private key: ${err}`);
         }
 
         return plaintextMessage.toString();

@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 
 /**
  * Take bytes operation
@@ -45,6 +46,8 @@ class TakeBytes extends Operation {
      * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {ArrayBuffer}
+     *
+     * @throws {OperationError} if invalid value
      */
     run(input, args) {
         const start = args[0],
@@ -52,7 +55,7 @@ class TakeBytes extends Operation {
             applyToEachLine = args[2];
 
         if (start < 0 || length < 0)
-            throw "Error: Invalid value";
+            throw new OperationError("Error: Invalid value");
 
         if (!applyToEachLine)
             return input.slice(start, start+length);

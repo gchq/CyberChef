@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import {DELIM_OPTIONS} from "../lib/Delim";
+import OperationError from "../errors/OperationError";
 
 /**
  * From Charcode operation
@@ -42,6 +43,8 @@ class FromCharcode extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {byteArray}
+     *
+     * @throws {OperationError} if base out of range
      */
     run(input, args) {
         const delim = Utils.charRep(args[0] || "Space"),
@@ -50,7 +53,7 @@ class FromCharcode extends Operation {
             i = 0;
 
         if (base < 2 || base > 36) {
-            throw "Error: Base argument must be between 2 and 36";
+            throw new OperationError("Error: Base argument must be between 2 and 36");
         }
 
         if (input.length === 0) {

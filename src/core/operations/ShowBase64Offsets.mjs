@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import {fromBase64, toBase64} from "../lib/Base64";
+import OperationError from "../errors/OperationError";
 
 /**
  * Show Base64 offsets operation
@@ -58,7 +59,7 @@ class ShowBase64Offsets extends Operation {
             script = "<script type='application/javascript'>$('[data-toggle=\"tooltip\"]').tooltip()</script>";
 
         if (input.length < 1) {
-            return "Please enter a string.";
+            throw new OperationError("Please enter a string.");
         }
 
         // Highlight offset 0

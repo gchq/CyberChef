@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import forge from "node-forge/dist/forge.min.js";
+import OperationError from "../errors/OperationError";
 
 /**
  * AES Decrypt operation
@@ -65,6 +66,8 @@ class AESDecrypt extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if cannot decrypt input or invalid key length
      */
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
@@ -75,12 +78,12 @@ class AESDecrypt extends Operation {
             gcmTag = Utils.convertToByteString(args[5].string, args[5].option);
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
-            return `Invalid key length: ${key.length} bytes
+            throw new OperationError(`Invalid key length: ${key.length} bytes
 
 The following algorithms will be used based on the size of the key:
   16 bytes = AES-128
   24 bytes = AES-192
-  32 bytes = AES-256`;
+  32 bytes = AES-256`);
         }
 
         input = Utils.convertToByteString(input, inputType);
@@ -96,7 +99,7 @@ The following algorithms will be used based on the size of the key:
         if (result) {
             return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
         } else {
-            return "Unable to decrypt input with these parameters.";
+            throw new OperationError("Unable to decrypt input with these parameters.");
         }
     }
 

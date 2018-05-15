@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import kbpgp from "kbpgp";
 import { ASP, importPrivateKey, importPublicKey } from "../lib/PGP";
+import OperationError from "../errors/OperationError";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
 
@@ -58,8 +59,8 @@ class PGPDecryptAndVerify extends Operation {
             keyring = new kbpgp.keyring.KeyRing();
         let unboxedLiterals;
 
-        if (!publicKey) return "Enter the public key of the signer.";
-        if (!privateKey) return "Enter the private key of the recipient.";
+        if (!publicKey) throw new OperationError("Enter the public key of the signer.");
+        if (!privateKey) throw new OperationError("Enter the private key of the recipient.");
         const privKey = await importPrivateKey(privateKey, passphrase);
         const pubKey = await importPublicKey(publicKey);
         keyring.add_key_manager(privKey);
@@ -97,13 +98,13 @@ class PGPDecryptAndVerify extends Operation {
                     text += unboxedLiterals.toString();
                     return text.trim();
                 } else {
-                    return "Could not identify a key manager.";
+                    throw new OperationError("Could not identify a key manager.");
                 }
             } else {
-                return "The data does not appear to be signed.";
+                throw new OperationError("The data does not appear to be signed.");
             }
         } catch (err) {
-            return `Couldn't verify message: ${err}`;
+            throw new OperationError(`Couldn't verify message: ${err}`);
         }
     }
 

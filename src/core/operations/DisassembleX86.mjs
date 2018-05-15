@@ -6,6 +6,8 @@
 
 import Operation from "../Operation";
 import * as disassemble from "../vendor/DisassembleX86-64";
+import OperationError from "../errors/OperationError";
+
 /**
  * Disassemble x86 operation
  */
@@ -68,6 +70,8 @@ class DisassembleX86 extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if invalid mode value
      */
     run(input, args) {
         const mode = args[0],
@@ -88,7 +92,7 @@ class DisassembleX86 extends Operation {
                 disassemble.setBitMode(0);
                 break;
             default:
-                throw "Invalid mode value";
+                throw new OperationError("Invalid mode value");
         }
 
         switch (compatibility) {
