@@ -1,3 +1,9 @@
+/**
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
 import Utils from "../Utils.js";
 import BigNumber from "bignumber.js";
 
