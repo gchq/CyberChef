@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import Arithmetic from "./baseClasses/Arithmetic";
+import Arithmetic from "../lib/Arithmetic";
 import BigNumber from "bignumber.js";
 
 /**

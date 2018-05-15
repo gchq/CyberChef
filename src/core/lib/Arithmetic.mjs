@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../../Utils";
+import Utils from "../Utils";
 import BigNumber from "bignumber.js";
 
 /**
