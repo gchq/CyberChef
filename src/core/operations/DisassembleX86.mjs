@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import disassemble from "../vendor/DisassembleX86-64.js";
+import * as disassemble from "../vendor/DisassembleX86-64";
 /**
  * Disassemble x86 operation
  */

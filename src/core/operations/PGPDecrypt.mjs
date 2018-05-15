@@ -5,9 +5,10 @@
  */
 
 import Operation from "../Operation";
-import * as kbpgp from "kbpgp";
-import { promisify } from "es6-promisify";
+import kbpgp from "kbpgp";
 import { ASP, importPrivateKey } from "../lib/PGP";
+import promisifyDefault from "es6-promisify";
+const promisify = promisifyDefault.promisify;
 
 /**
  * PGP Decrypt operation

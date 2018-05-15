@@ -10,9 +10,9 @@
  *
  */
 
-import * as kbpgp from "kbpgp";
-import { promisify } from "es6-promisify";
-
+import kbpgp from "kbpgp";
+import promisifyDefault from "es6-promisify";
+const promisify = promisifyDefault.promisify;
 /**
  * Progress callback
  *
