@@ -67,6 +67,7 @@ module.exports = {
             {
                 test: /\.m?js$/,
                 exclude: /node_modules\/(?!jsesc)/,
+                type: "javascript/auto",
                 loader: "babel-loader?compact=false"
             },
             {

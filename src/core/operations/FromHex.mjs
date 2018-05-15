@@ -53,6 +53,7 @@ class FromHex extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
+        if (args[0] === "Auto") return false;
         const delim = Utils.charRep(args[0] || "Space"),
             len = delim === "\r\n" ? 1 : delim.length,
             width = len + 2;
