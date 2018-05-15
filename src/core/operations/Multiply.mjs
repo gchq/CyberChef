@@ -5,9 +5,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Arithmetic from "../lib/Arithmetic";
 import BigNumber from "bignumber.js";
+import Operation from "../Operation";
+import { multi, createNumArray } from "../lib/Arithmetic";
+import { DELIM_OPTIONS } from "../lib/Delim";
+
 
 /**
  * Multiply operation
@@ -29,7 +31,7 @@ class Multiply extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": Arithmetic.DELIM_OPTIONS,
+                "value": DELIM_OPTIONS,
             }
         ];
     }
@@ -40,7 +42,7 @@ class Multiply extends Operation {
      * @returns {BigNumber}
      */
     run(input, args) {
-        const val = Arithmetic._multi(Arithmetic._createNumArray(input, args[0]));
+        const val = multi(createNumArray(input, args[0]));
         return val instanceof BigNumber ? val : new BigNumber(NaN);
     }
 
