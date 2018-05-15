@@ -10,19 +10,19 @@ import Arithmetic from "../lib/Arithmetic";
 import BigNumber from "bignumber.js";
 
 /**
- * Subtract operation
+ * Divide operation
  */
-class Subtract extends Operation {
+class Divide extends Operation {
 
     /**
-     * Subtract constructor
+     * Divide constructor
      */
     constructor() {
         super();
 
-        this.name = "Subtract";
+        this.name = "Divide";
         this.module = "Default";
-        this.description = "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>";
+        this.description = "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [
@@ -40,10 +40,10 @@ class Subtract extends Operation {
      * @returns {BigNumber}
      */
     run(input, args) {
-        const val = Arithmetic._sub(Arithmetic._createNumArray(input, args[0]));
+        const val = Arithmetic._div(Arithmetic._createNumArray(input, args[0]));
         return val instanceof BigNumber ? val : new BigNumber(NaN);
     }
 
 }
 
-export default Subtract;
+export default Divide;

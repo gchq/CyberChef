@@ -1,4 +1,5 @@
 /**
+ * @author bwhitn [brian.m.whitney@outlook.com]
  * @author d98762625 [d98762625@gmailcom]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -8,7 +9,8 @@ import Utils from "../Utils";
 import BigNumber from "bignumber.js";
 
 /**
- * 
+ * Arithmetic functions used by Sum, Multiply, Divide, Subtract (etc)
+ * functions.
  */
 class Arithmetic {
 
