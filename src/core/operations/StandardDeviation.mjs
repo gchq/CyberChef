@@ -10,19 +10,19 @@ import Arithmetic from "../lib/Arithmetic";
 import BigNumber from "bignumber.js";
 
 /**
- * Median operation
+ * Standard Deviation operation
  */
-class Median extends Operation {
+class StandardDeviation extends Operation {
 
     /**
-     * Median constructor
+     * StandardDeviation constructor
      */
     constructor() {
         super();
 
-        this.name = "Median";
+        this.name = "Standard Deviation";
         this.module = "Default";
-        this.description = "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>";
+        this.description = "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [
@@ -40,10 +40,11 @@ class Median extends Operation {
      * @returns {BigNumber}
      */
     run(input, args) {
-        const val = Arithmetic._median(Arithmetic._createNumArray(input, args[0]));
+        const val = Arithmetic._stdDev(Arithmetic._createNumArray(input, args[0]));
         return val instanceof BigNumber ? val : new BigNumber(NaN);
+
     }
 
 }
 
-export default Median;
+export default StandardDeviation;
