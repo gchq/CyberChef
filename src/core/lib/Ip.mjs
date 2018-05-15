@@ -390,9 +390,19 @@ export function _genIpv6Mask(cidr) {
     return mask;
 }
 
-    /**
-     * @constant
-     * @default
-     * @private
-     */
+/**
+* @constant
+* @default
+* @private
+*/
 const _LARGE_RANGE_ERROR = "The specified range contains more than 65,536 addresses. Running this query could crash your browser. If you want to run it, select the \"Allow large queries\" option. You are advised to turn off \"Auto Bake\" whilst editing large ranges.";
+/**
+* @constant
+* @default
+*/
+export const IPV4_REGEX = /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/;
+/**
+* @constant
+* @default
+*/
+export const IPV6_REGEX = /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i;
