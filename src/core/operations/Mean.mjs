@@ -7,7 +7,7 @@
 
 import Operation from "../Operation";
 import { mean, createNumArray } from "../lib/Arithmetic";
-import { DELIM_OPTIONS } from "../lib/Delim";
+import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim";
 import BigNumber from "bignumber.js";
 
 /**
@@ -30,7 +30,7 @@ class Mean extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": DELIM_OPTIONS,
+                "value": ARITHMETIC_DELIM_OPTIONS,
             }
         ];
     }

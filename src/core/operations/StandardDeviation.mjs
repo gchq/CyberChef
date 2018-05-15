@@ -8,7 +8,7 @@
 import BigNumber from "bignumber.js";
 import Operation from "../Operation";
 import { stdDev, createNumArray } from "../lib/Arithmetic";
-import { DELIM_OPTIONS } from "../lib/Delim";
+import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim";
 
 
 /**
@@ -31,7 +31,7 @@ class StandardDeviation extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": DELIM_OPTIONS,
+                "value": ARITHMETIC_DELIM_OPTIONS,
             }
         ];
     }
