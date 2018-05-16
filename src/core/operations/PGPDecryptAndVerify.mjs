@@ -24,7 +24,18 @@ class PGPDecryptAndVerify extends Operation {
 
         this.name = "PGP Decrypt and Verify";
         this.module = "PGP";
-        this.description = "Input: the ASCII-armoured encrypted PGP message you want to verify.\n<br><br>\nArguments: the ASCII-armoured PGP public key of the signer, \nthe ASCII-armoured private key of the recipient (and the private key password if necessary).\n<br><br>\nThis operation uses PGP to decrypt and verify an encrypted digital signature.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.";
+        this.description = [
+            "Input: the ASCII-armoured encrypted PGP message you want to verify.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the signer, ",
+            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
+            "<br><br>",
+            "This operation uses PGP to decrypt and verify an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n");
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -53,9 +64,7 @@ class PGPDecryptAndVerify extends Operation {
      */
     async run(input, args) {
         const signedMessage = input,
-            publicKey = args[0],
-            privateKey = args[1],
-            passphrase = args[2],
+            [publicKey, privateKey, passphrase] = args,
             keyring = new kbpgp.keyring.KeyRing();
         let unboxedLiterals;
 

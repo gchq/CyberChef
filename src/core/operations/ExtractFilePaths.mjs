@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import { search } from "../lib/Extract";
+
 /**
  * Extract file paths operation
  */
@@ -47,9 +48,7 @@ class ExtractFilePaths extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const includeWinPath = args[0],
-            includeUnixPath = args[1],
-            displayTotal = args[2],
+        const [includeWinPath, includeUnixPath, displayTotal] = args,
             winDrive = "[A-Z]:\\\\",
             winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)~]{0,61}",
             winExt = "[A-Z\\d]{1,6}",

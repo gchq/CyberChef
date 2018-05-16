@@ -24,7 +24,15 @@ class PGPEncrypt extends Operation {
 
         this.name = "PGP Encrypt";
         this.module = "PGP";
-        this.description = "Input: the message you want to encrypt.\n<br><br>\nArguments: the ASCII-armoured PGP public key of the recipient.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.";
+        this.description = [
+            "Input: the message you want to encrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n");
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

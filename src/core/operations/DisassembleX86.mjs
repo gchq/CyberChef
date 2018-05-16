@@ -74,12 +74,14 @@ class DisassembleX86 extends Operation {
      * @throws {OperationError} if invalid mode value
      */
     run(input, args) {
-        const mode = args[0],
-            compatibility = args[1],
-            codeSegment = args[2],
-            offset = args[3],
-            showInstructionHex = args[4],
-            showInstructionPos = args[5];
+        const [
+            mode,
+            compatibility,
+            codeSegment,
+            offset,
+            showInstructionHex,
+            showInstructionPos
+        ] = args;
 
         switch (mode) {
             case "64":

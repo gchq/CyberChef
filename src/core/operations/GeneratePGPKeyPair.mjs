@@ -11,6 +11,7 @@ import kbpgp from "kbpgp";
 import { getSubkeySize, ASP } from "../lib/PGP";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
+
 /**
  * Generate PGP Key Pair operation
  */

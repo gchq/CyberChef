@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
 
-
 /**
  * PGP Decrypt operation
  */
@@ -25,7 +24,16 @@ class PGPDecrypt extends Operation {
 
         this.name = "PGP Decrypt";
         this.module = "PGP";
-        this.description = "Input: the ASCII-armoured PGP message you want to decrypt.\n<br><br>\nArguments: the ASCII-armoured PGP private key of the recipient, \n(and the private key password if necessary).\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.";
+        this.description = [
+            "Input: the ASCII-armoured PGP message you want to decrypt.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured PGP private key of the recipient, ",
+            "(and the private key password if necessary).",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n");
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -51,8 +59,7 @@ class PGPDecrypt extends Operation {
      */
     async run(input, args) {
         const encryptedMessage = input,
-            privateKey = args[0],
-            passphrase = args[1],
+            [privateKey, passphrase] = args,
             keyring = new kbpgp.keyring.KeyRing();
         let plaintextMessage;
 

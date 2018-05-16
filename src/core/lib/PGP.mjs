@@ -13,9 +13,9 @@
 import kbpgp from "kbpgp";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
+
 /**
  * Progress callback
- *
  */
 export const ASP = kbpgp.ASP({
     "progress_hook": info => {

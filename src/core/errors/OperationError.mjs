@@ -15,6 +15,8 @@ class OperationError extends Error {
     constructor(...args) {
         super(...args);
 
+        this.type = "OperationError";
+
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, OperationError);
         }

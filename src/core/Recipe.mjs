@@ -177,7 +177,10 @@ class Recipe  {
                 }
             } catch (err) {
                 // Return expected errors as output
-                if (err instanceof OperationError) {
+                if (err instanceof OperationError ||
+                    (err.type && err.type === "OperationError")) {
+                    // Cannot rely on `err instanceof OperationError` here as extending
+                    // native types is not fully supported yet.
                     dish.set(err.message, "string");
                     return i;
                 } else {

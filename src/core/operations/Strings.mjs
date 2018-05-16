@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import XRegExp from "xregexp";
 import { search } from "../lib/Extract";
+
 /**
  * Strings operation
  */
@@ -56,10 +57,7 @@ class Strings extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const encoding = args[0],
-            minLen = args[1],
-            matchType = args[2],
-            displayTotal = args[3],
+        const [encoding, minLen, matchType, displayTotal] = args,
             alphanumeric = "A-Z\\d",
             punctuation = "/\\-:.,_$%'\"()<>= !\\[\\]{}@",
             printable = "\x20-\x7e",

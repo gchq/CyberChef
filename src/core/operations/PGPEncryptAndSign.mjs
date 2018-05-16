@@ -24,7 +24,18 @@ class PGPEncryptAndSign extends Operation {
 
         this.name = "PGP Encrypt and Sign";
         this.module = "PGP";
-        this.description = "Input: the cleartext you want to sign.\n<br><br>\nArguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)\nand the ASCII-armoured PGP public key of the recipient.\n<br><br>\nThis operation uses PGP to produce an encrypted digital signature.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.";
+        this.description = [
+            "Input: the cleartext you want to sign.",
+            "<br><br>",
+            "Arguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)",
+            "and the ASCII-armoured PGP public key of the recipient.",
+            "<br><br>",
+            "This operation uses PGP to produce an encrypted digital signature.",
+            "<br><br>",
+            "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
+            "<br><br>",
+            "This function uses the Keybase implementation of PGP.",
+        ].join("\n");
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -55,9 +66,7 @@ class PGPEncryptAndSign extends Operation {
      */
     async run(input, args) {
         const message = input,
-            privateKey = args[0],
-            passphrase = args[1],
-            publicKey = args[2];
+            [privateKey, passphrase, publicKey] = args;
         let signedMessage;
 
         if (!privateKey) throw new OperationError("Enter the private key of the signer.");
