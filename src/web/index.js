@@ -13,7 +13,7 @@ import "bootstrap";
 import "bootstrap-switch";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
-import CanvasComponents from "../core/vendor/canvascomponents.js";
+import * as CanvasComponents from "../core/lib/CanvasComponents";
 
 // CyberChef
 import App from "./App";

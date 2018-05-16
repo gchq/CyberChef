@@ -212,7 +212,10 @@ class Recipe  {
     async present(dish) {
         if (!this.lastRunOp) return;
 
-        const output = await this.lastRunOp.present(await dish.get(this.lastRunOp.outputType));
+        const output = await this.lastRunOp.present(
+            await dish.get(this.lastRunOp.outputType),
+            this.lastRunOp.ingValues
+        );
         dish.set(output, this.lastRunOp.presentType);
     }
 
@@ -268,6 +271,18 @@ class Recipe  {
         }
 
         return highlights;
+    }
+
+
+    /**
+     * Determines whether the previous operation has a different presentation type to its normal output.
+     *
+     * @param {number} progress
+     * @returns {boolean}
+     */
+    lastOpPresented(progress) {
+        if (progress < 1) return false;
+        return this.opList[progress-1].presentType !== this.opList[progress-1].outputType;
     }
 
 }
