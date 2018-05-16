@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import moment from "moment-timezone";
 import {UNITS} from "../lib/DateTime";
+import OperationError from "../errors/OperationError";
 
 /**
  * To UNIX Timestamp operation
@@ -47,6 +48,8 @@ class ToUNIXTimestamp extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if unit unrecognised
      */
     run(input, args) {
         const [units, treatAsUTC, showDateTime] = args,
@@ -63,7 +66,7 @@ class ToUNIXTimestamp extends Operation {
         } else if (units === "Nanoseconds (ns)") {
             result = d.valueOf() * 1000000;
         } else {
-            throw "Unrecognised unit";
+            throw new OperationError("Unrecognised unit");
         }
 
         return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();

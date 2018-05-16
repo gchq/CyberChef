@@ -37,6 +37,8 @@ class BifidCipherDecode extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if invalid key
      */
     run(input, args) {
         const keywordStr = args[0].toUpperCase().replace("J", "I"),

@@ -81,9 +81,10 @@ class Operation {
      * this behaviour.
      *
      * @param {*} data - The result of the run() function
+     * @param {Object[]} args - The operation's arguments
      * @returns {*} - A human-readable version of the data
      */
-    present(data) {
+    present(data, args) {
         return data;
     }
 

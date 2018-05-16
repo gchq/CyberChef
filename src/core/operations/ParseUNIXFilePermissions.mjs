@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 
 /**
  * Parse UNIX file permissions operation
@@ -169,7 +170,7 @@ class ParseUNIXFilePermissions extends Operation {
                 }
             }
         } else {
-            return "Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.";
+            throw new OperationError("Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.");
         }
 
         output += "Textual representation: " + permsToStr(perms);

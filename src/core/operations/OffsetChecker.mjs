@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import OperationError from "../errors/OperationError";
 
 /**
  * Offset checker operation
@@ -48,7 +49,7 @@ class OffsetChecker extends Operation {
             chr;
 
         if (!samples || samples.length < 2) {
-            return "Not enough samples, perhaps you need to modify the sample delimiter or add more data?";
+            throw new OperationError("Not enough samples, perhaps you need to modify the sample delimiter or add more data?");
         }
 
         // Initialise output strings

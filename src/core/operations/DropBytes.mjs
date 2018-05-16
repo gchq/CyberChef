@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 
 /**
  * Drop bytes operation
@@ -45,6 +46,8 @@ class DropBytes extends Operation {
      * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {ArrayBuffer}
+     *
+     * @throws {OperationError} if invalid input
      */
     run(input, args) {
         const start = args[0],
@@ -52,7 +55,7 @@ class DropBytes extends Operation {
             applyToEachLine = args[2];
 
         if (start < 0 || length < 0)
-            throw "Error: Invalid value";
+            throw new OperationError("Error: Invalid value");
 
         if (!applyToEachLine) {
             const left = input.slice(0, start),

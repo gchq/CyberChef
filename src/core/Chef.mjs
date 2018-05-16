@@ -60,6 +60,12 @@ class Chef {
             recipe.setBreakpoint(progress + 1, true);
         }
 
+        // If the previously run operation presented a different value to its
+        // normal output, we need to recalculate it.
+        if (recipe.lastOpPresented(progress)) {
+            progress = 0;
+        }
+
         // If stepping with flow control, we have to start from the beginning
         // but still want to skip all previous breakpoints
         if (progress > 0 && containsFc) {
