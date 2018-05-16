@@ -10,8 +10,8 @@ import Utils from "../Utils";
      * @param {boolean} allowLargeList
      * @returns {string}
      */
-export function _ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-    const network = _strToIpv4(cidr[1]),
+export function ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, allowLargeList) {
+    const network = strToIpv4(cidr[1]),
         cidrRange = parseInt(cidr[2], 10);
     let output = "";
 
@@ -24,16 +24,16 @@ export function _ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, all
         ip2 = ip1 | ~mask;
 
     if (includeNetworkInfo) {
-        output += "Network: " + _ipv4ToStr(network) + "\n";
+        output += "Network: " + ipv4ToStr(network) + "\n";
         output += "CIDR: " + cidrRange + "\n";
-        output += "Mask: " + _ipv4ToStr(mask) + "\n";
-        output += "Range: " + _ipv4ToStr(ip1) + " - " + _ipv4ToStr(ip2) + "\n";
+        output += "Mask: " + ipv4ToStr(mask) + "\n";
+        output += "Range: " + ipv4ToStr(ip1) + " - " + ipv4ToStr(ip2) + "\n";
         output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
     }
 
     if (enumerateAddresses) {
         if (cidrRange >= 16 || allowLargeList) {
-            output += _generateIpv4Range(ip1, ip2).join("\n");
+            output += generateIpv4Range(ip1, ip2).join("\n");
         } else {
             output += _LARGE_RANGE_ERROR;
         }
@@ -49,9 +49,9 @@ export function _ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, all
      * @param {boolean} includeNetworkInfo
      * @returns {string}
      */
-export function _ipv6CidrRange(cidr, includeNetworkInfo) {
+export function ipv6CidrRange(cidr, includeNetworkInfo) {
     let output = "";
-    const network = _strToIpv6(cidr[1]),
+    const network = strToIpv6(cidr[1]),
         cidrRange = parseInt(cidr[cidr.length-1], 10);
 
     if (cidrRange < 0 || cidrRange > 127) {
@@ -62,7 +62,7 @@ export function _ipv6CidrRange(cidr, includeNetworkInfo) {
         ip2 = new Array(8),
         total = new Array(128);
 
-    const mask = _genIpv6Mask(cidrRange);
+    const mask = genIpv6Mask(cidrRange);
     let totalDiff = "";
 
 
@@ -79,11 +79,11 @@ export function _ipv6CidrRange(cidr, includeNetworkInfo) {
     }
 
     if (includeNetworkInfo) {
-        output += "Network: " + _ipv6ToStr(network) + "\n";
-        output += "Shorthand: " + _ipv6ToStr(network, true) + "\n";
+        output += "Network: " + ipv6ToStr(network) + "\n";
+        output += "Shorthand: " + ipv6ToStr(network, true) + "\n";
         output += "CIDR: " + cidrRange + "\n";
-        output += "Mask: " + _ipv6ToStr(mask) + "\n";
-        output += "Range: " + _ipv6ToStr(ip1) + " - " + _ipv6ToStr(ip2) + "\n";
+        output += "Mask: " + ipv6ToStr(mask) + "\n";
+        output += "Range: " + ipv6ToStr(ip1) + " - " + ipv6ToStr(ip2) + "\n";
         output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
     }
 
@@ -101,9 +101,9 @@ export function _ipv6CidrRange(cidr, includeNetworkInfo) {
      * @param {boolean} allowLargeList
      * @returns {string}
      */
-export function _ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-    const ip1 = _strToIpv4(range[1]),
-        ip2 = _strToIpv4(range[2]);
+export function ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresses, allowLargeList) {
+    const ip1 = strToIpv4(range[1]),
+        ip2 = strToIpv4(range[2]);
 
     let output = "";
         // Calculate mask
@@ -124,18 +124,18 @@ export function _ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddress
 
     if (includeNetworkInfo) {
         output += "Minimum subnet required to hold this range:\n";
-        output += "\tNetwork: " + _ipv4ToStr(network) + "\n";
+        output += "\tNetwork: " + ipv4ToStr(network) + "\n";
         output += "\tCIDR: " + cidr + "\n";
-        output += "\tMask: " + _ipv4ToStr(mask) + "\n";
-        output += "\tSubnet range: " + _ipv4ToStr(subIp1) + " - " + _ipv4ToStr(subIp2) + "\n";
+        output += "\tMask: " + ipv4ToStr(mask) + "\n";
+        output += "\tSubnet range: " + ipv4ToStr(subIp1) + " - " + ipv4ToStr(subIp2) + "\n";
         output += "\tTotal addresses in subnet: " + (((subIp2 - subIp1) >>> 0) + 1) + "\n\n";
-        output += "Range: " + _ipv4ToStr(ip1) + " - " + _ipv4ToStr(ip2) + "\n";
+        output += "Range: " + ipv4ToStr(ip1) + " - " + ipv4ToStr(ip2) + "\n";
         output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
     }
 
     if (enumerateAddresses) {
         if (((ip2 - ip1) >>> 0) <= 65536 || allowLargeList) {
-            output += _generateIpv4Range(ip1, ip2).join("\n");
+            output += generateIpv4Range(ip1, ip2).join("\n");
         } else {
             output += _LARGE_RANGE_ERROR;
         }
@@ -152,9 +152,9 @@ export function _ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddress
      * @param {boolean} includeNetworkInfo
      * @returns {string}
      */
-export function _ipv6HyphenatedRange(range, includeNetworkInfo) {
-    const ip1 = _strToIpv6(range[1]),
-        ip2 = _strToIpv6(range[14]),
+export function ipv6HyphenatedRange(range, includeNetworkInfo) {
+    const ip1 = strToIpv6(range[1]),
+        ip2 = strToIpv6(range[14]),
         total = new Array(128).fill();
 
     let output = "",
@@ -171,8 +171,8 @@ export function _ipv6HyphenatedRange(range, includeNetworkInfo) {
     }
 
     if (includeNetworkInfo) {
-        output += "Range: " + _ipv6ToStr(ip1) + " - " + _ipv6ToStr(ip2) + "\n";
-        output += "Shorthand range: " + _ipv6ToStr(ip1, true) + " - " + _ipv6ToStr(ip2, true) + "\n";
+        output += "Range: " + ipv6ToStr(ip1) + " - " + ipv6ToStr(ip2) + "\n";
+        output += "Shorthand range: " + ipv6ToStr(ip1, true) + " - " + ipv6ToStr(ip2, true) + "\n";
         output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
     }
 
@@ -188,9 +188,9 @@ export function _ipv6HyphenatedRange(range, includeNetworkInfo) {
      *
      * @example
      * // returns 168427520
-     * _strToIpv4("10.10.0.0");
+     * strToIpv4("10.10.0.0");
      */
-export function _strToIpv4(ipStr) {
+export function strToIpv4(ipStr) {
     const blocks = ipStr.split("."),
         numBlocks = parseBlocks(blocks);
     let result = 0;
@@ -229,9 +229,9 @@ export function _strToIpv4(ipStr) {
      *
      * @example
      * // returns "10.10.0.0"
-     * _ipv4ToStr(168427520);
+     * ipv4ToStr(168427520);
      */
-export function _ipv4ToStr(ipInt) {
+export function ipv4ToStr(ipInt) {
     const blockA = (ipInt >> 24) & 255,
         blockB = (ipInt >> 16) & 255,
         blockC = (ipInt >> 8) & 255,
@@ -250,9 +250,9 @@ export function _ipv4ToStr(ipInt) {
      *
      * @example
      * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
-     * _strToIpv6("ff00::1111:2222");
+     * strToIpv6("ff00::1111:2222");
      */
-export function _strToIpv6(ipStr) {
+export function strToIpv6(ipStr) {
     let j = 0;
     const blocks = ipStr.split(":"),
         numBlocks = parseBlocks(blocks),
@@ -296,12 +296,12 @@ export function _strToIpv6(ipStr) {
      *
      * @example
      * // returns "ff00::1111:2222"
-     * _ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], true);
+     * ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], true);
      *
      * // returns "ff00:0000:0000:0000:0000:0000:1111:2222"
-     * _ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], false);
+     * ipv6ToStr([65280, 0, 0, 0, 0, 0, 4369, 8738], false);
      */
-export function _ipv6ToStr(ipv6, compact) {
+export function ipv6ToStr(ipv6, compact) {
     let output = "",
         i = 0;
 
@@ -352,13 +352,13 @@ export function _ipv6ToStr(ipv6, compact) {
      *
      * @example
      * // returns ["0.0.0.1", "0.0.0.2", "0.0.0.3"]
-     * IP._generateIpv4Range(1, 3);
+     * IP.generateIpv4Range(1, 3);
      */
-export function _generateIpv4Range(ip, endIp) {
+export function generateIpv4Range(ip, endIp) {
     const range = [];
     if (endIp >= ip) {
         for (; ip <= endIp; ip++) {
-            range.push(_ipv4ToStr(ip));
+            range.push(ipv4ToStr(ip));
         }
     } else {
         range[0] = "Second IP address smaller than first.";
@@ -373,7 +373,7 @@ export function _generateIpv4Range(ip, endIp) {
      * @param {number} cidr
      * @returns {number[]}
      */
-export function _genIpv6Mask(cidr) {
+export function genIpv6Mask(cidr) {
     const mask = new Array(8);
     let shift;
 
@@ -414,7 +414,7 @@ export const IPV6_REGEX = /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|)
      * @private
      * @constant
      */
-export const _protocolLookup = {
+export const protocolLookup = {
     0: {keyword: "HOPOPT", protocol: "IPv6 Hop-by-Hop Option"},
     1: {keyword: "ICMP", protocol: "Internet Control Message"},
     2: {keyword: "IGMP", protocol: "Internet Group Management"},

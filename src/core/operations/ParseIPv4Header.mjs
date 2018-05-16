@@ -6,8 +6,8 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {fromHex, toHex} from "../lib/Hex";
-import {_ipv4ToStr, _protocolLookup, calculateTCPIPChecksum} from "../lib/Ip";
+import {fromHex, toHex} from "../lib/Hex.mjs";
+import {ipv4ToStr, protocolLookup, calculateTCPIPChecksum} from "../lib/Ip.mjs";
 
 /**
  * Parse IPv4 header operation
@@ -83,7 +83,7 @@ class ParseIPv4Header extends Operation {
         }
 
         // Protocol
-        const protocolInfo = _protocolLookup[protocol] || {keyword: "", protocol: ""};
+        const protocolInfo = protocolLookup[protocol] || {keyword: "", protocol: ""};
 
         // Checksum
         const correctChecksum = calculateTCPIPChecksum(checksumHeader),
@@ -112,8 +112,8 @@ class ParseIPv4Header extends Operation {
             "<tr><td>Time-To-Live</td><td>" + ttl + "</td></tr>" +
             "<tr><td>Protocol</td><td>" + protocol + ", " + protocolInfo.protocol + " (" + protocolInfo.keyword + ")</td></tr>" +
             "<tr><td>Header checksum</td><td>" + checksumResult + "</td></tr>" +
-            "<tr><td>Source IP address</td><td>" + _ipv4ToStr(srcIP) + "</td></tr>" +
-            "<tr><td>Destination IP address</td><td>" + _ipv4ToStr(dstIP) + "</td></tr>";
+            "<tr><td>Source IP address</td><td>" + ipv4ToStr(srcIP) + "</td></tr>" +
+            "<tr><td>Destination IP address</td><td>" + ipv4ToStr(dstIP) + "</td></tr>";
 
         if (ihl > 5) {
             output += "<tr><td>Options</td><td>" + toHex(options) + "</td></tr>";

@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import {calculateTCPIPChecksum} from "../lib/Ip";
+import {calculateTCPIPChecksum} from "../lib/Ip.mjs";
 
 /**
  * TCP/IP Checksum operation

@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import {_ipv4CidrRange, _ipv4HyphenatedRange, _ipv6CidrRange, _ipv6HyphenatedRange} from "../lib/Ip";
+import {ipv4CidrRange, ipv4HyphenatedRange, ipv6CidrRange, ipv6HyphenatedRange} from "../lib/Ip";
 
 /**
  * Parse IP range operation
@@ -60,13 +60,13 @@ class ParseIPRange extends Operation {
         let match;
 
         if ((match = ipv4CidrRegex.exec(input))) {
-            return _ipv4CidrRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
+            return ipv4CidrRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
         } else if ((match = ipv4RangeRegex.exec(input))) {
-            return _ipv4HyphenatedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
+            return ipv4HyphenatedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
         } else if ((match = ipv6CidrRegex.exec(input))) {
-            return _ipv6CidrRange(match, includeNetworkInfo);
+            return ipv6CidrRange(match, includeNetworkInfo);
         } else if ((match = ipv6RangeRegex.exec(input))) {
-            return _ipv6HyphenatedRange(match, includeNetworkInfo);
+            return ipv6HyphenatedRange(match, includeNetworkInfo);
         } else {
             return "Invalid input.\n\nEnter either a CIDR range (e.g. 10.0.0.0/24) or a hyphenated range (e.g. 10.0.0.0 - 10.0.1.0). IPv6 also supported.";
         }

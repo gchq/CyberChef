@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {fromHex} from "../lib/Hex";
+import {fromHex} from "../lib/Hex.mjs";
 
 /**
  * Change IP format operation

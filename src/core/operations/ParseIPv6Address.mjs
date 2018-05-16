@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {_strToIpv6, _ipv6ToStr, _ipv4ToStr, IPV6_REGEX} from "../lib/Ip";
+import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/Ip.mjs";
 import BigInteger from "jsbn";
 
 /**
@@ -38,9 +38,9 @@ class ParseIPv6Address extends Operation {
             output = "";
 
         if ((match = IPV6_REGEX.exec(input))) {
-            const ipv6 = _strToIpv6(match[1]),
-                longhand = _ipv6ToStr(ipv6),
-                shorthand = _ipv6ToStr(ipv6, true);
+            const ipv6 = strToIpv6(match[1]),
+                longhand = ipv6ToStr(ipv6),
+                shorthand = ipv6ToStr(ipv6, true);
 
             output += "Longhand:  " + longhand + "\nShorthand: " + shorthand + "\n";
 
@@ -57,13 +57,13 @@ class ParseIPv6Address extends Operation {
                 ipv6[3] === 0 && ipv6[4] === 0 && ipv6[5] === 0xffff) {
                 // IPv4-mapped IPv6 address
                 output += "\nIPv4-mapped IPv6 address detected. IPv6 clients will be handled natively by default, and IPv4 clients appear as IPv6 clients at their IPv4-mapped IPv6 address.";
-                output += "\nMapped IPv4 address: " + _ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
+                output += "\nMapped IPv4 address: " + ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
                 output += "\nIPv4-mapped IPv6 addresses range: ::ffff:0:0/96";
             } else if (ipv6[0] === 0 && ipv6[1] === 0 && ipv6[2] === 0 &&
                 ipv6[3] === 0 && ipv6[4] === 0xffff && ipv6[5] === 0) {
                 // IPv4-translated address
                 output += "\nIPv4-translated address detected. Used by Stateless IP/ICMP Translation (SIIT). See RFCs 6145 and 6052 for more details.";
-                output += "\nTranslated IPv4 address: " + _ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
+                output += "\nTranslated IPv4 address: " + ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
                 output += "\nIPv4-translated addresses range: ::ffff:0:0:0/96";
             } else if (ipv6[0] === 0x100) {
                 // Discard prefix per RFC 6666
@@ -73,7 +73,7 @@ class ParseIPv6Address extends Operation {
                 ipv6[3] === 0 && ipv6[4] === 0 && ipv6[5] === 0) {
                 // IPv4/IPv6 translation per RFC 6052
                 output += "\n'Well-Known' prefix for IPv4/IPv6 translation detected. See RFC 6052 for more details.";
-                output += "\nTranslated IPv4 address: " + _ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
+                output += "\nTranslated IPv4 address: " + ipv4ToStr((ipv6[6] << 16) + ipv6[7]);
                 output += "\n'Well-Known' prefix range: 64:ff9b::/96";
             } else if (ipv6[0] === 0x2001 && ipv6[1] === 0) {
                 // Teredo tunneling
@@ -87,8 +87,8 @@ class ParseIPv6Address extends Operation {
                     flagUg      = (ipv6[4] >>> 8) & 3,
                     flagRandom2 = ipv6[4] & 255;
 
-                output += "\nServer IPv4 address: " + _ipv4ToStr(serverIpv4) +
-                    "\nClient IPv4 address: " + _ipv4ToStr(clientIpv4) +
+                output += "\nServer IPv4 address: " + ipv4ToStr(serverIpv4) +
+                    "\nClient IPv4 address: " + ipv4ToStr(clientIpv4) +
                     "\nClient UDP port:     " + udpPort +
                     "\nFlags:" +
                     "\n\tCone:    " + flagCone;
@@ -142,7 +142,7 @@ class ParseIPv6Address extends Operation {
                 output += "\n6to4 transition IPv6 address detected. See RFC 3056 for more details." +
                     "\n6to4 prefix range: 2002::/16";
 
-                const v4Addr = _ipv4ToStr((ipv6[1] << 16) + ipv6[2]),
+                const v4Addr = ipv4ToStr((ipv6[1] << 16) + ipv6[2]),
                     slaId = ipv6[3],
                     interfaceIdStr = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
                     interfaceId = new BigInteger(interfaceIdStr, 16);
