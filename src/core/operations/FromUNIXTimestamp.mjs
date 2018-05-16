@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import moment from "moment-timezone";
 import {UNITS} from "../lib/DateTime";
+import OperationError from "../errors/OperationError";
 
 /**
  * From UNIX Timestamp operation
@@ -37,6 +38,8 @@ class FromUNIXTimestamp extends Operation {
      * @param {number} input
      * @param {Object[]} args
      * @returns {string}
+     *
+     * @throws {OperationError} if invalid unit
      */
     run(input, args) {
         const units = args[0];
@@ -57,7 +60,7 @@ class FromUNIXTimestamp extends Operation {
             d = moment(input / 1000000);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
         } else {
-            throw "Unrecognised unit";
+            throw new OperationError("Unrecognised unit");
         }
     }
 

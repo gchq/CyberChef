@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import {INPUT_DELIM_OPTIONS} from "../lib/Delim";
+import OperationError from "../errors/OperationError";
 
 /**
  * Filter operation
@@ -56,7 +57,7 @@ class Filter extends Operation {
         try {
             regex = new RegExp(args[1]);
         } catch (err) {
-            return "Invalid regex. Details: " + err.message;
+            throw new OperationError(`Invalid regex. Details: ${err.message}`);
         }
 
         const regexFilter = function(value) {

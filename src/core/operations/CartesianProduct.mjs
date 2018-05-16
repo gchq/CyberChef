@@ -41,7 +41,7 @@ class CartesianProduct extends Operation {
      * Validate input length
      *
      * @param {Object[]} sets
-     * @throws {Error} if fewer than 2 sets
+     * @throws {OperationError} if fewer than 2 sets
      */
     validateSampleNumbers(sets) {
         if (!sets || sets.length < 2) {

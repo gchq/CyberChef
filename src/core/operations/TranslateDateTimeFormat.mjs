@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime";
+import OperationError from "../errors/OperationError";
 
 /**
  * Translate DateTime Format operation
@@ -67,7 +68,7 @@ class TranslateDateTimeFormat extends Operation {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch (err) {
-            return "Invalid format.\n\n" + FORMAT_EXAMPLES;
+            throw new OperationError(`Invalid format.\n\n${FORMAT_EXAMPLES}`);
         }
 
         return date.tz(outputTimezone).format(outputFormat);

@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import {fromHex} from "../lib/Hex";
+import OperationError from "../errors/OperationError";
 
 /**
  * Hamming Distance operation
@@ -55,11 +56,11 @@ class HammingDistance extends Operation {
             samples = input.split(delim);
 
         if (samples.length !== 2) {
-            return "Error: You can only calculae the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.";
+            throw new OperationError("Error: You can only calculae the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.");
         }
 
         if (samples[0].length !== samples[1].length) {
-            return "Error: Both inputs must be of the same length.";
+            throw new OperationError("Error: Both inputs must be of the same length.");
         }
 
         if (inputType === "Hex") {

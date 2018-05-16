@@ -3316,7 +3316,7 @@ If input "type" is set 5 it will adjust the mnemonic array to decode Centaur ins
 If input "type" is set 6 it will adjust the mnemonic array to decode instruction for the X86/486 CPU which conflict with the vector unit instructions with UMOV.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function CompatibilityMode( type )
+export function CompatibilityMode( type )
 {
   //Reset the changeable sections of the Mnemonics array, and operand encoding array.
   
@@ -3515,7 +3515,7 @@ The function "GetPosition()" Gives back the current base address in it's proper 
 If the hex input is invalid returns false.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function LoadBinCode( HexStr )
+export function LoadBinCode( HexStr )
 {
   //Clear BinCode, and Reset Code Position in Bin Code array.
 
@@ -3605,7 +3605,7 @@ segment, and offset address. Note that the Code Segment is used in 16 bit code. 
 if set 36, or higher. Effects instruction location in memory when decoding a program.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function SetBasePosition( Address )
+export function SetBasePosition( Address )
 {
   //Split the Segment:offset.
 
@@ -5652,7 +5652,7 @@ function Reset()
 do an linear disassemble.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function LDisassemble()
+export function LDisassemble()
 {
   var Instruction = ""; //Stores the Decoded instruction.
   var Out = "";  //The Disassemble output
@@ -5709,13 +5709,13 @@ function LDisassemble()
  * The following code has been added to expose public methods for use in CyberChef
  */
 
-export default {
-  LoadBinCode: LoadBinCode,
-  LDisassemble: LDisassemble,
-  SetBasePosition: SetBasePosition,
-  CompatibilityMode: CompatibilityMode,
-
-  setBitMode: val => { BitMode = val; },
-  setShowInstructionHex: val => { ShowInstructionHex = val; },
-  setShowInstructionPos: val => { ShowInstructionPos = val; },
+export function setBitMode (val) {
+  BitMode = val; 
 };
+export function setShowInstructionHex (val) {
+  ShowInstructionHex = val;
+};
+export function setShowInstructionPos (val) {
+  ShowInstructionPos = val; 
+};
+
