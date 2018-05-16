@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "clean:config", "webpack:node", "chmod:build"]);
+        ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:web", "inline", "chmod"]);
+        ["eslint", "clean:prod", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        ["webpack:webInline", "runInliner", "clean:inlineScripts"]);
+        ["exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
 
     grunt.registerTask("runInliner", runInliner);
