@@ -1,7 +1,7 @@
 /* eslint no-console: 0 */
 
 /**
- * TestRunner.js
+ * Test Runner
  *
  * For running the tests in the test register.
  *
@@ -33,12 +33,12 @@ import "./tests/operations/Base64";
 import "./tests/operations/CartesianProduct";
 // import "./tests/operations/CharEnc.js";
 import "./tests/operations/Ciphers";
-//import "./tests/operations/Checksum.js";
+import "./tests/operations/Checksum";
 // import "./tests/operations/Code.js";
 // import "./tests/operations/Compress.js";
 // import "./tests/operations/DateTime.js";
 // import "./tests/operations/FlowControl.js";
-// import "./tests/operations/Hash.js";
+import "./tests/operations/Hash";
 // import "./tests/operations/Hexdump.js";
 // import "./tests/operations/Image.js";
 // import "./tests/operations/MorseCode.js";

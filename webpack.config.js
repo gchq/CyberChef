@@ -53,7 +53,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules\/(?!jsesc)/,
+                exclude: /node_modules\/(?!jsesc|crypto-api)/,
                 type: "javascript/auto",
                 loader: "babel-loader?compact=false"
             },

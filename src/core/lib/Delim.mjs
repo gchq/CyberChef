@@ -32,9 +32,14 @@ export const WORD_DELIM_OPTIONS = ["Line feed", "CRLF", "Forward slash", "Backsl
 export const INPUT_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma", "Semi-colon", "Colon", "Nothing (separate chars)"];
 
 /**
- * Arithmetic sequence delimiters
+ * Armithmetic sequence delimiters
  */
 export const ARITHMETIC_DELIM_OPTIONS = ["Line feed", "Space", "Comma", "Semi-colon", "Colon", "CRLF"];
+
+/**
+ * Hash delimiters
+ */
+export const HASH_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma"];
 
 /**
  * Split delimiters.

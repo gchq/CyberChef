@@ -8,6 +8,7 @@
  * @license Apache-2.0
  *
  */
+
 import OperationError from "../errors/OperationError";
 import CryptoJS from "crypto-js";
 
