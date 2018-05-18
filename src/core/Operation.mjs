@@ -274,6 +274,15 @@ class Operation {
         return this._flowControl;
     }
 
+    /**
+     * Set whether this Operation is a flowcontrol op.
+     *
+     * @param {boolean} value
+     */
+    set flowControl(value) {
+        this._flowControl = !!value;
+    }
+
 }
 
 export default Operation;
