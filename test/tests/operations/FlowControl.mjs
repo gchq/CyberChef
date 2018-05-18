@@ -114,38 +114,38 @@ TestRegister.addTests([
 //             },
 //         ],
 //     },
-//     {
-//         name: "Jump: skips 1",
-//         input: [
-//             "shouldnt be changed",
-//         ].join("\n"),
-//         expectedOutput: [
-//             "shouldnt be changed",
-//         ].join("\n"),
-//         recipeConfig: [
-//             {
-//                 op: "Jump",
-//                 args: ["skipReplace", 10],
-//             },
-//             {
-//                 op: "Find / Replace",
-//                 args: [
-//                     {
-//                         "option": "Regex",
-//                         "string": "shouldnt be changed"
-//                     },
-//                     "shouldnt be changed was changed",
-//                     true,
-//                     true,
-//                     true,
-//                 ],
-//             },
-//             {
-//                 op: "Label",
-//                 args: ["skipReplace"]
-//             },
-//         ],
-//     },
+    {
+        name: "Jump: skips 1",
+        input: [
+            "shouldnt be changed",
+        ].join("\n"),
+        expectedOutput: [
+            "shouldnt be changed",
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "Jump",
+                args: ["skipReplace", 10],
+            },
+            {
+                op: "Find / Replace",
+                args: [
+                    {
+                        "option": "Regex",
+                        "string": "shouldnt be changed"
+                    },
+                    "shouldnt be changed was changed",
+                    true,
+                    true,
+                    true,
+                ],
+            },
+            {
+                op: "Label",
+                args: ["skipReplace"]
+            },
+        ],
+    },
 //     {
 //         name: "Conditional Jump: Skips 0",
 //         input: [
