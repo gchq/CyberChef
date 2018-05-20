@@ -35,7 +35,6 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
-            moment: "moment-timezone",
             log: "loglevel"
         }),
         new webpack.BannerPlugin({
@@ -43,7 +42,7 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
-        new ExtractTextPlugin("styles.css"),
+        new ExtractTextPlugin("styles.css")
     ],
     resolve: {
         alias: {
@@ -53,13 +52,14 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                exclude: /node_modules/,
+                test: /\.m?js$/,
+                exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                type: "javascript/auto",
                 loader: "babel-loader?compact=false"
             },
             {
-                test: /MetaConfig\.js$/,
-                loader: "val-loader"
+                test: /forge.min.js$/,
+                loader: "imports-loader?jQuery=>null"
             },
             {
                 test: /\.css$/,
@@ -109,9 +109,13 @@ module.exports = {
         children: false,
         chunks: false,
         modules: false,
-        warningsFilter: /source-map/,
+        entrypoints: false,
+        warningsFilter: [/source-map/, /dependency is an expression/],
     },
     node: {
         fs: "empty"
+    },
+    performance: {
+        hints: false
     }
 };

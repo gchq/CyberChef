@@ -42,7 +42,7 @@
             }
 
             // Define loading messages
-            const loadingMsgs = [
+            var loadingMsgs = [
                 "Proving P = NP...",
                 "Computing 6 x 9...",
                 "Mining bitcoin...",
@@ -66,18 +66,18 @@
 
             // Shuffle array using Durstenfeld algorithm
             for (let i = loadingMsgs.length - 1; i > 0; --i) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const temp = loadingMsgs[i];
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = loadingMsgs[i];
                 loadingMsgs[i] = loadingMsgs[j];
                 loadingMsgs[j] = temp;
             }
 
             // Show next loading message and move it to the end of the array
             function changeLoadingMsg() {
-                const msg = loadingMsgs.shift();
+                var msg = loadingMsgs.shift();
                 loadingMsgs.push(msg);
                 try {
-                    const el = document.getElementById("preloader-msg");
+                    var el = document.getElementById("preloader-msg");
                     if (!el.classList.contains("loading"))
                         el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
@@ -86,8 +86,50 @@
 
             changeLoadingMsg();
             window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random() * 2000) + 1500);
+
+            // If any errors are thrown during loading, handle them here
+            function loadingErrorHandler(e) {
+                function escapeHtml(str) {
+                    var HTML_CHARS = {
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#x27;", // &apos; not recommended because it's not in the HTML spec
+                        "/": "&#x2F;", // forward slash is included as it helps end an HTML entity
+                        "`": "&#x60;"
+                    };
+
+                    return str.replace(/[&<>"'/`]/g, function (match) {
+                        return HTML_CHARS[match];
+                    });
+                }
+
+                var msg = e.message +
+                    (e.filename ? "\nFilename: " + e.filename : "") +
+                    (e.lineno ? "\nLine: " + e.lineno : "") +
+                    (e.colno ? "\nColumn: " + e.colno : "") +
+                    (e.error ? "\nError: " + e.error : "") +
+                    "\nUser-Agent: " + navigator.userAgent +
+                    "\nCyberChef version: <%= htmlWebpackPlugin.options.version %>";
+
+                clearInterval(window.loadingMsgsInt);
+                document.getElementById("preloader").remove();
+                document.getElementById("preloader-msg").remove();
+                document.getElementById("preloader-error").innerHTML =
+                    "CyberChef encountered an error while loading.<br><br>" +
+                    "The following browser versions are supported:" +
+                    "<ul><li>Google Chrome 40+</li><li>Mozilla Firefox 35+</li><li>Microsoft Edge 14+</li></ul>" +
+                    "Your user agent is:<br>" + escapeHtml(navigator.userAgent) + "<br><br>" +
+                    "If your browser is supported, please <a href='https://github.com/gchq/CyberChef/issues/new'>" +
+                    "raise an issue</a> including the following details:<br><br>" +
+                    "<pre>" + escapeHtml(msg) + "</pre>";
+            };
+            window.addEventListener("error", loadingErrorHandler);
         </script>
-        <% if (!htmlWebpackPlugin.options.inline) { %>
+        <% if (htmlWebpackPlugin.options.inline) { %>
+            <meta name="robots" content="noindex" />
+        <% } else { %>
             <script type="application/ld+json">
                 <% print(JSON.stringify(require("../static/structuredData.json"))); %>
             </script>
@@ -98,6 +140,7 @@
         <div id="loader-wrapper">
             <div id="preloader" class="loader"></div>
             <div id="preloader-msg" class="loading-msg"></div>
+            <div id="preloader-error" class="loading-error"></div>
         </div>
         <!-- End preloader overlay -->
         <span id="edit-favourites" class="btn btn-default btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
@@ -183,8 +226,9 @@
                         </div>
                         <div class="textarea-wrapper no-select">
                             <div id="input-highlighter" class="no-select"></div>
-                            <textarea id="input-text"></textarea>
+                            <textarea id="input-text" spellcheck="false"></textarea>
                             <div id="input-file">
+                                <div class="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="card">
                                         <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
@@ -218,9 +262,10 @@
                         <div class="textarea-wrapper">
                             <div id="output-highlighter" class="no-select"></div>
                             <div id="output-html"></div>
-                            <textarea id="output-text" readonly="readonly"></textarea>
+                            <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
                             <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
                             <div id="output-file">
+                                <div class="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="card">
                                         <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
@@ -233,7 +278,7 @@
                                                 </span>
                                                 <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
                                                 <div class="input-group-addon">to</div>
-                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="1024" step="1024" min="0">
+                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
                                             </div>
                                         </div>
                                     </div>

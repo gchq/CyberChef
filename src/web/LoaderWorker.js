@@ -25,7 +25,7 @@ self.addEventListener("message", function(e) {
  */
 self.loadFile = function(file) {
     const reader = new FileReader();
-    let data = new Uint8Array(file.size);
+    const data = new Uint8Array(file.size);
     let offset = 0;
     const CHUNK_SIZE = 10485760; // 10MiB
 
@@ -47,7 +47,7 @@ self.loadFile = function(file) {
     };
 
     reader.onerror = function(e) {
-        self.postMessage({"error": file.error.message});
+        self.postMessage({"error": reader.error.message});
     };
 
     seek();

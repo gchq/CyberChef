@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "8.4"
+  - node
 install: npm install
 before_script:
   - npm install -g grunt
@@ -11,6 +11,7 @@ script:
   - grunt node
   - grunt prod --msg="$COMPILE_MSG"
 before_deploy:
+  - grunt exec:sitemap
   - grunt copy:ghPages
 deploy:
   - provider: pages

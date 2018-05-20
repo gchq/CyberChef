@@ -4,7 +4,8 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
-const fs = require("fs");
+const glob = require("glob");
+const path = require("path");
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -21,15 +22,15 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "concurrent:dev"]);
+        ["clean:dev", "exec:generateConfig", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "webpack:metaConf", "webpack:node", "chmod:build"]);
+        ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean:test", "webpack:metaConf", "webpack:tests", "execute:test"]);
+        ["exec:generateConfig", "exec:tests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -37,7 +38,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:metaConf", "webpack:web", "inline", "chmod"]);
+        ["eslint", "clean:prod", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -45,7 +46,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        ["webpack:webInline", "runInliner", "clean:inlineScripts"]);
+        ["exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
 
     grunt.registerTask("runInliner", runInliner);
@@ -60,9 +61,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
-    grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-accessibility");
     grunt.loadNpmTasks("grunt-concurrent");
 
@@ -118,12 +119,12 @@ module.exports = function (grunt) {
      * Generates an entry list for all the modules.
      */
     function listEntryModules() {
-        const path = "./src/core/config/modules/";
-        let entryModules = {};
+        const entryModules = {};
 
-        fs.readdirSync(path).forEach(file => {
-            if (file !== "Default.js" && file !== "OpModules.js")
-                entryModules[file.split(".js")[0]] = path + file;
+        glob.sync("./src/core/config/modules/*.mjs").forEach(file => {
+            const basename = path.basename(file);
+            if (basename !== "Default.mjs" && basename !== "OpModules.mjs")
+                entryModules[basename.split(".mjs")[0]] = path.resolve(file);
         });
 
         return entryModules;
@@ -131,10 +132,10 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         clean: {
-            dev: ["build/dev/*", "src/core/config/MetaConfig.js"],
-            prod: ["build/prod/*", "src/core/config/MetaConfig.js"],
-            test: ["build/test/*", "src/core/config/MetaConfig.js"],
-            node: ["build/node/*", "src/core/config/MetaConfig.js"],
+            dev: ["build/dev/*"],
+            prod: ["build/prod/*"],
+            node: ["build/node/*"],
+            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             inlineScripts: ["build/prod/scripts.js"],
         },
@@ -143,10 +144,10 @@ module.exports = function (grunt) {
                 configFile: "./.eslintrc.json"
             },
             configs: ["Gruntfile.js"],
-            core: ["src/core/**/*.js", "!src/core/lib/**/*", "!src/core/config/MetaConfig.js"],
-            web: ["src/web/**/*.js"],
-            node: ["src/node/**/*.js"],
-            tests: ["test/**/*.js"],
+            core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
+            web: ["src/web/**/*.{js,mjs}"],
+            node: ["src/node/**/*.{js,mjs}"],
+            tests: ["test/**/*.{js,mjs}"],
         },
         jsdoc: {
             options: {
@@ -159,16 +160,10 @@ module.exports = function (grunt) {
             all: {
                 src: [
                     "src/**/*.js",
-                    "!src/core/lib/**/*",
-                    "!src/core/config/MetaConfig.js"
+                    "src/**/*.mjs",
+                    "!src/core/vendor/**/*"
                 ],
             }
-        },
-        concurrent: {
-            options: {
-                logConcurrentOutput: true
-            },
-            dev: ["webpack:metaConfDev", "webpack-dev-server:start"]
         },
         accessibility: {
             options: {
@@ -184,55 +179,23 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
-            metaConf: {
-                target: "node",
-                entry: "./src/core/config/OperationConfig.js",
-                output: {
-                    filename: "MetaConfig.js",
-                    path: __dirname + "/src/core/config/",
-                    library: "MetaConfig",
-                    libraryTarget: "commonjs2",
-                    libraryExport: "default"
-                },
-                externals: [NodeExternals()],
-            },
-            metaConfDev: {
-                target: "node",
-                entry: "./src/core/config/OperationConfig.js",
-                output: {
-                    filename: "MetaConfig.js",
-                    path: __dirname + "/src/core/config/",
-                    library: "MetaConfig",
-                    libraryTarget: "commonjs2",
-                    libraryExport: "default"
-                },
-                externals: [NodeExternals()],
-                watch: true
-            },
             web: {
+                mode: "production",
                 target: "web",
                 entry: Object.assign({
-                    main: "./src/web/index.js"
+                    main: "./src/web/index.js",
+                    sitemap: "./src/web/static/sitemap.js"
                 }, moduleEntryPoints),
                 output: {
                     path: __dirname + "/build/prod"
                 },
                 resolve: {
                     alias: {
-                        "./config/modules/OpModules.js": "./config/modules/Default.js"
+                        "./config/modules/OpModules": "./config/modules/Default"
                     }
                 },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.UglifyJsPlugin({
-                        compress: {
-                            "screw_ie8": true,
-                            "dead_code": true,
-                            "unused": true,
-                            "warnings": false
-                        },
-                        comments: false,
-                    }),
                     new HtmlWebpackPlugin({
                         filename: "index.html",
                         template: "./src/web/html/index.html",
@@ -249,6 +212,7 @@ module.exports = function (grunt) {
                 ]
             },
             webInline: {
+                mode: "production",
                 target: "web",
                 entry: "./src/web/index.js",
                 output: {
@@ -256,21 +220,14 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/prod"
                 },
                 plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.UglifyJsPlugin({
-                        compress: {
-                            "screw_ie8": true,
-                            "dead_code": true,
-                            "unused": true,
-                            "warnings": false
-                        },
-                        comments: false,
-                    }),
+                    new webpack.DefinePlugin(Object.assign({}, BUILD_CONSTANTS, {
+                        INLINE: "true"
+                    })),
                     new HtmlWebpackPlugin({
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
-                        version: pkg.version,
+                        version: pkg.version + "s",
                         inline: true,
                         minify: {
                             removeComments: true,
@@ -282,8 +239,9 @@ module.exports = function (grunt) {
                 ]
             },
             tests: {
+                mode: "development",
                 target: "node",
-                entry: "./test/index.js",
+                entry: "./test/index.mjs",
                 externals: [NodeExternals()],
                 output: {
                     filename: "index.js",
@@ -294,8 +252,9 @@ module.exports = function (grunt) {
                 ]
             },
             node: {
+                mode: "production",
                 target: "node",
-                entry: "./src/node/index.js",
+                entry: "./src/node/index.mjs",
                 externals: [NodeExternals()],
                 output: {
                     filename: "CyberChef.js",
@@ -320,18 +279,20 @@ module.exports = function (grunt) {
                     children: false,
                     chunks: false,
                     modules: false,
-                    warningsFilter: /source-map/,
+                    entrypoints: false,
+                    warningsFilter: [/source-map/, /dependency is an expression/],
                 }
             },
             start: {
                 webpack: {
+                    mode: "development",
                     target: "web",
                     entry: Object.assign({
                         main: "./src/web/index.js"
                     }, moduleEntryPoints),
                     resolve: {
                         alias: {
-                            "./config/modules/OpModules.js": "./config/modules/Default.js"
+                            "./config/modules/OpModules": "./config/modules/Default"
                         }
                     },
                     plugins: [
@@ -371,7 +332,7 @@ module.exports = function (grunt) {
                         expand: true,
                         src: "docs/**",
                         dest: "build/prod/"
-                    }
+                    },
                 ]
             }
         },
@@ -389,6 +350,18 @@ module.exports = function (grunt) {
                 src: ["docs/**/*", "docs/"]
             }
         },
+        watch: {
+            config: {
+                files: ["src/core/operations/**/*", "!src/core/operations/index.mjs"],
+                tasks: ["exec:generateConfig"]
+            }
+        },
+        concurrent: {
+            dev: ["watch:config", "webpack-dev-server:start"],
+            options: {
+                logConcurrentOutput: true
+            }
+        },
         exec: {
             repoSize: {
                 command: [
@@ -400,9 +373,21 @@ module.exports = function (grunt) {
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
-        },
-        execute: {
-            test: "build/test/index.js"
+            sitemap: {
+                command: "node build/prod/sitemap.js > build/prod/sitemap.xml"
+            },
+            generateConfig: {
+                command: [
+                    "echo '\n--- Regenerating config files. ---'",
+                    "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
+                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
+                    "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
+                    "echo '--- Config scripts finished. ---\n'"
+                ].join(";")
+            },
+            tests: {
+                command: "node --experimental-modules test/index.mjs"
+            }
         },
     });
 };

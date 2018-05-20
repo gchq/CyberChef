@@ -5,10 +5,15 @@
                 "chrome": 40,
                 "firefox": 35,
                 "edge": 14,
-                "node": "6.5",
+                "node": "6.5"
             },
             "modules": false,
             "useBuiltIns": true
+        }]
+    ],
+    "plugins": [
+        ["babel-plugin-transform-builtin-extend", {
+            "globals": ["Error"]
         }]
     ]
 }

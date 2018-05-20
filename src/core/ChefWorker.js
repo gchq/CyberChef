@@ -7,9 +7,9 @@
  */
 
 import "babel-polyfill";
-import Chef from "./Chef.js";
-import OperationConfig from "./config/MetaConfig.js";
-import OpModules from "./config/modules/Default.js";
+import Chef from "./Chef";
+import OperationConfig from "./config/OperationConfig.json";
+import OpModules from "./config/modules/Default";
 
 // Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
@@ -59,6 +59,9 @@ self.addEventListener("message", function(e) {
             break;
         case "silentBake":
             silentBake(r.data);
+            break;
+        case "getDishAs":
+            getDishAs(r.data);
             break;
         case "docURL":
             // Used to set the URL of the current document so that scripts can be
@@ -126,6 +129,22 @@ function silentBake(data) {
 
 
 /**
+ * Translates the dish to a given type.
+ */
+async function getDishAs(data) {
+    const value = await self.chef.getDishAs(data.dish, data.type);
+
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: value,
+            id: data.id
+        }
+    });
+}
+
+
+/**
  * Calculates highlight offsets if possible.
  *
  * @param {Object[]} recipeConfig
@@ -151,12 +170,13 @@ function calculateHighlights(recipeConfig, direction, pos) {
  */
 self.loadRequiredModules = function(recipeConfig) {
     recipeConfig.forEach(op => {
-        let module = self.OperationConfig[op.op].module;
+        const module = self.OperationConfig[op.op].module;
 
         if (!OpModules.hasOwnProperty(module)) {
-            log.info("Loading module " + module);
-            self.sendStatusMessage("Loading module " + module);
-            self.importScripts(self.docURL + "/" + module + ".js");
+            log.info(`Loading ${module} module`);
+            self.sendStatusMessage(`Loading ${module} module`);
+            self.importScripts(`${self.docURL}/${module}.js`);
+            self.sendStatusMessage("");
         }
     });
 };

@@ -84,8 +84,15 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--title-background-colour);
     display: none;
+}
+
+.file-overlay {
+    position: absolute;
+    opacity: 0.8;
+    background-color: var(--title-background-colour);
+    width: 100%;
+    height: 100%;
 }
 
 #show-file-overlay {

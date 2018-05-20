@@ -1,3 +1,2 @@
-src/core/lib/**
-!src/core/lib/Magic.js
-src/core/config/MetaConfig.js
+src/core/vendor/**
+src/core/operations/legacy/**

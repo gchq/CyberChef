@@ -6,4 +6,7 @@ docs/*
 !docs/*.conf.json
 !docs/*.ico
 .vscode
-src/core/config/MetaConfig.js
+src/core/config/modules/*
+src/core/config/OperationConfig.json
+src/core/operations/index.mjs
+
