@@ -50,13 +50,11 @@ class Jump extends Operation {
         const jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {
-            log.debug("Maximum jumps reached or label cannot be found");
             return state;
         }
 
         state.progress = jmpIndex;
         state.numJumps++;
-        log.debug(`Jumping to label '${label}' at position ${jmpIndex} (jumps = ${state.numJumps})`);
         return state;
 
     }

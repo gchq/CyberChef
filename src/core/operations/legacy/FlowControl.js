@@ -227,7 +227,8 @@ const FlowControl = {
         }
 
         if (regexStr !== "") {
-            const strMatch = await dish.get(Dish.STRING).search(regexStr) > -1;
+            const str = await dish.get(Dish.STRING)
+            const strMatch = str.search(regexStr) > -1;
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;

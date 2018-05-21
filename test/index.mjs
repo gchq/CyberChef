@@ -38,7 +38,12 @@ import "./tests/operations/Checksum";
 // import "./tests/operations/Compress";
 // import "./tests/operations/Crypt";
 // import "./tests/operations/DateTime";
-import "./tests/operations/FlowControl";
+import "./tests/operations/Fork";
+import "./tests/operations/Jump";
+import "./tests/operations/ConditionalJump";
+import "./tests/operations/Register";
+import "./tests/operations/Comment";
+
 import "./tests/operations/Hash";
 import "./tests/operations/Hexdump";
 // import "./tests/operations/Image";
