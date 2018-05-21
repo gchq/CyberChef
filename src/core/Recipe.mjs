@@ -172,9 +172,9 @@ class Recipe  {
                     numRegisters = state.numRegisters;
                 } else {
                     output = await op.run(input, op.ingValues);
-                    this.lastRunOp = op;
                     dish.set(output, op.outputType);
                 }
+                this.lastRunOp = op;
             } catch (err) {
                 // Return expected errors as output
                 if (err instanceof OperationError ||

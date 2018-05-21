@@ -188,7 +188,7 @@ class Operation {
     get config() {
         return {
             "op": this.name,
-            "args": this._ingList.map(ing => ing.conf)
+            "args": this._ingList.map(ing => ing.config)
         };
     }
 

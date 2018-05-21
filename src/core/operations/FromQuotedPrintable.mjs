@@ -27,6 +27,13 @@ class FromQuotedPrintable extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
+        this.patterns = [
+            {
+                match: "^[\\x21-\\x3d\\x3f-\\x7e \\t]*(?:=[\\da-f]{2}|=\\r?\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\r?\\n)*$",
+                flags: "i",
+                args: []
+            },
+        ];
     }
 
     /**

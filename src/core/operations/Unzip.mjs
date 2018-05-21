@@ -39,6 +39,13 @@ class Unzip extends Operation {
                 value: false
             }
         ];
+        this.patterns = [
+            {
+                match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
+                flags: "",
+                args: ["", false]
+            },
+        ];
     }
 
     /**

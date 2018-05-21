@@ -24,6 +24,13 @@ class FromHTMLEntity extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.patterns = [
+            {
+                match: "&(?:#\\d{2,3}|#x[\\da-f]{2}|[a-z]{2,6});",
+                flags: "i",
+                args: []
+            },
+        ];
     }
 
     /**

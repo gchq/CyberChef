@@ -77,6 +77,7 @@
     "bootstrap-colorpicker": "^2.5.2",
     "bootstrap-switch": "^3.3.4",
     "bson": "^2.0.6",
+    "chi-squared": "^1.1.0",
     "crypto-api": "^0.8.0",
     "crypto-js": "^3.1.9-1",
     "ctph.js": "0.0.5",

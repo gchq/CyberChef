@@ -61,6 +61,8 @@ function main() {
     const utilsUsed = /Utils/.test(legacyFile);
     const esc = new EscapeString();
     const desc = esc.run(op.description, ["Special chars", "Double"]);
+    const patterns = op.hasOwnProperty("patterns") ? `
+        this.patterns = ${JSON.stringify(op.patterns, null, 4).split("\n").join("\n        ")};` : "";
 
     // Attempt to find the operation run function based on the JSDoc comment
     const regex = `\\* ${opName} operation[^:]+:(?: function ?\\(input, args\\))? ?{([\\s\\S]+?)\n    }`;
@@ -105,7 +107,7 @@ class ${moduleName} extends Operation {
         this.description = "${desc}";
         this.inputType = "${op.inputType}";
         this.outputType = "${op.outputType}";${op.manualBake ? "\n        this.manualBake = true;" : ""}
-        this.args = ${JSON.stringify(op.args, null, 4).split("\n").join("\n        ")};
+        this.args = ${JSON.stringify(op.args, null, 4).split("\n").join("\n        ")};${patterns}
     }
 
     /**
@@ -172,6 +174,30 @@ export default ${moduleName};
 
 
 const OP_CONFIG = {
+    "Magic": {
+        module: "Default",
+        description: "The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it.<br><br><b>Options</b><br><u>Depth:</u> If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion.<br><br><u>Intensive mode:</u> When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced.<br><br><u>Extensive language support:</u> At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar.",
+        inputType: "ArrayBuffer",
+        outputType: "html",
+        flowControl: true,
+        args: [
+            {
+                name: "Depth",
+                type: "number",
+                value: 3
+            },
+            {
+                name: "Intensive mode",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Extensive language support",
+                type: "boolean",
+                value: false
+            }
+        ]
+    },
     "Fork": {
         module: "Default",
         description: "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.",
@@ -330,6 +356,73 @@ const OP_CONFIG = {
                 type: "boolean",
                 value: "Base64.REMOVE_NON_ALPH_CHARS"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["A-Za-z0-9+/=", false]
+            },
+            {
+                match: "^[A-Z\\d\\-_]{20,}$",
+                flags: "i",
+                args: ["A-Za-z0-9-_", false]
+            },
+            {
+                match: "^(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?$",
+                flags: "i",
+                args: ["A-Za-z0-9+\\-=", false]
+            },
+            {
+                match: "^(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?$",
+                flags: "i",
+                args: ["./0-9A-Za-z=", false]
+            },
+            {
+                match: "^[A-Z\\d_.]{20,}$",
+                flags: "i",
+                args: ["A-Za-z0-9_.", false]
+            },
+            {
+                match: "^(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?$",
+                flags: "i",
+                args: ["A-Za-z0-9._-", false]
+            },
+            {
+                match: "^(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["0-9a-zA-Z+/=", false]
+            },
+            {
+                match: "^(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["0-9A-Za-z+/=", false]
+            },
+            {
+                match: "^[ !\"#$%&'()*+,\\-./\\d:;<=>?@A-Z[\\\\\\]^_]{20,}$",
+                flags: "",
+                args: [" -_", false]
+            },
+            {
+                match: "^[A-Z\\d+\\-]{20,}$",
+                flags: "i",
+                args: ["+\\-0-9A-Za-z", false]
+            },
+            {
+                match: "^[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}$",
+                flags: "",
+                args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", false]
+            },
+            {
+                match: "^(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?$",
+                flags: "i",
+                args: ["N-ZA-Mn-za-m0-9+/=", false]
+            },
+            {
+                match: "^[A-Z\\d./]{20,}$",
+                flags: "i",
+                args: ["./0-9A-Za-z", false]
+            },
         ]
     },
     "To Base64": {
@@ -363,6 +456,18 @@ const OP_CONFIG = {
                 type: "boolean",
                 value: "Base58.REMOVE_NON_ALPH_CHARS"
             }
+        ],
+        patterns: [
+            {
+                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                flags: "",
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz", false]
+            },
+            {
+                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                flags: "",
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz", false]
+            },
         ]
     },
     "To Base58": {
@@ -394,6 +499,13 @@ const OP_CONFIG = {
                 type: "boolean",
                 value: "Base64.REMOVE_NON_ALPH_CHARS"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
+                flags: "",
+                args: ["A-Z2-7=", false]
+            },
         ]
     },
     "To Base32": {
@@ -744,6 +856,53 @@ const OP_CONFIG = {
                 type: "option",
                 value: "ByteRepr.HEX_DELIM_OPTIONS"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:[\\dA-F]{2})+$",
+                flags: "i",
+                args: ["None"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Space"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Comma"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Colon"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Line feed"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["CRLF"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["0x"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["\\x"]
+            }
         ]
     },
     "To Hex": {
@@ -774,6 +933,38 @@ const OP_CONFIG = {
                 type: "option",
                 value: "ByteRepr.DELIM_OPTIONS"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?: (?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Space"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:,(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Comma"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:;(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?::(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Colon"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["Line feed"]
+            },
+            {
+                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\r\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                flags: "",
+                args: ["CRLF"]
+            },
         ]
     },
     "To Octal": {
@@ -811,7 +1002,6 @@ const OP_CONFIG = {
             }
         ]
     },
-
     "To Charcode": {
         module: "Default",
         description: "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
@@ -845,6 +1035,43 @@ const OP_CONFIG = {
                 type: "option",
                 value: "ByteRepr.BIN_DELIM_OPTIONS"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:[01]{8})+$",
+                flags: "",
+                args: ["None"]
+            },
+            {
+                match: "^(?:[01]{8})(?: [01]{8})*$",
+                flags: "",
+                args: ["Space"]
+            },
+            {
+                match: "^(?:[01]{8})(?:,[01]{8})*$",
+                flags: "",
+                args: ["Comma"]
+            },
+            {
+                match: "^(?:[01]{8})(?:;[01]{8})*$",
+                flags: "",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^(?:[01]{8})(?::[01]{8})*$",
+                flags: "",
+                args: ["Colon"]
+            },
+            {
+                match: "^(?:[01]{8})(?:\\n[01]{8})*$",
+                flags: "",
+                args: ["Line feed"]
+            },
+            {
+                match: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
+                flags: "",
+                args: ["CRLF"]
+            },
         ]
     },
     "To Binary": {
@@ -873,6 +1100,38 @@ const OP_CONFIG = {
                 type: "option",
                 value: "ByteRepr.DELIM_OPTIONS"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Space"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Comma"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Colon"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["Line feed"]
+            },
+            {
+                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                flags: "",
+                args: ["CRLF"]
+            },
         ]
     },
     "To Decimal": {
@@ -895,7 +1154,14 @@ const OP_CONFIG = {
         highlightReverse: "func",
         inputType: "string",
         outputType: "byteArray",
-        args: []
+        args: [],
+        patterns: [
+            {
+                match: "^(?:(?:[\\dA-F]{4,16}:?)?\\s*((?:[\\dA-F]{2}\\s){1,8}(?:\\s|[\\dA-F]{2}-)(?:[\\dA-F]{2}\\s){1,8}|(?:[\\dA-F]{2}\\s|[\\dA-F]{4}\\s)+)[^\\n]*\\n?)+$",
+                flags: "i",
+                args: []
+            },
+        ]
     },
     "To Hexdump": {
         module: "Default",
@@ -953,7 +1219,14 @@ const OP_CONFIG = {
         description: "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>", // <span> tags required to stop the browser just printing &
         inputType: "string",
         outputType: "string",
-        args: []
+        args: [],
+        patterns: [
+            {
+                match: "&(?:#\\d{2,3}|#x[\\da-f]{2}|[a-z]{2,6});",
+                flags: "i",
+                args: []
+            },
+        ]
     },
     "To HTML Entity": {
         module: "Default",
@@ -996,7 +1269,14 @@ const OP_CONFIG = {
         description: "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
         inputType: "string",
         outputType: "string",
-        args: []
+        args: [],
+        patterns: [
+            {
+                match: ".*(?:%[\\da-f]{2}.*){4}",
+                flags: "i",
+                args: []
+            },
+        ]
     },
     "URL Encode": {
         module: "URL",
@@ -1057,6 +1337,23 @@ const OP_CONFIG = {
                 type: "boolean",
                 value: true
             }
+        ],
+        patterns: [
+            {
+                match: "\\\\u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["\\u"]
+            },
+            {
+                match: "%u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["%u"]
+            },
+            {
+                match: "U\\+(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["U+"]
+            },
         ]
     },
     "From Quoted Printable": {
@@ -1064,7 +1361,14 @@ const OP_CONFIG = {
         description: "Converts QP-encoded text back to standard text.",
         inputType: "string",
         outputType: "byteArray",
-        args: []
+        args: [],
+        patterns: [
+            {
+                match: "^[\\x21-\\x3d\\x3f-\\x7e \\t]*(?:=[\\da-f]{2}|=\\r?\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\r?\\n)*$",
+                flags: "i",
+                args: []
+            },
+        ]
     },
     "To Quoted Printable": {
         module: "Default",
@@ -1226,7 +1530,7 @@ const OP_CONFIG = {
                 type: "option",
                 value: "Object.keys(CharEnc.IO_FORMAT),"
             },
-        ]
+        ],
     },
     "Decode text": {
         module: "CharEnc",
@@ -2573,6 +2877,28 @@ const OP_CONFIG = {
                 type: "option",
                 value: "DateTime.UNITS"
             }
+        ],
+        patterns: [
+            {
+                match: "^1?\\d{9}$",
+                flags: "",
+                args: ["Seconds (s)"]
+            },
+            {
+                match: "^1?\\d{12}$",
+                flags: "",
+                args: ["Milliseconds (ms)"]
+            },
+            {
+                match: "^1?\\d{15}$",
+                flags: "",
+                args: ["Microseconds (μs)"]
+            },
+            {
+                match: "^1?\\d{18}$",
+                flags: "",
+                args: ["Nanoseconds (ns)"]
+            },
         ]
     },
     "To UNIX Timestamp": {
@@ -2885,6 +3211,13 @@ const OP_CONFIG = {
                 type: "boolean",
                 value: "Compress.INFLATE_VERIFY"
             }
+        ],
+        patterns: [
+            {
+                match: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
+                flags: "",
+                args: [0, 0, "Adaptive", false, false]
+            },
         ]
     },
     "Gzip": {
@@ -2920,7 +3253,14 @@ const OP_CONFIG = {
         description: "Decompresses data which has been compressed using the deflate algorithm with gzip headers.",
         inputType: "byteArray",
         outputType: "byteArray",
-        args: []
+        args: [],
+        patterns: [
+            {
+                match: "^\\x1f\\x8b\\x08",
+                flags: "",
+                args: []
+            },
+        ]
     },
     "Zip": {
         module: "Compression",
@@ -2976,6 +3316,13 @@ const OP_CONFIG = {
                 type: "boolean",
                 value: "Compress.PKUNZIP_VERIFY"
             }
+        ],
+        patterns: [
+            {
+                match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
+                flags: "",
+                args: ["", false]
+            },
         ]
     },
     "Bzip2 Decompress": {
@@ -2983,7 +3330,14 @@ const OP_CONFIG = {
         description: "Decompresses data using the Bzip2 algorithm.",
         inputType: "byteArray",
         outputType: "string",
-        args: []
+        args: [],
+        patterns: [
+            {
+                match: "^\\x42\\x5a\\x68",
+                flags: "",
+                args: []
+            },
+        ]
     },
     "Generic Code Beautify": {
         module: "Code",
@@ -3468,7 +3822,7 @@ const OP_CONFIG = {
     },
     "Chi Square": {
         module: "Default",
-        description: "Calculates the Chi Square distribution of values.",
+        description: "Calculates the Chi-Squared distribution of values.",
         inputType: "ArrayBuffer",
         outputType: "number",
         args: []
@@ -3491,6 +3845,13 @@ const OP_CONFIG = {
                 type: "option",
                 value: "PublicKey.X509_INPUT_FORMAT"
             }
+        ],
+        patterns: [
+            {
+                match: "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
+                flags: "i",
+                args: ["PEM"]
+            },
         ]
     },
     "PEM to Hex": {
@@ -3783,6 +4144,13 @@ const OP_CONFIG = {
                 type: "option",
                 value: "MorseCode.WORD_DELIM_OPTIONS"
             }
+        ],
+        patterns: [
+            {
+                match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
+                flags: "i",
+                args: ["Space", "Line feed"]
+            },
         ]
     },
     "Tar": {
@@ -3803,7 +4171,13 @@ const OP_CONFIG = {
         description: "Unpacks a tarball and displays it per file.",
         inputType: "byteArray",
         outputType: "html",
-        args: [
+        args: [],
+        patterns: [
+            {
+                match: "^.{257}\\x75\\x73\\x74\\x61\\x72",
+                flags: "",
+                args: []
+            },
         ]
     },
     "Head": {
@@ -3945,6 +4319,14 @@ const OP_CONFIG = {
                 type: "option",
                 value: "Image.INPUT_FORMAT"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                flags: "",
+                args: ["Raw"],
+                useful: true
+            },
         ]
     },
     "Remove EXIF": {
@@ -4026,8 +4408,14 @@ const OP_CONFIG = {
                 type: "option",
                 value: "BCD.FORMAT"
             }
+        ],
+        patterns: [
+            {
+                match: "^(?:\\d{4} ){3,}\\d{4}$",
+                flags: "",
+                args: ["8 4 2 1", true, false, "Nibbles"]
+            },
         ]
-
     },
     "To BCD": {
         module: "Default",
