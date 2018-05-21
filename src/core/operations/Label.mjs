@@ -7,7 +7,7 @@
 import Operation from "../Operation";
 
 /**
- * Label operation
+ * Label operation. For use with Jump and Conditional Jump.
  */
 class Label extends Operation {
 
@@ -33,8 +33,6 @@ class Label extends Operation {
     }
 
     /**
-     * Label operation. For use with Jump and Conditional Jump
-     *
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.

@@ -27,8 +27,6 @@ class Merge extends Operation {
     }
 
     /**
-     * Merge operation.
-     *
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.

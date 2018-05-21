@@ -50,8 +50,6 @@ class ConditionalJump extends Operation {
     }
 
     /**
-     * Conditional Jump operation.
-     *
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
@@ -62,10 +60,7 @@ class ConditionalJump extends Operation {
     async run(state) {
         const ings   = state.opList[state.progress].ingValues,
             dish     = state.dish,
-            regexStr = ings[0],
-            invert   = ings[1],
-            label    = ings[2],
-            maxJumps = ings[3],
+            [regexStr, invert, label, maxJumps] = ings,
             jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {

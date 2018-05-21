@@ -44,8 +44,6 @@ class Register extends Operation {
     }
 
     /**
-     * Register operation.
-     *
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
@@ -54,9 +52,7 @@ class Register extends Operation {
      */
     async run(state) {
         const ings = state.opList[state.progress].ingValues;
-        const extractorStr = ings[0];
-        const i = ings[1];
-        const m = ings[2];
+        const [extractorStr, i, m] = ings;
 
         let modifiers = "";
         if (i) modifiers += "i";

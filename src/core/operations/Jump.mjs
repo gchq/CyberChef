@@ -39,8 +39,6 @@ class Jump extends Operation {
     }
 
     /**
-     * Jump operation.
-     *
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
@@ -49,9 +47,8 @@ class Jump extends Operation {
      * @returns {Object} The updated state of the recipe.
      */
     run(state) {
-        const ings     = state.opList[state.progress].ingValues;
-        const label = ings[0];
-        const maxJumps = ings[1];
+        const ings = state.opList[state.progress].ingValues;
+        const [label, maxJumps] = ings;
         const jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {
@@ -61,7 +58,6 @@ class Jump extends Operation {
         state.progress = jmpIndex;
         state.numJumps++;
         return state;
-
     }
 
 }

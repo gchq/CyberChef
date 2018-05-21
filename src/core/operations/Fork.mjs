@@ -45,8 +45,6 @@ class Fork extends Operation {
     }
 
     /**
-     * Fork operation.
-     *
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
      * @param {Dish} state.dish - The Dish being operated on.
@@ -59,9 +57,7 @@ class Fork extends Operation {
             outputType   = opList[state.progress].outputType,
             input        = await state.dish.get(inputType),
             ings         = opList[state.progress].ingValues,
-            splitDelim   = ings[0],
-            mergeDelim   = ings[1],
-            ignoreErrors = ings[2],
+            [splitDelim, mergeDelim, ignoreErrors] = ings,
             subOpList    = [];
         let inputs       = [],
             i;
