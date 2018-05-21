@@ -125,6 +125,6 @@
     "test": "grunt test",
     "docs": "grunt docs",
     "lint": "grunt lint",
-    "postinstall": "npx j2m node_modules/crypto-api/src/crypto-api.js"
+    "postinstall": "[ -f node_modules/crypto-api/src/crypto-api.mjs ] || npx j2m node_modules/crypto-api/src/crypto-api.js"
   }
 }
