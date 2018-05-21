@@ -35,7 +35,8 @@ function main() {
         "URL Decode",
         "Regular expression",
         "Entropy",
-        "Fork"
+        "Fork",
+        "Magic"
     ];
 
     const defaultOptions = {

@@ -188,7 +188,7 @@ class Operation {
     get config() {
         return {
             "op": this.name,
-            "args": this._ingList.map(ing => ing.conf)
+            "args": this._ingList.map(ing => ing.config)
         };
     }
 
@@ -272,6 +272,15 @@ class Operation {
      */
     get flowControl() {
         return this._flowControl;
+    }
+
+    /**
+     * Set whether this Operation is a flowcontrol op.
+     *
+     * @param {boolean} value
+     */
+    set flowControl(value) {
+        this._flowControl = !!value;
     }
 
 }

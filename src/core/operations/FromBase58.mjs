@@ -37,6 +37,18 @@ class FromBase58 extends Operation {
                 "value": true
             }
         ];
+        this.patterns = [
+            {
+                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                flags: "",
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz", false]
+            },
+            {
+                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                flags: "",
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz", false]
+            },
+        ];
     }
 
     /**

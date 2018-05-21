@@ -58,6 +58,13 @@ class ZlibInflate extends Operation {
                 value: false
             }
         ];
+        this.patterns = [
+            {
+                match: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
+                flags: "",
+                args: [0, 0, "Adaptive", false, false]
+            },
+        ];
     }
 
     /**

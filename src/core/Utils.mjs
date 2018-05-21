@@ -720,7 +720,7 @@ class Utils {
      * @param {boolean} [newline=false] - whether to add a newline after each operation
      * @returns {string}
      */
-    static generatePrettyRecipe(recipeConfig, newline=false) {
+    static generatePrettyRecipe(recipeConfig, newline = false) {
         let prettyConfig = "",
             name = "",
             args = "",

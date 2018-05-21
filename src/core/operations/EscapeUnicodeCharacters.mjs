@@ -44,6 +44,23 @@ class EscapeUnicodeCharacters extends Operation {
                 "value": true
             }
         ];
+        this.patterns = [
+            {
+                match: "\\\\u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["\\u"]
+            },
+            {
+                match: "%u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["%u"]
+            },
+            {
+                match: "U\\+(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["U+"]
+            },
+        ];
     }
 
     /**

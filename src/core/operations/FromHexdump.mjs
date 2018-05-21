@@ -24,6 +24,13 @@ class FromHexdump extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
+        this.patterns = [
+            {
+                match: "^(?:(?:[\\dA-F]{4,16}:?)?\\s*((?:[\\dA-F]{2}\\s){1,8}(?:\\s|[\\dA-F]{2}-)(?:[\\dA-F]{2}\\s){1,8}|(?:[\\dA-F]{2}\\s|[\\dA-F]{4}\\s)+)[^\\n]*\\n?)+$",
+                flags: "i",
+                args: []
+            },
+        ];
     }
 
     /**

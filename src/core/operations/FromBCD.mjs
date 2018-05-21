@@ -48,6 +48,13 @@ class FromBCD extends Operation {
                 "value": FORMAT
             }
         ];
+        this.patterns = [
+            {
+                match: "^(?:\\d{4} ){3,}\\d{4}$",
+                flags: "",
+                args: ["8 4 2 1", true, false, "Nibbles"]
+            },
+        ];
     }
 
     /**

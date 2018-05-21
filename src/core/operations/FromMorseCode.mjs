@@ -36,6 +36,13 @@ class FromMorseCode extends Operation {
                 "value": WORD_DELIM_OPTIONS
             }
         ];
+        this.patterns = [
+            {
+                match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
+                flags: "i",
+                args: ["Space", "Line feed"]
+            },
+        ];
     }
 
     /**
