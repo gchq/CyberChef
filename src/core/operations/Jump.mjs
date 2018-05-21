@@ -39,9 +39,14 @@ class Jump extends Operation {
     }
 
     /**
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {string}
+     * Jump operation.
+     *
+     * @param {Object} state - The current state of the recipe.
+     * @param {number} state.progress - The current position in the recipe.
+     * @param {Dish} state.dish - The Dish being operated on.
+     * @param {Operation[]} state.opList - The list of operations in the recipe.
+     * @param {number} state.numJumps - The number of jumps taken so far.
+     * @returns {Object} The updated state of the recipe.
      */
     run(state) {
         const ings     = state.opList[state.progress].ingValues;

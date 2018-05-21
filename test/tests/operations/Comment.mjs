@@ -3,7 +3,7 @@
  *
  * @author tlwr [toby@toby.codes]
  *
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 import TestRegister from "../../TestRegister";

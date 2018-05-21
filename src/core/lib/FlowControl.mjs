@@ -11,7 +11,7 @@
  * Returns the index of a label.
  *
  * @private
- * @param {Object} state
+ * @param {Object} state - The current state of the recipe.
  * @param {string} name - The label name to look for.
  * @returns {number}
  */
