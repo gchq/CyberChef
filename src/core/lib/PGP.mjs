@@ -10,6 +10,7 @@
  *
  */
 
+import OperationError from "../errors/OperationError";
 import kbpgp from "kbpgp";
 import promisifyDefault from "es6-promisify";
 const promisify = promisifyDefault.promisify;
@@ -86,12 +87,12 @@ export async function importPrivateKey(privateKey, passphrase) {
                     passphrase
                 });
             } else {
-                throw "Did not provide passphrase with locked private key.";
+                throw new OperationError("Did not provide passphrase with locked private key.");
             }
         }
         return key;
     } catch (err) {
-        throw `Could not import private key: ${err}`;
+        throw new OperationError(`Could not import private key: ${err}`);
     }
 }
 
@@ -111,6 +112,6 @@ export async function importPublicKey (publicKey) {
         });
         return key;
     } catch (err) {
-        throw `Could not import public key: ${err}`;
+        throw new OperationError(`Could not import public key: ${err}`);
     }
 }

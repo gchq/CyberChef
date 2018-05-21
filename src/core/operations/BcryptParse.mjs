@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 import bcrypt from "bcryptjs";
 
 /**
@@ -38,7 +39,7 @@ Salt: ${bcrypt.getSalt(input)}
 Password hash: ${input.split(bcrypt.getSalt(input))[1]}
 Full hash: ${input}`;
         } catch (err) {
-            return "Error: " + err.toString();
+            throw new OperationError("Error: " + err.toString());
         }
     }
 
