@@ -16,6 +16,7 @@ let OpModules = typeof self === "undefined" ? {} : self.OpModules || {};
 OpModules.HTTP = {
     "HTTP request":       HTTP.runHTTPRequest,
     "Strip HTTP headers": HTTP.runStripHeaders,
+    "Dechunk HTTP response": HTTP.runDechunk,
     "Parse User Agent":   HTTP.runParseUserAgent,
 };
 
