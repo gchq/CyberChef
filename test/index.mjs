@@ -27,7 +27,7 @@ import TestRegister from "./TestRegister";
 import "./tests/operations/Base58";
 import "./tests/operations/Base64";
 import "./tests/operations/BCD";
-// import "./tests/operations/BitwiseOp";
+import "./tests/operations/BitwiseOp";
 import "./tests/operations/BSON";
 import "./tests/operations/ByteRepr";
 import "./tests/operations/CartesianProduct";
