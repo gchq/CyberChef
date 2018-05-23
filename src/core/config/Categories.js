@@ -150,6 +150,7 @@ const Categories = [
         ops: [
             "HTTP request",
             "Strip HTTP headers",
+            "Dechunk HTTP response",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",

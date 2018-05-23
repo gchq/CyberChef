@@ -1846,6 +1846,13 @@ const OperationConfig = {
         outputType: "string",
         args: []
     },
+    "Dechunk HTTP response": {
+        module: "HTTP",
+        description: "Parses a HTTP response transferred using transfer-encoding:chunked",
+        inputType: "string",
+        outputType: "string",
+        args: []
+    },
     "Parse User Agent": {
         module: "HTTP",
         description: "Attempts to identify and categorise information contained in a user-agent string.",
