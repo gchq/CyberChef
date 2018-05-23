@@ -63,8 +63,7 @@ class DeriveEVPKey extends Operation {
     run(input, args) {
         const passphrase = Utils.convertToByteString(args[0].string, args[0].option),
             keySize = args[1] / 32,
-            iterations = args[2],
-            hasher = args[3],
+            [,, iterations, hasher, ] = args, //eslint-disable-line array-bracket-spacing
             salt = Utils.convertToByteString(args[4].string, args[4].option),
             key = CryptoJS.EvpKDF(passphrase, salt, {
                 keySize: keySize,

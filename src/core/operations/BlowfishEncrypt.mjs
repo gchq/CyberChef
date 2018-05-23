@@ -75,9 +75,7 @@ class BlowfishEncrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            mode = args[2],
-            inputType = args[3],
-            outputType = args[4];
+            [,, mode, inputType, outputType] = args;
 
         if (key.length === 0) return "Enter a key";
 

@@ -62,9 +62,7 @@ class DerivePBKDF2Key extends Operation {
      */
     run(input, args) {
         const passphrase = Utils.convertToByteString(args[0].string, args[0].option),
-            keySize = args[1],
-            iterations = args[2],
-            hasher = args[3],
+            [, keySize, iterations, hasher, ] = args, //eslint-disable-line array-bracket-spacing
             salt = Utils.convertToByteString(args[4].string, args[4].option) ||
                 forge.random.getBytesSync(keySize),
             derivedKey = forge.pkcs5.pbkdf2(passphrase, salt, iterations, keySize / 8, hasher.toLowerCase());

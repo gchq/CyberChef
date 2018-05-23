@@ -58,8 +58,7 @@ class RC2Decrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
-            inputType = args[2],
-            outputType = args[3],
+            [,, inputType, outputType] = args,
             decipher = forge.rc2.createDecryptionCipher(key);
 
         input = Utils.convertToByteString(input, inputType);
