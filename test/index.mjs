@@ -36,7 +36,7 @@ import "./tests/operations/Ciphers";
 import "./tests/operations/Checksum";
 // import "./tests/operations/Code";
 import "./tests/operations/Compress";
-// import "./tests/operations/Crypt";
+import "./tests/operations/Crypt";
 import "./tests/operations/DateTime";
 import "./tests/operations/Fork";
 import "./tests/operations/Jump";

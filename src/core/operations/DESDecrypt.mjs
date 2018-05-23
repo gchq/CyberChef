@@ -69,6 +69,7 @@ class DESDecrypt extends Operation {
 
         if (key.length !== 8) {
             return `Invalid key length: ${key.length} bytes
+
 DES uses a key length of 8 bytes (64 bits).
 Triple DES uses a key length of 24 bytes (192 bits).`;
         }
