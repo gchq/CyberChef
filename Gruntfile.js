@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
+        ["clean:node", "clean:config", "exec:generateConfig", "exec:generateNodeIndex", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
@@ -386,6 +386,23 @@ module.exports = function (grunt) {
                     "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
+            },
+            generateNodeIndex: {
+                command: [
+                    "echo '\n--- Regenerating node index ---'",
+                    "mkdir -p src/core/config/modules",
+                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
+                    "echo '[]\n' > src/core/config/OperationConfig.json",
+                    // Magic and Arithmetic libs 'mocked' for when called with wrap()
+                    "cp src/core/lib/Magic.mjs src/core/lib/Magic2.mjs",
+                    "cp src/core/lib/Arithmetic.mjs src/core/lib/Arithmetic2.mjs",
+                    "echo 'export default {};\n' > src/core/lib/Magic.mjs",
+                    "echo 'const div = () => 2;\n const createNumArray = () => 2;\n const mean = () => 2;\n const median = () => 2;\n const multi = () => 2;\n const stdDev = () => 2;\n const sub = () => 2;\n const sum = () => 2;\n export { div, createNumArray, mean, median, multi, stdDev, sub, sum };\n export default {};\n' > src/core/lib/Arithmetic.mjs",
+                    "node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs",
+                    "mv src/core/lib/Magic2.mjs src/core/lib/Magic.mjs",
+                    "mv src/core/lib/Arithmetic2.mjs src/core/lib/Arithmetic.mjs",
+                    "echo '--- Node index finished. ---\n'"
+                ].join(";"),
             },
             tests: {
                 command: "node --experimental-modules test/index.mjs"
