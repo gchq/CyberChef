@@ -22,11 +22,11 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "webpack-dev-server:start"]);
+        ["clean:dev", "exec:generateConfig", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "clean:config", "webpack:node", "chmod:build"]);
+        ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:web", "inline", "chmod"]);
+        ["eslint", "clean:prod", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        ["webpack:webInline", "runInliner", "clean:inlineScripts"]);
+        ["exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
 
     grunt.registerTask("runInliner", runInliner);
@@ -61,9 +61,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-accessibility");
+    grunt.loadNpmTasks("grunt-concurrent");
 
 
     // Project configuration
@@ -278,7 +280,7 @@ module.exports = function (grunt) {
                     chunks: false,
                     modules: false,
                     entrypoints: false,
-                    warningsFilter: /source-map/,
+                    warningsFilter: [/source-map/, /dependency is an expression/],
                 }
             },
             start: {
@@ -348,6 +350,18 @@ module.exports = function (grunt) {
                 src: ["docs/**/*", "docs/"]
             }
         },
+        watch: {
+            config: {
+                files: ["src/core/operations/**/*", "!src/core/operations/index.mjs"],
+                tasks: ["exec:generateConfig"]
+            }
+        },
+        concurrent: {
+            dev: ["watch:config", "webpack-dev-server:start"],
+            options: {
+                logConcurrentOutput: true
+            }
+        },
         exec: {
             repoSize: {
                 command: [
@@ -364,9 +378,13 @@ module.exports = function (grunt) {
             },
             generateConfig: {
                 command: [
+                    "echo '\n--- Regenerating config files. ---'",
+                    "mkdir -p src/core/config/modules",
+                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
+                    "echo '[]\n' > src/core/config/OperationConfig.json",
                     "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
-                    "echo ---\nConfig scripts finished.\n---\n"
+                    "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
             tests: {

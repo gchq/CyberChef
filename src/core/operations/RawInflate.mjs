@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import {INFLATE_BUFFER_TYPE} from "../lib/Zlib";
 import rawinflate from "zlibjs/bin/rawinflate.min";
+import OperationError from "../errors/OperationError";
 
 const Zlib = rawinflate.Zlib;
 
@@ -90,7 +91,7 @@ class RawInflate extends Operation {
             }
 
             if (!valid) {
-                throw "Error: Unable to inflate data";
+                throw new OperationError("Error: Unable to inflate data");
             }
         }
         // This seems to be the easiest way...

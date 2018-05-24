@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import {fromHex, HEX_DELIM_OPTIONS} from "../lib/Hex";
+import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex";
 import Utils from "../Utils";
 
 /**
@@ -28,7 +28,54 @@ class FromHex extends Operation {
             {
                 name: "Delimiter",
                 type: "option",
-                value: HEX_DELIM_OPTIONS
+                value: FROM_HEX_DELIM_OPTIONS
+            }
+        ];
+        this.patterns = [
+            {
+                match: "^(?:[\\dA-F]{2})+$",
+                flags: "i",
+                args: ["None"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Space"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Comma"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Semi-colon"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Colon"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["Line feed"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["CRLF"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["0x"]
+            },
+            {
+                match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["\\x"]
             }
         ];
     }
@@ -53,6 +100,7 @@ class FromHex extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
+        if (args[0] === "Auto") return false;
         const delim = Utils.charRep(args[0] || "Space"),
             len = delim === "\r\n" ? 1 : delim.length,
             width = len + 2;

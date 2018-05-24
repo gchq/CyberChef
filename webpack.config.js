@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const WebpackSyncShellPlugin = require("webpack-synchronizable-shell-plugin");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -43,18 +42,7 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
-        new ExtractTextPlugin("styles.css"),
-        new WebpackSyncShellPlugin({
-            onBuildStart: {
-                scripts: [
-                    "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
-                    "echo ---\nConfig scripts finished.\n---\n"
-                ],
-                blocking: true,
-                parallel: false
-            }
-        })
+        new ExtractTextPlugin("styles.css")
     ],
     resolve: {
         alias: {
@@ -65,8 +53,13 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules/,
+                exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                type: "javascript/auto",
                 loader: "babel-loader?compact=false"
+            },
+            {
+                test: /forge.min.js$/,
+                loader: "imports-loader?jQuery=>null"
             },
             {
                 test: /\.css$/,
@@ -117,7 +110,7 @@ module.exports = {
         chunks: false,
         modules: false,
         entrypoints: false,
-        warningsFilter: /source-map/,
+        warningsFilter: [/source-map/, /dependency is an expression/],
     },
     node: {
         fs: "empty"

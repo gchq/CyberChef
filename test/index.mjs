@@ -1,7 +1,7 @@
 /* eslint no-console: 0 */
 
 /**
- * TestRunner.js
+ * Test Runner
  *
  * For running the tests in the test register.
  *
@@ -24,36 +24,42 @@ global.ENVIRONMENT_IS_WEB = function() {
 };
 
 import TestRegister from "./TestRegister";
-// import "./tests/operations/Base58.js";
+import "./tests/operations/Base58";
 import "./tests/operations/Base64";
-// import "./tests/operations/BCD.js";
-// import "./tests/operations/BitwiseOp.js";
-// import "./tests/operations/BSON.js";
-// import "./tests/operations/ByteRepr.js";
-// import "./tests/operations/CharEnc.js";
-// import "./tests/operations/Cipher.js";
-// import "./tests/operations/Code.js";
-// import "./tests/operations/Compress.js";
-// import "./tests/operations/DateTime.js";
-// import "./tests/operations/FlowControl.js";
-// import "./tests/operations/Hash.js";
-// import "./tests/operations/Hexdump.js";
-// import "./tests/operations/Image.js";
-// import "./tests/operations/MorseCode.js";
-// import "./tests/operations/MS.js";
-// import "./tests/operations/PHP.js";
-// import "./tests/operations/NetBIOS.js";
-// import "./tests/operations/OTP.js";
-// import "./tests/operations/Regex.js";
-import "./tests/operations/Rotate.mjs";
-// import "./tests/operations/StrUtils.js";
-// import "./tests/operations/SeqUtils.js";
-import "./tests/operations/SetUnion";
-import "./tests/operations/SetIntersection";
-import "./tests/operations/SetDifference";
-import "./tests/operations/SymmetricDifference";
+import "./tests/operations/BCD";
+// import "./tests/operations/BitwiseOp";
+import "./tests/operations/BSON";
+import "./tests/operations/ByteRepr";
 import "./tests/operations/CartesianProduct";
+import "./tests/operations/CharEnc";
+import "./tests/operations/Ciphers";
+import "./tests/operations/Checksum";
+// import "./tests/operations/Code";
+import "./tests/operations/Compress";
+// import "./tests/operations/Crypt";
+import "./tests/operations/DateTime";
+import "./tests/operations/Fork";
+import "./tests/operations/Jump";
+import "./tests/operations/ConditionalJump";
+import "./tests/operations/Register";
+import "./tests/operations/Comment";
+import "./tests/operations/Hash";
+import "./tests/operations/Hexdump";
+// import "./tests/operations/Image";
+import "./tests/operations/MorseCode";
+import "./tests/operations/MS";
+import "./tests/operations/PHP";
+import "./tests/operations/NetBIOS";
+import "./tests/operations/OTP";
 import "./tests/operations/PowerSet";
+// import "./tests/operations/Regex";
+import "./tests/operations/Rotate";
+// import "./tests/operations/StrUtils";
+import "./tests/operations/SeqUtils";
+import "./tests/operations/SetDifference";
+import "./tests/operations/SetIntersection";
+import "./tests/operations/SetUnion";
+import "./tests/operations/SymmetricDifference";
 
 
 import "./tests/nodeApi/nodeApi";

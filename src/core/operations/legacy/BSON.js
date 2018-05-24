@@ -29,7 +29,7 @@ const BSON = {
             const data = JSON.parse(input);
             return bson.serialize(data).buffer;
         } catch (err) {
-            return err.toString();
+            throw err.toString();
         }
     },
 

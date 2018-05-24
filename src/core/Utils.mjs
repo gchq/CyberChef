@@ -524,36 +524,43 @@ class Utils {
      * Parses CSV data and returns it as a two dimensional array or strings.
      *
      * @param {string} data
+     * @param {string[]} [cellDelims=[","]]
+     * @param {string[]} [lineDelims=["\n", "\r"]]
      * @returns {string[][]}
      *
      * @example
      * // returns [["head1", "head2"], ["data1", "data2"]]
      * Utils.parseCSV("head1,head2\ndata1,data2");
      */
-    static parseCSV(data) {
+    static parseCSV(data, cellDelims=[","], lineDelims=["\n", "\r"]) {
         let b,
-            ignoreNext = false,
+            next,
+            renderNext = false,
             inString = false,
             cell = "",
             line = [];
         const lines = [];
 
+        // Remove BOM, often present in Excel CSV files
+        if (data.length && data[0] === "\uFEFF") data = data.substr(1);
+
         for (let i = 0; i < data.length; i++) {
             b = data[i];
-            if (ignoreNext) {
+            next = data[i+1] || "";
+            if (renderNext) {
                 cell += b;
-                ignoreNext = false;
+                renderNext = false;
             } else if (b === "\\") {
-                cell += b;
-                ignoreNext = true;
+                renderNext = true;
             } else if (b === "\"" && !inString) {
                 inString = true;
             } else if (b === "\"" && inString) {
-                inString = false;
-            } else if (b === "," && !inString) {
+                if (next === "\"") renderNext = true;
+                else inString = false;
+            } else if (!inString && cellDelims.indexOf(b) >= 0) {
                 line.push(cell);
                 cell = "";
-            } else if ((b === "\n" || b === "\r") && !inString) {
+            } else if (!inString && lineDelims.indexOf(b) >= 0) {
                 line.push(cell);
                 cell = "";
                 lines.push(line);
@@ -713,7 +720,7 @@ class Utils {
      * @param {boolean} [newline=false] - whether to add a newline after each operation
      * @returns {string}
      */
-    static generatePrettyRecipe(recipeConfig, newline=false) {
+    static generatePrettyRecipe(recipeConfig, newline = false) {
         let prettyConfig = "",
             name = "",
             args = "",

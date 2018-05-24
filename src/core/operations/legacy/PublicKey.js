@@ -62,7 +62,7 @@ const PublicKey = {
             pkStr = "",
             sig = cert.getSignatureValueHex(),
             sigStr = "",
-            extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
+            extensions = "";
 
         // Public Key fields
         pkFields.push({
@@ -144,6 +144,10 @@ const PublicKey = {
             sigStr = "  Signature:      " + PublicKey._formatByteStr(sig, 16, 18);
         }
 
+        // Extensions
+        try {
+            extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
+        } catch (err) {}
 
         let issuerStr = PublicKey._formatDnStr(issuer, 2),
             nbDate = PublicKey._formatDate(cert.getNotBefore()),

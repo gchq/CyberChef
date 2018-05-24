@@ -81,9 +81,10 @@ class Operation {
      * this behaviour.
      *
      * @param {*} data - The result of the run() function
+     * @param {Object[]} args - The operation's arguments
      * @returns {*} - A human-readable version of the data
      */
-    present(data) {
+    present(data, args) {
         return data;
     }
 
@@ -172,7 +173,8 @@ class Operation {
             return {
                 name: ing.name,
                 type: ing.type,
-                value: ing.defaultValue
+                value: ing.defaultValue,
+                toggleValues: ing.toggleValues || []
             };
         });
     }
@@ -186,7 +188,7 @@ class Operation {
     get config() {
         return {
             "op": this.name,
-            "args": this._ingList.map(ing => ing.conf)
+            "args": this._ingList.map(ing => ing.config)
         };
     }
 
@@ -270,6 +272,15 @@ class Operation {
      */
     get flowControl() {
         return this._flowControl;
+    }
+
+    /**
+     * Set whether this Operation is a flowcontrol op.
+     *
+     * @param {boolean} value
+     */
+    set flowControl(value) {
+        this._flowControl = !!value;
     }
 
 }

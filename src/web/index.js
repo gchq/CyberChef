@@ -13,11 +13,11 @@ import "bootstrap";
 import "bootstrap-switch";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
-import CanvasComponents from "../core/vendor/canvascomponents.js";
+import * as CanvasComponents from "../core/lib/CanvasComponents";
 
 // CyberChef
-import App from "./App.js";
-import Categories from "../core/config/Categories.js";
+import App from "./App";
+import Categories from "../core/config/Categories.json";
 import OperationConfig from "../core/config/OperationConfig.json";
 
 
@@ -35,7 +35,8 @@ function main() {
         "URL Decode",
         "Regular expression",
         "Entropy",
-        "Fork"
+        "Fork",
+        "Magic"
     ];
 
     const defaultOptions = {
@@ -64,3 +65,4 @@ window.compileMessage = COMPILE_MSG;
 window.CanvasComponents = CanvasComponents;
 
 document.addEventListener("DOMContentLoaded", main, false);
+

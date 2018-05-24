@@ -172,12 +172,15 @@ class Recipe  {
                     numRegisters = state.numRegisters;
                 } else {
                     output = await op.run(input, op.ingValues);
-                    this.lastRunOp = op;
                     dish.set(output, op.outputType);
                 }
+                this.lastRunOp = op;
             } catch (err) {
                 // Return expected errors as output
-                if (err instanceof OperationError) {
+                if (err instanceof OperationError ||
+                    (err.type && err.type === "OperationError")) {
+                    // Cannot rely on `err instanceof OperationError` here as extending
+                    // native types is not fully supported yet.
                     dish.set(err.message, "string");
                     return i;
                 } else {
@@ -209,7 +212,10 @@ class Recipe  {
     async present(dish) {
         if (!this.lastRunOp) return;
 
-        const output = await this.lastRunOp.present(await dish.get(this.lastRunOp.outputType));
+        const output = await this.lastRunOp.present(
+            await dish.get(this.lastRunOp.outputType),
+            this.lastRunOp.ingValues
+        );
         dish.set(output, this.lastRunOp.presentType);
     }
 
@@ -265,6 +271,18 @@ class Recipe  {
         }
 
         return highlights;
+    }
+
+
+    /**
+     * Determines whether the previous operation has a different presentation type to its normal output.
+     *
+     * @param {number} progress
+     * @returns {boolean}
+     */
+    lastOpPresented(progress) {
+        if (progress < 1) return false;
+        return this.opList[progress-1].presentType !== this.opList[progress-1].outputType;
     }
 
 }

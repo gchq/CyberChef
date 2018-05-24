@@ -21,6 +21,7 @@ class Ingredient {
         this.name  = "";
         this.type  = "";
         this._value = null;
+        this.toggleValues = [];
 
         if (ingredientConfig) {
             this._parseConfig(ingredientConfig);
@@ -38,6 +39,7 @@ class Ingredient {
         this.name = ingredientConfig.name;
         this.type = ingredientConfig.type;
         this.defaultValue = ingredientConfig.value;
+        this.toggleValues = ingredientConfig.toggleValues;
     }
 
 
