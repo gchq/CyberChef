@@ -37,6 +37,27 @@ const HTTP = {
         return (headerEnd < 2) ? input : input.slice(headerEnd, input.length);
     },
 
+    /**
+     * Dechunk response operation
+     *
+     * @param {string} input
+     * @param {Object[]} args}
+     * @returns {string}
+    */
+    runDechunk: function(input, args) {
+        var chunks = [];
+        var chunkSizeEnd = input.indexOf("\n") + 1;
+        var lineEndings = input.charAt(chunkSizeEnd - 2) == "\r" ? "\r\n" : "\n";
+        var lineEndingsLength = lineEndings.length;
+        var chunkSize = parseInt(input.slice(0, chunkSizeEnd), 16);
+        while (!isNaN(chunkSize)) {
+            chunks.push(input.slice(chunkSizeEnd, chunkSize + chunkSizeEnd)); 
+            input = input.slice(chunkSizeEnd + chunkSize + lineEndingsLength);
+            chunkSizeEnd = input.indexOf(lineEndings) + lineEndingsLength;
+            chunkSize = parseInt(input.slice(0, chunkSizeEnd), 16);
+        }
+        return chunks.join('') + input;
+    },
 
     /**
      * Parse User Agent operation.
