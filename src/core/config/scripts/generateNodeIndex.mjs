@@ -33,6 +33,7 @@ let code = `/**
 * @license Apache-2.0
 */
 
+import "babel-polyfill";
 import { wrap } from "./apiUtils";
 import {
 `;
@@ -43,7 +44,7 @@ Object.keys(operations).forEach((op) => {
 });
 
 code +=`
-} from "../node/operations/index";
+} from "../core/operations/index";
 
 // Define global environment functions
 global.ENVIRONMENT_IS_WORKER = function() {
