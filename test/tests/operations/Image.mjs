@@ -57,7 +57,7 @@ TestRegister.addTests([
     {
         name: "Extract EXIF: hello world text (error)",
         input: "hello world",
-        expectedError: true,
+        expectedOutput: "Could not extract EXIF data from image: Error: Invalid JPEG section offset",
         recipeConfig: [
             {
                 op: "Extract EXIF",
@@ -129,7 +129,7 @@ TestRegister.addTests([
     {
         name: "Remove EXIF: hello world text (error)",
         input: "hello world",
-        expectedError: true,
+        expectedOutput: "Could not remove EXIF data from image: Given data is not jpeg.",
         recipeConfig: [
             {
                 op: "Remove EXIF",

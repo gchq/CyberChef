@@ -45,7 +45,7 @@ import "./tests/operations/Register";
 import "./tests/operations/Comment";
 import "./tests/operations/Hash";
 import "./tests/operations/Hexdump";
-// import "./tests/operations/Image";
+import "./tests/operations/Image";
 import "./tests/operations/MorseCode";
 import "./tests/operations/MS";
 import "./tests/operations/PHP";

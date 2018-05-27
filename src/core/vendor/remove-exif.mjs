@@ -18,10 +18,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Utils from "../Utils.js";
+import Utils from "../Utils.mjs";
 
 // Param jpeg should be a binaryArray
-function removeEXIF(jpeg) {
+export function removeEXIF(jpeg) {
   // Convert binaryArray to char string
   jpeg = Utils.byteArrayToChars(jpeg);
   if (jpeg.slice(0, 2) != "\xff\xd8") {
@@ -149,5 +149,3 @@ function unpack(mark, str) {
 
   return unpacked;
 }
-
-export default removeEXIF;
