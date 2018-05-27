@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import { camelCase } from "lodash";
+import camelCase from "lodash/camelCase";
 import Operation from "../Operation";
 import { replaceVariableNames } from "../lib/Code";
 

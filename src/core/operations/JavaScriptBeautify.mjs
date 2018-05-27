@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 import escodegen from "escodegen";
 import * as esprima from "esprima";
 
@@ -84,7 +85,7 @@ class JavaScriptBeautify extends Operation {
             result = escodegen.generate(AST, options);
         } catch (e) {
             // Leave original error so the user can see the detail
-            throw "Unable to parse JavaScript.<br>" + e.message;
+            throw new OperationError("Unable to parse JavaScript.<br>" + e.message);
         }
         return result;
     }

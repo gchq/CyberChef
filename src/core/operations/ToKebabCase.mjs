@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import { kebabCase } from "lodash";
+import kebabCase from "lodash/kebabCase";
 import Operation from "../Operation";
 import { replaceVariableNames } from "../lib/Code";
 

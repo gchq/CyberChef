@@ -75,10 +75,18 @@ class XORBruteForce extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [keyLength, sampleLength, sampleOffset, scheme, nullPreserving, printKey, outputHex, /* ignore element */] = args, //eslint-disable-line array-bracket-spacing
-            crib = args[7].toLowerCase();
-
-        const output = [];
+        const [
+                keyLength,
+                sampleLength,
+                sampleOffset,
+                scheme,
+                nullPreserving,
+                printKey,
+                outputHex,
+                rawCrib
+            ] = args,
+            crib = rawCrib.toLowerCase(),
+            output = [];
         let result,
             resultUtf8,
             record = "";

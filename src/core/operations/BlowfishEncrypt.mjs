@@ -6,12 +6,17 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import OperationError from "../errors/OperationError";
 import { Blowfish } from "../vendor/Blowfish";
 import { toBase64 } from "../lib/Base64";
 
+/**
+ * Lookup table for Blowfish output types.
+ */
 const BLOWFISH_OUTPUT_TYPE_LOOKUP = {
     Base64: 0, Hex: 1, String: 2, Raw: 3
 };
+
 /**
  * Lookup table for Blowfish modes.
  */
@@ -77,7 +82,7 @@ class BlowfishEncrypt extends Operation {
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType] = args;
 
-        if (key.length === 0) return "Enter a key";
+        if (key.length === 0) throw new OperationError("Enter a key");
 
         input = Utils.convertToByteString(input, inputType);
 
@@ -88,7 +93,7 @@ class BlowfishEncrypt extends Operation {
             cipherMode: BLOWFISH_MODE_LOOKUP[mode]
         });
 
-        return outputType === "Raw" ? Utils.byteArrayToChars(enc) : enc   ;
+        return outputType === "Raw" ? Utils.byteArrayToChars(enc) : enc;
     }
 
 }

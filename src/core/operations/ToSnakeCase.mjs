@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import { snakeCase } from "lodash";
+import snakeCase from "lodash/snakeCase";
 import Operation from "../Operation";
 import { replaceVariableNames } from "../lib/Code";
 

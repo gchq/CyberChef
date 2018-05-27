@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import OperationError from "../errors/OperationError";
 import forge from "node-forge/dist/forge.min.js";
 
 /**
@@ -68,10 +69,10 @@ class TripleDESEncrypt extends Operation {
             outputType = args[4];
 
         if (key.length !== 24) {
-            return `Invalid key length: ${key.length} bytes
+            throw new OperationError(`Invalid key length: ${key.length} bytes
 
 Triple DES uses a key length of 24 bytes (192 bits).
-DES uses a key length of 8 bytes (64 bits).`;
+DES uses a key length of 8 bytes (64 bits).`);
         }
 
         input = Utils.convertToByteString(input, inputType);

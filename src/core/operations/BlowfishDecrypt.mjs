@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import OperationError from "../errors/OperationError";
 import { Blowfish } from "../vendor/Blowfish";
 import { toBase64 } from "../lib/Base64";
 import { toHexFast } from "../lib/Hex";
@@ -80,7 +81,7 @@ class BlowfishDecrypt extends Operation {
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType] = args;
 
-        if (key.length === 0) return "Enter a key";
+        if (key.length === 0) throw new OperationError("Enter a key");
 
         input = inputType === "Raw" ? Utils.strToByteArray(input) : input;
 
