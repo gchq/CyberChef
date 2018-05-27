@@ -310,6 +310,7 @@ TestRegister.addTests([
             }
         ],
     },
+    /* Since we don't pack ops before running tests, there's no polyfill for DomParser()
     {
         name: "CSS selector",
         input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
@@ -331,5 +332,5 @@ TestRegister.addTests([
                 "args": ["/div/p[@class=\"a\"]", "\\n"]
             }
         ]
-    }
+    }*/
 ]);

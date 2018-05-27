@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import * as JsDiff from "diff";
+import JsDiff from "diff";
 import OperationError from "../errors/OperationError";
 
 /**
