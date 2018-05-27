@@ -52,7 +52,7 @@ import "./tests/operations/PHP";
 import "./tests/operations/NetBIOS";
 import "./tests/operations/OTP";
 import "./tests/operations/PowerSet";
-// import "./tests/operations/Regex";
+import "./tests/operations/Regex";
 import "./tests/operations/Rotate";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SeqUtils";
