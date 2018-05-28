@@ -4,8 +4,10 @@
  * @license Apache-2.0
  */
 
-import nwmatcher from "nwmatcher";
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
+import xmldom from "xmldom";
+import nwmatcher from "nwmatcher";
 
 /**
  * CSS selector operation
@@ -44,7 +46,7 @@ class CSSSelector extends Operation {
      */
     run(input, args) {
         const [query, delimiter] = args,
-            parser = new DOMParser();
+            parser = new xmldom.DOMParser();
         let dom,
             result;
 
@@ -55,14 +57,14 @@ class CSSSelector extends Operation {
         try {
             dom = parser.parseFromString(input);
         } catch (err) {
-            return "Invalid input HTML.";
+            throw new OperationError("Invalid input HTML.");
         }
 
         try {
             const matcher = nwmatcher({document: dom});
             result = matcher.select(query, dom);
         } catch (err) {
-            return "Invalid CSS Selector. Details:\n" + err.message;
+            throw new OperationError("Invalid CSS Selector. Details:\n" + err.message);
         }
 
         const nodeToString = function(node) {

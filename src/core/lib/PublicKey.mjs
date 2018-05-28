@@ -1,5 +1,5 @@
 /**
- * Public key functions.
+ * Public key resources.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016

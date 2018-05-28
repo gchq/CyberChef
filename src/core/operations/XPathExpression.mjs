@@ -4,9 +4,10 @@
  * @license Apache-2.0
  */
 
-import xpath from "xpath";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
+import xmldom from "xmldom";
+import xpath from "xpath";
 
 /**
  * XPath expression operation
@@ -48,7 +49,7 @@ class XPathExpression extends Operation {
 
         let doc;
         try {
-            doc = new DOMParser().parseFromString(input, "application/xml");
+            doc = new xmldom.DOMParser().parseFromString(input, "application/xml");
         } catch (err) {
             throw new OperationError("Invalid input XML.");
         }

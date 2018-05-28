@@ -198,8 +198,6 @@ ${extensions}`;
 
 }
 
-export default ParseX509Certificate;
-
 /**
  * Formats dates.
  *
@@ -214,3 +212,5 @@ function formatDate (dateStr) {
         dateStr[8] + dateStr[9] + ":" +
         dateStr[10] + dateStr[11];
 }
+
+export default ParseX509Certificate;

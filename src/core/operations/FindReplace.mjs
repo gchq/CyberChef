@@ -20,7 +20,7 @@ class FindReplace extends Operation {
 
         this.name = "Find / Replace";
         this.module = "Regex";
-        this.description = "Replaces all occurrences of the first string with the second.<br><br> Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).";
+        this.description = "Replaces all occurrences of the first string with the second.<br><br>Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -21,7 +21,13 @@ class ExtractEXIF extends Operation {
 
         this.name = "Extract EXIF";
         this.module = "Image";
-        this.description = "Extracts EXIF data from an image.\n<br><br>\nEXIF data is metadata embedded in images (JPEG, JPG, TIFF) and audio files.\n<br><br>\nEXIF data from photos usually contains information about the image file itself as well as the device used to create it.";
+        this.description = [
+            "Extracts EXIF data from an image.",
+            "<br><br>",
+            "EXIF data is metadata embedded in images (JPEG, JPG, TIFF) and audio files.",
+            "<br><br>",
+            "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
+        ].join("\n");
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];

@@ -7,6 +7,7 @@
 import XRegExp from "xregexp";
 import Operation from "../Operation";
 import Utils from "../Utils";
+import OperationError from "../errors/OperationError";
 
 /**
  * Regular expression operation
@@ -133,14 +134,12 @@ class RegularExpression extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const userRegex = args[1],
-            i = args[2],
-            m = args[3],
-            s = args[4],
-            u = args[5],
-            a = args[6],
-            displayTotal = args[7],
-            outputFormat = args[8];
+        const [,
+            userRegex,
+            i, m, s, u, a,
+            displayTotal,
+            outputFormat
+        ] = args;
         let modifiers = "g";
 
         if (i) modifiers += "i";
@@ -166,7 +165,7 @@ class RegularExpression extends Operation {
                         return "Error: Invalid output format";
                 }
             } catch (err) {
-                return "Invalid regex. Details: " + err.message;
+                throw new OperationError("Invalid regex. Details: " + err.message);
             }
         } else {
             return Utils.escapeHtml(input);
@@ -174,8 +173,6 @@ class RegularExpression extends Operation {
     }
 
 }
-
-export default RegularExpression;
 
 /**
  * Creates a string listing the matches within a string.
@@ -261,3 +258,5 @@ function regexHighlight (input, regex, displayTotal) {
 
     return output;
 }
+
+export default RegularExpression;
