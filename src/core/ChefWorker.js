@@ -9,7 +9,7 @@
 import "babel-polyfill";
 import Chef from "./Chef";
 import OperationConfig from "./config/OperationConfig.json";
-import OpModules from "./config/modules/Default";
+import OpModules from "./config/modules/OpModules";
 
 // Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
