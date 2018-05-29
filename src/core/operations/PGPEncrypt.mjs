@@ -6,10 +6,10 @@
 
 import Operation from "../Operation";
 import kbpgp from "kbpgp";
-import { ASP } from "../lib/PGP";
+import { ASP, importPublicKey } from "../lib/PGP";
 import OperationError from "../errors/OperationError";
-import promisifyDefault from "es6-promisify";
-const promisify = promisifyDefault.promisify;
+import * as es6promisify from "es6-promisify";
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
  * PGP Encrypt operation
@@ -54,18 +54,11 @@ class PGPEncrypt extends Operation {
     async run(input, args) {
         const plaintextMessage = input,
             plainPubKey = args[0];
-        let key,
-            encryptedMessage;
+        let encryptedMessage;
 
         if (!plainPubKey) throw new OperationError("Enter the public key of the recipient.");
 
-        try {
-            key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
-                armored: plainPubKey,
-            });
-        } catch (err) {
-            throw new OperationError(`Could not import public key: ${err}`);
-        }
+        const key = await importPublicKey(plainPubKey);
 
         try {
             encryptedMessage = await promisify(kbpgp.box)({

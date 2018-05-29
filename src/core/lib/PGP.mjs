@@ -12,8 +12,8 @@
 
 import OperationError from "../errors/OperationError";
 import kbpgp from "kbpgp";
-import promisifyDefault from "es6-promisify";
-const promisify = promisifyDefault.promisify;
+import * as es6promisify from "es6-promisify";
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
  * Progress callback
