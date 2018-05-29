@@ -71,36 +71,39 @@ class Diff extends Operation {
         let output = "",
             diff;
 
+        // Node and Webpack load modules slightly differently
+        const jsdiff = JsDiff.default ? JsDiff.default : JsDiff;
+
         if (!samples || samples.length !== 2) {
             throw new OperationError("Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?");
         }
 
         switch (diffBy) {
             case "Character":
-                diff = JsDiff.diffChars(samples[0], samples[1]);
+                diff = jsdiff.diffChars(samples[0], samples[1]);
                 break;
             case "Word":
                 if (ignoreWhitespace) {
-                    diff = JsDiff.diffWords(samples[0], samples[1]);
+                    diff = jsdiff.diffWords(samples[0], samples[1]);
                 } else {
-                    diff = JsDiff.diffWordsWithSpace(samples[0], samples[1]);
+                    diff = jsdiff.diffWordsWithSpace(samples[0], samples[1]);
                 }
                 break;
             case "Line":
                 if (ignoreWhitespace) {
-                    diff = JsDiff.diffTrimmedLines(samples[0], samples[1]);
+                    diff = jsdiff.diffTrimmedLines(samples[0], samples[1]);
                 } else {
-                    diff = JsDiff.diffLines(samples[0], samples[1]);
+                    diff = jsdiff.diffLines(samples[0], samples[1]);
                 }
                 break;
             case "Sentence":
-                diff = JsDiff.diffSentences(samples[0], samples[1]);
+                diff = jsdiff.diffSentences(samples[0], samples[1]);
                 break;
             case "CSS":
-                diff = JsDiff.diffCss(samples[0], samples[1]);
+                diff = jsdiff.diffCss(samples[0], samples[1]);
                 break;
             case "JSON":
-                diff = JsDiff.diffJson(samples[0], samples[1]);
+                diff = jsdiff.diffJson(samples[0], samples[1]);
                 break;
             default:
                 throw new OperationError("Invalid 'Diff by' option.");

@@ -42,6 +42,11 @@ export const ARITHMETIC_DELIM_OPTIONS = ["Line feed", "Space", "Comma", "Semi-co
 export const HASH_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma"];
 
 /**
+ * IP delimiters
+ */
+export const IP_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma", "Semi-colon"];
+
+/**
  * Split delimiters.
  */
 export const SPLIT_DELIM_OPTIONS = [
