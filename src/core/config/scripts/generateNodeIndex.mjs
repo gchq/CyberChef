@@ -9,8 +9,8 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: ["off"] */
-
+/*eslint no-console: 0 */
+/* eslint camelcase: 0 */
 
 import fs from "fs";
 import path from "path";
@@ -34,7 +34,7 @@ let code = `/**
 */
 
 import "babel-polyfill";
-import { wrap } from "./apiUtils";
+import { wrap, translateTo } from "./apiUtils";
 import {
 `;
 
@@ -74,7 +74,7 @@ code += `    };
 }
 
 const chef = generateChef();
-
+chef.translateTo = translateTo;
 `;
 
 Object.keys(operations).forEach((op) => {
@@ -82,6 +82,7 @@ Object.keys(operations).forEach((op) => {
 });
 
 code +=`
+
 export default chef;
 export {
 `;

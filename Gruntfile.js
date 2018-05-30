@@ -388,16 +388,6 @@ module.exports = function (grunt) {
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
-            generateNodeIndex: {
-                command: [
-                    "echo '\n--- Regenerating node index ---'",
-                    "mkdir -p src/core/config/modules",
-                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
-                    "echo '[]\n' > src/core/config/OperationConfig.json",
-                    "node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs",
-                    "echo '--- Node index finished. ---\n'"
-                ].join(";"),
-            },
             tests: {
                 command: "node --experimental-modules test/index.mjs"
             }
