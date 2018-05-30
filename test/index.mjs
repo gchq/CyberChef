@@ -48,6 +48,7 @@ import "./tests/operations/Hexdump";
 import "./tests/operations/Image";
 import "./tests/operations/MorseCode";
 import "./tests/operations/MS";
+import "./tests/operations/PGP";
 import "./tests/operations/PHP";
 import "./tests/operations/NetBIOS";
 import "./tests/operations/OTP";
