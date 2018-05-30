@@ -10,7 +10,6 @@
  */
 
 /*eslint no-console: 0 */
-/* eslint camelcase: 0 */
 
 import fs from "fs";
 import path from "path";
@@ -32,6 +31,9 @@ let code = `/**
 * @copyright Crown Copyright ${new Date().getUTCFullYear()}
 * @license Apache-2.0
 */
+
+/* eslint camelcase: 0 */
+
 
 import "babel-polyfill";
 import { wrap, translateTo } from "./apiUtils";
@@ -67,7 +69,7 @@ function generateChef() {
 `;
 
 Object.keys(operations).forEach((op) => {
-    code += `        '${decapitalise(op)}': wrap(core_${op}),\n`;
+    code += `        "${decapitalise(op)}": wrap(core_${op}),\n`;
 });
 
 code += `    };
@@ -78,7 +80,7 @@ chef.translateTo = translateTo;
 `;
 
 Object.keys(operations).forEach((op) => {
-    code += `const ${decapitalise(op)} = chef['${decapitalise(op)}'];\n`;
+    code += `const ${decapitalise(op)} = chef.${decapitalise(op)};\n`;
 });
 
 code +=`
