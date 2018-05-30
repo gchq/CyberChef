@@ -67,7 +67,7 @@ function generateChef() {
 `;
 
 Object.keys(operations).forEach((op) => {
-    code += `        ${decapitalise(op)}: wrap(core_${op}),\n`;
+    code += `        '${decapitalise(op)}': wrap(core_${op}),\n`;
 });
 
 code += `    };
@@ -78,7 +78,7 @@ const chef = generateChef();
 `;
 
 Object.keys(operations).forEach((op) => {
-    code += `const ${decapitalise(op)} = chef[${decapitalise(op)}];\n`;
+    code += `const ${decapitalise(op)} = chef['${decapitalise(op)}'];\n`;
 });
 
 code +=`
