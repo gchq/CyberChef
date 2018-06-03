@@ -25,7 +25,8 @@ class Magic extends Operation {
         this.module = "Default";
         this.description = "The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it.<br><br><b>Options</b><br><u>Depth:</u> If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion.<br><br><u>Intensive mode:</u> When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced.<br><br><u>Extensive language support:</u> At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar.";
         this.inputType = "ArrayBuffer";
-        this.outputType = "html";
+        this.outputType = "JSON";
+        this.presentType = "html";
         this.args = [
             {
                 "name": "Depth",
@@ -56,9 +57,24 @@ class Magic extends Operation {
         const ings = state.opList[state.progress].ingValues,
             [depth, intensive, extLang] = ings,
             dish = state.dish,
-            currentRecipeConfig = state.opList.map(op => op.config),
             magic = new MagicLib(await dish.get(Dish.ARRAY_BUFFER)),
             options = await magic.speculativeExecution(depth, extLang, intensive);
+
+        // Record the current state for use when presenting
+        this.state = state;
+
+        dish.set(options, Dish.JSON);
+        return state;
+    }
+
+    /**
+     * Displays Magic results in HTML for web apps.
+     *
+     * @param {JSON} options
+     * @returns {html}
+     */
+    present(options) {
+        const currentRecipeConfig = this.state.opList.map(op => op.config);
 
         let output = `<table
                 class='table table-hover table-condensed table-bordered'
@@ -84,9 +100,9 @@ class Magic extends Operation {
         options.forEach(option => {
             // Construct recipe URL
             // Replace this Magic op with the generated recipe
-            const recipeConfig = currentRecipeConfig.slice(0, state.progress)
+            const recipeConfig = currentRecipeConfig.slice(0, this.state.progress)
                     .concat(option.recipe)
-                    .concat(currentRecipeConfig.slice(state.progress + 1)),
+                    .concat(currentRecipeConfig.slice(this.state.progress + 1)),
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
 
             let language = "",
@@ -131,8 +147,8 @@ class Magic extends Operation {
         if (!options.length) {
             output = "Nothing of interest could be detected about the input data.\nHave you tried modifying the operation arguments?";
         }
-        dish.set(output, Dish.HTML);
-        return state;
+
+        return output;
     }
 
 }

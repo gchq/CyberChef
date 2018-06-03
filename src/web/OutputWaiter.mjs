@@ -117,6 +117,7 @@ class OutputWaiter {
 
         this.manager.highlighter.removeHighlights();
         this.setOutputInfo(length, lines, duration);
+        this.backgroundMagic();
     }
 
 
@@ -442,6 +443,42 @@ class OutputWaiter {
             });
         });
         return this.dishBuffer;
+    }
+
+
+    /**
+     * Triggers the BackgroundWorker to attempt Magic on the current output.
+     */
+    backgroundMagic() {
+        const sample = this.dishStr ? this.dishStr.slice(0, 1000) :
+            this.dishBuffer ? this.dishBuffer.slice(0, 1000) : "";
+
+        if (sample.length) {
+            this.manager.background.magic(sample);
+        }
+    }
+
+
+    /**
+     * Handles the results of a background Magic call.
+     *
+     * @param {Object[]} options
+     */
+    backgroundMagicResult(options) {
+        if (!options.length ||
+            !options[0].recipe.length)
+            return;
+
+        //console.log(options);
+
+        const currentRecipeConfig = this.app.getRecipeConfig();
+        const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
+        const recipeURL = "#recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(newRecipeConfig));
+        const opSequence = options[0].recipe.map(o => o.op).join(", ");
+
+        log.log(`Running <a href="${recipeURL}">${opSequence}</a> will result in "${Utils.truncate(options[0].data, 20)}"`);
+        //this.app.setRecipeConfig(newRecipeConfig);
+        //this.app.autoBake();
     }
 
 }

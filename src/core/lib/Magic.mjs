@@ -344,6 +344,11 @@ class Magic {
             aScore += a.entropy;
             bScore += b.entropy;
 
+            // A result with no recipe but matching ops suggests there are better options
+            if ((!a.recipe.length && a.matchingOps.length) &&
+                b.recipe.length)
+                return 1;
+
             return aScore - bScore;
         });
     }
