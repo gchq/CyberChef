@@ -104,12 +104,16 @@ async function bake(data) {
 
         self.postMessage({
             action: "bakeComplete",
-            data: response
+            data: Object.assign(response, {
+                id: data.id
+            })
         });
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: err
+            data: Object.assign(err, {
+                id: data.id
+            })
         });
     }
 }

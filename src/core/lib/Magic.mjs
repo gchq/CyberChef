@@ -229,17 +229,22 @@ class Magic {
         const testEnc = async op => {
             for (let i = 0; i < encodings.length; i++) {
                 const conf = {
-                        op: op,
-                        args: [encodings[i]]
-                    },
-                    data = await this._runRecipe([conf], sample.buffer);
+                    op: op,
+                    args: [encodings[i]]
+                };
 
-                // Only add to the results if it changed the data
-                if (!_buffersEqual(data, sample.buffer)) {
-                    results.push({
-                        data: data,
-                        conf: conf
-                    });
+                try {
+                    const data = await this._runRecipe([conf], sample.buffer);
+
+                    // Only add to the results if it changed the data
+                    if (!_buffersEqual(data, sample.buffer)) {
+                        results.push({
+                            data: data,
+                            conf: conf
+                        });
+                    }
+                } catch (err) {
+                    continue;
                 }
             }
         };
@@ -344,6 +349,11 @@ class Magic {
             aScore += a.entropy;
             bScore += b.entropy;
 
+            // A result with no recipe but matching ops suggests there are better options
+            if ((!a.recipe.length && a.matchingOps.length) &&
+                b.recipe.length)
+                return 1;
+
             return aScore - bScore;
         });
     }
@@ -356,8 +366,9 @@ class Magic {
      * @returns {ArrayBuffer}
      */
     async _runRecipe(recipeConfig, input=this.inputBuffer) {
+        input = input instanceof ArrayBuffer ? input : input.buffer;
         const dish = new Dish();
-        dish.set(input.buffer, Dish.ARRAY_BUFFER);
+        dish.set(input, Dish.ARRAY_BUFFER);
 
         if (ENVIRONMENT_IS_WORKER()) self.loadRequiredModules(recipeConfig);
 
