@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
+        ["clean:node", "clean:config", "exec:generateNodeIndex", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
@@ -383,10 +383,19 @@ module.exports = function (grunt) {
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
                     "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs",
                     "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
+            },
+            generateNodeIndex: {
+                command: [
+                    "echo '\n--- Regenerating node index ---'",
+                    "mkdir -p src/core/config/modules",
+                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
+                    "echo '[]\n' > src/core/config/OperationConfig.json",
+                    "node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs",
+                    "echo '--- Node index finished. ---\n'"
+                ].join(";"),
             },
             tests: {
                 command: "node --experimental-modules test/index.mjs"
