@@ -62,9 +62,7 @@ import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/SymmetricDifference";
 
-
 import "./tests/nodeApi/nodeApi";
-import "./tests/nodeApi/translateTo";
 
 let allTestsPassing = true;
 const testStatusCounts = {
