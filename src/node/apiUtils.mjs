@@ -1,12 +1,12 @@
 /**
- * Wrap operations for consumption in Node
+ * Wrap operations for consumption in Node.
  *
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 
-import Dish from "../core/Dish";
+import SyncDish from "./SyncDish";
 
 /**
  * Extract default arg value from operation argument
@@ -59,60 +59,35 @@ function transformArgs(originalArgs, newArgs) {
  * @returns {Function} The operation's run function, wrapped in
  * some type conversion logic
  */
-export function wrap(Operation) {
+export function wrap(opClass) {
     /**
      * Wrapped operation run function
+     * @param {*} input
+     * @param {Object[]} args
+     * @returns {SyncDish} operation's output, on a Dish.
+     * @throws {OperationError} if the operation throws one.
      */
-    return async (input, args=null, callback) => {
+    return (input, args=null) => {
+        const operation = new opClass();
 
-        if (callback && typeof callback !== "function") {
-            throw TypeError("Expected callback to be a function");
+        let dish;
+        if (input instanceof SyncDish) {
+            dish = input;
+        } else {
+            dish = new SyncDish();
+            const type = SyncDish.typeEnum(input.constructor.name);
+            dish.set(input, type);
         }
-
-        if (!callback && typeof args === "function") {
-            callback = args;
-            args = null;
-        }
-
-        const operation = new Operation();
-        const dish = new Dish();
-
-        const type = Dish.typeEnum(input.constructor.name);
-        dish.set(input, type);
 
         args = transformArgs(operation.args, args);
-        const transformedInput = await dish.get(operation.inputType);
-
-        // Allow callback or promsise / async-await
-        if (callback) {
-            try {
-                const out = operation.run(transformedInput, args);
-                callback(null, out);
-            } catch (e) {
-                callback(e);
-            }
-        } else {
-            return operation.run(transformedInput, args);
-        }
+        const transformedInput = dish.get(operation.inputType);
+        const result = operation.run(transformedInput, args);
+        return new SyncDish({
+            value: result,
+            type: operation.outputType
+        });
     };
 }
-
-
-/**
- * First draft
- * @namespace Api
- * @param input
- * @param type
- */
-export async function translateTo(input, type) {
-    const dish = new Dish();
-
-    const initialType = Dish.typeEnum(input.constructor.name);
-
-    dish.set(input, initialType);
-    return await dish.get(type);
-}
-
 
 /**
  * Extract properties from an operation by instantiating it and

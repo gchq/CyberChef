@@ -393,7 +393,7 @@ module.exports = function (grunt) {
                     "mkdir -p src/core/config/modules",
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
-                    "node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs",
+                    "node --experimental-modules src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index finished. ---\n'"
                 ].join(";"),
             },

@@ -13,8 +13,8 @@
 
 import fs from "fs";
 import path from "path";
-import * as operations from "../../operations/index";
-import { decapitalise } from "../../../node/apiUtils";
+import * as operations from "../../../core/operations/index";
+import { decapitalise } from "../../apiUtils";
 
 const dir = path.join(`${process.cwd()}/src/node`);
 if (!fs.existsSync(dir)) {
@@ -36,7 +36,7 @@ let code = `/**
 
 
 import "babel-polyfill";
-import { wrap, translateTo } from "./apiUtils";
+import { wrap } from "./apiUtils";
 import {
 `;
 
@@ -76,7 +76,6 @@ code += `    };
 }
 
 const chef = generateChef();
-chef.translateTo = translateTo;
 `;
 
 Object.keys(operations).forEach((op) => {
