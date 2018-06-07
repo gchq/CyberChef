@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["exec:generateConfig", "exec:tests"]);
+        ["exec:generateNodeIndex", "exec:generateConfig", "exec:tests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
             node: ["build/node/*"],
-            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
+            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs", "src/node/index.mjs"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             inlineScripts: ["build/prod/scripts.js"],
         },
