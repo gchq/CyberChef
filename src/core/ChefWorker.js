@@ -9,7 +9,7 @@
 import "babel-polyfill";
 import Chef from "./Chef";
 import OperationConfig from "./config/OperationConfig.json";
-import OpModules from "./config/modules/Default";
+import OpModules from "./config/modules/OpModules";
 
 // Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
@@ -104,12 +104,16 @@ async function bake(data) {
 
         self.postMessage({
             action: "bakeComplete",
-            data: response
+            data: Object.assign(response, {
+                id: data.id
+            })
         });
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: err
+            data: Object.assign(err, {
+                id: data.id
+            })
         });
     }
 }

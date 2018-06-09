@@ -15,6 +15,7 @@ import OptionsWaiter from "./OptionsWaiter";
 import HighlighterWaiter from "./HighlighterWaiter";
 import SeasonalWaiter from "./SeasonalWaiter";
 import BindingsWaiter from "./BindingsWaiter";
+import BackgroundWorkerWaiter from "./BackgroundWorkerWaiter";
 
 
 /**
@@ -68,6 +69,7 @@ class Manager {
         this.highlighter = new HighlighterWaiter(this.app, this);
         this.seasonal    = new SeasonalWaiter(this.app, this);
         this.bindings    = new BindingsWaiter(this.app, this);
+        this.background  = new BackgroundWorkerWaiter(this.app, this);
 
         // Object to store dynamic handlers to fire on elements that may not exist yet
         this.dynamicHandlers = {};
@@ -85,6 +87,7 @@ class Manager {
         this.controls.initComponents();
         this.controls.autoBakeChange();
         this.bindings.updateKeybList();
+        this.background.registerChefWorker();
         this.seasonal.load();
     }
 

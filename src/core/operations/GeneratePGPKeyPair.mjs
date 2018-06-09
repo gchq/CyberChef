@@ -9,8 +9,8 @@
 import Operation from "../Operation";
 import kbpgp from "kbpgp";
 import { getSubkeySize, ASP } from "../lib/PGP";
-import promisifyDefault from "es6-promisify";
-const promisify = promisifyDefault.promisify;
+import * as es6promisify from "es6-promisify";
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
  * Generate PGP Key Pair operation

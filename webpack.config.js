@@ -12,10 +12,10 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const banner = `/**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
- *   Copyright 2017 Crown Copyright
+ *   Copyright 2016 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
