@@ -10,7 +10,7 @@
 import "highlight.js/styles/vs.css";
 
 /* Frameworks */
-import "bootstrap/dist/css/bootstrap.css";
+import "./vendors/bootstrap.scss";
 import "bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css";
 import "bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
 

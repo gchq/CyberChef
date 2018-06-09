@@ -42,7 +42,7 @@
             }
 
             // Define loading messages
-            const loadingMsgs = [
+            var loadingMsgs = [
                 "Proving P = NP...",
                 "Computing 6 x 9...",
                 "Mining bitcoin...",
@@ -66,18 +66,18 @@
 
             // Shuffle array using Durstenfeld algorithm
             for (let i = loadingMsgs.length - 1; i > 0; --i) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const temp = loadingMsgs[i];
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = loadingMsgs[i];
                 loadingMsgs[i] = loadingMsgs[j];
                 loadingMsgs[j] = temp;
             }
 
             // Show next loading message and move it to the end of the array
             function changeLoadingMsg() {
-                const msg = loadingMsgs.shift();
+                var msg = loadingMsgs.shift();
                 loadingMsgs.push(msg);
                 try {
-                    const el = document.getElementById("preloader-msg");
+                    var el = document.getElementById("preloader-msg");
                     if (!el.classList.contains("loading"))
                         el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
@@ -86,6 +86,46 @@
 
             changeLoadingMsg();
             window.loadingMsgsInt = setInterval(changeLoadingMsg, (Math.random() * 2000) + 1500);
+
+            // If any errors are thrown during loading, handle them here
+            function loadingErrorHandler(e) {
+                function escapeHtml(str) {
+                    var HTML_CHARS = {
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#x27;", // &apos; not recommended because it's not in the HTML spec
+                        "/": "&#x2F;", // forward slash is included as it helps end an HTML entity
+                        "`": "&#x60;"
+                    };
+
+                    return str.replace(/[&<>"'/`]/g, function (match) {
+                        return HTML_CHARS[match];
+                    });
+                }
+
+                var msg = e.message +
+                    (e.filename ? "\nFilename: " + e.filename : "") +
+                    (e.lineno ? "\nLine: " + e.lineno : "") +
+                    (e.colno ? "\nColumn: " + e.colno : "") +
+                    (e.error ? "\nError: " + e.error : "") +
+                    "\nUser-Agent: " + navigator.userAgent +
+                    "\nCyberChef version: <%= htmlWebpackPlugin.options.version %>";
+
+                clearInterval(window.loadingMsgsInt);
+                document.getElementById("preloader").remove();
+                document.getElementById("preloader-msg").remove();
+                document.getElementById("preloader-error").innerHTML =
+                    "CyberChef encountered an error while loading.<br><br>" +
+                    "The following browser versions are supported:" +
+                    "<ul><li>Google Chrome 40+</li><li>Mozilla Firefox 35+</li><li>Microsoft Edge 14+</li></ul>" +
+                    "Your user agent is:<br>" + escapeHtml(navigator.userAgent) + "<br><br>" +
+                    "If your browser is supported, please <a href='https://github.com/gchq/CyberChef/issues/new'>" +
+                    "raise an issue</a> including the following details:<br><br>" +
+                    "<pre>" + escapeHtml(msg) + "</pre>";
+            };
+            window.addEventListener("error", loadingErrorHandler);
         </script>
         <% if (htmlWebpackPlugin.options.inline) { %>
             <meta name="robots" content="noindex" />
@@ -100,9 +140,12 @@
         <div id="loader-wrapper">
             <div id="preloader" class="loader"></div>
             <div id="preloader-msg" class="loading-msg"></div>
+            <div id="preloader-error" class="loading-error"></div>
         </div>
         <!-- End preloader overlay -->
-        <span id="edit-favourites" class="btn btn-secondary btn-sm"><img aria-hidden="true" src="<%- require('../static/images/favourite-16x16.png') %>" alt="Star Icon"/> Edit</span>
+        <button type="button" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">
+            <i class="material-icons">star</i>
+        </button>
         <div id="alert" class="alert alert-danger">
             <button type="button" class="close" id="alert-close">&times;</button>
             <span id="alert-content"></span>
@@ -142,32 +185,38 @@
                 </div>
 
                 <div id="recipe" class="split split-horizontal no-select">
-                    <div class="title no-select">Recipe</div>
+                    <div class="title no-select">
+                        Recipe
+                        <span class="float-right">
+                            <button type="button" class="btn btn-danger bmd-btn-icon" id="save" data-toggle="tooltip" title="Save recipe">
+                                <i class="material-icons">save</i>
+                            </button>
+                            <button type="button" class="btn btn-danger bmd-btn-icon" id="load" data-toggle="tooltip" title="Load recipe">
+                                <i class="material-icons">folder</i>
+                            </button>
+                            <button type="button" class="btn btn-danger bmd-btn-icon" id="clr-recipe" data-toggle="tooltip" title="Clear recipe">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </span>
+                    </div>
                     <ul id="rec-list" class="list-area no-select"></ul>
 
                     <div id="controls" class="no-select">
-                        <div id="operational-controls">
-                            <div id="bake-group">
-                                <button type="button" class="btn btn-success btn-lg" id="bake">
-                                    <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
-                                    <span>Bake!</span>
-                                </button>
-                                <label class="btn btn-success btn-lg" id="auto-bake-label" for="auto-bake">
-                                    <input type="checkbox" checked="checked" id="auto-bake">
-                                    <div>Auto Bake</div>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <div class="mx-1 checkbox">
+                                <label>
+                                    <input type="checkbox" checked="checked" id="auto-bake"> Auto Bake
                                 </label>
                             </div>
-
-                            <div class="btn-group" style="padding-top: 10px;">
-                                <button type="button" class="btn btn-secondary" id="step"><img aria-hidden="true" src="<%- require('../static/images/step-16x16.png') %>" alt="Footstep Icon"/> Step through</button>
-                                <button type="button" class="btn btn-secondary" id="clr-breaks"><img aria-hidden="true" src="<%- require('../static/images/erase-16x16.png') %>" alt="Eraser Icon"/> Clear breakpoints</button>
-                            </div>
-                        </div>
-
-                        <div class="btn-group-vertical" id="extra-controls">
-                            <button type="button" class="btn btn-secondary" id="save"><img aria-hidden="true" src="<%- require('../static/images/save-16x16.png') %>" alt="Save Icon"/> Save recipe</button>
-                            <button type="button" class="btn btn-secondary" id="load"><img aria-hidden="true" src="<%- require('../static/images/open_yellow-16x16.png') %>" alt="Open Icon"/> Load recipe</button>
-                            <button type="button" class="btn btn-secondary" id="clr-recipe"><img aria-hidden="true" src="<%- require('../static/images/clean-16x16.png') %>" alt="Broom Icon"/> Clear recipe</button>
+                            <button type="button" class="mx-1 btn btn-outline-secondary" id="step" data-toggle="tooltip" title="Step through the recipe">
+                                <!-- <i class="material-icons">directions_walk</i> -->
+                                Step
+                            </button>
+                            <button type="button" class="mx-1 btn btn-success btn-raised" id="bake">
+                                <!-- <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/> -->
+                                <!-- <i class="material-icons">restaurant</i> -->
+                                <span>Bake!</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -176,10 +225,14 @@
                     <div id="input" class="split no-select">
                         <div class="title no-select">
                             <label for="input-text">Input</label>
-                            <div class="btn-group io-btn-group">
-                                <button type="button" class="btn btn-secondary btn-sm" id="clr-io"><img aria-hidden="true" src="<%- require('../static/images/recycle-16x16.png') %>" alt="Recycle Icon"/> Clear I/O</button>
-                                <button type="button" class="btn btn-secondary btn-sm" id="reset-layout"><img aria-hidden="true" src="<%- require('../static/images/layout-16x16.png') %>" alt="Grid Icon"/> Reset layout</button>
-                            </div>
+                            <span class="float-right">
+                                <button type="button" class="btn btn-danger bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                                <button type="button" class="btn btn-info bmd-btn-icon" id="reset-layout" data-toggle="tooltip" title="Reset pane layout">
+                                    <i class="material-icons">view_compact</i>
+                                </button>
+                            </span>
                             <div class="io-info" id="input-info"></div>
                             <div class="io-info" id="input-selection-info"></div>
                         </div>
@@ -207,13 +260,23 @@
                     <div id="output" class="split">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
-                            <div class="btn-group io-btn-group">
-                                <button type="button" class="btn btn-secondary btn-sm" id="save-to-file" title="Save to file"><img aria-hidden="true" src="<%- require('../static/images/save_as-16x16.png') %>" alt="Save Icon"/> Save to file</button>
-                                <button type="button" class="btn btn-secondary btn-sm" id="copy-output" title="Copy output"><img aria-hidden="true" src="<%- require('../static/images/copy-16x16.png') %>" alt="Copy Icon"/> Copy raw output</button>
-                                <button type="button" class="btn btn-secondary btn-sm" id="switch" title="Move output to input"><img aria-hidden="true" src="<%- require('../static/images/switch-16x16.png') %>" alt="Switch Icon"/> Move output to input</button>
-                                <button type="button" class="btn btn-secondary btn-sm" id="undo-switch" title="Undo move" disabled="disabled"><img aria-hidden="true" src="<%- require('../static/images/undo-16x16.png') %>" alt="Undo Icon"/> Undo</button>
-                                <button type="button" class="btn btn-secondary btn-sm" id="maximise-output" title="Maximise"><img aria-hidden="true" src="<%- require('../static/images/maximise-16x16.png') %>" alt="Maximise Icon"/> Max</button>
-                            </div>
+                            <span class="float-right">
+                                <button type="button" class="btn btn-danger bmd-btn-icon" id="save-to-file" data-toggle="tooltip" title="Save output to file">
+                                    <i class="material-icons">save</i>
+                                </button>
+                                <button type="button" class="btn btn-danger bmd-btn-icon" id="copy-output" data-toggle="tooltip" title="Copy raw output to the clipboard">
+                                    <i class="material-icons">content_copy</i>
+                                </button>
+                                <button type="button" class="btn btn-danger bmd-btn-icon" id="switch" data-toggle="tooltip" title="Move output to input">
+                                    <i class="material-icons">loop</i>
+                                </button>
+                                <button type="button" class="btn btn-warning bmd-btn-icon" id="undo-switch" data-toggle="tooltip" title="Undo" disabled="disabled">
+                                    <i class="material-icons">undo</i>
+                                </button>
+                                <button type="button" class="btn btn-danger bmd-btn-icon" id="maximise-output" data-toggle="tooltip" title="Maximise output pane">
+                                    <i class="material-icons">fullscreen</i>
+                                </button>
+                            </span>
                             <div class="io-info" id="output-info"></div>
                             <div class="io-info" id="output-selection-info"></div>
                             <span id="stale-indicator" title="The output is stale.&#10;The input or recipe has changed since this output was generated. Bake again to get the new value.">&#x1F551;</span>

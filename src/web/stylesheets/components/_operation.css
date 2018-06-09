@@ -18,13 +18,13 @@
     border-right: none;
 }
 
-.arg-group {
+/* .arg-group {
     display: table;
     width: 100%;
     margin-top: 10px;
-}
+} */
 
-.arg-group-text {
+/* .arg-group-text {
     display: block;
 }
 
@@ -33,21 +33,21 @@
     width: auto;
     margin-right: 30px;
     height: 34px;
-}
+} */
 
-.inline-args input[type="checkbox"] {
+/* .inline-args input[type="checkbox"] {
     margin-top: 10px;
-}
+} */
 
-.inline-args input[type="number"] {
+/* .inline-args input[type="number"] {
     width: 100px;
+} */
+
+.op-title {
+    font-weight: var(--op-title-font-weight);
 }
 
-.arg-title {
-    font-weight: var(--arg-title-font-weight);
-}
-
-.arg-input {
+/* .arg-input {
     display: table-cell;
     width: 100%;
     padding: 6px 12px;
@@ -60,9 +60,9 @@
     border: 1px solid var(--arg-border-colour);
     font-family: var(--fixed-width-font-family);
     text-overflow: ellipsis;
-}
+} */
 
-.short-string {
+/* .short-string {
     width: 150px;
 }
 
@@ -122,7 +122,7 @@ textarea.arg {
 
 button.dropdown-toggle {
     background-color: var(--secondary-background-colour);
-}
+} */
 
 .register-list {
     background-color: var(--fc-operation-border-colour);

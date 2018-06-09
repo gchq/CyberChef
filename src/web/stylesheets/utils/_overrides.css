@@ -8,6 +8,31 @@
 
 /* Bootstrap */
 
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+/*
 button,
 a:focus {
     outline: none;
@@ -54,20 +79,21 @@ a:focus {
     color: var(--btn-success-hover-font-colour);
     background-color: var(--btn-success-hover-bg-colour);
     border-color: var(--btn-success-hover-border-colour);
-}
+}*/
 
-.btn,
+/*.btn,
 .btn-lg,
 .nav-tabs>li>a,
 .form-control,
 .popover,
 .alert,
+.panel,
 .modal-content,
 .tooltip-inner,
 .dropdown-menu,
 .input-group-addon {
     border-radius: 0 !important;
-}
+}*/
 
 .btn.dropdown-toggle {
     height: 34px;

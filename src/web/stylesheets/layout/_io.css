@@ -32,7 +32,7 @@
 
 .textarea-wrapper {
     position: absolute;
-    top: 43px;
+    top: var(--title-height);
     bottom: 0;
     width: 100%;
     overflow: hidden;
@@ -103,18 +103,13 @@
     display: none;
 }
 
-.io-btn-group {
-    float: right;
-    margin-top: -4px;
-}
-
 .io-info {
     margin-right: 20px;
-    margin-top: -4px;
+    margin-top: 1px;
     float: right;
     height: 30px;
     text-align: right;
-    line-height: 10px;
+    line-height: 12px;
     font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
@@ -145,6 +140,6 @@
     line-height: var(--primary-line-height);
     color: var(--primary-font-colour);
     top: 50%;
-    
+
     transition: all 0.5s ease;
 }

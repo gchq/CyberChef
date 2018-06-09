@@ -7,16 +7,20 @@
  */
 
 :root {
-    --title-height: 43px;
+    --title-height: 48px;
 }
 
 .title {
-    padding: 10px;
+    padding: 8px;
+    padding-left: 20px;
+    padding-right: 12px;
     height: var(--title-height);
     border-bottom: 1px solid var(--primary-border-colour);
     font-weight: var(--title-weight);
+    font-size: var(--title-size);
     color: var(--title-colour);
     background-color: var(--title-background-colour);
+    line-height: calc(var(--title-height) - 20px);
 }
 
 .list-area {

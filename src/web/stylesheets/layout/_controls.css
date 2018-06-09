@@ -7,8 +7,7 @@
  */
 
 :root {
-    --controls-height: 130px;
-    --controls-division: 65%;
+    --controls-height: 80px;
 }
 
 #controls {
@@ -18,48 +17,5 @@
     bottom: 0;
     padding: 10px;
     border-top: 1px solid var(--primary-border-colour);
-    background-color: var(--secondary-background-colour);
-}
-
-#operational-controls {
-    width: var(--controls-division);
-    float: left;
-    text-align: center;
-}
-
-#bake-group {
-    display: table;
-    width: 100%;
-}
-
-#bake {
-    display: table-cell;
-    width: 100%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-#auto-bake-label {
-    display: table-cell;
-    padding: 1px;
-    line-height: 1.35;
-    width: 60px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: 1px solid transparent;
-}
-
-#auto-bake-label:hover {
-    border-left-color: var(--btn-success-hover-border-colour);
-}
-
-#auto-bake-label div {
-    font-size: 10px;
-    padding: 2px;
-}
-
-#extra-controls {
-    float: right;
-    width: calc(100% - var(--controls-division));
-    padding-left: 10px;
+    background-color: var(--primary-background-colour);
 }

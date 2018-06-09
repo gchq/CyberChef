@@ -1,5 +1,5 @@
 import sm from "sitemap";
-import OperationConfig from "../../core/config/MetaConfig.js";
+import OperationConfig from "../../core/config/OperationConfig.json";
 
 
 /**
@@ -20,7 +20,7 @@ sitemap.add({
     priority: 1.0
 });
 
-for (let op in OperationConfig) {
+for (const op in OperationConfig) {
     sitemap.add({
         url: `/?op=${encodeURIComponent(op)}`,
         changeFreq: "yearly",

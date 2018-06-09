@@ -30,6 +30,7 @@
 
     --title-colour: #424242;
     --title-weight: bold;
+    --title-size: 16px;
     --title-background-colour: #fafafa;
 
     --banner-font-colour: #468847;
@@ -67,7 +68,7 @@
 
 
     /* Operation arguments */
-    --arg-title-font-weight: bold;
+    --op-title-font-weight: bold;
     --arg-input-height: 34px;
     --arg-input-line-height: 20px;
     --arg-input-font-size: 15px;
