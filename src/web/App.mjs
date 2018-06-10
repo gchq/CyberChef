@@ -472,9 +472,8 @@ class App {
                 } else if (args[j].classList.contains("toggle-string")) {
                     // toggleString
                     args[j].value = recipeConfig[i].args[j].string;
-                    args[j].previousSibling.children[0].innerHTML =
-                        Utils.escapeHtml(recipeConfig[i].args[j].option) +
-                        " <span class='caret'></span>";
+                    args[j].parentNode.parentNode.querySelector("button").innerHTML =
+                        Utils.escapeHtml(recipeConfig[i].args[j].option);
                 } else {
                     // all others
                     args[j].value = recipeConfig[i].args[j];
@@ -703,42 +702,6 @@ class App {
      */
     popState(e) {
         this.loadURIParams();
-    }
-
-
-    /**
-     * Function to call an external API from this view.
-     */
-    callApi(url, type, data, dataType, contentType) {
-        type = type || "POST";
-        data = data || {};
-        dataType = dataType || undefined;
-        contentType = contentType || "application/json";
-
-        let response = null,
-            success = false;
-
-        $.ajax({
-            url: url,
-            async: false,
-            type: type,
-            data: data,
-            dataType: dataType,
-            contentType: contentType,
-            success: function(data) {
-                success = true;
-                response = data;
-            },
-            error: function(data) {
-                success = false;
-                response = data;
-            },
-        });
-
-        return {
-            success: success,
-            response: response
-        };
     }
 
 }

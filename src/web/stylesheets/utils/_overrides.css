@@ -32,6 +32,10 @@
     -webkit-font-smoothing: antialiased;
 }
 
+.form-group {
+    margin-bottom: 0;
+}
+
 /*
 button,
 a:focus {
@@ -95,17 +99,16 @@ a:focus {
     border-radius: 0 !important;
 }*/
 
-.btn.dropdown-toggle {
-    height: 34px;
-}
 
 input[type="search"] {
     -webkit-appearance: searchfield;
+    appearance: searchfield;
     box-shadow: none;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: searchfield-cancel-button;
+    appearance: searchfield-cancel-button;
 }
 
 .modal {

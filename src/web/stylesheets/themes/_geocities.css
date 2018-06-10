@@ -65,9 +65,6 @@
 
     /* Operation arguments */
     --op-title-font-weight: bold;
-    --arg-input-height: 34px;
-    --arg-input-line-height: 20px;
-    --arg-input-font-size: 15px;
     --arg-font-colour: white;
     --arg-background: black;
     --arg-border-colour: lime;

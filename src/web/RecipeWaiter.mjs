@@ -39,7 +39,7 @@ class RecipeWaiter {
             sort: true,
             animation: 0,
             delay: 0,
-            filter: ".arg-input,.arg",
+            filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
@@ -305,7 +305,7 @@ class RecipeWaiter {
                 } else if (ingList[j].classList.contains("toggle-string")) {
                     // toggleString
                     ingredients[j] = {
-                        option: ingList[j].previousSibling.children[0].textContent.slice(0, -1),
+                        option: ingList[j].parentNode.parentNode.querySelector("button").textContent,
                         string: ingList[j].value
                     };
                 } else if (ingList[j].getAttribute("type") === "number") {
@@ -417,10 +417,13 @@ class RecipeWaiter {
      * @param {event} e
      */
     dropdownToggleClick(e) {
-        const el = e.target;
-        const button = el.parentNode.parentNode.previousSibling;
+        e.stopPropagation();
+        e.preventDefault();
 
-        button.innerHTML = el.textContent + " <span class='caret'></span>";
+        const el = e.target;
+        const button = el.parentNode.parentNode.querySelector("button");
+
+        button.innerHTML = el.textContent;
         this.ingChange();
     }
 

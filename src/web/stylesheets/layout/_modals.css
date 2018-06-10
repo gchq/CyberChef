@@ -24,11 +24,6 @@
     height: 28px;
     padding: 3px 10px;
     vertical-align: middle;
-    font-size: calc(var(--arg-input-font-size) - 1px);
-    line-height: var(--arg-input-line-height);
-    color: var(--arg-font-colour);
-    background-color: var(--arg-background);
-    border: 1px solid var(--primary-border-colour);
 }
 
 .option-item select {
