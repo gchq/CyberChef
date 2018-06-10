@@ -202,21 +202,24 @@
                     <ul id="rec-list" class="list-area no-select"></ul>
 
                     <div id="controls" class="no-select">
-                        <div class="d-flex justify-content-end align-items-center">
-                            <div class="mx-1 checkbox">
-                                <label>
-                                    <input type="checkbox" checked="checked" id="auto-bake"> Auto Bake
-                                </label>
-                            </div>
-                            <button type="button" class="mx-1 btn btn-outline-secondary" id="step" data-toggle="tooltip" title="Step through the recipe">
-                                <!-- <i class="material-icons">directions_walk</i> -->
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="mx-2 btn btn-lg btn-outline-secondary" id="step" data-toggle="tooltip" title="Step through the recipe">
                                 Step
                             </button>
-                            <button type="button" class="mx-1 btn btn-success btn-raised" id="bake">
-                                <!-- <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/> -->
-                                <!-- <i class="material-icons">restaurant</i> -->
+
+                            <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake">
+                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
                                 <span>Bake!</span>
                             </button>
+
+                            <div class="form-group" style="display: contents;">
+                                <div class="mx-1 checkbox">
+                                    <label id="auto-bake-label">
+                                        <input type="checkbox" checked="checked" id="auto-bake">
+                                        <br>Auto Bake
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

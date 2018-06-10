@@ -6,9 +6,6 @@
 
 import HTMLIngredient from "./HTMLIngredient";
 
-const INFO_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAByElEQVR4XqVTzWoaYRQ9KZJmoVaS1J1QiYTIuOgqi9lEugguQhYhdGs3hTyAi0CWJTvJIks30ZBNsimUtlqkVLoQCuJsphRriyFjabWtEyf/Rv3iWcwwymTlgQuH851z5hu43wRGkEwmXwCIA4hiGAUAmUQikQbhEHwyGCWVSglVVUW73RYmyKnxjB56ncJ6NpsVxHGrI/ZLuniVb3DIqQmCHnrNkgcggNeSJPlisRgyJR2b737j/TcDsQUPwv6H5NR4BnroZcb6Z16N2PvyX6yna9Z8qp6JQ0Uf0ughmGHWBSAuyzJqrQ7eqKewY/dzE363C71e39LoWQq5wUwul4uzIBoIBHD01RgyrkZ8eDbvwUWnj623v2DHx4qB51IAzLIAXq8XP/7W0bUVVJtXWIk8wvlN364TA+/1IDMLwmWK/Hq3axmhaBdoGLeklm73ElaBYRgIzkyifHIOO4QQJKM3oJcZq6CgaVp0OTyHw9K/kQI4FiyHfdC0n2CWe5ApFosIPZ7C2tNpXpcDOehGyD/FIbd0euhlhllzFxRzC3fydbG4XRYbB9/tQ41n9m1U7l3lyp9LkfygiZeZCoecmtMqj/+Yxn7Od3v0j50qCO3zAAAAAElFTkSuQmCC";
-const REMOVE_ICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABwklEQVR42qRTPU8CQRB9K2CCMRJ6NTQajOUaqfxIbLCRghhjQixosLAgFNBQ3l8wsabxLxBJbCyVUBiMCVQEQkOEKBbCnefM3p4eohWXzM3uvHlv52b2hG3bmOWZw4yPn1/XQkCQ9wFxcgZZ0QLKpifpN8Z1n1L13griBBjHhYK0nMT4b+wom53ClAAFQacZJ/m8rNfrSOZy0vxJjPP6IJ2WzWYTO6mUwiwtILiJJSHUKVSWkchkZK1WQzQaxU2pVGUglkjIbreLUCiEx0qlStlFCpfPiPstYDtVKJH9ZFI2Gw1FGA6H6LTbCAaDeGu1FJl6UuYjpwTGzucokZW1NfnS66kyfT4fXns9RaZmlgNcuhZQU+jowLzuOK/HgwEW3E5ZlhLXVWKk11P3wNYNWw+HZdA0sUgx1zjGmD05nckx0ilGjBJdUq3fr7K5e8bGf43RdL7fOPSQb4lI8SLbrUfkUIuY32VTI1bJn5BqDnh4Dodt9ryPUDzyD7aquWoKQohl2i9sAbubwPkTcHkP3FHsg+yT+7sN7G0AF3Xg6sHB3onbdgWWKBDQg/BcTuVt51dQA/JrnIcyIu6rmPV3/hJgACPc0BMEYTg+AAAAAElFTkSuQmCC";
-
 
 /**
  * Object to handle the creation of operations.
@@ -57,11 +54,7 @@ class HTMLOperation {
         html += ">" + this.name;
 
         if (removeIcon) {
-            html += `<img src='data:image/png;base64,${REMOVE_ICON}' class='op-icon remove-icon'>`;
-        }
-
-        if (this.description) {
-            html += `<img src='data:image/png;base64,${INFO_ICON}' class='op-icon'>`;
+            html += "<i class='material-icons remove-icon op-icon'>delete</i>";
         }
 
         html += "</li>";
@@ -83,8 +76,8 @@ class HTMLOperation {
         }
 
         html += `<div class="recip-icons">
-            <div class="breakpoint" title="Set breakpoint" break="false"></div>
-            <div class="disable-icon recip-icon" title="Disable operation" disabled="false"></div>
+            <i class="material-icons breakpoint" title="Set breakpoint" break="false">pause</i>
+            <i class="material-icons disable-icon" title="Disable operation" disabled="false">not_interested</i>
         </div>
         <div class="clearfix">&nbsp;</div>`;
 

@@ -28,7 +28,7 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    -webkit-font-feature-settings: 'liga';
+    font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 }
 
@@ -101,13 +101,10 @@ a:focus {
 
 
 input[type="search"] {
-    -webkit-appearance: searchfield;
     appearance: searchfield;
-    box-shadow: none;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
-    -webkit-appearance: searchfield-cancel-button;
     appearance: searchfield-cancel-button;
 }
 

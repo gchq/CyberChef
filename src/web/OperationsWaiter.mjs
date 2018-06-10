@@ -285,37 +285,6 @@ class OperationsWaiter {
         this.app.resetFavourites();
     }
 
-
-    /**
-     * Handler for opIcon mouseover events.
-     * Hides any popovers already showing on the operation so that there aren't two at once.
-     *
-     * @param {event} e
-     */
-    opIconMouseover(e) {
-        const opEl = e.target.parentNode;
-        if (e.target.getAttribute("data-toggle") === "popover") {
-            $(opEl).popover("hide");
-        }
-    }
-
-
-    /**
-     * Handler for opIcon mouseleave events.
-     * If this icon created a popover and we're moving back to the operation element, display the
-     *   operation popover again.
-     *
-     * @param {event} e
-     */
-    opIconMouseleave(e) {
-        const opEl = e.target.parentNode;
-        const toEl = e.toElement || e.relatedElement;
-
-        if (e.target.getAttribute("data-toggle") === "popover" && toEl === opEl) {
-            $(opEl).popover("show");
-        }
-    }
-
 }
 
 export default OperationsWaiter;

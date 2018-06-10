@@ -240,7 +240,7 @@ class App {
     initialiseSplitter() {
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: [240, 325, 450],
+            minSize: [240, 370, 450],
             gutterSize: 4
         });
 
