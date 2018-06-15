@@ -14,7 +14,15 @@ import SyncDish from "./SyncDish";
  */
 function extractArg(arg) {
     if (arg.type === "option" || arg.type === "editableOption") {
-        return arg.value[0];
+        // pick default option if not already chosen
+        return typeof arg.value === "string" ? arg.value : arg.value[0];
+    }
+
+    if (arg.type === "toggleString") {
+        // ensure string and option exist when user hasn't defined
+        arg.string = arg.string || "";
+        arg.option = arg.option || arg.toggleValues[0];
+        return arg;
     }
 
     return arg.value;
@@ -24,8 +32,8 @@ function extractArg(arg) {
  * transformArgs
  *
  * Take the default args array and update with any user-defined
- * operation arguments. Allows user to define argyments in object style,
- * with accommodation name matching. Using named args in the API is more
+ * operation arguments. Allows user to define arguments in object style,
+ * with accommodating name matching. Using named args in the API is more
  * clear to the user.
  *
  * Argument name matching is case and space insensitive
@@ -42,8 +50,15 @@ function transformArgs(originalArgs, newArgs) {
                 return arg.name.toLowerCase().replace(/ /g, "") ===
                     key.toLowerCase().replace(/ /g, "");
             });
+
             if (index > -1) {
-                allArgs[index].value = newArgs[key];
+                const argument = allArgs[index];
+                if (["toggleString"].indexOf(argument.type) > -1) {
+                    argument.string = newArgs[key].string;
+                    argument.option = newArgs[key].option;
+                } else {
+                    argument.value = newArgs[key];
+                }
             }
         });
     }

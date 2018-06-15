@@ -9,6 +9,22 @@
  * @license Apache-2.0
  */
 
+/* eslint no-console: 0 */
+
+
+/**
+ * 
+ */
+const wrapRun = (run) => () => {
+    try {
+        run();
+    } catch (e) {
+        console.dir(e);
+        throw e;
+    }
+};
+
+
 /**
  * it - wrapper for assertions to provide a helpful description
  * to the TestRegister
@@ -37,7 +53,7 @@
 export function it(name, run) {
     return {
         name,
-        run
+        run: wrapRun(run),
     };
 }
 
