@@ -70,14 +70,6 @@ class HTMLIngredient {
                 break;
             case "toggleString":
                 html += `<div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>
-                        <div class="dropdown-menu toggle-dropdown">`;
-                for (i = 0; i < this.toggleValues.length; i++) {
-                    html += `<a class="dropdown-item" href="#">${this.toggleValues[i]}</a>`;
-                }
-                html += `</div>
-                    </div>
                     <div class="toggle-string">
                         <label for="${this.id}" class="bmd-label-floating toggle-string">${this.name}</label>
                         <input type="text"
@@ -88,6 +80,15 @@ class HTMLIngredient {
                             ${this.disabled ? "disabled" : ""}>
                         ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>
+                        <div class="dropdown-menu toggle-dropdown">`;
+                for (i = 0; i < this.toggleValues.length; i++) {
+                    html += `<a class="dropdown-item" href="#">${this.toggleValues[i]}</a>`;
+                }
+                html += `</div>
+                    </div>
+
                 </div>`;
                 break;
             case "number":

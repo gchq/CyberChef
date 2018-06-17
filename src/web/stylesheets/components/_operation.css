@@ -59,6 +59,26 @@ div.toggle-string {
     flex: 1;
 }
 
+.operation [class^='bmd-label'],
+.operation [class*=' bmd-label'],
+.operation label {
+    color: #388e3c;
+}
+
+.operation .is-focused [class^='bmd-label'],
+.operation .is-focused [class*=' bmd-label'],
+.operation .is-focused [class^='bmd-label'],
+.operation .is-focused [class*=' bmd-label'],
+.operation .is-focused label {
+    color: #1976d2;
+}
+
+.operation .form-control {
+    background-color: transparent;
+    border-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
+}
+
 .bmd-form-group.is-filled div.toggle-string label.bmd-label-floating,
 .bmd-form-group.is-focused div.toggle-string label.bmd-label-floating {
     left: unset;

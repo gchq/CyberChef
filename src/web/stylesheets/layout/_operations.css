@@ -31,32 +31,3 @@
     border: 2px dashed var(--rec-list-operation-font-colour) !important;
     padding: 8px 8px 9px 8px;
 }
-
-.operation input.form-control,
-.operation select.form-control,
-.operation textarea,
-.operation .bmd-label-floating,
-.operation .bmd-label-static {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.operation [class^='bmd-label'],
-.operation [class*=' bmd-label'],
-.operation label {
-    color: #388e3c;
-}
-
-.operation .is-focused [class^='bmd-label'],
-.operation .is-focused [class*=' bmd-label'],
-.operation .is-focused [class^='bmd-label'],
-.operation .is-focused [class*=' bmd-label'],
-.operation .is-focused label {
-    color: #1976d2;
-}
-
-.operation .form-control {
-    background-color: transparent;
-    border-color: var(--primary-border-colour);
-    color: var(--primary-font-colour);
-}
