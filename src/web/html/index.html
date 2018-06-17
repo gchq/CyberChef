@@ -156,7 +156,7 @@
                     <% if (htmlWebpackPlugin.options.inline) { %>
                         <span>Version <%= htmlWebpackPlugin.options.version %></span>
                     <% } else { %>
-                        <a href="cyberchef.htm" download>Download CyberChef<img aria-hidden="true" src="<%- require('../static/images/download-24x24.png') %>" alt="Download Icon"/></a>
+                        <a href="cyberchef.htm" download>Download CyberChef <i class="material-icons">file_download</i></a>
                     <% } %>
                 </div>
                 <div class="col" style="text-align: center;">
@@ -172,8 +172,8 @@
                     </span>
                 </div>
                 <div class="col" style="text-align: right; padding-right: 0;">
-                    <a href="#" id="options">Options<img aria-hidden="true" src="<%- require('../static/images/settings-22x22.png') %>" alt="Settings Icon"/></a>
-                    <a href="#" id="support" data-toggle="modal" data-target="#support-modal">About / Support<img aria-hidden="true" src="<%- require('../static/images/help-22x22.png') %>" alt="Question Mark Icon"/></a>
+                    <a href="#" id="options">Options <i class="material-icons">settings</i></a>
+                    <a href="#" id="support" data-toggle="modal" data-target="#support-modal">About / Support <i class="material-icons">help</i></a>
                 </div>
             </div>
             <div id="workspace-wrapper">
