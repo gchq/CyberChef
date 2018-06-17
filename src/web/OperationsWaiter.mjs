@@ -268,7 +268,7 @@ class OperationsWaiter {
      */
     saveFavouritesClick() {
         const favs = document.querySelectorAll("#edit-favourites-list li");
-        const favouritesList = Array.from(favs, e => e.textContent);
+        const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
 
         this.app.saveFavourites(favouritesList);
         this.app.loadFavourites();

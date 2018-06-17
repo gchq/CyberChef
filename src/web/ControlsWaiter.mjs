@@ -270,7 +270,10 @@ class ControlsWaiter {
         }
 
         // Populate textarea with first recipe
-        document.getElementById("load-text").value = savedRecipes.length ? savedRecipes[0].recipe : "";
+        const loadText = document.getElementById("load-text");
+        const evt = new Event("change");
+        loadText.value = savedRecipes.length ? savedRecipes[0].recipe : "";
+        loadText.dispatchEvent(evt);
     }
 
 

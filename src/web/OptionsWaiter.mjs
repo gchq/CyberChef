@@ -20,11 +20,6 @@ const OptionsWaiter = function(app, manager) {
  * @param {Object} options
  */
 OptionsWaiter.prototype.load = function(options) {
-    $(".option-item input:checkbox").bootstrapSwitch({
-        size: "small",
-        animate: false,
-    });
-
     for (const option in options) {
         this.app.options[option] = options[option];
     }
@@ -33,7 +28,7 @@ OptionsWaiter.prototype.load = function(options) {
     const cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
     let i;
     for (i = 0; i < cboxes.length; i++) {
-        $(cboxes[i]).bootstrapSwitch("state", this.app.options[cboxes[i].getAttribute("option")]);
+        cboxes[i].checked = this.app.options[cboxes[i].getAttribute("option")];
     }
 
     const nboxes = document.querySelectorAll("#options-body input[type=number]");
@@ -81,11 +76,11 @@ OptionsWaiter.prototype.resetOptionsClick = function() {
  * Modifies the option state and saves it to local storage.
  *
  * @param {event} e
- * @param {boolean} state
  */
-OptionsWaiter.prototype.switchChange = function(e, state) {
+OptionsWaiter.prototype.switchChange = function(e) {
     const el = e.target;
     const option = el.getAttribute("option");
+    const state = el.checked;
 
     log.debug(`Setting ${option} to ${state}`);
     this.app.options[option] = state;

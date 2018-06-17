@@ -11,7 +11,6 @@ import "./stylesheets/index.js";
 import "babel-polyfill";
 import "arrive";
 import "bootstrap-material-design";
-import "bootstrap-switch";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
 import * as CanvasComponents from "../core/lib/CanvasComponents";

@@ -29,6 +29,7 @@
     text-align: center;
     color: var(--primary-font-colour);
     font-size: 14px;
+    cursor: pointer;
 }
 
 #auto-bake-label .checkbox-decorator {
@@ -37,4 +38,8 @@
 
 #bake {
     box-shadow: none;
+}
+
+#controls .btn {
+    border-radius: 0;
 }
