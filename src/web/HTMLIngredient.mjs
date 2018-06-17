@@ -105,15 +105,15 @@ class HTMLIngredient {
             case "boolean":
                 html += `<div class="form-group inline">
                     <div class="checkbox">
-                    <label>
-                        <input type="checkbox"
-                            class="arg"
-                            id="${this.id}"
-                            arg-name="${this.name}"
-                            ${this.value ? " checked='checked' " : ""}
-                            ${this.disabled ? " disabled='disabled'" : ""}
-                            value="${this.name}"> ${this.name}
-                    </label>
+                        <label>
+                            <input type="checkbox"
+                                class="arg"
+                                id="${this.id}"
+                                arg-name="${this.name}"
+                                ${this.value ? " checked" : ""}
+                                ${this.disabled ? " disabled" : ""}
+                                value="${this.name}"> ${this.name}
+                        </label>
                     </div>
                 </div>`;
                 break;
@@ -243,6 +243,8 @@ class HTMLIngredient {
             input = link.parentNode.parentNode.parentNode.querySelector("input");
 
         input.value = link.getAttribute("value");
+        const evt = new Event("change");
+        input.dispatchEvent(evt);
 
         this.manager.recipe.ingChange();
     }
