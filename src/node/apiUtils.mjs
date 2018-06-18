@@ -56,6 +56,9 @@ function transformArgs(originalArgs, newArgs) {
                 if (["toggleString"].indexOf(argument.type) > -1) {
                     argument.string = newArgs[key].string;
                     argument.option = newArgs[key].option;
+                } else if (argument.type === "editableOption") {
+                    // takes key: "option", key: {name, val: "string"}, key: {name, val: [...]}
+                    argument.value = typeof newArgs[key] === "string" ? newArgs[key]: newArgs[key].value;
                 } else {
                     argument.value = newArgs[key];
                 }

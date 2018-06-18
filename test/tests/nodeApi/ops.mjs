@@ -27,6 +27,7 @@ import {
     bitShiftRight,
     cartesianProduct,
     CSSMinify,
+    toBase64,
 } from "../../../src/node/index";
 import TestRegister from "../../TestRegister";
 
@@ -115,6 +116,22 @@ color: white;
             preserveComments: true,
         });
         assert.strictEqual(result.toString(), "header {// comment width: 100%;color: white;}");
+    }),
+
+    it("toBase64: editableOption", () => {
+        const result = toBase64("some input", {
+            alphabet: {
+                value: "0-9A-W"
+            },
+        });
+        assert.strictEqual(result.toString(), "SPI1R1T0");
+    }),
+
+    it("toBase64: editableOptions key is value", () => {
+        const result = toBase64("some input", {
+            alphabet: "0-9A-W",
+        });
+        assert.strictEqual(result.toString(), "SPI1R1T0");
     })
 
 
