@@ -129,9 +129,12 @@
     visibility: hidden;
     transition: all 0.3s;
     margin-left: 5px;
-    font-size: larger;
-    font-weight: normal;
     cursor: help;
+}
+
+#stale-indicator i {
+    vertical-align: middle;
+    margin-bottom: 5px;
 }
 
 #output-loader .loading-msg {

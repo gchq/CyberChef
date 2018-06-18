@@ -205,7 +205,6 @@ class HTMLIngredient {
             default:
                 break;
         }
-        html += "</div>";
 
         return html;
     }

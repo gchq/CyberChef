@@ -108,6 +108,10 @@ input[type="search"]::-webkit-search-cancel-button {
     appearance: searchfield-cancel-button;
 }
 
+select.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
+    height: unset;
+}
+
 code {
     border: 0;
     white-space: pre-wrap;

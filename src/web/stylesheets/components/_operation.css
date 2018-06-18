@@ -7,7 +7,7 @@
  */
 
 .operation {
-    cursor: pointer;
+    cursor: grab;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -18,8 +18,27 @@
     border-right: none;
 }
 
+#rec-list .operation {
+    cursor: pointer;
+    padding: 14px;
+}
+
 .op-title {
     font-weight: var(--op-title-font-weight);
+}
+
+.ingredients {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 14px;
+}
+
+.ingredients > div {
+    grid-column: 1 / span 3;
+}
+
+.ingredients > div.inline {
+    grid-column: unset;
 }
 
 .arg {
@@ -33,26 +52,8 @@ select.arg {
 }
 
 textarea.arg {
-    min-height: 68px;
+    min-height: 74px;
     resize: vertical;
-}
-
-@media (min-width: 576px) {
-    .arg.inline {
-        display: inline-block;
-        width: auto;
-        vertical-align: middle;
-    }
-
-    .form-group.inline {
-        display: inline-block;
-        margin-right: 20px;
-        width: unset;
-    }
-
-    .input-group-append.inline {
-        display: inline-block;
-    }
 }
 
 div.toggle-string {
@@ -69,7 +70,8 @@ div.toggle-string {
 .operation .is-focused [class*=' bmd-label'],
 .operation .is-focused [class^='bmd-label'],
 .operation .is-focused [class*=' bmd-label'],
-.operation .is-focused label {
+.operation .is-focused label,
+.operation .checkbox label:hover {
     color: #1976d2;
 }
 

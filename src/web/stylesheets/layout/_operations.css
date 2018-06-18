@@ -31,3 +31,13 @@
     border: 2px dashed var(--rec-list-operation-font-colour) !important;
     padding: 8px 8px 9px 8px;
 }
+
+#categories a {
+    color: #1976d2;
+    cursor: pointer;
+}
+
+#categories a:hover,
+.op-list .operation:hover {
+    filter: brightness(98%);
+}

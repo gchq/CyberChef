@@ -241,7 +241,10 @@ class App {
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
             minSize: [240, 370, 450],
-            gutterSize: 4
+            gutterSize: 4,
+            onDrag: function() {
+                this.manager.recipe.adjustWidth();
+            }.bind(this)
         });
 
         this.ioSplitter = Split(["#input", "#output"], {

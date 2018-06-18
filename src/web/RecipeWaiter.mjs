@@ -479,6 +479,44 @@ class RecipeWaiter {
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
 
+    /**
+     * Adjusts the number of ingredient columns as the width of the recipe changes.
+     */
+    adjustWidth() {
+        const recList = document.getElementById("rec-list");
+
+        if (!this.ingredientRuleID) {
+            this.ingredientRuleID = null;
+            this.ingredientChildRuleID = null;
+
+            // Find relevant rules in the stylesheet
+            for (const i in document.styleSheets[0].cssRules) {
+                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
+                    this.ingredientRuleID = i;
+                }
+                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
+                    this.ingredientChildRuleID = i;
+                }
+            }
+        }
+
+        if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
+
+        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID],
+            ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
+
+        if (recList.clientWidth < 450) {
+            ingredientRule.style.gridTemplateColumns = "auto auto";
+            ingredientChildRule.style.gridColumn = "1 / span 2";
+        } else if (recList.clientWidth < 620) {
+            ingredientRule.style.gridTemplateColumns = "auto auto auto";
+            ingredientChildRule.style.gridColumn = "1 / span 3";
+        } else {
+            ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
+            ingredientChildRule.style.gridColumn = "1 / span 4";
+        }
+    }
+
 }
 
 export default RecipeWaiter;

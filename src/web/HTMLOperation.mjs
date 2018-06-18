@@ -69,13 +69,15 @@ class HTMLOperation {
      * @returns {string}
      */
     toFullHtml() {
-        let html = `<div class="op-title">${this.name}</div>`;
+        let html = `<div class="op-title">${this.name}</div>
+        <div class="ingredients">`;
 
         for (let i = 0; i < this.ingList.length; i++) {
             html += this.ingList[i].toHtml();
         }
 
-        html += `<div class="recip-icons">
+        html += `</div>
+        <div class="recip-icons">
             <i class="material-icons breakpoint" title="Set breakpoint" break="false">pause</i>
             <i class="material-icons disable-icon" title="Disable operation" disabled="false">not_interested</i>
         </div>

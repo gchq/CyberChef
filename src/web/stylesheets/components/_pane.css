@@ -12,7 +12,7 @@
 
 .title {
     padding: 8px;
-    padding-left: 20px;
+    padding-left: 12px;
     padding-right: 12px;
     height: var(--title-height);
     border-bottom: 1px solid var(--primary-border-colour);
@@ -20,7 +20,7 @@
     font-size: var(--title-size);
     color: var(--title-colour);
     background-color: var(--title-background-colour);
-    line-height: calc(var(--title-height) - 20px);
+    line-height: calc(var(--title-height) - 14px);
 }
 
 .list-area {
