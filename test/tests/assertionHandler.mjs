@@ -13,7 +13,7 @@
 
 
 /**
- * 
+ * Print useful stack on error
  */
 const wrapRun = (run) => () => {
     try {
