@@ -5,6 +5,9 @@
  *
  * Test node api operations
  *
+ * Aim of these tests is to ensure each arg type is
+ * handled correctly by the wrapper.
+ *
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -12,17 +15,18 @@
 
 import assert from "assert";
 import it from "../assertionHandler";
-import Utils from "../../../src/core/Utils";
-// import chef from "../../../src/node/index";
-// import OperationError from "../../../src/core/errors/OperationError";
-// import SyncDish from "../../../src/node/SyncDish";
 
 import {
     ADD,
     addLineNumbers,
     adler32Checksum,
     AESDecrypt,
-    AESEncrypt,
+    affineCipherDecode,
+    affineCipherEncode,
+    bifidCipherEncode,
+    bitShiftRight,
+    cartesianProduct,
+    CSSMinify,
 } from "../../../src/node/index";
 import TestRegister from "../../TestRegister";
 
@@ -63,21 +67,56 @@ TestRegister.addApiTests([
         assert.equal(result.toString(), "a slightly longer sampleinput?");
     }),
 
-    it("AES encrypt: toggleString and options", () => {
-        const result = AESEncrypt("something", {
-            key: {
-                string: "a key that is long enuff",
-                option: "utf8",
-            },
-            iv: {
-                string: "another iv",
-                option: "utf8",
-            },
-            mode: "ECB",
-            output: "Raw",
+    it("AffineCipherDecode: number input", () => {
+        const result = affineCipherDecode("some input", {
+            a: 7,
+            b: 4
         });
+        assert.strictEqual(result.toString(), "cuqa ifjgr");
+    }),
 
-        assert.equal(result.toString(), "Ä)\u0005DSa;F£nÐ");
+    it("affineCipherEncode: number input", () => {
+        const result = affineCipherEncode("some input", {
+            a: 11,
+            b: 6
+        });
+        assert.strictEqual(result.toString(), "weiy qtpsh");
+    }),
+
+    it("bifid cipher encode: string option", () => {
+        const result = bifidCipherEncode("some input", {
+            keyword: "mykeyword",
+        });
+        assert.strictEqual(result.toString(), "nmhs zmsdo");
+    }),
+
+    it("bitShiftRight: number and option", () => {
+        const result = bitShiftRight("some bits to shift", {
+            type: "Arithmetic shift",
+            amount: 1,
+        });
+        assert.strictEqual(result.toString(), "9762\u001014:9\u0010:7\u00109443:");
+    }),
+
+    it("cartesianProduct: binary string", () => {
+        const result = cartesianProduct("1:2\\n\\n3:4", {
+            itemDelimiter: ":",
+        });
+        assert.strictEqual(result.toString(), "(1,3):(1,4):(2,3):(2,4)");
+    }),
+
+    it("CSS minify: boolean", () => {
+        const input = `header {
+// comment
+width: 100%;
+color: white;
+}`;
+        const result = CSSMinify(input, {
+            preserveComments: true,
+        });
+        assert.strictEqual(result.toString(), "header {// comment width: 100%;color: white;}");
     })
+
+
 ]);
 
