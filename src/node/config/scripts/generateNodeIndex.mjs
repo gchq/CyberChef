@@ -39,7 +39,7 @@ let code = `/**
 
 
 import "babel-polyfill";
-import { wrap } from "./apiUtils";
+import { wrap, help } from "./apiUtils";
 import {
 `;
 
@@ -79,6 +79,14 @@ code += `    };
 }
 
 const chef = generateChef();
+chef.help = help([\n`;
+
+includedOperations.forEach((op) => {
+    code += `    core_${op},\n`;
+});
+
+code +=`]);
+
 `;
 
 includedOperations.forEach((op) => {

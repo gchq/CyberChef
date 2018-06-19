@@ -77,7 +77,7 @@ function transformArgs(originalArgs, newArgs) {
  * @returns {Function} The operation's run function, wrapped in
  * some type conversion logic
  */
-export function wrap(opClass) {
+export function wrap(OpClass) {
     /**
      * Wrapped operation run function
      * @param {*} input
@@ -86,7 +86,7 @@ export function wrap(opClass) {
      * @throws {OperationError} if the operation throws one.
      */
     return (input, args=null) => {
-        const operation = new opClass();
+        const operation = new OpClass();
 
         let dish;
         if (input instanceof SyncDish) {
@@ -107,48 +107,6 @@ export function wrap(opClass) {
     };
 }
 
-/**
- * Extract properties from an operation by instantiating it and
- * returning some of its properties for reference.
- * @param {Operation}  Operation - the operation to extract info from
- * @returns {Object} operation properties
- */
-function extractOperationInfo(Operation) {
-    const operation = new Operation();
-    return {
-        name: operation.name,
-        module: operation.module,
-        description: operation.description,
-        inputType: operation.inputType,
-        outputType: operation.outputType,
-        // Make arg names lowercase, no spaces to encourage non-sentence
-        // caps in repl
-        args: Object.assign([], operation.args).map((s) => {
-            s.name = decapitalise(s.name).replace(/ /g, "");
-            return s;
-        })
-    };
-}
-
-
-/**
- * @namespace Api
- * @param {Object} operations - an object filled with operations.
- * @param {String} searchTerm - the name of the operation to get help for.
- * Case and whitespace are ignored in search.
- * @returns {Object} listing properties of function
- */
-export function help(operations, searchTerm) {
-    if (typeof searchTerm === "string") {
-        const operation = operations[Object.keys(operations).find(o =>
-            o.toLowerCase() === searchTerm.replace(/ /g, "").toLowerCase())];
-        if (operation) {
-            return extractOperationInfo(operation);
-        }
-    }
-    return null;
-}
-
 
 /**
  * SomeName => someName
@@ -167,3 +125,50 @@ export function decapitalise(name) {
 
     return `${name.charAt(0).toLowerCase()}${name.substr(1)}`;
 }
+
+
+/**
+ * Extract properties from an operation by instantiating it and
+ * returning some of its properties for reference.
+ * @param {Operation}  Operation - the operation to extract info from
+ * @returns {Object} operation properties
+ */
+function extractOperationInfo(Operation) {
+    const operation = new Operation();
+    return {
+        name: decapitalise(operation.name).replace(/ /g, ""),
+        module: operation.module,
+        description: operation.description,
+        inputType: operation.inputType,
+        outputType: operation.outputType,
+        // Make arg names lowercase, no spaces to encourage non-sentence
+        // caps in repl
+        args: Object.assign([], operation.args).map((s) => {
+            s.name = decapitalise(s.name).replace(/ /g, "");
+            return s;
+        })
+    };
+}
+
+
+/**
+ * @namespace Api
+ * @param {Operation[]} operations - an object filled with operations.
+ * @param {String} searchTerm - the name of the operation to get help for.
+ * Case and whitespace are ignored in search.
+ * @returns {Function} taking search term and outputting description.
+ */
+export function help(operations) {
+    return function(searchTerm) {
+        if (typeof searchTerm === "string") {
+            const operation = operations
+                .find(o => o.name.toLowerCase() === searchTerm.replace(/ /g, "").toLowerCase());
+            if (operation) {
+                return extractOperationInfo(operation);
+            }
+            return null;
+        }
+        return null;
+    };
+}
+

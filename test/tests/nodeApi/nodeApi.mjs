@@ -108,4 +108,23 @@ TestRegister.addApiTests([
         const result = chef.fromBase32(chef.toBase32("32"));
         assert.equal(3 + result, 35);
     }),
+
+    it("chef.help: should exist", () => {
+        assert(chef.help);
+    }),
+
+    it("chef.help: should describe a operation", () => {
+        const result = chef.help("tripleDESDecrypt");
+        assert.strictEqual(result.name, "tripleDESDecrypt");
+        assert.strictEqual(result.module, "Ciphers");
+        assert.strictEqual(result.inputType, "string");
+        assert.strictEqual(result.outputType, "string");
+        assert.strictEqual(result.description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.");
+        assert.strictEqual(result.args.length, 5);
+    }),
+
+    it("chef.help: null for invalid operation", () => {
+        const result = chef.help("some invalid function name");
+        assert.strictEqual(result, null);
+    }),
 ]);
