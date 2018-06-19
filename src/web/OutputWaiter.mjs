@@ -267,9 +267,9 @@ class OutputWaiter {
         }
 
         if (success) {
-            this.app.alert("Copied raw output successfully.", "success", 2000);
+            this.app.alert("Copied raw output successfully.", 2000);
         } else {
-            this.app.alert("Sorry, the output could not be copied.", "danger", 2000);
+            this.app.alert("Sorry, the output could not be copied.", 3000);
         }
 
         // Clean up

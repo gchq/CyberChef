@@ -264,7 +264,7 @@ class InputWaiter {
         }
 
         if (r.hasOwnProperty("error")) {
-            this.app.alert(r.error, "danger", 10000);
+            this.app.alert(r.error, 10000);
         }
 
         if (r.hasOwnProperty("fileBuffer")) {

@@ -211,7 +211,6 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) {
             this.app.alert(
                 "Your security settings do not allow access to local storage so your recipe cannot be saved.",
-                "danger",
                 5000
             );
             return false;
@@ -221,7 +220,7 @@ class ControlsWaiter {
         const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
         if (!recipeName) {
-            this.app.alert("Please enter a recipe name", "danger", 2000);
+            this.app.alert("Please enter a recipe name", 3000);
             return;
         }
 
@@ -238,7 +237,7 @@ class ControlsWaiter {
         localStorage.savedRecipes = JSON.stringify(savedRecipes);
         localStorage.recipeId = recipeId;
 
-        this.app.alert("Recipe saved as \"" + recipeName + "\".", "success", 2000);
+        this.app.alert(`Recipe saved as "${recipeName}".`, 3000);
     }
 
 
@@ -322,7 +321,7 @@ class ControlsWaiter {
 
             $("#rec-list [data-toggle=popover]").popover();
         } catch (e) {
-            this.app.alert("Invalid recipe", "danger", 2000);
+            this.app.alert("Invalid recipe", 2000);
         }
     }
 

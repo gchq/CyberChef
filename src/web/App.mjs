@@ -105,7 +105,7 @@ class App {
     handleError(err, logToConsole) {
         if (logToConsole) log.error(err);
         const msg = err.displayStr || err.toString();
-        this.alert(msg, "danger", this.options.errorTimeout, !this.options.showErrors);
+        this.alert(msg, this.options.errorTimeout, !this.options.showErrors);
     }
 
 
@@ -319,8 +319,8 @@ class App {
             if (this.operations.hasOwnProperty(favourites[i])) {
                 validFavs.push(favourites[i]);
             } else {
-                this.alert("The operation \"" + Utils.escapeHtml(favourites[i]) +
-                    "\" is no longer available. It has been removed from your favourites.", "info");
+                this.alert(`The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. ` +
+                    "It has been removed from your favourites.");
             }
         }
         return validFavs;
@@ -336,7 +336,6 @@ class App {
         if (!this.isLocalStorageAvailable()) {
             this.alert(
                 "Your security settings do not allow access to local storage so your favourites cannot be saved.",
-                "danger",
                 5000
             );
             return false;
@@ -367,7 +366,7 @@ class App {
         const favourites = JSON.parse(localStorage.favourites);
 
         if (favourites.indexOf(name) >= 0) {
-            this.alert("'" + name + "' is already in your favourites", "info", 2000);
+            this.alert(`'${name}' is already in your favourites`, 3000);
             return;
         }
 
@@ -556,63 +555,35 @@ class App {
      * Pops up a message to the user and writes it to the console log.
      *
      * @param {string} str - The message to display (HTML supported)
-     * @param {string} style - The colour of the popup
-     *     "danger"  = red
-     *     "warning" = amber
-     *     "info"    = blue
-     *     "success" = green
-     * @param {number} timeout - The number of milliseconds before the popup closes automatically
+     * @param {number} timeout - The number of milliseconds before the alert closes automatically
      *     0 for never (until the user closes it)
      * @param {boolean} [silent=false] - Don't show the message in the popup, only print it to the
      *     console
      *
      * @example
-     * // Pops up a red box with the message "[current time] Error: Something has gone wrong!"
-     * // that will need to be dismissed by the user.
-     * this.alert("Error: Something has gone wrong!", "danger", 0);
+     * // Pops up a box with the message "Error: Something has gone wrong!" that will need to be
+     * // dismissed by the user.
+     * this.alert("Error: Something has gone wrong!", 0);
      *
-     * // Pops up a blue information box with the message "[current time] Happy Christmas!"
-     * // that will disappear after 5 seconds.
-     * this.alert("Happy Christmas!", "info", 5000);
+     * // Pops up a box with the message "Happy Christmas!" that will disappear after 5 seconds.
+     * this.alert("Happy Christmas!", 5000);
      */
-    alert(str, style, timeout, silent) {
+    alert(str, timeout, silent) {
         const time = new Date();
 
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
 
-        style = style || "danger";
         timeout = timeout || 0;
 
-        const alertEl = document.getElementById("alert"),
-            alertContent = document.getElementById("alert-content");
-
-        alertEl.classList.remove("alert-danger");
-        alertEl.classList.remove("alert-warning");
-        alertEl.classList.remove("alert-info");
-        alertEl.classList.remove("alert-success");
-        alertEl.classList.add("alert-" + style);
-
-        // If the box hasn't been closed, append to it rather than replacing
-        if (alertEl.style.display === "block") {
-            alertContent.innerHTML +=
-                "<br><br>[" + time.toLocaleTimeString() + "] " + str;
-        } else {
-            alertContent.innerHTML =
-                "[" + time.toLocaleTimeString() + "] " + str;
-        }
-
-        // Stop the animation if it is in progress
-        $("#alert").stop();
-        alertEl.style.display = "block";
-        alertEl.style.opacity = 1;
-
-        if (timeout > 0) {
-            clearTimeout(this.alertTimeout);
-            this.alertTimeout = setTimeout(function(){
-                $("#alert").slideUp(100);
-            }, timeout);
-        }
+        this.currentSnackbar = $.snackbar({
+            content: str,
+            timeout: timeout,
+            htmlAllowed: true,
+            onClose: () => {
+                this.currentSnackbar.remove();
+            }
+        });
     }
 
 
@@ -650,15 +621,6 @@ class App {
                     callback.bind(scope)(false);
                 this.confirmClosed = true;
             }.bind(this));
-    }
-
-
-    /**
-     * Handler for the alert close button click event.
-     * Closes the alert box.
-     */
-    alertCloseClick() {
-        document.getElementById("alert").style.display = "none";
     }
 
 

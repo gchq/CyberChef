@@ -183,7 +183,6 @@ class Manager {
 
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
-        document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
     }
 
 
