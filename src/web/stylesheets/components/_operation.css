@@ -162,7 +162,7 @@ div.toggle-string {
     border-color: var(--fc-operation-border-colour) !important;
 }
 
-.flow-control-op .form-group * { color: var(--fc-operation-font-colour) !important; }
+.flow-control-op .form-group *:not(.arg) { color: var(--fc-operation-font-colour) !important; }
 
 .flow-control-op.break {
     color: var(--fc-breakpoint-operation-font-colour) !important;
@@ -178,7 +178,8 @@ div.toggle-string {
     border-color: var(--disabled-border-colour) !important;
 }
 
-.disabled .form-group * { color: var(--disabled-font-colour) !important; }
+.disabled .form-group *,
+.flow-control-op.disabled .form-group * { color: var(--disabled-font-colour) !important; }
 
 .break .register-list {
     color: var(--fc-breakpoint-operation-font-colour) !important;
