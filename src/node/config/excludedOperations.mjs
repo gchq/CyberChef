@@ -12,4 +12,10 @@ export default  [
     "ConditionalJump",
     "Label",
     "Comment",
+
+    // Exclude file ops until HTML5 File Object can be mimicked
+    "Tar",
+    "Untar",
+    "Unzip",
+    "Zip",
 ];
