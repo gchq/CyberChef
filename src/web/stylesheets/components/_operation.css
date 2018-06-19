@@ -19,7 +19,6 @@
 }
 
 #rec-list .operation {
-    cursor: pointer;
     padding: 14px;
 }
 
@@ -88,7 +87,7 @@ div.toggle-string {
 
 .editable-option-menu {
     height: auto;
-    max-height: 300px;
+    max-height: 350px;
     overflow-x: hidden;
 }
 
@@ -108,6 +107,7 @@ div.toggle-string {
     float: right;
     color: #f44336;
     font-size: 18px;
+    cursor: pointer;
 }
 
 .recip-icons {
@@ -122,6 +122,7 @@ div.toggle-string {
     vertical-align: baseline;
     float: right;
     font-size: 18px;
+    cursor: pointer;
 }
 
 .disable-icon {
