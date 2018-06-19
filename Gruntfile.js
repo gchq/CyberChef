@@ -388,7 +388,7 @@ module.exports = function (grunt) {
             },
             generateOpsIndex: {
                 command: [
-                    "echo '\n--- Regenerating config files. ---'",
+                    "echo '\n--- Regenerating operations index. ---'",
                     "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "echo '\n--- Ops index generated. ---'",
                 ].join(";")
@@ -400,7 +400,7 @@ module.exports = function (grunt) {
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
                     "node --experimental-modules src/node/config/scripts/generateNodeIndex.mjs",
-                    "echo '--- Node index finished. ---\n'"
+                    "echo '--- Node index generated. ---\n'"
                 ].join(";"),
             },
             tests: {
