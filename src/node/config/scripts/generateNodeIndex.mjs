@@ -15,6 +15,9 @@ import fs from "fs";
 import path from "path";
 import * as operations from "../../../core/operations/index";
 import { decapitalise } from "../../apiUtils";
+import excludedOperations from "../excludedOperations";
+
+const includedOperations = Object.keys(operations).filter((op => excludedOperations.indexOf(op) === -1));
 
 const dir = path.join(`${process.cwd()}/src/node`);
 if (!fs.existsSync(dir)) {
@@ -40,7 +43,7 @@ import { wrap } from "./apiUtils";
 import {
 `;
 
-Object.keys(operations).forEach((op) => {
+includedOperations.forEach((op) => {
     // prepend with core_ to avoid name collision later.
     code += `    ${op} as core_${op},\n`;
 });
@@ -68,7 +71,7 @@ function generateChef() {
     return {
 `;
 
-Object.keys(operations).forEach((op) => {
+includedOperations.forEach((op) => {
     code += `        "${decapitalise(op)}": wrap(core_${op}),\n`;
 });
 
@@ -78,7 +81,7 @@ code += `    };
 const chef = generateChef();
 `;
 
-Object.keys(operations).forEach((op) => {
+includedOperations.forEach((op) => {
     code += `const ${decapitalise(op)} = chef.${decapitalise(op)};\n`;
 });
 
@@ -88,7 +91,7 @@ export default chef;
 export {
 `;
 
-Object.keys(operations).forEach((op) => {
+includedOperations.forEach((op) => {
     code += `    ${decapitalise(op)},\n`;
 });
 
