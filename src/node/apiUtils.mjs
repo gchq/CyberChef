@@ -13,9 +13,13 @@ import SyncDish from "./SyncDish";
  * @param {Object} arg - an arg from an operation
  */
 function extractArg(arg) {
-    if (arg.type === "option" || arg.type === "editableOption") {
+    if (arg.type === "option") {
         // pick default option if not already chosen
         return typeof arg.value === "string" ? arg.value : arg.value[0];
+    }
+
+    if (arg.type === "editableOption") {
+        return typeof arg.value === "string" ? arg.value : arg.value[0].value;
     }
 
     if (arg.type === "toggleString") {
@@ -96,7 +100,6 @@ export function wrap(OpClass) {
             const type = SyncDish.typeEnum(input.constructor.name);
             dish.set(input, type);
         }
-
         args = transformArgs(operation.args, args);
         const transformedInput = dish.get(operation.inputType);
         const result = operation.run(transformedInput, args);

@@ -132,8 +132,7 @@ color: white;
             alphabet: "0-9A-W",
         });
         assert.strictEqual(result.toString(), "SPI1R1T0");
-    })
-
+    }),
 
 ]);
 
