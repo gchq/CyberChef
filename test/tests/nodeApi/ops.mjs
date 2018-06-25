@@ -134,5 +134,10 @@ color: white;
         assert.strictEqual(result.toString(), "SPI1R1T0");
     }),
 
+    it("toBase64: editableOptions default", () => {
+        const result = toBase64("some input");
+        assert.strictEqual(result.toString(), "c29tZSBpbnB1dA==");
+    }),
+
 ]);
 

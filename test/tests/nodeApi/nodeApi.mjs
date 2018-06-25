@@ -127,4 +127,10 @@ TestRegister.addApiTests([
         const result = chef.help("some invalid function name");
         assert.strictEqual(result, null);
     }),
+
+    it("chef.help: takes a wrapped operation as input", () => {
+        const result = chef.help(chef.toBase32);
+        assert.strictEqual(result.name, "toBase32");
+        assert.strictEqual(result.module, "Default");
+    })
 ]);

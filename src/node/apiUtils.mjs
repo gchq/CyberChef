@@ -89,7 +89,7 @@ export function wrap(OpClass) {
      * @returns {SyncDish} operation's output, on a Dish.
      * @throws {OperationError} if the operation throws one.
      */
-    return (input, args=null) => {
+    const wrapped = (input, args=null) => {
         const operation = new OpClass();
 
         let dish;
@@ -108,6 +108,10 @@ export function wrap(OpClass) {
             type: operation.outputType
         });
     };
+
+    // used in chef.help
+    wrapped.opName = OpClass.name;
+    return wrapped;
 }
 
 
@@ -163,13 +167,21 @@ function extractOperationInfo(Operation) {
  */
 export function help(operations) {
     return function(searchTerm) {
+        let sanitised = false;
         if (typeof searchTerm === "string") {
-            const operation = operations
-                .find(o => o.name.toLowerCase() === searchTerm.replace(/ /g, "").toLowerCase());
-            if (operation) {
-                return extractOperationInfo(operation);
-            }
+            sanitised = searchTerm;
+        } else if (typeof searchTerm === "function") {
+            sanitised = searchTerm.opName;
+        }
+
+        if (!sanitised) {
             return null;
+        }
+
+        const operation = operations
+            .find(o => o.name.toLowerCase() === sanitised.replace(/ /g, "").toLowerCase());
+        if (operation) {
+            return extractOperationInfo(operation);
         }
         return null;
     };
