@@ -115,7 +115,7 @@ TestRegister.addApiTests([
 
     it("chef.help: should describe a operation", () => {
         const result = chef.help("tripleDESDecrypt");
-        assert.strictEqual(result.name, "tripleDESDecrypt");
+        assert.strictEqual(result.name, "Triple DES Decrypt");
         assert.strictEqual(result.module, "Ciphers");
         assert.strictEqual(result.inputType, "string");
         assert.strictEqual(result.outputType, "string");
@@ -130,7 +130,7 @@ TestRegister.addApiTests([
 
     it("chef.help: takes a wrapped operation as input", () => {
         const result = chef.help(chef.toBase32);
-        assert.strictEqual(result.name, "toBase32");
+        assert.strictEqual(result.name, "To Base32");
         assert.strictEqual(result.module, "Default");
     })
 ]);

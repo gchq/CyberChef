@@ -7,6 +7,7 @@
  */
 
 import SyncDish from "./SyncDish";
+import OperationConfig from "./config/OperationConfig.json";
 
 /**
  * Extract default arg value from operation argument
@@ -135,55 +136,30 @@ export function decapitalise(name) {
 
 
 /**
- * Extract properties from an operation by instantiating it and
- * returning some of its properties for reference.
- * @param {Operation}  Operation - the operation to extract info from
- * @returns {Object} operation properties
- */
-function extractOperationInfo(Operation) {
-    const operation = new Operation();
-    return {
-        name: decapitalise(operation.name).replace(/ /g, ""),
-        module: operation.module,
-        description: operation.description,
-        inputType: operation.inputType,
-        outputType: operation.outputType,
-        // Make arg names lowercase, no spaces to encourage non-sentence
-        // caps in repl
-        args: Object.assign([], operation.args).map((s) => {
-            s.name = decapitalise(s.name).replace(/ /g, "");
-            return s;
-        })
-    };
-}
-
-
-/**
  * @namespace Api
- * @param {Operation[]} operations - an object filled with operations.
  * @param {String} searchTerm - the name of the operation to get help for.
  * Case and whitespace are ignored in search.
- * @returns {Function} taking search term and outputting description.
+ * @returns {Object} Describe function matching searchTerm.
  */
-export function help(operations) {
-    return function(searchTerm) {
-        let sanitised = false;
-        if (typeof searchTerm === "string") {
-            sanitised = searchTerm;
-        } else if (typeof searchTerm === "function") {
-            sanitised = searchTerm.opName;
-        }
+export function help(searchTerm) {
+    let sanitised = false;
+    if (typeof searchTerm === "string") {
+        sanitised = searchTerm;
+    } else if (typeof searchTerm === "function") {
+        sanitised = searchTerm.opName;
+    }
 
-        if (!sanitised) {
-            return null;
-        }
-
-        const operation = operations
-            .find(o => o.name.toLowerCase() === sanitised.replace(/ /g, "").toLowerCase());
-        if (operation) {
-            return extractOperationInfo(operation);
-        }
+    if (!sanitised) {
         return null;
-    };
+    }
+
+    const key = Object.keys(OperationConfig)
+        .find(o => o.replace(/ /g, "").toLowerCase() === sanitised.replace(/ /g, "").toLowerCase());
+    if (key) {
+        const result = OperationConfig[key];
+        result.name = key;
+        return result;
+    }
+    return null;
 }
 

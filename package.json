@@ -39,7 +39,7 @@
     "exports-loader": "^0.7.0",
     "extract-text-webpack-plugin": "^4.0.0-alpha0",
     "file-loader": "^1.1.11",
-    "grunt": ">=1.0.2",
+    "grunt": "^1.0.3",
     "grunt-accessibility": "~6.0.0",
     "grunt-chmod": "~1.1.1",
     "grunt-concurrent": "^2.3.1",
