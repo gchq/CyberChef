@@ -132,5 +132,154 @@ TestRegister.addApiTests([
         const result = chef.help(chef.toBase32);
         assert.strictEqual(result.name, "To Base32");
         assert.strictEqual(result.module, "Default");
-    })
+    }),
+
+    it("chef.bake: should exist", () => {
+        assert(chef.bake);
+    }),
+
+    it("chef.bake: should return SyncDish", () => {
+        const result = chef.bake("input", "to base 64");
+        assert(result instanceof SyncDish);
+    }),
+
+    it("chef.bake: should take an input and an op name and perform it", () => {
+        const result = chef.bake("some input", "to base 32");
+        assert.strictEqual(result.toString(), "ONXW2ZJANFXHA5LU");
+    }),
+
+    it("chef.bake: should complain if recipe isnt a valid object", () => {
+        try {
+            chef.bake("some input", 3264);
+        } catch (e) {
+            assert.strictEqual(e.name, "TypeError");
+            assert.strictEqual(e.message, "Recipe can only contain function names or functions");
+        }
+    }),
+
+    it("chef.bake: Should complain if string op is invalid", () => {
+        try {
+            chef.bake("some input", "not a valid operation");
+            assert.fail("Shouldn't be hit");
+        } catch (e) {
+            assert.strictEqual(e.name, "TypeError");
+            assert.strictEqual(e.message, "Couldn't find an operation with name 'not a valid operation'.");
+        }
+    }),
+
+    it("chef.bake: Should take an input and an operation and perform it", () => {
+        const result = chef.bake("https://google.com/search?q=help", chef.parseURI);
+        assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = help\n");
+    }),
+
+    it("chef.bake: Should complain if an invalid operation is inputted", () => {
+        try {
+            chef.bake("https://google.com/search?q=help", () => {});
+            assert.fail("Shouldn't be hit");
+        } catch (e) {
+            assert.strictEqual(e.name, "TypeError");
+            assert.strictEqual(e.message, "Inputted function not a Chef operation.");
+        }
+    }),
+
+    it("chef.bake: accepts an array of operation names and performs them all in order", () => {
+        const result = chef.bake("https://google.com/search?q=that's a complicated question", ["URL encode", "URL decode", "Parse URI"]);
+        assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
+    }),
+
+    it("chef.bake: if recipe is empty array, return input as dish", () => {
+        const result = chef.bake("some input", []);
+        assert.strictEqual(result.toString(), "some input");
+        assert(result instanceof SyncDish, "Result is not instance of SyncDish");
+    }),
+
+    it("chef.bake: accepts an array of operations as recipe", () => {
+        const result = chef.bake("https://google.com/search?q=that's a complicated question", [chef.URLEncode, chef.URLDecode, chef.parseURI]);
+        assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
+    }),
+
+    it("should complain if an invalid operation is inputted as part of array", () => {
+        try {
+            chef.bake("something", [() => {}]);
+        } catch (e) {
+            assert.strictEqual(e.name, "TypeError");
+            assert.strictEqual(e.message, "Inputted function not a Chef operation.");
+        }
+    }),
+
+    it("chef.bake: should take single JSON object describing op and args OBJ", () => {
+        const result = chef.bake("some input", {
+            op: chef.toHex,
+            args: {
+                Delimiter: "Colon"
+            }
+        })
+        assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
+    }),
+
+    it("chef.bake: should take single JSON object describing op and args ARRAY", () => {
+        const result = chef.bake("some input", {
+            op: chef.toHex,
+            args: ["Colon"]
+        })
+        assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
+    }),
+
+    it("chef.bake: should error if op in JSON is not chef op", () => {
+        try {
+            chef.bake("some input", {
+                op: () => {},
+                args: ["Colon"],
+            });
+        } catch (e) {
+            assert.strictEqual(e.name, "TypeError");
+            assert.strictEqual(e.message, "Inputted function not a Chef operation.");
+        }
+    }),
+
+    it("chef.bake: should take multiple ops in JSON object form, some ops by string", () => {
+        const result = chef.bake("some input", [
+            {
+                op: chef.toHex,
+                args: ["Colon"]
+            },
+            {
+                op: "to octal",
+                args: {
+                    delimiter: "Semi-colon",
+                }
+            }
+        ]);
+        assert.strictEqual(result.toString(), "67;63;72;66;146;72;66;144;72;66;65;72;62;60;72;66;71;72;66;145;72;67;60;72;67;65;72;67;64");
+    }),
+
+    it("chef.bake: should handle op with multiple args", () => {
+        const result = chef.bake("some input", {
+            op: "to morse code",
+            args: {
+                formatOptions: "Dash/Dot",
+                wordDelimiter: "Comma",
+                letterDelimiter: "Backslash",
+            }
+        });
+        assert.strictEqual(result.toString(), "DotDotDot\\DashDashDash\\DashDash\\Dot,DotDot\\DashDot\\DotDashDashDot\\DotDotDash\\Dash");
+    }),
+
+    it("chef.bake: should take compact JSON format from Chef Website as recipe", () => {
+        const result = chef.bake("some input", [{"op":"To Morse Code","args":["Dash/Dot","Backslash","Comma"]},{"op":"Hex to PEM","args":["SOMETHING"]},{"op":"To Snake case","args":[false]}]);
+        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+    }),
+
+    it("chef.bake: should accept Clean JSON format from Chef website as recipe", () => {
+        const result = chef.bake("some input", [
+            { "op": "To Morse Code",
+                "args": ["Dash/Dot", "Backslash", "Comma"] },
+            { "op": "Hex to PEM",
+                "args": ["SOMETHING"] },
+            { "op": "To Snake case",
+                "args": [false] }
+        ]);
+        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+    }),
+
 ]);

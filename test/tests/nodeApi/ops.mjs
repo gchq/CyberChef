@@ -28,6 +28,7 @@ import {
     cartesianProduct,
     CSSMinify,
     toBase64,
+    toHex,
 } from "../../../src/node/index";
 import TestRegister from "../../TestRegister";
 
@@ -138,6 +139,13 @@ color: white;
         const result = toBase64("some input");
         assert.strictEqual(result.toString(), "c29tZSBpbnB1dA==");
     }),
+
+    it("toHex: accepts args", () => {
+        const result = toHex("some input", {
+            delimiter: "Colon",
+        });
+        assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
+    })
 
 ]);
 
