@@ -22,15 +22,15 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "exec:generateOpsIndex", "exec:generateConfig", "concurrent:dev"]);
+        ["clean:dev", "exec:generateConfig", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "clean:config", "exec:generateOpsIndex", "exec:generateNodeIndex", "webpack:node", "chmod:build"]);
+        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
-        ["clean", "exec:generateOpsIndex", "exec:generateNodeIndex", "exec:generateConfig", "exec:tests"]);
+        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "exec:generateConfig",  "exec:tests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "exec:generateOpsIndex", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
+        ["eslint", "clean:prod", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        ["exec:generateOpsIndex", "exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
+        ["exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
 
     grunt.registerTask("runInliner", runInliner);
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
             node: ["build/node/*"],
-            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs", "src/node/index.mjs"],
+            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs", "src/node/index.mjs", "src/node/config/OperationConfig.json"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             inlineScripts: ["build/prod/scripts.js"],
         },
@@ -379,6 +379,7 @@ module.exports = function (grunt) {
             generateConfig: {
                 command: [
                     "echo '\n--- Regenerating config files. ---'",
+                    "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "mkdir -p src/core/config/modules",
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
@@ -386,17 +387,16 @@ module.exports = function (grunt) {
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
-            generateOpsIndex: {
-                command: [
-                    "echo '\n--- Regenerating operations index. ---'",
-                    "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
-                    "echo '\n--- Ops index generated. ---'",
-                ].join(";")
-            },
             generateNodeIndex: {
                 command: [
                     "echo '\n--- Regenerating node index ---'",
-                    "mkdir -p src/core/config/modules",
+
+                    "echo 'Copying OperationConfig.json and wiping original'",
+                    "cp src/core/config/OperationConfig.json src/node/config/OperationConfig.json",
+                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
+                    "echo '[]\n' > src/core/config/OperationConfig.json",
+                    "echo '\n OperationConfig.json copied to src/node/config. Modules wiped.'",
+
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
                     "node --experimental-modules src/node/config/scripts/generateNodeIndex.mjs",
