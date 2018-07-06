@@ -26,7 +26,7 @@ class FromHexdump extends Operation {
         this.args = [];
         this.patterns = [
             {
-                match: "^(?:(?:[\\dA-F]{4,16}:?)?\\s*((?:[\\dA-F]{2}\\s){1,8}(?:\\s|[\\dA-F]{2}-)(?:[\\dA-F]{2}\\s){1,8}|(?:[\\dA-F]{2}\\s|[\\dA-F]{4}\\s)+)[^\\n]*\\n?)+$",
+                match: "^(?:(?:[\\dA-F]{4,16}h?:?)?[ \\t]*((?:[\\dA-F]{2} ){1,8}(?:[ \\t]|[\\dA-F]{2}-)(?:[\\dA-F]{2} ){1,8}|(?:[\\dA-F]{4} )*[\\dA-F]{4}|(?:[\\dA-F]{2} )*[\\dA-F]{2})[^\\n]*\\n?)+$",
                 flags: "i",
                 args: []
             },
@@ -40,7 +40,7 @@ class FromHexdump extends Operation {
      */
     run(input, args) {
         const output = [],
-            regex = /^\s*(?:[\dA-F]{4,16}h?:?)?\s*((?:[\dA-F]{2}\s){1,8}(?:\s|[\dA-F]{2}-)(?:[\dA-F]{2}\s){1,8}|(?:[\dA-F]{2}\s|[\dA-F]{4}\s)+)/igm;
+            regex = /^\s*(?:[\dA-F]{4,16}h?:?)?[ \t]+((?:[\dA-F]{2} ){1,8}(?:[ \t]|[\dA-F]{2}-)(?:[\dA-F]{2} ){1,8}|(?:[\dA-F]{4} )*[\dA-F]{4}|(?:[\dA-F]{2} )*[\dA-F]{2})/igm;
         let block, line;
 
         while ((block = regex.exec(input))) {
