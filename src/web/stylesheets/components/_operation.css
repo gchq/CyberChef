@@ -40,6 +40,10 @@
     grid-column: unset;
 }
 
+.ingredients .form-group {
+    padding-top: 1rem;
+}
+
 .arg {
     font-family: var(--fixed-width-font-family);
     text-overflow: ellipsis;
@@ -60,7 +64,11 @@ div.toggle-string {
 }
 
 .operation [class^='bmd-label'],
-.operation [class*=' bmd-label'],
+.operation [class*=' bmd-label'] {
+    top: 31px;
+    left: 10px;
+}
+
 .operation label {
     color: #388e3c;
 }
@@ -75,14 +83,35 @@ div.toggle-string {
 }
 
 .operation .form-control {
-    background-color: transparent;
-    border-color: var(--primary-border-colour);
-    color: var(--primary-font-colour);
+    border-width: 1px;
+    border-style: solid;
+    padding: 12px 10px;
+    border-radius: 4px;
+    background-color: var(--arg-background);
+    background-image: none;
+    border-color: var(--arg-border-colour);
+    color: var(--arg-font-colour);
+}
+
+.operation .form-control:focus {
+    border-width: 2px;
+    padding: 11px 9px;
+    border-color: #1976d2;
 }
 
 .bmd-form-group.is-filled div.toggle-string label.bmd-label-floating,
 .bmd-form-group.is-focused div.toggle-string label.bmd-label-floating {
     left: unset;
+}
+
+.bmd-form-group.is-filled label.bmd-label-floating,
+.bmd-form-group.is-focused label.bmd-label-floating {
+    top: 0.65rem;
+    left: 0.5rem;
+    background-image: linear-gradient(to top,
+        var(--arg-background) 8px,
+        var(--rec-list-operation-bg-colour) 8px);
+    padding: 0 4px;
 }
 
 .editable-option-menu {
