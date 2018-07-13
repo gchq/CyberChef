@@ -41,7 +41,8 @@
 }
 
 .ingredients .form-group {
-    padding-top: 1rem;
+    margin-top: 1rem;
+    padding-top: 0;
 }
 
 .arg {
@@ -65,8 +66,9 @@ div.toggle-string {
 
 .operation [class^='bmd-label'],
 .operation [class*=' bmd-label'] {
-    top: 31px;
-    left: 10px;
+    top: 13px;
+    left: 12px;
+    z-index: 10;
 }
 
 .operation label {
@@ -83,35 +85,48 @@ div.toggle-string {
 }
 
 .operation .form-control {
-    border-width: 1px;
-    border-style: solid;
-    padding: 12px 10px;
-    border-radius: 4px;
-    background-color: var(--arg-background);
+    padding: 20px 12px 6px 12px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
     background-image: none;
-    border-color: var(--arg-border-colour);
+    background-color: var(--arg-background);
+    background-position-y: 100%, 100%;
     color: var(--arg-font-colour);
 }
 
-.operation .form-control:focus {
-    border-width: 2px;
-    padding: 11px 9px;
-    border-color: #1976d2;
+.operation .form-control:hover {
+    background-image:
+        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
+    filter: brightness(97%);
 }
 
-.bmd-form-group.is-filled div.toggle-string label.bmd-label-floating,
-.bmd-form-group.is-focused div.toggle-string label.bmd-label-floating {
-    left: unset;
+.operation .form-control:focus {
+    background-color: var(--arg-background);
+    background-image:
+        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
+    filter: brightness(100%);
 }
 
 .bmd-form-group.is-filled label.bmd-label-floating,
 .bmd-form-group.is-focused label.bmd-label-floating {
-    top: 0.65rem;
-    left: 0.5rem;
-    background-image: linear-gradient(to top,
-        var(--arg-background) 8px,
-        var(--rec-list-operation-bg-colour) 8px);
-    padding: 0 4px;
+    top: 4px;
+    left: 12px;
+}
+
+.input-group .form-control {
+    border-top-left-radius: 4px !important;
+}
+
+.input-group-append button {
+    border-top-right-radius: 4px;
+    background-color: var(--arg-background) !important;
+    margin: unset;
+}
+
+.input-group-append button:hover {
+    filter: brightness(97%);
 }
 
 .editable-option-menu {
@@ -124,6 +139,24 @@ div.toggle-string {
     padding: 0.3rem 1rem 0.3rem 1rem;
     min-height: 1.6rem;
     max-width: 20rem;
+}
+
+.boolean-arg {
+    height: 46px;
+}
+
+.boolean-arg .checkbox {
+    height: 100%;
+}
+
+.boolean-arg .checkbox label {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.boolean-arg .checkbox-decorator {
+    top: 13px;
 }
 
 .register-list {

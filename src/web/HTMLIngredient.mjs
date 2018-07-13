@@ -104,7 +104,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "boolean":
-                html += `<div class="form-group inline">
+                html += `<div class="form-group inline boolean-arg">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox"
