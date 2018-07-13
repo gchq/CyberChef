@@ -294,10 +294,12 @@
                                         <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
                                         <div class="card-body">
                                             Size: <span id="output-file-size"></span><br>
-                                            <button id="output-file-download" type="button" class="btn btn-primary">Download</button>
+                                            <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
                                             <div class="input-group">
                                                 <span class="input-group-btn">
-                                                    <button id="output-file-slice" type="button" class="btn btn-secondary" title="View slice">&#x1f50d;</button>
+                                                    <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
+                                                          <i class="material-icons">search</i>
+                                                    </button>
                                                 </span>
                                                 <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
                                                 <div class="input-group-addon">to</div>

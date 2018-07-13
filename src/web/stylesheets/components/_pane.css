@@ -46,6 +46,7 @@
     color: var(--primary-font-colour);
     line-height: 30px;
     background-color: var(--primary-background-colour);
+    flex-direction: row;
 }
 
 .card:hover {
@@ -63,7 +64,7 @@
 .card-body .close {
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 4px;
 }
 
 .card-body {
@@ -77,7 +78,7 @@
 }
 
 .card-body>.btn {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     margin-top: 5px;
 }
 
