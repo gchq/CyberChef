@@ -147,7 +147,7 @@ class ToTable extends Operation {
          */
         function htmlOutput(tableData) {
             // Start the HTML output with suitable classes for styling.
-            let output = "<table class='table table-hover table-condensed table-bordered table-nonfluid'>";
+            let output = "<table class='table table-hover table-sm table-bordered table-nonfluid'>";
 
             // If the first row is a header then put it in <thead> with <th> cells.
             if (firstRowHeader) {

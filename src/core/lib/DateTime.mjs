@@ -49,7 +49,7 @@ export const DATETIME_FORMATS = [
  * MomentJS DateTime formatting examples.
  */
 export const FORMAT_EXAMPLES = `Format string tokens:
-<table class="table table-striped table-hover table-condensed table-bordered" style="font-family: sans-serif">
+<table class="table table-striped table-hover table-sm table-bordered" style="font-family: sans-serif">
   <thead>
     <tr>
       <th>Category</th>
