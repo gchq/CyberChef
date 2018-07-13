@@ -74,9 +74,9 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 CyberChef is built to support
 
- - Google Chrome 40+
- - Mozilla Firefox 35+
- - Microsoft Edge 14+
+ - Google Chrome 50+
+ - Mozilla Firefox 45+
+ - Microsoft Edge 24+
 
 
 ## Contributing
