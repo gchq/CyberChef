@@ -7,7 +7,6 @@
 import Operation from "../Operation";
 import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime";
-import OperationError from "../errors/OperationError";
 
 /**
  * Parse DateTime operation
@@ -60,7 +59,7 @@ class ParseDateTime extends Operation {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch (err) {
-            throw new OperationError(`Invalid format.\n\n${FORMAT_EXAMPLES}`);
+            return `Invalid format.\n\n${FORMAT_EXAMPLES}`;
         }
 
         output += "Date: " + date.format("dddd Do MMMM YYYY") +

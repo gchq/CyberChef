@@ -50,7 +50,7 @@ export const DATETIME_FORMATS = [
  */
 export const FORMAT_EXAMPLES = `Format string tokens:
 <table class="table table-striped table-hover table-sm table-bordered" style="font-family: sans-serif">
-  <thead>
+  <thead class="thead-dark">
     <tr>
       <th>Category</th>
       <th>Token</th>

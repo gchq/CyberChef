@@ -66,7 +66,7 @@ div.toggle-string {
 
 .operation [class^='bmd-label'],
 .operation [class*=' bmd-label'] {
-    top: 13px;
+    top: 13px !important;
     left: 12px;
     z-index: 10;
 }
@@ -109,10 +109,14 @@ div.toggle-string {
     filter: brightness(100%);
 }
 
-.bmd-form-group.is-filled label.bmd-label-floating,
-.bmd-form-group.is-focused label.bmd-label-floating {
-    top: 4px;
+.operation .bmd-form-group.is-filled label.bmd-label-floating,
+.operation .bmd-form-group.is-focused label.bmd-label-floating {
+    top: 4px !important;
     left: 12px;
+}
+
+.operation .bmd-form-group .bmd-help {
+    margin-top: -17px;
 }
 
 .input-group .form-control {

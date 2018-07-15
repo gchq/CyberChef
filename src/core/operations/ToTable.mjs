@@ -152,7 +152,7 @@ class ToTable extends Operation {
             // If the first row is a header then put it in <thead> with <th> cells.
             if (firstRowHeader) {
                 const row = tableData.shift();
-                output += "<thead>";
+                output += "<thead class='thead-light'>";
                 output += outputRow(row, "th");
                 output += "</thead>";
             }

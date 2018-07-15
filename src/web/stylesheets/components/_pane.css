@@ -33,7 +33,7 @@
     padding: 0;
 }
 
-.card {
+.io-card.card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     width: 400px;
@@ -49,11 +49,11 @@
     flex-direction: row;
 }
 
-.card:hover {
+.io-card.card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card>img {
+.io-card.card>img {
     float: left;
     width: 128px;
     height: 128px;
@@ -61,13 +61,13 @@
     margin-top: 11px;
 }
 
-.card-body .close {
+.io-card.card .card-body .close {
     position: absolute;
     right: 10px;
     top: 4px;
 }
 
-.card-body {
+.io-card.card .card-body {
     float: left;
     padding: 16px;
     width: 250px;
@@ -77,12 +77,12 @@
     user-select: text;
 }
 
-.card-body>.btn {
+.io-card.card .card-body>.btn {
     margin-bottom: 5px;
     margin-top: 5px;
 }
 
-.card input[type=number] {
+.io-card.card input[type=number] {
     padding-right: 6px;
     padding-left: 6px;
 }

@@ -72,3 +72,8 @@
 #faqs a.btn {
     text-transform: unset;
 }
+
+#faqs > div {
+    padding: 20px;
+    border-left: 2px solid var(--primary-border-colour);
+}

@@ -115,6 +115,7 @@ class HTMLIngredient {
                                 ${this.disabled ? " disabled" : ""}
                                 value="${this.name}"> ${this.name}
                         </label>
+                        ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     </div>
                 </div>`;
                 break;

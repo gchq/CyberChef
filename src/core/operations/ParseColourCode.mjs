@@ -113,7 +113,7 @@ CMYK: ${cmyk}
         document.getElementById('input-text').value = 'rgba(' +
             color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';
         window.app.autoBake();
-    });
+    }).children(".colorpicker").removeClass('dropdown-menu');
 </script>`;
     }
 
