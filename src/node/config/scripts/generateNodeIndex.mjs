@@ -39,7 +39,7 @@ let code = `/**
 
 
 import "babel-polyfill";
-import { wrap, help } from "./apiUtils";
+import { wrap, help, bake } from "./api";
 import {
 `;
 
@@ -88,8 +88,18 @@ includedOperations.forEach((op) => {
 
 code +=`
 
+const operations = [\n`;
+
+includedOperations.forEach((op) => {
+    code += `    ${decapitalise(op)},\n`;
+});
+
+code += `];
+
+chef.bake = bake(operations);
 export default chef;
 export {
+    operations,
 `;
 
 includedOperations.forEach((op) => {
