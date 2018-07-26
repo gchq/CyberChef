@@ -146,3 +146,8 @@
 
     transition: all 0.5s ease;
 }
+
+#magic {
+    margin-left: 5px;
+    display: none;
+}

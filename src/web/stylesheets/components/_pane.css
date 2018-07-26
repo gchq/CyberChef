@@ -23,6 +23,11 @@
     line-height: calc(var(--title-height) - 14px);
 }
 
+.title>span,
+.title>.btn {
+    margin-top: -4px;
+}
+
 .list-area {
     position: absolute;
     top: var(--title-height);
