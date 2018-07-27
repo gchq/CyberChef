@@ -444,7 +444,6 @@ class OutputWaiter {
 
         const currentRecipeConfig = this.app.getRecipeConfig();
         const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
-        const recipeURL = "#recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(newRecipeConfig));
         const opSequence = options[0].recipe.map(o => o.op).join(", ");
 
         this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
@@ -461,7 +460,7 @@ class OutputWaiter {
     magicClick() {
         const magicButton = document.getElementById("magic");
         this.app.setRecipeConfig(JSON.parse(magicButton.getAttribute("data-recipe")));
-        window.dispatchEvent(this.manager.statechange); 
+        window.dispatchEvent(this.manager.statechange);
         this.hideMagicButton();
     }
 

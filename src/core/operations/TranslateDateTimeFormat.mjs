@@ -7,7 +7,6 @@
 import Operation from "../Operation";
 import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime";
-import OperationError from "../errors/OperationError";
 
 /**
  * Translate DateTime Format operation
