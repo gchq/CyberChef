@@ -183,9 +183,10 @@ class App {
      * Sets the user's input data.
      *
      * @param {string} input - The string to set the input to
+     * @param {boolean} [silent=false] - Suppress statechange event
      */
-    setInput(input) {
-        this.manager.input.set(input);
+    setInput(input, silent=false) {
+        this.manager.input.set(input, silent);
     }
 
 
@@ -419,12 +420,12 @@ class App {
         if (this.uriParams.input) {
             try {
                 const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData);
+                this.setInput(inputData, true);
             } catch (err) {}
         }
 
         this.autoBakePause = false;
-        this.autoBake();
+        window.dispatchEvent(this.manager.statechange);
     }
 
 
@@ -504,6 +505,7 @@ class App {
     resetLayout() {
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
+        this.manager.recipe.adjustWidth();
     }
 
 

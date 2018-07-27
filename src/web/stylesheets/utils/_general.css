@@ -20,6 +20,10 @@ body {
     color: var(--subtext-font-colour);
 }
 
+.data-text {
+    font-family: var(--fixed-width-font-family);
+}
+
 .word-wrap {
     white-space: pre !important;
     word-wrap: normal !important;

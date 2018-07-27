@@ -447,8 +447,6 @@ class OutputWaiter {
         const recipeURL = "#recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(newRecipeConfig));
         const opSequence = options[0].recipe.map(o => o.op).join(", ");
 
-        log.log(`Running <a href="${recipeURL}">${opSequence}</a> will result in "${Utils.truncate(options[0].data, 20)}"`);
-
         this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
     }
 
@@ -477,10 +475,9 @@ class OutputWaiter {
      */
     showMagicButton(opSequence, result, recipeConfig) {
         const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `Running <i>${opSequence}</i> will result in "${Utils.truncate(result, 20)}"`);
+        magicButton.setAttribute("data-original-title", `Running <i>${opSequence}</i> will result in <span class="data-text">"${Utils.truncate(result, 30)}"</span>`);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
-        magicButton.style.visibility = "visible";
-        magicButton.style.opacity = 1;
+        magicButton.classList.remove("hidden");
     }
 
 
@@ -489,8 +486,7 @@ class OutputWaiter {
      */
     hideMagicButton() {
         const magicButton = document.getElementById("magic");
-        magicButton.style.visibility = "hidden";
-        magicButton.style.opacity = 0;
+        magicButton.classList.add("hidden");
         magicButton.setAttribute("data-recipe", "");
         magicButton.setAttribute("data-original-title", "Magic!");
     }

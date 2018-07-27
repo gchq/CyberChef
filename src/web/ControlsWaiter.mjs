@@ -355,9 +355,7 @@ ${navigator.userAgent}
      */
     showStaleIndicator() {
         const staleIndicator = document.getElementById("stale-indicator");
-
-        staleIndicator.style.visibility = "visible";
-        staleIndicator.style.opacity = 1;
+        staleIndicator.classList.remove("hidden");
     }
 
 
@@ -367,9 +365,7 @@ ${navigator.userAgent}
      */
     hideStaleIndicator() {
         const staleIndicator = document.getElementById("stale-indicator");
-
-        staleIndicator.style.opacity = 0;
-        staleIndicator.style.visibility = "hidden";
+        staleIndicator.classList.add("hidden");
     }
 
 
