@@ -148,6 +148,12 @@
 }
 
 #magic {
+    visibility: hidden;
+    transition: all 0.3s;
     margin-left: 5px;
-    display: none;
+    margin-bottom: 5px;
+}
+
+#magic svg path {
+    fill: var(--primary-font-colour);
 }

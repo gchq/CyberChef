@@ -422,6 +422,7 @@ class OutputWaiter {
      * Triggers the BackgroundWorker to attempt Magic on the current output.
      */
     backgroundMagic() {
+        this.hideMagicButton();
         const sample = this.dishStr ? this.dishStr.slice(0, 1000) :
             this.dishBuffer ? this.dishBuffer.slice(0, 1000) : "";
 
@@ -441,16 +442,57 @@ class OutputWaiter {
             !options[0].recipe.length)
             return;
 
-        //console.log(options);
-
         const currentRecipeConfig = this.app.getRecipeConfig();
         const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
         const recipeURL = "#recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(newRecipeConfig));
         const opSequence = options[0].recipe.map(o => o.op).join(", ");
 
         log.log(`Running <a href="${recipeURL}">${opSequence}</a> will result in "${Utils.truncate(options[0].data, 20)}"`);
-        //this.app.setRecipeConfig(newRecipeConfig);
-        //this.app.autoBake();
+
+        this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
+    }
+
+
+    /**
+     * Handler for Magic click events.
+     *
+     * Loads the Magic recipe.
+     *
+     * @fires Manager#statechange
+     */
+    magicClick() {
+        const magicButton = document.getElementById("magic");
+        this.app.setRecipeConfig(JSON.parse(magicButton.getAttribute("data-recipe")));
+        window.dispatchEvent(this.manager.statechange); 
+        this.hideMagicButton();
+    }
+
+
+    /**
+     * Displays the Magic button with a title and adds a link to a complete recipe.
+     *
+     * @param {string} opSequence
+     * @param {string} result
+     * @param {Object[]} recipeConfig
+     */
+    showMagicButton(opSequence, result, recipeConfig) {
+        const magicButton = document.getElementById("magic");
+        magicButton.setAttribute("data-original-title", `Running <i>${opSequence}</i> will result in "${Utils.truncate(result, 20)}"`);
+        magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
+        magicButton.style.visibility = "visible";
+        magicButton.style.opacity = 1;
+    }
+
+
+    /**
+     * Hides the Magic button and resets its values.
+     */
+    hideMagicButton() {
+        const magicButton = document.getElementById("magic");
+        magicButton.style.visibility = "hidden";
+        magicButton.style.opacity = 0;
+        magicButton.setAttribute("data-recipe", "");
+        magicButton.setAttribute("data-original-title", "Magic!");
     }
 
 }
