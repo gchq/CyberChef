@@ -71,8 +71,9 @@ div.toggle-string {
     z-index: 10;
 }
 
-.operation label {
-    color: #388e3c;
+.operation label,
+.operation .checkbox label {
+    color: var(--arg-label-colour);
 }
 
 .operation .is-focused [class^='bmd-label'],

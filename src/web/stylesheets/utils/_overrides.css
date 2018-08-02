@@ -69,35 +69,22 @@ a:focus {
     background-color: var(--primary-background-colour);
     border-color: var(--primary-border-colour);
 }
+*/
 
-.btn-success {
+.btn.btn-raised.btn-success {
     color: var(--btn-success-font-colour);
     background-color: var(--btn-success-bg-colour);
     border-color: var(--btn-success-border-colour);
 }
 
-.btn-success:hover,
-.btn-success:active,
-.btn-success:focus,
-.btn-success:hover:active {
+.btn.btn-raised.btn-success:hover,
+.btn.btn-raised.btn-success:active,
+.btn.btn-raised.btn-success:focus,
+.btn.btn-raised.btn-success:hover:active {
     color: var(--btn-success-hover-font-colour);
     background-color: var(--btn-success-hover-bg-colour);
     border-color: var(--btn-success-hover-border-colour);
-}*/
-
-/*.btn,
-.btn-lg,
-.nav-tabs>li>a,
-.form-control,
-.popover,
-.panel,
-.modal-content,
-.tooltip-inner,
-.dropdown-menu,
-.input-group-addon {
-    border-radius: 0 !important;
-}*/
-
+}
 
 input[type="search"] {
     appearance: searchfield;
@@ -109,6 +96,20 @@ input[type="search"]::-webkit-search-cancel-button {
 
 select.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
     height: unset !important;
+}
+
+.checkbox label,
+.checkbox-inline,
+.is-focused .checkbox-inline,
+.is-focused .checkbox-inline:hover,
+[class^="bmd-label"],
+.form-control,
+.is-focused .form-control {
+    color: var(--primary-font-colour);
+}
+
+.form-control {
+    background-image: linear-gradient(to top, rgb(25, 118, 210) 2px, rgba(25, 118, 210, 0) 2px), linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
 code {
@@ -166,9 +167,13 @@ optgroup {
     border-right-color: var(--popover-background);
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-    background-color: var(--primary-background-colour);
-    border-color: var(--primary-border-colour);
+.nav-tabs .nav-link {
+    color: var(--subtext-font-color);
+}
+
+.nav-tabs>li>a.nav-link.active, .nav-tabs>li>a.nav-link.active:focus, .nav-tabs>li>a.nav-link.active:hover {
+    background-color: var(--secondary-background-colour);
+    border-color: var(--secondary-border-colour);
     border-bottom-color: transparent;
     color: var(--primary-font-colour);
 }
@@ -177,11 +182,11 @@ optgroup {
     border-color: var(--primary-border-colour);
 }
 
-.nav>li>a:focus, .nav>li>a:hover {
+.nav a.nav-link:focus, .nav a.nav-link:hover {
     background-color: var(--secondary-border-colour);
 }
 
-.nav-tabs>li>a:hover {
+.nav-tabs a.nav-link:hover {
     border-color: var(--secondary-border-colour) var(--secondary-border-colour) var(--primary-border-colour);
 }
 
@@ -189,11 +194,11 @@ optgroup {
     background-color: var(--primary-background-colour);
 }
 
-.dropdown-menu>li>a {
+.dropdown-menu a {
     color: var(--primary-font-colour);
 }
 
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+.dropdown-menu a:focus, .dropdown-menu a:hover {
     background-color: var(--secondary-background-colour);
     color: var(--primary-font-colour);
 }
