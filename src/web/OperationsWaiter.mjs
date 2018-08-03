@@ -79,12 +79,12 @@ class OperationsWaiter {
 
             while (searchResultsEl.firstChild) {
                 try {
-                    $(searchResultsEl.firstChild).popover("destroy");
+                    $(searchResultsEl.firstChild).popover("dispose");
                 } catch (err) {}
                 searchResultsEl.removeChild(searchResultsEl.firstChild);
             }
 
-            $("#categories .in").collapse("hide");
+            $("#categories .show").collapse("hide");
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
                 const matchedOpsHtml = matchedOps
@@ -185,7 +185,7 @@ class OperationsWaiter {
                 setTimeout(function() {
                     // Determine if the popover associated with this element is being hovered over
                     if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").$tip && !$(_this).data("bs.popover").$tip.is(":hover"))) {
+                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
                         $(_this).popover("hide");
                     }
                 }, 50);
@@ -237,13 +237,13 @@ class OperationsWaiter {
             onFilter: function (evt) {
                 const el = editableList.closest(evt.item);
                 if (el && el.parentNode) {
-                    $(el).popover("destroy");
+                    $(el).popover("dispose");
                     el.parentNode.removeChild(el);
                 }
             },
             onEnd: function(evt) {
                 if (this.removeIntent) {
-                    $(evt.item).popover("destroy");
+                    $(evt.item).popover("dispose");
                     evt.item.remove();
                 }
             }.bind(this),
@@ -268,7 +268,7 @@ class OperationsWaiter {
      */
     saveFavouritesClick() {
         const favs = document.querySelectorAll("#edit-favourites-list li");
-        const favouritesList = Array.from(favs, e => e.textContent);
+        const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
 
         this.app.saveFavourites(favouritesList);
         this.app.loadFavourites();
@@ -283,37 +283,6 @@ class OperationsWaiter {
      */
     resetFavouritesClick() {
         this.app.resetFavourites();
-    }
-
-
-    /**
-     * Handler for opIcon mouseover events.
-     * Hides any popovers already showing on the operation so that there aren't two at once.
-     *
-     * @param {event} e
-     */
-    opIconMouseover(e) {
-        const opEl = e.target.parentNode;
-        if (e.target.getAttribute("data-toggle") === "popover") {
-            $(opEl).popover("hide");
-        }
-    }
-
-
-    /**
-     * Handler for opIcon mouseleave events.
-     * If this icon created a popover and we're moving back to the operation element, display the
-     *   operation popover again.
-     *
-     * @param {event} e
-     */
-    opIconMouseleave(e) {
-        const opEl = e.target.parentNode;
-        const toEl = e.toElement || e.relatedElement;
-
-        if (e.target.getAttribute("data-toggle") === "popover" && toEl === opEl) {
-            $(opEl).popover("show");
-        }
     }
 
 }

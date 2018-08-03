@@ -77,7 +77,7 @@ class Magic extends Operation {
         const currentRecipeConfig = this.state.opList.map(op => op.config);
 
         let output = `<table
-                class='table table-hover table-condensed table-bordered'
+                class='table table-hover table-sm table-bordered'
                 style='table-layout: fixed;'>
             <tr>
                 <th>Recipe (click to load)</th>

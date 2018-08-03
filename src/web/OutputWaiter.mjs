@@ -229,35 +229,6 @@ class OutputWaiter {
 
 
     /**
-     * Adjusts the display properties of the output buttons so that they fit within the current width
-     * without wrapping or overflowing.
-     */
-    adjustWidth() {
-        const output         = document.getElementById("output");
-        const saveToFile     = document.getElementById("save-to-file");
-        const copyOutput     = document.getElementById("copy-output");
-        const switchIO       = document.getElementById("switch");
-        const undoSwitch     = document.getElementById("undo-switch");
-        const maximiseOutput = document.getElementById("maximise-output");
-
-        if (output.clientWidth < 680) {
-            saveToFile.childNodes[1].nodeValue = "";
-            copyOutput.childNodes[1].nodeValue = "";
-            switchIO.childNodes[1].nodeValue = "";
-            undoSwitch.childNodes[1].nodeValue = "";
-            maximiseOutput.childNodes[1].nodeValue = "";
-        } else {
-            saveToFile.childNodes[1].nodeValue = " Save to file";
-            copyOutput.childNodes[1].nodeValue = " Copy output";
-            switchIO.childNodes[1].nodeValue = " Move output to input";
-            undoSwitch.childNodes[1].nodeValue = " Undo";
-            maximiseOutput.childNodes[1].nodeValue =
-                maximiseOutput.getAttribute("title") === "Maximise" ? " Max" : " Restore";
-        }
-    }
-
-
-    /**
      * Handler for save click events.
      * Saves the current output to a file.
      */
@@ -296,9 +267,9 @@ class OutputWaiter {
         }
 
         if (success) {
-            this.app.alert("Copied raw output successfully.", "success", 2000);
+            this.app.alert("Copied raw output successfully.", 2000);
         } else {
-            this.app.alert("Sorry, the output could not be copied.", "danger", 2000);
+            this.app.alert("Sorry, the output could not be copied.", 3000);
         }
 
         // Clean up
@@ -334,7 +305,9 @@ class OutputWaiter {
      */
     undoSwitchClick() {
         this.app.setInput(this.switchOrigData);
-        document.getElementById("undo-switch").disabled = true;
+        const undoSwitch = document.getElementById("undo-switch");
+        undoSwitch.disabled = true;
+        $(undoSwitch).tooltip("hide");
     }
 
 
@@ -345,17 +318,16 @@ class OutputWaiter {
     maximiseOutputClick(e) {
         const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
 
-        if (el.getAttribute("title") === "Maximise") {
+        if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
             this.app.columnSplitter.collapse(0);
             this.app.columnSplitter.collapse(1);
             this.app.ioSplitter.collapse(0);
 
-            el.setAttribute("title", "Restore");
-            el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAlUlEQVQ4y93RwQpBQRQG4C9ba1fxBteGPIj38BTejFJKLFnwCJIiCsW1mcV0k9yx82/OzGK+OXMGOpiiLTFjFNiilQI0sQ7IJiAjLKsgGVYB2YdaVO0kwy46/BVQi9ZDNPyQWen2ub/KufS8y7shfkq9tF9U7SC+/YluKvAI9YZeFeCECXJcA3JHP2WgMXJM/ZUcBwxeM+YuSWTgMtUAAAAASUVORK5CYII='> Restore";
-            this.adjustWidth();
+            $(el).attr("data-original-title", "Restore output pane");
+            el.querySelector("i").innerHTML = "fullscreen_exit";
         } else {
-            el.setAttribute("title", "Maximise");
-            el.innerHTML = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAi0lEQVQ4y83TMQrCQBCF4S+5g4rJEdJ7KE+RQ1lrIQQCllroEULuoM0Ww3a7aXwwLAzMPzDvLcz4hnooUItT1rsoVNy+4lgLWNL7RlcCmDBij2eCfNCrUITc0dRCrhj8m5otw0O6SV8LuAV3uhrAAa8sJ2Np7KPFawhgscVLjH9bCDhjt8WNKft88w/HjCvuVqu53QAAAABJRU5ErkJggg=='> Max";
+            $(el).attr("data-original-title", "Maximise output pane");
+            el.querySelector("i").innerHTML = "fullscreen";
             this.app.resetLayout();
         }
     }
@@ -450,6 +422,9 @@ class OutputWaiter {
      * Triggers the BackgroundWorker to attempt Magic on the current output.
      */
     backgroundMagic() {
+        this.hideMagicButton();
+        if (!this.app.options.autoMagic) return;
+
         const sample = this.dishStr ? this.dishStr.slice(0, 1000) :
             this.dishBuffer ? this.dishBuffer.slice(0, 1000) : "";
 
@@ -469,16 +444,52 @@ class OutputWaiter {
             !options[0].recipe.length)
             return;
 
-        //console.log(options);
-
         const currentRecipeConfig = this.app.getRecipeConfig();
         const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
-        const recipeURL = "#recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(newRecipeConfig));
         const opSequence = options[0].recipe.map(o => o.op).join(", ");
 
-        log.log(`Running <a href="${recipeURL}">${opSequence}</a> will result in "${Utils.truncate(options[0].data, 20)}"`);
-        //this.app.setRecipeConfig(newRecipeConfig);
-        //this.app.autoBake();
+        this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
+    }
+
+
+    /**
+     * Handler for Magic click events.
+     *
+     * Loads the Magic recipe.
+     *
+     * @fires Manager#statechange
+     */
+    magicClick() {
+        const magicButton = document.getElementById("magic");
+        this.app.setRecipeConfig(JSON.parse(magicButton.getAttribute("data-recipe")));
+        window.dispatchEvent(this.manager.statechange);
+        this.hideMagicButton();
+    }
+
+
+    /**
+     * Displays the Magic button with a title and adds a link to a complete recipe.
+     *
+     * @param {string} opSequence
+     * @param {string} result
+     * @param {Object[]} recipeConfig
+     */
+    showMagicButton(opSequence, result, recipeConfig) {
+        const magicButton = document.getElementById("magic");
+        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.truncate(result, 30)}"</span>`);
+        magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
+        magicButton.classList.remove("hidden");
+    }
+
+
+    /**
+     * Hides the Magic button and resets its values.
+     */
+    hideMagicButton() {
+        const magicButton = document.getElementById("magic");
+        magicButton.classList.add("hidden");
+        magicButton.setAttribute("data-recipe", "");
+        magicButton.setAttribute("data-original-title", "Magic!");
     }
 
 }

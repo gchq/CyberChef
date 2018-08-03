@@ -9,8 +9,9 @@ import "./stylesheets/index.js";
 
 // Libs
 import "babel-polyfill";
-import "bootstrap";
-import "bootstrap-switch";
+import "arrive";
+import "snackbarjs";
+import "bootstrap-material-design";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
 import * as CanvasComponents from "../core/lib/CanvasComponents";
@@ -50,7 +51,8 @@ function main() {
         theme:               "classic",
         useMetaKey:          false,
         ioDisplayThreshold:  512,
-        logLevel:            "info"
+        logLevel:            "info",
+        autoMagic:           true,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

@@ -26,44 +26,16 @@ class ControlsWaiter {
 
 
     /**
-     * Adjusts the display properties of the control buttons so that they fit within the current width
-     * without wrapping or overflowing.
+     * Initialise Bootstrap componenets
      */
-    adjustWidth() {
-        const controls     = document.getElementById("controls");
-        const step         = document.getElementById("step");
-        const clrBreaks    = document.getElementById("clr-breaks");
-        const saveImg      = document.querySelector("#save img");
-        const loadImg      = document.querySelector("#load img");
-        const stepImg      = document.querySelector("#step img");
-        const clrRecipImg  = document.querySelector("#clr-recipe img");
-        const clrBreaksImg = document.querySelector("#clr-breaks img");
-
-        if (controls.clientWidth < 470) {
-            step.childNodes[1].nodeValue = " Step";
-        } else {
-            step.childNodes[1].nodeValue = " Step through";
-        }
-
-        if (controls.clientWidth < 400) {
-            saveImg.style.display = "none";
-            loadImg.style.display = "none";
-            stepImg.style.display = "none";
-            clrRecipImg.style.display = "none";
-            clrBreaksImg.style.display = "none";
-        } else {
-            saveImg.style.display = "inline";
-            loadImg.style.display = "inline";
-            stepImg.style.display = "inline";
-            clrRecipImg.style.display = "inline";
-            clrBreaksImg.style.display = "inline";
-        }
-
-        if (controls.clientWidth < 330) {
-            clrBreaks.childNodes[1].nodeValue = " Clear breaks";
-        } else {
-            clrBreaks.childNodes[1].nodeValue = " Clear breakpoints";
-        }
+    initComponents() {
+        $("body").bootstrapMaterialDesign();
+        $("[data-toggle=tooltip]").tooltip({
+            animation: false,
+            container: "body",
+            boundary: "viewport",
+            trigger: "hover"
+        });
     }
 
 
@@ -105,18 +77,7 @@ class ControlsWaiter {
      * Handler for changes made to the Auto Bake checkbox.
      */
     autoBakeChange() {
-        const autoBakeLabel    = document.getElementById("auto-bake-label");
-        const autoBakeCheckbox = document.getElementById("auto-bake");
-
-        this.app.autoBake_ = autoBakeCheckbox.checked;
-
-        if (autoBakeCheckbox.checked) {
-            autoBakeLabel.classList.add("btn-success");
-            autoBakeLabel.classList.remove("btn-default");
-        } else {
-            autoBakeLabel.classList.add("btn-default");
-            autoBakeLabel.classList.remove("btn-success");
-        }
+        this.app.autoBake_ = document.getElementById("auto-bake").checked;
     }
 
 
@@ -125,20 +86,6 @@ class ControlsWaiter {
      */
     clearRecipeClick() {
         this.manager.recipe.clearRecipe();
-    }
-
-
-    /**
-     * Handler for the 'Clear breakpoints' command. Removes all breakpoints from operations in the
-     * recipe.
-     */
-    clearBreaksClick() {
-        const bps = document.querySelectorAll("#rec-list li.operation .breakpoint");
-
-        for (let i = 0; i < bps.length; i++) {
-            bps[i].setAttribute("break", "false");
-            bps[i].classList.remove("breakpoint-selected");
-        }
     }
 
 
@@ -264,7 +211,6 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) {
             this.app.alert(
                 "Your security settings do not allow access to local storage so your recipe cannot be saved.",
-                "danger",
                 5000
             );
             return false;
@@ -274,7 +220,7 @@ class ControlsWaiter {
         const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
         if (!recipeName) {
-            this.app.alert("Please enter a recipe name", "danger", 2000);
+            this.app.alert("Please enter a recipe name", 3000);
             return;
         }
 
@@ -291,7 +237,7 @@ class ControlsWaiter {
         localStorage.savedRecipes = JSON.stringify(savedRecipes);
         localStorage.recipeId = recipeId;
 
-        this.app.alert("Recipe saved as \"" + recipeName + "\".", "success", 2000);
+        this.app.alert(`Recipe saved as "${recipeName}".`, 3000);
     }
 
 
@@ -323,7 +269,10 @@ class ControlsWaiter {
         }
 
         // Populate textarea with first recipe
-        document.getElementById("load-text").value = savedRecipes.length ? savedRecipes[0].recipe : "";
+        const loadText = document.getElementById("load-text");
+        const evt = new Event("change");
+        loadText.value = savedRecipes.length ? savedRecipes[0].recipe : "";
+        loadText.dispatchEvent(evt);
     }
 
 
@@ -372,7 +321,7 @@ class ControlsWaiter {
 
             $("#rec-list [data-toggle=popover]").popover();
         } catch (e) {
-            this.app.alert("Invalid recipe", "danger", 2000);
+            this.app.alert("Invalid recipe", 2000);
         }
     }
 
@@ -391,7 +340,7 @@ class ControlsWaiter {
         if (reportBugInfo) {
             reportBugInfo.innerHTML = `* Version: ${PKG_VERSION + (typeof INLINE === "undefined" ? "" : "s")}
 * Compile time: ${COMPILE_TIME}
-* User-Agent: 
+* User-Agent:
 ${navigator.userAgent}
 * [Link to reproduce](${saveLink})
 
@@ -406,9 +355,7 @@ ${navigator.userAgent}
      */
     showStaleIndicator() {
         const staleIndicator = document.getElementById("stale-indicator");
-
-        staleIndicator.style.visibility = "visible";
-        staleIndicator.style.opacity = 1;
+        staleIndicator.classList.remove("hidden");
     }
 
 
@@ -418,9 +365,7 @@ ${navigator.userAgent}
      */
     hideStaleIndicator() {
         const staleIndicator = document.getElementById("stale-indicator");
-
-        staleIndicator.style.opacity = 0;
-        staleIndicator.style.visibility = "hidden";
+        staleIndicator.classList.add("hidden");
     }
 
 

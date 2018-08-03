@@ -84,6 +84,7 @@ class Manager {
     setup() {
         this.worker.registerChefWorker();
         this.recipe.initialiseOperationDragNDrop();
+        this.controls.initComponents();
         this.controls.autoBakeChange();
         this.bindings.updateKeybList();
         this.background.registerChefWorker();
@@ -107,7 +108,6 @@ class Manager {
         document.getElementById("auto-bake").addEventListener("change", this.controls.autoBakeChange.bind(this.controls));
         document.getElementById("step").addEventListener("click", this.controls.stepClick.bind(this.controls));
         document.getElementById("clr-recipe").addEventListener("click", this.controls.clearRecipeClick.bind(this.controls));
-        document.getElementById("clr-breaks").addEventListener("click", this.controls.clearBreaksClick.bind(this.controls));
         document.getElementById("save").addEventListener("click", this.controls.saveClick.bind(this.controls));
         document.getElementById("save-button").addEventListener("click", this.controls.saveButtonClick.bind(this.controls));
         document.getElementById("save-link-recipe-checkbox").addEventListener("change", this.controls.slrCheckChange.bind(this.controls));
@@ -125,8 +125,6 @@ class Manager {
         document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
-        this.addDynamicListener(".op-list .op-icon", "mouseover", this.ops.opIconMouseover, this.ops);
-        this.addDynamicListener(".op-list .op-icon", "mouseleave", this.ops.opIconMouseleave, this.ops);
         this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
         this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
 
@@ -137,7 +135,7 @@ class Manager {
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
         this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
-        this.addDynamicListener("#rec-list .input-group .dropdown-menu a", "click", this.recipe.dropdownToggleClick, this.recipe);
+        this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
         this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
 
         // Input
@@ -160,6 +158,7 @@ class Manager {
         document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
         document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
         document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
+        document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
         document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
         document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
         document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
@@ -168,15 +167,15 @@ class Manager {
         this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
         this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
         this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
-        this.addDynamicListener("#output-file-slice", "click", this.output.displayFileSlice, this.output);
+        this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
         document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));
         document.getElementById("reset-options").addEventListener("click", this.options.resetOptionsClick.bind(this.options));
-        $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.switchChange.bind(this.options));
-        $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox", this.options.setWordWrap.bind(this.options));
-        $(document).on("switchChange.bootstrapSwitch", ".option-item input:checkbox#useMetaKey", this.bindings.updateKeybList.bind(this.bindings));
+        this.addDynamicListener(".option-item input[type=checkbox]", "change", this.options.switchChange, this.options);
+        this.addDynamicListener(".option-item input[type=checkbox]", "change", this.options.setWordWrap, this.options);
+        this.addDynamicListener(".option-item input[type=checkbox]#useMetaKey", "change", this.bindings.updateKeybList, this.bindings);
         this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
@@ -185,7 +184,6 @@ class Manager {
 
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
-        document.getElementById("alert-close").addEventListener("click", this.app.alertCloseClick.bind(this.app));
     }
 
 
