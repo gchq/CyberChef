@@ -328,6 +328,7 @@
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
+            "Haversine distance",
             "Render Image",
             "Remove EXIF",
             "Extract EXIF",
