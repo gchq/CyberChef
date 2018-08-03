@@ -36,40 +36,36 @@
     margin-bottom: 0;
 }
 
-/*
+
 button,
 a:focus {
     outline: none;
 }
 
-.btn-secondary {
+.btn.btn-raised.btn-secondary {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-border-colour);
 }
 
-.btn-secondary:hover,
-.btn-secondary:active,
-.btn-secondary:hover:active,
-.open>.dropdown-toggle.btn-secondary {
+.btn.btn-raised.btn-secondary:hover,
+.btn.btn-raised.btn-secondary:active,
+.btn.btn-raised.btn-secondary:hover:active {
     color: var(--btn-default-hover-font-colour);
     background-color: var(--btn-default-hover-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-secondary:focus,
-.open>.dropdown-toggle.btn-secondary:hover,
-.open>.dropdown-toggle.btn-secondary:focus {
+.btn.btn-raised.btn-secondary:focus {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-secondary[disabled]:hover {
+.btn.btn-raised.btn-secondary[disabled]:hover {
     background-color: var(--primary-background-colour);
     border-color: var(--primary-border-colour);
 }
-*/
 
 .btn.btn-raised.btn-success {
     color: var(--btn-success-font-colour);
@@ -157,13 +153,14 @@ optgroup {
 .popover-body {
     max-height: 95vh;
     overflow-y: auto;
+    color: var(--primary-font-colour);
 }
 
-.popover.right>.arrow {
+.bs-popover-right>.arrow {
     border-right-color: var(--popover-border-colour);
 }
 
-.popover.right>.arrow:after {
+.bs-popover-right>.arrow:after {
     border-right-color: var(--popover-background);
 }
 
