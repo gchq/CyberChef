@@ -423,6 +423,8 @@ class OutputWaiter {
      */
     backgroundMagic() {
         this.hideMagicButton();
+        if (!this.app.options.autoMagic) return;
+
         const sample = this.dishStr ? this.dishStr.slice(0, 1000) :
             this.dishBuffer ? this.dishBuffer.slice(0, 1000) : "";
 

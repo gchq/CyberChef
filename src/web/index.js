@@ -51,7 +51,8 @@ function main() {
         theme:               "classic",
         useMetaKey:          false,
         ioDisplayThreshold:  512,
-        logLevel:            "info"
+        logLevel:            "info",
+        autoMagic:           true,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

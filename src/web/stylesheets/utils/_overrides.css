@@ -165,7 +165,7 @@ optgroup {
 }
 
 .nav-tabs .nav-link {
-    color: var(--subtext-font-color);
+    color: var(--subtext-font-colour);
 }
 
 .nav-tabs>li>a.nav-link.active, .nav-tabs>li>a.nav-link.active:focus, .nav-tabs>li>a.nav-link.active:hover {
