@@ -146,6 +146,10 @@ div.toggle-string {
     max-width: 20rem;
 }
 
+.ingredients .dropdown-toggle-split {
+    height: 41px !important;
+}
+
 .boolean-arg {
     height: 46px;
 }
