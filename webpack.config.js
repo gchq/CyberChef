@@ -12,10 +12,10 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const banner = `/**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2016
  * @license Apache-2.0
  *
- *   Copyright 2017 Crown Copyright
+ *   Copyright 2016 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
-        new ExtractTextPlugin("styles.css"),
+        new ExtractTextPlugin("styles.css")
     ],
     resolve: {
         alias: {
@@ -52,30 +52,34 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                exclude: /node_modules\/(?!jsesc)/,
+                test: /\.m?js$/,
+                exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                type: "javascript/auto",
                 loader: "babel-loader?compact=false"
             },
             {
-                test: /MetaConfig\.js$/,
-                loader: "val-loader"
+                test: /forge.min.js$/,
+                loader: "imports-loader?jQuery=>null"
+            },
+            {
+                test: /bootstrap-material-design/,
+                loader: "imports-loader?Popper=popper.js/dist/umd/popper.js"
             },
             {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     use: [
-                        { loader: "css-loader?minimize" },
+                        { loader: "css-loader" },
                         { loader: "postcss-loader" },
                     ]
                 })
             },
             {
-                test: /\.less$/,
+                test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
                     use: [
-                        { loader: "css-loader?minimize" },
-                        { loader: "postcss-loader" },
-                        { loader: "less-loader" }
+                        { loader: "css-loader" },
+                        { loader: "sass-loader" }
                     ]
                 })
             },

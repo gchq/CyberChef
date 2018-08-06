@@ -10,5 +10,10 @@
             "modules": false,
             "useBuiltIns": true
         }]
+    ],
+    "plugins": [
+        ["babel-plugin-transform-builtin-extend", {
+            "globals": ["Error"]
+        }]
     ]
 }

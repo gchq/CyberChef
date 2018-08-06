@@ -19,7 +19,6 @@
 @import "./preloader.css";
 
 /* Components */
-@import "./components/_alert.css";
 @import "./components/_button.css";
 @import "./components/_list.css";
 @import "./components/_operation.css";

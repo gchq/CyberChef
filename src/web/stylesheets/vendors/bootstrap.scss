@@ -1,0 +1,23 @@
+/**
+ * Bootstrap Material Design with overrides
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+@import "~bootstrap-material-design/scss/variables/colors";
+
+$theme-colors: (
+    primary: $blue-700,
+    success: $green,
+    info: $light-blue,
+    warning: $deep-orange,
+    danger: $red,
+    light: $grey-100,
+    dark: $grey-800
+);
+
+$bmd-form-line-height: 1.25;
+
+@import "~bootstrap-material-design/scss/core";

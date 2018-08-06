@@ -8,97 +8,104 @@
 
 /* Bootstrap */
 
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url("../static/fonts/MaterialIcons-Regular.woff2") format('woff2');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+
 button,
 a:focus {
     outline: none;
 }
 
-.btn-default {
+.btn.btn-raised.btn-secondary {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-border-colour);
 }
 
-.btn-default:hover,
-.btn-default:active,
-.btn-default:hover:active,
-.open>.dropdown-toggle.btn-default {
+.btn.btn-raised.btn-secondary:hover,
+.btn.btn-raised.btn-secondary:active,
+.btn.btn-raised.btn-secondary:hover:active {
     color: var(--btn-default-hover-font-colour);
     background-color: var(--btn-default-hover-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-default:focus,
-.open>.dropdown-toggle.btn-default:hover,
-.open>.dropdown-toggle.btn-default:focus {
+.btn.btn-raised.btn-secondary:focus {
     color: var(--btn-default-font-colour);
     background-color: var(--btn-default-bg-colour);
     border-color: var(--btn-default-hover-border-colour);
 }
 
-.btn-default[disabled]:hover {
+.btn.btn-raised.btn-secondary[disabled]:hover {
     background-color: var(--primary-background-colour);
     border-color: var(--primary-border-colour);
 }
 
-.btn-success {
+.btn.btn-raised.btn-success {
     color: var(--btn-success-font-colour);
     background-color: var(--btn-success-bg-colour);
     border-color: var(--btn-success-border-colour);
 }
 
-.btn-success:hover,
-.btn-success:active,
-.btn-success:focus,
-.btn-success:hover:active {
+.btn.btn-raised.btn-success:hover,
+.btn.btn-raised.btn-success:active,
+.btn.btn-raised.btn-success:focus,
+.btn.btn-raised.btn-success:hover:active {
     color: var(--btn-success-hover-font-colour);
     background-color: var(--btn-success-hover-bg-colour);
     border-color: var(--btn-success-hover-border-colour);
 }
 
-.btn,
-.btn-lg,
-.nav-tabs>li>a,
-.form-control,
-.popover,
-.alert,
-.modal-content,
-.tooltip-inner,
-.dropdown-menu,
-.input-group-addon {
-    border-radius: 0 !important;
-}
-
-.btn.dropdown-toggle {
-    height: 34px;
-}
-
 input[type="search"] {
-    -webkit-appearance: searchfield;
-    box-shadow: none;
+    appearance: searchfield;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
-    -webkit-appearance: searchfield-cancel-button;
+    appearance: searchfield-cancel-button;
 }
 
-.modal {
-    overflow-y: auto;
+select.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
+    height: unset !important;
 }
 
-.modal-content {
-    background-color: var(--primary-background-colour);
-}
-
-.modal-header,
-.modal-footer {
-    border-color: var(--primary-border-colour);
+.checkbox label,
+.checkbox-inline,
+.is-focused .checkbox-inline,
+.is-focused .checkbox-inline:hover,
+[class^="bmd-label"],
+.form-control,
+.is-focused .form-control {
+    color: var(--primary-font-colour);
 }
 
 .form-control {
-    background-color: transparent;
-    border-color: var(--primary-border-colour);
-    color: var(--primary-font-colour);
+    background-image: linear-gradient(to top, rgb(25, 118, 210) 2px, rgba(25, 118, 210, 0) 2px), linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
 code {
@@ -143,22 +150,27 @@ optgroup {
     border-color: var(--popover-border-colour);
 }
 
-.popover-content {
-    max-height: 90vh;
+.popover-body {
+    max-height: 95vh;
     overflow-y: auto;
+    color: var(--primary-font-colour);
 }
 
-.popover.right>.arrow {
+.bs-popover-right>.arrow {
     border-right-color: var(--popover-border-colour);
 }
 
-.popover.right>.arrow:after {
+.bs-popover-right>.arrow:after {
     border-right-color: var(--popover-background);
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-    background-color: var(--primary-background-colour);
-    border-color: var(--primary-border-colour);
+.nav-tabs .nav-link {
+    color: var(--subtext-font-colour);
+}
+
+.nav-tabs>li>a.nav-link.active, .nav-tabs>li>a.nav-link.active:focus, .nav-tabs>li>a.nav-link.active:hover {
+    background-color: var(--secondary-background-colour);
+    border-color: var(--secondary-border-colour);
     border-bottom-color: transparent;
     color: var(--primary-font-colour);
 }
@@ -167,11 +179,11 @@ optgroup {
     border-color: var(--primary-border-colour);
 }
 
-.nav>li>a:focus, .nav>li>a:hover {
+.nav a.nav-link:focus, .nav a.nav-link:hover {
     background-color: var(--secondary-border-colour);
 }
 
-.nav-tabs>li>a:hover {
+.nav-tabs a.nav-link:hover {
     border-color: var(--secondary-border-colour) var(--secondary-border-colour) var(--primary-border-colour);
 }
 
@@ -179,11 +191,11 @@ optgroup {
     background-color: var(--primary-background-colour);
 }
 
-.dropdown-menu>li>a {
+.dropdown-menu a {
     color: var(--primary-font-colour);
 }
 
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+.dropdown-menu a:focus, .dropdown-menu a:hover {
     background-color: var(--secondary-background-colour);
     color: var(--primary-font-colour);
 }
@@ -195,30 +207,6 @@ optgroup {
 
 .input-group-btn:first-child>.btn {
     border-right: 0;
-}
-
-
-/* Bootstrap-switch */
-
-.bootstrap-switch,
-.bootstrap-switch-container,
-.bootstrap-switch-handle-on,
-.bootstrap-switch-handle-off,
-.bootstrap-switch-label {
-    border-radius: 0 !important;
-}
-
-.bootstrap-switch .bootstrap-switch-label {
-    background-color: transparent;
-}
-
-.bootstrap-switch {
-    border-color: var(--primary-border-colour);
-}
-
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
-    background-color: var(--primary-border-colour);
-    color: var(--primary-font-colour);
 }
 
 

@@ -9,16 +9,17 @@ import "./stylesheets/index.js";
 
 // Libs
 import "babel-polyfill";
-import "bootstrap";
-import "bootstrap-switch";
+import "arrive";
+import "snackbarjs";
+import "bootstrap-material-design";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
-import CanvasComponents from "../core/lib/canvascomponents.js";
+import * as CanvasComponents from "../core/lib/CanvasComponents";
 
 // CyberChef
-import App from "./App.js";
-import Categories from "../core/config/Categories.js";
-import OperationConfig from "../core/config/MetaConfig.js";
+import App from "./App";
+import Categories from "../core/config/Categories.json";
+import OperationConfig from "../core/config/OperationConfig.json";
 
 
 /**
@@ -35,7 +36,8 @@ function main() {
         "URL Decode",
         "Regular expression",
         "Entropy",
-        "Fork"
+        "Fork",
+        "Magic"
     ];
 
     const defaultOptions = {
@@ -49,7 +51,8 @@ function main() {
         theme:               "classic",
         useMetaKey:          false,
         ioDisplayThreshold:  512,
-        logLevel:            "info"
+        logLevel:            "info",
+        autoMagic:           true,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
