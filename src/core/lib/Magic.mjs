@@ -287,6 +287,8 @@ class Magic {
             useful: useful
         });
 
+        const prevOp = recipeConfig[recipeConfig.length - 1];
+
         // Execute each of the matching operations, then recursively call the speculativeExecution()
         // method on the resulting data, recording the properties of each option.
         await Promise.all(matchingOps.map(async op => {
@@ -294,8 +296,14 @@ class Magic {
                     op: op.op,
                     args: op.args
                 },
-                output = await this._runRecipe([opConfig]),
-                magic = new Magic(output, this.opPatterns),
+                output = await this._runRecipe([opConfig]);
+
+            // If the recipe is repeating and returning the same data, do not continue
+            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
+                return;
+            }
+
+            const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful);
 
@@ -315,13 +323,16 @@ class Magic {
             }));
         }
 
-        // Prune branches that do not match anything
+        // Prune branches that result in unhelpful outputs
         results = results.filter(r =>
-            r.languageScores[0].probability > 0 ||
-            r.fileType ||
-            r.isUTF8 ||
-            r.matchingOps.length ||
-            r.useful);
+            (r.useful || r.data.length > 0) &&          // The operation resulted in ""
+            (                                           // One of the following must be true
+                r.languageScores[0].probability > 0 ||    // Some kind of language was found
+                r.fileType ||                             // A file was found
+                r.isUTF8 ||                               // UTF-8 was found
+                r.matchingOps.length                      // A matching op was found
+            )
+        );
 
         // Return a sorted list of possible recipes along with their properties
         return results.sort((a, b) => {
@@ -374,7 +385,7 @@ class Magic {
 
         const recipe = new Recipe(recipeConfig);
         try {
-            await recipe.execute(dish, 0);
+            await recipe.execute(dish);
             return dish.get(Dish.ARRAY_BUFFER);
         } catch (err) {
             // If there are errors, return an empty buffer
@@ -395,7 +406,10 @@ class Magic {
         let i = len;
         const counts = new Array(256).fill(0);
 
-        if (!len) return counts;
+        if (!len) {
+            this.freqDist = counts;
+            return this.freqDist;
+        }
 
         while (i--) {
             counts[this.inputBuffer[i]]++;

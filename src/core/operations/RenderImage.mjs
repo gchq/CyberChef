@@ -26,7 +26,8 @@ class RenderImage extends Operation {
         this.module = "Image";
         this.description = "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>bmp</li><li>ico</li></ul>";
         this.inputType = "string";
-        this.outputType = "html";
+        this.outputType = "byteArray";
+        this.presentType = "html";
         this.args = [
             {
                 "name": "Input format",
@@ -51,9 +52,8 @@ class RenderImage extends Operation {
      */
     run(input, args) {
         const inputFormat = args[0];
-        let dataURI = "data:";
 
-        if (!input.length) return "";
+        if (!input.length) return [];
 
         // Convert input to raw bytes
         switch (inputFormat) {
@@ -73,6 +73,26 @@ class RenderImage extends Operation {
 
         // Determine file type
         const type = Magic.magicFileType(input);
+        if (!(type && type.mime.indexOf("image") === 0)) {
+            throw new OperationError("Invalid file type");
+        }
+
+        return input;
+    }
+
+    /**
+     * Displays the image using HTML for web apps.
+     *
+     * @param {byteArray} data
+     * @returns {html}
+     */
+    async present(data) {
+        if (!data.length) return "";
+
+        let dataURI = "data:";
+
+        // Determine file type
+        const type = Magic.magicFileType(data);
         if (type && type.mime.indexOf("image") === 0) {
             dataURI += type.mime + ";";
         } else {
@@ -80,7 +100,7 @@ class RenderImage extends Operation {
         }
 
         // Add image data to URI
-        dataURI += "base64," + toBase64(input);
+        dataURI += "base64," + toBase64(data);
 
         return "<img src='" + dataURI + "'>";
     }

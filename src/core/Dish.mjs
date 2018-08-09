@@ -300,6 +300,69 @@ class Dish {
         }
     }
 
+
+    /**
+     * Returns a deep clone of the current Dish.
+     *
+     * @returns {Dish}
+     */
+    clone() {
+        const newDish = new Dish();
+
+        switch (this.type) {
+            case Dish.STRING:
+            case Dish.HTML:
+            case Dish.NUMBER:
+            case Dish.BIG_NUMBER:
+                // These data types are immutable so it is acceptable to copy them by reference
+                newDish.set(
+                    this.value,
+                    this.type
+                );
+                break;
+            case Dish.BYTE_ARRAY:
+            case Dish.JSON:
+                // These data types are mutable so they need to be copied by value
+                newDish.set(
+                    JSON.parse(JSON.stringify(this.value)),
+                    this.type
+                );
+                break;
+            case Dish.ARRAY_BUFFER:
+                // Slicing an ArrayBuffer returns a new ArrayBuffer with a copy its contents
+                newDish.set(
+                    this.value.slice(0),
+                    this.type
+                );
+                break;
+            case Dish.FILE:
+                // A new file can be created by copying over all the values from the original
+                newDish.set(
+                    new File([this.value], this.value.name, {
+                        "type": this.value.type,
+                        "lastModified": this.value.lastModified
+                    }),
+                    this.type
+                );
+                break;
+            case Dish.LIST_FILE:
+                newDish.set(
+                    this.value.map(f =>
+                        new File([f], f.name, {
+                            "type": f.type,
+                            "lastModified": f.lastModified
+                        })
+                    ),
+                    this.type
+                );
+                break;
+            default:
+                throw new Error("Cannot clone Dish, unknown type");
+        }
+
+        return newDish;
+    }
+
 }
 
 

@@ -96,7 +96,7 @@ class Chef {
         const returnType = this.dish.size > threshold ? Dish.ARRAY_BUFFER : Dish.STRING;
 
         // Create a raw version of the dish, unpresented
-        const rawDish = new Dish(this.dish);
+        const rawDish = this.dish.clone();
 
         // Present the raw result
         await recipe.present(this.dish);

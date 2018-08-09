@@ -66,11 +66,15 @@ import Chef from "../src/core/Chef";
                             ret.output = "Expected an error but did not receive one.";
                         } else if (result.result === test.expectedOutput) {
                             ret.status = "passing";
+                        } else if (test.hasOwnProperty("expectedMatch") && test.expectedMatch.test(result.result)) {
+                            ret.status = "passing";
                         } else {
                             ret.status = "failing";
+                            const expected = test.expectedOutput ? test.expectedOutput :
+                                test.expectedMatch ? test.expectedMatch.toString() : "unknown";
                             ret.output = [
                                 "Expected",
-                                "\t" + test.expectedOutput.replace(/\n/g, "\n\t"),
+                                "\t" + expected.replace(/\n/g, "\n\t"),
                                 "Received",
                                 "\t" + result.result.replace(/\n/g, "\n\t"),
                             ].join("\n");
