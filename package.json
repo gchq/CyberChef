@@ -28,6 +28,7 @@
     "url": "https://github.com/gchq/CyberChef/"
   },
   "main": "build/node/CyberChef.js",
+  "module": "src/node/index.mjs",
   "bugs": "https://github.com/gchq/CyberChef/issues",
   "devDependencies": {
     "babel-core": "^6.26.3",

@@ -255,7 +255,9 @@ module.exports = function (grunt) {
                 mode: "production",
                 target: "node",
                 entry: "./src/node/index.mjs",
-                externals: [NodeExternals()],
+                externals: [NodeExternals({
+                    whitelist: ["crypto-api/src/crypto-api"]
+                })],
                 output: {
                     filename: "CyberChef.js",
                     path: __dirname + "/build/node",
@@ -264,7 +266,7 @@ module.exports = function (grunt) {
                 },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS)
-                ]
+                ],
             }
         },
         "webpack-dev-server": {
@@ -390,7 +392,6 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: [
                     "echo '\n--- Regenerating node index ---'",
-
                     "echo 'Copying OperationConfig.json and wiping original'",
                     "cp src/core/config/OperationConfig.json src/node/config/OperationConfig.json",
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
