@@ -60,10 +60,11 @@ class InputWaiter {
      * Sets the input in the input area.
      *
      * @param {string|File} input
+     * @param {boolean} [silent=false] - Suppress statechange event
      *
      * @fires Manager#statechange
      */
-    set(input) {
+    set(input, silent=false) {
         const inputText = document.getElementById("input-text");
         if (input instanceof File) {
             this.setFile(input);
@@ -72,7 +73,7 @@ class InputWaiter {
         } else {
             inputText.value = input;
             this.closeFile();
-            window.dispatchEvent(this.manager.statechange);
+            if (!silent) window.dispatchEvent(this.manager.statechange);
             const lines = input.length < (this.app.options.ioDisplayThreshold * 1024) ?
                 input.count("\n") + 1 : null;
             this.setInputInfo(input.length, lines);
@@ -264,7 +265,7 @@ class InputWaiter {
         }
 
         if (r.hasOwnProperty("error")) {
-            this.app.alert(r.error, "danger", 10000);
+            this.app.alert(r.error, 10000);
         }
 
         if (r.hasOwnProperty("fileBuffer")) {

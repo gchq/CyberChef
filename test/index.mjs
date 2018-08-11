@@ -44,6 +44,7 @@ import "./tests/operations/ConditionalJump";
 import "./tests/operations/Register";
 import "./tests/operations/Comment";
 import "./tests/operations/Hash";
+import "./tests/operations/HaversineDistance";
 import "./tests/operations/Hexdump";
 import "./tests/operations/Image";
 import "./tests/operations/MorseCode";
@@ -61,6 +62,7 @@ import "./tests/operations/SetDifference";
 import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/SymmetricDifference";
+import "./tests/operations/Magic";
 
 import "./tests/nodeApi/nodeApi";
 import "./tests/nodeApi/ops";

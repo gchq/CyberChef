@@ -8,12 +8,14 @@
 
 :root,
 :root.classic {
-    --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --primary-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
     --primary-font-colour: #333;
     --primary-font-size: 14px;
     --primary-line-height: 20px;
 
-    --fixed-width-font-family: "Consolas", monospace;
+    --fixed-width-font-family: SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
     --fixed-width-font-colour: inherit;
     --fixed-width-font-size: inherit;
 
@@ -28,6 +30,7 @@
 
     --title-colour: #424242;
     --title-weight: bold;
+    --title-size: 16px;
     --title-background-colour: #fafafa;
 
     --banner-font-colour: #468847;
@@ -41,7 +44,7 @@
 
     --rec-list-operation-font-colour: #468847;
     --rec-list-operation-bg-colour: #dff0d8;
-    --rec-list-operation-border-colour: #d6e9c6;
+    --rec-list-operation-border-colour: #d3e8c0;
 
     --selected-operation-font-color: #c09853;
     --selected-operation-bg-colour: #fcf8e3;
@@ -65,14 +68,12 @@
 
 
     /* Operation arguments */
-    --arg-title-font-weight: bold;
-    --arg-input-height: 34px;
-    --arg-input-line-height: 20px;
-    --arg-input-font-size: 15px;
+    --op-title-font-weight: bold;
     --arg-font-colour: #424242;
     --arg-background: #fff;
     --arg-border-colour: #ddd;
     --arg-disabled-background: #eee;
+    --arg-label-colour: #388e3c;
 
 
     /* Buttons */

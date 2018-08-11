@@ -20,6 +20,10 @@ body {
     color: var(--subtext-font-colour);
 }
 
+.data-text {
+    font-family: var(--fixed-width-font-family);
+}
+
 .word-wrap {
     white-space: pre !important;
     word-wrap: normal !important;
@@ -29,6 +33,7 @@ body {
 .clearfix {
     clear: both;
     height: 0;
+    line-height: 0;
 }
 
 .blur {
@@ -36,7 +41,7 @@ body {
     text-shadow: rgba(0, 0, 0, 0.95) 0 0 10px !important;
 }
 
-.no-select { 
+.no-select {
     user-select: none;
 }
 

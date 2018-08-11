@@ -6,34 +6,12 @@
  * @license Apache-2.0
  */
 
-.option-item .bootstrap-switch {
-    margin: 15px 10px;
+.modal-content {
+    background-color: var(--primary-background-colour);
 }
 
-.option-item button {
-    margin: 10px;
-}
-
-.option-item label {
-    font-weight: normal;
-}
-
-.option-item input[type=number] {
-    margin: 15px 10px;
-    width: 80px;
-    height: 28px;
-    padding: 3px 10px;
-    vertical-align: middle;
-    font-size: calc(var(--arg-input-font-size) - 1px);
-    line-height: var(--arg-input-line-height);
-    color: var(--arg-font-colour);
-    background-color: var(--arg-background);
-    border: 1px solid var(--primary-border-colour);
-}
-
-.option-item select {
-    margin: 10px;
-    display: inline-block;
+.option-item {
+    margin-bottom: 20px;
 }
 
 #edit-favourites-list {
@@ -60,11 +38,15 @@
     margin: 10px 0 20px 20px;
 }
 
+#save-link-group {
+    padding-top: 0;
+}
+
 .save-link-options {
     float: right;
 }
 
-.save-link-options input{
+.save-link-options label {
     margin-left: 10px;
 }
 
@@ -84,7 +66,14 @@
 }
 
 #save-texts textarea {
-    border-top: none;
-    box-shadow: none;
     height: 200px;
+}
+
+#faqs a.btn {
+    text-transform: unset;
+}
+
+#faqs > div {
+    padding: 20px;
+    border-left: 2px solid var(--primary-border-colour);
 }

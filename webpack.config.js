@@ -62,21 +62,24 @@ module.exports = {
                 loader: "imports-loader?jQuery=>null"
             },
             {
+                test: /bootstrap-material-design/,
+                loader: "imports-loader?Popper=popper.js/dist/umd/popper.js"
+            },
+            {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     use: [
-                        { loader: "css-loader?minimize" },
+                        { loader: "css-loader" },
                         { loader: "postcss-loader" },
                     ]
                 })
             },
             {
-                test: /\.less$/,
+                test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
                     use: [
-                        { loader: "css-loader?minimize" },
-                        { loader: "postcss-loader" },
-                        { loader: "less-loader" }
+                        { loader: "css-loader" },
+                        { loader: "sass-loader" }
                     ]
                 })
             },

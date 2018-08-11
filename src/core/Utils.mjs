@@ -828,11 +828,11 @@ class Utils {
      */
     static async displayFilesAsHTML(files) {
         const formatDirectory = function(file) {
-            const html = `<div class='panel panel-default' style='white-space: normal;'>
-                    <div class='panel-heading' role='tab'>
-                        <h4 class='panel-title'>
+            const html = `<div class='card' style='white-space: normal;'>
+                    <div class='card-header'>
+                        <h6 class="mb-0">
                             ${Utils.escapeHtml(file.name)}
-                        </h4>
+                        </h6>
                     </div>
                 </div>`;
             return html;
@@ -845,29 +845,29 @@ class Utils {
                 {type: "octet/stream"}
             );
 
-            const html = `<div class='panel panel-default' style='white-space: normal;'>
-                    <div class='panel-heading' role='tab' id='heading${i}'>
-                        <h4 class='panel-title'>
-                            <div>
-                                <a href='#collapse${i}'
-                                    class='collapsed'
-                                    data-toggle='collapse'
-                                    aria-expanded='true'
-                                    aria-controls='collapse${i}'
-                                    title="Show/hide contents of '${Utils.escapeHtml(file.name)}'">${Utils.escapeHtml(file.name)}</a>
-                                <a href='${URL.createObjectURL(blob)}'
-                                    title='Download ${Utils.escapeHtml(file.name)}'
-                                    download='${Utils.escapeHtml(file.name)}'>&#x1f4be;</a>
-                                <span class='pull-right'>
-                                    ${file.size.toLocaleString()} bytes
-                                </span>
-                            </div>
-                        </h4>
+            const html = `<div class='card' style='white-space: normal;'>
+                    <div class='card-header' id='heading${i}'>
+                        <h6 class='mb-0'>
+                            <a class='collapsed'
+                                data-toggle='collapse'
+                                href='#collapse${i}'
+                                aria-expanded='false'
+                                aria-controls='collapse${i}'
+                                title="Show/hide contents of '${Utils.escapeHtml(file.name)}'">
+                                ${Utils.escapeHtml(file.name)}</a>
+                            <span class='float-right' style="margin-top: -3px">
+                                ${file.size.toLocaleString()} bytes
+                                <a title="Download ${Utils.escapeHtml(file.name)}"
+                                    href='${URL.createObjectURL(blob)}'
+                                    download='${Utils.escapeHtml(file.name)}'>
+                                    <i class="material-icons" style="vertical-align: bottom">save</i>
+                                </a>
+                            </span>
+                        </h6>
                     </div>
-                    <div id='collapse${i}' class='panel-collapse collapse'
-                        role='tabpanel' aria-labelledby='heading${i}'>
-                        <div class='panel-body'>
-                            <pre><code>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</code></pre>
+                    <div id='collapse${i}' class='collapse' aria-labelledby='heading${i}' data-parent="#files">
+                        <div class='card-body'>
+                            <pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>
                         </div>
                     </div>
                 </div>`;
@@ -875,8 +875,8 @@ class Utils {
         };
 
         let html = `<div style='padding: 5px; white-space: normal;'>
-                ${files.length} file(s) found<NL>
-            </div>`;
+                ${files.length} file(s) found
+            </div><div id="files" style="padding: 20px">`;
 
         for (let i = 0; i < files.length; i++) {
             if (files[i].name.endsWith("/")) {
@@ -886,7 +886,7 @@ class Utils {
             }
         }
 
-        return html;
+        return html += "</div>";
     }
 
 

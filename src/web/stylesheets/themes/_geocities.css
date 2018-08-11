@@ -64,14 +64,12 @@
 
 
     /* Operation arguments */
-    --arg-title-font-weight: bold;
-    --arg-input-height: 34px;
-    --arg-input-line-height: 20px;
-    --arg-input-font-size: 15px;
+    --op-title-font-weight: bold;
     --arg-font-colour: white;
     --arg-background: black;
     --arg-border-colour: lime;
     --arg-disabled-background: grey;
+    --arg-label-colour: red;
 
 
     /* Buttons */

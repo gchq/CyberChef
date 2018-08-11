@@ -97,7 +97,7 @@ class ParseIPv4Header extends Operation {
             checksumResult = givenChecksum + " (incorrect, should be " + correctChecksum + ")";
         }
 
-        output = `<table class='table table-hover table-condensed table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>
+        output = `<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>
 <tr><td>Version</td><td>${version}</td></tr>
 <tr><td>Internet Header Length (IHL)</td><td>${ihl} (${ihl * 4} bytes)</td></tr>
 <tr><td>Differentiated Services Code Point (DSCP)</td><td>${dscp}</td></tr>

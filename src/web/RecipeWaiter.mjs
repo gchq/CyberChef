@@ -39,10 +39,10 @@ class RecipeWaiter {
             sort: true,
             animation: 0,
             delay: 0,
-            filter: ".arg-input,.arg",
+            filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.querySelector(".arg-title").textContent);
+                dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
             },
             onEnd: function(evt) {
                 if (this.removeIntent) {
@@ -100,9 +100,15 @@ class RecipeWaiter {
                 // Removes popover element and event bindings from the dragged operation but not the
                 // event bindings from the one left in the operations list. Without manually removing
                 // these bindings, we cannot re-initialise the popover on the stub operation.
-                $(evt.item).popover("destroy").removeData("bs.popover").off("mouseenter").off("mouseleave");
-                $(evt.clone).off(".popover").removeData("bs.popover");
-                evt.item.setAttribute("data-toggle", "popover-disabled");
+                $(evt.item)
+                    .popover("dispose")
+                    .removeData("bs.popover")
+                    .off("mouseenter")
+                    .off("mouseleave")
+                    .attr("data-toggle", "popover-disabled");
+                $(evt.clone)
+                    .off(".popover")
+                    .removeData("bs.popover");
             },
             onEnd: this.opSortEnd.bind(this)
         });
@@ -299,7 +305,7 @@ class RecipeWaiter {
                 } else if (ingList[j].classList.contains("toggle-string")) {
                     // toggleString
                     ingredients[j] = {
-                        option: ingList[j].previousSibling.children[0].textContent.slice(0, -1),
+                        option: ingList[j].parentNode.parentNode.querySelector("button").textContent,
                         string: ingList[j].value
                     };
                 } else if (ingList[j].getAttribute("type") === "number") {
@@ -312,7 +318,7 @@ class RecipeWaiter {
             }
 
             item = {
-                op: operations[i].querySelector(".arg-title").textContent,
+                op: operations[i].querySelector(".op-title").textContent,
                 args: ingredients
             };
 
@@ -366,7 +372,7 @@ class RecipeWaiter {
         // Disable auto-bake if this is a manual op
         if (op.manualBake && this.app.autoBake_) {
             this.manager.controls.setAutoBake(false);
-            this.app.alert("Auto-Bake is disabled by default when using this operation.", "info", 5000);
+            this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
         }
     }
 
@@ -411,10 +417,13 @@ class RecipeWaiter {
      * @param {event} e
      */
     dropdownToggleClick(e) {
-        const el = e.target;
-        const button = el.parentNode.parentNode.previousSibling;
+        e.stopPropagation();
+        e.preventDefault();
 
-        button.innerHTML = el.textContent + " <span class='caret'></span>";
+        const el = e.target;
+        const button = el.parentNode.parentNode.querySelector("button");
+
+        button.innerHTML = el.textContent;
         this.ingChange();
     }
 
@@ -427,7 +436,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     opAdd(e) {
-        log.debug(`'${e.target.querySelector(".arg-title").textContent}' added to recipe`);
+        log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -468,6 +477,44 @@ class RecipeWaiter {
             </div>`;
 
         op.insertAdjacentHTML("beforeend", registerListEl);
+    }
+
+    /**
+     * Adjusts the number of ingredient columns as the width of the recipe changes.
+     */
+    adjustWidth() {
+        const recList = document.getElementById("rec-list");
+
+        if (!this.ingredientRuleID) {
+            this.ingredientRuleID = null;
+            this.ingredientChildRuleID = null;
+
+            // Find relevant rules in the stylesheet
+            for (const i in document.styleSheets[0].cssRules) {
+                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
+                    this.ingredientRuleID = i;
+                }
+                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
+                    this.ingredientChildRuleID = i;
+                }
+            }
+        }
+
+        if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
+
+        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID],
+            ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
+
+        if (recList.clientWidth < 450) {
+            ingredientRule.style.gridTemplateColumns = "auto auto";
+            ingredientChildRule.style.gridColumn = "1 / span 2";
+        } else if (recList.clientWidth < 620) {
+            ingredientRule.style.gridTemplateColumns = "auto auto auto";
+            ingredientChildRule.style.gridColumn = "1 / span 3";
+        } else {
+            ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
+            ingredientChildRule.style.gridColumn = "1 / span 4";
+        }
     }
 
 }

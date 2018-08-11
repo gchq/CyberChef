@@ -48,7 +48,7 @@ export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels,
         leftPadding = canvas.width * 0.08,
         rightPadding = canvas.width * 0.03,
         topPadding = canvas.height * 0.08,
-        bottomPadding = canvas.height * 0.15,
+        bottomPadding = canvas.height * 0.2,
         graphHeight = canvas.height - topPadding - bottomPadding,
         graphWidth = canvas.width - leftPadding - rightPadding,
         base = topPadding + graphHeight,
@@ -146,7 +146,7 @@ export function drawScaleBar(canvas, score, max, markings) {
         leftPadding = canvas.width * 0.01,
         rightPadding = canvas.width * 0.01,
         topPadding = canvas.height * 0.1,
-        bottomPadding = canvas.height * 0.3,
+        bottomPadding = canvas.height * 0.35,
         barHeight = canvas.height - topPadding - bottomPadding,
         barWidth = canvas.width - leftPadding - rightPadding;
 

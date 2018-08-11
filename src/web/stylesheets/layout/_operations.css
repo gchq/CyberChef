@@ -13,15 +13,16 @@
 }
 
 #search {
-    border-radius: 0;
-    border: none;
-    border-bottom: 1px solid var(--primary-border-colour);
-    color: var(--primary-font-colour);
+    padding-left: 10px;
+    padding-right: 10px;
+    background-image:
+        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
 #edit-favourites {
     float: right;
-    margin-top: -5px;
+    margin-top: -7px;
 }
 
 .favourites-hover {
@@ -29,4 +30,14 @@
     background-color: var(--rec-list-operation-bg-colour);
     border: 2px dashed var(--rec-list-operation-font-colour) !important;
     padding: 8px 8px 9px 8px;
+}
+
+#categories a {
+    color: #1976d2;
+    cursor: pointer;
+}
+
+#categories a:hover,
+.op-list .operation:hover {
+    filter: brightness(98%);
 }

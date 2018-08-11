@@ -120,7 +120,7 @@ class BackgroundWorkerWaiter {
      * @param {string|ArrayBuffer} input
      */
     magic(input) {
-        // If we're still working on the previous bake, cancel it before stating a new one.
+        // If we're still working on the previous bake, cancel it before starting a new one.
         if (this.completedCallback + 1 < this.callbackID) {
             clearTimeout(this.timeout);
             this.cancelBake();

@@ -47,9 +47,10 @@ class Diff extends Operation {
                 "value": true
             },
             {
-                "name": "Ignore whitespace (relevant for word and line)",
+                "name": "Ignore whitespace",
                 "type": "boolean",
-                "value": false
+                "value": false,
+                "hint": "Relevant for word and line"
             }
         ];
     }

@@ -170,12 +170,17 @@ class Operation {
      */
     get args() {
         return this._ingList.map(ing => {
-            return {
+            const conf = {
                 name: ing.name,
                 type: ing.type,
-                value: ing.defaultValue,
-                toggleValues: ing.toggleValues || []
+                value: ing.defaultValue
             };
+
+            if (ing.toggleValues) conf.toggleValues = ing.toggleValues;
+            if (ing.hint) conf.hint = ing.hint;
+            if (ing.disabled) conf.disabled = ing.disabled;
+            if (ing.target) conf.target = ing.target;
+            return conf;
         });
     }
 

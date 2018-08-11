@@ -21,7 +21,10 @@ class Ingredient {
         this.name  = "";
         this.type  = "";
         this._value = null;
+        this.disabled = false;
+        this.hint = "";
         this.toggleValues = [];
+        this.target = null;
 
         if (ingredientConfig) {
             this._parseConfig(ingredientConfig);
@@ -39,7 +42,10 @@ class Ingredient {
         this.name = ingredientConfig.name;
         this.type = ingredientConfig.type;
         this.defaultValue = ingredientConfig.value;
+        this.disabled = !!ingredientConfig.disabled;
+        this.hint = ingredientConfig.hint || false;
         this.toggleValues = ingredientConfig.toggleValues;
+        this.target = typeof ingredientConfig.target !== "undefined" ? ingredientConfig.target : null;
     }
 
 
