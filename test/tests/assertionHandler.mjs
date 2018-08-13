@@ -52,7 +52,7 @@ const wrapRun = (run) => () => {
  */
 export function it(name, run) {
     return {
-        name,
+        name: `Node API: ${name}`,
         run: wrapRun(run),
     };
 }

@@ -18,4 +18,8 @@ export default  [
     "Untar",
     "Unzip",
     "Zip",
+
+    // Also uses files
+    "DetectFileType",
+    "ExtractEXIF",
 ];
