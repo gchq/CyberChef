@@ -57,7 +57,6 @@ import {
     DecodeText as core_DecodeText,
     DeriveEVPKey as core_DeriveEVPKey,
     DerivePBKDF2Key as core_DerivePBKDF2Key,
-    DetectFileType as core_DetectFileType,
     Diff as core_Diff,
     DisassembleX86 as core_DisassembleX86,
     Divide as core_Divide,
@@ -70,7 +69,6 @@ import {
     ExpandAlphabetRange as core_ExpandAlphabetRange,
     ExtractDates as core_ExtractDates,
     ExtractDomains as core_ExtractDomains,
-    ExtractEXIF as core_ExtractEXIF,
     ExtractEmailAddresses as core_ExtractEmailAddresses,
     ExtractFilePaths as core_ExtractFilePaths,
     ExtractIPAddresses as core_ExtractIPAddresses,
@@ -129,7 +127,6 @@ import {
     MD4 as core_MD4,
     MD5 as core_MD5,
     MD6 as core_MD6,
-    Magic as core_Magic,
     Mean as core_Mean,
     Median as core_Median,
     MicrosoftScriptDecoder as core_MicrosoftScriptDecoder,
@@ -320,7 +317,6 @@ function generateChef() {
         "decodeText": wrap(core_DecodeText),
         "deriveEVPKey": wrap(core_DeriveEVPKey),
         "derivePBKDF2Key": wrap(core_DerivePBKDF2Key),
-        "detectFileType": wrap(core_DetectFileType),
         "diff": wrap(core_Diff),
         "disassembleX86": wrap(core_DisassembleX86),
         "divide": wrap(core_Divide),
@@ -333,7 +329,6 @@ function generateChef() {
         "expandAlphabetRange": wrap(core_ExpandAlphabetRange),
         "extractDates": wrap(core_ExtractDates),
         "extractDomains": wrap(core_ExtractDomains),
-        "extractEXIF": wrap(core_ExtractEXIF),
         "extractEmailAddresses": wrap(core_ExtractEmailAddresses),
         "extractFilePaths": wrap(core_ExtractFilePaths),
         "extractIPAddresses": wrap(core_ExtractIPAddresses),
@@ -392,7 +387,6 @@ function generateChef() {
         "MD4": wrap(core_MD4),
         "MD5": wrap(core_MD5),
         "MD6": wrap(core_MD6),
-        "magic": wrap(core_Magic),
         "mean": wrap(core_Mean),
         "median": wrap(core_Median),
         "microsoftScriptDecoder": wrap(core_MicrosoftScriptDecoder),
@@ -567,7 +561,6 @@ const decodeNetBIOSName = chef.decodeNetBIOSName;
 const decodeText = chef.decodeText;
 const deriveEVPKey = chef.deriveEVPKey;
 const derivePBKDF2Key = chef.derivePBKDF2Key;
-const detectFileType = chef.detectFileType;
 const diff = chef.diff;
 const disassembleX86 = chef.disassembleX86;
 const divide = chef.divide;
@@ -580,7 +573,6 @@ const escapeUnicodeCharacters = chef.escapeUnicodeCharacters;
 const expandAlphabetRange = chef.expandAlphabetRange;
 const extractDates = chef.extractDates;
 const extractDomains = chef.extractDomains;
-const extractEXIF = chef.extractEXIF;
 const extractEmailAddresses = chef.extractEmailAddresses;
 const extractFilePaths = chef.extractFilePaths;
 const extractIPAddresses = chef.extractIPAddresses;
@@ -639,7 +631,6 @@ const MD2 = chef.MD2;
 const MD4 = chef.MD4;
 const MD5 = chef.MD5;
 const MD6 = chef.MD6;
-const magic = chef.magic;
 const mean = chef.mean;
 const median = chef.median;
 const microsoftScriptDecoder = chef.microsoftScriptDecoder;
@@ -812,7 +803,6 @@ const operations = [
     decodeText,
     deriveEVPKey,
     derivePBKDF2Key,
-    detectFileType,
     diff,
     disassembleX86,
     divide,
@@ -825,7 +815,6 @@ const operations = [
     expandAlphabetRange,
     extractDates,
     extractDomains,
-    extractEXIF,
     extractEmailAddresses,
     extractFilePaths,
     extractIPAddresses,
@@ -884,7 +873,6 @@ const operations = [
     MD4,
     MD5,
     MD6,
-    magic,
     mean,
     median,
     microsoftScriptDecoder,
@@ -1060,7 +1048,6 @@ export {
     decodeText,
     deriveEVPKey,
     derivePBKDF2Key,
-    detectFileType,
     diff,
     disassembleX86,
     divide,
@@ -1073,7 +1060,6 @@ export {
     expandAlphabetRange,
     extractDates,
     extractDomains,
-    extractEXIF,
     extractEmailAddresses,
     extractFilePaths,
     extractIPAddresses,
@@ -1132,7 +1118,6 @@ export {
     MD4,
     MD5,
     MD6,
-    magic,
     mean,
     median,
     microsoftScriptDecoder,

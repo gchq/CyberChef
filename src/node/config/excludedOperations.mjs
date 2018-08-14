@@ -22,4 +22,7 @@ export default  [
     // Also uses files
     "DetectFileType",
     "ExtractEXIF",
+
+    // Relies on state of recipe.
+    // "Magic",
 ];

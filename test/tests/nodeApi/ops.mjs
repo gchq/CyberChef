@@ -8,6 +8,9 @@
  * Aim of these tests is to ensure each arg type is
  * handled correctly by the wrapper.
  *
+ * Generally just checking operations that use external dependencies to ensure
+ * it behaves as expected in Node.
+ *
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -551,6 +554,158 @@ Top Drawer`, {
 
     it("From unix timestamp", () => {
         assert.strictEqual(chef.fromUNIXTimestamp("978346800").toString(), "Mon 1 January 2001 11:00:00 UTC");
+    }),
+
+    it("Generate HOTP", () => {
+        const result = chef.generateHOTP("Cut The Mustard", {
+            name: "colonel",
+        });
+        const expected = `URI: otpauth://hotp/colonel?secret=IN2XIICUNBSSATLVON2GC4TE
+
+Password: 034148`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Generate PGP Key Pair", () => {
+        const result = chef.generatePGPKeyPair("Back To the Drawing Board", {
+            keyType: "ECC-256",
+        });
+        const expected = `-----BEGIN PGP PRIVATE KEY BLOCK-----
+Version: Keybase OpenPGP v2.0.77
+Comment: https://keybase.io/crypto
+
+xYgEW3KciQEBAK96Lx9G0WZiw1yhC35IogdumoxEJXsLdAVIjmskXeAfABEBAAEA
+AP4wK+OZu3AqojwtRoyIK1pHKU93OAuam1iaLCOGCwCckQCA5PjU0aLNZqy/eKyX
+T3rpKQCAxDDT5hHGAUfFPUu73KWABwB/WKpeUp7KwurMSbYVhgr1TijszQDCVAQT
+AQoAHgUCW3KciQIbLwMLCQcDFQoIAh4BAheAAxYCAQIZAQAKCRD0VeyUMgmpz3OE
+AP9qsnhhoK85Tnu6VKwKm1iMiJAssDQnFztDaMmmVdrN/MeIBFtynIkBAQDDhjIw
+fxOprqVMYLk6aC45JyPAA2POzu0Zb/rx0tKeBwARAQABAAD/XAr66oiP9ZORHiT0
+XZH4m7vwZt7AHuq4pYtVlMQXk60AgPw2Mno/wStvE/SBa9R7AtsAgMZ2BkJjvNPZ
+9YA6cl4lW0UAgI1+kJVLZ5VR9fPENfJR80EtncKDBBgBCgAPBQJbcpyJBQkPCZwA
+AhsuAEgJEPRV7JQyCanPPSAEGQEKAAYFAltynIkACgkQrewgWMQZ/b2blwD/dbwh
+/3F9xv+YGAwq8i1mzzswg4qBct6LoSIjGglULT9RIQD/cYd31YfKrEnbSBWD5PLi
+zcSsxtBGKphwXiPAlQJ1Q5DHiARbcpyJAQEAs8V418lf1T74PpAwdBTiViEUX9jB
+e+ZrAEVaq5nu1C8AEQEAAQAA/iPWhS23hnRTllealR4/H5OofZRwxvIQrxAJp6z1
+ICRxAIDayRpCAbK5EC3DzRU2z4VpAIDSWYSs9inI1VTfamJPMWHXAIC3aaukzCP4
+GEGeFobX/thnKhnCgwQYAQoADwUCW3KciQUJA8JnAAIbLgBICRD0VeyUMgmpzz0g
+BBkBCgAGBQJbcpyJAAoJEB4jzL1hmQIXamUA/0c1M6BSqVtxNowPcOAXKYIxMca1
+VFcRWolHnZqdZQ7k/J8A/3HvNLRS3p1HvjQEfXl/qKoRRn843Py09ptDHh+xpGKh
+=d+Vp
+-----END PGP PRIVATE KEY BLOCK-----
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: Keybase OpenPGP v2.0.77
+Comment: https://keybase.io/crypto
+
+xi0EW3KciQEBAK96Lx9G0WZiw1yhC35IogdumoxEJXsLdAVIjmskXeAfABEBAAHN
+AMJUBBMBCgAeBQJbcpyJAhsvAwsJBwMVCggCHgECF4ADFgIBAhkBAAoJEPRV7JQy
+CanPc4QA/2qyeGGgrzlOe7pUrAqbWIyIkCywNCcXO0NoyaZV2s38zi0EW3KciQEB
+AMOGMjB/E6mupUxguTpoLjknI8ADY87O7Rlv+vHS0p4HABEBAAHCgwQYAQoADwUC
+W3KciQUJDwmcAAIbLgBICRD0VeyUMgmpzz0gBBkBCgAGBQJbcpyJAAoJEK3sIFjE
+Gf29m5cA/3W8If9xfcb/mBgMKvItZs87MIOKgXLei6EiIxoJVC0/USEA/3GHd9WH
+yqxJ20gVg+Ty4s3ErMbQRiqYcF4jwJUCdUOQzi0EW3KciQEBALPFeNfJX9U++D6Q
+MHQU4lYhFF/YwXvmawBFWquZ7tQvABEBAAHCgwQYAQoADwUCW3KciQUJA8JnAAIb
+LgBICRD0VeyUMgmpzz0gBBkBCgAGBQJbcpyJAAoJEB4jzL1hmQIXamUA/0c1M6BS
+qVtxNowPcOAXKYIxMca1VFcRWolHnZqdZQ7k/J8A/3HvNLRS3p1HvjQEfXl/qKoR
+Rn843Py09ptDHh+xpGKh
+=ySwG
+-----END PGP PUBLIC KEY BLOCK-----`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Generate UUID", () => {
+        const result = chef.generateUUID();
+        assert.ok(result.toString());
+        assert.strictEqual(result.toString().length, 36);
+    }),
+
+    it("Gzip, Gunzip", () => {
+        assert.strictEqual(chef.gunzip(chef.gzip("Down To The Wire")).toString(), "Down To The Wire");
+    }),
+
+    it("Hex to Object Identifier", () => {
+        assert.strictEqual(
+            chef.hexToObjectIdentifier(chef.toHex("You Can't Teach an Old Dog New Tricks")).toString(),
+            "2.9.111.117.32.67.97.110.39.116.32.84.101.97.99.104.32.97.110.32.79.108.100.32.68.111.103.32.78.101.119.32.84.114.105.99.107.115");
+    }),
+
+    it("Hex to PEM", () => {
+        const result = chef.hexToPEM(chef.toHex("Yada Yada"));
+        const expected = `-----BEGIN CERTIFICATE-----\r
+WWFkYSBZYWRh\r
+-----END CERTIFICATE-----\r\n`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("HMAC", () => {
+        assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "b128b48ec0d6b0f1a27220c396d0f3e5");
+    }),
+
+    it("Javascript beautify", () => {
+        const result = chef.javaScriptBeautify("const b = 2, g = 7;const fun = (a) => {return a*a};");
+        const expected = `const b = 2, g = 7;
+const fun = a => {
+    return a * a;'
+};`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("JavaScript Minify", () => {
+        const result = chef.javaScriptMinify(`const b = 2, g = 7;
+const fun = a => {
+    return a * a;
+};`);
+        const expected = "const b = 2, g = 7;const fun = (a) => {return a*a};";
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("JavaScript Parse", () => {
+        const result = chef.javaScriptParser("const b = 2;");
+        const expected = `{
+"type": "Program",
+"body": [
+    {
+    "type": "VariableDeclaration",
+    "declarations": [
+        {
+        "type": "VariableDeclarator",
+        "id": {
+            "type": "Identifier",
+            "name": "b"
+        },
+        "init": {
+            "type": "Literal",
+            "value": 2,
+            "raw": "2"
+        }
+        }
+    ],
+    "kind": "const"
+    }
+],
+"sourceType": "script"
+}`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("JPathExpression", () => {
+        assert.strictEqual(chef.JPathExpression("{\"key\" : \"value\"}", {query: "$.key"}).toString(), "\"value\"");
+    }),
+
+    it("JSON Beautify", () => {
+        assert.strictEqual(
+            chef.JSONBeautify("{\"key\" : \"value\"}").toString(),
+            `{
+\\t"key": "value"
+}`);
+    }),
+
+    it("Keccak", () => {
+        assert.strictEqual(chef.keccak("Flea Market").toString(), "c2a06880b19e453ee5440e8bd4c2024bedc15a6630096aa3f609acfd2b8f15f27cd293e1cc73933e81432269129ce954a6138889ce87831179d55dcff1cc7587");
+    }),
+
+    it("MD6", () => {
+        assert.strictEqual(chef.MD6("Head Over Heels", {key: "arty"}).toString(), "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad");
     }),
 
     it("toBase64: editableOption", () => {

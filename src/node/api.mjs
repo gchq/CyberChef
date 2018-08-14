@@ -81,6 +81,10 @@ function transformArgs(originalArgs, newArgs) {
  * @param input
  */
 const ensureIsDish = function ensureIsDish(input) {
+    if (!input) {
+        return new SyncDish();
+    }
+
     let dish;
     if (input instanceof SyncDish) {
         dish = input;
