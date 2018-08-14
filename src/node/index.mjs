@@ -127,6 +127,7 @@ import {
     MD4 as core_MD4,
     MD5 as core_MD5,
     MD6 as core_MD6,
+    Magic as core_Magic,
     Mean as core_Mean,
     Median as core_Median,
     MicrosoftScriptDecoder as core_MicrosoftScriptDecoder,
@@ -170,7 +171,6 @@ import {
     RemoveLineNumbers as core_RemoveLineNumbers,
     RemoveNullBytes as core_RemoveNullBytes,
     RemoveWhitespace as core_RemoveWhitespace,
-    RenderImage as core_RenderImage,
     Return as core_Return,
     Reverse as core_Reverse,
     RotateLeft as core_RotateLeft,
@@ -203,7 +203,6 @@ import {
     Sum as core_Sum,
     SwapEndianness as core_SwapEndianness,
     SymmetricDifference as core_SymmetricDifference,
-    SyntaxHighlighter as core_SyntaxHighlighter,
     TCPIPChecksum as core_TCPIPChecksum,
     Tail as core_Tail,
     TakeBytes as core_TakeBytes,
@@ -387,6 +386,7 @@ function generateChef() {
         "MD4": wrap(core_MD4),
         "MD5": wrap(core_MD5),
         "MD6": wrap(core_MD6),
+        "magic": wrap(core_Magic),
         "mean": wrap(core_Mean),
         "median": wrap(core_Median),
         "microsoftScriptDecoder": wrap(core_MicrosoftScriptDecoder),
@@ -430,7 +430,6 @@ function generateChef() {
         "removeLineNumbers": wrap(core_RemoveLineNumbers),
         "removeNullBytes": wrap(core_RemoveNullBytes),
         "removeWhitespace": wrap(core_RemoveWhitespace),
-        "renderImage": wrap(core_RenderImage),
         "Return": wrap(core_Return),
         "reverse": wrap(core_Reverse),
         "rotateLeft": wrap(core_RotateLeft),
@@ -463,7 +462,6 @@ function generateChef() {
         "sum": wrap(core_Sum),
         "swapEndianness": wrap(core_SwapEndianness),
         "symmetricDifference": wrap(core_SymmetricDifference),
-        "syntaxHighlighter": wrap(core_SyntaxHighlighter),
         "TCPIPChecksum": wrap(core_TCPIPChecksum),
         "tail": wrap(core_Tail),
         "takeBytes": wrap(core_TakeBytes),
@@ -631,6 +629,7 @@ const MD2 = chef.MD2;
 const MD4 = chef.MD4;
 const MD5 = chef.MD5;
 const MD6 = chef.MD6;
+const magic = chef.magic;
 const mean = chef.mean;
 const median = chef.median;
 const microsoftScriptDecoder = chef.microsoftScriptDecoder;
@@ -674,7 +673,6 @@ const removeEXIF = chef.removeEXIF;
 const removeLineNumbers = chef.removeLineNumbers;
 const removeNullBytes = chef.removeNullBytes;
 const removeWhitespace = chef.removeWhitespace;
-const renderImage = chef.renderImage;
 const Return = chef.Return;
 const reverse = chef.reverse;
 const rotateLeft = chef.rotateLeft;
@@ -707,7 +705,6 @@ const subtract = chef.subtract;
 const sum = chef.sum;
 const swapEndianness = chef.swapEndianness;
 const symmetricDifference = chef.symmetricDifference;
-const syntaxHighlighter = chef.syntaxHighlighter;
 const TCPIPChecksum = chef.TCPIPChecksum;
 const tail = chef.tail;
 const takeBytes = chef.takeBytes;
@@ -873,6 +870,7 @@ const operations = [
     MD4,
     MD5,
     MD6,
+    magic,
     mean,
     median,
     microsoftScriptDecoder,
@@ -916,7 +914,6 @@ const operations = [
     removeLineNumbers,
     removeNullBytes,
     removeWhitespace,
-    renderImage,
     Return,
     reverse,
     rotateLeft,
@@ -949,7 +946,6 @@ const operations = [
     sum,
     swapEndianness,
     symmetricDifference,
-    syntaxHighlighter,
     TCPIPChecksum,
     tail,
     takeBytes,
@@ -1118,6 +1114,7 @@ export {
     MD4,
     MD5,
     MD6,
+    magic,
     mean,
     median,
     microsoftScriptDecoder,
@@ -1161,7 +1158,6 @@ export {
     removeLineNumbers,
     removeNullBytes,
     removeWhitespace,
-    renderImage,
     Return,
     reverse,
     rotateLeft,
@@ -1194,7 +1190,6 @@ export {
     sum,
     swapEndianness,
     symmetricDifference,
-    syntaxHighlighter,
     TCPIPChecksum,
     tail,
     takeBytes,

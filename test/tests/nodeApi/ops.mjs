@@ -18,6 +18,7 @@
 
 import assert from "assert";
 import it from "../assertionHandler";
+import fs from "fs";
 
 import {
     addLineNumbers,
@@ -706,6 +707,206 @@ const fun = a => {
 
     it("MD6", () => {
         assert.strictEqual(chef.MD6("Head Over Heels", {key: "arty"}).toString(), "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad");
+    }),
+
+    it("Parse ASN.1 Hex string", () => {
+        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(4d) 7574682d7761746572696e67\n");
+    }),
+
+    it("Parse DateTime", () => {
+        const result = chef.parseDateTime("06/07/2001 01:59:30");
+        const expected = `Date: Friday 6th July 2001
+Time: 01:59:30
+Period: AM
+Timezone: UTC
+UTC offset: +0000
+
+Daylight Saving Time: false
+Leap year: false
+Days in this month: 31
+
+Day of year: 187
+Week number: 2001
+Quarter: 3`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Parse IPV6 address", () => {
+        const result = chef.parseIPv6Address("2001:0db8:85a3:0000:0000:8a2e:0370:7334");
+        const expected = `Longhand:  2001:0db8:85a3:0000:0000:8a2e:0370:7334
+Shorthand: 2001:db8:85a3::8a2e:370:7334
+
+This is a documentation IPv6 address. This range should be used whenever an example IPv6 address is given or to model networking scenarios. Corresponds to 192.0.2.0/24, 198.51.100.0/24, and 203.0.113.0/24 in IPv4.
+Documentation range: 2001:db8::/32`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Parse URI", () => {
+        const result = chef.parseURI("https://www.google.co.uk/search?q=almonds");
+        const expected = `Protocol:	https:
+Hostname:	www.google.co.uk
+Path name:	/search
+Arguments:
+\tq = almonds
+`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Parse user agent", () => {
+        const result = chef.parseUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ");
+        const expected = `Browser
+    Name: Mozilla
+    Version: 5.0
+Device
+    Model: unknown
+    Type: unknown
+    Vendor: unknown
+Engine
+    Name: Gecko
+    Version: 47.0
+OS
+    Name: Windows
+    Version: 7
+CPU
+    Architecture: amd64`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("PGP Encrypt", () => {
+        const pbkey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1
+
+mI0EVWOihAEEALzwFAVWTrD0KiWCH5tX6q6QsGjlRn4IP2uj/xWsJZDNbCKm+JAe
+1RvIootpW1+PNNMJlIInwUgtCjtJ9gZbGBpXeqwdSn0oYuj9X86ekXOUnZsRoPCj
+RwS8kpbrvRVfhWN8hYuXFcXK2J2Ld0ZpVyJzkncpFdpAgzTPMfrO1HS5ABEBAAG0
+GmdwZyBuYW1lIChjb21tZW50KSA8ZW1AaWw+iLgEEwECACIFAlVjooQCGwMGCwkI
+BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEBg8dTRwi4g5I40D/2+uUuQxa3uMrAeI
+dXLaJWz3V0cl1rotfBP47apDUGbkm1HVgULJUo8Bo15Ii83ST8TUsyja3XcLutHb
+IwYSWo41gEV48+NKoN6Oy3HwqBoHfH06bu0If75vdSjnZpB2dO/Ph7L9kz78gc4y
+tZx4bE64MTlL2AYghZxyYpFyydjXuI0EVWOihAEEANE4UU+4iB2hMAXq93hiBzIh
+AMtn/DlWbJkpdUgrjKOG6tILs28mrw9rI4PivmT7grkyNW8sa3ATsmWC1xChxGTN
+T1guyh0Hhbc3Otfng2BFSWcBkPwUoNaOdrVFpP9J51IYrsQHsjbZlY45ghDBzM6t
+sISfkmmFCsp0l7w/XAcvABEBAAGInwQYAQIACQUCVWOihAIbDAAKCRAYPHU0cIuI
+OQ2BA/9KWqOhXZW75ac7CuJMfileZR7vRy9CkKyNG21cZtAlqftAX+m8FGdG0duU
+jKHiPvjXhSfP3lmrQ7brja9LgSzkiBqQzvPW55G67nGQdUC+mqZNJNlRh+8atf9I
+5nxg2i8zn6F5cLaNWz7cl27m1/mXKcH3gult1PLR4PiYLiC9aw==
+=xw3e
+-----END PGP PUBLIC KEY BLOCK-----`;
+
+        const result = chef.PGPEncrypt("A Fool and His Money are Soon Parted", {
+            publicKeyOfRecipient: pbkey,
+        });
+        const expected = `-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.77
+Comment: https://keybase.io/crypto
+
+wYwDv1kIXPPNwmABA/4syW+oO+S/mfpjdp83/MZJiKh6XNQoPr/N5/1Is/QXYu9V
+/v8/b+eReOpUVC6cVrJ8U5cB19y1Az3NQWHXLEC0jND2wL3cUM4sv87hlvv2PLhc
+okv8OHNCitRiweo7NZHVygHGdFvY082G47e1PkyPAuVynvzdD450ta/s/KOxZdJg
+ARbZIrC6WmjYNLwhbpRYawKD+3N4I5qliRpU2POKRi9UROAW9dth6egy60TTCvyO
+jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
+=IBYt
+-----END PGP MESSAGE-----
+`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Raw deflate", () => {
+        assert.strictEqual(chef.rawInflate(chef.rawDeflate("Like Father Like Son", { compressionType: "Fixed Huffman Coding"})).toString(), "Like Father Like Son");
+    }),
+
+    it("RC4", () => {
+        assert.strictEqual(
+            chef.RC4("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
+            "7d17e60d9bc94b7f4095851c729e69a2");
+    }),
+
+    it("RC4 Drop", () => {
+        assert.strictEqual(
+            chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
+            "8fa5f2751d34476a0c857439f43816cf");
+    }),
+
+    it("Regular Expression", () => {
+        assert.strictEqual(chef.regularExpression("Wouldn't Harm a Fly", {regex: "\\'[a-z]"}).toString(), "Wouldn't Harm a Fly");
+    }),
+
+    it("Remove EXIF", () => {
+        const picBuffer = fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg");
+        const result = chef.removeEXIF(picBuffer);
+        assert.strictEqual(result.toString().length(), 4582);
+    }),
+
+    it("Scan for embedded files", () => {
+        const result = chef.scanForEmbeddedFiles(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg"));
+        const expected = `Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.
+
+Offset 0 (0x00):
+    File extension: jpg
+    MIME type:      image/jpeg
+
+Offset 30 (0x1e):
+    File extension: tif
+    MIME type:      image/tiff
+
+Offset 212 (0xd4):
+    File extension: txt
+    MIME type:      text/plain
+    Description:    UTF-8 encoded Unicode byte order mark detected, commonly but not exclusively seen in text files.
+
+
+16 file types were detected that have common byte sequences. These are likely to be false positives. Run this operation with the 'Ignore common byte sequences' option unchecked to see details.`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Scrypt", () => {
+        assert.strictEqual(
+            chef.scrypt("Playing For Keeps", {salt: {string: "salty", option: "Hex"}}).toString(),
+            "5446b6d86d88515894a163201765bceed0bc39610b1506cdc4d939ffc638bc46e051bce756e2865165d89d955a43a7eb5504502567dea8bfc9e7d49aaa894c07");
+    }),
+
+    it("SHA3", () => {
+        assert.strictEqual(
+            chef.SHA3("benign gravel").toString(),
+            "2b1e36e0dbe151a89887be08da3bad141908cce62327f678161bcf058627e87abe57e3c5fce6581678714e6705a207acbd5c1f37f7a812280bc2cc558f00bed9");
+    }),
+
+    it("Shake", () => {
+        assert.strictEqual(
+            chef.shake("murderous bloodshed").toString(),
+            "b79b3bb88099330bc6a15122f8dfaededf57a33b51c748d5a94e8122ff18d21e12f83412926b7e4a77a85ba6f36aa4841685e78296036337175e40096b5ac000");
+    }),
+
+    it("Snefru", () => {
+        assert.strictEqual(
+            chef.snefru("demeaning milestone").toString(),
+            "a671b48770fe073ce49e9259cc2f47d345a53712639f8ae23c5ad3fec19540a5");
+    }),
+
+    it("SQL Beautify", () => {
+        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F 
+FROM STATS;`);
+        const expected = `SELECT MONTH,
+         ID,
+         RAIN_I,
+         TEMP_F
+FROM STATS;`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("SSDEEP", () => {
+        assert.strictEqual(
+            chef.SSDEEP("shotgun tyranny snugly").toString(),
+            "3:DLIXzMQCJc:XERKc");
+    }),
+
+    it("strings", () => {
+        const result = chef.strings("smothering ampersand abreast");
+        const expected = `Total found: 1
+
+smothering ampersand abreast
+`;
+        assert.strictEqual(result.toString(), expected);
     }),
 
     it("toBase64: editableOption", () => {

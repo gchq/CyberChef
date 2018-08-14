@@ -25,4 +25,7 @@ export default  [
 
     // Relies on state of recipe.
     // "Magic",
+
+    "RenderImage",
+    "SyntaxHighlighter",
 ];
