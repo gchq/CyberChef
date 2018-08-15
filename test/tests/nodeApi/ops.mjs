@@ -930,6 +930,54 @@ smothering ampersand abreast
         assert.strictEqual(result.toString(), "c29tZSBpbnB1dA==");
     }),
 
+    it("To BCD", () => {
+        assert.strictEqual(chef.toBCD("443").toString(), "0100 0100 0011");
+    }),
+
+    it("To CamelCase", () => {
+        assert.strictEqual(chef.toCamelCase("Quickest Wheel").toString(), "quickestWheel");
+    }),
+
+    it("To Kebab case", () => {
+        assert.strictEqual(chef.toKebabCase("Elfin Gold").toString(), "elfin-gold");
+    }),
+
+    it("To punycode", () => {
+        assert.strictEqual(chef.toPunycode("♠ ♣ ♥ ♦ ← ↑ ‍ →").toString(), "       -m06cw7klao368lfb3aq");
+    }),
+
+    it("to snake case", () => {
+        assert.strictEqual(chef.toSnakeCase("Abhorrent Grass").value, "abhorrent_grass");
+    }),
+
+    it("to unix timestamp", () => {
+        assert.strictEqual(chef.toUNIXTimestamp("04/01/2001").toString(), "986083200 (Sun 1 April 2001 00:00:00 UTC)");
+    }),
+
+    it("Translate DateTime format", () => {
+        assert.strictEqual(chef.translateDateTimeFormat("01/04/1999 22:33:01").toString(), "01/04/1999 22:33:01");
+    }),
+
+    it("Triple DES encrypt / decrypt", () => {
+        assert.strictEqual(
+            chef.tripleDESDecrypt(
+                chef.tripleDESEncrypt("Destroy Money", {key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"}}),
+                {key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"}}).toString(),
+            "Destroy Money");
+    }),
+
+    it("UNIX Timestamp to Windows Filetime", () => {
+        assert.strictEqual(chef.UNIXTimestampToWindowsFiletime("2020735").toString(), "116464943350000000");
+    }),
+
+    it("XML Beautify", () => {
+        assert.strictEqual(
+            chef.XMLBeautify("<contact-info><company>abc</company></contact-info>").toString(),
+            `<contact-info>
+\\t<company>abc</company>
+</contact-info>`);
+    }),
+
     it("toHex: accepts args", () => {
         const result = toHex("some input", {
             delimiter: "Colon",
