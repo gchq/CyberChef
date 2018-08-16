@@ -938,6 +938,13 @@ smothering ampersand abreast
         assert.strictEqual(chef.toCamelCase("Quickest Wheel").toString(), "quickestWheel");
     }),
 
+    it("toHex: accepts args", () => {
+        const result = toHex("some input", {
+            delimiter: "Colon",
+        });
+        assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
+    }),
+
     it("To Kebab case", () => {
         assert.strictEqual(chef.toKebabCase("Elfin Gold").toString(), "elfin-gold");
     }),
@@ -978,11 +985,36 @@ smothering ampersand abreast
 </contact-info>`);
     }),
 
-    it("toHex: accepts args", () => {
-        const result = toHex("some input", {
-            delimiter: "Colon",
-        });
-        assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
+    it("XPath expression", () => {
+        assert.strictEqual(
+            chef.XPathExpression("<contact-info><company>abc</company></contact-info>", {xPath: "contact-info/company"}).toString(),
+            "<company>abc</company>");
+    }),
+
+    it("Zlib deflate / inflate", () => {
+        assert.strictEqual(chef.zlibInflate(chef.zlibDeflate("cut homer wile rooky grits dizen")).toString(), "cut homer wile rooky grits dizen");
+    }),
+
+
+    it("Detect file type", () => {
+        assert.strictEqual(
+            chef.detectFileType(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg")).toString(),
+            `File extension: jpg
+MIME type:      image/jpeg`);
+    }),
+
+    it("extract EXIF", () => {
+        assert.strictEqual(
+            chef.extractEXIF(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg")).toString(),
+            `Found 7 tags.
+
+Orientation: 1
+XResolution: 72
+YResolution: 72
+ResolutionUnit: 2
+ColorSpace: 1
+ExifImageWidth: 57
+ExifImageHeight: 57`);
     }),
 
 ]);

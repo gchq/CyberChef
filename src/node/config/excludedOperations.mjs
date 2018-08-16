@@ -19,9 +19,6 @@ export default  [
     "Unzip",
     "Zip",
 
-    // Also uses files
-    "DetectFileType",
-    "ExtractEXIF",
 
     // Relies on state of recipe.
     // "Magic",

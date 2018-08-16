@@ -57,6 +57,7 @@ import {
     DecodeText as core_DecodeText,
     DeriveEVPKey as core_DeriveEVPKey,
     DerivePBKDF2Key as core_DerivePBKDF2Key,
+    DetectFileType as core_DetectFileType,
     Diff as core_Diff,
     DisassembleX86 as core_DisassembleX86,
     Divide as core_Divide,
@@ -69,6 +70,7 @@ import {
     ExpandAlphabetRange as core_ExpandAlphabetRange,
     ExtractDates as core_ExtractDates,
     ExtractDomains as core_ExtractDomains,
+    ExtractEXIF as core_ExtractEXIF,
     ExtractEmailAddresses as core_ExtractEmailAddresses,
     ExtractFilePaths as core_ExtractFilePaths,
     ExtractIPAddresses as core_ExtractIPAddresses,
@@ -316,6 +318,7 @@ function generateChef() {
         "decodeText": wrap(core_DecodeText),
         "deriveEVPKey": wrap(core_DeriveEVPKey),
         "derivePBKDF2Key": wrap(core_DerivePBKDF2Key),
+        "detectFileType": wrap(core_DetectFileType),
         "diff": wrap(core_Diff),
         "disassembleX86": wrap(core_DisassembleX86),
         "divide": wrap(core_Divide),
@@ -328,6 +331,7 @@ function generateChef() {
         "expandAlphabetRange": wrap(core_ExpandAlphabetRange),
         "extractDates": wrap(core_ExtractDates),
         "extractDomains": wrap(core_ExtractDomains),
+        "extractEXIF": wrap(core_ExtractEXIF),
         "extractEmailAddresses": wrap(core_ExtractEmailAddresses),
         "extractFilePaths": wrap(core_ExtractFilePaths),
         "extractIPAddresses": wrap(core_ExtractIPAddresses),
@@ -559,6 +563,7 @@ const decodeNetBIOSName = chef.decodeNetBIOSName;
 const decodeText = chef.decodeText;
 const deriveEVPKey = chef.deriveEVPKey;
 const derivePBKDF2Key = chef.derivePBKDF2Key;
+const detectFileType = chef.detectFileType;
 const diff = chef.diff;
 const disassembleX86 = chef.disassembleX86;
 const divide = chef.divide;
@@ -571,6 +576,7 @@ const escapeUnicodeCharacters = chef.escapeUnicodeCharacters;
 const expandAlphabetRange = chef.expandAlphabetRange;
 const extractDates = chef.extractDates;
 const extractDomains = chef.extractDomains;
+const extractEXIF = chef.extractEXIF;
 const extractEmailAddresses = chef.extractEmailAddresses;
 const extractFilePaths = chef.extractFilePaths;
 const extractIPAddresses = chef.extractIPAddresses;
@@ -800,6 +806,7 @@ const operations = [
     decodeText,
     deriveEVPKey,
     derivePBKDF2Key,
+    detectFileType,
     diff,
     disassembleX86,
     divide,
@@ -812,6 +819,7 @@ const operations = [
     expandAlphabetRange,
     extractDates,
     extractDomains,
+    extractEXIF,
     extractEmailAddresses,
     extractFilePaths,
     extractIPAddresses,
@@ -1044,6 +1052,7 @@ export {
     decodeText,
     deriveEVPKey,
     derivePBKDF2Key,
+    detectFileType,
     diff,
     disassembleX86,
     divide,
@@ -1056,6 +1065,7 @@ export {
     expandAlphabetRange,
     extractDates,
     extractDomains,
+    extractEXIF,
     extractEmailAddresses,
     extractFilePaths,
     extractIPAddresses,
