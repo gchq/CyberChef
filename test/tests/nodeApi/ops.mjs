@@ -118,20 +118,20 @@ Tiger-128`;
         assert.strictEqual(result.toString(), "Szkkb zh z Xozn");
     }),
 
-    it("Bcrypt", () => {
-        const result = chef.bcrypt("Put a Sock In It");
+    it("Bcrypt", async () => {
+        const result = await chef.bcrypt("Put a Sock In It");
         assert.strictEqual(result.toString(), "$2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6");
     }),
 
-    it("bcryptCompare", () => {
-        const result = chef.bcryptCompare("Put a Sock In It", {
+    it("bcryptCompare", async() => {
+        const result = await chef.bcryptCompare("Put a Sock In It", {
             hash: "$2a$10$2rT4a3XnIecBsd1H33dMTuyYE1HJ1n9F.V2rjQtAH73rh1qvOf/ae",
         });
         assert.strictEqual(result.toString(), "Match: Put a Sock In It");
     }),
 
-    it("Bcrypt Parse", () => {
-        const result = chef.bcryptParse("$2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6");
+    it("Bcrypt Parse", async () => {
+        const result = await chef.bcryptParse("$2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6");
         const expected = `Rounds: 10
 Salt: $2a$10$ODeP1.6fMsb.ENk2ngPUCO
 Password hash: 7qTGVPyHA9TqDVcyupyed8FjsiF65L6
@@ -567,8 +567,8 @@ Password: 034148`;
         assert.strictEqual(result.toString(), expected);
     }),
 
-    it("Generate PGP Key Pair", () => {
-        const result = chef.generatePGPKeyPair("Back To the Drawing Board", {
+    it("Generate PGP Key Pair", async () => {
+        const result = await chef.generatePGPKeyPair("Back To the Drawing Board", {
             keyType: "ECC-256",
         });
         const expected = `-----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -772,7 +772,7 @@ CPU
         assert.strictEqual(result.toString(), expected);
     }),
 
-    it("PGP Encrypt", () => {
+    it("PGP Encrypt", async () => {
         const pbkey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1
 
@@ -793,7 +793,7 @@ jKHiPvjXhSfP3lmrQ7brja9LgSzkiBqQzvPW55G67nGQdUC+mqZNJNlRh+8atf9I
 =xw3e
 -----END PGP PUBLIC KEY BLOCK-----`;
 
-        const result = chef.PGPEncrypt("A Fool and His Money are Soon Parted", {
+        const result = await chef.PGPEncrypt("A Fool and His Money are Soon Parted", {
             publicKeyOfRecipient: pbkey,
         });
         const expected = `-----BEGIN PGP MESSAGE-----

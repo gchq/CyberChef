@@ -97,7 +97,27 @@ const ensureIsDish = function ensureIsDish(input) {
 };
 
 /**
+ * prepareOp: transform args, make input the right type.
+ * @param opInstance - instance of the operation
+ * @param input - operation input
+ * @param args - operation args
+ */
+const prepareOp = function prepareOp(opInstance, input, args) {
+    const dish = ensureIsDish(input);
+    let transformedArgs;
+    // Transform object-style args to original args array
+    if (!Array.isArray(args)) {
+        transformedArgs = transformArgs(opInstance.args, args);
+    } else {
+        transformedArgs = args;
+    }
+    const transformedInput = dish.get(opInstance.inputType);
+    return {transformedInput, transformedArgs};
+};
+
+/**
  * Wrap an operation to be consumed by node API.
+ * Checks to see if run function is async or not.
  * new Operation().run() becomes operation()
  * Perform type conversion on input
  * @private
@@ -106,29 +126,47 @@ const ensureIsDish = function ensureIsDish(input) {
  * some type conversion logic
  */
 export function wrap(OpClass) {
-    /**
-     * Wrapped operation run function
-     * @param {*} input
-     * @param {Object | String[]} args - either in Object or normal args array
-     * @returns {SyncDish} operation's output, on a Dish.
-     * @throws {OperationError} if the operation throws one.
-     */
-    const wrapped = (input, args=null) => {
-        const operation = new OpClass();
 
-        const dish = ensureIsDish(input);
+    // Check to see if class's run function is async.
+    const opInstance = new OpClass();
+    const isAsync = opInstance.run.constructor.name === "AsyncFunction";
 
-        // Transform object-style args to original args array
-        if (!Array.isArray(args)) {
-            args = transformArgs(operation.args, args);
-        }
-        const transformedInput = dish.get(operation.inputType);
-        const result = operation.run(transformedInput, args);
-        return new SyncDish({
-            value: result,
-            type: operation.outputType
-        });
-    };
+    let wrapped;
+
+    // If async, wrap must be async.
+    if (isAsync) {
+        /**
+         * Async wrapped operation run function
+         * @param {*} input
+         * @param {Object | String[]} args - either in Object or normal args array
+         * @returns {Promise<SyncDish>} operation's output, on a Dish.
+         * @throws {OperationError} if the operation throws one.
+         */
+        wrapped = async (input, args=null) => {
+            const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+            const result = await opInstance.run(transformedInput, transformedArgs);
+            return new SyncDish({
+                value: result,
+                type: opInstance.outputType
+            });
+        };
+    } else {
+        /**
+         * wrapped operation run function
+         * @param {*} input
+         * @param {Object | String[]} args - either in Object or normal args array
+         * @returns {SyncDish} operation's output, on a Dish.
+         * @throws {OperationError} if the operation throws one.
+         */
+        wrapped = (input, args=null) => {
+            const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+            const result = opInstance.run(transformedInput, transformedArgs);
+            return new SyncDish({
+                value: result,
+                type: opInstance.outputType
+            });
+        };
+    }
 
     // used in chef.help
     wrapped.opName = OpClass.name;
