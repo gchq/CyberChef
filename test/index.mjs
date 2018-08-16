@@ -124,11 +124,14 @@ setTimeout(function() {
     process.exit(1);
 }, 10 * 1000);
 
+const start = new Date();
+
 Promise.all([
     TestRegister.runTests(),
     TestRegister.runApiTests()
 ])
     .then(function(resultsPair) {
+        const finish = new Date();
         const results = resultsPair[0].concat(resultsPair[1]);
         results.forEach(handleTestResult);
 
@@ -144,6 +147,8 @@ Promise.all([
         if (!allTestsPassing) {
             console.log("\nNot all tests are passing");
         }
+
+        console.log(`Tests took ${(finish - start) / 1000} seconds`);
 
         process.exit(allTestsPassing ? 0 : 1);
     });

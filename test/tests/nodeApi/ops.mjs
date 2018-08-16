@@ -108,9 +108,12 @@ Tiger-128`;
 
     it("AND", () => {
         const result = chef.AND("Scot-free", {
-            key: "Raining Cats and Dogs",
+            key: {
+                string: "Raining Cats and Dogs",
+                option: "Hex",
+            }
         });
-        assert.strictEqual(result.toString(), ".\"M$(D  E.");
+        assert.strictEqual(result.toString(), "\u0000\"M$(D  E");
     }),
 
     it("atBash Cipher", () => {
@@ -194,14 +197,9 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         assert.strictEqual(result.toString(), "Fool's Gold");
     }),
 
-    it("BSON Deserialise", () => {
-        const result = chef.BSONDeserialise("....phrase.....Mouth-watering..");
+    it("BSON Serialise / Deserialise", () => {
+        const result = chef.BSONDeserialise(chef.BSONSerialise({"phrase": "Mouth-watering"}));
         assert.strictEqual(result.toString(), "{\"phrase\": \"Mouth-watering\"}");
-    }),
-
-    it("BSON Serialise", () => {
-        const result = chef.BSONSerialise({"phrase": "Mouth-watering"});
-        assert.strictEqual(result.toString(), " ....phrase.....Mouth-watering..");
     }),
 
     it("Bzip2 Decompress", () => {
@@ -640,53 +638,6 @@ WWFkYSBZYWRh\r
 
     it("HMAC", () => {
         assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "b128b48ec0d6b0f1a27220c396d0f3e5");
-    }),
-
-    it("Javascript beautify", () => {
-        const result = chef.javaScriptBeautify("const b = 2, g = 7;const fun = (a) => {return a*a};");
-        const expected = `const b = 2, g = 7;
-const fun = a => {
-    return a * a;'
-};`;
-        assert.strictEqual(result.toString(), expected);
-    }),
-
-    it("JavaScript Minify", () => {
-        const result = chef.javaScriptMinify(`const b = 2, g = 7;
-const fun = a => {
-    return a * a;
-};`);
-        const expected = "const b = 2, g = 7;const fun = (a) => {return a*a};";
-        assert.strictEqual(result.toString(), expected);
-    }),
-
-    it("JavaScript Parse", () => {
-        const result = chef.javaScriptParser("const b = 2;");
-        const expected = `{
-"type": "Program",
-"body": [
-    {
-    "type": "VariableDeclaration",
-    "declarations": [
-        {
-        "type": "VariableDeclarator",
-        "id": {
-            "type": "Identifier",
-            "name": "b"
-        },
-        "init": {
-            "type": "Literal",
-            "value": 2,
-            "raw": "2"
-        }
-        }
-    ],
-    "kind": "const"
-    }
-],
-"sourceType": "script"
-}`;
-        assert.strictEqual(result.toString(), expected);
     }),
 
     it("JPathExpression", () => {

@@ -121,8 +121,6 @@ import {
     JPathExpression as core_JPathExpression,
     JSONBeautify as core_JSONBeautify,
     JSONMinify as core_JSONMinify,
-    JavaScriptBeautify as core_JavaScriptBeautify,
-    JavaScriptMinify as core_JavaScriptMinify,
     JavaScriptParser as core_JavaScriptParser,
     Keccak as core_Keccak,
     MD2 as core_MD2,
@@ -382,8 +380,6 @@ function generateChef() {
         "JPathExpression": wrap(core_JPathExpression),
         "JSONBeautify": wrap(core_JSONBeautify),
         "JSONMinify": wrap(core_JSONMinify),
-        "javaScriptBeautify": wrap(core_JavaScriptBeautify),
-        "javaScriptMinify": wrap(core_JavaScriptMinify),
         "javaScriptParser": wrap(core_JavaScriptParser),
         "keccak": wrap(core_Keccak),
         "MD2": wrap(core_MD2),
@@ -627,8 +623,6 @@ const hexToPEM = chef.hexToPEM;
 const JPathExpression = chef.JPathExpression;
 const JSONBeautify = chef.JSONBeautify;
 const JSONMinify = chef.JSONMinify;
-const javaScriptBeautify = chef.javaScriptBeautify;
-const javaScriptMinify = chef.javaScriptMinify;
 const javaScriptParser = chef.javaScriptParser;
 const keccak = chef.keccak;
 const MD2 = chef.MD2;
@@ -870,8 +864,6 @@ const operations = [
     JPathExpression,
     JSONBeautify,
     JSONMinify,
-    javaScriptBeautify,
-    javaScriptMinify,
     javaScriptParser,
     keccak,
     MD2,
@@ -1116,8 +1108,6 @@ export {
     JPathExpression,
     JSONBeautify,
     JSONMinify,
-    javaScriptBeautify,
-    javaScriptMinify,
     javaScriptParser,
     keccak,
     MD2,

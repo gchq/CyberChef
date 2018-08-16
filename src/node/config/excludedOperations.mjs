@@ -19,6 +19,10 @@ export default  [
     "Unzip",
     "Zip",
 
+    // esprima doesn't work in .mjs
+    "JavaScriptBeautify",
+    "JavaScriptMinify",
+    "JavaScriptParse",
 
     // Relies on state of recipe.
     // "Magic",
