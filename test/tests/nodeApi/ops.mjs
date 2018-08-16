@@ -962,7 +962,7 @@ smothering ampersand abreast
     }),
 
     it("Translate DateTime format", () => {
-        assert.strictEqual(chef.translateDateTimeFormat("01/04/1999 22:33:01").toString(), "01/04/1999 22:33:01");
+        assert.strictEqual(chef.translateDateTimeFormat("01/04/1999 22:33:01").toString(), "Thursday 1st April 1999 22:33:01 +00:00 UTC");
     }),
 
     it("Triple DES encrypt / decrypt", () => {

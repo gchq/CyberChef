@@ -60,7 +60,7 @@ class TranslateDateTimeFormat extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args;
+        const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args.slice(1);
         let date;
 
         try {
