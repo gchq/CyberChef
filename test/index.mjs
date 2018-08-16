@@ -142,3 +142,4 @@ TestRegister.runTests()
 
         process.exit(allTestsPassing ? 0 : 1);
     });
+
