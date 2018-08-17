@@ -198,8 +198,10 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     }),
 
     it("BSON Serialise / Deserialise", () => {
-        const result = chef.BSONDeserialise(chef.BSONSerialise({"phrase": "Mouth-watering"}));
-        assert.strictEqual(result.toString(), "{\"phrase\": \"Mouth-watering\"}");
+        const result = chef.BSONDeserialise(chef.BSONSerialise("{\"phrase\": \"Mouth-watering\"}"));
+        assert.strictEqual(result.toString(), `{
+  "phrase": "Mouth-watering"
+}`);
     }),
 
     it("Bzip2 Decompress", () => {
@@ -783,8 +785,7 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
     }),
 
     it("Remove EXIF", () => {
-        const picBuffer = fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg");
-        const result = chef.removeEXIF(picBuffer);
+        const result = chef.removeEXIF(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg"));
         assert.strictEqual(result.toString().length(), 4582);
     }),
 
@@ -793,17 +794,17 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
         const expected = `Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.
 
 Offset 0 (0x00):
-    File extension: jpg
-    MIME type:      image/jpeg
+  File extension: jpg
+  MIME type:      image/jpeg
 
 Offset 30 (0x1e):
-    File extension: tif
-    MIME type:      image/tiff
+  File extension: tif
+  MIME type:      image/tiff
 
 Offset 212 (0xd4):
-    File extension: txt
-    MIME type:      text/plain
-    Description:    UTF-8 encoded Unicode byte order mark detected, commonly but not exclusively seen in text files.
+  File extension: txt
+  MIME type:      text/plain
+  Description:    UTF-8 encoded Unicode byte order mark detected, commonly but not exclusively seen in text files.
 
 
 16 file types were detected that have common byte sequences. These are likely to be false positives. Run this operation with the 'Ignore common byte sequences' option unchecked to see details.`;
