@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 
+import Dish from "../core/Dish";
 import SyncDish from "./SyncDish";
 import Recipe from "./Recipe";
 import OperationConfig from "./config/OperationConfig.json";
@@ -46,11 +47,24 @@ function extractArg(arg) {
  *
  * Argument name matching is case and space insensitive
  * @private
- * @param {Object[]} originalArgs
- * @param {Object} newArgs
+ * @param {Object[]} originalArgs - the operation-s args list
+ * @param {Object} newArgs - any inputted args
  */
 function transformArgs(originalArgs, newArgs) {
-    const allArgs = Object.assign([], originalArgs);
+
+    // Filter out arg values that are list subheadings - they are surrounded in [].
+    // See Strings op for example.
+    const allArgs = Object.assign([], originalArgs).map((a) => {
+        if (Array.isArray(a.value)) {
+            a.value = a.value.filter((v) => {
+                if (typeof v === "string") {
+                    return !v.match(/^\[[\s\S]*\]$/); // Matches anything surrounded in [ ]
+                }
+                return true;
+            });
+        }
+        return a;
+    });
 
     if (newArgs) {
         Object.keys(newArgs).map((key) => {
@@ -90,7 +104,7 @@ const ensureIsDish = function ensureIsDish(input) {
         dish = input;
     } else {
         dish = new SyncDish();
-        const type = SyncDish.typeEnum(input.constructor.name);
+        const type = Dish.typeEnum(input.constructor.name);
         dish.set(input, type);
     }
     return dish;

@@ -61,6 +61,8 @@ class Dish {
                 return Dish.FILE;
             case "list<file>":
                 return Dish.LIST_FILE;
+            case "buffer":
+                return Dish.BUFFER;
             default:
                 throw "Invalid data type string. No matching enum.";
         }
@@ -93,6 +95,8 @@ class Dish {
                 return "File";
             case Dish.LIST_FILE:
                 return "List<File>";
+            case Dish.BUFFER:
+                return "Buffer";
             default:
                 throw "Invalid data type enum. No matching type.";
         }
@@ -266,6 +270,8 @@ class Dish {
             case Dish.LIST_FILE:
                 return this.value instanceof Array &&
                     this.value.reduce((acc, curr) => acc && curr instanceof File, true);
+            case Dish.BUFFER:
+                return this.value instanceof Buffer;
             default:
                 return false;
         }
@@ -284,6 +290,7 @@ class Dish {
             case Dish.BYTE_ARRAY:
             case Dish.STRING:
             case Dish.HTML:
+            case Dish.BUFFER:
                 return this.value.length;
             case Dish.NUMBER:
             case Dish.BIG_NUMBER:
@@ -357,6 +364,12 @@ class Dish {
                     this.type
                 );
                 break;
+            case Dish.BUFFER:
+                newDish.set(
+                    Buffer.from(this.value),
+                    this.type
+                );
+                break;
             default:
                 throw new Error("Cannot clone Dish, unknown type");
         }
@@ -421,6 +434,12 @@ Dish.FILE = 7;
 * @enum
 */
 Dish.LIST_FILE = 8;
+/**
+* Dish data type enum for node Buffer.
+* @readonly
+* @enum
+*/
+Dish.BUFFER = 9;
 
 
 export default Dish;

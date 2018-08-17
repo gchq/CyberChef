@@ -92,6 +92,9 @@ class SyncDish extends Dish {
             case Dish.JSON:
                 this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value)) : [];
                 break;
+            case Dish.BUFFER:
+                this.value = this.value instanceof Buffer ? this.value.buffer : [];
+                break;
             // case Dish.FILE:
             //     this.value = Utils.readFileSync(this.value);
             //     this.value = Array.prototype.slice.call(this.value);
@@ -134,6 +137,10 @@ class SyncDish extends Dish {
                 this.value = JSON.parse(byteArrayToStr(this.value));
                 this.type = Dish.JSON;
                 break;
+            case Dish.BUFFER:
+                this.value = Buffer.from(new Uint8Array(this.value));
+                this.type = Dish.BUFFER;
+                break;
             // case Dish.FILE:
             //     this.value = new File(this.value, "unknown");
             //     break;
@@ -145,7 +152,7 @@ class SyncDish extends Dish {
                 break;
         }
     }
-
 }
+
 
 export default SyncDish;

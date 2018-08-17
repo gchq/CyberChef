@@ -158,7 +158,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
 
     it("bit shift left", () => {
         const result = chef.bitShiftLeft("Keep Your Eyes Peeled");
-        assert.strictEqual(result.toString(), ".ÊÊà@²Þêä@.òÊæ@ ÊÊØÊÈ");
+        assert.strictEqual(result.toString(), "ÊÊà@²Þêä@òÊæ@ ÊÊØÊÈ");
     }),
 
     it("bitShiftRight: number and option", () => {
@@ -852,7 +852,7 @@ FROM STATS;`;
     }),
 
     it("strings", () => {
-        const result = chef.strings("smothering ampersand abreast");
+        const result = chef.strings("smothering ampersand abreast", {displayTotal: true});
         const expected = `Total found: 1
 
 smothering ampersand abreast
@@ -909,7 +909,7 @@ smothering ampersand abreast
     }),
 
     it("to unix timestamp", () => {
-        assert.strictEqual(chef.toUNIXTimestamp("04/01/2001").toString(), "986083200 (Sun 1 April 2001 00:00:00 UTC)");
+        assert.strictEqual(chef.toUNIXTimestamp("04-01-2001").toString(), "986083200 (Sun 1 April 2001 00:00:00 UTC)");
     }),
 
     it("Translate DateTime format", () => {
