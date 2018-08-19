@@ -86,7 +86,7 @@ class FromHex extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const delim = args[0] || "Space";
+        const delim = args[0] || "Auto";
         return fromHex(input, delim, 2);
     }
 

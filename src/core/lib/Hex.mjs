@@ -1,5 +1,5 @@
 /**
- * Byte representation functions.
+ * Hexadecimal functions.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
@@ -83,8 +83,7 @@ export function toHexFast(data) {
  * // returns [10,20,30]
  * fromHex("0a:14:1e", "Colon");
  */
-export function fromHex(data, delim, byteLen=2) {
-    delim = delim || "Auto";
+export function fromHex(data, delim="Auto", byteLen=2) {
     if (delim !== "None") {
         const delimRegex = delim === "Auto" ? /[^a-f\d]/gi : Utils.regexRep(delim);
         data = data.replace(delimRegex, "");

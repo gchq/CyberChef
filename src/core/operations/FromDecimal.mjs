@@ -5,8 +5,8 @@
  */
 
 import Operation from "../Operation";
-import Utils from "../Utils";
 import {DELIM_OPTIONS} from "../lib/Delim";
+import {fromDecimal} from "../lib/Decimal";
 
 /**
  * From Decimal operation
@@ -71,16 +71,7 @@ class FromDecimal extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0]),
-            output = [];
-        let byteStr = input.split(delim);
-        if (byteStr[byteStr.length-1] === "")
-            byteStr = byteStr.slice(0, byteStr.length-1);
-
-        for (let i = 0; i < byteStr.length; i++) {
-            output[i] = parseInt(byteStr[i], 10);
-        }
-        return output;
+        return fromDecimal(input, args[0]);
     }
 
 }

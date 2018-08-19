@@ -8,6 +8,7 @@ import utf8 from "utf8";
 import moment from "moment-timezone";
 import {fromBase64} from "./lib/Base64";
 import {fromHex} from "./lib/Hex";
+import {fromDecimal} from "./lib/Decimal";
 
 
 /**
@@ -297,7 +298,7 @@ class Utils {
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
      * @param {string} str
-     * @param {string} type - One of "Hex", "Base64", "UTF8" or "Latin1"
+     * @param {string} type - One of "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
      * @returns {byteArray}
      *
      * @example
@@ -314,6 +315,8 @@ class Utils {
         switch (type.toLowerCase()) {
             case "hex":
                 return fromHex(str);
+            case "decimal":
+                return fromDecimal(str);
             case "base64":
                 return fromBase64(str, null, "byteArray");
             case "utf8":

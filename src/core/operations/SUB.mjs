@@ -29,7 +29,7 @@ class SUB extends Operation {
                 "name": "Key",
                 "type": "toggleString",
                 "value": "",
-                "toggleValues": ["Hex", "Base64", "UTF8", "Latin1"]
+                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
             }
         ];
     }
