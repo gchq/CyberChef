@@ -76,4 +76,3 @@ class TranslateDateTimeFormat extends Operation {
 }
 
 export default TranslateDateTimeFormat;
-
