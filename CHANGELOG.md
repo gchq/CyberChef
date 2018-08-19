@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+### [8.1.0] - 2018-08-19
+- 'Dechunk HTTP response' operation added @sevzero #311
+
 ## [8.0.0] - 2018-08-05
 - Codebase rewritten using [ES modules](https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/) and [classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) #284
 - Operation architecture restructured to make adding new operations a lot simpler #284
@@ -29,6 +32,7 @@ All notable changes to this project will be documented in this file.
 -  Initial open source commit @n1474335
 
 
+[8.1.0]: https://github.com/gchq/CyberChef/releases/tag/v8.1.0
 [8.0.0]: https://github.com/gchq/CyberChef/releases/tag/v8.0.0
 [7.0.0]: https://github.com/gchq/CyberChef/releases/tag/v7.0.0
 [6.0.0]: https://github.com/gchq/CyberChef/releases/tag/v6.0.0
