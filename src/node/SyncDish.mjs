@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import util from "util";
 import Utils from "../core/Utils";
 import Dish from "../core/Dish";
 import BigNumber from "bignumber.js";
@@ -48,6 +49,14 @@ class SyncDish extends Dish {
     }
 
     /**
+     * What we want to log to the console.
+     */
+    [util.inspect.custom](depth, options) {
+        return this.get(Dish.typeEnum("string"));
+    }
+
+    /**
+     * Backwards compatibility for node v6
      * Log only the value to the console in node.
      */
     inspect() {

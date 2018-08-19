@@ -94,7 +94,7 @@ function transformArgs(originalArgs, newArgs) {
  * Ensure an input is a SyncDish object.
  * @param input
  */
-const ensureIsDish = function ensureIsDish(input) {
+function ensureIsDish(input) {
     if (!input) {
         return new SyncDish();
     }
@@ -116,7 +116,7 @@ const ensureIsDish = function ensureIsDish(input) {
  * @param input - operation input
  * @param args - operation args
  */
-const prepareOp = function prepareOp(opInstance, input, args) {
+function prepareOp(opInstance, input, args) {
     const dish = ensureIsDish(input);
     let transformedArgs;
     // Transform object-style args to original args array
