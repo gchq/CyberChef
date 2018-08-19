@@ -37,7 +37,7 @@ class OperationsWaiter {
     searchOperations(e) {
         let ops, selected;
 
-        if (e.type === "search") { // Search
+        if (e.type === "search" || e.keyCode === 13) { // Search or Return
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
@@ -48,9 +48,7 @@ class OperationsWaiter {
             }
         }
 
-        if (e.keyCode === 13) { // Return
-            e.preventDefault();
-        } else if (e.keyCode === 40) { // Down
+        if (e.keyCode === 40) { // Down
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
