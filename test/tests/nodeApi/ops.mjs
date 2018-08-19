@@ -786,29 +786,13 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
 
     it("Remove EXIF", () => {
         const result = chef.removeEXIF(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg"));
-        assert.strictEqual(result.toString().length(), 4582);
+        assert.strictEqual(result.toString().length, 4582);
     }),
 
     it("Scan for embedded files", () => {
-        const result = chef.scanForEmbeddedFiles(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg"));
-        const expected = `Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.
-
-Offset 0 (0x00):
-  File extension: jpg
-  MIME type:      image/jpeg
-
-Offset 30 (0x1e):
-  File extension: tif
-  MIME type:      image/tiff
-
-Offset 212 (0xd4):
-  File extension: txt
-  MIME type:      text/plain
-  Description:    UTF-8 encoded Unicode byte order mark detected, commonly but not exclusively seen in text files.
-
-
-16 file types were detected that have common byte sequences. These are likely to be false positives. Run this operation with the 'Ignore common byte sequences' option unchecked to see details.`;
-        assert.strictEqual(result.toString(), expected);
+        const result = chef.scanForEmbeddedFiles(fs.readFileSync("src/web/static/images/cook_male-32x32.png"));
+        const expected = "Scanning data for \'magic bytes\' which may indicate embedded files.";
+        assert.ok(result.toString().indexOf(expected) === 0);
     }),
 
     it("Scrypt", () => {
@@ -950,9 +934,9 @@ smothering ampersand abreast
 
     it("Detect file type", () => {
         assert.strictEqual(
-            chef.detectFileType(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg")).toString(),
-            `File extension: jpg
-MIME type:      image/jpeg`);
+            chef.detectFileType(fs.readFileSync("src/web/static/images/cook_male-32x32.png")).toString(),
+            `File extension: png
+MIME type:      image/png`);
     }),
 
     it("extract EXIF", () => {

@@ -108,15 +108,20 @@ function ensureIsDish(input) {
         dish.set(input, type);
     }
     return dish;
-};
+}
 
 /**
  * prepareOp: transform args, make input the right type.
+ * Also convert any Buffers to ArrayBuffers.
  * @param opInstance - instance of the operation
  * @param input - operation input
  * @param args - operation args
  */
 function prepareOp(opInstance, input, args) {
+    // convert any Buffers into ArrayBuffers.
+    if (input instanceof Buffer) {
+        input = input.buffer;
+    }
     const dish = ensureIsDish(input);
     let transformedArgs;
     // Transform object-style args to original args array
@@ -127,7 +132,7 @@ function prepareOp(opInstance, input, args) {
     }
     const transformedInput = dish.get(opInstance.inputType);
     return {transformedInput, transformedArgs};
-};
+}
 
 /**
  * Wrap an operation to be consumed by node API.
