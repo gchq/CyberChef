@@ -533,7 +533,9 @@ class App {
             compileInfo += " - " + window.compileMessage;
         }
 
-        document.getElementById("notice").innerHTML = compileInfo;
+        const notice = document.getElementById("notice");
+        notice.innerHTML = compileInfo;
+        notice.setAttribute("title", Utils.stripHtmlTags(window.compileMessage));
     }
 
 

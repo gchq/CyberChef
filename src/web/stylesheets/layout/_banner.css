@@ -21,3 +21,10 @@
     vertical-align: middle;
     padding-right: 10px;
 }
+
+#notice-wrapper {
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
