@@ -36,7 +36,7 @@ class FromMessagePack extends Operation {
         try {
             return notepack.decode(input);
         } catch (err) {
-            throw new OperationError(`Could not decode MessagePack to JSON:MessagePack ${err}`);
+            throw new OperationError(`Could not decode MessagePack to JSON: ${err}`);
         }
     }
 
