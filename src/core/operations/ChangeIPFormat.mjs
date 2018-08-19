@@ -21,7 +21,7 @@ class ChangeIPFormat extends Operation {
         super();
 
         this.name = "Change IP format";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Convert an IP address from one format to another, e.g. <code>172.20.23.54</code> to <code>ac141736</code>";
         this.inputType = "string";
         this.outputType = "string";
@@ -29,12 +29,12 @@ class ChangeIPFormat extends Operation {
             {
                 "name": "Input format",
                 "type": "option",
-                "value": ["Hex", "Raw"]
+                "value": ["Dotted Decimal", "Decimal", "Hex"]
             },
             {
                 "name": "Output format",
                 "type": "option",
-                "value": ["Hex", "Raw"]
+                "value": ["Dotted Decimal", "Decimal", "Hex"]
             }
         ];
     }

@@ -333,7 +333,7 @@ class Utils {
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
      * @param {string} str
-     * @param {string} type - One of "Hex", "Base64", "UTF8" or "Latin1"
+     * @param {string} type - One of "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
      * @returns {string}
      *
      * @example
@@ -350,6 +350,8 @@ class Utils {
         switch (type.toLowerCase()) {
             case "hex":
                 return Utils.byteArrayToChars(fromHex(str));
+            case "decimal":
+                return Utils.byteArrayToChars(fromDecimal(str));
             case "base64":
                 return Utils.byteArrayToChars(fromBase64(str, null, "byteArray"));
             case "utf8":
