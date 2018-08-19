@@ -62,6 +62,7 @@ import "./tests/operations/SetDifference";
 import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/SymmetricDifference";
+import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 
 let allTestsPassing = true;
@@ -141,3 +142,4 @@ TestRegister.runTests()
 
         process.exit(allTestsPassing ? 0 : 1);
     });
+
