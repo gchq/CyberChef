@@ -9,12 +9,23 @@ import Utils from "../core/Utils";
 import Dish from "../core/Dish";
 import BigNumber from "bignumber.js";
 import log from "loglevel";
+import * as ops from "./index";
 
 /**
  * Subclass of Dish where `get` and `_translate` are synchronous.
  * Also define functions to improve coercion behaviour.
  */
 class SyncDish extends Dish {
+
+    /** */
+    constructor(dish=null) {
+        super(dish);
+
+        for (const op in ops) {
+            this[op] = () => ops[op](this.value);
+        }
+
+    }
 
     /**
      * Synchronously returns the value of the data in the type format specified.
@@ -162,6 +173,9 @@ class SyncDish extends Dish {
         }
     }
 }
+
+
+
 
 
 export default SyncDish;
