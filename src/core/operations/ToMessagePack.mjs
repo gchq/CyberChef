@@ -34,10 +34,14 @@ class ToMessagePack extends Operation {
      */
     run(input, args) {
         try {
-            return notepack.encode(input);
+            if (ENVIRONMENT_IS_WORKER()) {
+                return notepack.encode(input);
+            } else {
+                return notepack.encode(input).buffer;
+            }
         } catch (err) {
             throw new OperationError(`Could not encode JSON to MessagePack: ${err}`);
-        }   
+        }
     }
 
 }

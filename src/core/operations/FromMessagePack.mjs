@@ -28,13 +28,14 @@ class FromMessagePack extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {JSON}
      */
     run(input, args) {
         try {
-            return notepack.decode(input);
+            const buf = Buffer.from(new Uint8Array(input));
+            return notepack.decode(buf);
         } catch (err) {
             throw new OperationError(`Could not decode MessagePack to JSON: ${err}`);
         }

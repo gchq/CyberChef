@@ -350,7 +350,7 @@ TestRegister.addTests([
     {
         name: "From MessagePack: no content",
         input: "",
-        expectedOutput: "Could not decode MessagePack to JSON: RangeError: offset is outside the bounds of the DataView",
+        expectedOutput: "Could not decode MessagePack to JSON: Error: Could not parse",
         recipeConfig: [
             {
                 "op": "From Hex",
