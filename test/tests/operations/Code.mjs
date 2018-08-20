@@ -343,7 +343,7 @@ TestRegister.addTests([
             },
             {
                 "op": "To Hex",
-                "args": ["Space"] 
+                "args": ["Space"]
             }
         ]
     },
@@ -354,7 +354,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": ["Space"] 
+                "args": ["Space"]
             },
             {
                 "op": "From MessagePack",
@@ -373,7 +373,7 @@ TestRegister.addTests([
             },
             {
                 "op": "To Hex",
-                "args": ["Space"] 
+                "args": ["Space"]
             }
         ]
     },
@@ -384,7 +384,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": ["Space"] 
+                "args": ["Space"]
             },
             {
                 "op": "From MessagePack",
