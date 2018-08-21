@@ -47,7 +47,9 @@
             "Change IP format",
             "Encode text",
             "Decode text",
-            "Swap endianness"
+            "Swap endianness",
+            "To MessagePack",
+            "From MessagePack"
         ]
     },
     {
