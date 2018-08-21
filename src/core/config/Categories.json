@@ -47,7 +47,9 @@
             "Change IP format",
             "Encode text",
             "Decode text",
-            "Swap endianness"
+            "Swap endianness",
+            "To MessagePack",
+            "From MessagePack"
         ]
     },
     {
@@ -313,7 +315,9 @@
             "To Camel case",
             "To Kebab case",
             "BSON serialise",
-            "BSON deserialise"
+            "BSON deserialise",
+            "To MessagePack",
+            "From MessagePack"
         ]
     },
     {
