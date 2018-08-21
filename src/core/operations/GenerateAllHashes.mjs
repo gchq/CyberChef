@@ -43,6 +43,7 @@ class GenerateAllHashes extends Operation {
         this.name = "Generate all hashes";
         this.module = "Hashing";
         this.description = "Generates all available hashes and checksums for the input.";
+        this.infoURL = "https://wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];

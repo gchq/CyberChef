@@ -33,6 +33,7 @@ class PGPEncrypt extends Operation {
             "<br><br>",
             "This function uses the Keybase implementation of PGP.",
         ].join("\n");
+        this.infoURL = "https://wikipedia.org/wiki/Pretty_Good_Privacy";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

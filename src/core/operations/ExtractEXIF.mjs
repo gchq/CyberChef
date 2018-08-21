@@ -28,6 +28,7 @@ class ExtractEXIF extends Operation {
             "<br><br>",
             "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n");
+        this.infoURL = "https://wikipedia.org/wiki/Exif";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];

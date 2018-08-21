@@ -24,6 +24,7 @@ class CompareCTPHHashes extends Operation {
         this.name = "Compare CTPH hashes";
         this.module = "Hashing";
         this.description = "Compares two Context Triggered Piecewise Hashing (CTPH) fuzzy hashes to determine the similarity between them on a scale of 0 to 100.";
+        this.infoURL = "https://forensicswiki.org/wiki/Context_Triggered_Piecewise_Hashing";
         this.inputType = "string";
         this.outputType = "Number";
         this.args = [

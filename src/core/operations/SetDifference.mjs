@@ -20,7 +20,8 @@ class SetDifference extends Operation {
 
         this.name = "Set Difference";
         this.module = "Default";
-        this.description = "Calculates the difference of two sets.";
+        this.description = "Calculates the difference, or relative complement, of two sets.";
+        this.infoURL = "https://wikipedia.org/wiki/Complement_(set_theory)#Relative_complement";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

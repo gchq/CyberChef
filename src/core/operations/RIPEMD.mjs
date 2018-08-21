@@ -21,6 +21,7 @@ class RIPEMD extends Operation {
         this.name = "RIPEMD";
         this.module = "Hashing";
         this.description = "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>";
+        this.infoURL = "https://wikipedia.org/wiki/RIPEMD";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [

@@ -53,6 +53,12 @@ If your operation does not rely on a library, just leave this blank and it will 
             prompt: "Description",
             type: "string"
         },
+        infoURL: {
+            description: "An optional URL for an external site can be added to give more information about the operation. Wikipedia links are often suitable. If linking to Wikipedia, use an international link (e.g. https://wikipedia.org/...) rather than a localised link (e.g. https://en.wikipedia.org/...).",
+            example: "https://wikipedia.org/wiki/Percent-encoding",
+            prompt: "Information URL",
+            type: "string",
+        },
         inputType: {
             description: `The input type defines how the input data will be presented to your operation. Check the project wiki for a full description of each type. The options are: ${ioTypes.join(", ")}.`,
             example: "string",
@@ -141,6 +147,7 @@ class ${moduleName} extends Operation {
         this.name = "${result.opName}";
         this.module = "${result.module}";
         this.description = "${(new EscapeString).run(result.description, ["Special chars", "Double"])}";
+        this.infoURL = "${result.infoURL}";
         this.inputType = "${result.inputType}";
         this.outputType = "${result.outputType}";
         this.args = [

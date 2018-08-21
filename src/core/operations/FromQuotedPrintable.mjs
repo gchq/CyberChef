@@ -24,6 +24,7 @@ class FromQuotedPrintable extends Operation {
         this.name = "From Quoted Printable";
         this.module = "Default";
         this.description = "Converts QP-encoded text back to standard text.";
+        this.infoURL = "https://wikipedia.org/wiki/Quoted-printable";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];

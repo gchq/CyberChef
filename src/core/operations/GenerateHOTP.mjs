@@ -22,6 +22,7 @@ class GenerateHOTP extends Operation {
         this.name = "Generate HOTP";
         this.module = "Default";
         this.description = "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.";
+        this.infoURL = "https://wikipedia.org/wiki/HMAC-based_One-time_Password_algorithm";
         this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [

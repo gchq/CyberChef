@@ -22,6 +22,7 @@ class SymmetricDifference extends Operation {
         this.name = "Symmetric Difference";
         this.module = "Default";
         this.description = "Calculates the symmetric difference of two sets.";
+        this.infoURL = "https://wikipedia.org/wiki/Symmetric_difference";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

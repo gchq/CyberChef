@@ -22,6 +22,7 @@ class RC2Decrypt extends Operation {
         this.name = "RC2 Decrypt";
         this.module = "Ciphers";
         this.description = "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.";
+        this.infoURL = "https://wikipedia.org/wiki/RC2";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

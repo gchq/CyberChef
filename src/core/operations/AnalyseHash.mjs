@@ -21,6 +21,7 @@ class AnalyseHash extends Operation {
         this.name = "Analyse hash";
         this.module = "Hashing";
         this.description = "Tries to determine information about a given hash and suggests which algorithm may have been used to generate it based on its length.";
+        this.infoURL = "https://wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

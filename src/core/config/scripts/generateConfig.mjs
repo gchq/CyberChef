@@ -35,12 +35,13 @@ for (const opObj in Ops) {
     const op = new Ops[opObj]();
 
     operationConfig[op.name] = {
-        module: op.module,
+        module:      op.module,
         description: op.description,
-        inputType: op.inputType,
-        outputType: op.presentType,
+        infoURL:     op.infoURL,
+        inputType:   op.inputType,
+        outputType:  op.presentType,
         flowControl: op.flowControl,
-        args: op.args
+        args:        op.args
     };
 
     if (op.hasOwnProperty("patterns")) {

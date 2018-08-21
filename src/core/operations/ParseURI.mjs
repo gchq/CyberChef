@@ -21,6 +21,7 @@ class ParseURI extends Operation {
         this.name = "Parse URI";
         this.module = "URL";
         this.description = "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.";
+        this.infoURL = "https://wikipedia.org/wiki/Uniform_Resource_Identifier";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

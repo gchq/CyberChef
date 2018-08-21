@@ -21,6 +21,7 @@ class ParseUNIXFilePermissions extends Operation {
         this.name = "Parse UNIX file permissions";
         this.module = "Default";
         this.description = "Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups.<br><br>Input should be in either octal (e.g. <code>755</code>) or textual (e.g. <code>drwxr-xr-x</code>) format.";
+        this.infoURL = "https://wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

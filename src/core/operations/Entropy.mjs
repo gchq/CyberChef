@@ -21,6 +21,7 @@ class Entropy extends Operation {
         this.name = "Entropy";
         this.module = "Default";
         this.description = "Shannon Entropy, in the context of information theory, is a measure of the rate at which information is produced by a source of data. It can be used, in a broad sense, to detect whether data is likely to be structured or unstructured. 8 is the maximum, representing highly unstructured, 'random' data. English language text usually falls somewhere between 3.5 and 5. Properly encrypted or compressed data should have an entropy of over 7.5.";
+        this.infoURL = "https://wikipedia.org/wiki/Entropy_(information_theory)";
         this.inputType = "byteArray";
         this.outputType = "number";
         this.presentType = "html";
