@@ -19,8 +19,9 @@ class Substitute extends Operation {
         super();
 
         this.name = "Substitute";
-        this.module = "Ciphers";
+        this.module = "Default";
         this.description = "A substitution cipher allowing you to specify bytes to replace with other byte values. This can be used to create Caesar ciphers but is more powerful as any byte value can be substituted, not just letters, and the substitution values need not be in order.<br><br>Enter the bytes you want to replace in the Plaintext field and the bytes to replace them with in the Ciphertext field.<br><br>Non-printable bytes can be specified using string escape notation. For example, a line feed character can be written as either <code>\n</code> or <code>\x0a</code>.<br><br>Byte ranges can be specified using a hyphen. For example, the sequence <code>0123456789</code> can be written as <code>0-9</code>.";
+        this.infoURL = "https://wikipedia.org/wiki/Substitution_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

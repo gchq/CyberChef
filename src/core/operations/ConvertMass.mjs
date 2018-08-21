@@ -20,6 +20,7 @@ class ConvertMass extends Operation {
         this.name = "Convert mass";
         this.module = "Default";
         this.description = "Converts a unit of mass to another format.";
+        this.infoURL = "https://wikipedia.org/wiki/Orders_of_magnitude_(mass)";
         this.inputType = "BigNumber";
         this.outputType = "BigNumber";
         this.args = [

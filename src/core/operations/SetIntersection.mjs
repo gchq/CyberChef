@@ -21,6 +21,7 @@ class SetIntersection extends Operation {
         this.name = "Set Intersection";
         this.module = "Default";
         this.description = "Calculates the intersection of two sets.";
+        this.infoURL = "https://wikipedia.org/wiki/Intersection_(set_theory)";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

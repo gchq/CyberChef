@@ -23,6 +23,7 @@ class ToUNIXTimestamp extends Operation {
         this.name = "To UNIX Timestamp";
         this.module = "Default";
         this.description = "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).";
+        this.infoURL = "https://wikipedia.org/wiki/Unix_time";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

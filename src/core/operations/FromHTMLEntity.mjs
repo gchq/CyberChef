@@ -21,6 +21,7 @@ class FromHTMLEntity extends Operation {
         this.name = "From HTML Entity";
         this.module = "Default";
         this.description = "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>";
+        this.infoURL = "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

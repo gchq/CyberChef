@@ -30,6 +30,7 @@ class HTTPRequest extends Operation {
             "<br><br>",
             "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
         ].join("\n");
+        this.infoURL = "https://wikipedia.org/wiki/List_of_HTTP_header_fields#Request_fields";
         this.inputType = "string";
         this.outputType = "string";
         this.manualBake = true;

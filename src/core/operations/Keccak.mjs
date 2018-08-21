@@ -22,6 +22,7 @@ class Keccak extends Operation {
         this.name = "Keccak";
         this.module = "Hashing";
         this.description = "The Keccak hash algorithm was designed by Guido Bertoni, Joan Daemen, Micha\xebl Peeters, and Gilles Van Assche, building upon RadioGat\xfan. It was selected as the winner of the SHA-3 design competition.<br><br>This version of the algorithm is Keccak[c=2d] and differs from the SHA-3 specification.";
+        this.infoURL = "https://wikipedia.org/wiki/SHA-3";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [

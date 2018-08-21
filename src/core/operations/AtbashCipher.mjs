@@ -21,6 +21,7 @@ class AtbashCipher extends Operation {
         this.name = "Atbash Cipher";
         this.module = "Ciphers";
         this.description = "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.";
+        this.infoURL = "https://wikipedia.org/wiki/Atbash";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

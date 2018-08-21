@@ -25,6 +25,7 @@ class StandardDeviation extends Operation {
         this.name = "Standard Deviation";
         this.module = "Default";
         this.description = "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Standard_deviation";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [

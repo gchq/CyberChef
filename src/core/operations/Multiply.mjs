@@ -25,6 +25,7 @@ class Multiply extends Operation {
         this.name = "Multiply";
         this.module = "Default";
         this.description = "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Multiplication";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [

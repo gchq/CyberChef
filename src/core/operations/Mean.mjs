@@ -24,6 +24,7 @@ class Mean extends Operation {
         this.name = "Mean";
         this.module = "Default";
         this.description = "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Arithmetic_mean";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [

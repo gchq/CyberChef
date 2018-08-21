@@ -24,6 +24,7 @@ class Unzip extends Operation {
         this.name = "Unzip";
         this.module = "Compression";
         this.description = "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.";
+        this.infoURL = "https://wikipedia.org/wiki/Zip_(file_format)";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";

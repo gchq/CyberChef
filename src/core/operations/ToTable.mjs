@@ -21,6 +21,7 @@ class ToTable extends Operation {
         this.name = "To Table";
         this.module = "Default";
         this.description = "Data can be split on different characters and rendered as an HTML or ASCII table with an optional header row.<br><br>Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to <code>\\t</code> to support TSV (Tab Separated Values) or <code>|</code> for PSV (Pipe Separated Values).<br><br>You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.";
+        this.infoURL = "https://wikipedia.org/wiki/Comma-separated_values";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [

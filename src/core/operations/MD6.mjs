@@ -22,6 +22,7 @@ class MD6 extends Operation {
         this.name = "MD6";
         this.module = "Hashing";
         this.description = "The MD6 (Message-Digest 6) algorithm is a cryptographic hash function. It uses a Merkle tree-like structure to allow for immense parallel computation of hashes for very long inputs.";
+        this.infoURL = "https://wikipedia.org/wiki/MD6";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

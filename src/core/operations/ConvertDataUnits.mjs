@@ -20,6 +20,7 @@ class ConvertDataUnits extends Operation {
         this.name = "Convert data units";
         this.module = "Default";
         this.description = "Converts a unit of data to another format.";
+        this.infoURL = "https://wikipedia.org/wiki/Orders_of_magnitude_(data)";
         this.inputType = "BigNumber";
         this.outputType = "BigNumber";
         this.args = [

@@ -21,6 +21,7 @@ class ToBase32 extends Operation {
         this.name = "To Base32";
         this.module = "Default";
         this.description = "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.";
+        this.infoURL = "https://wikipedia.org/wiki/Base32";
         this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [

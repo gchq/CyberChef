@@ -29,6 +29,7 @@ class EncodeText extends Operation {
             Object.keys(IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
             "</ul>",
         ].join("\n");
+        this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [

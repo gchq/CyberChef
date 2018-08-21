@@ -23,6 +23,7 @@ class FromBase58 extends Operation {
         this.name = "From Base58";
         this.module = "Default";
         this.description = "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included) back into its raw form.<br><br>e.g. <code>StV1DL6CwTryKyV</code> becomes <code>hello world</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).";
+        this.infoURL = "https://wikipedia.org/wiki/Base58";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [

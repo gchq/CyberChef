@@ -45,6 +45,11 @@ body {
     user-select: none;
 }
 
+.inline-icon {
+    font-size: 12px;
+    padding-left: 2px;
+}
+
 .konami {
     transform: rotate(180deg);
 }
