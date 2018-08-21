@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+### [8.3.0] - 2018-08-21
+- 'To MessagePack' and 'From MessagePack' operations added @artemisbot #338
+
 ### [8.2.0] - 2018-08-21
 - Added information links to most operations, accessible in the description popover @PenguinGeorge #298
 
