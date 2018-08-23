@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
+import Utils from "../Utils";
 import {alphabetName, ALPHABET_OPTIONS} from "../lib/Base85";
 
 /**
@@ -21,7 +22,7 @@ class FromBase85 extends Operation {
 
         this.name = "From Base85";
         this.module = "Default";
-        this.description = "Base85 (similar to Base64) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>BOu!rD]j7BEbo7</code> becomes <code>hello world</code><br><br>Base85 is commonly used in Adobe's PostScript and PDF file formats.";
+        this.description = "Base85 (also called Ascii85) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>BOu!rD]j7BEbo7</code> becomes <code>hello world</code><br><br>Base85 is commonly used in Adobe's PostScript and PDF file formats.";
         this.infoURL = "https://wikipedia.org/wiki/Ascii85";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -40,7 +41,7 @@ class FromBase85 extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const alphabet = args[0] || ALPHABET_OPTIONS[0].value,
+        const alphabet = Utils.expandAlphRange(args[0]).join(""),
             encoding = alphabetName(alphabet),
             result = [];
 
@@ -68,7 +69,7 @@ class FromBase85 extends Operation {
                     .map((chr, idx) => {
                         const digit = alphabet.indexOf(chr);
                         if (digit < 0 || digit > 84) {
-                            throw "Invalid character '" + chr + "' at index " + idx;
+                            throw `Invalid character '${chr}' at index ${idx}`;
                         }
                         return digit;
                     });

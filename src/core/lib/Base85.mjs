@@ -12,15 +12,15 @@
 export const ALPHABET_OPTIONS = [
     {
         name: "Standard",
-        value: "!&quot;#$%&&apos;()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[&bsol;]^_`abcdefghijklmnopqrstu",
+        value: "!-u",
     },
     {
         name: "Z85 (ZeroMQ)",
-        value: "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#",
+        value: "0-9a-zA-Z.#\\-:+=^!/*?&<>()[]{}@%$#",
     },
     {
         name: "IPv6",
-        value: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|~}",
+        value: "0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|~}",
     }
 ];
 
