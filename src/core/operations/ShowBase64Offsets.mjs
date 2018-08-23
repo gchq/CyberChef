@@ -36,6 +36,11 @@ class ShowBase64Offsets extends Operation {
                 name: "Show variable chars and padding",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "Input format",
+                type: "option",
+                value: ["Raw", "Base64"]
             }
         ];
     }
@@ -46,7 +51,11 @@ class ShowBase64Offsets extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [alphabet, showVariable] = args;
+        const [alphabet, showVariable, format] = args;
+
+        if (format === "Base64") {
+            input = fromBase64(Utils.byteArrayToUtf8(input), null, "byteArray");
+        }
 
         let offset0 = toBase64(input, alphabet),
             offset1 = toBase64([0].concat(input), alphabet),
