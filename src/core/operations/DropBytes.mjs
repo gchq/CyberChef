@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
 
 /**
  * Drop bytes operation
@@ -20,7 +19,7 @@ class DropBytes extends Operation {
 
         this.name = "Drop bytes";
         this.module = "Default";
-        this.description = "Cuts a slice of the specified number of bytes out of the data.";
+        this.description = "Cuts a slice of the specified number of bytes out of the data. Negative values are allowed.";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [
@@ -50,14 +49,25 @@ class DropBytes extends Operation {
      * @throws {OperationError} if invalid input
      */
     run(input, args) {
-        const start = args[0],
-            length = args[1],
-            applyToEachLine = args[2];
-
-        if (start < 0 || length < 0)
-            throw new OperationError("Error: Invalid value");
+        let start = args[0],
+            length = args[1];
+        const applyToEachLine = args[2];
 
         if (!applyToEachLine) {
+            if (start < 0) { // Take from the end
+                start = input.byteLength + start;
+            }
+
+            if (length < 0) { // Flip start point
+                start = start + length;
+                if (start < 0) {
+                    start = input.byteLength + start;
+                    length = start - length;
+                } else {
+                    length = -length;
+                }
+            }
+
             const left = input.slice(0, start),
                 right = input.slice(start + length, input.byteLength);
             const result = new Uint8Array(left.byteLength + right.byteLength);
@@ -82,10 +92,28 @@ class DropBytes extends Operation {
         }
         lines.push(line);
 
-        let output = [];
+        let output = [],
+            s = start,
+            l = length;
         for (i = 0; i < lines.length; i++) {
-            output = output.concat(lines[i].slice(0, start).concat(lines[i].slice(start+length, lines[i].length)));
+            if (s < 0) { // Take from the end
+                s = lines[i].length + s;
+            }
+
+            if (l < 0) { // Flip start point
+                s = s + l;
+                if (s < 0) {
+                    s = lines[i].length + s;
+                    l = s - l;
+                } else {
+                    l = -l;
+                }
+            }
+
+            output = output.concat(lines[i].slice(0, s).concat(lines[i].slice(s+l, lines[i].length)));
             output.push(0x0a);
+            s = start;
+            l = length;
         }
         return new Uint8Array(output.slice(0, output.length-1)).buffer;
     }
