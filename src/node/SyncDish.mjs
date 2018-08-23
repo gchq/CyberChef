@@ -18,13 +18,13 @@ import * as ops from "./index";
 class SyncDish extends Dish {
 
     /** */
-    constructor(dish=null) {
-        super(dish);
-
+    constructor(inputOrDish=null, type=null) {
+        super(inputOrDish);
+        
+        // Add operations to make it composable
         for (const op in ops) {
             this[op] = () => ops[op](this.value);
         }
-
     }
 
     /**

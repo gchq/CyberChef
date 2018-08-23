@@ -10,6 +10,7 @@
 
 
 import "babel-polyfill";
+import SyncDish from "./SyncDish";
 import { wrap, help, bake } from "./api";
 import {
     ADD as core_ADD,
@@ -514,6 +515,7 @@ function generateChef() {
 
 const chef = generateChef();
 chef.help = help;
+chef.dish = SyncDish;
 const ADD = chef.ADD;
 const AESDecrypt = chef.AESDecrypt;
 const AESEncrypt = chef.AESEncrypt;
@@ -1237,4 +1239,5 @@ export {
     XPathExpression,
     zlibDeflate,
     zlibInflate,
+    SyncDish as Dish
 };

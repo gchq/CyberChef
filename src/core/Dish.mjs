@@ -17,16 +17,27 @@ class Dish {
     /**
      * Dish constructor
      *
-     * @param {Dish} [dish=null] - A dish to clone
+     * @param {Dish || *} [dishOrInput=null] - A dish to clone OR an object
+     * literal to make into a dish
+     * @param {Enum} [type=null] (optional) - A type to accompany object
+     * literal input
      */
-    constructor(dish=null) {
+    constructor(dishOrInput=null, type = null) {
         this.value = [];
         this.type = Dish.BYTE_ARRAY;
 
-        if (dish &&
-            dish.hasOwnProperty("value") &&
-            dish.hasOwnProperty("type")) {
-            this.set(dish.value, dish.type);
+        // Case: dishOrInput is dish object
+        if (dishOrInput &&
+            dishOrInput.hasOwnProperty("value") &&
+            dishOrInput.hasOwnProperty("type")) {
+            this.set(dishOrInput.value, dishOrInput.type);
+        // input and type defined separately
+        } else if (dishOrInput && type) {
+            this.set(dishOrInput, type);
+        // No type declared, so infer it.
+        } else if (dishOrInput) {
+            const inferredType = Dish.typeEnum(dishOrInput.constructor.name);
+            this.set(dishOrInput, inferredType);
         }
     }
 
@@ -56,6 +67,7 @@ class Dish {
             case "big number":
                 return Dish.BIG_NUMBER;
             case "json":
+            case "object": // object constructor name. To allow JSON input in node.
                 return Dish.JSON;
             case "file":
                 return Dish.FILE;

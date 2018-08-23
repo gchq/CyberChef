@@ -791,7 +791,7 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
 
     it("Scan for embedded files", () => {
         const result = chef.scanForEmbeddedFiles(fs.readFileSync("src/web/static/images/cook_male-32x32.png"));
-        const expected = "Scanning data for \'magic bytes\' which may indicate embedded files.";
+        const expected = "Scanning data for 'magic bytes' which may indicate embedded files.";
         assert.ok(result.toString().indexOf(expected) === 0);
     }),
 

@@ -16,7 +16,7 @@ import chef from "../../../src/node/index";
 import OperationError from "../../../src/core/errors/OperationError";
 import SyncDish from "../../../src/node/SyncDish";
 
-import { toBase32 } from "../../../src/node/index";
+import { toBase32, Dish } from "../../../src/node/index";
 import TestRegister from "../../TestRegister";
 
 TestRegister.addApiTests([
@@ -280,6 +280,42 @@ TestRegister.addApiTests([
                 "args": [false] }
         ]);
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+    }),
+
+    it("Composable Dish: Should have top level Dish object", () => {
+        assert.ok(Dish);
+    }),
+
+    it("Composable Dish: Should construct empty dish object", () => {
+        const dish = new Dish();
+        assert.deepEqual(dish.value, []);
+        assert.strictEqual(dish.type, 0);
+    }),
+
+    it("Composable Dish: constructed dish should have operation prototype functions", () => {
+        const dish = new Dish();
+        assert.ok(dish.translateDateTimeFormat);
+        assert.ok(dish.stripHTTPHeaders);
+        assert.throws(() => dish.someInvalidFunction());
+    }),
+
+    it("Composable Dish: composed function returns another dish", () => {
+        const result = new Dish("some input").toBase32();
+        assert.ok(result instanceof SyncDish);
+    }),
+
+    it("Composable dish: infers type from input if needed", () => {
+        const dish = new Dish("string input");
+        assert.strictEqual(dish.type, 1);
+
+        const numberDish = new Dish(333);
+        assert.strictEqual(numberDish.type, 2);
+
+        const arrayBufferDish = new Dish(Buffer.from("some buffer input").buffer);
+        assert.strictEqual(arrayBufferDish.type, 4);
+
+        const JSONDish = new Dish({key: "value"});
+        assert.strictEqual(JSONDish.type, 6);
     }),
 
 ]);

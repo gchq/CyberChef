@@ -39,6 +39,7 @@ let code = `/**
 
 
 import "babel-polyfill";
+import SyncDish from "./SyncDish";
 import { wrap, help, bake } from "./api";
 import {
 `;
@@ -80,6 +81,7 @@ code += `    };
 
 const chef = generateChef();
 chef.help = help;
+chef.dish = SyncDish;
 `;
 
 includedOperations.forEach((op) => {
@@ -106,7 +108,7 @@ includedOperations.forEach((op) => {
     code += `    ${decapitalise(op)},\n`;
 });
 
-
+code += "    SyncDish as Dish\n";
 code += "};\n";
 
 
