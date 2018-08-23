@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to CyberChef will be documented in this file.
 
+### [8.4.0] - 2018-08-23
+- 'To Base85' and 'From Base85' operations added [@PenguinGeorge] | [#340]
+
 ### [8.3.0] - 2018-08-21
 - 'To MessagePack' and 'From MessagePack' operations added [@artemisbot] | [#338]
 
@@ -38,6 +41,7 @@ All notable changes to CyberChef will be documented in this file.
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 
+[8.4.0]: https://github.com/gchq/CyberChef/releases/tag/v8.4.0
 [8.3.0]: https://github.com/gchq/CyberChef/releases/tag/v8.3.0
 [8.2.0]: https://github.com/gchq/CyberChef/releases/tag/v8.2.0
 [8.1.0]: https://github.com/gchq/CyberChef/releases/tag/v8.1.0
@@ -69,3 +73,4 @@ All notable changes to CyberChef will be documented in this file.
 [#311]: https://github.com/gchq/CyberChef/pull/311
 [#325]: https://github.com/gchq/CyberChef/pull/325
 [#338]: https://github.com/gchq/CyberChef/pull/338
+[#340]: https://github.com/gchq/CyberChef/pull/340
