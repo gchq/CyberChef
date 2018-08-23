@@ -16,7 +16,7 @@ export const ALPHABET_OPTIONS = [
     },
     {
         name: "Z85 (ZeroMQ)",
-        value: "0-9a-zA-Z.#\\-:+=^!/*?&<>()[]{}@%$#",
+        value: "0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#",
     },
     {
         name: "IPv6",
