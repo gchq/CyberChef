@@ -51,7 +51,9 @@
             "Decode text",
             "Swap endianness",
             "To MessagePack",
-            "From MessagePack"
+            "From MessagePack",
+            "To Braille",
+            "From Braille"
         ]
     },
     {
