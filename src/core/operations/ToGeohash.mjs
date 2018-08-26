@@ -21,7 +21,7 @@ class ToGeohash extends Operation {
         this.name = "To Geohash";
         this.module = "Default";
         this.description = "Converts Lat / Long coordinates into a Geohash string.  For example, <code>37.8324,112.5584</code> becomes <code>ww8p1r4t8</code>.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Geohash";
+        this.infoURL = "https://wikipedia.org/wiki/Geohash";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
