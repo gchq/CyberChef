@@ -22,7 +22,7 @@ TestRegister.addTests([
     },
     {
         name: "From Geohash",
-        input: "w\nw\n\n\nw",
+        input: "w\n\nw\n\n\nw",
         expectedOutput: "22.5,112.5\n0,0\n22.5,112.5\n0,0\n0,0\n22.5,112.5",
         recipeConfig: [
             {
