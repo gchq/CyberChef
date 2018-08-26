@@ -11,8 +11,8 @@ import TestRegister from "../../TestRegister";
 TestRegister.addTests([
     {
         name: "To Geohash",
-        input: "37.8324,112.5584\n37.9324,-112.2584",
-        expectedOutput: "ww8p1r4t8\n9w8pv3ruj",
+        input: "37.8324,112.5584",
+        expectedOutput: "ww8p1r4t8",
         recipeConfig: [
             {
                 op: "To Geohash",
@@ -22,12 +22,34 @@ TestRegister.addTests([
     },
     {
         name: "To Geohash",
-        input: "37.8324,112.5584\n\n\n",
-        expectedOutput: "ww8p1r4t8\n\n\n",
+        input: "37.9324,-112.2584",
+        expectedOutput: "9w8pv3ruj",
         recipeConfig: [
             {
                 op: "To Geohash",
                 args: [9],
+            },
+        ],
+    },
+    {
+        name: "To Geohash",
+        input: "37.8324,112.5584",
+        expectedOutput: "ww8",
+        recipeConfig: [
+            {
+                op: "To Geohash",
+                args: [3],
+            },
+        ],
+    },
+    {
+        name: "To Geohash",
+        input: "37.9324,-112.2584",
+        expectedOutput: "9w8pv3rujxy5b99",
+        recipeConfig: [
+            {
+                op: "To Geohash",
+                args: [15],
             },
         ],
     },

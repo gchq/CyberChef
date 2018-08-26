@@ -41,11 +41,9 @@ class ToGeohash extends Operation {
     run(input, args) {
         const [precision] = args;
 
-        return input.split("\n").map(line => {
-            line = line.replace(/ /g, "");
-            if (line === "") return "";
-            return geohash.encode(...line.split(",").map(num => parseFloat(num)), precision);
-        }).join("\n");
+        input = input.replace(/ /g, "");
+        if (input === "") return "";
+        return geohash.encode(...input.split(",").map(num => parseFloat(num)), precision);
     }
 
 }

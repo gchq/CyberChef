@@ -34,10 +34,8 @@ class FromGeohash extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return input.split("\n").map(line => {
-            const coords = geohash.decode(line);
-            return [coords.latitude, coords.longitude].join(",");
-        }).join("\n");
+        const coords = geohash.decode(input);
+        return [coords.latitude, coords.longitude].join(",");
     }
 
 }
