@@ -41,7 +41,7 @@ class RenderMoustache extends Operation {
     run(input, args) {
         const [template] = args;
 
-        return Moustache.render(template, input)
+        return Moustache.render(template, input);
     }
 
 }
