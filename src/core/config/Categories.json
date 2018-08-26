@@ -53,7 +53,9 @@
             "To MessagePack",
             "From MessagePack",
             "To Braille",
-            "From Braille"
+            "From Braille",
+            "To Geohash",
+            "From Geohash"
         ]
     },
     {
