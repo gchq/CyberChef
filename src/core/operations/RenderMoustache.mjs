@@ -19,7 +19,7 @@ class RenderMoustache extends Operation {
         super();
 
         this.name = "Render Moustache";
-        this.module = "Default";
+        this.module = "Templating";
         this.description = "Uses a provided Moustache template in order to render a JSON value.";
         this.infoURL = "https://mustache.github.io/mustache.5.html";
         this.inputType = "JSON";
