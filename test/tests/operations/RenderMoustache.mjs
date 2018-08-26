@@ -35,12 +35,12 @@ Well, {{taxed_value}} after taxes.
     },
     {
         name: "Render Moustache",
-        input: `{}`,
-        expectedOutput: `Hello .`,
+        input: "{}",
+        expectedOutput: "Hello .",
         recipeConfig: [
             {
                 op: "Render Moustache",
-                args: [`Hello {{name}}.`]
+                args: ["Hello {{name}}."]
             }
         ],
     },
