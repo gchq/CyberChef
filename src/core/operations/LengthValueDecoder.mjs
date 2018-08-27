@@ -20,11 +20,33 @@ class FromLengthValue extends Operation {
 
         this.name = "From Length Value";
         this.module = "Default";
-        this.description = "Converts a Length-Value (LV) encoded string into a line-delimited JSON (LDJSON / Streaming JSON) format";
+        this.description = "Converts a Length-Value (LV) encoded string into a JSON object.  Can optionally include a <code>Key</code> / <code>Type</code> entry.";
         this.infoURL = "";
         this.inputType = "byteArray";
-        this.outputType = "string";
+        this.outputType = "JSON";
         this.args = [
+            {
+                name: "Bytes in Key Value",
+                type: "populateOption",
+                value: [
+                    {
+                        name: "0 Bytes (No Key)",
+                        value: "0"
+                    },
+                    {
+                        name: "1 Byte",
+                        value: "1"
+                    },
+                    {
+                        name: "2 Bytes",
+                        value: "2"
+                    },
+                    {
+                        name: "4 Bytes",
+                        value: "4"
+                    }
+                ]
+            },
             {
                 name: "Bytes in Length Value",
                 type: "populateOption",
@@ -56,7 +78,8 @@ class FromLengthValue extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const bytesInLength = parseInt(args[0].split(" ")[0], 10);
+        const bytesInKey = parseInt(args[0].split(" ")[0], 10);
+        const bytesInLength = parseInt(args[1].split(" ")[0], 10);
         const basicEncodingRules = args[2];
 
         const lv = new LengthValue(input, { bytesInLength, basicEncodingRules });
@@ -64,13 +87,14 @@ class FromLengthValue extends Operation {
         const data = [];
 
         while (!lv.atEnd()) {
-            const dataLength = lv.getLength();
-            const value = lv.getValue(dataLength);
+            const key = bytesInKey ? lv.getValue(bytesInKey) : undefined;
+            const length = lv.getLength();
+            const value = lv.getValue(length);
 
-            data.push(value);
+            data.push({ key, length, value });
         }
 
-        return data.map(line => line.map(value => ("00" + value.toString(16)).slice(-2)).join(" ")).join("\n");
+        return data;
     }
 
 }
