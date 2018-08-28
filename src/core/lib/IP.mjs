@@ -109,8 +109,8 @@ export function ipv6CidrRange(cidr, includeNetworkInfo) {
  * @returns {string}
  */
 export function ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-    const ip1 = strToIpv4(range[1]),
-        ip2 = strToIpv4(range[2]);
+    const ip1 = strToIpv4(range[0].split("-")[0].trim()),
+          ip2 = strToIpv4(range[0].split("-")[1].trim());
 
     let output = "";
 
@@ -186,6 +186,42 @@ export function ipv6HyphenatedRange(range, includeNetworkInfo) {
     }
 
     return output;
+}
+
+/**
+ * Parses a list of IPv4 addresses separated by a new line (\n) and displays information
+ * about it.
+ *
+ * @param {RegExp} list
+ * @param {boolean} includeNetworkInfo
+ * @param {boolean} enumerateAddresses
+ * @param {boolean} allowLargeList
+ * @returns {string}
+ */
+export function ipv4ListedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList) {
+
+    var ipv4List = match[0].split("\n");
+    ipv4List = ipv4List.filter(Boolean);
+
+    var ipv4CidrList = ipv4List.filter( function(a) { return a.includes("/")});
+    for (let i = 0; i < ipv4CidrList.length; i++) {
+        let network = strToIpv4(ipv4CidrList[i].split("/")[0]);
+        let cidrRange = parseInt(ipv4CidrList[i].split("/")[1]);
+        if (cidrRange < 0 || cidrRange > 31) {
+            return "IPv4 CIDR must be less than 32";
+        }
+        let mask = ~(0xFFFFFFFF >>> cidrRange),
+            cidrIp1 = network & mask,
+            cidrIp2 = cidrIp1 | ~mask;
+        ipv4List.splice(ipv4List.indexOf(ipv4CidrList[i]),1);
+        ipv4List.push(ipv4ToStr(cidrIp1), ipv4ToStr(cidrIp2));
+    }
+
+    ipv4List = ipv4List.sort(ipv4Compare);
+    let ip1 = ipv4List[0];
+    let ip2 = ipv4List[ipv4List.length - 1];
+    let range = [ip1 + " - " + ip2]
+    return ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresses, allowLargeList);
 }
 
 /**
@@ -389,6 +425,17 @@ export function genIpv6Mask(cidr) {
     }
 
     return mask;
+}
+
+/**
+ * Comparison operation for sorting of IPv4 addresses.
+ *
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
+export function ipv4Compare(a, b) {
+    return strToIpv4(a) - strToIpv4(b);
 }
 
 const _LARGE_RANGE_ERROR = "The specified range contains more than 65,536 addresses. Running this query could crash your browser. If you want to run it, select the \"Allow large queries\" option. You are advised to turn off \"Auto Bake\" whilst editing large ranges.";
