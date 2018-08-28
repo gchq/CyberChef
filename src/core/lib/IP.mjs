@@ -3,6 +3,7 @@
  *
  * @author picapi
  * @author n1474335 [n1474335@gmail.com]
+ * @author Klaxon [klaxon@veyr.com]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
@@ -109,8 +110,8 @@ export function ipv6CidrRange(cidr, includeNetworkInfo) {
  * @returns {string}
  */
 export function ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-    const ip1 = strToIpv4(range[1]),
-        ip2 = strToIpv4(range[2]);
+    const ip1 = strToIpv4(range[0].split("-")[0].trim()),
+        ip2 = strToIpv4(range[0].split("-")[1].trim());
 
     let output = "";
 
@@ -162,8 +163,8 @@ Total addresses in range: ${(((ip2 - ip1) >>> 0) + 1)}
  * @returns {string}
  */
 export function ipv6HyphenatedRange(range, includeNetworkInfo) {
-    const ip1 = strToIpv6(range[1]),
-        ip2 = strToIpv6(range[14]),
+    const ip1 = strToIpv6(range[0].split("-")[0].trim()),
+        ip2 = strToIpv6(range[0].split("-")[1].trim()),
         total = new Array(128).fill();
 
     let output = "",
@@ -186,6 +187,93 @@ export function ipv6HyphenatedRange(range, includeNetworkInfo) {
     }
 
     return output;
+}
+
+/**
+ * Parses a list of IPv4 addresses separated by a new line (\n) and displays information
+ * about it.
+ *
+ * @param {RegExp} list
+ * @param {boolean} includeNetworkInfo
+ * @param {boolean} enumerateAddresses
+ * @param {boolean} allowLargeList
+ * @returns {string}
+ */
+export function ipv4ListedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList) {
+
+    let ipv4List = match[0].split("\n");
+    ipv4List = ipv4List.filter(Boolean);
+
+    const ipv4CidrList = ipv4List.filter(function(a) {
+        return a.includes("/");
+    });
+    for (let i = 0; i < ipv4CidrList.length; i++) {
+        const network = strToIpv4(ipv4CidrList[i].split("/")[0]);
+        const cidrRange = parseInt(ipv4CidrList[i].split("/")[1], 10);
+        if (cidrRange < 0 || cidrRange > 31) {
+            return "IPv4 CIDR must be less than 32";
+        }
+        const mask = ~(0xFFFFFFFF >>> cidrRange),
+            cidrIp1 = network & mask,
+            cidrIp2 = cidrIp1 | ~mask;
+        ipv4List.splice(ipv4List.indexOf(ipv4CidrList[i]), 1);
+        ipv4List.push(ipv4ToStr(cidrIp1), ipv4ToStr(cidrIp2));
+    }
+
+    ipv4List = ipv4List.sort(ipv4Compare);
+    const ip1 = ipv4List[0];
+    const ip2 = ipv4List[ipv4List.length - 1];
+    const range = [ip1 + " - " + ip2];
+    return ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresses, allowLargeList);
+}
+
+/**
+ * Parses a list of IPv6 addresses separated by a new line (\n) and displays information
+ * about it.
+ *
+ * @param {RegExp} list
+ * @param {boolean} includeNetworkInfo
+ * @returns {string}
+ */
+export function ipv6ListedRange(match, includeNetworkInfo) {
+
+    let ipv6List = match[0].split("\n");
+    ipv6List = ipv6List.filter(function(str) {
+        return str.trim();
+    });
+    for (let i =0; i < ipv6List.length; i++){
+        ipv6List[i] = ipv6List[i].trim();
+    }
+    const ipv6CidrList = ipv6List.filter(function(a) {
+        return a.includes("/");
+    });
+
+    for (let i = 0; i < ipv6CidrList.length; i++) {
+
+        const network = strToIpv6(ipv6CidrList[i].split("/")[0]);
+        const cidrRange = parseInt(ipv6CidrList[i].split("/")[1], 10);
+
+        if (cidrRange < 0 || cidrRange > 127) {
+            return "IPv6 CIDR must be less than 128";
+        }
+
+        const cidrIp1 = new Array(8),
+            cidrIp2 = new Array(8);
+
+        const mask = genIpv6Mask(cidrRange);
+
+        for (let j = 0; j < 8; j++) {
+            cidrIp1[j] = network[j] & mask[j];
+            cidrIp2[j] = cidrIp1[j] | (~mask[j] & 0x0000FFFF);
+        }
+        ipv6List.splice(ipv6List.indexOf(ipv6CidrList[i]), 1);
+        ipv6List.push(ipv6ToStr(cidrIp1), ipv6ToStr(cidrIp2));
+    }
+    ipv6List = ipv6List.sort(ipv6Compare);
+    const ip1 = ipv6List[0];
+    const ip2 = ipv6List[ipv6List.length - 1];
+    const range = [ip1 + " - " + ip2];
+    return ipv6HyphenatedRange(range, includeNetworkInfo);
 }
 
 /**
@@ -389,6 +477,37 @@ export function genIpv6Mask(cidr) {
     }
 
     return mask;
+}
+
+/**
+ * Comparison operation for sorting of IPv4 addresses.
+ *
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
+export function ipv4Compare(a, b) {
+    return strToIpv4(a) - strToIpv4(b);
+}
+
+/**
+ * Comparison operation for sorting of IPv6 addresses.
+ *
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
+export function ipv6Compare(a, b) {
+
+    const a_ = strToIpv6(a),
+        b_ = strToIpv6(b);
+
+    for (let i = 0; i < a_.length; i++){
+        if (a_[i] !== b_[i]){
+            return a_[i] - b_[i];
+        }
+    }
+    return 0;
 }
 
 const _LARGE_RANGE_ERROR = "The specified range contains more than 65,536 addresses. Running this query could crash your browser. If you want to run it, select the \"Allow large queries\" option. You are advised to turn off \"Auto Bake\" whilst editing large ranges.";

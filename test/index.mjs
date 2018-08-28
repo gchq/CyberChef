@@ -64,6 +64,7 @@ import "./tests/operations/SetUnion";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
+import "./tests/operations/ParseIPRange";
 
 let allTestsPassing = true;
 const testStatusCounts = {
@@ -142,4 +143,3 @@ TestRegister.runTests()
 
         process.exit(allTestsPassing ? 0 : 1);
     });
-
