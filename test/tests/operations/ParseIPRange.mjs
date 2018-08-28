@@ -1,5 +1,5 @@
 /**
- * MS tests.
+ * Parse IP Range tests.
  *
  * @author Klaxon [klaxon@veyr.com]
  * @copyright Crown Copyright 2017
@@ -15,7 +15,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -26,7 +26,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -37,7 +37,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -48,7 +48,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -59,7 +59,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -70,7 +70,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -81,7 +81,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -92,7 +92,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -103,7 +103,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -114,7 +114,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
@@ -125,7 +125,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Parse IP range",
-                "args": [true,true,false]
+                "args": [true, true, false]
             },
         ],
     },
