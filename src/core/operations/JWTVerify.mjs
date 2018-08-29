@@ -27,7 +27,7 @@ class JWTVerify extends Operation {
         this.args = [
             {
                 name: "Private / Secret Key",
-                type: "shortString",
+                type: "text",
                 value: "secret_cat"
             },
         ];
@@ -42,7 +42,12 @@ class JWTVerify extends Operation {
         const [key] = args;
 
         try {
-            return jwt.verify(input, key);
+            return jwt.verify(input, key, { algorithms: [
+                "HS256",
+                "HS384",
+                "HS512",
+                "none"
+            ]});
         } catch (err) {
             return err;
         }

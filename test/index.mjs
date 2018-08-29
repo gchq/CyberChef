@@ -64,6 +64,9 @@ import "./tests/operations/SetUnion";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
+import "./tests/operations/JWTSign";
+import "./tests/operations/JWTDecode";
+import "./tests/operations/JWTVerify";
 
 let allTestsPassing = true;
 const testStatusCounts = {

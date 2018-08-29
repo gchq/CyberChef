@@ -27,53 +27,23 @@ class JWTSign extends Operation {
         this.args = [
             {
                 name: "Private / Secret Key",
-                type: "shortString",
+                type: "text",
                 value: "secret_cat"
             },
             {
                 name: "Signing Algorithm",
-                type: "populateOption",
+                type: "option",
                 value: [
-                    {
-                        name: "HS256",
-                        value: "HS256"
-                    },
-                    {
-                        name: "HS384",
-                        value: "HS384",
-                    },
-                    {
-                        name: "HS512",
-                        value: "HS512",
-                    },
-                    {
-                        name: "RS256",
-                        value: "RS256",
-                    },
-                    {
-                        name: "RS384",
-                        value: "RS384",
-                    },
-                    {
-                        name: "RS512",
-                        value: "RS512",
-                    },
-                    {
-                        name: "ES256",
-                        value: "ES256",
-                    },
-                    {
-                        name: "ES384",
-                        value: "ES384",
-                    },
-                    {
-                        name: "ES512",
-                        value: "ES512",
-                    },
-                    {
-                        name: "None",
-                        value: "none",
-                    },
+                    "HS256",
+                    "HS384",
+                    "HS512",
+                    "RS256",
+                    "RS384",
+                    "RS512",
+                    "ES256",
+                    "ES384",
+                    "ES512",
+                    "None"
                 ]
             }
         ];
