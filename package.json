@@ -106,6 +106,7 @@
     "loglevel-message-prefix": "^3.0.0",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21",
+    "ngeohash": "^0.6.0",
     "node-forge": "^0.7.5",
     "node-md6": "^0.1.0",
     "notepack.io": "^2.1.3",
