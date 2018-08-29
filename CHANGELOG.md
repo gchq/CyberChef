@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to CyberChef will be documented in this file.
 
+
+### [8.6.0] - 2018-08-29
+- 'To Geohash' and 'From Geohash' operations added [@GCHQ77703] | [#344] 
+
 ### [8.5.0] - 2018-08-23
 - 'To Braille' and 'From Braille' operations added [@n1474335] | [#255]
 
@@ -44,6 +48,7 @@ All notable changes to CyberChef will be documented in this file.
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 
+[8.6.0]: https://github.com/gchq/CyberChef/releases/tag/v8.6.0
 [8.5.0]: https://github.com/gchq/CyberChef/releases/tag/v8.5.0
 [8.4.0]: https://github.com/gchq/CyberChef/releases/tag/v8.4.0
 [8.3.0]: https://github.com/gchq/CyberChef/releases/tag/v8.3.0
@@ -57,6 +62,7 @@ All notable changes to CyberChef will be documented in this file.
 
 [@n1474335]: https://github.com/n1474335
 [@d98762625]: https://github.com/d98762625
+[@GCHQ77703]: https://github.com/GCHQ77703
 [@artemisbot]: https://github.com/artemisbot
 [@picapi]: https://github.com/picapi
 [@Dachande663]: https://github.com/Dachande663
@@ -79,3 +85,4 @@ All notable changes to CyberChef will be documented in this file.
 [#325]: https://github.com/gchq/CyberChef/pull/325
 [#338]: https://github.com/gchq/CyberChef/pull/338
 [#340]: https://github.com/gchq/CyberChef/pull/340
+[#344]: https://github.com/gchq/CyberChef/pull/344
