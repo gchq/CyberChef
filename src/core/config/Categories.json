@@ -53,9 +53,7 @@
             "To MessagePack",
             "From MessagePack",
             "To Braille",
-            "From Braille",
-            "To Geohash",
-            "From Geohash"
+            "From Braille"
         ]
     },
     {
@@ -291,7 +289,9 @@
             "Adler-32 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum"
+            "TCP/IP Checksum",
+            "To Geohash",
+            "From Geohash"
         ]
     },
     {

@@ -19,13 +19,12 @@ class FromGeohash extends Operation {
         super();
 
         this.name = "From Geohash";
-        this.module = "Default";
-        this.description = "Converts Geohash strings into Lat / Long coordinates.  For example, <code>ww8p1r4t8</code> becomes <code>37.8324,112.5584</code>.";
+        this.module = "Hashing";
+        this.description = "Converts Geohash strings into Lat/Long coordinates. For example, <code>ww8p1r4t8</code> becomes <code>37.8324,112.5584</code>.";
         this.infoURL = "https://wikipedia.org/wiki/Geohash";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [
-        ];
+        this.args = [];
     }
 
     /**
@@ -34,8 +33,10 @@ class FromGeohash extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const coords = geohash.decode(input);
-        return [coords.latitude, coords.longitude].join(",");
+        return input.split("\n").map(line => {
+            const coords = geohash.decode(line);
+            return [coords.latitude, coords.longitude].join(",");
+        }).join("\n");
     }
 
 }

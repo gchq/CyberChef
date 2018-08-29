@@ -2,7 +2,6 @@
  * To Geohash tests
  *
  * @author gchq77703
- *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
