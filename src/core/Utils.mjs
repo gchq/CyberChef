@@ -1065,6 +1065,31 @@ class Utils {
         }[token];
     }
 
+
+    /**
+     * Turns a dataURI into a byte array.
+     * Credit to sanddune (https://jsfiddle.net/uubnnr0w/380/)
+     *
+     * @param {String} dataURI
+     * @returns {Array}
+     */
+    static convertDataURIToBinary(dataURI) {
+        const BASE64_MARKER = ";base64,";
+        const base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+        const base64 = dataURI.substring(base64Index);
+
+        const raw = atob(base64);
+        const rawLength = raw.length;
+
+        const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+        for (let i = 0; i < rawLength; i++) {
+            array[i] = raw.charCodeAt(i);
+        }
+
+        return array;
+    }
+
 }
 
 export default Utils;
