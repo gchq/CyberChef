@@ -66,6 +66,7 @@ import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 import "./tests/operations/ToGeohash.mjs";
 import "./tests/operations/FromGeohash.mjs";
+import "./tests/operations/ParseIPRange";
 
 let allTestsPassing = true;
 const testStatusCounts = {
@@ -144,4 +145,3 @@ TestRegister.runTests()
 
         process.exit(allTestsPassing ? 0 : 1);
     });
-
