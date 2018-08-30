@@ -89,6 +89,8 @@
             "Derive EVP key",
             "Bcrypt",
             "Scrypt",
+            "Generate RSA Key Pair",
+            "RSA Sign",
             "Pseudo-Random Number Generator"
         ]
     },
