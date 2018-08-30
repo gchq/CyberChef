@@ -37,7 +37,7 @@ class PlayAudio extends Operation {
     present(input) {
         const type = input.split(";")[0].split(":")[1];
         const binary = Utils.convertDataURIToBinary(input);
-        const blob = new Blob([binary], { type: type});
+        const blob = new Blob([binary], { type: type });
         const src = URL.createObjectURL(blob);
 
 
