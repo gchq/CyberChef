@@ -187,6 +187,16 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
+    it("chef.bake: forgiving with operation names", () =>{
+        const result = chef.bake("https://google.com/search?q=that's a complicated question", ["urlencode", "url decode", "parseURI"]);
+        assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
+    }),
+
+    it("chef.bake: forgiving with operation names", () =>{
+        const result = chef.bake("hello", ["to base 64"]);
+        assert.strictEqual(result.toString(), "aGVsbG8=");
+    }),
+
     it("chef.bake: if recipe is empty array, return input as dish", () => {
         const result = chef.bake("some input", []);
         assert.strictEqual(result.toString(), "some input");
