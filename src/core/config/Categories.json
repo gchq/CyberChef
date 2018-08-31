@@ -89,6 +89,9 @@
             "Derive EVP key",
             "Bcrypt",
             "Scrypt",
+            "JWT Sign",
+            "JWT Verify",
+            "JWT Decode",
             "Pseudo-Random Number Generator"
         ]
     },

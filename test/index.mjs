@@ -47,6 +47,9 @@ import "./tests/operations/HaversineDistance";
 import "./tests/operations/Hexdump";
 import "./tests/operations/Image";
 import "./tests/operations/Jump";
+import "./tests/operations/JWTDecode";
+import "./tests/operations/JWTSign";
+import "./tests/operations/JWTVerify";
 import "./tests/operations/MS";
 import "./tests/operations/Magic";
 import "./tests/operations/MorseCode";
@@ -67,6 +70,7 @@ import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/ToGeohash.mjs";
 import "./tests/operations/TranslateDateTimeFormat";
+import "./tests/operations/Magic";
 
 let allTestsPassing = true;
 const testStatusCounts = {
