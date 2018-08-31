@@ -108,7 +108,8 @@ Object.keys(operations).forEach((op) => {
 
 code += `];
 
-chef.bake = bake(operations);
+const prebaked = bake(operations);
+chef.bake = prebaked;
 export default chef;
 
 // Operations as top level exports.
@@ -120,7 +121,9 @@ Object.keys(operations).forEach((op) => {
     code += `    ${decapitalise(op)},\n`;
 });
 
-code += "    SyncDish as Dish\n";
+code += "    SyncDish as Dish,\n";
+code += "    prebaked as bake,\n";
+code += "    help,\n";
 code += "};\n";
 
 

@@ -1044,7 +1044,8 @@ const operations = [
     zlibInflate,
 ];
 
-chef.bake = bake(operations);
+const prebaked = bake(operations);
+chef.bake = prebaked
 export default chef;
 
 // Operations as top level exports.
@@ -1302,5 +1303,7 @@ export {
     zip,
     zlibDeflate,
     zlibInflate,
-    SyncDish as Dish
+    SyncDish as Dish,
+    prebaked as bake,
+    help,
 };
