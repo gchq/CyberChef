@@ -62,6 +62,10 @@ module.exports = {
                 loader: "imports-loader?jQuery=>null"
             },
             {
+                test: /prime.worker.min.js$/,
+                use: "raw-loader"
+            },
+            {
                 test: /bootstrap-material-design/,
                 loader: "imports-loader?Popper=popper.js/dist/umd/popper.js"
             },

@@ -49,10 +49,10 @@ class RSASign extends Operation {
         const privateKey = forge.pki.decryptRsaPrivateKey(key, password);
 
         const md = forge.md.sha1.create();
-        md.update(input, 'utf8');
+        md.update(input, "utf8");
         const signature = privateKey.sign(md);
 
-        return signature.split('').map(char => char.charCodeAt());
+        return signature.split("").map(char => char.charCodeAt());
     }
 
 }

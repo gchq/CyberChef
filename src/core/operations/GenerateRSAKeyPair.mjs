@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import forge from "node-forge/dist/forge.min.js";
+import PrimeWorker from "node-forge/dist/prime.worker.min.js";
 
 /**
  * Generate RSA Key Pair operation
@@ -52,15 +53,19 @@ class GenerateRSAKeyPair extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [keyLength, outputFormat] = args
+        const [keyLength, outputFormat] = args;
+        let workerScript;
 
         return new Promise((resolve, reject) => {
-            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: 2 }, (err, keypair) => {
-                if (err) return reject(err)
+            if (ENVIRONMENT_IS_WORKER || window) {
+                workerScript = ENVIRONMENT_IS_WORKER() ? self.URL.createObjectURL(new Blob([PrimeWorker])) : window.URL.createObjectURL(new Blob([PrimeWorker]));
+            }
+            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: 2, workerScript}, (err, keypair) => {
+                if (err) return reject(err);
 
                 let result;
 
-                switch(outputFormat) {
+                switch (outputFormat) {
                     case "PEM":
                         result = forge.pki.publicKeyToPem(keypair.publicKey) + "\n" + forge.pki.privateKeyToPem(keypair.privateKey);
                         break;
@@ -70,11 +75,11 @@ class GenerateRSAKeyPair extends Operation {
                     case "DER":
                         result = forge.asn1.toDer(forge.pki.privateKeyToAsn1(keypair.privateKey)).getBytes();
                         break;
-                };
+                }
 
                 resolve(result);
-            })
-        })
+            });
+        });
     }
 
 }
