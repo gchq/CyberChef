@@ -392,14 +392,15 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: [
                     "echo '\n--- Regenerating node index ---'",
+                    // Why copy and wipe OperationConfig?
+                    // OperationConfig.json needs to be empty for build to avoid circular dependency on DetectFileType.
+                    // We copy it to node dir so that we can use it as a search corpus in chef.help.
                     "echo 'Copying OperationConfig.json and wiping original'",
                     "cp src/core/config/OperationConfig.json src/node/config/OperationConfig.json",
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
                     "echo '\n OperationConfig.json copied to src/node/config. Modules wiped.'",
 
-                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
-                    "echo '[]\n' > src/core/config/OperationConfig.json",
                     "node --experimental-modules src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
                 ].join(";"),
