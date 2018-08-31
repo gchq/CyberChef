@@ -64,7 +64,7 @@ import "./tests/operations/SetUnion";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
-import "./tests/operations/LengthValueDecoder";
+import "./tests/operations/LVDecode";
 
 let allTestsPassing = true;
 const testStatusCounts = {

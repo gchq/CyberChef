@@ -8,61 +8,40 @@ import Operation from "../Operation";
 import LengthValue from "../lib/LengthValue";
 
 /**
- * From Length Value operation
+ * From LV Decode operation
  */
-class FromLengthValue extends Operation {
+class LVDecode extends Operation {
 
     /**
-     * FromLengthValue constructor
+     * LVDecode constructor
      */
     constructor() {
         super();
 
-        this.name = "From Length Value";
+        this.name = "LV Decode";
         this.module = "Default";
         this.description = "Converts a Length-Value (LV) encoded string into a JSON object.  Can optionally include a <code>Key</code> / <code>Type</code> entry.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/KLV";
         this.inputType = "byteArray";
         this.outputType = "JSON";
         this.args = [
             {
                 name: "Bytes in Key Value",
-                type: "populateOption",
+                type: "option",
                 value: [
-                    {
-                        name: "0 Bytes (No Key)",
-                        value: "0"
-                    },
-                    {
-                        name: "1 Byte",
-                        value: "1"
-                    },
-                    {
-                        name: "2 Bytes",
-                        value: "2"
-                    },
-                    {
-                        name: "4 Bytes",
-                        value: "4"
-                    }
+                    "0 Bytes (No Key)",
+                    "1 Byte",
+                    "2 Bytes",
+                    "4 Bytes"
                 ]
             },
             {
                 name: "Bytes in Length Value",
-                type: "populateOption",
+                type: "option",
                 value: [
-                    {
-                        name: "1 Byte",
-                        value: "1"
-                    },
-                    {
-                        name: "2 Bytes",
-                        value: "2"
-                    },
-                    {
-                        name: "4 Bytes",
-                        value: "4"
-                    }
+                    "1 Byte",
+                    "2 Bytes",
+                    "4 Bytes"
                 ]
             },
             {
@@ -99,4 +78,4 @@ class FromLengthValue extends Operation {
 
 }
 
-export default FromLengthValue;
+export default LVDecode;
