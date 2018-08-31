@@ -40,8 +40,9 @@ let code = `/**
 
 import "babel-polyfill";
 import SyncDish from "./SyncDish";
-import { wrap, help, bake } from "./api";
+import { wrap, help, bake, explainExludedFunction } from "./api";
 import {
+    // import as core_ to avoid name clashes after wrap.
 `;
 
 includedOperations.forEach((op) => {
@@ -76,23 +77,32 @@ includedOperations.forEach((op) => {
     code += `        "${decapitalise(op)}": wrap(core_${op}),\n`;
 });
 
+excludedOperations.forEach((op) => {
+    code += `        "${decapitalise(op)}": explainExludedFunction("${op}"),\n`;
+});
+
 code += `    };
 }
 
 const chef = generateChef();
+// Add some additional features to chef object.
 chef.help = help;
 chef.dish = SyncDish;
+
+// Define consts here so we can add to top-level export - wont allow
+// export of chef property.
 `;
 
-includedOperations.forEach((op) => {
+Object.keys(operations).forEach((op) => {
     code += `const ${decapitalise(op)} = chef.${decapitalise(op)};\n`;
 });
 
 code +=`
 
+// Define array of all operations to create register for bake.
 const operations = [\n`;
 
-includedOperations.forEach((op) => {
+Object.keys(operations).forEach((op) => {
     code += `    ${decapitalise(op)},\n`;
 });
 
@@ -100,11 +110,13 @@ code += `];
 
 chef.bake = bake(operations);
 export default chef;
+
+// Operations as top level exports.
 export {
     operations,
 `;
 
-includedOperations.forEach((op) => {
+Object.keys(operations).forEach((op) => {
     code += `    ${decapitalise(op)},\n`;
 });
 

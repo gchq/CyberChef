@@ -11,8 +11,9 @@
 
 import "babel-polyfill";
 import SyncDish from "./SyncDish";
-import { wrap, help, bake } from "./api";
+import { wrap, help, bake, explainExludedFunction } from "./api";
 import {
+    // import as core_ to avoid name clashes after wrap.
     ADD as core_ADD,
     AESDecrypt as core_AESDecrypt,
     AESEncrypt as core_AESEncrypt,
@@ -122,7 +123,6 @@ import {
     JPathExpression as core_JPathExpression,
     JSONBeautify as core_JSONBeautify,
     JSONMinify as core_JSONMinify,
-    JavaScriptParser as core_JavaScriptParser,
     Keccak as core_Keccak,
     MD2 as core_MD2,
     MD4 as core_MD4,
@@ -381,7 +381,6 @@ function generateChef() {
         "JPathExpression": wrap(core_JPathExpression),
         "JSONBeautify": wrap(core_JSONBeautify),
         "JSONMinify": wrap(core_JSONMinify),
-        "javaScriptParser": wrap(core_JavaScriptParser),
         "keccak": wrap(core_Keccak),
         "MD2": wrap(core_MD2),
         "MD4": wrap(core_MD4),
@@ -510,12 +509,31 @@ function generateChef() {
         "XPathExpression": wrap(core_XPathExpression),
         "zlibDeflate": wrap(core_ZlibDeflate),
         "zlibInflate": wrap(core_ZlibInflate),
+        "fork": explainExludedFunction("Fork"),
+        "merge": explainExludedFunction("Merge"),
+        "jump": explainExludedFunction("Jump"),
+        "conditionalJump": explainExludedFunction("ConditionalJump"),
+        "label": explainExludedFunction("Label"),
+        "comment": explainExludedFunction("Comment"),
+        "tar": explainExludedFunction("Tar"),
+        "untar": explainExludedFunction("Untar"),
+        "unzip": explainExludedFunction("Unzip"),
+        "zip": explainExludedFunction("Zip"),
+        "javaScriptBeautify": explainExludedFunction("JavaScriptBeautify"),
+        "javaScriptMinify": explainExludedFunction("JavaScriptMinify"),
+        "javaScriptParser": explainExludedFunction("JavaScriptParser"),
+        "renderImage": explainExludedFunction("RenderImage"),
+        "syntaxHighlighter": explainExludedFunction("SyntaxHighlighter"),
     };
 }
 
 const chef = generateChef();
+// Add some additional features to chef object.
 chef.help = help;
 chef.dish = SyncDish;
+
+// Define consts here so we can add to top-level export - wont allow
+// export of chef property.
 const ADD = chef.ADD;
 const AESDecrypt = chef.AESDecrypt;
 const AESEncrypt = chef.AESEncrypt;
@@ -547,8 +565,10 @@ const CTPH = chef.CTPH;
 const cartesianProduct = chef.cartesianProduct;
 const changeIPFormat = chef.changeIPFormat;
 const chiSquare = chef.chiSquare;
+const comment = chef.comment;
 const compareCTPHHashes = chef.compareCTPHHashes;
 const compareSSDEEPHashes = chef.compareSSDEEPHashes;
+const conditionalJump = chef.conditionalJump;
 const convertArea = chef.convertArea;
 const convertDataUnits = chef.convertDataUnits;
 const convertDistance = chef.convertDistance;
@@ -586,6 +606,7 @@ const fletcher16Checksum = chef.fletcher16Checksum;
 const fletcher32Checksum = chef.fletcher32Checksum;
 const fletcher64Checksum = chef.fletcher64Checksum;
 const fletcher8Checksum = chef.fletcher8Checksum;
+const fork = chef.fork;
 const formatMACAddresses = chef.formatMACAddresses;
 const frequencyDistribution = chef.frequencyDistribution;
 const fromBCD = chef.fromBCD;
@@ -625,8 +646,12 @@ const hexToPEM = chef.hexToPEM;
 const JPathExpression = chef.JPathExpression;
 const JSONBeautify = chef.JSONBeautify;
 const JSONMinify = chef.JSONMinify;
+const javaScriptBeautify = chef.javaScriptBeautify;
+const javaScriptMinify = chef.javaScriptMinify;
 const javaScriptParser = chef.javaScriptParser;
+const jump = chef.jump;
 const keccak = chef.keccak;
+const label = chef.label;
 const MD2 = chef.MD2;
 const MD4 = chef.MD4;
 const MD5 = chef.MD5;
@@ -634,6 +659,7 @@ const MD6 = chef.MD6;
 const magic = chef.magic;
 const mean = chef.mean;
 const median = chef.median;
+const merge = chef.merge;
 const microsoftScriptDecoder = chef.microsoftScriptDecoder;
 const multiply = chef.multiply;
 const NOT = chef.NOT;
@@ -675,6 +701,7 @@ const removeEXIF = chef.removeEXIF;
 const removeLineNumbers = chef.removeLineNumbers;
 const removeNullBytes = chef.removeNullBytes;
 const removeWhitespace = chef.removeWhitespace;
+const renderImage = chef.renderImage;
 const Return = chef.Return;
 const reverse = chef.reverse;
 const rotateLeft = chef.rotateLeft;
@@ -707,9 +734,11 @@ const subtract = chef.subtract;
 const sum = chef.sum;
 const swapEndianness = chef.swapEndianness;
 const symmetricDifference = chef.symmetricDifference;
+const syntaxHighlighter = chef.syntaxHighlighter;
 const TCPIPChecksum = chef.TCPIPChecksum;
 const tail = chef.tail;
 const takeBytes = chef.takeBytes;
+const tar = chef.tar;
 const toBCD = chef.toBCD;
 const toBase = chef.toBase;
 const toBase32 = chef.toBase32;
@@ -742,6 +771,8 @@ const URLEncode = chef.URLEncode;
 const unescapeString = chef.unescapeString;
 const unescapeUnicodeCharacters = chef.unescapeUnicodeCharacters;
 const unique = chef.unique;
+const untar = chef.untar;
+const unzip = chef.unzip;
 const vigenèreDecode = chef.vigenèreDecode;
 const vigenèreEncode = chef.vigenèreEncode;
 const whirlpool = chef.whirlpool;
@@ -752,10 +783,12 @@ const XMLMinify = chef.XMLMinify;
 const XOR = chef.XOR;
 const XORBruteForce = chef.XORBruteForce;
 const XPathExpression = chef.XPathExpression;
+const zip = chef.zip;
 const zlibDeflate = chef.zlibDeflate;
 const zlibInflate = chef.zlibInflate;
 
 
+// Define array of all operations to create register for bake.
 const operations = [
     ADD,
     AESDecrypt,
@@ -788,8 +821,10 @@ const operations = [
     cartesianProduct,
     changeIPFormat,
     chiSquare,
+    comment,
     compareCTPHHashes,
     compareSSDEEPHashes,
+    conditionalJump,
     convertArea,
     convertDataUnits,
     convertDistance,
@@ -827,6 +862,7 @@ const operations = [
     fletcher32Checksum,
     fletcher64Checksum,
     fletcher8Checksum,
+    fork,
     formatMACAddresses,
     frequencyDistribution,
     fromBCD,
@@ -866,8 +902,12 @@ const operations = [
     JPathExpression,
     JSONBeautify,
     JSONMinify,
+    javaScriptBeautify,
+    javaScriptMinify,
     javaScriptParser,
+    jump,
     keccak,
+    label,
     MD2,
     MD4,
     MD5,
@@ -875,6 +915,7 @@ const operations = [
     magic,
     mean,
     median,
+    merge,
     microsoftScriptDecoder,
     multiply,
     NOT,
@@ -916,6 +957,7 @@ const operations = [
     removeLineNumbers,
     removeNullBytes,
     removeWhitespace,
+    renderImage,
     Return,
     reverse,
     rotateLeft,
@@ -948,9 +990,11 @@ const operations = [
     sum,
     swapEndianness,
     symmetricDifference,
+    syntaxHighlighter,
     TCPIPChecksum,
     tail,
     takeBytes,
+    tar,
     toBCD,
     toBase,
     toBase32,
@@ -983,6 +1027,8 @@ const operations = [
     unescapeString,
     unescapeUnicodeCharacters,
     unique,
+    untar,
+    unzip,
     vigenèreDecode,
     vigenèreEncode,
     whirlpool,
@@ -993,12 +1039,15 @@ const operations = [
     XOR,
     XORBruteForce,
     XPathExpression,
+    zip,
     zlibDeflate,
     zlibInflate,
 ];
 
 chef.bake = bake(operations);
 export default chef;
+
+// Operations as top level exports.
 export {
     operations,
     ADD,
@@ -1032,8 +1081,10 @@ export {
     cartesianProduct,
     changeIPFormat,
     chiSquare,
+    comment,
     compareCTPHHashes,
     compareSSDEEPHashes,
+    conditionalJump,
     convertArea,
     convertDataUnits,
     convertDistance,
@@ -1071,6 +1122,7 @@ export {
     fletcher32Checksum,
     fletcher64Checksum,
     fletcher8Checksum,
+    fork,
     formatMACAddresses,
     frequencyDistribution,
     fromBCD,
@@ -1110,8 +1162,12 @@ export {
     JPathExpression,
     JSONBeautify,
     JSONMinify,
+    javaScriptBeautify,
+    javaScriptMinify,
     javaScriptParser,
+    jump,
     keccak,
+    label,
     MD2,
     MD4,
     MD5,
@@ -1119,6 +1175,7 @@ export {
     magic,
     mean,
     median,
+    merge,
     microsoftScriptDecoder,
     multiply,
     NOT,
@@ -1160,6 +1217,7 @@ export {
     removeLineNumbers,
     removeNullBytes,
     removeWhitespace,
+    renderImage,
     Return,
     reverse,
     rotateLeft,
@@ -1192,9 +1250,11 @@ export {
     sum,
     swapEndianness,
     symmetricDifference,
+    syntaxHighlighter,
     TCPIPChecksum,
     tail,
     takeBytes,
+    tar,
     toBCD,
     toBase,
     toBase32,
@@ -1227,6 +1287,8 @@ export {
     unescapeString,
     unescapeUnicodeCharacters,
     unique,
+    untar,
+    unzip,
     vigenèreDecode,
     vigenèreEncode,
     whirlpool,
@@ -1237,6 +1299,7 @@ export {
     XOR,
     XORBruteForce,
     XPathExpression,
+    zip,
     zlibDeflate,
     zlibInflate,
     SyncDish as Dish

@@ -22,7 +22,7 @@ export default  [
     // esprima doesn't work in .mjs
     "JavaScriptBeautify",
     "JavaScriptMinify",
-    "JavaScriptParse",
+    "JavaScriptParser",
 
     // Relies on state of recipe.
     // "Magic",

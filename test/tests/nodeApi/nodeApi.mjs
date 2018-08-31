@@ -318,4 +318,22 @@ TestRegister.addApiTests([
         assert.strictEqual(JSONDish.type, 6);
     }),
 
+    it("Excluded operations: throw a sensible error when you try and call one", () => {
+        try {
+            chef.fork();
+        } catch (e) {
+            assert.strictEqual(e.type, "ExcludedOperationError");
+            assert.strictEqual(e.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
+        }
+    }),
+
+    it("Excluded operations: throw a sensible error when you try and call one", () => {
+        try {
+            chef.renderImage();
+        } catch (e) {
+            assert.strictEqual(e.type, "ExcludedOperationError");
+            assert.strictEqual(e.message, "Sorry, the RenderImage operation is not available in the Node.js version of CyberChef.");
+        }
+    })
+
 ]);
