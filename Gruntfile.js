@@ -382,13 +382,13 @@ module.exports = function (grunt) {
                     "mkdir -p src/core/config/modules",
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
-                    "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
             tests: {
-                command: "node --experimental-modules test/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation test/index.mjs"
             }
         },
     });

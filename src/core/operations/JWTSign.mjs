@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import jwt from "jsonwebtoken";
+import OperationError from "../errors/OperationError";
 
 /**
  * JWT Sign operation
@@ -20,18 +21,18 @@ class JWTSign extends Operation {
 
         this.name = "JWT Sign";
         this.module = "Crypto";
-        this.description = "Signs a JSON object as a JSON Web Token using a provided secret / private key.";
-        this.infoURL = "https://jwt.io/";
+        this.description = "Signs a JSON object as a JSON Web Token using a provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.";
+        this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "JSON";
         this.outputType = "string";
         this.args = [
             {
-                name: "Private / Secret Key",
+                name: "Private/Secret Key",
                 type: "text",
-                value: "secret_cat"
+                value: "secret"
             },
             {
-                name: "Signing Algorithm",
+                name: "Signing algorithm",
                 type: "option",
                 value: [
                     "HS256",
@@ -56,7 +57,16 @@ class JWTSign extends Operation {
      */
     run(input, args) {
         const [key, algorithm] = args;
-        return jwt.sign(input, key, { algorithm: algorithm === "None" ? "none" : algorithm });
+
+        try {
+            return jwt.sign(input, key, {
+                algorithm: algorithm === "None" ? "none" : algorithm
+            });
+        } catch (err) {
+            throw new OperationError(`Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.
+
+${err}`);
+        }
     }
 
 }

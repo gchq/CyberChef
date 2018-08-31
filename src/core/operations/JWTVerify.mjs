@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import jwt from "jsonwebtoken";
+import OperationError from "../errors/OperationError";
 
 /**
  * JWT Verify operation
@@ -20,15 +21,15 @@ class JWTVerify extends Operation {
 
         this.name = "JWT Verify";
         this.module = "Crypto";
-        this.description = "Verifies that a JSON Web Token is valid and has been signed with the provided secret / private key.";
-        this.infoURL = "https://jwt.io/";
+        this.description = "Verifies that a JSON Web Token is valid and has been signed with the provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.";
+        this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
         this.args = [
             {
-                name: "Private / Secret Key",
+                name: "Private/Secret Key",
                 type: "text",
-                value: "secret_cat"
+                value: "secret"
             },
         ];
     }
@@ -42,14 +43,20 @@ class JWTVerify extends Operation {
         const [key] = args;
 
         try {
-            return jwt.verify(input, key, { algorithms: [
+            const verified = jwt.verify(input, key, { algorithms: [
                 "HS256",
                 "HS384",
                 "HS512",
                 "none"
             ]});
+
+            if (verified.hasOwnProperty("name") && verified.name === "JsonWebTokenError") {
+                throw new OperationError(verified.message);
+            }
+
+            return verified;
         } catch (err) {
-            return err;
+            throw new OperationError(err);
         }
     }
 

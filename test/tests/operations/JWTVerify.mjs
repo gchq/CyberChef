@@ -12,12 +12,9 @@ const outputObject = JSON.stringify({
     String: "SomeString",
     Number: 42,
     iat: 1
-});
+}, null, 4);
 
-const invalidAlgorithm = JSON.stringify({
-    name: "JsonWebTokenError",
-    message: "invalid algorithm"
-});
+const invalidAlgorithm = "JsonWebTokenError: invalid algorithm";
 
 const hsKey = "secret_cat";
 const rsKey = `-----BEGIN RSA PRIVATE KEY-----
@@ -43,7 +40,7 @@ OF/2NxApJCzGCEDdfSp6VQO30hyhRANCAAQRWz+jn65BtOMvdyHKcvjBeBSDZH2r
 
 TestRegister.addTests([
     {
-        name: "JSON Verify: HS",
+        name: "JWT Verify: HS",
         input: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
         expectedOutput: outputObject,
         recipeConfig: [
@@ -54,7 +51,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "JSON Verify: RS",
+        name: "JWT Verify: RS",
         input: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.MjEJhtZk2nXzigi24piMzANmrj3mILHJcDl0xOjl5a8EgdKVL1oaMEjTkMQp5RA8YrqeRBFaX-BGGCKOXn5zPY1DJwWsBUyN9C-wGR2Qye0eogH_3b4M9EW00TPCUPXm2rx8URFj7Wg9VlsmrGzLV2oKkPgkVxuFSxnpO3yjn1Y",
         expectedOutput: invalidAlgorithm,
         recipeConfig: [
@@ -65,7 +62,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "JSON Verify: ES",
+        name: "JWT Verify: ES",
         input: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.WkECT51jSfpRkcpQ4x0h5Dwe7CFBI6u6Et2gWp91HC7mpN_qCFadRpsvJLtKubm6cJTLa68xtei0YrDD8fxIUA",
         expectedOutput: invalidAlgorithm,
         recipeConfig: [
