@@ -48,6 +48,14 @@ TestRegister.addApiTests([
         assert.equal(result.toString(), "aO[^ZS\u000eW\\^cb");
     }),
 
+
+    it("ADD: default option toggleString argument", () => {
+        const result = chef.ADD(3, {
+            key: "4",
+        });
+        assert.strictEqual(result.toString(), "7");
+    }),
+
     it("addLineNumbers: No arguments", () => {
         const result = addLineNumbers("sample input");
         assert.equal(result.toString(), "1 sample input");
@@ -919,6 +927,23 @@ smothering ampersand abreast
             `<contact-info>
 \\t<company>abc</company>
 </contact-info>`);
+    }),
+
+    it("XOR: toggleString with default option", () => {
+        assert.strictEqual(chef.XOR("fe023da5", {
+            key: "73 6f 6d 65"
+        }).toString(),
+        "\u0015\n]W@\u000b\fP");
+    }),
+
+    it("XOR: toggleString with custom option", () => {
+        assert.strictEqual(chef.XOR("fe023da5", {
+            key: {
+                string: "73 6f 6d 65",
+                option: "utf8",
+            }
+        }).toString(),
+        "QV\u0010\u0004UDWQ");
     }),
 
     it("XPath expression", () => {
