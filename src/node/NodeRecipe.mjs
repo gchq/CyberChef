@@ -12,7 +12,7 @@ import { sanitise } from "./apiUtils";
  * the SyncDish the operate on. However, this Recipe is for the node
  * environment.
  */
-class Recipe {
+class NodeRecipe {
 
     /**
      * Recipe constructor
@@ -88,4 +88,4 @@ class Recipe {
     }
 }
 
-export default Recipe;
+export default NodeRecipe;

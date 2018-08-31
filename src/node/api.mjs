@@ -8,7 +8,7 @@
 
 import Dish from "../core/Dish";
 import SyncDish from "./SyncDish";
-import Recipe from "./Recipe";
+import NodeRecipe from "./NodeRecipe";
 import OperationConfig from "./config/OperationConfig.json";
 import { sanitise } from "./apiUtils";
 import ExludedOperationError from "../core/errors/ExcludedOperationError";
@@ -242,7 +242,7 @@ export function bake(operations){
      * @throws {TypeError} if invalid recipe given.
      */
     return function(input, recipeConfig) {
-        const recipe =  new Recipe(recipeConfig);
+        const recipe =  new NodeRecipe(recipeConfig);
         const dish = ensureIsDish(input);
         return recipe.execute(dish);
     };
@@ -259,7 +259,7 @@ export function explainExludedFunction(name) {
     const func = () => {
         throw new ExludedOperationError(`Sorry, the ${name} operation is not available in the Node.js version of CyberChef.`);
     };
-    // Add opName prop so Recipe can handle it, just like wrap does.
+    // Add opName prop so NodeRecipe can handle it, just like wrap does.
     func.opName = name;
     return func;
 }
