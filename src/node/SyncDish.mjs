@@ -20,7 +20,7 @@ class SyncDish extends Dish {
     /** */
     constructor(inputOrDish=null, type=null) {
         super(inputOrDish);
-        
+
         // Add operations to make it composable
         for (const op in ops) {
             this[op] = () => ops[op](this.value);
@@ -173,9 +173,5 @@ class SyncDish extends Dish {
         }
     }
 }
-
-
-
-
 
 export default SyncDish;

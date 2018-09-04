@@ -115,12 +115,12 @@ TestRegister.addApiTests([
 
     it("chef.help: should describe a operation", () => {
         const result = chef.help("tripleDESDecrypt");
-        assert.strictEqual(result.name, "Triple DES Decrypt");
-        assert.strictEqual(result.module, "Ciphers");
-        assert.strictEqual(result.inputType, "string");
-        assert.strictEqual(result.outputType, "string");
-        assert.strictEqual(result.description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.");
-        assert.strictEqual(result.args.length, 5);
+        assert.strictEqual(result[0].name, "Triple DES Decrypt");
+        assert.strictEqual(result[0].module, "Ciphers");
+        assert.strictEqual(result[0].inputType, "string");
+        assert.strictEqual(result[0].outputType, "string");
+        assert.strictEqual(result[0].description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.");
+        assert.strictEqual(result[0].args.length, 5);
     }),
 
     it("chef.help: null for invalid operation", () => {
@@ -130,8 +130,29 @@ TestRegister.addApiTests([
 
     it("chef.help: takes a wrapped operation as input", () => {
         const result = chef.help(chef.toBase32);
-        assert.strictEqual(result.name, "To Base32");
-        assert.strictEqual(result.module, "Default");
+        assert.strictEqual(result[0].name, "To Base32");
+        assert.strictEqual(result[0].module, "Default");
+    }),
+
+    it("chef.help: returns multiple results", () => {
+        const result = chef.help("base 64");
+        assert.strictEqual(result.length, 8);
+    }),
+
+    it("chef.help: looks in description for matches too", () => {
+        // string only in one operation's description.
+        const result = chef.help("Converts a unit of data to another format.");
+        assert.strictEqual(result.length, 1);
+        assert.strictEqual(result[0].name, "Convert data units");
+    }),
+
+    it("chef.help: lists name matches before desc matches", () => {
+        const result = chef.help("MD5");
+        assert.ok(result[0].name.includes("MD5"));
+        assert.strictEqual(result[1].name.includes("MD5"), false);
+        assert.strictEqual(result[2].name.includes("MD5"), false);
+        assert.ok(result[1].description.includes("MD5"));
+        assert.ok(result[2].description.includes("MD5"));
     }),
 
     it("chef.bake: should exist", () => {

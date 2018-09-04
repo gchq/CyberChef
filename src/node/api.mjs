@@ -6,6 +6,9 @@
  * @license Apache-2.0
  */
 
+/*eslint no-console: ["off"] */
+
+
 import Dish from "../core/Dish";
 import SyncDish from "./SyncDish";
 import NodeRecipe from "./NodeRecipe";
@@ -199,29 +202,59 @@ export function wrap(OpClass) {
 
 /**
  * @namespace Api
- * @param {String} searchTerm - the name of the operation to get help for.
+ * help: Give information about operations matching the given search term,
+ * or inputted operation.
+ * @param {String || wrapped operation} input - the name of the operation to get help for.
  * Case and whitespace are ignored in search.
- * @returns {Object} Describe function matching searchTerm.
+ * @returns {Object[]} Config of matching operations.
  */
-export function help(searchTerm) {
-    let sanitised = false;
-    if (typeof searchTerm === "string") {
-        sanitised = searchTerm;
-    } else if (typeof searchTerm === "function") {
-        sanitised = searchTerm.opName;
+export function help(input) {
+    let searchTerm = false;
+    if (typeof input === "string") {
+        searchTerm = input;
+    } else if (typeof input === "function") {
+        searchTerm = input.opName;
     }
 
-    if (!sanitised) {
+    if (!searchTerm) {
         return null;
     }
 
-    const key = Object.keys(OperationConfig)
-        .find(o => sanitise(o) === sanitise(sanitised));
-    if (key) {
-        const result = OperationConfig[key];
-        result.name = key;
-        return result;
+    // Look for matches in operation name and description, listing name
+    // matches first.
+    const matches = Object.keys(OperationConfig)
+        // hydrate operation: swap op name for op config object (with name)
+        .map((m) => {
+            const hydrated = OperationConfig[m];
+            hydrated.name = m;
+
+            // Return hydrated along with what type of match it was
+            return {
+                hydrated,
+                nameMatch: sanitise(hydrated.name).includes(sanitise(searchTerm)),
+                descMatch: sanitise(hydrated.description).includes(sanitise(searchTerm))
+            };
+        })
+        // Filter out non-matches
+        .filter((result) => {
+            return result.nameMatch || result.descMatch;
+        })
+        // sort results with name match first
+        .sort((a, b) => {
+            const aInt = a.nameMatch ? 1 : 0;
+            const bInt = b.nameMatch ? 1  : 0;
+            return bInt - aInt;
+        })
+        // extract just the hydrated config
+        .map(result => result.hydrated);
+
+    // Concatenate matches but remove duplicates
+    if (matches && matches.length) {
+        console.log(`${matches.length} results found.`);
+        return matches;
     }
+
+    console.log("No results found.");
     return null;
 }
 

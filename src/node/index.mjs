@@ -1045,7 +1045,7 @@ const operations = [
 ];
 
 const prebaked = bake(operations);
-chef.bake = prebaked
+chef.bake = prebaked;
 export default chef;
 
 // Operations as top level exports.
