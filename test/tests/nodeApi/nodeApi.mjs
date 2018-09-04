@@ -136,7 +136,7 @@ TestRegister.addApiTests([
 
     it("chef.help: returns multiple results", () => {
         const result = chef.help("base 64");
-        assert.strictEqual(result.length, 8);
+        assert.strictEqual(result.length, 10);
     }),
 
     it("chef.help: looks in description for matches too", () => {

@@ -29,4 +29,6 @@ export default  [
 
     "RenderImage",
     "SyntaxHighlighter",
+
+    "DetectFileType",
 ];

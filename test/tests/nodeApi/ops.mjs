@@ -956,14 +956,6 @@ smothering ampersand abreast
         assert.strictEqual(chef.zlibInflate(chef.zlibDeflate("cut homer wile rooky grits dizen")).toString(), "cut homer wile rooky grits dizen");
     }),
 
-
-    it("Detect file type", () => {
-        assert.strictEqual(
-            chef.detectFileType(fs.readFileSync("src/web/static/images/cook_male-32x32.png")).toString(),
-            `File extension: png
-MIME type:      image/png`);
-    }),
-
     it("extract EXIF", () => {
         assert.strictEqual(
             chef.extractEXIF(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg")).toString(),
