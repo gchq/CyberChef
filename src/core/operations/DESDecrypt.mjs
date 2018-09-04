@@ -23,6 +23,7 @@ class DESDecrypt extends Operation {
         this.name = "DES Decrypt";
         this.module = "Ciphers";
         this.description = "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br>Triple DES uses a key length of 24 bytes (192 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
+        this.infoURL = "https://wikipedia.org/wiki/Data_Encryption_Standard";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

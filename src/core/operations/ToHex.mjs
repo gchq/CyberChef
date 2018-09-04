@@ -22,6 +22,7 @@ class ToHex extends Operation {
         this.name = "To Hex";
         this.module = "Default";
         this.description = "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Hexadecimal";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [

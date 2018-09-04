@@ -21,6 +21,7 @@ class ToBase extends Operation {
         this.name = "To Base";
         this.module = "Default";
         this.description = "Converts a decimal number to a given numerical base.";
+        this.infoURL = "https://wikipedia.org/wiki/Radix";
         this.inputType = "BigNumber";
         this.outputType = "string";
         this.args = [

@@ -20,6 +20,7 @@ class ConvertDistance extends Operation {
         this.name = "Convert distance";
         this.module = "Default";
         this.description = "Converts a unit of distance to another format.";
+        this.infoURL = "https://wikipedia.org/wiki/Orders_of_magnitude_(length)";
         this.inputType = "BigNumber";
         this.outputType = "BigNumber";
         this.args = [

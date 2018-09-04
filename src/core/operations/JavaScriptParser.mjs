@@ -21,6 +21,7 @@ class JavaScriptParser extends Operation {
         this.name = "JavaScript Parser";
         this.module = "Code";
         this.description = "Returns an Abstract Syntax Tree for valid JavaScript code.";
+        this.infoURL = "https://en.wikipedia.org/wiki/Abstract_syntax_tree";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -21,6 +21,7 @@ class ObjectIdentifierToHex extends Operation {
         this.name = "Object Identifier to Hex";
         this.module = "PublicKey";
         this.description = "Converts an object identifier (OID) into a hexadecimal string.";
+        this.infoURL = "https://wikipedia.org/wiki/Object_identifier";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

@@ -21,7 +21,8 @@ class DeriveEVPKey extends Operation {
 
         this.name = "Derive EVP key";
         this.module = "Ciphers";
-        this.description = "EVP is a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.";
+        this.description = "This operation performs a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.";
+        this.infoURL = "https://wikipedia.org/wiki/Key_derivation_function";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -29,6 +29,7 @@ class Operation {
         this.name             = "";
         this.module           = "";
         this.description      = "";
+        this.infoURL          = null;
     }
 
 

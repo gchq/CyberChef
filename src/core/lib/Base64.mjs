@@ -81,6 +81,7 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
         return returnType === "string" ? "" : [];
     }
 
+    alphabet = alphabet || "A-Za-z0-9+/=";
     alphabet = Utils.expandAlphRange(alphabet).join("");
 
     const output = [];

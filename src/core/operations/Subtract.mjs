@@ -25,6 +25,7 @@ class Subtract extends Operation {
         this.name = "Subtract";
         this.module = "Default";
         this.description = "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Subtraction";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [

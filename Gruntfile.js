@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "exec:generateConfig", "concurrent:dev"]);
+        ["clean:dev", "clean:config", "exec:generateConfig", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
+        ["eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -381,11 +381,12 @@ module.exports = function (grunt) {
             generateConfig: {
                 command: [
                     "echo '\n--- Regenerating config files. ---'",
-                    "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
+                    // "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "mkdir -p src/core/config/modules",
                     "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
-                    "node --experimental-modules src/core/config/scripts/generateConfig.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
@@ -406,7 +407,7 @@ module.exports = function (grunt) {
                 ].join(";"),
             },
             tests: {
-                command: "node --experimental-modules test/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation test/index.mjs"
             }
         },
     });

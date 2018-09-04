@@ -21,6 +21,7 @@ class TCPIPChecksum extends Operation {
         this.name = "TCP/IP Checksum";
         this.module = "Hashing";
         this.description = "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.";
+        this.infoURL = "https://wikipedia.org/wiki/IPv4_header_checksum";
         this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [];

@@ -21,6 +21,7 @@ class ToHexdump extends Operation {
         this.name = "To Hexdump";
         this.module = "Default";
         this.description = "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.";
+        this.infoURL = "https://wikipedia.org/wiki/Hex_dump";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [

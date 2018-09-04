@@ -20,6 +20,7 @@ class URLDecode extends Operation {
         this.name = "URL Decode";
         this.module = "URL";
         this.description = "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Percent-encoding";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

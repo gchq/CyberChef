@@ -22,6 +22,7 @@ class FrequencyDistribution extends Operation {
         this.name = "Frequency distribution";
         this.module = "Default";
         this.description = "Displays the distribution of bytes in the data as a graph.";
+        this.infoURL = "https://wikipedia.org/wiki/Frequency_distribution";
         this.inputType = "ArrayBuffer";
         this.outputType = "json";
         this.presentType = "html";

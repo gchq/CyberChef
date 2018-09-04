@@ -23,6 +23,7 @@ class PseudoRandomNumberGenerator extends Operation {
         this.name = "Pseudo-Random Number Generator";
         this.module = "Ciphers";
         this.description = "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.";
+        this.infoURL = "https://wikipedia.org/wiki/Pseudorandom_number_generator";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

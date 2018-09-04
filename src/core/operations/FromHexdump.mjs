@@ -21,6 +21,7 @@ class FromHexdump extends Operation {
         this.name = "From Hexdump";
         this.module = "Default";
         this.description = "Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.";
+        this.infoURL = "https://wikipedia.org/wiki/Hex_dump";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];

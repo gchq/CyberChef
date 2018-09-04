@@ -182,7 +182,7 @@ class Dish {
                 this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
                 break;
             case Dish.JSON:
-                this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value)) : [];
+                this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
                 break;
             case Dish.FILE:
                 this.value = await Utils.readFile(this.value);

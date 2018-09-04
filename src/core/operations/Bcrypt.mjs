@@ -21,6 +21,7 @@ class Bcrypt extends Operation {
         this.name = "Bcrypt";
         this.module = "Hashing";
         this.description = "bcrypt is a password hashing function designed by Niels Provos and David Mazi\xe8res, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.<br><br>Enter the password in the input to generate its hash.";
+        this.infoURL = "https://wikipedia.org/wiki/Bcrypt";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -22,6 +22,7 @@ class OR extends Operation {
         this.name = "OR";
         this.module = "Default";
         this.description = "OR the input with the given key.<br>e.g. <code>fe023da5</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#OR";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [
@@ -29,7 +30,7 @@ class OR extends Operation {
                 "name": "Key",
                 "type": "toggleString",
                 "value": "",
-                "toggleValues": ["Hex", "Base64", "UTF8", "Latin1"]
+                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
             }
         ];
     }

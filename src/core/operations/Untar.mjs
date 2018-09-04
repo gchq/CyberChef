@@ -21,6 +21,7 @@ class Untar extends Operation {
         this.name = "Untar";
         this.module = "Compression";
         this.description = "Unpacks a tarball and displays it per file.";
+        this.infoURL = "https://wikipedia.org/wiki/Tar_(computing)";
         this.inputType = "byteArray";
         this.outputType = "List<File>";
         this.presentType = "html";

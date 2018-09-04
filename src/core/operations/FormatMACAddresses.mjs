@@ -20,6 +20,7 @@ class FormatMACAddresses extends Operation {
         this.name = "Format MAC addresses";
         this.module = "Default";
         this.description = "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.";
+        this.infoURL = "https://wikipedia.org/wiki/MAC_address#Notational_conventions";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

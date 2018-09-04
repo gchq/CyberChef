@@ -23,6 +23,7 @@ class XPathExpression extends Operation {
         this.name = "XPath expression";
         this.module = "Code";
         this.description = "Extract information from an XML document with an XPath query";
+        this.infoURL = "https://wikipedia.org/wiki/XPath";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

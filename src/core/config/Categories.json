@@ -25,6 +25,8 @@
             "From Base32",
             "To Base58",
             "From Base58",
+            "To Base85",
+            "From Base85",
             "To Base",
             "From Base",
             "To BCD",
@@ -47,7 +49,11 @@
             "Change IP format",
             "Encode text",
             "Decode text",
-            "Swap endianness"
+            "Swap endianness",
+            "To MessagePack",
+            "From MessagePack",
+            "To Braille",
+            "From Braille"
         ]
     },
     {
@@ -83,6 +89,9 @@
             "Derive EVP key",
             "Bcrypt",
             "Scrypt",
+            "JWT Sign",
+            "JWT Verify",
+            "JWT Decode",
             "Pseudo-Random Number Generator"
         ]
     },
@@ -137,6 +146,7 @@
         "ops": [
             "HTTP request",
             "Strip HTTP headers",
+            "Dechunk HTTP response",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
@@ -282,7 +292,9 @@
             "Adler-32 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum"
+            "TCP/IP Checksum",
+            "To Geohash",
+            "From Geohash"
         ]
     },
     {
@@ -312,7 +324,9 @@
             "To Camel case",
             "To Kebab case",
             "BSON serialise",
-            "BSON deserialise"
+            "BSON deserialise",
+            "To MessagePack",
+            "From MessagePack"
         ]
     },
     {

@@ -26,6 +26,7 @@ class HTMLOperation {
 
         this.name        = name;
         this.description = config.description;
+        this.infoURL     = config.infoURL;
         this.manualBake  = config.manualBake || false;
         this.config      = config;
         this.ingList     = [];
@@ -46,8 +47,10 @@ class HTMLOperation {
         let html = "<li class='operation'";
 
         if (this.description) {
+            const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
+
             html += ` data-container='body' data-toggle='popover' data-placement='right'
-                data-content="${this.description}" data-html='true' data-trigger='hover'
+                data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover'
                 data-boundary='viewport'`;
         }
 
@@ -117,6 +120,25 @@ class HTMLOperation {
         }
     }
 
+}
+
+
+/**
+ * Given a URL for a Wikipedia (or other wiki) page, this function returns a link to that page.
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+function titleFromWikiLink(url) {
+    const splitURL = url.split("/");
+    if (splitURL.indexOf("wiki") < 0) {
+        // Not a wiki link, return full URL
+        return `<a href='${url}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
+    }
+
+    const pageTitle = decodeURIComponent(splitURL[splitURL.length - 1])
+        .replace(/_/g, " ");
+    return `<a href='${url}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on Wikipedia`;
 }
 
 export default HTMLOperation;

@@ -115,7 +115,7 @@ class App {
      * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
      *   whole recipe.
      */
-    bake(step) {
+    bake(step=false) {
         if (this.baking) return;
 
         // Reset attemptHighlight flag
@@ -533,7 +533,9 @@ class App {
             compileInfo += " - " + window.compileMessage;
         }
 
-        document.getElementById("notice").innerHTML = compileInfo;
+        const notice = document.getElementById("notice");
+        notice.innerHTML = compileInfo;
+        notice.setAttribute("title", Utils.stripHtmlTags(window.compileMessage));
     }
 
 
@@ -634,6 +636,7 @@ class App {
      * @param {event} e
      */
     stateChange(e) {
+        this.progress = 0;
         this.autoBake();
 
         // Set title

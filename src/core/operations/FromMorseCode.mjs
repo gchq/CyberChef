@@ -22,6 +22,7 @@ class FromMorseCode extends Operation {
         this.name = "From Morse Code";
         this.module = "Default";
         this.description = "Translates Morse Code into (upper case) alphanumeric characters.";
+        this.infoURL = "https://wikipedia.org/wiki/Morse_code";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

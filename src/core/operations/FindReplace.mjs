@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import XRegExp from "xregexp";
 
 /**
  * Find / Replace operation
@@ -21,6 +22,7 @@ class FindReplace extends Operation {
         this.name = "Find / Replace";
         this.module = "Regex";
         this.description = "Replaces all occurrences of the first string with the second.<br><br>Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).";
+        this.infoURL = "https://wikipedia.org/wiki/Regular_expression";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -49,6 +51,11 @@ class FindReplace extends Operation {
                 "name": "Multiline matching",
                 "type": "boolean",
                 "value": true
+            },
+            {
+                "name": "Dot matches all",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -59,16 +66,17 @@ class FindReplace extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [{option: type}, replace, g, i, m] = args;
+        const [{option: type}, replace, g, i, m, s] = args;
         let find = args[0].string,
             modifiers = "";
 
         if (g) modifiers += "g";
         if (i) modifiers += "i";
         if (m) modifiers += "m";
+        if (s) modifiers += "s";
 
         if (type === "Regex") {
-            find = new RegExp(find, modifiers);
+            find = new XRegExp(find, modifiers);
             return input.replace(find, replace);
         }
 
@@ -76,7 +84,7 @@ class FindReplace extends Operation {
             find = Utils.parseEscapedChars(find);
         }
 
-        find = new RegExp(Utils.escapeRegex(find), modifiers);
+        find = new XRegExp(Utils.escapeRegex(find), modifiers);
 
         return input.replace(find, replace);
     }

@@ -23,6 +23,7 @@ class ToOctal extends Operation {
         this.name = "To Octal";
         this.module = "Default";
         this.description = "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>";
+        this.infoURL = "https://wikipedia.org/wiki/Octal";
         this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [
