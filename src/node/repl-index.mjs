@@ -15,7 +15,15 @@ import "babel-polyfill";
 
 /*eslint no-console: ["off"] */
 
-console.log("Welcome to CyberChef");
+console.log(`
+   ______      __              ________         ____
+  / ____/_  __/ /_  ___  _____/ ____/ /_  ___  / __/
+ / /   / / / / __ \\/ _ \\/ ___/ /   / __ \\/ _ \\/ /_  
+/ /___/ /_/ / /_/ /  __/ /  / /___/ / / /  __/ __/  
+\\____/\\__, /_.___/\\___/_/   \\____/_/ /_/\\___/_/     
+     /____/                                         
+     
+`);
 const replServer = repl.start({
     prompt: "chef > ",
 });

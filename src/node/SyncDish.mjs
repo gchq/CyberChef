@@ -2,6 +2,7 @@
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
+ * @module node
  */
 
 import util from "util";
@@ -17,9 +18,13 @@ import * as ops from "./index";
  */
 class SyncDish extends Dish {
 
-    /** */
+    /**
+    * Create a Dish
+    * @param {any} inputOrDish - The dish input
+    * @param {String|Number} - The dish type, as enum or string
+    */
     constructor(inputOrDish=null, type=null) {
-        super(inputOrDish);
+        super(inputOrDish, type);
 
         // Add operations to make it composable
         for (const op in ops) {
@@ -115,6 +120,7 @@ class SyncDish extends Dish {
             case Dish.BUFFER:
                 this.value = this.value instanceof Buffer ? this.value.buffer : [];
                 break;
+            // No such API in Node.js.
             // case Dish.FILE:
             //     this.value = Utils.readFileSync(this.value);
             //     this.value = Array.prototype.slice.call(this.value);
@@ -161,6 +167,7 @@ class SyncDish extends Dish {
                 this.value = Buffer.from(new Uint8Array(this.value));
                 this.type = Dish.BUFFER;
                 break;
+            // No such API in Node.js.
             // case Dish.FILE:
             //     this.value = new File(this.value, "unknown");
             //     break;

@@ -87,7 +87,7 @@ code += `    };
 const chef = generateChef();
 // Add some additional features to chef object.
 chef.help = help;
-chef.dish = SyncDish;
+chef.Dish = SyncDish;
 
 // Define consts here so we can add to top-level export - wont allow
 // export of chef property.
