@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
 
 /**
  * To Python bytes operation
@@ -33,48 +32,48 @@ class ToPythonBytes extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        let data = new Uint8Array(input);
-        if(!data) return "b''";
+        const data = new Uint8Array(input);
+        if (!data) return "b''";
 
         // First pass to decide which quote to use
         //  single quote is prefered
         let onlySingleQuote = false;
-        for(let i = 0; i < data.length; i++) {
-            if(data[i] == 0x22) { // 0x22 <-> "
+        for (let i = 0; i < data.length; i++) {
+            if (data[i] === 0x22) { // 0x22 <-> "
                 onlySingleQuote = false;
                 break;
             }
-            if(data[i] == 0x27) { // 0x27 <-> '
+            if (data[i] === 0x27) { // 0x27 <-> '
                 onlySingleQuote = true;
             }
         }
         let singleQuoted = true;
-        if(onlySingleQuote) {
+        if (onlySingleQuote) {
             singleQuoted = false;
         }
 
         // Second pass to convert byte array in Python bytes literal
         let output = "";
-        for(let i = 0; i < data.length; i++) {
-            if(data[i] == 0x09) {
-                output += '\\t';
-            } else if(data[i] == 0x0a) {
-                output += '\\n';
-            } else if(data[i] == 0x0d) {
-                output += '\\r';
-            } else if(data[i] == 0x22 && !singleQuoted) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i] === 0x09) {
+                output += "\\t";
+            } else if (data[i] === 0x0a) {
+                output += "\\n";
+            } else if (data[i] === 0x0d) {
+                output += "\\r";
+            } else if (data[i] === 0x22 && !singleQuoted) {
                 output += '\\"';
-            } else if(data[i] == 0x27 && singleQuoted) {
+            } else if (data[i] === 0x27 && singleQuoted) {
                 output += "\\'";
-            } else if(data[i] == 0x5c) {
-                output += '\\';
-            } else if(data[i] < 0x20 || data[i] > 0x7e) {
-                output += '\\x' + data[i].toString(16).padStart(2,0);
+            } else if (data[i] === 0x5c) {
+                output += "\\";
+            } else if (data[i] < 0x20 || data[i] > 0x7e) {
+                output += "\\x" + data[i].toString(16).padStart(2, 0);
             } else {
                 output += String.fromCharCode(data[i]);
             }
         }
-        if(singleQuoted) {
+        if (singleQuoted) {
             return "b'" + output + "'";
         } else {
             return 'b"' + output + '"';
