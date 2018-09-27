@@ -11,4 +11,4 @@ src/core/config/OperationConfig.json
 src/core/operations/index.mjs
 src/node/config/OperationConfig.json
 src/node/index.mjs
-**/*.DS_Storeg
+**/*.DS_Store

@@ -134,7 +134,7 @@
     "test": "grunt test",
     "docs": "grunt docs",
     "lint": "grunt lint",
-    "build-node": "grunt node",
+    "repl": "node --experimental-modules --no-warnings src/node/repl-index.mjs",
     "newop": "node --experimental-modules src/core/config/scripts/newOperation.mjs",
     "postinstall": "[ -f node_modules/crypto-api/src/crypto-api.mjs ] || npx j2m node_modules/crypto-api/src/crypto-api.js"
   }

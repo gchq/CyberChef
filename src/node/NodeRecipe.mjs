@@ -38,7 +38,7 @@ class NodeRecipe {
                 throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
             }
         } else if (typeof ing === "function") {
-            if (operations.findIndex(o => o === ing) > -1) {
+            if (operations.includes(ing)) {
                 return ing;
             } else {
                 throw new TypeError("Inputted function not a Chef operation.");
