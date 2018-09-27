@@ -6,24 +6,34 @@
 
 import Operation from "../Operation";
 
+const LANGUAGES = {
+    "Python": "python",
+};
+
 /**
- * To Python bytes operation
+ * To Byte String Literal operation
  */
-class ToPythonBytes extends Operation {
+class ToByteStringLiteral extends Operation {
 
     /**
-     * ToPythonBytes constructor
+     * ToByteStringLiteral constructor
      */
     constructor() {
         super();
 
-        this.name = "To Python bytes";
+        this.name = "To Byte String Literal";
         this.module = "Default";
-        this.description = "Converts the input data to Python bytes literal.<br><br>e.g. The UTF-8 encoded string <code>ça ma couté 20€</code> becomes <code>b'\\xc3\\xa7a ma cout\\xc3\\xa9 20\\xe2\\x82\\xac'</code>";
+        this.description = "Converts the input data to byte string literal in common languages.<br><br>e.g. for python, the UTF-8 encoded string <code>ça ma couté 20€</code> becomes <code>b'\\xc3\\xa7a ma cout\\xc3\\xa9 20\\xe2\\x82\\xac'</code>";
         this.infoURL = "https://docs.python.org/3/reference/lexical_analysis.html#string-and-bytes-literals";
         this.inputType = "ArrayBuffer" ;
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                "name": "Language",
+                "type": "option",
+                "value": Object.keys(LANGUAGES)
+            },
+        ];
     }
 
     /**
@@ -33,6 +43,18 @@ class ToPythonBytes extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input);
+        const language = args[0];
+        if (language === "python") {
+            return this.python(data);
+        }
+        return "";
+    }
+
+    /**
+     * @param {Uint8Array} data
+     * @returns {string}
+     */
+    python(data) {
         if (!data) return "b''";
 
         // First pass to decide which quote to use
@@ -81,4 +103,4 @@ class ToPythonBytes extends Operation {
     }
 }
 
-export default ToPythonBytes;
+export default ToByteStringLiteral;
