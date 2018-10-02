@@ -39,8 +39,8 @@ class ExtractEmailAddresses extends Operation {
      */
     run(input, args) {
         const displayTotal = args[0],
-            regex = /\b\w[-.\w]*@[-\w]+(?:\.[-\w]+)*\.[A-Z]{2,4}\b/ig;
-
+        // email regex from: https://www.regular-expressions.info/email.html
+            regex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig;
         return search(input, regex, null, displayTotal);
     }
 
