@@ -40,6 +40,7 @@ import "./tests/operations/Compress";
 import "./tests/operations/ConditionalJump";
 import "./tests/operations/Crypt";
 import "./tests/operations/DateTime";
+import "./tests/operations/ExtractEmailAddresses";
 import "./tests/operations/Fork";
 import "./tests/operations/FromGeohash.mjs";
 import "./tests/operations/Hash";
