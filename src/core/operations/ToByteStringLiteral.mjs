@@ -7,6 +7,8 @@
 import Operation from "../Operation";
 
 const LANGUAGES = {
+    "C": "c",
+    "Go": "go",
     "Python": "python",
 };
 
@@ -24,9 +26,9 @@ class ToByteStringLiteral extends Operation {
         this.name = "To Byte String Literal";
         this.module = "Default";
         this.description = "Converts the input data to byte string literal in common languages.<br><br>e.g. for python, the UTF-8 encoded string <code>ça ma couté 20€</code> becomes <code>b'\\xc3\\xa7a ma cout\\xc3\\xa9 20\\xe2\\x82\\xac'</code>";
-        this.infoURL = "https://docs.python.org/3/reference/lexical_analysis.html#string-and-bytes-literals";
         this.inputType = "ArrayBuffer" ;
-        this.outputType = "string";
+        this.outputType = "string";this.infoURL = "https://en.wikipedia.org/wiki/String_(computer_science)#Non-text_strings";
+
         this.args = [
             {
                 "name": "Language",
@@ -43,64 +45,96 @@ class ToByteStringLiteral extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input);
-        const language = args[0];
-        if (language === "python") {
-            return this.python(data);
+        const language = LANGUAGES[args[0]];
+        if (language === "c") {
+            const sequences = Object.assign(DOUBLEQUOTE_SEQUENCE, COMMON_SEQUENCES, C_EXTRA_SEQUENCES);
+            // regex is here to replace \xa7a by \xa7""a since escape sequence can have more than 2 digit
+            return '"' + this.escape(data, sequences).replace(/(\\x[0-9a-f]{2})([0-9a-f])/gi, '$1""$2') + '"';
+        } else if (language === "go") {
+            const sequences = Object.assign(DOUBLEQUOTE_SEQUENCE, COMMON_SEQUENCES, GO_EXTRA_SEQUENCES);
+            return '([]byte)("' + this.escape(data, sequences) + '")';
+        } else if (language === "python") {
+            const [quote, quoteSequence] = this.preferedQuote(data);
+            const sequences = Object.assign(quoteSequence, COMMON_SEQUENCES, PYTHON_EXTRA_SEQUENCES);
+            return "b" + quote + this.escape(data, sequences) + quote;
         }
         return "";
     }
 
     /**
      * @param {Uint8Array} data
-     * @returns {string}
+     * @returns {bool}
+     * python and javascript can use single or double quote equally
+     * better use the variant that reduce quote escape
      */
-    python(data) {
-        if (!data) return "b''";
-
-        // First pass to decide which quote to use
-        //  single quote is prefered
-        let onlySingleQuote = false;
+    preferedQuote(data) {
+        let onlySingleQuoteInData = false;
         for (let i = 0; i < data.length; i++) {
-            if (data[i] === 0x22) { // 0x22 <-> "
-                onlySingleQuote = false;
+            if (data[i] === '"'.charCodeAt(0)) {
+                onlySingleQuoteInData = false;
                 break;
             }
-            if (data[i] === 0x27) { // 0x27 <-> '
-                onlySingleQuote = true;
+            if (data[i] === "'".charCodeAt(0)) {
+                onlySingleQuoteInData = true;
             }
         }
-        let singleQuoted = true;
-        if (onlySingleQuote) {
-            singleQuoted = false;
+        if (onlySingleQuoteInData) {
+            return ['"', DOUBLEQUOTE_SEQUENCE];
         }
+        return ["'", SINGLEQUOTE_SEQUENCE];
+    }
 
-        // Second pass to convert byte array in Python bytes literal
+    /**
+     * @param {Uint8Array} data
+     * @param {object} sequences
+     * @returns {string}
+     */
+    escape(data, sequences) {
         let output = "";
         for (let i = 0; i < data.length; i++) {
-            if (data[i] === 0x09) {
-                output += "\\t";
-            } else if (data[i] === 0x0a) {
-                output += "\\n";
-            } else if (data[i] === 0x0d) {
-                output += "\\r";
-            } else if (data[i] === 0x22 && !singleQuoted) {
-                output += '\\"';
-            } else if (data[i] === 0x27 && singleQuoted) {
-                output += "\\'";
-            } else if (data[i] === 0x5c) {
-                output += "\\";
-            } else if (data[i] < 0x20 || data[i] > 0x7e) {
-                output += "\\x" + data[i].toString(16).padStart(2, 0);
-            } else {
-                output += String.fromCharCode(data[i]);
-            }
+            output +=
+                sequences[data[i]] ||
+                (
+                    (data[i] < 0x20 || data[i] > 0x7e) ?
+                        "\\x" + data[i].toString(16).padStart(2, 0) :
+                        String.fromCharCode(data[i])
+                );
         }
-        if (singleQuoted) {
-            return "b'" + output + "'";
-        } else {
-            return 'b"' + output + '"';
-        }
+        return output;
     }
 }
+
+const SINGLEQUOTE_SEQUENCE = {
+    0x27: "\\'"
+};
+
+const DOUBLEQUOTE_SEQUENCE = {
+    0x22: '\\"'
+};
+
+const COMMON_SEQUENCES = {
+    0x08: "\\b",
+    0x09: "\\t",
+    0x0a: "\\n",
+    0x0b: "\\v",
+    0x0c: "\\f",
+    0x0d: "\\r",
+    0x5c: "\\\\"
+};
+
+// https://en.wikipedia.org/wiki/Escape_sequences_in_C
+const C_EXTRA_SEQUENCES = {
+    0x07: "\\a"
+};
+
+// https://golang.org/ref/spec#Rune_literals
+const GO_EXTRA_SEQUENCES = {
+    0x07: "\\a"
+};
+
+// https://docs.python.org/3/reference/lexical_analysis.html#string-and-bytes-literals
+const PYTHON_EXTRA_SEQUENCES = {
+    0x07: "\\a"
+};
 
 export default ToByteStringLiteral;

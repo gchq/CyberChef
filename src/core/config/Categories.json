@@ -54,7 +54,7 @@
             "From MessagePack",
             "To Braille",
             "From Braille",
-            "To Python bytes"
+            "To Byte String Literal"
         ]
     },
     {
