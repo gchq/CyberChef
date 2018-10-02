@@ -1,5 +1,5 @@
 /**
- * Parse IP Range tests.
+ * extract email address tests.
  *
  * @author Klaxon [klaxon@veyr.com]
  * @copyright Crown Copyright 2017
