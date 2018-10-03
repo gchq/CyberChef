@@ -46,9 +46,8 @@ class RemoveLetterAccents extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        // const [firstArg, secondArg] = args;
-
-        throw new OperationError("Test");
+        return input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //reference: https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript/37511463
     }
 
 }
