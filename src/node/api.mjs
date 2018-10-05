@@ -8,8 +8,6 @@
 
 /*eslint no-console: ["off"] */
 
-
-import Dish from "../core/Dish";
 import SyncDish from "./SyncDish";
 import NodeRecipe from "./NodeRecipe";
 import OperationConfig from "./config/OperationConfig.json";
@@ -107,15 +105,11 @@ function ensureIsDish(input) {
         return new SyncDish();
     }
 
-    let dish;
     if (input instanceof SyncDish) {
-        dish = input;
+        return input;
     } else {
-        dish = new SyncDish();
-        const type = Dish.typeEnum(input.constructor.name);
-        dish.set(input, type);
+        return new SyncDish(input);
     }
-    return dish;
 }
 
 /**
@@ -126,10 +120,6 @@ function ensureIsDish(input) {
  * @param args - operation args
  */
 function prepareOp(opInstance, input, args) {
-    // convert any Buffers into ArrayBuffers.
-    if (input instanceof Buffer) {
-        input = input.buffer;
-    }
     const dish = ensureIsDish(input);
     let transformedArgs;
     // Transform object-style args to original args array

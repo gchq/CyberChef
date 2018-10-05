@@ -15,6 +15,7 @@ import it from "../assertionHandler";
 import chef from "../../../src/node/index";
 import OperationError from "../../../src/core/errors/OperationError";
 import SyncDish from "../../../src/node/SyncDish";
+import fs from "fs";
 
 import { toBase32, Dish } from "../../../src/node/index";
 import TestRegister from "../../TestRegister";
@@ -347,6 +348,13 @@ TestRegister.addApiTests([
 
         const JSONDish = new Dish({key: "value"});
         assert.strictEqual(JSONDish.type, 6);
+    }),
+
+    it("Composable dish: Buffer type dishes should be converted to strings", () => {
+        fs.writeFileSync("test.txt", "abc");
+        const dish = new Dish(fs.readFileSync("test.txt"));
+        assert.strictEqual(dish.type, 4);
+        fs.unlinkSync("test.txt");
     }),
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {

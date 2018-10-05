@@ -23,6 +23,14 @@ class SyncDish extends Dish {
     * @param {String|Number} - The dish type, as enum or string
     */
     constructor(inputOrDish=null, type=null) {
+
+        // Allow `fs` file input:
+        // Any node fs Buffers transformed to array buffer
+        // NOT Buffer.buff, as this makes a buffer of the whole object.
+        if (Buffer.isBuffer(inputOrDish)) {
+            inputOrDish = new Uint8Array(inputOrDish).buffer;
+        }
+
         super(inputOrDish, type);
 
         // Add operations to make it composable

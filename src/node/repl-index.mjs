@@ -34,3 +34,4 @@ operations.forEach((op) => {
 
 replServer.context.help = chef.help;
 replServer.context.bake = chef.bake;
+replServer.context.Dish = chef.Dish;
