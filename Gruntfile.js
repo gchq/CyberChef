@@ -6,6 +6,7 @@ const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 const glob = require("glob");
 const path = require("path");
+const UglifyJSWebpackPlugin = require("uglifyjs-webpack-plugin");
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -26,7 +27,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:node", "chmod:build"]);
+        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:node", "webpack:nodeRepl", "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the tests in test/tests.",
@@ -267,6 +268,43 @@ module.exports = function (grunt) {
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS)
                 ],
+                // Need to preserve property names for bake, search
+                optimization: {
+                    minimizer: [
+                        new UglifyJSWebpackPlugin({
+                            uglifyOptions: {
+                                mangle: false,
+                            }
+                        })
+                    ]
+                },
+            },
+            nodeRepl: {
+                mode: "production",
+                target: "node",
+                entry: "./src/node/repl-index.mjs",
+                externals: [NodeExternals({
+                    whitelist: ["crypto-api/src/crypto-api"]
+                })],
+                output: {
+                    filename: "CyberChef-repl.js",
+                    path: __dirname + "/build/node",
+                    library: "CyberChef",
+                    libraryTarget: "commonjs2"
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                ],
+                // Need to preserve property names for bake, search
+                optimization: {
+                    minimizer: [
+                        new UglifyJSWebpackPlugin({
+                            uglifyOptions: {
+                                mangle: false,
+                            }
+                        })
+                    ]
+                }
             }
         },
         "webpack-dev-server": {

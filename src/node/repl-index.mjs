@@ -7,9 +7,7 @@
  * @license Apache-2.0
  */
 
-import { operations } from "./index";
 import chef from "./index";
-import { decapitalise } from "./apiUtils";
 import repl from "repl";
 import "babel-polyfill";
 
@@ -28,10 +26,9 @@ const replServer = repl.start({
     prompt: "chef > ",
 });
 
-operations.forEach((op) => {
-    replServer.context[decapitalise(op.opName)] = op;
+Object.keys(chef).forEach((key) => {
+    if (key !== "operations") {
+        replServer.context[key] = chef[key];
+    }
 });
 
-replServer.context.help = chef.help;
-replServer.context.bake = chef.bake;
-replServer.context.Dish = chef.Dish;
