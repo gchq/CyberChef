@@ -395,5 +395,11 @@
             "Return",
             "Comment"
         ]
+    },
+    {
+        "name": "Esoteric Programming",
+        "ops": [
+            "Malbolge"
+        ]
     }
 ]

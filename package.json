@@ -113,6 +113,7 @@
     "lodash": "^4.17.11",
     "loglevel": "^1.6.1",
     "loglevel-message-prefix": "^3.0.0",
+    "malbolge-vm": "^1.0.2",
     "moment": "^2.23.0",
     "moment-timezone": "^0.5.23",
     "ngeohash": "^0.6.3",
