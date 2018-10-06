@@ -85,6 +85,7 @@
     "bignumber.js": "^8.0.2",
     "bootstrap-colorpicker": "^2.5.3",
     "bootstrap-material-design": "^4.1.1",
+    "brainfuck-javascript": "^0.1.7",
     "bson": "^4.0.1",
     "chi-squared": "^1.1.0",
     "crypto-api": "^0.8.3",
