@@ -131,7 +131,7 @@ class HTMLOperation {
  */
 function titleFromWikiLink(url) {
     const splitURL = url.split("/");
-    if (splitURL.indexOf("wiki") < 0) {
+    if (splitURL.indexOf("wikipedia.org") < 0) {
         // Not a wiki link, return full URL
         return `<a href='${url}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
     }
