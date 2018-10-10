@@ -1,5 +1,8 @@
 /**
+ * Parser for Type-length-value data.
+ *
  * @author gchq77703 []
+ * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
@@ -11,12 +14,15 @@ const defaults = {
 };
 
 /**
- * Length Value library
+ * TLVParser library
  */
-export default class LengthValue {
+export default class TLVParser {
 
     /**
-     * LengthValue constructor
+     * TLVParser constructor
+     *
+     * @param {byteArray} input
+     * @param {Object} options
      */
     constructor(input, options) {
         this.input = input;
@@ -24,7 +30,7 @@ export default class LengthValue {
     }
 
     /**
-     * @returns {Number}
+     * @returns {number}
      */
     getLength() {
         if (this.basicEncodingRules) {
@@ -48,13 +54,14 @@ export default class LengthValue {
     }
 
     /**
-     * @param {Number} length
-     * @returns {Number[]}
+     * @param {number} length
+     * @returns {number[]}
      */
     getValue(length) {
         const value = [];
 
         for (let i = 0; i < length; i++) {
+            if (this.location > this.input.length) return value;
             value.push(this.input[this.location]);
             this.location++;
         }
@@ -63,7 +70,7 @@ export default class LengthValue {
     }
 
     /**
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     atEnd() {
         return this.input.length <= this.location;
