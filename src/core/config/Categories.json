@@ -100,6 +100,7 @@
         "ops": [
             "Parse X.509 certificate",
             "Parse ASN.1 hex string",
+            "Parse CSR",
             "PEM to Hex",
             "Hex to PEM",
             "Hex to Object Identifier",
