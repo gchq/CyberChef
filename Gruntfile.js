@@ -280,7 +280,11 @@ module.exports = function (grunt) {
                     chunks: false,
                     modules: false,
                     entrypoints: false,
-                    warningsFilter: [/source-map/, /dependency is an expression/],
+                    warningsFilter: [
+                        /source-map/,
+                        /dependency is an expression/,
+                        /export 'default'/
+                    ],
                 }
             },
             start: {
