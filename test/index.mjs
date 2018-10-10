@@ -71,6 +71,7 @@ import "./tests/operations/SymmetricDifference";
 import "./tests/operations/ToGeohash.mjs";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
+import "./tests/operations/ParseTLV";
 
 let allTestsPassing = true;
 const testStatusCounts = {
