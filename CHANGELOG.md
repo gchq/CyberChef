@@ -1,6 +1,8 @@
 # Changelog
 All notable changes to CyberChef will be documented in this file.
 
+### [8.8.0] - 2018-10-10
+- 'Parse TLV' operation added [@GCHQ77703] | [#351]
 
 ### [8.7.0] - 2018-08-31
 - 'JWT Sign', 'JWT Verify' and 'JWT Decode' operations added [@GCHQ77703] | [#348]
@@ -51,6 +53,7 @@ All notable changes to CyberChef will be documented in this file.
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 
+[8.8.0]: https://github.com/gchq/CyberChef/releases/tag/v8.8.0
 [8.7.0]: https://github.com/gchq/CyberChef/releases/tag/v8.7.0
 [8.6.0]: https://github.com/gchq/CyberChef/releases/tag/v8.6.0
 [8.5.0]: https://github.com/gchq/CyberChef/releases/tag/v8.5.0
@@ -91,3 +94,4 @@ All notable changes to CyberChef will be documented in this file.
 [#340]: https://github.com/gchq/CyberChef/pull/340
 [#344]: https://github.com/gchq/CyberChef/pull/344
 [#348]: https://github.com/gchq/CyberChef/pull/348
+[#351]: https://github.com/gchq/CyberChef/pull/351

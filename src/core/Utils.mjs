@@ -555,8 +555,6 @@ class Utils {
             if (renderNext) {
                 cell += b;
                 renderNext = false;
-            } else if (b === "\\") {
-                renderNext = true;
             } else if (b === "\"" && !inString) {
                 inString = true;
             } else if (b === "\"" && inString) {
