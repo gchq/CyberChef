@@ -146,19 +146,19 @@ class Sort extends Operation {
         const a_ = a.split(/([^\da-f]+)/i),
             b_ = b.split(/([^\da-f]+)/i);
 
-		for (let i = 0; i < a_.length; ++i) {
-			let t = parseInt(a_[i], 16);
-			if (!isNaN(t)) {
-				a_[i] = t;
-			}
-		}
+        for (let i = 0; i < a_.length; ++i) {
+            const t = parseInt(a_[i], 16);
+            if (!isNaN(t)) {
+                a_[i] = t;
+            }
+        }
 
-		for (let i = 0; i < b_.length; ++i) {
-			let t = parseInt(b_[i], 16);
-			if (!isNaN(t)) {
-				b_[i] = t;
-			}
-		}
+        for (let i = 0; i < b_.length; ++i) {
+            const t = parseInt(b_[i], 16);
+            if (!isNaN(t)) {
+                b_[i] = t;
+            }
+        }
 
         for (let i = 0; i < a_.length && i < b.length; ++i) {
             if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
