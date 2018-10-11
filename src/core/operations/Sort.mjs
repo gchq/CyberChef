@@ -38,7 +38,7 @@ class Sort extends Operation {
             {
                 "name": "Order",
                 "type": "option",
-                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric"]
+                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)"]
             }
         ];
     }
@@ -62,6 +62,8 @@ class Sort extends Operation {
             sorted = sorted.sort(Sort._ipSort);
         } else if (order === "Numeric") {
             sorted = sorted.sort(Sort._numericSort);
+        } else if (order === "Numeric (hexadecimal)") {
+            sorted = sorted.sort(Sort._hexadecimalSort);
         }
 
         if (sortReverse) sorted.reverse();
@@ -115,6 +117,48 @@ class Sort extends Operation {
     static _numericSort(a, b) {
         const a_ = a.split(/([^\d]+)/),
             b_ = b.split(/([^\d]+)/);
+
+        for (let i = 0; i < a_.length && i < b.length; ++i) {
+            if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
+            if (!isNaN(a_[i]) && isNaN(b_[i])) return -1;
+            if (isNaN(a_[i]) && isNaN(b_[i])) {
+                const ret = a_[i].localeCompare(b_[i]); // Compare strings
+                if (ret !== 0) return ret;
+            }
+            if (!isNaN(a_[i]) && !isNaN(a_[i])) { // Compare numbers
+                if (a_[i] - b_[i] !== 0) return a_[i] - b_[i];
+            }
+        }
+
+        return a.localeCompare(b);
+    }
+
+    /**
+     * Comparison operation for sorting of hexadecimal values.
+     *
+     * @author Chris van Marle
+     * @private
+     * @param {string} a
+     * @param {string} b
+     * @returns {number}
+     */
+    static _hexadecimalSort(a, b) {
+        const a_ = a.split(/([^\da-f]+)/i),
+            b_ = b.split(/([^\da-f]+)/i);
+
+		for (let i = 0; i < a_.length; ++i) {
+			let t = parseInt(a_[i], 16);
+			if (!isNaN(t)) {
+				a_[i] = t;
+			}
+		}
+
+		for (let i = 0; i < b_.length; ++i) {
+			let t = parseInt(b_[i], 16);
+			if (!isNaN(t)) {
+				b_[i] = t;
+			}
+		}
 
         for (let i = 0; i < a_.length && i < b.length; ++i) {
             if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
