@@ -131,14 +131,16 @@ class HTMLOperation {
  */
 function titleFromWikiLink(url) {
     const splitURL = url.split("/");
-    if (splitURL.indexOf("wikipedia.org") < 0) {
+    if (splitURL.indexOf("wikipedia.org") < 0 && splitURL.indexOf("forensicswiki.org") < 0) {
         // Not a wiki link, return full URL
         return `<a href='${url}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
     }
 
+    const wikiName = splitURL.indexOf("forensicswiki.org") < 0 ? "Wikipedia" : "Forensics Wiki";
+
     const pageTitle = decodeURIComponent(splitURL[splitURL.length - 1])
         .replace(/_/g, " ");
-    return `<a href='${url}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on Wikipedia`;
+    return `<a href='${url}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
 }
 
 export default HTMLOperation;
