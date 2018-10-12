@@ -242,11 +242,11 @@ function regexHighlight (input, regex, displayTotal) {
         // Add up to match
         output += Utils.escapeHtml(input.slice(i, m.index));
 
-        title = "Offset: " + m.index + "&#10;";
+        title = `Offset: ${m.index}\n`;
         if (m.length > 1) {
-            title += "Groups:&#10;";
+            title += "Groups:\n";
             for (let n = 1; n < m.length; ++n) {
-                title += n + ": " + m[n] + "&#10;";
+                title += `${n}: ${m[n]}\n`;
             }
         }
 
