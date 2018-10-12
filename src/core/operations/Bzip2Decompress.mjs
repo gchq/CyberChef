@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import bzip2 from "../vendor/bzip2.js";
+import bzip2 from "../vendor/bzip2";
 import OperationError from "../errors/OperationError";
 
 /**

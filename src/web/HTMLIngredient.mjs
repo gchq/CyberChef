@@ -154,7 +154,7 @@ class HTMLIngredient {
                     } else if ((m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                         html += "</optgroup>";
                     } else {
-                        html += `<option populate-value="${this.value[i].value}">${this.value[i].name}</option>`;
+                        html += `<option populate-value='${this.value[i].value}'>${this.value[i].name}</option>`;
                     }
                 }
                 html += `</select>
