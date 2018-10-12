@@ -29,6 +29,11 @@ class FromDecimal extends Operation {
                 "name": "Delimiter",
                 "type": "option",
                 "value": DELIM_OPTIONS
+            },
+            {
+                "name": "Convert negatives",
+                "type": "boolean",
+                "value": false
             }
         ];
         this.patterns = [
@@ -71,7 +76,11 @@ class FromDecimal extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        return fromDecimal(input, args[0]);
+        let data = fromDecimal(input, args[0]);
+        if (args[1]) { // Convert negatives
+            data = data.map(v => v < 0 ? 0xFF + v + 1 : v);
+        }
+        return data;
     }
 
 }
