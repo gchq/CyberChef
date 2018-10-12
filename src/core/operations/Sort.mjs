@@ -143,22 +143,18 @@ class Sort extends Operation {
      * @returns {number}
      */
     static _hexadecimalSort(a, b) {
-        const a_ = a.split(/([^\da-f]+)/i),
+        let a_ = a.split(/([^\da-f]+)/i),
             b_ = b.split(/([^\da-f]+)/i);
 
-        for (let i = 0; i < a_.length; ++i) {
-            const t = parseInt(a_[i], 16);
-            if (!isNaN(t)) {
-                a_[i] = t;
-            }
-        }
+        a_ = a_.map(v => {
+            const t = parseInt(v, 16);
+            return isNaN(t) ? v : t;
+        });
 
-        for (let i = 0; i < b_.length; ++i) {
-            const t = parseInt(b_[i], 16);
-            if (!isNaN(t)) {
-                b_[i] = t;
-            }
-        }
+        b_ = b_.map(v => {
+            const t = parseInt(v, 16);
+            return isNaN(t) ? v : t;
+        });
 
         for (let i = 0; i < a_.length && i < b.length; ++i) {
             if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
