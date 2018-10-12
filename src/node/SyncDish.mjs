@@ -9,7 +9,6 @@ import Utils from "../core/Utils";
 import Dish from "../core/Dish";
 import BigNumber from "bignumber.js";
 import log from "loglevel";
-import * as ops from "./index";
 
 /**
  * Subclass of Dish where `get` and `_translate` are synchronous.
@@ -32,11 +31,17 @@ class SyncDish extends Dish {
         }
 
         super(inputOrDish, type);
+    }
 
-        // Add operations to make it composable
-        for (const op in ops) {
-            this[op] = () => ops[op](this.value);
-        }
+    /**
+     * Apply the inputted operation to the dish.
+     *
+     * @param {WrappedOperation} operation the operation to perform
+     * @param {*} args - any arguments for the operation
+     * @returns {Dish} a new dish with the result of the operation.
+     */
+    apply(operation, args=null) {
+        return operation(this.value, args);
     }
 
     /**
