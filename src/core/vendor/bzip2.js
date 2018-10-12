@@ -262,4 +262,4 @@ bzip2.decompress = function(bits, size, len){
   return output;
 }
 
-module.exports = bzip2;
+export default bzip2;
