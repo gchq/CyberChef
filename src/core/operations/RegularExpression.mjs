@@ -227,6 +227,7 @@ function regexList (input, regex, displayTotal, matches, captureGroups) {
  */
 function regexHighlight (input, regex, displayTotal) {
     let output = "",
+        title = "",
         m,
         hl = 1,
         i = 0,
@@ -241,8 +242,16 @@ function regexHighlight (input, regex, displayTotal) {
         // Add up to match
         output += Utils.escapeHtml(input.slice(i, m.index));
 
+        title = `Offset: ${m.index}\n`;
+        if (m.length > 1) {
+            title += "Groups:\n";
+            for (let n = 1; n < m.length; ++n) {
+                title += `\t${n}: ${m[n]}\n`;
+            }
+        }
+
         // Add match with highlighting
-        output += "<span class='hl"+hl+"'>" + Utils.escapeHtml(m[0]) + "</span>";
+        output += "<span class='hl"+hl+"' title='"+title+"'>" + Utils.escapeHtml(m[0]) + "</span>";
 
         // Switch highlight
         hl = hl === 1 ? 2 : 1;
