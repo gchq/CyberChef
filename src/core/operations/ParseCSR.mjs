@@ -46,9 +46,10 @@ Locality: ${csr.subject.getField("L").value}
 State: ${csr.subject.getField("ST").value}
 Country: ${csr.subject.getField("C").value}
 EmailAddress: ${csr.subject.getField("E").value}
-Subject Alternative Names: ${subjectAltNames.map(function (name) {
-        return name;
-    })}`;
+SubjectAltNames: ${subjectAltNames.map(function (name) {
+        return "DNS: " + name;
+    }).join("\n\t")}`;
+
     }
 
 }
