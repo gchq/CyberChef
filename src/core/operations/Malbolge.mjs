@@ -32,7 +32,7 @@ class Malbolge extends Operation {
     ];
     this.patterns = [
       {
-        match: '^(?:[\\x21-\\x7e)?$',
+        match: '^(?:[\\x21-\\x7e])?$',
         flags: 'i',
         args: []
       }
