@@ -103,9 +103,8 @@ class FromBase58 extends Operation {
             }
         });
 
-        while (zeroPrefix > 0) {
+        while (zeroPrefix--) {
             result.push(0);
-            zeroPrefix--;
         }
 
         return result.reverse();
