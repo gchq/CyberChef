@@ -71,6 +71,11 @@ class FromBase58 extends Operation {
 
         if (input.length === 0) return [];
 
+        let zeroPrefix = 0;
+        for (let i = 0; i < input.length && input[i] === alphabet[0]; i++) {
+            zeroPrefix++;
+        }
+
         [].forEach.call(input, function(c, charIndex) {
             const index = alphabet.indexOf(c);
 
@@ -97,6 +102,10 @@ class FromBase58 extends Operation {
                 carry = carry >> 8;
             }
         });
+
+        while (zeroPrefix--) {
+            result.push(0);
+        }
 
         return result.reverse();
     }
