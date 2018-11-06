@@ -54,6 +54,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "To Base58 with null prefix and suffix",
+        input: "\0\0\0Hello\0\0\0",
+        expectedOutput: "111D7LMXYjHjTu",
+        recipeConfig: [
+            {
+                op: "To Base58",
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
+            },
+        ],
+    },
+    {
+        name: "From Base58 with null prefix and suffix",
+        input: "111D7LMXYjHjTu",
+        expectedOutput: "\0\0\0Hello\0\0\0",
+        recipeConfig: [
+            {
+                op: "From Base58",
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
+            },
+        ],
+    },
+    {
         name: "From Base58 (Bitcoin): 'StV1DL6CwTryKyV'",
         input: "StV1DL6CwTryKyV",
         expectedOutput: "hello world",
