@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import { search } from "../lib/Extract";
+import { search, URL_REGEX } from "../lib/Extract";
 
 /**
  * Extract URLs operation
@@ -38,16 +38,8 @@ class ExtractURLs extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const displayTotal = args[0],
-            protocol = "[A-Z]+://",
-            hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
-            port = ":\\d+";
-        let path = "/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*";
-
-        path += "(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*";
-        const regex = new RegExp(protocol + hostname + "(?:" + port +
-            ")?(?:" + path + ")?", "ig");
-        return search(input, regex, null, displayTotal);
+        const displayTotal = args[0];
+        return search(input, URL_REGEX, null, displayTotal);
     }
 
 }

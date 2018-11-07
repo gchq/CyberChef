@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import { search } from "../lib/Extract";
+import { search, DOMAIN_REGEX } from "../lib/Extract";
 
 /**
  * Extract domains operation
@@ -38,10 +38,8 @@ class ExtractDomains extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const displayTotal = args[0],
-            regex = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
-
-        return search(input, regex, null, displayTotal);
+        const displayTotal = args[0];
+        return search(input, DOMAIN_REGEX, null, displayTotal);
     }
 
 }

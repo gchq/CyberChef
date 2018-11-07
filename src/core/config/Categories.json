@@ -159,7 +159,8 @@
             "Change IP format",
             "Group IP addresses",
             "Encode NetBIOS Name",
-            "Decode NetBIOS Name"
+            "Decode NetBIOS Name",
+            "Defang URL"
         ]
     },
     {
@@ -208,8 +209,7 @@
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
-            "Sleep",
-            "Defang URL"
+            "Sleep"
         ]
     },
     {
