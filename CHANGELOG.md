@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to CyberChef will be documented in this file.
 
+### [8.10.0] - 2018-11-07
+- 'Remove Diacritics' operation added [@klaxon1] | [#387]
+
 ### [8.9.0] - 2018-11-07
 - 'Defang URL' operation added [@arnydo] | [#394]
 
@@ -80,6 +83,7 @@ All notable changes to CyberChef will be documented in this file.
 [@sevzero]: https://github.com/sevzero
 [@PenguinGeorge]: https://github.com/PenguinGeorge
 [@arnydo]: https://github.com/arnydo
+[@klaxon1]: https://github.com/klaxon1
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -99,4 +103,5 @@ All notable changes to CyberChef will be documented in this file.
 [#344]: https://github.com/gchq/CyberChef/pull/344
 [#348]: https://github.com/gchq/CyberChef/pull/348
 [#351]: https://github.com/gchq/CyberChef/pull/351
+[#387]: https://github.com/gchq/CyberChef/pull/387
 [#394]: https://github.com/gchq/CyberChef/pull/394
