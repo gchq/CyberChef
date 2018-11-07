@@ -63,6 +63,7 @@ import "./tests/operations/ParseIPRange";
 import "./tests/operations/PowerSet";
 import "./tests/operations/Regex";
 import "./tests/operations/Register";
+import "./tests/operations/RemoveDiacritics";
 import "./tests/operations/Rotate";
 import "./tests/operations/SeqUtils";
 import "./tests/operations/SetDifference";
