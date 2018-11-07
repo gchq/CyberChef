@@ -168,7 +168,7 @@
         "ops": [
             "Encode text",
             "Decode text",
-            "Remove Letter Accents",
+            "Remove Diacritics",
             "Unescape Unicode Characters"
         ]
     },
