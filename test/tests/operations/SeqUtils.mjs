@@ -30,4 +30,15 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "SeqUtils - Hexadecimal sort",
+        input: "06,08,0a,0d,0f,1,10,11,12,13,14,15,16,17,18,19,1a,1b,1c,1d,1e,1f,2,3,4,5,7,9,b,c,e",
+        expectedOutput: "1,2,3,4,5,06,7,08,9,0a,b,c,0d,e,0f,10,11,12,13,14,15,16,17,18,19,1a,1b,1c,1d,1e,1f",
+        recipeConfig: [
+            {
+                "op": "Sort",
+                "args": ["Comma", false, "Numeric (hexadecimal)"]
+            }
+        ],
+    },
 ]);
