@@ -31,7 +31,7 @@ class FromDecimal extends Operation {
                 "value": DELIM_OPTIONS
             },
             {
-                "name": "Convert negatives",
+                "name": "Support signed values",
                 "type": "boolean",
                 "value": false
             }
@@ -40,32 +40,32 @@ class FromDecimal extends Operation {
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Space"]
+                args: ["Space", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Comma"]
+                args: ["Comma", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Semi-colon"]
+                args: ["Semi-colon", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Colon"]
+                args: ["Colon", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Line feed"]
+                args: ["Line feed", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["CRLF"]
+                args: ["CRLF", false]
             },
         ];
     }
