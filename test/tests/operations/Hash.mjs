@@ -411,7 +411,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": ["test", "SHA256"]
+                "args": [{"option": "Latin1", "string": "test"}, "SHA256"]
             }
         ]
     },
