@@ -71,13 +71,6 @@ class HMAC extends Operation {
             msg = Utils.arrayBufferToStr(input, false),
             hasher = CryptoApi.getHasher(hashFunc);
 
-        // Horrible shim to fix constructor bug. Reported in nf404/crypto-api#8
-        hasher.reset = () => {
-            hasher.state = {};
-            const tmp = new hasher.constructor();
-            hasher.state = tmp.state;
-        };
-
         const mac = CryptoApi.getHmac(CryptoApi.encoder.fromUtf(key), hasher);
         mac.update(msg);
         return CryptoApi.encoder.toHex(mac.finalize());
