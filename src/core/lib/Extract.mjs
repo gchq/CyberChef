@@ -39,3 +39,21 @@ export function search (input, searchRegex, removeRegex, includeTotal) {
 
     return output;
 }
+
+
+/**
+ * URL regular expression
+ */
+const protocol = "[A-Z]+://",
+    hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
+    port = ":\\d+",
+    path = "/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*" +
+        "(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*";
+
+export const URL_REGEX = new RegExp(protocol + hostname + "(?:" + port + ")?(?:" + path + ")?", "ig");
+
+
+/**
+ * Domain name regular expression
+ */
+export const DOMAIN_REGEX = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;

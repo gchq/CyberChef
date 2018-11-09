@@ -159,7 +159,8 @@
             "Change IP format",
             "Group IP addresses",
             "Encode NetBIOS Name",
-            "Decode NetBIOS Name"
+            "Decode NetBIOS Name",
+            "Defang URL"
         ]
     },
     {
@@ -167,6 +168,7 @@
         "ops": [
             "Encode text",
             "Decode text",
+            "Remove Diacritics",
             "Unescape Unicode Characters"
         ]
     },

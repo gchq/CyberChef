@@ -30,6 +30,11 @@ class ToDecimal extends Operation {
                 "name": "Delimiter",
                 "type": "option",
                 "value": DELIM_OPTIONS
+            },
+            {
+                "name": "Support signed values",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -40,7 +45,11 @@ class ToDecimal extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0]);
+        const delim = Utils.charRep(args[0]),
+            signed = args[1];
+        if (signed) {
+            input = input.map(v => v > 0x7F ? v - 0xFF - 1 : v);
+        }
         return input.join(delim);
     }
 

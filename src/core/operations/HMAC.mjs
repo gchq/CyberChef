@@ -28,8 +28,9 @@ class HMAC extends Operation {
         this.args = [
             {
                 "name": "Key",
-                "type": "binaryString",
-                "value": ""
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
             },
             {
                 "name": "Hashing function",
@@ -66,17 +67,10 @@ class HMAC extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const key = args[0],
+        const key = Utils.convertToByteString(args[0].string || "", args[0].option),
             hashFunc = args[1].toLowerCase(),
             msg = Utils.arrayBufferToStr(input, false),
             hasher = CryptoApi.getHasher(hashFunc);
-
-        // Horrible shim to fix constructor bug. Reported in nf404/crypto-api#8
-        hasher.reset = () => {
-            hasher.state = {};
-            const tmp = new hasher.constructor();
-            hasher.state = tmp.state;
-        };
 
         const mac = CryptoApi.getHmac(CryptoApi.encoder.fromUtf(key), hasher);
         mac.update(msg);

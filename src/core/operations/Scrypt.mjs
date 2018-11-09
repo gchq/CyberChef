@@ -62,7 +62,7 @@ class Scrypt extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const salt = Utils.convertToByteString(args[0].string || "", args[0].option),
+        const salt = Buffer.from(Utils.convertToByteArray(args[0].string || "", args[0].option)),
             iterations = args[1],
             memFactor = args[2],
             parallelFactor = args[3],

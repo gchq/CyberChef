@@ -29,38 +29,43 @@ class FromDecimal extends Operation {
                 "name": "Delimiter",
                 "type": "option",
                 "value": DELIM_OPTIONS
+            },
+            {
+                "name": "Support signed values",
+                "type": "boolean",
+                "value": false
             }
         ];
         this.patterns = [
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Space"]
+                args: ["Space", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Comma"]
+                args: ["Comma", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Semi-colon"]
+                args: ["Semi-colon", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Colon"]
+                args: ["Colon", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["Line feed"]
+                args: ["Line feed", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
-                args: ["CRLF"]
+                args: ["CRLF", false]
             },
         ];
     }
@@ -71,7 +76,11 @@ class FromDecimal extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        return fromDecimal(input, args[0]);
+        let data = fromDecimal(input, args[0]);
+        if (args[1]) { // Convert negatives
+            data = data.map(v => v < 0 ? 0xFF + v + 1 : v);
+        }
+        return data;
     }
 
 }

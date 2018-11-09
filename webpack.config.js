@@ -30,6 +30,9 @@ const banner = `/**
  * limitations under the License.
  */`;
 
+const vendorCSS = new ExtractTextPlugin("vendor.css");
+const projectCSS = new ExtractTextPlugin("styles.css");
+
 module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
@@ -42,7 +45,8 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
-        new ExtractTextPlugin("styles.css")
+        vendorCSS,
+        projectCSS
     ],
     resolve: {
         alias: {
@@ -67,7 +71,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
+                use: projectCSS.extract({
                     use: [
                         { loader: "css-loader" },
                         { loader: "postcss-loader" },
@@ -76,7 +80,7 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: ExtractTextPlugin.extract({
+                use: vendorCSS.extract({
                     use: [
                         { loader: "css-loader" },
                         { loader: "sass-loader" }
