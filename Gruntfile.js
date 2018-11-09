@@ -249,7 +249,7 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/test"
                 },
                 plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
                 ]
             },
             node: {
@@ -268,16 +268,17 @@ module.exports = function (grunt) {
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS)
                 ],
-                // Need to preserve property names for bake, search
                 optimization: {
                     minimizer: [
                         new UglifyJSWebpackPlugin({
+                            cache: true,
+                            parallel: true,
                             uglifyOptions: {
-                                mangle: false,
+                                "keep_fnames": true,
                             }
                         })
                     ]
-                },
+                }
             },
             nodeRepl: {
                 mode: "production",
@@ -295,12 +296,13 @@ module.exports = function (grunt) {
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS)
                 ],
-                // Need to preserve property names for bake, search
                 optimization: {
                     minimizer: [
                         new UglifyJSWebpackPlugin({
+                            parallel: true,
+                            cache: true,
                             uglifyOptions: {
-                                mangle: false,
+                                "keep_fnames": true,
                             }
                         })
                     ]

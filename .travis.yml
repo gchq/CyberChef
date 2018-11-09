@@ -1,6 +1,7 @@
 language: node_js
 node_js:
   - node
+cache: npm
 install: npm install
 before_script:
   - npm install -g grunt
