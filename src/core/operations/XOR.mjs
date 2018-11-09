@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import { bitOp, xor } from "../lib/BitwiseOp";
+import { bitOp, xor, BITWISE_OP_DELIMS } from "../lib/BitwiseOp";
 
 /**
  * XOR operation
@@ -30,7 +30,7 @@ class XOR extends Operation {
                 "name": "Key",
                 "type": "toggleString",
                 "value": "",
-                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
+                "toggleValues": BITWISE_OP_DELIMS
             },
             {
                 "name": "Scheme",
