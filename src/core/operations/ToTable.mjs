@@ -33,7 +33,7 @@ class ToTable extends Operation {
             {
                 "name": "Row delimiters",
                 "type": "binaryShortString",
-                "value": "\\n\\r"
+                "value": "\\r\\n"
             },
             {
                 "name": "Make first row header",
