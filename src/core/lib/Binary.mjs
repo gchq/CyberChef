@@ -19,10 +19,10 @@ import Utils from "../Utils";
  *
  * @example
  * // returns "00010000 00100000 00110000"
- * toHex([10,20,30]);
+ * toBinary([10,20,30]);
  *
  * // returns "00010000 00100000 00110000"
- * toHex([10,20,30], ":");
+ * toBinary([10,20,30], ":");
  */
 export function toBinary(data, delim="Space", padding=8) {
     if (!data) return "";
