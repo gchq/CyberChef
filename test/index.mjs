@@ -39,6 +39,7 @@ import "./tests/operations/Comment";
 import "./tests/operations/Compress";
 import "./tests/operations/ConditionalJump";
 import "./tests/operations/Crypt";
+import "./tests/operations/CSV";
 import "./tests/operations/DateTime";
 import "./tests/operations/ExtractEmailAddresses";
 import "./tests/operations/Fork";
@@ -126,12 +127,12 @@ function handleTestResult(testResult) {
 
 
 /**
- * Fail if the process takes longer than 10 seconds.
+ * Fail if the process takes longer than 60 seconds.
  */
 setTimeout(function() {
-    console.log("Tests took longer than 10 seconds to run, returning.");
+    console.log("Tests took longer than 60 seconds to run, returning.");
     process.exit(1);
-}, 10 * 1000);
+}, 60 * 1000);
 
 
 TestRegister.runTests()

@@ -20,7 +20,7 @@ class JSONToCSV extends Operation {
 
         this.name = "JSON to CSV";
         this.module = "Default";
-        this.description = "Converts JSON data to a CSV.";
+        this.description = "Converts JSON data to a CSV based on the definition in RFC 4180.";
         this.infoURL = "https://wikipedia.org/wiki/Comma-separated_values";
         this.inputType = "JSON";
         this.outputType = "string";
@@ -46,25 +46,65 @@ class JSONToCSV extends Operation {
     run(input, args) {
         const [cellDelim, rowDelim] = args;
 
+        this.cellDelim = cellDelim;
+        this.rowDelim = rowDelim;
+        const self = this;
+
+        // TODO: Escape cells correctly.
+
         try {
             // If the JSON is an array of arrays, this is easy
             if (input[0] instanceof Array) {
-                return input.map(row => row.join(cellDelim)).join(rowDelim) + rowDelim;
+                return input
+                    .map(row => row
+                        .map(self.escapeCellContents.bind(self))
+                        .join(cellDelim)
+                    )
+                    .join(rowDelim) +
+                    rowDelim;
             }
 
             // If it's an array of dictionaries...
             const header = Object.keys(input[0]);
-            return header.join(cellDelim) +
+            return header
+                .map(self.escapeCellContents.bind(self))
+                .join(cellDelim) +
                 rowDelim +
-                input.map(
-                    row => header.map(
-                        h => row[h]
-                    ).join(cellDelim)
-                ).join(rowDelim) +
+                input
+                    .map(row => header
+                        .map(h => row[h])
+                        .map(self.escapeCellContents.bind(self))
+                        .join(cellDelim)
+                    )
+                    .join(rowDelim) +
                 rowDelim;
         } catch (err) {
-            throw new OperationError("Unable to parse JSON to CSV: " + err);
+            throw new OperationError("Unable to parse JSON to CSV: " + err.toString());
         }
+    }
+
+    /**
+     * Correctly escapes a cell's contents based on the cell and row delimiters.
+     *
+     * @param {string} data
+     * @returns {string}
+     */
+    escapeCellContents(data) {
+        // Double quotes should be doubled up
+        data = data.replace(/"/g, '""');
+
+        // If the cell contains a cell or row delimiter or a double quote, it mut be enclosed in double quotes
+        if (
+            data.indexOf(this.cellDelim) >= 0 ||
+            data.indexOf(this.rowDelim) >= 0 ||
+            data.indexOf("\n") >= 0 ||
+            data.indexOf("\r") >= 0 ||
+            data.indexOf('"') >= 0
+        ) {
+            data = `"${data}"`;
+        }
+
+        return data;
     }
 
 }
