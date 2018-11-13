@@ -46,11 +46,10 @@ class JSONToCSV extends Operation {
     run(input, args) {
         const [cellDelim, rowDelim] = args;
 
+        // Record values so they don't have to be passed to other functions explicitly
         this.cellDelim = cellDelim;
         this.rowDelim = rowDelim;
         const self = this;
-
-        // TODO: Escape cells correctly.
 
         try {
             // If the JSON is an array of arrays, this is easy
