@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to CyberChef will be documented in this file.
 
+### [8.11.0] - 2018-11-13
+- 'CSV to JSON' and 'JSON to CSV' operations added [@n1474335] | [#277]
+
 ### [8.10.0] - 2018-11-07
 - 'Remove Diacritics' operation added [@klaxon1] | [#387]
 
@@ -91,6 +94,7 @@ All notable changes to CyberChef will be documented in this file.
 [#239]: https://github.com/gchq/CyberChef/pull/239
 [#248]: https://github.com/gchq/CyberChef/pull/248
 [#255]: https://github.com/gchq/CyberChef/issues/255
+[#277]: https://github.com/gchq/CyberChef/issues/277
 [#281]: https://github.com/gchq/CyberChef/pull/281
 [#284]: https://github.com/gchq/CyberChef/pull/284
 [#294]: https://github.com/gchq/CyberChef/pull/294
