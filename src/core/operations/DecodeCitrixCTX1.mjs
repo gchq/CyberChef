@@ -33,11 +33,11 @@ class DecodeCitrixCTX1 extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        if (input.length % 4 != 0) {
+        if (input.length % 4 !== 0) {
             return "";
         }
-        let revinput = input.reverse();
-        let result = [];
+        const revinput = input.reverse();
+        const result = [];
         let temp = 0;
         for (let i = 0; i < revinput.length; i+=2) {
             if (i+2 >= revinput.length) {

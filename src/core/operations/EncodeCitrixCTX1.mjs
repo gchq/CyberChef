@@ -33,8 +33,8 @@ class EncodeCitrixCTX1 extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        let utf16pass = Buffer.from(cptable.utils.encode(1200, input));
-        let result = [];
+        const utf16pass = Buffer.from(cptable.utils.encode(1200, input));
+        const result = [];
         let temp = 0;
         for (let i = 0; i < utf16pass.length; i++) {
             temp = utf16pass[i] ^ 0xa5 ^ temp;
