@@ -66,6 +66,7 @@
             "Blowfish Decrypt",
             "DES Encrypt",
             "DES Decrypt",
+            "Citrix CTX1 Encode",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
             "RC2 Encrypt",
