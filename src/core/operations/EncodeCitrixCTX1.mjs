@@ -1,5 +1,5 @@
 /**
- * @author n1474335 [n1474335@gmail.com]
+ * @author bwhitn [brian.m.whitney@gmail.com]
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
@@ -23,26 +23,26 @@ class EncodeCitrixCTX1 extends Operation {
         this.description = "Encodes strings to Citrix CTX1 password format.";
         this.infoURL = "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "byteArray";
         this.args = [];
     }
 
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         let utf16pass = Buffer.from(cptable.utils.encode(1200, input));
         let result = [];
-        let temp = 0
+        let temp = 0;
         for (let i = 0; i < utf16pass.length; i++) {
             temp = utf16pass[i] ^ 0xa5 ^ temp;
-            result.push(((temp >> 4) & 0xf) + 0x41);
+            result.push(((temp >>> 4) & 0xf) + 0x41);
             result.push((temp & 0xf) + 0x41);
         }
 
-        return new TextDecoder("utf-8").decode(Buffer.from(result));
+        return result;
     }
 
 }
