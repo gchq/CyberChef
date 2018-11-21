@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const path = require("path");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -58,8 +59,13 @@ module.exports = {
             {
                 test: /\.m?js$/,
                 exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                options: {
+                    configFile: path.resolve(__dirname, "babel.config.js"),
+                    cacheDirectory: true,
+                    compact: false
+                },
                 type: "javascript/auto",
-                loader: "babel-loader?compact=false"
+                loader: "babel-loader"
             },
             {
                 test: /forge.min.js$/,

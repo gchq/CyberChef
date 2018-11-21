@@ -143,7 +143,7 @@ module.exports = function (grunt) {
             options: {
                 configFile: "./.eslintrc.json"
             },
-            configs: ["Gruntfile.js"],
+            configs: ["*.js"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}"],
             node: ["src/node/**/*.{js,mjs}"],
