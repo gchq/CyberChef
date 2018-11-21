@@ -79,15 +79,15 @@ class ParseIMF extends Operation {
      */
     run(input, args) {
         if (!input) {
-            return;
+            return "";
         }
-        let headerBody = this.splitHeaderFromBody(input);
+        let headerBody = splitHeaderFromBody(input);
         let header = headerBody[0];
-        let headerArray = this.parseHeader(header);
-        if (args[0]) {
-            header = this.replaceDecodeWord(header);
+        let headerArray = parseHeader(header);
+        if (true) {
+            header = replaceDecodeWord(header);
         }
-        return JSON.stringify(headerArray);
+        return header;
     }
 
     /**
@@ -96,8 +96,8 @@ class ParseIMF extends Operation {
      * @param {string} input
      * @returns {string[]}
      */
-    splitHeaderFromBody(input) {
-        const emlRegex = /^([\x20-\x7e\n\r\t]+?)(?:\r?\n){2}([\x20-\x7e\t\n\r]*)/;
+    static splitHeaderFromBody(input) {
+        const emlRegex = /^([\x20-\xff\n\r\t]+?)(?:\r?\n){2}([\x20-\xff\t\n\r]*)/;
         let splitEmail = emlRegex.exec(input);
         if (splitEmail) {
             //TODO: Array splice vs shift?
@@ -113,11 +113,13 @@ class ParseIMF extends Operation {
      * @param {string} input
      * @returns {string}
      */
-    replaceDecodeWord(input) {
+    static replaceDecodeWord(input) {
         return input.replace(/=\?([^?]+)\?(Q|B)\?([^?]+)\?=/g, function (a, charEnc, contEnc, input) {
-            //TODO fix Q encoding as it isn't identical to quoted-printable. ie _=" "
             contEnc = (contEnc === "B") ? "base64" : "quoted-printable";
-            return this.decodeMimeData(input, charEnc, contEnc);
+            if (contEnc === "quoted-printable") {
+                input = input.replace("_", " ");
+            }
+            return decodeMimeData(input, charEnc, contEnc);
         });
     }
 
@@ -129,7 +131,7 @@ class ParseIMF extends Operation {
      * @param {string} input
      * @returns {object}
      */
-    parseHeader(input) {
+    static parseHeader(input) {
         const sectionRegex = /([A-Z-]+):\s+([\x20-\x7e\r\n\t]+?)(?=$|\r?\n\S)/gi;
         let header = {}, section;
         while ((section = sectionRegex.exec(input))) {
@@ -152,11 +154,11 @@ class ParseIMF extends Operation {
      * @param {string} contEnc
      * @returns {string}
      */
-    decodeMimeData(input, charEnc, contEnc) {
+    static decodeMimeData(input, charEnc, contEnc) {
       //TODO: make exceptions for unknown charEnc and contEnc?
-      input = this.DECODER[contEnc](input);
+      input = DECODER[contEnc](input);
       if (charEnc) {
-          input = cptable.utils.decode(this.MIME_FORMAT[charEnc.toLowerCase()], input);
+          input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
       }
       return input;
     }
@@ -169,7 +171,7 @@ class ParseIMF extends Operation {
      * @param {integer} fieldNum
      * @returns {string}
      */
-    getHeaderItem(header, fieldItem, fieldNum = 0){
+    static getHeaderItem(header, fieldItem, fieldNum = 0){
         if (fieldItem[1] in header && header[fieldItem[1]].length > fieldNum) {
             let field = header[fieldItem[1]][fieldNum], item;
             if ((item = fieldItem[0].exec(field))) {
