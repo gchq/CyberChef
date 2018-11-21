@@ -245,7 +245,7 @@ TestRegister.addTests([
     {
         name: "Citrix CTX1 Decode: invalid length",
         input: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLA",
-        expectedOutput: "",
+        expectedOutput: "Incorrect hash length",
         recipeConfig: [
             {
                 "op": "Citrix CTX1 Decode",

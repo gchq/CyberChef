@@ -1,6 +1,6 @@
 /**
  * @author bwhitn [brian.m.whitney@gmail.com]
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 
@@ -8,18 +8,18 @@ import Operation from "../Operation";
 import cptable from "../vendor/js-codepage/cptable.js";
 
 /**
- * Encode Citrix CTX1 class
+ * Citrix CTX1 Encode operation
  */
-class EncodeCitrixCTX1 extends Operation {
+class CitrixCTX1Encode extends Operation {
 
     /**
-     * EncodeCitrixCTX1 constructor
+     * CitrixCTX1Encode constructor
      */
     constructor() {
         super();
 
         this.name = "Citrix CTX1 Encode";
-        this.module = "Ciphers";
+        this.module = "Encodings";
         this.description = "Encodes strings to Citrix CTX1 password format.";
         this.infoURL = "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
         this.inputType = "string";
@@ -33,7 +33,7 @@ class EncodeCitrixCTX1 extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const utf16pass = Buffer.from(cptable.utils.encode(1200, input));
+        const utf16pass = Array.from(cptable.utils.encode(1200, input));
         const result = [];
         let temp = 0;
         for (let i = 0; i < utf16pass.length; i++) {
@@ -47,4 +47,4 @@ class EncodeCitrixCTX1 extends Operation {
 
 }
 
-export default EncodeCitrixCTX1;
+export default CitrixCTX1Encode;

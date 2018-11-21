@@ -68,8 +68,6 @@
             "Blowfish Decrypt",
             "DES Encrypt",
             "DES Decrypt",
-            "Citrix CTX1 Encode",
-            "Citrix CTX1 Decode",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
             "RC2 Encrypt",
@@ -97,6 +95,8 @@
             "JWT Sign",
             "JWT Verify",
             "JWT Decode",
+            "Citrix CTX1 Encode",
+            "Citrix CTX1 Decode",
             "Pseudo-Random Number Generator"
         ]
     },
