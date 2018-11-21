@@ -16,7 +16,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -27,7 +27,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -38,7 +38,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -49,7 +49,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -60,7 +60,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -71,7 +71,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -82,7 +82,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t"],
+                args: ["\t", false],
             },
         ],
     },
@@ -93,7 +93,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" "],
+                args: [" ", false],
             },
         ],
     },
@@ -104,7 +104,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t"],
+                args: ["\t", false],
+            },
+        ],
+    },
+    {
+        name: "JSON Beautify: tab, nested, sorted",
+        input: "[2,{\"second\":2,\"first\":3,\"beginning\":{\"j\":\"3\",\"i\":[2,3,false]}},1,2,3]",
+        expectedOutput: "[\n\t2,\n\t{\n\t\t\"beginning\": {\n\t\t\t\"i\": [\n\t\t\t\t2,\n\t\t\t\t3,\n\t\t\t\tfalse\n\t\t\t],\n\t\t\t\"j\": \"3\"\n\t\t},\n\t\t\"first\": 3,\n\t\t\"second\": 2\n\t},\n\t1,\n\t2,\n\t3\n]",
+        recipeConfig: [
+            {
+                op: "JSON Beautify",
+                args: ["\t", true],
             },
         ],
     },
