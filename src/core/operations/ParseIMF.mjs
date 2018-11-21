@@ -8,6 +8,7 @@
  import OperationError from "../errors/OperationError";
  import cptable from "../vendor/js-codepage/cptable.js";
  import {fromBase64} from "../lib/Base64";
+ import {decodeQuotedPrintable} from "../lib/QuotedPrintable"
  import {MIME_FORMAT} from "../lib/ChrEnc";
 
 
@@ -35,10 +36,10 @@
  //TODO: should 8 bit and 7 bit be treated the same?
  const DECODER = {
      "base64": function (input) {
-         return Utils.fromBase64(input, Base64.ALPHABET, "string", true);
+         return fromBase64(input, Base64.ALPHABET, "string", true);
      },
      "quoted-printable": function (input) {
-         return QuotedPrintable.mimeDecode(input);
+         return decodeQuotedPrintable(input);
      },
      "7bit": function (input) {
          return input;
@@ -79,11 +80,11 @@
     if (!input) {
         return;
     }
-    let headerBody = Email._splitHeaderFromBody(input);
+    let headerBody = this.splitHeaderFromBody(input);
     let header = headerBody[0];
-    let headerArray = Email._parseHeader(header);
+    let headerArray = this.parseHeader(header);
     if (args[0]) {
-        header = Email._replaceDecodeWord(header);
+        header = this.replaceDecodeWord(header);
     }
     return JSON.stringify(headerArray);
   }
