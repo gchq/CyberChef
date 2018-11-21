@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to CyberChef will be documented in this file.
 
+### [8.12.0] - 2018-11-21
+- 'Citrix CTX1 Encode' and 'Citrix CTX1 Decode' operations added [@bwhitn] | [#428]
+
 ### [8.11.0] - 2018-11-13
 - 'CSV to JSON' and 'JSON to CSV' operations added [@n1474335] | [#277]
 
@@ -87,6 +90,7 @@ All notable changes to CyberChef will be documented in this file.
 [@PenguinGeorge]: https://github.com/PenguinGeorge
 [@arnydo]: https://github.com/arnydo
 [@klaxon1]: https://github.com/klaxon1
+[@bwhitn]: https://github.com/bwhitn
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -109,3 +113,4 @@ All notable changes to CyberChef will be documented in this file.
 [#351]: https://github.com/gchq/CyberChef/pull/351
 [#387]: https://github.com/gchq/CyberChef/pull/387
 [#394]: https://github.com/gchq/CyberChef/pull/394
+[#428]: https://github.com/gchq/CyberChef/pull/428
