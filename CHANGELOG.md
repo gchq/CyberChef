@@ -1,5 +1,5 @@
 # Changelog
-All notable changes to CyberChef will be documented in this file.
+All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 ### [8.12.0] - 2018-11-21
 - 'Citrix CTX1 Encode' and 'Citrix CTX1 Decode' operations added [@bwhitn] | [#428]
@@ -55,7 +55,7 @@ All notable changes to CyberChef will be documented in this file.
 - Added support for loading, processing and downloading files up to 500MB [@n1474335] | [#224]
 
 ## [6.0.0] - 2017-09-19
-- Threading support added. All recipe processing moved into a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to increase performance and allowing long-running operations to be cancelled [@n1474335] | [#173]
+- Threading support added. All recipe processing moved into a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to increase performance and to allow long-running operations to be cancelled [@n1474335] | [#173]
 - Module system created so that operations relying on large libraries can be downloaded separately as required, reducing the initial loading time for the app [@n1474335] | [#173]
 
 ## [5.0.0] - 2017-03-30
