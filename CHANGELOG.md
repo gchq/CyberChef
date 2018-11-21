@@ -65,6 +65,11 @@ All notable changes to CyberChef will be documented in this file.
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 
+
+[8.12.0]: https://github.com/gchq/CyberChef/releases/tag/v8.12.0
+[8.11.0]: https://github.com/gchq/CyberChef/releases/tag/v8.11.0
+[8.10.0]: https://github.com/gchq/CyberChef/releases/tag/v8.10.0
+[8.9.0]: https://github.com/gchq/CyberChef/releases/tag/v8.9.0
 [8.8.0]: https://github.com/gchq/CyberChef/releases/tag/v8.8.0
 [8.7.0]: https://github.com/gchq/CyberChef/releases/tag/v8.7.0
 [8.6.0]: https://github.com/gchq/CyberChef/releases/tag/v8.6.0
