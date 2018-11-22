@@ -51,6 +51,7 @@ import "./tests/operations/Hexdump";
 import "./tests/operations/Image";
 import "./tests/operations/Jump";
 import "./tests/operations/JSONBeautify";
+import "./tests/operations/JSONMinify";
 import "./tests/operations/JWTDecode";
 import "./tests/operations/JWTSign";
 import "./tests/operations/JWTVerify";
