@@ -90,18 +90,40 @@ class ParseIMF extends Operation {
         let headerBody = ParseIMF.splitHeaderFromBody(input);
         let header = headerBody[0];
         let headerArray = ParseIMF.parseHeader(header);
-        if (args[0]) {
-            header = ParseIMF.replaceDecodeWord(header);
+        if (args[0] && headerBody.length > 0) {
+            headerBody[0] = ParseIMF.replaceDecodeWord(headerBody[0]);
         }
         let retval = [];
         let i = 0;
         headerBody.forEach(function(file){
-            file = new File(Array.from(file), "test"+String(i), {type: "text/plain"})
+            file = new File([file], "test"+String(i), {type: "text/plain"});
             retval.push(file);
             i++;
         });
         return retval;
     }
+
+    /**
+     * Displays the files in HTML for web apps.
+     *
+     * @param {File[]} files
+     * @returns {html}
+     */
+    async present(files) {
+        return await Utils.displayFilesAsHTML(files);
+    }
+
+    /**
+     * Walks a MIME document and returns an array of Mime data and header objects.
+     *
+     * @param {string} input
+     * @param {object} header
+     * @returns {object[]}
+     */
+     static walkMime(input, header) {
+         let output = [];
+         if header[""]
+     }
 
     /**
      * Breaks the header from the body and returns [header, body]
