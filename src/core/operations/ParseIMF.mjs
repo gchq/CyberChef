@@ -12,7 +12,6 @@ import {decodeQuotedPrintable} from "../lib/QuotedPrintable";
 import {MIME_FORMAT} from "../lib/ChrEnc";
 import Utils from "../Utils";
 
-
 // TODO: fix function header
 /**
  * Return the conetent encoding for a mime section from a header object.
@@ -22,7 +21,7 @@ import Utils from "../Utils";
  * @constant
  * @default
  */
-const FIELD_ITEM = {
+const IMF_FIELD_ITEM = {
     FILENAME: [/filename=".*?([^~#%&*\][\\:<>?/|]+)"/, "content-disposition"],
     CONTENT_TYPE: [/\s*([^;\s]+)/, "content-type"],
     BOUNDARY: [/boundary="(.+?)"/, "content-type"],
@@ -35,7 +34,7 @@ const FIELD_ITEM = {
  * @default
  */
 // TODO: should 8 bit and 7 bit be treated the same?
-const DECODER = {
+const IMF_DECODER = {
     "base64": function (input) {
         return fromBase64(input);
     },
@@ -49,7 +48,6 @@ const DECODER = {
         return input;
     },
 }
-
 
 class ParseIMF extends Operation {
 
@@ -66,28 +64,43 @@ class ParseIMF extends Operation {
         ].join("\n");
         this.infoURL = "https://tools.ietf.org/html/rfc5322";
         this.inputType = "string";
-        this.outputType = "string";
-        this.args = [];
+        this.outputType = "List<File>";
+        this.presentType = "html";
+        this.args = [
+            {
+                "name": "Decode Quoted Words",
+                "type": "boolean",
+                "value": false
+            }
+        ];
     }
 
     /**
      * Basic Email Parser that displays the header and mime sections as files.
+     * Args 0 boolean decode quoted words
      *
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {File[]}
      */
     run(input, args) {
         if (!input) {
-            return "";
+            return [];
         }
-        let headerBody = splitHeaderFromBody(input);
+        let headerBody = ParseIMF.splitHeaderFromBody(input);
         let header = headerBody[0];
-        let headerArray = parseHeader(header);
-        if (true) {
-            header = replaceDecodeWord(header);
+        let headerArray = ParseIMF.parseHeader(header);
+        if (args[0]) {
+            header = ParseIMF.replaceDecodeWord(header);
         }
-        return header;
+        let retval = [];
+        let i = 0;
+        headerBody.forEach(function(file){
+            file = new File(Array.from(file), "test"+String(i), {type: "text/plain"})
+            retval.push(file);
+            i++;
+        });
+        return retval;
     }
 
     /**
@@ -117,9 +130,9 @@ class ParseIMF extends Operation {
         return input.replace(/=\?([^?]+)\?(Q|B)\?([^?]+)\?=/g, function (a, charEnc, contEnc, input) {
             contEnc = (contEnc === "B") ? "base64" : "quoted-printable";
             if (contEnc === "quoted-printable") {
-                input = input.replace("_", " ");
+                input = input.replace(/_/g, " ");
             }
-            return decodeMimeData(input, charEnc, contEnc);
+            return ParseIMF.decodeMimeData(input, charEnc, contEnc);
         });
     }
 
@@ -155,12 +168,12 @@ class ParseIMF extends Operation {
      * @returns {string}
      */
     static decodeMimeData(input, charEnc, contEnc) {
-      //TODO: make exceptions for unknown charEnc and contEnc?
-      input = DECODER[contEnc](input);
-      if (charEnc) {
-          input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
-      }
-      return input;
+        //TODO: make exceptions for unknown charEnc and contEnc?
+        input = IMF_DECODER[contEnc](input);
+        if (charEnc) {
+            input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
+        }
+        return input;
     }
 
     /**
