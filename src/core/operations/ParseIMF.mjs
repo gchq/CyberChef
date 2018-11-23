@@ -29,26 +29,6 @@ const IMF_FIELD_ITEM = {
     TRANSER_ENCODING: [/\s*([A-Za-z0-9-]+)\s*/, "content-transfer-encoding"],
 }
 
-/**
- * @constant
- * @default
- */
-// TODO: should 8 bit and 7 bit be treated the same?
-const IMF_DECODER = {
-    "base64": function (input) {
-        return fromBase64(input);
-    },
-    "quoted-printable": function (input) {
-        return Utils.byteArrayToUtf8(decodeQuotedPrintable(input));
-    },
-    "7bit": function (input) {
-        return input;
-    },
-    "8bit": function (input) {
-        return input;
-    },
-}
-
 class ParseIMF extends Operation {
 
     /**
@@ -93,10 +73,11 @@ class ParseIMF extends Operation {
         if (args[0] && headerBody.length > 0) {
             headerBody[0] = ParseIMF.replaceDecodeWord(headerBody[0]);
         }
+        let retfiles = ParseIMF.walkMime(headerBody[1], headerArray, input.indexOf("\r") >= 0);
         let retval = [];
         let i = 0;
-        headerBody.forEach(function(file){
-            file = new File([file], "test"+String(i), {type: "text/plain"});
+        retfiles.forEach(function(file){
+            file = new File([file.data], "test"+String(i), {type: "text/plain"});
             retval.push(file);
             i++;
         });
@@ -120,9 +101,39 @@ class ParseIMF extends Operation {
      * @param {object} header
      * @returns {object[]}
      */
-     static walkMime(input, header) {
-         let output = [];
-         if header[""]
+    static walkMime(input, header, rn) {
+        let new_line_length = rn ? 2 : 1;
+        const content_type_reg = /([^;]+);\s+boundary\=(['"])(.+?)\2/g;
+        const inner_content_type_reg = /^([^;]+);\s+type\=(['"])(.+?)\2;\s+boundary\=(['"])(.+?)\4/g;
+        let output_sections = [];
+        if (header.hasOwnProperty("mime-version") || (header.hasOwnProperty("content-type") && header["content-type"][0].startsWith("multipart/"))) {
+            let content_boundary = null;
+            let idx = 3;
+            if (header["content-type"][0].indexOf("type=") > 0) {
+                content_boundary = inner_content_type_reg.exec(header["content-type"][0]);
+                idx = 5;
+            } else {
+                content_boundary = content_type_reg.exec(header["content-type"][0]);
+            }
+            const boundary_str = "--".concat(content_boundary[idx]);
+            let start = input.indexOf(boundary_str) + boundary_str.length + new_line_length;
+            let end = input.indexOf(boundary_str.concat("--")) - new_line_length;
+            let output = input.substring(start, end);
+            let headerBody = ParseIMF.splitHeaderFromBody(output);
+            let headerArray = ParseIMF.parseHeader(headerBody[0]);
+            let parts = ParseIMF.walkMime(headerBody[1], headerArray, rn);
+            parts.forEach(function(part){
+                output_sections.push(part);
+            });
+        } else if (header.hasOwnProperty("content-type") && header.hasOwnProperty("content-transfer-encoding")) {
+            const cont_type_data_reg = /^([^;]+);\s+charset\=(['"])(.+?)\2/g;
+            let cont_type = cont_type_data_reg.exec(header["content-type"][0]);
+            let val = ParseIMF.decodeMimeData(input, cont_type[3], header["content-transfer-encoding"][0]);
+            return [{type:cont_type[1], data: val}];
+        } else {
+            throw new OperationError("Invalid Mime section");
+        }
+        return output_sections;
      }
 
     /**
@@ -190,9 +201,19 @@ class ParseIMF extends Operation {
      * @returns {string}
      */
     static decodeMimeData(input, charEnc, contEnc) {
-        //TODO: make exceptions for unknown charEnc and contEnc?
-        input = IMF_DECODER[contEnc](input);
-        if (charEnc) {
+        switch (contEnc) {
+            case "base64":
+                input = fromBase64(input);
+                break;
+            case "quoted-printable":
+                input = Utils.byteArrayToUtf8(decodeQuotedPrintable(input));
+                break;
+            case "7bit":
+            case "8bit":
+            default:
+                break;
+        }
+        if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
             input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
         }
         return input;
