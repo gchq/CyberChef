@@ -6,6 +6,7 @@ const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 const glob = require("glob");
 const path = require("path");
+const UglifyJSWebpackPlugin = require("uglifyjs-webpack-plugin");
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -218,6 +219,24 @@ module.exports = function (grunt) {
                 output: {
                     filename: "scripts.js",
                     path: __dirname + "/build/prod"
+                },
+                optimization: {
+                    minimizer: [
+                        /**
+                         * Override default uglifyJS plugin to escape
+                         * unicode chars in string and literals, avoiding
+                         * error with Safari.
+                         */
+                        new UglifyJSWebpackPlugin({
+                            cache: true,
+                            parallel: true,
+                            uglifyOptions: {
+                                output: {
+                                    "ascii_only": true,
+                                }
+                            }
+                        })
+                    ],
                 },
                 plugins: [
                     new webpack.DefinePlugin(Object.assign({}, BUILD_CONSTANTS, {

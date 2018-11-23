@@ -59,7 +59,12 @@ module.exports = {
                 test: /\.m?js$/,
                 exclude: /node_modules\/(?!jsesc|crypto-api)/,
                 type: "javascript/auto",
-                loader: "babel-loader?compact=false"
+                loader: "babel-loader?compact=false",
+                query: {
+                    presets: [
+                        require.resolve("@babel/preset-env"),
+                    ]
+                }
             },
             {
                 test: /forge.min.js$/,
