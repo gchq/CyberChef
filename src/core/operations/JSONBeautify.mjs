@@ -28,7 +28,7 @@ class JSONBeautify extends Operation {
             {
                 "name": "Indent string",
                 "type": "binaryShortString",
-                "value": "\\t"
+                "value": "    "
             },
             {
                 "name": "Sort Object Keys",
@@ -44,8 +44,8 @@ class JSONBeautify extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const indentStr = args[0];
-        const sortBool = args[1];
+        const [indentStr, sortBool] = args;
+
         if (!input) return "";
         if (sortBool) {
             input = JSON.stringify(JSONBeautify._sort(JSON.parse(input)));
