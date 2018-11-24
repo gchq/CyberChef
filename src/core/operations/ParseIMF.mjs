@@ -21,12 +21,10 @@ import Utils from "../Utils";
  * @constant
  * @default
  */
-const IMF_FIELD_ITEM = {
-    FILENAME: [/filename=".*?([^~#%&*\][\\:<>?/|]+)"/, "content-disposition"],
-    CONTENT_TYPE: [/\s*([^;\s]+)/, "content-type"],
-    BOUNDARY: [/boundary="(.+?)"/, "content-type"],
-    CHARSET: [/charset=([a-z0-9-]+)/, "content-type"],
-    TRANSER_ENCODING: [/\s*([A-Za-z0-9-]+)\s*/, "content-transfer-encoding"],
+const FILE_TYPE_SUFFIX = {
+    "text/plain": "txt",
+    "text/html": "htm",
+    "application/rtf": "rtf",
 }
 
 class ParseIMF extends Operation {
@@ -64,22 +62,34 @@ class ParseIMF extends Operation {
      * @returns {File[]}
      */
     run(input, args) {
+        // TODO: need to add Non-Mime emails
+        // TODO: need to add header info to output
+        // TODO: no uuencode function. see if we can fix this
+        // TODO: Need to parse multipart headers better as they are key value pairs separated by a ";\s+".
         if (!input) {
             return [];
         }
         let headerBody = ParseIMF.splitHeaderFromBody(input);
-        let header = headerBody[0];
-        let headerArray = ParseIMF.parseHeader(header);
+        let headerArray = ParseIMF.parseHeader(headerBody[0]);
         if (args[0] && headerBody.length > 0) {
             headerBody[0] = ParseIMF.replaceDecodeWord(headerBody[0]);
         }
         let retfiles = ParseIMF.walkMime(headerBody[1], headerArray, input.indexOf("\r") >= 0);
         let retval = [];
-        let i = 0;
-        retfiles.forEach(function(file){
-            file = new File([file.data], "test"+String(i), {type: "text/plain"});
+        retfiles.forEach(function(fileObj){
+            let file = null;
+            if (fileObj.name !== null) {
+                file = new File([fileObj.data], fileObj.name, {type: fileObj.type});
+            } else {
+                let name = ParseIMF.replaceDecodeWord(headerArray["subject"][0]).concat(".");
+                if (fileObj.type in FILE_TYPE_SUFFIX) {
+                    name = name.concat(FILE_TYPE_SUFFIX[fileObj.type]);
+                } else {
+                    name = name.concat("bin");
+                }
+                file = new File([fileObj.data], name, {type: fileObj.type});
+            }
             retval.push(file);
-            i++;
         });
         return retval;
     }
@@ -115,21 +125,37 @@ class ParseIMF extends Operation {
             } else {
                 content_boundary = content_type_reg.exec(header["content-type"][0]);
             }
-            const boundary_str = "--".concat(content_boundary[idx]);
-            let start = input.indexOf(boundary_str) + boundary_str.length + new_line_length;
-            let end = input.indexOf(boundary_str.concat("--")) - new_line_length;
-            let output = input.substring(start, end);
-            let headerBody = ParseIMF.splitHeaderFromBody(output);
-            let headerArray = ParseIMF.parseHeader(headerBody[0]);
-            let parts = ParseIMF.walkMime(headerBody[1], headerArray, rn);
-            parts.forEach(function(part){
-                output_sections.push(part);
+            let mime_parts = ParseIMF.splitMultipart(input, content_boundary[idx], new_line_length);
+            mime_parts.forEach(function(mime_part){
+                let headerBody = ParseIMF.splitHeaderFromBody(mime_part);
+                let headerArray = ParseIMF.parseHeader(headerBody[0]);
+                let parts = ParseIMF.walkMime(headerBody[1], headerArray, rn);
+                parts.forEach(function(part){
+                    output_sections.push(part);
+                });
             });
         } else if (header.hasOwnProperty("content-type") && header.hasOwnProperty("content-transfer-encoding")) {
-            const cont_type_data_reg = /^([^;]+);\s+charset\=(['"])(.+?)\2/g;
-            let cont_type = cont_type_data_reg.exec(header["content-type"][0]);
-            let val = ParseIMF.decodeMimeData(input, cont_type[3], header["content-transfer-encoding"][0]);
-            return [{type:cont_type[1], data: val}];
+            let contType = null;
+            let dataValue = null;
+            let fileName = null;
+            let charEnc = null;
+            // TODO: if there is no content disposition filename try content type name.
+            if (header.hasOwnProperty("content-disposition")) {
+                const cont_disp = /^([^;]+);.*?filename\=(['"]?)(.+?)\2$/g;
+                let dispo = cont_disp.exec(header["content-disposition"][0]);
+                // TODO: Remove path if it contains it.
+                fileName = dispo[3];
+                const cont_type_file = /^([^;]+);\s+name\=(["']?)(.+?)\2$/g;
+                let content = cont_type_file.exec(header["content-type"][0]);
+                let contType = content[1];
+            } else {
+                const cont_type_data_reg = /^([^;]+);\s+charset\=(['"]?)(.+?)\2$/g;
+                let content = cont_type_data_reg.exec(header["content-type"][0]);
+                contType = content[1];
+                charEnc = content[3]
+            }
+            dataValue = ParseIMF.decodeMimeData(input, charEnc, header["content-transfer-encoding"][0]);
+            return [{type: contType, data: dataValue, name: fileName}];
         } else {
             throw new OperationError("Invalid Mime section");
         }
@@ -178,7 +204,7 @@ class ParseIMF extends Operation {
      * @returns {object}
      */
     static parseHeader(input) {
-        const sectionRegex = /([A-Z-]+):\s+([\x20-\x7e\r\n\t]+?)(?=$|\r?\n\S)/gi;
+        const sectionRegex = /([A-Za-z-]+):\s+([\x20-\xff\r\n\t]+?)(?=$|\r?\n\S)/g;
         let header = {}, section;
         while ((section = sectionRegex.exec(input))) {
             let fieldName = section[1].toLowerCase();
@@ -220,22 +246,35 @@ class ParseIMF extends Operation {
     }
 
     /**
-     * Returns a header item given a header object, itemName, and index number.
      *
-     * @param {object} header
-     * @param {object} FIELD_ITEM
-     * @param {integer} fieldNum
-     * @returns {string}
+     *
+     *
+     *
      */
-    static getHeaderItem(header, fieldItem, fieldNum = 0){
-        if (fieldItem[1] in header && header[fieldItem[1]].length > fieldNum) {
-            let field = header[fieldItem[1]][fieldNum], item;
-            if ((item = fieldItem[0].exec(field))) {
-                return item[1];
+    static splitMultipart(input, boundary, new_line_length) {
+        let output = [];
+        let newline = new_line_length === 2 ? "\r\n" : "\n";
+        const boundary_str = "--".concat(boundary, newline);
+        const last = input.indexOf("--".concat(boundary, "--", newline)) - new_line_length;
+        let start = 0;
+        while(true) {
+            let start = input.indexOf(boundary_str, start);
+            if (start >= 0) {
+                start = start + boundary_str.length;
+            } else {
+                break;
             }
+            let end = input.indexOf(boundary_str, start) - new_line_length;
+            if (end > start) {
+                output.push(input.substring(start, end));
+            } else {
+                output.push(input.substring(start, last));
+                break;
+            }
+            start = end;
         }
+        return output;
     }
-
 }
 
 export default ParseIMF
