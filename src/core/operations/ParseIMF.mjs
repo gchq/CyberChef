@@ -73,19 +73,19 @@ class ParseIMF extends Operation {
         if (!input) {
             return [];
         }
-        let headerBody = ParseIMF.splitHeaderFromBody(input);
-        let headerArray = ParseIMF.parseHeader(headerBody[0]);
-        if (args[0] && headerBody.length > 0) {
-            headerBody[0] = ParseIMF.replaceDecodeWord(headerBody[0]);
+        let emlObj = ParseIMF.splitParse(input);
+        if (!emlObj.body) { throw new OperationError("No body was found");}
+        if (args[0]) {
+            emlObj.rawHeader = ParseIMF.replaceDecodeWord(emlObj.rawHeader);
         }
-        let retval = [new File([headerBody[0]], "Header", {type: "text/plain"})];
-        let retfiles = ParseIMF.walkMime(headerBody[1], headerArray, input.indexOf("\r") >= 0);
+        let retval = [new File([emlObj.rawHeader], "Header", {type: "text/plain"})];
+        let retfiles = ParseIMF.walkMime(emlObj, input.indexOf("\r") >= 0);
         retfiles.forEach(function(fileObj){
             let file = null;
             if (fileObj.name !== null) {
                 file = new File([fileObj.data], fileObj.name, {type: fileObj.type});
             } else {
-                let name = headerArray["subject"][0].concat(".");
+                let name = emlObj.header["subject"][0].concat(".");
                 if (fileObj.type in FILE_TYPE_SUFFIX) {
                     name = name.concat(FILE_TYPE_SUFFIX[fileObj.type]);
                 } else {
@@ -115,31 +115,16 @@ class ParseIMF extends Operation {
      * @param {object} header
      * @returns {object[]}
      */
-    static walkMime(input, header, rn) {
+    static walkMime(parentObj, rn) {
         let new_line_length = rn ? 2 : 1;
-        let output_sections = [];
-        if (header.hasOwnProperty("content-type") && header["content-type"][0].startsWith("multipart/")) {
-            let contType = ParseIMF.decodeComplexField(header["content-type"][0]);
-            let content_boundary = null;
-            if (contType.hasOwnProperty("boundary")) {
-                content_boundary = contType.boundary;
-            }
-            let mime_parts = ParseIMF.splitMultipart(input, content_boundary, new_line_length);
-            mime_parts.forEach(function(mime_part){
-                let headerBody = ParseIMF.splitHeaderFromBody(mime_part);
-                let headerArray = ParseIMF.parseHeader(headerBody[0]);
-                let parts = ParseIMF.walkMime(headerBody[1], headerArray, rn);
-                parts.forEach(function(part){
-                    output_sections.push(part);
-                });
-            });
-        } else if (header.hasOwnProperty("content-type") && header.hasOwnProperty("content-transfer-encoding")) {
-            let contType = null, fileName = null, charEnc = null, contTran = null;
-            let contDispoObj = header.hasOwnProperty("content-disposition") ? ParseIMF.decodeComplexField(header["content-disposition"][0]) : null;
-            let contTypeObj = ParseIMF.decodeComplexField(header["content-type"][0]);
-            let contEncObj = ParseIMF.decodeComplexField(header["content-transfer-encoding"][0]);
-            if (contDispoObj != null && contDispoObj.hasOwnProperty("filename")) {
-                fileName = contDispoObj.filename;
+        let contType = null, fileName = null, charEnc = null, contDispoObj = null;
+        if (parentObj.header.hasOwnProperty("content-type")) {
+            let contTypeObj = ParseIMF.decodeComplexField(parentObj.header["content-type"][0]);
+            if (parentObj.header.hasOwnProperty("content-disposition")) {
+                contDispoObj = ParseIMF.decodeComplexField(parentObj.header["content-disposition"][0])
+                if (contDispoObj != null && contDispoObj.hasOwnProperty("filename")) {
+                    fileName = contDispoObj.filename;
+                }
             }
             if (contTypeObj != null) {
                 if (contTypeObj.hasOwnProperty("value")) {
@@ -152,34 +137,39 @@ class ParseIMF extends Operation {
                     fileName = contTypeObj.name;
                 }
             }
-            if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
-                contTran = contEncObj.value[0];
+            if (contType.startsWith("multipart/")) {
+                let content_boundary = null;
+                let output_sections = [];
+                if (contTypeObj.hasOwnProperty("boundary")) {
+                    content_boundary = contTypeObj.boundary;
+                }
+                let mime_parts = ParseIMF.splitMultipart(parentObj.body, content_boundary, new_line_length);
+                mime_parts.forEach(function(mime_part){
+                    let mimeObj = ParseIMF.splitParse(mime_part);
+                    if (!mimeObj.body) {
+                        return [];
+                    }
+                    let parts = ParseIMF.walkMime(mimeObj, rn);
+                    parts.forEach(function(part){
+                        output_sections.push(part);
+                    });
+                });
+                return output_sections;
             }
-            if (contTran != null) {
-                input = ParseIMF.decodeMimeData(input, charEnc, contTran);
+            if (parentObj.header.hasOwnProperty("content-transfer-encoding")) {
+                let contEncObj = ParseIMF.decodeComplexField(parentObj.header["content-transfer-encoding"][0]);
+                let contTran = null;
+                if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
+                    contTran = contEncObj.value[0];
+                }
+                if (contTran != null) {
+                    parentObj.body = ParseIMF.decodeMimeData(parentObj.body, charEnc, contTran);
+                }
             }
-            return [{type: contType, data: input, name: fileName}];
-        } else {
-            throw new OperationError("Invalid Mime section");
+            return [{type: contType, data: parentObj.body, name: fileName}];
         }
-        return output_sections;
+        throw new OperationError("Invalid Mime section");
      }
-
-    /**
-     * Breaks the header from the body and returns [header, body]
-     *
-     * @param {string} input
-     * @returns {string[]}
-     */
-    static splitHeaderFromBody(input) {
-        const emlRegex = /^([\x20-\xff\n\r\t]+?)(?:\r?\n){2}([\x20-\xff\t\n\r]*)/;
-        let splitEmail = emlRegex.exec(input);
-        if (splitEmail) {
-            //TODO: Array splice vs shift?
-            splitEmail.shift();
-            return splitEmail;
-        }
-    }
 
     /**
      * Takes a string and decodes quoted words inside them
@@ -198,6 +188,34 @@ class ParseIMF extends Operation {
         });
     }
 
+
+    /**
+     * Breaks the header from the body and returns [header, body]
+     *
+     * @param {string} input
+     * @returns {string[]}
+     */
+    static splitParse(input) {
+        const emlRegex = /(?:\r?\n){2}/g;
+        let matchobj = emlRegex.exec(input);
+        if (matchobj) {
+            let splitEmail = [input.substring(0,matchobj.index), input.substring(emlRegex.lastIndex)];
+            const sectionRegex = /([A-Za-z-]+):\s+([\x00-\xff]+?)(?=$|\r?\n\S)/g;
+            let headerObj = {}, section;
+            while ((section = sectionRegex.exec(splitEmail[0]))) {
+                let fieldName = section[1].toLowerCase();
+                let fieldValue = ParseIMF.replaceDecodeWord(section[2].replace(/\n|\r/g, " "));
+                if (fieldName in headerObj) {
+                    headerObj[fieldName].push(fieldValue);
+                } else {
+                    headerObj[fieldName] = [fieldValue];
+                }
+            }
+            return {rawHeader:splitEmail[0], body: splitEmail[1],  header: headerObj};
+        }
+        return {rawHeader: null, body:null, header:null};
+    }
+
     /**
      * Breaks a header into a object to be used by other functions.
      * It removes any line feeds or carriage returns from the values and
@@ -205,9 +223,9 @@ class ParseIMF extends Operation {
      *
      * @param {string} input
      * @returns {object}
-     */
+     *
     static parseHeader(input) {
-        const sectionRegex = /([A-Za-z-]+):\s+([\x20-\xff\r\n\t]+?)(?=$|\r?\n\S)/g;
+        const sectionRegex = /([A-Za-z-]+):\s+([\x00-\xff]+?)(?=$|\r?\n\S)/g;
         let header = {}, section;
         while ((section = sectionRegex.exec(input))) {
             let fieldName = section[1].toLowerCase();
@@ -219,7 +237,7 @@ class ParseIMF extends Operation {
             }
         }
         return header;
-    }
+    } */
 
     /**
      * Return decoded MIME data given the character encoding and content encoding.
