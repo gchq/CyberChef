@@ -10,21 +10,20 @@ import cptable from "../vendor/js-codepage/cptable.js";
 import {fromBase64} from "../lib/Base64";
 import {decodeQuotedPrintable} from "../lib/QuotedPrintable";
 import {MIME_FORMAT} from "../lib/ChrEnc";
+import Mime from "../lib/Mime";
 import Utils from "../Utils";
 
 /**
- * Return the conetent encoding for a mime section from a header object.
- * CONTENT_TYPE returns the content type of a mime header from a header object.
- * Returns the filename from a mime header object.
- * Returns the boundary value for the mime section from a header object.
+ *
+ *
  * @constant
  * @default
- */
+ *
 const BODY_FILE_TYPE = {
     "text/plain": "txt",
     "text/html": "htm",
     "application/rtf": "rtf",
-}
+} */
 
 class ParseIMF extends Operation {
 
@@ -52,6 +51,11 @@ class ParseIMF extends Operation {
         ];
     }
 
+    run(input, args) {
+        let mimeObj = new Mime(input);
+        return mimeObj.decodeMime(args[0]);
+    }
+
     /**
      * Basic Email Parser that displays the header and mime sections as files.
      * Args 0 boolean decode quoted words
@@ -59,7 +63,7 @@ class ParseIMF extends Operation {
      * @param {string} input
      * @param {Object[]} args
      * @returns {File[]}
-     */
+     *
      // NOTE: Liberties taken include:
      // No checks are made to verify quoted words are valid encodings e.g. underscore vs escape
      // This attempts to decode mime reguardless if it is \r\n (correct newline) or \n (incorrect)
@@ -99,7 +103,7 @@ class ParseIMF extends Operation {
             retval.push(file);
         });
         return retval;
-    }
+    } */
 
     /**
      * Displays the files in HTML for web apps.
@@ -117,7 +121,7 @@ class ParseIMF extends Operation {
      * @param {string} input
      * @param {object} header
      * @returns {object[]}
-     */
+     *
     static walkMime(parentObj, rn) {
         let new_line_length = rn ? 2 : 1;
         let contType = null, fileName = null, charEnc = null, contDispoObj = null;
@@ -180,7 +184,7 @@ class ParseIMF extends Operation {
      *
      * @param {string} input
      * @returns {string}
-     */
+     *
     static replaceDecodeWord(input) {
         return input.replace(/=\?([^?]+)\?(Q|B)\?([^?]+)\?=/g, function (a, charEnc, contEnc, input) {
             contEnc = (contEnc === "B") ? "base64" : "quoted-printable";
@@ -199,7 +203,7 @@ class ParseIMF extends Operation {
      *
      * @param {string} input
      * @returns {object}
-     */
+     *
     static splitParse(input) {
         const emlRegex = /(?:\r?\n){2}/g;
         let matchobj = emlRegex.exec(input);
@@ -228,7 +232,7 @@ class ParseIMF extends Operation {
      * @param {string} charEnc
      * @param {string} contEnc
      * @returns {string}
-     */
+     *
     static decodeMimeData(input, charEnc, contEnc) {
         switch (contEnc) {
             case "base64":
@@ -236,10 +240,6 @@ class ParseIMF extends Operation {
                 break;
             case "quoted-printable":
                 input = Utils.byteArrayToUtf8(decodeQuotedPrintable(input));
-                break;
-            case "7bit":
-            case "8bit":
-            default:
                 break;
         }
         if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
@@ -249,12 +249,13 @@ class ParseIMF extends Operation {
     }
 
     /**
-     * Parse a complex header field and return an object that contains normalized
-     * keys with corresponding values and single values under a value array.
+     * Parses a complex header field and returns an object that contains
+     * normalized keys with corresponding values along with single values under
+     * a value array.
      *
      * @param {string} field
      * @returns {object}
-     */
+     *
     static decodeComplexField(field) {
         let fieldSplit = field.split(/;\s+/g);
         let retVal = {};
@@ -285,14 +286,14 @@ class ParseIMF extends Operation {
     }
 
     /**
-     * Splits a Mime document by the current boundaries and try to account for
-     * the current new line size which can be either the standard \r\n or \n.
+     * Splits a Mime document by the current boundaries and attempts to account
+     * for the current new line size which can be either the standard \r\n or \n.
      *
      * @param {string} input
      * @param {string} boundary
      * @param {string} new_line_length
      * @return {string[]}
-     */
+     *
     static splitMultipart(input, boundary, new_line_length) {
         let output = [];
         let newline = new_line_length === 2 ? "\r\n" : "\n";
@@ -319,7 +320,7 @@ class ParseIMF extends Operation {
             start = end;
         }
         return output;
-    }
+    } */
 }
 
 export default ParseIMF
