@@ -20,7 +20,7 @@ import Utils from "../Utils";
  * @constant
  * @default
  */
-const FILE_TYPE_SUFFIX = {
+const BODY_FILE_TYPE = {
     "text/plain": "txt",
     "text/html": "htm",
     "application/rtf": "rtf",
@@ -61,15 +61,13 @@ class ParseIMF extends Operation {
      * @returns {File[]}
      */
      // NOTE: Liberties taken include:
-     // header normalization by lowercasing field names and certain header values
      // No checks are made to verify quoted words are valid encodings e.g. underscore vs escape
      // This attempts to decode mime reguardless if it is \r\n (correct newline) or \n (incorrect)
-     // Both Base64 and QuotedPrintable is used for decode. UUEncode is not available right now and is a standardized encoding format.
+     // Both Base64 and QuotedPrintable is used for decode. UUEncode is not available right now
+     // and is a standardized encoding format.
     run(input, args) {
-        // TODO: need to add Non-Mime email support
         // TODO Later: no uuencode function. See if we can fix this.
-        // TODO: may want to do base64 decode of binary to bytearray.
-        // TODO Later: need to look at binhex decoder maybe.
+        // TODO: content-type can be omitted and would mean us-ascii charset and text/plain.
         if (!input) {
             return [];
         }
@@ -85,9 +83,14 @@ class ParseIMF extends Operation {
             if (fileObj.name !== null) {
                 file = new File([fileObj.data], fileObj.name, {type: fileObj.type});
             } else {
-                let name = emlObj.header["subject"][0].concat(".");
-                if (fileObj.type in FILE_TYPE_SUFFIX) {
-                    name = name.concat(FILE_TYPE_SUFFIX[fileObj.type]);
+                let name = null;
+                if ("subject" in emlObj.header) {
+                    name = emlObj.header["subject"][0].concat(".");
+                } else {
+                    name = "Undefined.";
+                }
+                if (fileObj.type in BODY_FILE_TYPE) {
+                    name = name.concat(BODY_FILE_TYPE[fileObj.type]);
                 } else {
                     name = name.concat("bin");
                 }
@@ -160,7 +163,7 @@ class ParseIMF extends Operation {
                 let contEncObj = ParseIMF.decodeComplexField(parentObj.header["content-transfer-encoding"][0]);
                 let contTran = null;
                 if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
-                    contTran = contEncObj.value[0];
+                        contTran = contEncObj.value[0];
                 }
                 if (contTran != null) {
                     parentObj.body = ParseIMF.decodeMimeData(parentObj.body, charEnc, contTran);
@@ -190,10 +193,12 @@ class ParseIMF extends Operation {
 
 
     /**
-     * Breaks the header from the body and returns [header, body]
+     * Breaks the header from the body and parses the header. The returns an
+     * object or null. The object contains the raw header, decoded body, and
+     * parsed header object.
      *
      * @param {string} input
-     * @returns {string[]}
+     * @returns {object}
      */
     static splitParse(input) {
         const emlRegex = /(?:\r?\n){2}/g;
@@ -213,31 +218,8 @@ class ParseIMF extends Operation {
             }
             return {rawHeader:splitEmail[0], body: splitEmail[1],  header: headerObj};
         }
-        return {rawHeader: null, body:null, header:null};
+        return null;
     }
-
-    /**
-     * Breaks a header into a object to be used by other functions.
-     * It removes any line feeds or carriage returns from the values and
-     * replaces it with a space.
-     *
-     * @param {string} input
-     * @returns {object}
-     *
-    static parseHeader(input) {
-        const sectionRegex = /([A-Za-z-]+):\s+([\x00-\xff]+?)(?=$|\r?\n\S)/g;
-        let header = {}, section;
-        while ((section = sectionRegex.exec(input))) {
-            let fieldName = section[1].toLowerCase();
-            let fieldValue = ParseIMF.replaceDecodeWord(section[2].replace(/\n|\r/g, " "));
-            if (header[fieldName]) {
-                header[fieldName].push(fieldValue);
-            } else {
-                header[fieldName] = [fieldValue];
-            }
-        }
-        return header;
-    } */
 
     /**
      * Return decoded MIME data given the character encoding and content encoding.
@@ -267,11 +249,11 @@ class ParseIMF extends Operation {
     }
 
     /**
+     * Parse a complex header field and return an object that contains normalized
+     * keys with corresponding values and single values under a value array.
      *
-     *
-     *
-     *
-     *
+     * @param {string} field
+     * @returns {object}
      */
     static decodeComplexField(field) {
         let fieldSplit = field.split(/;\s+/g);
@@ -303,16 +285,22 @@ class ParseIMF extends Operation {
     }
 
     /**
+     * Splits a Mime document by the current boundaries and try to account for
+     * the current new line size which can be either the standard \r\n or \n.
      *
-     *
-     *
-     *
+     * @param {string} input
+     * @param {string} boundary
+     * @param {string} new_line_length
+     * @return {string[]}
      */
     static splitMultipart(input, boundary, new_line_length) {
         let output = [];
         let newline = new_line_length === 2 ? "\r\n" : "\n";
         const boundary_str = "--".concat(boundary, newline);
-        const last = input.indexOf("--".concat(boundary, "--", newline)) - new_line_length;
+        let last = input.indexOf("--".concat(boundary, "--", newline)) - new_line_length;
+        if (last < 0) {
+            last = input.indexOf("--".concat(boundary, "--")) - new_line_length;
+        }
         let start = 0;
         while(true) {
             let start = input.indexOf(boundary_str, start);
