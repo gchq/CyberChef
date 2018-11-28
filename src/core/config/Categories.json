@@ -55,7 +55,8 @@
             "To Braille",
             "From Braille",
             "Parse TLV",
-            "Parse Internet Message Format"
+            "Parse Internet Message Format",
+            "Decode Mime Encoded Words"
         ]
     },
     {
