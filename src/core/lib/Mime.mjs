@@ -11,18 +11,14 @@ import {decodeQuotedPrintable} from "../lib/QuotedPrintable";
 import {MIME_FORMAT} from "../lib/ChrEnc";
 import Utils from "../Utils";
 
-/**
- *
- *
- * @constant
- * @default
- */
-const BODY_FILE_TYPE = {
-    "text/plain": "txt",
-    "text/html": "htm",
-    "application/rtf": "rtf",
-}
 
+/**
+ * NOTE: Liberties taken include:
+ * No checks are made to verify quoted words are valid encodings e.g. underscore vs escape
+ * This attempts to decode mime reguardless if it is \r\n (correct newline) or \n (incorrect)
+ * Both Base64 and QuotedPrintable is used for decode. UUEncode is not available right now
+ * and is a standardized encoding format.
+ */
 class Mime {
     /**
      * Internet MessageFormat constructor
@@ -40,45 +36,42 @@ class Mime {
      * @param {boolean} decodeWords
      * @returns {File[]}
      */
-     // NOTE: Liberties taken include:
-     // No checks are made to verify quoted words are valid encodings e.g. underscore vs escape
-     // This attempts to decode mime reguardless if it is \r\n (correct newline) or \n (incorrect)
-     // Both Base64 and QuotedPrintable is used for decode. UUEncode is not available right now
-     // and is a standardized encoding format.
     decodeMime(decodeWords) {
-        // TODO Later: no uuencode function. See if we can fix this.
         // TODO: content-type can be omitted and would mean us-ascii charset and text/plain.
         if (!this.input) {
             return [];
         }
-        let emlObj = Mime._splitParse(this.input);
+        let emlObj = Mime._splitParseHead(this.input);
         if (!emlObj.body) { throw new OperationError("No body was found");}
         if (decodeWords) {
             emlObj.rawHeader = Mime.replaceEncodedWord(emlObj.rawHeader);
         }
         let retval = [new File([emlObj.rawHeader], "Header", {type: "text/plain"})];
-        let retfiles = this._walkMime(emlObj);
-        retfiles.forEach(function(fileObj){
-            let file = null;
-            if (fileObj.name !== null) {
-                file = new File([fileObj.data], fileObj.name, {type: fileObj.type});
-            } else {
-                let name = null;
+        this._walkMime(emlObj).forEach(function(fileObj){
+            let name = fileObj.name;
+            if (fileObj.name === null) {
                 if ("subject" in emlObj.header) {
-                    name = emlObj.header["subject"][0].concat(".");
+                    name = emlObj.header["subject"][0];
                 } else {
-                    name = "Undefined.";
+                    name = "Undefined";
                 }
-                if (fileObj.type in BODY_FILE_TYPE) {
-                    name = name.concat(BODY_FILE_TYPE[fileObj.type]);
-                } else {
-                    name = name.concat("bin");
-                }
-                file = new File([fileObj.data], name, {type: fileObj.type});
+                name = name.concat(Mime.getFileExt(fileObj.type));
             }
-            retval.push(file);
+            retval.push(new File([fileObj.data], name, {type: fileObj.type}));
         });
         return retval;
+    }
+
+    static getFileExt(mimetype) {
+        switch (mimetype) {
+            case "text/plain":
+                return ".txt";
+            case "text/html":
+                return ".htm";
+            case "application/rtf":
+                return ".rtf";
+        }
+        return ".bin";
     }
 
     /**
@@ -111,19 +104,17 @@ class Mime {
                 }
             }
             if (contType.startsWith("multipart/")) {
-                let content_boundary = null;
                 let output_sections = [];
-                if (contTypeObj.hasOwnProperty("boundary")) {
-                    content_boundary = contTypeObj.boundary;
+                if (!contTypeObj.hasOwnProperty("boundary")) {
+                    throw new OperationError("Invalid mulitpart section no boundary");
                 }
-                let mime_parts = Mime._splitMultipart(parentObj.body, content_boundary, new_line_length);
+                let mime_parts = this._splitMultipart(parentObj.body, contTypeObj.boundary, new_line_length);
                 mime_parts.forEach(function(mime_part){
-                    let mimeObj = Mime._splitParse(mime_part);
+                    let mimeObj = Mime._splitParseHead(mime_part);
                     if (!mimeObj.body) {
                         return [];
                     }
-                    let parts = this._walkMime(mimeObj);
-                    parts.forEach(function(part){
+                    this._walkMime(mimeObj).forEach(function(part){
                         output_sections.push(part);
                     }, this);
                 }, this);
@@ -131,12 +122,8 @@ class Mime {
             }
             if (parentObj.header.hasOwnProperty("content-transfer-encoding")) {
                 let contEncObj = Mime._decodeComplexField(parentObj.header["content-transfer-encoding"][0]);
-                let contTran = null;
                 if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
-                        contTran = contEncObj.value[0];
-                }
-                if (contTran != null) {
-                    parentObj.body = Mime._decodeMimeData(parentObj.body, charEnc, contTran);
+                    parentObj.body = Mime._decodeMimeData(parentObj.body, charEnc, contEncObj.value[0]);
                 }
             }
             return [{type: contType, data: parentObj.body, name: fileName}];
@@ -170,7 +157,7 @@ class Mime {
      * @param {string} input
      * @returns {object}
      */
-    static _splitParse(input) {
+    static _splitParseHead(input) {
         const emlRegex = /(?:\r?\n){2}/g;
         let matchobj = emlRegex.exec(input);
         if (matchobj) {
@@ -207,6 +194,21 @@ class Mime {
             case "quoted-printable":
                 input = Utils.byteArrayToUtf8(decodeQuotedPrintable(input));
                 break;
+            case "x-uuencode":
+                //TODO: need to trim before and after;
+                let match = /^\s*begin[^\n]+\n(.*)\r?\n`\r?\nend\s*$/gs.exec(input);
+                let lineReg = /\r?\n?.(.*)$/gm;
+                let line = null;
+                let lines = [];
+                while ((line = lineReg.exec(match[1]))) {
+                    lines.push(fromBase64(line[1], " -_"));
+                }
+                if (match) {
+                    input = lines.join("");
+                } else {
+                    throw new OperationError("Invalid uuencoding");
+                }
+                break;
         }
         if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
             input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
@@ -226,19 +228,18 @@ class Mime {
         let fieldSplit = field.split(/;\s+/g);
         let retVal = {};
         fieldSplit.forEach(function(item){
-            if (item.indexOf("=") >= 0) {
-                let eq = item.indexOf("=");
-                let kv = null;
+            let eq = item.indexOf("=");
+            if (eq >= 0) {
                 if (item.length > eq) {
-                    kv = [item.substring(0, eq), item.substring(eq + 1).trim()];
+                    let kv = [item.substring(0, eq), item.substring(eq + 1).trim()];
+                    if ((kv[1].startsWith("\'") && kv[1].endsWith("\'"))
+                        || (kv[1].startsWith("\"") && kv[1].endsWith("\""))) {
+                        kv[1] = (/(['"])(.+)\1/.exec(kv[1]))[2];
+                    }
+                    retVal[kv[0].toLowerCase()] = kv[1];
                 } else {
                     throw OperationError("Not a valid header entry");
                 }
-                if ((kv[1].startsWith("\'") && kv[1].endsWith("\'"))
-                    || (kv[1].startsWith("\"") && kv[1].endsWith("\""))) {
-                    kv[1] = (/(['"])(.+)\1/.exec(kv[1]))[2];
-                }
-                retVal[kv[0].toLowerCase()] = kv[1];
             } else {
                 item = item.trim().toLowerCase();
                 if (retVal.hasOwnProperty("value")) {
@@ -260,29 +261,22 @@ class Mime {
      * @param {string} new_line_length
      * @return {string[]}
      */
-    static _splitMultipart(input, boundary, new_line_length) {
+    _splitMultipart(input, boundary, new_line_length) {
         let output = [];
-        let newline = new_line_length === 2 ? "\r\n" : "\n";
-        const boundary_str = "--".concat(boundary, newline);
-        let last = input.indexOf("--".concat(boundary, "--", newline)) - new_line_length;
-        if (last < 0) {
-            last = input.indexOf("--".concat(boundary, "--")) - new_line_length;
-        }
+        const boundary_str = "--".concat(boundary, this.rn ? "\r\n" : "\n");
+        let last = input.indexOf("--".concat(boundary, "--")) - new_line_length;
         let start = 0;
         while(true) {
             let start = input.indexOf(boundary_str, start);
-            if (start >= 0) {
-                start = start + boundary_str.length;
-            } else {
+            if (start < 0) {
                 break;
             }
+            start = start + boundary_str.length;
             let end = input.indexOf(boundary_str, start) - new_line_length;
-            if (end > start) {
-                output.push(input.substring(start, end));
-            } else {
-                output.push(input.substring(start, last));
+            if (end <= start) {
                 break;
             }
+            output.push(input.substring(start, end));
             start = end;
         }
         return output;
