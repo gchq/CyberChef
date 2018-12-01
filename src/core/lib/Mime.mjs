@@ -83,53 +83,59 @@ class Mime {
      */
     _walkMime(parentObj) {
         let new_line_length = this.rn ? 2 : 1;
-        let contType = null, fileName = null, charEnc = null, contDispoObj = null;
+        let contType = null,
+            fileName = null,
+            charEnc = null,
+            contDispoObj = null,
+            contTypeObj = null;
         if (parentObj.header.hasOwnProperty("content-type")) {
-            let contTypeObj = Mime._decodeComplexField(parentObj.header["content-type"][0]);
-            if (parentObj.header.hasOwnProperty("content-disposition")) {
-                contDispoObj = Mime._decodeComplexField(parentObj.header["content-disposition"][0])
-                if (contDispoObj != null && contDispoObj.hasOwnProperty("filename")) {
-                    fileName = contDispoObj.filename;
-                }
-            }
-            if (contTypeObj != null) {
-                if (contTypeObj.hasOwnProperty("value")) {
-                    contType = contTypeObj.value[0];
-                }
-                if (contTypeObj.hasOwnProperty("charset")) {
-                    charEnc = contTypeObj.charset;
-                }
-                if (fileName == null && contTypeObj.hasOwnProperty("name")) {
-                    fileName = contTypeObj.name;
-                }
-            }
-            if (contType.startsWith("multipart/")) {
-                let output_sections = [];
-                if (!contTypeObj.hasOwnProperty("boundary")) {
-                    throw new OperationError("Invalid mulitpart section no boundary");
-                }
-                let mime_parts = this._splitMultipart(parentObj.body, contTypeObj.boundary, new_line_length);
-                mime_parts.forEach(function(mime_part){
-                    let mimeObj = Mime._splitParseHead(mime_part);
-                    if (!mimeObj.body) {
-                        return [];
-                    }
-                    this._walkMime(mimeObj).forEach(function(part){
-                        output_sections.push(part);
-                    }, this);
-                }, this);
-                return output_sections;
-            }
-            if (parentObj.header.hasOwnProperty("content-transfer-encoding")) {
-                let contEncObj = Mime._decodeComplexField(parentObj.header["content-transfer-encoding"][0]);
-                if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
-                    parentObj.body = Mime._decodeMimeData(parentObj.body, charEnc, contEncObj.value[0]);
-                }
-            }
-            return [{type: contType, data: parentObj.body, name: fileName}];
+            contTypeObj = Mime._decodeComplexField(parentObj.header["content-type"][0]);
         }
-        throw new OperationError("Invalid Mime section");
-     }
+        if (parentObj.header.hasOwnProperty("content-disposition")) {
+            contDispoObj = Mime._decodeComplexField(parentObj.header["content-disposition"][0])
+            if (contDispoObj != null && contDispoObj.hasOwnProperty("filename")) {
+                fileName = contDispoObj.filename;
+            }
+        }
+        if (contTypeObj != null) {
+            if (contTypeObj.hasOwnProperty("value")) {
+                contType = contTypeObj.value[0];
+            }
+            if (contTypeObj.hasOwnProperty("charset")) {
+                charEnc = contTypeObj.charset;
+            }
+            if (fileName == null && contTypeObj.hasOwnProperty("name")) {
+                fileName = contTypeObj.name;
+            }
+        } else {
+            contType = "text/plain";
+            charEnc = "us-ascii";
+        }
+        if (contType.startsWith("multipart/")) {
+            let output_sections = [];
+            if (!contTypeObj.hasOwnProperty("boundary")) {
+                throw new OperationError("Invalid mulitpart section no boundary");
+            }
+            let mime_parts = this._splitMultipart(parentObj.body, contTypeObj.boundary, new_line_length);
+            mime_parts.forEach(function(mime_part){
+                let mimeObj = Mime._splitParseHead(mime_part);
+                if (!mimeObj.body) {
+                    return [];
+                }
+                this._walkMime(mimeObj).forEach(function(part){
+                    output_sections.push(part);
+                }, this);
+            }, this);
+            return output_sections;
+        }
+        if (parentObj.header.hasOwnProperty("content-transfer-encoding")) {
+            let contEncObj = Mime._decodeComplexField(parentObj.header["content-transfer-encoding"][0]);
+            if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
+                parentObj.body = Mime._decodeMimeData(parentObj.body, charEnc, contEncObj.value[0]);
+            }
+        }
+        return [{type: contType, data: parentObj.body, name: fileName}];
+    }
 
     /**
      * Takes a string and decodes quoted words inside them
@@ -193,22 +199,6 @@ class Mime {
                 break;
             case "quoted-printable":
                 input = Utils.byteArrayToUtf8(decodeQuotedPrintable(input));
-                break;
-            case "x-uuencode":
-                //TODO: need to trim before and after;
-                let match = /^\s*begin[^\n]+\n(.*)\r?\n`\r?\nend\s*$/gs.exec(input);
-                let lineReg = /\r?\n?.(.*)$/gm;
-                let line = null;
-                let lines = [];
-                while ((line = lineReg.exec(match[1]))) {
-                    lines.push(fromBase64(line[1], " -_"));
-                }
-                if (match) {
-                    input = lines.join("");
-                } else {
-                    throw new OperationError("Invalid uuencoding");
-                }
-                break;
         }
         if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
             input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
