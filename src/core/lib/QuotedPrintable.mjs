@@ -8,8 +8,6 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-
 /**
  * @param {string} input
  * @returns {byteArray}

@@ -9,7 +9,7 @@
  */
 
 import Operation from "../Operation";
-import {decodeQuotedPrintable} from "../lib/QuotedPrintable"
+import {decodeQuotedPrintable} from "../lib/QuotedPrintable";
 
 /**
  * From Quoted Printable operation

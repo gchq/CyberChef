@@ -5,10 +5,12 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
 import Mime from "../lib/Mime";
 import Utils from "../Utils";
 
+/**
+ *
+ */
 class ParseIMF extends Operation {
 
     /**
@@ -19,8 +21,8 @@ class ParseIMF extends Operation {
         this.name = "Parse Internet Message Format";
         this.module = "Default";
         this.description = ["Parse an IMF formatted messages following RFC5322.",
-            "<br><br>",
-            "Parses an IMF formated message. These often have the file extention &quot;.eml&quote; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts.",
+                            "<br><br>",
+                            "Parses an IMF formated message. These often have the file extention &quot;.eml&quote; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts.",
         ].join("\n");
         this.infoURL = "https://tools.ietf.org/html/rfc5322";
         this.inputType = "string";
@@ -35,9 +37,16 @@ class ParseIMF extends Operation {
         ];
     }
 
+    /**
+     *
+     *
+     *
+     *
+     *
+     */
     run(input, args) {
-        let mimeObj = new Mime(input);
-        return mimeObj.decodeMime(args[0]);
+        //let mimeObj = new Mime(input);
+        return new Mime(input).decodeMime(args[0]);
     }
 
     /**
