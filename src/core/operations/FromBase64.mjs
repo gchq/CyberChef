@@ -38,44 +38,44 @@ class FromBase64 extends Operation {
         ];
         this.patterns = [
             {
-                match: "^(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                match: "^\\s*(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9+/=", false]
+                args: ["A-Za-z0-9+/=", true]
             },
             {
-                match: "^[A-Z\\d\\-_]{20,}$",
+                match: "^\\s*[A-Z\\d\\-_]{20,}\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9-_", false]
+                args: ["A-Za-z0-9-_", true]
             },
             {
-                match: "^(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?$",
+                match: "^\\s*(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9+\\-=", false]
+                args: ["A-Za-z0-9+\\-=", true]
             },
             {
-                match: "^(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?$",
+                match: "^\\s*(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?\\s*$",
                 flags: "i",
-                args: ["./0-9A-Za-z=", false]
+                args: ["./0-9A-Za-z=", true]
             },
             {
-                match: "^[A-Z\\d_.]{20,}$",
+                match: "^\\s*[A-Z\\d_.]{20,}\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9_.", false]
+                args: ["A-Za-z0-9_.", true]
             },
             {
-                match: "^(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?$",
+                match: "^\\s*(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9._-", false]
+                args: ["A-Za-z0-9._-", true]
             },
             {
-                match: "^(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                match: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["0-9a-zA-Z+/=", false]
+                args: ["0-9a-zA-Z+/=", true]
             },
             {
-                match: "^(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?$",
+                match: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["0-9A-Za-z+/=", false]
+                args: ["0-9A-Za-z+/=", true]
             },
             {
                 match: "^[ !\"#$%&'()*+,\\-./\\d:;<=>?@A-Z[\\\\\\]^_]{20,}$",
@@ -83,24 +83,24 @@ class FromBase64 extends Operation {
                 args: [" -_", false]
             },
             {
-                match: "^[A-Z\\d+\\-]{20,}$",
+                match: "^\\s*[A-Z\\d+\\-]{20,}\\s*$",
                 flags: "i",
-                args: ["+\\-0-9A-Za-z", false]
+                args: ["+\\-0-9A-Za-z", true]
             },
             {
-                match: "^[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}$",
+                match: "^\\s*[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}\\s*$",
                 flags: "",
-                args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", false]
+                args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", true]
             },
             {
-                match: "^(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?$",
+                match: "^\\s*(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["N-ZA-Mn-za-m0-9+/=", false]
+                args: ["N-ZA-Mn-za-m0-9+/=", true]
             },
             {
-                match: "^[A-Z\\d./]{20,}$",
+                match: "^\\s*[A-Z\\d./]{20,}\\s*$",
                 flags: "i",
-                args: ["./0-9A-Za-z", false]
+                args: ["./0-9A-Za-z", true]
             },
         ];
     }

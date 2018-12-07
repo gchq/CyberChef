@@ -54,7 +54,9 @@
             "From MessagePack",
             "To Braille",
             "From Braille",
-            "Parse TLV"
+            "Parse TLV",
+            "CSV to JSON",
+            "JSON to CSV"
         ]
     },
     {
@@ -93,6 +95,8 @@
             "JWT Sign",
             "JWT Verify",
             "JWT Decode",
+            "Citrix CTX1 Encode",
+            "Citrix CTX1 Decode",
             "Pseudo-Random Number Generator"
         ]
     },

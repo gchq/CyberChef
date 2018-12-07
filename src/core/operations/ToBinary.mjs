@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import {BIN_DELIM_OPTIONS} from "../lib/Delim";
+import {toBinary} from "../lib/Binary";
 
 /**
  * To Binary operation
@@ -40,19 +41,7 @@ class ToBinary extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0] || "Space"),
-            padding = 8;
-        let output = "";
-
-        for (let i = 0; i < input.length; i++) {
-            output += input[i].toString(2).padStart(padding, "0") + delim;
-        }
-
-        if (delim.length) {
-            return output.slice(0, -delim.length);
-        } else {
-            return output;
-        }
+        return toBinary(input, args[0]);
     }
 
     /**

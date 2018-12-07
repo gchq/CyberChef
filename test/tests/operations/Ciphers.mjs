@@ -221,6 +221,39 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Citrix CTX1 Encode",
+        input: "Password1",
+        expectedOutput: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLAO",
+        recipeConfig: [
+            {
+                "op": "Citrix CTX1 Encode",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Citrix CTX1 Decode: normal",
+        input: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLAO",
+        expectedOutput: "Password1",
+        recipeConfig: [
+            {
+                "op": "Citrix CTX1 Decode",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Citrix CTX1 Decode: invalid length",
+        input: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLA",
+        expectedOutput: "Incorrect hash length",
+        recipeConfig: [
+            {
+                "op": "Citrix CTX1 Decode",
+                "args": []
+            }
+        ],
+    },
+    {
         name: "Vigenère Encode: no input",
         input: "",
         expectedOutput: "",

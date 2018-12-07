@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import { bitOp, and } from "../lib/BitwiseOp";
+import { bitOp, and, BITWISE_OP_DELIMS } from "../lib/BitwiseOp";
 
 /**
  * AND operation
@@ -30,7 +30,7 @@ class AND extends Operation {
                 "name": "Key",
                 "type": "toggleString",
                 "value": "",
-                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
+                "toggleValues": BITWISE_OP_DELIMS
             }
         ];
     }

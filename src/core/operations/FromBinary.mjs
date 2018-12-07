@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Utils from "../Utils";
 import {BIN_DELIM_OPTIONS} from "../lib/Delim";
+import {fromBinary} from "../lib/Binary";
 
 /**
  * From Binary operation
@@ -77,15 +78,7 @@ class FromBinary extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const delimRegex = Utils.regexRep(args[0] || "Space");
-        input = input.replace(delimRegex, "");
-
-        const output = [];
-        const byteLen = 8;
-        for (let i = 0; i < input.length; i += byteLen) {
-            output.push(parseInt(input.substr(i, byteLen), 2));
-        }
-        return output;
+        return fromBinary(input, args[0]);
     }
 
     /**

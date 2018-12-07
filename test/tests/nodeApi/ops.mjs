@@ -658,7 +658,7 @@ WWFkYSBZYWRh\r
         assert.strictEqual(
             chef.JSONBeautify("{\"key\" : \"value\"}").toString(),
             `{
-\\t"key": "value"
+    "key": "value"
 }`);
     }),
 

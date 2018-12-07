@@ -39,6 +39,7 @@ import "./tests/operations/Comment";
 import "./tests/operations/Compress";
 import "./tests/operations/ConditionalJump";
 import "./tests/operations/Crypt";
+import "./tests/operations/CSV";
 import "./tests/operations/DateTime";
 import "./tests/operations/ExtractEmailAddresses";
 import "./tests/operations/Fork";
@@ -49,6 +50,8 @@ import "./tests/operations/HaversineDistance";
 import "./tests/operations/Hexdump";
 import "./tests/operations/Image";
 import "./tests/operations/Jump";
+import "./tests/operations/JSONBeautify";
+import "./tests/operations/JSONMinify";
 import "./tests/operations/JWTDecode";
 import "./tests/operations/JWTSign";
 import "./tests/operations/JWTVerify";
@@ -129,12 +132,12 @@ function handleTestResult(testResult) {
 
 
 /**
- * Fail if the process takes longer than 10 seconds.
+ * Fail if the process takes longer than 60 seconds.
  */
 setTimeout(function() {
-    console.log("Tests took longer than 10 seconds to run, returning.");
+    console.log("Tests took longer than 60 seconds to run, returning.");
     process.exit(1);
-}, 10 * 1000);
+}, 60 * 1000);
 
 const start = new Date();
 

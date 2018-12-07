@@ -1,5 +1,11 @@
 # Changelog
-All notable changes to CyberChef will be documented in this file.
+All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
+
+### [8.12.0] - 2018-11-21
+- 'Citrix CTX1 Encode' and 'Citrix CTX1 Decode' operations added [@bwhitn] | [#428]
+
+### [8.11.0] - 2018-11-13
+- 'CSV to JSON' and 'JSON to CSV' operations added [@n1474335] | [#277]
 
 ### [8.10.0] - 2018-11-07
 - 'Remove Diacritics' operation added [@klaxon1] | [#387]
@@ -49,7 +55,7 @@ All notable changes to CyberChef will be documented in this file.
 - Added support for loading, processing and downloading files up to 500MB [@n1474335] | [#224]
 
 ## [6.0.0] - 2017-09-19
-- Threading support added. All recipe processing moved into a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to increase performance and allowing long-running operations to be cancelled [@n1474335] | [#173]
+- Threading support added. All recipe processing moved into a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to increase performance and to allow long-running operations to be cancelled [@n1474335] | [#173]
 - Module system created so that operations relying on large libraries can be downloaded separately as required, reducing the initial loading time for the app [@n1474335] | [#173]
 
 ## [5.0.0] - 2017-03-30
@@ -59,6 +65,11 @@ All notable changes to CyberChef will be documented in this file.
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 
+
+[8.12.0]: https://github.com/gchq/CyberChef/releases/tag/v8.12.0
+[8.11.0]: https://github.com/gchq/CyberChef/releases/tag/v8.11.0
+[8.10.0]: https://github.com/gchq/CyberChef/releases/tag/v8.10.0
+[8.9.0]: https://github.com/gchq/CyberChef/releases/tag/v8.9.0
 [8.8.0]: https://github.com/gchq/CyberChef/releases/tag/v8.8.0
 [8.7.0]: https://github.com/gchq/CyberChef/releases/tag/v8.7.0
 [8.6.0]: https://github.com/gchq/CyberChef/releases/tag/v8.6.0
@@ -84,6 +95,7 @@ All notable changes to CyberChef will be documented in this file.
 [@PenguinGeorge]: https://github.com/PenguinGeorge
 [@arnydo]: https://github.com/arnydo
 [@klaxon1]: https://github.com/klaxon1
+[@bwhitn]: https://github.com/bwhitn
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -91,6 +103,7 @@ All notable changes to CyberChef will be documented in this file.
 [#239]: https://github.com/gchq/CyberChef/pull/239
 [#248]: https://github.com/gchq/CyberChef/pull/248
 [#255]: https://github.com/gchq/CyberChef/issues/255
+[#277]: https://github.com/gchq/CyberChef/issues/277
 [#281]: https://github.com/gchq/CyberChef/pull/281
 [#284]: https://github.com/gchq/CyberChef/pull/284
 [#294]: https://github.com/gchq/CyberChef/pull/294
@@ -105,3 +118,4 @@ All notable changes to CyberChef will be documented in this file.
 [#351]: https://github.com/gchq/CyberChef/pull/351
 [#387]: https://github.com/gchq/CyberChef/pull/387
 [#394]: https://github.com/gchq/CyberChef/pull/394
+[#428]: https://github.com/gchq/CyberChef/pull/428

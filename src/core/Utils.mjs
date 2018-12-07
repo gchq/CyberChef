@@ -9,6 +9,7 @@ import moment from "moment-timezone";
 import {fromBase64} from "./lib/Base64";
 import {fromHex} from "./lib/Hex";
 import {fromDecimal} from "./lib/Decimal";
+import {fromBinary} from "./lib/Binary";
 
 
 /**
@@ -298,7 +299,7 @@ class Utils {
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
      * @param {string} str
-     * @param {string} type - One of "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
+     * @param {string} type - One of "Binary", "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
      * @returns {byteArray}
      *
      * @example
@@ -313,6 +314,8 @@ class Utils {
      */
     static convertToByteArray(str, type) {
         switch (type.toLowerCase()) {
+            case "binary":
+                return fromBinary(str);
             case "hex":
                 return fromHex(str);
             case "decimal":
@@ -333,7 +336,7 @@ class Utils {
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
      * @param {string} str
-     * @param {string} type - One of "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
+     * @param {string} type - One of "Binary", "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
      * @returns {string}
      *
      * @example
@@ -348,6 +351,8 @@ class Utils {
      */
     static convertToByteString(str, type) {
         switch (type.toLowerCase()) {
+            case "binary":
+                return Utils.byteArrayToChars(fromBinary(str));
             case "hex":
                 return Utils.byteArrayToChars(fromHex(str));
             case "decimal":
@@ -568,6 +573,10 @@ class Utils {
                 cell = "";
                 lines.push(line);
                 line = [];
+                // Skip next byte if it is also a line delim (e.g. \r\n)
+                if (lineDelims.indexOf(next) >= 0 && next !== b) {
+                    i++;
+                }
             } else {
                 cell += b;
             }
