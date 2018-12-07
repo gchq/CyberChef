@@ -11,7 +11,7 @@
 import SyncDish from "./SyncDish";
 import NodeRecipe from "./NodeRecipe";
 import OperationConfig from "./config/OperationConfig.json";
-import { sanitise } from "./apiUtils";
+import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils";
 import ExludedOperationError from "../core/errors/ExcludedOperationError";
 
 
@@ -58,12 +58,7 @@ function transformArgs(originalArgs, newArgs) {
     // See Strings op for example.
     const allArgs = Object.assign([], originalArgs).map((a) => {
         if (Array.isArray(a.value)) {
-            a.value = a.value.filter((v) => {
-                if (typeof v === "string") {
-                    return !v.match(/^\[[\s\S]*\]$/); // Matches anything surrounded in [ ]
-                }
-                return true;
-            });
+            a.value = removeSubheadingsFromArray(a.value);
         }
         return a;
     });
@@ -187,6 +182,23 @@ export function wrap(OpClass) {
 
     // used in chef.help
     wrapped.opName = OpClass.name;
+
+    /** */
+    const addArgs = (op) => {
+        const result = {};
+        op.args.forEach((a) => {
+            if (a.type === "option") {
+                result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.value);
+            } else if (a.type === "toggleString") {
+                result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.toggleValues);
+            }
+        });
+
+        return result;
+    };
+
+    wrapped.args = addArgs(opInstance);
+
     return wrapped;
 }
 
