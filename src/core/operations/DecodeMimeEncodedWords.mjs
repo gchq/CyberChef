@@ -20,7 +20,7 @@ class DecodeMimeEncodedWords extends Operation {
         this.name = "Decode Mime Encoded Words";
         this.module = "Default";
         this.description = ["Parser an IMF formatted messages following RFC5322.",
-                            "<br><br>", "Parses an IMF formated message. These often have the file extention &quot;.eml&quote; and contain the email headers and body. The output will be a file list of the headers and mime parts.",
+                            "<br><br>", "Decodes Mime encoded words that are found in IMF messages.",
         ].join("\n");
         this.infoURL = "https://tools.ietf.org/html/rfc2047";
         this.inputType = "string";

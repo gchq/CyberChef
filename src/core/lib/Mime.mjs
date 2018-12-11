@@ -6,7 +6,6 @@
 
 import OperationError from "../errors/OperationError";
 import cptable from "../vendor/js-codepage/cptable.js";
-import {fromBase64} from "../lib/Base64";
 import {decodeQuotedPrintable} from "../lib/QuotedPrintable";
 import {MIME_FORMAT} from "../lib/ChrEnc";
 import Utils from "../Utils";
@@ -58,7 +57,7 @@ class Mime {
                 }
                 name = name.concat(Mime.getFileExt(fileObj.type));
             }
-            retval.push(new File([fileObj.data], name, {type: fileObj.type}));
+            retval.push(new File([Uint8Array.from(fileObj.data)], name, {type: fileObj.type}));
         });
         return retval;
     }
@@ -91,7 +90,7 @@ class Mime {
         const newLineLength = this.rn ? 2 : 1;
         let contType = "text/plain",
             fileName = null,
-            charEnc = "us-ascii",
+            charEnc = null,
             contDispoObj = null,
             contTypeObj = null;
         if (parentObj.header.hasOwnProperty("content-type")) {
@@ -109,6 +108,10 @@ class Mime {
             }
             if (contTypeObj.hasOwnProperty("charset")) {
                 charEnc = contTypeObj.charset;
+            } else {
+                if (contType.startsWith("text/")) {
+                    charEnc = "us-ascii";
+                }
             }
             if (fileName == null && contTypeObj.hasOwnProperty("name")) {
                 fileName = contTypeObj.name;
@@ -196,10 +199,11 @@ class Mime {
     static _decodeMimeData(input, charEnc, contEnc) {
         switch (contEnc) {
             case "base64":
-                input = fromBase64(input);
+                input = Utils.convertToByteArray(input, "base64");
+                //input = fromBase64(input);
                 break;
             case "quoted-printable":
-                input = Utils.byteArrayToUtf8(decodeQuotedPrintable(input));
+                input = decodeQuotedPrintable(input);
         }
         if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
             input = cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input);
@@ -253,15 +257,16 @@ class Mime {
      */
     _splitMultipart(input, boundary, newLineLength) {
         const output = [];
-        const boundaryStr = "--".concat(boundary, this.rn ? "\r\n" : "\n");
-        const last = input.indexOf("--".concat(boundary, "--")) - newLineLength;
+        const newline = this.rn ? "\r\n" : "\n";
+        const boundaryStr = newline.concat("--", boundary);
+        const last = input.indexOf(newline.concat("--", boundary, "--"));
         for (;;) {
             let start = input.indexOf(boundaryStr, start);
             if (start < 0) {
                 break;
             }
             start += boundaryStr.length;
-            const end = input.indexOf(boundaryStr, start) - newLineLength;
+            const end = input.indexOf(boundaryStr, start);
             if (end <= start) {
                 break;
             }
