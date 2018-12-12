@@ -23,7 +23,6 @@ class Mime {
      */
     constructor(input) {
         this.input = input;
-        this.rn = input.indexOf("\r") >= 0;
     }
 
     /**
@@ -46,8 +45,7 @@ class Mime {
             emlObj.rawHeader = Mime.replaceEncodedWord(emlObj.rawHeader);
         }
         const retval = [new File([emlObj.rawHeader], "Header", {type: "text/plain"})];
-        let testval = Mime._walkMime(this.input);
-        console.log(JSON.stringify(testval));
+        let testval = Mime._parseMime(this.input);
         testval.forEach(function(fileObj){
             let name = fileObj.name;
             if (fileObj.name === null) {
@@ -234,7 +232,7 @@ class Mime {
      * @param {string} mimeObj
      * @returns {object[]}
      */
-    static _walkMime(mimeObj) {
+    static _parseMime(mimeObj) {
         mimeObj = Mime._splitParseHead(mimeObj);
         const contType = Mime._decodeComplexField(mimeObj, "content-type");
         const boundary = Mime._decodeComplexField(mimeObj, "content-type", "boundary");
@@ -243,58 +241,41 @@ class Mime {
                 throw new OperationError("Invalid mulitpart section no boundary");
             }
             const sections = [];
-            //const mimeParts = Mime._splitMultipart(mimeObj.body, boundary);
             Mime._splitMultipart(mimeObj.body, boundary).forEach((mimePart) => {
-                sections.push(Mime._walkMime(mimePart));
+                sections.push(Mime._parseMime(mimePart));
             }, sections);
             mimeObj.body = sections;
         }
         return mimeObj
     }
 
-/**
-    static parsestuff() {
-    let contType = "text/plain",
-        fileName = null,
-        charEnc = null,
-        contDispoObj = null,
-        contTypeObj = null;
-    if (parentObj.header.hasOwnProperty("content-type")) {
-        contTypeObj = Mime._decodeComplexField(parentObj.header["content-type"][0]);
-    }
-    if (parentObj.header.hasOwnProperty("content-disposition")) {
-        contDispoObj = Mime._decodeComplexField(parentObj.header["content-disposition"][0]);
-        if (contDispoObj != null && contDispoObj.hasOwnProperty("filename")) {
-            fileName = contDispoObj.filename;
-        }
-    }
-    if (contTypeObj != null) {
-        if (contTypeObj.hasOwnProperty("value")) {
-            contType = contTypeObj.value[0];
-        }
-        if (contTypeObj.hasOwnProperty("charset")) {
-            charEnc = contTypeObj.charset;
+    static walkMime(mimeObj, methods, recursive=true) {
+        let contType = Mime._decodeComplexField(mimeObj, "content-type");
+        if (contType && contType.startsWith("mulipart/") && recursive) {
+            for (let i = 0; i < mimeObj.body.length; i++) {
+                mimeObj
+            }
         } else {
-            if (contType.startsWith("text/")) {
+            methods.forEach(method => method(mimeObj));
+            yield mimeObj;
+        }
+    }
+
+    static decodeMimeMessage(mimeObj) {
+        let contType = Mime._decodeComplexField(mimeObj, "content-type"),
+            charEnc = Mime._decodeComplexField(mimeObj, "content-type", "charset"),
+            //name = Mime._decodeComplexField(mimeObj, "content-disposition", "filename"),
+            //nameAlt = Mime._decodeComplexField(mimeObj, "content-type", "name"),
+            contEnc = Mime._decodeComplexField(mimeObj, "content-transfer-encoding");
+        if (contType != null) {
+            if (!charEnc && contType.startsWith("text/")) {
                 charEnc = "us-ascii";
             }
         }
-        if (fileName == null && contTypeObj.hasOwnProperty("name")) {
-            fileName = contTypeObj.name;
+        if (contEnc && typeof mimeObj.body === "string") {
+            mimeObj.body = Mime._decodeMimeData(mimeObj.body, charEnc, contEnc);
         }
     }
-    if (mimeObj) {
-        this._walkMime(mimeObj).forEach(part => sections.push(part));
-    }
-    if (parentObj.header.hasOwnProperty("content-transfer-encoding")) {
-        const contEncObj = Mime._decodeComplexField(parentObj.header["content-transfer-encoding"][0]);
-        if (contEncObj != null && contEncObj.hasOwnProperty("value")) {
-            parentObj.body = Mime._decodeMimeData(parentObj.body, charEnc, contEncObj.value[0]);
-        }
-    }
-    return [{type: contType, data: parentObj.body, name: fileName}];
-}
-*/
 
     /**
      * Takes a string and decodes quoted words inside them
