@@ -252,12 +252,9 @@ class Mime {
     static walkMime(mimeObj, methods, recursive=true) {
         let contType = Mime._decodeComplexField(mimeObj, "content-type");
         if (contType && contType.startsWith("mulipart/") && recursive) {
-            for (let i = 0; i < mimeObj.body.length; i++) {
-                mimeObj
-            }
+            mimeObj.body.forEach(obj => Mime.walkMime(obj, methods, recursive));
         } else {
             methods.forEach(method => method(mimeObj));
-            yield mimeObj;
         }
     }
 
