@@ -245,7 +245,8 @@
             "XPath expression",
             "JPath expression",
             "CSS selector",
-            "Extract EXIF"
+            "Extract EXIF",
+            "Extract Files"
         ]
     },
     {
@@ -337,13 +338,22 @@
         ]
     },
     {
+        "name": "Forensics",
+        "ops": [
+            "Detect File Type",
+            "Scan for Embedded Files",
+            "Extract Files",
+            "Remove EXIF",
+            "Extract EXIF",
+            "Render Image"
+        ]
+    },
+    {
         "name": "Other",
         "ops": [
             "Entropy",
             "Frequency distribution",
             "Chi Square",
-            "Detect File Type",
-            "Scan for Embedded Files",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
             "Generate UUID",
@@ -351,8 +361,6 @@
             "Generate HOTP",
             "Haversine distance",
             "Render Image",
-            "Remove EXIF",
-            "Extract EXIF",
             "Numberwang",
             "XKCD Random Number"
         ]
