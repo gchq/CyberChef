@@ -42,12 +42,12 @@ class A1Z26CipherEncode extends Operation {
     run(input, args) {
         const delim = Utils.charRep(args[0] || "Space");
         let output = "";
-        
+
         const sanitizedinput = input.toLowerCase(),
             charcode = Utils.strToCharcode(sanitizedinput);
 
         for (let i = 0; i < charcode.length; i++) {
-            let ordinal = charcode[i] - 96;
+            const ordinal = charcode[i] - 96;
 
             if (ordinal > 0 && ordinal <= 26) {
                 output += ordinal.toString(10) + delim;

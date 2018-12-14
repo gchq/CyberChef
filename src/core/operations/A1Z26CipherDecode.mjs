@@ -42,13 +42,13 @@ class A1Z26CipherDecode extends Operation {
      */
     run(input, args) {
         const delim = Utils.charRep(args[0] || "Space");
-        
+
         if (input.length === 0) {
             return [];
         }
 
-        let bites = input.split(delim),
-            latin1 = "";
+        const bites = input.split(delim);
+        let latin1 = "";
         for (let i = 0; i < bites.length; i++) {
             if (bites[i] < 1 || bites[i] > 26) {
                 throw new OperationError("Error: all numbers must be between 1 and 26.");
