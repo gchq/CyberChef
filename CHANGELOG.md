@@ -1,6 +1,9 @@
 # Changelog
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
+### [8.13.0] - 2018-12-15
+- 'A1Z26 Cipher Encode' and 'A1Z26 Cipher Decode' operations added [@jarmovanlenthe] | [#441]
+
 ### [8.12.0] - 2018-11-21
 - 'Citrix CTX1 Encode' and 'Citrix CTX1 Decode' operations added [@bwhitn] | [#428]
 
@@ -20,7 +23,7 @@ All major and minor version changes will be documented in this file. Details of 
 - 'JWT Sign', 'JWT Verify' and 'JWT Decode' operations added [@GCHQ77703] | [#348]
 
 ### [8.6.0] - 2018-08-29
-- 'To Geohash' and 'From Geohash' operations added [@GCHQ77703] | [#344] 
+- 'To Geohash' and 'From Geohash' operations added [@GCHQ77703] | [#344]
 
 ### [8.5.0] - 2018-08-23
 - 'To Braille' and 'From Braille' operations added [@n1474335] | [#255]
@@ -66,6 +69,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.13.0]: https://github.com/gchq/CyberChef/releases/tag/v8.13.0
 [8.12.0]: https://github.com/gchq/CyberChef/releases/tag/v8.12.0
 [8.11.0]: https://github.com/gchq/CyberChef/releases/tag/v8.11.0
 [8.10.0]: https://github.com/gchq/CyberChef/releases/tag/v8.10.0
@@ -96,6 +100,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@arnydo]: https://github.com/arnydo
 [@klaxon1]: https://github.com/klaxon1
 [@bwhitn]: https://github.com/bwhitn
+[@jarmovanlenthe]: https://github.com/jarmovanlenthe
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -119,3 +124,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#387]: https://github.com/gchq/CyberChef/pull/387
 [#394]: https://github.com/gchq/CyberChef/pull/394
 [#428]: https://github.com/gchq/CyberChef/pull/428
+[#441]: https://github.com/gchq/CyberChef/pull/441

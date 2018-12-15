@@ -86,6 +86,8 @@
             "Bifid Cipher Decode",
             "Affine Cipher Encode",
             "Affine Cipher Decode",
+            "A1Z26 Cipher Encode",
+            "A1Z26 Cipher Decode",
             "Atbash Cipher",
             "Substitute",
             "Derive PBKDF2 key",
