@@ -22,7 +22,7 @@ class Mime {
      * Internet MessageFormat constructor
      */
     constructor(input) {
-        this.input = input;
+        this.mimeObj = Mime._parseMime(input);
     }
 
     /**
@@ -34,18 +34,18 @@ class Mime {
      * @returns {File[]}
      */
     decodeMime(decodeWords) {
-        if (!this.input) {
+        if (!this.mimeObj) {
             return [];
         }
-        const emlObj = Mime._splitParseHead(this.input);
-        if (!emlObj.body) {
-            throw new OperationError("No body was found");
-        }
+        //const emlObj = Mime._splitParseHead(this.input);
+        //if (!emlObj.body) {
+        //    throw new OperationError("No body was found");
+        //}
         if (decodeWords) {
             emlObj.rawHeader = Mime.replaceEncodedWord(emlObj.rawHeader);
         }
-        const retval = [new File([emlObj.rawHeader], "Header", {type: "text/plain"})];
-        let testval = Mime._parseMime(this.input);
+        //const retval = [new File([emlObj.rawHeader], "Header", {type: "text/plain"})];
+        //let testval = Mime._parseMime(this.input);
         testval.forEach(function(fileObj){
             let name = fileObj.name;
             if (fileObj.name === null) {
@@ -227,15 +227,26 @@ class Mime {
     }
 
     /**
-     * Walks a MIME document and returns an array of Mime data.
+     * Helper function to return objects as an array.
      *
-     * @param {string} mimeObj
      * @returns {object[]}
      */
-    static _parseMime(mimeObj) {
-        mimeObj = Mime._splitParseHead(mimeObj);
-        const contType = Mime._decodeComplexField(mimeObj, "content-type");
-        const boundary = Mime._decodeComplexField(mimeObj, "content-type", "boundary");
+    toObjArray() {
+        const out = [];
+        Mime.walkMime(this.mimeObj, mimePart => out.push(mimePart));
+        return out;
+    }
+
+    /**
+     * Walks a MIME document and returns an array of Mime data.
+     *
+     * @param {string} mimeData
+     * @returns {object}
+     */
+    static _parseMime(mimeData) {
+        let mimeObj = Mime._splitParseHead(mimeData);
+        const contType = Mime.decodeComplexField(mimeObj, "content-type");
+        const boundary = Mime.decodeComplexField(mimeObj, "content-type", "boundary");
         if (contType && contType.startsWith("multipart/")) {
             if (!boundary) {
                 throw new OperationError("Invalid mulitpart section no boundary");
@@ -249,28 +260,40 @@ class Mime {
         return mimeObj
     }
 
+    /**
+     * Executes methods on a mime object. These methods should modify the mimeObj.
+     *
+     * @param {Object} mimeObj
+     * @param {function[]} methods
+     * @param {boolean} recursive
+     * @returns {null}
+     */
     static walkMime(mimeObj, methods, recursive=true) {
-        let contType = Mime._decodeComplexField(mimeObj, "content-type");
-        if (contType && contType.startsWith("mulipart/") && recursive) {
-            mimeObj.body.forEach(obj => Mime.walkMime(obj, methods, recursive));
+        let contType = Mime.decodeComplexField(mimeObj, "content-type");
+        if (recursive && contType && contType.startsWith("mulitpart/")) {
+            mimeObj.body.forEach(obj => Mime.walkMime(obj, methods));
         } else {
             methods.forEach(method => method(mimeObj));
         }
     }
 
+    /**
+     * Attempts to decode a mimeObj's data by applying appropriate character and content decoders based on the header data.
+     *
+     * @param {Object} mimeObj
+     * @returns {null}
+     */
     static decodeMimeMessage(mimeObj) {
-        let contType = Mime._decodeComplexField(mimeObj, "content-type"),
-            charEnc = Mime._decodeComplexField(mimeObj, "content-type", "charset"),
-            //name = Mime._decodeComplexField(mimeObj, "content-disposition", "filename"),
-            //nameAlt = Mime._decodeComplexField(mimeObj, "content-type", "name"),
-            contEnc = Mime._decodeComplexField(mimeObj, "content-transfer-encoding");
+        let contType = Mime.decodeComplexField(mimeObj, "content-type"),
+            charEnc = Mime.decodeComplexField(mimeObj, "content-type", "charset"),
+            contEnc = Mime.decodeComplexField(mimeObj, "content-transfer-encoding");
         if (contType != null) {
             if (!charEnc && contType.startsWith("text/")) {
                 charEnc = "us-ascii";
             }
         }
         if (contEnc && typeof mimeObj.body === "string") {
-            mimeObj.body = Mime._decodeMimeData(mimeObj.body, charEnc, contEnc);
+            mimeObj.body = Mime.decodeMimeData(mimeObj.body, charEnc, contEnc);
         }
     }
 
@@ -295,6 +318,7 @@ class Mime {
     }
 
 
+    //TODO: Allow only a header as input
     /**
      * Breaks the header from the body and parses the header. The returns an
      * object or null. The object contains the raw header, decoded body, and
@@ -356,7 +380,7 @@ class Mime {
      * @param {string} field
      * @returns {string}
      */
-    static _decodeComplexField(mimeObj, field, subfield="value") {
+    static decodeComplexField(mimeObj, field, subfield="value") {
         if (mimeObj.header.hasOwnProperty(field)) {
             const fieldSplit = mimeObj.header[field][0].split(/;\s+/g);
             for (let i = 0; i < fieldSplit.length; i++) {
@@ -381,6 +405,7 @@ class Mime {
         return null;
     }
 
+    //TODO: make this a yield instead of string array.
     /**
      * Splits a Mime document by the current boundaries and attempts to account
      * for the current new line size which can be either the standard \r\n or \n.
@@ -394,21 +419,18 @@ class Mime {
         const newline = input.indexOf("\r") >= 0 ? "\r\n" : "\n";
         const boundaryStr = newline.concat("--", boundary);
         const last = input.indexOf(newline.concat("--", boundary, "--"));
-        for (;;) {
-            let start = input.indexOf(boundaryStr, start);
-            if (start < 0) {
+        let begin = 0;
+        for (let end = 0; end !== last; begin = end) {
+            begin = input.indexOf(boundaryStr, begin);
+            if (begin < 0) {
                 break;
             }
-            start += boundaryStr.length;
-            const end = input.indexOf(boundaryStr, start);
-            if (end <= start) {
+            begin += boundaryStr.length;
+            end = input.indexOf(boundaryStr, begin);
+            if (end <= begin) {
                 break;
             }
-            output.push(input.substring(start, end));
-            if (end === last) {
-                break;
-            }
-            start = end;
+            output.push(input.substring(begin, end));
         }
         return output;
     }
