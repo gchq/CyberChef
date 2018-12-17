@@ -18,6 +18,8 @@
             "From Binary",
             "To Octal",
             "From Octal",
+            "To Base62",
+            "From Base62",
             "To Base64",
             "From Base64",
             "Show Base64 offsets",
