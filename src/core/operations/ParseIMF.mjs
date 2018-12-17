@@ -9,7 +9,7 @@ import Mime from "../lib/Mime";
 import Utils from "../Utils";
 
 /**
- * Operation for parsing IMF messages into file list.
+ *
  */
 class ParseIMF extends Operation {
 
@@ -18,12 +18,11 @@ class ParseIMF extends Operation {
      */
     constructor() {
         super();
-
         this.name = "Parse Internet Message Format";
         this.module = "Default";
         this.description = ["Parse an IMF formatted messages following RFC5322.",
                             "<br><br>",
-                            "Parses an IMF formated message like those sent in SMTP. These often have the file extention &quot;.eml&quote; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts."
+                            "Parses an IMF formated message. These often have the file extention &quot;.eml&quote; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts.",
         ].join("\n");
         this.infoURL = "https://tools.ietf.org/html/rfc5322";
         this.inputType = "string";
@@ -31,7 +30,7 @@ class ParseIMF extends Operation {
         this.presentType = "html";
         this.args = [
             {
-                "name": "Decode Mime Encoded Words",
+                "name": "Decode Encoded-Words",
                 "type": "boolean",
                 "value": false
             }
@@ -39,12 +38,68 @@ class ParseIMF extends Operation {
     }
 
     /**
-     * @param {string}
-     * @param {Object[]}
+     * Basic Email Parser that displays the header and mime sections as files.
+     * Args 0 boolean decode quoted words
+     *
+     * @param {string} input
+     * @param {boolean} decodeWords
      * @returns {File[]}
      */
     run(input, args) {
-        return new Mime(input).decodeMime(args[0]);
+        const eml = new Mime(input);
+        if (!eml.mimeObj) {
+            return [];
+        }
+        eml.decodeMimeObjects();
+        if (args[0]) {
+            eml.decodeHeaderWords(false);
+        }
+        const fields = [["filename", "content-disposition", "filename"],
+                        ["name", "content-type", "name"],
+                        ["type", "content-type"],
+                        ["subject", "subject"]];
+        const dataObj = eml.extractData(fields);
+        let subject = null;
+        const retval = [];
+        if (dataObj.length >= 1) {
+            subject = dataObj[0].fields.subject;
+            if (dataObj[0].header) {
+                retval.push(new File([dataObj[0].header], "Header.txt", {type: "text/plain"}));
+            }
+        }
+        dataObj.forEach(function(obj) {
+            if (obj.body) {
+                let name = obj.fields.filename ? obj.fields.filename : obj.fields.name;
+                const type = obj.fields.type ? obj.fields.type : "text/plain";
+                if (!name) {
+                    name = (subject ? subject : "Undefined").concat(ParseIMF.getFileExt(type));
+                }
+                if (Array.isArray(obj.body)) {
+                    retval.push(new File([Uint8Array.from(obj.body)], name, {type: type}));
+                } else {
+                    retval.push(new File([obj.body], name, {type: type}));
+                }
+            }
+        });
+        return retval;
+    }
+
+    /**
+     * Simple function to add a common file extention based on mime type string.
+     *
+     * @param {string} mimetype
+     * @returns {string}
+     */
+    static getFileExt(mimetype) {
+        switch (mimetype) {
+            case "text/plain":
+                return ".txt";
+            case "text/html":
+                return ".htm";
+            case "application/rtf":
+                return ".rtf";
+        }
+        return ".bin";
     }
 
     /**
