@@ -26,7 +26,13 @@ class TextEncodingBruteForce extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                name: "Mode",
+                type: "option",
+                value: ["Encode", "Decode"]
+            }
+        ];
     }
 
     /**
@@ -36,12 +42,23 @@ class TextEncodingBruteForce extends Operation {
      */
     run(input, args) {
         const output = [],
-            charSets = Object.keys(IO_FORMAT);
+            charSets = Object.keys(IO_FORMAT),
+            mode = args[0];
 
         for (let i = 0; i < charSets.length; i++) {
-            let currentEncoding = Utils.printable(charSets[i] + ": ", false);
-            currentEncoding += cptable.utils.encode(IO_FORMAT[charSets[i]], input);
-            output.push(currentEncoding);
+            let currentEncoding = charSets[i] + ": ";
+
+            try {
+                if (mode === "Decode") {
+                    currentEncoding += cptable.utils.decode(IO_FORMAT[charSets[i]], input);
+                } else {
+                    currentEncoding += cptable.utils.encode(IO_FORMAT[charSets[i]], input);
+                }
+            } catch (err) {
+                currentEncoding += "Could not decode.";
+            }
+
+            output.push(Utils.printable(currentEncoding, true));
         }
 
         return output.join("\n");
