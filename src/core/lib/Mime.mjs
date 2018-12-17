@@ -24,6 +24,7 @@ class Mime {
         this.mimeObj = Mime._parseMime(input);
     }
 
+    //TODO: Generator?
     /**
      * Extract data from mimeObjects and return object array containing them.
      *
@@ -82,7 +83,7 @@ class Mime {
      * @param {boolean} recursive
      */
     decodeHeaderWords(recursive=true) {
-        Mime.walkMime(this.mimeObj, mimePart => {
+        Mime.walkMime(this.mimeObj, function(mimePart) {
             if (mimePart.rawHeader) {
                 mimePart.rawHeader = Mime.replaceEncodedWord(mimePart.rawHeader);
             }
@@ -95,9 +96,9 @@ class Mime {
      * @param {boolean} recursive
      */
     decodeMimeObjects(recursive=true) {
-        Mime.walkMime(this.mimeObj,
-            mimePart =>  Mime.decodeMimeMessage(mimePart),
-            recursive);
+        Mime.walkMime(this.mimeObj, function(mimePart) {
+            Mime.decodeMimeMessage(mimePart);
+        }, recursive);
     }
 
     /**
@@ -116,7 +117,7 @@ class Mime {
             }
             const sections = [];
 
-            Mime._splitMultipart(mimeObj.body, boundary).forEach((mimePart) => {
+            Mime._splitMultipart(mimeObj.body, boundary).forEach(function(mimePart) {
                 sections.push(Mime._parseMime(mimePart));
             }, sections);
             mimeObj.body = sections;
@@ -135,7 +136,9 @@ class Mime {
         const contType = Mime._extractField(mimeObj, "content-type");
         method(mimeObj);
         if (recursive && mimeObj.body && contType && contType.startsWith("multipart/")) {
-            mimeObj.body.forEach(obj => Mime.walkMime(obj, method));
+            mimeObj.body.forEach(function(obj) {
+                Mime.walkMime(obj, method);
+            });
         }
     }
 
@@ -250,27 +253,26 @@ class Mime {
      * @param {string} field
      * @returns {string}
      */
-    static _extractField(mimeObj, field, subfield="value") {
+    static _extractField(mimeObj, field, subfield=null) {
+        if (subfield) {
+            subfield = subfield.toLowerCase();
+        }
         if (mimeObj.header.hasOwnProperty(field)) {
             const fieldSplit = mimeObj.header[field][0].split(/;\s+/g);
             for (let i = 0; i < fieldSplit.length; i++) {
                 const eq = fieldSplit[i].indexOf("=");
-                if (eq >= 0) {
-                    if (fieldSplit[i].length > eq) {
-                        const kv = [fieldSplit[i].substring(0, eq), fieldSplit[i].substring(eq + 1).trim()];
-                        if ((kv[1].startsWith("'") && kv[1].endsWith("'")) || (kv[1].startsWith("\"") && kv[1].endsWith("\""))) {
-                            const val = (/(['"])(.+)\1/.exec(kv[1]));
-                            if (val && val.length === 3) {
-                                kv[1] = val[2];
-                            }
+                if (eq >= 0 && fieldSplit[i].length > eq && subfield) {
+                    const kv = [fieldSplit[i].substring(0, eq), fieldSplit[i].substring(eq + 1).trim()];
+                    if ((kv[1].startsWith("'") && kv[1].endsWith("'")) || (kv[1].startsWith("\"") && kv[1].endsWith("\""))) {
+                        const val = (/(['"])(.+)\1/.exec(kv[1]));
+                        if (val && val.length === 3) {
+                            kv[1] = val[2];
                         }
-                        if (subfield.toLowerCase() === kv[0].toLowerCase()) {
-                            return kv[1];
-                        }
-                    } else {
-                        throw OperationError("Not a valid header entry");
                     }
-                } else if (subfield === "value"){
+                    if (subfield === kv[0].toLowerCase()) {
+                        return kv[1];
+                    }
+                } else if (!subfield){
                     return fieldSplit[i].trim().toLowerCase();
                 }
             }
@@ -278,6 +280,7 @@ class Mime {
         return null;
     }
 
+    //TODO: turn into generator function
     /**
      * Splits a Mime document by the current boundaries and attempts to account
      * for the current new line size which can be either the standard \r\n or \n.
