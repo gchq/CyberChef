@@ -24,9 +24,10 @@ class Mime {
         this.mimeObj = Mime._parseMime(input);
     }
 
-    //TODO: Generator?
     /**
      * Extract data from mimeObjects and return object array containing them.
+     * extractData([["testa", "header", "subheader"], ["testb", "header"]]) would
+     * returns an array of objects {fields: {testa: "somestringornull", testb: "somestringornull"}, header: "somestringornull", body: "somestringornull"}
      *
      * @param {string[][]} headerObjects
      * @param {boolean} header
@@ -116,11 +117,12 @@ class Mime {
                 throw new OperationError("Invalid mulitpart section no boundary");
             }
             const sections = [];
-
-            Mime._splitMultipart(mimeObj.body, boundary).forEach(function(mimePart) {
-                sections.push(Mime._parseMime(mimePart));
-            }, sections);
-            mimeObj.body = sections;
+            for (const val of Mime._splitMultipart(mimeObj.body, boundary)) {
+                sections.push(Mime._parseMime(val));
+            }
+            if (sections.length) {
+                mimeObj.body = sections;
+            }
         }
         return mimeObj;
     }
@@ -135,7 +137,7 @@ class Mime {
     static walkMime(mimeObj, method, recursive=true) {
         const contType = Mime._extractField(mimeObj, "content-type");
         method(mimeObj);
-        if (recursive && mimeObj.body && contType && contType.startsWith("multipart/")) {
+        if (recursive && mimeObj.body && Array.isArray(mimeObj.body) && contType && contType.startsWith("multipart/")) {
             mimeObj.body.forEach(function(obj) {
                 Mime.walkMime(obj, method);
             });
@@ -181,8 +183,6 @@ class Mime {
         });
     }
 
-
-    //TODO: Allow only a header as input
     /**
      * Breaks the header from the body and parses the header. The returns an
      * object or null. The object contains the raw header, decoded body, and
@@ -280,7 +280,6 @@ class Mime {
         return null;
     }
 
-    //TODO: turn into generator function
     /**
      * Splits a Mime document by the current boundaries and attempts to account
      * for the current new line size which can be either the standard \r\n or \n.
@@ -289,11 +288,11 @@ class Mime {
      * @param {string} boundary
      * @return {string[]}
      */
-    static _splitMultipart(input, boundary) {
-        const output = [];
+    static *_splitMultipart(input, boundary) {
         const newline = input.indexOf("\r") >= 0 ? "\r\n" : "\n";
-        const boundaryStr = newline.concat("--", boundary);
-        const last = input.indexOf(boundaryStr, "--");
+        const boundaryStr = "--".concat(boundary);
+        const boundaryStrEnd = newline.concat(boundaryStr);
+        const last = input.indexOf(boundaryStrEnd.concat("--"));
         let begin = 0;
         for (let end = 0; end !== last; begin = end) {
             begin = input.indexOf(boundaryStr, begin);
@@ -301,13 +300,12 @@ class Mime {
                 break;
             }
             begin += boundaryStr.length;
-            end = input.indexOf(boundaryStr, begin);
+            end = input.indexOf(boundaryStrEnd, begin);
             if (end <= begin) {
                 break;
             }
-            output.push(input.substring(begin, end));
+            yield input.substring(begin, end);
         }
-        return output;
     }
 }
 

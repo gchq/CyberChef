@@ -18,11 +18,11 @@ class ParseIMF extends Operation {
      */
     constructor() {
         super();
-        this.name = "Parse Internet Message Format";
+        this.name = "Parse IMF";
         this.module = "Default";
-        this.description = ["Parse an IMF formatted messages following RFC5322.",
+        this.description = ["Parse an Internet Message Format (IMF) messages following RFC5322.",
                             "<br><br>",
-                            "Parses an IMF formated message. These often have the file extention &quot;.eml&quote; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts.",
+                            "Parses an IMF formated message. These often have the file extention &quot;.eml&quot; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts.",
         ].join("\n");
         this.infoURL = "https://tools.ietf.org/html/rfc5322";
         this.inputType = "string";
@@ -30,7 +30,7 @@ class ParseIMF extends Operation {
         this.presentType = "html";
         this.args = [
             {
-                "name": "Decode Mime Encoded Words",
+                "name": "Decode Encoded-Words",
                 "type": "boolean",
                 "value": false
             }
@@ -61,7 +61,7 @@ class ParseIMF extends Operation {
         const dataObj = eml.extractData(fields);
         let subject = null;
         const retval = [];
-        if (dataObj.length) {
+        if (dataObj.length >= 1) {
             subject = dataObj[0].fields.subject;
             if (dataObj[0].header) {
                 retval.push(new File([dataObj[0].header], "Header.txt", {type: "text/plain"}));
