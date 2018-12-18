@@ -276,17 +276,18 @@ class Magic {
         let results = [];
 
         // Record the properties of the current data
-        results.push({
-            recipe: recipeConfig,
-            data: this.inputStr.slice(0, 100),
-            languageScores: this.detectLanguage(extLang),
-            fileType: this.detectFileType(),
-            isUTF8: this.isUTF8(),
-            entropy: this.calcEntropy(),
-            matchingOps: matchingOps,
-            useful: useful
-        });
-
+        if (filter == null || new RegExp(filter).test(this.inputStr)){
+            results.push({
+                recipe: recipeConfig,
+                data: this.inputStr.slice(0, 100),
+                languageScores: this.detectLanguage(extLang),
+                fileType: this.detectFileType(),
+                isUTF8: this.isUTF8(),
+                entropy: this.calcEntropy(),
+                matchingOps: matchingOps,
+                useful: useful
+            });
+        }
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
         // Execute each of the matching operations, then recursively call the speculativeExecution()
@@ -331,10 +332,7 @@ class Magic {
                 r.fileType ||                             // A file was found
                 r.isUTF8 ||                               // UTF-8 was found
                 r.matchingOps.length                      // A matching op was found
-            ) &&
-            (
-                filter == null ||                       // Either no filter was passed, or
-                new RegExp(filter).test(r.data))        // the filter matches the result data
+            )
         );
 
         // Return a sorted list of possible recipes along with their properties
