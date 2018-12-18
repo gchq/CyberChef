@@ -267,7 +267,7 @@ class Magic {
      * @param {boolean} [useful=false] - Whether the current recipe should be scored highly
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
-    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false) {
+    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, filter=null) {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
@@ -305,7 +305,7 @@ class Magic {
 
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
-                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful);
+                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, filter);
 
             results = results.concat(speculativeResults);
         }));
@@ -331,7 +331,10 @@ class Magic {
                 r.fileType ||                             // A file was found
                 r.isUTF8 ||                               // UTF-8 was found
                 r.matchingOps.length                      // A matching op was found
-            )
+            ) &&
+            (
+                filter == null ||                       // Either no filter was passed, or
+                new RegExp(filter).test(r.data))        // the filter matches the result data
         );
 
         // Return a sorted list of possible recipes along with their properties

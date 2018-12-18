@@ -43,6 +43,11 @@ class Magic extends Operation {
                 "name": "Extensive language support",
                 "type": "boolean",
                 "value": false
+            },
+            {
+                "name": "Output Filter (Regex)",
+                "type": "string",
+                "value": ""
             }
         ];
     }
@@ -56,10 +61,10 @@ class Magic extends Operation {
      */
     async run(state) {
         const ings = state.opList[state.progress].ingValues,
-            [depth, intensive, extLang] = ings,
+            [depth, intensive, extLang, filter] = ings,
             dish = state.dish,
             magic = new MagicLib(await dish.get(Dish.ARRAY_BUFFER)),
-            options = await magic.speculativeExecution(depth, extLang, intensive);
+            options = await magic.speculativeExecution(depth, extLang, intensive, [], false, filter);
 
         // Record the current state for use when presenting
         this.state = state;
