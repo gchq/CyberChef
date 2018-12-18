@@ -17,7 +17,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base62",
-                args: [],
+                args: ["0-9A-Za-z"],
             },
         ],
     },
@@ -28,7 +28,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base62",
-                args: [],
+                args: ["0-9A-Za-z"],
             },
         ],
     },
@@ -39,7 +39,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base62",
-                args: [],
+                args: ["0-9A-Za-z"],
             },
         ],
     },
@@ -50,7 +50,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base62",
-                args: [],
+                args: ["0-9A-Za-z"],
             },
         ],
     },
@@ -61,7 +61,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base62",
-                args: [],
+                args: ["0-9A-Za-z"],
             },
         ],
     },
@@ -72,7 +72,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base62",
-                args: [],
+                args: ["0-9A-Za-z"],
             },
         ],
     }

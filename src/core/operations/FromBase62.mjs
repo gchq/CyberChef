@@ -22,21 +22,27 @@ class FromBase62 extends Operation {
 
         this.name = "From Base62";
         this.module = "Default";
-        this.description = "decode base62 string";
-        this.infoURL = "https://en.wikipedia.org/wiki/List_of_numeral_systems";
+        this.description = "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.";
+        this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
         this.inputType = "string";
-        this.outputType = "string";
-        this.args = [];
+        this.outputType = "byteArray";
+        this.args = [
+            {
+                name: "Alphabet",
+                type: "string",
+                value: "0-9A-Za-z"
+            }
+        ];
     }
 
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
-        if (input.length < 1) return "";
-        const ALPHABET = Utils.expandAlphRange("0-9A-Za-z").join("");
+        if (input.length < 1) return [];
+        const ALPHABET = Utils.expandAlphRange(args[0]).join("");
         const BN = BigNumber.clone({ ALPHABET });
 
         const re = new RegExp("[^" + ALPHABET.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
@@ -44,7 +50,7 @@ class FromBase62 extends Operation {
 
         const number = new BN(input, 62);
 
-        return Utils.byteArrayToUtf8(Utils.convertToByteArray(number.toString(16), "Hex"));
+        return Utils.convertToByteArray(number.toString(16), "Hex");
     }
 
 }

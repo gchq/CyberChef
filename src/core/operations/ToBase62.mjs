@@ -22,11 +22,17 @@ class ToBase62 extends Operation {
 
         this.name = "To Base62";
         this.module = "Default";
-        this.description = "encode string to base62";
+        this.description = "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.";
         this.infoURL = "https://en.wikipedia.org/wiki/List_of_numeral_systems";
-        this.inputType = "string";
+        this.inputType = "byteArray";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                name: "Alphabet",
+                type: "string",
+                value: "0-9A-Za-z"
+            }
+        ];
     }
 
     /**
@@ -37,12 +43,10 @@ class ToBase62 extends Operation {
     run(input, args) {
         if (input.length < 1) return "";
 
-        const ALPHABET = Utils.expandAlphRange("0-9A-Za-z").join("");
+        const ALPHABET = Utils.expandAlphRange(args[0]).join("");
         const BN = BigNumber.clone({ ALPHABET });
 
-        input = Utils.strToByteArray(input);
-        input = toHexFast(input);
-        input = input.toUpperCase();
+        input = toHexFast(input).toUpperCase();
 
         const number = new BN(input, 16);
 
