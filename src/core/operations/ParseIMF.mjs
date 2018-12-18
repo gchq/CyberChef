@@ -61,7 +61,7 @@ class ParseIMF extends Operation {
         const dataObj = eml.extractData(fields);
         let subject = null;
         const retval = [];
-        if (dataObj.length >= 1) {
+        if (dataObj.length) {
             subject = dataObj[0].fields.subject;
             if (dataObj[0].header) {
                 retval.push(new File([dataObj[0].header], "Header.txt", {type: "text/plain"}));
