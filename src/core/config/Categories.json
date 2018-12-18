@@ -51,6 +51,7 @@
             "Change IP format",
             "Encode text",
             "Decode text",
+            "Text Encoding Brute Force",
             "Swap endianness",
             "To MessagePack",
             "From MessagePack",

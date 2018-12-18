@@ -75,6 +75,7 @@ import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
+import "./tests/operations/TextEncodingBruteForce";
 import "./tests/operations/ToGeohash.mjs";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
