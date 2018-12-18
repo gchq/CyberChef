@@ -276,6 +276,8 @@ class Magic {
         let results = [];
 
         // Record the properties of the current data
+        // Only if there either wasn't a filter provided,
+        // or the filter matches in the data
         if (filter == null || new RegExp(filter).test(this.inputStr)){
             results.push({
                 recipe: recipeConfig,
