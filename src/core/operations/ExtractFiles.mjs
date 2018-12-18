@@ -6,9 +6,8 @@
 
 import Operation from "../Operation";
 // import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
 import Utils from "../Utils";
-import {extractFile} from "../lib/FileExtraction";
+import {detectFileType, extractFile} from "../lib/FileType";
 
 /**
  * Extract Files operation
@@ -40,13 +39,13 @@ class ExtractFiles extends Operation {
         const bytes = new Uint8Array(input);
 
         // Scan for embedded files
-        const fileDetails = scanForEmbeddedFiles(bytes);
+        const detectedFiles = scanForEmbeddedFiles(bytes);
 
         // Extract each file that we support
         const files = [];
-        fileDetails.forEach(fileDetail => {
+        detectedFiles.forEach(detectedFile => {
             try {
-                files.push(extractFile(bytes, fileDetail));
+                files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
             } catch (err) {}
         });
 
@@ -70,22 +69,21 @@ class ExtractFiles extends Operation {
  * @param data
  */
 function scanForEmbeddedFiles(data) {
-    let type;
-    const types = [];
+    const detectedFiles = [];
 
     for (let i = 0; i < data.length; i++) {
-        type = Magic.magicFileType(data.slice(i));
-        if (type) {
-            types.push({
-                offset: i,
-                ext: type.ext,
-                mime: type.mime,
-                desc: type.desc
+        const fileDetails = detectFileType(data.slice(i));
+        if (fileDetails.length) {
+            fileDetails.forEach(match => {
+                detectedFiles.push({
+                    offset: i,
+                    fileDetails: match,
+                });
             });
         }
     }
 
-    return types;
+    return detectedFiles;
 }
 
 export default ExtractFiles;

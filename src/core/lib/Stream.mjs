@@ -11,13 +11,6 @@
 /**
  * A Stream can be used to traverse a binary blob, interpreting sections of it
  * as various data types.
- *
- * @param {Uint8Array} bytes
- * @param {Object} fileDetail
- * @param {string} fileDetail.mime
- * @param {string} fileDetail.ext
- * @param {number} fileDetail.offset
- * @returns {File}
  */
 export default class Stream {
 
