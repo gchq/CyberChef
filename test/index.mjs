@@ -28,6 +28,7 @@ import "./tests/operations/BCD";
 import "./tests/operations/BSON";
 import "./tests/operations/Base58";
 import "./tests/operations/Base64";
+import "./tests/operations/Base62";
 import "./tests/operations/BitwiseOp";
 import "./tests/operations/ByteRepr";
 import "./tests/operations/CartesianProduct";

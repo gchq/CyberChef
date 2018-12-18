@@ -1,6 +1,10 @@
 # Changelog
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
+
+### [8.14.0] - 2018-12-18
+- 'To Base62' and 'From Base62' operations added [@tcode2k16] | [#443]
+
 ### [8.13.0] - 2018-12-15
 - 'A1Z26 Cipher Encode' and 'A1Z26 Cipher Decode' operations added [@jarmovanlenthe] | [#441]
 
@@ -69,6 +73,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.14.0]: https://github.com/gchq/CyberChef/releases/tag/v8.14.0
 [8.13.0]: https://github.com/gchq/CyberChef/releases/tag/v8.13.0
 [8.12.0]: https://github.com/gchq/CyberChef/releases/tag/v8.12.0
 [8.11.0]: https://github.com/gchq/CyberChef/releases/tag/v8.11.0
@@ -101,6 +106,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@klaxon1]: https://github.com/klaxon1
 [@bwhitn]: https://github.com/bwhitn
 [@jarmovanlenthe]: https://github.com/jarmovanlenthe
+[@tcode2k16]: https://github.com/tcode2k16
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -125,3 +131,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#394]: https://github.com/gchq/CyberChef/pull/394
 [#428]: https://github.com/gchq/CyberChef/pull/428
 [#441]: https://github.com/gchq/CyberChef/pull/441
+[#443]: https://github.com/gchq/CyberChef/pull/443
