@@ -72,7 +72,7 @@ class HMAC extends Operation {
             msg = Utils.arrayBufferToStr(input, false),
             hasher = CryptoApi.getHasher(hashFunc);
 
-        const mac = CryptoApi.getHmac(CryptoApi.encoder.fromUtf(key), hasher);
+        const mac = CryptoApi.getHmac(key, hasher);
         mac.update(msg);
         return CryptoApi.encoder.toHex(mac.finalize());
     }
