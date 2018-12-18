@@ -45,7 +45,7 @@ class Magic extends Operation {
                 "value": false
             },
             {
-                "name": "Output Filter (Regex)",
+                "name": "Crib (known plaintext string or regex)",
                 "type": "string",
                 "value": ""
             }
