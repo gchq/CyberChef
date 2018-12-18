@@ -1,5 +1,6 @@
 /**
  * @author Cynser
+ * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
@@ -22,10 +23,18 @@ class TextEncodingBruteForce extends Operation {
 
         this.name = "Text Encoding Brute Force";
         this.module = "CharEnc";
-        this.description = "Enumerate all possible text encodings for input.";
+        this.description = [
+            "Enumerates all supported text encodings for the input, allowing you to quickly spot the correct one.",
+            "<br><br>",
+            "Supported charsets are:",
+            "<ul>",
+            Object.keys(IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
+            "</ul>"
+        ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "json";
+        this.presentType = "html";
         this.args = [
             {
                 name: "Mode",
@@ -38,30 +47,44 @@ class TextEncodingBruteForce extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {json}
      */
     run(input, args) {
-        const output = [],
-            charSets = Object.keys(IO_FORMAT),
+        const output = {},
+            charsets = Object.keys(IO_FORMAT),
             mode = args[0];
 
-        for (let i = 0; i < charSets.length; i++) {
-            let currentEncoding = charSets[i] + ": ";
-
+        charsets.forEach(charset => {
             try {
                 if (mode === "Decode") {
-                    currentEncoding += cptable.utils.decode(IO_FORMAT[charSets[i]], input);
+                    output[charset] = cptable.utils.decode(IO_FORMAT[charset], input);
                 } else {
-                    currentEncoding += cptable.utils.encode(IO_FORMAT[charSets[i]], input);
+                    output[charset] = Utils.arrayBufferToStr(cptable.utils.encode(IO_FORMAT[charset], input));
                 }
             } catch (err) {
-                currentEncoding += "Could not decode.";
+                output[charset] = "Could not decode.";
             }
+        });
 
-            output.push(Utils.printable(currentEncoding, true));
+        return output;
+    }
+
+    /**
+     * Displays the encodings in an HTML table for web apps.
+     *
+     * @param {Object[]} encodings
+     * @returns {html}
+     */
+    present(encodings) {
+        let table = "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Encoding</th><th>Value</th></tr>";
+
+        for (const enc in encodings) {
+            const value = Utils.printable(encodings[enc], true);
+            table += `<tr><td>${enc}</td><td>${value}</td></tr>`;
         }
 
-        return output.join("\n");
+        table += "<table>";
+        return table;
     }
 
 }
