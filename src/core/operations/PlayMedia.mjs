@@ -23,8 +23,8 @@ class PlayMedia extends Operation {
         super();
 
         this.name = "Play Media";
-        this.module = "Media";
-        this.description = "Plays the input as sound or video depending on the type.";
+        this.module = "Default";
+        this.description = "Plays the input as audio or video depending on the type.<br><br>Tags: sound, movie, mp3, mp4, mov, webm, wav, ogg";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -44,7 +44,7 @@ class PlayMedia extends Operation {
      * @returns {byteArray} The multimedia data as bytes.
      */
     run(input, args) {
-        const inputFormat = args[0];
+        const [inputFormat] = args;
 
         if (!input.length) return [];
 
@@ -68,7 +68,7 @@ class PlayMedia extends Operation {
         // Determine file type
         const type = Magic.magicFileType(input);
         if (!(type && /^audio|video/.test(type.mime))) {
-            throw new OperationError("Invalid file type");
+            throw new OperationError("Invalid or unrecognised file type");
         }
 
         return input;
@@ -77,6 +77,7 @@ class PlayMedia extends Operation {
     /**
      * Displays an audio or video element that may be able to play the media
      * file.
+     *
      * @param data {byteArray} Data containing an audio or video file.
      * @returns {string} Markup to display a media player.
      */
