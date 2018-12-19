@@ -342,22 +342,28 @@
         ]
     },
     {
+        "name": "Forensics",
+        "ops": [
+            "Detect File Type",
+            "Scan for Embedded Files",
+            "Remove EXIF",
+            "Extract EXIF",
+            "Render Image",
+            "Play Media"
+        ]
+    },
+    {
         "name": "Other",
         "ops": [
             "Entropy",
             "Frequency distribution",
             "Chi Square",
-            "Detect File Type",
-            "Scan for Embedded Files",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
             "Haversine distance",
-            "Render Image",
-            "Remove EXIF",
-            "Extract EXIF",
             "Numberwang",
             "XKCD Random Number"
         ]
