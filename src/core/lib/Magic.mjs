@@ -265,6 +265,7 @@ class Magic {
      *                                      performance)
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
      * @param {boolean} [useful=false] - Whether the current recipe should be scored highly
+     * @param {string} [filter=null] - The regex crib provided by the user, to filter the operation output
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
     async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, filter=null) {
@@ -320,7 +321,7 @@ class Magic {
             await Promise.all(bfEncodings.map(async enc => {
                 const magic = new Magic(enc.data, this.opPatterns),
                     bfResults = await magic.speculativeExecution(
-                        depth-1, extLang, false, [...recipeConfig, enc.conf]);
+                        depth-1, extLang, false, [...recipeConfig, enc.conf], useful, filter);
 
                 results = results.concat(bfResults);
             }));
