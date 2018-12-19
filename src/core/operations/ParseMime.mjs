@@ -11,20 +11,21 @@ import Utils from "../Utils";
 /**
  *
  */
-class ParseIMF extends Operation {
+class ParseMime extends Operation {
 
     /**
-     * Internet Message Format constructor
+     * ParseMime constructor
      */
     constructor() {
         super();
-        this.name = "Parse IMF";
+        this.name = "Parse Mime";
         this.module = "Default";
-        this.description = ["Parse an Internet Message Format (IMF) messages following RFC5322.",
+        this.description = ["Generic Mime Message parser that decodes Mime messages into files",
                             "<br><br>",
-                            "Parses an IMF formated message. These often have the file extention &quot;.eml&quot; and contain the email headers and body. The output will be a file list of the root header and decoded mime parts.",
+                            "The output will be the root header and the associated mime parts.",
+                            "This includes Internet Message Format which are found in SMTP traffic."
         ].join("\n");
-        this.infoURL = "https://tools.ietf.org/html/rfc5322";
+        this.infoURL = "https://tools.ietf.org/html/rfc2045";
         this.inputType = "string";
         this.outputType = "List<File>";
         this.presentType = "html";
@@ -61,7 +62,7 @@ class ParseIMF extends Operation {
         const dataObj = eml.extractData(fields);
         let subject = null;
         const retval = [];
-        if (dataObj.length) {
+        if (dataObj.length >= 1) {
             subject = dataObj[0].fields.subject;
             if (dataObj[0].header) {
                 retval.push(new File([dataObj[0].header], "Header.txt", {type: "text/plain"}));
@@ -72,7 +73,7 @@ class ParseIMF extends Operation {
                 let name = obj.fields.filename ? obj.fields.filename : obj.fields.name;
                 const type = obj.fields.type ? obj.fields.type : "text/plain";
                 if (!name) {
-                    name = (subject ? subject : "Undefined").concat(ParseIMF.getFileExt(type));
+                    name = (subject ? subject : "Undefined").concat(ParseMime.getFileExt(type));
                 }
                 if (Array.isArray(obj.body)) {
                     retval.push(new File([Uint8Array.from(obj.body)], name, {type: type}));
@@ -113,4 +114,4 @@ class ParseIMF extends Operation {
     }
 }
 
-export default ParseIMF;
+export default ParseMime;
