@@ -342,6 +342,13 @@
         ]
     },
     {
+        "name": "Multimedia",
+        "ops": [
+            "Render Image",
+            "Play Media"
+        ]
+    },
+    {
         "name": "Other",
         "ops": [
             "Entropy",
@@ -355,7 +362,6 @@
             "Generate TOTP",
             "Generate HOTP",
             "Haversine distance",
-            "Render Image",
             "Remove EXIF",
             "Extract EXIF",
             "Numberwang",
