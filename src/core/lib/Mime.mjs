@@ -1,9 +1,3 @@
-/**
- * @author bwhitn [brian.m.whitney@outlook.com]
- * @copyright Crown Copyright 2016
- * @license Apache-2.0
- */
-
 import OperationError from "../errors/OperationError";
 import cptable from "../vendor/js-codepage/cptable.js";
 import {decodeQuotedPrintable} from "../lib/QuotedPrintable";
@@ -11,10 +5,11 @@ import {MIME_FORMAT} from "../lib/ChrEnc";
 import Utils from "../Utils";
 
 /**
- * NOTE: Liberties taken include:
- * No checks are made to verify quoted words are valid encodings e.g. underscore vs escape
- * This attempts to decode mime reguardless if it is \r\n (correct newline) or \n (incorrect)
- * Both Base64 and QuotedPrintable is used for decode.
+ * Class to do general Mime format parsing
+ *
+ * @author bwhitn [brian.m.whitney@outlook.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
  */
 class Mime {
     /**
