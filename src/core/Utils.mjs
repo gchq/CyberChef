@@ -573,6 +573,10 @@ class Utils {
                 cell = "";
                 lines.push(line);
                 line = [];
+                // Skip next byte if it is also a line delim (e.g. \r\n)
+                if (lineDelims.indexOf(next) >= 0 && next !== b) {
+                    i++;
+                }
             } else {
                 cell += b;
             }

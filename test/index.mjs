@@ -28,6 +28,7 @@ import "./tests/operations/BCD";
 import "./tests/operations/BSON";
 import "./tests/operations/Base58";
 import "./tests/operations/Base64";
+import "./tests/operations/Base62";
 import "./tests/operations/BitwiseOp";
 import "./tests/operations/ByteRepr";
 import "./tests/operations/CartesianProduct";
@@ -39,6 +40,7 @@ import "./tests/operations/Comment";
 import "./tests/operations/Compress";
 import "./tests/operations/ConditionalJump";
 import "./tests/operations/Crypt";
+import "./tests/operations/CSV";
 import "./tests/operations/DateTime";
 import "./tests/operations/ExtractEmailAddresses";
 import "./tests/operations/Fork";
@@ -49,6 +51,8 @@ import "./tests/operations/HaversineDistance";
 import "./tests/operations/Hexdump";
 import "./tests/operations/Image";
 import "./tests/operations/Jump";
+import "./tests/operations/JSONBeautify";
+import "./tests/operations/JSONMinify";
 import "./tests/operations/JWTDecode";
 import "./tests/operations/JWTSign";
 import "./tests/operations/JWTVerify";
@@ -71,6 +75,7 @@ import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
+import "./tests/operations/TextEncodingBruteForce";
 import "./tests/operations/ToGeohash.mjs";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
@@ -126,12 +131,12 @@ function handleTestResult(testResult) {
 
 
 /**
- * Fail if the process takes longer than 10 seconds.
+ * Fail if the process takes longer than 60 seconds.
  */
 setTimeout(function() {
-    console.log("Tests took longer than 10 seconds to run, returning.");
+    console.log("Tests took longer than 60 seconds to run, returning.");
     process.exit(1);
-}, 10 * 1000);
+}, 60 * 1000);
 
 
 TestRegister.runTests()

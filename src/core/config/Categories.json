@@ -25,6 +25,8 @@
             "From Base32",
             "To Base58",
             "From Base58",
+            "To Base62",
+            "From Base62",
             "To Base85",
             "From Base85",
             "To Base",
@@ -49,12 +51,15 @@
             "Change IP format",
             "Encode text",
             "Decode text",
+            "Text Encoding Brute Force",
             "Swap endianness",
             "To MessagePack",
             "From MessagePack",
             "To Braille",
             "From Braille",
-            "Parse TLV"
+            "Parse TLV",
+            "CSV to JSON",
+            "JSON to CSV"
         ]
     },
     {
@@ -84,6 +89,8 @@
             "Bifid Cipher Decode",
             "Affine Cipher Encode",
             "Affine Cipher Decode",
+            "A1Z26 Cipher Encode",
+            "A1Z26 Cipher Decode",
             "Atbash Cipher",
             "Substitute",
             "Derive PBKDF2 key",
@@ -93,6 +100,8 @@
             "JWT Sign",
             "JWT Verify",
             "JWT Decode",
+            "Citrix CTX1 Encode",
+            "Citrix CTX1 Decode",
             "Pseudo-Random Number Generator"
         ]
     },
