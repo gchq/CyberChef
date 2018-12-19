@@ -231,18 +231,21 @@ class Mime {
      * @returns {string}
      */
     static _decodeMimeData(input, charEnc, contEnc) {
-        switch (contEnc) {
-            case "base64":
-                input = Utils.convertToByteArray(input, "base64");
-                break;
-            case "quoted-printable":
-                input = decodeQuotedPrintable(input);
+        try {
+            switch (contEnc) {
+                case "base64":
+                    input = Utils.convertToByteArray(input, "base64");
+                    break;
+                case "quoted-printable":
+                    input = decodeQuotedPrintable(input);
+            }
+            if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
+                input = Utils.strToByteArray(cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input));
+            }
+            return input;
+        } catch (err) {
+            throw new OperationError("Invalid Mime Format");
         }
-        if (charEnc && MIME_FORMAT.hasOwnProperty(charEnc.toLowerCase())) {
-            input = Utils.strToByteArray(cptable.utils.decode(MIME_FORMAT[charEnc.toLowerCase()], input));
-
-        }
-        return input;
     }
 
     /**
