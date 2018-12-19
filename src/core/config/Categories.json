@@ -351,6 +351,7 @@
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
+            "Generate QR Code",
             "Haversine distance",
             "Render Image",
             "Remove EXIF",
