@@ -352,6 +352,7 @@
             "Generate TOTP",
             "Generate HOTP",
             "Generate QR Code",
+            "Parse QR Code",
             "Haversine distance",
             "Render Image",
             "Remove EXIF",
