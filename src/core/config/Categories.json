@@ -350,7 +350,8 @@
             "Extract Files",
             "Remove EXIF",
             "Extract EXIF",
-            "Render Image"
+            "Render Image",
+            "Play Media"
         ]
     },
     {
@@ -365,7 +366,6 @@
             "Generate TOTP",
             "Generate HOTP",
             "Haversine distance",
-            "Render Image",
             "Numberwang",
             "XKCD Random Number"
         ]

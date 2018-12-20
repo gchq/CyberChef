@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.16.0] - 2018-12-19
+- 'Play Media' operation added [@anthony-arnold] | [#446]
+
 ### [8.15.0] - 2018-12-18
 - 'Text Encoding Brute Force' operation added [@Cynser] | [#439]
 
@@ -76,6 +79,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.16.0]: https://github.com/gchq/CyberChef/releases/tag/v8.16.0
 [8.15.0]: https://github.com/gchq/CyberChef/releases/tag/v8.15.0
 [8.14.0]: https://github.com/gchq/CyberChef/releases/tag/v8.14.0
 [8.13.0]: https://github.com/gchq/CyberChef/releases/tag/v8.13.0
@@ -112,6 +116,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@jarmovanlenthe]: https://github.com/jarmovanlenthe
 [@tcode2k16]: https://github.com/tcode2k16
 [@Cynser]: https://github.com/Cynser
+[@anthony-arnold]: https://github.com/anthony-arnold
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -138,3 +143,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#439]: https://github.com/gchq/CyberChef/pull/439
 [#441]: https://github.com/gchq/CyberChef/pull/441
 [#443]: https://github.com/gchq/CyberChef/pull/443
+[#446]: https://github.com/gchq/CyberChef/pull/446
