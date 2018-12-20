@@ -22,9 +22,9 @@ class GenerateQRCode extends Operation {
         super();
 
         this.name = "Generate QR Code";
-        this.module = "QRCode";
+        this.module = "Image";
         this.description = "Generates a QR code from text.";
-        this.infoURL = "https://en.wikipedia.org/wiki/QR_code";
+        this.infoURL = "https://wikipedia.org/wiki/QR_code";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.presentType = "html";
@@ -32,7 +32,7 @@ class GenerateQRCode extends Operation {
             {
                 "name": "Image Format",
                 "type": "option",
-                "value": ["SVG", "PNG"]
+                "value": ["PNG", "SVG"]
             },
             {
                 "name": "Size of QR module",
