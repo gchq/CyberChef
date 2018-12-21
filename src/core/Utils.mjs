@@ -6,7 +6,7 @@
 
 import utf8 from "utf8";
 import moment from "moment-timezone";
-import {fromBase64} from "./lib/Base64";
+import {fromBase64, toBase64} from "./lib/Base64";
 import {fromHex} from "./lib/Hex";
 import {fromDecimal} from "./lib/Decimal";
 import {fromBinary} from "./lib/Binary";
@@ -850,6 +850,17 @@ class Utils {
             return html;
         };
 
+        const formatContent = function (buff, type) {
+            if (type.startsWith("image")) {
+                let dataURI = "data:";
+                dataURI += type + ";";
+                dataURI += "base64," + toBase64(buff);
+                return "<img src='" + dataURI + "'>";
+            } else {
+                return `<pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>`;
+            }
+        };
+
         const formatFile = async function(file, i) {
             const buff = await Utils.readFile(file);
             const blob = new Blob(
@@ -879,7 +890,7 @@ class Utils {
                     </div>
                     <div id='collapse${i}' class='collapse' aria-labelledby='heading${i}' data-parent="#files">
                         <div class='card-body'>
-                            <pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>
+                            ${formatContent(buff, file.type)}
                         </div>
                     </div>
                 </div>`;
