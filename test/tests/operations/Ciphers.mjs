@@ -111,6 +111,39 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "A1Z26 Encode: normal",
+        input: "This is the test sentence.",
+        expectedOutput: "20 8 9 19 9 19 20 8 5 20 5 19 20 19 5 14 20 5 14 3 5",
+        recipeConfig: [
+            {
+                op: "A1Z26 Cipher Encode",
+                args: ["Space"]
+            }
+        ],
+    },
+    {
+        name: "A1Z26 Decode: normal",
+        input: "20 8 9 19 9 19 20 8 5 20 5 19 20 19 5 14 20 5 14 3 5",
+        expectedOutput: "thisisthetestsentence",
+        recipeConfig: [
+            {
+                op: "A1Z26 Cipher Decode",
+                args: ["Space"]
+            }
+        ],
+    },
+    {
+        name: "A1Z26 Decode: error",
+        input: "20 8 9 27",
+        expectedOutput: "Error: all numbers must be between 1 and 26.",
+        recipeConfig: [
+            {
+                op: "A1Z26 Cipher Decode",
+                args: ["Space"]
+            }
+        ],
+    },
+    {
         name: "Atbash: no input",
         input: "",
         expectedOutput: "",
