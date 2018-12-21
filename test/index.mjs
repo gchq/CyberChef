@@ -73,7 +73,7 @@ import "./tests/operations/SeqUtils";
 import "./tests/operations/SetDifference";
 import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
-import "./tests/operations/SplitColourChannels";
+//import "./tests/operations/SplitColourChannels";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/TextEncodingBruteForce";
