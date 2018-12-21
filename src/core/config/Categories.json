@@ -364,6 +364,10 @@
             "Generate TOTP",
             "Generate HOTP",
             "Haversine distance",
+            "Render Image",
+            "Remove EXIF",
+            "Extract EXIF",
+            "Split Colour Channels",
             "Numberwang",
             "XKCD Random Number"
         ]
