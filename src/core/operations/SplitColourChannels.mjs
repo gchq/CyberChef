@@ -64,7 +64,7 @@ class SplitColourChannels extends Operation {
                         ]).getBufferAsync(jimp.MIME_PNG);
                     resolve(new File([new Uint8Array((await split).values())], "red.png", {type: "image/png"}));
                 } catch (err) {
-                    reject(new OperationError("Could not split red channel."));
+                    reject(new OperationError(`Could not split red channel: ${err}`));
                 }
             });
             const green = new Promise(async (resolve, reject) => {
@@ -76,7 +76,7 @@ class SplitColourChannels extends Operation {
                         ]).getBufferAsync(jimp.MIME_PNG);
                     resolve(new File([new Uint8Array((await split).values())], "green.png", {type: "image/png"}));
                 } catch (err) {
-                    reject(new OperationError("Could not split green channel."));
+                    reject(new OperationError(`Could not split green channel: ${err}`));
                 }
             });
             const blue = new Promise(async (resolve, reject) => {
@@ -88,7 +88,7 @@ class SplitColourChannels extends Operation {
                         ]).getBufferAsync(jimp.MIME_PNG);
                     resolve(new File([new Uint8Array((await split).values())], "blue.png", {type: "image/png"}));
                 } catch (err) {
-                    reject(new OperationError("Could not split blue channel."));
+                    reject(new OperationError(`Could not split blue channel: ${err}`));
                 }
             });
             return await Promise.all([red, green, blue]);

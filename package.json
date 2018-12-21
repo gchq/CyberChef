@@ -92,6 +92,7 @@
     "exif-parser": "^0.1.12",
     "file-saver": "^2.0.0-rc.4",
     "highlight.js": "^9.13.1",
+    "jimp": "^0.6.0",
     "jquery": "^3.3.1",
     "js-crc": "^0.2.0",
     "js-sha3": "^0.8.0",

@@ -855,7 +855,7 @@ class Utils {
                 let dataURI = "data:";
                 dataURI += type + ";";
                 dataURI += "base64," + toBase64(buff);
-                return "<img src='" + dataURI + "'>";
+                return "<img style='max-width: 100%;' src='" + dataURI + "'>";
             } else {
                 return `<pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>`;
             }
