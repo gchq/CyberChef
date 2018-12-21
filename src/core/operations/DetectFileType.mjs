@@ -39,7 +39,7 @@ class DetectFileType extends Operation {
         if (!types.length) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
         } else {
-            let output;
+            let output = "";
 
             types.forEach(type => {
                 output += "File extension: " + type.extension + "\n" +

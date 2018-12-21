@@ -13,7 +13,7 @@ import Stream from "./Stream";
  * to extract them where possible.
  */
 const FILE_SIGNATURES = {
-    "Pictures": [
+    "Images": [
         {
             name: "JPEG Image",
             extension: "jpg",
@@ -51,7 +51,165 @@ const FILE_SIGNATURES = {
             },
             extractor: null
         },
-
+        {
+            name: "WEBP Image",
+            extension: "webp",
+            mime: "image/webp",
+            description: "",
+            signature: {
+                8: 0x57,
+                9: 0x45,
+                10: 0x42,
+                11: 0x50
+            },
+            extractor: null
+        },
+        {
+            name: "TIFF Image",
+            extension: "tif",
+            mime: "image/tiff",
+            description: "",
+            signature: [
+                {
+                    0: 0x49,
+                    1: 0x49,
+                    2: 0x2a,
+                    3: 0x0
+                },
+                {
+                    0: 0x4d,
+                    1: 0x4d,
+                    2: 0x0,
+                    3: 0x2a
+                }
+            ],
+            extractor: null
+        }, /*
+        {
+            name: " Image",
+            extension: "",
+            mime: "image/",
+            description: "",
+            signature: {
+                0: 0x,
+                1: 0x,
+                2: 0x,
+                3: 0x
+            },
+            extractor: null
+        },
+        {
+            name: " Image",
+            extension: "",
+            mime: "image/",
+            description: "",
+            signature: {
+                0: 0x,
+                1: 0x,
+                2: 0x,
+                3: 0x
+            },
+            extractor: null
+        },
+        {
+            name: " Image",
+            extension: "",
+            mime: "image/",
+            description: "",
+            signature: {
+                0: 0x,
+                1: 0x,
+                2: 0x,
+                3: 0x
+            },
+            extractor: null
+        },
+        {
+            name: " Image",
+            extension: "",
+            mime: "image/",
+            description: "",
+            signature: {
+                0: 0x,
+                1: 0x,
+                2: 0x,
+                3: 0x
+            },
+            extractor: null
+        },
+        {
+            name: " Image",
+            extension: "",
+            mime: "image/",
+            description: "",
+            signature: {
+                0: 0x,
+                1: 0x,
+                2: 0x,
+                3: 0x
+            },
+            extractor: null
+        },
+        {
+            name: " Image",
+            extension: "",
+            mime: "image/",
+            description: "",
+            signature: {
+                0: 0x,
+                1: 0x,
+                2: 0x,
+                3: 0x
+            },
+            extractor: null
+        },*/
+    ],
+    "Video": [
+        {
+            name: "WEBM",
+            extension: "webm",
+            mime: "video/webm",
+            description: "",
+            signature: {
+                0: 0x1a,
+                1: 0x45,
+                2: 0xdf,
+                3: 0xa3
+            },
+            extractor: null
+        },
+    ],
+    "Audio": [
+        {
+            name: "WAV",
+            extension: "wav",
+            mime: "audio/x-wav",
+            description: "",
+            signature: {
+                0: 0x52,
+                1: 0x49,
+                2: 0x46,
+                3: 0x46,
+                8: 0x57,
+                9: 0x41,
+                10: 0x56,
+                11: 0x45
+            },
+            extractor: null
+        },
+        {
+            name: "OGG",
+            extension: "ogg",
+            mime: "audio/ogg",
+            description: "",
+            signature: {
+                0: 0x4f,
+                1: 0x67,
+                2: 0x67,
+                3: 0x53
+            },
+            extractor: null
+        },
     ],
     "Documents": [
         {
@@ -103,13 +261,31 @@ const FILE_SIGNATURES = {
 /**
  * Checks whether a signature matches a buffer.
  *
- * @param {Object} sig - A dictionary of offsets with values assigned to them. These
- *   values can be numbers for static checks, arrays of potential valid matches, or
- *   bespoke functions to check the validity of the buffer value at that offset.
+ * @param {Object|Object[]} sig - A dictionary of offsets with values assigned to them.
+ *   These values can be numbers for static checks, arrays of potential valid matches,
+ *   or bespoke functions to check the validity of the buffer value at that offset.
  * @param {Uint8Array} buf
  * @returns {boolean}
  */
 function signatureMatches(sig, buf) {
+    if (sig instanceof Array) {
+        return sig.reduce((acc, s) => acc || bytesMatch(s, buf), false);
+    } else {
+        return bytesMatch(sig, buf);
+    }
+}
+
+
+/**
+ * Checks whether a set of bytes match the given buffer.
+ *
+ * @param {Object} sig - A dictionary of offsets with values assigned to them.
+ *   These values can be numbers for static checks, arrays of potential valid matches,
+ *   or bespoke functions to check the validity of the buffer value at that offset.
+ * @param {Uint8Array} buf
+ * @returns {boolean}
+ */
+function bytesMatch(sig, buf) {
     for (const offset in sig) {
         switch (typeof sig[offset]) {
             case "number": // Static check
@@ -165,34 +341,6 @@ export function detectFileType(buf) {
 
 
     /*
-    if (buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF) {
-        return {
-            ext: "jpg",
-            mime: "image/jpeg"
-        };
-    }
-
-    if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47) {
-        return {
-            ext: "png",
-            mime: "image/png"
-        };
-    }
-
-    if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) {
-        return {
-            ext: "gif",
-            mime: "image/gif"
-        };
-    }
-
-    if (buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) {
-        return {
-            ext: "webp",
-            mime: "image/webp"
-        };
-    }
-
     // needs to be before `tif` check
     if (((buf[0] === 0x49 && buf[1] === 0x49 && buf[2] === 0x2A && buf[3] === 0x0) || (buf[0] === 0x4D && buf[1] === 0x4D && buf[2] === 0x0 && buf[3] === 0x2A)) && buf[8] === 0x43 && buf[9] === 0x52) {
         return {
@@ -234,13 +382,6 @@ export function detectFileType(buf) {
         return {
             ext: "epub",
             mime: "application/epub+zip"
-        };
-    }
-
-    if (buf[0] === 0x50 && buf[1] === 0x4B && (buf[2] === 0x3 || buf[2] === 0x5 || buf[2] === 0x7) && (buf[3] === 0x4 || buf[3] === 0x6 || buf[3] === 0x8)) {
-        return {
-            ext: "zip",
-            mime: "application/zip"
         };
     }
 
@@ -315,13 +456,6 @@ export function detectFileType(buf) {
         };
     }
 
-    if (buf[0] === 0x1A && buf[1] === 0x45 && buf[2] === 0xDF && buf[3] === 0xA3) {
-        return {
-            ext: "webm",
-            mime: "video/webm"
-        };
-    }
-
     if (buf[0] === 0x0 && buf[1] === 0x0 && buf[2] === 0x0 && buf[3] === 0x14 && buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70) {
         return {
             ext: "mov",
@@ -364,13 +498,6 @@ export function detectFileType(buf) {
         };
     }
 
-    if (buf[0] === 0x4F && buf[1] === 0x67 && buf[2] === 0x67 && buf[3] === 0x53) {
-        return {
-            ext: "ogg",
-            mime: "audio/ogg"
-        };
-    }
-
     if (buf[0] === 0x66 && buf[1] === 0x4C && buf[2] === 0x61 && buf[3] === 0x43) {
         return {
             ext: "flac",
@@ -378,31 +505,10 @@ export function detectFileType(buf) {
         };
     }
 
-    if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 && buf[8] === 0x57 && buf[9] === 0x41 && buf[10] === 0x56 && buf[11] === 0x45) {
-        return {
-            ext: "wav",
-            mime: "audio/x-wav"
-        };
-    }
-
     if (buf[0] === 0x23 && buf[1] === 0x21 && buf[2] === 0x41 && buf[3] === 0x4D && buf[4] === 0x52 && buf[5] === 0x0A) {
         return {
             ext: "amr",
             mime: "audio/amr"
-        };
-    }
-
-    if (buf[0] === 0x25 && buf[1] === 0x50 && buf[2] === 0x44 && buf[3] === 0x46) {
-        return {
-            ext: "pdf",
-            mime: "application/pdf"
-        };
-    }
-
-    if (buf[0] === 0x4D && buf[1] === 0x5A) {
-        return {
-            ext: "exe",
-            mime: "application/x-msdownload"
         };
     }
 
