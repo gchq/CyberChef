@@ -63,6 +63,7 @@ import "./tests/operations/OTP";
 import "./tests/operations/PGP";
 import "./tests/operations/PHP";
 import "./tests/operations/ParseIPRange";
+import "./tests/operations/ParseQRCode";
 import "./tests/operations/PowerSet";
 import "./tests/operations/Regex";
 import "./tests/operations/Register";
