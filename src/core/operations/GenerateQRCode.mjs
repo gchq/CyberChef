@@ -85,7 +85,7 @@ class GenerateQRCode extends Operation {
                 outputData += String.fromCharCode(parseInt(data[i]));
             }
             return outputData;
-        } else if (format === "PNG") {
+        } else {
             let dataURI = "data:";
             const type = Magic.magicFileType(data);
             if (type && type.mime.indexOf("image") === 0){
