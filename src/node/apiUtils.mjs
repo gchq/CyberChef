@@ -84,6 +84,3 @@ export function sentenceToCamelCase(str) {
         })
         .reduce((prev, curr) => `${prev}${curr}`, "");
 }
-
-
-

@@ -647,7 +647,7 @@ WWFkYSBZYWRh\r
     }),
 
     it("HMAC", () => {
-        assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "78206a67f34bfc073243c3c89148c21e");
+        assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "e15c268b4ee755c9e52db094ed50add7");
     }),
 
     it("JPathExpression", () => {
