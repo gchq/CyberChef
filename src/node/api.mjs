@@ -91,6 +91,7 @@ function transformArgs(originalArgs, newArgs) {
     return allArgs.map(extractArg);
 }
 
+
 /**
  * Ensure an input is a SyncDish object.
  * @param input
@@ -106,6 +107,7 @@ function ensureIsDish(input) {
         return new SyncDish(input);
     }
 }
+
 
 /**
  * prepareOp: transform args, make input the right type.
@@ -126,6 +128,32 @@ function prepareOp(opInstance, input, args) {
     const transformedInput = dish.get(opInstance.inputType);
     return {transformedInput, transformedArgs};
 }
+
+
+/**
+ * createArgOptions
+ *
+ * Create an object of options for each option or togglestring argument
+ * in the given operation.
+ *
+ * Argument names are converted to camel case for consistency.
+ *
+ * @param {Operation} op - the operation to extract args from
+ * @returns {{}} - arrays of options for option and toggleString args.
+*/
+function createArgOptions(op) {
+    const result = {};
+    op.args.forEach((a) => {
+        if (a.type === "option") {
+            result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.value);
+        } else if (a.type === "toggleString") {
+            result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.toggleValues);
+        }
+    });
+
+    return result;
+}
+
 
 /**
  * Wrap an operation to be consumed by node API.
@@ -182,30 +210,16 @@ export function wrap(OpClass) {
 
     // used in chef.help
     wrapped.opName = OpClass.name;
-
-    /** */
-    const addArgs = (op) => {
-        const result = {};
-        op.args.forEach((a) => {
-            if (a.type === "option") {
-                result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.value);
-            } else if (a.type === "toggleString") {
-                result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.toggleValues);
-            }
-        });
-
-        return result;
-    };
-
-    wrapped.args = addArgs(opInstance);
+    wrapped.argOptions = createArgOptions(opInstance);
 
     return wrapped;
 }
 
+
 /**
- * @namespace Api
  * help: Give information about operations matching the given search term,
  * or inputted operation.
+ *
  * @param {String || wrapped operation} input - the name of the operation to get help for.
  * Case and whitespace are ignored in search.
  * @returns {Object[]} Config of matching operations.
@@ -260,6 +274,7 @@ export function help(input) {
     return null;
 }
 
+
 /**
  * bake [Wrapped] - Perform an array of operations on some input.
  * @param operations array of chef's operations (used in wrapping stage)
@@ -283,7 +298,10 @@ export function bake(operations){
     };
 }
 
+
 /**
+ * explainExcludedFunction
+ *
  * Explain that the given operation is not included in the Node.js version.
  * @param {String} name - name of operation
  */
