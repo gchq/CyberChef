@@ -383,6 +383,26 @@ TestRegister.addApiTests([
             assert.strictEqual(e.type, "ExcludedOperationError");
             assert.strictEqual(e.message, "Sorry, the RenderImage operation is not available in the Node.js version of CyberChef.");
         }
+    }),
+
+    it("Operation arguments: should be accessible from operation object if op has array arg", () => {
+        assert.ok(chef.toCharcode.argOptions);
+        assert.equal(chef.unzip.argOptions, undefined);
+    }),
+
+    it("Operation arguments: should have key for each array-based argument in operation", () => {
+        assert.ok(chef.convertDistance.argOptions.inputUnits);
+        assert.ok(chef.convertDistance.argOptions.outputUnits);
+
+        assert.ok(chef.bitShiftRight.argOptions.type);
+        // is a number type, so not included.
+        assert.equal(chef.bitShiftRight.argOptions.amount, undefined);
+    }),
+
+    it("Operation arguments: should list all options excluding subheadings", () => {
+        // First element (subheading) removed
+        assert.equal(chef.convertDistance.argOptions.inputUnits[0], "Nanometres (nm)");
+        assert.equal(chef.defangURL.argOptions.process[1], "Only full URLs");
     })
 
 ]);
