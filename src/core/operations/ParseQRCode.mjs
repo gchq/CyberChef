@@ -23,11 +23,17 @@ class ParseQRCode extends Operation {
 
         this.name = "Parse QR Code";
         this.module = "Image";
-        this.description = "Reads an image file and attempts to detect and read a QR code from the image.";
+        this.description = "Reads an image file and attempts to detect and read a QR code from the image.<br><br><u>Normalise Image</u><br>Attempt to normalise the image before parsing it, to try and improve detection of a QR code.";
         this.infoURL = "https://wikipedia.org/wiki/QR_code";
         this.inputType = "byteArray";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                "name": "Normalise image",
+                "type": "boolean",
+                "value": true
+            }
+        ];
     }
 
     /**
@@ -37,38 +43,55 @@ class ParseQRCode extends Operation {
      */
     async run(input, args) {
         const type = Magic.magicFileType(input);
+        const [normalise] = args;
         // Make sure that the input is an image
         if (type && type.mime.indexOf("image") === 0){
-
-            return new Promise((resolve, reject) => {
-                // Read the input
-                jimp.read(Buffer.from(input))
-                    .then(image => {
-                        image.rgba(false); // Disable RGBA (uses just RGB)
-
-                        // Get the buffer of the new image and read it in Jimp
-                        // Don't actually need the new image buffer, just need 
-                        // Jimp to refresh the current object
-                        image.getBuffer(image.getMIME(), (err, buffer) => {
-                            jimp.read(buffer)
-                                .then(newImage =>{
-                                    // If the image has been read correctly, try to find a QR code
-                                    if (image.bitmap != null){
-                                        const qrData = jsqr(image.bitmap.data, image.getWidth(), image.getHeight());
-                                        if (qrData != null) {
-                                            resolve(qrData.data);
-                                        } else {
-                                            log.error(image.bitmap);
-                                            reject(new OperationError("Error parsing QR code from image."));
-                                        }
-                                    } else {
-                                        reject(new OperationError("Error reading the image data."));
-                                    }
+            let normalisedImage = null;
+            if (normalise){
+                // Process the image to be easier to read by jsqr
+                // Disables the alpha channel
+                // Sets the image default background to white
+                // Normalises the image colours
+                // Makes the image greyscale
+                // Converts image to a JPEG 
+                normalisedImage = await new Promise((resolve, reject) => {
+                    jimp.read(Buffer.from(input))
+                        .then(image => {
+                            image
+                                .rgba(false)
+                                .background(0xFFFFFFFF)
+                                .normalize()
+                                .greyscale()
+                                .getBuffer(jimp.MIME_JPEG, (error, result) => {
+                                    resolve([...result]);
                                 });
+                        })
+                        .catch(err => {
+                            reject(new OperationError("Error reading the image file."));
                         });
+                });
+            } else {
+                normalisedImage = input;
+            }
+            if (normalisedImage instanceof OperationError){
+                return normalisedImage;
+            }
+            return new Promise((resolve, reject) => {
+                jimp.read(Buffer.from(normalisedImage))
+                    .then(image => {
+                        if (image.bitmap != null){
+                            const qrData = jsqr(image.bitmap.data, image.getWidth(), image.getHeight());
+                            if (qrData != null){
+                                resolve(qrData.data);
+                            } else {
+                                reject(new OperationError("Couldn't read a QR code from the image."));
+                            }
+                        } else {
+                            reject(new OperationError("Error reading the normalised image file."));
+                        }
                     })
                     .catch(err => {
-                        reject(new OperationError("Error opening the image. Are you sure this is an image file?"));
+                        reject(new OperationError("Error reading the normalised image file."));
                     });
             });
         }  else {
