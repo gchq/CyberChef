@@ -19,7 +19,7 @@ class BcryptCompare extends Operation {
         super();
 
         this.name = "Bcrypt compare";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Tests whether the input matches the given bcrypt hash. To test multiple possible passwords, use the 'Fork' operation.";
         this.infoURL = "https://wikipedia.org/wiki/Bcrypt";
         this.inputType = "string";

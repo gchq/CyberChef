@@ -5,7 +5,6 @@
  */
 
 import utf8 from "utf8";
-import moment from "moment-timezone";
 import {fromBase64} from "./lib/Base64";
 import {fromHex} from "./lib/Hex";
 import {fromDecimal} from "./lib/Decimal";
@@ -794,38 +793,6 @@ class Utils {
             recipeConfig.push(op);
         }
         return recipeConfig;
-    }
-
-
-    /**
-     * Expresses a number of milliseconds in a human readable format.
-     *
-     * Range                        | Sample Output
-     * -----------------------------|-------------------------------
-     * 0 to 45 seconds              | a few seconds ago
-     * 45 to 90 seconds             | a minute ago
-     * 90 seconds to 45 minutes     | 2 minutes ago ... 45 minutes ago
-     * 45 to 90 minutes             | an hour ago
-     * 90 minutes to 22 hours       | 2 hours ago ... 22 hours ago
-     * 22 to 36 hours               | a day ago
-     * 36 hours to 25 days          | 2 days ago ... 25 days ago
-     * 25 to 45 days                | a month ago
-     * 45 to 345 days               | 2 months ago ... 11 months ago
-     * 345 to 545 days (1.5 years)  | a year ago
-     * 546 days+                    | 2 years ago ... 20 years ago
-     *
-     * @param {number} ms
-     * @returns {string}
-     *
-     * @example
-     * // returns "3 minutes"
-     * Utils.fuzzyTime(152435);
-     *
-     * // returns "5 days"
-     * Utils.fuzzyTime(456851321);
-     */
-    static fuzzyTime(ms) {
-        return moment.duration(ms, "milliseconds").humanize();
     }
 
 

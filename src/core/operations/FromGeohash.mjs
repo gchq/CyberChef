@@ -19,7 +19,7 @@ class FromGeohash extends Operation {
         super();
 
         this.name = "From Geohash";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Converts Geohash strings into Lat/Long coordinates. For example, <code>ww8p1r4t8</code> becomes <code>37.8324,112.5584</code>.";
         this.infoURL = "https://wikipedia.org/wiki/Geohash";
         this.inputType = "string";

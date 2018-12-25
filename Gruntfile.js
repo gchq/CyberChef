@@ -2,6 +2,7 @@
 
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 const glob = require("glob");
@@ -208,6 +209,11 @@ module.exports = function (grunt) {
                             minifyJS: true,
                             minifyCSS: true
                         }
+                    }),
+                    new BundleAnalyzerPlugin({
+                        analyzerMode: "static",
+                        reportFilename: "build/prod/BundleAnalyzerReport.html",
+                        openAnalyzer: false
                     }),
                 ]
             },

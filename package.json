@@ -67,6 +67,7 @@
     "url-loader": "^1.1.2",
     "web-resource-inliner": "^4.2.1",
     "webpack": "^4.25.1",
+    "webpack-bundle-analyzer": "^3.0.3",
     "webpack-dev-server": "^3.1.10",
     "webpack-node-externals": "^1.7.2",
     "worker-loader": "^2.0.0"
@@ -96,7 +97,6 @@
     "jquery": "^3.3.1",
     "js-crc": "^0.2.0",
     "js-sha3": "^0.8.0",
-    "jsbn": "^1.1.0",
     "jsesc": "^2.5.1",
     "jsonpath": "^1.0.0",
     "jsonwebtoken": "^8.3.0",
