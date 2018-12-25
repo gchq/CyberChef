@@ -363,6 +363,8 @@
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
+            "Generate QR Code",
+            "Parse QR Code",
             "Haversine distance",
             "Numberwang",
             "XKCD Random Number"
