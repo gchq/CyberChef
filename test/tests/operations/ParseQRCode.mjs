@@ -1,6 +1,6 @@
-/** 
+/**
  * Parse QR Code tests
- * 
+ *
  * @author j433866 [j433866@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -15,7 +15,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": ["Space"]
+                "args": ["None"]
             },
             {
                 "op": "Parse QR Code",
@@ -34,7 +34,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Parse QR Code",
-                "args": [true]
+                "args": [false]
             },
         ],
     },
@@ -45,7 +45,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": ["Space"]
+                "args": ["None"]
             },
             {
                 "op": "Parse QR Code",
@@ -60,7 +60,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": ["Space"]
+                "args": ["None"]
             },
             {
                 "op": "Parse QR Code",

@@ -23,7 +23,7 @@ class ParseQRCode extends Operation {
 
         this.name = "Parse QR Code";
         this.module = "Image";
-        this.description = "Reads an image file and attempts to detect and read a QR code from the image.<br><br><u>Normalise Image</u><br>Attempt to normalise the image before parsing it, to try and improve detection of a QR code.";
+        this.description = "Reads an image file and attempts to detect and read a Quick Response (QR) code from the image.<br><br><u>Normalise Image</u><br>Attempts to normalise the image before parsing it to improve detection of a QR code.";
         this.infoURL = "https://wikipedia.org/wiki/QR_code";
         this.inputType = "byteArray";
         this.outputType = "string";
@@ -31,7 +31,7 @@ class ParseQRCode extends Operation {
             {
                 "name": "Normalise image",
                 "type": "boolean",
-                "value": true
+                "value": false
             }
         ];
     }
@@ -44,17 +44,19 @@ class ParseQRCode extends Operation {
     async run(input, args) {
         const type = Magic.magicFileType(input);
         const [normalise] = args;
+
         // Make sure that the input is an image
-        if (type && type.mime.indexOf("image") === 0){
-            let normalisedImage = null;
-            if (normalise){
+        if (type && type.mime.indexOf("image") === 0) {
+            let image = input;
+
+            if (normalise) {
                 // Process the image to be easier to read by jsqr
                 // Disables the alpha channel
                 // Sets the image default background to white
                 // Normalises the image colours
                 // Makes the image greyscale
-                // Converts image to a JPEG 
-                normalisedImage = await new Promise((resolve, reject) => {
+                // Converts image to a JPEG
+                image = await new Promise((resolve, reject) => {
                     jimp.read(Buffer.from(input))
                         .then(image => {
                             image
@@ -63,38 +65,38 @@ class ParseQRCode extends Operation {
                                 .normalize()
                                 .greyscale()
                                 .getBuffer(jimp.MIME_JPEG, (error, result) => {
-                                    resolve([...result]);
+                                    resolve(result);
                                 });
                         })
                         .catch(err => {
                             reject(new OperationError("Error reading the image file."));
                         });
                 });
-            } else {
-                normalisedImage = input;
             }
-            if (normalisedImage instanceof OperationError){
-                return normalisedImage;
+
+            if (image instanceof OperationError) {
+                throw image;
             }
+
             return new Promise((resolve, reject) => {
-                jimp.read(Buffer.from(normalisedImage))
+                jimp.read(Buffer.from(image))
                     .then(image => {
-                        if (image.bitmap != null){
+                        if (image.bitmap != null) {
                             const qrData = jsqr(image.bitmap.data, image.getWidth(), image.getHeight());
-                            if (qrData != null){
+                            if (qrData != null) {
                                 resolve(qrData.data);
                             } else {
                                 reject(new OperationError("Couldn't read a QR code from the image."));
                             }
                         } else {
-                            reject(new OperationError("Error reading the normalised image file."));
+                            reject(new OperationError("Error reading the image file."));
                         }
                     })
                     .catch(err => {
-                        reject(new OperationError("Error reading the normalised image file."));
+                        reject(new OperationError("Error reading the image file."));
                     });
             });
-        }  else {
+        } else {
             throw new OperationError("Invalid file type.");
         }
 
