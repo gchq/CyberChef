@@ -26,6 +26,7 @@ class HTMLIngredient {
         this.disabled = config.disabled || false;
         this.hint = config.hint || false;
         this.target = config.target;
+        this.defaultIndex = config.defaultIndex || 0;
         this.toggleValues = config.toggleValues;
         this.id = "ing-" + this.app.nextIngId();
     }
@@ -133,7 +134,7 @@ class HTMLIngredient {
                     } else if ((m = this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                         html += "</optgroup>";
                     } else {
-                        html += `<option>${this.value[i]}</option>`;
+                        html += `<option ${this.defaultIndex === i ? "selected" : ""}>${this.value[i]}</option>`;
                     }
                 }
                 html += `</select>
@@ -154,7 +155,7 @@ class HTMLIngredient {
                     } else if ((m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                         html += "</optgroup>";
                     } else {
-                        html += `<option populate-value='${this.value[i].value}'>${this.value[i].name}</option>`;
+                        html += `<option populate-value="${this.value[i].value}">${this.value[i].name}</option>`;
                     }
                 }
                 html += `</select>
@@ -170,7 +171,7 @@ class HTMLIngredient {
                         class="form-control arg inline"
                         id="${this.id}"
                         arg-name="${this.name}"
-                        value="${this.value[0].value}"
+                        value="${this.value[this.defaultIndex].value}"
                         ${this.disabled ? "disabled" : ""}>
                     ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     <div class="input-group-append inline">
