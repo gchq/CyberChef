@@ -334,8 +334,8 @@ TestRegister.addTests([
     },
     {
         name: "To MessagePack: no content",
-        input: "",
-        expectedError: true,
+        input: "{}",
+        expectedMatch: /Unexpected end of JSON input/,
         recipeConfig: [
             {
                 "op": "To MessagePack",

@@ -77,7 +77,7 @@ import "./tests/operations/SetUnion";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/TextEncodingBruteForce";
-import "./tests/operations/ToGeohash.mjs";
+import "./tests/operations/ToGeohash";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 import "./tests/operations/ParseTLV";
@@ -155,7 +155,8 @@ TestRegister.runTests()
         }
 
         if (!allTestsPassing) {
-            console.log("\nNot all tests are passing");
+            console.log("\nFailing tests:\n");
+            results.filter(r => r.status !== "passing").forEach(handleTestResult);
         }
 
         process.exit(allTestsPassing ? 0 : 1);
