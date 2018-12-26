@@ -9,7 +9,7 @@ import { fromHex } from "../lib/Hex";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import { detectFileType } from "../lib/FileType";
+import { isType, detectFileType } from "../lib/FileType";
 
 /**
  * PlayMedia operation
@@ -66,8 +66,7 @@ class PlayMedia extends Operation {
 
 
         // Determine file type
-        const types = detectFileType(input);
-        if (!(types && types.length && /^audio|video/.test(types[0].mime))) {
+        if (!isType(/^(audio|video)/, input)) {
             throw new OperationError("Invalid or unrecognised file type");
         }
 

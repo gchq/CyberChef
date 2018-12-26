@@ -704,6 +704,39 @@ export function detectFileType(buf) {
 
 
 /**
+ * Detects whether the given buffer is a file of the type specified.
+ *
+ * @param {string|RegExp} type
+ * @param {Uint8Array} buf
+ * @returns {string|false} The mime type or false if the type does not match
+ */
+export function isType(type, buf) {
+    const types = detectFileType(buf);
+
+    if (!(types && types.length)) return false;
+
+    if (typeof type === "string") {
+        return types[0].mime.startsWith(type) ? types[0].mime : false;
+    } else if (type instanceof RegExp) {
+        return type.test(types[0].mime) ? types[0].mime : false;
+    } else {
+        throw new Error("Invalid type input.");
+    }
+}
+
+
+/**
+ * Detects whether the given buffer contains an image file.
+ *
+ * @param {Uint8Array} buf
+ * @returns {string|false} The mime type or false if the type does not match
+ */
+export function isImage(buf) {
+    return isType("image", buf);
+}
+
+
+/**
  * Attempts to extract a file from a data stream given its offset and extractor function.
  *
  * @param {Uint8Array} bytes
