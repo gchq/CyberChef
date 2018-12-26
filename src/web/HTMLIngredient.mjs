@@ -165,6 +165,35 @@ class HTMLIngredient {
                 this.manager.addDynamicListener("#" + this.id, "change", this.populateOptionChange, this);
                 break;
             case "editableOption":
+                html += `<div class="form-group input-group">
+                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <input type="text"
+                        class="form-control arg"
+                        id="${this.id}"
+                        arg-name="${this.name}"
+                        value="${this.value[this.defaultIndex].value}"
+                        ${this.disabled ? "disabled" : ""}>
+                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
+                    <div class="input-group-append">
+                        <button type="button"
+                            class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                            data-toggle="dropdown"
+                            data-boundary="scrollParent"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu editable-option-menu">`;
+                for (i = 0; i < this.value.length; i++) {
+                    html += `<a class="dropdown-item" href="#" value="${this.value[i].value}">${this.value[i].name}</a>`;
+                }
+                html += `</div>
+                    </div>
+                </div>`;
+
+                this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
+                break;
+            case "editableOptionShort":
                 html += `<div class="form-group input-group inline">
                     <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
                     <input type="text"

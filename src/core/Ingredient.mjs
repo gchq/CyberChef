@@ -95,6 +95,7 @@ class Ingredient {
             case "binaryString":
             case "binaryShortString":
             case "editableOption":
+            case "editableOptionShort":
                 return Utils.parseEscapedChars(data);
             case "byteArray":
                 if (typeof data == "string") {
