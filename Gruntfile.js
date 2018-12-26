@@ -212,7 +212,7 @@ module.exports = function (grunt) {
                     }),
                     new BundleAnalyzerPlugin({
                         analyzerMode: "static",
-                        reportFilename: "build/prod/BundleAnalyzerReport.html",
+                        reportFilename: "BundleAnalyzerReport.html",
                         openAnalyzer: false
                     }),
                 ]
