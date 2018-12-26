@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import Magic from "../lib/Magic";
+import {detectFileType} from "../lib/FileType";
 
 /**
  * Detect File Type operation
@@ -34,17 +34,21 @@ class DetectFileType extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input),
-            type = Magic.magicFileType(data);
+            types = detectFileType(data);
 
-        if (!type) {
+        if (!types.length) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
         } else {
-            let output = "File extension: " + type.ext + "\n" +
-                "MIME type:      " + type.mime;
+            let output = "";
 
-            if (type.desc && type.desc.length) {
-                output += "\nDescription:    " + type.desc;
-            }
+            types.forEach(type => {
+                output += "File extension: " + type.extension + "\n" +
+                    "MIME type:      " + type.mime + "\n";
+
+                if (type.description && type.description.length) {
+                    output += "\nDescription:    " + type.description + "\n";
+                }
+            });
 
             return output;
         }

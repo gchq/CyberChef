@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import Magic from "../lib/Magic";
+import {detectFileType} from "../lib/FileType";
 
 /**
  * Scan for Embedded Files operation
@@ -41,7 +41,7 @@ class ScanForEmbeddedFiles extends Operation {
      */
     run(input, args) {
         let output = "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.\n",
-            type,
+            types,
             numFound = 0,
             numCommonFound = 0;
         const ignoreCommon = args[0],
@@ -49,20 +49,23 @@ class ScanForEmbeddedFiles extends Operation {
             data = new Uint8Array(input);
 
         for (let i = 0; i < data.length; i++) {
-            type = Magic.magicFileType(data.slice(i));
-            if (type) {
-                if (ignoreCommon && commonExts.indexOf(type.ext) > -1) {
-                    numCommonFound++;
-                    continue;
-                }
-                numFound++;
-                output += "\nOffset " + i + " (0x" + Utils.hex(i) + "):\n" +
-                    "  File extension: " + type.ext + "\n" +
-                    "  MIME type:      " + type.mime + "\n";
+            types = detectFileType(data.slice(i));
+            if (types.length) {
+                types.forEach(type => {
+                    if (ignoreCommon && commonExts.indexOf(type.extension) > -1) {
+                        numCommonFound++;
+                        return;
+                    }
 
-                if (type.desc && type.desc.length) {
-                    output += "  Description:    " + type.desc + "\n";
-                }
+                    numFound++;
+                    output += "\nOffset " + i + " (0x" + Utils.hex(i) + "):\n" +
+                        "  File extension: " + type.extension + "\n" +
+                        "  MIME type:      " + type.mime + "\n";
+
+                    if (type.description && type.description.length) {
+                        output += "  Description:    " + type.description + "\n";
+                    }
+                });
             }
         }
 

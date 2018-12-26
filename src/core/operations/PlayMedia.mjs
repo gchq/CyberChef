@@ -9,7 +9,7 @@ import { fromHex } from "../lib/Hex";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import Magic from "../lib/Magic";
+import { detectFileType } from "../lib/FileType";
 
 /**
  * PlayMedia operation
@@ -66,8 +66,8 @@ class PlayMedia extends Operation {
 
 
         // Determine file type
-        const type = Magic.magicFileType(input);
-        if (!(type && /^audio|video/.test(type.mime))) {
+        const types = detectFileType(input);
+        if (!(types && types.length && /^audio|video/.test(types[0].mime))) {
             throw new OperationError("Invalid or unrecognised file type");
         }
 
@@ -84,15 +84,15 @@ class PlayMedia extends Operation {
     async present(data) {
         if (!data.length) return "";
 
-        const type = Magic.magicFileType(data);
-        const matches = /^audio|video/.exec(type.mime);
+        const types = detectFileType(data);
+        const matches = /^audio|video/.exec(types[0].mime);
         if (!matches) {
             throw new OperationError("Invalid file type");
         }
-        const dataURI = `data:${type.mime};base64,${toBase64(data)}`;
+        const dataURI = `data:${types[0].mime};base64,${toBase64(data)}`;
         const element = matches[0];
 
-        let html = `<${element} src='${dataURI}' type='${type.mime}' controls>`;
+        let html = `<${element} src='${dataURI}' type='${types[0].mime}' controls>`;
         html += "<p>Unsupported media type.</p>";
         html += `</${element}>`;
         return html;
