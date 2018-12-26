@@ -83,6 +83,9 @@ import "./tests/operations/Magic";
 import "./tests/operations/ParseTLV";
 import "./tests/operations/Media";
 
+// Cannot test operations that use the File type yet
+//import "./tests/operations/SplitColourChannels";
+
 let allTestsPassing = true;
 const testStatusCounts = {
     total: 0,

@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.18.0] - 2018-12-26
+- 'Split Colour Channels' operation added [@artemisbot] | [#449]
+
 ### [8.17.0] - 2018-12-25
 - 'Generate QR Code' and 'Parse QR Code' operations added [@j433866] | [#448]
 
@@ -82,6 +85,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.18.0]: https://github.com/gchq/CyberChef/releases/tag/v8.18.0
 [8.17.0]: https://github.com/gchq/CyberChef/releases/tag/v8.17.0
 [8.16.0]: https://github.com/gchq/CyberChef/releases/tag/v8.16.0
 [8.15.0]: https://github.com/gchq/CyberChef/releases/tag/v8.15.0
@@ -150,3 +154,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#443]: https://github.com/gchq/CyberChef/pull/443
 [#446]: https://github.com/gchq/CyberChef/pull/446
 [#448]: https://github.com/gchq/CyberChef/pull/448
+[#449]: https://github.com/gchq/CyberChef/pull/449
