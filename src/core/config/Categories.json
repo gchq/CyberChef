@@ -347,9 +347,17 @@
             "Detect File Type",
             "Scan for Embedded Files",
             "Remove EXIF",
-            "Extract EXIF",
+            "Extract EXIF"
+        ]
+    },
+    {
+        "name": "Multimedia",
+        "ops": [
             "Render Image",
-            "Play Media"
+            "Play Media",
+            "Remove EXIF",
+            "Extract EXIF",
+            "Split Colour Channels"
         ]
     },
     {
@@ -366,10 +374,6 @@
             "Generate QR Code",
             "Parse QR Code",
             "Haversine distance",
-            "Render Image",
-            "Remove EXIF",
-            "Extract EXIF",
-            "Split Colour Channels",
             "Numberwang",
             "XKCD Random Number"
         ]

@@ -74,7 +74,6 @@ import "./tests/operations/SeqUtils";
 import "./tests/operations/SetDifference";
 import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
-//import "./tests/operations/SplitColourChannels";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
 import "./tests/operations/TextEncodingBruteForce";
@@ -83,6 +82,9 @@ import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 import "./tests/operations/ParseTLV";
 import "./tests/operations/Media";
+
+// Cannot test operations that use the File type yet
+//import "./tests/operations/SplitColourChannels";
 
 let allTestsPassing = true;
 const testStatusCounts = {

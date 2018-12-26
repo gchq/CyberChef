@@ -24,25 +24,12 @@ class SplitColourChannels extends Operation {
 
         this.name = "Split Colour Channels";
         this.module = "Image";
-        this.description = "Splits given image into its red, green and blue colour channels.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Channel_(digital_image)";
+        this.description = "Splits the given image into its red, green and blue colour channels.";
+        this.infoURL = "https://wikipedia.org/wiki/Channel_(digital_image)";
         this.inputType = "byteArray";
         this.outputType = "List<File>";
         this.presentType = "html";
-        this.args = [
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
-        ];
+        this.args = [];
     }
 
     /**
@@ -55,18 +42,22 @@ class SplitColourChannels extends Operation {
         // Make sure that the input is an image
         if (type && type.mime.indexOf("image") === 0) {
             const parsedImage = await jimp.read(Buffer.from(input));
+
             const red = new Promise(async (resolve, reject) => {
                 try {
-                    const split = parsedImage.clone()
+                    const split = parsedImage
+                        .clone()
                         .color([
                             {apply: "blue", params: [-255]},
                             {apply: "green", params: [-255]}
-                        ]).getBufferAsync(jimp.MIME_PNG);
+                        ])
+                        .getBufferAsync(jimp.MIME_PNG);
                     resolve(new File([new Uint8Array((await split).values())], "red.png", {type: "image/png"}));
                 } catch (err) {
                     reject(new OperationError(`Could not split red channel: ${err}`));
                 }
             });
+
             const green = new Promise(async (resolve, reject) => {
                 try {
                     const split = parsedImage.clone()
@@ -79,6 +70,7 @@ class SplitColourChannels extends Operation {
                     reject(new OperationError(`Could not split green channel: ${err}`));
                 }
             });
+
             const blue = new Promise(async (resolve, reject) => {
                 try {
                     const split = parsedImage
@@ -91,6 +83,7 @@ class SplitColourChannels extends Operation {
                     reject(new OperationError(`Could not split blue channel: ${err}`));
                 }
             });
+
             return await Promise.all([red, green, blue]);
         } else {
             throw new OperationError("Invalid file type.");
