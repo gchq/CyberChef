@@ -2,6 +2,7 @@
 
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 const glob = require("glob");
@@ -179,37 +180,44 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
-            web: {
-                mode: "production",
-                target: "web",
-                entry: Object.assign({
-                    main: "./src/web/index.js",
-                    sitemap: "./src/web/static/sitemap.js"
-                }, moduleEntryPoints),
-                output: {
-                    path: __dirname + "/build/prod"
-                },
-                resolve: {
-                    alias: {
-                        "./config/modules/OpModules": "./config/modules/Default"
-                    }
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        chunks: ["main"],
-                        compileTime: compileTime,
-                        version: pkg.version,
-                        minify: {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            minifyJS: true,
-                            minifyCSS: true
+            web: () => {
+                return {
+                    mode: "production",
+                    target: "web",
+                    entry: Object.assign({
+                        main: "./src/web/index.js",
+                        sitemap: "./src/web/static/sitemap.js"
+                    }, moduleEntryPoints),
+                    output: {
+                        path: __dirname + "/build/prod"
+                    },
+                    resolve: {
+                        alias: {
+                            "./config/modules/OpModules": "./config/modules/Default"
                         }
-                    }),
-                ]
+                    },
+                    plugins: [
+                        new webpack.DefinePlugin(BUILD_CONSTANTS),
+                        new HtmlWebpackPlugin({
+                            filename: "index.html",
+                            template: "./src/web/html/index.html",
+                            chunks: ["main"],
+                            compileTime: compileTime,
+                            version: pkg.version,
+                            minify: {
+                                removeComments: true,
+                                collapseWhitespace: true,
+                                minifyJS: true,
+                                minifyCSS: true
+                            }
+                        }),
+                        new BundleAnalyzerPlugin({
+                            analyzerMode: "static",
+                            reportFilename: "BundleAnalyzerReport.html",
+                            openAnalyzer: false
+                        }),
+                    ]
+                };
             },
             webInline: {
                 mode: "production",

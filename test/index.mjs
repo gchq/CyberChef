@@ -28,6 +28,7 @@ import "./tests/operations/BCD";
 import "./tests/operations/BSON";
 import "./tests/operations/Base58";
 import "./tests/operations/Base64";
+import "./tests/operations/Base62";
 import "./tests/operations/BitwiseOp";
 import "./tests/operations/ByteRepr";
 import "./tests/operations/CartesianProduct";
@@ -63,6 +64,7 @@ import "./tests/operations/OTP";
 import "./tests/operations/PGP";
 import "./tests/operations/PHP";
 import "./tests/operations/ParseIPRange";
+import "./tests/operations/ParseQRCode";
 import "./tests/operations/PowerSet";
 import "./tests/operations/Regex";
 import "./tests/operations/Register";
@@ -74,10 +76,15 @@ import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
-import "./tests/operations/ToGeohash.mjs";
+import "./tests/operations/TextEncodingBruteForce";
+import "./tests/operations/ToGeohash";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 import "./tests/operations/ParseTLV";
+import "./tests/operations/Media";
+
+// Cannot test operations that use the File type yet
+//import "./tests/operations/SplitColourChannels";
 
 let allTestsPassing = true;
 const testStatusCounts = {
@@ -151,7 +158,8 @@ TestRegister.runTests()
         }
 
         if (!allTestsPassing) {
-            console.log("\nNot all tests are passing");
+            console.log("\nFailing tests:\n");
+            results.filter(r => r.status !== "passing").forEach(handleTestResult);
         }
 
         process.exit(allTestsPassing ? 0 : 1);

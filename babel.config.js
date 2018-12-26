@@ -1,7 +1,7 @@
 module.exports = function(api) {
     api.cache.forever();
 
-    return  {
+    return {
         "presets": [
             ["@babel/preset-env", {
                 "targets": {

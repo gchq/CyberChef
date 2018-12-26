@@ -20,7 +20,7 @@ class DecodeText extends Operation {
         super();
 
         this.name = "Decode text";
-        this.module = "CharEnc";
+        this.module = "Encodings";
         this.description = [
             "Decodes text from the chosen character encoding.",
             "<br><br>",

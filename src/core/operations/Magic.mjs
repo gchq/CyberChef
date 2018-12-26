@@ -23,7 +23,7 @@ class Magic extends Operation {
         this.name = "Magic";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it.<br><br><b>Options</b><br><u>Depth:</u> If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion.<br><br><u>Intensive mode:</u> When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced.<br><br><u>Extensive language support:</u> At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar.";
+        this.description = "The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it.<br><br><b>Options</b><br><u>Depth:</u> If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion.<br><br><u>Intensive mode:</u> When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced.<br><br><u>Extensive language support:</u> At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar.<br><br>Optionally enter a regular expression to match a string you expect to find to filter results (crib).";
         this.infoURL = "https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
@@ -43,6 +43,11 @@ class Magic extends Operation {
                 "name": "Extensive language support",
                 "type": "boolean",
                 "value": false
+            },
+            {
+                "name": "Crib (known plaintext string or regex)",
+                "type": "string",
+                "value": ""
             }
         ];
     }
@@ -56,10 +61,16 @@ class Magic extends Operation {
      */
     async run(state) {
         const ings = state.opList[state.progress].ingValues,
-            [depth, intensive, extLang] = ings,
+            [depth, intensive, extLang, crib] = ings,
             dish = state.dish,
             magic = new MagicLib(await dish.get(Dish.ARRAY_BUFFER)),
-            options = await magic.speculativeExecution(depth, extLang, intensive);
+            cribRegex = (crib && crib.length) ? new RegExp(crib, "i") : null;
+        let options = await magic.speculativeExecution(depth, extLang, intensive, [], false, cribRegex);
+
+        // Filter down to results which matched the crib
+        if (cribRegex) {
+            options = options.filter(option => option.matchesCrib);
+        }
 
         // Record the current state for use when presenting
         this.state = state;

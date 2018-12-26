@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError.mjs";
+import OperationError from "../errors/OperationError";
 import notepack from "notepack.io";
 
 /**
