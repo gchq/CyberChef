@@ -16,13 +16,14 @@ export const FILE_SIGNATURES = {
     "Images": [
         {
             name: "Joint Photographic Experts Group image",
-            extension: "jpg",
+            extension: "jpg,jpeg,jpe,thm,mpo",
             mime: "image/jpeg",
             description: "",
             signature: {
                 0: 0xff,
                 1: 0xd8,
-                2: 0xff
+                2: 0xff,
+                3: [0xc0, 0xc4, 0xdb, 0xdd, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe7, 0xe8, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xfe]
             },
             extractor: extractJPEG
         },
@@ -32,9 +33,12 @@ export const FILE_SIGNATURES = {
             mime: "image/gif",
             description: "",
             signature: {
-                0: 0x47,
+                0: 0x47, // GIF
                 1: 0x49,
-                2: 0x46
+                2: 0x46,
+                3: 0x38, // 8
+                4: [0x37, 0x39], // 7|9
+                5: 0x61  // a
             },
             extractor: null
         },
@@ -45,9 +49,13 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x89,
-                1: 0x50,
+                1: 0x50, // PNG
                 2: 0x4e,
-                3: 0x47
+                3: 0x47,
+                4: 0x0d,
+                5: 0x0a,
+                6: 0x1a,
+                7: 0x0a
             },
             extractor: null
         },
@@ -61,6 +69,23 @@ export const FILE_SIGNATURES = {
                 9: 0x45,
                 10: 0x42,
                 11: 0x50
+            },
+            extractor: null
+        },
+        {
+            name: "Camera Image File Format",
+            extension: "crw",
+            mime: "image/x-canon-crw",
+            description: "",
+            signature: {
+                6: 0x48, // HEAPCCDR
+                7: 0x45,
+                8: 0x41,
+                9: 0x50,
+                10: 0x43,
+                11: 0x43,
+                12: 0x44,
+                13: 0x52
             },
             extractor: null
         },
@@ -117,7 +142,13 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x42,
-                1: 0x4d
+                1: 0x4d,
+                7: 0x0,
+                9: 0x0,
+                14: [0x0c, 0x28, 0x38, 0x40, 0x6c, 0x7c],
+                15: 0x0,
+                16: 0x0,
+                17: 0x0
             },
             extractor: null
         },
@@ -142,8 +173,50 @@ export const FILE_SIGNATURES = {
                 0: 0x38,
                 1: 0x42,
                 2: 0x50,
-                3: 0x53
+                3: 0x53,
+                4: 0x0,
+                5: 0x1,
+                6: 0x0,
+                7: 0x0,
+                8: 0x0,
+                9: 0x0,
+                10: 0x0,
+                11: 0x0
             },
+            extractor: null
+        },
+        {
+            name: "Paint Shop Pro image",
+            extension: "psp",
+            mime: "image/psp",
+            description: "",
+            signature: [
+                {
+                    0: 0x50, // Paint Shop Pro Im
+                    1: 0x61,
+                    2: 0x69,
+                    3: 0x6e,
+                    4: 0x74,
+                    5: 0x20,
+                    6: 0x53,
+                    7: 0x68,
+                    8: 0x6f,
+                    9: 0x70,
+                    10: 0x20,
+                    11: 0x50,
+                    12: 0x72,
+                    13: 0x6f,
+                    14: 0x20,
+                    15: 0x49,
+                    16: 0x6d
+                },
+                {
+                    0: 0x7e,
+                    1: 0x42,
+                    2: 0x4b,
+                    3: 0x0
+                }
+            ],
             extractor: null
         },
         {
@@ -155,7 +228,13 @@ export const FILE_SIGNATURES = {
                 0: 0x0,
                 1: 0x0,
                 2: 0x1,
-                3: 0x0
+                3: 0x0,
+                4: [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15],
+                5: 0x0,
+                6: [0x10, 0x20, 0x30, 0x40, 0x80],
+                7: [0x10, 0x20, 0x30, 0x40, 0x80],
+                9: 0x00,
+                10: [0x0, 0x1]
             },
             extractor: null
         }
@@ -509,6 +588,26 @@ export const FILE_SIGNATURES = {
                 5: 0xb1,
                 6: 0x1a,
                 7: 0xe1
+            },
+            extractor: null
+        },
+        {
+            name: "Microsoft Office 2007+ documents",
+            extension: "docx,xlsx,pptx",
+            mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            description: "",
+            signature: {
+                38: 0x5f, // _Types].xml
+                39: 0x54,
+                40: 0x79,
+                41: 0x70,
+                42: 0x65,
+                43: 0x73,
+                44: 0x5d,
+                45: 0x2e,
+                46: 0x78,
+                47: 0x6d,
+                48: 0x6c
             },
             extractor: null
         },
