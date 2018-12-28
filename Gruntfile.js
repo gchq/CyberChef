@@ -30,7 +30,7 @@ module.exports = function (grunt) {
         ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
-        "A task which runs all the tests in test/tests.",
+        "A task which runs all the tests in the tests directory.",
         ["exec:generateConfig", "exec:tests"]);
 
     grunt.registerTask("docs",
@@ -148,7 +148,7 @@ module.exports = function (grunt) {
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}"],
             node: ["src/node/**/*.{js,mjs}"],
-            tests: ["test/**/*.{js,mjs}"],
+            tests: ["tests/**/*.{js,mjs}"],
         },
         jsdoc: {
             options: {
@@ -244,19 +244,6 @@ module.exports = function (grunt) {
                             minifyCSS: true
                         }
                     }),
-                ]
-            },
-            tests: {
-                mode: "development",
-                target: "node",
-                entry: "./test/index.mjs",
-                externals: [NodeExternals()],
-                output: {
-                    filename: "index.js",
-                    path: __dirname + "/build/test"
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS)
                 ]
             },
             node: {
@@ -400,7 +387,7 @@ module.exports = function (grunt) {
                 ].join(";")
             },
             tests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation test/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
             }
         },
     });
