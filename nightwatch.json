@@ -1,0 +1,27 @@
+{
+  "src_folders": ["tests/browser"],
+  "output_folder": "tests/browser/output",
+
+  "test_settings": {
+
+    "default": {
+      "launch_url": "http://localhost:8080",
+      "webdriver": {
+        "start_process": true,
+        "log_path": false
+      }
+    },
+
+    "chrome": {
+      "webdriver": {
+        "server_path": "./node_modules/.bin/chromedriver",
+        "port": 9515
+      },
+      "desiredCapabilities": {
+        "browserName": "chrome"
+      }
+    }
+
+  }
+}
+

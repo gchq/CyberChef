@@ -30,8 +30,12 @@ module.exports = function (grunt) {
         ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
-        "A task which runs all the tests in the tests directory.",
-        ["exec:generateConfig", "exec:tests"]);
+        "A task which runs all the operation tests in the tests directory.",
+        ["exec:generateConfig", "exec:opTests"]);
+
+    grunt.registerTask("testui",
+        "A task which runs all the UI tests in the tests directory. Requires the dev server to be running.",
+        ["exec:browserTests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -386,8 +390,11 @@ module.exports = function (grunt) {
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
-            tests: {
+            opTests: {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
+            },
+            browserTests: {
+                command: "./node_modules/.bin/nightwatch --env chrome"
             }
         },
     });
