@@ -82,6 +82,7 @@ import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 import "./tests/operations/ParseTLV";
 import "./tests/operations/Media";
+import "./tests/operations/Disjoin";
 
 let allTestsPassing = true;
 const testStatusCounts = {
