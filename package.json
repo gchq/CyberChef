@@ -47,6 +47,7 @@
     "grunt-chmod": "~1.1.1",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "~2.0.0",
+    "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^21.0.0",

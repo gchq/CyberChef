@@ -8,18 +8,25 @@
       "launch_url": "http://localhost:8080",
       "webdriver": {
         "start_process": true,
-        "log_path": false
-      }
-    },
-
-    "chrome": {
-      "webdriver": {
         "server_path": "./node_modules/.bin/chromedriver",
-        "port": 9515
+        "port": 9515,
+        "log_path": false
       },
       "desiredCapabilities": {
         "browserName": "chrome"
       }
+    },
+
+    "dev": {
+      "launch_url": "http://localhost:8080"
+    },
+
+    "prod": {
+      "launch_url": "http://localhost:8000/index.html"
+    },
+
+    "inline": {
+      "launch_url": "http://localhost:8000/cyberchef.htm"
     }
 
   }

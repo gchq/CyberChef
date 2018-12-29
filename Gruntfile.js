@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("testui",
         "A task which runs all the UI tests in the tests directory. Requires the dev server to be running.",
-        ["exec:browserTests"]);
+        ["connect:prod", "exec:browserTests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -71,6 +71,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-accessibility");
     grunt.loadNpmTasks("grunt-concurrent");
+    grunt.loadNpmTasks("grunt-contrib-connect");
 
 
     // Project configuration
@@ -148,7 +149,7 @@ module.exports = function (grunt) {
             options: {
                 configFile: "./.eslintrc.json"
             },
-            configs: ["*.js"],
+            configs: ["*.{js,mjs}"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}"],
             node: ["src/node/**/*.{js,mjs}"],
@@ -311,6 +312,14 @@ module.exports = function (grunt) {
                 }
             }
         },
+        connect: {
+            prod: {
+                options: {
+                    port: 8000,
+                    base: "build/prod/"
+                }
+            }
+        },
         copy: {
             ghPages: {
                 options: {
@@ -394,7 +403,7 @@ module.exports = function (grunt) {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
             },
             browserTests: {
-                command: "./node_modules/.bin/nightwatch --env chrome"
+                command: "./node_modules/.bin/nightwatch --env prod,inline"
             }
         },
     });

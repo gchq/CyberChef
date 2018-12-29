@@ -7,7 +7,6 @@
  */
 module.exports = {
     before: function (browser) {
-        console.log("The dev server much be running on http://localhost:8080 for these tests to work.")
         browser
             .resizeWindow(1280, 800)
             .url(browser.launchUrl);
