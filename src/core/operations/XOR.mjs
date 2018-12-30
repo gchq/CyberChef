@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import { bitOp, xor, BITWISE_OP_DELIMS } from "../lib/BitwiseOp";
+import { bitOp, xor, add, BITWISE_OP_DELIMS } from "../lib/BitwiseOp";
 
 /**
  * XOR operation
@@ -35,7 +35,7 @@ class XOR extends Operation {
             {
                 "name": "Scheme",
                 "type": "option",
-                "value": ["Standard", "Input differential", "Output differential", "Cascade"]
+                "value": ["Standard", "Input differential", "Output differential", "Cascade", "Rolling", "Rolling (cumulative)", "Rolling (cumulative self)"]
             },
             {
                 "name": "Null preserving",
@@ -53,6 +53,26 @@ class XOR extends Operation {
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
             [, scheme, nullPreserving] = args;
+
+        if (scheme.startsWith("Rolling") && key.length) {
+            const inp = input.chunks(key.length);
+            let runningIndex = 0;
+            let runningKey = key;
+            let xorred = null;
+            return inp.reduce((result, current, index) => {
+                runningIndex += index;
+                switch (scheme) {
+                    case "Rolling":  // key = key + index
+                        return result.concat(bitOp(current, key.map(x => add(x, index)), xor, nullPreserving, scheme));
+                    case "Rolling (cumulative)":  // key = key + index + previous indices
+                        return result.concat(bitOp(current, key.map(x => add(x, runningIndex)), xor, nullPreserving, scheme));
+                    case "Rolling (cumulative self)": // key = key XOR previous chunk
+                        xorred = bitOp(current, runningKey, xor, nullPreserving, scheme);
+                        runningKey = bitOp(runningKey, current, xor, nullPreserving, scheme);
+                        return result.concat(xorred);
+                }
+            }, Utils.strToByteArray(""));
+        }
 
         return bitOp(input, key, xor, nullPreserving, scheme);
     }

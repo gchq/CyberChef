@@ -1079,7 +1079,6 @@ Array.prototype.unique = function() {
     return a;
 };
 
-
 /**
  * Returns the largest value in the array.
  *
@@ -1147,6 +1146,64 @@ Array.prototype.equals = function(other) {
     return true;
 };
 
+
+/**
+* Returns an array of the original array split into array chunks of size n.
+*
+* @returns {Array}
+*
+* @example
+* // returns [[1,2,3], [4,5,6], [7,8,9]]
+* [1,2,3,4,5,6,7,8,9].chunks(3);
+*
+* // returns []
+* [].chunks(7)
+*
+* // returns [1,2,3,4,5,6,7,8,9]
+* [1,2,3,4,5,6,7,8,9].chunks(0);
+* [1,2,3,4,5,6,7,8,9].chunks(-1);
+*
+*/
+Array.prototype.chunks = function(chunkSize) {
+    if (!this.length || chunkSize <= 0) return this;
+    const result = [];
+    for (let i = 0; i < this.length; i++) {
+        if (i % chunkSize === 0) {
+            result.push([]);
+        }
+        result[i / chunkSize | 0].push(this[i]);
+    }
+    return result;
+};
+
+/**
+* Returns an array of the original string split into string chunks of size n.
+*
+* @returns {Array}
+*
+* @example
+* // returns ["som", "eth", "ing"]
+* "something".chunks(3);
+*
+* // returns ""
+* "".chunks(7);
+*
+* // returns "something"
+* "something".chunks(0);
+* "something".chunks(-1);
+*
+*/
+String.prototype.chunks = function(chunkSize) {
+    if (!this.length || chunkSize <= 0) return this;
+    const result = [];
+    for (let i = 0; i < this.length; i++) {
+        if (i % chunkSize === 0) {
+            result.push("");
+        }
+        result[i / chunkSize | 0] += this.charAt(i);
+    }
+    return result;
+};
 
 /**
  * Counts the number of times a char appears in a string.
