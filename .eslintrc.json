@@ -87,6 +87,15 @@
         "no-var": "error",
         "prefer-const": "error"
     },
+    "overrides": [
+        {
+            "files": "tests/**/*",
+            "rules": {
+                "no-unused-expressions": "off",
+                "no-console": "off"
+            }
+        }
+    ],
     "globals": {
         "$": false,
         "jQuery": false,
