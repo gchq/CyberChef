@@ -207,11 +207,7 @@ ${extensions}`;
  */
 function formatDate (dateStr) {
     if (dateStr.length === 13) { // UTC Time
-        if (dateStr[0] < "5") {
-            dateStr = "20" + dateStr;
-        } else {
-            dateStr = "19" + dateStr;
-        }
+        dateStr = (dateStr[0] < "5" ? "20" : "19") + dateStr;
     }
     return dateStr[6] + dateStr[7] + "/" +
         dateStr[4] + dateStr[5] + "/" +
