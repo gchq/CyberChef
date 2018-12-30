@@ -69,7 +69,7 @@ module.exports = {
             .useXpath()
             .moveToElement(toHex, 10, 10)
             .useCss()
-            .waitForElementVisible(".popover-body", 500)
+            .waitForElementVisible(".popover-body", 1000)
             .doubleClick();
 
         // Confirm that it has been added to the recipe
@@ -87,14 +87,14 @@ module.exports = {
         // Check output
         browser
             .useCss()
-            .waitForElementNotVisible("#stale-indicator", 100)
+            .waitForElementNotVisible("#stale-indicator", 500)
             .expect.element("#output-text").to.have.value.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
         browser
             .useCss()
             .moveToElement(op, 10, 10)
-            .waitForElementNotPresent(".popover-body", 500)
+            .waitForElementNotPresent(".popover-body", 1000)
             .click("#clr-recipe")
             .waitForElementNotPresent(op);
     },
