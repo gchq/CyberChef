@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - node
+addons:
+  chrome: stable
 install: npm install
 before_script:
   - npm install -g grunt
