@@ -57,7 +57,7 @@ export const FILE_SIGNATURES = {
                 6: 0x1a,
                 7: 0x0a
             },
-            extractor: null
+            extractor: extractPNG
         },
         {
             name: "WEBP Image",
@@ -150,7 +150,7 @@ export const FILE_SIGNATURES = {
                 16: 0x0,
                 17: 0x0
             },
-            extractor: null
+            extractor: extractBMP
         },
         {
             name: "JPEG Extended Range image",
@@ -1230,6 +1230,58 @@ export function extractZIP(bytes, offset) {
     stream.moveForwardsBy(20);
     const commentLength = stream.readInt(2, "le");
     stream.moveForwardsBy(commentLength);
+
+    return stream.carve();
+}
+
+
+/**
+ * PNG extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractPNG(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move past signature to first chunk
+    stream.moveForwardsBy(8);
+
+    let chunkSize = 0,
+        chunkType = "";
+
+    while (chunkType !== "IEND") {
+        chunkSize = stream.readInt(4, "be");
+        chunkType = stream.readString(4);
+
+        // Chunk data size + CRC checksum
+        stream.moveForwardsBy(chunkSize + 4);
+    }
+
+
+    return stream.carve();
+}
+
+
+/**
+ * BMP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractBMP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move past header
+    stream.moveForwardsBy(2);
+
+    // Read full file size
+    const bmpSize = stream.readInt(4, "le");
+
+    // Move to end of file (file size minus header and size field)
+    stream.moveForwardsBy(bmpSize - 6);
 
     return stream.carve();
 }
