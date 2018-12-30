@@ -81,7 +81,8 @@ module.exports = {
         // Enter input
         browser
             .useCss()
-            .setValue("#input-text", "Don't Panic.");
+            .setValue("#input-text", "Don't Panic.")
+            .click("#bake");
 
         // Check output
         browser
