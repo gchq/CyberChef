@@ -181,8 +181,8 @@ class ParseX509Certificate extends Operation {
 Serial number:    ${new r.BigInteger(sn, 16).toString()} (0x${sn})
 Algorithm ID:     ${cert.getSignatureAlgorithmField()}
 Validity
-  Not Before:     ${nbDate} (dd-mm-yy hh:mm:ss) (${cert.getNotBefore()})
-  Not After:      ${naDate} (dd-mm-yy hh:mm:ss) (${cert.getNotAfter()})
+  Not Before:     ${nbDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotBefore()})
+  Not After:      ${naDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotAfter()})
 Issuer
 ${issuerStr}
 Subject
@@ -208,6 +208,7 @@ ${extensions}`;
 function formatDate (dateStr) {
     return dateStr[4] + dateStr[5] + "/" +
         dateStr[2] + dateStr[3] + "/" +
+        (dateStr[0] < "5" ? "20" : "19") +
         dateStr[0] + dateStr[1] + " " +
         dateStr[6] + dateStr[7] + ":" +
         dateStr[8] + dateStr[9] + ":" +
