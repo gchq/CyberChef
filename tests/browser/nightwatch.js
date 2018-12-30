@@ -1,12 +1,12 @@
 /**
- * Tests to ensure that the app loads correctly in a reasonable time and that operations can br run.
+ * Tests to ensure that the app loads correctly in a reasonable time and that operations can be run.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 module.exports = {
-    before: function (browser) {
+    before: browser => {
         browser
             .resizeWindow(1280, 800)
             .url(browser.launchUrl);
@@ -35,7 +35,7 @@ module.exports = {
 
     "Operations loaded": browser => {
         browser.useXpath();
-        // Check an operation in every category
+        // Check that an operation in every category has been populated
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Base64']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Binary']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='AES Decrypt']").to.be.present;
@@ -70,12 +70,12 @@ module.exports = {
             .moveToElement(toHex, 10, 10)
             .useCss()
             .waitForElementVisible(".popover-body", 500)
-            .doubleClick()
-            .waitForElementVisible(op);
+            .doubleClick();
 
         // Confirm that it has been added to the recipe
         browser
             .useCss()
+            .waitForElementVisible(op)
             .expect.element(op).text.to.contain("To Hex");
 
         // Enter input
@@ -86,6 +86,7 @@ module.exports = {
         // Check output
         browser
             .useCss()
+            .waitForElementNotVisible("#stale-indicator", 100)
             .expect.element("#output-text").to.have.value.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe

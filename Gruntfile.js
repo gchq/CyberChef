@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         ["exec:generateConfig", "exec:opTests"]);
 
     grunt.registerTask("testui",
-        "A task which runs all the UI tests in the tests directory. Requires the dev server to be running.",
+        "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
         ["connect:prod", "exec:browserTests"]);
 
     grunt.registerTask("docs",
