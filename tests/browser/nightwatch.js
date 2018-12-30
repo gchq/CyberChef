@@ -87,7 +87,7 @@ module.exports = {
         // Check output
         browser
             .useCss()
-            .waitForElementNotVisible("#stale-indicator", 500)
+            .waitForElementNotVisible("#stale-indicator", 1000)
             .expect.element("#output-text").to.have.value.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
