@@ -206,13 +206,19 @@ ${extensions}`;
  * @returns {string}
  */
 function formatDate (dateStr) {
-    return dateStr[4] + dateStr[5] + "/" +
-        dateStr[2] + dateStr[3] + "/" +
-        (dateStr[0] < "5" ? "20" : "19") +
-        dateStr[0] + dateStr[1] + " " +
-        dateStr[6] + dateStr[7] + ":" +
+    if (dateStr.length === 13) { // UTC Time
+        if (dateStr[0] < "5") {
+            dateStr = "20" + dateStr;
+        } else {
+            dateStr = "19" + dateStr;
+        }
+    }
+    return dateStr[6] + dateStr[7] + "/" +
+        dateStr[4] + dateStr[5] + "/" +
+        dateStr[0] + dateStr[1] + dateStr[2] + dateStr[3] + " " +
         dateStr[8] + dateStr[9] + ":" +
-        dateStr[10] + dateStr[11];
+        dateStr[10] + dateStr[11] + ":" +
+        dateStr[12] + dateStr[13];
 }
 
 export default ParseX509Certificate;
