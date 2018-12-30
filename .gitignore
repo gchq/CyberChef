@@ -9,4 +9,5 @@ docs/*
 src/core/config/modules/*
 src/core/config/OperationConfig.json
 src/core/operations/index.mjs
+tests/browser/output/*
 
