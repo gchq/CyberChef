@@ -16,13 +16,22 @@ import {FILE_SIGNATURES} from "./FileSignatures";
  *   These values can be numbers for static checks, arrays of potential valid matches,
  *   or bespoke functions to check the validity of the buffer value at that offset.
  * @param {Uint8Array} buf
+ * @param {number} [offset=0] Where in the buffer to start searching from
  * @returns {boolean}
  */
-function signatureMatches(sig, buf) {
-    if (sig instanceof Array) {
-        return sig.reduce((acc, s) => acc || bytesMatch(s, buf), false);
+function signatureMatches(sig, buf, offset=0) {
+    // Using a length check seems to be more performant than `sig instanceof Array`
+    if (sig.length) {
+        // sig is an Array - return true if any of them match
+        // The following `reduce` method is nice, but performance matters here, so we
+        // opt for a faster, if less elegant, for loop.
+        // return sig.reduce((acc, s) => acc || bytesMatch(s, buf, offset), false);
+        for (let i = 0; i < sig.length; i++) {
+            if (bytesMatch(sig[i], buf, offset)) return true;
+        }
+        return false;
     } else {
-        return bytesMatch(sig, buf);
+        return bytesMatch(sig, buf, offset);
     }
 }
 
@@ -34,25 +43,27 @@ function signatureMatches(sig, buf) {
  *   These values can be numbers for static checks, arrays of potential valid matches,
  *   or bespoke functions to check the validity of the buffer value at that offset.
  * @param {Uint8Array} buf
+ * @param {number} [offset=0] Where in the buffer to start searching from
  * @returns {boolean}
  */
-function bytesMatch(sig, buf) {
-    for (const offset in sig) {
-        switch (typeof sig[offset]) {
+function bytesMatch(sig, buf, offset=0) {
+    for (const sigoffset in sig) {
+        const pos = parseInt(sigoffset, 10) + offset;
+        switch (typeof sig[sigoffset]) {
             case "number": // Static check
-                if (buf[offset] !== sig[offset])
+                if (buf[pos] !== sig[sigoffset])
                     return false;
                 break;
             case "object": // Array of options
-                if (sig[offset].indexOf(buf[offset]) < 0)
+                if (sig[sigoffset].indexOf(buf[pos]) < 0)
                     return false;
                 break;
             case "function": // More complex calculation
-                if (!sig[offset](buf[offset]))
+                if (!sig[sigoffset](buf[pos]))
                     return false;
                 break;
             default:
-                throw new Error(`Unrecognised signature type at offset ${offset}`);
+                throw new Error(`Unrecognised signature type at offset ${sigoffset}`);
         }
     }
     return true;
@@ -88,6 +99,46 @@ export function detectFileType(buf) {
         });
     }
     return matchingFiles;
+}
+
+
+/**
+ * Given a buffer, searches for magic byte sequences at all possible positions and returns
+ * the extensions and mime types.
+ *
+ * @param {Uint8Array} buf
+ * @returns {Object[]} foundFiles
+ * @returns {number} foundFiles.offset - The position in the buffer at which this file was found
+ * @returns {Object} foundFiles.fileDetails
+ * @returns {string} foundFiles.fileDetails.name - Name of file type
+ * @returns {string} foundFiles.fileDetails.ext - File extension
+ * @returns {string} foundFiles.fileDetails.mime - Mime type
+ * @returns {string} [foundFiles.fileDetails.desc] - Description
+ */
+export function scanForFileTypes(buf) {
+    if (!(buf && buf.length > 1)) {
+        return [];
+    }
+
+    const foundFiles = [];
+
+    // TODO allow user to select which categories to check
+    for (const cat in FILE_SIGNATURES) {
+        const category = FILE_SIGNATURES[cat];
+
+        for (let i = 0; i < category.length; i++) {
+            const filetype = category[i];
+            for (let pos = 0; pos < buf.length; pos++) {
+                if (signatureMatches(filetype.signature, buf, pos)) {
+                    foundFiles.push({
+                        offset: pos,
+                        fileDetails: filetype
+                    });
+                }
+            }
+        }
+    }
+    return foundFiles;
 }
 
 

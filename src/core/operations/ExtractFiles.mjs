@@ -7,7 +7,7 @@
 import Operation from "../Operation";
 // import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import {detectFileType, extractFile} from "../lib/FileType";
+import {scanForFileTypes, extractFile} from "../lib/FileType";
 
 /**
  * Extract Files operation
@@ -39,7 +39,7 @@ class ExtractFiles extends Operation {
         const bytes = new Uint8Array(input);
 
         // Scan for embedded files
-        const detectedFiles = scanForEmbeddedFiles(bytes);
+        const detectedFiles = scanForFileTypes(bytes);
 
         // Extract each file that we support
         const files = [];
@@ -62,28 +62,6 @@ class ExtractFiles extends Operation {
         return await Utils.displayFilesAsHTML(files);
     }
 
-}
-
-/**
- * TODO refactor
- * @param data
- */
-function scanForEmbeddedFiles(data) {
-    const detectedFiles = [];
-
-    for (let i = 0; i < data.length; i++) {
-        const fileDetails = detectFileType(data.slice(i));
-        if (fileDetails.length) {
-            fileDetails.forEach(match => {
-                detectedFiles.push({
-                    offset: i,
-                    fileDetails: match,
-                });
-            });
-        }
-    }
-
-    return detectedFiles;
 }
 
 export default ExtractFiles;

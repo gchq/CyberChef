@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {detectFileType} from "../lib/FileType";
+import {scanForFileTypes} from "../lib/FileType";
 
 /**
  * Scan for Embedded Files operation
@@ -41,32 +41,30 @@ class ScanForEmbeddedFiles extends Operation {
      */
     run(input, args) {
         let output = "Scanning data for 'magic bytes' which may indicate embedded files. The following results may be false positives and should not be treat as reliable. Any suffiently long file is likely to contain these magic bytes coincidentally.\n",
-            types,
             numFound = 0,
             numCommonFound = 0;
         const ignoreCommon = args[0],
-            commonExts = ["ico", "ttf", ""],
-            data = new Uint8Array(input);
+            commonExts = ["ttf", "utf16le", ""],
+            data = new Uint8Array(input),
+            types = scanForFileTypes(data);
 
-        for (let i = 0; i < data.length; i++) {
-            types = detectFileType(data.slice(i));
-            if (types.length) {
-                types.forEach(type => {
-                    if (ignoreCommon && commonExts.indexOf(type.extension) > -1) {
-                        numCommonFound++;
-                        return;
-                    }
 
-                    numFound++;
-                    output += "\nOffset " + i + " (0x" + Utils.hex(i) + "):\n" +
-                        "  File extension: " + type.extension + "\n" +
-                        "  MIME type:      " + type.mime + "\n";
+        if (types.length) {
+            types.forEach(type => {
+                if (ignoreCommon && commonExts.indexOf(type.fileDetails.extension) > -1) {
+                    numCommonFound++;
+                    return;
+                }
 
-                    if (type.description && type.description.length) {
-                        output += "  Description:    " + type.description + "\n";
-                    }
-                });
-            }
+                numFound++;
+                output += "\nOffset " + type.offset + " (0x" + Utils.hex(type.offset) + "):\n" +
+                    "  File extension: " + type.fileDetails.extension + "\n" +
+                    "  MIME type:      " + type.fileDetails.mime + "\n";
+
+                if (type.fileDetails.description && type.fileDetails.description.length) {
+                    output += "  Description:    " + type.fileDetails.description + "\n";
+                }
+            });
         }
 
         if (numFound === 0) {
