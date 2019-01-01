@@ -6,8 +6,7 @@ addons:
 install: npm install
 before_script:
   - npm install -g grunt
-  - npm install -g increase-memory-limit
-  - increase-memory-limit
+  - export NODE_OPTIONS=--max_old_space_size=1024
 script:
   - grunt lint
   - grunt test
