@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import bsonjs from "bson";
+import bson from "bson";
 import OperationError from "../errors/OperationError";
 
 /**
@@ -35,8 +35,6 @@ class BSONSerialise extends Operation {
      */
     run(input, args) {
         if (!input) return new ArrayBuffer();
-
-        const bson = new bsonjs();
 
         try {
             const data = JSON.parse(input);
