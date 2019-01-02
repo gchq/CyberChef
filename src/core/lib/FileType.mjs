@@ -128,17 +128,58 @@ export function scanForFileTypes(buf) {
 
         for (let i = 0; i < category.length; i++) {
             const filetype = category[i];
-            for (let pos = 0; pos < buf.length; pos++) {
-                if (signatureMatches(filetype.signature, buf, pos)) {
-                    foundFiles.push({
-                        offset: pos,
-                        fileDetails: filetype
-                    });
+            const sigs = filetype.signature.length ? filetype.signature : [filetype.signature];
+
+            sigs.forEach(sig => {
+                let pos = 0;
+                while ((pos = locatePotentialSig(buf, sig, pos)) >= 0) {
+                    if (signatureMatches(sig, buf, pos)) {
+                        foundFiles.push({
+                            offset: pos,
+                            fileDetails: filetype
+                        });
+                    }
+                    pos++;
                 }
-            }
+            });
         }
     }
-    return foundFiles;
+
+    // Return found files in order of increasing offset
+    return foundFiles.sort((a, b) => {
+        return a.offset - b.offset;
+    });
+}
+
+
+/**
+ * Fastcheck function to quickly scan the buffer for the first byte in a signature.
+ *
+ * @param {Uint8Array} buf - The buffer to search
+ * @param {Object} sig - A single signature object (Not an array of signatures)
+ * @param {number} offset - Where to start search from
+ * @returs {number} The position of the match or -1 if one cannot be found.
+ */
+function locatePotentialSig(buf, sig, offset) {
+    // Find values for first key and value in sig
+    const k = parseInt(Object.keys(sig)[0], 10);
+    const v = Object.values(sig)[0];
+    switch (typeof v) {
+        case "number":
+            return buf.indexOf(v, offset + k) - k;
+        case "object":
+            for (let i = offset + k; i < buf.length; i++) {
+                if (v.indexOf(buf[i]) >= 0) return i - k;
+            }
+            return -1;
+        case "function":
+            for (let i = offset + k; i < buf.length; i++) {
+                if (v(buf[i])) return i - k;
+            }
+            return -1;
+        default:
+            throw new Error("Unrecognised signature type");
+    }
 }
 
 
@@ -155,9 +196,15 @@ export function isType(type, buf) {
     if (!(types && types.length)) return false;
 
     if (typeof type === "string") {
-        return types[0].mime.startsWith(type) ? types[0].mime : false;
+        return types.reduce((acc, t) => {
+            const mime = t.mime.startsWith(type) ? t.mime : false;
+            return acc || mime;
+        }, false);
     } else if (type instanceof RegExp) {
-        return type.test(types[0].mime) ? types[0].mime : false;
+        return types.reduce((acc, t) => {
+            const mime = type.test(t.mime) ? t.mime : false;
+            return acc || mime;
+        }, false);
     } else {
         throw new Error("Invalid type input.");
     }
