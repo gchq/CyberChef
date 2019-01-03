@@ -133,7 +133,7 @@ export function scanForFileTypes(buf) {
             sigs.forEach(sig => {
                 let pos = 0;
                 while ((pos = locatePotentialSig(buf, sig, pos)) >= 0) {
-                    if (signatureMatches(sig, buf, pos)) {
+                    if (bytesMatch(sig, buf, pos)) {
                         foundFiles.push({
                             offset: pos,
                             fileDetails: filetype
