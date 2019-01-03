@@ -417,7 +417,7 @@ export const FILE_SIGNATURES = {
                 2: 0x56,
                 3: 0x1
             },
-            extractor: null
+            extractor: extractFLV
         },
     ],
     "Audio": [
@@ -1282,6 +1282,52 @@ export function extractBMP(bytes, offset) {
 
     // Move to end of file (file size minus header and size field)
     stream.moveForwardsBy(bmpSize - 6);
+
+    return stream.carve();
+}
+
+
+/**
+ * FLV extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractFLV(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move past signature, version and flags
+    stream.moveForwardsBy(5);
+
+    // Read header size
+    const headerSize = stream.readInt(4, "be");
+
+    // Skip through the rest of the header
+    stream.moveForwardsBy(headerSize - 9);
+
+    let tagSize = -11; // Fake size of previous tag header
+    while (stream.position < stream.length) {
+        const prevTagSize = stream.readInt(4, "be");
+        const tagType = stream.readInt(1, "be");
+
+        if ([8, 9, 18].indexOf(tagType) < 0) {
+            // This tag is not valid
+            stream.moveBackwardsBy(1);
+            break;
+        }
+
+        if (prevTagSize !== tagSize + 11) {
+            // Previous tag was not valid
+            stream.moveBackwardsBy(tagSize + 11);
+            break;
+        }
+
+        tagSize = stream.readInt(3, "be");
+
+        // Move past the rest of the tag header and payload
+        stream.moveForwardsBy(7 + tagSize);
+    }
 
     return stream.carve();
 }

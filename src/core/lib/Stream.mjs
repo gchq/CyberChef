@@ -22,6 +22,7 @@ export default class Stream {
     constructor(input) {
         this.bytes = input;
         this.position = 0;
+        this.length = this.bytes.length;
     }
 
     /**
@@ -31,6 +32,8 @@ export default class Stream {
      * @returns {Uint8Array}
      */
     getBytes(numBytes) {
+        if (this.position > this.length) return undefined;
+
         const newPosition = this.position + numBytes;
         const bytes = this.bytes.slice(this.position, newPosition);
         this.position = newPosition;
@@ -45,6 +48,8 @@ export default class Stream {
      * @returns {string}
      */
     readString(numBytes) {
+        if (this.position > this.length) return undefined;
+
         let result = "";
         for (let i = this.position; i < this.position + numBytes; i++) {
             const currentByte = this.bytes[i];
@@ -63,6 +68,8 @@ export default class Stream {
      * @returns {number}
      */
     readInt(numBytes, endianness="be") {
+        if (this.position > this.length) return undefined;
+
         let val = 0;
         if (endianness === "be") {
             for (let i = this.position; i < this.position + numBytes; i++) {
@@ -85,8 +92,10 @@ export default class Stream {
      * @param {number|List<number>} val
      */
     continueUntil(val) {
+        if (this.position > this.length) return;
+
         if (typeof val === "number") {
-            while (++this.position < this.bytes.length && this.bytes[this.position] !== val) {
+            while (++this.position < this.length && this.bytes[this.position] !== val) {
                 continue;
             }
             return;
@@ -94,13 +103,13 @@ export default class Stream {
 
         // val is an array
         let found = false;
-        while (!found && this.position < this.bytes.length) {
-            while (++this.position < this.bytes.length && this.bytes[this.position] !== val[0]) {
+        while (!found && this.position < this.length) {
+            while (++this.position < this.length && this.bytes[this.position] !== val[0]) {
                 continue;
             }
             found = true;
             for (let i = 1; i < val.length; i++) {
-                if (this.position + i > this.bytes.length || this.bytes[this.position + i] !== val[i])
+                if (this.position + i > this.length || this.bytes[this.position + i] !== val[i])
                     found = false;
             }
         }
@@ -122,7 +131,23 @@ export default class Stream {
      * @param {number} numBytes
      */
     moveForwardsBy(numBytes) {
-        this.position += numBytes;
+        const pos = this.position + numBytes;
+        if (pos < 0 || pos > this.length)
+            throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
+        this.position = pos;
+    }
+
+
+    /**
+     * Move backwards through the stream by the specified number of bytes.
+     *
+     * @param {number} numBytes
+     */
+    moveBackwardsBy(numBytes) {
+        const pos = this.position - numBytes;
+        if (pos < 0 || pos > this.length)
+            throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
+        this.position = pos;
     }
 
     /**
@@ -131,7 +156,7 @@ export default class Stream {
      * @param {number} pos
      */
     moveTo(pos) {
-        if (pos < 0 || pos > this.bytes.length - 1)
+        if (pos < 0 || pos > this.length)
             throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
     }
@@ -142,7 +167,7 @@ export default class Stream {
      * @returns {boolean}
      */
     hasMore() {
-        return this.position < this.bytes.length;
+        return this.position < this.length;
     }
 
     /**
