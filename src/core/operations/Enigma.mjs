@@ -8,12 +8,12 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import * as Enigma from "../lib/Enigma";
+import {ROTORS, LETTERS, ROTORS_OPTIONAL, REFLECTORS, Rotor, Reflector, Plugboard, EnigmaMachine} from "../lib/Enigma";
 
 /**
  * Enigma operation
  */
-class EnigmaOp extends Operation {
+class Enigma extends Operation {
     /**
      * Enigma constructor
      */
@@ -30,72 +30,72 @@ class EnigmaOp extends Operation {
             {
                 name: "1st (right-hand) rotor",
                 type: "editableOption",
-                value: Enigma.ROTORS,
+                value: ROTORS,
                 // Default config is the rotors I-III *left to right*
                 defaultIndex: 2
             },
             {
                 name: "1st rotor ring setting",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "1st rotor initial value",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "2nd rotor",
                 type: "editableOption",
-                value: Enigma.ROTORS,
+                value: ROTORS,
                 defaultIndex: 1
             },
             {
                 name: "2nd rotor ring setting",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "2nd rotor initial value",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "3rd rotor",
                 type: "editableOption",
-                value: Enigma.ROTORS,
+                value: ROTORS,
                 defaultIndex: 0
             },
             {
                 name: "3rd rotor ring setting",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "3rd rotor initial value",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "4th rotor",
                 type: "editableOption",
-                value: Enigma.ROTORS_OPTIONAL,
+                value: ROTORS_OPTIONAL,
                 defaultIndex: 10
             },
             {
                 name: "4th rotor ring setting",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "4th rotor initial value",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "Reflector",
                 type: "editableOption",
-                value: Enigma.REFLECTORS
+                value: REFLECTORS
             },
             {
                 name: "Plugboard",
@@ -145,14 +145,14 @@ class EnigmaOp extends Operation {
                 break;
             }
             const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*3], 1);
-            rotors.push(new Enigma.Rotor(rotorwiring, rotorsteps, args[i*3 + 1], args[i*3 + 2]));
+            rotors.push(new Rotor(rotorwiring, rotorsteps, args[i*3 + 1], args[i*3 + 2]));
         }
-        const reflector = new Enigma.Reflector(reflectorstr);
-        const plugboard = new Enigma.Plugboard(plugboardstr);
+        const reflector = new Reflector(reflectorstr);
+        const plugboard = new Plugboard(plugboardstr);
         if (removeOther) {
             input = input.replace(/[^A-Za-z]/g, "");
         }
-        const enigma = new Enigma.EnigmaMachine(rotors, reflector, plugboard);
+        const enigma = new EnigmaMachine(rotors, reflector, plugboard);
         let result = enigma.crypt(input);
         if (removeOther) {
             // Five character cipher groups is traditional
@@ -194,4 +194,4 @@ class EnigmaOp extends Operation {
 
 }
 
-export default EnigmaOp;
+export default Enigma;
