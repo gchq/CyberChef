@@ -609,7 +609,7 @@ export const FILE_SIGNATURES = {
                 47: 0x6d,
                 48: 0x6c
             },
-            extractor: null
+            extractor: extractZIP
         },
         {
             name: "EPUB e-book",
