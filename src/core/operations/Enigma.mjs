@@ -83,6 +83,11 @@ class EnigmaOp extends Operation {
                 defaultIndex: 10
             },
             {
+                name: "4th rotor ring setting",
+                type: "option",
+                value: Enigma.LETTERS
+            },
+            {
                 name: "4th rotor initial value",
                 type: "option",
                 value: Enigma.LETTERS
@@ -130,25 +135,17 @@ class EnigmaOp extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [
-            rotor1str, rotor1ring, rotor1pos,
-            rotor2str, rotor2ring, rotor2pos,
-            rotor3str, rotor3ring, rotor3pos,
-            rotor4str, rotor4pos,
-            reflectorstr, plugboardstr,
-            removeOther
-        ] = args;
+        const reflectorstr = args[12];
+        const plugboardstr = args[13];
+        const removeOther = args[14];
         const rotors = [];
-        const [rotor1wiring, rotor1steps] = this.parseRotorStr(rotor1str, 1);
-        rotors.push(new Enigma.Rotor(rotor1wiring, rotor1steps, rotor1ring, rotor1pos));
-        const [rotor2wiring, rotor2steps] = this.parseRotorStr(rotor2str, 2);
-        rotors.push(new Enigma.Rotor(rotor2wiring, rotor2steps, rotor2ring, rotor2pos));
-        const [rotor3wiring, rotor3steps] = this.parseRotorStr(rotor3str, 3);
-        rotors.push(new Enigma.Rotor(rotor3wiring, rotor3steps, rotor3ring, rotor3pos));
-        if (rotor4str !== "") {
-            // Fourth rotor doesn't have a ring setting - A is equivalent to no setting
-            const [rotor4wiring, rotor4steps] = this.parseRotorStr(rotor4str, 4);
-            rotors.push(new Enigma.Rotor(rotor4wiring, rotor4steps, "A", rotor4pos));
+        for (let i=0; i<4; i++) {
+            if (i === 3 && args[i*3] === "") {
+                // No fourth rotor
+                break;
+            }
+            const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*3], 1);
+            rotors.push(new Enigma.Rotor(rotorwiring, rotorsteps, args[i*3 + 1], args[i*3 + 2]));
         }
         const reflector = new Enigma.Reflector(reflectorstr);
         const plugboard = new Enigma.Plugboard(plugboardstr);

@@ -21,7 +21,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -41,7 +41,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "W",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "F",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "N",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -62,7 +62,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "B", "Z",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -82,7 +82,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "W", "Z",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "F", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "N", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -102,7 +102,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -121,7 +121,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -132,7 +132,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -152,7 +152,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "U",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "D",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -172,7 +172,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "U",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "E",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -192,7 +192,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "S",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "D",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -211,7 +211,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "H", "Z",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -230,7 +230,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "H", "F",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "C", "D",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "Q", "A",
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -249,7 +249,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "D", "Q",
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "P", "F",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "O", "E",
-                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", "X", // Beta
+                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", "A", "X", // Beta
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     ""
                 ]
@@ -268,7 +268,7 @@ TestRegister.addTests([
                     "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "W", "U", // IV
                     "VZBRGITYUPSDNHLXAWMJQOFECK<A", "M", "G", // V
                     "JPGVOUMFYQBENHZRDKASXLICTW<AN", "A", "J", // VI
-                    "FSOKANUERHMBTIYCWLQPZXVGJD", "L", // Gamma
+                    "FSOKANUERHMBTIYCWLQPZXVGJD", "A", "L", // Gamma
                     "AR BD CO EJ FN GT HK IV LM PW QZ SX UY", // C thin
                     ""
                 ]
@@ -287,7 +287,7 @@ TestRegister.addTests([
                     "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "U", "Z", // VIII
                     "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "O", "O", // IV
                     "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN", "I", "V", // VII
-                    "FSOKANUERHMBTIYCWLQPZXVGJD", "I", // Gamma
+                    "FSOKANUERHMBTIYCWLQPZXVGJD", "A", "I", // Gamma
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     "WN MJ LX YB FP QD US IH CE GR"
                 ]
@@ -306,9 +306,28 @@ TestRegister.addTests([
                     "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "U", "Z", // VIII
                     "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "O", "O", // IV
                     "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN", "I", "V", // VII
-                    "FSOKANUERHMBTIYCWLQPZXVGJD", "I", // Gamma
+                    "FSOKANUERHMBTIYCWLQPZXVGJD", "A", "I", // Gamma
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     "WN MJ LX YB FP QD US IH CE GR"
+                ]
+            }
+        ]
+    },
+    {
+        // Decryption test on real message
+        name: "Enigma: decryption 2",
+        input: "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXTGPJJAVTOCKZFSLPPQIHZFXOEBWIIEKFZLCLOAQJULJOYHSSMBBGWHZANVOIIPYRBRTDJQDJJOQKCXWDNBBTYVXLYTAPGVEATXSONPNYNQFUDBBHHVWEPYEYDOHNLXKZDNWRHDUWUJUMWWVIIWZXIVIUQDRHYMNCYEFUAPNHOTKHKGDNPSAKNUAGHJZSMJBMHVTREQEDGXHLZWIFUSKDQVELNMIMITHBHDBWVHDFYHJOQIHORTDJDBWXEMEAYXGYQXOHFDMYUXXNOJAZRSGHPLWMLRECWWUTLRTTVLBHYOORGLGOWUXNXHMHYFAACQEKTHSJW",
+        expectedOutput: "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHHABEFOLGELNBEBEFEHLERHALTENXXJANSTERLEDESBISHERIGXNREICHSMARSCHALLSJGOERINGJSETZTDERFUEHRERSIEYHVRRGRZSSADMIRALYALSSEINENNACHFOLGEREINXSCHRIFTLSCHEVOLLMACHTUNTERWEGSXABSOFORTSOLLENSIESAEMTLICHEMASSNAHMENVERFUEGENYDIESICHAUSDERGEGENWAERTIGENLAGEERGEBENXGEZXREICHSLEITEIKKTULPEKKJBORMANNJXXOBXDXMMMDURNHFKSTXKOMXADMXUUUBOOIEXKP",
+        recipeConfig: [
+            {
+                "op": "Enigma",
+                "args": [
+                    "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "L", "Z", // VIII
+                    "JPGVOUMFYQBENHZRDKASXLICTW<AN", "E", "S", // VI
+                    "VZBRGITYUPSDNHLXAWMJQOFECK<A", "P", "D", // V
+                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", "E", "C", // Beta
+                    "AR BD CO EJ FN GT HK IV LM PW QZ SX UY", // C thin
+                    "AE BF CM DQ HU JN LX PR SZ VW"
                 ]
             }
         ]
@@ -325,7 +344,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "", true
                 ]
@@ -344,7 +363,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "", false
                 ]
@@ -362,7 +381,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQ", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -380,7 +399,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQo", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -398,7 +417,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQA", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -416,7 +435,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<RR", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -434,7 +453,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<a", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -454,7 +473,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY BR CU DH EQ FS GL IP JX KN MO", // B
                     ""
                 ]
@@ -472,7 +491,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AA BR CU DH EQ FS GL IP JX KN MO TZ", // B
                     ""
                 ]
@@ -490,7 +509,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AY AR CU DH EQ FS GL IP JX KN MO TZ", // B
                     ""
                 ]
@@ -508,7 +527,7 @@ TestRegister.addTests([
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "", "A", "A",
                     "AYBR CU DH EQ FS GL IP JX KN MO TZ", // B
                     ""
                 ]
