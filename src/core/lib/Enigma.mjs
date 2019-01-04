@@ -103,15 +103,17 @@ export class Rotor {
         if (!/^[A-Z]$/.test(initialPosition)) {
             throw new OperationError("Rotor initial position must be exactly one uppercase letter");
         }
-        this.map = {};
-        this.revMap = {};
+        this.map = new Array(26).fill();
+        this.revMap = new Array(26).fill();
+        const uniq = {};
         for (let i=0; i<LETTERS.length; i++) {
             const a = a2i(LETTERS[i]);
             const b = a2i(wiring[i]);
             this.map[a] = b;
             this.revMap[b] = a;
+            uniq[b] = true;
         }
-        if (Object.keys(this.revMap).length !== LETTERS.length) {
+        if (Object.keys(uniq).length !== LETTERS.length) {
             throw new OperationError("Rotor wiring must have each letter exactly once");
         }
         const rs = a2i(ringSetting);
@@ -219,6 +221,8 @@ class PairMapBase {
 
 /**
  * Reflector. PairMapBase but requires that all characters are accounted for.
+ *
+ * Includes a couple of optimisations on that basis.
  */
 export class Reflector extends PairMapBase {
     /**
@@ -231,6 +235,21 @@ export class Reflector extends PairMapBase {
         if (s !== 26) {
             throw new OperationError("Reflector must have exactly 13 pairs covering every letter");
         }
+        const optMap = new Array(26).fill();
+        for (const x of Object.keys(this.map)) {
+            optMap[x] = this.map[x];
+        }
+        this.map = optMap;
+    }
+
+    /**
+     * Transform a character through this object.
+     *
+     * @param {number} c - The character.
+     * @returns {number}
+     */
+    transform(c) {
+        return this.map[c];
     }
 }
 
