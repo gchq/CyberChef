@@ -793,7 +793,7 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
     }),
 
     it("Remove EXIF", () => {
-        const result = chef.removeEXIF(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg"));
+        const result = chef.removeEXIF(fs.readFileSync("tests/node/sampleData/pic.jpg"));
         assert.strictEqual(result.toString().length, 4582);
     }),
 
@@ -958,7 +958,7 @@ smothering ampersand abreast
 
     it("extract EXIF", () => {
         assert.strictEqual(
-            chef.extractEXIF(fs.readFileSync("test/tests/nodeApi/sampleData/pic.jpg")).toString(),
+            chef.extractEXIF(fs.readFileSync("tests/node/sampleData/pic.jpg")).toString(),
             `Found 7 tags.
 
 Orientation: 1

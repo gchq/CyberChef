@@ -64,7 +64,7 @@ function handleTestResult(testStatus, testResult) {
 
 /**
  * Log each test result, count tests and failures. Log test suite run duration.
- * 
+ *
  * @param {Object} testStatus - object describing test run data
  * @param {Object[]} results - results from TestRegister
  */
