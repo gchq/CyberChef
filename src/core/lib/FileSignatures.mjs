@@ -572,7 +572,7 @@ export const FILE_SIGNATURES = {
                 3: 0x74,
                 4: 0x66
             },
-            extractor: null
+            extractor: extractRTF
         },
         {
             name: "Microsoft Office documents/OLE2",
@@ -1307,7 +1307,7 @@ export function extractFLV(bytes, offset) {
     stream.moveForwardsBy(headerSize - 9);
 
     let tagSize = -11; // Fake size of previous tag header
-    while (stream.position < stream.length) {
+    while (stream.hasMore()) {
         const prevTagSize = stream.readInt(4, "be");
         const tagType = stream.readInt(1, "be");
 
@@ -1328,6 +1328,46 @@ export function extractFLV(bytes, offset) {
 
         // Move past the rest of the tag header and payload
         stream.moveForwardsBy(7 + tagSize);
+    }
+
+    return stream.carve();
+}
+
+
+/**
+ * RTF extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractRTF(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    let openTags = 0;
+
+    if (stream.readInt(1, "be") !== 0x7b) { // {
+        throw new Error("Not a valid RTF file");
+    } else {
+        openTags++;
+    }
+
+    while (openTags > 0 && stream.hasMore()) {
+        switch (stream.readInt(1, "be")) {
+            case 0x7b: // {
+                openTags++;
+                break;
+            case 0x7d: // }
+                openTags--;
+                break;
+            case 0x5c: // \
+                // Consume any more escapes and then skip over the next character
+                stream.consumeIf(0x5c);
+                stream.position++;
+                break;
+            default:
+                break;
+        }
     }
 
     return stream.carve();
