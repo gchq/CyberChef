@@ -2,6 +2,15 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.19.0] - 2018-12-30
+- UI test suite added to confirm that the app loads correctly in a reasonable time and that various operations from each module can be run [@n1474335] | [#458]
+
+### [8.18.0] - 2018-12-26
+- 'Split Colour Channels' operation added [@artemisbot] | [#449]
+
+### [8.17.0] - 2018-12-25
+- 'Generate QR Code' and 'Parse QR Code' operations added [@j433866] | [#448]
+
 ### [8.16.0] - 2018-12-19
 - 'Play Media' operation added [@anthony-arnold] | [#446]
 
@@ -79,6 +88,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.19.0]: https://github.com/gchq/CyberChef/releases/tag/v8.19.0
+[8.18.0]: https://github.com/gchq/CyberChef/releases/tag/v8.18.0
+[8.17.0]: https://github.com/gchq/CyberChef/releases/tag/v8.17.0
 [8.16.0]: https://github.com/gchq/CyberChef/releases/tag/v8.16.0
 [8.15.0]: https://github.com/gchq/CyberChef/releases/tag/v8.15.0
 [8.14.0]: https://github.com/gchq/CyberChef/releases/tag/v8.14.0
@@ -103,6 +115,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 [@n1474335]: https://github.com/n1474335
 [@d98762625]: https://github.com/d98762625
+[@j433866]: https://github.com/j433866
 [@GCHQ77703]: https://github.com/GCHQ77703
 [@artemisbot]: https://github.com/artemisbot
 [@picapi]: https://github.com/picapi
@@ -144,3 +157,6 @@ All major and minor version changes will be documented in this file. Details of 
 [#441]: https://github.com/gchq/CyberChef/pull/441
 [#443]: https://github.com/gchq/CyberChef/pull/443
 [#446]: https://github.com/gchq/CyberChef/pull/446
+[#448]: https://github.com/gchq/CyberChef/pull/448
+[#449]: https://github.com/gchq/CyberChef/pull/449
+[#458]: https://github.com/gchq/CyberChef/pull/458

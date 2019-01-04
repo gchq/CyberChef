@@ -12,3 +12,5 @@ src/core/operations/index.mjs
 src/node/config/OperationConfig.json
 src/node/index.mjs
 **/*.DS_Store
+tests/browser/output/*
+

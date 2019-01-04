@@ -10,6 +10,7 @@ import Manager from "./Manager";
 import HTMLCategory from "./HTMLCategory";
 import HTMLOperation from "./HTMLOperation";
 import Split from "split.js";
+import moment from "moment-timezone";
 
 
 /**
@@ -515,7 +516,8 @@ class App {
     setCompileMessage() {
         // Display time since last build and compile message
         const now = new Date(),
-            timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime);
+            msSinceCompile = now.getTime() - window.compileTime,
+            timeSinceCompile = moment.duration(msSinceCompile, "milliseconds").humanize();
 
         // Calculate previous version to compare to
         const prev = PKG_VERSION.split(".").map(n => {

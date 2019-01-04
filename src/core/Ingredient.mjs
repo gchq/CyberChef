@@ -25,6 +25,7 @@ class Ingredient {
         this.hint = "";
         this.toggleValues = [];
         this.target = null;
+        this.defaultIndex = 0;
 
         if (ingredientConfig) {
             this._parseConfig(ingredientConfig);
@@ -46,6 +47,7 @@ class Ingredient {
         this.hint = ingredientConfig.hint || false;
         this.toggleValues = ingredientConfig.toggleValues;
         this.target = typeof ingredientConfig.target !== "undefined" ? ingredientConfig.target : null;
+        this.defaultIndex = typeof ingredientConfig.defaultIndex !== "undefined" ? ingredientConfig.defaultIndex : 0;
     }
 
 
@@ -93,6 +95,7 @@ class Ingredient {
             case "binaryString":
             case "binaryShortString":
             case "editableOption":
+            case "editableOptionShort":
                 return Utils.parseEscapedChars(data);
             case "byteArray":
                 if (typeof data == "string") {

@@ -6,6 +6,7 @@
  */
 
 import Utils from "./Utils";
+import DishError from "./errors/DishError";
 import BigNumber from "bignumber.js";
 import log from "loglevel";
 
@@ -73,7 +74,7 @@ class Dish {
             case "list<file>":
                 return Dish.LIST_FILE;
             default:
-                throw "Invalid data type string. No matching enum.";
+                throw new DishError("Invalid data type string. No matching enum.");
         }
     }
 
@@ -105,7 +106,7 @@ class Dish {
             case Dish.LIST_FILE:
                 return "List<File>";
             default:
-                throw "Invalid data type enum. No matching type.";
+                throw new DishError("Invalid data type enum. No matching type.");
         }
     }
 
@@ -129,7 +130,7 @@ class Dish {
 
         if (!this.valid()) {
             const sample = Utils.truncate(JSON.stringify(this.value), 13);
-            throw "Data is not a valid " + Dish.enumLookup(type) + ": " + sample;
+            throw new DishError(`Data is not a valid ${Dish.enumLookup(type)}: ${sample}`);
         }
     }
 
@@ -163,77 +164,85 @@ class Dish {
         const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
 
         // Convert data to intermediate byteArray type
-        switch (this.type) {
-            case Dish.STRING:
-                this.value = this.value ? Utils.strToByteArray(this.value) : [];
-                break;
-            case Dish.NUMBER:
-                this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
-                break;
-            case Dish.HTML:
-                this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
-                break;
-            case Dish.ARRAY_BUFFER:
-                // Array.from() would be nicer here, but it's slightly slower
-                this.value = Array.prototype.slice.call(new Uint8Array(this.value));
-                break;
-            case Dish.BIG_NUMBER:
-                this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
-                break;
-            case Dish.JSON:
-                this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
-                break;
-            case Dish.FILE:
-                this.value = await Utils.readFile(this.value);
-                this.value = Array.prototype.slice.call(this.value);
-                break;
-            case Dish.LIST_FILE:
-                this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
-                this.value = this.value.map(b => Array.prototype.slice.call(b));
-                this.value = [].concat.apply([], this.value);
-                break;
-            default:
-                break;
+        try {
+            switch (this.type) {
+                case Dish.STRING:
+                    this.value = this.value ? Utils.strToByteArray(this.value) : [];
+                    break;
+                case Dish.NUMBER:
+                    this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
+                    break;
+                case Dish.HTML:
+                    this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
+                    break;
+                case Dish.ARRAY_BUFFER:
+                    // Array.from() would be nicer here, but it's slightly slower
+                    this.value = Array.prototype.slice.call(new Uint8Array(this.value));
+                    break;
+                case Dish.BIG_NUMBER:
+                    this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
+                    break;
+                case Dish.JSON:
+                    this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
+                    break;
+                case Dish.FILE:
+                    this.value = await Utils.readFile(this.value);
+                    this.value = Array.prototype.slice.call(this.value);
+                    break;
+                case Dish.LIST_FILE:
+                    this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
+                    this.value = this.value.map(b => Array.prototype.slice.call(b));
+                    this.value = [].concat.apply([], this.value);
+                    break;
+                default:
+                    break;
+            }
+        } catch (err) {
+            throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);
         }
 
         this.type = Dish.BYTE_ARRAY;
 
         // Convert from byteArray to toType
-        switch (toType) {
-            case Dish.STRING:
-            case Dish.HTML:
-                this.value = this.value ? byteArrayToStr(this.value) : "";
-                this.type = Dish.STRING;
-                break;
-            case Dish.NUMBER:
-                this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
-                this.type = Dish.NUMBER;
-                break;
-            case Dish.ARRAY_BUFFER:
-                this.value = new Uint8Array(this.value).buffer;
-                this.type = Dish.ARRAY_BUFFER;
-                break;
-            case Dish.BIG_NUMBER:
-                try {
-                    this.value = new BigNumber(byteArrayToStr(this.value));
-                } catch (err) {
-                    this.value = new BigNumber(NaN);
-                }
-                this.type = Dish.BIG_NUMBER;
-                break;
-            case Dish.JSON:
-                this.value = JSON.parse(byteArrayToStr(this.value));
-                this.type = Dish.JSON;
-                break;
-            case Dish.FILE:
-                this.value = new File(this.value, "unknown");
-                break;
-            case Dish.LIST_FILE:
-                this.value = [new File(this.value, "unknown")];
-                this.type = Dish.LIST_FILE;
-                break;
-            default:
-                break;
+        try {
+            switch (toType) {
+                case Dish.STRING:
+                case Dish.HTML:
+                    this.value = this.value ? byteArrayToStr(this.value) : "";
+                    this.type = Dish.STRING;
+                    break;
+                case Dish.NUMBER:
+                    this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
+                    this.type = Dish.NUMBER;
+                    break;
+                case Dish.ARRAY_BUFFER:
+                    this.value = new Uint8Array(this.value).buffer;
+                    this.type = Dish.ARRAY_BUFFER;
+                    break;
+                case Dish.BIG_NUMBER:
+                    try {
+                        this.value = new BigNumber(byteArrayToStr(this.value));
+                    } catch (err) {
+                        this.value = new BigNumber(NaN);
+                    }
+                    this.type = Dish.BIG_NUMBER;
+                    break;
+                case Dish.JSON:
+                    this.value = JSON.parse(byteArrayToStr(this.value));
+                    this.type = Dish.JSON;
+                    break;
+                case Dish.FILE:
+                    this.value = new File(this.value, "unknown");
+                    break;
+                case Dish.LIST_FILE:
+                    this.value = [new File(this.value, "unknown")];
+                    this.type = Dish.LIST_FILE;
+                    break;
+                default:
+                    break;
+            }
+        } catch (err) {
+            throw new DishError(`Error translating from byteArray to ${Dish.enumLookup(toType)}: ${err}`);
         }
     }
 
@@ -369,7 +378,7 @@ class Dish {
                 );
                 break;
             default:
-                throw new Error("Cannot clone Dish, unknown type");
+                throw new DishError("Cannot clone Dish, unknown type");
         }
 
         return newDish;

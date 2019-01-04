@@ -46,6 +46,9 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
+        new webpack.DefinePlugin({
+            "process.browser": "true"
+        }),
         vendorCSS,
         projectCSS
     ],

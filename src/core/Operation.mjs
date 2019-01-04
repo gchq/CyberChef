@@ -181,6 +181,7 @@ class Operation {
             if (ing.hint) conf.hint = ing.hint;
             if (ing.disabled) conf.disabled = ing.disabled;
             if (ing.target) conf.target = ing.target;
+            if (ing.defaultIndex) conf.defaultIndex = ing.defaultIndex;
             return conf;
         });
     }

@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-// import Operation from "./Operation.js";
 import OpModules from "./config/modules/OpModules";
 import OperationConfig from "./config/OperationConfig.json";
 import OperationError from "./errors/OperationError";
+import DishError from "./errors/DishError";
 import log from "loglevel";
 
 /**
@@ -181,6 +181,10 @@ class Recipe  {
                     (err.type && err.type === "OperationError")) {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
+                    dish.set(err.message, "string");
+                    return i;
+                } else if (err instanceof DishError ||
+                    (err.type && err.type === "DishError")) {
                     dish.set(err.message, "string");
                     return i;
                 } else {

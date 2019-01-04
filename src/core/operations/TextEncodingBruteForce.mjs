@@ -22,7 +22,7 @@ class TextEncodingBruteForce extends Operation {
         super();
 
         this.name = "Text Encoding Brute Force";
-        this.module = "CharEnc";
+        this.module = "Encodings";
         this.description = [
             "Enumerates all supported text encodings for the input, allowing you to quickly spot the correct one.",
             "<br><br>",
