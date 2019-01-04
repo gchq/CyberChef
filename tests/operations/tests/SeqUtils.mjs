@@ -5,7 +5,7 @@
  * @copyright Copyright 2017
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister";
 
 TestRegister.addTests([
     {
