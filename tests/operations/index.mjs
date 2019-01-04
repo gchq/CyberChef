@@ -86,8 +86,6 @@ import "./tests/Media";
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
 
-import "./tests/nodeApi/nodeApi";
-import "./tests/nodeApi/ops";
 
 let allTestsPassing = true;
 const testStatusCounts = {
