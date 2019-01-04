@@ -650,7 +650,7 @@ export const FILE_SIGNATURES = {
                 56: 0x69,
                 57: 0x70
             },
-            extractor: null
+            extractor: extractZIP
         },
     ],
     "Applications": [
@@ -790,7 +790,7 @@ export const FILE_SIGNATURES = {
                 1: 0x8b,
                 2: 0x8
             },
-            extractor: null
+            extractor: extractGZIP
         },
         {
             name: "Bzip2",
@@ -1309,7 +1309,7 @@ export function extractFLV(bytes, offset) {
     let tagSize = -11; // Fake size of previous tag header
     while (stream.hasMore()) {
         const prevTagSize = stream.readInt(4, "be");
-        const tagType = stream.readInt(1, "be");
+        const tagType = stream.readInt(1);
 
         if ([8, 9, 18].indexOf(tagType) < 0) {
             // This tag is not valid
@@ -1346,14 +1346,14 @@ export function extractRTF(bytes, offset) {
 
     let openTags = 0;
 
-    if (stream.readInt(1, "be") !== 0x7b) { // {
+    if (stream.readInt(1) !== 0x7b) { // {
         throw new Error("Not a valid RTF file");
     } else {
         openTags++;
     }
 
     while (openTags > 0 && stream.hasMore()) {
-        switch (stream.readInt(1, "be")) {
+        switch (stream.readInt(1)) {
             case 0x7b: // {
                 openTags++;
                 break;
@@ -1369,6 +1369,105 @@ export function extractRTF(bytes, offset) {
                 break;
         }
     }
+
+    return stream.carve();
+}
+
+
+/**
+ * GZIP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractGZIP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    /* HEADER */
+
+    // Skip over signature and compression method
+    stream.moveForwardsBy(3);
+
+    // Read flags
+    const flags = stream.readInt(1);
+
+    // Skip over last modification time
+    stream.moveForwardsBy(4);
+
+    // Read compression flags
+    const compressionFlags = stream.readInt(1);
+
+    // Skip over OS
+    stream.moveForwardsBy(1);
+
+
+    /* OPTIONAL HEADERS */
+
+    // Extra fields
+    if (flags & 0x4) {
+        console.log("Extra fields");
+        const extraFieldsSize = stream.readInt(2, "le");
+        stream.moveForwardsby(extraFieldsSize);
+    }
+
+    // Original filename
+    if (flags & 0x8) {
+        console.log("Filename");
+        stream.continueUntil(0x00);
+        stream.moveForwardsBy(1);
+    }
+
+    // Comment
+    if (flags & 0x10) {
+        console.log("Comment");
+        stream.continueUntil(0x00);
+        stream.moveForwardsBy(1);
+    }
+
+    // Checksum
+    if (flags & 0x2) {
+        console.log("Checksum");
+        stream.moveForwardsBy(2);
+    }
+
+
+    /* DEFLATE DATA */
+
+    let finalBlock = 0;
+
+    while (!finalBlock) {
+        // Read header
+        const blockHeader = stream.readBits(3);
+
+        finalBlock = blockHeader & 0x1;
+        const blockType = blockHeader & 0x6;
+
+        if (blockType === 0) {
+            // No compression
+            stream.moveForwardsBy(1);
+            const blockLength = stream.readInt(2, "le");
+            console.log("No compression. Length: " + blockLength);
+            stream.moveForwardsBy(2 + blockLength);
+        } else if (blockType === 1) {
+            // Fixed Huffman
+
+        } else if (blockType === 2) {
+            // Dynamic Huffman
+
+        } else {
+            throw new Error("Invalid block type");
+            break;
+        }
+    }
+
+
+    /* FOOTER */
+
+    // Skip over checksum and size of original uncompressed input
+    stream.moveForwardsBy(8);
+
+    console.log(stream.position);
 
     return stream.carve();
 }

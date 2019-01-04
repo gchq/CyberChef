@@ -21,8 +21,9 @@ export default class Stream {
      */
     constructor(input) {
         this.bytes = input;
-        this.position = 0;
         this.length = this.bytes.length;
+        this.position = 0;
+        this.bitPos = 0;
     }
 
     /**
@@ -37,6 +38,7 @@ export default class Stream {
         const newPosition = this.position + numBytes;
         const bytes = this.bytes.slice(this.position, newPosition);
         this.position = newPosition;
+        this.bitPos = 0;
         return bytes;
     }
 
@@ -57,6 +59,7 @@ export default class Stream {
             result += String.fromCharCode(currentByte);
         }
         this.position += numBytes;
+        this.bitPos = 0;
         return result;
     }
 
@@ -83,8 +86,58 @@ export default class Stream {
             }
         }
         this.position += numBytes;
+        this.bitPos = 0;
         return val;
     }
+
+
+    /**
+     * Reads a number of bits from the buffer.
+     *
+     * @TODO Add endianness
+     *
+     * @param {number} numBits
+     * @returns {number}
+     */
+    readBits(numBits) {
+        if (this.position > this.length) return undefined;
+
+        let bitBuf = 0,
+            bitBufLen = 0;
+
+        // Add remaining bits from current byte
+        bitBuf = this.bytes[this.position++] & bitMask(this.bitPos);
+        bitBufLen = 8 - this.bitPos;
+        this.bitPos = 0;
+
+        // Not enough bits yet
+        while (bitBufLen < numBits) {
+            bitBuf |= this.bytes[this.position++] << bitBufLen;
+            bitBufLen += 8;
+        }
+
+        // Reverse back to numBits
+        if (bitBufLen > numBits) {
+            const excess = bitBufLen - numBits;
+            bitBuf >>>= excess;
+            bitBufLen -= excess;
+            this.position--;
+            this.bitPos = 8 - excess;
+        }
+
+        return bitBuf;
+
+        /**
+         * Calculates the bit mask based on the current bit position.
+         *
+         * @param {number} bitPos
+         * @returns {number} The bit mask
+         */
+        function bitMask(bitPos) {
+            return (1 << (8 - bitPos)) - 1;
+        }
+    }
+
 
     /**
      * Consume the stream until we reach the specified byte or sequence of bytes.
@@ -93,6 +146,8 @@ export default class Stream {
      */
     continueUntil(val) {
         if (this.position > this.length) return;
+
+        this.bitPos = 0;
 
         if (typeof val === "number") {
             while (++this.position < this.length && this.bytes[this.position] !== val) {
@@ -121,8 +176,10 @@ export default class Stream {
      * @param {number} val
      */
     consumeIf(val) {
-        if (this.bytes[this.position] === val)
+        if (this.bytes[this.position] === val) {
             this.position++;
+            this.bitPos = 0;
+        }
     }
 
     /**
@@ -135,6 +192,7 @@ export default class Stream {
         if (pos < 0 || pos > this.length)
             throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
+        this.bitPos = 0;
     }
 
 
@@ -148,6 +206,7 @@ export default class Stream {
         if (pos < 0 || pos > this.length)
             throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
+        this.bitPos = 0;
     }
 
     /**
@@ -159,6 +218,7 @@ export default class Stream {
         if (pos < 0 || pos > this.length)
             throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
+        this.bitPos = 0;
     }
 
     /**
@@ -176,6 +236,7 @@ export default class Stream {
      * @returns {Uint8Array}
      */
     carve() {
+        if (this.bitPos > 0) this.position++;
         return this.bytes.slice(0, this.position);
     }
 
