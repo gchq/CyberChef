@@ -12,6 +12,11 @@
  */
 import "babel-polyfill";
 
+import {
+    setLongTestFailure,
+    logTestReport,
+} from "../lib/utils";
+
 // Define global environment functions
 global.ENVIRONMENT_IS_WORKER = function() {
     return typeof importScripts === "function";
@@ -23,7 +28,7 @@ global.ENVIRONMENT_IS_WEB = function() {
     return typeof window === "object";
 };
 
-import TestRegister from "./TestRegister";
+import TestRegister from "../lib/TestRegister";
 import "./tests/BCD";
 import "./tests/BSON";
 import "./tests/Base58";
@@ -86,91 +91,20 @@ import "./tests/Media";
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
 
+// import "./tests/nodeApi/nodeApi";
+// import "./tests/nodeApi/ops";
 
-let allTestsPassing = true;
-const testStatusCounts = {
-    total: 0,
+const testStatus = {
+    allTestsPassing: true,
+    counts: {
+        total: 0,
+    }
 };
 
+setLongTestFailure();
 
-/**
- * Helper function to convert a status to an icon.
- *
- * @param {string} status
- * @returns {string}
- */
-function statusToIcon(status) {
-    const icons = {
-        erroring: "🔥",
-        failing: "❌",
-        passing: "✔️️",
-    };
-    return icons[status] || "?";
-}
+const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-
-/**
- * Displays a given test result in the console.
- *
- * @param {Object} testResult
- */
-function handleTestResult(testResult) {
-    allTestsPassing = allTestsPassing && testResult.status === "passing";
-    const newCount = (testStatusCounts[testResult.status] || 0) + 1;
-    testStatusCounts[testResult.status] = newCount;
-    testStatusCounts.total += 1;
-
-    console.log([
-        statusToIcon(testResult.status),
-        testResult.test.name
-    ].join(" "));
-
-    if (testResult.output) {
-        console.log(
-            testResult.output
-                .trim()
-                .replace(/^/, "\t")
-                .replace(/\n/g, "\n\t")
-        );
-    }
-}
-
-
-/**
- * Fail if the process takes longer than 60 seconds.
- */
-setTimeout(function() {
-    console.log("Tests took longer than 60 seconds to run, returning.");
-    process.exit(1);
-}, 60 * 1000);
-
-const start = new Date();
-
-Promise.all([
-    TestRegister.runTests(),
-    TestRegister.runApiTests()
-])
-    .then(function(resultsPair) {
-        const finish = new Date();
-        const results = resultsPair[0].concat(resultsPair[1]);
-        results.forEach(handleTestResult);
-
-        console.log("\n");
-
-        for (const testStatus in testStatusCounts) {
-            const count = testStatusCounts[testStatus];
-            if (count > 0) {
-                console.log(testStatus.toUpperCase(), count);
-            }
-        }
-
-        if (!allTestsPassing) {
-            console.log("\nFailing tests:\n");
-            results.filter(r => r.status !== "passing").forEach(handleTestResult);
-        }
-
-        console.log(`Tests took ${(finish - start) / 1000} seconds`);
-
-        process.exit(allTestsPassing ? 0 : 1);
-    });
+TestRegister.runTests()
+    .then(logOpsTestReport);
 

@@ -38,9 +38,9 @@ module.exports = function (grunt) {
         "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
         ["connect:prod", "exec:browserTests"]);
 
-    // grunt.registerTask("testnode",
-    //     "Run all the node tests in the tests directory",
-    //     ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "exec:generateConfig", "exec:nodeTests"]);
+    grunt.registerTask("test-node",
+        "Run all the node tests in the tests directory",
+        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "exec:generateConfig", "exec:nodeTests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -481,9 +481,9 @@ module.exports = function (grunt) {
             browserTests: {
                 command: "./node_modules/.bin/nightwatch --env prod,inline"
             },
-            // nodeTests: {
-            //     command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
-            // }
+            nodeTests: {
+                command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
+            }
         },
     });
 };

@@ -6,7 +6,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister";
 
 const EXAMPLE_CSV = `A,B,C,D,E,F\r
 1,2,3,4,5,6\r

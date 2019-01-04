@@ -18,7 +18,7 @@ import SyncDish from "../../../src/node/SyncDish";
 import fs from "fs";
 
 import { toBase32, Dish, SHA3 } from "../../../src/node/index";
-import TestRegister from "../../TestRegister";
+import TestRegister from "../../lib/TestRegister";
 
 TestRegister.addApiTests([
     it("should have some operations", () => {

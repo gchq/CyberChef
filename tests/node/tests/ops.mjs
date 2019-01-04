@@ -34,7 +34,7 @@ import {
     toHex,
 } from "../../../src/node/index";
 import chef from "../../../src/node/index";
-import TestRegister from "../../TestRegister";
+import TestRegister from "../../lib/TestRegister";
 
 TestRegister.addApiTests([
 
