@@ -1317,9 +1317,10 @@ export function extractFLV(bytes, offset) {
             break;
         }
 
-        if (prevTagSize !== tagSize + 11) {
-            // Previous tag was not valid
-            stream.moveBackwardsBy(tagSize + 11);
+        if (prevTagSize !== (tagSize + 11)) {
+            // Previous tag was not valid, reverse back over this header
+            // and the previous tag body and header
+            stream.moveBackwardsBy(tagSize + 11 + 5);
             break;
         }
 
