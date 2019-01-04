@@ -98,8 +98,7 @@ const testStatus = {
     allTestsPassing: true,
     counts: {
         total: 0,
-    },
-    start: new Date(),
+    }
 };
 
 setLongTestFailure();

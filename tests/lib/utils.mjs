@@ -84,9 +84,6 @@ export function logTestReport(testStatus, results) {
         results.filter(r => r.status !== "passing").forEach(handleTestResult);
     }
 
-
-    console.log(`Tests took ${(testStatus.finish - testStatus.start) / 1000} seconds`);
-
     process.exit(testStatus.allTestsPassing ? 0 : 1);
 }
 
