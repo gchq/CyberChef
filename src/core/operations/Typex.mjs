@@ -23,7 +23,7 @@ class Typex extends Operation {
 
         this.name = "Typex";
         this.module = "Default";
-        this.description = "Encipher/decipher with the WW2 Typex machine.<br><br>The standard set of rotors are provided. Later Typexes had a plugboard to configure the reflector: to configure this, enter a string of connected pairs of letters, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F (you'll need to connect every letter). These Typexes also have an input plugboard: unlike Enigma's plugboard, it's not restricted to pairs, so it's entered like a rotor. To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.";
+        this.description = "Encipher/decipher with the WW2 Typex machine.<br><br>Typex rotors were changed regularly and none are public: a random example set are provided. Later Typexes had a reflector which could be configured with a plugboard: to configure this, enter a string of connected pairs of letters in the reflector box, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F (you'll need to connect every letter). These Typexes also have an input plugboard: unlike Enigma's plugboard, it's not restricted to pairs, so it's entered like a rotor (without stepping). To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.";
         this.infoURL = "https://wikipedia.org/wiki/Typex";
         this.inputType = "string";
         this.outputType = "string";

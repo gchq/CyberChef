@@ -9,19 +9,26 @@ import OperationError from "../errors/OperationError";
 import * as Enigma from "../lib/Enigma";
 import Utils from "../Utils";
 
+/**
+ * A set of example Typex rotors. No Typex rotor wirings are publicly available, so these are
+ * randomised.
+ */
 export const ROTORS = [
-    {name: "1", value: "QWECYJIBFKMLTVZPOHUDGNRSXA<ACEINQTVY"},
-    {name: "2", value: "AJDKSIRUXBLHWTMCQGZNPYFVOE<ACEINQTVY"},
-    {name: "3", value: "BDFHJLCPRTXVZNYEIWGAKMUSQO<ACEINQTVY"},
-    {name: "4", value: "ESOVPZJAYQUIRHXLNFTGKDCMWB<ACEINQTVY"},
-    {name: "5", value: "VZBRGITYUPSDNHLXAWMJQOFECK<ACEINQTVY"},
-    {name: "6", value: "FVPJIAOYEDRZXWGCTKUQSBNMHL<ACEINQTVY"},
-    {name: "7", value: "KZGLIUCJEHADXRYWVTNSFQPMOB<ACEINQTVY"},
-    {name: "8", value: "ZLVGOIFTYWUEPMABNCXRQSDKHJ<ACEINQTVY"},
+    {name: "Example 1", value: "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW"},
+    {name: "Example 2", value: "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW"},
+    {name: "Example 3", value: "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW"},
+    {name: "Example 4", value: "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW"},
+    {name: "Example 5", value: "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW"},
+    {name: "Example 6", value: "BDCNWUEIQVFTSXALOGZJYMHKPR<BFHNQUW"},
+    {name: "Example 7", value: "WJUKEIABMSGFTQZVCNPHORDXYL<BFHNQUW"},
+    {name: "Example 8", value: "TNVCZXDIPFWQKHSJMAOYLEURGB<BFHNQUW"},
 ];
 
+/**
+ * An example Typex reflector. Again, randomised.
+ */
 export const REFLECTORS = [
-    {name: "Standard", value: "MO VW GL JX TZ AY EQ IP KN DH CU FS BR"},
+    {name: "Standard", value: "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP"},
 ];
 
 // Special character handling on Typex keyboard
