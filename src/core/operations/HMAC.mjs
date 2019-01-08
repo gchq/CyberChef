@@ -20,7 +20,7 @@ class HMAC extends Operation {
         super();
 
         this.name = "HMAC";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.";
         this.infoURL = "https://wikipedia.org/wiki/HMAC";
         this.inputType = "ArrayBuffer";
@@ -72,7 +72,7 @@ class HMAC extends Operation {
             msg = Utils.arrayBufferToStr(input, false),
             hasher = CryptoApi.getHasher(hashFunc);
 
-        const mac = CryptoApi.getHmac(CryptoApi.encoder.fromUtf(key), hasher);
+        const mac = CryptoApi.getHmac(key, hasher);
         mac.update(msg);
         return CryptoApi.encoder.toHex(mac.finalize());
     }

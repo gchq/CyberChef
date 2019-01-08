@@ -23,7 +23,7 @@ class ParseIPv4Header extends Operation {
         super();
 
         this.name = "Parse IPv4 header";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Given an IPv4 header, this operations parses and displays each field in an easily readable format.";
         this.infoURL = "https://wikipedia.org/wiki/IPv4#Header";
         this.inputType = "string";

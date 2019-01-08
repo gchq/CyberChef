@@ -26,12 +26,12 @@ class Split extends Operation {
         this.args = [
             {
                 "name": "Split delimiter",
-                "type": "editableOption",
+                "type": "editableOptionShort",
                 "value": SPLIT_DELIM_OPTIONS
             },
             {
                 "name": "Join delimiter",
-                "type": "editableOption",
+                "type": "editableOptionShort",
                 "value": JOIN_DELIM_OPTIONS
             }
         ];

@@ -9,6 +9,6 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
-[{package.json,.travis.yml}]
+[{package.json,.travis.yml,nightwatch.json}]
 indent_style = space
 indent_size = 2

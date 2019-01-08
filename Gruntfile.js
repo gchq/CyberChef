@@ -2,6 +2,7 @@
 
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
 const glob = require("glob");
@@ -29,8 +30,12 @@ module.exports = function (grunt) {
         ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
-        "A task which runs all the tests in test/tests.",
-        ["exec:generateConfig", "exec:tests"]);
+        "A task which runs all the operation tests in the tests directory.",
+        ["exec:generateConfig", "exec:opTests"]);
+
+    grunt.registerTask("testui",
+        "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
+        ["connect:prod", "exec:browserTests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -66,6 +71,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-accessibility");
     grunt.loadNpmTasks("grunt-concurrent");
+    grunt.loadNpmTasks("grunt-contrib-connect");
 
 
     // Project configuration
@@ -143,11 +149,11 @@ module.exports = function (grunt) {
             options: {
                 configFile: "./.eslintrc.json"
             },
-            configs: ["*.js"],
+            configs: ["*.{js,mjs}"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}"],
             node: ["src/node/**/*.{js,mjs}"],
-            tests: ["test/**/*.{js,mjs}"],
+            tests: ["tests/**/*.{js,mjs}"],
         },
         jsdoc: {
             options: {
@@ -179,37 +185,44 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
-            web: {
-                mode: "production",
-                target: "web",
-                entry: Object.assign({
-                    main: "./src/web/index.js",
-                    sitemap: "./src/web/static/sitemap.js"
-                }, moduleEntryPoints),
-                output: {
-                    path: __dirname + "/build/prod"
-                },
-                resolve: {
-                    alias: {
-                        "./config/modules/OpModules": "./config/modules/Default"
-                    }
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        chunks: ["main"],
-                        compileTime: compileTime,
-                        version: pkg.version,
-                        minify: {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            minifyJS: true,
-                            minifyCSS: true
+            web: () => {
+                return {
+                    mode: "production",
+                    target: "web",
+                    entry: Object.assign({
+                        main: "./src/web/index.js",
+                        sitemap: "./src/web/static/sitemap.js"
+                    }, moduleEntryPoints),
+                    output: {
+                        path: __dirname + "/build/prod"
+                    },
+                    resolve: {
+                        alias: {
+                            "./config/modules/OpModules": "./config/modules/Default"
                         }
-                    }),
-                ]
+                    },
+                    plugins: [
+                        new webpack.DefinePlugin(BUILD_CONSTANTS),
+                        new HtmlWebpackPlugin({
+                            filename: "index.html",
+                            template: "./src/web/html/index.html",
+                            chunks: ["main"],
+                            compileTime: compileTime,
+                            version: pkg.version,
+                            minify: {
+                                removeComments: true,
+                                collapseWhitespace: true,
+                                minifyJS: true,
+                                minifyCSS: true
+                            }
+                        }),
+                        new BundleAnalyzerPlugin({
+                            analyzerMode: "static",
+                            reportFilename: "BundleAnalyzerReport.html",
+                            openAnalyzer: false
+                        }),
+                    ]
+                };
             },
             webInline: {
                 mode: "production",
@@ -236,19 +249,6 @@ module.exports = function (grunt) {
                             minifyCSS: true
                         }
                     }),
-                ]
-            },
-            tests: {
-                mode: "development",
-                target: "node",
-                entry: "./test/index.mjs",
-                externals: [NodeExternals()],
-                output: {
-                    filename: "index.js",
-                    path: __dirname + "/build/test"
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS)
                 ]
             },
             node: {
@@ -309,6 +309,14 @@ module.exports = function (grunt) {
                             version: pkg.version,
                         })
                     ]
+                }
+            }
+        },
+        connect: {
+            prod: {
+                options: {
+                    port: 8000,
+                    base: "build/prod/"
                 }
             }
         },
@@ -391,8 +399,11 @@ module.exports = function (grunt) {
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
-            tests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation test/index.mjs"
+            opTests: {
+                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
+            },
+            browserTests: {
+                command: "./node_modules/.bin/nightwatch --env prod,inline"
             }
         },
     });

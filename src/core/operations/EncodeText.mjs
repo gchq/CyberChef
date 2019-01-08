@@ -20,7 +20,7 @@ class EncodeText extends Operation {
         super();
 
         this.name = "Encode text";
-        this.module = "CharEnc";
+        this.module = "Encodings";
         this.description = [
             "Encodes text into the chosen character encoding.",
             "<br><br>",
