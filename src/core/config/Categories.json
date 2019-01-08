@@ -364,6 +364,7 @@
         "ops": [
             "Magic",
             "Fork",
+            "Subsection",
             "Merge",
             "Register",
             "Label",
