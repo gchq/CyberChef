@@ -40,23 +40,32 @@ class YaraRules extends Operation {
     run(input, args) {
         return new Promise((resolve, reject) => {
             Yara().then(yara => {
+                let matchString = "";
                 const resp = yara.run(input, args[0]);
                 if (resp.compileErrors.size() > 0) {
                     for (let i = 0; i < resp.compileErrors.size(); i++) {
                         const compileError = resp.compileErrors.get(i);
-                        reject(new OperationError(`Error on line ${compileError.lineNumber}: ${compileError.message}`));
+                        if (!compileError.warning) {
+                            reject(new OperationError(`Error on line ${compileError.lineNumber}: ${compileError.message}`));
+                        } else {
+                            matchString += `Warning on line ${compileError.lineNumber}: ${compileError.message}`;
+                        }
                     }
                 }
                 const matchedRules = resp.matchedRules;
-                let matchString = "";
                 for (let i = 0; i < matchedRules.keys().size(); i++) {
                     const ruleMatches = matchedRules.get(matchedRules.keys().get(i));
-                    matchString += `Rule "${matchedRules.keys().get(i)}" matches:\n`;
+                    if (ruleMatches.size() === 0) {
+                        matchString += `Input matches rule "${matchedRules.keys().get(i)}".\n`;
+                    } else {
+                        matchString += `Rule "${matchedRules.keys().get(i)}" matches:\n`;
 
-                    for (let j = 0; j < ruleMatches.size(); j++) {
-                        const match = ruleMatches.get(j);
-                        matchString += `Position ${match.location}, length ${match.matchLength}, data: ${match.data}\n`;
+                        for (let j = 0; j < ruleMatches.size(); j++) {
+                            const match = ruleMatches.get(j);
+                            matchString += `Position ${match.location}, length ${match.matchLength}, data: ${match.data}\n`;
+                        }
                     }
+                    
                 }
                 resolve(matchString);
             });
