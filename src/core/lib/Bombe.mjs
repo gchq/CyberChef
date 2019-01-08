@@ -191,9 +191,6 @@ export class BombeMachine {
         if (ciphertext.length < crib.length) {
             throw new OperationError("Crib overruns supplied ciphertext");
         }
-        if (ciphertext.length > crib.length) {
-            throw new OperationError("Ciphertext is longer than crib");
-        }
         if (crib.length < 2) {
             // This is the absolute bare minimum to be sane, and even then it's likely too short to
             // be useful
@@ -204,7 +201,7 @@ export class BombeMachine {
             // A shorter crib is preferable to reduce this chance, of course
             throw new OperationError("Crib is too long");
         }
-        for (let i=0; i<ciphertext.length; i++) {
+        for (let i=0; i<crib.length; i++) {
             if (ciphertext[i] === crib[i]) {
                 throw new OperationError(`Invalid crib: character ${ciphertext[i]} at pos ${i} in both ciphertext and crib`);
             }
@@ -397,6 +394,46 @@ export class BombeMachine {
     }
 
     /**
+     * Single-pair steckering. Used for trial decryption rather than building a whole plugboard
+     * object for one pair
+     * @param {number[2]} stecker - Known stecker pair.
+     * @param {number} x - Letter to transform.
+     * @result number
+     */
+    singleStecker(stecker, x) {
+        if (x === stecker[0]) {
+            return stecker[1];
+        }
+        if (x === stecker[1]) {
+            return stecker[0];
+        }
+        return x;
+    }
+
+    /**
+     * Trial decryption at the current setting.
+     * Used after we get a stop.
+     * This applies the detected stecker pair if we have one. It does not handle the other
+     * steckering or stepping (which is why we limit it to 26 characters, since it's guaranteed to
+     * be wrong after that anyway).
+     * @param {number[2]} stecker - Known stecker pair.
+     * @returns {string}
+     */
+    tryDecrypt(stecker) {
+        const fastRotor = this.indicator.rotors[0];
+        const initialPos = fastRotor.pos;
+        const res = [];
+        // The indicator scrambler starts in the right place for the beginning of the ciphertext.
+        for (let i=0; i<Math.min(26, this.ciphertext.length); i++) {
+            const t = this.indicator.transform(this.singleStecker(stecker, a2i(this.ciphertext[i])));
+            res.push(i2a(this.singleStecker(stecker, t)));
+            fastRotor.pos = Utils.mod(fastRotor.pos + 1, 26);
+        }
+        fastRotor.pos = initialPos;
+        return res.join("");
+    }
+
+    /**
      * Having set up the Bombe, do the actual attack run. This tries every possible rotor setting
      * and attempts to logically invalidate them. If it can't, it's added to the list of candidate
      * solutions.
@@ -433,19 +470,26 @@ export class BombeMachine {
                     // Our steckering hypothesis is wrong. Correct value is the un-energised wire.
                     for (let j=0; j<26; j++) {
                         if (!this.wires[26*this.testRegister + j]) {
-                            stecker = `${i2a(this.testRegister)} <-> ${i2a(j)}`;
+                            stecker = [this.testRegister, j];
                             break;
                         }
                     }
                 } else if (count === 1) {
                     // This means our hypothesis for the steckering is correct.
-                    stecker = `${i2a(this.testRegister)} <-> ${i2a(this.testInput[1])}`;
+                    stecker = [this.testRegister, this.testInput[1]];
                 } else {
                     // Unusual, probably indicative of a poor menu. I'm a little unclear on how
                     // this was really handled, but we'll return it for the moment.
-                    stecker = `? (wire count: ${count})`;
+                    stecker = undefined;
                 }
-                result.push([this.indicator.getPos(), stecker]);
+                const testDecrypt = this.tryDecrypt(stecker);
+                let steckerStr;
+                if (stecker !== undefined) {
+                    steckerStr = `${i2a(stecker[0])}${i2a(stecker[1])}`;
+                } else {
+                    steckerStr = `?? (wire count: ${count})`;
+                }
+                result.push([this.indicator.getPos(), steckerStr, testDecrypt]);
             }
             // Step all the scramblers
             // This loop counts how many rotors have reached their starting position (meaning the

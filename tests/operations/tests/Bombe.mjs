@@ -8,9 +8,10 @@ import TestRegister from "../TestRegister";
 
 TestRegister.addTests([
     {
+        // Plugboard for this test is BO LC KE GA
         name: "Bombe: 3 rotor (self-stecker)",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch: /LGA \(S <-> S\)/,
+        expectedMatch: /LGA \(plugboard: SS\): VFISUSGTKSTMPSUNAK/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -28,7 +29,7 @@ TestRegister.addTests([
     {
         name: "Bombe: 3 rotor (other stecker)",
         input: "JBYALIHDYNUAAVKBYM",
-        expectedMatch: /LGA \(A <-> G\)/,
+        expectedMatch: /LGA \(plugboard: AG\): QFIMUMAFKMQSKMYNGW/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -46,7 +47,7 @@ TestRegister.addTests([
     {
         name: "Bombe: crib offset",
         input: "AAABBYFLTHHYIJQAYBBYS", // first three chars here are faked
-        expectedMatch: /LGA \(S <-> S\)/,
+        expectedMatch: /LGA \(plugboard: SS\): VFISUSGTKSTMPSUNAK/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -61,12 +62,30 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "Bombe: multiple stops",
+        input: "BBYFLTHHYIJQAYBBYS",
+        expectedMatch: /LGA \(plugboard: TT\): VFISUSGTKSTMPSUNAK/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "THISISATESTM", 0,
+                ]
+            }
+        ]
+    },
     /*
      * Long test is long
     {
         name: "Bombe: 4 rotor",
         input: "LUOXGJSHGEDSRDOQQX",
-        expectedMatch: /LHSC \(S <-> S\)/,
+        expectedMatch: /LHSC \(plugboard: SS\)/,
         recipeConfig: [
             {
                 "op": "Bombe",

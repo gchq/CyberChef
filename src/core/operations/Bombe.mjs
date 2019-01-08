@@ -112,7 +112,7 @@ class Bombe extends Operation {
         // For symmetry with the Enigma op, for the input we'll just remove all invalid characters
         input = input.replace(/[^A-Za-z]/g, "").toUpperCase();
         crib = crib.replace(/[^A-Za-z]/g, "").toUpperCase();
-        const ciphertext = input.slice(offset, offset+crib.length);
+        const ciphertext = input.slice(offset);
         const reflector = new Reflector(reflectorstr);
         let update;
         if (ENVIRONMENT_IS_WORKER()) {
@@ -122,9 +122,9 @@ class Bombe extends Operation {
         }
         const bombe = new BombeMachine(rotors, reflector, ciphertext, crib, update);
         const result = bombe.run();
-        let msg = `Bombe run on menu with ${bombe.nLoops} loops (2+ desirable). Note: Rotor positions are listed left to right and start at the beginning of the crib, and ignore stepping and the ring setting. One stecker pair is determined. Results:\n`;
-        for (const [setting, wires] of result) {
-            msg += `Stop: ${setting} (${wires})\n`;
+        let msg = `Bombe run on menu with ${bombe.nLoops} loops (2+ desirable). Note: Rotor positions are listed left to right and start at the beginning of the crib, and ignore stepping and the ring setting. One stecker pair is determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided. Results:\n`;
+        for (const [setting, stecker, decrypt] of result) {
+            msg += `Stop: ${setting} (plugboard: ${stecker}): ${decrypt}\n`;
         }
         return msg;
     }
