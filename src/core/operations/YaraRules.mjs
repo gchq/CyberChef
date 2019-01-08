@@ -27,7 +27,7 @@ class YaraRules extends Operation {
         this.outputType = "string";
         this.args = [{
             name: "Rules",
-            type: "string",
+            type: "code",
             value: ""
         }];
     }

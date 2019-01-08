@@ -42,6 +42,16 @@ class HTMLIngredient {
             i, m;
 
         switch (this.type) {
+            case "code":
+                html+= `<div class="form-group">
+                <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                <textarea class="form-control arg"
+                    id="${this.id}"
+                    arg-name="${this.name}"
+                    value="${this.value}"
+                    ${this.disabled ? "disabled" : ""}></textarea>
+                ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}`;
+                break;
             case "string":
             case "binaryString":
             case "byteArray":
