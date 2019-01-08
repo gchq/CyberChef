@@ -43,6 +43,24 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "Bombe: crib offset",
+        input: "AAABBYFLTHHYIJQAYBBYS", // first three chars here are faked
+        expectedMatch: /LGA \(S <-> S\)/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "THISISATESTMESSAGE", 3,
+                ]
+            }
+        ]
+    },
     /*
      * Long test is long
     {
@@ -64,4 +82,113 @@ TestRegister.addTests([
         ]
     },
     */
+    {
+        name: "Bombe: no crib",
+        input: "JBYALIHDYNUAAVKBYM",
+        expectedMatch: /Crib cannot be empty/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "", 0,
+                ]
+            }
+        ]
+    },
+    {
+        name: "Bombe: short crib",
+        input: "JBYALIHDYNUAAVKBYM",
+        expectedMatch: /Crib is too short/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "A", 0,
+                ]
+            }
+        ]
+    },
+    {
+        name: "Bombe: invalid crib",
+        input: "JBYALIHDYNUAAVKBYM",
+        expectedMatch: /Invalid crib: .* in both ciphertext and crib/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "AAAAAAAA", 0,
+                ]
+            }
+        ]
+    },
+    {
+        name: "Bombe: long crib",
+        input: "JBYALIHDYNUAAVKBYM",
+        expectedMatch: /Crib overruns supplied ciphertext/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "CCCCCCCCCCCCCCCCCCCCCC", 0,
+                ]
+            }
+        ]
+    },
+    {
+        name: "Bombe: really long crib",
+        input: "BBBBBBBBBBBBBBBBBBBBBBBBBB",
+        expectedMatch: /Crib is too long/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "AAAAAAAAAAAAAAAAAAAAAAAAAA", 0,
+                ]
+            }
+        ]
+    },
+    {
+        name: "Bombe: negative offset",
+        input: "AAAAA",
+        expectedMatch: /Offset cannot be negative/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "BBBBB", -1,
+                ]
+            }
+        ]
+    },
+    // Enigma tests cover validation of rotors and reflector
 ]);

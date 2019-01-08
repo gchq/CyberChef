@@ -77,10 +77,7 @@ class Edge {
      * @returns {number}
      */
     getOther(node) {
-        if (this.node1 === node) {
-            return this.node2;
-        }
-        return this.node1;
+        return this.node1 === node ? this.node2 : this.node1;
     }
 }
 
@@ -144,10 +141,7 @@ class Scrambler {
      * @returns {number}
      */
     getOtherEnd(end) {
-        if (this.end1 === end) {
-            return this.end2;
-        }
-        return this.end1;
+        return this.end1 === end ? this.end2 : this.end1;
     }
 
     /**
@@ -194,8 +188,11 @@ export class BombeMachine {
      * @param {function} update - Function to call to send status updates (optional)
      */
     constructor(rotors, reflector, ciphertext, crib, update=undefined) {
-        if (ciphertext.length !== crib.length) {
-            throw new OperationError("Ciphertext and crib length differ");
+        if (ciphertext.length < crib.length) {
+            throw new OperationError("Crib overruns supplied ciphertext");
+        }
+        if (ciphertext.length > crib.length) {
+            throw new OperationError("Ciphertext is longer than crib");
         }
         if (crib.length < 2) {
             // This is the absolute bare minimum to be sane, and even then it's likely too short to
@@ -226,7 +223,7 @@ export class BombeMachine {
 
         // This is the bundle of wires corresponding to the 26 letters within each of the 26
         // possible nodes in the menu
-        this.wires = new Array(26*26).fill(false);
+        this.wires = new Array(26*26);
 
         // These are the pseudo-Engima devices corresponding to each edge in the menu, and the
         // nodes in the menu they each connect to
@@ -271,9 +268,9 @@ export class BombeMachine {
      * If we have a way of sending status messages, do so.
      * @param {string} msg - Message to send.
      */
-    update(msg) {
+    update(...msg) {
         if (this.updateFn !== undefined) {
-            this.updateFn(msg);
+            this.updateFn(...msg);
         }
     }
 
@@ -411,7 +408,10 @@ export class BombeMachine {
         // For each possible rotor setting
         const nChecks = Math.pow(26, this.baseRotors.length);
         for (let i=1; i<=nChecks; i++) {
-            this.wires.fill(false);
+            // Benchmarking suggests this is faster than using .fill()
+            for (let i=0; i<this.wires.length; i++) {
+                this.wires[i] = false;
+            }
             // Energise the test input, follow the current through each scrambler
             // (and the diagonal board)
             this.energiseCount = 0;
@@ -462,9 +462,9 @@ export class BombeMachine {
                 scrambler.step(n);
             }
             // Send status messages at what seems to be a reasonably sensible frequency
-            if (n > 2) {
-                const msg = `Bombe run with ${this.nLoops} loops in menu (2+ desirable): ${stops} stops, ${Math.floor(100 * i / nChecks)}% done`;
-                this.update(msg);
+            // (note this won't be triggered on 3-rotor runs - they run fast enough it doesn't seem necessary)
+            if (n > 3) {
+                this.update(this.nLoops, stops, i/nChecks);
             }
         }
         return result;

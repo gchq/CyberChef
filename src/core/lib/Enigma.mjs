@@ -103,8 +103,8 @@ export class Rotor {
         if (!/^[A-Z]$/.test(initialPosition)) {
             throw new OperationError("Rotor initial position must be exactly one uppercase letter");
         }
-        this.map = new Array(26).fill();
-        this.revMap = new Array(26).fill();
+        this.map = new Array(26);
+        this.revMap = new Array(26);
         const uniq = {};
         for (let i=0; i<LETTERS.length; i++) {
             const a = a2i(LETTERS[i]);
@@ -235,7 +235,7 @@ export class Reflector extends PairMapBase {
         if (s !== 26) {
             throw new OperationError("Reflector must have exactly 13 pairs covering every letter");
         }
-        const optMap = new Array(26).fill();
+        const optMap = new Array(26);
         for (const x of Object.keys(this.map)) {
             optMap[x] = this.map[x];
         }
