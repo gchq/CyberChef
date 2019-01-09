@@ -23,7 +23,7 @@ class YaraRules extends Operation {
         this.module = "Yara";
         this.description = "Yara support";
         this.infoURL = "https://en.wikipedia.org/wiki/YARA";
-        this.inputType = "string";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [{
             name: "Rules",
@@ -41,7 +41,12 @@ class YaraRules extends Operation {
         return new Promise((resolve, reject) => {
             Yara().then(yara => {
                 let matchString = "";
-                const resp = yara.run(input, args[0]);
+                const inpArr = new Uint8Array(input); // I know this is garbage but it's like 1.5 times faster
+                const inpVec = new yara.vectorChar();
+                for (let i = 0; i < inpArr.length; i++) {
+                    inpVec.push_back(inpArr[i]);
+                }
+                const resp = yara.run(inpVec, args[0]);
                 if (resp.compileErrors.size() > 0) {
                     for (let i = 0; i < resp.compileErrors.size(); i++) {
                         const compileError = resp.compileErrors.get(i);
