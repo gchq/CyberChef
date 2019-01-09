@@ -2,16 +2,16 @@
  * Lorem Ipsum generator.
  *
  * @author Klaxon [klaxon@veyr.com]
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 
- /**
-  * generate lorem ipsum paragraphs.
-  *
-  * @param {number} length
-  * @returns {string}
-  */
+/**
+ * Generate lorem ipsum paragraphs.
+ *
+ * @param {number} length
+ * @returns {string}
+ */
 export function GenerateParagraphs(length=3) {
     const paragraphs = [];
     while (paragraphs.length < length) {
@@ -29,12 +29,13 @@ export function GenerateParagraphs(length=3) {
     return paragraphs.join("");
 }
 
+
 /**
-* generate lorem ipsum sentences.
-*
-* @param {number} length
-* @returns {string}
-*/
+ * Generate lorem ipsum sentences.
+ *
+ * @param {number} length
+ * @returns {string}
+ */
 export function GenerateSentences(length=3) {
     const sentences = [];
     while (sentences.length < length) {
@@ -46,12 +47,13 @@ export function GenerateSentences(length=3) {
     return paragraphs.join("");
 }
 
+
 /**
-* generate lorem ipsum words.
-*
-* @param {number} length
-* @returns {string}
-*/
+ * Generate lorem ipsum words.
+ *
+ * @param {number} length
+ * @returns {string}
+ */
 export function GenerateWords(length=3) {
     const words = getWords(length);
     const sentences = wordsToSentences(words);
@@ -59,19 +61,21 @@ export function GenerateWords(length=3) {
     return paragraphs.join("");
 }
 
- /**
-  * generate lorem ipsum bytes.
-  *
-  * @param {number} length
-  * @returns {string}
-  */
+
+/**
+ * Generate lorem ipsum bytes.
+ *
+ * @param {number} length
+ * @returns {string}
+ */
 export function GenerateBytes(length=3) {
     const str = GenerateWords(length/3);
     return str.slice(0, length);
 }
 
+
 /**
- * get array of randomly selected words from the lorem ipsum wordList.
+ * Get array of randomly selected words from the lorem ipsum wordList.
  *
  * @param {number} length
  * @returns {string[]}
@@ -84,16 +88,16 @@ function getWords(length=3) {
     while (words.length < length){
         do {
             word = wordList[Math.floor(Math.random() * wordList.length)];
-        }
-        while (previousWord === word);
+        } while (previousWord === word);
         words.push(word);
         previousWord = word;
     }
     return words;
 }
 
+
 /**
- * convert an array or words into an array of sentences"
+ * Convert an array of words into an array of sentences
  *
  * @param {string[]} words
  * @returns {string[]}
@@ -112,8 +116,9 @@ function wordsToSentences(words) {
     return sentences;
 }
 
+
 /**
- * convert an array or sentences into an array of paragraphs"
+ * Convert an array of sentences into an array of paragraphs
  *
  * @param {string[]} sentences
  * @returns {string[]}
@@ -130,15 +135,16 @@ function sentencesToParagraphs(sentences) {
     return paragraphs;
 }
 
+
 /**
- * format an array of words into a sentence.
+ * Format an array of words into a sentence.
  *
  * @param {string[]} words
  * @returns {string}
  * @private
  */
 function formatSentence(words) {
-    //0.35 chance of a  comma being added randomly to the sentence.
+    // 0.35 chance of a  comma being added randomly to the sentence.
     if (Math.random() < PROBABILITY_OF_A_COMMA) {
         const pos = Math.round(Math.random()*(words.length-1));
         words[pos] +=",";
@@ -149,8 +155,9 @@ function formatSentence(words) {
     return sentence;
 }
 
+
 /**
- * format an array of sentences into a paragraph
+ * Format an array of sentences into a paragraph.
  *
  * @param {string[]} sentences
  * @returns {string}
@@ -162,10 +169,11 @@ function formatParagraph(sentences) {
     return paragraph;
 }
 
+
 /**
- * get a random number based on a mean and standard deviation.
+ * Get a random number based on a mean and standard deviation.
  *
- * @param {number} Mean
+ * @param {number} mean
  * @param {number} stdDev
  * @returns {number}
  * @private
@@ -174,13 +182,13 @@ function getRandomLength(mean, stdDev) {
     let length;
     do {
         length =  Math.round((Math.random()*2-1)+(Math.random()*2-1)+(Math.random()*2-1)*stdDev+mean);
-    }
-    while (length <= 0);
+    } while (length <= 0);
     return length;
 }
 
+
 /**
- * replace first 5 words with "Lorem ipsum dolor sit amet"
+ * Replace first 5 words with "Lorem ipsum dolor sit amet"
  *
  * @param {string[]} str
  * @returns {string[]}
@@ -199,6 +207,7 @@ function replaceStart(str) {
         return str;
     }
 }
+
 
 const SENTENCE_LENGTH_MEAN = 15;
 const SENTENCE_LENGTH_STD_DEV = 9;

@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.20.0] - 2019-01-09
+- 'Generate Lorem Ipsum' operation added [@klaxon1] | [#455]
+
 ### [8.19.0] - 2018-12-30
 - UI test suite added to confirm that the app loads correctly in a reasonable time and that various operations from each module can be run [@n1474335] | [#458]
 
@@ -88,6 +91,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.20.0]: https://github.com/gchq/CyberChef/releases/tag/v8.20.0
 [8.19.0]: https://github.com/gchq/CyberChef/releases/tag/v8.19.0
 [8.18.0]: https://github.com/gchq/CyberChef/releases/tag/v8.18.0
 [8.17.0]: https://github.com/gchq/CyberChef/releases/tag/v8.17.0
@@ -159,4 +163,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#446]: https://github.com/gchq/CyberChef/pull/446
 [#448]: https://github.com/gchq/CyberChef/pull/448
 [#449]: https://github.com/gchq/CyberChef/pull/449
+[#455]: https://github.com/gchq/CyberChef/pull/455
 [#458]: https://github.com/gchq/CyberChef/pull/458

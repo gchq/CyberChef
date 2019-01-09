@@ -9,17 +9,17 @@ import OperationError from "../errors/OperationError";
 import { GenerateParagraphs, GenerateSentences, GenerateWords, GenerateBytes } from "../lib/LoremIpsum";
 
 /**
- * Lorem Ipsum Generator operation
+ * Generate Lorem Ipsum operation
  */
-class LoremIpsumGenerator extends Operation {
+class GenerateLoremIpsum extends Operation {
 
     /**
-     * LoremIpsumGenerator constructor
+     * GenerateLoremIpsum constructor
      */
     constructor() {
         super();
 
-        this.name = "Lorem Ipsum Generator";
+        this.name = "Generate Lorem Ipsum";
         this.module = "Default";
         this.description = "Generate varying length lorem ipsum placeholder text.";
         this.infoURL = "https://wikipedia.org/wiki/Lorem_ipsum";
@@ -60,11 +60,11 @@ class LoremIpsumGenerator extends Operation {
             case "Bytes":
                 return GenerateBytes(length);
             default:
-                throw new OperationError("invalid lengthType");
+                throw new OperationError("Invalid length type");
 
         }
     }
 
 }
 
-export default LoremIpsumGenerator;
+export default GenerateLoremIpsum;
