@@ -25,11 +25,28 @@ class YaraRules extends Operation {
         this.infoURL = "https://en.wikipedia.org/wiki/YARA";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
-        this.args = [{
-            name: "Rules",
-            type: "code",
-            value: ""
-        }];
+        this.args = [
+            {
+                name: "Rules",
+                type: "code",
+                value: ""
+            },
+            {
+                name: "Show strings",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Show string lengths",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Show metadata",
+                type: "boolean",
+                value: false
+            }
+        ];
     }
 
     /**
@@ -38,6 +55,7 @@ class YaraRules extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        const [rules, showStrings, showLengths, showMeta] = args;
         return new Promise((resolve, reject) => {
             Yara().then(yara => {
                 let matchString = "";
@@ -46,7 +64,7 @@ class YaraRules extends Operation {
                 for (let i = 0; i < inpArr.length; i++) {
                     inpVec.push_back(inpArr[i]);
                 }
-                const resp = yara.run(inpVec, args[0]);
+                const resp = yara.run(inpVec, rules);
                 if (resp.compileErrors.size() > 0) {
                     for (let i = 0; i < resp.compileErrors.size(); i++) {
                         const compileError = resp.compileErrors.get(i);
@@ -58,16 +76,26 @@ class YaraRules extends Operation {
                     }
                 }
                 const matchedRules = resp.matchedRules;
-                for (let i = 0; i < matchedRules.keys().size(); i++) {
-                    const ruleMatches = matchedRules.get(matchedRules.keys().get(i));
-                    if (ruleMatches.size() === 0) {
-                        matchString += `Input matches rule "${matchedRules.keys().get(i)}".\n`;
+                for (let i = 0; i < matchedRules.size(); i++) {
+                    const rule = matchedRules.get(i);
+                    const matches = rule.resolvedMatches;
+                    let meta = "";
+                    if (showMeta && rule.metadata.size() > 0) {
+                        meta += " [";
+                        for (let j = 0; j < rule.metadata.size(); j++) {
+                            meta += `${rule.metadata.get(j).identifier}: ${rule.metadata.get(j).data}, `;
+                        }
+                        meta = meta.slice(0, -2) + "]";
+                    }
+                    if (matches.size() === 0 || !(showStrings || showLengths)) {
+                        matchString += `Input matches rule "${rule.ruleName}"${meta}.\n`;
                     } else {
-                        matchString += `Rule "${matchedRules.keys().get(i)}" matches:\n`;
-
-                        for (let j = 0; j < ruleMatches.size(); j++) {
-                            const match = ruleMatches.get(j);
-                            matchString += `Position ${match.location}, length ${match.matchLength}, data: ${match.data}\n`;
+                        matchString += `Rule "${rule.ruleName}"${meta} matches:\n`;
+                        for (let j = 0; j < matches.size(); j++) {
+                            const match = matches.get(j);
+                            if (showStrings || showLengths) {
+                                matchString += `Pos ${match.location}, ${showLengths ? `length ${match.matchLength}, ` : ""}identifier ${match.stringIdentifier}${showStrings ? `, data: "${match.data}"` : ""}\n`;
+                            }
                         }
                     }
                     

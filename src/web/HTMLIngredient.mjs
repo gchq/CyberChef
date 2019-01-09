@@ -51,7 +51,8 @@ class HTMLIngredient {
                     value="${this.value}"
                     rows=5
                     ${this.disabled ? "disabled" : ""}></textarea>
-                ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}`;
+                ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
+                </div>`;
                 break;
             case "string":
             case "binaryString":
