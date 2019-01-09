@@ -9,41 +9,45 @@ import OperationError from "../errors/OperationError";
 import Yara from "libyara-wasm";
 
 /**
- * Yara Rules operation
+ * YARA Rules operation
  */
-class YaraRules extends Operation {
+class YARARules extends Operation {
 
     /**
-     * YaraRules constructor
+     * YARARules constructor
      */
     constructor() {
         super();
 
-        this.name = "Yara Rules";
+        this.name = "YARA Rules";
         this.module = "Yara";
-        this.description = "Yara support";
-        this.infoURL = "https://en.wikipedia.org/wiki/YARA";
+        this.description = "YARA is a tool developed at VirusTotal, primarily aimed at helping malware researchers to identify and classify malware samples. It matches based on rules specified by the user containing textual or binary patterns and a boolean expression. For help on writing rules, see the <a href='https://yara.readthedocs.io/en/latest/writingrules.html'>YARA documentation.</a>";
+        this.infoURL = "https://wikipedia.org/wiki/YARA";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
                 name: "Rules",
-                type: "code",
-                value: ""
+                type: "text",
+                value: "",
+                rows: 5
             },
             {
                 name: "Show strings",
                 type: "boolean",
+                hint: "Show each match's data",
                 value: false
             },
             {
                 name: "Show string lengths",
                 type: "boolean",
+                hint: "Show the length of each match's data",
                 value: false
             },
             {
                 name: "Show metadata",
                 type: "boolean",
+                hint: "Show the metadata of each rule",
                 value: false
             }
         ];
@@ -59,7 +63,7 @@ class YaraRules extends Operation {
         return new Promise((resolve, reject) => {
             Yara().then(yara => {
                 let matchString = "";
-                const inpArr = new Uint8Array(input); // I know this is garbage but it's like 1.5 times faster
+                const inpArr = new Uint8Array(input);
                 const inpVec = new yara.vectorChar();
                 for (let i = 0; i < inpArr.length; i++) {
                     inpVec.push_back(inpArr[i]);
@@ -107,4 +111,4 @@ class YaraRules extends Operation {
 
 }
 
-export default YaraRules;
+export default YARARules;

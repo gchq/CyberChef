@@ -179,6 +179,7 @@ class Operation {
 
             if (ing.toggleValues) conf.toggleValues = ing.toggleValues;
             if (ing.hint) conf.hint = ing.hint;
+            if (ing.rows) conf.rows = ing.rows;
             if (ing.disabled) conf.disabled = ing.disabled;
             if (ing.target) conf.target = ing.target;
             if (ing.defaultIndex) conf.defaultIndex = ing.defaultIndex;

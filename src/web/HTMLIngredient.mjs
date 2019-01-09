@@ -25,6 +25,7 @@ class HTMLIngredient {
         this.value = config.value;
         this.disabled = config.disabled || false;
         this.hint = config.hint || false;
+        this.rows = config.rows || false;
         this.target = config.target;
         this.defaultIndex = config.defaultIndex || 0;
         this.toggleValues = config.toggleValues;
@@ -42,18 +43,6 @@ class HTMLIngredient {
             i, m;
 
         switch (this.type) {
-            case "code":
-                html+= `<div class="form-group">
-                <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
-                <textarea class="form-control arg"
-                    id="${this.id}"
-                    arg-name="${this.name}"
-                    value="${this.value}"
-                    rows=5
-                    ${this.disabled ? "disabled" : ""}></textarea>
-                ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
-                </div>`;
-                break;
             case "string":
             case "binaryString":
             case "byteArray":
@@ -241,6 +230,7 @@ class HTMLIngredient {
                         class="form-control arg"
                         id="${this.id}"
                         arg-name="${this.name}"
+                        rows="${this.rows ? this.rows : 3}"
                         ${this.disabled ? "disabled" : ""}>${this.value}</textarea>
                     ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
