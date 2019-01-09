@@ -27,6 +27,7 @@ TestRegister.addTests([
         ]
     },
     {
+        // This test produces a menu that doesn't use the first letter, which is also a good test
         name: "Bombe: 3 rotor (other stecker)",
         input: "JBYALIHDYNUAAVKBYM",
         expectedMatch: /LGA \(plugboard: AG\): QFIMUMAFKMQSKMYNGW/,
@@ -80,8 +81,7 @@ TestRegister.addTests([
             }
         ]
     },
-    /*
-     * Long test is long
+    // This test is a bit slow - it takes about 12s on my test hardware
     {
         name: "Bombe: 4 rotor",
         input: "LUOXGJSHGEDSRDOQQX",
@@ -100,7 +100,6 @@ TestRegister.addTests([
             }
         ]
     },
-    */
     {
         name: "Bombe: no crib",
         input: "JBYALIHDYNUAAVKBYM",

@@ -82,6 +82,104 @@ class Edge {
 }
 
 /**
+ * As all the Bombe's rotors move in step, at any given point the vast majority of the scramblers
+ * in the machine share the majority of their state, which is hosted in this class.
+ */
+class SharedScrambler {
+    /**
+     * SharedScrambler constructor.
+     * @param {Object[]} rotors - List of rotors in the shared state _only_.
+     * @param {Object} reflector - The reflector in use.
+     */
+    constructor(rotors, reflector) {
+        this.reflector = reflector;
+        this.rotors = rotors;
+        this.rotorsRev = [].concat(rotors).reverse();
+        this.lowerCache = new Array(26);
+        this.higherCache = new Array(26);
+        for (let i=0; i<26; i++) {
+            this.higherCache[i] = new Array(26);
+        }
+        this.cacheGen();
+    }
+
+    /**
+     * Step the rotors forward.
+     * @param {number} n - How many rotors to step. This includes the rotors which are not part of
+     * the shared state, so should be 2 or more.
+     */
+    step(n) {
+        for (let i=0; i<n-1; i++) {
+            this.rotors[i].step();
+        }
+        this.cacheGen();
+    }
+
+    /**
+     * Optimisation: We pregenerate all routes through the machine with the top rotor removed,
+     * as these rarely change. This saves a lot of lookups. This function generates this route
+     * table.
+     * We also just-in-time cache the full routes through the scramblers, because after stepping
+     * the fast rotor some scramblers will be in states occupied by other scrambles on previous
+     * iterations.
+     */
+    cacheGen() {
+        for (let i=0; i<26; i++) {
+            this.lowerCache[i] = undefined;
+            for (let j=0; j<26; j++) {
+                this.higherCache[i][j] = undefined;
+            }
+        }
+        for (let i=0; i<26; i++) {
+            if (this.lowerCache[i] !== undefined) {
+                continue;
+            }
+            let letter = i;
+            for (const rotor of this.rotors) {
+                letter = rotor.transform(letter);
+            }
+            letter = this.reflector.transform(letter);
+            for (const rotor of this.rotorsRev) {
+                letter = rotor.revTransform(letter);
+            }
+            // By symmetry
+            this.lowerCache[i] = letter;
+            this.lowerCache[letter] = i;
+        }
+    }
+
+    /**
+     * Get the fully cached result, if present.
+     * @param {number} pos - Position of the fast rotor
+     * @param {number} i - Letter
+     * @returns {number|undefined} - undefined if not cached
+     */
+    fullTransform(pos, i) {
+        return this.higherCache[pos][i];
+    }
+
+    /**
+     * Add a value to the full result cache.
+     * @param {number} pos - Position of the fast rotor
+     * @param {number} i - Letter
+     * @param {number} val - Transformed letter
+     */
+    addCache(pos, i, val) {
+        this.higherCache[pos][i] = val;
+        this.higherCache[pos][val] = i;
+    }
+
+    /**
+     * Map a letter through this (partial) scrambler.
+     * @param {number} i - The letter
+     * @returns {number}
+     */
+    transform(i) {
+        return this.lowerCache[i];
+    }
+}
+
+/**
  * Scrambler.
  *
  * This is effectively just an Enigma machine, but it only operates on one character at a time and
@@ -89,18 +187,17 @@ class Edge {
  */
 class Scrambler {
     /** Scrambler constructor.
-     * @param {Object[]} rotors - List of rotors in this scrambler
-     * @param {Object} reflector - This scrambler's reflector
+     * @param {Object} base - The SharedScrambler whose state this scrambler uses
+     * @param {Object} rotor - The non-shared fast rotor in this scrambler
      * @param {number} pos - Position offset from start of crib
      * @param {number} end1 - Letter in menu this scrambler is attached to
      * @param {number} end2 - Other letter in menu this scrambler is attached to
      */
-    constructor(rotors, reflector, pos, end1, end2) {
-        this.reflector = reflector;
-        this.rotors = rotors;
-        this.rotorsRev = [].concat(rotors).reverse();
+    constructor(base, rotor, pos, end1, end2) {
+        this.baseScrambler = base;
+        this.rotor = rotor;
         this.initialPos = pos;
-        this.rotors[0].pos += pos;
+        this.rotor.pos += pos;
         this.end1 = end1;
         this.end2 = end2;
     }
@@ -111,12 +208,14 @@ class Scrambler {
      * All nodes in the Bombe step in sync.
      * @param {number} n - How many rotors to step
      */
-    step(n) {
-        // The Bombe steps the slowest rotor on an actual Enigma first.
-        for (let i=this.rotors.length - 1; i>=this.rotors.length-n; i--) {
-            this.rotors[i].step();
-        }
+    step() {
+        // The Bombe steps the slowest rotor on an actual Enigma fastest, for reasons.
+        // ...but for optimisation reasons I'm going to cheat and not do that, as this vastly
+        // simplifies caching the state of the majority of the scramblers. The results are the
+        // same, just in a slightly different order.
+        this.rotor.step();
     }
+
 
     /**
      * Run a letter through the scrambler.
@@ -125,13 +224,14 @@ class Scrambler {
      */
     transform(i) {
         let letter = i;
-        for (const rotor of this.rotors) {
-            letter = rotor.transform(letter);
+        const cached = this.baseScrambler.fullTransform(this.rotor.pos, i);
+        if (cached !== undefined) {
+            return cached;
         }
-        letter = this.reflector.transform(letter);
-        for (const rotor of this.rotorsRev) {
-            letter = rotor.revTransform(letter);
-        }
+        letter = this.rotor.transform(letter);
+        letter = this.baseScrambler.transform(letter);
+        letter = this.rotor.revTransform(letter);
+        this.baseScrambler.addCache(this.rotor.pos, i, letter);
         return letter;
     }
 
@@ -155,15 +255,11 @@ class Scrambler {
      */
     getPos() {
         let result = "";
-        for (let i=0; i<this.rotors.length; i++) {
-            let pos = this.rotors[i].pos;
-            // Enigma steps *before* encrypting each character. This means we need to roll the fast
-            // rotor back by one before outputting it, to ensure the position is correct for the
-            // first character.
-            // As usual with the Bombe we do not take stepping of other rotors into account!
-            if (i === 0) {
-                pos = Utils.mod(pos - 1, 26);
-            }
+        // Roll back the fast rotor by one step
+        let pos = Utils.mod(this.rotor.pos - 1, 26);
+        result += i2a(pos);
+        for (let i=0; i<this.baseScrambler.rotors.length; i++) {
+            pos = this.baseScrambler.rotors[i].pos;
             result += i2a(pos);
         }
         return result.split("").reverse().join("");
@@ -228,16 +324,14 @@ export class BombeMachine {
         for (let i=0; i<26; i++) {
             this.scramblers.push(new Array());
         }
+        this.sharedScrambler = new SharedScrambler(this.baseRotors.slice(1), reflector);
         this.allScramblers = new Array();
         this.indicator = undefined;
         for (const edge of edges) {
-            const cRotors = [];
-            for (const r of this.baseRotors) {
-                cRotors.push(r.copy());
-            }
+            const cRotor = this.baseRotors[0].copy();
             const end1 = a2i(edge.node1.letter);
             const end2 = a2i(edge.node2.letter);
-            const scrambler = new Scrambler(cRotors, reflector, edge.pos, end1, end2);
+            const scrambler = new Scrambler(this.sharedScrambler, cRotor, edge.pos, end1, end2);
             if (edge.pos === 0) {
                 this.indicator = scrambler;
             }
@@ -249,7 +343,7 @@ export class BombeMachine {
         // use one of the actual scramblers if there's one in the right position, but if not we'll
         // just create one.
         if (this.indicator === undefined) {
-            this.indicator = new Scrambler(this.baseRotors, reflector, 0, undefined);
+            this.indicator = new Scrambler(this.sharedScrambler, this.baseRotors[0].copy(), 0, undefined, undefined);
             this.allScramblers.push(this.indicator);
         }
 
@@ -363,33 +457,34 @@ export class BombeMachine {
     }
 
     /**
-     * Implement Welchman's diagonal board: If A steckers to B, that implies B steckers to A, and
-     * so forth. This function just gets the paired wire.
-     * @param {number[2]} i - Bombe state wire
-     * @returns {number[2]}
-     */
-    getDiagonal(i) {
-        return [i[1], i[0]];
-    }
-
-    /**
      * Bombe electrical simulation. Energise a wire. For all connected wires (both via the diagonal
      * board and via the scramblers), energise them too, recursively.
      * @param {number[2]} i - Bombe state wire
      */
-    energise(i) {
-        const idx = 26*i[0] + i[1];
+    energise(i, j) {
+        const idx = 26*i + j;
         if (this.wires[idx]) {
             return;
         }
         this.energiseCount ++;
         this.wires[idx] = true;
-        this.energise(this.getDiagonal(i));
+        // Welchman's diagonal board: if A steckers to B, that implies B steckers to A. Handle
+        // both.
+        const idxPair = 26*j + i;
+        this.wires[idxPair] = true;
 
-        for (const scrambler of this.scramblers[i[0]]) {
-            const out = scrambler.transform(i[1]);
-            const other = scrambler.getOtherEnd(i[0]);
-            this.energise([other, out]);
+        for (const scrambler of this.scramblers[i]) {
+            const out = scrambler.transform(j);
+            const other = scrambler.getOtherEnd(i);
+            this.energise(other, out);
+        }
+        if (i === j) {
+            return;
+        }
+        for (const scrambler of this.scramblers[j]) {
+            const out = scrambler.transform(i);
+            const other = scrambler.getOtherEnd(j);
+            this.energise(other, out);
         }
     }
 
@@ -401,6 +496,9 @@ export class BombeMachine {
      * @result number
      */
     singleStecker(stecker, x) {
+        if (stecker === undefined) {
+            return x;
+        }
         if (x === stecker[0]) {
             return stecker[1];
         }
@@ -420,14 +518,14 @@ export class BombeMachine {
      * @returns {string}
      */
     tryDecrypt(stecker) {
-        const fastRotor = this.indicator.rotors[0];
+        const fastRotor = this.indicator.rotor;
         const initialPos = fastRotor.pos;
         const res = [];
         // The indicator scrambler starts in the right place for the beginning of the ciphertext.
         for (let i=0; i<Math.min(26, this.ciphertext.length); i++) {
             const t = this.indicator.transform(this.singleStecker(stecker, a2i(this.ciphertext[i])));
             res.push(i2a(this.singleStecker(stecker, t)));
-            fastRotor.pos = Utils.mod(fastRotor.pos + 1, 26);
+            this.indicator.step(1);
         }
         fastRotor.pos = initialPos;
         return res.join("");
@@ -452,7 +550,7 @@ export class BombeMachine {
             // Energise the test input, follow the current through each scrambler
             // (and the diagonal board)
             this.energiseCount = 0;
-            this.energise(this.testInput);
+            this.energise(...this.testInput);
             // Count the energised outputs
             let count = 0;
             for (let j=26*this.testRegister; j<26*(1+this.testRegister); j++) {
@@ -502,8 +600,11 @@ export class BombeMachine {
                     break;
                 }
             }
+            if (n > 1) {
+                this.sharedScrambler.step(n);
+            }
             for (const scrambler of this.allScramblers) {
-                scrambler.step(n);
+                scrambler.step();
             }
             // Send status messages at what seems to be a reasonably sensible frequency
             // (note this won't be triggered on 3-rotor runs - they run fast enough it doesn't seem necessary)
