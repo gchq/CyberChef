@@ -49,6 +49,7 @@ class HTMLIngredient {
                     id="${this.id}"
                     arg-name="${this.name}"
                     value="${this.value}"
+                    rows=5
                     ${this.disabled ? "disabled" : ""}></textarea>
                 ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}`;
                 break;
