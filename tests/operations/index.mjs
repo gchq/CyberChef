@@ -84,6 +84,7 @@ import "./tests/ParseTLV";
 import "./tests/Media";
 import "./tests/Enigma";
 import "./tests/Bombe";
+import "./tests/MultipleBombe";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";

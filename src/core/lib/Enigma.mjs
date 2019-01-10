@@ -171,6 +171,7 @@ class PairMapBase {
     constructor(pairs, name="PairMapBase") {
         // I've chosen to make whitespace significant here to make a) code and
         // b) inputs easier to read
+        this.pairs = pairs;
         this.map = {};
         if (pairs === "") {
             return;

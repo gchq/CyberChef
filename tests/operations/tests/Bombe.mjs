@@ -85,7 +85,7 @@ TestRegister.addTests([
     {
         name: "Bombe: 4 rotor",
         input: "LUOXGJSHGEDSRDOQQX",
-        expectedMatch: /LHSC \(plugboard: SS\)/,
+        expectedMatch: /LHSC \(plugboard: SS\): HHHSSSGQUUQPKSEKWK/,
         recipeConfig: [
             {
                 "op": "Bombe",

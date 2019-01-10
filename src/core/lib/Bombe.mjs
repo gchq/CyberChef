@@ -92,14 +92,24 @@ class SharedScrambler {
      * @param {Object} reflector - The reflector in use.
      */
     constructor(rotors, reflector) {
-        this.reflector = reflector;
-        this.rotors = rotors;
-        this.rotorsRev = [].concat(rotors).reverse();
         this.lowerCache = new Array(26);
         this.higherCache = new Array(26);
         for (let i=0; i<26; i++) {
             this.higherCache[i] = new Array(26);
         }
+        this.changeRotors(rotors, reflector);
+    }
+
+    /**
+     * Replace the rotors and reflector in this SharedScrambler.
+     * This takes care of flushing caches as well.
+     * @param {Object[]} rotors - List of rotors in the shared state _only_.
+     * @param {Object} reflector - The reflector in use.
+     */
+    changeRotors(rotors, reflector) {
+        this.reflector = reflector;
+        this.rotors = rotors;
+        this.rotorsRev = [].concat(rotors).reverse();
         this.cacheGen();
     }
 
@@ -195,11 +205,20 @@ class Scrambler {
      */
     constructor(base, rotor, pos, end1, end2) {
         this.baseScrambler = base;
-        this.rotor = rotor;
         this.initialPos = pos;
-        this.rotor.pos += pos;
+        this.changeRotor(rotor);
         this.end1 = end1;
         this.end2 = end2;
+    }
+
+    /**
+     * Replace the rotor in this scrambler.
+     * The position is reset automatically.
+     * @param {Object} rotor - New rotor
+     */
+    changeRotor(rotor) {
+        this.rotor = rotor;
+        this.rotor.pos += this.initialPos;
     }
 
     /**
@@ -304,12 +323,7 @@ export class BombeMachine {
         }
         this.ciphertext = ciphertext;
         this.crib = crib;
-        // This is ordered from the Enigma fast rotor to the slow, so bottom to top for the Bombe
-        this.baseRotors = [];
-        for (const rstr of rotors) {
-            const rotor = new CopyRotor(rstr, "", "A", "A");
-            this.baseRotors.push(rotor);
-        }
+        this.initRotors(rotors);
         this.updateFn = update;
 
         const [mostConnected, edges] = this.makeMenu();
@@ -352,6 +366,33 @@ export class BombeMachine {
         for (const edge of mostConnected.edges) {
             this.testInput = [this.testRegister, a2i(edge.getOther(mostConnected).letter)];
             break;
+        }
+    }
+
+    /**
+     * Build Rotor objects from list of rotor wiring strings.
+     * @param {string[]} rotors - List of rotor wiring strings
+     */
+    initRotors(rotors) {
+        // This is ordered from the Enigma fast rotor to the slow, so bottom to top for the Bombe
+        this.baseRotors = [];
+        for (const rstr of rotors) {
+            const rotor = new CopyRotor(rstr, "", "A", "A");
+            this.baseRotors.push(rotor);
+        }
+    }
+
+    /**
+     * Replace the rotors and reflector in all components of this Bombe.
+     * @param {string[]} rotors - List of rotor wiring strings
+     * @param {Object} reflector - Reflector object
+     */
+    changeRotors(rotors, reflector) {
+        // At the end of the run, the rotors are all back in the same position they started
+        this.initRotors(rotors);
+        this.sharedScrambler.changeRotors(this.baseRotors.slice(1), reflector);
+        for (const scrambler of this.allScramblers) {
+            scrambler.changeRotor(this.baseRotors[0].copy());
         }
     }
 
