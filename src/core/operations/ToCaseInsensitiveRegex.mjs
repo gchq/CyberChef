@@ -19,7 +19,7 @@ class ToCaseInsensitiveRegex extends Operation {
 
         this.name = "To Case Insensitive Regex";
         this.module = "Default";
-        this.description = "Converts a case-sensitive regex string into a case-insensitive regex string in case /i flag is unavailable to you.";
+        this.description = "Converts a case-sensitive regex string into a case-insensitive regex string in case the i flag is unavailable to you.<br><br>e.g. <code>Mozilla/[0-9].[0-9] .*</code> becomes <code>[mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .*</code>";
         this.infoURL = "https://wikipedia.org/wiki/Regular_expression";
         this.inputType = "string";
         this.outputType = "string";
