@@ -514,7 +514,8 @@ export class BombeMachine {
         const idxPair = 26*j + i;
         this.wires[idxPair] = true;
 
-        for (const scrambler of this.scramblers[i]) {
+        for (let k=0; k<this.scramblers[i].length; k++) {
+            const scrambler = this.scramblers[i][k];
             const out = scrambler.transform(j);
             const other = scrambler.getOtherEnd(i);
             this.energise(other, out);
@@ -522,7 +523,8 @@ export class BombeMachine {
         if (i === j) {
             return;
         }
-        for (const scrambler of this.scramblers[j]) {
+        for (let k=0; k<this.scramblers[j].length; k++) {
+            const scrambler = this.scramblers[j][k];
             const out = scrambler.transform(i);
             const other = scrambler.getOtherEnd(j);
             this.energise(other, out);
