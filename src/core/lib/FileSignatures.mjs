@@ -1438,10 +1438,8 @@ export function extractGZIP(bytes, offset) {
 
     while (!finalBlock) {
         // Read header
-        const blockHeader = stream.readBits(3);
-
-        finalBlock = blockHeader & 0x1;
-        const blockType = blockHeader & 0x6;
+        finalBlock = stream.readBits(1);
+        const blockType = stream.readBits(2);
 
         if (blockType === 0) {
             // No compression
@@ -1451,23 +1449,23 @@ export function extractGZIP(bytes, offset) {
             stream.moveForwardsBy(2 + blockLength);
         } else if (blockType === 1) {
             // Fixed Huffman
+            console.log("Fixed Huffman");
 
         } else if (blockType === 2) {
             // Dynamic Huffman
-
+            console.log("Dynamic Huffman");
         } else {
             throw new Error("Invalid block type");
             break;
         }
     }
 
-
     /* FOOTER */
 
     // Skip over checksum and size of original uncompressed input
     stream.moveForwardsBy(8);
 
-    console.log(stream.position);
+    console.log("Ending at " + stream.position);
 
     return stream.carve();
 }

@@ -106,7 +106,7 @@ export default class Stream {
             bitBufLen = 0;
 
         // Add remaining bits from current byte
-        bitBuf = this.bytes[this.position++] & bitMask(this.bitPos);
+        bitBuf = (this.bytes[this.position++] & bitMask(this.bitPos)) >>> this.bitPos;
         bitBufLen = 8 - this.bitPos;
         this.bitPos = 0;
 
@@ -119,7 +119,7 @@ export default class Stream {
         // Reverse back to numBits
         if (bitBufLen > numBits) {
             const excess = bitBufLen - numBits;
-            bitBuf >>>= excess;
+            bitBuf &= (1 << numBits) - 1;
             bitBufLen -= excess;
             this.position--;
             this.bitPos = 8 - excess;
@@ -134,10 +134,9 @@ export default class Stream {
          * @returns {number} The bit mask
          */
         function bitMask(bitPos) {
-            return (1 << (8 - bitPos)) - 1;
+            return 256 - (1 << bitPos);
         }
     }
-
 
     /**
      * Consume the stream until we reach the specified byte or sequence of bytes.
