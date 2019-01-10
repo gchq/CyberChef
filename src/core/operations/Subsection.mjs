@@ -39,6 +39,11 @@ class Subsection extends Operation {
                 "value": true
             },
             {
+                "name": "Global matching",
+                "type": "boolean",
+                "value": true
+            },
+            {
                 "name": "Ignore errors",
                 "type": "boolean",
                 "value": false
@@ -49,7 +54,7 @@ class Subsection extends Operation {
     /**
      * @param {Object} state - The current state of the recipe.
      * @param {number} state.progress - The current position in the recipe.
-     * @param {Dish} state.Dish - The Dish being operated on
+     * @param {Dish} state.dish - The Dish being operated on
      * @param {Operation[]} state.opList - The list of operations in the recipe
      * @returns {Object} - The updated state of the recipe
      */
@@ -59,12 +64,12 @@ class Subsection extends Operation {
             outputType  = opList[state.progress].outputType,
             input       = await state.dish.get(inputType),
             ings        = opList[state.progress].ingValues,
-            [section, caseSensitive, ignoreErrors]   = ings,
+            [section, caseSensitive, global, ignoreErrors] = ings,
             subOpList   = [];
 
         if (input && section !== "") {
             // Create subOpList for each tranche to operate on
-            // (all remaining operations unless we encounter a Merge)
+            // all remaining operations unless we encounter a Merge
             for (let i = state.progress + 1; i < opList.length; i++) {
                 if (opList[i].name === "Merge" && !opList[i].disabled) {
                     break;
@@ -73,13 +78,15 @@ class Subsection extends Operation {
                 }
             }
 
-            let flags = "g",
+            let flags = "",
                 inOffset = 0,
                 output = "",
                 m,
                 progress = 0;
-            if (!caseSensitive)
-                flags += "i";
+
+            if (!caseSensitive) flags += "i";
+            if (global) flags += "g";
+
             const regex = new XRegExp(section, flags),
                 recipe = new Recipe();
 
@@ -95,16 +102,19 @@ class Subsection extends Operation {
                 matched = true;
                 // Add up to match
                 let matchStr = m[0];
-                if (m.length === 1) {
+
+                if (m.length === 1) { // No capture groups
                     output += input.slice(inOffset, m.index);
-                    inOffset = regex.lastIndex;
+                    inOffset = m.index + m[0].length;
                 } else if (m.length >= 2) {
                     matchStr = m[1];
+
                     // Need to add some of the matched string that isn't in the capture group
                     output += input.slice(inOffset, m.index + m[0].indexOf(m[1]));
                     // Set i to be after the end of the first capture group
-                    inOffset = regex.lastIndex - (m[0].length - (m[0].indexOf(m[1]) + m[1].length));
+                    inOffset = m.index + m[0].indexOf(m[1]) + m[1].length;
                 }
+
                 // Baseline ing values for each tranche so that registers are reset
                 subOpList.forEach((op, i) => {
                     op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
@@ -122,7 +132,9 @@ class Subsection extends Operation {
                     progress = err.progress + 1;
                 }
                 output += await dish.get(outputType);
+                if (!regex.global) break;
             }
+
             // If no matches were found, advance progress to after a Merge op
             // Otherwise, the operations below Subsection will be run on all the input data
             if (!matched) {
