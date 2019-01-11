@@ -46,7 +46,10 @@ class ExtractFiles extends Operation {
         detectedFiles.forEach(detectedFile => {
             try {
                 files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
-            } catch (err) {}
+            } catch (err) {
+                if (err.message.indexOf("No extraction algorithm available") < 0)
+                    throw err;
+            }
         });
 
         return files;

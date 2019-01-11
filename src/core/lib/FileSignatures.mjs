@@ -1384,6 +1384,7 @@ export function extractRTF(bytes, offset) {
 export function extractGZIP(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
+
     /* HEADER */
 
     // Skip over signature and compression method
@@ -1396,7 +1397,7 @@ export function extractGZIP(bytes, offset) {
     stream.moveForwardsBy(4);
 
     // Read compression flags
-    const compressionFlags = stream.readInt(1);
+    stream.readInt(1);
 
     // Skip over OS
     stream.moveForwardsBy(1);
@@ -1406,34 +1407,63 @@ export function extractGZIP(bytes, offset) {
 
     // Extra fields
     if (flags & 0x4) {
-        console.log("Extra fields");
         const extraFieldsSize = stream.readInt(2, "le");
         stream.moveForwardsby(extraFieldsSize);
     }
 
     // Original filename
     if (flags & 0x8) {
-        console.log("Filename");
         stream.continueUntil(0x00);
         stream.moveForwardsBy(1);
     }
 
     // Comment
     if (flags & 0x10) {
-        console.log("Comment");
         stream.continueUntil(0x00);
         stream.moveForwardsBy(1);
     }
 
     // Checksum
     if (flags & 0x2) {
-        console.log("Checksum");
         stream.moveForwardsBy(2);
     }
 
 
     /* DEFLATE DATA */
 
+    parseDEFLATE(stream);
+
+
+    /* FOOTER */
+
+    // Skip over checksum and size of original uncompressed input
+    stream.moveForwardsBy(8);
+
+    return stream.carve();
+}
+
+
+/**
+ * Steps through a DEFLATE stream
+ *
+ * @param {Stream} stream
+ */
+function parseDEFLATE(stream) {
+    // Construct required Huffman Tables
+    const fixedLiteralTableLengths = new Uint8Array(288);
+    for (let i = 0; i < fixedLiteralTableLengths.length; i++) {
+        fixedLiteralTableLengths[i] =
+            (i <= 143) ? 8 :
+                (i <= 255) ? 9 :
+                    (i <= 279) ? 7 :
+                        8;
+    }
+    const fixedLiteralTable = buildHuffmanTable(fixedLiteralTableLengths);
+    const fixedDistanceTableLengths = new Uint8Array(30).fill(5);
+    const fixedDistanceTable = buildHuffmanTable(fixedDistanceTableLengths);
+    const huffmanOrder = new Uint8Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
+
+    // Parse DEFLATE data
     let finalBlock = 0;
 
     while (!finalBlock) {
@@ -1442,30 +1472,175 @@ export function extractGZIP(bytes, offset) {
         const blockType = stream.readBits(2);
 
         if (blockType === 0) {
-            // No compression
+            /* No compression */
+
+            // Consume the rest of the current byte
             stream.moveForwardsBy(1);
+            // Read the block length value
             const blockLength = stream.readInt(2, "le");
-            console.log("No compression. Length: " + blockLength);
+            // Move to the end of this block
             stream.moveForwardsBy(2 + blockLength);
         } else if (blockType === 1) {
-            // Fixed Huffman
-            console.log("Fixed Huffman");
+            /* Fixed Huffman */
 
+            parseHuffmanBlock(stream, fixedLiteralTable, fixedDistanceTable);
         } else if (blockType === 2) {
-            // Dynamic Huffman
-            console.log("Dynamic Huffman");
+            /* Dynamic Huffman */
+
+            // Read the number of liternal and length codes
+            const hlit = stream.readBits(5) + 257;
+            // Read the number of distance codes
+            const hdist = stream.readBits(5) + 1;
+            // Read the number of code lengths
+            const hclen = stream.readBits(4) + 4;
+
+            // Parse code lengths
+            const codeLengths = new Uint8Array(huffmanOrder.length);
+            for (let i = 0; i < hclen; i++) {
+                codeLengths[huffmanOrder[i]] = stream.readBits(3);
+            }
+
+            // Parse length table
+            const codeLengthsTable = buildHuffmanTable(codeLengths);
+            const lengthTable = new Uint8Array(hlit + hdist);
+
+            let code, repeat, prev;
+            for (let i = 0; i < hlit + hdist;) {
+                code = readHuffmanCode(stream, codeLengthsTable);
+                switch (code) {
+                    case 16:
+                        repeat = 3 + stream.readBits(2);
+                        while (repeat--) lengthTable[i++] = prev;
+                        break;
+                    case 17:
+                        repeat = 3 + stream.readBits(3);
+                        while (repeat--) lengthTable[i++] = 0;
+                        prev = 0;
+                        break;
+                    case 18:
+                        repeat = 11 + stream.readBits(7);
+                        while (repeat--) lengthTable[i++] = 0;
+                        prev = 0;
+                        break;
+                    default:
+                        lengthTable[i++] = code;
+                        prev = code;
+                        break;
+                }
+            }
+
+            const dynamicLiteralTable = buildHuffmanTable(lengthTable.subarray(0, hlit));
+            const dynamicDistanceTable = buildHuffmanTable(lengthTable.subarray(hlit));
+
+            parseHuffmanBlock(stream, dynamicLiteralTable, dynamicDistanceTable);
         } else {
             throw new Error("Invalid block type");
-            break;
         }
     }
 
-    /* FOOTER */
+    // Consume final byte if it has not been fully consumed yet
+    if (stream.bitPos > 0)
+        stream.moveForwardsBy(1);
+}
 
-    // Skip over checksum and size of original uncompressed input
-    stream.moveForwardsBy(8);
 
-    console.log("Ending at " + stream.position);
+/**
+ * Parses a Huffman Block given the literal and distance tables
+ *
+ * @param {Stream} stream
+ * @param {Uint32Array} litTab
+ * @param {Uint32Array} distTab
+ */
+function parseHuffmanBlock(stream, litTab, distTab) {
+    const lengthExtraTable = new Uint8Array([
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
+    ]);
+    const distanceExtraTable = new Uint8Array([
+        0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
+    ]);
 
-    return stream.carve();
+    let code;
+    while ((code = readHuffmanCode(stream, litTab))) {
+        // console.log("Code: " + code + " (" + Utils.chr(code) + ") " + Utils.bin(code));
+
+        // End of block
+        if (code === 256) break;
+
+        // Literal
+        if (code < 256) continue;
+
+        // Length code
+        stream.readBits(lengthExtraTable[code - 257]);
+
+        // Dist code
+        code = readHuffmanCode(stream, distTab);
+        stream.readBits(distanceExtraTable[code]);
+    }
+}
+
+
+/**
+ * Builds a Huffman table given the relevant code lengths
+ *
+ * @param {Uint8Array} lengths
+ * @returns {Array} result
+ * @returns {Uint32Array} result.table
+ * @returns {number} result.maxCodeLength
+ * @returns {number} result.minCodeLength
+ */
+function buildHuffmanTable(lengths) {
+    const maxCodeLength = Math.max.apply(Math, lengths);
+    const minCodeLength = Math.min.apply(Math, lengths);
+    const size = 1 << maxCodeLength;
+    const table = new Uint32Array(size);
+
+    for (let bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength;) {
+        for (let i = 0; i < lengths.length; i++) {
+            if (lengths[i] === bitLength) {
+                let reversed, rtemp, j;
+                for (reversed = 0, rtemp = code, j = 0; j < bitLength; j++) {
+                    reversed = (reversed << 1) | (rtemp & 1);
+                    rtemp >>= 1;
+                }
+
+                const value = (bitLength << 16) | i;
+                for (let j = reversed; j < size; j += skip) {
+                    table[j] = value;
+                }
+
+                code++;
+            }
+        }
+
+        bitLength++;
+        code <<= 1;
+        skip <<= 1;
+    }
+
+    return [table, maxCodeLength, minCodeLength];
+}
+
+
+/**
+ * Reads the next Huffman code from the stream, given the relevant code table
+ *
+ * @param {Stream} stream
+ * @param {Uint32Array} table
+ * @returns {number}
+ */
+function readHuffmanCode(stream, table) {
+    const [codeTable, maxCodeLength] = table;
+
+    // Read max length
+    const bitsBuf = stream.readBits(maxCodeLength);
+    const codeWithLength = codeTable[bitsBuf & ((1 << maxCodeLength) - 1)];
+    const codeLength = codeWithLength >>> 16;
+
+    if (codeLength > maxCodeLength) {
+        throw new Error("Invalid code length: " + codeLength);
+    }
+
+    stream.moveBackwardsByBits(maxCodeLength - codeLength);
+
+    return codeWithLength & 0xffff;
 }

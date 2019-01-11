@@ -90,7 +90,6 @@ export default class Stream {
         return val;
     }
 
-
     /**
      * Reads a number of bits from the buffer.
      *
@@ -194,7 +193,6 @@ export default class Stream {
         this.bitPos = 0;
     }
 
-
     /**
      * Move backwards through the stream by the specified number of bytes.
      *
@@ -206,6 +204,29 @@ export default class Stream {
             throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
         this.bitPos = 0;
+    }
+
+    /**
+     * Move backwards through the strem by the specified number of bits.
+     *
+     * @param {number} numBits
+     */
+    moveBackwardsByBits(numBits) {
+        if (numBits <= this.bitPos) {
+            this.bitPos -= numBits;
+        } else {
+            if (this.bitPos > 0) {
+                numBits -= this.bitPos;
+                this.bitPos = 0;
+            }
+
+            while (numBits > 0) {
+                this.moveBackwardsBy(1);
+                this.bitPos = 8;
+                this.moveBackwardsByBits(numBits);
+                numBits -= 8;
+            }
+        }
     }
 
     /**
