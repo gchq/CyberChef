@@ -828,7 +828,7 @@ export const FILE_SIGNATURES = {
                 0: 0x78,
                 1: [0x1, 0x9c, 0xda, 0x5e]
             },
-            extractor: null
+            extractor: extractZlib
         },
         {
             name: "xz compression",
@@ -1438,6 +1438,37 @@ export function extractGZIP(bytes, offset) {
 
     // Skip over checksum and size of original uncompressed input
     stream.moveForwardsBy(8);
+
+    return stream.carve();
+}
+
+
+/**
+ * Zlib extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractZlib(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Skip over CMF
+    stream.moveForwardsBy(1);
+
+    // Read flags
+    const flags = stream.readInt(1);
+
+    // Skip over preset dictionary checksum
+    if (flags & 0x20) {
+        stream.moveForwardsBy(4);
+    }
+
+    // Parse DEFLATE stream
+    parseDEFLATE(stream);
+
+    // Skip over final checksum
+    stream.moveForwardsBy(4);
 
     return stream.carve();
 }
