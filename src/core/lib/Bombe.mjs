@@ -693,7 +693,7 @@ export class BombeMachine {
      * Having set up the Bombe, do the actual attack run. This tries every possible rotor setting
      * and attempts to logically invalidate them. If it can't, it's added to the list of candidate
      * solutions.
-     * @returns {string[][2]} - list of pairs of candidate rotor setting, and calculated stecker pair
+     * @returns {string[][3]} - list of 3-tuples of candidate rotor setting, plugboard settings, and decryption preview
      */
     run() {
         let stops = 0;

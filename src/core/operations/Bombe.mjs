@@ -35,19 +35,19 @@ class Bombe extends Operation {
                 defaultIndex: 2
             },
             {
-                name: "2nd rotor",
+                name: "2nd (middle) rotor",
                 type: "editableOption",
                 value: ROTORS,
                 defaultIndex: 1
             },
             {
-                name: "3rd rotor",
+                name: "3rd (left-hand) rotor",
                 type: "editableOption",
                 value: ROTORS,
                 defaultIndex: 0
             },
             {
-                name: "4th rotor",
+                name: "4th (left-most, only some models) rotor",
                 type: "editableOption",
                 value: ROTORS_OPTIONAL,
                 defaultIndex: 10
