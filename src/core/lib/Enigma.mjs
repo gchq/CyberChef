@@ -182,7 +182,8 @@ class PairMapBase {
             }
             const a = a2i(pair[0]), b = a2i(pair[1]);
             if (a === b) {
-                throw new OperationError(`${name}: cannot connect ${pair[0]} to itself`);
+                // self-stecker
+                return;
             }
             if (this.map.hasOwnProperty(a)) {
                 throw new OperationError(`${name} connects ${pair[0]} more than once`);

@@ -483,7 +483,7 @@ TestRegister.addTests([
     {
         name: "Enigma: reflector validation 2",
         input: "Hello, world. This is a test.",
-        expectedOutput: "Reflector: cannot connect A to itself",
+        expectedOutput: "Reflector must have exactly 13 pairs covering every letter",
         recipeConfig: [
             {
                 "op": "Enigma",
@@ -492,7 +492,7 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
                     "", "A", "A",
-                    "AA BR CU DH EQ FS GL IP JX KN MO TZ", // B
+                    "AA BR CU DH EQ FS GL IP JX KN MO TZ VV WY", // B
                     ""
                 ]
             }

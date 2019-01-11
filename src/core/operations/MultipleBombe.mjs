@@ -163,6 +163,11 @@ class MultipleBombe extends Operation {
                 name: "Crib offset",
                 type: "number",
                 value: 0
+            },
+            {
+                name: "Use checking machine",
+                type: "boolean",
+                value: true
             }
         ];
     }
@@ -211,7 +216,7 @@ class MultipleBombe extends Operation {
         const reflectorsStr = args[5];
         let crib = args[6];
         const offset = args[7];
-        // TODO got this far
+        const check = args[8];
         const rotors = [];
         const fourthRotors = [];
         const reflectors = [];
@@ -279,8 +284,8 @@ class MultipleBombe extends Operation {
                                 runRotors.push(rotor4);
                             }
                             if (bombe === undefined) {
-                                bombe = new BombeMachine(runRotors, reflector, ciphertext, crib);
-                                msg = `Bombe run on menu with ${bombe.nLoops} loops (2+ desirable). Note: Rotors and rotor positions are listed left to right, ignore stepping and the ring setting, and positions start at the beginning of the crib. One stecker pair is determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided. Results:\n`;
+                                bombe = new BombeMachine(runRotors, reflector, ciphertext, crib, check);
+                                msg = `Bombe run on menu with ${bombe.nLoops} loops (2+ desirable). Note: Rotors and rotor positions are listed left to right, ignore stepping and the ring setting, and positions start at the beginning of the crib. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided. Results:\n`;
                             } else {
                                 bombe.changeRotors(runRotors, reflector);
                             }
@@ -290,7 +295,7 @@ class MultipleBombe extends Operation {
                                 update(bombe.nLoops, nStops, nRuns / totalRuns);
                             }
                             if (result.length > 0) {
-                                msg += `Rotors: ${runRotors.join(", ")}\nReflector: ${reflector.pairs}\n`;
+                                msg += `\nRotors: ${runRotors.join(", ")}\nReflector: ${reflector.pairs}\n`;
                                 for (const [setting, stecker, decrypt] of result) {
                                     msg += `Stop: ${setting} (plugboard: ${stecker}): ${decrypt}\n`;
                                 }

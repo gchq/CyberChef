@@ -8,7 +8,7 @@
 
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import {Rotor, a2i, i2a} from "./Enigma";
+import {Rotor, Plugboard, a2i, i2a} from "./Enigma";
 
 /**
  * Convenience/optimisation subclass of Rotor
@@ -302,7 +302,7 @@ export class BombeMachine {
      * @param {string} crib - Known plaintext for this ciphertext
      * @param {function} update - Function to call to send status updates (optional)
      */
-    constructor(rotors, reflector, ciphertext, crib, update=undefined) {
+    constructor(rotors, reflector, ciphertext, crib, check, update=undefined) {
         if (ciphertext.length < crib.length) {
             throw new OperationError("Crib overruns supplied ciphertext");
         }
@@ -324,6 +324,7 @@ export class BombeMachine {
         this.ciphertext = ciphertext;
         this.crib = crib;
         this.initRotors(rotors);
+        this.check = check;
         this.updateFn = update;
 
         const [mostConnected, edges] = this.makeMenu();
@@ -507,7 +508,6 @@ export class BombeMachine {
         if (this.wires[idx]) {
             return;
         }
-        this.energiseCount ++;
         this.wires[idx] = true;
         // Welchman's diagonal board: if A steckers to B, that implies B steckers to A. Handle
         // both.
@@ -564,14 +564,129 @@ export class BombeMachine {
         const fastRotor = this.indicator.rotor;
         const initialPos = fastRotor.pos;
         const res = [];
+        const plugboard = new Plugboard(stecker);
         // The indicator scrambler starts in the right place for the beginning of the ciphertext.
         for (let i=0; i<Math.min(26, this.ciphertext.length); i++) {
-            const t = this.indicator.transform(this.singleStecker(stecker, a2i(this.ciphertext[i])));
-            res.push(i2a(this.singleStecker(stecker, t)));
+            const t = this.indicator.transform(plugboard.transform(a2i(this.ciphertext[i])));
+            res.push(i2a(plugboard.transform(t)));
             this.indicator.step(1);
         }
         fastRotor.pos = initialPos;
         return res.join("");
+    }
+
+    /**
+     * Format a steckered pair, in sorted order to allow uniquing.
+     * @param {number} a - A letter
+     * @param {number} b - Its stecker pair
+     * @returns {string}
+     */
+    formatPair(a, b) {
+        if (a < b) {
+            return `${i2a(a)}${i2a(b)}`;
+        }
+        return `${i2a(b)}${i2a(a)}`;
+    }
+
+    /**
+     * The checking machine was used to manually verify Bombe stops. Using a device which was
+     * effectively a non-stepping Enigma, the user would walk through each of the links in the
+     * menu at the rotor positions determined by the Bombe. By starting with the stecker pair the
+     * Bombe gives us, we find the stecker pair of each connected letter in the graph, and so on.
+     * If a contradiction is reached, the stop is invalid. If not, we have most (but not
+     * necessarily all) of the plugboard connections.
+     * You will notice that this procedure is exactly the same as what the Bombe itself does, only
+     * we start with an assumed good hypothesis and read out the stecker pair for every letter.
+     * On the real hardware that wasn't practical, but fortunately we're not the real hardware, so
+     * we don't need to implement the manual checking machine procedure.
+     * @param {number} pair - The stecker pair of the test register.
+     * @returns {string} - The empty string for invalid stops, or a plugboard configuration string
+     *      containing all known pairs.
+     */
+    checkingMachine(pair) {
+        if (pair !== this.testInput[1]) {
+            // We have a new hypothesis for this stop - apply the new one.
+            // De-energise the board
+            for (let i=0; i<this.wires.length; i++) {
+                this.wires[i] = false;
+            }
+            // Re-energise with the corrected hypothesis
+            this.energise(this.testRegister, pair);
+        }
+
+        const results = new Set();
+        results.add(this.formatPair(this.testRegister, pair));
+        for (let i=0; i<26; i++) {
+            let count = 0;
+            let other;
+            for (let j=0; j<26; j++) {
+                if (this.wires[i*26 + j]) {
+                    count++;
+                    other = j;
+                }
+            }
+            if (count > 1) {
+                // This is an invalid stop.
+                return "";
+            } else if (count === 0) {
+                // No information about steckering from this wire
+                continue;
+            }
+            results.add(this.formatPair(i, other));
+        }
+        return [...results].join(" ");
+    }
+
+    /**
+     * Check to see if the Bombe has stopped. If so, process the stop.
+     * @returns {(undefined|string[3])} - Undefined for no stop, or [rotor settings, plugboard settings, decryption preview]
+     */
+    checkStop() {
+        // Count the energised outputs
+        let count = 0;
+        for (let j=26*this.testRegister; j<26*(1+this.testRegister); j++) {
+            if (this.wires[j]) {
+                count++;
+            }
+        }
+        if (count === 26) {
+            return undefined;
+        }
+        // If it's not all of them, we have a stop
+        let steckerPair;
+        // The Bombe tells us one stecker pair as well. The input wire and test register we
+        // started with are hypothesised to be a stecker pair.
+        if (count === 25) {
+            // Our steckering hypothesis is wrong. Correct value is the un-energised wire.
+            for (let j=0; j<26; j++) {
+                if (!this.wires[26*this.testRegister + j]) {
+                    steckerPair = j;
+                    break;
+                }
+            }
+        } else if (count === 1) {
+            // This means our hypothesis for the steckering is correct.
+            steckerPair = this.testInput[1];
+        } else {
+            // If this happens a lot it implies the menu isn't good enough. We can't do
+            // anything useful with it as we don't have a stecker partner, so we'll just drop it
+            // and move on. This does risk eating the actual stop occasionally, but I've only seen
+            // this happen when the menu is bad enough we have thousands of stops, so I'm not sure
+            // it matters.
+            return undefined;
+        }
+        let stecker;
+        if (this.check) {
+            stecker = this.checkingMachine(steckerPair);
+            if (stecker === "") {
+                // Invalid stop - don't count it, don't return it
+                return undefined;
+            }
+        } else {
+            stecker = `${i2a(this.testRegister)}${i2a(steckerPair)}`;
+        }
+        const testDecrypt = this.tryDecrypt(stecker);
+        return [this.indicator.getPos(), stecker, testDecrypt];
     }
 
     /**
@@ -592,45 +707,12 @@ export class BombeMachine {
             }
             // Energise the test input, follow the current through each scrambler
             // (and the diagonal board)
-            this.energiseCount = 0;
             this.energise(...this.testInput);
-            // Count the energised outputs
-            let count = 0;
-            for (let j=26*this.testRegister; j<26*(1+this.testRegister); j++) {
-                if (this.wires[j]) {
-                    count++;
-                }
-            }
-            // If it's not all of them, we have a stop
-            if (count < 26) {
-                stops += 1;
-                let stecker;
-                // The Bombe tells us one stecker pair as well. The input wire and test register we
-                // started with are hypothesised to be a stecker pair.
-                if (count === 25) {
-                    // Our steckering hypothesis is wrong. Correct value is the un-energised wire.
-                    for (let j=0; j<26; j++) {
-                        if (!this.wires[26*this.testRegister + j]) {
-                            stecker = [this.testRegister, j];
-                            break;
-                        }
-                    }
-                } else if (count === 1) {
-                    // This means our hypothesis for the steckering is correct.
-                    stecker = [this.testRegister, this.testInput[1]];
-                } else {
-                    // Unusual, probably indicative of a poor menu. I'm a little unclear on how
-                    // this was really handled, but we'll return it for the moment.
-                    stecker = undefined;
-                }
-                const testDecrypt = this.tryDecrypt(stecker);
-                let steckerStr;
-                if (stecker !== undefined) {
-                    steckerStr = `${i2a(stecker[0])}${i2a(stecker[1])}`;
-                } else {
-                    steckerStr = `?? (wire count: ${count})`;
-                }
-                result.push([this.indicator.getPos(), steckerStr, testDecrypt]);
+
+            const stop = this.checkStop();
+            if (stop !== undefined) {
+                stops++;
+                result.push(stop);
             }
             // Step all the scramblers
             // This loop counts how many rotors have reached their starting position (meaning the

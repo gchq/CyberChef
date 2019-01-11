@@ -21,7 +21,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 0,
+                    "THISISATESTMESSAGE", 0, false
                 ]
             }
         ]
@@ -40,7 +40,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 0,
+                    "THISISATESTMESSAGE", 0, false
                 ]
             }
         ]
@@ -58,7 +58,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 3,
+                    "THISISATESTMESSAGE", 3, false
                 ]
             }
         ]
@@ -76,7 +76,25 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTM", 0,
+                    "THISISATESTM", 0, false
+                ]
+            }
+        ]
+    },
+    {
+        name: "Bombe: checking machine",
+        input: "BBYFLTHHYIJQAYBBYS",
+        expectedMatch: /Stop: LGA \(plugboard: TT AG BO CL EK FF HH II JJ SS YY\): THISISATESTMESSAGE/,
+        recipeConfig: [
+            {
+                "op": "Bombe",
+                "args": [
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "THISISATESTM", 0, true
                 ]
             }
         ]
@@ -95,7 +113,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "LEYJVCNIXWPBQMDRTAKZGFUHOS", // Beta
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
-                    "THISISATESTMESSAGE", 0,
+                    "THISISATESTMESSAGE", 0, false
                 ]
             }
         ]
@@ -113,7 +131,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "", 0,
+                    "", 0, false
                 ]
             }
         ]
@@ -131,7 +149,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "A", 0,
+                    "A", 0, false
                 ]
             }
         ]
@@ -149,7 +167,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "AAAAAAAA", 0,
+                    "AAAAAAAA", 0, false
                 ]
             }
         ]
@@ -167,7 +185,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "CCCCCCCCCCCCCCCCCCCCCC", 0,
+                    "CCCCCCCCCCCCCCCCCCCCCC", 0, false
                 ]
             }
         ]
@@ -185,7 +203,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "AAAAAAAAAAAAAAAAAAAAAAAAAA", 0,
+                    "AAAAAAAAAAAAAAAAAAAAAAAAAA", 0, false
                 ]
             }
         ]
@@ -203,7 +221,7 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "BBBBB", -1,
+                    "BBBBB", -1, false
                 ]
             }
         ]
