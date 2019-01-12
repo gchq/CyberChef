@@ -159,27 +159,6 @@ class SharedScrambler {
     }
 
     /**
-     * Get the fully cached result, if present.
-     * @param {number} pos - Position of the fast rotor
-     * @param {number} i - Letter
-     * @returns {number|undefined} - undefined if not cached
-     */
-    fullTransform(pos, i) {
-        return this.higherCache[pos][i];
-    }
-
-    /**
-     * Add a value to the full result cache.
-     * @param {number} pos - Position of the fast rotor
-     * @param {number} i - Letter
-     * @param {number} val - Transformed letter
-     */
-    addCache(pos, i, val) {
-        this.higherCache[pos][i] = val;
-        this.higherCache[pos][val] = i;
-    }
-
-    /**
      * Map a letter through this (partial) scrambler.
      * @param {number} i - The letter
      * @returns {number}
@@ -209,6 +188,9 @@ class Scrambler {
         this.changeRotor(rotor);
         this.end1 = end1;
         this.end2 = end2;
+        // For efficiency reasons, we pull the relevant shared cache from the baseScrambler into
+        // this object - this saves us a few pointer dereferences
+        this.cache = this.baseScrambler.higherCache[pos];
     }
 
     /**
@@ -233,6 +215,7 @@ class Scrambler {
         // simplifies caching the state of the majority of the scramblers. The results are the
         // same, just in a slightly different order.
         this.rotor.step();
+        this.cache = this.baseScrambler.higherCache[this.rotor.pos];
     }
 
 
@@ -243,14 +226,15 @@ class Scrambler {
      */
     transform(i) {
         let letter = i;
-        const cached = this.baseScrambler.fullTransform(this.rotor.pos, i);
+        const cached = this.cache[i];
         if (cached !== undefined) {
             return cached;
         }
         letter = this.rotor.transform(letter);
         letter = this.baseScrambler.transform(letter);
         letter = this.rotor.revTransform(letter);
-        this.baseScrambler.addCache(this.rotor.pos, i, letter);
+        this.cache[i] = letter;
+        this.cache[letter] = i;
         return letter;
     }
 
@@ -513,12 +497,26 @@ export class BombeMachine {
         // both.
         const idxPair = 26*j + i;
         this.wires[idxPair] = true;
+        if (i === this.testRegister || j === this.testRegister) {
+            this.energiseCount++;
+            if (this.energiseCount === 26) {
+                // no point continuing, bail out
+                return;
+            }
+        }
 
         for (let k=0; k<this.scramblers[i].length; k++) {
             const scrambler = this.scramblers[i][k];
             const out = scrambler.transform(j);
             const other = scrambler.getOtherEnd(i);
-            this.energise(other, out);
+            // Lift the pre-check before the call, to save some function call overhead
+            const otherIdx = 26*other + out;
+            if (!this.wires[otherIdx]) {
+                this.energise(other, out);
+                if (this.energiseCount === 26) {
+                    return;
+                }
+            }
         }
         if (i === j) {
             return;
@@ -527,7 +525,13 @@ export class BombeMachine {
             const scrambler = this.scramblers[j][k];
             const out = scrambler.transform(i);
             const other = scrambler.getOtherEnd(j);
-            this.energise(other, out);
+            const otherIdx = 26*other + out;
+            if (!this.wires[otherIdx]) {
+                this.energise(other, out);
+                if (this.energiseCount === 26) {
+                    return;
+                }
+            }
         }
     }
 
@@ -610,6 +614,7 @@ export class BombeMachine {
             for (let i=0; i<this.wires.length; i++) {
                 this.wires[i] = false;
             }
+            this.energiseCount = 0;
             // Re-energise with the corrected hypothesis
             this.energise(this.testRegister, pair);
         }
@@ -643,12 +648,7 @@ export class BombeMachine {
      */
     checkStop() {
         // Count the energised outputs
-        let count = 0;
-        for (let j=26*this.testRegister; j<26*(1+this.testRegister); j++) {
-            if (this.wires[j]) {
-                count++;
-            }
-        }
+        const count = this.energiseCount;
         if (count === 26) {
             return undefined;
         }
@@ -705,6 +705,7 @@ export class BombeMachine {
             for (let i=0; i<this.wires.length; i++) {
                 this.wires[i] = false;
             }
+            this.energiseCount = 0;
             // Energise the test input, follow the current through each scrambler
             // (and the diagonal board)
             this.energise(...this.testInput);
