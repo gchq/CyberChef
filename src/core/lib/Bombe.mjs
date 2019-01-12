@@ -19,6 +19,7 @@ import {Rotor, Plugboard, a2i, i2a} from "./Enigma";
 class CopyRotor extends Rotor {
     /**
      * Return a copy of this Rotor.
+     * @returns {Object}
      */
     copy() {
         const clone = {
@@ -204,10 +205,9 @@ class Scrambler {
     }
 
     /**
-     * Step the rotors forward.
+     * Step the rotor forward.
      *
-     * All nodes in the Bombe step in sync.
-     * @param {number} n - How many rotors to step
+     * The base SharedScrambler needs to be instructed to step separately.
      */
     step() {
         // The Bombe steps the slowest rotor on an actual Enigma fastest, for reasons.
@@ -284,6 +284,7 @@ export class BombeMachine {
      * @param {Object} reflector - Reflector object
      * @param {string} ciphertext - The ciphertext to attack
      * @param {string} crib - Known plaintext for this ciphertext
+     * @param {boolean} check - Whether to use the checking machine
      * @param {function} update - Function to call to send status updates (optional)
      */
     constructor(rotors, reflector, ciphertext, crib, check, update=undefined) {
@@ -383,7 +384,7 @@ export class BombeMachine {
 
     /**
      * If we have a way of sending status messages, do so.
-     * @param {string} msg - Message to send.
+     * @param {...*} msg - Message to send.
      */
     update(...msg) {
         if (this.updateFn !== undefined) {
@@ -485,7 +486,8 @@ export class BombeMachine {
     /**
      * Bombe electrical simulation. Energise a wire. For all connected wires (both via the diagonal
      * board and via the scramblers), energise them too, recursively.
-     * @param {number[2]} i - Bombe state wire
+     * @param {number} i - Bombe wire bundle
+     * @param {number} j - Bombe stecker hypothesis wire within bundle
      */
     energise(i, j) {
         const idx = 26*i + j;
@@ -536,32 +538,12 @@ export class BombeMachine {
     }
 
     /**
-     * Single-pair steckering. Used for trial decryption rather than building a whole plugboard
-     * object for one pair
-     * @param {number[2]} stecker - Known stecker pair.
-     * @param {number} x - Letter to transform.
-     * @result number
-     */
-    singleStecker(stecker, x) {
-        if (stecker === undefined) {
-            return x;
-        }
-        if (x === stecker[0]) {
-            return stecker[1];
-        }
-        if (x === stecker[1]) {
-            return stecker[0];
-        }
-        return x;
-    }
-
-    /**
      * Trial decryption at the current setting.
      * Used after we get a stop.
      * This applies the detected stecker pair if we have one. It does not handle the other
      * steckering or stepping (which is why we limit it to 26 characters, since it's guaranteed to
      * be wrong after that anyway).
-     * @param {number[2]} stecker - Known stecker pair.
+     * @param {string} stecker - Known stecker spec string.
      * @returns {string}
      */
     tryDecrypt(stecker) {
