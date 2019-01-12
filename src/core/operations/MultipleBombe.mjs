@@ -10,7 +10,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import {BombeMachine} from "../lib/Bombe";
-import {ROTORS, REFLECTORS, Reflector} from "../lib/Enigma";
+import {ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector} from "../lib/Enigma";
 
 /**
  * Convenience method for flattening the preset ROTORS object into a newline-separated string.
@@ -104,11 +104,11 @@ class MultipleBombe extends Operation {
                     },
                     {
                         name: "German Service Enigma (Third - 4 rotor)",
-                        value: rotorsFormat(ROTORS, 8, 9)
+                        value: rotorsFormat(ROTORS_FOURTH, 1, 2)
                     },
                     {
                         name: "German Service Enigma (Fourth - 4 rotor)",
-                        value: rotorsFormat(ROTORS, 8, 10)
+                        value: rotorsFormat(ROTORS_FOURTH, 1, 3)
                     },
                     {
                         name: "User defined",
@@ -178,8 +178,13 @@ class MultipleBombe extends Operation {
      * @param {number} nStops - How many stops so far
      * @param {number} progress - Progress (as a float in the range 0..1)
      */
-    updateStatus(nLoops, nStops, progress) {
-        const msg = `Bombe run with ${nLoops} loops in menu (2+ desirable): ${nStops} stops, ${Math.floor(100 * progress)}% done`;
+    updateStatus(nLoops, nStops, progress, start) {
+        const elapsed = new Date().getTime() - start;
+        const remaining = (elapsed / progress) * (1 - progress) / 1000;
+        const hours = Math.floor(remaining / 3600);
+        const minutes = `0${Math.floor((remaining % 3600) / 60)}`.slice(-2);
+        const seconds = `0${Math.floor(remaining % 60)}`.slice(-2);
+        const msg = `Bombe run with ${nLoops} loops in menu (2+ desirable): ${nStops} stops, ${Math.floor(100 * progress)}% done, ${hours}:${minutes}:${seconds} remaining`;
         self.sendStatusMessage(msg);
     }
 
@@ -267,6 +272,7 @@ class MultipleBombe extends Operation {
         const totalRuns = choose(rotors.length, 3) * 6 * fourthRotors.length * reflectors.length;
         let nRuns = 0;
         let nStops = 0;
+        const start = new Date().getTime();
         for (const rotor1 of rotors) {
             for (const rotor2 of rotors) {
                 if (rotor2 === rotor1) {
@@ -292,7 +298,7 @@ class MultipleBombe extends Operation {
                             const result = bombe.run();
                             nStops += result.length;
                             if (update !== undefined) {
-                                update(bombe.nLoops, nStops, nRuns / totalRuns);
+                                update(bombe.nLoops, nStops, nRuns / totalRuns, start);
                             }
                             if (result.length > 0) {
                                 msg += `\nRotors: ${runRotors.join(", ")}\nReflector: ${reflector.pairs}\n`;

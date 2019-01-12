@@ -8,7 +8,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import {ROTORS, LETTERS, ROTORS_OPTIONAL, REFLECTORS, Rotor, Reflector, Plugboard, EnigmaMachine} from "../lib/Enigma";
+import {ROTORS, LETTERS, ROTORS_FOURTH, REFLECTORS, Rotor, Reflector, Plugboard, EnigmaMachine} from "../lib/Enigma";
 
 /**
  * Enigma operation
@@ -79,8 +79,8 @@ class Enigma extends Operation {
             {
                 name: "4th (left-most, only some models) rotor",
                 type: "editableOption",
-                value: ROTORS_OPTIONAL,
-                defaultIndex: 10
+                value: ROTORS_FOURTH,
+                defaultIndex: 0
             },
             {
                 name: "4th rotor ring setting",

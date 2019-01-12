@@ -9,7 +9,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import {BombeMachine} from "../lib/Bombe";
-import {ROTORS, ROTORS_OPTIONAL, REFLECTORS, Reflector} from "../lib/Enigma";
+import {ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector} from "../lib/Enigma";
 
 /**
  * Bombe operation
@@ -49,7 +49,7 @@ class Bombe extends Operation {
             {
                 name: "4th (left-most, only some models) rotor",
                 type: "editableOption",
-                value: ROTORS_OPTIONAL,
+                value: ROTORS_FOURTH,
                 defaultIndex: 10
             },
             {

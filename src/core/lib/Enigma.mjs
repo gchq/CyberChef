@@ -22,13 +22,13 @@ export const ROTORS = [
     {name: "VI", value: "JPGVOUMFYQBENHZRDKASXLICTW<AN"},
     {name: "VII", value: "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN"},
     {name: "VIII", value: "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN"},
+];
+
+export const ROTORS_FOURTH = [
+    {name: "None", value: ""},
     {name: "Beta", value: "LEYJVCNIXWPBQMDRTAKZGFUHOS"},
     {name: "Gamma", value: "FSOKANUERHMBTIYCWLQPZXVGJD"},
 ];
-
-export const ROTORS_OPTIONAL = [].concat(ROTORS).concat([
-    {name: "None", value: ""},
-]);
 
 /**
  * Provided default Enigma reflector set.
