@@ -59,16 +59,22 @@ class YARARules extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Instantiating YARA.");
         const [rules, showStrings, showLengths, showMeta] = args;
         return new Promise((resolve, reject) => {
             Yara().then(yara => {
+                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Converting data for YARA.");
                 let matchString = "";
-                const inpArr = new Uint8Array(input);
-                const inpVec = new yara.vectorChar();
-                for (let i = 0; i < inpArr.length; i++) {
-                    inpVec.push_back(inpArr[i]);
-                }
-                const resp = yara.run(inpVec, rules);
+
+                const inpArr = new Uint8Array(input); // Turns out embind knows that JS uint8array <==> C++ std::string
+
+                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Running YARA matching.");
+
+                const resp = yara.run(inpArr, rules);
+
+                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Processing data.");
+
                 if (resp.compileErrors.size() > 0) {
                     for (let i = 0; i < resp.compileErrors.size(); i++) {
                         const compileError = resp.compileErrors.get(i);
@@ -102,7 +108,6 @@ class YARARules extends Operation {
                             }
                         }
                     }
-                    
                 }
                 resolve(matchString);
             });
