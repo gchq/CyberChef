@@ -45,6 +45,7 @@ export function convertCoordinates (inLat, inLong, inFormat, outFormat, precisio
         convLong = convertSingleCoordinate(inLong, inFormat, "Decimal Degrees", 15).split("°");
     }
 
+    // Convert Geohash and MGRS here, as they need both the lat and long values
     if (outFormat === "Geohash") {
         convLat = geohash.encode(parseFloat(convLat), parseFloat(convLong), precision);
     } else if (outFormat === "Military Grid Reference System") {
@@ -244,12 +245,14 @@ export function findFormat (input, delim) {
     }
 
     // Test MGRS and Geohash
-    if (input.split(" ").length === 1) {
+    if (input.split(" ").length <= 1) {
+        const filteredInput = input.replace(/[^A-Za-z0-9]/, "").toUpperCase();
         const mgrsPattern = new RegExp(/^[0-9]{2}[C-HJ-NP-X]{2}[A-Z]+/);
-        const geohashPattern = new RegExp(/^[0123456789bcdefghjkmnpqrstuvwxyz]+$/);
-        if (mgrsPattern.test(input.toUpperCase())) {
+        const geohashPattern = new RegExp(/^[0123456789BCDEFGHJKMNPQRSTUVWXYZ]+$/);
+        log.error(filteredInput);
+        if (mgrsPattern.test(filteredInput)) {
             return "Military Grid Reference System";
-        } else if (geohashPattern.test(input.toLowerCase())) {
+        } else if (geohashPattern.test(filteredInput)) {
             return "Geohash";
         }
     }
@@ -292,6 +295,8 @@ export function findDelim (input) {
             }
         }
     }
+
+    // Loop through the standard delimiters, and try to find them in the input
     for (let i = 0; i < delims.length; i++) {
         const delim = delims[i];
         if (input.includes(delim)) {
