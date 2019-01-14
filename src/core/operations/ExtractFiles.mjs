@@ -8,6 +8,7 @@ import Operation from "../Operation";
 // import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
 import {scanForFileTypes, extractFile} from "../lib/FileType";
+import {FILE_SIGNATURES} from "../lib/FileSignatures";
 
 /**
  * Extract Files operation
@@ -27,7 +28,13 @@ class ExtractFiles extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";
-        this.args = [];
+        this.args = Object.keys(FILE_SIGNATURES).map(cat => {
+            return {
+                name: cat,
+                type: "boolean",
+                value: cat === "Miscellaneous" ? false : true
+            };
+        });
     }
 
     /**
@@ -36,10 +43,15 @@ class ExtractFiles extends Operation {
      * @returns {List<File>}
      */
     run(input, args) {
-        const bytes = new Uint8Array(input);
+        const bytes = new Uint8Array(input),
+            categories = [];
+
+        args.forEach((cat, i) => {
+            if (cat) categories.push(Object.keys(FILE_SIGNATURES)[i]);
+        });
 
         // Scan for embedded files
-        const detectedFiles = scanForFileTypes(bytes);
+        const detectedFiles = scanForFileTypes(bytes, categories);
 
         // Extract each file that we support
         const files = [];

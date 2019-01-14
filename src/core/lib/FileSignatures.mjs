@@ -678,7 +678,7 @@ export const FILE_SIGNATURES = {
                 2: 0x4c,
                 3: 0x46
             },
-            extractor: null
+            extractor: extractELF
         },
         {
             name: "Adobe Flash",
@@ -1469,6 +1469,50 @@ export function extractZlib(bytes, offset) {
 
     // Skip over final checksum
     stream.moveForwardsBy(4);
+
+    return stream.carve();
+}
+
+
+/**
+ * ELF extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractELF(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Skip over magic number
+    stream.moveForwardsBy(4);
+
+    // Read architecture (x86 == 1, x64 == 2)
+    const x86 = stream.readInt(1) === 1;
+
+    // Read endianness (1 == little, 2 == big)
+    const endian = stream.readInt(1) === 1 ? "le" : "be";
+
+    // Skip over header values
+    stream.moveForwardsBy(x86 ? 26 : 34);
+
+    // Read section header table offset
+    const shoff = x86 ? stream.readInt(4, endian) : stream.readInt(8, endian);
+
+    // Skip over flags, header size and program header size and entries
+    stream.moveForwardsBy(10);
+
+    // Read section header table entry size
+    const shentsize = stream.readInt(2, endian);
+
+    // Read number of entries in the section header table
+    const shnum = stream.readInt(2, endian);
+
+    // Jump to section header table
+    stream.moveTo(shoff);
+
+    // Move past each section header
+    stream.moveForwardsBy(shentsize * shnum);
 
     return stream.carve();
 }

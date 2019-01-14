@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import {detectFileType} from "../lib/FileType";
+import {FILE_SIGNATURES} from "../lib/FileSignatures";
 
 /**
  * Detect File Type operation
@@ -24,7 +25,13 @@ class DetectFileType extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/List_of_file_signatures";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
-        this.args = [];
+        this.args = Object.keys(FILE_SIGNATURES).map(cat => {
+            return {
+                name: cat,
+                type: "boolean",
+                value: true
+            };
+        });
     }
 
     /**
@@ -34,7 +41,13 @@ class DetectFileType extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input),
-            types = detectFileType(data);
+            categories = [];
+
+        args.forEach((cat, i) => {
+            if (cat) categories.push(Object.keys(FILE_SIGNATURES)[i]);
+        });
+
+        const types = detectFileType(data, categories);
 
         if (!types.length) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";

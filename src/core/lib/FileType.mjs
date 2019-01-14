@@ -75,22 +75,29 @@ function bytesMatch(sig, buf, offset=0) {
  * extension and mime type.
  *
  * @param {Uint8Array} buf
+ * @param {string[]} [categories=All] - Which categories of file to look for
  * @returns {Object[]} types
  * @returns {string} type.name - Name of file type
  * @returns {string} type.ext - File extension
  * @returns {string} type.mime - Mime type
  * @returns {string} [type.desc] - Description
  */
-export function detectFileType(buf) {
+export function detectFileType(buf, categories=Object.keys(FILE_SIGNATURES)) {
     if (!(buf && buf.length > 1)) {
         return [];
     }
 
     const matchingFiles = [];
+    const signatures = {};
 
-    // TODO allow user to select which categories to check
     for (const cat in FILE_SIGNATURES) {
-        const category = FILE_SIGNATURES[cat];
+        if (categories.includes(cat)) {
+            signatures[cat] = FILE_SIGNATURES[cat];
+        }
+    }
+
+    for (const cat in signatures) {
+        const category = signatures[cat];
 
         category.forEach(filetype => {
             if (signatureMatches(filetype.signature, buf)) {
@@ -107,6 +114,7 @@ export function detectFileType(buf) {
  * the extensions and mime types.
  *
  * @param {Uint8Array} buf
+ * @param {string[]} [categories=All] - Which categories of file to look for
  * @returns {Object[]} foundFiles
  * @returns {number} foundFiles.offset - The position in the buffer at which this file was found
  * @returns {Object} foundFiles.fileDetails
@@ -115,16 +123,22 @@ export function detectFileType(buf) {
  * @returns {string} foundFiles.fileDetails.mime - Mime type
  * @returns {string} [foundFiles.fileDetails.desc] - Description
  */
-export function scanForFileTypes(buf) {
+export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
     if (!(buf && buf.length > 1)) {
         return [];
     }
 
     const foundFiles = [];
+    const signatures = {};
 
-    // TODO allow user to select which categories to check
     for (const cat in FILE_SIGNATURES) {
-        const category = FILE_SIGNATURES[cat];
+        if (categories.includes(cat)) {
+            signatures[cat] = FILE_SIGNATURES[cat];
+        }
+    }
+
+    for (const cat in signatures) {
+        const category = signatures[cat];
 
         for (let i = 0; i < category.length; i++) {
             const filetype = category[i];
