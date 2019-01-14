@@ -1,8 +1,5 @@
 /**
- * This script automatically generates OperationConfig.json, containing metadata
- * for each operation in the src/core/operations directory.
- * It also generates modules in the src/core/config/modules directory to separate
- * out operations into logical collections.
+ * This script automatically generates empty default files
  *
  * @author David B Heise [david@heiseink.com]
  * @copyright Crown Copyright 2018
@@ -16,6 +13,7 @@ import childProcess from "child_process";
 
 
 const mkdirSync = function (dirPath) {
+    console.log("Ensuring Folder: " + dirPath)
     try {
         fs.mkdirSync(dirPath);
     } catch (err) {
