@@ -249,7 +249,6 @@ export function findFormat (input, delim) {
         const filteredInput = input.replace(/[^A-Za-z0-9]/, "").toUpperCase();
         const mgrsPattern = new RegExp(/^[0-9]{2}[C-HJ-NP-X]{2}[A-Z]+/);
         const geohashPattern = new RegExp(/^[0123456789BCDEFGHJKMNPQRSTUVWXYZ]+$/);
-        log.error(filteredInput);
         if (mgrsPattern.test(filteredInput)) {
             return "Military Grid Reference System";
         } else if (geohashPattern.test(filteredInput)) {

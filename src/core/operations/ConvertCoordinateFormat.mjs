@@ -22,7 +22,7 @@ class ConvertCoordinateFormat extends Operation {
 
         this.name = "Convert co-ordinate format";
         this.module = "Hashing";
-        this.description = "Convert geographical coordinates between different formats.<br><br>Currently supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li></ul>";
+        this.description = "Convert geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li></ul>";
         this.infoURL = "https://wikipedia.org/wiki/Geographic_coordinate_conversion";
         this.inputType = "string";
         this.outputType = "string";
@@ -93,10 +93,8 @@ class ConvertCoordinateFormat extends Operation {
         // Autodetect input delimiter
         if (inDelim === "Auto") {
             inDelim = findDelim(input);
-            log.error("DATA: " + input + " DELIM: " + inDelim);
             if (inDelim === null) {
                 inDelim = "";
-                // throw new OperationError("Could not automatically detect the input delimiter.");
             }
         } else if (!inDelim.includes("Direction")) {
             // Get the actual delimiter from the regex
@@ -104,9 +102,8 @@ class ConvertCoordinateFormat extends Operation {
         }
         if (inFormat === "Auto") {
             inFormat = findFormat(input, inDelim);
-            log.error("DATA: " + input + " FORMAT: " + inFormat);
             if (inFormat === null) {
-                throw new OperationError("Could not automatically detect the input");
+                throw new OperationError("Could not automatically detect the input format.");
             }
         }
 
@@ -147,7 +144,6 @@ class ConvertCoordinateFormat extends Operation {
         } else {
             // Split on the delimiter
             const splitInput = input.split(inDelim);
-            log.error(splitInput);
             if (splitInput.length > 0) {
                 inLat = splitInput[0];
                 if (splitInput.length >= 2) {
