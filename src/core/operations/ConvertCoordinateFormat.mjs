@@ -117,7 +117,8 @@ class ConvertCoordinateFormat extends Operation {
         // Prepare input data
         if (inFormat === "Geohash" || inFormat === "Military Grid Reference System") {
             // Geohash only has one value, so just use the input
-            inLat = input;
+            // Replace anything that isn't a valid character in Geohash / MGRS
+            inLat = input.replace(/[^A-Za-z0-9]/, "");
         } else if (inDelim === "Direction Preceding") {
             // Split on the compass directions
             const splitInput = input.split(/[NnEeSsWw]/);
