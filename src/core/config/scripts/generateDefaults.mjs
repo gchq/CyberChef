@@ -43,7 +43,7 @@ fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "expor
 fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n");
 
 //Run the generateOpsIndex.mjs file
-childProcess.fork(path.join(dir, "src/core/config/scripts/generateOpsIndex.mjs"), { execArgv: ["--experimental-modules","--no-warnings","--no-deprecation"]});
+childProcess.fork(path.join(dir, "src/core/config/scripts/generateOpsIndex.mjs"), { execArgv: ["--experimental-modules", "--no-warnings", "--no-deprecation"]});
 
 //Run the generateConfig.mjs file
-childProcess.fork(path.join(dir, "src/core/config/scripts/generateConfig.mjs"), { execArgv: ["--experimental-modules","--no-warnings","--no-deprecation"]});
+childProcess.fork(path.join(dir, "src/core/config/scripts/generateConfig.mjs"), { execArgv: ["--experimental-modules", "--no-warnings", "--no-deprecation"]});
