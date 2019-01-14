@@ -37,7 +37,7 @@ class ConvertCoordinateFormat extends Operation {
                 "type": "option",
                 "value": [
                     "Auto",
-                    "Direction Preceding", // Need better names
+                    "Direction Preceding",
                     "Direction Following",
                     "\\n",
                     "Comma",
@@ -55,7 +55,7 @@ class ConvertCoordinateFormat extends Operation {
                 "type": "option",
                 "value": [
                     "Space",
-                    "Direction Preceding", // Need better names
+                    "Direction Preceding",
                     "Direction Following",
                     "\\n",
                     "Comma",

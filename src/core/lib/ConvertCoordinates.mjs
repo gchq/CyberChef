@@ -259,14 +259,13 @@ export function findFormat (input, delim) {
     // Test DMS/DDM/DD formats
     if (testData !== undefined) {
         const split = splitInput(testData);
-        if (split.length === 3) {
-            // DMS
-            return "Degrees Minutes Seconds";
-        } else if (split.length === 2) {
-            // DDM
-            return "Degrees Decimal Minutes";
-        } else if (split.length === 1) {
-            return "Decimal Degrees";
+        switch (split.length){
+            case 3:
+                return "Degrees Minutes Seconds";
+            case 2:
+                return "Degrees Decimal Minutes";
+            case 1:
+                return "Decimal Degrees";
         }
     }
     return null;
@@ -280,13 +279,12 @@ export function findFormat (input, delim) {
 export function findDelim (input) {
     input = input.trim();
     const delims = [",", ";", ":"];
-    // Direction
     const testDir = input.match(/[NnEeSsWw]/g);
     if (testDir !== null && testDir.length > 0 && testDir.length < 3) {
-        // Possible direction
+        // Possibly contains a direction
         const splitInput = input.split(/[NnEeSsWw]/);
         if (splitInput.length <= 3 && splitInput.length > 0) {
-            // One of the splits should be an empty string
+            // If there's 3 splits (one should be empty), then assume we have directions
             if (splitInput[0] === "") {
                 return "Direction Preceding";
             } else if (splitInput[splitInput.length - 1] === "") {
@@ -301,6 +299,7 @@ export function findDelim (input) {
         if (input.includes(delim)) {
             const splitInput = input.split(delim);
             if (splitInput.length <= 3 && splitInput.length > 0) {
+                // Don't want to try and convert more than 2 co-ordinates
                 return delim;
             }
         }
