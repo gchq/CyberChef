@@ -208,3 +208,98 @@ function convDDToDDM (decDegrees, precision) {
     converted.string = degrees + "° " + decMinutes + "'";
     return converted;
 }
+
+/**
+ * 
+ * @param {string} input - The input data whose format we need to detect
+ * @param {string} delim - The delimiter separating the data in input
+ * @returns {string} The input format
+ */
+export function findFormat (input, delim) {
+    input = input.trim();
+    let testData;
+    if (delim.includes("Direction")) {
+        const split = input.split(/[NnEeSsWw]/);
+        if (split.length > 0) {
+            if (split[0] === "") {
+                // Direction Preceding
+                testData = split[1];
+            } else {
+                // Direction Following
+                testData = split[0];
+            }
+        }
+    } else if (delim !== "") {
+        const split = input.split(delim);
+        if (!input.includes(delim)) {
+            testData = input;
+        }
+        if (split.length > 0) {
+            if (split[0] !== "") {
+                testData = split[0];
+            } else if (split.length > 1) {
+                testData = split[1];
+            }
+        }
+    }
+
+    // Test MGRS and Geohash
+    if (input.split(" ").length === 1) {
+        const mgrsPattern = new RegExp(/^[0-9]{2}[C-HJ-NP-X]{2}[A-Z]+/);
+        const geohashPattern = new RegExp(/^[0123456789bcdefghjkmnpqrstuvwxyz]+$/);
+        if (mgrsPattern.test(input.toUpperCase())) {
+            return "Military Grid Reference System";
+        } else if (geohashPattern.test(input.toLowerCase())) {
+            return "Geohash";
+        }
+    }
+
+    // Test DMS/DDM/DD formats
+    if (testData !== undefined) {
+        const split = splitInput(testData);
+        if (split.length === 3) {
+            // DMS
+            return "Degrees Minutes Seconds";
+        } else if (split.length === 2) {
+            // DDM
+            return "Degrees Decimal Minutes";
+        } else if (split.length === 1) {
+            return "Decimal Degrees";
+        }
+    }
+    return null;
+}
+
+/**
+ * Automatically find the delimeter type from the given input
+ * @param {string} input
+ * @returns {string} Delimiter type
+ */
+export function findDelim (input) {
+    input = input.trim();
+    const delims = [",", ";", ":"];
+    // Direction
+    const testDir = input.match(/[NnEeSsWw]/g);
+    if (testDir !== null && testDir.length > 0 && testDir.length < 3) {
+        // Possible direction
+        const splitInput = input.split(/[NnEeSsWw]/);
+        if (splitInput.length <= 3 && splitInput.length > 0) {
+            // One of the splits should be an empty string
+            if (splitInput[0] === "") {
+                return "Direction Preceding";
+            } else if (splitInput[splitInput.length - 1] === "") {
+                return "Direction Following";
+            }
+        }
+    }
+    for (let i = 0; i < delims.length; i++) {
+        const delim = delims[i];
+        if (input.includes(delim)) {
+            const splitInput = input.split(delim);
+            if (splitInput.length <= 3 && splitInput.length > 0) {
+                return delim;
+            }
+        }
+    }
+    return null;
+}

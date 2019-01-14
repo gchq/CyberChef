@@ -210,6 +210,7 @@
             "Convert mass",
             "Convert speed",
             "Convert data units",
+            "Convert co-ordinate format",
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
