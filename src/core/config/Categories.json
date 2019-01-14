@@ -302,9 +302,7 @@
             "Adler-32 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum",
-            "To Geohash",
-            "From Geohash"
+            "TCP/IP Checksum"
         ]
     },
     {
