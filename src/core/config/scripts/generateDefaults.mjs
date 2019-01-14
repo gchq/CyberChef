@@ -9,8 +9,6 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: ["off"] */
-
 import path from "path";
 import fs from "fs";
 import process from "process";
@@ -34,9 +32,10 @@ const mkdirpSync = function (dirPath) {
 
 
 const dir = process.cwd();
+const newPath = path.join(dir, "src/core/config/modules");
 
 //Create the Destination Folder
-mkdirpSync(path.join(dir, "src/core/config/modules"));
+mkdirpSync(newPath);
 
 //Create the default files
 fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "export default{};\n");
