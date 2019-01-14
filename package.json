@@ -104,7 +104,6 @@
     "lodash": "^4.17.11",
     "loglevel": "^1.6.1",
     "loglevel-message-prefix": "^3.0.0",
-    "mgrs": "^1.0.0",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "ngeohash": "^0.6.0",
