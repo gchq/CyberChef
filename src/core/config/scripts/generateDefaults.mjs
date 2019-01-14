@@ -36,8 +36,8 @@ const newPath = path.join(dir, "src/core/config/modules");
 mkdirpSync(newPath);
 
 //Create the default files
-fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "export default{};\n");
-fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n");
+fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "export default{};\n", {"flag": "w"});
+fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n", {"flag": "w"});
 
 //Run the generateOpsIndex.mjs file
 childProcess.fork(path.join(dir, "src/core/config/scripts/generateOpsIndex.mjs"), { execArgv: ["--experimental-modules", "--no-warnings", "--no-deprecation"]});
