@@ -50,7 +50,7 @@ class Bombe extends Operation {
                 name: "4th (left-most, only some models) rotor",
                 type: "editableOption",
                 value: ROTORS_FOURTH,
-                defaultIndex: 10
+                defaultIndex: 0
             },
             {
                 name: "Reflector",
