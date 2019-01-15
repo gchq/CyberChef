@@ -13,9 +13,10 @@ import childProcess from "child_process";
 
 
 const mkdirSync = function (dirPath) {
-    console.log("Ensuring Folder: " + dirPath)
+    
     try {
         fs.mkdirSync(dirPath);
+        console.log("Folder Ensured: " + dirPath)
     } catch (err) {
         if (err.code !== "EEXIST") throw err;
     }
