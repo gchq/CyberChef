@@ -81,6 +81,9 @@ export function convertCoordinates (inLat, inLong, inFormat, outFormat, precisio
         const latlon = new geodesy.LatLonEllipsoidal(parseFloat(convLat), parseFloat(convLong));
         const osng = geodesy.OsGridRef.latLonToOsGrid(latlon);
         convLat = osng.toString();
+        if (convLat === "") {
+            throw "Couldn't convert co-ordinates to Ordnance Survey National Grid. Are they out of range?";
+        }
     } else {
         convLat = convertSingleCoordinate(convLat.toString(), "Decimal Degrees", outFormat, precision);
         convLong = convertSingleCoordinate(convLong.toString(), "Decimal Degrees", outFormat, precision);
