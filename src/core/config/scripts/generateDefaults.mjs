@@ -12,11 +12,10 @@ import process from "process";
 import childProcess from "child_process";
 
 
-const mkdirSync = function (dirPath) {
-    
+const mkdirSync = function (dirPath) {    
     try {
         fs.mkdirSync(dirPath);
-        console.log("Folder Ensured: " + dirPath)
+        console.log("Folder Ensured: " + dirPath);
     } catch (err) {
         if (err.code !== "EEXIST") throw err;
     }
@@ -37,8 +36,8 @@ const newPath = path.join(dir, "src/core/config/modules");
 mkdirpSync(newPath);
 
 //Create the default files
-fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "export default{};\n", {"flag": "w"});
-fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n", {"flag": "w"});
+fs.writeFileSync(path.join(newPath, "OpModules.mjs"), "export default{};\n");
+fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n");
 
 //Run the generateOpsIndex.mjs file
 childProcess.fork(path.join(dir, "src/core/config/scripts/generateOpsIndex.mjs"), { execArgv: ["--experimental-modules", "--no-warnings", "--no-deprecation"]});
