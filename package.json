@@ -106,7 +106,7 @@
     "jsqr": "^1.1.1",
     "jsrsasign": "8.0.12",
     "kbpgp": "^2.0.82",
-    "libyara-wasm": "0.0.9",
+    "libyara-wasm": "0.0.10",
     "lodash": "^4.17.11",
     "loglevel": "^1.6.1",
     "loglevel-message-prefix": "^3.0.0",
