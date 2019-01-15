@@ -1,15 +1,10 @@
 /**
- * This script automatically generates OperationConfig.json, containing metadata
- * for each operation in the src/core/operations directory.
- * It also generates modules in the src/core/config/modules directory to separate
- * out operations into logical collections.
+ * This script automatically generates empty default files
  *
  * @author David B Heise [david@heiseink.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-
-/*eslint no-console: ["off"] */
 
 import path from "path";
 import fs from "fs";
@@ -18,6 +13,7 @@ import childProcess from "child_process";
 
 
 const mkdirSync = function (dirPath) {
+    console.log("Ensuring Folder: " + dirPath)
     try {
         fs.mkdirSync(dirPath);
     } catch (err) {
@@ -34,16 +30,17 @@ const mkdirpSync = function (dirPath) {
 
 
 const dir = process.cwd();
+const newPath = path.join(dir, "src/core/config/modules");
 
 //Create the Destination Folder
-mkdirpSync(path.join(dir, "src/core/config/modules"));
+mkdirpSync(newPath);
 
 //Create the default files
-fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "export default{};\n");
-fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n");
+fs.writeFileSync(path.join(dir, "src/core/config/modules/OpModules.mjs"), "export default{};\n", {"flag": "w"});
+fs.writeFileSync(path.join(dir, "src/core/config/OperationConfig.json"), "[]\n", {"flag": "w"});
 
 //Run the generateOpsIndex.mjs file
-childProcess.fork(path.join(dir, "src/core/config/scripts/generateOpsIndex.mjs"), { execArgv: ["--experimental-modules","--no-warnings","--no-deprecation"]});
+childProcess.fork(path.join(dir, "src/core/config/scripts/generateOpsIndex.mjs"), { execArgv: ["--experimental-modules", "--no-warnings", "--no-deprecation"]});
 
 //Run the generateConfig.mjs file
-childProcess.fork(path.join(dir, "src/core/config/scripts/generateConfig.mjs"), { execArgv: ["--experimental-modules","--no-warnings","--no-deprecation"]});
+childProcess.fork(path.join(dir, "src/core/config/scripts/generateConfig.mjs"), { execArgv: ["--experimental-modules", "--no-warnings", "--no-deprecation"]});
