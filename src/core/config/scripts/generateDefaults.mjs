@@ -11,29 +11,11 @@ import fs from "fs";
 import process from "process";
 import childProcess from "child_process";
 
-
-const mkdirSync = function (dirPath) {    
-    try {
-        fs.mkdirSync(dirPath);
-        console.log("Folder Ensured: " + dirPath);
-    } catch (err) {
-        if (err.code !== "EEXIST") throw err;
-    }
-};
-
-const mkdirpSync = function (dirPath) {
-    const parts = dirPath.split(path.sep);
-    for (let i = 1; i <= parts.length; i++) {
-        mkdirSync(path.join.apply(null, parts.slice(0, i)));
-    }
-};
-
-
 const dir = process.cwd();
 const newPath = path.join(dir, "src/core/config/modules");
 
 //Create the Destination Folder
-mkdirpSync(newPath);
+fs.mkdirSync(newPath, { recursive: true });
 
 //Create the default files
 fs.writeFileSync(path.join(newPath, "OpModules.mjs"), "export default{};\n");
