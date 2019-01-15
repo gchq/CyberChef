@@ -51,10 +51,12 @@ class App {
      */
     setup() {
         document.dispatchEvent(this.manager.appstart);
+
         this.initialiseSplitter();
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
+        this.manager.output.saveBombe();
         this.resetLayout();
         this.setCompileMessage();
 

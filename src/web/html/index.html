@@ -81,7 +81,11 @@
                     if (!el.classList.contains("loading"))
                         el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
-                } catch (err) {} // Ignore errors if DOM not yet ready
+                } catch (err) {
+                    // This error was likely caused by the DOM not being ready yet,
+                    // so we wait another second and then try again.
+                    setTimeout(changeLoadingMsg, 1000);
+                }
             }
 
             changeLoadingMsg();
@@ -138,7 +142,9 @@
     <body>
         <!-- Preloader overlay -->
         <div id="loader-wrapper">
-            <div id="preloader" class="loader"></div>
+            <div id="preloader" class="loader">
+                <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="400"></object>
+            </div>
             <div id="preloader-msg" class="loading-msg"></div>
             <div id="preloader-error" class="loading-error"></div>
         </div>
