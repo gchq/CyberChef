@@ -7,7 +7,7 @@
  */
 
 import geohash from "ngeohash";
-import mgrs from "mgrs";
+import geodesy from "geodesy";
 
 /**
  * Co-ordinate formats
@@ -17,7 +17,19 @@ export const FORMATS = [
     "Degrees Decimal Minutes",
     "Decimal Degrees",
     "Geohash",
-    "Military Grid Reference System"
+    "Military Grid Reference System",
+    "Ordnance Survey National Grid"
+];
+
+/**
+ * Formats that are made up of one string
+ * These formats skip bits like filtering delimiters and
+ * are outputted differently (only one output)
+ */
+export const STRING_FORMATS = [
+    "Geohash",
+    "Military Grid Reference System",
+    "Ordnance Survey National Grid"
 ];
 
 /**
@@ -37,9 +49,22 @@ export function convertCoordinates (inLat, inLong, inFormat, outFormat, precisio
         convLat = hash.latitude.toString();
         convLong = hash.longitude.toString();
     } else if (inFormat === "Military Grid Reference System") {
-        const result = mgrs.toPoint(inLat.replace(" ", ""));
-        convLat = result[1];
-        convLong = result[0];
+        const utm = geodesy.Mgrs.parse(inLat).toUtm();
+        const result = utm.toLatLonE().toString("d", 4).replace(/[^0-9.,]/g, "");
+        const splitResult = result.split(",");
+        if (splitResult.length === 2) {
+            convLat = splitResult[0];
+            convLong = splitResult[1];
+        }
+    } else if (inFormat === "Ordnance Survey National Grid") {
+        const osng = geodesy.OsGridRef.parse(inLat);
+        const latlon = geodesy.OsGridRef.osGridToLatLon(osng, geodesy.LatLonEllipsoidal.datum.WGS84);
+        const result = latlon.toString("d", 4).replace(/[^0-9.,]/g, "");
+        const splitResult = result.split(",");
+        if (splitResult.length === 2) {
+            convLat = splitResult[0];
+            convLong = splitResult[1];
+        }
     } else {
         convLat = convertSingleCoordinate(inLat, inFormat, "Decimal Degrees", 15).split("°");
         convLong = convertSingleCoordinate(inLong, inFormat, "Decimal Degrees", 15).split("°");
@@ -49,7 +74,13 @@ export function convertCoordinates (inLat, inLong, inFormat, outFormat, precisio
     if (outFormat === "Geohash") {
         convLat = geohash.encode(parseFloat(convLat), parseFloat(convLong), precision);
     } else if (outFormat === "Military Grid Reference System") {
-        convLat = mgrs.forward([parseFloat(convLong), parseFloat(convLat)], precision);
+        const utm = new geodesy.LatLonEllipsoidal(parseFloat(convLat), parseFloat(convLong)).toUtm();
+        const mgrs = utm.toMgrs();
+        convLat = mgrs.toString();
+    } else if (outFormat === "Ordnance Survey National Grid") {
+        const latlon = new geodesy.LatLonEllipsoidal(parseFloat(convLat), parseFloat(convLong));
+        const osng = geodesy.OsGridRef.latLonToOsGrid(latlon);
+        convLat = osng.toString();
     } else {
         convLat = convertSingleCoordinate(convLat.toString(), "Decimal Degrees", outFormat, precision);
         convLong = convertSingleCoordinate(convLong.toString(), "Decimal Degrees", outFormat, precision);

@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import {FORMATS, convertCoordinates, convertSingleCoordinate, findDelim, findFormat} from "../lib/ConvertCoordinates";
+import {FORMATS, STRING_FORMATS, convertCoordinates, convertSingleCoordinate, findDelim, findFormat} from "../lib/ConvertCoordinates";
 import Utils from "../Utils";
 
 /**
@@ -22,7 +22,7 @@ class ConvertCoordinateFormat extends Operation {
 
         this.name = "Convert co-ordinate format";
         this.module = "Hashing";
-        this.description = "Convert geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li></ul>";
+        this.description = "Convert geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li></ul>";
         this.infoURL = "https://wikipedia.org/wiki/Geographic_coordinate_conversion";
         this.inputType = "string";
         this.outputType = "string";
@@ -107,14 +107,14 @@ class ConvertCoordinateFormat extends Operation {
             }
         }
 
-        if (inDelim === "" && (inFormat !== "Geohash" && inFormat !== "Military Grid Reference System")) {
+        if (inDelim === "" && (!STRING_FORMATS.includes(inFormat))) {
             throw new OperationError("Could not automatically detect the input delimiter.");
         }
 
         // Prepare input data
-        if (inFormat === "Geohash" || inFormat === "Military Grid Reference System") {
+        if (STRING_FORMATS.includes(inFormat)) {
             // Geohash only has one value, so just use the input
-            // Replace anything that isn't a valid character in Geohash / MGRS
+            // Replace anything that isn't a valid character in Geohash / MGRS / OSNG
             inLat = input.replace(/[^A-Za-z0-9]/, "");
         } else if (inDelim === "Direction Preceding") {
             // Split on the compass directions
@@ -152,7 +152,7 @@ class ConvertCoordinateFormat extends Operation {
             }
         }
 
-        if (inFormat !== "Geohash" && inFormat !== "Military Grid Reference System" && outDelim.includes("Direction")) {
+        if (!STRING_FORMATS.includes(inFormat) && outDelim.includes("Direction")) {
             // Match on compass directions, and store the first 2 matches for the output
             const dir = input.match(/[NnEeSsWw]/g);
             if (dir !== null) {
@@ -173,14 +173,15 @@ class ConvertCoordinateFormat extends Operation {
         // Convert the co-ordinates
         if (inLat !== undefined) {
             if (inLong === undefined) {
-                if (inFormat !== "Geohash" && inFormat !== "Military Grid Reference System") {
-                    if (outFormat === "Geohash" || outFormat === "Military Grid Reference System"){
+                if (!STRING_FORMATS.includes(inFormat)) {
+                    if (STRING_FORMATS.includes(outFormat)){
                         throw new OperationError(`${outFormat} needs both a latitude and a longitude to be calculated`);
                     }
                 }
-                if (inFormat === "Geohash" || inFormat === "Military Grid Reference System") {
+                if (STRING_FORMATS.includes(inFormat)) {
                     // Geohash conversion is in convertCoordinates despite needing
                     // only one input as it needs to output two values
+                    inLat = inLat.replace(/[^A-Za-z0-9]/g, "");
                     [outLat, outLong] = convertCoordinates(inLat, inLat, inFormat, outFormat, precision);
                 } else {
                     outLat = convertSingleCoordinate(inLat, inFormat, outFormat, precision);
@@ -195,16 +196,16 @@ class ConvertCoordinateFormat extends Operation {
         // Output conversion results if successful
         if (outLat !== undefined) {
             let output = "";
-            if (outDelim === "Direction Preceding" && outFormat !== "Geohash" && outFormat !== "Military Grid Reference System") {
+            if (outDelim === "Direction Preceding" && !STRING_FORMATS.includes(outFormat)) {
                 output += latDir += " ";
             }
             output += outLat;
-            if (outDelim === "Direction Following" && outFormat !== "Geohash" && outFormat !== "Military Grid Reference System") {
+            if (outDelim === "Direction Following" && !STRING_FORMATS.includes(outFormat)) {
                 output += " " + latDir;
             }
             output += outSeparator;
 
-            if (outLong !== undefined && outFormat !== "Geohash" && outFormat !== "Military Grid Reference System") {
+            if (outLong !== undefined && !STRING_FORMATS.includes(outFormat)) {
                 if (outDelim === "Direction Preceding") {
                     output += longDir + " ";
                 }
