@@ -49,6 +49,12 @@ class YARARules extends Operation {
                 type: "boolean",
                 hint: "Show the metadata of each rule",
                 value: false
+            },
+            {
+                name: "Show counts",
+                type: "boolean",
+                hint: "Show the number of matches per rule",
+                value: true
             }
         ];
     }
@@ -61,7 +67,7 @@ class YARARules extends Operation {
     run(input, args) {
         if (ENVIRONMENT_IS_WORKER())
             self.sendStatusMessage("Instantiating YARA.");
-        const [rules, showStrings, showLengths, showMeta] = args;
+        const [rules, showStrings, showLengths, showMeta, showCounts] = args;
         return new Promise((resolve, reject) => {
             Yara().then(yara => {
                 if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Converting data for YARA.");
@@ -97,10 +103,11 @@ class YARARules extends Operation {
                         }
                         meta = meta.slice(0, -2) + "]";
                     }
+                    const countString = showCounts ? `${matches.size()} time${matches.size() > 1 ? "s" : ""}` : "";
                     if (matches.size() === 0 || !(showStrings || showLengths)) {
-                        matchString += `Input matches rule "${rule.ruleName}"${meta}.\n`;
+                        matchString += `Input matches rule "${rule.ruleName}"${meta}${countString.length > 0 ? ` ${countString}`: ""}.\n`;
                     } else {
-                        matchString += `Rule "${rule.ruleName}"${meta} matches:\n`;
+                        matchString += `Rule "${rule.ruleName}"${meta} matches (${countString}):\n`;
                         for (let j = 0; j < matches.size(); j++) {
                             const match = matches.get(j);
                             if (showStrings || showLengths) {
