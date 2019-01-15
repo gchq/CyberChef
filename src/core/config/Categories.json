@@ -189,6 +189,8 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
+			"To Case Insensitive Regex",
+			"From Case Insensitive Regex",
             "Add line numbers",
             "Remove line numbers",
             "To Table",
@@ -374,6 +376,7 @@
             "Generate QR Code",
             "Parse QR Code",
             "Haversine distance",
+            "Generate Lorem Ipsum",
             "Numberwang",
             "XKCD Random Number"
         ]
@@ -383,6 +386,7 @@
         "ops": [
             "Magic",
             "Fork",
+            "Subsection",
             "Merge",
             "Register",
             "Label",
