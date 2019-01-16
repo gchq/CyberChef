@@ -142,9 +142,7 @@
     <body>
         <!-- Preloader overlay -->
         <div id="loader-wrapper">
-            <div id="preloader" class="loader">
-                <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="400"></object>
-            </div>
+            <div id="preloader" class="loader"></div>
             <div id="preloader-msg" class="loading-msg"></div>
             <div id="preloader-error" class="loading-error"></div>
         </div>
@@ -321,7 +319,9 @@
                                 </div>
                             </div>
                             <div id="output-loader">
-                                <div class="loader"></div>
+                                <div id="output-loader-animation">
+                                    <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
+                                </div>
                                 <div class="loading-msg"></div>
                             </div>
                         </div>

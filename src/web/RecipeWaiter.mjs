@@ -340,10 +340,11 @@ class RecipeWaiter {
     /**
      * Moves or removes the breakpoint indicator in the recipe based on the position.
      *
-     * @param {number} position
+     * @param {number|boolean} position - If boolean, turn off all indicators
      */
     updateBreakpointIndicator(position) {
         const operations = document.querySelectorAll("#rec-list li.operation");
+        if (typeof position === "boolean") position = operations.length;
         for (let i = 0; i < operations.length; i++) {
             if (i === position) {
                 operations[i].classList.add("break");

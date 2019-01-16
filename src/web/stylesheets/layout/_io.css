@@ -80,11 +80,13 @@
     transition: all 0.5s ease;
 }
 
-#output-loader .loader {
+#output-loader-animation {
+    display: block;
+    position: absolute;
     width: 60%;
     height: 60%;
-    left: unset;
     top: 10%;
+    transition: all 0.5s ease;
 }
 
 #output-loader .loading-msg {

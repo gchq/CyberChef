@@ -124,6 +124,9 @@ class App {
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
 
+        // Remove all current indicators
+        this.manager.recipe.updateBreakpointIndicator(false);
+
         this.manager.worker.bake(
             this.getInput(),        // The user's input
             this.getRecipeConfig(), // The configuration of the recipe

@@ -334,12 +334,11 @@ class OutputWaiter {
 
 
     /**
-     * Save bombe object before it is removed so that it can be used later
+     * Save bombe object then remove it from the DOM so that it does not cause performance issues.
      */
     saveBombe() {
-        this.bombeEl = document.getElementById("bombe").cloneNode();
-        this.bombeEl.setAttribute("width", "100%");
-        this.bombeEl.setAttribute("height", "100%");
+        this.bombeEl = document.getElementById("bombe");
+        this.bombeEl.parentNode.removeChild(this.bombeEl);
     }
 
 
@@ -358,7 +357,7 @@ class OutputWaiter {
 
         const outputLoader = document.getElementById("output-loader"),
             outputElement = document.getElementById("output-text"),
-            loader = outputLoader.querySelector(".loader");
+            animation = document.getElementById("output-loader-animation");
 
         if (value) {
             this.manager.controls.hideStaleIndicator();
@@ -366,7 +365,7 @@ class OutputWaiter {
             // Start a timer to add the Bombe to the DOM just before we make it
             // visible so that there is no stuttering
             this.appendBombeTimeout = setTimeout(function() {
-                loader.appendChild(this.bombeEl);
+                animation.appendChild(this.bombeEl);
             }.bind(this), 150);
 
             // Show the loading screen
@@ -380,7 +379,7 @@ class OutputWaiter {
             // Remove the Bombe from the DOM to save resources
             this.outputLoaderTimeout = setTimeout(function () {
                 try {
-                    loader.removeChild(this.bombeEl);
+                    animation.removeChild(this.bombeEl);
                 } catch (err) {}
             }.bind(this), 500);
             outputElement.disabled = false;

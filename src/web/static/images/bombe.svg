@@ -56,13 +56,13 @@
 </script>
 <style>
     .row0 {--primary-color: #e5d41b;}
-    .row1 {--primary-color: #BE1E2D;}
+    .row1 {--primary-color: #be1e2d;}
     .row2 {--primary-color: #337f24;}
 </style>
  
 <symbol id="rotor">
     <g transform="scale(0.1)">
-        <circle id="casing" class="ring-color" style="fill: var(--primary-color, #BE1E2D)" cx="692" cy="674" r="505"/>
+        <circle id="casing" class="ring-color" style="fill: var(--primary-color, #be1e2d)" cx="692" cy="674" r="505"/>
         <circle id="alphabet-ring" fill="#7a5340" cx="692" cy="674" r="477"/>
         <circle id="face" fill="#412612" cx="692" cy="674" r="412"/>
         <circle id="plate" fill="#F1F2F2" cx="692" cy="674" r="185"/>
