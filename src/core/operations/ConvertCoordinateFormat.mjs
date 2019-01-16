@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates";
 
 /**
@@ -37,7 +38,6 @@ class ConvertCoordinateFormat extends Operation {
                     "Auto",
                     "Direction Preceding",
                     "Direction Following",
-                    "Space",
                     "\\n",
                     "Comma",
                     "Semi-colon",
@@ -83,8 +83,17 @@ class ConvertCoordinateFormat extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [inFormat, inDelim, outFormat, outDelim, incDirection, precision] = args;
-        return convertCoordinates(input, inFormat, inDelim, outFormat, outDelim, incDirection, precision);
+        if (input.replace(/[\s+]/g, "") !== "") {
+            const [inFormat, inDelim, outFormat, outDelim, incDirection, precision] = args;
+            try {
+                const result = convertCoordinates(input, inFormat, inDelim, outFormat, outDelim, incDirection, precision);
+                return result;
+            } catch (error) {
+                throw new OperationError(error);
+            }
+        } else {
+            return input;
+        }
     }
 }
 
