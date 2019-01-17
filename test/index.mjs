@@ -44,7 +44,6 @@ import "./tests/operations/DateTime";
 import "./tests/operations/ExtractEmailAddresses";
 import "./tests/operations/Fork";
 import "./tests/operations/FromDecimal";
-import "./tests/operations/FromGeohash";
 import "./tests/operations/Hash";
 import "./tests/operations/HaversineDistance";
 import "./tests/operations/Hexdump";
@@ -74,10 +73,10 @@ import "./tests/operations/SetIntersection";
 import "./tests/operations/SetUnion";
 import "./tests/operations/StrUtils";
 import "./tests/operations/SymmetricDifference";
-import "./tests/operations/ToGeohash.mjs";
 import "./tests/operations/TranslateDateTimeFormat";
 import "./tests/operations/Magic";
 import "./tests/operations/ParseTLV";
+import "./tests/operations/ConvertCoordinateFormat";
 
 let allTestsPassing = true;
 const testStatusCounts = {
