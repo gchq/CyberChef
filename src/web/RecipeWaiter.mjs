@@ -376,6 +376,7 @@ class RecipeWaiter {
         }
     }
 
+
     /**
      * Adds the specified operation to the recipe.
      *
@@ -453,6 +454,7 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
+
     /**
      * Handler for text argument dragover events.
      * Gives the user a visual cue to show that items can be dropped here.
@@ -469,6 +471,7 @@ class RecipeWaiter {
         e.target.closest("textarea.arg").classList.add("dropping-file");
     }
 
+
     /**
      * Handler for text argument dragleave events.
      * Removes the visual cue.
@@ -480,6 +483,7 @@ class RecipeWaiter {
         e.preventDefault();
         e.target.classList.remove("dropping-file");
     }
+
 
     /**
      * Handler for text argument drop events.
@@ -510,7 +514,10 @@ class RecipeWaiter {
             const self = this;
             reader.onload = function (e) {
                 targ.value = e.target.result;
-                self.ingChange();
+                // Trigger floating label move
+                const changeEvent = new Event('change');
+                targ.dispatchEvent(changeEvent);
+                window.dispatchEvent(self.manager.statechange);
             };
             reader.readAsText(file);
         }
@@ -541,6 +548,7 @@ class RecipeWaiter {
 
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
+
 
     /**
      * Adjusts the number of ingredient columns as the width of the recipe changes.

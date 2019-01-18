@@ -35,25 +35,21 @@ class YARARules extends Operation {
             {
                 name: "Show strings",
                 type: "boolean",
-                hint: "Show each match's data",
                 value: false
             },
             {
                 name: "Show string lengths",
                 type: "boolean",
-                hint: "Show the length of each match's data",
                 value: false
             },
             {
                 name: "Show metadata",
                 type: "boolean",
-                hint: "Show the metadata of each rule",
                 value: false
             },
             {
                 name: "Show counts",
                 type: "boolean",
-                hint: "Show the number of matches per rule",
                 value: true
             }
         ];
@@ -66,7 +62,7 @@ class YARARules extends Operation {
      */
     run(input, args) {
         if (ENVIRONMENT_IS_WORKER())
-            self.sendStatusMessage("Instantiating YARA.");
+            self.sendStatusMessage("Instantiating YARA...");
         const [rules, showStrings, showLengths, showMeta, showCounts] = args;
         return new Promise((resolve, reject) => {
             Yara().then(yara => {

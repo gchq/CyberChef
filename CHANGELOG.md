@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.23.0] - 2019-01-18
+- 'YARA Rules' operatio added [@artemisbot] | [#468]
+
 ### [8.22.0] - 2019-01-10
 - 'Subsection' operation added [@j433866] | [#467]
 
@@ -97,6 +100,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.23.0]: https://github.com/gchq/CyberChef/releases/tag/v8.23.0
 [8.22.0]: https://github.com/gchq/CyberChef/releases/tag/v8.22.0
 [8.21.0]: https://github.com/gchq/CyberChef/releases/tag/v8.21.0
 [8.20.0]: https://github.com/gchq/CyberChef/releases/tag/v8.20.0
@@ -176,3 +180,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#458]: https://github.com/gchq/CyberChef/pull/458
 [#461]: https://github.com/gchq/CyberChef/pull/461
 [#467]: https://github.com/gchq/CyberChef/pull/467
+[#468]: https://github.com/gchq/CyberChef/pull/468
