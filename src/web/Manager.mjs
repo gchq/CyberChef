@@ -137,6 +137,9 @@ class Manager {
         this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
         this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
+        this.addDynamicListener("textarea.arg", "dragover", this.recipe.textArgDragover, this.recipe);
+        this.addDynamicListener("textarea.arg", "dragleave", this.recipe.textArgDragLeave, this.recipe);
+        this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
 
         // Input
         this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
