@@ -83,6 +83,7 @@ import "./tests/Magic";
 import "./tests/ParseTLV";
 import "./tests/Media";
 import "./tests/ToFromInsensitiveRegex";
+import "./tests/YARA.mjs";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
