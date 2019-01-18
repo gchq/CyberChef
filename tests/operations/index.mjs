@@ -45,7 +45,6 @@ import "./tests/DateTime";
 import "./tests/ExtractEmailAddresses";
 import "./tests/Fork";
 import "./tests/FromDecimal";
-import "./tests/FromGeohash";
 import "./tests/Hash";
 import "./tests/HaversineDistance";
 import "./tests/Hexdump";
@@ -77,13 +76,13 @@ import "./tests/SetUnion";
 import "./tests/StrUtils";
 import "./tests/SymmetricDifference";
 import "./tests/TextEncodingBruteForce";
-import "./tests/ToGeohash";
 import "./tests/TranslateDateTimeFormat";
 import "./tests/Magic";
 import "./tests/ParseTLV";
 import "./tests/Media";
 import "./tests/ToFromInsensitiveRegex";
 import "./tests/YARA.mjs";
+import "./tests/ConvertCoordinateFormat";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
