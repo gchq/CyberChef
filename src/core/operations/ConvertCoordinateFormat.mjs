@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
 import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates";
 
 /**
@@ -21,7 +20,7 @@ class ConvertCoordinateFormat extends Operation {
 
         this.name = "Convert co-ordinate format";
         this.module = "Hashing";
-        this.description = "Convert geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>The operation can try to detect the input co-ordinate format and delimiter automatically, but this may not always work correctly.";
+        this.description = "Converts geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>The operation can try to detect the input co-ordinate format and delimiter automatically, but this may not always work correctly.";
         this.infoURL = "https://wikipedia.org/wiki/Geographic_coordinate_conversion";
         this.inputType = "string";
         this.outputType = "string";
@@ -85,12 +84,8 @@ class ConvertCoordinateFormat extends Operation {
     run(input, args) {
         if (input.replace(/[\s+]/g, "") !== "") {
             const [inFormat, inDelim, outFormat, outDelim, incDirection, precision] = args;
-            try {
-                const result = convertCoordinates(input, inFormat, inDelim, outFormat, outDelim, incDirection, precision);
-                return result;
-            } catch (error) {
-                throw new OperationError(error);
-            }
+            const result = convertCoordinates(input, inFormat, inDelim, outFormat, outDelim, incDirection, precision);
+            return result;
         } else {
             return input;
         }

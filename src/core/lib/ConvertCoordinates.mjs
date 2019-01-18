@@ -8,6 +8,7 @@
 
 import geohash from "ngeohash";
 import geodesy from "geodesy";
+import OperationError from "../errors/OperationError";
 
 /**
  * Co-ordinate formats
@@ -34,6 +35,7 @@ const NO_CHANGE = [
 
 /**
  * Convert a given latitude and longitude into a different format.
+ *
  * @param {string} input - Input string to be converted
  * @param {string} inFormat - Format of the input coordinates
  * @param {string} inDelim - The delimiter splitting the lat/long of the input
@@ -49,29 +51,40 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         latlon,
         convLat,
         convLon,
-        conv;
+        conv,
+        hash,
+        utm,
+        mgrs,
+        osng,
+        splitLat,
+        splitLong,
+        lat,
+        lon;
 
     // Can't have a precision less than 0!
     if (precision < 0) {
         precision = 0;
     }
+
     if (inDelim === "Auto") {
         // Try to detect a delimiter in the input.
         inDelim = findDelim(input);
         if (inDelim === null) {
-            throw "Unable to detect the input delimiter automatically.";
+            throw new OperationError("Unable to detect the input delimiter automatically.");
         }
     } else {
         // Convert the delimiter argument value to the actual character
         inDelim = realDelim(inDelim);
     }
+
     if (inFormat === "Auto") {
         // Try to detect the format of the input data
         inFormat = findFormat(input, inDelim);
         if (inFormat === null) {
-            throw "Unable to detect the input format automatically.";
+            throw new OperationError("Unable to detect the input format automatically.");
         }
     }
+
     // Convert the output delimiter argument to the real character
     outDelim = realDelim(outDelim);
 
@@ -91,83 +104,91 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
     }
 
     // Conversions from the input format into a geodesy latlon object
-    if (inFormat === "Geohash") {
-        const hash = geohash.decode(input.replace(/[^A-Za-z0-9]/g, ""));
-        latlon = new geodesy.LatLonEllipsoidal(hash.latitude, hash.longitude);
-    } else if (inFormat === "Military Grid Reference System") {
-        const utm = geodesy.Mgrs.parse(input.replace(/[^A-Za-z0-9]/g, "")).toUtm();
-        latlon = utm.toLatLonE();
-    } else if (inFormat === "Ordnance Survey National Grid") {
-        const osng = geodesy.OsGridRef.parse(input.replace(/[^A-Za-z0-9]/g, ""));
-        latlon = geodesy.OsGridRef.osGridToLatLon(osng);
-    } else if (inFormat === "Universal Transverse Mercator") {
-        // Geodesy needs a space between the first 2 digits and the next letter
-        if (/^[\d]{2}[A-Za-z]/.test(input)) {
-            input = input.slice(0, 2) + " " + input.slice(2);
-        }
-        const utm = geodesy.Utm.parse(input);
-        latlon = utm.toLatLonE();
-    } else if (inFormat === "Degrees Minutes Seconds") {
-        if (isPair) {
-            // Split up the lat/long into degrees / minutes / seconds values
-            const splitLat = splitInput(split[0]),
+    switch (inFormat) {
+        case "Geohash":
+            hash = geohash.decode(input.replace(/[^A-Za-z0-9]/g, ""));
+            latlon = new geodesy.LatLonEllipsoidal(hash.latitude, hash.longitude);
+            break;
+        case "Military Grid Reference System":
+            utm = geodesy.Mgrs.parse(input.replace(/[^A-Za-z0-9]/g, "")).toUtm();
+            latlon = utm.toLatLonE();
+            break;
+        case "Ordnance Survey National Grid":
+            osng = geodesy.OsGridRef.parse(input.replace(/[^A-Za-z0-9]/g, ""));
+            latlon = geodesy.OsGridRef.osGridToLatLon(osng);
+            break;
+        case "Universal Transverse Mercator":
+            // Geodesy needs a space between the first 2 digits and the next letter
+            if (/^[\d]{2}[A-Za-z]/.test(input)) {
+                input = input.slice(0, 2) + " " + input.slice(2);
+            }
+            utm = geodesy.Utm.parse(input);
+            latlon = utm.toLatLonE();
+            break;
+        case "Degrees Minutes Seconds":
+            if (isPair) {
+                // Split up the lat/long into degrees / minutes / seconds values
+                splitLat = splitInput(split[0]);
                 splitLong = splitInput(split[1]);
 
-            if (splitLat.length >= 3 && splitLong.length >= 3) {
-                const lat = convDMSToDD(splitLat[0], splitLat[1], splitLat[2], 10);
-                const long = convDMSToDD(splitLong[0], splitLong[1], splitLong[2], 10);
-                latlon = new geodesy.LatLonEllipsoidal(lat.degrees, long.degrees);
+                if (splitLat.length >= 3 && splitLong.length >= 3) {
+                    lat = convDMSToDD(splitLat[0], splitLat[1], splitLat[2], 10);
+                    lon = convDMSToDD(splitLong[0], splitLong[1], splitLong[2], 10);
+                    latlon = new geodesy.LatLonEllipsoidal(lat.degrees, lon.degrees);
+                } else {
+                    throw new OperationError("Invalid co-ordinate format for Degrees Minutes Seconds");
+                }
             } else {
-                throw "Invalid co-ordinate format for Degrees Minutes Seconds";
+                // Not a pair, so only try to convert one set of co-ordinates
+                splitLat = splitInput(split[0]);
+                if (splitLat.length >= 3) {
+                    lat = convDMSToDD(splitLat[0], splitLat[1], splitLat[2]);
+                    latlon = new geodesy.LatLonEllipsoidal(lat.degrees, lat.degrees);
+                } else {
+                    throw new OperationError("Invalid co-ordinate format for Degrees Minutes Seconds");
+                }
             }
-        } else {
-            // Not a pair, so only try to convert one set of co-ordinates
-            const splitLat = splitInput(split[0]);
-            if (splitLat.length >= 3) {
-                const lat = convDMSToDD(splitLat[0], splitLat[1], splitLat[2]);
+            break;
+        case "Degrees Decimal Minutes":
+            if (isPair) {
+                splitLat = splitInput(split[0]);
+                splitLong = splitInput(split[1]);
+                if (splitLat.length !== 2 || splitLong.length !== 2) {
+                    throw new OperationError("Invalid co-ordinate format for Degrees Decimal Minutes.");
+                }
+                // Convert to decimal degrees, and then convert to a geodesy object
+                lat = convDDMToDD(splitLat[0], splitLat[1], 10);
+                lon = convDDMToDD(splitLong[0], splitLong[1], 10);
+                latlon = new geodesy.LatLonEllipsoidal(lat.degrees, lon.degrees);
+            } else {
+                // Not a pair, so only try to convert one set of co-ordinates
+                splitLat = splitInput(input);
+                if (splitLat.length !== 2) {
+                    throw new OperationError("Invalid co-ordinate format for Degrees Decimal Minutes.");
+                }
+                lat = convDDMToDD(splitLat[0], splitLat[1], 10);
                 latlon = new geodesy.LatLonEllipsoidal(lat.degrees, lat.degrees);
+            }
+            break;
+        case "Decimal Degrees":
+            if (isPair) {
+                splitLat =  splitInput(split[0]);
+                splitLong = splitInput(split[1]);
+                if (splitLat.length !== 1 || splitLong.length !== 1) {
+                    throw new OperationError("Invalid co-ordinate format for Decimal Degrees.");
+                }
+                latlon = new geodesy.LatLonEllipsoidal(splitLat[0], splitLong[0]);
             } else {
-                throw "Invalid co-ordinate format for Degrees Minutes Seconds";
+                // Not a pair, so only try to convert one set of co-ordinates
+                splitLat = splitInput(split[0]);
+                if (splitLat.length !== 1) {
+                    throw new OperationError("Invalid co-ordinate format for Decimal Degrees.");
+                }
+                latlon = new geodesy.LatLonEllipsoidal(splitLat[0], splitLat[0]);
             }
-        }
-    } else if (inFormat === "Degrees Decimal Minutes") {
-        if (isPair) {
-            const splitLat = splitInput(split[0]);
-            const splitLong = splitInput(split[1]);
-            if (splitLat.length !== 2 || splitLong.length !== 2) {
-                throw "Invalid co-ordinate format for Degrees Decimal Minutes.";
-            }
-            // Convert to decimal degrees, and then convert to a geodesy object
-            const lat = convDDMToDD(splitLat[0], splitLat[1], 10);
-            const long = convDDMToDD(splitLong[0], splitLong[1], 10);
-            latlon = new geodesy.LatLonEllipsoidal(lat.degrees, long.degrees);
-        } else {
-            // Not a pair, so only try to convert one set of co-ordinates
-            const splitLat = splitInput(input);
-            if (splitLat.length !== 2) {
-                throw "Invalid co-ordinate format for Degrees Decimal Minutes.";
-            }
-            const lat = convDDMToDD(splitLat[0], splitLat[1], 10);
-            latlon = new geodesy.LatLonEllipsoidal(lat.degrees, lat.degrees);
-        }
-    } else if (inFormat === "Decimal Degrees") {
-        if (isPair) {
-            const splitLat =  splitInput(split[0]);
-            const splitLong = splitInput(split[1]);
-            if (splitLat.length !== 1 || splitLong.length !== 1) {
-                throw "Invalid co-ordinate format for Decimal Degrees.";
-            }
-            latlon = new geodesy.LatLonEllipsoidal(splitLat[0], splitLong[0]);
-        } else {
-            // Not a pair, so only try to convert one set of co-ordinates
-            const splitLat = splitInput(split[0]);
-            if (splitLat.length !== 1) {
-                throw "Invalid co-ordinate format for Decimal Degrees.";
-            }
-            latlon = new geodesy.LatLonEllipsoidal(splitLat[0], splitLat[0]);
-        }
-    } else {
-        throw `Unknown input format '${inFormat}'`;
+            break;
+        default:
+            throw new OperationError(`Unknown input format '${inFormat}'`);
     }
 
     // Everything is now a geodesy latlon object
@@ -179,68 +200,78 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         if (dirs && dirs.length >= 1) {
             // Make positive lat/lon values with S/W directions into negative values
             if (dirs[0] === "S" || dirs[0] === "W" && latlon.lat > 0) {
-                latlon.lat = 0 - latlon.lat;
+                latlon.lat = -latlon.lat;
             }
             if (dirs.length >= 2) {
                 if (dirs[1] === "S" || dirs[1] === "W" && latlon.lon > 0) {
-                    latlon.lon = 0 - latlon.lon;
+                    latlon.lon = -latlon.lon;
                 }
             }
         }
     }
+
     // Try to find the compass directions of the lat and long
     const [latDir, longDir] = findDirs(latlon.lat + "," + latlon.lon, ",");
+
     // Output conversions for each output format
-    if (outFormat === "Decimal Degrees") {
-        // We could use the built in latlon.toString(),
-        // but this makes adjusting the output harder
-        const lat = convDDToDD(latlon.lat, precision);
-        const lon = convDDToDD(latlon.lon, precision);
-        convLat = lat.string;
-        convLon = lon.string;
-    } else if (outFormat === "Degrees Decimal Minutes") {
-        const lat = convDDToDDM(latlon.lat, precision);
-        const lon = convDDToDDM(latlon.lon, precision);
-        convLat = lat.string;
-        convLon = lon.string;
-    } else if (outFormat === "Degrees Minutes Seconds") {
-        const lat = convDDToDMS(latlon.lat, precision);
-        const lon = convDDToDMS(latlon.lon, precision);
-        convLat = lat.string;
-        convLon = lon.string;
-    } else if (outFormat === "Geohash") {
-        convLat = geohash.encode(latlon.lat, latlon.lon, precision);
-    } else if (outFormat === "Military Grid Reference System") {
-        const utm = latlon.toUtm();
-        const mgrs = utm.toMgrs();
-        // MGRS wants a precision that's an even number between 2 and 10
-        if (precision % 2 !== 0) {
-            precision = precision + 1;
-        }
-        if (precision > 10) {
-            precision = 10;
-        }
-        convLat = mgrs.toString(precision);
-    } else if (outFormat === "Ordnance Survey National Grid") {
-        const osng = geodesy.OsGridRef.latLonToOsGrid(latlon);
-        if (osng.toString() === "") {
-            throw "Could not convert co-ordinates to OS National Grid. Are the co-ordinates in range?";
-        }
-        // OSNG wants a precision that's an even number between 2 and 10
-        if (precision % 2 !== 0) {
-            precision = precision + 1;
-        }
-        if (precision > 10) {
-            precision = 10;
-        }
-        convLat = osng.toString(precision);
-    } else if (outFormat === "Universal Transverse Mercator") {
-        const utm = latlon.toUtm();
-        convLat = utm.toString(precision);
+    switch (outFormat) {
+        case "Decimal Degrees":
+            // We could use the built in latlon.toString(),
+            // but this makes adjusting the output harder
+            lat = convDDToDD(latlon.lat, precision);
+            lon = convDDToDD(latlon.lon, precision);
+            convLat = lat.string;
+            convLon = lon.string;
+            break;
+        case "Degrees Decimal Minutes":
+            lat = convDDToDDM(latlon.lat, precision);
+            lon = convDDToDDM(latlon.lon, precision);
+            convLat = lat.string;
+            convLon = lon.string;
+            break;
+        case "Degrees Minutes Seconds":
+            lat = convDDToDMS(latlon.lat, precision);
+            lon = convDDToDMS(latlon.lon, precision);
+            convLat = lat.string;
+            convLon = lon.string;
+            break;
+        case "Geohash":
+            convLat = geohash.encode(latlon.lat, latlon.lon, precision);
+            break;
+        case "Military Grid Reference System":
+            utm = latlon.toUtm();
+            mgrs = utm.toMgrs();
+            // MGRS wants a precision that's an even number between 2 and 10
+            if (precision % 2 !== 0) {
+                precision = precision + 1;
+            }
+            if (precision > 10) {
+                precision = 10;
+            }
+            convLat = mgrs.toString(precision);
+            break;
+        case "Ordnance Survey National Grid":
+            osng = geodesy.OsGridRef.latLonToOsGrid(latlon);
+            if (osng.toString() === "") {
+                throw new OperationError("Could not convert co-ordinates to OS National Grid. Are the co-ordinates in range?");
+            }
+            // OSNG wants a precision that's an even number between 2 and 10
+            if (precision % 2 !== 0) {
+                precision = precision + 1;
+            }
+            if (precision > 10) {
+                precision = 10;
+            }
+            convLat = osng.toString(precision);
+            break;
+        case "Universal Transverse Mercator":
+            utm = latlon.toUtm();
+            convLat = utm.toString(precision);
+            break;
     }
 
     if (convLat === undefined) {
-        throw "Error converting co-ordinates.";
+        throw new OperationError("Error converting co-ordinates.");
     }
 
     if (outFormat.includes("Degrees")) {
@@ -283,6 +314,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
 
 /**
  * Split up the input using a space or degrees signs, and sanitise the result
+ *
  * @param {string} input - The input data to be split
  * @returns {number[]} An array of the different items in the string, stored as floats
  */
@@ -302,6 +334,7 @@ function splitInput (input){
 
 /**
  * Convert Degrees Minutes Seconds to Decimal Degrees
+ *
  * @param {number} degrees - The degrees of the input co-ordinates
  * @param {number} minutes - The minutes of the input co-ordinates
  * @param {number} seconds - The seconds of the input co-ordinates
@@ -324,6 +357,7 @@ function convDMSToDD (degrees, minutes, seconds, precision){
 
 /**
  * Convert Decimal Degrees Minutes to Decimal Degrees
+ *
  * @param {number} degrees - The input degrees to be converted
  * @param {number} minutes - The input minutes to be converted
  * @param {number} precision - The precision which the result should be rounded to
@@ -345,6 +379,7 @@ function convDDMToDD (degrees, minutes, precision) {
 
 /**
  * Convert Decimal Degrees to Decimal Degrees
+ *
  * Doesn't affect the input, just puts it into an object
  * @param {number} degrees - The input degrees to be converted
  * @param {number} precision - The precision which the result should be rounded to
@@ -359,6 +394,7 @@ function convDDToDD (degrees, precision) {
 
 /**
  * Convert Decimal Degrees to Degrees Minutes Seconds
+ *
  * @param {number} decDegrees - The input data to be converted
  * @param {number} precision - The precision which the result should be rounded to
  * @returns {{string: string, degrees: number, minutes: number, seconds: number}} An object containing the raw converted value as separate numbers (.degrees, .minutes, .seconds), and a formatted string version (obj.string)
@@ -383,6 +419,7 @@ function convDDToDMS (decDegrees, precision) {
 
 /**
  * Convert Decimal Degrees to Degrees Decimal Minutes
+ *
  * @param {number} decDegrees - The input degrees to be converted
  * @param {number} precision - The precision the input data should be rounded to
  * @returns {{string: string, degrees: number, minutes: number}} An object containing the raw converted value as separate numbers (.degrees, .minutes), and a formatted string version (obj.string)
@@ -407,6 +444,7 @@ function convDDToDDM (decDegrees, precision) {
 
 /**
  * Finds and returns the compass directions in an input string
+ *
  * @param {string} input - The input co-ordinates containing the direction
  * @param {string} delim - The delimiter separating latitide and longitude
  * @returns {string[]} String array containing the latitude and longitude directions
@@ -421,13 +459,10 @@ export function findDirs(input, delim) {
         // If there's actually compass directions
         // in the input, use these to work out the direction
         if (dirs.length <= 2 && dirs.length >= 1) {
-            if (dirs.length === 2) {
-                return [dirs[0], dirs[1]];
-            } else {
-                return [dirs[0], ""];
-            }
+            return dirs.length === 2 ? [dirs[0], dirs[1]] : [dirs[0], ""];
         }
     }
+
     // Nothing was returned, so guess the directions
     let lat = upperInput,
         long,
@@ -440,43 +475,29 @@ export function findDirs(input, delim) {
                 if (split[0] !== "") {
                     lat = split[0];
                 }
-                if (split.length >= 2) {
-                    if (split[1] !== "") {
-                        long = split[1];
-                    }
+                if (split.length >= 2 && split[1] !== "") {
+                    long = split[1];
                 }
             }
         }
     } else {
         const split = upperInput.split(dirExp);
         if (split.length > 1) {
-            if (split[0] === "") {
-                lat = split[1];
-            } else {
-                lat = split[0];
-            }
-            if (split.length > 2) {
-                if (split[2] !== "") {
-                    long = split[2];
-                }
+            lat = split[0] === "" ? split[1] : split[0];
+            if (split.length > 2 && split[2] !== "") {
+                long = split[2];
             }
         }
     }
+
     if (lat) {
         lat = parseFloat(lat);
-        if (lat < 0) {
-            latDir = "S";
-        } else {
-            latDir = "N";
-        }
+        latDir = lat < 0 ? "S" : "N";
     }
+
     if (long) {
         long = parseFloat(long);
-        if (long < 0) {
-            longDir = "W";
-        } else {
-            longDir = "E";
-        }
+        longDir = long < 0 ? "W" : "E";
     }
 
     return [latDir, longDir];
@@ -484,6 +505,7 @@ export function findDirs(input, delim) {
 
 /**
  * Detects the co-ordinate format of the input data
+ *
  * @param {string} input - The input data whose format we need to detect
  * @param {string} delim - The delimiter separating the data in input
  * @returns {string} The input format
@@ -495,25 +517,19 @@ export function findFormat (input, delim) {
         geohashPattern = new RegExp(/^[0123456789BCDEFGHJKMNPQRSTUVWXYZ]+$/),
         utmPattern = new RegExp(/^[0-9]{2}\s?[C-HJ-NP-X]\s[0-9.]+\s?[0-9.]+$/),
         degPattern = new RegExp(/[°'"]/g);
+
     input = input.trim();
+
     if (delim !== null && delim.includes("Direction")) {
         const split = input.split(/[NnEeSsWw]/);
         if (split.length > 1) {
-            if (split[0] === "") {
-                testData = split[1];
-            } else {
-                testData = split[0];
-            }
+            testData = split[0] === "" ? split[1] : split[0];
         }
     } else if (delim !== null && delim !== "") {
         if (input.includes(delim)) {
             const split = input.split(delim);
             if (split.length > 1) {
-                if (split[0] === "") {
-                    testData = split[1];
-                } else {
-                    testData = split[0];
-                }
+                testData = split[0] === "" ? split[1] : split[0];
             }
         } else {
             testData = input;
@@ -523,20 +539,17 @@ export function findFormat (input, delim) {
     // Test non-degrees formats
     if (!degPattern.test(input)) {
         const filteredInput = input.toUpperCase().replace(delim, "");
-        const isMgrs = mgrsPattern.test(filteredInput);
-        const isOsng = osngPattern.test(filteredInput);
-        const isGeohash = geohashPattern.test(filteredInput);
-        const isUtm = utmPattern.test(filteredInput);
-        if (isUtm) {
+
+        if (utmPattern.test(filteredInput)) {
             return "Universal Transverse Mercator";
         }
-        if (isMgrs) {
+        if (mgrsPattern.test(filteredInput)) {
             return "Military Grid Reference System";
         }
-        if (isOsng) {
+        if (osngPattern.test(filteredInput)) {
             return "Ordnance Survey National Grid";
         }
-        if (isGeohash) {
+        if (geohashPattern.test(filteredInput)) {
             return "Geohash";
         }
     }
@@ -558,6 +571,7 @@ export function findFormat (input, delim) {
 
 /**
  * Automatically find the delimeter type from the given input
+ *
  * @param {string} input
  * @returns {string} Delimiter type
  */
@@ -594,6 +608,7 @@ export function findDelim (input) {
 
 /**
  * Gets the real string for a delimiter name.
+ *
  * @param {string} delim The delimiter to be matched
  * @returns {string}
  */
@@ -610,7 +625,9 @@ export function realDelim (delim) {
 
 /**
  * Returns true if a zero is negative
+ *
  * @param {number} zero
+ * @returns {boolean}
  */
 function isNegativeZero(zero) {
     return zero === 0 && (1/zero < 0);
@@ -618,6 +635,7 @@ function isNegativeZero(zero) {
 
 /**
  * Rounds a number to a specified number of decimal places
+ *
  * @param {number} input - The number to be rounded
  * @param {precision} precision - The number of decimal places the number should be rounded to
  * @returns {number}
