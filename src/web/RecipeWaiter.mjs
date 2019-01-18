@@ -515,7 +515,7 @@ class RecipeWaiter {
             reader.onload = function (e) {
                 targ.value = e.target.result;
                 // Trigger floating label move
-                const changeEvent = new Event('change');
+                const changeEvent = new Event("change");
                 targ.dispatchEvent(changeEvent);
                 window.dispatchEvent(self.manager.statechange);
             };
