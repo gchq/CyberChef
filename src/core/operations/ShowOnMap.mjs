@@ -59,7 +59,19 @@ class ShowOnMap extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        // Pass the input through, don't need to do anything to it here
+        if (input.replace(/\s+/g, "") !== "") {
+            const inFormat = args[1],
+                inDelim = args[2];
+            let latLong;
+            try {
+                latLong = convertCoordinates(input, inFormat, inDelim, "Decimal Degrees", "Comma", "None", 5);
+            } catch (error) {
+                throw new OperationError(error);
+            }
+            latLong = latLong.replace(/[,]$/, "");
+            latLong = latLong.replace(/°/g, "");
+            return latLong;
+        }
         return input;
     }
 
@@ -70,15 +82,7 @@ class ShowOnMap extends Operation {
      */
     async present(data, args) {
         if (data.replace(/\s+/g, "") !== "") {
-            const [zoomLevel, inFormat, inDelim] = args;
-            let latLong;
-            try {
-                latLong = convertCoordinates(data, inFormat, inDelim, "Decimal Degrees", "Comma", "None", 5);
-            } catch (error) {
-                throw new OperationError(error);
-            }
-            latLong = latLong.replace(/[,]$/, "");
-            latLong = latLong.replace(/°/g, "");
+            const zoomLevel = args[0];
             const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 tileAttribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
                 leafletUrl = "https://unpkg.com/leaflet@1.4.0/dist/leaflet.js",
@@ -90,13 +94,13 @@ class ShowOnMap extends Operation {
     var mapscript = document.createElement('script');
     document.body.appendChild(mapscript);
     mapscript.onload = function() {
-        var presentMap = L.map('presentedMap').setView([${latLong}], ${zoomLevel});
+        var presentMap = L.map('presentedMap').setView([${data}], ${zoomLevel});
         L.tileLayer('${tileUrl}', {
             attribution: '${tileAttribution}'
         }).addTo(presentMap);
 
-        L.marker([${latLong}]).addTo(presentMap)
-            .bindPopup('${latLong}')
+        L.marker([${data}]).addTo(presentMap)
+            .bindPopup('${data}')
             .openPopup();
     };
     mapscript.src = "${leafletUrl}";
