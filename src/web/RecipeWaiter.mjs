@@ -376,6 +376,7 @@ class RecipeWaiter {
         }
     }
 
+
     /**
      * Adds the specified operation to the recipe.
      *
@@ -455,6 +456,75 @@ class RecipeWaiter {
 
 
     /**
+     * Handler for text argument dragover events.
+     * Gives the user a visual cue to show that items can be dropped here.
+     *
+     * @param {event} e
+     */
+    textArgDragover (e) {
+        // This will be set if we're dragging an operation
+        if (e.dataTransfer.effectAllowed === "move")
+            return false;
+
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.closest("textarea.arg").classList.add("dropping-file");
+    }
+
+
+    /**
+     * Handler for text argument dragleave events.
+     * Removes the visual cue.
+     *
+     * @param {event} e
+     */
+    textArgDragLeave (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.classList.remove("dropping-file");
+    }
+
+
+    /**
+     * Handler for text argument drop events.
+     * Loads the dragged data into the argument textarea.
+     *
+     * @param {event} e
+     */
+    textArgDrop(e) {
+        // This will be set if we're dragging an operation
+        if (e.dataTransfer.effectAllowed === "move")
+            return false;
+
+        e.stopPropagation();
+        e.preventDefault();
+        const targ = e.target;
+        const file = e.dataTransfer.files[0];
+        const text = e.dataTransfer.getData("Text");
+
+        targ.classList.remove("dropping-file");
+
+        if (text) {
+            targ.value = text;
+            return;
+        }
+
+        if (file) {
+            const reader = new FileReader();
+            const self = this;
+            reader.onload = function (e) {
+                targ.value = e.target.result;
+                // Trigger floating label move
+                const changeEvent = new Event("change");
+                targ.dispatchEvent(changeEvent);
+                window.dispatchEvent(self.manager.statechange);
+            };
+            reader.readAsText(file);
+        }
+    }
+
+
+    /**
      * Sets register values.
      *
      * @param {number} opIndex
@@ -478,6 +548,7 @@ class RecipeWaiter {
 
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
+
 
     /**
      * Adjusts the number of ingredient columns as the width of the recipe changes.
