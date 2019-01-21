@@ -72,7 +72,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         if (inDelim === null) {
             throw new OperationError("Unable to detect the input delimiter automatically.");
         }
-    } else {
+    } else if (!inDelim.includes("Direction")) {
         // Convert the delimiter argument value to the actual character
         inDelim = realDelim(inDelim);
     }
@@ -89,7 +89,16 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
     outDelim = realDelim(outDelim);
 
     if (!NO_CHANGE.includes(inFormat)) {
-        split = input.split(inDelim);
+        if (inDelim.includes("Direction")) {
+            // Split on directions
+            split = input.split(/[NnEeSsWw]/g);
+            if (split[0] === "") {
+                // Remove first element if direction preceding
+                split = split.slice(1);
+            }
+        } else {
+            split = input.split(inDelim);
+        }
         // Replace any co-ordinate symbols with spaces so we can split on them later
         for (let i = 0; i < split.length; i++) {
             split[i] = split[i].replace(/[°˝´'"]/g, " ");
@@ -196,7 +205,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
     if (inFormat.includes("Degrees")) {
         // If the input string contains directions, we need to check if they're S or W.
         // If either of the directions are, we should make the decimal value negative
-        const dirs = input.match(/[NnEeSsWw]/g);
+        const dirs = input.toUpperCase().match(/[NESW]/g);
         if (dirs && dirs.length >= 1) {
             // Make positive lat/lon values with S/W directions into negative values
             if (dirs[0] === "S" || dirs[0] === "W" && latlon.lat > 0) {
