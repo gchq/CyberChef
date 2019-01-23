@@ -138,7 +138,9 @@
   },
   "scripts": {
     "start": "grunt dev",
+    "start-node": "grunt node",
     "build": "grunt prod",
+    "build-node": "grunt node-prod",
     "test": "grunt test",
     "testui": "grunt testui",
     "docs": "grunt docs",
