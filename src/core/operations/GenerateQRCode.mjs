@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
+import detectFileType from "../lib/DetectFileType";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import qr from "qr-image";
-import { toBase64 } from "../lib/Base64";
-import Magic from "../lib/Magic";
 import Utils from "../Utils";
+import { toBase64 } from "../lib/Base64";
 
 /**
  * Generate QR Code operation
@@ -100,7 +100,7 @@ class GenerateQRCode extends Operation {
 
         if (format === "PNG") {
             let dataURI = "data:";
-            const type = Magic.magicFileType(data);
+            const type = detectFileType(data);
             if (type && type.mime.indexOf("image") === 0){
                 dataURI += type.mime + ";";
             } else {

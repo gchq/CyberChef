@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import Magic from "../lib/Magic";
+import detectFileType from "../lib/DetectFileType";
 
 /**
  * Detect File Type operation
@@ -34,7 +34,7 @@ class DetectFileType extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input),
-            type = Magic.magicFileType(data);
+            type = detectFileType(data);
 
         if (!type) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";

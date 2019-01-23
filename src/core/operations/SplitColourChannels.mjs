@@ -7,7 +7,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import Magic from "../lib/Magic";
+import detectFileType from "../lib/DetectFileType";
 
 import jimp from "jimp";
 
@@ -38,7 +38,7 @@ class SplitColourChannels extends Operation {
      * @returns {List<File>}
      */
     async run(input, args) {
-        const type = Magic.magicFileType(input);
+        const type = detectFileType(input);
         // Make sure that the input is an image
         if (type && type.mime.indexOf("image") === 0) {
             const parsedImage = await jimp.read(Buffer.from(input));

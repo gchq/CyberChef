@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import Magic from "../lib/Magic";
+import detectFileType from "../lib/DetectFileType";
 
 /**
  * Scan for Embedded Files operation
@@ -49,7 +49,7 @@ class ScanForEmbeddedFiles extends Operation {
             data = new Uint8Array(input);
 
         for (let i = 0; i < data.length; i++) {
-            type = Magic.magicFileType(data.slice(i));
+            type = detectFileType(data.slice(i));
             if (type) {
                 if (ignoreCommon && commonExts.indexOf(type.ext) > -1) {
                     numCommonFound++;

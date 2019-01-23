@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
+import detectFileType from "../lib/DetectFileType";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
 import jsqr from "jsqr";
 import jimp from "jimp";
 
@@ -42,7 +42,7 @@ class ParseQRCode extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const type = Magic.magicFileType(input);
+        const type = detectFileType(input);
         const [normalise] = args;
 
         // Make sure that the input is an image
