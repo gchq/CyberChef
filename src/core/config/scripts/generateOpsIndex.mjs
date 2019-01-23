@@ -24,7 +24,7 @@ if (!fs.existsSync(dir)) {
 // Find all operation files
 const opObjs = [];
 fs.readdirSync(path.join(dir, "../operations")).forEach(file => {
-    if (!file.endsWith(".mjs") || file === "index.mjs") return;
+    if (!file.endsWith(".mjs") || file === "index.mjs" || file === "DetectFileType.mjs" || file === "Fork.mjs" || file === "GenerateQRCode.mjs" || file === "Magic.mjs" || file === "ParseQRCode.mjs" || file === "PlayMedia.mjs" || file === "RenderImage.mjs" || file === "ScanForEmbeddedFiles.mjs" || file === "SplitColourChannels.mjs") return;
     opObjs.push(file.split(".mjs")[0]);
 });
 
