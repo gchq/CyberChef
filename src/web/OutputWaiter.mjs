@@ -478,7 +478,7 @@ class OutputWaiter {
      */
     showMagicButton(opSequence, result, recipeConfig) {
         const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.truncate(result, 30)}"</span>`);
+        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.truncate(Utils.escapeHtml(result), 30)}"</span>`);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
     }
