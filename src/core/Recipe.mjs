@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import OpModules from "./config/modules/OpModules";
 import OperationConfig from "./config/OperationConfig.json";
 import OperationError from "./errors/OperationError";
 import Operation from "./Operation";

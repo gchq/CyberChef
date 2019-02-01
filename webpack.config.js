@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 const path = require("path");
 
 /**
@@ -32,13 +31,6 @@ const banner = `/**
  * limitations under the License.
  */`;
 
-// const vendorCSS = new MiniCssExtractPlugin({ 
-//     filename: "[name].css",
-// });
-// const projectCSS = new MiniCssExtractPlugin({
-//     filename: "styles.css",
-//     chunkFileName: "styles.css",
-// });
 
 module.exports = {
     plugins: [
@@ -57,7 +49,6 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "[name].css",
-            chunkFilename: "[id].css",
         }),
     ],
     resolve: {
@@ -71,8 +62,6 @@ module.exports = {
     //             styles: {
     //                 name: "styles",
     //                 test: /\.css$/,
-    //                 // test: (module,c,entry = 'foo') => module.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-
     //                 chunks: "all",
     //                 enforce: true
     //             },
@@ -113,12 +102,6 @@ module.exports = {
                     "css-loader",
                     "postcss-loader",
                 ]
-                // use: projectCSS.extract({
-                //     use: [
-                //         { loader: "css-loader" },
-                //         { loader: "postcss-loader" },
-                //     ]
-                // })
             },
             {
                 test: /\.scss$/,
@@ -127,12 +110,6 @@ module.exports = {
                     "css-loader",
                     "sass-loader",
                 ]
-                // use: vendorCSS.extract({
-                //     use: [
-                //         { loader: "css-loader" },
-                //         { loader: "sass-loader" }
-                //     ]
-                // })
             },
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
