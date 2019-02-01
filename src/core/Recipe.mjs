@@ -37,7 +37,6 @@ class Recipe  {
      * @param {Object} recipeConfig
      */
     _parseConfig(recipeConfig) {
-
         recipeConfig.forEach((c) => {
             this.opList.push({
                 name: c.op,
@@ -46,7 +45,7 @@ class Recipe  {
                 breakpoint: c.breakpoint,
                 disabled: c.disabled,
             });
-        })
+        });
     }
 
 
@@ -90,9 +89,9 @@ class Recipe  {
                 ingValues: o.args,
                 breakpoint: o.breakpoint,
                 disabled: o.disabled,
-            })
+            });
 
-        })
+        });
 
     }
 
