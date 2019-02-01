@@ -34,6 +34,7 @@
     "@babel/preset-env": "^7.2.3",
     "autoprefixer": "^9.4.3",
     "babel-loader": "^8.0.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "bootstrap": "^4.2.1",
     "chromedriver": "^2.45.0",
     "colors": "^1.3.3",

@@ -7,6 +7,7 @@
 import OpModules from "./config/modules/OpModules";
 import OperationConfig from "./config/OperationConfig.json";
 import OperationError from "./errors/OperationError";
+import Operation from "./Operation";
 import DishError from "./errors/DishError";
 import log from "loglevel";
 
@@ -22,6 +23,7 @@ class Recipe  {
      */
     constructor(recipeConfig) {
         this.opList = [];
+        this.opList = [];
 
         if (recipeConfig) {
             this._parseConfig(recipeConfig);
@@ -36,16 +38,16 @@ class Recipe  {
      * @param {Object} recipeConfig
      */
     _parseConfig(recipeConfig) {
-        for (let c = 0; c < recipeConfig.length; c++) {
-            const operationName = recipeConfig[c].op;
-            const opConf = OperationConfig[operationName];
-            const opObj = OpModules[opConf.module][operationName];
-            const operation = new opObj();
-            operation.ingValues = recipeConfig[c].args;
-            operation.breakpoint = recipeConfig[c].breakpoint;
-            operation.disabled = recipeConfig[c].disabled;
-            this.addOperation(operation);
-        }
+
+        recipeConfig.forEach((c) => {
+            this.opList.push({
+                name: c.op,
+                module: OperationConfig[c.op].module,
+                ingValues: c.args,
+                breakpoint: c.breakpoint,
+                disabled: c.disabled,
+            });
+        })
     }
 
 
@@ -55,7 +57,10 @@ class Recipe  {
      * @returns {Object[]}
      */
     get config() {
-        return this.opList.map(op => op.config);
+        return this.opList.map(op => ({
+            op: op.name,
+            args: op.ingValues,
+        }));
     }
 
 
@@ -75,7 +80,21 @@ class Recipe  {
      * @param {Operation[]} operations
      */
     addOperations(operations) {
-        this.opList = this.opList.concat(operations);
+        operations.forEach((o) => {
+            if (o instanceof Operation) {
+                this.opList.push(o);
+            }
+
+            this.opList.push({
+                name: o.name,
+                module: o.module,
+                ingValues: o.args,
+                breakpoint: o.breakpoint,
+                disabled: o.disabled,
+            })
+
+        })
+
     }
 
 
@@ -137,11 +156,26 @@ class Recipe  {
 
         if (startFrom === 0) this.lastRunOp = null;
 
+        let modules = await import("./config/modules/OpModules");
+        modules = modules.default;
+
         log.debug(`[*] Executing recipe of ${this.opList.length} operations, starting at ${startFrom}`);
 
         for (let i = startFrom; i < this.opList.length; i++) {
-            op = this.opList[i];
+
+            const opConfig = this.opList[i];
+
+            if (opConfig instanceof Operation) {
+                op = opConfig;
+            } else {
+                op = new modules[opConfig.module][opConfig.name]();
+                op.ingValues = opConfig.ingValues;
+                op.breakpoint = opConfig.breakpoint;
+                op.disabled = opConfig.disabled;
+            }
+
             log.debug(`[${i}] ${op.name} ${JSON.stringify(op.ingValues)}`);
+
             if (op.disabled) {
                 log.debug("Operation is disabled, skipping");
                 continue;
