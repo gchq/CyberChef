@@ -18,9 +18,13 @@ class HTTPSOverDNS extends Operation {
     constructor() {
         super();
 
-        this.name = "DNS Over HTTPS";
+        this.name = "DNS over HTTPS";
         this.module = "Code";
-        this.description = "Calls out to HTTPS Over DNS Resolvers";
+        this.description = ["Takes a single domain name and performs a DNS lookup using DNS vver HTTPS.",
+        "<br><br>",
+        "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
+        "<br><br>",
+        "Can be used with any service that supports the GET paramaters <code>name</code> and <code>type</code>."].join('\n');
         this.infoURL = "https://en.wikipedia.org/wiki/DNS_over_HTTPS";
         this.inputType = "string";
         this.outputType = "JSON";
