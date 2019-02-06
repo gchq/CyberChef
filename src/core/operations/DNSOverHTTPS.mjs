@@ -51,7 +51,9 @@ class HTTPSOverDNS extends Operation {
                     "A",
                     "AAAA",
                     "TXT",
-                    "MX"
+                    "MX",
+                    "DNSKEY",
+                    "NS"
                 ]
             },
             {
@@ -82,6 +84,7 @@ class HTTPSOverDNS extends Operation {
             " - An invalid Resolver URL\n" )
         }
         var params = {name:input, type:requestType, cd:DNSSEC};
+
         url.search = new URLSearchParams(params)
 
         
