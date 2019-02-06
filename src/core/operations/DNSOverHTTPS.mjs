@@ -20,11 +20,11 @@ class HTTPSOverDNS extends Operation {
 
         this.name = "DNS over HTTPS";
         this.module = "Code";
-        this.description = ["Takes a single domain name and performs a DNS lookup using DNS vver HTTPS.",
+        this.description = ["Takes a single domain name and performs a DNS lookup using DNS over HTTPS.",
         "<br><br>",
         "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
         "<br><br>",
-        "Can be used with any service that supports the GET paramaters <code>name</code> and <code>type</code>."].join('\n');
+        "Can be used with any service that supports the GET parameters <code>name</code> and <code>type</code>."].join('\n');
         this.infoURL = "https://en.wikipedia.org/wiki/DNS_over_HTTPS";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -55,7 +55,7 @@ class HTTPSOverDNS extends Operation {
                 ]
             },
             {
-                name: "Show Just Answer Data",
+                name: "Answer Data Only",
                 type: "boolean",
                 value: false
             },
@@ -92,7 +92,8 @@ class HTTPSOverDNS extends Operation {
             }
             return data;
 
-        }).catch(e => {throw new OperationError("Error making request to :" + url + e.toString())})
+        }).catch(e => {throw new OperationError("Error making request to : " + url + "\n" + 
+            "Error Message:  " + e.toString())})
 
     }
 
