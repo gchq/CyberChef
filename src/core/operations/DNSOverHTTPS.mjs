@@ -24,6 +24,7 @@ class HTTPSOverDNS extends Operation {
         this.infoURL = "https://en.wikipedia.org/wiki/DNS_over_HTTPS";
         this.inputType = "string";
         this.outputType = "JSON";
+        this.manualBake = true;
         this.args = [
             {
                 name: "Resolver",
@@ -69,13 +70,16 @@ class HTTPSOverDNS extends Operation {
      */
     run(input, args) {
         const [resolver, requestType, justAnswer, DNSSEC] = args;
-
-        var url = new URL(resolver);
+        try{
+            var url = new URL(resolver);
+        } catch (error) {
+            throw new OperationError(error.toString() + 
+            "\n\nThis error could be caused by one of the following:\n" +
+            " - An invalid Resolver URL\n" )
+        }
         var params = {name:input, type:requestType, cd:DNSSEC};
-
         url.search = new URLSearchParams(params)
 
-        console.log(url.toString())
         
         return fetch(url, {headers:{'accept': 'application/dns-json'}}).then(response => {return response.json()})
         .then(data => {
@@ -84,7 +88,7 @@ class HTTPSOverDNS extends Operation {
             }
             return data;
 
-        }).catch(e => {throw new OperationError("Error making request to " + url + e.toString())})
+        }).catch(e => {throw new OperationError("Error making request to :" + url + e.toString())})
 
     }
 
