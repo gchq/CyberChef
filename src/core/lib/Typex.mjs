@@ -148,14 +148,13 @@ export class Rotor extends Enigma.Rotor {
      * @param {string} wiring - A 26 character string of the wiring order.
      * @param {string} steps - A 0..26 character string of stepping points.
      * @param {bool} reversed - Whether to reverse the rotor.
+     * @param {char} ringSetting - Ring setting of the rotor.
      * @param {char} initialPosition - The initial position of the rotor.
      */
-    constructor(wiring, steps, reversed, initialPos) {
-        let initialPosMod = initialPos;
+    constructor(wiring, steps, reversed, ringSetting, initialPos) {
         let wiringMod = wiring;
         if (reversed) {
-            initialPosMod = Enigma.i2a(Utils.mod(26 - Enigma.a2i(initialPos), 26));
-            const outMap = new Array(26).fill();
+            const outMap = new Array(26);
             for (let i=0; i<26; i++) {
                 // wiring[i] is the original output
                 // Enigma.LETTERS[i] is the original input
@@ -165,7 +164,7 @@ export class Rotor extends Enigma.Rotor {
             }
             wiringMod = outMap.join("");
         }
-        super(wiringMod, steps, "A", initialPosMod);
+        super(wiringMod, steps, ringSetting, initialPos);
     }
 }
 

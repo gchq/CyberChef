@@ -40,6 +40,11 @@ class Typex extends Operation {
                 value: false
             },
             {
+                name: "1st rotor ring setting",
+                type: "option",
+                value: LETTERS
+            },
+            {
                 name: "1st rotor initial value",
                 type: "option",
                 value: LETTERS
@@ -54,6 +59,11 @@ class Typex extends Operation {
                 name: "2nd rotor reversed",
                 type: "boolean",
                 value: false
+            },
+            {
+                name: "2nd rotor ring setting",
+                type: "option",
+                value: LETTERS
             },
             {
                 name: "2nd rotor initial value",
@@ -72,6 +82,11 @@ class Typex extends Operation {
                 value: false
             },
             {
+                name: "3rd rotor ring setting",
+                type: "option",
+                value: LETTERS
+            },
+            {
                 name: "3rd rotor initial value",
                 type: "option",
                 value: LETTERS
@@ -88,6 +103,11 @@ class Typex extends Operation {
                 value: false
             },
             {
+                name: "4th rotor ring setting",
+                type: "option",
+                value: LETTERS
+            },
+            {
                 name: "4th rotor initial value",
                 type: "option",
                 value: LETTERS
@@ -102,6 +122,11 @@ class Typex extends Operation {
                 name: "5th rotor reversed",
                 type: "boolean",
                 value: false
+            },
+            {
+                name: "5th rotor ring setting",
+                type: "option",
+                value: LETTERS
             },
             {
                 name: "5th rotor initial value",
@@ -156,14 +181,14 @@ class Typex extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const reflectorstr = args[15];
-        const plugboardstr = args[16];
-        const typexKeyboard = args[17];
-        const removeOther = args[18];
+        const reflectorstr = args[20];
+        const plugboardstr = args[21];
+        const typexKeyboard = args[22];
+        const removeOther = args[23];
         const rotors = [];
         for (let i=0; i<5; i++) {
-            const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*3]);
-            rotors.push(new Rotor(rotorwiring, rotorsteps, args[i*3 + 1], args[i*3+2]));
+            const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*4]);
+            rotors.push(new Rotor(rotorwiring, rotorsteps, args[i*4 + 1], args[i*4+2], args[i*4+3]));
         }
         const reflector = new Reflector(reflectorstr);
         let plugboardstrMod = plugboardstr;
