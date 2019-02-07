@@ -21,10 +21,10 @@ class HTTPSOverDNS extends Operation {
         this.name = "DNS over HTTPS";
         this.module = "Code";
         this.description = ["Takes a single domain name and performs a DNS lookup using DNS over HTTPS.",
-        "<br><br>",
-        "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
-        "<br><br>",
-        "Can be used with any service that supports the GET parameters <code>name</code> and <code>type</code>."].join('\n');
+                            "<br><br>",
+                            "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
+                            "<br><br>",
+                            "Can be used with any service that supports the GET parameters <code>name</code> and <code>type</code>."].join("\n");
         this.infoURL = "https://en.wikipedia.org/wiki/DNS_over_HTTPS";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -76,27 +76,31 @@ class HTTPSOverDNS extends Operation {
      */
     run(input, args) {
         const [resolver, requestType, justAnswer, DNSSEC] = args;
-        try{
-            var url = new URL(resolver);
+        let url = URL;
+        try {
+            url = new URL(resolver);
         } catch (error) {
-            throw new OperationError(error.toString() + 
+            throw new OperationError(error.toString() +
             "\n\nThis error could be caused by one of the following:\n" +
-            " - An invalid Resolver URL\n" )
+            " - An invalid Resolver URL\n");
         }
-        var params = {name:input, type:requestType, cd:DNSSEC};
+        const params = {name: input, type: requestType, cd: DNSSEC};
 
-        url.search = new URLSearchParams(params)
+        url.search = new URLSearchParams(params);
 
-        
-        return fetch(url, {headers:{'accept': 'application/dns-json'}}).then(response => {return response.json()})
-        .then(data => {
-            if(justAnswer){
-                return jpath.query(data, "$.Answer[*].data")
-            }
-            return data;
+        return fetch(url, {headers: {"accept": "application/dns-json"}}).then(response => {
+            return response.json();
+        })
+            .then(data => {
+                if (justAnswer) {
+                    return jpath.query(data, "$.Answer[*].data");
+                }
+                return data;
 
-        }).catch(e => {throw new OperationError("Error making request to : " + url + "\n" + 
-            "Error Message:  " + e.toString())})
+            }).catch(e => {
+                throw new OperationError("Error making request to : " + url + "\n" +
+                    "Error Message:  " + e.toString());
+            });
 
     }
 
