@@ -3,7 +3,6 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import jpath from "jsonpath";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 
@@ -19,7 +18,7 @@ class HTTPSOverDNS extends Operation {
         super();
 
         this.name = "DNS over HTTPS";
-        this.module = "Code";
+        this.module = "Default";
         this.description = ["Takes a single domain name and performs a DNS lookup using DNS over HTTPS.",
                             "<br><br>",
                             "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
@@ -93,7 +92,7 @@ class HTTPSOverDNS extends Operation {
         })
             .then(data => {
                 if (justAnswer) {
-                    return jpath.query(data, "$.Answer[*].data");
+                    return this.extractData(data.Answer);
                 }
                 return data;
 
@@ -104,6 +103,25 @@ class HTTPSOverDNS extends Operation {
 
     }
 
+
+    /**
+     * Construct an array of just data from a DNS Answer section
+     * @private
+     * @param {JSON} data
+     * @returns {JSON}
+     */
+    extractData(data) {
+        if (typeof(data) == "undefined"){
+            return [];
+        } else {
+            const dataValues = [];
+            data.forEach(element => {
+                dataValues.push(element.data);
+            });
+            return dataValues;
+
+        }
+    }
 }
 
 export default HTTPSOverDNS;
