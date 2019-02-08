@@ -10,7 +10,7 @@ TestRegister.addTests([
     {
         name: "Multi-Bombe: 3 rotor",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch: /LGA \(plugboard: SS\): VFISUSGTKSTMPSUNAK/,
+        expectedMatch: /<td>LGA<\/td><td>SS<\/td><td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
                 "op": "Multiple Bombe",
@@ -30,7 +30,7 @@ TestRegister.addTests([
     {
         name: "Multi-Bombe: 4 rotor",
         input: "LUOXGJSHGEDSRDOQQX",
-        expectedMatch: /LHSC \(plugboard: SS\): HHHSSSGQUUQPKSEKWK/,
+        expectedMatch: /<td>LHSC<\/td><td>SS<\/td><td>HHHSSSGQUUQPKSEKWK<\/td>/,
         recipeConfig: [
             {
                 "op": "Multiple Bombe",
