@@ -22,7 +22,6 @@ class Recipe  {
      */
     constructor(recipeConfig) {
         this.opList = [];
-        this.opList = [];
 
         if (recipeConfig) {
             this._parseConfig(recipeConfig);
@@ -46,6 +45,31 @@ class Recipe  {
                 disabled: c.disabled,
             });
         });
+    }
+
+
+    /**
+     * Populate elements of opList with operation instances.
+     * Dynamic import here removes top-level cyclic dependency issue.For
+     *
+     * @private
+     */
+    async _hydrateOpList() {
+        let modules = await import("./config/modules/OpModules");
+        modules = modules.default;
+
+        this.opList = this.opList.map((o) => {
+            if (o instanceof Operation) {
+                return o;
+            } else {
+                const op = new modules[o.module][o.name]();
+                op.ingValues = o.ingValues;
+                op.breakpoint = o.breakpoint;
+                op.disabled = o.disabled;
+                return op;
+            }
+        });
+
     }
 
 
@@ -80,19 +104,21 @@ class Recipe  {
     addOperations(operations) {
         operations.forEach((o) => {
             if (o instanceof Operation) {
+
                 this.opList.push(o);
+
+            } else {
+
+                this.opList.push({
+                    name: o.name,
+                    module: o.module,
+                    ingValues: o.args,
+                    breakpoint: o.breakpoint,
+                    disabled: o.disabled,
+                });
+
             }
-
-            this.opList.push({
-                name: o.name,
-                module: o.module,
-                ingValues: o.args,
-                breakpoint: o.breakpoint,
-                disabled: o.disabled,
-            });
-
         });
-
     }
 
 
@@ -154,23 +180,13 @@ class Recipe  {
 
         if (startFrom === 0) this.lastRunOp = null;
 
-        let modules = await import("./config/modules/OpModules");
-        modules = modules.default;
+        await this._hydrateOpList();
 
         log.debug(`[*] Executing recipe of ${this.opList.length} operations, starting at ${startFrom}`);
 
         for (let i = startFrom; i < this.opList.length; i++) {
 
-            const opConfig = this.opList[i];
-
-            if (opConfig instanceof Operation) {
-                op = opConfig;
-            } else {
-                op = new modules[opConfig.module][opConfig.name]();
-                op.ingValues = opConfig.ingValues;
-                op.breakpoint = opConfig.breakpoint;
-                op.disabled = opConfig.disabled;
-            }
+            op = this.opList[i];
 
             log.debug(`[${i}] ${op.name} ${JSON.stringify(op.ingValues)}`);
 
@@ -286,7 +302,8 @@ class Recipe  {
      * @returns {function} highlights[].b
      * @returns {Object[]} highlights[].args
      */
-    generateHighlightList() {
+    async generateHighlightList() {
+        await this._hydrateOpList();
         const highlights = [];
 
         for (let i = 0; i < this.opList.length; i++) {

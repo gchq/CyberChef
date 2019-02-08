@@ -157,8 +157,8 @@ async function getDishAs(data) {
  * @param {number} pos.start - The start offset.
  * @param {number} pos.end - The end offset.
  */
-function calculateHighlights(recipeConfig, direction, pos) {
-    pos = self.chef.calculateHighlights(recipeConfig, direction, pos);
+async function calculateHighlights(recipeConfig, direction, pos) {
+    pos = await self.chef.calculateHighlights(recipeConfig, direction, pos);
 
     self.postMessage({
         action: "highlightsCalculated",
