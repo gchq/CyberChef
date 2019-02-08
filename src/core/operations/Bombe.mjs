@@ -26,7 +26,8 @@ class Bombe extends Operation {
         this.description = "Emulation of the Bombe machine used to attack Enigma.<br><br>To run this you need to have a 'crib', which is some known plaintext for a chunk of the target ciphertext, and know the rotors used. (See the 'Bombe (multiple runs)' operation if you don't know the rotors.) The machine will suggest possible configurations of the Enigma. Each suggestion has the rotor start positions (left to right) and known plugboard pairs.<br><br>Choosing a crib: First, note that Enigma cannot encrypt a letter to itself, which allows you to rule out some positions for possible cribs. Secondly, the Bombe does not simulate the Enigma's middle rotor stepping. The longer your crib, the more likely a step happened within it, which will prevent the attack working. However, other than that, longer cribs are generally better. The attack produces a 'menu' which maps ciphertext letters to plaintext, and the goal is to produce 'loops': for example, with ciphertext ABC and crib CAB, we have the mappings A&lt;-&gt;C, B&lt;-&gt;A, and C&lt;-&gt;B, which produces a loop A-B-C-A. The more loops, the better the crib. The operation will output this: if your menu has too few loops, a large number of incorrect outputs will be produced. Try a different crib. If the menu seems good but the right answer isn't produced, your crib may be wrong, or you may have overlapped the middle rotor stepping - try a different crib.<br><br>Output is not sufficient to fully decrypt the data. You will have to recover the rest of the plugboard settings by inspection. And the ring position is not taken into account: this affects when the middle rotor steps. If your output is correct for a bit, and then goes wrong, adjust the ring and start position on the right-hand rotor together until the output improves. If necessary, repeat for the middle rotor.<br><br>By default this operation runs the checking machine, a manual process to verify the quality of Bombe stops, on each stop, discarding stops which fail. If you want to see how many times the hardware actually stops for a given input, disable the checking machine.";
         this.infoURL = "https://wikipedia.org/wiki/Bombe";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "JSON";
+        this.presentType = "html";
         this.args = [
             {
                 name: "1st (right-hand) rotor",
@@ -82,7 +83,7 @@ class Bombe extends Operation {
      * @param {number} progress - Progress (as a float in the range 0..1)
      */
     updateStatus(nLoops, nStops, progress) {
-        const msg = `Bombe run with ${nLoops} loops in menu (2+ desirable): ${nStops} stops, ${Math.floor(100 * progress)}% done`;
+        const msg = `Bombe run with ${nLoops} loop${nLoops === 1 ? "" : "s"} in menu (2+ desirable): ${nStops} stops, ${Math.floor(100 * progress)}% done`;
         self.sendStatusMessage(msg);
     }
 
@@ -128,11 +129,29 @@ class Bombe extends Operation {
         }
         const bombe = new BombeMachine(rotors, reflector, ciphertext, crib, check, update);
         const result = bombe.run();
-        let msg = `Bombe run on menu with ${bombe.nLoops} loops (2+ desirable). Note: Rotor positions are listed left to right and start at the beginning of the crib, and ignore stepping and the ring setting. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided. Results:\n`;
-        for (const [setting, stecker, decrypt] of result) {
-            msg += `Stop: ${setting} (plugboard: ${stecker}): ${decrypt}\n`;
+        return {
+            nLoops: bombe.nLoops,
+            result: result
+        };
+    }
+
+
+    /**
+     * Displays the Bombe results in an HTML table
+     *
+     * @param {Object} output
+     * @param {number} output.nLoops
+     * @param {Array[]} output.result
+     * @returns {html}
+     */
+    present(output) {
+        let html = `Bombe run on menu with ${output.nLoops} loop${output.nLoops === 1 ? "" : "s"} (2+ desirable). Note: Rotor positions are listed left to right and start at the beginning of the crib, and ignore stepping and the ring setting. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided.\n\n`;
+        html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th><th>Partial plugboard</th><th>Decryption preview</th></tr>";
+        for (const [setting, stecker, decrypt] of output.result) {
+            html += `<tr><td>${setting}</td><td>${stecker}</td><td>${decrypt}</td></tr>\n`;
         }
-        return msg;
+        html += "</table>";
+        return html;
     }
 }
 

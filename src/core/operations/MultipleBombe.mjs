@@ -56,7 +56,8 @@ class MultipleBombe extends Operation {
         this.description = "Emulation of the Bombe machine used to attack Enigma. This version carries out multiple Bombe runs to handle unknown rotor configurations.<br><br>You should test your menu on the single Bombe operation before running it here. See the description of the Bombe operation for instructions on choosing a crib.";
         this.infoURL = "https://wikipedia.org/wiki/Bombe";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "JSON";
+        this.presentType = "html";
         this.args = [
             {
                 "name": "Standard Enigmas",
@@ -146,7 +147,7 @@ class MultipleBombe extends Operation {
         const hours = Math.floor(remaining / 3600);
         const minutes = `0${Math.floor((remaining % 3600) / 60)}`.slice(-2);
         const seconds = `0${Math.floor(remaining % 60)}`.slice(-2);
-        const msg = `Bombe run with ${nLoops} loops in menu (2+ desirable): ${nStops} stops, ${Math.floor(100 * progress)}% done, ${hours}:${minutes}:${seconds} remaining`;
+        const msg = `Bombe run with ${nLoops} loop${nLoops === 1 ? "" : "s"} in menu (2+ desirable): ${nStops} stops, ${Math.floor(100 * progress)}% done, ${hours}:${minutes}:${seconds} remaining`;
         self.sendStatusMessage(msg);
     }
 
@@ -227,7 +228,7 @@ class MultipleBombe extends Operation {
             update = undefined;
         }
         let bombe = undefined;
-        let msg;
+        const output = {bombeRuns: []};
         // I could use a proper combinatorics algorithm here... but it would be more code to
         // write one, and we don't seem to have one in our existing libraries, so massively nested
         // for loop it is
@@ -253,7 +254,7 @@ class MultipleBombe extends Operation {
                             }
                             if (bombe === undefined) {
                                 bombe = new BombeMachine(runRotors, reflector, ciphertext, crib, check);
-                                msg = `Bombe run on menu with ${bombe.nLoops} loops (2+ desirable). Note: Rotors and rotor positions are listed left to right, ignore stepping and the ring setting, and positions start at the beginning of the crib. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided. Results:\n`;
+                                output.nLoops = bombe.nLoops;
                             } else {
                                 bombe.changeRotors(runRotors, reflector);
                             }
@@ -263,17 +264,41 @@ class MultipleBombe extends Operation {
                                 update(bombe.nLoops, nStops, nRuns / totalRuns, start);
                             }
                             if (result.length > 0) {
-                                msg += `\nRotors: ${runRotors.join(", ")}\nReflector: ${reflector.pairs}\n`;
-                                for (const [setting, stecker, decrypt] of result) {
-                                    msg += `Stop: ${setting} (plugboard: ${stecker}): ${decrypt}\n`;
-                                }
+                                output.bombeRuns.push({
+                                    rotors: runRotors,
+                                    reflector: reflector.pairs,
+                                    result: result
+                                });
                             }
                         }
                     }
                 }
             }
         }
-        return msg;
+        return output;
+    }
+
+
+    /**
+     * Displays the MultiBombe results in an HTML table
+     *
+     * @param {Object} output
+     * @param {number} output.nLoops
+     * @param {Array[]} output.result
+     * @returns {html}
+     */
+    present(output) {
+        let html = `Bombe run on menu with ${output.nLoops} loop${output.nLoops === 1 ? "" : "s"} (2+ desirable). Note: Rotors and rotor positions are listed left to right, ignore stepping and the ring setting, and positions start at the beginning of the crib. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided.\n`;
+
+        for (const run of output.bombeRuns) {
+            html += `\nRotors: ${run.rotors.join(", ")}\nReflector: ${run.reflector}\n`;
+            html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th><th>Partial plugboard</th><th>Decryption preview</th></tr>";
+            for (const [setting, stecker, decrypt] of run.result) {
+                html += `<tr><td>${setting}</td><td>${stecker}</td><td>${decrypt}</td></tr>\n`;
+            }
+            html += "</table>\n";
+        }
+        return html;
     }
 }
 
