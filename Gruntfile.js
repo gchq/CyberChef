@@ -471,9 +471,7 @@ module.exports = function (grunt) {
             generateConfig: {
                 command: [
                     "echo '\n--- Regenerating config files. ---'",
-                    // "node --experimental-modules src/core/config/scripts/generateOpsIndex.mjs",
                     "mkdir -p src/core/config/modules",
-                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "echo '[]\n' > src/core/config/OperationConfig.json",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
@@ -483,8 +481,6 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: [
                     "echo '\n--- Regenerating node index ---'",
-                    // Avoid cyclic dependency
-                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
                     "node --experimental-modules src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
                 ].join(";"),
