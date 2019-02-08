@@ -205,6 +205,7 @@ class RecipeWaiter {
      * @fires Manager#statechange
      */
     ingChange(e) {
+        if (e && e.target && e.target.classList.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -391,6 +392,15 @@ class RecipeWaiter {
         item.innerHTML = name;
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
+
+        // Trigger populateOption events
+        const populateOptions = item.querySelectorAll(".populate-option");
+        const evt = new Event("change", {bubbles: true});
+        if (populateOptions.length) {
+            for (const el of populateOptions) {
+                el.dispatchEvent(evt);
+            }
+        }
 
         item.dispatchEvent(this.manager.operationadd);
         return item;

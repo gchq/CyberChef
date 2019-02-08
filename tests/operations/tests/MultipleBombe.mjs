@@ -16,9 +16,10 @@ TestRegister.addTests([
                 "op": "Multiple Bombe",
                 "args": [
                     // I, II and III
-                    "User defined", "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R\nAJDKSIRUXBLHWTMCQGZNPYFVOE<F\nBDFHJLCPRTXVZNYEIWGAKMUSQO<W",
-                    "User defined", "",
-                    "User defined", "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
+                    "User defined",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R\nAJDKSIRUXBLHWTMCQGZNPYFVOE<F\nBDFHJLCPRTXVZNYEIWGAKMUSQO<W",
+                    "",
+                    "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "THISISATESTMESSAGE", 0, false
                 ]
             }
@@ -35,9 +36,10 @@ TestRegister.addTests([
                 "op": "Multiple Bombe",
                 "args": [
                     // I, II and III
-                    "User defined", "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R\nAJDKSIRUXBLHWTMCQGZNPYFVOE<F\nBDFHJLCPRTXVZNYEIWGAKMUSQO<W",
-                    "User defined", "LEYJVCNIXWPBQMDRTAKZGFUHOS", // Beta
-                    "User defined", "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
+                    "User defined",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R\nAJDKSIRUXBLHWTMCQGZNPYFVOE<F\nBDFHJLCPRTXVZNYEIWGAKMUSQO<W",
+                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", // Beta
+                    "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     "THISISATESTMESSAGE", 0, false
                 ]
             }

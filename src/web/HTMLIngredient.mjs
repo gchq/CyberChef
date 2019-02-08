@@ -39,7 +39,7 @@ class HTMLIngredient {
      */
     toHtml() {
         let html = "",
-            i, m;
+            i, m, eventFn;
 
         switch (this.type) {
             case "string":
@@ -142,10 +142,11 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "populateOption":
+            case "populateMultiOption":
                 html += `<div class="form-group">
                     <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
                     <select
-                        class="form-control arg"
+                        class="form-control arg no-state-change populate-option"
                         id="${this.id}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
@@ -155,14 +156,20 @@ class HTMLIngredient {
                     } else if ((m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
                         html += "</optgroup>";
                     } else {
-                        html += `<option populate-value="${this.value[i].value}">${this.value[i].name}</option>`;
+                        const val = this.type === "populateMultiOption" ?
+                            JSON.stringify(this.value[i].value) :
+                            this.value[i].value;
+                        html += `<option populate-value='${val}'>${this.value[i].name}</option>`;
                     }
                 }
                 html += `</select>
                     ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
 
-                this.manager.addDynamicListener("#" + this.id, "change", this.populateOptionChange, this);
+                eventFn = this.type === "populateMultiOption" ?
+                    this.populateMultiOptionChange :
+                    this.populateOptionChange;
+                this.manager.addDynamicListener("#" + this.id, "change", eventFn, this);
                 break;
             case "editableOption":
                 html += `<div class="form-group input-group">
@@ -248,6 +255,9 @@ class HTMLIngredient {
      * @param {event} e
      */
     populateOptionChange(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         const el = e.target;
         const op = el.parentNode.parentNode;
         const target = op.querySelectorAll(".arg")[this.target];
@@ -257,6 +267,37 @@ class HTMLIngredient {
         target.dispatchEvent(evt);
 
         this.manager.recipe.ingChange();
+    }
+
+
+    /**
+     * Handler for populate multi option changes.
+     * Populates the relevant arguments with the specified values.
+     *
+     * @param {event} e
+     */
+    populateMultiOptionChange(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const el = e.target;
+        const op = el.parentNode.parentNode;
+        const args = op.querySelectorAll(".arg");
+        const targets = this.target.map(i => args[i]);
+        const vals = JSON.parse(el.childNodes[el.selectedIndex].getAttribute("populate-value"));
+        const evt = new Event("change");
+
+        for (let i = 0; i < targets.length; i++) {
+            targets[i].value = vals[i];
+        }
+
+        // Fire change event after all targets have been assigned
+        this.manager.recipe.ingChange();
+
+        // Send change event for each target once all have been assigned, to update the label placement.
+        for (const target of targets) {
+            target.dispatchEvent(evt);
+        }
     }
 
 

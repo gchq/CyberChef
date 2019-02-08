@@ -60,30 +60,46 @@ class MultipleBombe extends Operation {
         this.args = [
             {
                 "name": "Standard Enigmas",
-                "type": "populateOption",
+                "type": "populateMultiOption",
                 "value": [
                     {
                         name: "German Service Enigma (First - 3 rotor)",
-                        value: rotorsFormat(ROTORS, 0, 5)
+                        value: [
+                            rotorsFormat(ROTORS, 0, 5),
+                            "",
+                            rotorsFormat(REFLECTORS, 0, 1)
+                        ]
                     },
                     {
                         name: "German Service Enigma (Second - 3 rotor)",
-                        value: rotorsFormat(ROTORS, 0, 8)
+                        value: [
+                            rotorsFormat(ROTORS, 0, 8),
+                            "",
+                            rotorsFormat(REFLECTORS, 0, 2)
+                        ]
                     },
                     {
                         name: "German Service Enigma (Third - 4 rotor)",
-                        value: rotorsFormat(ROTORS, 0, 8)
+                        value: [
+                            rotorsFormat(ROTORS, 0, 8),
+                            rotorsFormat(ROTORS_FOURTH, 1, 2),
+                            rotorsFormat(REFLECTORS, 2, 3)
+                        ]
                     },
                     {
                         name: "German Service Enigma (Fourth - 4 rotor)",
-                        value: rotorsFormat(ROTORS, 0, 8)
+                        value: [
+                            rotorsFormat(ROTORS, 0, 8),
+                            rotorsFormat(ROTORS_FOURTH, 1, 3),
+                            rotorsFormat(REFLECTORS, 2, 4)
+                        ]
                     },
                     {
                         name: "User defined",
-                        value: ""
+                        value: ["", "", ""]
                     },
                 ],
-                "target": 1
+                "target": [1, 2, 3]
             },
             {
                 name: "Main rotors",
@@ -91,63 +107,9 @@ class MultipleBombe extends Operation {
                 value: ""
             },
             {
-                "name": "Standard Enigmas",
-                "type": "populateOption",
-                "value": [
-                    {
-                        name: "German Service Enigma (First - 3 rotor)",
-                        value: ""
-                    },
-                    {
-                        name: "German Service Enigma (Second - 3 rotor)",
-                        value: ""
-                    },
-                    {
-                        name: "German Service Enigma (Third - 4 rotor)",
-                        value: rotorsFormat(ROTORS_FOURTH, 1, 2)
-                    },
-                    {
-                        name: "German Service Enigma (Fourth - 4 rotor)",
-                        value: rotorsFormat(ROTORS_FOURTH, 1, 3)
-                    },
-                    {
-                        name: "User defined",
-                        value: ""
-                    },
-                ],
-                "target": 3
-            },
-            {
                 name: "4th rotor",
                 type: "text",
                 value: ""
-            },
-            {
-                "name": "Standard Enigmas",
-                "type": "populateOption",
-                "value": [
-                    {
-                        name: "German Service Enigma (First - 3 rotor)",
-                        value: rotorsFormat(REFLECTORS, 0, 1)
-                    },
-                    {
-                        name: "German Service Enigma (Second - 3 rotor)",
-                        value: rotorsFormat(REFLECTORS, 0, 2)
-                    },
-                    {
-                        name: "German Service Enigma (Third - 4 rotor)",
-                        value: rotorsFormat(REFLECTORS, 2, 3)
-                    },
-                    {
-                        name: "German Service Enigma (Fourth - 4 rotor)",
-                        value: rotorsFormat(REFLECTORS, 2, 4)
-                    },
-                    {
-                        name: "User defined",
-                        value: ""
-                    },
-                ],
-                "target": 5
             },
             {
                 name: "Reflectors",
@@ -217,11 +179,11 @@ class MultipleBombe extends Operation {
      */
     run(input, args) {
         const mainRotorsStr = args[1];
-        const fourthRotorsStr = args[3];
-        const reflectorsStr = args[5];
-        let crib = args[6];
-        const offset = args[7];
-        const check = args[8];
+        const fourthRotorsStr = args[2];
+        const reflectorsStr = args[3];
+        let crib = args[4];
+        const offset = args[5];
+        const check = args[6];
         const rotors = [];
         const fourthRotors = [];
         const reflectors = [];

@@ -7,6 +7,7 @@ docs/*
 !docs/*.ico
 .vscode
 .*.swp
+.DS_Store
 src/core/config/modules/*
 src/core/config/OperationConfig.json
 src/core/operations/index.mjs
