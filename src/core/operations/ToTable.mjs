@@ -57,7 +57,7 @@ class ToTable extends Operation {
         const [cellDelims, rowDelims, firstRowHeader, format] = args;
 
         // Process the input into a nested array of elements.
-        const tableData = Utils.parseCSV(input, cellDelims.split(""), rowDelims.split(""));
+        const tableData = Utils.parseCSV(Utils.escapeHtml(input), cellDelims.split(""), rowDelims.split(""));
 
         if (!tableData.length) return "";
 
