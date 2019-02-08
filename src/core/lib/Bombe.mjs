@@ -2,6 +2,7 @@
  * Emulation of the Bombe machine.
  *
  * @author s2224834
+ * @author The National Museum of Computing - Bombe Rebuild Project
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
