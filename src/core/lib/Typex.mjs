@@ -2,6 +2,7 @@
  * Emulation of the Typex machine.
  *
  * @author s2224834
+ * @author The National Museum of Computing - Bombe Rebuild Project
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
@@ -28,7 +29,7 @@ export const ROTORS = [
  * An example Typex reflector. Again, randomised.
  */
 export const REFLECTORS = [
-    {name: "Standard", value: "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP"},
+    {name: "Example", value: "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP"},
 ];
 
 // Special character handling on Typex keyboard
@@ -172,6 +173,8 @@ export class Rotor extends Enigma.Rotor {
  * Typex input plugboard. Based on a Rotor, because it allows arbitrary maps, not just switches
  * like the Enigma plugboard.
  * Not to be confused with the reflector plugboard.
+ * This is also where the Typex's backwards input wiring is implemented - it's a bit of a hack, but
+ * it means everything else continues to work like in the Enigma.
  */
 export class Plugboard extends Enigma.Rotor {
     /**
@@ -180,10 +183,45 @@ export class Plugboard extends Enigma.Rotor {
      * @param {string} wiring - 26 character string of mappings from A-Z, as per rotors, or "".
      */
     constructor(wiring) {
+        // Typex input wiring is backwards vs Enigma: that is, letters enter the rotors in a
+        // clockwise order, vs. Enigma's anticlockwise (or vice versa depending on which side
+        // you're looking at it from). I'm doing the transform here to avoid having to rewrite
+        // the Engima crypt() method in Typex as well.
+        // Note that the wiring for the reflector is the same way around as Enigma, so no
+        // transformation is necessary on that side.
+        // We're going to achieve this by mapping the plugboard settings through an additional
+        // transform that mirrors the alphabet before we pass it to the superclass.
+        if (!/^[A-Z]{26}$/.test(wiring)) {
+            throw new OperationError("Plugboard wiring must be 26 unique uppercase letters");
+        }
+        const reversed = "AZYXWVUTSRQPONMLKJIHGFEDCB";
+        wiring = wiring.replace(/./g, x => {
+            return reversed[Enigma.a2i(x)];
+        });
         try {
             super(wiring, "", "A", "A");
         } catch (err) {
             throw new OperationError(err.message.replace("Rotor", "Plugboard"));
         }
+    }
+
+    /**
+     * Transform a character through this rotor forwards.
+     *
+     * @param {number} c - The character.
+     * @returns {number}
+     */
+    transform(c) {
+        return Utils.mod(this.map[Utils.mod(c + this.pos, 26)] - this.pos, 26);
+    }
+
+    /**
+     * Transform a character through this rotor backwards.
+     *
+     * @param {number} c - The character.
+     * @returns {number}
+     */
+    revTransform(c) {
+        return Utils.mod(this.revMap[Utils.mod(c + this.pos, 26)] - this.pos, 26);
     }
 }
