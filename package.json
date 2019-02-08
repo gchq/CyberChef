@@ -80,7 +80,7 @@
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
-    "bignumber.js": "^8.0.1",
+    "bignumber.js": "^8.0.2",
     "bootstrap-colorpicker": "^2.5.3",
     "bootstrap-material-design": "^4.1.1",
     "bson": "^4.0.1",
@@ -131,7 +131,7 @@
     "vkbeautify": "^0.99.3",
     "xmldom": "^0.1.27",
     "xpath": "0.0.27",
-    "xregexp": "^4.2.0",
+    "xregexp": "^4.2.4",
     "zlibjs": "^0.3.1"
   },
   "scripts": {
