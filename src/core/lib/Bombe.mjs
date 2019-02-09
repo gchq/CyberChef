@@ -281,6 +281,14 @@ export class BombeMachine {
      * ciphertext. It will check that the crib is sane (length is vaguely sensible and there's no
      * matching characters between crib and ciphertext) but cannot check further - if it's wrong
      * your results will be wrong!
+     *
+     * There is also no handling of rotor stepping - if the target Enigma stepped in the middle of
+     * your crib, you're out of luck. TODO: Allow specifying a step point - this is fairly easy to
+     * configure on a real Bombe, but we're not clear on whether it was ever actually done for
+     * real (there would almost certainly have been better ways of attacking in most situations
+     * than attempting to exhaust options for the stepping point, but in some circumstances, e.g.
+     * via Banburismus, the stepping point might have been known).
+     *
      * @param {string[]} rotors - list of rotor spec strings (without step points!)
      * @param {Object} reflector - Reflector object
      * @param {string} ciphertext - The ciphertext to attack
