@@ -651,12 +651,34 @@ export class BombeMachine {
             // This means our hypothesis for the steckering is correct.
             steckerPair = this.testInput[1];
         } else {
-            // If this happens a lot it implies the menu isn't good enough. We can't do
-            // anything useful with it as we don't have a stecker partner, so we'll just drop it
-            // and move on. This does risk eating the actual stop occasionally, but I've only seen
-            // this happen when the menu is bad enough we have thousands of stops, so I'm not sure
-            // it matters.
-            return undefined;
+            // This was known as a "boxing stop" - we have a stop but not a single hypothesis.
+            // If this happens a lot it implies the menu isn't good enough.
+            // If we have the checking machine enabled, we're going to just check each wire in
+            // turn. If we get 0 or 1 hit, great.
+            // If we get multiple hits, or the checking machine is off, the user will just have to
+            // deal with it.
+            if (!this.check) {
+                // We can't draw any conclusions about the steckering (one could maybe suggest
+                // options in some cases, but too hard to present clearly).
+                return [this.indicator.getPos(), "??", this.tryDecrypt("")];
+            }
+            let stecker = undefined;
+            for (let i = 0; i < 26; i++) {
+                const newStecker = this.checkingMachine(i);
+                if (newStecker !== "") {
+                    if (stecker !== undefined) {
+                        // Multiple hypotheses can't be ruled out.
+                        return [this.indicator.getPos(), "??", this.tryDecrypt("")];
+                    }
+                    stecker = newStecker;
+                }
+            }
+            if (stecker === undefined) {
+                // Checking machine ruled all possibilities out.
+                return undefined;
+            }
+            // If we got here, there was just one possibility allowed by the checking machine. Success.
+            return [this.indicator.getPos(), stecker, this.tryDecrypt(stecker)];
         }
         let stecker;
         if (this.check) {
