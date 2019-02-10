@@ -23,7 +23,7 @@
             const bbox = rotor.getBBox();
             const x = bbox.width/2 + bbox.x;
             const y = bbox.height/2 + bbox.y;
-            const wait = row === 0 ? speed/26 : row === 1 ? speed : speed*26;
+            const wait = row === 0 ? speed/26/1.5 : row === 1 ? speed : speed*26;
  
             rotor.setAttribute("transform", "rotate(" + startPos + ", " + x + ", " + y + ")");
  
@@ -50,7 +50,7 @@
                     break;
                 }
             }
-        }, speed/26 - 5);
+        }, speed/26/1.5 - 5);
     }
     // ]]>
 </script>
