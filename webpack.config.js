@@ -56,24 +56,6 @@ module.exports = {
             jquery: "jquery/src/jquery",
         },
     },
-    // optimization: {
-    //     splitChunks: {
-    //         cacheGroups: {
-    //             styles: {
-    //                 name: "styles",
-    //                 test: /\.css$/,
-    //                 chunks: "all",
-    //                 enforce: true
-    //             },
-    //             vendor: {
-    //                 name: "vendor",
-    //                 test: /\.scss$/,
-    //                 chunks: "all",
-    //                 enforce: true,
-    //             },
-    //         }
-    //     }
-    // },
     module: {
         rules: [
             {

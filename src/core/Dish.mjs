@@ -180,7 +180,7 @@ class Dish {
                     this.value = Array.prototype.slice.call(new Uint8Array(this.value));
                     break;
                 case Dish.BIG_NUMBER:
-                    this.value = this.value instanceof BigNumber ? Utils.strToByteArray(this.value.toFixed()) : [];
+                    this.value = BigNumber.isBigNumber(this.value) ? Utils.strToByteArray(this.value.toFixed()) : [];
                     break;
                 case Dish.JSON:
                     this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
@@ -277,7 +277,7 @@ class Dish {
             case Dish.ARRAY_BUFFER:
                 return this.value instanceof ArrayBuffer;
             case Dish.BIG_NUMBER:
-                return this.value instanceof BigNumber;
+                return BigNumber.isBigNumber(this.value);
             case Dish.JSON:
                 // All values can be serialised in some manner, so we return true in all cases
                 return true;

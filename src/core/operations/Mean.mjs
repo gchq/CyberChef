@@ -43,7 +43,7 @@ class Mean extends Operation {
      */
     run(input, args) {
         const val = mean(createNumArray(input, args[0]));
-        return val instanceof BigNumber ? val : new BigNumber(NaN);
+        return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
     }
 
 }

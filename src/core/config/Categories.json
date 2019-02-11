@@ -155,6 +155,7 @@
         "name": "Networking",
         "ops": [
             "HTTP request",
+            "DNS over HTTPS",
             "Strip HTTP headers",
             "Dechunk HTTP response",
             "Parse User Agent",
