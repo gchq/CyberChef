@@ -10,6 +10,9 @@ import Operation from "./Operation";
 import DishError from "./errors/DishError";
 import log from "loglevel";
 
+// Cache container for modules
+let modules = null;
+
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
  */
@@ -36,7 +39,7 @@ class Recipe  {
      * @param {Object} recipeConfig
      */
     _parseConfig(recipeConfig) {
-        recipeConfig.forEach((c) => {
+        recipeConfig.forEach(c => {
             this.opList.push({
                 name: c.op,
                 module: OperationConfig[c.op].module,
@@ -50,15 +53,19 @@ class Recipe  {
 
     /**
      * Populate elements of opList with operation instances.
-     * Dynamic import here removes top-level cyclic dependency issue.For
+     * Dynamic import here removes top-level cyclic dependency issue.
      *
      * @private
      */
     async _hydrateOpList() {
-        let modules = await import("./config/modules/OpModules");
-        modules = modules.default;
+        if (!modules) {
+            // Using Webpack Magic Comments to force the dynamic import to be included in the main chunk
+            // https://webpack.js.org/api/module-methods/
+            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules");
+            modules = modules.default;
+        }
 
-        this.opList = this.opList.map((o) => {
+        this.opList = this.opList.map(o => {
             if (o instanceof Operation) {
                 return o;
             } else {
@@ -69,7 +76,6 @@ class Recipe  {
                 return op;
             }
         });
-
     }
 
 
@@ -102,13 +108,10 @@ class Recipe  {
      * @param {Operation[]} operations
      */
     addOperations(operations) {
-        operations.forEach((o) => {
+        operations.forEach(o => {
             if (o instanceof Operation) {
-
                 this.opList.push(o);
-
             } else {
-
                 this.opList.push({
                     name: o.name,
                     module: o.module,
@@ -116,7 +119,6 @@ class Recipe  {
                     breakpoint: o.breakpoint,
                     disabled: o.disabled,
                 });
-
             }
         });
     }
@@ -151,7 +153,7 @@ class Recipe  {
 
 
     /**
-     * Returns true if there is an Flow Control Operation in this Recipe.
+     * Returns true if there is a Flow Control Operation in this Recipe.
      *
      * @returns {boolean}
      */
