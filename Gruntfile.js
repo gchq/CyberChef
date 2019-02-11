@@ -288,7 +288,10 @@ module.exports = function (grunt) {
                     libraryTarget: "commonjs2"
                 },
                 plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new webpack.optimize.LimitChunkCountPlugin({
+                        maxChunks: 1
+                    })
                 ],
             },
             nodeProd: {
@@ -305,7 +308,10 @@ module.exports = function (grunt) {
                     libraryTarget: "commonjs2"
                 },
                 plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new webpack.optimize.LimitChunkCountPlugin({
+                        maxChunks: 1
+                    })
                 ],
                 optimization: {
                     minimizer: [
@@ -333,7 +339,10 @@ module.exports = function (grunt) {
                     libraryTarget: "commonjs2"
                 },
                 plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new webpack.optimize.LimitChunkCountPlugin({
+                        maxChunks: 1
+                    })
                 ],
                 optimization: {
                     minimizer: [
