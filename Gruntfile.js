@@ -194,7 +194,8 @@ module.exports = function (grunt) {
                         sitemap: "./src/web/static/sitemap.js"
                     }, moduleEntryPoints),
                     output: {
-                        path: __dirname + "/build/prod"
+                        path: __dirname + "/build/prod",
+                        globalObject: "this"
                     },
                     resolve: {
                         alias: {

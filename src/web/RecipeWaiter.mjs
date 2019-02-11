@@ -8,6 +8,8 @@ import HTMLOperation from "./HTMLOperation";
 import Sortable from "sortablejs";
 import Utils from "../core/Utils";
 
+/*eslint no-console: ["off"] */
+
 
 /**
  * Waiter to handle events related to the recipe.
@@ -561,20 +563,35 @@ class RecipeWaiter {
             this.ingredientChildRuleID = null;
 
             // Find relevant rules in the stylesheet
-            for (const i in document.styleSheets[0].cssRules) {
-                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
-                    this.ingredientRuleID = i;
-                }
-                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
-                    this.ingredientChildRuleID = i;
+            // try {
+            if (document.styleSheets[0].hasOwnProperty("cssRules")) {
+                for (const i in document.styleSheets[0].cssRules) {
+                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
+                        this.ingredientRuleID = i;
+                    }
+                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
+                        this.ingredientChildRuleID = i;
+                    }
                 }
             }
+            // } catch (e) {
+            //     console.log(e.constructor);
+            //     console.warn("Can't read the css rules of: " + document.styleSheets[0], e);
+            // }
         }
 
         if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
+        let ingredientRule, ingredientChildRule;
 
-        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID],
+        // Chrome 64+
+        // try {
+        if (document.styleSheets[0].hasOwnProperty("cssRules")) {
+            ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID];
             ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
+        }
+        // } catch (e) {
+        //     console.warn("Can't read the css rules of: " + document.styleSheets[0], e);
+        // }
 
         if (recList.clientWidth < 450) {
             ingredientRule.style.gridTemplateColumns = "auto auto";
