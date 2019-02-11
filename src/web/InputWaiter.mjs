@@ -243,11 +243,7 @@ class InputWaiter {
         }
 
         if (file) {
-            this.closeFile();
-            this.loaderWorker = new LoaderWorker();
-            this.loaderWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
-            this.loaderWorker.postMessage({"file": file});
-            this.set(file);
+            this.loadFile(file);
         }
     }
 
@@ -259,16 +255,8 @@ class InputWaiter {
      */
     inputOpen(e) {
         e.preventDefault();
-
         const file = e.srcElement.files[0];
-
-        if (file) {
-            this.closeFile();
-            this.loaderWorker = new LoaderWorker();
-            this.loaderWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
-            this.loaderWorker.postMessage({"file": file});
-            this.set(file);
-        }
+        this.loadFile(file);
     }
 
 
@@ -323,6 +311,22 @@ class InputWaiter {
         const inputText = document.getElementById("input-text");
         inputText.style.overflow = "auto";
         inputText.classList.remove("blur");
+    }
+
+
+    /**
+     * Loads a file into the input.
+     *
+     * @param {File} file
+     */
+    loadFile(file) {
+        if (file) {
+            this.closeFile();
+            this.loaderWorker = new LoaderWorker();
+            this.loaderWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+            this.loaderWorker.postMessage({"file": file});
+            this.set(file);
+        }
     }
 
 
