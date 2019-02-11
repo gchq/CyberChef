@@ -240,7 +240,7 @@ function regexHighlight (input, regex, displayTotal) {
         if (groups.length) {
             title += "Groups:\n";
             for (let i = 0; i < groups.length; i++) {
-                title += `\t${i+1}: ${Utils.escapeHtml(groups[i])}\n`;
+                title += `\t${i+1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
             }
         }
 
