@@ -8,8 +8,6 @@ import HTMLOperation from "./HTMLOperation";
 import Sortable from "sortablejs";
 import Utils from "../core/Utils";
 
-/*eslint no-console: ["off"] */
-
 
 /**
  * Waiter to handle events related to the recipe.

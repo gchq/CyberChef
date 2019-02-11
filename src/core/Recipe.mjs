@@ -185,11 +185,8 @@ class Recipe  {
         log.debug(`[*] Executing recipe of ${this.opList.length} operations, starting at ${startFrom}`);
 
         for (let i = startFrom; i < this.opList.length; i++) {
-
             op = this.opList[i];
-
             log.debug(`[${i}] ${op.name} ${JSON.stringify(op.ingValues)}`);
-
             if (op.disabled) {
                 log.debug("Operation is disabled, skipping");
                 continue;
