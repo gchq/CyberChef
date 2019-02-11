@@ -561,20 +561,25 @@ class RecipeWaiter {
             this.ingredientChildRuleID = null;
 
             // Find relevant rules in the stylesheet
-            for (const i in document.styleSheets[0].cssRules) {
-                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
-                    this.ingredientRuleID = i;
+            // try/catch for chrome 64+ CORS error on cssRules.
+            try {
+                for (const i in document.styleSheets[0].cssRules) {
+                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
+                        this.ingredientRuleID = i;
+                    }
+                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
+                        this.ingredientChildRuleID = i;
+                    }
                 }
-                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
-                    this.ingredientChildRuleID = i;
-                }
+            } catch (e) {
+                // Do nothing.
             }
         }
 
         if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
 
-        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID],
-            ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
+        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID];
+        const ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
 
         if (recList.clientWidth < 450) {
             ingredientRule.style.gridTemplateColumns = "auto auto";
