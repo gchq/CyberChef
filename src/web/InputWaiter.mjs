@@ -251,6 +251,26 @@ class InputWaiter {
         }
     }
 
+    /**
+     * Handler for open input button events
+     * Loads the opened data into the input textarea
+     *
+     * @param {event} e
+     */
+    inputOpen(e) {
+        e.preventDefault();
+
+        const file = e.srcElement.files[0];
+
+        if (file) {
+            this.closeFile();
+            this.loaderWorker = new LoaderWorker();
+            this.loaderWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+            this.loaderWorker.postMessage({"file": file});
+            this.set(file);
+        }
+    }
+
 
     /**
      * Handler for messages sent back by the LoaderWorker.
