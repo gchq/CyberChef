@@ -484,8 +484,7 @@ module.exports = function (grunt) {
             generateConfig: {
                 command: [
                     "echo '\n--- Regenerating config files. ---'",
-                    "mkdir -p src/core/config/modules",
-                    "echo '[]\n' > src/core/config/OperationConfig.json",
+                    "echo [] > src/core/config/OperationConfig.json",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"

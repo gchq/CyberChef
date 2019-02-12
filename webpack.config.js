@@ -48,7 +48,7 @@ module.exports = {
             "process.browser": "true"
         }),
         new MiniCssExtractPlugin({
-            filename: "[name].css",
+            filename: "[name].css"
         }),
     ],
     resolve: {
