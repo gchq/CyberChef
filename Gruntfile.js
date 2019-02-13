@@ -28,11 +28,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:node", "chmod:build"]);
-
-    grunt.registerTask("node-prod",
-        "Compiles CyberChef into a single NodeJS module.",
-        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:nodeProd", "webpack:nodeRepl", "chmod:build"]);
+        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:node", "webpack:nodeRepl",  "chmod:build"]);
 
     grunt.registerTask("test",
         "A task which runs all the operation tests in the tests directory.",
@@ -275,27 +271,7 @@ module.exports = function (grunt) {
                 ]
             },
             node: {
-                mode: "development",
-                target: "node",
-                entry: "./src/node/index.mjs",
-                externals: [NodeExternals({
-                    whitelist: ["crypto-api/src/crypto-api"]
-                })],
-                output: {
-                    filename: "CyberChef.js",
-                    path: __dirname + "/build/node",
-                    library: "CyberChef",
-                    libraryTarget: "commonjs2"
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.LimitChunkCountPlugin({
-                        maxChunks: 1
-                    })
-                ],
-            },
-            nodeProd: {
-                mode: "production",
+                mode: process.env.NODE_ENV,
                 target: "node",
                 entry: "./src/node/index.mjs",
                 externals: [NodeExternals({
@@ -326,7 +302,7 @@ module.exports = function (grunt) {
                 }
             },
             nodeRepl: {
-                mode: "production",
+                mode: process.env.NODE_ENV,
                 target: "node",
                 entry: "./src/node/repl-index.mjs",
                 externals: [NodeExternals({

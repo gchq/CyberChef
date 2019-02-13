@@ -140,9 +140,9 @@
   },
   "scripts": {
     "start": "grunt dev",
-    "start-node": "grunt node",
     "build": "grunt prod",
-    "build-node": "grunt node-prod",
+    "node": "NODE_ENV=development grunt node",
+    "node-prod": "NODE_ENV=production grunt node",
     "test": "grunt test",
     "testui": "grunt testui",
     "docs": "grunt docs",
