@@ -248,14 +248,6 @@ class Dish {
      */
     constructor(dishOrInput=null, type = null) {
 
-        if (Utils.isBrowser()) {
-            this._translate = _asyncTranslate.bind(this);
-            this.get = asyncGet.bind(this);
-        } else {
-            this._translate = _translate.bind(this);
-            this.get = get.bind(this);
-        }
-
         this.value = [];
         this.type = Dish.BYTE_ARRAY;
 
@@ -560,5 +552,13 @@ Dish.FILE = 7;
 * @enum
 */
 Dish.LIST_FILE = 8;
+
+if (Utils.isBrowser()) {
+    Dish.prototype._translate = _asyncTranslate
+    Dish.prototype.get = asyncGet
+} else {
+    Dish.prototype._translate = _translate
+    Dish.prototype.get = get
+}
 
 export default Dish;
