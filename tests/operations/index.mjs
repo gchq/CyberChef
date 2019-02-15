@@ -45,6 +45,7 @@ import "./tests/DateTime";
 import "./tests/ExtractEmailAddresses";
 import "./tests/Fork";
 import "./tests/FromDecimal";
+import "./tests/GenerateDeBruijnSequence";
 import "./tests/Hash";
 import "./tests/HaversineDistance";
 import "./tests/Hexdump";

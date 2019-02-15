@@ -370,6 +370,7 @@
             "Chi Square",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
+            "Generate De Bruijn Sequence",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
