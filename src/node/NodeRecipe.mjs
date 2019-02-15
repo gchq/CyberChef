@@ -9,7 +9,7 @@ import { sanitise } from "./apiUtils";
 
 /**
  * Similar to core/Recipe, Recipe controls a list of operations and
- * the SyncDish the operate on. However, this Recipe is for the node
+ * the NodeDish the operate on. However, this Recipe is for the node
  * environment.
  */
 class NodeRecipe {
@@ -73,17 +73,17 @@ class NodeRecipe {
 
     /**
      * Run the dish through each operation, one at a time.
-     * @param {SyncDish} dish
-     * @returns {SyncDish}
+     * @param {NodeDish} dish
+     * @returns {NodeDish}
      */
-    execute(dish) {
-        return this.opList.reduce((prev, curr) => {
+    async execute(dish) {
+        return await this.opList.reduce(async (prev, curr) => {
             // CASE where opLis item is op and args
             if (curr.hasOwnProperty("op") && curr.hasOwnProperty("args")) {
-                return curr.op(prev, curr.args);
+                return await curr.op(prev, curr.args);
             }
             // CASE opList item is just op.
-            return curr(prev);
+            return await curr(prev);
         }, dish);
     }
 }

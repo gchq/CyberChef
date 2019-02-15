@@ -9,6 +9,7 @@ import {fromBase64, toBase64} from "./lib/Base64";
 import {fromHex} from "./lib/Hex";
 import {fromDecimal} from "./lib/Decimal";
 import {fromBinary} from "./lib/Binary";
+import { fstat } from "fs";
 
 
 /**
@@ -919,7 +920,7 @@ class Utils {
     /**
      * Reads a File and returns the data as a Uint8Array.
      *
-     * @param {File} file
+     * @param {File | for node: array|arrayBuffer|buffer|string} file
      * @returns {Uint8Array}
      *
      * @example
@@ -927,33 +928,49 @@ class Utils {
      * await Utils.readFile(new File(["hello"], "test"))
      */
     static readFile(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            const data = new Uint8Array(file.size);
-            let offset = 0;
-            const CHUNK_SIZE = 10485760; // 10MiB
+        if (Utils.isBrowser()) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                const data = new Uint8Array(file.size);
+                let offset = 0;
+                const CHUNK_SIZE = 10485760; // 10MiB
 
-            const seek = function() {
-                if (offset >= file.size) {
-                    resolve(data);
-                    return;
-                }
-                const slice = file.slice(offset, offset + CHUNK_SIZE);
-                reader.readAsArrayBuffer(slice);
-            };
+                const seek = function() {
+                    if (offset >= file.size) {
+                        resolve(data);
+                        return;
+                    }
+                    const slice = file.slice(offset, offset + CHUNK_SIZE);
+                    reader.readAsArrayBuffer(slice);
+                };
 
-            reader.onload = function(e) {
-                data.set(new Uint8Array(reader.result), offset);
-                offset += CHUNK_SIZE;
+                reader.onload = function(e) {
+                    data.set(new Uint8Array(reader.result), offset);
+                    offset += CHUNK_SIZE;
+                    seek();
+                };
+
+                reader.onerror = function(e) {
+                    reject(reader.error.message);
+                };
+
                 seek();
-            };
+            });
 
-            reader.onerror = function(e) {
-                reject(reader.error.message);
-            };
+        } else if (Utils.isNode()) {
+            return Buffer.from(file).buffer;
+        }
 
-            seek();
-        });
+        throw new Error("Unkown environment!");
+    }
+
+    /** */
+    static readFileSync(file) {
+        if (Utils.isBrowser()) {
+            throw new TypeError("Browser environment cannot support readFileSync");
+        }
+
+        return Buffer.from(file).buffer;
     }
 
 
@@ -1048,6 +1065,20 @@ class Utils {
             "\\x":           /\\x/g,
             "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
         }[token];
+    }
+
+    /**
+     * Check if code is running in a browser environment
+     */
+    static isBrowser() {
+        return typeof window !== "undefined" && typeof window.document !== "undefined";
+    }
+
+    /**
+     * Check if code is running in a Node environment
+     */
+    static isNode() {
+        return typeof process !== "undefined" && process.versions != null && process.versions.node != null;
     }
 
 }

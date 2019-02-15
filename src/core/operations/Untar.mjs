@@ -131,6 +131,7 @@ class Untar extends Operation {
      * @returns {html}
      */
     async present(files) {
+        console.log("err....");
         return await Utils.displayFilesAsHTML(files);
     }
 

@@ -8,36 +8,12 @@
 
 /*eslint no-console: ["off"] */
 
-import SyncDish from "./SyncDish";
+import NodeDish from "./NodeDish";
 import NodeRecipe from "./NodeRecipe";
 import OperationConfig from "../core/config/OperationConfig.json";
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils";
 import ExludedOperationError from "../core/errors/ExcludedOperationError";
 
-
-/**
- * Extract default arg value from operation argument
- * @param {Object} arg - an arg from an operation
- */
-function extractArg(arg) {
-    if (arg.type === "option") {
-        // pick default option if not already chosen
-        return typeof arg.value === "string" ? arg.value : arg.value[0];
-    }
-
-    if (arg.type === "editableOption") {
-        return typeof arg.value === "string" ? arg.value : arg.value[0].value;
-    }
-
-    if (arg.type === "toggleString") {
-        // ensure string and option exist when user hasn't defined
-        arg.string = arg.string || "";
-        arg.option = arg.option || arg.toggleValues[0];
-        return arg;
-    }
-
-    return arg.value;
-}
 
 /**
  * transformArgs
@@ -52,81 +28,84 @@ function extractArg(arg) {
  * @param {Object[]} originalArgs - the operation-s args list
  * @param {Object} newArgs - any inputted args
  */
-function transformArgs(originalArgs, newArgs) {
+function reconcileOpArgs(operationArgs, objectStyleArgs) {
+
+    if (Array.isArray(objectStyleArgs)) {
+        return objectStyleArgs;
+    }
 
     // Filter out arg values that are list subheadings - they are surrounded in [].
     // See Strings op for example.
-    const allArgs = Object.assign([], originalArgs).map((a) => {
+    const opArgs = Object.assign([], operationArgs).map((a) => {
         if (Array.isArray(a.value)) {
             a.value = removeSubheadingsFromArray(a.value);
         }
         return a;
     });
 
-    if (newArgs) {
-        Object.keys(newArgs).map((key) => {
-            const index = allArgs.findIndex((arg) => {
+    // transform object style arg objects to the same shape as op's args
+    if (objectStyleArgs) {
+        Object.keys(objectStyleArgs).map((key) => {
+            const index = opArgs.findIndex((arg) => {
                 return arg.name.toLowerCase().replace(/ /g, "") ===
                     key.toLowerCase().replace(/ /g, "");
             });
 
             if (index > -1) {
-                const argument = allArgs[index];
+                const argument = opArgs[index];
                 if (argument.type === "toggleString") {
-                    if (typeof newArgs[key] === "string") {
-                        argument.string = newArgs[key];
+                    if (typeof objectStyleArgs[key] === "string") {
+                        argument.string = objectStyleArgs[key];
                     } else {
-                        argument.string = newArgs[key].string;
-                        argument.option = newArgs[key].option;
+                        argument.string = objectStyleArgs[key].string;
+                        argument.option = objectStyleArgs[key].option;
                     }
                 } else if (argument.type === "editableOption") {
                     // takes key: "option", key: {name, val: "string"}, key: {name, val: [...]}
-                    argument.value = typeof newArgs[key] === "string" ? newArgs[key]: newArgs[key].value;
+                    argument.value = typeof objectStyleArgs[key] === "string" ? objectStyleArgs[key]: objectStyleArgs[key].value;
                 } else {
-                    argument.value = newArgs[key];
+                    argument.value = objectStyleArgs[key];
                 }
             }
         });
     }
-    return allArgs.map(extractArg);
+
+    return opArgs.map((arg) => {
+        if (arg.type === "option") {
+            // pick default option if not already chosen
+            return typeof arg.value === "string" ? arg.value : arg.value[0];
+        }
+
+        if (arg.type === "editableOption") {
+            return typeof arg.value === "string" ? arg.value : arg.value[0].value;
+        }
+
+        if (arg.type === "toggleString") {
+            // ensure string and option exist when user hasn't defined
+            arg.string = arg.string || "";
+            arg.option = arg.option || arg.toggleValues[0];
+            return arg;
+        }
+
+        return arg.value;
+    });
 }
 
 
 /**
- * Ensure an input is a SyncDish object.
+ * Ensure an input is a NodeDish object.
  * @param input
  */
 function ensureIsDish(input) {
     if (!input) {
-        return new SyncDish();
+        return new NodeDish();
     }
 
-    if (input instanceof SyncDish) {
+    if (input instanceof NodeDish) {
         return input;
     } else {
-        return new SyncDish(input);
+        return new NodeDish(input);
     }
-}
-
-
-/**
- * prepareOp: transform args, make input the right type.
- * Also convert any Buffers to ArrayBuffers.
- * @param opInstance - instance of the operation
- * @param input - operation input
- * @param args - operation args
- */
-function prepareOp(opInstance, input, args) {
-    const dish = ensureIsDish(input);
-    let transformedArgs;
-    // Transform object-style args to original args array
-    if (!Array.isArray(args)) {
-        transformedArgs = transformArgs(opInstance.args, args);
-    } else {
-        transformedArgs = args;
-    }
-    const transformedInput = dish.get(opInstance.inputType);
-    return {transformedInput, transformedArgs};
 }
 
 
@@ -154,7 +133,6 @@ function createArgOptions(op) {
     return result;
 }
 
-
 /**
  * Wrap an operation to be consumed by node API.
  * Checks to see if run function is async or not.
@@ -169,44 +147,29 @@ export function wrap(OpClass) {
 
     // Check to see if class's run function is async.
     const opInstance = new OpClass();
-    const isAsync = opInstance.run.constructor.name === "AsyncFunction";
 
-    let wrapped;
+    /**
+     * Async wrapped operation run function
+     * @param {*} input
+     * @param {Object | String[]} args - either in Object or normal args array
+     * @returns {Promise<NodeDish>} operation's output, on a Dish.
+     * @throws {OperationError} if the operation throws one.
+     */
+    const wrapped = async (input, args=null) => {
+        const dish = ensureIsDish(input);
 
-    // If async, wrap must be async.
-    if (isAsync) {
-        /**
-         * Async wrapped operation run function
-         * @param {*} input
-         * @param {Object | String[]} args - either in Object or normal args array
-         * @returns {Promise<SyncDish>} operation's output, on a Dish.
-         * @throws {OperationError} if the operation throws one.
-         */
-        wrapped = async (input, args=null) => {
-            const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
-            const result = await opInstance.run(transformedInput, transformedArgs);
-            return new SyncDish({
-                value: result,
-                type: opInstance.outputType
-            });
-        };
-    } else {
-        /**
-         * wrapped operation run function
-         * @param {*} input
-         * @param {Object | String[]} args - either in Object or normal args array
-         * @returns {SyncDish} operation's output, on a Dish.
-         * @throws {OperationError} if the operation throws one.
-         */
-        wrapped = (input, args=null) => {
-            const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
-            const result = opInstance.run(transformedInput, transformedArgs);
-            return new SyncDish({
-                value: result,
-                type: opInstance.outputType
-            });
-        };
-    }
+        // Transform object-style args to original args array
+        const transformedArgs = reconcileOpArgs(opInstance.args, args);
+
+        // ensure the input is the correct type
+        const transformedInput = await dish.get(opInstance.inputType);
+
+        const result = await opInstance.run(transformedInput, transformedArgs);
+        return new NodeDish({
+            value: result,
+            type: opInstance.outputType
+        });
+    };
 
     // used in chef.help
     wrapped.opName = OpClass.name;
@@ -288,7 +251,7 @@ export function bake(operations){
      * @param {*} input - some input for a recipe.
      * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig -
      * An operation, operation name, or an array of either.
-     * @returns {SyncDish} of the result
+     * @returns {NodeDish} of the result
      * @throws {TypeError} if invalid recipe given.
      */
     return function(input, recipeConfig) {

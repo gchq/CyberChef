@@ -271,7 +271,7 @@ module.exports = function (grunt) {
                 ]
             },
             node: {
-                mode: process.env.NODE_ENV,
+                mode: process.env.NODE_ENV === "prodction" ? "production" : "development",
                 target: "node",
                 entry: "./src/node/index.mjs",
                 externals: [NodeExternals({
@@ -302,7 +302,7 @@ module.exports = function (grunt) {
                 }
             },
             nodeRepl: {
-                mode: process.env.NODE_ENV,
+                mode: process.env.NODE_ENV === "prodction" ? "production" : "development",
                 target: "node",
                 entry: "./src/node/repl-index.mjs",
                 externals: [NodeExternals({

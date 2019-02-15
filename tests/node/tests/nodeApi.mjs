@@ -14,7 +14,7 @@ import assert from "assert";
 import it from "../assertionHandler";
 import chef from "../../../src/node/index";
 import OperationError from "../../../src/core/errors/OperationError";
-import SyncDish from "../../../src/node/SyncDish";
+import NodeDish from "../../../src/node/NodeDish";
 import fs from "fs";
 
 import { toBase32, Dish, SHA3 } from "../../../src/node/index";
@@ -93,9 +93,9 @@ TestRegister.addApiTests([
         assert.equal(result.get("string"), "NFXHA5LU");
     }),
 
-    it("should return a SyncDish", () => {
+    it("should return a NodeDish", async () => {
         const result = chef.toBase32("input");
-        assert(result instanceof SyncDish);
+        assert(result instanceof NodeDish);
     }),
 
     it("should coerce to a string as you expect", () => {

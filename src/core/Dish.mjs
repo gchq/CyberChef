@@ -74,6 +74,7 @@ class Dish {
             case "list<file>":
                 return Dish.LIST_FILE;
             default:
+                console.log(typeStr);
                 throw new DishError("Invalid data type string. No matching enum.");
         }
     }
@@ -383,7 +384,6 @@ class Dish {
 
         return newDish;
     }
-
 }
 
 

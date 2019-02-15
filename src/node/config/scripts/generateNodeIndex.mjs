@@ -39,7 +39,7 @@ let code = `/**
 
 
 import "babel-polyfill";
-import SyncDish from "./SyncDish";
+import NodeDish from "./NodeDish";
 import { wrap, help, bake, explainExludedFunction } from "./api";
 import {
     // import as core_ to avoid name clashes after wrap.
@@ -87,7 +87,7 @@ code += `    };
 const chef = generateChef();
 // Add some additional features to chef object.
 chef.help = help;
-chef.Dish = SyncDish;
+chef.Dish = NodeDish;
 
 // Define consts here so we can add to top-level export - wont allow
 // export of chef property.
@@ -121,7 +121,7 @@ Object.keys(operations).forEach((op) => {
     code += `    ${decapitalise(op)},\n`;
 });
 
-code += "    SyncDish as Dish,\n";
+code += "    NodeDish as Dish,\n";
 code += "    prebaked as bake,\n";
 code += "    help,\n";
 code += "};\n";

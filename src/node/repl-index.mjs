@@ -9,6 +9,7 @@
 
 import chef from "./index";
 import repl from "repl";
+import File from "./File";
 import "babel-polyfill";
 
 /*eslint no-console: ["off"] */
@@ -25,6 +26,8 @@ console.log(`
 const replServer = repl.start({
     prompt: "chef > ",
 });
+
+global.File = File;
 
 Object.keys(chef).forEach((key) => {
     if (key !== "operations") {

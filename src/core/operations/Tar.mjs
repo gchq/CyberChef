@@ -132,6 +132,8 @@ class Tar extends Operation {
         tarball.writeBytes(input);
         tarball.writeEndBlocks();
 
+        console.log("here");
+
         return new File([new Uint8Array(tarball.bytes)], args[0]);
     }
 

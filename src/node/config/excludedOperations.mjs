@@ -14,8 +14,8 @@ export default  [
     "Comment",
 
     // Exclude file ops until HTML5 File Object can be mimicked
-    "Tar",
-    "Untar",
+    // "Tar",
+    // "Untar",
     "Unzip",
     "Zip",
 
