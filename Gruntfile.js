@@ -200,7 +200,7 @@ module.exports = function (grunt) {
                     }, moduleEntryPoints),
                     output: {
                         path: __dirname + "/build/prod",
-                        globalObject: "this"
+                        // globalObject: "this"
                     },
                     resolve: {
                         alias: {
@@ -366,7 +366,7 @@ module.exports = function (grunt) {
                         }
                     },
                     output: {
-                        globalObject: "this",
+                        // globalObject: "this",
                     },
                     plugins: [
                         new webpack.DefinePlugin(BUILD_CONSTANTS),

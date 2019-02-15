@@ -160,9 +160,9 @@ TestRegister.addApiTests([
         assert(chef.bake);
     }),
 
-    it("chef.bake: should return SyncDish", () => {
+    it("chef.bake: should return NodeDish", () => {
         const result = chef.bake("input", "to base 64");
-        assert(result instanceof SyncDish);
+        assert(result instanceof NodeDish);
     }),
 
     it("chef.bake: should take an input and an op name and perform it", () => {
@@ -222,7 +222,7 @@ TestRegister.addApiTests([
     it("chef.bake: if recipe is empty array, return input as dish", () => {
         const result = chef.bake("some input", []);
         assert.strictEqual(result.toString(), "some input");
-        assert(result instanceof SyncDish, "Result is not instance of SyncDish");
+        assert(result instanceof NodeDish, "Result is not instance of NodeDish");
     }),
 
     it("chef.bake: accepts an array of operations as recipe", () => {
@@ -332,7 +332,7 @@ TestRegister.addApiTests([
 
     it("Composable Dish: composed function returns another dish", () => {
         const result = new Dish("some input").apply(toBase32);
-        assert.ok(result instanceof SyncDish);
+        assert.ok(result instanceof NodeDish);
     }),
 
 
