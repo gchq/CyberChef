@@ -10,6 +10,229 @@ import DishError from "./errors/DishError";
 import BigNumber from "bignumber.js";
 import log from "loglevel";
 
+
+/**
+ * Translates the data to the given type format.
+ *
+ * @param {number} toType - The data type of value, see Dish enums.
+ * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
+ */
+async function _asyncTranslate(toType, notUTF8=false) {
+    log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
+    const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
+
+    // Convert data to intermediate byteArray type
+    try {
+        switch (this.type) {
+            case Dish.STRING:
+                this.value = this.value ? Utils.strToByteArray(this.value) : [];
+                break;
+            case Dish.NUMBER:
+                this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
+                break;
+            case Dish.HTML:
+                this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
+                break;
+            case Dish.ARRAY_BUFFER:
+                // Array.from() would be nicer here, but it's slightly slower
+                this.value = Array.prototype.slice.call(new Uint8Array(this.value));
+                break;
+            case Dish.BIG_NUMBER:
+                this.value = BigNumber.isBigNumber(this.value) ? Utils.strToByteArray(this.value.toFixed()) : [];
+                break;
+            case Dish.JSON:
+                this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
+                break;
+            case Dish.FILE:
+                this.value = await Utils.readFile(this.value);
+                this.value = Array.prototype.slice.call(this.value);
+                break;
+            case Dish.LIST_FILE:
+                this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
+                this.value = this.value.map(b => Array.prototype.slice.call(b));
+                this.value = [].concat.apply([], this.value);
+                break;
+            default:
+                break;
+        }
+    } catch (err) {
+        throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);
+    }
+
+    this.type = Dish.BYTE_ARRAY;
+
+    // Convert from byteArray to toType
+    try {
+        switch (toType) {
+            case Dish.STRING:
+            case Dish.HTML:
+                this.value = this.value ? byteArrayToStr(this.value) : "";
+                this.type = Dish.STRING;
+                break;
+            case Dish.NUMBER:
+                this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
+                this.type = Dish.NUMBER;
+                break;
+            case Dish.ARRAY_BUFFER:
+                this.value = new Uint8Array(this.value).buffer;
+                this.type = Dish.ARRAY_BUFFER;
+                break;
+            case Dish.BIG_NUMBER:
+                try {
+                    this.value = new BigNumber(byteArrayToStr(this.value));
+                } catch (err) {
+                    this.value = new BigNumber(NaN);
+                }
+                this.type = Dish.BIG_NUMBER;
+                break;
+            case Dish.JSON:
+                this.value = JSON.parse(byteArrayToStr(this.value));
+                this.type = Dish.JSON;
+                break;
+            case Dish.FILE:
+                this.value = new File(this.value, "unknown");
+                break;
+            case Dish.LIST_FILE:
+                this.value = [new File(this.value, "unknown")];
+                this.type = Dish.LIST_FILE;
+                break;
+            default:
+                break;
+        }
+    } catch (err) {
+        throw new DishError(`Error translating from byteArray to ${Dish.enumLookup(toType)}: ${err}`);
+    }
+}
+
+
+/**
+ * Translates the data to the given type format.
+ *
+ * @param {number} toType - The data type of value, see Dish enums.
+ * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
+ */
+function _translate(toType, notUTF8=false) {
+    log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
+    const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
+
+    // Convert data to intermediate byteArray type
+    try {
+        switch (this.type) {
+            case Dish.STRING:
+                this.value = this.value ? Utils.strToByteArray(this.value) : [];
+                break;
+            case Dish.NUMBER:
+                this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
+                break;
+            case Dish.HTML:
+                this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
+                break;
+            case Dish.ARRAY_BUFFER:
+                // Array.from() would be nicer here, but it's slightly slower
+                this.value = Array.prototype.slice.call(new Uint8Array(this.value));
+                break;
+            case Dish.BIG_NUMBER:
+                this.value = BigNumber.isBigNumber(this.value) ? Utils.strToByteArray(this.value.toFixed()) : [];
+                break;
+            case Dish.JSON:
+                this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
+                break;
+            case Dish.FILE:
+                this.value = Utils.readFileSync(this.value);
+                this.value = Array.prototype.slice.call(this.value);
+                break;
+            case Dish.LIST_FILE:
+                this.value = this.value.map(f => Utils.readFileSync(f));
+                this.value = this.value.map(b => Array.prototype.slice.call(b));
+                this.value = [].concat.apply([], this.value);
+                break;
+            default:
+                break;
+        }
+    } catch (err) {
+        throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);
+    }
+
+    this.type = Dish.BYTE_ARRAY;
+
+    // Convert from byteArray to toType
+    try {
+        switch (toType) {
+            case Dish.STRING:
+            case Dish.HTML:
+                this.value = this.value ? byteArrayToStr(this.value) : "";
+                this.type = Dish.STRING;
+                break;
+            case Dish.NUMBER:
+                this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
+                this.type = Dish.NUMBER;
+                break;
+            case Dish.ARRAY_BUFFER:
+                this.value = new Uint8Array(this.value).buffer;
+                this.type = Dish.ARRAY_BUFFER;
+                break;
+            case Dish.BIG_NUMBER:
+                try {
+                    this.value = new BigNumber(byteArrayToStr(this.value));
+                } catch (err) {
+                    this.value = new BigNumber(NaN);
+                }
+                this.type = Dish.BIG_NUMBER;
+                break;
+            case Dish.JSON:
+                this.value = JSON.parse(byteArrayToStr(this.value));
+                this.type = Dish.JSON;
+                break;
+            case Dish.FILE:
+                this.value = new File(this.value, "unknown");
+                break;
+            case Dish.LIST_FILE:
+                this.value = [new File(this.value, "unknown")];
+                this.type = Dish.LIST_FILE;
+                break;
+            default:
+                break;
+        }
+    } catch (err) {
+        throw new DishError(`Error translating from byteArray to ${Dish.enumLookup(toType)}: ${err}`);
+    }
+}
+
+/**
+ * Returns the value of the data in the type format specified.
+ *
+ * @param {number} type - The data type of value, see Dish enums.
+ * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
+ * @returns {*} - The value of the output data.
+ */
+async function asyncGet(type, notUTF8=false) {
+    if (typeof type === "string") {
+        type = Dish.typeEnum(type);
+    }
+    if (this.type !== type) {
+        await this._translate(type, notUTF8);
+    }
+    return this.value;
+}
+
+/**
+ * Returns the value of the data in the type format specified.
+ *
+ * @param {number} type - The data type of value, see Dish enums.
+ * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
+ * @returns {*} - The value of the output data.
+ */
+function get(type, notUTF8=false) {
+    if (typeof type === "string") {
+        type = Dish.typeEnum(type);
+    }
+    if (this.type !== type) {
+        this._translate(type, notUTF8);
+    }
+    return this.value;
+}
+
+
 /**
  * The data being operated on by each operation.
  */
@@ -24,6 +247,15 @@ class Dish {
      * literal input
      */
     constructor(dishOrInput=null, type = null) {
+
+        if (Utils.isBrowser()) {
+            this._translate = _asyncTranslate.bind(this);
+            this.get = asyncGet.bind(this);
+        } else {
+            this._translate = _translate.bind(this);
+            this.get = get.bind(this);
+        }
+
         this.value = [];
         this.type = Dish.BYTE_ARRAY;
 
@@ -74,7 +306,6 @@ class Dish {
             case "list<file>":
                 return Dish.LIST_FILE;
             default:
-                console.log(typeStr);
                 throw new DishError("Invalid data type string. No matching enum.");
         }
     }
@@ -132,118 +363,6 @@ class Dish {
         if (!this.valid()) {
             const sample = Utils.truncate(JSON.stringify(this.value), 13);
             throw new DishError(`Data is not a valid ${Dish.enumLookup(type)}: ${sample}`);
-        }
-    }
-
-
-    /**
-     * Returns the value of the data in the type format specified.
-     *
-     * @param {number} type - The data type of value, see Dish enums.
-     * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
-     * @returns {*} - The value of the output data.
-     */
-    async get(type, notUTF8=false) {
-        if (typeof type === "string") {
-            type = Dish.typeEnum(type);
-        }
-        if (this.type !== type) {
-            await this._translate(type, notUTF8);
-        }
-        return this.value;
-    }
-
-
-    /**
-     * Translates the data to the given type format.
-     *
-     * @param {number} toType - The data type of value, see Dish enums.
-     * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
-     */
-    async _translate(toType, notUTF8=false) {
-        log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
-        const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
-
-        // Convert data to intermediate byteArray type
-        try {
-            switch (this.type) {
-                case Dish.STRING:
-                    this.value = this.value ? Utils.strToByteArray(this.value) : [];
-                    break;
-                case Dish.NUMBER:
-                    this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
-                    break;
-                case Dish.HTML:
-                    this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
-                    break;
-                case Dish.ARRAY_BUFFER:
-                    // Array.from() would be nicer here, but it's slightly slower
-                    this.value = Array.prototype.slice.call(new Uint8Array(this.value));
-                    break;
-                case Dish.BIG_NUMBER:
-                    this.value = BigNumber.isBigNumber(this.value) ? Utils.strToByteArray(this.value.toFixed()) : [];
-                    break;
-                case Dish.JSON:
-                    this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
-                    break;
-                case Dish.FILE:
-                    this.value = await Utils.readFile(this.value);
-                    this.value = Array.prototype.slice.call(this.value);
-                    break;
-                case Dish.LIST_FILE:
-                    this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
-                    this.value = this.value.map(b => Array.prototype.slice.call(b));
-                    this.value = [].concat.apply([], this.value);
-                    break;
-                default:
-                    break;
-            }
-        } catch (err) {
-            throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);
-        }
-
-        this.type = Dish.BYTE_ARRAY;
-
-        // Convert from byteArray to toType
-        try {
-            switch (toType) {
-                case Dish.STRING:
-                case Dish.HTML:
-                    this.value = this.value ? byteArrayToStr(this.value) : "";
-                    this.type = Dish.STRING;
-                    break;
-                case Dish.NUMBER:
-                    this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
-                    this.type = Dish.NUMBER;
-                    break;
-                case Dish.ARRAY_BUFFER:
-                    this.value = new Uint8Array(this.value).buffer;
-                    this.type = Dish.ARRAY_BUFFER;
-                    break;
-                case Dish.BIG_NUMBER:
-                    try {
-                        this.value = new BigNumber(byteArrayToStr(this.value));
-                    } catch (err) {
-                        this.value = new BigNumber(NaN);
-                    }
-                    this.type = Dish.BIG_NUMBER;
-                    break;
-                case Dish.JSON:
-                    this.value = JSON.parse(byteArrayToStr(this.value));
-                    this.type = Dish.JSON;
-                    break;
-                case Dish.FILE:
-                    this.value = new File(this.value, "unknown");
-                    break;
-                case Dish.LIST_FILE:
-                    this.value = [new File(this.value, "unknown")];
-                    this.type = Dish.LIST_FILE;
-                    break;
-                default:
-                    break;
-            }
-        } catch (err) {
-            throw new DishError(`Error translating from byteArray to ${Dish.enumLookup(toType)}: ${err}`);
         }
     }
 
