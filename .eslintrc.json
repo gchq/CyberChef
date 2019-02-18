@@ -1,10 +1,12 @@
 {
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 9,
         "ecmaFeatures": {
             "impliedStrict": true
         },
-        "sourceType": "module"
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
     },
     "env": {
         "browser": true,
@@ -87,6 +89,15 @@
         "no-var": "error",
         "prefer-const": "error"
     },
+    "overrides": [
+        {
+            "files": "tests/**/*",
+            "rules": {
+                "no-unused-expressions": "off",
+                "no-console": "off"
+            }
+        }
+    ],
     "globals": {
         "$": false,
         "jQuery": false,

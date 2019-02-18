@@ -222,7 +222,7 @@ export default ${moduleName};
     console.log(`\nNext steps:
 1. Add your operation to ${colors.green("src/core/config/Categories.json")}
 2. Write your operation code.
-3. Write tests in ${colors.green("test/tests/operations/")}
+3. Write tests in ${colors.green("tests/operations/tests/")}
 4. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
 5. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
 

@@ -18,7 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Utils from "../Utils.mjs";
+import Utils from "../Utils";
 
 // Param jpeg should be a binaryArray
 export function removeEXIF(jpeg) {

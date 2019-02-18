@@ -265,9 +265,10 @@ class Magic {
      *                                      performance)
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
      * @param {boolean} [useful=false] - Whether the current recipe should be scored highly
+     * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation output
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
-    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false) {
+    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null) {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
@@ -284,9 +285,9 @@ class Magic {
             isUTF8: this.isUTF8(),
             entropy: this.calcEntropy(),
             matchingOps: matchingOps,
-            useful: useful
+            useful: useful,
+            matchesCrib: crib && crib.test(this.inputStr)
         });
-
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
         // Execute each of the matching operations, then recursively call the speculativeExecution()
@@ -305,7 +306,7 @@ class Magic {
 
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
-                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful);
+                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
 
             results = results.concat(speculativeResults);
         }));
@@ -317,7 +318,7 @@ class Magic {
             await Promise.all(bfEncodings.map(async enc => {
                 const magic = new Magic(enc.data, this.opPatterns),
                     bfResults = await magic.speculativeExecution(
-                        depth-1, extLang, false, [...recipeConfig, enc.conf]);
+                        depth-1, extLang, false, [...recipeConfig, enc.conf], false, crib);
 
                 results = results.concat(bfResults);
             }));

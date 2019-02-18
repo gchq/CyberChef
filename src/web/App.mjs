@@ -10,6 +10,7 @@ import Manager from "./Manager";
 import HTMLCategory from "./HTMLCategory";
 import HTMLOperation from "./HTMLOperation";
 import Split from "split.js";
+import moment from "moment-timezone";
 
 
 /**
@@ -237,12 +238,18 @@ class App {
 
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
+     *
+     * @param {boolean} [minimise=false] - Set this flag if attempting to minimuse frames to 0 width
      */
-    initialiseSplitter() {
+    initialiseSplitter(minimise=false) {
+        if (this.columnSplitter) this.columnSplitter.destroy();
+        if (this.ioSplitter) this.ioSplitter.destroy();
+
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: [240, 370, 450],
+            minSize: minimise ? [0, 0, 0] : [240, 370, 450],
             gutterSize: 4,
+            expandToMin: false,
             onDrag: function() {
                 this.manager.recipe.adjustWidth();
             }.bind(this)
@@ -250,7 +257,8 @@ class App {
 
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
-            gutterSize: 4
+            gutterSize: 4,
+            minSize: minimise ? [0, 0] : [100, 100]
         });
 
         this.resetLayout();
@@ -515,7 +523,8 @@ class App {
     setCompileMessage() {
         // Display time since last build and compile message
         const now = new Date(),
-            timeSinceCompile = Utils.fuzzyTime(now.getTime() - window.compileTime);
+            msSinceCompile = now.getTime() - window.compileTime,
+            timeSinceCompile = moment.duration(msSinceCompile, "milliseconds").humanize();
 
         // Calculate previous version to compare to
         const prev = PKG_VERSION.split(".").map(n => {

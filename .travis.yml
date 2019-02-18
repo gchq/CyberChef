@@ -1,15 +1,19 @@
 language: node_js
 node_js:
   - node
+addons:
+  chrome: stable
 install: npm install
 before_script:
   - npm install -g grunt
+  - export NODE_OPTIONS=--max_old_space_size=2048
 script:
   - grunt lint
   - grunt test
   - grunt docs
   - grunt node
   - grunt prod --msg="$COMPILE_MSG"
+  - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
 before_deploy:
   - grunt exec:sitemap
   - grunt copy:ghPages

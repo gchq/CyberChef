@@ -22,7 +22,7 @@ class GroupIPAddresses extends Operation {
         super();
 
         this.name = "Group IP addresses";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Groups a list of IP addresses into subnets. Supports both IPv4 and IPv6 addresses.";
         this.infoURL = "https://wikipedia.org/wiki/Subnetwork";
         this.inputType = "string";

@@ -21,7 +21,7 @@ class ParseIPRange extends Operation {
         super();
 
         this.name = "Parse IP range";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Given a CIDR range (e.g. <code>10.0.0.0/24</code>), hyphenated range (e.g. <code>10.0.0.0 - 10.0.1.0</code>), or a list of IPs and/or CIDR ranges (separated by a new line), this operation provides network information and enumerates all IP addresses in the range.<br><br>IPv6 is supported but will not be enumerated.";
         this.infoURL = "https://wikipedia.org/wiki/Subnetwork";
         this.inputType = "string";

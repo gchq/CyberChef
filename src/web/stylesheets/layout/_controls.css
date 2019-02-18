@@ -15,7 +15,7 @@
     width: 100%;
     height: var(--controls-height);
     bottom: 0;
-    padding: 10px;
+    padding: 0;
     padding-top: 12px;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
