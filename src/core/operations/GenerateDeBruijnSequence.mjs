@@ -71,7 +71,7 @@ class GenerateDeBruijnSequence extends Operation {
                 }
                 return;
             }
-            
+
             a[t] = a[t - p];
             db(t + 1, p);
             for (let j = a[t - p] + 1; j < k; j++) {
