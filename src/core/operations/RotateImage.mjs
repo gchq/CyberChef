@@ -51,7 +51,7 @@ class RotateImage extends Operation {
                 jimp.read(Buffer.from(input))
                     .then(image => {
                         image
-                            .rotate(degrees / 100)
+                            .rotate(degrees)
                             .getBuffer(jimp.AUTO, (error, result) => {
                                 if (error){
                                     reject(new OperationError("Error getting the new image buffer"));
