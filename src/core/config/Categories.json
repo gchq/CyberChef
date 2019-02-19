@@ -59,7 +59,9 @@
             "From Braille",
             "Parse TLV",
             "CSV to JSON",
-            "JSON to CSV"
+            "JSON to CSV",
+            "Parse Mime",
+            "Decode Mime Encoded Words"
         ]
     },
     {
