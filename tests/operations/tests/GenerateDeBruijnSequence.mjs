@@ -30,4 +30,4 @@ TestRegister.addTests([
             }
         ]
     }
-])
+]);
