@@ -42,28 +42,15 @@ class RotateImage extends Operation {
      * @param {Object[]} args
      * @returns {byteArray}
      */
-    run(input, args) {
+    async run(input, args) {
         const [degrees] = args;
         const type = Magic.magicFileType(input);
 
         if (type && type.mime.indexOf("image") === 0){
-            return new Promise((resolve, reject) => {
-                jimp.read(Buffer.from(input))
-                    .then(image => {
-                        image
-                            .rotate(degrees)
-                            .getBuffer(jimp.AUTO, (error, result) => {
-                                if (error){
-                                    reject(new OperationError("Error getting the new image buffer"));
-                                } else {
-                                    resolve([...result]);
-                                }
-                            });
-                    })
-                    .catch(err => {
-                        reject(new OperationError("Error reading the input image."));
-                    });
-            });
+            const image = await jimp.read(Buffer.from(input));
+            image.rotate(degrees);
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
         } else {
             throw new OperationError("Invalid file type.");
         }
@@ -71,7 +58,6 @@ class RotateImage extends Operation {
 
     /**
      * Displays the rotated image using HTML for web apps
-     * 
      * @param {byteArray} data
      * @returns {html}
      */

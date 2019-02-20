@@ -57,7 +57,7 @@ class ResizeImage extends Operation {
      * @param {Object[]} args
      * @returns {byteArray}
      */
-    run(input, args) {
+    async run(input, args) {
         let width = args[0],
             height = args[1];
         const unit = args[2],
@@ -67,37 +67,20 @@ class ResizeImage extends Operation {
         if (!type || type.mime.indexOf("image") !== 0){
             throw new OperationError("Invalid file type.");
         }
+        const image = await jimp.read(Buffer.from(input));
 
-        return new Promise((resolve, reject) => {
-            jimp.read(Buffer.from(input))
-                .then(image => {
-                    if (unit === "Percent") {
-                        width = image.getWidth() * (width / 100);
-                        height = image.getHeight() * (height / 100);
-                    }
-                    if (aspect) {
-                        image
-                            .scaleToFit(width, height)
-                            .getBuffer(jimp.AUTO, (error, result) => {
-                                if (error){
-                                    reject(new OperationError("Error scaling the image."));
-                                } else {
-                                    resolve([...result]);
-                                }
-                            });
-                    } else {
-                        image
-                            .resize(width, height)
-                            .getBuffer(jimp.AUTO, (error, result) => {
-                                if (error){
-                                    reject(new OperationError("Error scaling the image."));
-                                } else {
-                                    resolve([...result]);
-                                }
-                            });
-                    }
-                });
-        });
+        if (unit === "Percent") {
+            width = image.getWidth() * (width / 100);
+            height = image.getHeight() * (height / 100);
+        }
+        if (aspect) {
+            image.scaleToFit(width, height);
+        } else {
+            image.resize(width, height);
+        }
+
+        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+        return [...imageBuffer];
     }
 
     /**
