@@ -51,7 +51,6 @@ class DitherImage extends Operation {
 
     /**
      * Displays the dithered image using HTML for web apps
-     * 
      * @param {byteArray} data
      * @returns {html}
      */
