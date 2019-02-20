@@ -364,7 +364,8 @@
             "Resize Image",
             "Blur Image",
             "Dither Image",
-            "Invert Image"
+            "Invert Image",
+            "Flip Image"
         ]
     },
     {
