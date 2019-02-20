@@ -48,6 +48,18 @@ class ResizeImage extends Operation {
                 name: "Maintain aspect ratio",
                 type: "boolean",
                 value: false
+            },
+            {
+                name: "Resizing algorithm",
+                type: "option",
+                value: [
+                    "Nearest Neighbour",
+                    "Bilinear",
+                    "Bicubic",
+                    "Hermite",
+                    "Bezier"
+                ],
+                defaultIndex: 1
             }
         ];
     }
@@ -62,8 +74,17 @@ class ResizeImage extends Operation {
             height = args[1];
         const unit = args[2],
             aspect = args[3],
+            resizeAlg = args[4],
             type = Magic.magicFileType(input);
 
+        const resizeMap = {
+            "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
+            "Bilinear": jimp.RESIZE_BILINEAR,
+            "Bicubic": jimp.RESIZE_BICUBIC,
+            "Hermite": jimp.RESIZE_HERMITE,
+            "Bezier": jimp.RESIZE_BEZIER
+        };
+        
         if (!type || type.mime.indexOf("image") !== 0){
             throw new OperationError("Invalid file type.");
         }
@@ -74,9 +95,9 @@ class ResizeImage extends Operation {
             height = image.getHeight() * (height / 100);
         }
         if (aspect) {
-            image.scaleToFit(width, height);
+            image.scaleToFit(width, height, resizeMap[resizeAlg]);
         } else {
-            image.resize(width, height);
+            image.resize(width, height, resizeMap[resizeAlg]);
         }
 
         const imageBuffer = await image.getBufferAsync(jimp.AUTO);
