@@ -359,7 +359,12 @@
             "Play Media",
             "Remove EXIF",
             "Extract EXIF",
-            "Split Colour Channels"
+            "Split Colour Channels",
+            "Rotate Image",
+            "Resize Image",
+            "Blur Image",
+            "Dither Image",
+            "Invert Image"
         ]
     },
     {
