@@ -1,10 +1,12 @@
 {
+    "parser": "babel-eslint",
     "parserOptions": {
-        "ecmaVersion": 8,
+        "ecmaVersion": 9,
         "ecmaFeatures": {
             "impliedStrict": true
         },
-        "sourceType": "module"
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
     },
     "env": {
         "browser": true,
@@ -28,18 +30,13 @@
         // modify rules from base configurations
         "no-unused-vars": ["error", {
             "args": "none",
-            "vars": "local",
-            // Allow vars that start with a capital letter to be unused.
-            // This is mainly for exported module names which are useful to indicate
-            // the name of the module and may be used to refer to itself in future.
-            "varsIgnorePattern": "^[A-Z]"
+            "vars": "all"
         }],
         "no-empty": ["error", {
             "allowEmptyCatch": true
         }],
 
         // disable rules from base configurations
-        "no-console": "off",
         "no-control-regex": "off",
 
         // stylistic conventions
@@ -52,7 +49,11 @@
         "no-trailing-spaces": "warn",
         "eol-last": "error",
         "func-call-spacing": "error",
+        "key-spacing": ["warn", {
+            "mode": "minimum"
+        }],
         "indent": ["error", 4, {
+            "ignoreComments": true,
             "ArrayExpression": "first",
             "SwitchCase": 1
         }],
@@ -85,14 +86,28 @@
         "no-whitespace-before-property": "error",
         "operator-linebreak": ["error", "after"],
         "space-in-parens": "error",
-        "no-var": "error"
+        "no-var": "error",
+        "prefer-const": "error"
     },
+    "overrides": [
+        {
+            "files": "tests/**/*",
+            "rules": {
+                "no-unused-expressions": "off",
+                "no-console": "off"
+            }
+        }
+    ],
     "globals": {
         "$": false,
         "jQuery": false,
-        "moment": false,
+        "log": false,
 
         "COMPILE_TIME": false,
-        "COMPILE_MSG": false
+        "COMPILE_MSG": false,
+        "PKG_VERSION": false,
+        "ENVIRONMENT_IS_WORKER": false,
+        "ENVIRONMENT_IS_NODE": false,
+        "ENVIRONMENT_IS_WEB": false
     }
 }

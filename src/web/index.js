@@ -9,15 +9,17 @@ import "./stylesheets/index.js";
 
 // Libs
 import "babel-polyfill";
-import "bootstrap";
-import "bootstrap-switch";
+import "arrive";
+import "snackbarjs";
+import "bootstrap-material-design";
 import "bootstrap-colorpicker";
-import CanvasComponents from "../core/lib/canvascomponents.js";
+import moment from "moment-timezone";
+import * as CanvasComponents from "../core/lib/CanvasComponents";
 
 // CyberChef
-import App from "./App.js";
-import Categories from "../core/config/Categories.js";
-import OperationConfig from "../core/config/OperationConfig.js";
+import App from "./App";
+import Categories from "../core/config/Categories.json";
+import OperationConfig from "../core/config/OperationConfig.json";
 
 
 /**
@@ -34,28 +36,29 @@ function main() {
         "URL Decode",
         "Regular expression",
         "Entropy",
-        "Fork"
+        "Fork",
+        "Magic"
     ];
 
     const defaultOptions = {
-        updateUrl         : true,
-        showHighlighter   : true,
-        treatAsUtf8       : true,
-        wordWrap          : true,
-        showErrors        : true,
-        errorTimeout      : 4000,
-        autoBakeThreshold : 200,
-        attemptHighlight  : true,
-        theme             : "classic",
+        updateUrl:           true,
+        showHighlighter:     true,
+        treatAsUtf8:         true,
+        wordWrap:            true,
+        showErrors:          true,
+        errorTimeout:        4000,
+        attemptHighlight:    true,
+        theme:               "classic",
+        useMetaKey:          false,
+        ioDisplayThreshold:  512,
+        logLevel:            "info",
+        autoMagic:           true,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
     window.app = new App(Categories, OperationConfig, defaultFavourites, defaultOptions);
     window.app.setup();
 }
-
-// Fix issues with browsers that don't support console.log()
-window.console = console || {log: function() {}, error: function() {}};
 
 window.compileTime = moment.tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
 window.compileMessage = COMPILE_MSG;
@@ -64,3 +67,4 @@ window.compileMessage = COMPILE_MSG;
 window.CanvasComponents = CanvasComponents;
 
 document.addEventListener("DOMContentLoaded", main, false);
+

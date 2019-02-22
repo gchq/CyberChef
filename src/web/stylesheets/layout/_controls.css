@@ -7,8 +7,7 @@
  */
 
 :root {
-    --controls-height: 120px;
-    --controls-division: 65%;
+    --controls-height: 75px;
 }
 
 #controls {
@@ -16,50 +15,31 @@
     width: 100%;
     height: var(--controls-height);
     bottom: 0;
-    padding: 10px;
+    padding: 0;
+    padding-top: 12px;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
 }
 
-#operational-controls {
-    width: var(--controls-division);
-    float: left;
+#auto-bake-label {
+    display: inline-block;
+    width: 100px;
+    padding: 0;
+    margin: 0;
     text-align: center;
+    color: var(--primary-font-colour);
+    font-size: 14px;
+    cursor: pointer;
 }
 
-#bake-group {
-    display: table;
-    width: 100%;
+#auto-bake-label .checkbox-decorator {
+    position: relative;
 }
 
 #bake {
-    display: table-cell;
-    width: 100%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    box-shadow: none;
 }
 
-#auto-bake-label {
-    display: table-cell;
-    padding: 1px;
-    line-height: 1.35;
-    width: 60px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: 1px solid var(--btn-success-bg-colour);
-}
-
-#auto-bake-label:hover {
-    border-left-color: var(--btn-success-hover-border-colour);
-}
-
-#auto-bake-label div {
-    font-size: 10px;
-    padding: 2px;
-}
-
-#extra-controls {
-    float: right;
-    width: calc(100% - var(--controls-division));
-    padding-left: 10px;
+#controls .btn {
+    border-radius: 30px;
 }

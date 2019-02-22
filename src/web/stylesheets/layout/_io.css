@@ -32,14 +32,14 @@
 
 .textarea-wrapper {
     position: absolute;
-    top: 43px;
+    top: var(--title-height);
     bottom: 0;
     width: 100%;
     overflow: hidden;
 }
 
 .textarea-wrapper textarea,
-.textarea-wrapper div {
+.textarea-wrapper>div {
     font-family: var(--fixed-width-font-family);
     font-size: var(--fixed-width-font-size);
     color: var(--fixed-width-font-colour);
@@ -63,21 +63,58 @@
     border: none;
 }
 
-.io-btn-group {
-    float: right;
-    margin-top: -4px;
+#output-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: var(--primary-background-colour);
+    visibility: hidden;
+    opacity: 0;
+
+    transition: all 0.5s ease;
+}
+
+#input-file,
+#output-file {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.file-overlay {
+    position: absolute;
+    opacity: 0.8;
+    background-color: var(--title-background-colour);
+    width: 100%;
+    height: 100%;
+}
+
+#show-file-overlay {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    display: none;
 }
 
 .io-info {
     margin-right: 20px;
-    margin-top: -4px;
+    margin-top: 1px;
     float: right;
     height: 30px;
     text-align: right;
-    line-height: 10px;
+    line-height: 12px;
     font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
+    display: flex;
+    align-items: center;
 }
 
 #input-info {
@@ -86,24 +123,51 @@
 
 .dropping-file {
     border: 5px dashed var(--drop-file-border-colour) !important;
+    margin: -5px;
 }
 
-@keyframes spinner {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(359deg);
-    }
+#stale-indicator {
+    opacity: 1;
+    visibility: visibile;
+    transition: margin 0s, opacity 0.3s;
+    margin-left: 5px;
+    cursor: help;
 }
 
-.loading-icon::before {
-    content: "\21bb";
+#stale-indicator i {
+    vertical-align: middle;
+    margin-bottom: 5px;
 }
 
-.loading-icon {
-    animation-name: spinner;
-    animation-duration: 1000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
+#output-loader .loading-msg {
+    opacity: 1;
+    font-family: var(--primary-font-family);
+    line-height: var(--primary-line-height);
+    color: var(--primary-font-colour);
+    top: 50%;
+
+    transition: all 0.5s ease;
+}
+
+#magic {
+    opacity: 1;
+    visibility: visibile;
+    transition: margin 0s 0.3s, opacity 0.3s 0.3s, visibility 0.3s 0.3s;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+#magic.hidden,
+#stale-indicator.hidden {
+    visibility: hidden;
+    transition: opacity 0.3s, margin 0.3s 0.3s, visibility 0.3s;
+    opacity: 0;
+}
+
+#magic.hidden {
+    margin-left: -32px;
+}
+
+#magic svg path {
+    fill: var(--primary-font-colour);
 }

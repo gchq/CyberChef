@@ -1,7 +1,20 @@
+"use strict";
+
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const NodeExternals = require("webpack-node-externals");
 const Inliner = require("web-resource-inliner");
+const glob = require("glob");
+const path = require("path");
+
+/**
+ * Grunt configuration for building the app in various formats.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -10,15 +23,19 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "webpack:webDev"]);
+        ["clean:dev", "clean:config", "exec:generateConfig", "concurrent:dev"]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
-        ["clean:node", "webpack:node", "chmod:build"]);
+        ["clean:node", "clean:config", "exec:generateConfig", "webpack:node", "chmod:build"]);
 
     grunt.registerTask("test",
-        "A task which runs all the tests in test/tests.",
-        ["clean:test", "webpack:tests", "execute:test"]);
+        "A task which runs all the operation tests in the tests directory.",
+        ["exec:generateConfig", "exec:opTests"]);
+
+    grunt.registerTask("testui",
+        "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
+        ["connect:prod", "exec:browserTests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
@@ -26,7 +43,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "webpack:webProd", "inline", "chmod"]);
+        ["eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -34,8 +51,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask("inline",
         "Compiles a production build of CyberChef into a single, portable web page.",
-        runInliner);
+        ["exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
+
+    grunt.registerTask("runInliner", runInliner);
     grunt.registerTask("doc", "docs");
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
@@ -47,35 +66,33 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
-    grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-accessibility");
+    grunt.loadNpmTasks("grunt-concurrent");
+    grunt.loadNpmTasks("grunt-contrib-connect");
 
 
     // Project configuration
     const compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
-        banner = "/**\n" +
-            "* CyberChef - The Cyber Swiss Army Knife\n" +
-            "*\n" +
-            "* @copyright Crown Copyright 2016\n" +
-            "* @license Apache-2.0\n" +
-            "*\n" +
-            "*   Copyright 2016 Crown Copyright\n" +
-            "*\n" +
-            '* Licensed under the Apache License, Version 2.0 (the "License");\n' +
-            "* you may not use this file except in compliance with the License.\n" +
-            "* You may obtain a copy of the License at\n" +
-            "*\n" +
-            "*     http://www.apache.org/licenses/LICENSE-2.0\n" +
-            "*\n" +
-            "* Unless required by applicable law or agreed to in writing, software\n" +
-            '* distributed under the License is distributed on an "AS IS" BASIS,\n' +
-            "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-            "* See the License for the specific language governing permissions and\n" +
-            "* limitations under the License.\n" +
-            "*/\n",
-        pkg = grunt.file.readJSON("package.json");
+        pkg = grunt.file.readJSON("package.json"),
+        webpackConfig = require("./webpack.config.js"),
+        BUILD_CONSTANTS = {
+            COMPILE_TIME: JSON.stringify(compileTime),
+            COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
+            PKG_VERSION: JSON.stringify(pkg.version),
+            ENVIRONMENT_IS_WORKER: function() {
+                return typeof importScripts === "function";
+            },
+            ENVIRONMENT_IS_NODE: function() {
+                return typeof process === "object" && typeof require === "function";
+            },
+            ENVIRONMENT_IS_WEB: function() {
+                return typeof window === "object";
+            }
+        },
+        moduleEntryPoints = listEntryModules();
 
     /**
      * Compiles a production build of CyberChef into a single, portable web page.
@@ -104,23 +121,39 @@ module.exports = function (grunt) {
         });
     }
 
+    /**
+     * Generates an entry list for all the modules.
+     */
+    function listEntryModules() {
+        const entryModules = {};
+
+        glob.sync("./src/core/config/modules/*.mjs").forEach(file => {
+            const basename = path.basename(file);
+            if (basename !== "Default.mjs" && basename !== "OpModules.mjs")
+                entryModules[basename.split(".mjs")[0]] = path.resolve(file);
+        });
+
+        return entryModules;
+    }
+
     grunt.initConfig({
         clean: {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
-            test: ["build/test/*"],
             node: ["build/node/*"],
-            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico"],
+            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
+            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
+            inlineScripts: ["build/prod/scripts.js"],
         },
         eslint: {
             options: {
                 configFile: "./.eslintrc.json"
             },
-            configs: ["Gruntfile.js"],
-            core: ["src/core/**/*.js", "!src/core/lib/**/*"],
-            web: ["src/web/**/*.js"],
-            node: ["src/node/**/*.js"],
-            tests: ["test/**/*.js"],
+            configs: ["*.{js,mjs}"],
+            core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
+            web: ["src/web/**/*.{js,mjs}"],
+            node: ["src/node/**/*.{js,mjs}"],
+            tests: ["tests/**/*.{js,mjs}"],
         },
         jsdoc: {
             options: {
@@ -133,7 +166,8 @@ module.exports = function (grunt) {
             all: {
                 src: [
                     "src/**/*.js",
-                    "!src/core/lib/**/*",
+                    "src/**/*.mjs",
+                    "!src/core/vendor/**/*"
                 ],
             }
         },
@@ -150,103 +184,49 @@ module.exports = function (grunt) {
             }
         },
         webpack: {
-            options: {
-                plugins: [
-                    new webpack.ProvidePlugin({
-                        $: "jquery",
-                        jQuery: "jquery",
-                        moment: "moment-timezone"
-                    }),
-                    new webpack.BannerPlugin({
-                        banner: banner,
-                        raw: true,
-                        entryOnly: true
-                    }),
-                    new webpack.DefinePlugin({
-                        COMPILE_TIME: JSON.stringify(compileTime),
-                        COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || "")
-                    }),
-                    new ExtractTextPlugin("styles.css"),
-                ],
-                resolve: {
-                    alias: {
-                        jquery: "jquery/src/jquery"
-                    }
-                },
-                module: {
-                    rules: [
-                        {
-                            test: /\.js$/,
-                            exclude: /node_modules/,
-                            loader: "babel-loader?compact=false"
-                        },
-                        {
-                            test: /\.css$/,
-                            use: ExtractTextPlugin.extract({
-                                use: [
-                                    { loader: "css-loader?minimize" },
-                                    { loader: "postcss-loader" },
-                                ]
-                            })
-                        },
-                        {
-                            test: /\.less$/,
-                            use: ExtractTextPlugin.extract({
-                                use: [
-                                    { loader: "css-loader?minimize" },
-                                    { loader: "postcss-loader" },
-                                    { loader: "less-loader" }
-                                ]
-                            })
-                        },
-                        {
-                            test: /\.(ico|eot|ttf|woff|woff2)$/,
-                            loader: "url-loader",
-                            options: {
-                                limit: 10000
+            options: webpackConfig,
+            web: () => {
+                return {
+                    mode: "production",
+                    target: "web",
+                    entry: Object.assign({
+                        main: "./src/web/index.js",
+                        sitemap: "./src/web/static/sitemap.js"
+                    }, moduleEntryPoints),
+                    output: {
+                        path: __dirname + "/build/prod",
+                        globalObject: "this"
+                    },
+                    resolve: {
+                        alias: {
+                            "./config/modules/OpModules": "./config/modules/Default"
+                        }
+                    },
+                    plugins: [
+                        new webpack.DefinePlugin(BUILD_CONSTANTS),
+                        new HtmlWebpackPlugin({
+                            filename: "index.html",
+                            template: "./src/web/html/index.html",
+                            chunks: ["main"],
+                            compileTime: compileTime,
+                            version: pkg.version,
+                            minify: {
+                                removeComments: true,
+                                collapseWhitespace: true,
+                                minifyJS: true,
+                                minifyCSS: true
                             }
-                        },
-                        { // First party images are saved as files to be cached
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /node_modules/,
-                            loader: "file-loader",
-                            options: {
-                                name: "images/[name].[ext]"
-                            }
-                        },
-                        { // Third party images are inlined
-                            test: /\.(png|jpg|gif|svg)$/,
-                            exclude: /web\/static/,
-                            loader: "url-loader",
-                            options: {
-                                limit: 10000
-                            }
-                        },
+                        }),
+                        new BundleAnalyzerPlugin({
+                            analyzerMode: "static",
+                            reportFilename: "BundleAnalyzerReport.html",
+                            openAnalyzer: false
+                        }),
                     ]
-                },
-                stats: {
-                    children: false,
-                    warningsFilter: /source-map/
-                }
+                };
             },
-            webDev: {
-                target: "web",
-                entry: "./src/web/index.js",
-                output: {
-                    filename: "scripts.js",
-                    path: __dirname + "/build/dev"
-                },
-                plugins: [
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        compileTime: compileTime,
-                        version: pkg.version,
-                    })
-                ],
-                watch: true
-            },
-            webProd: {
+            webInline: {
+                mode: "production",
                 target: "web",
                 entry: "./src/web/index.js",
                 output: {
@@ -254,32 +234,14 @@ module.exports = function (grunt) {
                     path: __dirname + "/build/prod"
                 },
                 plugins: [
-                    new webpack.optimize.UglifyJsPlugin({
-                        compress: {
-                            "screw_ie8": true,
-                            "dead_code": true,
-                            "unused": true,
-                            "warnings": false
-                        },
-                        comments: false,
-                    }),
-                    new HtmlWebpackPlugin({ // Main version
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        compileTime: compileTime,
-                        version: pkg.version,
-                        minify: {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            minifyJS: true,
-                            minifyCSS: true
-                        }
-                    }),
-                    new HtmlWebpackPlugin({ // Inline version
+                    new webpack.DefinePlugin(Object.assign({}, BUILD_CONSTANTS, {
+                        INLINE: "true"
+                    })),
+                    new HtmlWebpackPlugin({
                         filename: "cyberchef.htm",
                         template: "./src/web/html/index.html",
                         compileTime: compileTime,
-                        version: pkg.version,
+                        version: pkg.version + "s",
                         inline: true,
                         minify: {
                             removeComments: true,
@@ -290,37 +252,104 @@ module.exports = function (grunt) {
                     }),
                 ]
             },
-            tests: {
-                target: "node",
-                entry: "./test/index.js",
-                output: {
-                    filename: "index.js",
-                    path: __dirname + "/build/test"
-                }
-            },
             node: {
+                mode: "production",
                 target: "node",
-                entry: "./src/node/index.js",
+                entry: "./src/node/index.mjs",
+                externals: [NodeExternals()],
                 output: {
                     filename: "CyberChef.js",
                     path: __dirname + "/build/node",
                     library: "CyberChef",
                     libraryTarget: "commonjs2"
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS)
+                ]
+            }
+        },
+        "webpack-dev-server": {
+            options: {
+                webpack: webpackConfig,
+                host: "0.0.0.0",
+                disableHostCheck: true,
+                overlay: true,
+                inline: false,
+                clientLogLevel: "error",
+                stats: {
+                    children: false,
+                    chunks: false,
+                    modules: false,
+                    entrypoints: false,
+                    warningsFilter: [
+                        /source-map/,
+                        /dependency is an expression/,
+                        /export 'default'/
+                    ],
+                }
+            },
+            start: {
+                webpack: {
+                    mode: "development",
+                    target: "web",
+                    entry: Object.assign({
+                        main: "./src/web/index.js"
+                    }, moduleEntryPoints),
+                    resolve: {
+                        alias: {
+                            "./config/modules/OpModules": "./config/modules/Default"
+                        }
+                    },
+                    output: {
+                        globalObject: "this",
+                    },
+                    plugins: [
+                        new webpack.DefinePlugin(BUILD_CONSTANTS),
+                        new HtmlWebpackPlugin({
+                            filename: "index.html",
+                            template: "./src/web/html/index.html",
+                            chunks: ["main"],
+                            compileTime: compileTime,
+                            version: pkg.version,
+                        })
+                    ]
+                }
+            }
+        },
+        connect: {
+            prod: {
+                options: {
+                    port: 8000,
+                    base: "build/prod/"
                 }
             }
         },
         copy: {
             ghPages: {
                 options: {
-                    process: function (content) {
+                    process: function (content, srcpath) {
                         // Add Google Analytics code to index.html
-                        content = content.replace("</body></html>",
-                            grunt.file.read("src/web/static/ga.html") + "</body></html>");
-                        return grunt.template.process(content);
-                    }
+                        if (srcpath.indexOf("index.html") >= 0) {
+                            content = content.replace("</body></html>",
+                                grunt.file.read("src/web/static/ga.html") + "</body></html>");
+                            return grunt.template.process(content, srcpath);
+                        } else {
+                            return content;
+                        }
+                    },
+                    noProcess: ["**", "!**/*.html"]
                 },
-                src: "build/prod/index.html",
-                dest: "build/prod/index.html"
+                files: [
+                    {
+                        src: "build/prod/index.html",
+                        dest: "build/prod/index.html"
+                    },
+                    {
+                        expand: true,
+                        src: "docs/**",
+                        dest: "build/prod/"
+                    },
+                ]
             }
         },
         chmod: {
@@ -337,6 +366,18 @@ module.exports = function (grunt) {
                 src: ["docs/**/*", "docs/"]
             }
         },
+        watch: {
+            config: {
+                files: ["src/core/operations/**/*", "!src/core/operations/index.mjs"],
+                tasks: ["exec:generateConfig"]
+            }
+        },
+        concurrent: {
+            dev: ["watch:config", "webpack-dev-server:start"],
+            options: {
+                logConcurrentOutput: true
+            }
+        },
         exec: {
             repoSize: {
                 command: [
@@ -348,9 +389,24 @@ module.exports = function (grunt) {
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
-        },
-        execute: {
-            test: "build/test/index.js"
+            sitemap: {
+                command: "node build/prod/sitemap.js > build/prod/sitemap.xml"
+            },
+            generateConfig: {
+                command: [
+                    "echo '\n--- Regenerating config files. ---'",
+                    "echo [] > src/core/config/OperationConfig.json",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
+                    "echo '--- Config scripts finished. ---\n'"
+                ].join(";")
+            },
+            opTests: {
+                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
+            },
+            browserTests: {
+                command: "./node_modules/.bin/nightwatch --env prod,inline"
+            }
         },
     });
 };

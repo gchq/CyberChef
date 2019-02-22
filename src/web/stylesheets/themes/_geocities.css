@@ -1,0 +1,113 @@
+/**
+ * GeoCities theme definitions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+:root.geocities {
+    --primary-font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", "Marker Felt", "Purisa", "URW Chancery L", cursive, sans-serif;
+    --primary-font-colour: black;
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family: "Courier New", Courier, monospace;
+    --fixed-width-font-colour: yellow;
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: darkgrey;
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: #00f;
+    --secondary-background-colour: #f00;
+
+    --primary-border-colour: pink;
+    --secondary-border-colour: springgreen;
+
+    --title-colour: red;
+    --title-weight: bold;
+    --title-background-colour: yellow;
+
+    --banner-font-colour: white;
+    --banner-bg-colour: maroon;
+
+
+    /* Operation colours */
+    --op-list-operation-font-colour: blue;
+    --op-list-operation-bg-colour: yellow;
+    --op-list-operation-border-colour: green;
+
+    --rec-list-operation-font-colour: white;
+    --rec-list-operation-bg-colour: purple;
+    --rec-list-operation-border-colour: green;
+
+    --selected-operation-font-color: white;
+    --selected-operation-bg-colour: pink;
+    --selected-operation-border-colour: blue;
+
+    --breakpoint-font-colour: white;
+    --breakpoint-bg-colour: red;
+    --breakpoint-border-colour: blue;
+
+    --disabled-font-colour: grey;
+    --disabled-bg-colour: black;
+    --disabled-border-colour: grey;
+
+    --fc-operation-font-colour: sienna;
+    --fc-operation-bg-colour: pink;
+    --fc-operation-border-colour: yellow;
+
+    --fc-breakpoint-operation-font-colour: darkgrey;
+    --fc-breakpoint-operation-bg-colour: deeppink;
+    --fc-breakpoint-operation-border-colour: yellowgreen;
+
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: white;
+    --arg-background: black;
+    --arg-border-colour: lime;
+    --arg-disabled-background: grey;
+    --arg-label-colour: red;
+
+
+    /* Buttons */
+    --btn-default-font-colour: black;
+    --btn-default-bg-colour: white;
+    --btn-default-border-colour: grey;
+
+    --btn-default-hover-font-colour: black;
+    --btn-default-hover-bg-colour: white;
+    --btn-default-hover-border-colour: grey;
+
+    --btn-success-font-colour: white;
+    --btn-success-bg-colour: lawngreen;
+    --btn-success-border-colour: grey;
+
+    --btn-success-hover-font-colour: white;
+    --btn-success-hover-bg-colour: lime;
+    --btn-success-hover-border-colour: grey;
+
+
+    /* Highlighter colours */
+    --hl1: #fff000;
+    --hl2: #95dfff;
+    --hl3: #ffb6b6;
+    --hl4: #fcf8e3;
+    --hl5: #8de768;
+
+
+    /* Scrollbar */
+    --scrollbar-track: lightsteelblue;
+    --scrollbar-thumb: lightslategrey;
+    --scrollbar-hover: grey;
+
+
+    /* Misc. */
+    --drop-file-border-colour: purple;
+    --popover-background: turquoise;
+    --popover-border-colour: violet;
+    --code-background: black;
+    --code-font-colour: limegreen;
+}
