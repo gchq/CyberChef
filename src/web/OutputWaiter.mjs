@@ -319,6 +319,7 @@ class OutputWaiter {
         const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
 
         if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
+            this.app.initialiseSplitter(true);
             this.app.columnSplitter.collapse(0);
             this.app.columnSplitter.collapse(1);
             this.app.ioSplitter.collapse(0);
@@ -328,6 +329,7 @@ class OutputWaiter {
         } else {
             $(el).attr("data-original-title", "Maximise output pane");
             el.querySelector("i").innerHTML = "fullscreen";
+            this.app.initialiseSplitter(false);
             this.app.resetLayout();
         }
     }
@@ -506,7 +508,7 @@ class OutputWaiter {
      */
     showMagicButton(opSequence, result, recipeConfig) {
         const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.truncate(result, 30)}"</span>`);
+        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
     }

@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 /**
@@ -31,8 +31,6 @@ const banner = `/**
  * limitations under the License.
  */`;
 
-const vendorCSS = new ExtractTextPlugin("vendor.css");
-const projectCSS = new ExtractTextPlugin("styles.css");
 
 module.exports = {
     plugins: [
@@ -49,8 +47,9 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.browser": "true"
         }),
-        vendorCSS,
-        projectCSS
+        new MiniCssExtractPlugin({
+            filename: "[name].css"
+        }),
     ],
     resolve: {
         alias: {
@@ -80,21 +79,19 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: projectCSS.extract({
-                    use: [
-                        { loader: "css-loader" },
-                        { loader: "postcss-loader" },
-                    ]
-                })
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "postcss-loader",
+                ]
             },
             {
                 test: /\.scss$/,
-                use: vendorCSS.extract({
-                    use: [
-                        { loader: "css-loader" },
-                        { loader: "sass-loader" }
-                    ]
-                })
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader",
+                ]
             },
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,

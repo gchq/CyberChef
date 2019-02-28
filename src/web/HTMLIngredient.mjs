@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import Utils from "../core/Utils";
+
 /**
  * Object to handle the creation of operation ingredients.
  */
@@ -25,6 +27,7 @@ class HTMLIngredient {
         this.value = config.value;
         this.disabled = config.disabled || false;
         this.hint = config.hint || false;
+        this.rows = config.rows || false;
         this.target = config.target;
         this.defaultIndex = config.defaultIndex || 0;
         this.toggleValues = config.toggleValues;
@@ -159,7 +162,7 @@ class HTMLIngredient {
                         const val = this.type === "populateMultiOption" ?
                             JSON.stringify(this.value[i].value) :
                             this.value[i].value;
-                        html += `<option populate-value='${val}'>${this.value[i].name}</option>`;
+                        html += `<option populate-value='${Utils.escapeHtml(val)}'>${this.value[i].name}</option>`;
                     }
                 }
                 html += `</select>
@@ -236,6 +239,7 @@ class HTMLIngredient {
                         class="form-control arg"
                         id="${this.id}"
                         arg-name="${this.name}"
+                        rows="${this.rows ? this.rows : 3}"
                         ${this.disabled ? "disabled" : ""}>${this.value}</textarea>
                     ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;

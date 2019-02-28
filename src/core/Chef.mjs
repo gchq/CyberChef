@@ -157,9 +157,9 @@ class Chef {
      * @param {number} pos.end - The end offset.
      * @returns {Object}
      */
-    calculateHighlights(recipeConfig, direction, pos) {
+    async calculateHighlights(recipeConfig, direction, pos) {
         const recipe = new Recipe(recipeConfig);
-        const highlights = recipe.generateHighlightList();
+        const highlights = await recipe.generateHighlightList();
 
         if (!highlights) return false;
 

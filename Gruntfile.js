@@ -194,7 +194,8 @@ module.exports = function (grunt) {
                         sitemap: "./src/web/static/sitemap.js"
                     }, moduleEntryPoints),
                     output: {
-                        path: __dirname + "/build/prod"
+                        path: __dirname + "/build/prod",
+                        globalObject: "this"
                     },
                     resolve: {
                         alias: {
@@ -299,6 +300,9 @@ module.exports = function (grunt) {
                             "./config/modules/OpModules": "./config/modules/Default"
                         }
                     },
+                    output: {
+                        globalObject: "this",
+                    },
                     plugins: [
                         new webpack.DefinePlugin(BUILD_CONSTANTS),
                         new HtmlWebpackPlugin({
@@ -391,9 +395,7 @@ module.exports = function (grunt) {
             generateConfig: {
                 command: [
                     "echo '\n--- Regenerating config files. ---'",
-                    "mkdir -p src/core/config/modules",
-                    "echo 'export default {};\n' > src/core/config/modules/OpModules.mjs",
-                    "echo '[]\n' > src/core/config/OperationConfig.json",
+                    "echo [] > src/core/config/OperationConfig.json",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"

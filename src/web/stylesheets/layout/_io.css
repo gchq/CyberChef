@@ -147,6 +147,7 @@
 
 .dropping-file {
     border: 5px dashed var(--drop-file-border-colour) !important;
+    margin: -5px;
 }
 
 #stale-indicator {
