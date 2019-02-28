@@ -65,8 +65,8 @@
     left: calc(50% - 200px);
     top: calc(50% + 50px);
     text-align: center;
-    margin-top: 50px;
     opacity: 0;
+    font-size: 18px;
 }
 
 .loading-msg.loading {
@@ -158,5 +158,14 @@
 	from {
         opacity: 0;
         transform: translate3d(0, 200px, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }

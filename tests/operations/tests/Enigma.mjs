@@ -17,11 +17,12 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
+                    "3-rotor",
+                    "", "A", "A",
                     // Note: start on Z because it steps when the key is pressed
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -38,10 +39,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "W",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "F",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "N",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "F",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "W",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -59,10 +61,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "B", "Z",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "B", "Z",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -79,10 +82,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "W", "Z",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "F", "A",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "N", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "F", "A",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "W", "Z",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -99,10 +103,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -118,10 +123,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -129,10 +135,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "Z",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -149,10 +156,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "U",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "D",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "D",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "U",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -169,10 +177,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "U",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "E",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "E",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "U",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -189,10 +198,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "S",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "D",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "D",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "S",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -208,10 +218,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "H", "Z",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "H", "Z",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -227,10 +238,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "H", "F",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "C", "D",
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "Q", "A",
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "C", "D",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "H", "F",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW",
                     ""
                 ]
@@ -246,10 +258,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "D", "Q",
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "P", "F",
+                    "4-rotor",
+                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", "A", "X", // Beta
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "O", "E",
-                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", "X", // Beta
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "P", "F",
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "D", "Q",
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     ""
                 ]
@@ -265,10 +278,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "W", "U", // IV
-                    "VZBRGITYUPSDNHLXAWMJQOFECK<A", "M", "G", // V
+                    "4-rotor",
+                    "FSOKANUERHMBTIYCWLQPZXVGJD", "A", "L", // Gamma
                     "JPGVOUMFYQBENHZRDKASXLICTW<AN", "A", "J", // VI
-                    "FSOKANUERHMBTIYCWLQPZXVGJD", "L", // Gamma
+                    "VZBRGITYUPSDNHLXAWMJQOFECK<A", "M", "G", // V
+                    "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "W", "U", // IV
                     "AR BD CO EJ FN GT HK IV LM PW QZ SX UY", // C thin
                     ""
                 ]
@@ -284,10 +298,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "U", "Z", // VIII
-                    "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "O", "O", // IV
+                    "4-rotor",
+                    "FSOKANUERHMBTIYCWLQPZXVGJD", "A", "I", // Gamma
                     "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN", "I", "V", // VII
-                    "FSOKANUERHMBTIYCWLQPZXVGJD", "I", // Gamma
+                    "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "O", "O", // IV
+                    "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "U", "Z", // VIII
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     "WN MJ LX YB FP QD US IH CE GR"
                 ]
@@ -303,12 +318,33 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "U", "Z", // VIII
-                    "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "O", "O", // IV
+                    "4-rotor",
+                    "FSOKANUERHMBTIYCWLQPZXVGJD", "A", "I", // Gamma
                     "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN", "I", "V", // VII
-                    "FSOKANUERHMBTIYCWLQPZXVGJD", "I", // Gamma
+                    "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "O", "O", // IV
+                    "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "U", "Z", // VIII
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     "WN MJ LX YB FP QD US IH CE GR"
+                ]
+            }
+        ]
+    },
+    {
+        // Decryption test on real message
+        name: "Enigma: decryption 2",
+        input: "LANOTCTOUARBBFPMHPHGCZXTDYGAHGUFXGEWKBLKGJWLQXXTGPJJAVTOCKZFSLPPQIHZFXOEBWIIEKFZLCLOAQJULJOYHSSMBBGWHZANVOIIPYRBRTDJQDJJOQKCXWDNBBTYVXLYTAPGVEATXSONPNYNQFUDBBHHVWEPYEYDOHNLXKZDNWRHDUWUJUMWWVIIWZXIVIUQDRHYMNCYEFUAPNHOTKHKGDNPSAKNUAGHJZSMJBMHVTREQEDGXHLZWIFUSKDQVELNMIMITHBHDBWVHDFYHJOQIHORTDJDBWXEMEAYXGYQXOHFDMYUXXNOJAZRSGHPLWMLRECWWUTLRTTVLBHYOORGLGOWUXNXHMHYFAACQEKTHSJW",
+        expectedOutput: "KRKRALLEXXFOLGENDESISTSOFORTBEKANNTZUGEBENXXICHHABEFOLGELNBEBEFEHLERHALTENXXJANSTERLEDESBISHERIGXNREICHSMARSCHALLSJGOERINGJSETZTDERFUEHRERSIEYHVRRGRZSSADMIRALYALSSEINENNACHFOLGEREINXSCHRIFTLSCHEVOLLMACHTUNTERWEGSXABSOFORTSOLLENSIESAEMTLICHEMASSNAHMENVERFUEGENYDIESICHAUSDERGEGENWAERTIGENLAGEERGEBENXGEZXREICHSLEITEIKKTULPEKKJBORMANNJXXOBXDXMMMDURNHFKSTXKOMXADMXUUUBOOIEXKP",
+        recipeConfig: [
+            {
+                "op": "Enigma",
+                "args": [
+                    "4-rotor",
+                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", "E", "C", // Beta
+                    "VZBRGITYUPSDNHLXAWMJQOFECK<A", "P", "D", // V
+                    "JPGVOUMFYQBENHZRDKASXLICTW<AN", "E", "S", // VI
+                    "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN", "L", "Z", // VIII
+                    "AR BD CO EJ FN GT HK IV LM PW QZ SX UY", // C thin
+                    "AE BF CM DQ HU JN LX PR SZ VW"
                 ]
             }
         ]
@@ -322,10 +358,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "", true
                 ]
@@ -341,10 +378,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "", false
                 ]
@@ -359,10 +397,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQ", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQ", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -377,10 +416,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQo", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQo", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -395,10 +435,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQA", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQA", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -413,10 +454,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<RR", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<RR", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -431,10 +473,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<a", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<a", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     ""
                 ]
@@ -451,10 +494,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO", // B
                     ""
                 ]
@@ -464,16 +508,17 @@ TestRegister.addTests([
     {
         name: "Enigma: reflector validation 2",
         input: "Hello, world. This is a test.",
-        expectedOutput: "Reflector: cannot connect A to itself",
+        expectedOutput: "Reflector must have exactly 13 pairs covering every letter",
         recipeConfig: [
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
-                    "AA BR CU DH EQ FS GL IP JX KN MO TZ", // B
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
+                    "AA BR CU DH EQ FS GL IP JX KN MO TZ VV WY", // B
                     ""
                 ]
             }
@@ -487,10 +532,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AY AR CU DH EQ FS GL IP JX KN MO TZ", // B
                     ""
                 ]
@@ -505,10 +551,11 @@ TestRegister.addTests([
             {
                 "op": "Enigma",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "3-rotor",
+                    "", "A", "A",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", "A", "A", // I
-                    "", "A",
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "A", "A", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "A", "A", // III
                     "AYBR CU DH EQ FS GL IP JX KN MO TZ", // B
                     ""
                 ]

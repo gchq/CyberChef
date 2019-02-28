@@ -205,6 +205,7 @@ class RecipeWaiter {
      * @fires Manager#statechange
      */
     ingChange(e) {
+        if (e && e.target && e.target.classList.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -340,10 +341,11 @@ class RecipeWaiter {
     /**
      * Moves or removes the breakpoint indicator in the recipe based on the position.
      *
-     * @param {number} position
+     * @param {number|boolean} position - If boolean, turn off all indicators
      */
     updateBreakpointIndicator(position) {
         const operations = document.querySelectorAll("#rec-list li.operation");
+        if (typeof position === "boolean") position = operations.length;
         for (let i = 0; i < operations.length; i++) {
             if (i === position) {
                 operations[i].classList.add("break");
@@ -375,6 +377,7 @@ class RecipeWaiter {
             this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
         }
     }
+
 
     /**
      * Adds the specified operation to the recipe.
@@ -429,6 +432,23 @@ class RecipeWaiter {
 
 
     /**
+     * Triggers various change events for operation arguments that have just been initialised.
+     *
+     * @param {HTMLElement} op
+     */
+    triggerArgEvents(op) {
+        // Trigger populateOption and argSelector events
+        const triggerableOptions = op.querySelectorAll(".populate-option, .arg-selector");
+        const evt = new Event("change", {bubbles: true});
+        if (triggerableOptions.length) {
+            for (const el of triggerableOptions) {
+                el.dispatchEvent(evt);
+            }
+        }
+    }
+
+
+    /**
      * Handler for operationadd events.
      *
      * @listens Manager#operationadd
@@ -437,6 +457,8 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
+
+        this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -451,6 +473,75 @@ class RecipeWaiter {
     opRemove(e) {
         log.debug("Operation removed from recipe");
         window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Handler for text argument dragover events.
+     * Gives the user a visual cue to show that items can be dropped here.
+     *
+     * @param {event} e
+     */
+    textArgDragover (e) {
+        // This will be set if we're dragging an operation
+        if (e.dataTransfer.effectAllowed === "move")
+            return false;
+
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.closest("textarea.arg").classList.add("dropping-file");
+    }
+
+
+    /**
+     * Handler for text argument dragleave events.
+     * Removes the visual cue.
+     *
+     * @param {event} e
+     */
+    textArgDragLeave (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.classList.remove("dropping-file");
+    }
+
+
+    /**
+     * Handler for text argument drop events.
+     * Loads the dragged data into the argument textarea.
+     *
+     * @param {event} e
+     */
+    textArgDrop(e) {
+        // This will be set if we're dragging an operation
+        if (e.dataTransfer.effectAllowed === "move")
+            return false;
+
+        e.stopPropagation();
+        e.preventDefault();
+        const targ = e.target;
+        const file = e.dataTransfer.files[0];
+        const text = e.dataTransfer.getData("Text");
+
+        targ.classList.remove("dropping-file");
+
+        if (text) {
+            targ.value = text;
+            return;
+        }
+
+        if (file) {
+            const reader = new FileReader();
+            const self = this;
+            reader.onload = function (e) {
+                targ.value = e.target.result;
+                // Trigger floating label move
+                const changeEvent = new Event("change");
+                targ.dispatchEvent(changeEvent);
+                window.dispatchEvent(self.manager.statechange);
+            };
+            reader.readAsText(file);
+        }
     }
 
 
@@ -479,6 +570,7 @@ class RecipeWaiter {
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
 
+
     /**
      * Adjusts the number of ingredient columns as the width of the recipe changes.
      */
@@ -490,20 +582,25 @@ class RecipeWaiter {
             this.ingredientChildRuleID = null;
 
             // Find relevant rules in the stylesheet
-            for (const i in document.styleSheets[0].cssRules) {
-                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
-                    this.ingredientRuleID = i;
+            // try/catch for chrome 64+ CORS error on cssRules.
+            try {
+                for (const i in document.styleSheets[0].cssRules) {
+                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
+                        this.ingredientRuleID = i;
+                    }
+                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
+                        this.ingredientChildRuleID = i;
+                    }
                 }
-                if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
-                    this.ingredientChildRuleID = i;
-                }
+            } catch (e) {
+                // Do nothing.
             }
         }
 
         if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
 
-        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID],
-            ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
+        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID];
+        const ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
 
         if (recList.clientWidth < 450) {
             ingredientRule.style.gridTemplateColumns = "auto auto";

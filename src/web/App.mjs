@@ -51,10 +51,12 @@ class App {
      */
     setup() {
         document.dispatchEvent(this.manager.appstart);
+
         this.initialiseSplitter();
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
+        this.manager.output.saveBombe();
         this.resetLayout();
         this.setCompileMessage();
 
@@ -121,6 +123,9 @@ class App {
 
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
+
+        // Remove all current indicators
+        this.manager.recipe.updateBreakpointIndicator(false);
 
         this.manager.worker.bake(
             this.getInput(),        // The user's input
@@ -238,12 +243,18 @@ class App {
 
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
+     *
+     * @param {boolean} [minimise=false] - Set this flag if attempting to minimuse frames to 0 width
      */
-    initialiseSplitter() {
+    initialiseSplitter(minimise=false) {
+        if (this.columnSplitter) this.columnSplitter.destroy();
+        if (this.ioSplitter) this.ioSplitter.destroy();
+
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: [240, 370, 450],
+            minSize: minimise ? [0, 0, 0] : [240, 370, 450],
             gutterSize: 4,
+            expandToMin: false,
             onDrag: function() {
                 this.manager.recipe.adjustWidth();
             }.bind(this)
@@ -251,7 +262,8 @@ class App {
 
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
-            gutterSize: 4
+            gutterSize: 4,
+            minSize: minimise ? [0, 0] : [100, 100]
         });
 
         this.resetLayout();
@@ -467,6 +479,7 @@ class App {
             const item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
             // Populate arguments
+            log.debug(`Populating arguments for ${recipeConfig[i].op}`);
             const args = item.querySelectorAll(".arg");
             for (let j = 0; j < args.length; j++) {
                 if (recipeConfig[i].args[j] === undefined) continue;
@@ -491,6 +504,8 @@ class App {
             if (recipeConfig[i].breakpoint) {
                 item.querySelector(".breakpoint").click();
             }
+
+            this.manager.recipe.triggerArgEvents(item);
 
             this.progress = 0;
         }

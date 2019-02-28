@@ -41,6 +41,7 @@ for (const opObj in Ops) {
         inputType:   op.inputType,
         outputType:  op.presentType,
         flowControl: op.flowControl,
+        manualBake:  op.manualBake,
         args:        op.args
     };
 

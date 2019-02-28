@@ -81,7 +81,11 @@
                     if (!el.classList.contains("loading"))
                         el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
-                } catch (err) {} // Ignore errors if DOM not yet ready
+                } catch (err) {
+                    // This error was likely caused by the DOM not being ready yet,
+                    // so we wait another second and then try again.
+                    setTimeout(changeLoadingMsg, 1000);
+                }
             }
 
             changeLoadingMsg();
@@ -225,6 +229,10 @@
                         <div class="title no-select">
                             <label for="input-text">Input</label>
                             <span class="float-right">
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input" onclick="document.getElementById('open-file').click();">
+                                    <i class="material-icons">input</i>
+                                    <input type="file" id="open-file" style="display: none">
+                                </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output">
                                     <i class="material-icons">delete</i>
                                 </button>
@@ -315,7 +323,9 @@
                                 </div>
                             </div>
                             <div id="output-loader">
-                                <div class="loader"></div>
+                                <div id="output-loader-animation">
+                                    <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
+                                </div>
                                 <div class="loading-msg"></div>
                             </div>
                         </div>

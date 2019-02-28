@@ -104,6 +104,8 @@
             "Citrix CTX1 Decode",
             "Pseudo-Random Number Generator",
             "Enigma",
+            "Bombe",
+            "Multiple Bombe",
             "Typex"
         ]
     },
@@ -157,6 +159,7 @@
         "name": "Networking",
         "ops": [
             "HTTP request",
+            "DNS over HTTPS",
             "Strip HTTP headers",
             "Dechunk HTTP response",
             "Parse User Agent",
@@ -191,6 +194,8 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
+			"To Case Insensitive Regex",
+			"From Case Insensitive Regex",
             "Add line numbers",
             "Remove line numbers",
             "To Table",
@@ -215,6 +220,7 @@
             "Convert mass",
             "Convert speed",
             "Convert data units",
+            "Convert co-ordinate format",
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
@@ -306,9 +312,7 @@
             "Adler-32 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum",
-            "To Geohash",
-            "From Geohash"
+            "TCP/IP Checksum"
         ]
     },
     {
@@ -376,6 +380,7 @@
             "Generate QR Code",
             "Parse QR Code",
             "Haversine distance",
+            "Generate Lorem Ipsum",
             "Numberwang",
             "XKCD Random Number"
         ]
@@ -385,6 +390,7 @@
         "ops": [
             "Magic",
             "Fork",
+            "Subsection",
             "Merge",
             "Register",
             "Label",

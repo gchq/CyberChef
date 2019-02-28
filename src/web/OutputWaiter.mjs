@@ -319,6 +319,7 @@ class OutputWaiter {
         const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
 
         if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
+            this.app.initialiseSplitter(true);
             this.app.columnSplitter.collapse(0);
             this.app.columnSplitter.collapse(1);
             this.app.ioSplitter.collapse(0);
@@ -328,30 +329,61 @@ class OutputWaiter {
         } else {
             $(el).attr("data-original-title", "Maximise output pane");
             el.querySelector("i").innerHTML = "fullscreen";
+            this.app.initialiseSplitter(false);
             this.app.resetLayout();
         }
     }
 
 
     /**
-     * Shows or hides the loading icon.
+     * Save bombe object then remove it from the DOM so that it does not cause performance issues.
+     */
+    saveBombe() {
+        this.bombeEl = document.getElementById("bombe");
+        this.bombeEl.parentNode.removeChild(this.bombeEl);
+    }
+
+
+    /**
+     * Shows or hides the output loading screen.
+     * The animated Bombe SVG, whilst quite aesthetically pleasing, is reasonably CPU
+     * intensive, so we remove it from the DOM when not in use. We only show it if the
+     * recipe is taking longer than 200ms. We add it to the DOM just before that so that
+     * it is ready to fade in without stuttering.
      *
-     * @param {boolean} value
+     * @param {boolean} value - true == show loader
      */
     toggleLoader(value) {
+        clearTimeout(this.appendBombeTimeout);
+        clearTimeout(this.outputLoaderTimeout);
+
         const outputLoader = document.getElementById("output-loader"),
-            outputElement = document.getElementById("output-text");
+            outputElement = document.getElementById("output-text"),
+            animation = document.getElementById("output-loader-animation");
 
         if (value) {
             this.manager.controls.hideStaleIndicator();
-            this.bakingStatusTimeout = setTimeout(function() {
+
+            // Start a timer to add the Bombe to the DOM just before we make it
+            // visible so that there is no stuttering
+            this.appendBombeTimeout = setTimeout(function() {
+                animation.appendChild(this.bombeEl);
+            }.bind(this), 150);
+
+            // Show the loading screen
+            this.outputLoaderTimeout = setTimeout(function() {
                 outputElement.disabled = true;
                 outputLoader.style.visibility = "visible";
                 outputLoader.style.opacity = 1;
                 this.manager.controls.toggleBakeButtonFunction(true);
             }.bind(this), 200);
         } else {
-            clearTimeout(this.bakingStatusTimeout);
+            // Remove the Bombe from the DOM to save resources
+            this.outputLoaderTimeout = setTimeout(function () {
+                try {
+                    animation.removeChild(this.bombeEl);
+                } catch (err) {}
+            }.bind(this), 500);
             outputElement.disabled = false;
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
@@ -476,7 +508,7 @@ class OutputWaiter {
      */
     showMagicButton(opSequence, result, recipeConfig) {
         const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.truncate(result, 30)}"</span>`);
+        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
     }

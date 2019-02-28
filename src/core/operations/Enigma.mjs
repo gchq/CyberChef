@@ -8,12 +8,12 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import * as Enigma from "../lib/Enigma";
+import {ROTORS, LETTERS, ROTORS_FOURTH, REFLECTORS, Rotor, Reflector, Plugboard, EnigmaMachine} from "../lib/Enigma";
 
 /**
  * Enigma operation
  */
-class EnigmaOp extends Operation {
+class Enigma extends Operation {
     /**
      * Enigma constructor
      */
@@ -28,69 +28,88 @@ class EnigmaOp extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "1st (right-hand) rotor",
+                name: "Model",
+                type: "argSelector",
+                value: [
+                    {
+                        name: "3-rotor",
+                        off: [1, 2, 3]
+                    },
+                    {
+                        name: "4-rotor",
+                        on: [1, 2, 3]
+                    }
+                ]
+            },
+            {
+                name: "Left-most (4th) rotor",
                 type: "editableOption",
-                value: Enigma.ROTORS,
+                value: ROTORS_FOURTH,
+                defaultIndex: 0
+            },
+            {
+                name: "Left-most rotor ring setting",
+                type: "option",
+                value: LETTERS
+            },
+            {
+                name: "Left-most rotor initial value",
+                type: "option",
+                value: LETTERS
+            },
+            {
+                name: "Left-hand rotor",
+                type: "editableOption",
+                value: ROTORS,
+                defaultIndex: 0
+            },
+            {
+                name: "Left-hand rotor ring setting",
+                type: "option",
+                value: LETTERS
+            },
+            {
+                name: "Left-hand rotor initial value",
+                type: "option",
+                value: LETTERS
+            },
+            {
+                name: "Middle rotor",
+                type: "editableOption",
+                value: ROTORS,
+                defaultIndex: 1
+            },
+            {
+                name: "Middle rotor ring setting",
+                type: "option",
+                value: LETTERS
+            },
+            {
+                name: "Middle rotor initial value",
+                type: "option",
+                value: LETTERS
+            },
+            {
+                name: "Right-hand rotor",
+                type: "editableOption",
+                value: ROTORS,
                 // Default config is the rotors I-III *left to right*
                 defaultIndex: 2
             },
             {
-                name: "1st rotor ring setting",
+                name: "Right-hand rotor ring setting",
                 type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
-                name: "1st rotor initial value",
+                name: "Right-hand rotor initial value",
                 type: "option",
-                value: Enigma.LETTERS
-            },
-            {
-                name: "2nd rotor",
-                type: "editableOption",
-                value: Enigma.ROTORS,
-                defaultIndex: 1
-            },
-            {
-                name: "2nd rotor ring setting",
-                type: "option",
-                value: Enigma.LETTERS
-            },
-            {
-                name: "2nd rotor initial value",
-                type: "option",
-                value: Enigma.LETTERS
-            },
-            {
-                name: "3rd rotor",
-                type: "editableOption",
-                value: Enigma.ROTORS,
-                defaultIndex: 0
-            },
-            {
-                name: "3rd rotor ring setting",
-                type: "option",
-                value: Enigma.LETTERS
-            },
-            {
-                name: "3rd rotor initial value",
-                type: "option",
-                value: Enigma.LETTERS
-            },
-            {
-                name: "4th rotor",
-                type: "editableOption",
-                value: Enigma.ROTORS_OPTIONAL,
-                defaultIndex: 10
-            },
-            {
-                name: "4th rotor initial value",
-                type: "option",
-                value: Enigma.LETTERS
+                value: LETTERS
             },
             {
                 name: "Reflector",
                 type: "editableOption",
-                value: Enigma.REFLECTORS
+                value: REFLECTORS
             },
             {
                 name: "Plugboard",
@@ -130,32 +149,27 @@ class EnigmaOp extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [
-            rotor1str, rotor1ring, rotor1pos,
-            rotor2str, rotor2ring, rotor2pos,
-            rotor3str, rotor3ring, rotor3pos,
-            rotor4str, rotor4pos,
-            reflectorstr, plugboardstr,
-            removeOther
-        ] = args;
+        const model = args[0];
+        const reflectorstr = args[13];
+        const plugboardstr = args[14];
+        const removeOther = args[15];
         const rotors = [];
-        const [rotor1wiring, rotor1steps] = this.parseRotorStr(rotor1str, 1);
-        rotors.push(new Enigma.Rotor(rotor1wiring, rotor1steps, rotor1ring, rotor1pos));
-        const [rotor2wiring, rotor2steps] = this.parseRotorStr(rotor2str, 2);
-        rotors.push(new Enigma.Rotor(rotor2wiring, rotor2steps, rotor2ring, rotor2pos));
-        const [rotor3wiring, rotor3steps] = this.parseRotorStr(rotor3str, 3);
-        rotors.push(new Enigma.Rotor(rotor3wiring, rotor3steps, rotor3ring, rotor3pos));
-        if (rotor4str !== "") {
-            // Fourth rotor doesn't have a ring setting - A is equivalent to no setting
-            const [rotor4wiring, rotor4steps] = this.parseRotorStr(rotor4str, 4);
-            rotors.push(new Enigma.Rotor(rotor4wiring, rotor4steps, "A", rotor4pos));
+        for (let i=0; i<4; i++) {
+            if (i === 0 && model === "3-rotor") {
+                // Skip the 4th rotor settings
+                continue;
+            }
+            const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*3 + 1], 1);
+            rotors.push(new Rotor(rotorwiring, rotorsteps, args[i*3 + 2], args[i*3 + 3]));
         }
-        const reflector = new Enigma.Reflector(reflectorstr);
-        const plugboard = new Enigma.Plugboard(plugboardstr);
+        // Rotors are handled in reverse
+        rotors.reverse();
+        const reflector = new Reflector(reflectorstr);
+        const plugboard = new Plugboard(plugboardstr);
         if (removeOther) {
             input = input.replace(/[^A-Za-z]/g, "");
         }
-        const enigma = new Enigma.EnigmaMachine(rotors, reflector, plugboard);
+        const enigma = new EnigmaMachine(rotors, reflector, plugboard);
         let result = enigma.crypt(input);
         if (removeOther) {
             // Five character cipher groups is traditional
@@ -197,4 +211,4 @@ class EnigmaOp extends Operation {
 
 }
 
-export default EnigmaOp;
+export default Enigma;

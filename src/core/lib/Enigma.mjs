@@ -22,13 +22,12 @@ export const ROTORS = [
     {name: "VI", value: "JPGVOUMFYQBENHZRDKASXLICTW<AN"},
     {name: "VII", value: "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN"},
     {name: "VIII", value: "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN"},
+];
+
+export const ROTORS_FOURTH = [
     {name: "Beta", value: "LEYJVCNIXWPBQMDRTAKZGFUHOS"},
     {name: "Gamma", value: "FSOKANUERHMBTIYCWLQPZXVGJD"},
 ];
-
-export const ROTORS_OPTIONAL = [].concat(ROTORS).concat([
-    {name: "None", value: ""},
-]);
 
 /**
  * Provided default Enigma reflector set.
@@ -103,15 +102,17 @@ export class Rotor {
         if (!/^[A-Z]$/.test(initialPosition)) {
             throw new OperationError("Rotor initial position must be exactly one uppercase letter");
         }
-        this.map = {};
-        this.revMap = {};
+        this.map = new Array(26);
+        this.revMap = new Array(26);
+        const uniq = {};
         for (let i=0; i<LETTERS.length; i++) {
             const a = a2i(LETTERS[i]);
             const b = a2i(wiring[i]);
             this.map[a] = b;
             this.revMap[b] = a;
+            uniq[b] = true;
         }
-        if (Object.keys(this.revMap).length !== LETTERS.length) {
+        if (Object.keys(uniq).length !== LETTERS.length) {
             throw new OperationError("Rotor wiring must have each letter exactly once");
         }
         const rs = a2i(ringSetting);
@@ -169,6 +170,7 @@ class PairMapBase {
     constructor(pairs, name="PairMapBase") {
         // I've chosen to make whitespace significant here to make a) code and
         // b) inputs easier to read
+        this.pairs = pairs;
         this.map = {};
         if (pairs === "") {
             return;
@@ -179,7 +181,8 @@ class PairMapBase {
             }
             const a = a2i(pair[0]), b = a2i(pair[1]);
             if (a === b) {
-                throw new OperationError(`${name}: cannot connect ${pair[0]} to itself`);
+                // self-stecker
+                return;
             }
             if (this.map.hasOwnProperty(a)) {
                 throw new OperationError(`${name} connects ${pair[0]} more than once`);
@@ -219,6 +222,8 @@ class PairMapBase {
 
 /**
  * Reflector. PairMapBase but requires that all characters are accounted for.
+ *
+ * Includes a couple of optimisations on that basis.
  */
 export class Reflector extends PairMapBase {
     /**
@@ -231,6 +236,21 @@ export class Reflector extends PairMapBase {
         if (s !== 26) {
             throw new OperationError("Reflector must have exactly 13 pairs covering every letter");
         }
+        const optMap = new Array(26);
+        for (const x of Object.keys(this.map)) {
+            optMap[x] = this.map[x];
+        }
+        this.map = optMap;
+    }
+
+    /**
+     * Transform a character through this object.
+     *
+     * @param {number} c - The character.
+     * @returns {number}
+     */
+    transform(c) {
+        return this.map[c];
     }
 }
 
