@@ -291,7 +291,7 @@ class MultipleBombe extends Operation {
         let html = `Bombe run on menu with ${output.nLoops} loop${output.nLoops === 1 ? "" : "s"} (2+ desirable). Note: Rotors and rotor positions are listed left to right, ignore stepping and the ring setting, and positions start at the beginning of the crib. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided.\n`;
 
         for (const run of output.bombeRuns) {
-            html += `\nRotors: ${run.rotors.join(", ")}\nReflector: ${run.reflector}\n`;
+            html += `\nRotors: ${run.rotors.slice().reverse().join(", ")}\nReflector: ${run.reflector}\n`;
             html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th><th>Partial plugboard</th><th>Decryption preview</th></tr>";
             for (const [setting, stecker, decrypt] of run.result) {
                 html += `<tr><td>${setting}</td><td>${stecker}</td><td>${decrypt}</td></tr>\n`;
