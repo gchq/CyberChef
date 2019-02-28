@@ -240,6 +240,27 @@ class HTMLIngredient {
                     ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
                 break;
+            case "argSelector":
+                html += `<div class="form-group inline">
+                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <select
+                        class="form-control arg inline arg-selector"
+                        id="${this.id}"
+                        arg-name="${this.name}"
+                        ${this.disabled ? "disabled" : ""}>`;
+                for (i = 0; i < this.value.length; i++) {
+                    html += `<option ${this.defaultIndex === i ? "selected" : ""}
+                        turnon="${JSON.stringify(this.value[i].on || [])}"
+                        turnoff="${JSON.stringify(this.value[i].off || [])}">
+                            ${this.value[i].name}
+                        </option>`;
+                }
+                html += `</select>
+                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
+                </div>`;
+
+                this.manager.addDynamicListener(".arg-selector", "change", this.argSelectorChange, this);
+                break;
             default:
                 break;
         }
@@ -319,6 +340,33 @@ class HTMLIngredient {
         input.dispatchEvent(evt);
 
         this.manager.recipe.ingChange();
+    }
+
+
+    /**
+     * Handler for argument selector changes.
+     * Shows or hides the relevant arguments for this operation.
+     *
+     * @param {event} e
+     */
+    argSelectorChange(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const option = e.target.options[e.target.selectedIndex];
+        const op = e.target.closest(".operation");
+        const args = op.querySelectorAll(".ingredients .form-group");
+        const turnon = JSON.parse(option.getAttribute("turnon"));
+        const turnoff = JSON.parse(option.getAttribute("turnoff"));
+
+        args.forEach((arg, i) => {
+            if (turnon.includes(i)) {
+                arg.classList.remove("d-none");
+            }
+            if (turnoff.includes(i)) {
+                arg.classList.add("d-none");
+            }
+        });
     }
 
 }

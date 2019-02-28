@@ -16,10 +16,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "THISISATESTMESSAGE", 0, false
                 ]
@@ -35,10 +36,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "THISISATESTMESSAGE", 0, false
                 ]
@@ -53,10 +55,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "THISISATESTMESSAGE", 3, false
                 ]
@@ -71,10 +74,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "THISISATESTM", 0, false
                 ]
@@ -89,10 +93,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "THISISATESTM", 0, true
                 ]
@@ -108,10 +113,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "4-rotor",
                     "LEYJVCNIXWPBQMDRTAKZGFUHOS", // Beta
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
                     "THISISATESTMESSAGE", 0, false
                 ]
@@ -126,10 +132,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "", 0, false
                 ]
@@ -144,10 +151,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "A", 0, false
                 ]
@@ -162,10 +170,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "AAAAAAAA", 0, false
                 ]
@@ -180,10 +189,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "CCCCCCCCCCCCCCCCCCCCCC", 0, false
                 ]
@@ -198,10 +208,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "AAAAAAAAAAAAAAAAAAAAAAAAAA", 0, false
                 ]
@@ -216,10 +227,11 @@ TestRegister.addTests([
             {
                 "op": "Bombe",
                 "args": [
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "3-rotor",
                     "",
+                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
                     "BBBBB", -1, false
                 ]

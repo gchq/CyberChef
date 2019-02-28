@@ -393,15 +393,6 @@ class RecipeWaiter {
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
 
-        // Trigger populateOption events
-        const populateOptions = item.querySelectorAll(".populate-option");
-        const evt = new Event("change", {bubbles: true});
-        if (populateOptions.length) {
-            for (const el of populateOptions) {
-                el.dispatchEvent(evt);
-            }
-        }
-
         item.dispatchEvent(this.manager.operationadd);
         return item;
     }
@@ -440,6 +431,23 @@ class RecipeWaiter {
 
 
     /**
+     * Triggers various change events for operation arguments that have just been initialised.
+     *
+     * @param {HTMLElement} op
+     */
+    triggerArgEvents(op) {
+        // Trigger populateOption and argSelector events
+        const triggerableOptions = op.querySelectorAll(".populate-option, .arg-selector");
+        const evt = new Event("change", {bubbles: true});
+        if (triggerableOptions.length) {
+            for (const el of triggerableOptions) {
+                el.dispatchEvent(evt);
+            }
+        }
+    }
+
+
+    /**
      * Handler for operationadd events.
      *
      * @listens Manager#operationadd
@@ -448,6 +456,8 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
+
+        this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
 

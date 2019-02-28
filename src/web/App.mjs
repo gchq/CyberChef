@@ -472,6 +472,7 @@ class App {
             const item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
             // Populate arguments
+            log.debug(`Populating arguments for ${recipeConfig[i].op}`);
             const args = item.querySelectorAll(".arg");
             for (let j = 0; j < args.length; j++) {
                 if (recipeConfig[i].args[j] === undefined) continue;
@@ -496,6 +497,8 @@ class App {
             if (recipeConfig[i].breakpoint) {
                 item.querySelector(".breakpoint").click();
             }
+
+            this.manager.recipe.triggerArgEvents(item);
 
             this.progress = 0;
         }

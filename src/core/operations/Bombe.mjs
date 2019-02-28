@@ -30,28 +30,42 @@ class Bombe extends Operation {
         this.presentType = "html";
         this.args = [
             {
-                name: "1st (right-hand) rotor",
-                type: "editableOption",
-                value: ROTORS,
-                defaultIndex: 2
+                name: "Model",
+                type: "argSelector",
+                value: [
+                    {
+                        name: "3-rotor",
+                        off: [1]
+                    },
+                    {
+                        name: "4-rotor",
+                        on: [1]
+                    }
+                ]
             },
             {
-                name: "2nd (middle) rotor",
+                name: "Left-most rotor",
+                type: "editableOption",
+                value: ROTORS_FOURTH,
+                defaultIndex: 0
+            },
+            {
+                name: "Left-hand rotor",
+                type: "editableOption",
+                value: ROTORS,
+                defaultIndex: 0
+            },
+            {
+                name: "Middle rotor",
                 type: "editableOption",
                 value: ROTORS,
                 defaultIndex: 1
             },
             {
-                name: "3rd (left-hand) rotor",
+                name: "Right-hand rotor",
                 type: "editableOption",
                 value: ROTORS,
-                defaultIndex: 0
-            },
-            {
-                name: "4th (left-most, only some models) rotor",
-                type: "editableOption",
-                value: ROTORS_FOURTH,
-                defaultIndex: 0
+                defaultIndex: 2
             },
             {
                 name: "Reflector",
@@ -93,23 +107,26 @@ class Bombe extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const reflectorstr = args[4];
-        let crib = args[5];
-        const offset = args[6];
-        const check = args[7];
+        const model = args[0];
+        const reflectorstr = args[5];
+        let crib = args[6];
+        const offset = args[7];
+        const check = args[8];
         const rotors = [];
         for (let i=0; i<4; i++) {
-            if (i === 3 && args[i] === "") {
+            if (i === 0 && model === "3-rotor") {
                 // No fourth rotor
-                break;
+                continue;
             }
-            let rstr = args[i];
+            let rstr = args[i + 1];
             // The Bombe doesn't take stepping into account so we'll just ignore it here
             if (rstr.includes("<")) {
                 rstr = rstr.split("<", 2)[0];
             }
             rotors.push(rstr);
         }
+        // Rotors are handled in reverse
+        rotors.reverse();
         if (crib.length === 0) {
             throw new OperationError("Crib cannot be empty");
         }
