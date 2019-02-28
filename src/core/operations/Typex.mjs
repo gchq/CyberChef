@@ -29,10 +29,10 @@ class Typex extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "1st (right-hand, static) rotor",
+                name: "1st (left-hand) rotor",
                 type: "editableOption",
                 value: ROTORS,
-                defaultIndex: 4
+                defaultIndex: 0
             },
             {
                 name: "1st rotor reversed",
@@ -50,10 +50,10 @@ class Typex extends Operation {
                 value: LETTERS
             },
             {
-                name: "2nd (static) rotor",
+                name: "2nd rotor",
                 type: "editableOption",
                 value: ROTORS,
-                defaultIndex: 3
+                defaultIndex: 1
             },
             {
                 name: "2nd rotor reversed",
@@ -71,7 +71,7 @@ class Typex extends Operation {
                 value: LETTERS
             },
             {
-                name: "3rd rotor",
+                name: "3rd (middle) rotor",
                 type: "editableOption",
                 value: ROTORS,
                 defaultIndex: 2
@@ -92,10 +92,10 @@ class Typex extends Operation {
                 value: LETTERS
             },
             {
-                name: "4th rotor",
+                name: "4th (static) rotor",
                 type: "editableOption",
                 value: ROTORS,
-                defaultIndex: 1
+                defaultIndex: 3
             },
             {
                 name: "4th rotor reversed",
@@ -113,10 +113,10 @@ class Typex extends Operation {
                 value: LETTERS
             },
             {
-                name: "5th rotor",
+                name: "5th (right-hand, static) rotor",
                 type: "editableOption",
                 value: ROTORS,
-                defaultIndex: 0
+                defaultIndex: 4
             },
             {
                 name: "5th rotor reversed",
@@ -190,6 +190,8 @@ class Typex extends Operation {
             const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*4]);
             rotors.push(new Rotor(rotorwiring, rotorsteps, args[i*4 + 1], args[i*4+2], args[i*4+3]));
         }
+        // Rotors are handled in reverse
+        rotors.reverse();
         const reflector = new Reflector(reflectorstr);
         let plugboardstrMod = plugboardstr;
         if (plugboardstrMod === "") {
