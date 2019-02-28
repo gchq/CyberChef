@@ -25,7 +25,6 @@ export const ROTORS = [
 ];
 
 export const ROTORS_FOURTH = [
-    {name: "None", value: ""},
     {name: "Beta", value: "LEYJVCNIXWPBQMDRTAKZGFUHOS"},
     {name: "Gamma", value: "FSOKANUERHMBTIYCWLQPZXVGJD"},
 ];

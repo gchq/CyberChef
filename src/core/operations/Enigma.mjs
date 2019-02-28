@@ -42,7 +42,7 @@ class Enigma extends Operation {
                 ]
             },
             {
-                name: "Left-most rotor",
+                name: "Left-most (4th) rotor",
                 type: "editableOption",
                 value: ROTORS_FOURTH,
                 defaultIndex: 0
