@@ -31,6 +31,17 @@ class NodeDish extends Dish {
     }
 
     /**
+     * Apply the inputted operation to the dish.
+     *
+     * @param {WrappedOperation} operation the operation to perform
+     * @param {*} args - any arguments for the operation
+     * @returns {Dish} a new dish with the result of the operation.
+     */
+    apply(operation, args=null) {
+        return operation(this.value, args);
+    }
+
+    /**
      * alias for get
      * @param args see get args
      */
