@@ -926,7 +926,11 @@ class Utils {
      * await Utils.readFile(new File(["hello"], "test"))
      */
     static readFile(file) {
-        if (Utils.isBrowser()) {
+
+        if (Utils.isNode()) {
+            return Buffer.from(file).buffer;
+
+        } else {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 const data = new Uint8Array(file.size);
@@ -954,17 +958,12 @@ class Utils {
 
                 seek();
             });
-
-        } else if (Utils.isNode()) {
-            return Buffer.from(file).buffer;
         }
-
-        throw new Error("Unkown environment!");
     }
 
     /** */
     static readFileSync(file) {
-        if (Utils.isBrowser()) {
+        if (!Utils.isNode()) {
             throw new TypeError("Browser environment cannot support readFileSync");
         }
 
@@ -1063,13 +1062,6 @@ class Utils {
             "\\x":           /\\x/g,
             "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
         }[token];
-    }
-
-    /**
-     * Check if code is running in a browser environment
-     */
-    static isBrowser() {
-        return typeof window !== "undefined" && typeof window.document !== "undefined";
     }
 
     /**

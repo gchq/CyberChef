@@ -365,9 +365,6 @@ module.exports = function (grunt) {
                             "./config/modules/OpModules": "./config/modules/Default"
                         }
                     },
-                    output: {
-                        // globalObject: "this",
-                    },
                     plugins: [
                         new webpack.DefinePlugin(BUILD_CONSTANTS),
                         new HtmlWebpackPlugin({
