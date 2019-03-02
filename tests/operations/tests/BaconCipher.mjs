@@ -234,7 +234,7 @@ TestRegister.addTests([
     },
     {
         name: "Bacon Decode: complete alphabet case code inverse",
-        input: "Well, there's now another example which will be not only strange to read but sound weird for everyone knowing nothing what the thing is about. Nevertheless, works great out of the box.",
+        input: "Well, there's now another example   which will be not only strange to read but sound weird for everyone knowing nothing what the thing is about. Nevertheless, works great out of the box. ",
         expectedOutput: "DECODE",
         recipeConfig: [
             {
