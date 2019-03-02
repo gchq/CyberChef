@@ -8,11 +8,10 @@
 
 import Operation from "../Operation";
 import {
-    BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE,
+    BACON_ALPHABETS,
     BACON_TRANSLATIONS_FOR_ENCODING, BACON_TRANSLATION_AB,
     swapZeroAndOne
 } from "../lib/Bacon";
-import { BACON_CODES_REDUCED } from "../lib/Bacon.mjs";
 
 /**
 * BaconCipherEncode operation
@@ -34,7 +33,7 @@ class BaconCipherEncode extends Operation {
             {
                 "name": "Alphabet",
                 "type": "option",
-                "value": [BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE]
+                "value": Object.keys(BACON_ALPHABETS)
             },
             {
                 "name": "Translation",
@@ -62,6 +61,7 @@ class BaconCipherEncode extends Operation {
     run(input, args) {
         const [alphabet, translation, keep, invert] = args;
 
+        const alphabetObject = BACON_ALPHABETS[alphabet];
         const charCodeA = "A".charCodeAt(0);
         const charCodeZ = "Z".charCodeAt(0);
 
@@ -69,8 +69,8 @@ class BaconCipherEncode extends Operation {
             const charCode = c.toUpperCase().charCodeAt(0);
             if (charCode >= charCodeA && charCode <= charCodeZ) {
                 let code = charCode - charCodeA;
-                if (alphabet === BACON_ALPHABET_REDUCED) {
-                    code = BACON_CODES_REDUCED[code];
+                if (alphabetObject.codes !== undefined) {
+                    code = alphabetObject.codes[code];
                 }
                 const bacon = ("00000" + code.toString(2)).substr(-5, 5);
                 return bacon;

@@ -8,7 +8,7 @@
 
 import Operation from "../Operation";
 import {
-    BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE,
+    BACON_ALPHABETS,
     BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP,
     swapZeroAndOne
 } from "../lib/Bacon";
@@ -33,7 +33,7 @@ class BaconCipherDecode extends Operation {
             {
                 "name": "Alphabet",
                 "type": "option",
-                "value": [BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE]
+                "value": Object.keys(BACON_ALPHABETS)
             },
             {
                 "name": "Translation",
@@ -55,10 +55,11 @@ class BaconCipherDecode extends Operation {
     */
     run(input, args) {
         const [alphabet, translation, invert] = args;
-        // split text into groups of 5 characters
+        const alphabetObject = BACON_ALPHABETS[alphabet];
 
         // remove invalid characters
         input = input.replace(BACON_CLEARER_MAP[translation], "");
+
         // normalize to unique alphabet
         if (BACON_NORMALIZE_MAP[translation] !== undefined) {
             input = input.replace(/./g, function (c) {
@@ -95,7 +96,7 @@ class BaconCipherDecode extends Operation {
         for (let index = 0; index < inputArray.length; index++) {
             const code = inputArray[index];
             const number = parseInt(code, 2);
-            output += number < alphabet.length ? alphabet[number] : "?";
+            output += number < alphabetObject.alphabet.length ? alphabetObject.alphabet[number] : "?";
         }
         return output;
     }

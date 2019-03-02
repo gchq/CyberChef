@@ -6,9 +6,9 @@
  * @license Apache-2.0
  */
 import TestRegister from "../TestRegister";
-import { BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE, BACON_TRANSLATIONS } from "../../../src/core/lib/Bacon";
+import { BACON_ALPHABETS, BACON_TRANSLATIONS } from "../../../src/core/lib/Bacon";
 
-const alphabets = [BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE];
+const alphabets = Object.keys(BACON_ALPHABETS);
 const translations = BACON_TRANSLATIONS;
 
 TestRegister.addTests([

@@ -9,10 +9,15 @@
 /**
  * Bacon definitions.
  */
-
-export const BACON_ALPHABET_REDUCED = "ABCDEFGHIKLMNOPQRSTUWXYZ";
-export const BACON_ALPHABET_COMPLETE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-export const BACON_CODES_REDUCED = [0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 19, 20, 21, 22, 23];
+export const BACON_ALPHABETS = {
+    "Standard (I=J and U=V)": {
+        alphabet: "ABCDEFGHIKLMNOPQRSTUWXYZ",
+        codes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 19, 20, 21, 22, 23]
+    },
+    "Complete": {
+        alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    }
+};
 export const BACON_TRANSLATION_01 = "0/1";
 export const BACON_TRANSLATION_AB = "A/B";
 export const BACON_TRANSLATION_CASE = "Case";
