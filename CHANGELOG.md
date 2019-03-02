@@ -2,6 +2,24 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.24.0] - 2019-02-08
+- 'DNS over HTTPS' operation added [@h345983745] | [#489]
+
+### [8.23.1] - 2019-01-18
+- 'Convert co-ordinate format' operation added [@j433866] | [#476]
+
+### [8.23.0] - 2019-01-18
+- 'YARA Rules' operation added [@artemisbot] | [#468]
+
+### [8.22.0] - 2019-01-10
+- 'Subsection' operation added [@j433866] | [#467]
+
+### [8.21.0] - 2019-01-10
+- 'To Case Insensitive Regex' and 'From Case Insensitive Regex' operations added [@masq] | [#461]
+
+### [8.20.0] - 2019-01-09
+- 'Generate Lorem Ipsum' operation added [@klaxon1] | [#455]
+
 ### [8.19.0] - 2018-12-30
 - UI test suite added to confirm that the app loads correctly in a reasonable time and that various operations from each module can be run [@n1474335] | [#458]
 
@@ -88,6 +106,12 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.24.0]: https://github.com/gchq/CyberChef/releases/tag/v8.24.0
+[8.23.1]: https://github.com/gchq/CyberChef/releases/tag/v8.23.1
+[8.23.0]: https://github.com/gchq/CyberChef/releases/tag/v8.23.0
+[8.22.0]: https://github.com/gchq/CyberChef/releases/tag/v8.22.0
+[8.21.0]: https://github.com/gchq/CyberChef/releases/tag/v8.21.0
+[8.20.0]: https://github.com/gchq/CyberChef/releases/tag/v8.20.0
 [8.19.0]: https://github.com/gchq/CyberChef/releases/tag/v8.19.0
 [8.18.0]: https://github.com/gchq/CyberChef/releases/tag/v8.18.0
 [8.17.0]: https://github.com/gchq/CyberChef/releases/tag/v8.17.0
@@ -117,6 +141,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@d98762625]: https://github.com/d98762625
 [@j433866]: https://github.com/j433866
 [@GCHQ77703]: https://github.com/GCHQ77703
+[@h345983745]: https://github.com/h345983745
 [@artemisbot]: https://github.com/artemisbot
 [@picapi]: https://github.com/picapi
 [@Dachande663]: https://github.com/Dachande663
@@ -130,6 +155,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@tcode2k16]: https://github.com/tcode2k16
 [@Cynser]: https://github.com/Cynser
 [@anthony-arnold]: https://github.com/anthony-arnold
+[@masq]: https://github.com/masq
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -159,4 +185,10 @@ All major and minor version changes will be documented in this file. Details of 
 [#446]: https://github.com/gchq/CyberChef/pull/446
 [#448]: https://github.com/gchq/CyberChef/pull/448
 [#449]: https://github.com/gchq/CyberChef/pull/449
+[#455]: https://github.com/gchq/CyberChef/pull/455
 [#458]: https://github.com/gchq/CyberChef/pull/458
+[#461]: https://github.com/gchq/CyberChef/pull/461
+[#467]: https://github.com/gchq/CyberChef/pull/467
+[#468]: https://github.com/gchq/CyberChef/pull/468
+[#476]: https://github.com/gchq/CyberChef/pull/476
+[#489]: https://github.com/gchq/CyberChef/pull/489

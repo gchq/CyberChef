@@ -6,6 +6,7 @@ addons:
 install: npm install
 before_script:
   - npm install -g grunt
+  - export NODE_OPTIONS=--max_old_space_size=2048
 script:
   - grunt lint
   - grunt test

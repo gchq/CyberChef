@@ -23,6 +23,7 @@ class Operation {
         this._breakpoint      = false;
         this._disabled        = false;
         this._flowControl     = false;
+        this._manualBake      = false;
         this._ingList         = [];
 
         // Public fields
@@ -179,6 +180,7 @@ class Operation {
 
             if (ing.toggleValues) conf.toggleValues = ing.toggleValues;
             if (ing.hint) conf.hint = ing.hint;
+            if (ing.rows) conf.rows = ing.rows;
             if (ing.disabled) conf.disabled = ing.disabled;
             if (ing.target) conf.target = ing.target;
             if (ing.defaultIndex) conf.defaultIndex = ing.defaultIndex;
@@ -281,6 +283,7 @@ class Operation {
         return this._flowControl;
     }
 
+
     /**
      * Set whether this Operation is a flowcontrol op.
      *
@@ -288,6 +291,26 @@ class Operation {
      */
     set flowControl(value) {
         this._flowControl = !!value;
+    }
+
+
+    /**
+     * Returns true if this Operation should not trigger AutoBake.
+     *
+     * @returns {boolean}
+     */
+    get manualBake() {
+        return this._manualBake;
+    }
+
+
+    /**
+     * Set whether this Operation should trigger AutoBake.
+     *
+     * @param {boolean} value
+     */
+    set manualBake(value) {
+        this._manualBake = !!value;
     }
 
 }
