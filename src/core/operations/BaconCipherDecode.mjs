@@ -9,7 +9,8 @@
 import Operation from "../Operation";
 import {
     BACON_ALPHABET_REDUCED, BACON_ALPHABET_COMPLETE,
-    BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP
+    BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP,
+    swapZeroAndOne
 } from "../lib/Bacon";
 
 /**
@@ -84,12 +85,7 @@ class BaconCipherDecode extends Operation {
         }
 
         if (invert) {
-            input = input.replace(/./g, function (c) {
-                return {
-                    "0": "1",
-                    "1": "0"
-                }[c];
-            });
+            input = swapZeroAndOne(input);
         }
 
         // group into 5
