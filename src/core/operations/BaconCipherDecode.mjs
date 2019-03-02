@@ -77,10 +77,14 @@ class BaconCipherDecode extends Operation {
                 }
             });
         } else if (translation === BACON_TRANSLATION_AMNZ) {
-            const words = input.split(" ");
+            const words = input.split(/\s+/);
             const letters = words.map(function (e) {
-                const code = e[0].toUpperCase().charCodeAt(0);
-                return code >= "N".charCodeAt(0) ? "1" : "0";
+                if (e) {
+                    const code = e[0].toUpperCase().charCodeAt(0);
+                    return code >= "N".charCodeAt(0) ? "1" : "0";
+                } else {
+                    return "";
+                }
             });
             input = letters.join("");
         }
