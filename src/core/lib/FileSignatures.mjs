@@ -1057,7 +1057,7 @@ export function extractJPEG(bytes, offset) {
 
     while (stream.hasMore()) {
         const marker = stream.getBytes(2);
-        if (marker[0] !== 0xff) throw new Error("Invalid JPEG marker: " + marker);
+        if (marker[0] !== 0xff) throw new Error(`Invalid marker while parsing JPEG at pos ${stream.position}: ${marker}`);
 
         let segmentSize = 0;
         switch (marker[1]) {
@@ -1609,7 +1609,7 @@ function parseDEFLATE(stream) {
 
             parseHuffmanBlock(stream, dynamicLiteralTable, dynamicDistanceTable);
         } else {
-            throw new Error("Invalid block type");
+            throw new Error(`Invalid block type while parsing DEFLATE stream at pos ${stream.position}`);
         }
     }
 
@@ -1712,7 +1712,7 @@ function readHuffmanCode(stream, table) {
     const codeLength = codeWithLength >>> 16;
 
     if (codeLength > maxCodeLength) {
-        throw new Error("Invalid code length: " + codeLength);
+        throw new Error(`Invalid Huffman Code length while parsing DEFLATE block at pos ${stream.position}: ${codeLength}`);
     }
 
     stream.moveBackwardsByBits(maxCodeLength - codeLength);

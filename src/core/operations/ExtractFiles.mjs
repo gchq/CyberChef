@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-// import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
 import {scanForFileTypes, extractFile} from "../lib/FileType";
 import {FILE_SIGNATURES} from "../lib/FileSignatures";
@@ -34,7 +34,13 @@ class ExtractFiles extends Operation {
                 type: "boolean",
                 value: cat === "Miscellaneous" ? false : true
             };
-        });
+        }).concat([
+            {
+                name: "Ignore failed extractions",
+                type: "boolean",
+                value: "true"
+            }
+        ]);
     }
 
     /**
@@ -44,7 +50,8 @@ class ExtractFiles extends Operation {
      */
     run(input, args) {
         const bytes = new Uint8Array(input),
-            categories = [];
+            categories = [],
+            ignoreFailedExtractions = args.pop(1);
 
         args.forEach((cat, i) => {
             if (cat) categories.push(Object.keys(FILE_SIGNATURES)[i]);
@@ -59,8 +66,13 @@ class ExtractFiles extends Operation {
             try {
                 files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
             } catch (err) {
-                if (err.message.indexOf("No extraction algorithm available") < 0)
-                    throw err;
+                if (!ignoreFailedExtractions && err.message.indexOf("No extraction algorithm available") < 0) {
+                    throw new OperationError(
+                        `Error while attempting to extract ${detectedFile.fileDetails.name} ` +
+                        `at offset ${detectedFile.offset}:\n` +
+                        `${err.message}`
+                    );
+                }
             }
         });
 
