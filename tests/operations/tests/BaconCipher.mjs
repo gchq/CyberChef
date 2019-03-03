@@ -1,7 +1,7 @@
 /**
  * BaconCipher tests.
  *
- * @author Karsten Silkenbäumer [kassi@users.noreply.github.com]
+ * @author Karsten Silkenbäumer [github.com/kassi]
  * @copyright Karsten Silkenbäumer 2019
  * @license Apache-2.0
  */

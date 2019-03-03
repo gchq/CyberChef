@@ -1,7 +1,7 @@
 /**
  * BaconCipher operation.
  *
-* @author kassi [kassi@users.noreply.github.com]
+* @author Karsten Silkenbäumer [github.com/kassi]
 * @copyright Karsten Silkenbäumer 2019
 * @license Apache-2.0
 */
