@@ -368,7 +368,8 @@
             "Flip Image",
             "Crop Image",
             "Image Brightness / Contrast",
-            "Image Opacity"
+            "Image Opacity",
+            "Image Filter"
         ]
     },
     {
