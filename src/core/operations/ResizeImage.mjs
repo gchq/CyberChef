@@ -32,12 +32,14 @@ class ResizeImage extends Operation {
             {
                 name: "Width",
                 type: "number",
-                value: 100
+                value: 100,
+                min: 1
             },
             {
                 name: "Height",
                 type: "number",
-                value: 100
+                value: 100,
+                min: 1
             },
             {
                 name: "Unit type",
