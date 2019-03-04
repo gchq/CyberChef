@@ -30,9 +30,9 @@ class RotateImage extends Operation {
         this.presentType = "html";
         this.args = [
             {
-                "name": "Rotation amount (degrees)",
-                "type": "number",
-                "value": 90
+                name: "Rotation amount (degrees)",
+                type: "number",
+                value: 90
             }
         ];
     }
