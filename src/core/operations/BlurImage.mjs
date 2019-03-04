@@ -32,7 +32,8 @@ class BlurImage extends Operation {
             {
                 name: "Blur Amount",
                 type: "number",
-                value: 5
+                value: 5,
+                min: 1
             },
             {
                 name: "Blur Type",
@@ -59,6 +60,8 @@ class BlurImage extends Operation {
                     image.blur(blurAmount);
                     break;
                 case "Gaussian":
+                    if (ENVIRONMENT_IS_WORKER())
+                        self.sendStatusMessage("Gaussian blurring image. This will take a while...");
                     image.gaussian(blurAmount);
                     break;
             }
