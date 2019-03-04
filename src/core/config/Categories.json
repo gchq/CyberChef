@@ -366,7 +366,8 @@
             "Dither Image",
             "Invert Image",
             "Flip Image",
-            "Crop Image"
+            "Crop Image",
+            "Image Brightness / Contrast"
         ]
     },
     {
