@@ -367,7 +367,8 @@
             "Invert Image",
             "Flip Image",
             "Crop Image",
-            "Image Brightness / Contrast"
+            "Image Brightness / Contrast",
+            "Image Opacity"
         ]
     },
     {
