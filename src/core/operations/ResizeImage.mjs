@@ -24,7 +24,7 @@ class ResizeImage extends Operation {
         this.name = "Resize Image";
         this.module = "Image";
         this.description = "Resizes an image to the specified width and height values.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Image_scaling";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.presentType = "html";
