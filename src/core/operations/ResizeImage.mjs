@@ -86,10 +86,11 @@ class ResizeImage extends Operation {
             "Hermite": jimp.RESIZE_HERMITE,
             "Bezier": jimp.RESIZE_BEZIER
         };
-        
+
         if (!type || type.mime.indexOf("image") !== 0){
             throw new OperationError("Invalid file type.");
         }
+
         const image = await jimp.read(Buffer.from(input));
 
         if (unit === "Percent") {
