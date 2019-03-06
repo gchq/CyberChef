@@ -57,6 +57,7 @@ import "./tests/JWTSign";
 import "./tests/JWTVerify";
 import "./tests/MS";
 import "./tests/Magic";
+import "./tests/Malbolge";
 import "./tests/MorseCode";
 import "./tests/NetBIOS";
 import "./tests/OTP";

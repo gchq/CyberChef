@@ -312,6 +312,12 @@
         ]
     },
     {
+        "name": "Esoteric Programming",
+        "ops": [
+            "Malbolge"
+        ]
+    },
+    {
         "name": "Code tidy",
         "ops": [
             "Syntax highlighter",
