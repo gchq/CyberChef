@@ -97,6 +97,9 @@ class ResizeImage extends Operation {
             width = image.getWidth() * (width / 100);
             height = image.getHeight() * (height / 100);
         }
+
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Resizing image...");
         if (aspect) {
             image.scaleToFit(width, height, resizeMap[resizeAlg]);
         } else {
