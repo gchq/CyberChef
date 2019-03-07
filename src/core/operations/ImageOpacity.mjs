@@ -65,7 +65,7 @@ class ImageOpacity extends Operation {
             const imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
             return [...imageBuffer];
         } catch (err) {
-            throw new OperateionError(`Error changing image opacity. (${err})`);
+            throw new OperationError(`Error changing image opacity. (${err})`);
         }
     }
 
