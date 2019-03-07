@@ -59,8 +59,16 @@ class ImageBrightnessContrast extends Operation {
         }
 
         const image = await jimp.read(Buffer.from(input));
-        image.brightness(brightness / 100);
-        image.contrast(contrast / 100);
+        if (brightness !== 0) {
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Changing image brightness...");
+            image.brightness(brightness / 100);
+        }
+        if (contrast !== 0) {
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Changing image contrast...");
+            image.contrast(contrast / 100);
+        }
 
         const imageBuffer = await image.getBufferAsync(jimp.AUTO);
         return [...imageBuffer];

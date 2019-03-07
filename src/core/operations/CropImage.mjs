@@ -99,6 +99,8 @@ class CropImage extends Operation {
         }
 
         const image = await jimp.read(Buffer.from(input));
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Cropping image...");
         if (autocrop) {
             image.autocrop({
                 tolerance: (autoTolerance / 100),

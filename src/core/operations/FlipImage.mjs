@@ -51,6 +51,8 @@ class FlipImage extends Operation {
 
         const image = await jimp.read(Buffer.from(input));
 
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Flipping image...");
         switch (flipAxis){
             case "Horizontal":
                 image.flip(true, false);

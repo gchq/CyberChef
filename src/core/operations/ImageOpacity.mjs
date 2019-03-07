@@ -52,6 +52,8 @@ class ImageOpacity extends Operation {
         }
 
         const image = await jimp.read(Buffer.from(input));
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Changing image opacity...");
         image.opacity(opacity / 100);
 
         const imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);

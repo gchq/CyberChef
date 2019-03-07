@@ -42,6 +42,8 @@ class InvertImage extends Operation {
             throw new OperationError("Invalid input file format.");
         }
         const image = await jimp.read(Buffer.from(input));
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Inverting image...");
         image.invert();
         const imageBuffer = await image.getBufferAsync(jimp.AUTO);
         return [...imageBuffer];

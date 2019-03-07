@@ -48,6 +48,8 @@ class RotateImage extends Operation {
 
         if (type && type.mime.indexOf("image") === 0){
             const image = await jimp.read(Buffer.from(input));
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Rotating image...");
             image.rotate(degrees);
             const imageBuffer = await image.getBufferAsync(jimp.AUTO);
             return [...imageBuffer];

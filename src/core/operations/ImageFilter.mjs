@@ -53,7 +53,8 @@ class ImageFilter extends Operation {
         }
 
         const image = await jimp.read(Buffer.from(input));
-
+        if (ENVIRONMENT_IS_WORKER())
+            self.sendStatusMessage("Applying " + filterType.toLowerCase() + " filter to image...");
         if (filterType === "Greyscale") {
             image.greyscale();
         } else {

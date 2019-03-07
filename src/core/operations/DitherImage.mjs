@@ -41,6 +41,8 @@ class DitherImage extends Operation {
 
         if (type && type.mime.indexOf("image") === 0){
             const image = await jimp.read(Buffer.from(input));
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Applying dither to image...");
             image.dither565();
             const imageBuffer = await image.getBufferAsync(jimp.AUTO);
             return [...imageBuffer];
