@@ -106,13 +106,21 @@ class ContainImage extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
-
-        if (ENVIRONMENT_IS_WORKER())
-            self.sendStatusMessage("Containing image...");
-        image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
+        }
+        try {
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Containing image...");
+            image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error containing image. (${err})`);
+        }
     }
 
     /**

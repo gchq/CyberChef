@@ -11,29 +11,36 @@ import { toBase64 } from "../lib/Base64";
 import jimp from "jimp";
 
 /**
- * Flip Image operation
+ * Normalise Image operation
  */
-class FlipImage extends Operation {
+class NormaliseImage extends Operation {
 
     /**
-     * FlipImage constructor
+     * NormaliseImage constructor
      */
     constructor() {
         super();
 
-        this.name = "Flip Image";
+        this.name = "Normalise Image";
         this.module = "Image";
-        this.description = "Flips an image along its X or Y axis.";
+        this.description = "Normalise the image colours.";
         this.infoURL = "";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
-        this.presentType="html";
+        this.presentType=  "html";
         this.args = [
+            /* Example arguments. See the project wiki for full details.
             {
-                name: "Flip Axis",
-                type: "option",
-                value: ["Horizontal", "Vertical"]
+                name: "First arg",
+                type: "string",
+                value: "Don't Panic"
+            },
+            {
+                name: "Second arg",
+                type: "number",
+                value: 42
             }
+            */
         ];
     }
 
@@ -43,39 +50,23 @@ class FlipImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        const [flipAxis] = args;
+        // const [firstArg, secondArg] = args;
         const type = Magic.magicFileType(input);
+
         if (!type || type.mime.indexOf("image") !== 0){
-            throw new OperationError("Invalid input file type.");
+            throw new OperationError("Invalid file type.");
         }
 
-        let image;
-        try {
-            image = await jimp.read(Buffer.from(input));
-        } catch (err) {
-            throw new OperationError(`Error loading image. (${err})`);
-        }
-        try {
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Flipping image...");
-            switch (flipAxis){
-                case "Horizontal":
-                    image.flip(true, false);
-                    break;
-                case "Vertical":
-                    image.flip(false, true);
-                    break;
-            }
+        const image = await jimp.read(Buffer.from(input));
 
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-            return [...imageBuffer];
-        } catch (err) {
-            throw new OperationError(`Error flipping image. (${err})`);
-        }
+        image.normalize();
+
+        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+        return [...imageBuffer];
     }
 
     /**
-     * Displays the flipped image using HTML for web apps
+     * Displays the normalised image using HTML for web apps
      * @param {byteArray} data
      * @returns {html}
      */
@@ -97,4 +88,4 @@ class FlipImage extends Operation {
 
 }
 
-export default FlipImage;
+export default NormaliseImage;

@@ -66,40 +66,48 @@ class ImageHueSaturationLightness extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
-
-        if (hue !== 0) {
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Changing image hue...");
-            image.colour([
-                {
-                    apply: "hue",
-                    params: [hue]
-                }
-            ]);
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
         }
-        if (saturation !== 0) {
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Changing image saturation...");
-            image.colour([
-                {
-                    apply: "saturate",
-                    params: [saturation]
-                }
-            ]);
+        try {
+            if (hue !== 0) {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Changing image hue...");
+                image.colour([
+                    {
+                        apply: "hue",
+                        params: [hue]
+                    }
+                ]);
+            }
+            if (saturation !== 0) {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Changing image saturation...");
+                image.colour([
+                    {
+                        apply: "saturate",
+                        params: [saturation]
+                    }
+                ]);
+            }
+            if (lightness !== 0) {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Changing image lightness...");
+                image.colour([
+                    {
+                        apply: "lighten",
+                        params: [lightness]
+                    }
+                ]);
+            }
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error adjusting image hue / saturation / lightness. (${err})`);
         }
-        if (lightness !== 0) {
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Changing image lightness...");
-            image.colour([
-                {
-                    apply: "lighten",
-                    params: [lightness]
-                }
-            ]);
-        }
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
     }
 
     /**

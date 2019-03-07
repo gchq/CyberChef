@@ -53,21 +53,29 @@ class BlurImage extends Operation {
         const type = Magic.magicFileType(input);
 
         if (type && type.mime.indexOf("image") === 0){
-            const image = await jimp.read(Buffer.from(input));
-
-            switch (blurType){
-                case "Fast":
-                    image.blur(blurAmount);
-                    break;
-                case "Gaussian":
-                    if (ENVIRONMENT_IS_WORKER())
-                        self.sendStatusMessage("Gaussian blurring image. This will take a while...");
-                    image.gaussian(blurAmount);
-                    break;
+            let image;
+            try {
+                image = await jimp.read(Buffer.from(input));
+            } catch (err) {
+                throw new OperationError(`Error loading image. (${err})`);
             }
+            try {
+                switch (blurType){
+                    case "Fast":
+                        image.blur(blurAmount);
+                        break;
+                    case "Gaussian":
+                        if (ENVIRONMENT_IS_WORKER())
+                            self.sendStatusMessage("Gaussian blurring image. This will take a while...");
+                        image.gaussian(blurAmount);
+                        break;
+                }
 
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-            return [...imageBuffer];
+                const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+                return [...imageBuffer];
+            } catch (err) {
+                throw new OperationError(`Error blurring image. (${err})`);
+            }
         } else {
             throw new OperationError("Invalid file type.");
         }

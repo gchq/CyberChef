@@ -51,13 +51,22 @@ class ImageOpacity extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
-        if (ENVIRONMENT_IS_WORKER())
-            self.sendStatusMessage("Changing image opacity...");
-        image.opacity(opacity / 100);
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
+        }
+        try {
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Changing image opacity...");
+            image.opacity(opacity / 100);
 
-        const imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
-        return [...imageBuffer];
+            const imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperateionError(`Error changing image opacity. (${err})`);
+        }
     }
 
     /**

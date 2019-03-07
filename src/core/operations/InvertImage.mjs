@@ -41,12 +41,22 @@ class InvertImage extends Operation {
         if (!type || type.mime.indexOf("image") !== 0) {
             throw new OperationError("Invalid input file format.");
         }
-        const image = await jimp.read(Buffer.from(input));
-        if (ENVIRONMENT_IS_WORKER())
-            self.sendStatusMessage("Inverting image...");
-        image.invert();
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
+
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
+        }
+        try {
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Inverting image...");
+            image.invert();
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error inverting image. (${err})`);
+        }
     }
 
     /**

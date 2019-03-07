@@ -58,20 +58,29 @@ class ImageBrightnessContrast extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
-        if (brightness !== 0) {
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Changing image brightness...");
-            image.brightness(brightness / 100);
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
         }
-        if (contrast !== 0) {
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Changing image contrast...");
-            image.contrast(contrast / 100);
-        }
+        try {
+            if (brightness !== 0) {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Changing image brightness...");
+                image.brightness(brightness / 100);
+            }
+            if (contrast !== 0) {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Changing image contrast...");
+                image.contrast(contrast / 100);
+            }
 
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error adjusting image brightness / contrast. (${err})`);
+        }
     }
 
     /**

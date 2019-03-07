@@ -47,12 +47,21 @@ class RotateImage extends Operation {
         const type = Magic.magicFileType(input);
 
         if (type && type.mime.indexOf("image") === 0){
-            const image = await jimp.read(Buffer.from(input));
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Rotating image...");
-            image.rotate(degrees);
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-            return [...imageBuffer];
+            let image;
+            try {
+                image = await jimp.read(Buffer.from(input));
+            } catch (err) {
+                throw new OperationError(`Error loading image. (${err})`);
+            }
+            try {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Rotating image...");
+                image.rotate(degrees);
+                const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+                return [...imageBuffer];
+            } catch (err) {
+                throw new OperationError(`Error rotating image. (${err})`);
+            }
         } else {
             throw new OperationError("Invalid file type.");
         }

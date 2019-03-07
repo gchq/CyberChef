@@ -91,23 +91,31 @@ class ResizeImage extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
-
-        if (unit === "Percent") {
-            width = image.getWidth() * (width / 100);
-            height = image.getHeight() * (height / 100);
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
         }
+        try {
+            if (unit === "Percent") {
+                width = image.getWidth() * (width / 100);
+                height = image.getHeight() * (height / 100);
+            }
 
-        if (ENVIRONMENT_IS_WORKER())
-            self.sendStatusMessage("Resizing image...");
-        if (aspect) {
-            image.scaleToFit(width, height, resizeMap[resizeAlg]);
-        } else {
-            image.resize(width, height, resizeMap[resizeAlg]);
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Resizing image...");
+            if (aspect) {
+                image.scaleToFit(width, height, resizeMap[resizeAlg]);
+            } else {
+                image.resize(width, height, resizeMap[resizeAlg]);
+            }
+
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error resizing image. (${err})`);
         }
-
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
     }
 
     /**

@@ -40,12 +40,21 @@ class DitherImage extends Operation {
         const type = Magic.magicFileType(input);
 
         if (type && type.mime.indexOf("image") === 0){
-            const image = await jimp.read(Buffer.from(input));
-            if (ENVIRONMENT_IS_WORKER())
-                self.sendStatusMessage("Applying dither to image...");
-            image.dither565();
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-            return [...imageBuffer];
+            let image;
+            try {
+                image = await jimp.read(Buffer.from(input));
+            } catch (err) {
+                throw new OperationError(`Error loading image. (${err})`);
+            }
+            try {
+                if (ENVIRONMENT_IS_WORKER())
+                    self.sendStatusMessage("Applying dither to image...");
+                image.dither565();
+                const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+                return [...imageBuffer];
+            } catch (err) {
+                throw new OperationError(`Error applying dither to image. (${err})`);
+            }
         } else {
             throw new OperationError("Invalid file type.");
         }

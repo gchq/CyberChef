@@ -52,17 +52,26 @@ class ImageFilter extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
-        if (ENVIRONMENT_IS_WORKER())
-            self.sendStatusMessage("Applying " + filterType.toLowerCase() + " filter to image...");
-        if (filterType === "Greyscale") {
-            image.greyscale();
-        } else {
-            image.sepia();
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
         }
+        try {
+            if (ENVIRONMENT_IS_WORKER())
+                self.sendStatusMessage("Applying " + filterType.toLowerCase() + " filter to image...");
+            if (filterType === "Greyscale") {
+                image.greyscale();
+            } else {
+                image.sepia();
+            }
 
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
+            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error applying filter to image. (${err})`);
+        }
     }
 
     /**
