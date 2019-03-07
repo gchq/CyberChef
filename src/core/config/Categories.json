@@ -369,7 +369,10 @@
             "Crop Image",
             "Image Brightness / Contrast",
             "Image Opacity",
-            "Image Filter"
+            "Image Filter",
+            "Contain Image",
+            "Cover Image",
+            "Image Hue/Saturation/Lightness"
         ]
     },
     {
