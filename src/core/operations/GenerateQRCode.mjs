@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import qr from "qr-image";
+import { generateQrCode } from "../lib/QRCode";
 import { toBase64 } from "../lib/Base64";
 import Magic from "../lib/Magic";
 import Utils from "../Utils";
@@ -62,29 +62,7 @@ class GenerateQRCode extends Operation {
     run(input, args) {
         const [format, size, margin, errorCorrection] = args;
 
-        // Create new QR image from the input data, and convert it to a buffer
-        const qrImage = qr.imageSync(input, {
-            type: format,
-            size: size,
-            margin: margin,
-            "ec_level": errorCorrection.charAt(0).toUpperCase()
-        });
-
-        if (qrImage == null) {
-            throw new OperationError("Error generating QR code.");
-        }
-
-        switch (format) {
-            case "SVG":
-            case "EPS":
-            case "PDF":
-                return [...Buffer.from(qrImage)];
-            case "PNG":
-                // Return the QR image buffer as a byte array
-                return [...qrImage];
-            default:
-                throw new OperationError("Unsupported QR code format.");
-        }
+        return generateQrCode(input, format, size, margin, errorCorrection);
     }
 
     /**
