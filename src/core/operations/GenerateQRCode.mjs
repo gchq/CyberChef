@@ -38,12 +38,14 @@ class GenerateQRCode extends Operation {
             {
                 "name": "Module size (px)",
                 "type": "number",
-                "value": 5
+                "value": 5,
+                "min": 1
             },
             {
                 "name": "Margin (num modules)",
                 "type": "number",
-                "value": 2
+                "value": 2,
+                "min": 0
             },
             {
                 "name": "Error correction",
