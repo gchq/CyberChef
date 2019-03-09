@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
+import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
 
@@ -23,7 +23,7 @@ class CropImage extends Operation {
 
         this.name = "Crop Image";
         this.module = "Image";
-        this.description = "Crops an image to the specified region, or automatically crop edges.<br><br><b><u>Autocrop</u></b><br>Automatically crops same-colour borders from the image.<br><br><u>Autocrop tolerance</u><br>A percentage value for the tolerance of colour difference between pixels.<br><br><u>Only autocrop frames</u><br>Only crop real frames (all sides must have the same border)<br><br><u>Symmetric autocrop</u><br>Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount)<br><br><u>Autocrop keep border</u><br>The number of pixels of border to leave around the image.";
+        this.description = "Crops an image to the specified region, or automatically crops edges.<br><br><b><u>Autocrop</u></b><br>Automatically crops same-colour borders from the image.<br><br><u>Autocrop tolerance</u><br>A percentage value for the tolerance of colour difference between pixels.<br><br><u>Only autocrop frames</u><br>Only crop real frames (all sides must have the same border)<br><br><u>Symmetric autocrop</u><br>Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount)<br><br><u>Autocrop keep border</u><br>The number of pixels of border to leave around the image.";
         this.infoURL = "https://wikipedia.org/wiki/Cropping_(image)";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
@@ -91,10 +91,8 @@ class CropImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        // const [firstArg, secondArg] = args;
         const [xPos, yPos, width, height, autocrop, autoTolerance, autoFrames, autoSymmetric, autoBorder] = args;
-        const type = Magic.magicFileType(input);
-        if (!type || type.mime.indexOf("image") !== 0){
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 
@@ -133,16 +131,12 @@ class CropImage extends Operation {
     present(data) {
         if (!data.length) return "";
 
-        let dataURI = "data:";
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0){
-            dataURI += type.mime + ";";
-        } else {
-            throw new OperationError("Invalid file type");
+        const type = isImage(data);
+        if (!type) {
+            throw new OperationError("Invalid file type.");
         }
-        dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
+        return `<img src="data:${type};base64,${toBase64(data)}">`;
     }
 
 }

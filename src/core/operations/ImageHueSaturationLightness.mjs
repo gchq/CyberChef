@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
+import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
 
@@ -60,9 +60,8 @@ class ImageHueSaturationLightness extends Operation {
      */
     async run(input, args) {
         const [hue, saturation, lightness] = args;
-        const type = Magic.magicFileType(input);
 
-        if (!type || type.mime.indexOf("image") !== 0){
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 
@@ -118,16 +117,12 @@ class ImageHueSaturationLightness extends Operation {
     present(data) {
         if (!data.length) return "";
 
-        let dataURI = "data:";
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0){
-            dataURI += type.mime + ";";
-        } else {
-            throw new OperationError("Invalid file type");
+        const type = isImage(data);
+        if (!type) {
+            throw new OperationError("Invalid file type.");
         }
-        dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
+        return `<img src="data:${type};base64,${toBase64(data)}">`;
     }
 }
 

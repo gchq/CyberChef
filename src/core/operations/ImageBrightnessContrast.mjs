@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
+import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
 
@@ -23,7 +23,7 @@ class ImageBrightnessContrast extends Operation {
 
         this.name = "Image Brightness / Contrast";
         this.module = "Image";
-        this.description = "Adjust the brightness and contrast of an image.";
+        this.description = "Adjust the brightness or contrast of an image.";
         this.infoURL = "";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
@@ -53,8 +53,7 @@ class ImageBrightnessContrast extends Operation {
      */
     async run(input, args) {
         const [brightness, contrast] = args;
-        const type = Magic.magicFileType(input);
-        if (!type || type.mime.indexOf("image") !== 0){
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 
@@ -79,7 +78,7 @@ class ImageBrightnessContrast extends Operation {
             const imageBuffer = await image.getBufferAsync(jimp.AUTO);
             return [...imageBuffer];
         } catch (err) {
-            throw new OperationError(`Error adjusting image brightness / contrast. (${err})`);
+            throw new OperationError(`Error adjusting image brightness or contrast. (${err})`);
         }
     }
 
@@ -91,16 +90,12 @@ class ImageBrightnessContrast extends Operation {
     present(data) {
         if (!data.length) return "";
 
-        let dataURI = "data:";
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0){
-            dataURI += type.mime + ";";
-        } else {
-            throw new OperationError("Invalid file type");
+        const type = isImage(data);
+        if (!type) {
+            throw new OperationError("Invalid file type.");
         }
-        dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
+        return `<img src="data:${type};base64,${toBase64(data)}">`;
     }
 
 }

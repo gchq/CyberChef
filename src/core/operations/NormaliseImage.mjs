@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
+import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
 import jimp from "jimp";
 
@@ -28,20 +28,7 @@ class NormaliseImage extends Operation {
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.presentType=  "html";
-        this.args = [
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
-        ];
+        this.args = [];
     }
 
     /**
@@ -50,10 +37,7 @@ class NormaliseImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        // const [firstArg, secondArg] = args;
-        const type = Magic.magicFileType(input);
-
-        if (!type || type.mime.indexOf("image") !== 0){
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 
@@ -73,17 +57,12 @@ class NormaliseImage extends Operation {
     present(data) {
         if (!data.length) return "";
 
-        let dataURI = "data:";
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0){
-            dataURI += type.mime + ";";
-        } else {
+        const type = isImage(data);
+        if (!type) {
             throw new OperationError("Invalid file type.");
         }
-        dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
-
+        return `<img src="data:${type};base64,${toBase64(data)}">`;
     }
 
 }

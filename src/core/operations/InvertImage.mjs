@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
+import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
 import jimp from "jimp";
 
@@ -37,8 +37,7 @@ class InvertImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        const type = Magic.magicFileType(input);
-        if (!type || type.mime.indexOf("image") !== 0) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid input file format.");
         }
 
@@ -67,17 +66,12 @@ class InvertImage extends Operation {
     present(data) {
         if (!data.length) return "";
 
-        let dataURI = "data:";
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0){
-            dataURI += type.mime + ";";
-        } else {
+        const type = isImage(data);
+        if (!type) {
             throw new OperationError("Invalid file type.");
         }
-        dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
-
+        return `<img src="data:${type};base64,${toBase64(data)}">`;
     }
 
 }
