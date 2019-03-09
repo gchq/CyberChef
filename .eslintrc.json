@@ -102,6 +102,7 @@
         "$": false,
         "jQuery": false,
         "log": false,
+        "app": false,
 
         "COMPILE_TIME": false,
         "COMPILE_MSG": false,

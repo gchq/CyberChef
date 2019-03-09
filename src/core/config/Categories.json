@@ -254,7 +254,8 @@
             "XPath expression",
             "JPath expression",
             "CSS selector",
-            "Extract EXIF"
+            "Extract EXIF",
+            "Extract Files"
         ]
     },
     {
@@ -348,6 +349,7 @@
         "ops": [
             "Detect File Type",
             "Scan for Embedded Files",
+            "Extract Files",
             "Remove EXIF",
             "Extract EXIF"
         ]
