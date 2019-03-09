@@ -1,5 +1,6 @@
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -30,6 +31,7 @@ const banner = `/**
  * limitations under the License.
  */`;
 
+
 module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
@@ -42,7 +44,12 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
-        new ExtractTextPlugin("styles.css")
+        new webpack.DefinePlugin({
+            "process.browser": "true"
+        }),
+        new MiniCssExtractPlugin({
+            filename: "[name].css"
+        }),
     ],
     resolve: {
         alias: {
@@ -54,8 +61,13 @@ module.exports = {
             {
                 test: /\.m?js$/,
                 exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                options: {
+                    configFile: path.resolve(__dirname, "babel.config.js"),
+                    cacheDirectory: true,
+                    compact: false
+                },
                 type: "javascript/auto",
-                loader: "babel-loader?compact=false"
+                loader: "babel-loader"
             },
             {
                 test: /forge.min.js$/,
@@ -67,21 +79,19 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    use: [
-                        { loader: "css-loader" },
-                        { loader: "postcss-loader" },
-                    ]
-                })
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "postcss-loader",
+                ]
             },
             {
                 test: /\.scss$/,
-                use: ExtractTextPlugin.extract({
-                    use: [
-                        { loader: "css-loader" },
-                        { loader: "sass-loader" }
-                    ]
-                })
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader",
+                ]
             },
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
@@ -113,7 +123,11 @@ module.exports = {
         chunks: false,
         modules: false,
         entrypoints: false,
-        warningsFilter: [/source-map/, /dependency is an expression/],
+        warningsFilter: [
+            /source-map/,
+            /dependency is an expression/,
+            /export 'default'/
+        ],
     },
     node: {
         fs: "empty"

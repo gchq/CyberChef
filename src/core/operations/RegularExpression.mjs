@@ -227,32 +227,30 @@ function regexList (input, regex, displayTotal, matches, captureGroups) {
  */
 function regexHighlight (input, regex, displayTotal) {
     let output = "",
-        m,
+        title = "",
         hl = 1,
-        i = 0,
         total = 0;
 
-    while ((m = regex.exec(input))) {
-        // Moves pointer when an empty string is matched (prevents infinite loop)
-        if (m.index === regex.lastIndex) {
-            regex.lastIndex++;
+    output = input.replace(regex, (match, ...args) => {
+        args.pop(); // Throw away full string
+        const offset = args.pop(),
+            groups = args;
+
+        title = `Offset: ${offset}\n`;
+        if (groups.length) {
+            title += "Groups:\n";
+            for (let i = 0; i < groups.length; i++) {
+                title += `\t${i+1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
+            }
         }
-
-        // Add up to match
-        output += Utils.escapeHtml(input.slice(i, m.index));
-
-        // Add match with highlighting
-        output += "<span class='hl"+hl+"'>" + Utils.escapeHtml(m[0]) + "</span>";
 
         // Switch highlight
         hl = hl === 1 ? 2 : 1;
 
-        i = regex.lastIndex;
         total++;
-    }
 
-    // Add all after final match
-    output += Utils.escapeHtml(input.slice(i, input.length));
+        return `<span class='hl${hl}' title='${title}'>${Utils.escapeHtml(match)}</span>`;
+    });
 
     if (displayTotal)
         output = "Total found: " + total + "\n\n" + output;

@@ -25,6 +25,8 @@
             "From Base32",
             "To Base58",
             "From Base58",
+            "To Base62",
+            "From Base62",
             "To Base85",
             "From Base85",
             "To Base",
@@ -49,12 +51,16 @@
             "Change IP format",
             "Encode text",
             "Decode text",
+            "Text Encoding Brute Force",
             "Swap endianness",
             "To MessagePack",
             "From MessagePack",
             "To Braille",
             "From Braille",
-            "To Byte String Literal"
+            "Parse TLV",
+            "CSV to JSON",
+            "JSON to CSV",
+	    "To Byte String Literal",
         ]
     },
     {
@@ -84,6 +90,8 @@
             "Bifid Cipher Decode",
             "Affine Cipher Encode",
             "Affine Cipher Decode",
+            "A1Z26 Cipher Encode",
+            "A1Z26 Cipher Decode",
             "Atbash Cipher",
             "Substitute",
             "Derive PBKDF2 key",
@@ -93,6 +101,8 @@
             "JWT Sign",
             "JWT Verify",
             "JWT Decode",
+            "Citrix CTX1 Encode",
+            "Citrix CTX1 Decode",
             "Pseudo-Random Number Generator"
         ]
     },
@@ -146,6 +156,7 @@
         "name": "Networking",
         "ops": [
             "HTTP request",
+            "DNS over HTTPS",
             "Strip HTTP headers",
             "Dechunk HTTP response",
             "Parse User Agent",
@@ -159,7 +170,8 @@
             "Change IP format",
             "Group IP addresses",
             "Encode NetBIOS Name",
-            "Decode NetBIOS Name"
+            "Decode NetBIOS Name",
+            "Defang URL"
         ]
     },
     {
@@ -167,6 +179,7 @@
         "ops": [
             "Encode text",
             "Decode text",
+            "Remove Diacritics",
             "Unescape Unicode Characters"
         ]
     },
@@ -178,6 +191,8 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
+			"To Case Insensitive Regex",
+			"From Case Insensitive Regex",
             "Add line numbers",
             "Remove line numbers",
             "To Table",
@@ -202,6 +217,7 @@
             "Convert mass",
             "Convert speed",
             "Convert data units",
+            "Convert co-ordinate format",
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
@@ -293,9 +309,7 @@
             "Adler-32 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum",
-            "To Geohash",
-            "From Geohash"
+            "TCP/IP Checksum"
         ]
     },
     {
@@ -331,22 +345,39 @@
         ]
     },
     {
+        "name": "Forensics",
+        "ops": [
+            "Detect File Type",
+            "Scan for Embedded Files",
+            "Remove EXIF",
+            "Extract EXIF"
+        ]
+    },
+    {
+        "name": "Multimedia",
+        "ops": [
+            "Render Image",
+            "Play Media",
+            "Remove EXIF",
+            "Extract EXIF",
+            "Split Colour Channels"
+        ]
+    },
+    {
         "name": "Other",
         "ops": [
             "Entropy",
             "Frequency distribution",
             "Chi Square",
-            "Detect File Type",
-            "Scan for Embedded Files",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",
+            "Generate QR Code",
+            "Parse QR Code",
             "Haversine distance",
-            "Render Image",
-            "Remove EXIF",
-            "Extract EXIF",
+            "Generate Lorem Ipsum",
             "Numberwang",
             "XKCD Random Number"
         ]
@@ -356,6 +387,7 @@
         "ops": [
             "Magic",
             "Fork",
+            "Subsection",
             "Merge",
             "Register",
             "Label",

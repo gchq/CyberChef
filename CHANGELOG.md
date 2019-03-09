@@ -1,12 +1,66 @@
 # Changelog
-All notable changes to CyberChef will be documented in this file.
+All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
+
+### [8.24.0] - 2019-02-08
+- 'DNS over HTTPS' operation added [@h345983745] | [#489]
+
+### [8.23.1] - 2019-01-18
+- 'Convert co-ordinate format' operation added [@j433866] | [#476]
+
+### [8.23.0] - 2019-01-18
+- 'YARA Rules' operation added [@artemisbot] | [#468]
+
+### [8.22.0] - 2019-01-10
+- 'Subsection' operation added [@j433866] | [#467]
+
+### [8.21.0] - 2019-01-10
+- 'To Case Insensitive Regex' and 'From Case Insensitive Regex' operations added [@masq] | [#461]
+
+### [8.20.0] - 2019-01-09
+- 'Generate Lorem Ipsum' operation added [@klaxon1] | [#455]
+
+### [8.19.0] - 2018-12-30
+- UI test suite added to confirm that the app loads correctly in a reasonable time and that various operations from each module can be run [@n1474335] | [#458]
+
+### [8.18.0] - 2018-12-26
+- 'Split Colour Channels' operation added [@artemisbot] | [#449]
+
+### [8.17.0] - 2018-12-25
+- 'Generate QR Code' and 'Parse QR Code' operations added [@j433866] | [#448]
+
+### [8.16.0] - 2018-12-19
+- 'Play Media' operation added [@anthony-arnold] | [#446]
+
+### [8.15.0] - 2018-12-18
+- 'Text Encoding Brute Force' operation added [@Cynser] | [#439]
+
+### [8.14.0] - 2018-12-18
+- 'To Base62' and 'From Base62' operations added [@tcode2k16] | [#443]
+
+### [8.13.0] - 2018-12-15
+- 'A1Z26 Cipher Encode' and 'A1Z26 Cipher Decode' operations added [@jarmovanlenthe] | [#441]
+
+### [8.12.0] - 2018-11-21
+- 'Citrix CTX1 Encode' and 'Citrix CTX1 Decode' operations added [@bwhitn] | [#428]
+
+### [8.11.0] - 2018-11-13
+- 'CSV to JSON' and 'JSON to CSV' operations added [@n1474335] | [#277]
+
+### [8.10.0] - 2018-11-07
+- 'Remove Diacritics' operation added [@klaxon1] | [#387]
+
+### [8.9.0] - 2018-11-07
+- 'Defang URL' operation added [@arnydo] | [#394]
+
+### [8.8.0] - 2018-10-10
+- 'Parse TLV' operation added [@GCHQ77703] | [#351]
 
 ### [8.7.0] - 2018-08-31
 - 'JWT Sign', 'JWT Verify' and 'JWT Decode' operations added [@GCHQ77703] | [#348]
 
 ### [8.6.0] - 2018-08-29
-- 'To Geohash' and 'From Geohash' operations added [@GCHQ77703] | [#344] 
+- 'To Geohash' and 'From Geohash' operations added [@GCHQ77703] | [#344]
 
 ### [8.5.0] - 2018-08-23
 - 'To Braille' and 'From Braille' operations added [@n1474335] | [#255]
@@ -41,7 +95,7 @@ All notable changes to CyberChef will be documented in this file.
 - Added support for loading, processing and downloading files up to 500MB [@n1474335] | [#224]
 
 ## [6.0.0] - 2017-09-19
-- Threading support added. All recipe processing moved into a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to increase performance and allowing long-running operations to be cancelled [@n1474335] | [#173]
+- Threading support added. All recipe processing moved into a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to increase performance and to allow long-running operations to be cancelled [@n1474335] | [#173]
 - Module system created so that operations relying on large libraries can be downloaded separately as required, reducing the initial loading time for the app [@n1474335] | [#173]
 
 ## [5.0.0] - 2017-03-30
@@ -51,6 +105,25 @@ All notable changes to CyberChef will be documented in this file.
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 
+
+[8.24.0]: https://github.com/gchq/CyberChef/releases/tag/v8.24.0
+[8.23.1]: https://github.com/gchq/CyberChef/releases/tag/v8.23.1
+[8.23.0]: https://github.com/gchq/CyberChef/releases/tag/v8.23.0
+[8.22.0]: https://github.com/gchq/CyberChef/releases/tag/v8.22.0
+[8.21.0]: https://github.com/gchq/CyberChef/releases/tag/v8.21.0
+[8.20.0]: https://github.com/gchq/CyberChef/releases/tag/v8.20.0
+[8.19.0]: https://github.com/gchq/CyberChef/releases/tag/v8.19.0
+[8.18.0]: https://github.com/gchq/CyberChef/releases/tag/v8.18.0
+[8.17.0]: https://github.com/gchq/CyberChef/releases/tag/v8.17.0
+[8.16.0]: https://github.com/gchq/CyberChef/releases/tag/v8.16.0
+[8.15.0]: https://github.com/gchq/CyberChef/releases/tag/v8.15.0
+[8.14.0]: https://github.com/gchq/CyberChef/releases/tag/v8.14.0
+[8.13.0]: https://github.com/gchq/CyberChef/releases/tag/v8.13.0
+[8.12.0]: https://github.com/gchq/CyberChef/releases/tag/v8.12.0
+[8.11.0]: https://github.com/gchq/CyberChef/releases/tag/v8.11.0
+[8.10.0]: https://github.com/gchq/CyberChef/releases/tag/v8.10.0
+[8.9.0]: https://github.com/gchq/CyberChef/releases/tag/v8.9.0
+[8.8.0]: https://github.com/gchq/CyberChef/releases/tag/v8.8.0
 [8.7.0]: https://github.com/gchq/CyberChef/releases/tag/v8.7.0
 [8.6.0]: https://github.com/gchq/CyberChef/releases/tag/v8.6.0
 [8.5.0]: https://github.com/gchq/CyberChef/releases/tag/v8.5.0
@@ -66,13 +139,23 @@ All notable changes to CyberChef will be documented in this file.
 
 [@n1474335]: https://github.com/n1474335
 [@d98762625]: https://github.com/d98762625
+[@j433866]: https://github.com/j433866
 [@GCHQ77703]: https://github.com/GCHQ77703
+[@h345983745]: https://github.com/h345983745
 [@artemisbot]: https://github.com/artemisbot
 [@picapi]: https://github.com/picapi
 [@Dachande663]: https://github.com/Dachande663
 [@JustAnotherMark]: https://github.com/JustAnotherMark
 [@sevzero]: https://github.com/sevzero
 [@PenguinGeorge]: https://github.com/PenguinGeorge
+[@arnydo]: https://github.com/arnydo
+[@klaxon1]: https://github.com/klaxon1
+[@bwhitn]: https://github.com/bwhitn
+[@jarmovanlenthe]: https://github.com/jarmovanlenthe
+[@tcode2k16]: https://github.com/tcode2k16
+[@Cynser]: https://github.com/Cynser
+[@anthony-arnold]: https://github.com/anthony-arnold
+[@masq]: https://github.com/masq
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -80,6 +163,7 @@ All notable changes to CyberChef will be documented in this file.
 [#239]: https://github.com/gchq/CyberChef/pull/239
 [#248]: https://github.com/gchq/CyberChef/pull/248
 [#255]: https://github.com/gchq/CyberChef/issues/255
+[#277]: https://github.com/gchq/CyberChef/issues/277
 [#281]: https://github.com/gchq/CyberChef/pull/281
 [#284]: https://github.com/gchq/CyberChef/pull/284
 [#294]: https://github.com/gchq/CyberChef/pull/294
@@ -91,3 +175,20 @@ All notable changes to CyberChef will be documented in this file.
 [#340]: https://github.com/gchq/CyberChef/pull/340
 [#344]: https://github.com/gchq/CyberChef/pull/344
 [#348]: https://github.com/gchq/CyberChef/pull/348
+[#351]: https://github.com/gchq/CyberChef/pull/351
+[#387]: https://github.com/gchq/CyberChef/pull/387
+[#394]: https://github.com/gchq/CyberChef/pull/394
+[#428]: https://github.com/gchq/CyberChef/pull/428
+[#439]: https://github.com/gchq/CyberChef/pull/439
+[#441]: https://github.com/gchq/CyberChef/pull/441
+[#443]: https://github.com/gchq/CyberChef/pull/443
+[#446]: https://github.com/gchq/CyberChef/pull/446
+[#448]: https://github.com/gchq/CyberChef/pull/448
+[#449]: https://github.com/gchq/CyberChef/pull/449
+[#455]: https://github.com/gchq/CyberChef/pull/455
+[#458]: https://github.com/gchq/CyberChef/pull/458
+[#461]: https://github.com/gchq/CyberChef/pull/461
+[#467]: https://github.com/gchq/CyberChef/pull/467
+[#468]: https://github.com/gchq/CyberChef/pull/468
+[#476]: https://github.com/gchq/CyberChef/pull/476
+[#489]: https://github.com/gchq/CyberChef/pull/489

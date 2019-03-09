@@ -53,6 +53,11 @@ class ToBase58 extends Operation {
 
         if (input.length === 0) return "";
 
+        let zeroPrefix = 0;
+        for (let i = 0; i < input.length && input[i] === 0; i++) {
+            zeroPrefix++;
+        }
+
         input.forEach(function(b) {
             let carry = (result[0] << 8) + b;
             result[0] = carry % 58;
@@ -74,7 +79,7 @@ class ToBase58 extends Operation {
             return alphabet[b];
         }).reverse().join("");
 
-        while (result.length < input.length) {
+        while (zeroPrefix--) {
             result = alphabet[0] + result;
         }
 

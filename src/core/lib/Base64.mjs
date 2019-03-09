@@ -126,14 +126,14 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
  * Base64 alphabets.
  */
 export const ALPHABET_OPTIONS = [
-    {name: "Standard: A-Za-z0-9+/=", value: "A-Za-z0-9+/="},
-    {name: "URL safe: A-Za-z0-9-_", value: "A-Za-z0-9-_"},
+    {name: "Standard (RFC 4648): A-Za-z0-9+/=", value: "A-Za-z0-9+/="},
+    {name: "URL safe (RFC 4648 \u00A75): A-Za-z0-9-_", value: "A-Za-z0-9-_"},
     {name: "Filename safe: A-Za-z0-9+-=", value: "A-Za-z0-9+\\-="},
     {name: "itoa64: ./0-9A-Za-z=", value: "./0-9A-Za-z="},
     {name: "XML: A-Za-z0-9_.", value: "A-Za-z0-9_."},
     {name: "y64: A-Za-z0-9._-", value: "A-Za-z0-9._-"},
     {name: "z64: 0-9a-zA-Z+/=", value: "0-9a-zA-Z+/="},
-    {name: "Radix-64: 0-9A-Za-z+/=", value: "0-9A-Za-z+/="},
+    {name: "Radix-64 (RFC 4880): 0-9A-Za-z+/=", value: "0-9A-Za-z+/="},
     {name: "Uuencoding: [space]-_", value: " -_"},
     {name: "Xxencoding: +-0-9A-Za-z", value: "+\\-0-9A-Za-z"},
     {name: "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r", value: "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"},

@@ -116,6 +116,13 @@ div.toggle-string {
     left: 12px;
 }
 
+.operation label.bmd-label-floating {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: calc(100% - 13px);
+}
+
 .operation .bmd-form-group .bmd-help {
     margin-top: -17px;
 }
@@ -172,6 +179,7 @@ div.toggle-string {
     background-color: var(--fc-operation-border-colour);
     font-family: var(--fixed-width-font-family);
     padding: 10px;
+    word-break: break-all;
 }
 
 .op-icon {

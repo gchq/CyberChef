@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError.mjs";
+import OperationError from "../errors/OperationError";
 import notepack from "notepack.io";
 
 /**
@@ -38,7 +38,9 @@ class ToMessagePack extends Operation {
             if (ENVIRONMENT_IS_WORKER()) {
                 return notepack.encode(input);
             } else {
-                return notepack.encode(input).buffer;
+                const res = notepack.encode(input);
+                // Safely convert from Node Buffer to ArrayBuffer using the correct view of the data
+                return (new Uint8Array(res)).buffer;
             }
         } catch (err) {
             throw new OperationError(`Could not encode JSON to MessagePack: ${err}`);

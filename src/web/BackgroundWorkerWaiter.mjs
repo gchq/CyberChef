@@ -67,6 +67,7 @@ class BackgroundWorkerWaiter {
                 log.debug("Background ChefWorker loaded");
                 break;
             case "optionUpdate":
+            case "statusMessage":
                 // Ignore these messages
                 break;
             default:

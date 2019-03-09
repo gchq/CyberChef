@@ -5,10 +5,10 @@
  */
 
 import utf8 from "utf8";
-import moment from "moment-timezone";
-import {fromBase64} from "./lib/Base64";
+import {fromBase64, toBase64} from "./lib/Base64";
 import {fromHex} from "./lib/Hex";
 import {fromDecimal} from "./lib/Decimal";
+import {fromBinary} from "./lib/Binary";
 
 
 /**
@@ -298,7 +298,7 @@ class Utils {
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
      * @param {string} str
-     * @param {string} type - One of "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
+     * @param {string} type - One of "Binary", "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
      * @returns {byteArray}
      *
      * @example
@@ -313,6 +313,8 @@ class Utils {
      */
     static convertToByteArray(str, type) {
         switch (type.toLowerCase()) {
+            case "binary":
+                return fromBinary(str);
             case "hex":
                 return fromHex(str);
             case "decimal":
@@ -333,7 +335,7 @@ class Utils {
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
      * @param {string} str
-     * @param {string} type - One of "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
+     * @param {string} type - One of "Binary", "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
      * @returns {string}
      *
      * @example
@@ -348,6 +350,8 @@ class Utils {
      */
     static convertToByteString(str, type) {
         switch (type.toLowerCase()) {
+            case "binary":
+                return Utils.byteArrayToChars(fromBinary(str));
             case "hex":
                 return Utils.byteArrayToChars(fromHex(str));
             case "decimal":
@@ -555,8 +559,6 @@ class Utils {
             if (renderNext) {
                 cell += b;
                 renderNext = false;
-            } else if (b === "\\") {
-                renderNext = true;
             } else if (b === "\"" && !inString) {
                 inString = true;
             } else if (b === "\"" && inString) {
@@ -570,6 +572,10 @@ class Utils {
                 cell = "";
                 lines.push(line);
                 line = [];
+                // Skip next byte if it is also a line delim (e.g. \r\n)
+                if (lineDelims.indexOf(next) >= 0 && next !== b) {
+                    i++;
+                }
             } else {
                 cell += b;
             }
@@ -791,38 +797,6 @@ class Utils {
 
 
     /**
-     * Expresses a number of milliseconds in a human readable format.
-     *
-     * Range                        | Sample Output
-     * -----------------------------|-------------------------------
-     * 0 to 45 seconds              | a few seconds ago
-     * 45 to 90 seconds             | a minute ago
-     * 90 seconds to 45 minutes     | 2 minutes ago ... 45 minutes ago
-     * 45 to 90 minutes             | an hour ago
-     * 90 minutes to 22 hours       | 2 hours ago ... 22 hours ago
-     * 22 to 36 hours               | a day ago
-     * 36 hours to 25 days          | 2 days ago ... 25 days ago
-     * 25 to 45 days                | a month ago
-     * 45 to 345 days               | 2 months ago ... 11 months ago
-     * 345 to 545 days (1.5 years)  | a year ago
-     * 546 days+                    | 2 years ago ... 20 years ago
-     *
-     * @param {number} ms
-     * @returns {string}
-     *
-     * @example
-     * // returns "3 minutes"
-     * Utils.fuzzyTime(152435);
-     *
-     * // returns "5 days"
-     * Utils.fuzzyTime(456851321);
-     */
-    static fuzzyTime(ms) {
-        return moment.duration(ms, "milliseconds").humanize();
-    }
-
-
-    /**
      * Formats a list of files or directories.
      *
      * @author tlwr [toby@toby.codes]
@@ -841,6 +815,17 @@ class Utils {
                     </div>
                 </div>`;
             return html;
+        };
+
+        const formatContent = function (buff, type) {
+            if (type.startsWith("image")) {
+                let dataURI = "data:";
+                dataURI += type + ";";
+                dataURI += "base64," + toBase64(buff);
+                return "<img style='max-width: 100%;' src='" + dataURI + "'>";
+            } else {
+                return `<pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>`;
+            }
         };
 
         const formatFile = async function(file, i) {
@@ -872,7 +857,7 @@ class Utils {
                     </div>
                     <div id='collapse${i}' class='collapse' aria-labelledby='heading${i}' data-parent="#files">
                         <div class='card-body'>
-                            <pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>
+                            ${formatContent(buff, file.type)}
                         </div>
                     </div>
                 </div>`;
