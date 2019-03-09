@@ -62,12 +62,13 @@ class ExtractFiles extends Operation {
 
         // Extract each file that we support
         const files = [];
+        const errors = [];
         detectedFiles.forEach(detectedFile => {
             try {
                 files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
             } catch (err) {
                 if (!ignoreFailedExtractions && err.message.indexOf("No extraction algorithm available") < 0) {
-                    throw new OperationError(
+                    errors.push(
                         `Error while attempting to extract ${detectedFile.fileDetails.name} ` +
                         `at offset ${detectedFile.offset}:\n` +
                         `${err.message}`
@@ -76,8 +77,13 @@ class ExtractFiles extends Operation {
             }
         });
 
+        if (errors.length) {
+            throw new OperationError(errors.join("\n\n"));
+        }
+
         return files;
     }
+
 
     /**
      * Displays the files in HTML for web apps.

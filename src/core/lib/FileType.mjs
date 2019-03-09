@@ -7,6 +7,7 @@
  *
  */
 import {FILE_SIGNATURES} from "./FileSignatures";
+import {sendStatusMessage} from "../Utils";
 
 
 /**
@@ -148,6 +149,7 @@ export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
                 let pos = 0;
                 while ((pos = locatePotentialSig(buf, sig, pos)) >= 0) {
                     if (bytesMatch(sig, buf, pos)) {
+                        sendStatusMessage(`Found potential signature for ${filetype.name} at pos ${pos}`);
                         foundFiles.push({
                             offset: pos,
                             fileDetails: filetype
@@ -249,9 +251,12 @@ export function isImage(buf) {
  */
 export function extractFile(bytes, fileDetail, offset) {
     if (fileDetail.extractor) {
+        sendStatusMessage(`Attempting to extract ${fileDetail.name} at pos ${offset}...`);
         const fileData = fileDetail.extractor(bytes, offset);
         const ext = fileDetail.extension.split(",")[0];
-        return new File([fileData], `extracted_at_0x${offset.toString(16)}.${ext}`);
+        return new File([fileData], `extracted_at_0x${offset.toString(16)}.${ext}`, {
+            type: fileDetail.mime
+        });
     }
 
     throw new Error(`No extraction algorithm available for "${fileDetail.mime}" files`);

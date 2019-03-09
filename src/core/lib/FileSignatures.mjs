@@ -1518,26 +1518,26 @@ export function extractELF(bytes, offset) {
 }
 
 
+// Construct required Huffman Tables
+const fixedLiteralTableLengths = new Array(288);
+for (let i = 0; i < fixedLiteralTableLengths.length; i++) {
+    fixedLiteralTableLengths[i] =
+        (i <= 143) ? 8 :
+            (i <= 255) ? 9 :
+                (i <= 279) ? 7 :
+                    8;
+}
+const fixedLiteralTable = buildHuffmanTable(fixedLiteralTableLengths);
+const fixedDistanceTableLengths = new Array(30).fill(5);
+const fixedDistanceTable = buildHuffmanTable(fixedDistanceTableLengths);
+const huffmanOrder = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+
 /**
  * Steps through a DEFLATE stream
  *
  * @param {Stream} stream
  */
 function parseDEFLATE(stream) {
-    // Construct required Huffman Tables
-    const fixedLiteralTableLengths = new Uint8Array(288);
-    for (let i = 0; i < fixedLiteralTableLengths.length; i++) {
-        fixedLiteralTableLengths[i] =
-            (i <= 143) ? 8 :
-                (i <= 255) ? 9 :
-                    (i <= 279) ? 7 :
-                        8;
-    }
-    const fixedLiteralTable = buildHuffmanTable(fixedLiteralTableLengths);
-    const fixedDistanceTableLengths = new Uint8Array(30).fill(5);
-    const fixedDistanceTable = buildHuffmanTable(fixedDistanceTableLengths);
-    const huffmanOrder = new Uint8Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
-
     // Parse DEFLATE data
     let finalBlock = 0;
 
@@ -1619,6 +1619,14 @@ function parseDEFLATE(stream) {
 }
 
 
+// Static length tables
+const lengthExtraTable = [
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
+];
+const distanceExtraTable = [
+    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
+];
+
 /**
  * Parses a Huffman Block given the literal and distance tables
  *
@@ -1627,19 +1635,17 @@ function parseDEFLATE(stream) {
  * @param {Uint32Array} distTab
  */
 function parseHuffmanBlock(stream, litTab, distTab) {
-    const lengthExtraTable = new Uint8Array([
-        0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
-    ]);
-    const distanceExtraTable = new Uint8Array([
-        0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
-    ]);
-
     let code;
+    let loops = 0;
     while ((code = readHuffmanCode(stream, litTab))) {
         // console.log("Code: " + code + " (" + Utils.chr(code) + ") " + Utils.bin(code));
 
         // End of block
         if (code === 256) break;
+
+        // Detect probably infinite loops
+        if (++loops > 10000)
+            throw new Error("Caught in probable infinite loop while parsing Huffman Block");
 
         // Literal
         if (code < 256) continue;
@@ -1657,7 +1663,7 @@ function parseHuffmanBlock(stream, litTab, distTab) {
 /**
  * Builds a Huffman table given the relevant code lengths
  *
- * @param {Uint8Array} lengths
+ * @param {Array} lengths
  * @returns {Array} result
  * @returns {Uint32Array} result.table
  * @returns {number} result.maxCodeLength
