@@ -361,7 +361,20 @@
             "Play Media",
             "Remove EXIF",
             "Extract EXIF",
-            "Split Colour Channels"
+            "Split Colour Channels",
+            "Rotate Image",
+            "Resize Image",
+            "Blur Image",
+            "Dither Image",
+            "Invert Image",
+            "Flip Image",
+            "Crop Image",
+            "Image Brightness / Contrast",
+            "Image Opacity",
+            "Image Filter",
+            "Contain Image",
+            "Cover Image",
+            "Image Hue/Saturation/Lightness"
         ]
     },
     {
