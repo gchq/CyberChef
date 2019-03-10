@@ -1,6 +1,6 @@
 /**
  * @author tlwr [toby@toby.codes] - Original
- * @author Matt C [matt@artemisbot.uk] - Conversion to new format
+ * @author Matt C [me@mitt.dev] - Conversion to new format
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */

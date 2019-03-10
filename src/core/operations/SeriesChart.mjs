@@ -1,145 +1,67 @@
+/**
+ * @author tlwr [toby@toby.codes]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
 import * as d3 from "d3";
-import Utils from "../Utils.js";
+import { getSeriesValues, RECORD_DELIMITER_OPTIONS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
+
+import Operation from "../Operation";
+import Utils from "../Utils";
 
 /**
- * Charting operations.
- *
- * @author tlwr [toby@toby.com]
- * @copyright Crown Copyright 2016
- * @license Apache-2.0
- *
- * @namespace
+ * Series chart operation
  */
-const Charts = {
-
+class SeriesChart extends Operation {
 
     /**
-     * Scatter chart operation.
-     *
-     * @param {string} input
-     * @param {Object[]} args
-     * @returns {html}
+     * SeriesChart constructor
      */
-    runScatterChart: function (input, args) {
-        const recordDelimiter = Utils.charRep[args[0]],
-            fieldDelimiter = Utils.charRep[args[1]],
-            columnHeadingsAreIncluded = args[2],
-            fillColour = args[5],
-            radius = args[6],
-            colourInInput = args[7],
-            dimension = 500;
+    constructor() {
+        super();
 
-        let xLabel = args[3],
-            yLabel = args[4];
-
-        let dataFunction = colourInInput ? Charts._getScatterValuesWithColour : Charts._getScatterValues;
-
-        let { headings, values } = dataFunction(
-                input,
-                recordDelimiter,
-                fieldDelimiter,
-                columnHeadingsAreIncluded
-            );
-
-        if (headings) {
-            xLabel = headings.x;
-            yLabel = headings.y;
-        }
-
-        let svg = document.createElement("svg");
-        svg = d3.select(svg)
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("viewBox", `0 0 ${dimension} ${dimension}`);
-
-        let margin = {
-                top: 10,
-                right: 0,
-                bottom: 40,
-                left: 30,
+        this.name = "Series chart";
+        this.module = "Charts";
+        this.description = "";
+        this.infoURL = "";
+        this.inputType = "string";
+        this.outputType = "html";
+        this.args = [
+            {
+                name: "Record delimiter",
+                type: "option",
+                value: RECORD_DELIMITER_OPTIONS,
             },
-            width = dimension - margin.left - margin.right,
-            height = dimension - margin.top - margin.bottom,
-            marginedSpace = svg.append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        let xExtent = d3.extent(values, d => d[0]),
-            xDelta = xExtent[1] - xExtent[0],
-            yExtent = d3.extent(values, d => d[1]),
-            yDelta = yExtent[1] - yExtent[0],
-            xAxis = d3.scaleLinear()
-                .domain([xExtent[0] - (0.1 * xDelta), xExtent[1] + (0.1 * xDelta)])
-                .range([0, width]),
-            yAxis = d3.scaleLinear()
-                .domain([yExtent[0] - (0.1 * yDelta), yExtent[1] + (0.1 * yDelta)])
-                .range([height, 0]);
-
-        marginedSpace.append("clipPath")
-            .attr("id", "clip")
-            .append("rect")
-            .attr("width", width)
-            .attr("height", height);
-
-        marginedSpace.append("g")
-            .attr("class", "points")
-            .attr("clip-path", "url(#clip)")
-            .selectAll("circle")
-            .data(values)
-            .enter()
-            .append("circle")
-            .attr("cx", (d) => xAxis(d[0]))
-            .attr("cy", (d) => yAxis(d[1]))
-            .attr("r", d => radius)
-            .attr("fill", d => {
-                return colourInInput ? d[2] : fillColour;
-            })
-            .attr("stroke", "rgba(0, 0, 0, 0.5)")
-            .attr("stroke-width", "0.5")
-            .append("title")
-            .text(d => {
-                let x = d[0],
-                    y = d[1],
-                    tooltip = `X: ${x}\n
-                               Y: ${y}\n
-                    `.replace(/\s{2,}/g, "\n");
-                return tooltip;
-            });
-
-        marginedSpace.append("g")
-            .attr("class", "axis axis--y")
-            .call(d3.axisLeft(yAxis).tickSizeOuter(-width));
-
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", -margin.left)
-            .attr("x", -(height / 2))
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text(yLabel);
-
-        marginedSpace.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(xAxis).tickSizeOuter(-height));
-
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", dimension)
-            .style("text-anchor", "middle")
-            .text(xLabel);
-
-        return svg._groups[0][0].outerHTML;
-    },
-
+            {
+                name: "Field delimiter",
+                type: "option",
+                value: FIELD_DELIMITER_OPTIONS,
+            },
+            {
+                name: "X label",
+                type: "string",
+                value: "",
+            },
+            {
+                name: "Point radius",
+                type: "number",
+                value: 1,
+            },
+            {
+                name: "Series colours",
+                type: "string",
+                value: "mediumseagreen, dodgerblue, tomato",
+            },
+        ];
+    }
 
     /**
-     * Series chart operation.
-     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {html}
      */
-    runSeriesChart(input, args) {
+    run(input, args) {
         const recordDelimiter = Utils.charRep[args[0]],
             fieldDelimiter = Utils.charRep[args[1]],
             xLabel = args[2],
@@ -152,7 +74,7 @@ const Charts = {
             seriesHeight = 100,
             seriesWidth = svgWidth - seriesLabelWidth - interSeriesPadding;
 
-        let { xValues, series } = Charts._getSeriesValues(input, recordDelimiter, fieldDelimiter),
+        const { xValues, series } = getSeriesValues(input, recordDelimiter, fieldDelimiter),
             allSeriesHeight = Object.keys(series).length * (interSeriesPadding + seriesHeight),
             svgHeight = allSeriesHeight + xAxisHeight + interSeriesPadding;
 
@@ -162,7 +84,7 @@ const Charts = {
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
-        let xAxis = d3.scalePoint()
+        const xAxis = d3.scalePoint()
             .domain(xValues)
             .range([0, seriesWidth]);
 
@@ -181,14 +103,14 @@ const Charts = {
             .style("text-anchor", "middle")
             .text(xLabel);
 
-        let tooltipText = {},
+        const tooltipText = {},
             tooltipAreaWidth = seriesWidth / xValues.length;
 
         xValues.forEach(x => {
-            let tooltip = [];
+            const tooltip = [];
 
             series.forEach(serie => {
-                let y = serie.data[x];
+                const y = serie.data[x];
                 if (typeof y === "undefined") return;
 
                 tooltip.push(`${serie.name}: ${y}`);
@@ -197,7 +119,7 @@ const Charts = {
             tooltipText[x] = tooltip.join("\n");
         });
 
-        let chartArea = svg.append("g")
+        const chartArea = svg.append("g")
             .attr("transform", `translate(${seriesLabelWidth}, ${xAxisHeight})`);
 
         chartArea
@@ -222,16 +144,16 @@ const Charts = {
                 `.replace(/\s{2,}/g, "\n");
             });
 
-        let yAxesArea = svg.append("g")
+        const yAxesArea = svg.append("g")
             .attr("transform", `translate(0, ${xAxisHeight})`);
 
         series.forEach((serie, seriesIndex) => {
-            let yExtent = d3.extent(Object.values(serie.data)),
+            const yExtent = d3.extent(Object.values(serie.data)),
                 yAxis = d3.scaleLinear()
                     .domain(yExtent)
                     .range([seriesHeight, 0]);
 
-            let seriesGroup = chartArea
+            const seriesGroup = chartArea
                 .append("g")
                 .attr("transform", `translate(0, ${seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`);
 
@@ -257,7 +179,7 @@ const Charts = {
                 .attr("stroke-width", "1");
 
             xValues.forEach(x => {
-                let y = serie.data[x];
+                const y = serie.data[x];
                 if (typeof y === "undefined") return;
 
                 seriesGroup
@@ -291,7 +213,8 @@ const Charts = {
         });
 
         return svg._groups[0][0].outerHTML;
-    },
-};
+    }
 
-export default Charts;
+}
+
+export default SeriesChart;
