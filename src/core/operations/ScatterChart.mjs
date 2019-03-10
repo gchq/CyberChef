@@ -5,6 +5,7 @@
  */
 
 import * as d3 from "d3";
+import jsdom from "jsdom";
 import { getScatterValues, getScatterValuesWithColour, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
 import Operation from "../Operation";
@@ -77,8 +78,8 @@ class ScatterChart extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const recordDelimiter = Utils.charRep[args[0]],
-            fieldDelimiter = Utils.charRep[args[1]],
+        const recordDelimiter = Utils.charRep(args[0]),
+            fieldDelimiter = Utils.charRep(args[1]),
             columnHeadingsAreIncluded = args[2],
             fillColour = args[5],
             radius = args[6],
@@ -89,7 +90,6 @@ class ScatterChart extends Operation {
             yLabel = args[4];
 
         const dataFunction = colourInInput ? getScatterValuesWithColour : getScatterValues;
-
         const { headings, values } = dataFunction(
             input,
             recordDelimiter,
@@ -101,7 +101,7 @@ class ScatterChart extends Operation {
             xLabel = headings.x;
             yLabel = headings.y;
         }
-
+        const document = new jsdom.JSDOM().window.document;
         let svg = document.createElement("svg");
         svg = d3.select(svg)
             .attr("width", "100%")

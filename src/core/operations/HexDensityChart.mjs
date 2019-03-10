@@ -6,6 +6,7 @@
 
 import * as d3 from "d3";
 import * as d3hexbin from "d3-hexbin";
+import jsdom from "jsdom";
 import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
 import Operation from "../Operation";
@@ -94,8 +95,8 @@ class HexDensityChart extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const recordDelimiter = Utils.charRep[args[0]],
-            fieldDelimiter = Utils.charRep[args[1]],
+        const recordDelimiter = Utils.charRep(args[0]),
+            fieldDelimiter = Utils.charRep(args[1]),
             packRadius = args[2],
             drawRadius = args[3],
             columnHeadingsAreIncluded = args[4],
@@ -119,6 +120,7 @@ class HexDensityChart extends Operation {
             yLabel = headings.y;
         }
 
+        const document = new jsdom.JSDOM().window.document;
         let svg = document.createElement("svg");
         svg = d3.select(svg)
             .attr("width", "100%")

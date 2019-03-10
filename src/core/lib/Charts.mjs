@@ -50,7 +50,6 @@ export function getValues(input, recordDelimiter, fieldDelimiter, columnHeadings
         .split(recordDelimiter)
         .forEach((row, rowIndex) => {
             const split = row.split(fieldDelimiter);
-
             if (split.length !== length) throw new OperationError(`Each row must have length ${length}.`);
 
             if (columnHeadingsAreIncluded && rowIndex === 0) {
@@ -59,7 +58,6 @@ export function getValues(input, recordDelimiter, fieldDelimiter, columnHeadings
                 values.push(split);
             }
         });
-
     return { headings, values};
 }
 

@@ -130,7 +130,10 @@ module.exports = {
         ],
     },
     node: {
-        fs: "empty"
+        fs: "empty",
+        "child_process": "empty",
+        net: "empty",
+        tls: "empty"
     },
     performance: {
         hints: false

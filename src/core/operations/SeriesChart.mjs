@@ -5,6 +5,7 @@
  */
 
 import * as d3 from "d3";
+import jsdom from "jsdom";
 import { getSeriesValues, RECORD_DELIMITER_OPTIONS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
 import Operation from "../Operation";
@@ -62,8 +63,8 @@ class SeriesChart extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const recordDelimiter = Utils.charRep[args[0]],
-            fieldDelimiter = Utils.charRep[args[1]],
+        const recordDelimiter = Utils.charRep(args[0]),
+            fieldDelimiter = Utils.charRep(args[1]),
             xLabel = args[2],
             pipRadius = args[3],
             seriesColours = args[4].split(","),
@@ -78,6 +79,7 @@ class SeriesChart extends Operation {
             allSeriesHeight = Object.keys(series).length * (interSeriesPadding + seriesHeight),
             svgHeight = allSeriesHeight + xAxisHeight + interSeriesPadding;
 
+        const document = new jsdom.JSDOM().window.document;
         let svg = document.createElement("svg");
         svg = d3.select(svg)
             .attr("width", "100%")
