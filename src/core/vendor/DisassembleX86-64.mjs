@@ -1,4 +1,32 @@
 /*-------------------------------------------------------------------------------------------------------------------------
+Created by Damian Recoskie (https://github.com/Recoskie/X86-64-Disassembler-JS) 
+  & exported for CyberChef by Matt [me@mitt.dev]
+---------------------------------------------------------------------------------------------------------------------------
+MIT License
+
+Copyright (c) 2019 Damian Recoskie
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------------------------------
 Binary byte code array.
 ---------------------------------------------------------------------------------------------------------------------------
 Function ^LoadBinCode()^ takes a string input of hex and loads it into the BinCode array it is recommended that the location
@@ -3585,7 +3613,6 @@ function NextByte()
   if ( CodePos < BinCode.length ) //If not out of bounds.
   {
     //Convert current byte to String, and pad.
-    var t;
 
     ( ( t = BinCode[CodePos++].toString(16) ).length === 1) && ( t = "0" + t );
 
@@ -4017,21 +4044,33 @@ function DecodeImmediate( type, BySize, SizeSetting )
 
     Pad32 = ( Math.min( BitMode, 1 ) << 2 ) + 4; Pad64 = Math.max( Math.min( BitMode, 2 ), 1 ) << 3;
 
-    //Add the 32 bit section to V32.
+    //Carry bit to 64 bit section.
+    
+    var C64 = 0;
+    
+    //Relative size.
+    
+    var n = Math.min( 0x100000000, Math.pow( 2, 4 << ( S + 1 ) ) );
+    
+    //Sing bit adjust.
+    
+    if( V32 >= ( n >> 1 ) ) { V32 -= n; }
+    
+    //Add position.
+    
+    V32 += Pos32;
+    
+    //Remove carry bit and add it to C64.
 
-    var C64 = 0; V32 += Pos32;
+    ( C64 = ( ( V32 ) >= 0x100000000 ) ) && ( V32 -= 0x100000000 );
+    
+    //Do not carry to 64 if address is 32, and below.
+    
+    if ( S <= 2 ) { C64 = false; }
 
-    //If bit mode is 16 bits only the first 16 bits are used, or if Size Attribute is 16 bit.
+    //Add the 64 bit position plus carry.
 
-    ( BitMode <= 0 || SizeAttrSelect <= 0 ) && ( V32 &= 0xFFFF );
-
-    //Adjust the 32 bit relative address section if it was not cropped to 16 bit's.
-
-    ( C64 = ( ( V32 ) > 0xFFFFFFFF ) ) && ( V32 -= 0x100000000 );
-
-    //Add the 64 bit address section if in 64 bit mode, or higher.
-
-    ( BitMode >= 2 ) && ( ( V64 += Pos64 + C64 ) > 0xFFFFFFFF ) && ( V64 -= 0x100000000 );
+    ( ( V64 += Pos64 + C64 ) > 0xFFFFFFFF ) && ( V64 -= 0x100000000 );
   }
 
   /*---------------------------------------------------------------------------------------------------------------------------
