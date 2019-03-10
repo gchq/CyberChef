@@ -3553,7 +3553,7 @@ export function LoadBinCode( HexStr )
 
   var len = HexStr.length;
 
-  for( var i = 0, el = 0, Sing = 0, int32 = 0; i < len; i += 8 )
+  for( var i = 0, el = 0, Sign = 0, int32 = 0; i < len; i += 8 )
   {
     //It is faster to read 8 hex digits at a time if possible.
 
@@ -3569,22 +3569,22 @@ export function LoadBinCode( HexStr )
 
     //The variable sing corrects the unusable sing bits during the 4 byte rotation algorithm.
 
-    Sing = int32;
+    Sign = int32;
 
-    //Remove the Sing bit value if active for when the number is changed to int32 during rotation.
+    //Remove the Sign bit value if active for when the number is changed to int32 during rotation.
 
     int32 ^= int32 & 0x80000000;
 
-    //Rotate the 32 bit int so that each number is put in order in the BinCode array. Add the Sing Bit positions back though each rotation.
+    //Rotate the 32 bit int so that each number is put in order in the BinCode array. Add the Sign Bit positions back though each rotation.
 
     int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( ( Sing >> 24 ) & 0x80 ) | int32 ) & 0xFF;
+    BinCode[el++] = ( ( ( Sign >> 24 ) & 0x80 ) | int32 ) & 0xFF;
     int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( ( Sing >> 16 ) & 0x80 ) | int32 ) & 0xFF;
+    BinCode[el++] = ( ( ( Sign >> 16 ) & 0x80 ) | int32 ) & 0xFF;
     int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( ( Sing >> 8 ) & 0x80 ) | int32 ) & 0xFF;
+    BinCode[el++] = ( ( ( Sign >> 8 ) & 0x80 ) | int32 ) & 0xFF;
     int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( Sing & 0x80 ) | int32 ) & 0xFF;
+    BinCode[el++] = ( ( Sign & 0x80 ) | int32 ) & 0xFF;
   }
 
   //Remove elements past the Number of bytes in HexStr because int 32 is always 4 bytes it is possible to end in an uneven number.
@@ -3974,11 +3974,11 @@ function DecodeImmediate( type, BySize, SizeSetting )
 
   var Pad32 = 0, Pad64 = 0;
 
-  //*Initialize the Sing value that is only set for Negative, or Positive Relative displacements.
+  //*Initialize the Sign value that is only set for Negative, or Positive Relative displacements.
 
-  var Sing = 0;
+  var Sign = 0;
 
-  //*Initialize the Sing Extend variable size as 0 Some Immediate numbers Sing extend.
+  //*Initialize the Sign Extend variable size as 0 Some Immediate numbers Sign extend.
 
   var Extend = 0;
 
@@ -4052,7 +4052,7 @@ function DecodeImmediate( type, BySize, SizeSetting )
     
     var n = Math.min( 0x100000000, Math.pow( 2, 4 << ( S + 1 ) ) );
     
-    //Sing bit adjust.
+    //Sign bit adjust.
     
     if( V32 >= ( n >> 1 ) ) { V32 -= n; }
     
@@ -4091,9 +4091,9 @@ function DecodeImmediate( type, BySize, SizeSetting )
 
     var Center = 2 * ( 1 << ( n << 3 ) - 2 );
 
-    //By default the Sing is Positive.
+    //By default the Sign is Positive.
 
-    Sing = 1;
+    Sign = 1;
 
     /*-------------------------------------------------------------------------------------------------------------------------
     Calculate the VSIB displacement size if it is a VSIB Disp8.
@@ -4113,9 +4113,9 @@ function DecodeImmediate( type, BySize, SizeSetting )
 
       V32 = Center * 2 - V32;
 
-      //The Sing is negative.
+      //The Sign is negative.
 
-      Sing = 2;
+      Sign = 2;
     }
   }
 
@@ -4149,7 +4149,7 @@ function DecodeImmediate( type, BySize, SizeSetting )
 
   //*Return the Imm.
 
-  return ( ( Sing > 0 ? ( Sing > 1 ? "-" : "+" ) : "" ) + Imm.toUpperCase() );
+  return ( ( Sign > 0 ? ( Sign > 1 ? "-" : "+" ) : "" ) + Imm.toUpperCase() );
 
 }
 
