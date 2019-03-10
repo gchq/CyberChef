@@ -5,7 +5,7 @@
  */
 
 import * as d3 from "d3";
-import jsdom from "jsdom";
+import * as nodom from "nodom";
 import { getScatterValues, getScatterValuesWithColour, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
 import Operation from "../Operation";
@@ -101,7 +101,8 @@ class ScatterChart extends Operation {
             xLabel = headings.x;
             yLabel = headings.y;
         }
-        const document = new jsdom.JSDOM().window.document;
+
+        const document = new nodom.Document();
         let svg = document.createElement("svg");
         svg = d3.select(svg)
             .attr("width", "100%")
