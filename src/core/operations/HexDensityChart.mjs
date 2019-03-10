@@ -25,8 +25,7 @@ class HexDensityChart extends Operation {
 
         this.name = "Hex Density chart";
         this.module = "Charts";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "Hex density charts are used in a similar way to scatter charts, however rather than rendering tens of thousands of points, it groups the points into a few hundred hexagons to show the distribution.";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
@@ -90,6 +89,8 @@ class HexDensityChart extends Operation {
 
 
     /**
+     * Hex Bin chart operation.
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {html}

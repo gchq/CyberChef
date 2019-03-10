@@ -24,8 +24,8 @@ class ScatterChart extends Operation {
 
         this.name = "Scatter chart";
         this.module = "Charts";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "Plots two-variable data as single points on a graph.";
+        this.infoURL = "https://en.wikipedia.org/wiki/Scatter_plot";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
@@ -73,6 +73,8 @@ class ScatterChart extends Operation {
     }
 
     /**
+     * Scatter chart operation.
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {html}

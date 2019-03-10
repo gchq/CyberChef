@@ -24,8 +24,7 @@ class SeriesChart extends Operation {
 
         this.name = "Series chart";
         this.module = "Charts";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "A time series graph is a line graph of repeated measurements taken over regular time intervals.";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
@@ -58,6 +57,8 @@ class SeriesChart extends Operation {
     }
 
     /**
+     * Series chart operation.
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {html}

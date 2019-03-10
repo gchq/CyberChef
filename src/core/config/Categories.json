@@ -359,7 +359,11 @@
             "Play Media",
             "Remove EXIF",
             "Extract EXIF",
-            "Split Colour Channels"
+            "Split Colour Channels",
+            "Hex Density chart",
+            "Scatter chart",
+            "Series chart",
+            "Heatmap chart"
         ]
     },
     {

@@ -26,8 +26,8 @@ class HeatmapChart extends Operation {
 
         this.name = "Heatmap chart";
         this.module = "Charts";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "A heatmap is a graphical representation of data where the individual values contained in a matrix are represented as colors.";
+        this.infoURL = "https://wikipedia.org/wiki/Heat_map";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
@@ -85,6 +85,8 @@ class HeatmapChart extends Operation {
     }
 
     /**
+     * Heatmap chart operation.
+     *
      * @param {string} input
      * @param {Object[]} args
      * @returns {html}
@@ -99,7 +101,6 @@ class HeatmapChart extends Operation {
             minColour = args[8],
             maxColour = args[9],
             dimension = 500;
-        
         if (vBins <= 0) throw new OperationError("Number of vertical bins must be greater than 0");
         if (hBins <= 0) throw new OperationError("Number of horizontal bins must be greater than 0");
 
@@ -182,7 +183,7 @@ class HeatmapChart extends Operation {
             .attr("stroke-width", drawEdges ? "0.5" : "none")
             .append("title")
             .text(d => {
-                let count = d.length,
+                const count = d.length,
                     perc = 100.0 * d.length / values.length,
                     tooltip = `Count: ${count}\n
                                Percentage: ${perc.toFixed(2)}%\n
@@ -218,7 +219,7 @@ class HeatmapChart extends Operation {
 
     /**
      * Packs a list of x, y coordinates into a number of bins for use in a heatmap.
-     * 
+     *
      * @param {Object[]} points
      * @param {number} number of vertical bins
      * @param {number} number of horizontal bins
