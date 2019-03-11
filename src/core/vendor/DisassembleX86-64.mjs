@@ -3609,7 +3609,7 @@ function NextByte()
 {
   //Add the current byte as hex to InstructionHex which will be displayed beside the decoded instruction.
   //After an instruction decodes InstructionHex is only added beside the instruction if ShowInstructionHex is active.
-
+  var t;
   if ( CodePos < BinCode.length ) //If not out of bounds.
   {
     //Convert current byte to String, and pad.
