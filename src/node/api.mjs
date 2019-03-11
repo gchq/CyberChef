@@ -140,7 +140,7 @@ function prepareOp(opInstance, input, args) {
 function createArgOptions(op) {
     const result = {};
     op.args.forEach((a) => {
-        if (a.type === "option") {
+        if (a.type === "option" || a.type === "editableOption") {
             result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.value);
         } else if (a.type === "toggleString") {
             result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.toggleValues);
@@ -183,7 +183,7 @@ export function wrap(OpClass) {
             const result = await opInstance.run(transformedInput, transformedArgs);
             return new NodeDish({
                 value: result,
-                type: opInstance.outputType
+                type: opInstance.outputType,
             });
         };
     } else {
@@ -197,9 +197,11 @@ export function wrap(OpClass) {
         wrapped = (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
             const result = opInstance.run(transformedInput, transformedArgs);
+            console.log('Result:');
+            console.log(result);
             return new NodeDish({
                 value: result,
-                type: opInstance.outputType
+                type: opInstance.outputType,
             });
         };
     }

@@ -967,7 +967,7 @@ class Utils {
             throw new TypeError("Browser environment cannot support readFileSync");
         }
 
-        return Buffer.from(file).buffer;
+        return Buffer.from(file.data).buffer;
     }
 
 
