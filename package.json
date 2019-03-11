@@ -105,7 +105,6 @@
     "jquery": "^3.3.1",
     "js-crc": "^0.2.0",
     "js-sha3": "^0.8.0",
-    "jsdom": "^14.0.0",
     "jsesc": "^2.5.2",
     "jsonpath": "^1.0.0",
     "jsonwebtoken": "^8.4.0",
