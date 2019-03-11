@@ -832,8 +832,9 @@ class Utils {
             const buff = await Utils.readFile(file);
             const blob = new Blob(
                 [buff],
-                {type: "octet/stream"}
+                {type: file.type || "octet/stream"}
             );
+            const blobURL = URL.createObjectURL(blob);
 
             const html = `<div class='card' style='white-space: normal;'>
                     <div class='card-header' id='heading${i}'>
@@ -848,9 +849,18 @@ class Utils {
                             <span class='float-right' style="margin-top: -3px">
                                 ${file.size.toLocaleString()} bytes
                                 <a title="Download ${Utils.escapeHtml(file.name)}"
-                                    href='${URL.createObjectURL(blob)}'
-                                    download='${Utils.escapeHtml(file.name)}'>
+                                    href="${blobURL}"
+                                    download="${Utils.escapeHtml(file.name)}"
+                                    data-toggle="tooltip">
                                     <i class="material-icons" style="vertical-align: bottom">save</i>
+                                </a>
+                                <a title="Move to input"
+                                    href="#"
+                                    blob-url="${blobURL}"
+                                    file-name="${Utils.escapeHtml(file.name)}"
+                                    class="extract-file"
+                                    data-toggle="tooltip">
+                                    <i class="material-icons" style="vertical-align: bottom">open_in_browser</i>
                                 </a>
                             </span>
                         </h6>
@@ -1162,6 +1172,21 @@ Array.prototype.equals = function(other) {
 String.prototype.count = function(chr) {
     return this.split(chr).length - 1;
 };
+
+
+/**
+ * Wrapper for self.sendStatusMessage to handle different environments.
+ *
+ * @param {string} msg
+ */
+export function sendStatusMessage(msg) {
+    if (ENVIRONMENT_IS_WORKER())
+        self.sendStatusMessage(msg);
+    else if (ENVIRONMENT_IS_WEB())
+        app.alert(msg, 10000);
+    else if (ENVIRONMENT_IS_NODE())
+        log.debug(msg);
+}
 
 
 /*

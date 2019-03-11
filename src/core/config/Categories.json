@@ -254,7 +254,8 @@
             "XPath expression",
             "JPath expression",
             "CSS selector",
-            "Extract EXIF"
+            "Extract EXIF",
+            "Extract Files"
         ]
     },
     {
@@ -348,6 +349,7 @@
         "ops": [
             "Detect File Type",
             "Scan for Embedded Files",
+            "Extract Files",
             "Remove EXIF",
             "Extract EXIF"
         ]
@@ -364,6 +366,19 @@
             "Scatter chart",
             "Series chart",
             "Heatmap chart"
+            "Rotate Image",
+            "Resize Image",
+            "Blur Image",
+            "Dither Image",
+            "Invert Image",
+            "Flip Image",
+            "Crop Image",
+            "Image Brightness / Contrast",
+            "Image Opacity",
+            "Image Filter",
+            "Contain Image",
+            "Cover Image",
+            "Image Hue/Saturation/Lightness"
         ]
     },
     {

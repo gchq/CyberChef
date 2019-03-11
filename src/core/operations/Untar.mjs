@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+import Stream from "../lib/Stream";
 
 /**
  * Untar operation
@@ -41,38 +42,6 @@ class Untar extends Operation {
      * @returns {List<File>}
      */
     run(input, args) {
-        const Stream = function(input) {
-            this.bytes = input;
-            this.position = 0;
-        };
-
-        Stream.prototype.getBytes = function(bytesToGet) {
-            const newPosition = this.position + bytesToGet;
-            const bytes = this.bytes.slice(this.position, newPosition);
-            this.position = newPosition;
-            return bytes;
-        };
-
-        Stream.prototype.readString = function(numBytes) {
-            let result = "";
-            for (let i = this.position; i < this.position + numBytes; i++) {
-                const currentByte = this.bytes[i];
-                if (currentByte === 0) break;
-                result += String.fromCharCode(currentByte);
-            }
-            this.position += numBytes;
-            return result;
-        };
-
-        Stream.prototype.readInt = function(numBytes, base) {
-            const string = this.readString(numBytes);
-            return parseInt(string, base);
-        };
-
-        Stream.prototype.hasMore = function() {
-            return this.position < this.bytes.length;
-        };
-
         const stream = new Stream(input),
             files = [];
 
@@ -85,7 +54,7 @@ class Untar extends Operation {
                 ownerUID: stream.readString(8),
                 ownerGID: stream.readString(8),
                 size: parseInt(stream.readString(12), 8), // Octal
-                lastModTime: new Date(1000 * stream.readInt(12, 8)), // Octal
+                lastModTime: new Date(1000 * parseInt(stream.readString(12), 8)), // Octal
                 checksum: stream.readString(8),
                 type: stream.readString(1),
                 linkedFileName: stream.readString(100),
