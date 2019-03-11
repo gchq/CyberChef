@@ -19,7 +19,7 @@ class ExtractHashes extends Operation {
         super();
 
         this.name = "Extract Hashes";
-        this.module = "Default";
+        this.module = "Regex";
         this.description = "Extracts hash values based on hash byte length";
         this.infoURL = "https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions";
         this.inputType = "string";
