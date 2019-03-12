@@ -374,7 +374,8 @@
             "Image Filter",
             "Contain Image",
             "Cover Image",
-            "Image Hue/Saturation/Lightness"
+            "Image Hue/Saturation/Lightness",
+            "Sharpen Image"
         ]
     },
     {
