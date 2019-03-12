@@ -28,7 +28,7 @@ class ExtractHashes extends Operation {
             {
                 name: "Hash character length",
                 type: "number",
-                value: 32
+                value: 40
             },
             {
                 name: "All hashes",
@@ -49,7 +49,7 @@ class ExtractHashes extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        let results = [];
+        const results = [];
         let hashCount = 0;
 
         const hashLength = args[0];
@@ -61,9 +61,9 @@ class ExtractHashes extends Operation {
 
         if (searchAllHashes) hashBitLengths = [4, 8, 16, 32, 64, 128, 160, 192, 224, 256, 320, 384, 512, 1024];
 
-        for (let hashBitLength of hashBitLengths) {
+        for (const hashBitLength of hashBitLengths) {
             // Convert bit length to character length
-            let hashCharacterLength = (hashBitLength / 8) * 2;
+            const hashCharacterLength = (hashBitLength / 8) * 2;
 
             const regex = new RegExp(`(\\b|^)[a-f0-9]{${hashCharacterLength}}(\\b|$)`, "g");
             const searchResults = search(input, regex, null, false);
