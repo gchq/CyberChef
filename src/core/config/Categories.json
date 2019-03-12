@@ -375,7 +375,8 @@
             "Contain Image",
             "Cover Image",
             "Image Hue/Saturation/Lightness",
-            "Sharpen Image"
+            "Sharpen Image",
+            "Convert image format"
         ]
     },
     {
