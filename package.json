@@ -1,6 +1,6 @@
 {
   "name": "cyberchef",
-  "version": "8.24.2",
+  "version": "8.26.3",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
@@ -110,7 +110,7 @@
     "jsqr": "^1.1.1",
     "jsrsasign": "8.0.12",
     "kbpgp": "^2.0.82",
-    "libyara-wasm": "0.0.11",
+    "libyara-wasm": "0.0.12",
     "lodash": "^4.17.11",
     "loglevel": "^1.6.1",
     "loglevel-message-prefix": "^3.0.0",
