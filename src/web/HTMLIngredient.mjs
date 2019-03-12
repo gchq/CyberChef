@@ -32,6 +32,9 @@ class HTMLIngredient {
         this.defaultIndex = config.defaultIndex || 0;
         this.toggleValues = config.toggleValues;
         this.id = "ing-" + this.app.nextIngId();
+        this.min = (typeof config.min === "number") ? config.min : "";
+        this.max = (typeof config.max === "number") ? config.max : "";
+        this.step = config.step || 1;
     }
 
 
@@ -103,6 +106,9 @@ class HTMLIngredient {
                         id="${this.id}"
                         arg-name="${this.name}"
                         value="${this.value}"
+                        min="${this.min}"
+                        max="${this.max}"
+                        step="${this.step}"
                         ${this.disabled ? "disabled" : ""}>
                     ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
