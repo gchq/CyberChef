@@ -9,7 +9,7 @@ import { fromHex } from "../lib/Hex";
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import Magic from "../lib/Magic";
+import {isImage} from "../lib/FileType";
 
 /**
  * Render Image operation
@@ -72,8 +72,7 @@ class RenderImage extends Operation {
         }
 
         // Determine file type
-        const type = Magic.magicFileType(input);
-        if (!(type && type.mime.indexOf("image") === 0)) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type");
         }
 
@@ -92,9 +91,9 @@ class RenderImage extends Operation {
         let dataURI = "data:";
 
         // Determine file type
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0) {
-            dataURI += type.mime + ";";
+        const mime = isImage(data);
+        if (mime) {
+            dataURI += mime + ";";
         } else {
             throw new OperationError("Invalid file type");
         }

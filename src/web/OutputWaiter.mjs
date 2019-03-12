@@ -494,6 +494,24 @@ class OutputWaiter {
         magicButton.setAttribute("data-original-title", "Magic!");
     }
 
+
+    /**
+     * Handler for extract file events.
+     *
+     * @param {Event} e
+     */
+    async extractFileClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const el = e.target.nodeName === "I" ? e.target.parentNode : e.target;
+        const blobURL = el.getAttribute("blob-url");
+        const fileName = el.getAttribute("file-name");
+
+        const blob = await fetch(blobURL).then(r => r.blob());
+        this.manager.input.loadFile(new File([blob], fileName, {type: blob.type}));
+    }
+
 }
 
 export default OutputWaiter;
