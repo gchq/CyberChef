@@ -20,13 +20,13 @@ class ExtractHashes extends Operation {
 
         this.name = "Extract Hashes";
         this.module = "Regex";
-        this.description = "Extracts hash values based on hash byte length";
+        this.description = "Extracts potential hashes based on hash character length";
         this.infoURL = "https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Hash length",
+                name: "Hash character length",
                 type: "number",
                 value: 32
             },
@@ -56,11 +56,16 @@ class ExtractHashes extends Operation {
         const searchAllHashes = args[1];
         const showDisplayTotal = args[2];
 
-        let hashLengths = [hashLength];
-        if (searchAllHashes) hashLengths = [4, 8, 16, 32, 64, 128, 160, 192, 224, 256, 320, 384, 512, 1024];
+        // Convert character length to bit length
+        let hashBitLengths = [(hashLength / 2) * 8];
 
-        for (let hashLength of hashLengths) {
-            const regex = new RegExp(`(\\b|^)[a-f0-9]{${hashLength}}(\\b|$)`, "g");
+        if (searchAllHashes) hashBitLengths = [4, 8, 16, 32, 64, 128, 160, 192, 224, 256, 320, 384, 512, 1024];
+
+        for (let hashBitLength of hashBitLengths) {
+            // Convert bit length to character length
+            let hashCharacterLength = (hashBitLength / 8) * 2;
+
+            const regex = new RegExp(`(\\b|^)[a-f0-9]{${hashCharacterLength}}(\\b|$)`, "g");
             const searchResults = search(input, regex, null, false);
 
             hashCount += searchResults.split("\n").length - 1;
