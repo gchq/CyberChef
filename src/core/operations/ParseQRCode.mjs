@@ -6,7 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import Magic from "../lib/Magic";
+import { isImage } from "../lib/FileType.mjs";
 import { parseQrCode } from "../lib/QRCode";
 
 /**
@@ -50,9 +50,8 @@ class ParseQRCode extends Operation {
      */
     async run(input, args) {
         const [normalise] = args;
-        const type = Magic.magicFileType(input);
 
-        if (!type || type.mime.indexOf("image") !== 0) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
         return await parseQrCode(input, normalise);
