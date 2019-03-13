@@ -173,6 +173,7 @@ class Manager {
         this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
         this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
         document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
+        this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));
