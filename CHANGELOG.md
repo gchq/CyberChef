@@ -2,6 +2,12 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.27.0] - 2019-03-14
+- 'Enigma', 'Typex', 'Bombe' and 'Multiple Bombe' operations added [@s2224834] | [#516]
+- See [this wiki article](https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex) for a full explanation of these operations.
+- New Bombe-style loading animation added for long-running operations [@n1474335]
+- New operation argument types added: `populateMultiOption` and `argSelector` [@n1474335]
+
 ### [8.26.0] - 2019-03-09
 - Various image manipulation operations added [@j433866] | [#506]
 
