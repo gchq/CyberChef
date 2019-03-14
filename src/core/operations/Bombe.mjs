@@ -163,9 +163,9 @@ class Bombe extends Operation {
      */
     present(output) {
         let html = `Bombe run on menu with ${output.nLoops} loop${output.nLoops === 1 ? "" : "s"} (2+ desirable). Note: Rotor positions are listed left to right and start at the beginning of the crib, and ignore stepping and the ring setting. Some plugboard settings are determined. A decryption preview starting at the beginning of the crib and ignoring stepping is also provided.\n\n`;
-        html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th><th>Partial plugboard</th><th>Decryption preview</th></tr>";
+        html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th>  <th>Partial plugboard</th>  <th>Decryption preview</th></tr>\n";
         for (const [setting, stecker, decrypt] of output.result) {
-            html += `<tr><td>${setting}</td><td>${stecker}</td><td>${decrypt}</td></tr>\n`;
+            html += `<tr><td>${setting}</td>  <td>${stecker}</td>  <td>${decrypt}</td></tr>\n`;
         }
         html += "</table>";
         return html;

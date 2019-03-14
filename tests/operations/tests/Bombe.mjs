@@ -11,7 +11,7 @@ TestRegister.addTests([
         // Plugboard for this test is BO LC KE GA
         name: "Bombe: 3 rotor (self-stecker)",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch: /<td>LGA<\/td><td>SS<\/td><td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -31,7 +31,7 @@ TestRegister.addTests([
         // This test produces a menu that doesn't use the first letter, which is also a good test
         name: "Bombe: 3 rotor (other stecker)",
         input: "JBYALIHDYNUAAVKBYM",
-        expectedMatch: /<td>LGA<\/td><td>AG<\/td><td>QFIMUMAFKMQSKMYNGW<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>AG<\/td> {2}<td>QFIMUMAFKMQSKMYNGW<\/td>/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -50,7 +50,7 @@ TestRegister.addTests([
     {
         name: "Bombe: crib offset",
         input: "AAABBYFLTHHYIJQAYBBYS", // first three chars here are faked
-        expectedMatch: /<td>LGA<\/td><td>SS<\/td><td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -69,7 +69,7 @@ TestRegister.addTests([
     {
         name: "Bombe: multiple stops",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch: /<td>LGA<\/td><td>TT<\/td><td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>TT<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -88,7 +88,7 @@ TestRegister.addTests([
     {
         name: "Bombe: checking machine",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch: /<td>LGA<\/td><td>TT AG BO CL EK FF HH II JJ SS YY<\/td><td>THISISATESTMESSAGE<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>TT AG BO CL EK FF HH II JJ SS YY<\/td> {2}<td>THISISATESTMESSAGE<\/td>/,
         recipeConfig: [
             {
                 "op": "Bombe",
@@ -108,7 +108,7 @@ TestRegister.addTests([
     {
         name: "Bombe: 4 rotor",
         input: "LUOXGJSHGEDSRDOQQX",
-        expectedMatch: /<td>LHSC<\/td><td>SS<\/td><td>HHHSSSGQUUQPKSEKWK<\/td>/,
+        expectedMatch: /<td>LHSC<\/td> {2}<td>SS<\/td> {2}<td>HHHSSSGQUUQPKSEKWK<\/td>/,
         recipeConfig: [
             {
                 "op": "Bombe",
