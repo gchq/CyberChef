@@ -44,10 +44,6 @@ class Dish {
         if (dishOrInput &&
             dishOrInput.hasOwnProperty("value") &&
             dishOrInput.hasOwnProperty("type")) {
-            console.log('first setting');
-            console.log(dishOrInput);
-            console.log(dishOrInput.constructor.name);
-            console.log(dishOrInput.value);
             this.set(dishOrInput.value, dishOrInput.type);
         // input and type defined separately
         } else if (dishOrInput && type) {
@@ -103,8 +99,6 @@ class Dish {
      * @returns {string} The data type as a string.
      */
     static enumLookup(typeEnum) {
-        console.trace('enumLookup');
-        console.log('type ' + typeEnum);
         switch (typeEnum) {
             case Dish.BYTE_ARRAY:
                 return "byteArray";
@@ -180,16 +174,11 @@ class Dish {
             type = Dish.typeEnum(type);
         }
 
-        console.log('Dish setting:');
-        console.log(value);
-        console.log(type);
-
         log.debug("Dish type: " + Dish.enumLookup(type));
         this.value = value;
         this.type = type;
 
         if (!this.valid()) {
-            console.log('invalid!');
             const sample = Utils.truncate(JSON.stringify(this.value), 13);
             throw new DishError(`Data is not a valid ${Dish.enumLookup(type)}: ${sample}`);
         }
@@ -231,8 +220,6 @@ class Dish {
                 // All values can be serialised in some manner, so we return true in all cases
                 return true;
             case Dish.FILE:
-                console.log("Validating on file");
-                console.log(this.value instanceof File);
                 return this.value instanceof File;
             case Dish.LIST_FILE:
                 return this.value instanceof Array &&
@@ -349,13 +336,13 @@ class Dish {
 
         // Node environment => translate is sync
         if (Utils.isNode()) {
-            console.log('_translate toType:');
-            console.log(toType);
+            console.log('Running in node');
             this._toByteArray();
             this._fromByteArray(toType, notUTF8);
 
         // Browser environment => translate is async
         } else {
+            console.log('Running in browser');
             return new Promise((resolve, reject) => {
                 this._toByteArray()
                     .then(() => this.type = Dish.BYTE_ARRAY)
@@ -404,7 +391,6 @@ class Dish {
         };
 
         try {
-            console.log("_tyByteArray this.type: " + this.type);
             return toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
         } catch (err) {
             throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);

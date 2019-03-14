@@ -17,8 +17,10 @@ class DishString extends DishTranslationType {
      * convert the given value to a ByteArray
      */
     static toByteArray() {
+        console.log('string to byte array');
         DishString.checkForValue(this.value);
         this.value = this.value ? Utils.strToByteArray(this.value) : [];
+        console.log(this.value);
     }
 
     /**

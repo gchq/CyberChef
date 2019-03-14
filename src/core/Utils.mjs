@@ -967,6 +967,10 @@ class Utils {
             throw new TypeError("Browser environment cannot support readFileSync");
         }
 
+        console.log('readFileSync:');
+        console.log(file);
+        console.log(Buffer.from(file.data).toString());
+
         return Buffer.from(file.data).buffer;
     }
 

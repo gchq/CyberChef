@@ -197,8 +197,6 @@ export function wrap(OpClass) {
         wrapped = (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
             const result = opInstance.run(transformedInput, transformedArgs);
-            console.log('Result:');
-            console.log(result);
             return new NodeDish({
                 value: result,
                 type: opInstance.outputType,

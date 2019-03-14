@@ -19,9 +19,12 @@ class DishFile extends DishTranslationType {
     static toByteArray() {
         DishFile.checkForValue(this.value);
         if (Utils.isNode()) {
-            console.log("valie: ");
+            console.log('toByteArray original value:');
             console.log(this.value);
+            // this.value = Utils.readFileSync(this.value);
             this.value = Array.prototype.slice.call(Utils.readFileSync(this.value));
+            console.log('toByteArray value:');
+            console.log(this.value);
         } else {
             return new Promise((resolve, reject) => {
                 Utils.readFile(this.value)
@@ -40,6 +43,8 @@ class DishFile extends DishTranslationType {
     static fromByteArray() {
         DishFile.checkForValue(this.value);
         this.value = new File(this.value, "unknown");
+        console.log('from Byte array');
+        console.log(this.value);
     }
 }
 

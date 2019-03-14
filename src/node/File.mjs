@@ -24,10 +24,16 @@ class File {
      * @param {Object} stats (optional) - file stats e.g. lastModified
      */
     constructor(data, name="", stats={}) {
-        this.data = Buffer.from(data);
+        // Look at File API definition to see how to handle this.
+        this.data = Buffer.from(data[0]);
         this.name = name;
         this.lastModified = stats.lastModified || Date.now();
         this.type = stats.type || mime.getType(this.name);
+
+        console.log('File constructor');
+        console.log(typeof data);
+        console.log(data);
+        console.log(this.data);
     }
 
     /**
