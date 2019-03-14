@@ -472,7 +472,6 @@ class Utils {
         const str = Utils.byteArrayToChars(byteArray);
         try {
             const utf8Str = utf8.decode(str);
-
             if (str.length !== utf8Str.length) {
                 if (ENVIRONMENT_IS_WORKER()) {
                     self.setOption("attemptHighlight", false);
@@ -966,12 +965,12 @@ class Utils {
         if (!Utils.isNode()) {
             throw new TypeError("Browser environment cannot support readFileSync");
         }
+        let bytes = [];
+        for (const byte of file.data.values()) {
+            bytes = bytes.concat(byte);
+        }
 
-        console.log('readFileSync:');
-        console.log(file);
-        console.log(Buffer.from(file.data).toString());
-
-        return Buffer.from(file.data).buffer;
+        return bytes;
     }
 
 

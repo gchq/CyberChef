@@ -336,13 +336,11 @@ class Dish {
 
         // Node environment => translate is sync
         if (Utils.isNode()) {
-            console.log('Running in node');
             this._toByteArray();
             this._fromByteArray(toType, notUTF8);
 
         // Browser environment => translate is async
         } else {
-            console.log('Running in browser');
             return new Promise((resolve, reject) => {
                 this._toByteArray()
                     .then(() => this.type = Dish.BYTE_ARRAY)
