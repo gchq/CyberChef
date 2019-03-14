@@ -118,6 +118,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.27.0]: https://github.com/gchq/CyberChef/releases/tag/v8.27.0
 [8.26.0]: https://github.com/gchq/CyberChef/releases/tag/v8.26.0
 [8.25.0]: https://github.com/gchq/CyberChef/releases/tag/v8.25.0
 [8.24.0]: https://github.com/gchq/CyberChef/releases/tag/v8.24.0
