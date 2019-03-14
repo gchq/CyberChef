@@ -2,6 +2,12 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.26.0] - 2019-03-09
+- Various image manipulation operations added [@j433866] | [#506]
+
+### [8.25.0] - 2019-03-09
+- 'Extract Files' operation added and more file formats supported [@n1474335] | [#440]
+
 ### [8.24.0] - 2019-02-08
 - 'DNS over HTTPS' operation added [@h345983745] | [#489]
 
@@ -106,6 +112,8 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.26.0]: https://github.com/gchq/CyberChef/releases/tag/v8.26.0
+[8.25.0]: https://github.com/gchq/CyberChef/releases/tag/v8.25.0
 [8.24.0]: https://github.com/gchq/CyberChef/releases/tag/v8.24.0
 [8.23.1]: https://github.com/gchq/CyberChef/releases/tag/v8.23.1
 [8.23.0]: https://github.com/gchq/CyberChef/releases/tag/v8.23.0
@@ -180,6 +188,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#394]: https://github.com/gchq/CyberChef/pull/394
 [#428]: https://github.com/gchq/CyberChef/pull/428
 [#439]: https://github.com/gchq/CyberChef/pull/439
+[#440]: https://github.com/gchq/CyberChef/pull/440
 [#441]: https://github.com/gchq/CyberChef/pull/441
 [#443]: https://github.com/gchq/CyberChef/pull/443
 [#446]: https://github.com/gchq/CyberChef/pull/446
@@ -192,3 +201,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#468]: https://github.com/gchq/CyberChef/pull/468
 [#476]: https://github.com/gchq/CyberChef/pull/476
 [#489]: https://github.com/gchq/CyberChef/pull/489
+[#506]: https://github.com/gchq/CyberChef/pull/506
