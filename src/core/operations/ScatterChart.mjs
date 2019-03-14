@@ -1,15 +1,20 @@
 /**
  * @author tlwr [toby@toby.codes]
+ * @author Matt C [me@mitt.dev]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 
-import * as d3 from "d3";
-import * as nodom from "nodom";
+import * as d3temp from "d3";
+import * as nodomtemp from "nodom";
+
 import { getScatterValues, getScatterValuesWithColour, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
 import Operation from "../Operation";
 import Utils from "../Utils";
+
+const d3 = d3temp.default ? d3temp.default : d3temp;
+const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
 
 /**
  * Scatter chart operation
