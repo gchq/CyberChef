@@ -120,7 +120,7 @@
     "ngeohash": "^0.6.3",
     "node-forge": "^0.7.6",
     "node-md6": "^0.1.0",
-    "nodom": "^2.1.0",
+    "nodom": "github:artemisbot/nodom",
     "notepack.io": "^2.2.0",
     "nwmatcher": "^1.4.4",
     "otp": "^0.1.3",
