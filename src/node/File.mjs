@@ -42,6 +42,14 @@ class File {
     get size() {
         return this.data.length;
     }
+
+    /**
+     * Return lastModified as Date
+     */
+    get lastModifiedDate() {
+        return new Date(this.lastModified);
+    }
+
 }
 
 export default File;

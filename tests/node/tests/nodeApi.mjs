@@ -387,7 +387,7 @@ TestRegister.addApiTests([
 
     it("Operation arguments: should be accessible from operation object if op has array arg", () => {
         assert.ok(chef.toCharcode.argOptions);
-        assert.equal(chef.unzip.argOptions, undefined);
+        assert.deepEqual(chef.unzip.argOptions, {});
     }),
 
     it("Operation arguments: should have key for each array-based argument in operation", () => {

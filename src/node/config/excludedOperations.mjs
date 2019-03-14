@@ -13,12 +13,6 @@ export default  [
     "Label",
     "Comment",
 
-    // Exclude file ops until HTML5 File Object can be mimicked
-    // "Tar",
-    // "Untar",
-    "Unzip",
-    "Zip",
-
     // esprima doesn't work in .mjs
     "JavaScriptBeautify",
     "JavaScriptMinify",

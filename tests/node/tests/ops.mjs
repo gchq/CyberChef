@@ -35,6 +35,9 @@ import {
 } from "../../../src/node/index";
 import chef from "../../../src/node/index";
 import TestRegister from "../../lib/TestRegister";
+import File from "../../../src/node/File";
+
+global.File = File;
 
 TestRegister.addApiTests([
 
@@ -970,6 +973,49 @@ ColorSpace: 1
 ExifImageWidth: 57
 ExifImageHeight: 57`);
     }),
+
+    it("Tar", () => {
+        const tarred = chef.tar("some file content", {
+            filename: "test.txt"
+        });
+        assert.strictEqual(tarred.type, 7);
+        assert.strictEqual(tarred.value.size, 2048);
+        assert.strictEqual(tarred.value.data.toString().substr(0, 8), "test.txt");
+    }),
+
+    it("Untar", () => {
+        const tarred = chef.tar("some file content", {
+            filename: "filename.txt",
+        });
+        const untarred = chef.untar(tarred);
+        assert.strictEqual(untarred.type, 8);
+        assert.strictEqual(untarred.value.length, 1);
+        assert.strictEqual(untarred.value[0].name, "filename.txt");
+        assert.strictEqual(untarred.value[0].data.toString(), "some file content");
+    }),
+
+    it("Zip", () => {
+        const zipped = chef.zip("some file content", {
+            filename: "sample.zip",
+            comment: "added",
+            operaringSystem: "Unix",
+        });
+
+        assert.strictEqual(zipped.type, 7);
+        assert.equal(zipped.value.data.toString().indexOf("sample.zip"), 30);
+        assert.equal(zipped.value.data.toString().indexOf("added"), 122);
+    }),
+
+    // it("Unzip", () => {
+    //     const zipped = chef.zip("some file content", {
+    //         filename: "zipped.zip",
+    //         comment: "zippy",
+    //     });
+    //     const unzipped = chef.unzip(zipped);
+
+    //     assert.equal(unzipped.type, 8);
+    //     assert.equal(unzipped.value = "zipped.zip");
+    // }),
 
 ]);
 
