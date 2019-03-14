@@ -88,6 +88,10 @@ import "./tests/Media";
 import "./tests/ToFromInsensitiveRegex";
 import "./tests/YARA.mjs";
 import "./tests/ConvertCoordinateFormat";
+import "./tests/Enigma";
+import "./tests/Bombe";
+import "./tests/MultipleBombe";
+import "./tests/Typex";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";

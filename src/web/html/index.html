@@ -81,7 +81,11 @@
                     if (!el.classList.contains("loading"))
                         el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
-                } catch (err) {} // Ignore errors if DOM not yet ready
+                } catch (err) {
+                    // This error was likely caused by the DOM not being ready yet,
+                    // so we wait another second and then try again.
+                    setTimeout(changeLoadingMsg, 1000);
+                }
             }
 
             changeLoadingMsg();
@@ -271,7 +275,7 @@
                                     <i class="material-icons">content_copy</i>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Move output to input">
-                                    <i class="material-icons">loop</i>
+                                    <i class="material-icons">open_in_browser</i>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="undo-switch" data-toggle="tooltip" title="Undo" disabled="disabled">
                                     <i class="material-icons">undo</i>
@@ -319,7 +323,9 @@
                                 </div>
                             </div>
                             <div id="output-loader">
-                                <div class="loader"></div>
+                                <div id="output-loader-animation">
+                                    <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
+                                </div>
                                 <div class="loading-msg"></div>
                             </div>
                         </div>

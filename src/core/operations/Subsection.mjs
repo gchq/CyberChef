@@ -116,7 +116,7 @@ class Subsection extends Operation {
                 }
 
                 // Baseline ing values for each tranche so that registers are reset
-                subOpList.forEach((op, i) => {
+                recipe.opList.forEach((op, i) => {
                     op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
                 });
 

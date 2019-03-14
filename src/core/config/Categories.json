@@ -102,7 +102,11 @@
             "JWT Decode",
             "Citrix CTX1 Encode",
             "Citrix CTX1 Decode",
-            "Pseudo-Random Number Generator"
+            "Pseudo-Random Number Generator",
+            "Enigma",
+            "Bombe",
+            "Multiple Bombe",
+            "Typex"
         ]
     },
     {
@@ -254,7 +258,8 @@
             "XPath expression",
             "JPath expression",
             "CSS selector",
-            "Extract EXIF"
+            "Extract EXIF",
+            "Extract Files"
         ]
     },
     {
@@ -348,6 +353,7 @@
         "ops": [
             "Detect File Type",
             "Scan for Embedded Files",
+            "Extract Files",
             "Remove EXIF",
             "Extract EXIF"
         ]
@@ -359,7 +365,20 @@
             "Play Media",
             "Remove EXIF",
             "Extract EXIF",
-            "Split Colour Channels"
+            "Split Colour Channels",
+            "Rotate Image",
+            "Resize Image",
+            "Blur Image",
+            "Dither Image",
+            "Invert Image",
+            "Flip Image",
+            "Crop Image",
+            "Image Brightness / Contrast",
+            "Image Opacity",
+            "Image Filter",
+            "Contain Image",
+            "Cover Image",
+            "Image Hue/Saturation/Lightness"
         ]
     },
     {

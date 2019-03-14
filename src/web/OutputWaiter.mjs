@@ -336,24 +336,54 @@ class OutputWaiter {
 
 
     /**
-     * Shows or hides the loading icon.
+     * Save bombe object then remove it from the DOM so that it does not cause performance issues.
+     */
+    saveBombe() {
+        this.bombeEl = document.getElementById("bombe");
+        this.bombeEl.parentNode.removeChild(this.bombeEl);
+    }
+
+
+    /**
+     * Shows or hides the output loading screen.
+     * The animated Bombe SVG, whilst quite aesthetically pleasing, is reasonably CPU
+     * intensive, so we remove it from the DOM when not in use. We only show it if the
+     * recipe is taking longer than 200ms. We add it to the DOM just before that so that
+     * it is ready to fade in without stuttering.
      *
-     * @param {boolean} value
+     * @param {boolean} value - true == show loader
      */
     toggleLoader(value) {
+        clearTimeout(this.appendBombeTimeout);
+        clearTimeout(this.outputLoaderTimeout);
+
         const outputLoader = document.getElementById("output-loader"),
-            outputElement = document.getElementById("output-text");
+            outputElement = document.getElementById("output-text"),
+            animation = document.getElementById("output-loader-animation");
 
         if (value) {
             this.manager.controls.hideStaleIndicator();
-            this.bakingStatusTimeout = setTimeout(function() {
+
+            // Start a timer to add the Bombe to the DOM just before we make it
+            // visible so that there is no stuttering
+            this.appendBombeTimeout = setTimeout(function() {
+                animation.appendChild(this.bombeEl);
+            }.bind(this), 150);
+
+            // Show the loading screen
+            this.outputLoaderTimeout = setTimeout(function() {
                 outputElement.disabled = true;
                 outputLoader.style.visibility = "visible";
                 outputLoader.style.opacity = 1;
                 this.manager.controls.toggleBakeButtonFunction(true);
             }.bind(this), 200);
         } else {
-            clearTimeout(this.bakingStatusTimeout);
+            // Remove the Bombe from the DOM to save resources
+            this.outputLoaderTimeout = setTimeout(function () {
+                try {
+                    animation.removeChild(this.bombeEl);
+                } catch (err) {}
+            }.bind(this), 500);
             outputElement.disabled = false;
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
@@ -492,6 +522,24 @@ class OutputWaiter {
         magicButton.classList.add("hidden");
         magicButton.setAttribute("data-recipe", "");
         magicButton.setAttribute("data-original-title", "Magic!");
+    }
+
+
+    /**
+     * Handler for extract file events.
+     *
+     * @param {Event} e
+     */
+    async extractFileClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const el = e.target.nodeName === "I" ? e.target.parentNode : e.target;
+        const blobURL = el.getAttribute("blob-url");
+        const fileName = el.getAttribute("file-name");
+
+        const blob = await fetch(blobURL).then(r => r.blob());
+        this.manager.input.loadFile(new File([blob], fileName, {type: blob.type}));
     }
 
 }

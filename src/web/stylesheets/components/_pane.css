@@ -91,3 +91,7 @@
     padding-right: 6px;
     padding-left: 6px;
 }
+
+#files .card-header .float-right a:hover {
+    text-decoration: none;
+}
