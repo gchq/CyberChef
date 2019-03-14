@@ -100,8 +100,15 @@ module.exports = {
                     limit: 10000
                 }
             },
+            {
+                test: /\.svg$/,
+                loader: "svg-url-loader",
+                options: {
+                    encoding: "base64"
+                }
+            },
             { // First party images are saved as files to be cached
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif)$/,
                 exclude: /node_modules/,
                 loader: "file-loader",
                 options: {
@@ -109,7 +116,7 @@ module.exports = {
                 }
             },
             { // Third party images are inlined
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
                 loader: "url-loader",
                 options: {

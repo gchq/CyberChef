@@ -73,6 +73,30 @@
     background-color: var(--primary-background-colour);
     visibility: hidden;
     opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: all 0.5s ease;
+}
+
+#output-loader-animation {
+    display: block;
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    top: 10%;
+    transition: all 0.5s ease;
+}
+
+#output-loader .loading-msg {
+    opacity: 1;
+    font-family: var(--primary-font-family);
+    line-height: var(--primary-line-height);
+    color: var(--primary-font-colour);
+    left: unset;
+    top: 30%;
+    position: relative;
 
     transition: all 0.5s ease;
 }
@@ -137,16 +161,6 @@
 #stale-indicator i {
     vertical-align: middle;
     margin-bottom: 5px;
-}
-
-#output-loader .loading-msg {
-    opacity: 1;
-    font-family: var(--primary-font-family);
-    line-height: var(--primary-line-height);
-    color: var(--primary-font-colour);
-    top: 50%;
-
-    transition: all 0.5s ease;
 }
 
 #magic {

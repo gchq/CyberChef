@@ -102,7 +102,11 @@
             "JWT Decode",
             "Citrix CTX1 Encode",
             "Citrix CTX1 Decode",
-            "Pseudo-Random Number Generator"
+            "Pseudo-Random Number Generator",
+            "Enigma",
+            "Bombe",
+            "Multiple Bombe",
+            "Typex"
         ]
     },
     {
