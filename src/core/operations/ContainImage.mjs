@@ -72,6 +72,11 @@ class ContainImage extends Operation {
                     "Bezier"
                 ],
                 defaultIndex: 1
+            },
+            {
+                name: "Opaque background",
+                type: "boolean",
+                value: true
             }
         ];
     }
@@ -82,7 +87,7 @@ class ContainImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        const [width, height, hAlign, vAlign, alg] = args;
+        const [width, height, hAlign, vAlign, alg, opaqueBg] = args;
 
         const resizeMap = {
             "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
@@ -115,6 +120,13 @@ class ContainImage extends Operation {
             if (ENVIRONMENT_IS_WORKER())
                 self.sendStatusMessage("Containing image...");
             image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
+
+            if (opaqueBg) {
+                const newImage = await jimp.read(width, height, 0x000000FF);
+                newImage.blit(image, 0, 0);
+                image = newImage;
+            }
+
             const imageBuffer = await image.getBufferAsync(jimp.AUTO);
             return [...imageBuffer];
         } catch (err) {
