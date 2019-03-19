@@ -51,10 +51,12 @@ class App {
      */
     setup() {
         document.dispatchEvent(this.manager.appstart);
+
         this.initialiseSplitter();
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
+        this.manager.output.saveBombe();
         this.resetLayout();
         this.setCompileMessage();
 
@@ -121,6 +123,9 @@ class App {
 
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
+
+        // Remove all current indicators
+        this.manager.recipe.updateBreakpointIndicator(false);
 
         this.manager.worker.bake(
             this.getInput(),        // The user's input
@@ -474,6 +479,7 @@ class App {
             const item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
             // Populate arguments
+            log.debug(`Populating arguments for ${recipeConfig[i].op}`);
             const args = item.querySelectorAll(".arg");
             for (let j = 0; j < args.length; j++) {
                 if (recipeConfig[i].args[j] === undefined) continue;
@@ -498,6 +504,8 @@ class App {
             if (recipeConfig[i].breakpoint) {
                 item.querySelector(".breakpoint").click();
             }
+
+            this.manager.recipe.triggerArgEvents(item);
 
             this.progress = 0;
         }

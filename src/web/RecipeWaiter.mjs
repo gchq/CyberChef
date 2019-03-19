@@ -205,6 +205,7 @@ class RecipeWaiter {
      * @fires Manager#statechange
      */
     ingChange(e) {
+        if (e && e.target && e.target.classList.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -340,10 +341,11 @@ class RecipeWaiter {
     /**
      * Moves or removes the breakpoint indicator in the recipe based on the position.
      *
-     * @param {number} position
+     * @param {number|boolean} position - If boolean, turn off all indicators
      */
     updateBreakpointIndicator(position) {
         const operations = document.querySelectorAll("#rec-list li.operation");
+        if (typeof position === "boolean") position = operations.length;
         for (let i = 0; i < operations.length; i++) {
             if (i === position) {
                 operations[i].classList.add("break");
@@ -430,6 +432,23 @@ class RecipeWaiter {
 
 
     /**
+     * Triggers various change events for operation arguments that have just been initialised.
+     *
+     * @param {HTMLElement} op
+     */
+    triggerArgEvents(op) {
+        // Trigger populateOption and argSelector events
+        const triggerableOptions = op.querySelectorAll(".populate-option, .arg-selector");
+        const evt = new Event("change", {bubbles: true});
+        if (triggerableOptions.length) {
+            for (const el of triggerableOptions) {
+                el.dispatchEvent(evt);
+            }
+        }
+    }
+
+
+    /**
      * Handler for operationadd events.
      *
      * @listens Manager#operationadd
@@ -438,6 +457,8 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
+
+        this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
 
