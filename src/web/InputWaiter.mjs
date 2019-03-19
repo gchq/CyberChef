@@ -318,9 +318,11 @@ class InputWaiter {
         if (this.loaderWorker) this.loaderWorker.terminate();
         this.fileBuffer = null;
         document.getElementById("input-file").style.display = "none";
-        const inputText = document.getElementById("input-text");
+        const inputText = document.getElementById("input-text"),
+            fileThumb = document.getElementById("input-file-thumbnail");
         inputText.style.overflow = "auto";
         inputText.classList.remove("blur");
+        fileThumb.src = require("./static/images/file-128x128.png");
     }
 
 
