@@ -53,6 +53,7 @@ function main() {
         ioDisplayThreshold:  512,
         logLevel:            "info",
         autoMagic:           true,
+        imagePreview:        true,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

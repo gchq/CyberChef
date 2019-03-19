@@ -6,6 +6,8 @@
 
 import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker";
 import Utils from "../core/Utils";
+import { toBase64 } from "../core/lib/Base64";
+import { isImage } from "../core/lib/FileType";
 
 
 /**
@@ -290,8 +292,16 @@ class InputWaiter {
      */
     displayFilePreview() {
         const inputText = document.getElementById("input-text"),
-            fileSlice = this.fileBuffer.slice(0, 4096);
-
+            fileSlice = this.fileBuffer.slice(0, 4096),
+            fileThumb = document.getElementById("input-file-thumbnail"),
+            arrBuffer = new Uint8Array(this.fileBuffer),
+            type = isImage(arrBuffer);
+        if (type && type !== "image/tiff" && this.app.options.imagePreview) {
+            // Don't show TIFFs as not much supports them
+            fileThumb.src = `data:${type};base64,${toBase64(arrBuffer)}`;
+        } else {
+            fileThumb.src = require("./static/images/file-128x128.png");
+        }
         inputText.style.overflow = "hidden";
         inputText.classList.add("blur");
         inputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
