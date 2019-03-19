@@ -9,6 +9,7 @@ import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
 import jimp from "jimp";
+import { gaussianBlur } from "../lib/ImageManipulation";
 
 /**
  * Blur Image operation
@@ -64,12 +65,14 @@ class BlurImage extends Operation {
         try {
             switch (blurType){
                 case "Fast":
+                    if (ENVIRONMENT_IS_WORKER())
+                        self.sendStatusMessage("Fast blurring image...");
                     image.blur(blurAmount);
                     break;
                 case "Gaussian":
                     if (ENVIRONMENT_IS_WORKER())
-                        self.sendStatusMessage("Gaussian blurring image. This may take a while...");
-                    image.gaussian(blurAmount);
+                        self.sendStatusMessage("Gaussian blurring image...");
+                    image = gaussianBlur(image, blurAmount);
                     break;
             }
 

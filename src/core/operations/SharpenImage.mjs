@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
+import { gaussianBlur } from "../lib/ImageManipulation";
 import jimp from "jimp";
 
 /**
@@ -74,12 +75,12 @@ class SharpenImage extends Operation {
         try {
             if (ENVIRONMENT_IS_WORKER())
                 self.sendStatusMessage("Sharpening image... (Cloning image)");
-            const blurImage = image.clone();
             const blurMask = image.clone();
 
             if (ENVIRONMENT_IS_WORKER())
                 self.sendStatusMessage("Sharpening image... (Blurring cloned image)");
-            blurImage.gaussian(radius);
+            const blurImage = gaussianBlur(image.clone(), radius, 3);
+
 
             if (ENVIRONMENT_IS_WORKER())
                 self.sendStatusMessage("Sharpening image... (Creating unsharp mask)");
