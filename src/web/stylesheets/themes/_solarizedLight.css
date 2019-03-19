@@ -1,0 +1,145 @@
+/**
+ * Solarized light theme definitions
+ *
+ * @author j433866 [j433866@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+:root.solarizedLight {
+    --base03: #002b36;
+    --base02: #073642;
+    --base01: #586e75;
+    --base00: #657b83;
+    --base0: #839496;
+    --base1: #93a1a1;
+    --base2: #eee8d5;
+    --base3: #fdf6e3;
+    --sol-yellow: #b58900;
+    --sol-orange: #cb4b16;
+    --sol-red: #dc322f;
+    --sol-magenta: #d33682;
+    --sol-violet: #6c71c4;
+    --sol-blue: #268bd2;
+    --sol-cyan: #2aa198;
+    --sol-green: #859900;
+
+    --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --primary-font-colour: var(--base00);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family: "Monaco", "Droid Sans Mono", "Consolas", monospace;
+    --fixed-width-font-colour: inherit;
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--base1);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--base3);
+    --secondary-background-colour: var(--base2);
+
+    --primary-border-colour: var(--base0);
+    --secondary-border-colour: var(--base1);
+
+    --title-colour: var(--base01);
+    --title-weight: bold;
+    --title-background-colour: var(--base2);
+
+    --banner-font-colour: var(--base00);
+    --banner-bg-colour: var(--base3);
+
+    --category-list-font-colour: var(--base01);
+
+    --loader-background-colour: var(--base3);
+    --loader-outer-colour: var(--base01);
+    --loader-middle-colour: var(--base00);
+    --loader-inner-colour: var(--base0);
+
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--base00);
+    --op-list-operation-bg-colour: var(--base3);
+    --op-list-operation-border-colour: var(--base2);
+
+    --rec-list-operation-font-colour: var(--base00);
+    --rec-list-operation-bg-colour: var(--base2);
+    --rec-list-operation-border-colour: var(--base1);
+
+    --selected-operation-font-color: var(--base01);
+    --selected-operation-bg-colour: var(--base2);
+    --selected-operation-border-colour: var(--base1);
+
+    --breakpoint-font-colour: var(--sol-red);
+    --breakpoint-bg-colour: var(--base2);
+    --breakpoint-border-colour: var(--base0);
+
+    --disabled-font-colour: var(--base1);
+    --disabled-bg-colour: var(--base3);
+    --disabled-border-colour: var(--base2);
+
+    --fc-operation-font-colour: var(--base01);
+    --fc-operation-bg-colour: var(--base2);
+    --fc-operation-border-colour: var(--base1);
+
+    --fc-breakpoint-operation-font-colour: var(--base02);
+    --fc-breakpoint-operation-bg-colour: var(--base1);
+    --fc-breakpoint-operation-border-colour: var(--base0);
+
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--base00);
+    --arg-background: var(--base3);
+    --arg-border-colour: var(--base0);
+    --arg-disabled-background: var(--base3);
+    --arg-label-colour: var(--base01);
+
+
+    /* Operation buttons */
+    --disable-icon-colour: #9e9e9e;
+    --disable-icon-selected-colour: #f44336;
+    --breakpoint-icon-colour: #9e9e9e;
+    --breakpoint-icon-selected-colour: #f44336;
+
+
+    /* Buttons */
+    --btn-default-font-colour: var(--base00);
+    --btn-default-bg-colour: var(--base2);
+    --btn-default-border-colour: var(--base1);
+
+    --btn-default-hover-font-colour: var(--base01);
+    --btn-default-hover-bg-colour: var(--base1);
+    --btn-default-hover-border-colour: var(--base0);
+
+    --btn-success-font-colour: var(--base00);
+    --btn-success-bg-colour: var(--base3);
+    --btn-success-border-colour: var(--base0);
+
+    --btn-success-hover-font-colour: var(--base01);
+    --btn-success-hover-bg-colour: var(--base1);
+    --btn-success-hover-border-colour: var(--base0);
+
+
+    /* Highlighter colours */
+    --hl1: var(--base1);
+    --hl2: var(--sol-blue);
+    --hl3: var(--sol-magenta);
+    --hl4: var(--sol-yellow);
+    --hl5: var(--sol-green);
+
+
+    /* Scrollbar */
+    --scrollbar-track: var(--base3);
+    --scrollbar-thumb: var(--base1);
+    --scrollbar-hover: var(--base0);
+
+
+    /* Misc. */
+    --drop-file-border-colour: var(--base1);
+    --popover-background: var(--base2);
+    --popover-border-colour: var(--base1);
+    --code-background: var(--base3);
+    --code-font-colour: var(--base01);
+    --input-highlight-colour: var(--base01);
+}

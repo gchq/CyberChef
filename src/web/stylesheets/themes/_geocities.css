@@ -32,6 +32,13 @@
     --banner-font-colour: white;
     --banner-bg-colour: maroon;
 
+    --category-list-font-colour: yellow;
+
+    --loader-background-colour: #00f;
+    --loader-outer-colour: #0f0;
+    --loader-middle-colour: red;
+    --loader-inner-colour: yellow;
+
 
     /* Operation colours */
     --op-list-operation-font-colour: blue;
@@ -72,6 +79,13 @@
     --arg-label-colour: red;
 
 
+    /* Operation buttons */
+    --disable-icon-colour: #0f0;
+    --disable-icon-selected-colour: yellow;
+    --breakpoint-icon-colour: #0f0;
+    --breakpoint-icon-selected-colour: yellow;
+
+
     /* Buttons */
     --btn-default-font-colour: black;
     --btn-default-bg-colour: white;
@@ -110,4 +124,5 @@
     --popover-border-colour: violet;
     --code-background: black;
     --code-font-colour: limegreen;
+    --input-highlight-colour: limegreen;
 }

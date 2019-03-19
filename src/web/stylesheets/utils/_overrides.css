@@ -104,8 +104,11 @@ select.form-control:not([size]):not([multiple]), select.custom-file-control:not(
     color: var(--primary-font-colour);
 }
 
-.form-control {
-    background-image: linear-gradient(to top, rgb(25, 118, 210) 2px, rgba(25, 118, 210, 0) 2px), linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
+.form-control
+.is-focused .form-control {
+    background-image:
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
+        linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
 code {

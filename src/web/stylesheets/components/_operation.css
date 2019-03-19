@@ -205,19 +205,19 @@ div.toggle-string {
 }
 
 .disable-icon {
-    color: #9e9e9e;
+    color: var(--disable-icon-colour);
 }
 
 .disable-icon-selected {
-    color: #f44336;
+    color: var(--disable-icon-selected-colour);
 }
 
 .breakpoint {
-    color: #9e9e9e;
+    color: var(--breakpoint-icon-colour);
 }
 
 .breakpoint-selected {
-    color: #f44336;
+    color: var(--breakpoint-icon-selected-colour);
 }
 
 .break {
