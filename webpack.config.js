@@ -94,7 +94,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(ico|eot|ttf|woff|woff2)$/,
+                test: /\.(ico|eot|ttf|woff|woff2|fnt)$/,
                 loader: "url-loader",
                 options: {
                     limit: 10000

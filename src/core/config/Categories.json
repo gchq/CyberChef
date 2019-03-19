@@ -376,7 +376,8 @@
             "Cover Image",
             "Image Hue/Saturation/Lightness",
             "Sharpen Image",
-            "Convert image format"
+            "Convert Image Format",
+            "Add Text To Image"
         ]
     },
     {
