@@ -398,22 +398,33 @@ TestRegister.addApiTests([
 
     it("Operation arguments: should be accessible from operation object if op has array arg", () => {
         assert.ok(chef.toCharcode.argOptions);
-        assert.deepEqual(chef.unzip.argOptions, {});
+        assert.deepEqual(chef.unzip.argOptions, {
+            password: {
+                type: "binaryString",
+                value: "",
+            },
+            verifyResult: {
+                type: "boolean",
+                value: false,
+            }
+        });
     }),
 
-    it("Operation arguments: should have key for each array-based argument in operation", () => {
+    it("Operation arguments: should have key for each argument in operation", () => {
         assert.ok(chef.convertDistance.argOptions.inputUnits);
         assert.ok(chef.convertDistance.argOptions.outputUnits);
 
-        assert.ok(chef.bitShiftRight.argOptions.type);
-        // is a number type, so not included.
-        assert.equal(chef.bitShiftRight.argOptions.amount, undefined);
+        assert.strictEqual(chef.bitShiftRight.argOptions.amount.type, "number");
+        assert.strictEqual(chef.bitShiftRight.argOptions.amount.value, 1);
+        assert.strictEqual(chef.bitShiftRight.argOptions.type.type, "option");
+        assert.ok(Array.isArray(chef.bitShiftRight.argOptions.type.options));
+
     }),
 
     it("Operation arguments: should list all options excluding subheadings", () => {
         // First element (subheading) removed
-        assert.equal(chef.convertDistance.argOptions.inputUnits[0], "Nanometres (nm)");
-        assert.equal(chef.defangURL.argOptions.process[1], "Only full URLs");
+        assert.equal(chef.convertDistance.argOptions.inputUnits.options[0], "Nanometres (nm)");
+        assert.equal(chef.defangURL.argOptions.process.options[1], "Only full URLs");
     })
 
 ]);

@@ -1002,8 +1002,8 @@ ExifImageHeight: 57`);
         });
 
         assert.strictEqual(zipped.type, 7);
-        assert.equal(zipped.value.data.toString().indexOf("sample.zip"), 30);
-        assert.equal(zipped.value.data.toString().indexOf("added"), 122);
+        assert.ok(zipped.value.data.toString().includes("sample.zip"));
+        assert.ok(zipped.value.data.toString().includes("added"));
     }),
 
     it("Unzip", () => {
@@ -1016,6 +1016,17 @@ ExifImageHeight: 57`);
         assert.equal(unzipped.type, 8);
         assert.equal(unzipped.value[0].data, "some file content");
         assert.equal(unzipped.value[0].name, "zipped.zip");
+    }),
+
+    it("Unzip with password", () => {
+        const zipped = chef.zip("some content", {
+            password: "abcd",
+        });
+        const unzipped = chef.unzip(zipped, {
+            password: "abcd",
+        });
+
+        assert.equal(unzipped.value[0].data, "some content");
     }),
 
 ]);

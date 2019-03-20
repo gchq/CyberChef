@@ -141,9 +141,21 @@ function createArgOptions(op) {
     const result = {};
     op.args.forEach((a) => {
         if (a.type === "option" || a.type === "editableOption") {
-            result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.value);
+            result[sentenceToCamelCase(a.name)] = {
+                type: a.type,
+                options: removeSubheadingsFromArray(a.value)
+            };
         } else if (a.type === "toggleString") {
-            result[sentenceToCamelCase(a.name)] = removeSubheadingsFromArray(a.toggleValues);
+            result[sentenceToCamelCase(a.name)] = {
+                type: a.type,
+                value: a.value,
+                toggleValues: removeSubheadingsFromArray(a.toggleValues),
+            };
+        } else {
+            result[sentenceToCamelCase(a.name)] = {
+                type: a.type,
+                value: a.value,
+            };
         }
     });
 
