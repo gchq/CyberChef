@@ -1006,16 +1006,17 @@ ExifImageHeight: 57`);
         assert.equal(zipped.value.data.toString().indexOf("added"), 122);
     }),
 
-    // it("Unzip", () => {
-    //     const zipped = chef.zip("some file content", {
-    //         filename: "zipped.zip",
-    //         comment: "zippy",
-    //     });
-    //     const unzipped = chef.unzip(zipped);
+    it("Unzip", () => {
+        const zipped = chef.zip("some file content", {
+            filename: "zipped.zip",
+            comment: "zippy",
+        });
+        const unzipped = chef.unzip(zipped);
 
-    //     assert.equal(unzipped.type, 8);
-    //     assert.equal(unzipped.value = "zipped.zip");
-    // }),
+        assert.equal(unzipped.type, 8);
+        assert.equal(unzipped.value[0].data, "some file content");
+        assert.equal(unzipped.value[0].name, "zipped.zip");
+    }),
 
 ]);
 
