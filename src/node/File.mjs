@@ -21,12 +21,17 @@ class File {
      *
      * https://w3c.github.io/FileAPI/#file-constructor
      *
-     * @param {String|Array|ArrayBuffer|Buffer} bits - file content
+     * @param {String|Array|ArrayBuffer|Buffer|[File]} bits - file content
      * @param {String} name (optional) - file name
      * @param {Object} stats (optional) - file stats e.g. lastModified
      */
     constructor(data, name="", stats={}) {
-        const buffers = data.map(d => Buffer.from(d));
+        const buffers = data.map((d) => {
+            if (d instanceof File) {
+                return Buffer.from(d.data);
+            }
+            return Buffer.from(d);
+        });
         const totalLength = buffers.reduce((p, c) => p + c.length, 0);
         this.data = Buffer.concat(buffers, totalLength);
 

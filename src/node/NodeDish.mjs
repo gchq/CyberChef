@@ -53,14 +53,14 @@ class NodeDish extends Dish {
      * Avoid coercion to a String primitive.
      */
     toString() {
-        return this.get(Dish.typeEnum("string"));
+        return this.presentAs(Dish.typeEnum("string"));
     }
 
     /**
      * What we want to log to the console.
      */
     [util.inspect.custom](depth, options) {
-        return this.get(Dish.typeEnum("string"));
+        return this.presentAs(Dish.typeEnum("string"));
     }
 
     /**
@@ -68,14 +68,14 @@ class NodeDish extends Dish {
      * Log only the value to the console in node.
      */
     inspect() {
-        return this.get(Dish.typeEnum("string"));
+        return this.presentAs(Dish.typeEnum("string"));
     }
 
     /**
      * Avoid coercion to a Number primitive.
      */
     valueOf() {
-        return this.get(Dish.typeEnum("number"));
+        return this.presentAs(Dish.typeEnum("number"));
     }
 
 }

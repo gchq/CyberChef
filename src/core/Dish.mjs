@@ -184,6 +184,22 @@ class Dish {
         }
     }
 
+    /**
+     * Returns the Dish as the given type, without mutating the original dish.
+     *
+     * If running in a browser, get is asynchronous.
+     *
+     * @Node
+     *
+     * @param {number} type - The data type of value, see Dish enums.
+     * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
+     * @returns {Dish | Promise} - (Broswer) A promise | (Node) value of dish in given type
+     */
+    presentAs(type, notUTF8=false) {
+        const clone = this.clone();
+        return clone.get(type, notUTF8);
+    }
+
 
     /**
      * Validates that the value is the type that has been specified.

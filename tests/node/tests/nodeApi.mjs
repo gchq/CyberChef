@@ -148,12 +148,23 @@ TestRegister.addApiTests([
     }),
 
     it("chef.help: lists name matches before desc matches", () => {
+        const result = chef.help("Checksum");
+        assert.ok(result[0].name.includes("Checksum"));
+        assert.ok(result[1].name.includes("Checksum"));
+        assert.strictEqual(result[result.length - 1].name.includes("Checksum"), false);
+        assert.ok(result[result.length - 1].description.includes("checksum"));
+    }),
+
+    it("chef.help: exact name match only returns one result", () => {
         const result = chef.help("MD5");
-        assert.ok(result[0].name.includes("MD5"));
-        assert.strictEqual(result[1].name.includes("MD5"), false);
-        assert.strictEqual(result[2].name.includes("MD5"), false);
-        assert.ok(result[1].description.includes("MD5"));
-        assert.ok(result[2].description.includes("MD5"));
+        assert.strictEqual(result.length, 1);
+        assert.strictEqual(result[0].name, "MD5");
+    }),
+
+    it("chef.help: exact match ignores whitespace", () => {
+        const result = chef.help("tobase64");
+        assert.strictEqual(result.length, 1);
+        assert.strictEqual(result[0].name, "To Base64");
     }),
 
     it("chef.bake: should exist", () => {
