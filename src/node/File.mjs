@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import mime from "mime";
 import { detectFileType } from "../core/lib/FileType";
 
 

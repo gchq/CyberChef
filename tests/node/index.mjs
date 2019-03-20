@@ -29,7 +29,7 @@ global.ENVIRONMENT_IS_WEB = function() {
 
 import TestRegister from "../lib/TestRegister";
 import "./tests/nodeApi";
-import "./tests/ops";
+import "./tests/operations";
 import "./tests/File";
 
 const testStatus = {
