@@ -5,6 +5,8 @@
  */
 
 import mime from "mime";
+import { detectFileType } from "../core/lib/FileType";
+
 
 /**
  * FileShim
@@ -37,8 +39,13 @@ class File {
 
         this.name = name;
         this.lastModified = stats.lastModified || Date.now();
-        this.type = stats.type || mime.getType(this.name);
 
+        const types = detectFileType(this.data);
+        if (types.length) {
+            this.type = types[0].mime;
+        } else {
+            this.type = "application/unknown";
+        }
     }
 
     /**
