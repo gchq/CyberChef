@@ -52,6 +52,7 @@
     line-height: 30px;
     background-color: var(--primary-background-colour);
     flex-direction: row;
+    padding-left: 10px;
 }
 
 .io-card.card:hover {
@@ -68,8 +69,7 @@
     margin-top: auto;
     margin-right: auto;
     margin-bottom: auto;
-    padding: 10px;
-    padding-right: 0px;
+    padding: 0px;
 
 }
 
