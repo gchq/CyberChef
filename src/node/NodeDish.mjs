@@ -25,8 +25,8 @@ class NodeDish extends Dish {
         // NOT Buffer.buff, as this makes a buffer of the whole object.
         if (Buffer.isBuffer(inputOrDish)) {
             inputOrDish = new Uint8Array(inputOrDish).buffer;
+            type = Dish.BYTE_ARRAY;
         }
-
         super(inputOrDish, type);
     }
 
@@ -38,7 +38,7 @@ class NodeDish extends Dish {
      * @returns {Dish} a new dish with the result of the operation.
      */
     apply(operation, args=null) {
-        return operation(this.value, args);
+        return operation(this, args);
     }
 
     /**
