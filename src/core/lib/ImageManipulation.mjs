@@ -12,7 +12,7 @@ import OperationError from "../errors/OperationError";
  * Gaussian blurs an image.
  *
  * @param {jimp} input
- * @param {int} radius
+ * @param {number} radius
  * @param {boolean} fast
  * @returns {jimp}
  */
@@ -24,7 +24,6 @@ export function gaussianBlur (input, radius) {
             input = boxBlur(input, (boxes[i] - 1) / 2);
         }
     } catch (err) {
-        log.error(err);
         throw new OperationError(`Error blurring image. (${err})`);
     }
 
@@ -33,8 +32,8 @@ export function gaussianBlur (input, radius) {
 
 /**
  *
- * @param {int} radius
- * @param {int} numBoxes
+ * @param {number} radius
+ * @param {number} numBoxes
  * @returns {Array}
  */
 function boxesForGauss(radius, numBoxes) {
@@ -167,9 +166,9 @@ function boxBlurH (source, output, width, height, radius) {
  *
  * @param {jimp} source
  * @param {jimp} output
- * @param {int} width
- * @param {int} height
- * @param {int} radius
+ * @param {number} width
+ * @param {number} height
+ * @param {number} radius
  * @returns {jimp}
  */
 function boxBlurV (source, output, width, height, radius) {

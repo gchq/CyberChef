@@ -110,7 +110,12 @@ class ResizeImage extends Operation {
                 image.resize(width, height, resizeMap[resizeAlg]);
             }
 
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            let imageBuffer;
+            if (image.getMIME() === "image/gif") {
+                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            } else {
+                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            }
             return [...imageBuffer];
         } catch (err) {
             throw new OperationError(`Error resizing image. (${err})`);

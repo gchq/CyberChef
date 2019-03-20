@@ -115,7 +115,12 @@ class CoverImage extends Operation {
             if (ENVIRONMENT_IS_WORKER())
                 self.sendStatusMessage("Covering image...");
             image.cover(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            let imageBuffer;
+            if (image.getMIME() === "image/gif") {
+                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            } else {
+                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            }
             return [...imageBuffer];
         } catch (err) {
             throw new OperationError(`Error covering image. (${err})`);

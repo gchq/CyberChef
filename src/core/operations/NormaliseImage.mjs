@@ -41,12 +41,26 @@ class NormaliseImage extends Operation {
             throw new OperationError("Invalid file type.");
         }
 
-        const image = await jimp.read(Buffer.from(input));
+        let image;
+        try {
+            image = await jimp.read(Buffer.from(input));
+        } catch (err) {
+            throw new OperationError(`Error opening image file. (${err})`);
+        }
 
-        image.normalize();
+        try {
+            image.normalize();
 
-        const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-        return [...imageBuffer];
+            let imageBuffer;
+            if (image.getMIME() === "image/gif") {
+                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            } else {
+                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            }
+            return [...imageBuffer];
+        } catch (err) {
+            throw new OperationError(`Error normalising image. (${err})`);
+        }
     }
 
     /**

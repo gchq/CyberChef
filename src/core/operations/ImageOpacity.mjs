@@ -61,7 +61,12 @@ class ImageOpacity extends Operation {
                 self.sendStatusMessage("Changing image opacity...");
             image.opacity(opacity / 100);
 
-            const imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            let imageBuffer;
+            if (image.getMIME() === "image/gif") {
+                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            } else {
+                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            }
             return [...imageBuffer];
         } catch (err) {
             throw new OperationError(`Error changing image opacity. (${err})`);
