@@ -1,8 +1,6 @@
 language: node_js
 node_js:
   - node
-env:
-  - NODE_ENV=production
 cache: npm
 addons:
   chrome: stable
@@ -15,7 +13,7 @@ script:
   - grunt test
   - grunt test-node
   - grunt docs
-  - grunt node
+  - NODE_ENV=production grunt node
   - grunt prod --msg="$COMPILE_MSG"
   - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
 before_deploy:
