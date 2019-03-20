@@ -427,7 +427,7 @@ color: white;
     it("Disassemble x86", () => {
         const result = chef.disassembleX86(chef.toBase64("one two three"));
         const expected = `0000000000000000 0000                            ADD BYTE PTR [RAX],AL\r
-0000000000000002 0B250000000B                    OR ESP,DWORD PTR [000000000B000008]\r
+0000000000000002 0B250000000B                    OR ESP,DWORD PTR [0000000-F4FFFFF8]\r
 `;
         assert.strictEqual(result.toString(), expected);
     }),
