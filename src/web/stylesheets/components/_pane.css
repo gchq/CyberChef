@@ -60,10 +60,17 @@
 
 .io-card.card>img {
     float: left;
-    width: 128px;
-    height: 128px;
-    margin-left: 10px;
-    margin-top: 11px;
+    width: auto;
+    height: auto;
+    max-width: 128px;
+    max-height: 128px;
+    margin-left: auto;
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    padding: 10px;
+    padding-right: 0px;
+
 }
 
 .io-card.card .card-body .close {
