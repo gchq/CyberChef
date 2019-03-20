@@ -42,7 +42,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("test-node",
         "Run all the node tests in the tests directory",
-        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "exec:generateConfig", "exec:nodeTests"]);
+        ["clean", "exec:generateConfig", "exec:generateNodeIndex", "exec:nodeTests"]);
 
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
