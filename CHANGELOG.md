@@ -157,6 +157,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@j433866]: https://github.com/j433866
 [@GCHQ77703]: https://github.com/GCHQ77703
 [@h345983745]: https://github.com/h345983745
+[@s2224834]: https://github.com/s2224834
 [@artemisbot]: https://github.com/artemisbot
 [@picapi]: https://github.com/picapi
 [@Dachande663]: https://github.com/Dachande663
@@ -209,3 +210,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#476]: https://github.com/gchq/CyberChef/pull/476
 [#489]: https://github.com/gchq/CyberChef/pull/489
 [#506]: https://github.com/gchq/CyberChef/pull/506
+[#516]: https://github.com/gchq/CyberChef/pull/516
