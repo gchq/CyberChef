@@ -232,6 +232,8 @@ export function help(input) {
         return null;
     }
 
+    let exactMatchExists = false;
+
     // Look for matches in operation name and description, listing name
     // matches first.
     const matches = Object.keys(OperationConfig)
@@ -240,15 +242,23 @@ export function help(input) {
             const hydrated = OperationConfig[m];
             hydrated.name = m;
 
+            // flag up an exact name match. Only first exact match counts.
+            if (!exactMatchExists) {
+                exactMatchExists = sanitise(hydrated.name) === sanitise(searchTerm);
+            }
             // Return hydrated along with what type of match it was
             return {
                 hydrated,
+                nameExactMatch: sanitise(hydrated.name) === sanitise(searchTerm),
                 nameMatch: sanitise(hydrated.name).includes(sanitise(searchTerm)),
                 descMatch: sanitise(hydrated.description).includes(sanitise(searchTerm))
             };
         })
-        // Filter out non-matches
+        // Filter out non-matches. If exact match exists, filter out all others.
         .filter((result) => {
+            if (exactMatchExists) {
+                return !!result.nameExactMatch;
+            }
             return result.nameMatch || result.descMatch;
         })
         // sort results with name match first
@@ -260,9 +270,8 @@ export function help(input) {
         // extract just the hydrated config
         .map(result => result.hydrated);
 
-    // Concatenate matches but remove duplicates
     if (matches && matches.length) {
-        console.log(`${matches.length} results found.`);
+        console.log(`${matches.length} result${matches.length > 1 ? "s" : ""} found.`);
         return matches;
     }
 
@@ -273,10 +282,9 @@ export function help(input) {
 
 /**
  * bake [Wrapped] - Perform an array of operations on some input.
- * @param operations array of chef's operations (used in wrapping stage)
  * @returns {Function}
  */
-export function bake(operations){
+export function bake(){
 
     /**
      * bake
