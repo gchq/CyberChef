@@ -24,12 +24,14 @@
     --sol-cyan: #2aa198;
     --sol-green: #859900;
 
-    --primary-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --primary-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
     --primary-font-colour: var(--base00);
     --primary-font-size: 14px;
     --primary-line-height: 20px;
 
-    --fixed-width-font-family: "Monaco", "Droid Sans Mono", "Consolas", monospace;
+    --fixed-width-font-family: SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
     --fixed-width-font-colour: inherit;
     --fixed-width-font-size: inherit;
 
@@ -142,4 +144,5 @@
     --code-background: var(--base3);
     --code-font-colour: var(--base01);
     --input-highlight-colour: var(--base01);
+    --input-border-colour: var(--base00);
 }
