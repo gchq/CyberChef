@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - node
+env:
+  - NODE_ENV=production
 cache: npm
 addons:
   chrome: stable
@@ -11,6 +13,7 @@ before_script:
 script:
   - grunt lint
   - grunt test
+  - grunt test-node
   - grunt docs
   - grunt node
   - grunt prod --msg="$COMPILE_MSG"

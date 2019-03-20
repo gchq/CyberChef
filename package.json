@@ -146,6 +146,7 @@
     "node-prod": "NODE_ENV=production grunt node",
     "repl": "grunt node && node build/node/CyberChef-repl.js",
     "test": "grunt test",
+    "test-node": "grunt test-node",
     "testui": "grunt testui",
     "docs": "grunt docs",
     "lint": "grunt lint",

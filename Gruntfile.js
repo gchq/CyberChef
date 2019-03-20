@@ -17,6 +17,8 @@ const UglifyJSWebpackPlugin = require("uglifyjs-webpack-plugin");
  * @license Apache-2.0
  */
 
+const NODE_PROD = process.env.NODE_ENV === "production";
+
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
     grunt.file.preserveBOM = false;
@@ -271,7 +273,7 @@ module.exports = function (grunt) {
                 ]
             },
             node: {
-                mode: process.env.NODE_ENV === "prodction" ? "production" : "development",
+                mode: NODE_PROD ? "production" : "development",
                 target: "node",
                 entry: "./src/node/index.mjs",
                 externals: [NodeExternals({
@@ -290,7 +292,7 @@ module.exports = function (grunt) {
                     })
                 ],
                 optimization: {
-                    minimizer: [
+                    minimizer: NODE_PROD ? [
                         new UglifyJSWebpackPlugin({
                             cache: true,
                             parallel: true,
@@ -298,11 +300,11 @@ module.exports = function (grunt) {
                                 "keep_fnames": true,
                             }
                         })
-                    ]
+                    ] : []
                 }
             },
             nodeRepl: {
-                mode: process.env.NODE_ENV === "prodction" ? "production" : "development",
+                mode: NODE_PROD ? "production" : "development",
                 target: "node",
                 entry: "./src/node/repl-index.mjs",
                 externals: [NodeExternals({
@@ -321,7 +323,7 @@ module.exports = function (grunt) {
                     })
                 ],
                 optimization: {
-                    minimizer: [
+                    minimizer: NODE_PROD ? [
                         new UglifyJSWebpackPlugin({
                             parallel: true,
                             cache: true,
@@ -329,7 +331,7 @@ module.exports = function (grunt) {
                                 "keep_fnames": true,
                             }
                         })
-                    ]
+                    ] : []
                 }
             }
         },
