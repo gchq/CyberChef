@@ -142,19 +142,22 @@ class Manager {
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
 
         // Input
-        this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
-        this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
+        // this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
+        // this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
         document.getElementById("clr-io").addEventListener("click", this.input.clearIoClick.bind(this.input));
         this.addListeners("#open-file", "change", this.input.inputOpen, this.input);
-        this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
-        this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
-        this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
-        document.getElementById("input-text").addEventListener("scroll", this.highlighter.inputScroll.bind(this.highlighter));
-        document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
-        document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
-        this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
-        document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
+        // this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
+        // this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
+        // this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
+        // document.getElementById("input-text").addEventListener("scroll", this.highlighter.inputScroll.bind(this.highlighter));
+        // document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
+        // document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
+        // this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
+        // document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
+        document.getElementById("btn-new-tab").addEventListener("click", this.input.addTab);
+        this.addDynamicListener("#input-tabs ul li .btn-close-tab i", "click", this.input.removeTab, this.input);
+        this.addDynamicListener("#input-tabs ul li .input-tab-content", "click", this.input.changeTab, this.input);
 
         // Output
         document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));

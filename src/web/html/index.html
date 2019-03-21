@@ -229,6 +229,9 @@
                         <div class="title no-select">
                             <label for="input-text">Input</label>
                             <span class="float-right">
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab">
+                                    <i class="material-icons">add</i>
+                                </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input" onclick="document.getElementById('open-file').click();">
                                     <i class="material-icons">input</i>
                                     <input type="file" id="open-file" style="display: none">
@@ -243,20 +246,34 @@
                             <div class="io-info" id="input-info"></div>
                             <div class="io-info" id="input-selection-info"></div>
                         </div>
-                        <div class="textarea-wrapper no-select">
-                            <div id="input-highlighter" class="no-select"></div>
-                            <textarea id="input-text" spellcheck="false"></textarea>
-                            <div id="input-file">
-                                <div class="file-overlay"></div>
-                                <div style="position: relative; height: 100%;">
-                                    <div class="io-card card">
-                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
-                                        <div class="card-body">
-                                            <button type="button" class="close" id="input-file-close">&times;</button>
-                                            Name: <span id="input-file-name"></span><br>
-                                            Size: <span id="input-file-size"></span><br>
-                                            Type: <span id="input-file-type"></span><br>
-                                            Loaded: <span id="input-file-loaded"></span>
+                        <div id="multi-input-wrapper">
+                            <div id="input-tabs" style="display: none;">
+                                <ul>
+                                    <li id="input-tab-1" class="active-input-tab">
+                                        <div class="input-tab-content">
+                                            Tab 1
+                                        </div>
+                                        <button type="button" class="btn btn-primary bmd-btn-icon btn-close-tab" id="btn-close-tab-1">
+                                                <i class="material-icons">clear</i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="textarea-wrapper no-select input-wrapper active-input-area" id="tab-input-area-1">
+                                <div id="input-highlighter" class="no-select"></div>
+                                <textarea id="input-text-1" class="input-text" spellcheck="false"></textarea>
+                                <div class="input-file" id="input-file-1">
+                                    <div class="file-overlay"></div>
+                                    <div style="position: relative; height: 100%;">
+                                        <div class="io-card card">
+                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon" id="input-file-thumbnail-1"/>
+                                            <div class="card-body">
+                                                <button type="button" class="close" id="input-file-close">&times;</button>
+                                                Name: <span id="input-file-name-1"></span><br>
+                                                Size: <span id="input-file-size-1"></span><br>
+                                                Type: <span id="input-file-type-1"></span><br>
+                                                Loaded: <span id="input-file-loaded-1"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -349,6 +349,189 @@ class InputWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
+    /**
+     * Handler for adding a new input tab.
+     *
+     */
+    addTab() {
+        const tabWrapper = document.getElementById("input-tabs");
+        const tabsList = tabWrapper.children[0];
+        const lastTabNum = tabsList.lastElementChild.id.replace("input-tab-", "");
+        const newTabNum = parseInt(lastTabNum, 10) + 1;
+
+        tabWrapper.style.display = "block";
+
+        // Resize highlighter
+        // document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+
+        const activeTabElements = document.getElementsByClassName("active-input-tab");
+        for (let i = 0; i < activeTabElements.length; i++) {
+            activeTabElements.item(i).classList.remove("active-input-tab");
+        }
+
+        const newTab = document.createElement("li");
+        newTab.id = `input-tab-${newTabNum}`;
+        newTab.classList.add("active-input-tab");
+
+        const newTabContent = document.createElement("div");
+        newTabContent.classList.add("input-tab-content");
+        newTabContent.innerText = `Tab ${newTabNum}`;
+
+        const newTabCloseBtn = document.createElement("button");
+        newTabCloseBtn.className = "btn btn-primary bmd-btn-icon btn-close-tab";
+        newTabCloseBtn.id = `btn-close-tab-${newTabNum}`;
+
+        const newTabCloseBtnIcon = document.createElement("i");
+        newTabCloseBtnIcon.classList.add("material-icons");
+        newTabCloseBtnIcon.innerText = "clear";
+
+        newTabCloseBtn.appendChild(newTabCloseBtnIcon);
+        newTab.appendChild(newTabContent);
+        newTab.appendChild(newTabCloseBtn);
+
+        tabsList.appendChild(newTab);
+
+        const multiWrapper = document.getElementById("multi-input-wrapper");
+
+        const activeAreaElements = document.getElementsByClassName("active-input-area");
+        for (let i = 0; i < activeAreaElements.length; i++) {
+            activeAreaElements.item(i).classList.remove("active-input-area");
+        }
+
+        const newTextAreaWrapper = document.createElement("div");
+        newTextAreaWrapper.className = "textarea-wrapper no-select input-wrapper active-input-area";
+        newTextAreaWrapper.id = `tab-input-area-${newTabNum}`;
+
+        const newTextArea = document.createElement("textarea");
+        newTextArea.id = `input-text-${newTabNum}`;
+        newTextArea.spellcheck = "false";
+        newTextArea.classList.add("input-text");
+
+        const newFileArea = document.createElement("div");
+        newFileArea.id = `input-file-${newTabNum}`;
+        newFileArea.classList.add("input-file");
+
+        const newFileOverlay = document.createElement("div");
+        newFileOverlay.classList.add("file-overlay");
+
+        const newFileWrapper = document.createElement("div");
+        newFileWrapper.style.position = "relative";
+        newFileWrapper.style.height = "100%";
+
+        const newFileCard = document.createElement("div");
+        newFileCard.className = "io-card card";
+
+        const newFileThumb = document.createElement("img");
+        newFileThumb["aria-hidden"] = "true";
+        newFileThumb.src = require("./static/images/file-128x128.png");
+        newFileThumb.alt = "File icon";
+        newFileThumb.id = `input-file-thumbnail-${newTabNum}`;
+
+        const newFileCardBody = document.createElement("div");
+        newFileCardBody.class = "card-body";
+
+        const newFileCloseButton = document.createElement("button");
+        newFileCloseButton.type = "button";
+        newFileCloseButton.class = "close";
+        newFileCloseButton.id = `input-file-close-${newTabNum}`;
+        newFileCloseButton.innerHTML = "&times;";
+
+        newFileCardBody.appendChild(newFileCloseButton);
+
+        const cardInfo = `
+        Name: <span id="input-file-name-${newTabNum}"></span><br>
+        Size: <span id="input-file-size-${newTabNum}"></span><br>
+        Type: <span id="input-file-type-${newTabNum}"></span><br>
+        Loaded: <span id="input-file-loaded-${newTabNum}"></span>`;
+
+        newFileCardBody.innerHTML = newFileCardBody.innerHTML + cardInfo;
+
+        newFileCard.appendChild(newFileThumb);
+        newFileCard.appendChild(newFileCardBody);
+        newFileWrapper.appendChild(newFileCard);
+        newFileArea.appendChild(newFileOverlay);
+        newFileArea.appendChild(newFileWrapper);
+
+        newTextAreaWrapper.appendChild(newTextArea);
+        newTextAreaWrapper.appendChild(newFileArea);
+        multiWrapper.appendChild(newTextAreaWrapper);
+
+        // file inputs!
+    }
+
+    /**
+     * Handler for removing an input tab
+     *
+     * @param {event} mouseEvent
+     */
+    removeTab(mouseEvent) {
+        if (!mouseEvent.path) {
+            return;
+        }
+        const closeBtn = mouseEvent.path[1];
+        const liItem = closeBtn.parentElement;
+        const tabList = liItem.parentElement;
+        if (tabList.children.length > 1) {
+            if (liItem.classList.contains("active-input-tab")) {
+                // If current tab is active, change the active tab and input to another tab
+                let newActiveAreaId;
+                if (liItem.previousElementSibling) {
+                    liItem.previousElementSibling.classList.add("active-input-tab");
+                    const newActiveTabNum = liItem.previousElementSibling.id.replace("input-tab-", "");
+                    newActiveAreaId = `tab-input-area-${newActiveTabNum}`;
+                } else if (liItem.nextElementSibling) {
+                    liItem.nextElementSibling.classList.add("active-input-tab");
+                    const newActiveTabNum = liItem.nextElementSibling.id.replace("input-tab-", "");
+                    newActiveAreaId = `tab-input-area-${newActiveTabNum}`;
+                }
+
+                if (newActiveAreaId) {
+                    document.getElementById(newActiveAreaId).classList.add("active-input-area");
+                }
+            }
+            const tabNum = liItem.id.replace("input-tab-", "");
+            const multiInputArea = document.getElementById("multi-input-wrapper");
+            const inputAreaId = `tab-input-area-${tabNum}`;
+            const inputArea = document.getElementById(inputAreaId);
+
+            tabList.removeChild(liItem);
+            multiInputArea.removeChild(inputArea);
+        }
+        if (tabList.children.length === 1) {
+            document.getElementById("input-tabs").style.display = "none";
+            // document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
+        }
+    }
+
+    /**
+     * Handler for changing tabs
+     *
+     * @param {event} mouseEvent
+     */
+    changeTab(mouseEvent) {
+        if (!mouseEvent.path) {
+            return;
+        }
+        const tabContent = mouseEvent.path[0];
+        const liItem = tabContent.parentElement;
+        const tabNum = liItem.id.replace("input-tab-", "");
+
+        const activeTabsList = document.getElementsByClassName("active-input-tab");
+        for (let i = 0; i < activeTabsList.length; i++) {
+            activeTabsList.item(i).classList.remove("active-input-tab");
+        }
+
+        const activeAreaList = document.getElementsByClassName("active-input-area");
+        for (let i = 0; i < activeAreaList.length; i++) {
+            activeAreaList.item(i).classList.remove("active-input-area");
+        }
+        liItem.classList.add("active-input-tab");
+
+        const newActiveAreaId = `tab-input-area-${tabNum}`;
+        document.getElementById(newActiveAreaId).classList.add("active-input-area");
+
+    }
+
 }
 
 export default InputWaiter;
