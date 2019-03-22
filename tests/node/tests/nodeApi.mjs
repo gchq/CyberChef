@@ -357,6 +357,9 @@ TestRegister.addApiTests([
         const arrayBufferDish = new Dish(Buffer.from("some buffer input").buffer);
         assert.strictEqual(arrayBufferDish.type, 4);
 
+        const byteArrayDish = new Dish(Buffer.from("some buffer input"));
+        assert.strictEqual(byteArrayDish.type, 0);
+
         const JSONDish = new Dish({key: "value"});
         assert.strictEqual(JSONDish.type, 6);
     }),
@@ -364,7 +367,7 @@ TestRegister.addApiTests([
     it("Composable dish: Buffer type dishes should be converted to strings", () => {
         fs.writeFileSync("test.txt", "abc");
         const dish = new Dish(fs.readFileSync("test.txt"));
-        assert.strictEqual(dish.type, 4);
+        assert.strictEqual(dish.type, 0);
         fs.unlinkSync("test.txt");
     }),
 

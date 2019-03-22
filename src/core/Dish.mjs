@@ -36,7 +36,6 @@ class Dish {
      * literal input
      */
     constructor(dishOrInput=null, type = null) {
-
         this.value = [];
         this.type = Dish.BYTE_ARRAY;
 
@@ -46,7 +45,7 @@ class Dish {
             dishOrInput.hasOwnProperty("type")) {
             this.set(dishOrInput.value, dishOrInput.type);
         // input and type defined separately
-        } else if (dishOrInput && type) {
+        } else if (dishOrInput && type !== null) {
             this.set(dishOrInput, type);
         // No type declared, so infer it.
         } else if (dishOrInput) {

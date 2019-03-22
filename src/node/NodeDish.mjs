@@ -22,9 +22,9 @@ class NodeDish extends Dish {
 
         // Allow `fs` file input:
         // Any node fs Buffers transformed to array buffer
-        // NOT Buffer.buff, as this makes a buffer of the whole object.
+        // Use Array.from as Uint8Array doesnt pass instanceof Array test
         if (Buffer.isBuffer(inputOrDish)) {
-            inputOrDish = new Uint8Array(inputOrDish).buffer;
+            inputOrDish = Array.from(inputOrDish);
             type = Dish.BYTE_ARRAY;
         }
         super(inputOrDish, type);
