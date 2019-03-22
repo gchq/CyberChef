@@ -88,6 +88,7 @@
     "bootstrap-material-design": "^4.1.1",
     "bson": "^4.0.1",
     "chi-squared": "^1.1.0",
+    "clippyjs": "0.0.3",
     "crypto-api": "^0.8.3",
     "crypto-js": "^3.1.9-1",
     "ctph.js": "0.0.5",
