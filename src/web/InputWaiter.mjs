@@ -418,7 +418,7 @@ class InputWaiter {
         this.manager.output.closeFile();
         // this.manager.highlighter.removeHighlights();
         const inputNum = this.getActiveTab();
-        document.getElementById(`input-tab-${inputNum}`).firstElementChild.innerText = "New Tab";
+        document.getElementById(`input-tab-${inputNum}`).firstElementChild.innerText = `${inputNum}: New Tab`;
         document.getElementById("input-text").value = "";
         document.getElementById("output-text").value = "";
         document.getElementById("input-info").innerHTML = "";
@@ -452,7 +452,7 @@ class InputWaiter {
 
         const newTabContent = document.createElement("div");
         newTabContent.classList.add("input-tab-content");
-        newTabContent.innerText = "New Tab";
+        newTabContent.innerText = `${newTabNum}: New Tab`;
 
         const newTabCloseBtn = document.createElement("button");
         newTabCloseBtn.className = "btn btn-primary bmd-btn-icon btn-close-tab";
@@ -503,7 +503,7 @@ class InputWaiter {
             delete this.fileBuffers[tabNum];
             this.inputs[tabNum] = "";
             document.getElementById("input-text").value = "";
-            tabLiItem.firstElementChild.innerText = "New Tab";
+            tabLiItem.firstElementChild.innerText = `${tabNum}: New Tab`;
         }
         if (tabList.children.length === 1) {
             document.getElementById("input-tabs").style.display = "none";
@@ -546,7 +546,7 @@ class InputWaiter {
 
         if (this.fileBuffers[newTabNum]) {
             const fileObj = this.fileBuffers[newTabNum];
-            this.setInputInfo(fileObj.size, 1);
+            this.setInputInfo(fileObj.size, null);
             this.setFileInfo(fileObj);
             this.displayFilePreview();
         } else {
@@ -581,17 +581,17 @@ class InputWaiter {
      * @param {string|File} input
      */
     displayTabInfo(input) {
-        const activeTabs = document.getElementsByClassName("active-input-tab");
-        if (activeTabs.length > 0) {
-            const activeTabContent = activeTabs.item(0).getElementsByClassName("input-tab-content")[0];
-            if (input instanceof File) {
-                activeTabContent.innerText = input.name;
+        const tabNum = this.getActiveTab();
+        const activeTab = document.getElementById(`input-tab-${tabNum}`);
+        const activeTabContent = activeTab.firstElementChild;
+        if (input instanceof File) {
+            activeTabContent.innerText = input.name;
+        } else {
+            if (input.length > 0) {
+                const inputText = input.slice(0, 100).split(/[\r\n]/)[0];
+                activeTabContent.innerText = `${tabNum}: ${inputText}`;
             } else {
-                if (input.length > 0) {
-                    activeTabContent.innerText = input.slice(0, 100).split(/[\r\n]/)[0];
-                } else {
-                    activeTabContent.innerText = "New Tab";
-                }
+                activeTabContent.innerText = `${tabNum}: New Tab`;
             }
         }
 
