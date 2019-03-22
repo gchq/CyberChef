@@ -442,6 +442,7 @@ class InputWaiter {
         tabWrapper.style.display = "block";
 
         document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+        document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
         document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
 
         this.inputs[newTabNum.toString()] = "";
@@ -508,6 +509,7 @@ class InputWaiter {
             document.getElementById("input-tabs").style.display = "none";
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
 
         }
@@ -586,7 +588,7 @@ class InputWaiter {
                 activeTabContent.innerText = input.name;
             } else {
                 if (input.length > 0) {
-                    activeTabContent.innerText = input.slice(0, 100);
+                    activeTabContent.innerText = input.slice(0, 100).split(/[\r\n]/)[0];
                 } else {
                     activeTabContent.innerText = "New Tab";
                 }

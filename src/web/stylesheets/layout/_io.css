@@ -105,9 +105,9 @@
 #output-highlighter {
     position: absolute;
     left: 0;
-    top: 0;
+    bottom: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - var(--title-height));
     padding: 3px;
     margin: 0;
     overflow: hidden;
