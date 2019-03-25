@@ -23,7 +23,7 @@ class Lorenz extends Operation {
         this.name = "Lorenz";
         this.module = "Default";
         this.description = "Enciphers characters using the World War 2 German Lorenz SZ cipher attachment.";
-        this.infoURL = "https://wikipedia.org/wiki/Lorenz_cipher";
+        this.infoURL = "https://lorenz.virtualcolossus.co.uk";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -34,8 +34,29 @@ class Lorenz extends Operation {
             },
             {
                 name: "Wheel Pattern",
-                type: "option",
-                "value": ["KH Pattern", "ZMUG Pattern", "BREAM Pattern", "No Pattern"]
+                type: "argSelector",
+                "value": [
+                	{
+                		name: "KH Pattern",
+                		off: [19,20,21,22,23,24,25,26,27,28,29,30],
+                	},
+                	{
+                		name: "ZMUG Pattern",
+                		off: [19,20,21,22,23,24,25,26,27,28,29,30]
+                	},
+                	{
+                		name: "BREAM Pattern",
+                		off: [19,20,21,22,23,24,25,26,27,28,29,30]
+                	},
+                	{
+                		name: "No Pattern",
+                		off: [19,20,21,22,23,24,25,26,27,28,29,30]
+                	},
+                	{
+                		name: "Custom",
+                		on: [19,20,21,22,23,24,25,26,27,28,29,30]
+                	}
+                ]
             },
             {
                 name: "KT-Schalter",
@@ -131,6 +152,66 @@ class Lorenz extends Operation {
             	name: "Χ5 start (1-23)",
             	type: "number",
             	"value": 1
+            },
+            {
+            	name: "Ψ1 lugs (43)",
+            	type: "string",
+            	value: ".x...xx.x.x..xxx.x.x.xxxx.x.x.x.x.x..x.xx.x"
+            },
+            {
+            	name: "Ψ2 lugs (47)",
+            	type: "string",
+            	value: ".xx.x.xxx..x.x.x..x.xx.x.xxx.x....x.xx.x.x.x..x"
+            },
+            {
+            	name: "Ψ3 lugs (51)",
+            	type: "string",
+            	value: ".x.x.x..xxx....x.x.xx.x.x.x..xxx.x.x..x.x.xx..x.x.x"
+            },
+            {
+            	name: "Ψ4 lugs (53)",
+            	type: "string",
+            	value: ".xx...xxxxx.x.x.xx...x.xx.x.x..x.x.xx.x..x.x.x.x.x.x."
+            },
+            {
+            	name: "Ψ5 lugs (59)",
+            	type: "string",
+            	value: "xx...xx.x..x.xx.x...x.x.x.x.x.x.x.x.xx..xxxx.x.x...xx.x..x."
+            },
+            {
+            	name: "Μ37 lugs (37)",
+            	type: "string",
+            	value: "x.x.x.x.x.x...x.x.x...x.x.x...x.x...."
+            },
+            {
+            	name: "Μ61 lugs (61)",
+            	type: "string",
+            	value: ".xxxx.xxxx.xxx.xxxx.xx....xxx.xxxx.xxxx.xxxx.xxxx.xxx.xxxx..."
+            },
+            {
+            	name: "Χ1 lugs (41)",
+            	type: "string",
+            	value: ".x...xxx.x.xxxx.x...x.x..xxx....xx.xxxx.."
+            },
+            {
+            	name: "Χ2 lugs (31)",
+            	type: "string",
+            	value: "x..xxx...x.xxxx..xx..x..xx.xx.."
+            },
+            {
+            	name: "Χ3 lugs (29)",
+            	type: "string",
+            	value: "..xx..x.xxx...xx...xx..xx.xx."
+            },
+            {
+            	name: "Χ4 lugs (26)",
+            	type: "string",
+            	value: "xx..x..xxxx..xx.xxx....x.."
+            },
+            {
+            	name: "Χ5 lugs (23)",
+            	type: "string",
+            	value: "xx..xx....xxxx.x..x.x.."
             }
         ];
     }
@@ -162,6 +243,18 @@ class Lorenz extends Operation {
         	x3 = args[16],
         	x4 = args[17],
         	x5 = args[18],
+        	lugs1 = args[19],
+        	lugs2 = args[20],
+        	lugs3 = args[21],
+        	lugs4 = args[22],
+        	lugs5 = args[23],
+        	lugm37 = args[24],
+        	lugm61 = args[25],
+        	lugx1 = args[26],
+        	lugx2 = args[27],
+        	lugx3 = args[28],
+        	lugx4 = args[29],
+        	lugx5 = args[30],
         	figShifted = false;
 
         this.reverseTable();
@@ -180,7 +273,38 @@ class Lorenz extends Operation {
  		if (x5<1 || x5>23) throw new OperationError("Χ5 start must be between 1 and 23");
 
         // Initialise chosen wheel pattern
-        var chosenSetting = INIT_PATTERNS[pattern];
+        if(pattern=="Custom") {
+        	var re = new RegExp("^[\.xX]*$");
+        	if (lugs1.length != 43 || !re.test(lugs1) ) throw new OperationError("Ψ1 custom lugs must be 43 long and can only include . or x ");
+        	if (lugs2.length != 47 || !re.test(lugs2) ) throw new OperationError("Ψ2 custom lugs must be 47 long and can only include . or x");
+        	if (lugs3.length != 51 || !re.test(lugs3) ) throw new OperationError("Ψ3 custom lugs must be 51 long and can only include . or x");
+        	if (lugs4.length != 53 || !re.test(lugs4) ) throw new OperationError("Ψ4 custom lugs must be 53 long and can only include . or x");
+        	if (lugs5.length != 59 || !re.test(lugs5) ) throw new OperationError("Ψ5 custom lugs must be 59 long and can only include . or x");
+        	if (lugm37.length != 37 || !re.test(lugm37) ) throw new OperationError("M37 custom lugs must be 37 long and can only include . or x");
+        	if (lugm61.length != 61 || !re.test(lugm61) ) throw new OperationError("M61 custom lugs must be 61 long and can only include . or x");
+        	if (lugx1.length != 41 || !re.test(lugx1) ) throw new OperationError("Χ1 custom lugs must be 41 long and can only include . or x");
+        	if (lugx2.length != 31 || !re.test(lugx2) ) throw new OperationError("Χ2 custom lugs must be 31 long and can only include . or x");
+        	if (lugx3.length != 29 || !re.test(lugx3) ) throw new OperationError("Χ3 custom lugs must be 29 long and can only include . or x");
+        	if (lugx4.length != 26 || !re.test(lugx4) ) throw new OperationError("Χ4 custom lugs must be 26 long and can only include . or x");
+        	if (lugx5.length != 23 || !re.test(lugx5) ) throw new OperationError("Χ5 custom lugs must be 23 long and can only include . or x");
+        	var chosenSetting = INIT_PATTERNS["No Pattern"];
+        	console.log(chosenSetting);
+        	chosenSetting["S"][1] = this.readLugs(lugs1);
+        	chosenSetting["S"][2] = this.readLugs(lugs2);
+        	chosenSetting["S"][3] = this.readLugs(lugs3);
+        	chosenSetting["S"][4] = this.readLugs(lugs4);
+        	chosenSetting["S"][5] = this.readLugs(lugs5);
+        	chosenSetting["M"][1] = this.readLugs(lugm37);
+        	chosenSetting["M"][2] = this.readLugs(lugm61);
+        	chosenSetting["X"][1] = this.readLugs(lugx1);
+        	chosenSetting["X"][2] = this.readLugs(lugx2);
+        	chosenSetting["X"][3] = this.readLugs(lugx3);
+        	chosenSetting["X"][4] = this.readLugs(lugx4);
+        	chosenSetting["X"][5] = this.readLugs(lugx5);
+        	console.log(chosenSetting);
+        } else {
+        	var chosenSetting = INIT_PATTERNS[pattern];
+        }
         var chiSettings = chosenSetting["X"]; // Pin settings for Chi links (X)
         var psiSettings = chosenSetting["S"]; // Pin settings for Psi links (S)
         var muSettings = chosenSetting["M"]; // Pin settings for Motor links (M)
@@ -441,6 +565,17 @@ class Lorenz extends Operation {
         	const ltr = figShiftArr[letter];
         	this.REVERSE_FIGSHIFT_TABLE[ltr] = letter;
         }
+    }
+
+    readLugs(lugstr) {
+    	var arr = Array.prototype.map.call(lugstr, function(lug) {
+    		if(lug==".") {
+    			return 0;
+    		} else {
+    			return 1;
+    		} 
+    	});
+    	return arr;
     }
 
 }
