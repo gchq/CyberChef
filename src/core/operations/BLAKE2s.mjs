@@ -6,7 +6,9 @@
 
 import Operation from "../Operation";
 import blakejs from "blakejs";
-
+import OperationError from "../errors/OperationError";
+import Utils from "../Utils";
+import { toBase64 } from "../lib/Base64";
 /**
  * BLAKE2s Operation
  */
@@ -29,6 +31,10 @@ class BLAKE2s extends Operation {
                 "name": "Size",
                 "type": "option",
                 "value": ["256", "160", "128"]
+            }, {
+                "name": "Output Encoding",
+                "type": "option",
+                "value": ["Hex", "Base64", "Raw"]
             }
         ];
     }
@@ -36,11 +42,20 @@ class BLAKE2s extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string} The input having been hashed with BLAKE2s, HEX encoded.
+     * @returns {string} The input having been hashed with BLAKE2s in the encoding format speicifed.
      */
     run(input, args) {
-        const [outSize] = args;
-        return blakejs.blake2sHex(input, null, outSize / 8);
+        const [outSize, outFormat] = args;
+        switch (outFormat) {
+            case "Hex":
+                return blakejs.blake2sHex(input, null, outSize / 8);
+            case "Base64":
+                return toBase64(blakejs.blake2s(input, null, outSize / 8));
+            case "Raw":
+                return Utils.arrayBufferToStr(blakejs.blake2s(input, null, outSize / 8).buffer);
+            default:
+                return new OperationError("Unsupported Output Type");
+        }
     }
 
 }
