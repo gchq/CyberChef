@@ -85,6 +85,7 @@
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^8.1.1",
+    "blakejs": "^1.1.0",
     "bootstrap": "4.2.1",
     "bootstrap-colorpicker": "^2.5.3",
     "bootstrap-material-design": "^4.1.1",
