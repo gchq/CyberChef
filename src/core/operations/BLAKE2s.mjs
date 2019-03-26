@@ -21,7 +21,7 @@ class BLAKE2s extends Operation {
         this.name = "BLAKE2s";
         this.module = "Hashing";
         this.description = "Performs BLAKE2s hashing on the input. Returns the output HEX encoded.";
-        this.infoURL = "https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2";
+        this.infoURL = "https://wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
