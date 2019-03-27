@@ -23,7 +23,7 @@ class ExtractFiles extends Operation {
 
         this.name = "Extract Files";
         this.module = "Default";
-        this.description = "TODO";
+        this.description = "Performs file carving to attempt to extract files from the input.";
         this.infoURL = "https://forensicswiki.org/wiki/File_Carving";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
