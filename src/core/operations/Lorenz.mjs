@@ -368,7 +368,7 @@ class Lorenz extends Operation {
         var thisChi = [];
         var thisMu = [];
         var m61lug = muSettings[1][m61-1];
-        var m37lug = muSettings[2][m37-1];
+        var m37lug = 0;
 		var p5 = [0,0,0];
 
         const self = this;
@@ -434,12 +434,18 @@ class Lorenz extends Operation {
     		var totalmotor = basicmotor;
     		var lim = 0;
 
+            p5[2] = p5[1];
+            p5[1] = p5[0];
+            p5[0] = ITA2_TABLE[letter][4];
+            console.log('p5='+ITA2_TABLE[letter]+' ('+letter+') = '+p5[0]);
+
 		    // Limitations here
 			if(model=='SZ42a') {
 		    	// Chi 2 one back lim - The active character of chi 2 (2nd Chi wheel) in the previous position
 		    	lim = chiSettings[2][x2bptr-1];       	
 		    	if(kt) {
-		    		if(lim==p5[2]) { lim = 0; } else { lim=1; } //p5 back 2
+		    		console.log('lim='+lim+', p5-2='+p5[2]);
+                    if(lim==p5[2]) { lim = 0; } else { lim=1; } //p5 back 2
 		    	}
                 
 		    	// If basic motor = 0 and limitation = 1, Total motor = 0 [no move], otherwise, total motor = 1 [move]
@@ -486,11 +492,6 @@ class Lorenz extends Operation {
 
             m61lug = muSettings[1][m61-1];
             m37lug = muSettings[2][m37-1];
-
-            p5[2] = p5[1];
-	  		p5[1] = p5[0];
-	  		p5[0] = ITA2_TABLE[letter][4];
-            console.log('p5='+ITA2_TABLE[letter]+' ('+letter+') = '+p5[0]);
 
 	  		var rtnstr = self.REVERSE_ITA2_TABLE[resultStr];
             if(format=="5/8/9") {
