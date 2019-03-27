@@ -82,9 +82,16 @@ class InputWaiter {
             } else {
                 inputs.push({
                     inputNum: inputNum,
-                    input: this.inputs[inputNum]
+                    input: this.inputs[inputNum] || ""
                 });
             }
+        }
+
+        if (inputs.length === 0) {
+            inputs.push({
+                inputNum: this.getActiveTab(),
+                input: ""
+            });
         }
 
         return inputs;
@@ -495,6 +502,9 @@ class InputWaiter {
 
         tabsList.appendChild(newTab);
 
+        this.manager.output.addTab(newTabNum.toString());
+        this.manager.output.changeTab(document.getElementById(`output-tab-${newTabNum.toString()}`).firstElementChild);
+
         if (changeTab) {
             this.changeTab(newTabContent);
         }
@@ -511,20 +521,18 @@ class InputWaiter {
             if (tabLiItem.classList.contains("active-input-tab")) {
                 if (tabLiItem.previousElementSibling) {
                     this.changeTab(tabLiItem.previousElementSibling.firstElementChild);
-
-                    window.dispatchEvent(this.manager.statechange);
                 } else if (tabLiItem.nextElementSibling) {
                     this.changeTab(tabLiItem.nextElementSibling.firstElementChild);
-
-                    window.dispatchEvent(this.manager.statechange);
                 }
             }
             const tabNum = tabLiItem.id.replace("input-tab-", "");
 
-            delete this.fileBuffers[tabNum];
-            delete this.inputs[tabNum];
+            this.fileBuffers[tabNum] = undefined;
+            this.inputs[tabNum] = undefined;
 
             tabList.removeChild(tabLiItem);
+
+            this.manager.output.removeTab(tabNum, this.getActiveTab());
         } else {
             const tabNum = tabLiItem.id.replace("input-tab-", "");
             delete this.fileBuffers[tabNum];
@@ -560,7 +568,7 @@ class InputWaiter {
      *
      * @param {Element} tabElement The tab element to change to
      */
-    changeTab(tabElement) {
+    changeTab(tabElement, changeOutput=true) {
         const liItem = tabElement.parentElement;
         const newTabNum = liItem.id.replace("input-tab-", "");
         const currentTabNum = this.getActiveTab();
@@ -585,6 +593,10 @@ class InputWaiter {
             document.getElementById("input-file").style.display = "none";
         }
 
+        if (changeOutput) {
+            this.manager.output.changeTab(document.getElementById(`output-tab-${newTabNum.toString()}`).firstElementChild);
+        }
+
     }
 
     /**
@@ -596,7 +608,7 @@ class InputWaiter {
         if (!mouseEvent.srcElement) {
             return;
         }
-        this.changeTab(mouseEvent.srcElement);
+        this.changeTab(mouseEvent.srcElement, true);
 
     }
 

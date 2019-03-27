@@ -50,13 +50,7 @@ class OutputWaiter {
         this.outputs = outputs;
         const activeTab = this.manager.input.getActiveTab();
 
-        const tabs = document.getElementById("output-tabs").getElementsByTagName("li");
-        for (let i = tabs.length - 1; i >= 0; i--) {
-            document.getElementById("output-tabs").firstElementChild.removeChild(tabs.item(i));
-        }
-
         for (let i = 0; i < outputs.length; i++) {
-            this.addTab(outputs[i].inputNum);
             if (outputs[i].inputNum === activeTab) {
                 await this.set(outputs[i].data.result, outputs[i].data.type, outputs[0].data.duration);
             }
@@ -611,11 +605,69 @@ class OutputWaiter {
      *
      * @param {Element} tabElement
      */
-    changeTab(tabElement) {
+    changeTab(tabElement, changeInput=false) {
         const liItem = tabElement.parentElement;
-        const newTabNum = liItem.id.replace("input-tab-", "");
-        const currentTabNum = this.getActiveTab();
-        const outputText = document.getElementById("output-text");
+        const newTabNum = liItem.id.replace("output-tab-", "");
+        const currentTabNum = this.manager.input.getActiveTab();
+
+        const activeTabs = document.getElementsByClassName("active-output-tab");
+        for (let i = 0; i < activeTabs.length; i++) {
+            activeTabs.item(i).classList.remove("active-output-tab");
+        }
+
+        document.getElementById(`output-tab-${currentTabNum}`).classList.remove("active-output-tab");
+        liItem.classList.add("active-output-tab");
+
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum === newTabNum) {
+                this.set(this.outputs[i].data.result, this.outputs[i].data.type, this.outputs[0].data.duration);
+            }
+        }
+        if (changeInput) {
+            this.manager.input.changeTab(document.getElementById(`input-tab-${newTabNum}`).firstElementChild, false);
+        }
+    }
+
+    /**
+     * Handler for changing tabs event
+     *
+     * @param {event} mouseEvent
+     */
+    changeTabClick(mouseEvent) {
+        if (!mouseEvent.srcElement) {
+            return;
+        }
+        this.changeTab(mouseEvent.srcElement, true);
+    }
+
+    /**
+     * Removes a tab from the output window, along with the value for it in outputs
+     *
+     * @param {string} inputNum
+     * @param {string} newActiveNum
+     */
+    removeTab(inputNum, newActiveNum) {
+        const tabLiItem = document.getElementById(`output-tab-${inputNum}`);
+
+        if (tabLiItem.parentElement.children.length === 2) {
+            document.getElementById("output-tabs").style.display = "none";
+
+            document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
+
+        }
+
+        tabLiItem.parentElement.removeChild(tabLiItem);
+
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum === inputNum) {
+                this.outputs.splice(i, 1);
+                break;
+            }
+        }
+
+        this.changeTab(document.getElementById(`output-tab-${newActiveNum}`), false);
     }
 
 }
