@@ -71,11 +71,11 @@ class WorkerWaiter {
                     data: r.data,
                     inputNum: r.data.inputNum
                 });
-                log.error(this.pendingInputs);
                 if (this.pendingInputs.length > 0) {
                     log.debug("Bake complete. Baking next input");
                     this.bakeNextInput(r.data.inputNum);
                 } else if (this.runningWorkers <= 0) {
+                    this.runningWorkers = 0;
                     this.recipeConfig = undefined;
                     this.options = undefined;
                     this.progress = undefined;
@@ -84,6 +84,7 @@ class WorkerWaiter {
                 }
                 break;
             case "bakeError":
+                this.runningWorkers -= 1;
                 this.app.handleError(r.data);
                 this.setBakingStatus(false);
                 break;
@@ -213,6 +214,7 @@ class WorkerWaiter {
 
         const initialInputs = input.slice(0, this.chefWorkers.length);
         this.pendingInputs = input.slice(this.chefWorkers.length, input.length);
+        this.runningWorkers = 0;
 
         for (let i = 0; i < initialInputs.length; i++) {
             this.runningWorkers += 1;
