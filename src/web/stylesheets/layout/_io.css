@@ -30,7 +30,8 @@
     -moz-padding-start: 1px; /* Fixes bug in Firefox */
 }
 
-#input-tabs ul {
+#input-tabs ul,
+#output-tabs ul {
     list-style: none;
     background-color: var(--title-background-colour);
     padding: 0;
@@ -43,7 +44,8 @@
     height: var(--tab-height);
 }
 
-#input-tabs ul li {
+#input-tabs ul li,
+#output-tabs ul li {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -56,17 +58,20 @@
     vertical-align: middle;
 }
 
-#input-tabs ul li:hover {
+#input-tabs ul li:hover,
+#output-tabs ul li:hover {
     cursor: pointer;
     background-color: var(--primary-background-colour);
 }
 
-.active-input-tab {
+.active-input-tab,
+.active-output-tab {
     font-weight: bold;
     background-color: var(--primary-background-colour);
 }
 
-.input-tab-content {
+.input-tab-content,
+.output-tab-content {
     width: 100%;
     max-width: 100%;
     padding-left: 5px;
