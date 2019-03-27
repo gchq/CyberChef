@@ -367,22 +367,20 @@ class Lorenz extends Operation {
         var thisPsi = [];
         var thisChi = [];
         var thisMu = [];
-		var m61lug = 0;
-		var m37lug = 0;
+        var m61lug = muSettings[1][m61-1];
+        var m37lug = muSettings[2][m37-1];
 		var p5 = [0,0,0];
 
         const self = this;
         const letters = Array.prototype.map.call(ita2Input, function(character) {
             const letter = character.toUpperCase();
 
-            console.log(s1+' '+s2+' '+s3+' '+s4+' '+s5+' : '+m37+' '+m61+' : '+x1+' '+x2+' '+x3+' '+x4+' '+x5);
+            //console.log(s1+' '+s2+' '+s3+' '+s4+' '+s5+' : '+m37+' '+m61+' : '+x1+' '+x2+' '+x3+' '+x4+' '+x5);
 
             var x2bptr = x2+1;
     		if(x2bptr==32) x2bptr=1;
     		var s1bptr = s1+1;
     		if(s1bptr==44) s1bptr=1;
-
-    		console.log('x2b1='+x2bptr+' s1b1='+s1bptr);
 
             thisChi = [
 				chiSettings[1][x1-1],
@@ -443,13 +441,14 @@ class Lorenz extends Operation {
 		    	if(kt) {
 		    		if(lim==p5[2]) { lim = 0; } else { lim=1; } //p5 back 2
 		    	}
-                console.log('BM='+basicmotor+', LM='+lim);
+                
 		    	// If basic motor = 0 and limitation = 1, Total motor = 0 [no move], otherwise, total motor = 1 [move]
 		    	if(basicmotor==0 && lim==1) {
 		    		totalmotor = 0;
 		    	} else {
 		    		totalmotor = 1;
 		    	}   
+                console.log('BM='+basicmotor+', LM='+lim+', TM='+totalmotor);
 
 		    } else if(model=='SZ42b') {
 		    	// Chi 2 one back + Psi 1 one back.
@@ -476,7 +475,7 @@ class Lorenz extends Operation {
     			throw new OperationError("Lorenz model type not recognised");
     		}
 
-    		// increment Psi wheels when current M37 lug active
+    		// increment Psi wheels when current totalmotor active
     		if(totalmotor == 1) {
 	            if(--s1 < 1) s1 = 43;
 	            if(--s2 < 1) s2 = 47;
