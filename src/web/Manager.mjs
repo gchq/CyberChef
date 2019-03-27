@@ -82,7 +82,7 @@ class Manager {
      * Sets up the various components and listeners.
      */
     setup() {
-        this.worker.registerChefWorker();
+        this.worker.setupChefWorkers();
         this.recipe.initialiseOperationDragNDrop();
         this.controls.initComponents();
         this.controls.autoBakeChange();

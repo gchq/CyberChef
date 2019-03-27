@@ -1,6 +1,7 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2017
+ * @author j433866 [j433866@gmail.com]
+ * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 
@@ -14,7 +15,7 @@ class WorkerWaiter {
     /**
      * WorkerWaiter constructor.
      *
-     * @param {App} app - The main view object for CyberChef.
+     * @param {App} app - The main view object for CyberChef
      * @param {Manager} manager - The CyberChef event manager.
      */
     constructor(app, manager) {
@@ -23,24 +24,34 @@ class WorkerWaiter {
 
         this.callbacks = {};
         this.callbackID = 0;
+        this.pendingInputs = [];
+        this.runningWorkers = 0;
+        this.chefWorkers = [];
+        this.outputs = [];
     }
 
-
     /**
-     * Sets up the ChefWorker and associated listeners.
+     * Sets up a pool of ChefWorkers to be used for baking
      */
-    registerChefWorker() {
-        log.debug("Registering new ChefWorker");
-        this.chefWorker = new ChefWorker();
-        this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
-        this.setLogLevel();
+    setupChefWorkers() {
+        const threads = navigator.hardwareConcurrency || 4; // Default to 4
 
-        let docURL = document.location.href.split(/[#?]/)[0];
-        const index = docURL.lastIndexOf("/");
-        if (index > 0) {
-            docURL = docURL.substring(0, index);
+        for (let i = 0; i < threads; i++) {
+            const newWorker = new ChefWorker();
+            newWorker.addEventListener("message", this.handleChefMessage.bind(this));
+            let docURL = document.location.href.split(/[#?]/)[0];
+            const index = docURL.lastIndexOf("/");
+            if (index > 0) {
+                docURL = docURL.substring(0, index);
+            }
+            newWorker.postMessage({"action": "docURL", "data": docURL});
+            newWorker.postMessage({"action": "inputNum", "data": 0});
+
+            this.chefWorkers.push({
+                worker: newWorker,
+                inputNum: 0
+            });
         }
-        this.chefWorker.postMessage({"action": "docURL", "data": docURL});
     }
 
 
@@ -55,7 +66,22 @@ class WorkerWaiter {
 
         switch (r.action) {
             case "bakeComplete":
-                this.bakingComplete(r.data);
+                this.runningWorkers -= 1;
+                this.outputs.push({
+                    data: r.data,
+                    inputNum: r.data.inputNum
+                });
+                log.error(this.pendingInputs);
+                if (this.pendingInputs.length > 0) {
+                    log.debug("Bake complete. Baking next input");
+                    this.bakeNextInput(r.data.inputNum);
+                } else if (this.runningWorkers <= 0) {
+                    this.recipeConfig = undefined;
+                    this.options = undefined;
+                    this.progress = undefined;
+                    this.step = undefined;
+                    this.bakingComplete();
+                }
                 break;
             case "bakeError":
                 this.app.handleError(r.data);
@@ -104,22 +130,47 @@ class WorkerWaiter {
 
 
     /**
-     * Cancels the current bake by terminating the ChefWorker and creating a new one.
+     * Calcels the current bake by terminating and removing all ChefWorkers,
+     * and creating a new one
      */
     cancelBake() {
-        this.chefWorker.terminate();
-        this.registerChefWorker();
+        for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+            this.chefWorkers[i].worker.terminate();
+            this.chefWorkers.pop();
+        }
+        this.setupChefWorkers();
         this.setBakingStatus(false);
         this.manager.controls.showStaleIndicator();
     }
 
 
     /**
-     * Handler for completed bakes.
+     * Handler for completed bakes
+     */
+    bakingComplete() {
+        this.setBakingStatus(false);
+
+        if (this.pendingInputs.length !== 0) return;
+
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].error) {
+                this.app.handleError(this.outputs[i].error);
+            }
+        }
+
+        this.app.progress = this.outputs[0].data.progress;
+        this.app.dish = this.outputs[0].data.dish;
+        this.manager.recipe.updateBreakpointIndicator(this.app.progress);
+        this.manager.output.multiSet(this.outputs);
+        log.debug("--- Bake complete ---");
+    }
+
+    /**
+     * Handler for completed bakes
      *
      * @param {Object} response
      */
-    bakingComplete(response) {
+    bakingCompleteOld(response) {
         this.setBakingStatus(false);
 
         if (!response) return;
@@ -135,11 +186,10 @@ class WorkerWaiter {
         log.debug("--- Bake complete ---");
     }
 
-
     /**
      * Asks the ChefWorker to bake the current input using the current recipe.
      *
-     * @param {string} input
+     * @param {string | Array} input
      * @param {Object[]} recipeConfig
      * @param {Object} options
      * @param {number} progress
@@ -148,16 +198,63 @@ class WorkerWaiter {
     bake(input, recipeConfig, options, progress, step) {
         this.setBakingStatus(true);
 
-        this.chefWorker.postMessage({
-            action: "bake",
-            data: {
+        this.recipeConfig = recipeConfig;
+        this.options = options;
+        this.progress = progress;
+        this.step = step;
+        this.outputs = [];
+
+        if (typeof input === "string") {
+            input = [{
                 input: input,
-                recipeConfig: recipeConfig,
-                options: options,
-                progress: progress,
-                step: step
+                inputNum: 0
+            }];
+        }
+
+        const initialInputs = input.slice(0, this.chefWorkers.length);
+        this.pendingInputs = input.slice(this.chefWorkers.length, input.length);
+
+        for (let i = 0; i < initialInputs.length; i++) {
+            this.runningWorkers += 1;
+            this.chefWorkers[i].inputNum = initialInputs[i].inputNum;
+            this.chefWorkers[i].worker.postMessage({
+                action: "bake",
+                data: {
+                    input: initialInputs[i].input,
+                    recipeConfig: recipeConfig,
+                    options: options,
+                    progress: progress,
+                    step: step,
+                    inputNum: initialInputs[i].inputNum
+                }
+            });
+        }
+    }
+
+
+    /**
+     *
+     * @param inputNum
+     */
+    bakeNextInput(inputNum) {
+        this.runningWorkers += 1;
+        const nextInput = this.pendingInputs.pop();
+        for (let i = 0; i < this.chefWorkers.length; i++) {
+            if (this.chefWorkers[i].inputNum === inputNum) {
+                this.chefWorkers[i].inputNum = nextInput.inputNum;
+                this.chefWorkers[i].worker.postMessage({
+                    action: "bake",
+                    data: {
+                        input: nextInput.input,
+                        recipeConfig: this.recipeConfig,
+                        options: this.options,
+                        progress: this.progress,
+                        step: this.step,
+                        inputNum: nextInput.inputNum
+                    }
+                });
             }
-        });
+        }
     }
 
 
@@ -168,7 +265,7 @@ class WorkerWaiter {
      * @param {Object[]} [recipeConfig]
      */
     silentBake(recipeConfig) {
-        this.chefWorker.postMessage({
+        this.chefWorkers[0].worker.postMessage({
             action: "silentBake",
             data: {
                 recipeConfig: recipeConfig
@@ -187,7 +284,7 @@ class WorkerWaiter {
      * @param {number} pos.end - The end offset.
      */
     highlight(recipeConfig, direction, pos) {
-        this.chefWorker.postMessage({
+        this.chefWorkers[0].postMessage({
             action: "highlight",
             data: {
                 recipeConfig: recipeConfig,
@@ -208,7 +305,7 @@ class WorkerWaiter {
     getDishAs(dish, type, callback) {
         const id = this.callbackID++;
         this.callbacks[id] = callback;
-        this.chefWorker.postMessage({
+        this.chefWorkers[0].worker.postMessage({
             action: "getDishAs",
             data: {
                 dish: dish,
@@ -225,14 +322,15 @@ class WorkerWaiter {
      * @param {string} level
      */
     setLogLevel(level) {
-        if (!this.chefWorker) return;
+        if (!this.chefWorkers || !this.chefWorkers.length > 0) return;
 
-        this.chefWorker.postMessage({
-            action: "setLogLevel",
-            data: log.getLevel()
-        });
+        for (let i = 0; i < this.chefWorkers.length; i++) {
+            this.chefWorkers[i].worker.postMessage({
+                action: "setLogLevel",
+                data: log.getLevel()
+            });
+        }
     }
-
 }
 
 

@@ -27,6 +27,8 @@ self.chef = new Chef();
 self.OpModules = OpModules;
 self.OperationConfig = OperationConfig;
 
+self.inputNum = "0";
+
 // Tell the app that the worker has loaded and is ready to operate
 self.postMessage({
     action: "workerLoaded",
@@ -105,14 +107,16 @@ async function bake(data) {
         self.postMessage({
             action: "bakeComplete",
             data: Object.assign(response, {
-                id: data.id
+                id: data.id,
+                inputNum: data.inputNum || 0
             })
         });
     } catch (err) {
         self.postMessage({
             action: "bakeError",
             data: Object.assign(err, {
-                id: data.id
+                id: data.id,
+                inputNum: data.inputNum || 0
             })
         });
     }
@@ -142,7 +146,8 @@ async function getDishAs(data) {
         action: "dishReturned",
         data: {
             value: value,
-            id: data.id
+            id: data.id,
+            inputNum: self.inputNum
         }
     });
 }
@@ -162,7 +167,8 @@ async function calculateHighlights(recipeConfig, direction, pos) {
 
     self.postMessage({
         action: "highlightsCalculated",
-        data: pos
+        data: pos,
+        inputNum: self.inputNum
     });
 }
 
@@ -194,7 +200,8 @@ self.loadRequiredModules = function(recipeConfig) {
 self.sendStatusMessage = function(msg) {
     self.postMessage({
         action: "statusMessage",
-        data: msg
+        data: msg,
+        inputNum: self.inputNum
     });
 };
 
@@ -210,7 +217,8 @@ self.setOption = function(option, value) {
         action: "optionUpdate",
         data: {
             option: option,
-            value: value
+            value: value,
+            inputNum: self.inputNum
         }
     });
 };
@@ -229,7 +237,8 @@ self.setRegisters = function(opIndex, numPrevRegisters, registers) {
         data: {
             opIndex: opIndex,
             numPrevRegisters: numPrevRegisters,
-            registers: registers
+            registers: registers,
+            inputNum: self.inputNum
         }
     });
 };

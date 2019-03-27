@@ -126,8 +126,8 @@ class HighlighterWaiter {
      */
     inputScroll(e) {
         const el = e.target;
-        document.getElementById("input-highlighter").scrollTop = el.scrollTop;
-        document.getElementById("input-highlighter").scrollLeft = el.scrollLeft;
+        // document.getElementById("input-highlighter").scrollTop = el.scrollTop;
+        // document.getElementById("input-highlighter").scrollLeft = el.scrollLeft;
     }
 
 
@@ -326,7 +326,7 @@ class HighlighterWaiter {
      * Removes highlighting and selection information.
      */
     removeHighlights() {
-        document.getElementById("input-highlighter").innerHTML = "";
+        // document.getElementById("input-highlighter").innerHTML = "";
         document.getElementById("output-highlighter").innerHTML = "";
         document.getElementById("input-selection-info").innerHTML = "";
         document.getElementById("output-selection-info").innerHTML = "";

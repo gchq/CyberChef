@@ -62,6 +62,34 @@ class InputWaiter {
         return value;
     }
 
+    /**
+     * Gets the inputs from all tabs
+     *
+     * @returns {Array}
+     */
+    getAll() {
+        const inputs = [];
+        const tabsContainer = document.getElementById("input-tabs");
+        const tabs = tabsContainer.firstElementChild.children;
+
+        for (let i = 0; i < tabs.length; i++) {
+            const inputNum = tabs.item(i).id.replace("input-tab-", "");
+            if (this.fileBuffers[inputNum] && this.fileBuffers[inputNum].fileBuffer) {
+                inputs.push({
+                    inputNum: inputNum,
+                    input: this.fileBuffers[inputNum].fileBuffer
+                });
+            } else {
+                inputs.push({
+                    inputNum: inputNum,
+                    input: this.inputs[inputNum]
+                });
+            }
+        }
+
+        return inputs;
+    }
+
 
     /**
      * Sets the input in the input area.
@@ -408,7 +436,6 @@ class InputWaiter {
      * @fires Manager#statechange
      */
     clearAllIoClick() {
-        // TODO: Close all tabs here
         const tabs = document.getElementById("input-tabs").getElementsByTagName("li");
         for (let i = tabs.length - 1; i >= 0; i--) {
             const tabItem = tabs.item(i);
@@ -558,8 +585,6 @@ class InputWaiter {
             document.getElementById("input-file").style.display = "none";
         }
 
-        window.dispatchEvent(this.manager.statechange);
-
     }
 
     /**
@@ -585,7 +610,7 @@ class InputWaiter {
         const activeTab = document.getElementById(`input-tab-${tabNum}`);
         const activeTabContent = activeTab.firstElementChild;
         if (input instanceof File) {
-            activeTabContent.innerText = input.name;
+            activeTabContent.innerText = `${tabNum}: ${input.name}`;
         } else {
             if (input.length > 0) {
                 const inputText = input.slice(0, 100).split(/[\r\n]/)[0];

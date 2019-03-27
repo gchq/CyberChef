@@ -25,6 +25,7 @@ class OutputWaiter {
 
         this.dishBuffer = null;
         this.dishStr = null;
+        this.outputs = [];
     }
 
 
@@ -35,6 +36,38 @@ class OutputWaiter {
      */
     get() {
         return document.getElementById("output-text").value;
+    }
+
+
+    /**
+     * Sets the output array for multiple outputs.
+     * Displays the active output in the output textarea
+     *
+     * @param {Array} outputs
+     */
+    async multiSet(outputs) {
+        log.debug("Received " + outputs.length + " outputs.");
+        this.outputs = outputs;
+        const activeTab = this.manager.input.getActiveTab();
+
+        const tabs = document.getElementById("output-tabs").getElementsByTagName("li");
+        for (let i = tabs.length - 1; i >= 0; i--) {
+            document.getElementById("output-tabs").firstElementChild.removeChild(tabs.item(i));
+        }
+
+        for (let i = 0; i < outputs.length; i++) {
+            this.addTab(outputs[i].inputNum);
+            if (outputs[i].inputNum === activeTab) {
+                await this.set(outputs[i].data.result, outputs[i].data.type, outputs[0].data.duration);
+            }
+        }
+        // await this.set(this.outputs[0].data.result, this.outputs[0].data.type, this.outputs[0].data.duration);
+
+        // Create tabs
+
+        // Select active tab
+
+        // Display active tab data in textarea
     }
 
 
@@ -540,6 +573,49 @@ class OutputWaiter {
 
         const blob = await fetch(blobURL).then(r => r.blob());
         this.manager.input.loadFile(new File([blob], fileName, {type: blob.type}));
+    }
+
+    /**
+     * Function to create a new tab
+     *
+     * @param inputNum
+     */
+    addTab(inputNum) {
+        const tabWrapper = document.getElementById("output-tabs");
+        const tabsList = tabWrapper.firstElementChild;
+
+        if (tabsList.children.length > 0) {
+            tabWrapper.style.display = "block";
+        }
+
+        document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+        document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+        document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+
+        const newTab = document.createElement("li");
+        newTab.id = `output-tab-${inputNum}`;
+        if (inputNum === this.manager.input.getActiveTab()) {
+            newTab.classList.add("active-output-tab");
+        }
+
+        const newTabContent = document.createElement("div");
+        newTabContent.classList.add("output-tab-content");
+        newTabContent.innerText = `Tab ${inputNum}`;
+
+        newTab.appendChild(newTabContent);
+        tabsList.appendChild(newTab);
+    }
+
+    /**
+     * Function to change tabs
+     *
+     * @param {Element} tabElement
+     */
+    changeTab(tabElement) {
+        const liItem = tabElement.parentElement;
+        const newTabNum = liItem.id.replace("input-tab-", "");
+        const currentTabNum = this.getActiveTab();
+        const outputText = document.getElementById("output-text");
     }
 
 }

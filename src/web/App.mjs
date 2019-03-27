@@ -128,7 +128,7 @@ class App {
         this.manager.recipe.updateBreakpointIndicator(false);
 
         this.manager.worker.bake(
-            this.getInput(),        // The user's input
+            this.getAllInput(),     // The user's input
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,           // Options set by the user
             this.progress,          // The current position in the recipe
@@ -184,6 +184,14 @@ class App {
         return this.manager.input.get();
     }
 
+    /**
+     * Gets the user's input data for all tabs.
+     *
+     * @returns {Array}
+     */
+    getAllInput() {
+        return this.manager.input.getAll();
+    }
 
     /**
      * Sets the user's input data.
@@ -244,7 +252,7 @@ class App {
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
-     * @param {boolean} [minimise=false] - Set this flag if attempting to minimuse frames to 0 width
+     * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseSplitter(minimise=false) {
         if (this.columnSplitter) this.columnSplitter.destroy();
