@@ -89,7 +89,7 @@ class Lorenz extends Operation {
                 "value": ["Plaintext", "ITA2"]
             },
             {
-            	name: "Output Format",
+            	name: "ITA2 Format",
             	type: "option",
                 "value": ["5/8/9", "+/-/."]
             },
