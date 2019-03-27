@@ -250,7 +250,7 @@
                             <ul>
                                 <li id="input-tab-1" class="active-input-tab">
                                     <div class="input-tab-content">
-                                        New Tab
+                                        1: New Tab
                                     </div>
                                     <button type="button" class="btn btn-primary bmd-btn-icon btn-close-tab" id="btn-close-tab-1">
                                             <i class="material-icons">clear</i>
@@ -310,38 +310,52 @@
                                 <i class="material-icons">access_time</i>
                             </span>
                         </div>
-                        <div class="textarea-wrapper">
-                            <div id="output-highlighter" class="no-select"></div>
-                            <div id="output-html"></div>
-                            <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
-                            <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
-                            <div id="output-file">
-                                <div class="file-overlay"></div>
-                                <div style="position: relative; height: 100%;">
-                                    <div class="io-card card">
-                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
-                                        <div class="card-body">
-                                            Size: <span id="output-file-size"></span><br>
-                                            <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
-                                            <div class="input-group">
-                                                <span class="input-group-btn">
-                                                    <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
-                                                          <i class="material-icons">search</i>
-                                                    </button>
-                                                </span>
-                                                <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
-                                                <div class="input-group-addon">to</div>
-                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
+                        <div id="output-wrapper">
+                            <div id="output-tabs" style="display: none">
+                                <ul>
+                                    <li id="output-tab-1" class="active-output-tab">
+                                        <div class="output-tab-content">
+                                            1: New Tab
+                                        </div>
+                                        <button type="button" class="btn btn-primary bmd-btn-icon btn-close-tab" id="btn-close-tab-1">
+                                                <i class="material-icons">clear</i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="textarea-wrapper">
+                                <div id="output-highlighter" class="no-select"></div>
+                                <div id="output-html"></div>
+                                <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
+                                <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
+                                <div id="output-file">
+                                    <div class="file-overlay"></div>
+                                    <div style="position: relative; height: 100%;">
+                                        <div class="io-card card">
+                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                            <div class="card-body">
+                                                Size: <span id="output-file-size"></span><br>
+                                                <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
+                                                <div class="input-group">
+                                                    <span class="input-group-btn">
+                                                        <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
+                                                            <i class="material-icons">search</i>
+                                                        </button>
+                                                    </span>
+                                                    <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
+                                                    <div class="input-group-addon">to</div>
+                                                    <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="output-loader">
-                                <div id="output-loader-animation">
-                                    <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
+                                <div id="output-loader">
+                                    <div id="output-loader-animation">
+                                        <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
+                                    </div>
+                                    <div class="loading-msg"></div>
                                 </div>
-                                <div class="loading-msg"></div>
                             </div>
                         </div>
                     </div>
