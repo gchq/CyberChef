@@ -106,7 +106,8 @@
             "Enigma",
             "Bombe",
             "Multiple Bombe",
-            "Typex"
+            "Typex",
+            "Streebog"
         ]
     },
     {
@@ -194,8 +195,8 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
-			"To Case Insensitive Regex",
-			"From Case Insensitive Regex",
+            "To Case Insensitive Regex",
+            "From Case Insensitive Regex",
             "Add line numbers",
             "Remove line numbers",
             "To Table",
