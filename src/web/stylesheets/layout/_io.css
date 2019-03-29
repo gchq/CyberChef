@@ -24,6 +24,21 @@
     word-wrap: break-word;
 }
 
+#output-wrapper{
+    margin: 0;
+    padding: 0;
+    height: calc(100% - var(--title-height));
+}
+
+#output-wrapper .textarea-wrapper {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+
 #output-html {
     display: none;
     overflow-y: auto;
@@ -91,7 +106,7 @@
     width: fit-content;
 }
 
-.textarea-wrapper {
+.input-wrapper.textarea-wrapper {
     width: 100%;
     height: calc(100% - var(--title-height));
     box-sizing: border-box;

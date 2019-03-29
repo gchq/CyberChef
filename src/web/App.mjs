@@ -181,7 +181,7 @@ class App {
      * @returns {string}
      */
     getInput() {
-        return this.manager.input.get();
+        return this.manager.input.getActive();
     }
 
     /**

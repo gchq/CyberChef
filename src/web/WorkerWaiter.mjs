@@ -72,7 +72,7 @@ class WorkerWaiter {
                     inputNum: r.data.inputNum
                 });
                 if (this.pendingInputs.length > 0) {
-                    log.debug("Bake complete. Baking next input");
+                    log.debug(`Bake ${r.data.inputNum} complete. Baking next input`);
                     this.bakeNextInput(r.data.inputNum);
                 } else if (this.runningWorkers <= 0) {
                     this.runningWorkers = 0;

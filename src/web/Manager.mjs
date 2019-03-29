@@ -82,6 +82,8 @@ class Manager {
      * Sets up the various components and listeners.
      */
     setup() {
+        this.input.addTab();
+        this.input.setupLoaderWorker();
         this.worker.setupChefWorkers();
         this.recipe.initialiseOperationDragNDrop();
         this.controls.initComponents();
@@ -156,6 +158,9 @@ class Manager {
         // this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
         document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addTab.bind(this.input));
+        document.getElementById("btn-previous-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
+        document.getElementById("btn-next-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
+        document.getElementById("btn-go-to-tab").addEventListener("click", this.input.goToTab.bind(this.input));
         this.addDynamicListener("#input-tabs ul li .btn-close-tab i", "click", this.input.removeTabClick, this.input);
         this.addDynamicListener("#input-tabs ul li .input-tab-content", "click", this.input.changeTabClick, this.input);
 
@@ -177,7 +182,7 @@ class Manager {
         this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
         document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
-        this.addDynamicListener("#output-tabs ul li .output-tab-content", "click", this.output.changeTabClick, this.output);
+        // this.addDynamicListener("#output-tabs ul li .output-tab-content", "click", this.output.changeTabClick, this.output);
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));
