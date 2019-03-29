@@ -700,9 +700,9 @@ class InputWaiter {
     displayFilePreview() {
         const inputNum = this.getActiveTab(),
             inputText = document.getElementById("input-text"),
-            fileSlice = this.fileBuffer.slice(0, 4096),
+            fileSlice = this.getInput(inputNum).slice(0, 4096),
             fileThumb = document.getElementById("input-file-thumbnail"),
-            arrBuffer = new Uint8Array(this.fileBuffer),
+            arrBuffer = new Uint8Array(this.getInput(inputNum)),
             type = isImage(arrBuffer);
         if (type && type !== "image/tiff" && this.app.options.imagePreview) {
             // Don't show TIFFs as not much supports them
