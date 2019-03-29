@@ -841,6 +841,7 @@ class InputWaiter {
 
         for (let i = 0; i < newInputs.length; i++) {
             tabsList.appendChild(this.createTabElement(newInputs[i]));
+            this.displayTabInfo(newInputs[i]);
         }
 
         if (newInputs.length > 1) {
@@ -859,6 +860,7 @@ class InputWaiter {
 
         if (newInputs.length === 0) {
             activeTab = this.addTab();
+            this.displayTabInfo(activeTab);
         }
 
         this.changeTab(activeTab);
