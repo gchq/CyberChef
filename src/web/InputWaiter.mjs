@@ -7,6 +7,8 @@
 
 import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker";
 import Utils from "../core/Utils";
+import { toBase64 } from "../core/lib/Base64";
+import { isImage } from "../core/lib/FileType";
 
 
 /**
@@ -176,15 +178,18 @@ class InputWaiter {
                 fileSize = document.getElementById("input-file-size"),
                 fileType = document.getElementById("input-file-type"),
                 fileLoaded = document.getElementById("input-file-loaded");
+
             fileOverlay.style.display = "none";
             fileName.textContent = "";
             fileSize.textContent = "";
             fileType.textContent = "";
             fileLoaded.textContent = "";
 
-            const inputText = document.getElementById("input-text");
+            const inputText = document.getElementById("input-text"),
+                fileThumb = document.getElementById("input-file-thumbnail");
             inputText.style.overflow = "auto";
             inputText.classList.remove("blur");
+            fileThumb.src = require("./static/images/file-128x128.png");
         }
     }
 
@@ -695,8 +700,16 @@ class InputWaiter {
     displayFilePreview() {
         const inputNum = this.getActiveTab(),
             inputText = document.getElementById("input-text"),
-            fileSlice = this.getInput(inputNum).slice(0, 4096);
-
+            fileSlice = this.fileBuffer.slice(0, 4096),
+            fileThumb = document.getElementById("input-file-thumbnail"),
+            arrBuffer = new Uint8Array(this.fileBuffer),
+            type = isImage(arrBuffer);
+        if (type && type !== "image/tiff" && this.app.options.imagePreview) {
+            // Don't show TIFFs as not much supports them
+            fileThumb.src = `data:${type};base64,${toBase64(arrBuffer)}`;
+        } else {
+            fileThumb.src = require("./static/images/file-128x128.png");
+        }
         inputText.style.overflow = "hidden";
         inputText.classList.add("blur");
         inputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));

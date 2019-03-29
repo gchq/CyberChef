@@ -1,0 +1,147 @@
+/**
+ * Solarized dark theme definitions
+ *
+ * @author j433866 [j433866@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+:root.solarizedDark {
+    --base03: #002b36;
+    --base02: #073642;
+    --base01: #586e75;
+    --base00: #657b83;
+    --base0: #839496;
+    --base1: #93a1a1;
+    --base2: #eee8d5;
+    --base3: #fdf6e3;
+    --sol-yellow: #b58900;
+    --sol-orange: #cb4b16;
+    --sol-red: #dc322f;
+    --sol-magenta: #d33682;
+    --sol-violet: #6c71c4;
+    --sol-blue: #268bd2;
+    --sol-cyan: #2aa198;
+    --sol-green: #859900;
+
+    --primary-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
+    --primary-font-colour: var(--base0);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family: SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    --fixed-width-font-colour: inherit;
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--base01);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--base03);
+    --secondary-background-colour: var(--base02);
+
+    --primary-border-colour: var(--base00);
+    --secondary-border-colour: var(--base01);
+
+    --title-colour: var(--base1);
+    --title-weight: bold;
+    --title-background-colour: var(--base02);
+
+    --banner-font-colour: var(--base0);
+    --banner-bg-colour: var(--base03);
+    --banner-url-colour: var(--base1);
+
+    --category-list-font-colour: var(--base1);
+
+    --loader-background-colour: var(--base03);
+    --loader-outer-colour: var(--base1);
+    --loader-middle-colour: var(--base0);
+    --loader-inner-colour: var(--base00);
+
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--base0);
+    --op-list-operation-bg-colour: var(--base03);
+    --op-list-operation-border-colour: var(--base02);
+
+    --rec-list-operation-font-colour: var(--base0);
+    --rec-list-operation-bg-colour: var(--base02);
+    --rec-list-operation-border-colour: var(--base01);
+
+    --selected-operation-font-color: var(--base1);
+    --selected-operation-bg-colour: var(--base02);
+    --selected-operation-border-colour: var(--base01);
+
+    --breakpoint-font-colour: var(--sol-red);
+    --breakpoint-bg-colour: var(--base02);
+    --breakpoint-border-colour: var(--base00);
+
+    --disabled-font-colour: var(--base01);
+    --disabled-bg-colour: var(--base03);
+    --disabled-border-colour: var(--base02);
+
+    --fc-operation-font-colour: var(--base1);
+    --fc-operation-bg-colour: var(--base02);
+    --fc-operation-border-colour: var(--base01);
+
+    --fc-breakpoint-operation-font-colour: var(--sol-orange);
+    --fc-breakpoint-operation-bg-colour: var(--base02);
+    --fc-breakpoint-operation-border-colour: var(--base00);
+
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--base0);
+    --arg-background: var(--base03);
+    --arg-border-colour: var(--base00);
+    --arg-disabled-background: var(--base03);
+    --arg-label-colour: var(--base1);
+
+
+    /* Operation buttons */
+    --disable-icon-colour: var(--base00);
+    --disable-icon-selected-colour: var(--sol-red);
+    --breakpoint-icon-colour: var(--base00);
+    --breakpoint-icon-selected-colour: var(--sol-red);
+
+    /* Buttons */
+    --btn-default-font-colour: var(--base0);
+    --btn-default-bg-colour: var(--base02);
+    --btn-default-border-colour: var(--base01);
+
+    --btn-default-hover-font-colour: var(--base1);
+    --btn-default-hover-bg-colour: var(--base01);
+    --btn-default-hover-border-colour: var(--base00);
+
+    --btn-success-font-colour: var(--base0);
+    --btn-success-bg-colour: var(--base03);
+    --btn-success-border-colour: var(--base00);
+
+    --btn-success-hover-font-colour: var(--base1);
+    --btn-success-hover-bg-colour: var(--base01);
+    --btn-success-hover-border-colour: var(--base00);
+
+    /* Highlighter colours */
+    --hl1: var(--base01);
+    --hl2: var(--sol-blue);
+    --hl3: var(--sol-magenta);
+    --hl4: var(--sol-yellow);
+    --hl5: var(--sol-green);
+
+
+    /* Scrollbar */
+    --scrollbar-track: var(--base03);
+    --scrollbar-thumb: var(--base00);
+    --scrollbar-hover: var(--base01);
+
+
+    /* Misc. */
+    --drop-file-border-colour: var(--base01);
+    --popover-background: var(--base02);
+    --popover-border-colour: var(--base01);
+    --code-background: var(--base03);
+    --code-font-colour: var(--base1);
+    --input-highlight-colour: var(--base1);
+    --input-border-colour: var(--base0);
+}
