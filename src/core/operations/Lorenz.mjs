@@ -288,7 +288,6 @@ class Lorenz extends Operation {
         	if (lugx4.length != 26 || !re.test(lugx4) ) throw new OperationError("Χ4 custom lugs must be 26 long and can only include . or x");
         	if (lugx5.length != 23 || !re.test(lugx5) ) throw new OperationError("Χ5 custom lugs must be 23 long and can only include . or x");
         	var chosenSetting = INIT_PATTERNS["No Pattern"];
-        	console.log(chosenSetting);
         	chosenSetting["S"][1] = this.readLugs(lugs1);
         	chosenSetting["S"][2] = this.readLugs(lugs2);
         	chosenSetting["S"][3] = this.readLugs(lugs3);
@@ -301,7 +300,6 @@ class Lorenz extends Operation {
         	chosenSetting["X"][3] = this.readLugs(lugx3);
         	chosenSetting["X"][4] = this.readLugs(lugx4);
         	chosenSetting["X"][5] = this.readLugs(lugx5);
-        	console.log(chosenSetting);
         } else {
         	var chosenSetting = INIT_PATTERNS[pattern];
         }
@@ -317,7 +315,7 @@ class Lorenz extends Operation {
 	        	var letter = character.toUpperCase();
 	            
 	        	if(intype == "Plaintext") {
-		            if (validChars.indexOf(letter) === -1) throw new OperationError("Invalid Plaintext character");
+		            if (validChars.indexOf(letter) === -1) throw new OperationError("Invalid Plaintext character : "+letter);
 
 		            if( !figShifted && figShiftedChars.indexOf(letter) !== -1 ) {
 		            	// in letters mode and next char needs to be figure shifted
@@ -342,8 +340,12 @@ class Lorenz extends Operation {
 
 	        	} else {
 
-	        		if (validITA2.indexOf(letter) === -1) throw new OperationError("Invalid ITA2 character");
-	        		
+	        		if (validITA2.indexOf(letter) === -1) {
+                        var errltr = letter;
+                        if(errltr=="\n") errltr = "Carriage Return";
+                        if(errltr==" ") errltr = "Space";
+                        throw new OperationError("Invalid ITA2 character : "+errltr);
+	        		}
 	        		return letter;
 
 	        	}
@@ -355,27 +357,29 @@ class Lorenz extends Operation {
         	// Receive input should always be ITA2
 	        ita2 = Array.prototype.map.call(input, function(character) {
 	        	var letter = character.toUpperCase();
-	        	if (validITA2.indexOf(letter) === -1) throw new OperationError("Invalid ITA2 character");
+	        	if (validITA2.indexOf(letter) === -1) {
+                    var errltr = letter;
+                    if(errltr=="\n") errltr = "Carriage Return";
+                    if(errltr==" ") errltr = "Space";
+                    throw new OperationError("Invalid ITA2 character : "+errltr);
+                }
 	        	return letter;
 	        });
 
         }
 
         const ita2Input = ita2.join("");
-        console.log(ita2Input);
 
         var thisPsi = [];
         var thisChi = [];
         var thisMu = [];
         var m61lug = muSettings[1][m61-1];
-        var m37lug = 0;
+        var m37lug = muSettings[2][m37-1];
 		var p5 = [0,0,0];
 
         const self = this;
         const letters = Array.prototype.map.call(ita2Input, function(character) {
             const letter = character.toUpperCase();
-
-            //console.log(s1+' '+s2+' '+s3+' '+s4+' '+s5+' : '+m37+' '+m61+' : '+x1+' '+x2+' '+x3+' '+x4+' '+x5);
 
             var x2bptr = x2+1;
     		if(x2bptr==32) x2bptr=1;
@@ -402,8 +406,6 @@ class Lorenz extends Operation {
 				muSettings[1][m61-1],
 				muSettings[2][m37-1]
 			];
-
-			console.log(letter + ' + ' + self.REVERSE_ITA2_TABLE[thisPsi.join("")] + ' + ' + self.REVERSE_ITA2_TABLE[thisChi.join("")]);
 
             if (typeof ITA2_TABLE[letter] == "undefined") {
                 return "";
@@ -436,15 +438,17 @@ class Lorenz extends Operation {
 
             p5[2] = p5[1];
             p5[1] = p5[0];
-            p5[0] = ITA2_TABLE[letter][4];
-            console.log('p5='+ITA2_TABLE[letter]+' ('+letter+') = '+p5[0]);
+            if(mode=="Send") {
+                p5[0] = ITA2_TABLE[letter][4];
+            } else {
+                p5[0] = xorSum[4];
+            }
 
 		    // Limitations here
 			if(model=='SZ42a') {
 		    	// Chi 2 one back lim - The active character of chi 2 (2nd Chi wheel) in the previous position
 		    	lim = chiSettings[2][x2bptr-1];       	
 		    	if(kt) {
-		    		console.log('lim='+lim+', p5-2='+p5[2]);
                     if(lim==p5[2]) { lim = 0; } else { lim=1; } //p5 back 2
 		    	}
                 
@@ -453,8 +457,7 @@ class Lorenz extends Operation {
 		    		totalmotor = 0;
 		    	} else {
 		    		totalmotor = 1;
-		    	}   
-                console.log('BM='+basicmotor+', LM='+lim+', TM='+totalmotor);
+		    	} 
 
 		    } else if(model=='SZ42b') {
 		    	// Chi 2 one back + Psi 1 one back.
@@ -465,7 +468,6 @@ class Lorenz extends Operation {
 		    	if(kt) {
 		    		if(lim==p5[2]) { lim=0; } else { lim=1; } //p5 back 2	
 		    	}
-                console.log('BM='+basicmotor+', LM='+lim);
 		    	// If basic motor = 0 and limitation = 1, Total motor = 0 [no move], otherwise, total motor = 1 [move]
 		    	if(basicmotor==0 && lim==1) {
 		    		totalmotor = 0;
@@ -476,7 +478,6 @@ class Lorenz extends Operation {
     		} else if(model=="SZ40") {
     			// SZ40
 	    		totalmotor = basicmotor;
-                console.log('TM='+basicmotor);
     		} else {
     			throw new OperationError("Lorenz model type not recognised");
     		}
