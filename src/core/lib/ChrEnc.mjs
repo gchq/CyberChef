@@ -15,6 +15,7 @@ export const IO_FORMAT = {
     "UTF16LE (1200)": 1200,
     "UTF16BE (1201)": 1201,
     "UTF16 (1201)": 1201,
+    "DOS Latin US (437)": 437,
     "IBM EBCDIC International (500)": 500,
     "IBM EBCDIC US-Canada (37)": 37,
     "Windows-874 Thai (874)": 874,
