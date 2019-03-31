@@ -22,7 +22,9 @@ class BLAKE2s extends Operation {
 
         this.name = "BLAKE2s";
         this.module = "Hashing";
-        this.description = "Performs BLAKE2s hashing on the input. Returns the output HEX encoded.";
+        this.description = `Performs BLAKE2s hashing on the input.  
+        <br><br> BLAKE2s is a flavour of the BLAKE cryptographic hash function that is optimized for 8 to 32-bit platforms and produces digests of any size between 1 and 32 bytes.
+        <br><br> Supports the use of an optional key.`;
         this.infoURL = "https://wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2";
         this.inputType = "string";
         this.outputType = "string";
@@ -56,7 +58,7 @@ class BLAKE2s extends Operation {
         if (key.length === 0){
             key = null;
         } else if (key.length > 32){
-            throw new OperationError(["Key cannot be greater than 32 bytes", "It is currently " + key.length +" bytes."].join("\n"));
+            throw new OperationError(["Key cannot be greater than 32 bytes", "It is currently " + key.length + " bytes."].join("\n"));
         }
         switch (outFormat) {
             case "Hex":
