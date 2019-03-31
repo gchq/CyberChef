@@ -32,6 +32,7 @@ import "./tests/BitwiseOp";
 import "./tests/ByteRepr";
 import "./tests/CartesianProduct";
 import "./tests/CharEnc";
+import "./tests/Charts";
 import "./tests/Checksum";
 import "./tests/Ciphers";
 import "./tests/Code";

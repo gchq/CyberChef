@@ -378,7 +378,11 @@
             "Image Filter",
             "Contain Image",
             "Cover Image",
-            "Image Hue/Saturation/Lightness"
+            "Image Hue/Saturation/Lightness",
+            "Hex Density chart",
+            "Scatter chart",
+            "Series chart",
+            "Heatmap chart"
         ]
     },
     {
@@ -395,6 +399,7 @@
             "Generate QR Code",
             "Parse QR Code",
             "Haversine distance",
+            "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
             "XKCD Random Number"
