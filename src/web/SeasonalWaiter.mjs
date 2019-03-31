@@ -95,7 +95,7 @@ class SeasonalWaiter {
         }
 
         if (!this.app.options.clippy) {
-            this.clippyTimeouts.forEach(t => clearTimeout(t));
+            if (this.clippyTimeouts) this.clippyTimeouts.forEach(t => clearTimeout(t));
             return;
         }
 

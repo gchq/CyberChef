@@ -10,7 +10,6 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-import "babel-polyfill";
 
 // Define global environment functions
 global.ENVIRONMENT_IS_WORKER = function() {
