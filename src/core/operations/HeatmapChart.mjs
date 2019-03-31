@@ -9,7 +9,6 @@ import * as d3temp from "d3";
 import * as nodomtemp from "nodom";
 import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
-
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";

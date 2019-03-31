@@ -7,7 +7,7 @@
 
 import OperationError from "../errors/OperationError";
 
- /**
+/**
  * @constant
  * @default
  */
@@ -40,6 +40,7 @@ export const COLOURS = {
  * @param {string} recordDelimiter
  * @param {string} fieldDelimiter
  * @param {boolean} columnHeadingsAreIncluded - whether we should skip the first record
+ * @param {number} length
  * @returns {Object[]}
  */
 export function getValues(input, recordDelimiter, fieldDelimiter, columnHeadingsAreIncluded, length) {
@@ -58,7 +59,7 @@ export function getValues(input, recordDelimiter, fieldDelimiter, columnHeadings
                 values.push(split);
             }
         });
-    return { headings, values};
+    return { headings, values };
 }
 
 
@@ -74,7 +75,8 @@ export function getValues(input, recordDelimiter, fieldDelimiter, columnHeadings
 export function getScatterValues(input, recordDelimiter, fieldDelimiter, columnHeadingsAreIncluded) {
     let { headings, values } = getValues(
         input,
-        recordDelimiter, fieldDelimiter,
+        recordDelimiter,
+        fieldDelimiter,
         columnHeadingsAreIncluded,
         2
     );
@@ -95,6 +97,7 @@ export function getScatterValues(input, recordDelimiter, fieldDelimiter, columnH
 
     return { headings, values };
 }
+
 
 /**
  * Gets values from input for a scatter plot with colour from the third column.

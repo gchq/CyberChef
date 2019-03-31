@@ -7,7 +7,6 @@
 
 import * as d3temp from "d3";
 import * as nodomtemp from "nodom";
-
 import { getScatterValues, getScatterValuesWithColour, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
 
 import Operation from "../Operation";
@@ -30,7 +29,7 @@ class ScatterChart extends Operation {
         this.name = "Scatter chart";
         this.module = "Charts";
         this.description = "Plots two-variable data as single points on a graph.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Scatter_plot";
+        this.infoURL = "https://wikipedia.org/wiki/Scatter_plot";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
