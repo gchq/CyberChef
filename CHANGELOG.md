@@ -1,6 +1,8 @@
 # Changelog
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
+### [8.28.0] - 2019-03-31
+- 'Heatmap Chart', 'Hex Density Chart', 'Scatter Chart' and 'Series Chart' operation added [@artemisbot] [@tlwr] | [#496] [#143]
 
 ### [8.27.0] - 2019-03-14
 - 'Enigma', 'Typex', 'Bombe' and 'Multiple Bombe' operations added [@s2224834] | [#516]
@@ -118,6 +120,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.28.0]: https://github.com/gchq/CyberChef/releases/tag/v8.28.0
 [8.27.0]: https://github.com/gchq/CyberChef/releases/tag/v8.27.0
 [8.26.0]: https://github.com/gchq/CyberChef/releases/tag/v8.26.0
 [8.25.0]: https://github.com/gchq/CyberChef/releases/tag/v8.25.0
@@ -159,6 +162,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@h345983745]: https://github.com/h345983745
 [@s2224834]: https://github.com/s2224834
 [@artemisbot]: https://github.com/artemisbot
+[@tlwr]: https://github.com/tlwr
 [@picapi]: https://github.com/picapi
 [@Dachande663]: https://github.com/Dachande663
 [@JustAnotherMark]: https://github.com/JustAnotherMark
@@ -175,6 +179,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
+[#143]: https://github.com/gchq/CyberChef/pull/143
 [#224]: https://github.com/gchq/CyberChef/pull/224
 [#239]: https://github.com/gchq/CyberChef/pull/239
 [#248]: https://github.com/gchq/CyberChef/pull/248
@@ -209,5 +214,6 @@ All major and minor version changes will be documented in this file. Details of 
 [#468]: https://github.com/gchq/CyberChef/pull/468
 [#476]: https://github.com/gchq/CyberChef/pull/476
 [#489]: https://github.com/gchq/CyberChef/pull/489
+[#496]: https://github.com/gchq/CyberChef/pull/496
 [#506]: https://github.com/gchq/CyberChef/pull/506
 [#516]: https://github.com/gchq/CyberChef/pull/516
