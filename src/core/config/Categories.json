@@ -297,6 +297,8 @@
             "HAS-160",
             "Whirlpool",
             "Snefru",
+            "BLAKE2b",
+            "BLAKE2s",
             "SSDEEP",
             "CTPH",
             "Compare SSDEEP hashes",

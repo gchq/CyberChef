@@ -87,6 +87,8 @@ import "./tests/Enigma";
 import "./tests/Bombe";
 import "./tests/MultipleBombe";
 import "./tests/Typex";
+import "./tests/BLAKE2b";
+import "./tests/BLAKE2s";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
