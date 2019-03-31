@@ -14,7 +14,7 @@ TestRegister.addTests([
         expectedOutput: "7706af019148849e516f95ba630307a2018bb7bf03803eca5ed7ed2c3c013513",
         recipeConfig: [
             { "op": "BLAKE2s",
-                "args": ["256", "Hex"] }
+                "args": ["256", "Hex", {string: "", option: "UTF8"}] }
         ]
     },
     {
@@ -23,7 +23,7 @@ TestRegister.addTests([
         expectedOutput: "0e4fcfc2ee0097ac1d72d70b595a39e09a3c7c7e",
         recipeConfig: [
             { "op": "BLAKE2s",
-                "args": ["160", "Hex"] }
+                "args": ["160", "Hex", {string: "", option: "UTF8"}] }
         ]
     },
     {
@@ -32,7 +32,16 @@ TestRegister.addTests([
         expectedOutput: "9964ee6f36126626bf864363edfa96f6",
         recipeConfig: [
             { "op": "BLAKE2s",
-                "args": ["128", "Hex"] }
+                "args": ["128", "Hex", {string: "", option: "UTF8"}] }
+        ]
+    },
+    {
+        name: "BLAKE2s: Key Test",
+        input: "Hello World",
+        expectedOutput: "9964ee6f36126626bf864363edfa96f6",
+        recipeConfig: [
+            { "op": "BLAKE2s",
+                "args": ["128", "Hex", {string: "", option: "UTF8"}] }
         ]
     }
 ]);

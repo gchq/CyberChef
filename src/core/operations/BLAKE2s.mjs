@@ -35,6 +35,12 @@ class BLAKE2s extends Operation {
                 "name": "Output Encoding",
                 "type": "option",
                 "value": ["Hex", "Base64", "Raw"]
+            },
+            {
+                "name": "Key",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["UTF8", "Decimal", "Base64", "Hex", "Latin1"]
             }
         ];
     }
@@ -46,13 +52,19 @@ class BLAKE2s extends Operation {
      */
     run(input, args) {
         const [outSize, outFormat] = args;
+        let key = Utils.convertToByteArray(args[2].string || "", args[2].option);
+        if (key.length === 0){
+            key = null;
+        } else if (key.length > 32){
+            throw new OperationError(["Key cannot be greater than 32 bytes", "It is currently " + key.length +" bytes."].join("\n"));
+        }
         switch (outFormat) {
             case "Hex":
-                return blakejs.blake2sHex(input, null, outSize / 8);
+                return blakejs.blake2sHex(input, key, outSize / 8);
             case "Base64":
-                return toBase64(blakejs.blake2s(input, null, outSize / 8));
+                return toBase64(blakejs.blake2s(input, key, outSize / 8));
             case "Raw":
-                return Utils.arrayBufferToStr(blakejs.blake2s(input, null, outSize / 8).buffer);
+                return Utils.arrayBufferToStr(blakejs.blake2s(input, key, outSize / 8).buffer);
             default:
                 return new OperationError("Unsupported Output Type");
         }
