@@ -13,7 +13,7 @@ TestRegister.addTests([
         input: "100 100\n200 200\n300 300\n400 400\n500 500",
         expectedMatch: /^<svg width/,
         recipeConfig: [
-            { 
+            {
                 "op": "Scatter chart",
                 "args": ["Line feed", "Space", false, "time", "stress", "black", 5, false]
             }
@@ -24,9 +24,9 @@ TestRegister.addTests([
         input: "100 100\n200 200\n300 300\n400 400\n500 500",
         expectedMatch: /^<svg width/,
         recipeConfig: [
-            { 
+            {
                 "op": "Hex Density chart",
-                "args": ["Line feed", "Space", 25, 15, true, "", "", true, "white", "black", true] 
+                "args": ["Line feed", "Space", 25, 15, true, "", "", true, "white", "black", true]
             }
         ],
     },
@@ -35,9 +35,9 @@ TestRegister.addTests([
         input: "100 100 100\n200 200 200\n300 300 300\n400 400 400\n500 500 500",
         expectedMatch: /^<svg width/,
         recipeConfig: [
-            { 
+            {
                 "op": "Series chart",
-                "args": ["Line feed", "Space", "", 1, "mediumseagreen, dodgerblue, tomato"] 
+                "args": ["Line feed", "Space", "", 1, "mediumseagreen, dodgerblue, tomato"]
             }
         ],
     },
@@ -46,7 +46,7 @@ TestRegister.addTests([
         input: "100 100\n200 200\n300 300\n400 400\n500 500",
         expectedMatch: /^<svg width/,
         recipeConfig: [
-            { 
+            {
                 "op": "Heatmap chart",
                 "args": ["Line feed", "Space", 25, 25, true, "", "", false, "white", "black"]
             }
