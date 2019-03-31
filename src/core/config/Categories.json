@@ -297,6 +297,8 @@
             "HAS-160",
             "Whirlpool",
             "Snefru",
+            "BLAKE2b",
+            "BLAKE2s",
             "SSDEEP",
             "CTPH",
             "Compare SSDEEP hashes",
@@ -313,9 +315,7 @@
             "Adler-32 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum",
-            "BLAKE2b",
-            "BLAKE2s"
+            "TCP/IP Checksum"
         ]
     },
     {

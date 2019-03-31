@@ -88,16 +88,16 @@ class GenerateAllHashes extends Operation {
                 "\nWhirlpool-0: " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-0"]) +
                 "\nWhirlpool-T: " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-T"]) +
                 "\nWhirlpool:   " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool"]) +
+                "\nBLAKE2b-128: " + (new BLAKE2b).run(arrayBuffer, ["128", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-160: " + (new BLAKE2b).run(arrayBuffer, ["160", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-256: " + (new BLAKE2b).run(arrayBuffer, ["256", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-384: " + (new BLAKE2b).run(arrayBuffer, ["384", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-512: " + (new BLAKE2b).run(arrayBuffer, ["512", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-128: " + (new BLAKE2s).run(arrayBuffer, ["128", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-160: " + (new BLAKE2s).run(arrayBuffer, ["160", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-256: " + (new BLAKE2s).run(arrayBuffer, ["256", "Hex", {string: "", option: "UTF8"}]) +
                 "\nSSDEEP:      " + (new SSDEEP()).run(str) +
                 "\nCTPH:        " + (new CTPH()).run(str) +
-                "\nBLAKE2b-512: " + (new BLAKE2b).run(str, ["512", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2b-384: " + (new BLAKE2b).run(str, ["384", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2b-256: " + (new BLAKE2b).run(str, ["256", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2b-160: " + (new BLAKE2b).run(str, ["160", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2b-128: " + (new BLAKE2b).run(str, ["128", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2s-256: " + (new BLAKE2s).run(str, ["256", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2s-160: " + (new BLAKE2s).run(str, ["160", "Hex", {string: "", option: "UTF8"}]) +
-                "\nBLAKE2s-128: " + (new BLAKE2s).run(str, ["128", "Hex", {string: "", option: "UTF8"}]) +
                 "\n\nChecksums:" +
                 "\nFletcher-8:  " + (new Fletcher8Checksum).run(byteArray, []) +
                 "\nFletcher-16: " + (new Fletcher16Checksum).run(byteArray, []) +

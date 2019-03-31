@@ -27,7 +27,7 @@ class BLAKE2b extends Operation {
         <br><br> BLAKE2b is a flavour of the BLAKE cryptographic hash function that is optimized for 64-bit platforms and produces digests of any size between 1 and 64 bytes.
         <br><br> Supports the use of an optional key.`;
         this.infoURL = "https://wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2b_algorithm";
-        this.inputType = "string";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -48,18 +48,20 @@ class BLAKE2b extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string} The input having been hashed with BLAKE2b in the encoding format speicifed.
      */
     run(input, args) {
         const [outSize, outFormat] = args;
         let key = Utils.convertToByteArray(args[2].string || "", args[2].option);
-        if (key.length === 0){
+        if (key.length === 0) {
             key = null;
-        } else if (key.length > 64){
+        } else if (key.length > 64) {
             throw new OperationError(["Key cannot be greater than 64 bytes", "It is currently " + key.length + " bytes."].join("\n"));
         }
+
+        input = new Uint8Array(input);
         switch (outFormat) {
             case "Hex":
                 return blakejs.blake2bHex(input, key, outSize / 8);
