@@ -6,9 +6,8 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import { isImage } from "../lib/FileType";
-import jsqr from "jsqr";
-import jimp from "jimp";
+import { isImage } from "../lib/FileType.mjs";
+import { parseQrCode } from "../lib/QRCode";
 
 /**
  * Parse QR Code operation
@@ -34,6 +33,14 @@ class ParseQRCode extends Operation {
                 "value": false
             }
         ];
+        this.patterns = [
+            {
+                "match": "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                "flags": "",
+                "args": [false],
+                "useful": true
+            }
+        ];
     }
 
     /**
@@ -44,59 +51,10 @@ class ParseQRCode extends Operation {
     async run(input, args) {
         const [normalise] = args;
 
-        // Make sure that the input is an image
-        if (!isImage(new Uint8Array(input))) throw new OperationError("Invalid file type.");
-
-        let image = input;
-
-        if (normalise) {
-            // Process the image to be easier to read by jsqr
-            // Disables the alpha channel
-            // Sets the image default background to white
-            // Normalises the image colours
-            // Makes the image greyscale
-            // Converts image to a JPEG
-            image = await new Promise((resolve, reject) => {
-                jimp.read(input)
-                    .then(image => {
-                        image
-                            .rgba(false)
-                            .background(0xFFFFFFFF)
-                            .normalize()
-                            .greyscale()
-                            .getBuffer(jimp.MIME_JPEG, (error, result) => {
-                                resolve(result);
-                            });
-                    })
-                    .catch(err => {
-                        reject(new OperationError("Error reading the image file."));
-                    });
-            });
+        if (!isImage(input)) {
+            throw new OperationError("Invalid file type.");
         }
-
-        if (image instanceof OperationError) {
-            throw image;
-        }
-
-        return new Promise((resolve, reject) => {
-            jimp.read(Buffer.from(image))
-                .then(image => {
-                    if (image.bitmap != null) {
-                        const qrData = jsqr(image.bitmap.data, image.getWidth(), image.getHeight());
-                        if (qrData != null) {
-                            resolve(qrData.data);
-                        } else {
-                            reject(new OperationError("Couldn't read a QR code from the image."));
-                        }
-                    } else {
-                        reject(new OperationError("Error reading the image file."));
-                    }
-                })
-                .catch(err => {
-                    reject(new OperationError("Error reading the image file."));
-                });
-        });
-
+        return await parseQrCode(input, normalise);
     }
 
 }

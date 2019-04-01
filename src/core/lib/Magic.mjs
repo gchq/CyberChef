@@ -312,6 +312,11 @@ class Magic {
                 return;
             }
 
+            // If the recipe returned an empty buffer, do not continue
+            if (_buffersEqual(output, new ArrayBuffer())) {
+                return;
+            }
+
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
@@ -395,7 +400,12 @@ class Magic {
         const recipe = new Recipe(recipeConfig);
         try {
             await recipe.execute(dish);
-            return dish.get(Dish.ARRAY_BUFFER);
+            // Return an empty buffer if the recipe did not run to completion
+            if (recipe.lastRunOp === recipe.opList[recipe.opList.length - 1]) {
+                return dish.get(Dish.ARRAY_BUFFER);
+            } else {
+                return new ArrayBuffer();
+            }
         } catch (err) {
             // If there are errors, return an empty buffer
             return new ArrayBuffer();
