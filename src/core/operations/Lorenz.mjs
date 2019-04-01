@@ -22,8 +22,8 @@ class Lorenz extends Operation {
 
         this.name = "Lorenz";
         this.module = "Default";
-        this.description = "Enciphers characters using the World War 2 German Lorenz SZ cipher attachment.";
-        this.infoURL = "https://lorenz.virtualcolossus.co.uk";
+        this.description = "The Lorenz SZ40/42 cipher attachment was a WW2 German rotor cipher machine with twelve rotors which attached in-line between remote teleprinters.<br><br>It used the Vernam cipher with two groups of five rotors (named the psi(ψ) wheels and chi(χ) wheels at Bletchley Park) to create two pseudorandom streams of five bits, encoded in ITA2, which were XOR added to the plaintext. Two other rotors, dubbed the mu(μ) or motor wheels, could hold up the stepping of the psi wheels meaning they stepped intermittently.<br><br>Each rotor has a different number of cams/lugs around their circumference which could be set active or inactive changing the key stream.<br><br>Three models of the Lorenz are emulated, SZ40, SZ42a and SZ42b and three example wheel patterns (the lug settings) are included (KH, ZMUG & BREAM) with the option to set a custom set using the letter 'x' for active or '.' for an inactive lug.<br><br>The input can either be plaintext or ITA2 when sending and ITA2 when receiving.<br><br>To learn more, Virtual Lorenz, an online, browser based simulation of the Lorenz SZ40/42 is available at <a href='https://lorenz.virtualcolossus.co.uk'>https://lorenz.virtualcolossus.co.uk</a>.";
+        this.infoURL = "https://en.wikipedia.org/wiki/Lorenz_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
