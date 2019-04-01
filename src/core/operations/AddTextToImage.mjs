@@ -134,18 +134,32 @@ class AddTextToImage extends Operation {
             if (ENVIRONMENT_IS_WORKER())
                 self.sendStatusMessage("Adding text to image...");
 
-            const fontsMap = {
-                "Roboto": await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.fnt"),
-                "Roboto Black": await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.fnt"),
-                "Roboto Mono": await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.fnt"),
-                "Roboto Slab": await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.fnt")
-            };
+            const fontsMap = {};
+            const fonts = [
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.fnt"),
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.fnt"),
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.fnt"),
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.fnt")
+            ];
+
+            await Promise.all(fonts)
+                .then(fonts => {
+                    fontsMap.Roboto = fonts[0];
+                    fontsMap["Roboto Black"] = fonts[1];
+                    fontsMap["Roboto Mono"] = fonts[2];
+                    fontsMap["Roboto Slab"] = fonts[3]
+                });
+
 
             // Make Webpack load the png font images
-            await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.png");
-            await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.png");
-            await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.png");
-            await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.png");
+            const fontImages = [
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.png"),
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.png"),
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.png"),
+                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.png")
+            ];
+
+            await Promise.all(fontImages);
 
             const font = fontsMap[fontFace];
 
