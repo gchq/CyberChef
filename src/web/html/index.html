@@ -229,13 +229,13 @@
                         <div class="title no-select">
                             <label for="input-text">Input</label>
                             <span class="float-right">
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-previous-tab" data-toggle="tooltip" title="Go to the previous tab">
+                                <button type="button" class="btn btn-primary bmd-btn-icon tab-buttons" id="btn-previous-tab" data-toggle="tooltip" title="Go to the previous tab">
                                     <i class="material-icons">keyboard_arrow_left</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-go-to-tab" data-toggle="tooltip" title="Go to a specific tab">
+                                <button type="button" class="btn btn-primary bmd-btn-icon tab-buttons" id="btn-go-to-tab" data-toggle="tooltip" title="Go to a specific tab">
                                     <i class="material-icons">more_horiz</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-next-tab" data-toggle="tooltip" title="Go to the next tab">
+                                <button type="button" class="btn btn-primary bmd-btn-icon tab-buttons" id="btn-next-tab" data-toggle="tooltip" title="Go to the next tab">
                                     <i class="material-icons">keyboard_arrow_right</i>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab">
@@ -256,8 +256,8 @@
                             <div class="io-info" id="input-info"></div>
                             <div class="io-info" id="input-selection-info"></div>
                         </div>
-                        <div id="input-tabs" style="display: none;">
-                            <ul>
+                        <div id="input-tabs-wrapper" style="display: none;">
+                            <ul id="input-tabs">
                             </ul>
                         </div>
                         <div class="textarea-wrapper no-select input-wrapper" id="input-wrapper">

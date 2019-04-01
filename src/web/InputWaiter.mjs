@@ -549,6 +549,10 @@ class InputWaiter {
      */
     loadUIFiles(files) {
         let inputNum;
+        if (files.length > 20) {
+            this.manager.controls.setAutoBake(false);
+            this.app.alert("Auto-Bake is disabled by default when inputting more than 20 files.", 5000);
+        }
         for (let i = 0; i < files.length; i++) {
             inputNum = this.getActiveTab();
             if (i > 0) {
@@ -771,16 +775,21 @@ class InputWaiter {
         });
 
         const tabsWrapper = document.getElementById("input-tabs");
-        const numTabs = tabsWrapper.firstElementChild.children.length;
+        const numTabs = tabsWrapper.children.length;
 
         if (numTabs < this.maxTabs) {
             // Create a tab element
             const newTab = this.createTabElement(inputNum);
 
-            tabsWrapper.firstElementChild.appendChild(newTab);
+            tabsWrapper.appendChild(newTab);
 
             if (numTabs > 0) {
-                tabsWrapper.style.display = "block";
+                tabsWrapper.parentElement.style.display = "block";
+
+                const tabButtons = document.getElementsByClassName("tab-buttons");
+                for (let i = 0; i < tabButtons.length; i++) {
+                    tabButtons.item(i).style.display = "inline-block";
+                }
 
                 document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
@@ -829,8 +838,7 @@ class InputWaiter {
      * @param {number} activeTab
      */
     refreshTabs(activeTab) {
-        const tabsWrapper = document.getElementById("input-tabs");
-        const tabsList = tabsWrapper.firstElementChild;
+        const tabsList = document.getElementById("input-tabs");
         let newInputs = this.getNearbyNums(activeTab, "right");
         if (newInputs.length < this.maxTabs) {
             newInputs = this.getNearbyNums(activeTab, "left");
@@ -846,13 +854,23 @@ class InputWaiter {
         }
 
         if (newInputs.length > 1) {
-            tabsWrapper.style.display = "block";
+            tabsList.parentElement.style.display = "block";
+
+            const tabButtons = document.getElementsByClassName("tab-buttons");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons.item(i).style.display = "inline-block";
+            }
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
         } else {
-            tabsWrapper.style.display = "none";
+            tabsList.parentElement.style.display = "none";
+
+            const tabButtons = document.getElementsByClassName("tab-buttons");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons.item(i).style.display = "none";
+            }
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
@@ -958,7 +976,7 @@ class InputWaiter {
         }
 
         const tabsWrapper = document.getElementById("input-tabs");
-        const tabs = tabsWrapper.firstElementChild.children;
+        const tabs = tabsWrapper.children;
 
         let found = false;
         for (let i = 0; i < tabs.length; i++) {
@@ -1116,7 +1134,7 @@ class InputWaiter {
      * @returns {Element}
      */
     getTabItem(inputNum) {
-        const tabs = document.getElementById("input-tabs").firstElementChild.children;
+        const tabs = document.getElementById("input-tabs").children;
         for (let i = 0; i < tabs.length; i++) {
             if (parseInt(tabs.item(i).getAttribute("inputNum"), 10) === inputNum) {
                 return tabs.item(i);
