@@ -25,8 +25,8 @@ class ConvertImageFormat extends Operation {
         this.module = "Image";
         this.description = "Converts an image between different formats. Supported formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
         this.infoURL = "https://wikipedia.org/wiki/Image_file_formats";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
@@ -69,7 +69,7 @@ class ConvertImageFormat extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
@@ -93,12 +93,12 @@ class ConvertImageFormat extends Operation {
 
         const mime = formatMap[format];
 
-        if (!isImage(input)) {
+        if (!isImage(new Uint8Array(input))) {
             throw new OperationError("Invalid file format.");
         }
         let image;
         try {
-            image = await jimp.read(Buffer.from(input));
+            image = await jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error opening image file. (${err})`);
         }
@@ -114,7 +114,7 @@ class ConvertImageFormat extends Operation {
             }
 
             const imageBuffer = await image.getBufferAsync(mime);
-            return [...imageBuffer];
+            return imageBuffer.buffer;
         } catch (err) {
             throw new OperationError(`Error converting image format. (${err})`);
         }
@@ -123,18 +123,19 @@ class ConvertImageFormat extends Operation {
     /**
      * Displays the converted image using HTML for web apps
      *
-     * @param {byteArray} data
+     * @param {ArrayBuffer} data
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
+        const dataArray = new Uint8Array(data);
 
-        const type = isImage(data);
+        const type = isImage(dataArray);
         if (!type) {
-            throw new OperationError("Invalid image type.");
+            throw new OperationError("Invalid file type.");
         }
 
-        return `<img src="data:${type};base64,${toBase64(data)}">`;
+        return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
 
 }

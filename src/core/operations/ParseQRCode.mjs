@@ -25,7 +25,7 @@ class ParseQRCode extends Operation {
         this.module = "Image";
         this.description = "Reads an image file and attempts to detect and read a Quick Response (QR) code from the image.<br><br><u>Normalise Image</u><br>Attempts to normalise the image before parsing it to improve detection of a QR code.";
         this.infoURL = "https://wikipedia.org/wiki/QR_code";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -37,7 +37,7 @@ class ParseQRCode extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -45,7 +45,7 @@ class ParseQRCode extends Operation {
         const [normalise] = args;
 
         // Make sure that the input is an image
-        if (!isImage(input)) throw new OperationError("Invalid file type.");
+        if (!isImage(new Uint8Array(input))) throw new OperationError("Invalid file type.");
 
         let image = input;
 
@@ -57,7 +57,7 @@ class ParseQRCode extends Operation {
             // Makes the image greyscale
             // Converts image to a JPEG
             image = await new Promise((resolve, reject) => {
-                jimp.read(Buffer.from(input))
+                jimp.read(input)
                     .then(image => {
                         image
                             .rgba(false)

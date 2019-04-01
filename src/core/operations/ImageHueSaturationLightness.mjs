@@ -25,8 +25,8 @@ class ImageHueSaturationLightness extends Operation {
         this.module = "Image";
         this.description = "Adjusts the hue / saturation / lightness (HSL) values of an image.";
         this.infoURL = "";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
@@ -54,20 +54,20 @@ class ImageHueSaturationLightness extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     async run(input, args) {
         const [hue, saturation, lightness] = args;
 
-        if (!isImage(input)) {
+        if (!isImage(new Uint8Array(input))) {
             throw new OperationError("Invalid file type.");
         }
 
         let image;
         try {
-            image = await jimp.read(Buffer.from(input));
+            image = await jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
@@ -109,7 +109,7 @@ class ImageHueSaturationLightness extends Operation {
             } else {
                 imageBuffer = await image.getBufferAsync(jimp.AUTO);
             }
-            return [...imageBuffer];
+            return imageBuffer.buffer;
         } catch (err) {
             throw new OperationError(`Error adjusting image hue / saturation / lightness. (${err})`);
         }
@@ -117,18 +117,19 @@ class ImageHueSaturationLightness extends Operation {
 
     /**
      * Displays the image using HTML for web apps
-     * @param {byteArray} data
+     * @param {ArrayBuffer} data
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
+        const dataArray = new Uint8Array(data);
 
-        const type = isImage(data);
+        const type = isImage(dataArray);
         if (!type) {
             throw new OperationError("Invalid file type.");
         }
 
-        return `<img src="data:${type};base64,${toBase64(data)}">`;
+        return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
 }
 

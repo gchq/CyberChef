@@ -25,8 +25,8 @@ class AddTextToImage extends Operation {
         this.module = "Image";
         this.description = "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.<br><br>Note: This may cause a degradation in image quality, especially when using font sizes larger than 72.";
         this.infoURL = "";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
@@ -102,7 +102,7 @@ class AddTextToImage extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
@@ -120,13 +120,13 @@ class AddTextToImage extends Operation {
         let xPos = args[3],
             yPos = args[4];
 
-        if (!isImage(input)) {
+        if (!isImage(new Uint8Array(input))) {
             throw new OperationError("Invalid file type.");
         }
 
         let image;
         try {
-            image = await jimp.read(Buffer.from(input));
+            image = await jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
@@ -147,7 +147,7 @@ class AddTextToImage extends Operation {
                     fontsMap.Roboto = fonts[0];
                     fontsMap["Roboto Black"] = fonts[1];
                     fontsMap["Roboto Mono"] = fonts[2];
-                    fontsMap["Roboto Slab"] = fonts[3]
+                    fontsMap["Roboto Slab"] = fonts[3];
                 });
 
 
@@ -248,7 +248,7 @@ class AddTextToImage extends Operation {
             } else {
                 imageBuffer = await image.getBufferAsync(jimp.AUTO);
             }
-            return [...imageBuffer];
+            return imageBuffer.buffer;
         } catch (err) {
             throw new OperationError(`Error adding text to image. (${err})`);
         }
@@ -257,18 +257,19 @@ class AddTextToImage extends Operation {
     /**
      * Displays the blurred image using HTML for web apps
      *
-     * @param {byteArray} data
+     * @param {ArrayBuffer} data
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
+        const dataArray = new Uint8Array(data);
 
-        const type = isImage(data);
+        const type = isImage(dataArray);
         if (!type) {
             throw new OperationError("Invalid file type.");
         }
 
-        return `<img src="data:${type};base64,${toBase64(data)}">`;
+        return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
 
 }
