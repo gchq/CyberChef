@@ -699,12 +699,13 @@ class InputWaiter {
      */
     displayFilePreview() {
         const inputNum = this.getActiveTab(),
+            input = this.getInput(inputNum),
             inputText = document.getElementById("input-text"),
-            fileSlice = this.getInput(inputNum).slice(0, 4096),
+            fileSlice = input.slice(0, 4096),
             fileThumb = document.getElementById("input-file-thumbnail"),
-            arrBuffer = new Uint8Array(this.getInput(inputNum)),
+            arrBuffer = new Uint8Array(input),
             type = isImage(arrBuffer);
-        if (type && type !== "image/tiff" && this.app.options.imagePreview) {
+        if (type && type !== "image/tiff" && this.app.options.imagePreview && input.byteLength < 1024000) {
             // Don't show TIFFs as not much supports them
             fileThumb.src = `data:${type};base64,${toBase64(arrBuffer)}`;
         } else {
