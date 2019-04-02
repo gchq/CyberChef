@@ -84,7 +84,7 @@ class Manager {
     setup() {
         this.input.addTab();
         this.input.setupLoaderWorker();
-        this.worker.setupChefWorkers();
+        this.worker.setupChefWorker();
         this.recipe.initialiseOperationDragNDrop();
         this.controls.initComponents();
         this.controls.autoBakeChange();
@@ -165,24 +165,24 @@ class Manager {
         this.addDynamicListener("#input-tabs li .input-tab-content", "click", this.input.changeTabClick, this.input);
 
         // Output
-        document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
-        document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
-        document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
-        document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
-        document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
-        document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
-        document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
-        document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
-        document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
-        document.getElementById("output-html").addEventListener("mouseup", this.highlighter.outputHtmlMouseup.bind(this.highlighter));
-        document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
-        this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
-        this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
-        this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
-        this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
-        document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
-        this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
-        // this.addDynamicListener("#output-tabs ul li .output-tab-content", "click", this.output.changeTabClick, this.output);
+        // document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
+        // document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
+        // document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
+        // document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
+        // document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
+        // document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
+        // document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
+        // document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
+        // document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
+        // document.getElementById("output-html").addEventListener("mouseup", this.highlighter.outputHtmlMouseup.bind(this.highlighter));
+        // document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
+        // this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
+        // this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
+        // this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
+        // this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
+        // document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
+        // this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
+        this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));

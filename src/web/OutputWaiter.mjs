@@ -1,5 +1,6 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
+ * @author j433866 [j433866@gmail.com]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
@@ -7,360 +8,314 @@
 import Utils from "../core/Utils";
 import FileSaver from "file-saver";
 
-
 /**
- * Waiter to handle events related to the output.
- */
+  * Waiter to handle events related to the output
+  */
 class OutputWaiter {
 
     /**
      * OutputWaiter constructor.
      *
      * @param {App} app - The main view object for CyberChef.
-     * @param {Manager} manager - The CyberChef event manager.
+     * @param {Manager} manager - The CyberChef event manager
      */
     constructor(app, manager) {
         this.app = app;
         this.manager = manager;
 
-        this.dishBuffer = null;
-        this.dishStr = null;
         this.outputs = [];
+        this.maxTabs = 4; // Calculate this
     }
 
-
     /**
-     * Gets the output string from the output textarea.
+     * Gets the output for the specified input number
      *
-     * @returns {string}
+     * @param {number} inputNum
+     * @returns {Object}
      */
-    get() {
-        return document.getElementById("output-text").value;
+    getOutput(inputNum) {
+        const index = this.getOutputIndex(inputNum);
+        if (index === -1) return -1;
+
+        if (typeof this.outputs[index].data.result === "string") {
+            return this.outputs[index].data.result;
+        } else {
+            return this.outputs[index].data.result || "";
+        }
     }
 
-
     /**
-     * Sets the output array for multiple outputs.
-     * Displays the active output in the output textarea
+     * Gets the index of the output for the specified input number
      *
-     * @param {Array} outputs
+     * @param {number} inputNum
+     * @returns {number}
      */
-    async multiSet(outputs) {
-        log.debug("Received " + outputs.length + " outputs.");
-        this.outputs = outputs;
-        const activeTab = this.manager.input.getActiveTab();
-
-        for (let i = 0; i < outputs.length; i++) {
-            if (outputs[i].inputNum === activeTab) {
-                await this.set(outputs[i].data.result, outputs[i].data.type, outputs[0].data.duration);
+    getOutputIndex(inputNum) {
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum === inputNum) {
+                return i;
             }
         }
-        // await this.set(this.outputs[0].data.result, this.outputs[0].data.type, this.outputs[0].data.duration);
-
-        // Create tabs
-
-        // Select active tab
-
-        // Display active tab data in textarea
+        return -1;
     }
 
+    /**
+     * Gets the output string or FileBuffer for the active input
+     *
+     * @returns {string | ArrayBuffer}
+     */
+    getActive() {
+        return this.getOutput(this.getActiveTab()).data;
+    }
+
+    /**
+     * Adds a new output to the output array.
+     * Creates a new tab if we have less than maxtabs tabs open
+     *
+     * @param {number} inputNum
+     * @param {boolean} [changeTab=true]
+     */
+    addOutput(inputNum, changeTab = true) {
+        const index = this.getOutputIndex(inputNum);
+        if (index !== -1) {
+            // Remove the output if it already exists
+            this.outputs.splice(index, 1);
+        }
+        const newOutput = {
+            data: null,
+            inputNum: inputNum,
+            // statusMessage: `Input ${inputNum} has not been baked yet.`,
+            statusMessage: "",
+            error: null,
+            status: "inactive"
+        };
+
+        this.outputs.push(newOutput);
+
+        // add new tab
+        this.addTab(inputNum, changeTab);
+        return this.outputs.indexOf(newOutput);
+    }
+
+    /**
+     * Updates the value for the output in the output array.
+     * If this is the active output tab, updates the output textarea
+     *
+     * @param {Object} data
+     * @param {number} inputNum
+     */
+    updateOutputValue(data, inputNum) {
+        let index = this.getOutputIndex(inputNum);
+        if (index === -1) {
+            index = this.addOutput(inputNum);
+        }
+
+        this.outputs[index].data = data;
+
+        // set output here
+        this.set(inputNum);
+    }
+
+    /**
+     * Updates the status message for the output in the output array.
+     * If this is the active output tab, updates the output textarea
+     *
+     * @param {string} statusMessage
+     * @param {number} inputNum
+     */
+    updateOutputMessage(statusMessage, inputNum) {
+        // log.error(`MSG: ${statusMessage}; inputNum: ${inputNum}`);
+        const index = this.getOutputIndex(inputNum);
+        if (index === -1) return;
+
+        this.outputs[index].statusMessage = statusMessage;
+        this.set(inputNum);
+    }
+
+    /**
+     * Updates the error value for the output in the output array.
+     * If this is the active output tab, calls app.handleError.
+     * Otherwise, the error will be handled when the output is switched to
+     *
+     * @param {Error} error
+     * @param {number} inputNum
+     */
+    updateOutputError(error, inputNum) {
+        const index = this.getOutputIndex(inputNum);
+        if (index === -1) return;
+
+        this.outputs[index].error = error;
+
+        // call handle error here
+        // or make the error handling part of set()
+        this.set(inputNum);
+    }
+
+    /**
+     * Updates the status value for the output in the output array
+     *
+     * @param {string} status
+     * @param {number} inputNum
+     */
+    updateOutputStatus(status, inputNum) {
+        const index = this.getOutputIndex(inputNum);
+        if (index === -1) return;
+
+        this.outputs[index].status = status;
+
+        this.set(inputNum);
+    }
+
+    /**
+     * Removes an output from the output array.
+     *
+     * @param {number} inputNum
+     */
+    removeOutput(inputNum) {
+        const index = this.getOutputIndex(inputNum);
+        if (index === -1) return;
+
+        this.outputs.splice(index, 1);
+    }
 
     /**
      * Sets the output in the output textarea.
      *
-     * @param {string|ArrayBuffer} data - The output string/HTML/ArrayBuffer
-     * @param {string} type - The data type of the output
-     * @param {number} duration - The length of time (ms) it took to generate the output
-     * @param {boolean} [preserveBuffer=false] - Whether to preserve the dishBuffer
+     * @param {number} inputNum
      */
-    async set(data, type, duration, preserveBuffer) {
-        log.debug("Output type: " + type);
+    set(inputNum) {
+        const outputIndex = this.getOutputIndex(inputNum);
+        if (outputIndex === -1) return;
+        const output = this.outputs[outputIndex];
         const outputText = document.getElementById("output-text");
         const outputHtml = document.getElementById("output-html");
         const outputFile = document.getElementById("output-file");
         const outputHighlighter = document.getElementById("output-highlighter");
         const inputHighlighter = document.getElementById("input-highlighter");
-        let scriptElements, lines, length;
+        // If inactive, show blank
+        // If pending or baking, show loader and status message
+        // If error, style the tab and handle the error
+        // If done, display the output if it's the active tab
 
-        if (!preserveBuffer) {
-            this.closeFile();
-            this.dishStr = null;
-            document.getElementById("show-file-overlay").style.display = "none";
-        }
-
-        switch (type) {
-            case "html":
-                outputText.style.display = "none";
-                outputHtml.style.display = "block";
-                outputFile.style.display = "none";
-                outputHighlighter.display = "none";
-                inputHighlighter.display = "none";
-
-                outputText.value = "";
-                outputHtml.innerHTML = data;
-
-                // Execute script sections
-                scriptElements = outputHtml.querySelectorAll("script");
-                for (let i = 0; i < scriptElements.length; i++) {
-                    try {
-                        eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-                    } catch (err) {
-                        log.error(err);
-                    }
-                }
-
-                await this.getDishStr();
-                length = this.dishStr.length;
-                lines = this.dishStr.count("\n") + 1;
-                break;
-            case "ArrayBuffer":
-                outputText.style.display = "block";
-                outputHtml.style.display = "none";
-                outputHighlighter.display = "none";
-                inputHighlighter.display = "none";
-
-                outputText.value = "";
-                outputHtml.innerHTML = "";
-                length = data.byteLength;
-
-                this.setFile(data);
-                break;
-            case "string":
-            default:
+        if (output.status === "inactive") {
+            // An output is inactive when it has been created but has not been baked at all
+            // show a blank here
+            if (inputNum === this.getActiveTab()) {
+                this.toggleLoader(false);
                 outputText.style.display = "block";
                 outputHtml.style.display = "none";
                 outputFile.style.display = "none";
                 outputHighlighter.display = "block";
                 inputHighlighter.display = "block";
 
-                outputText.value = Utils.printable(data, true);
+                outputText.value = "";
                 outputHtml.innerHTML = "";
 
-                lines = data.count("\n") + 1;
-                length = data.length;
-                this.dishStr = data;
-                break;
-        }
+            }
+        } else if (output.status === "pending" || output.status === "baking") {
+            // show the loader and the status message if it's being shown
+            // otherwise don't do anything
+            if (inputNum === this.getActiveTab()) {
+                this.toggleLoader(true);
 
-        this.manager.highlighter.removeHighlights();
-        this.setOutputInfo(length, lines, duration);
-        this.backgroundMagic();
+                document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
+            }
+
+        } else if (output.status === "error") {
+            // style the tab if it's being shown
+            // run app.handleError()
+            if (inputNum === this.getActiveTab()) {
+                this.toggleLoader(false);
+            }
+        } else if (output.status === "baked") {
+            // Display the output if it's the active tab
+            this.displayTabInfo(inputNum);
+            if (inputNum === this.getActiveTab()) {
+                this.toggleLoader(false);
+                this.closeFile();
+                let scriptElements, lines, length;
+
+                switch (output.data.type) {
+                    case "html":
+                        outputText.style.display = "none";
+                        outputHtml.style.display = "block";
+                        outputFile.style.display = "none";
+                        outputHighlighter.style.display = "none";
+                        inputHighlighter.style.display = "none";
+
+                        outputText.value = "";
+                        outputHtml.innerHTML = output.data.result;
+
+                        // Execute script sections
+                        scriptElements = outputHtml.querySelectorAll("script");
+                        for (let i = 0; i < scriptElements.length; i++) {
+                            try {
+                                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+                            } catch (err) {
+                                log.error(err);
+                            }
+                        }
+
+                        break;
+                    case "ArrayBuffer":
+                        outputText.style.display = "block";
+                        outputHtml.style.display = "none";
+                        outputHighlighter.display = "none";
+                        inputHighlighter.display = "none";
+
+                        outputText.value = "";
+                        outputHtml.innerHTML = "";
+                        length = output.data.result.byteLength;
+
+                        this.setFile(output.data.result);
+                        break;
+                    case "string":
+                    default:
+                        outputText.style.display = "block";
+                        outputHtml.style.display = "none";
+                        outputFile.style.display = "none";
+                        outputHighlighter.display = "block";
+                        inputHighlighter.display = "block";
+
+                        outputText.value = Utils.printable(output.data.result, true);
+                        outputHtml.innerHTML = "";
+
+                        lines = output.data.result.count("\n") + 1;
+                        length = output.data.result.length;
+                        break;
+                }
+            }
+        }
     }
 
-
     /**
-     * Shows file details.
+     * Shows file details
      *
      * @param {ArrayBuffer} buf
      */
     setFile(buf) {
-        this.dishBuffer = buf;
         const file = new File([buf], "output.dat");
 
         // Display file overlay in output area with details
         const fileOverlay = document.getElementById("output-file"),
-            fileSize = document.getElementById("output-file-size");
+            fileSize = document.getElementById("output-file-size"),
+            outputText = document.getElementById("output-text"),
+            fileSlice = buf.slice(0, 4096);
 
         fileOverlay.style.display = "block";
         fileSize.textContent = file.size.toLocaleString() + " bytes";
-
-        // Display preview slice in the background
-        const outputText = document.getElementById("output-text"),
-            fileSlice = this.dishBuffer.slice(0, 4096);
 
         outputText.classList.add("blur");
         outputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
     }
 
-
     /**
-     * Removes the output file and nulls its memory.
+     * Clears output file details
      */
     closeFile() {
-        this.dishBuffer = null;
         document.getElementById("output-file").style.display = "none";
         document.getElementById("output-text").classList.remove("blur");
     }
-
-
-    /**
-     * Handler for file download events.
-     */
-    async downloadFile() {
-        this.filename = window.prompt("Please enter a filename:", this.filename || "download.dat");
-        await this.getDishBuffer();
-        const file = new File([this.dishBuffer], this.filename);
-        if (this.filename) FileSaver.saveAs(file, this.filename, false);
-    }
-
-
-    /**
-     * Handler for file slice display events.
-     */
-    displayFileSlice() {
-        const startTime = new Date().getTime(),
-            showFileOverlay = document.getElementById("show-file-overlay"),
-            sliceFromEl = document.getElementById("output-file-slice-from"),
-            sliceToEl = document.getElementById("output-file-slice-to"),
-            sliceFrom = parseInt(sliceFromEl.value, 10),
-            sliceTo = parseInt(sliceToEl.value, 10),
-            str = Utils.arrayBufferToStr(this.dishBuffer.slice(sliceFrom, sliceTo));
-
-        document.getElementById("output-text").classList.remove("blur");
-        showFileOverlay.style.display = "block";
-        this.set(str, "string", new Date().getTime() - startTime, true);
-    }
-
-
-    /**
-     * Handler for show file overlay events.
-     *
-     * @param {Event} e
-     */
-    showFileOverlayClick(e) {
-        const outputFile = document.getElementById("output-file"),
-            showFileOverlay = e.target;
-
-        document.getElementById("output-text").classList.add("blur");
-        outputFile.style.display = "block";
-        showFileOverlay.style.display = "none";
-        this.setOutputInfo(this.dishBuffer.byteLength, null, 0);
-    }
-
-
-    /**
-     * Displays information about the output.
-     *
-     * @param {number} length - The length of the current output string
-     * @param {number} lines - The number of the lines in the current output string
-     * @param {number} duration - The length of time (ms) it took to generate the output
-     */
-    setOutputInfo(length, lines, duration) {
-        let width = length.toString().length;
-        width = width < 4 ? 4 : width;
-
-        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const timeStr = (duration.toString() + "ms").padStart(width, " ").replace(/ /g, "&nbsp;");
-
-        let msg = "time: " + timeStr + "<br>length: " + lengthStr;
-
-        if (typeof lines === "number") {
-            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>lines: " + linesStr;
-        }
-
-        document.getElementById("output-info").innerHTML = msg;
-        document.getElementById("input-selection-info").innerHTML = "";
-        document.getElementById("output-selection-info").innerHTML = "";
-    }
-
-
-    /**
-     * Handler for save click events.
-     * Saves the current output to a file.
-     */
-    saveClick() {
-        this.downloadFile();
-    }
-
-
-    /**
-     * Handler for copy click events.
-     * Copies the output to the clipboard.
-     */
-    async copyClick() {
-        await this.getDishStr();
-
-        // Create invisible textarea to populate with the raw dish string (not the printable version that
-        // contains dots instead of the actual bytes)
-        const textarea = document.createElement("textarea");
-        textarea.style.position = "fixed";
-        textarea.style.top = 0;
-        textarea.style.left = 0;
-        textarea.style.width = 0;
-        textarea.style.height = 0;
-        textarea.style.border = "none";
-
-        textarea.value = this.dishStr;
-        document.body.appendChild(textarea);
-
-        // Select and copy the contents of this textarea
-        let success = false;
-        try {
-            textarea.select();
-            success = this.dishStr && document.execCommand("copy");
-        } catch (err) {
-            success = false;
-        }
-
-        if (success) {
-            this.app.alert("Copied raw output successfully.", 2000);
-        } else {
-            this.app.alert("Sorry, the output could not be copied.", 3000);
-        }
-
-        // Clean up
-        document.body.removeChild(textarea);
-    }
-
-
-    /**
-     * Handler for switch click events.
-     * Moves the current output into the input textarea.
-     */
-    async switchClick() {
-        this.switchOrigData = this.manager.input.get();
-        document.getElementById("undo-switch").disabled = false;
-        if (this.dishBuffer) {
-            this.manager.input.setFile(new File([this.dishBuffer], "output.dat"));
-            this.manager.input.handleLoaderMessage({
-                data: {
-                    progress: 100,
-                    fileBuffer: this.dishBuffer
-                }
-            });
-        } else {
-            await this.getDishStr();
-            this.app.setInput(this.dishStr);
-        }
-    }
-
-
-    /**
-     * Handler for undo switch click events.
-     * Removes the output from the input and replaces the input that was removed.
-     */
-    undoSwitchClick() {
-        this.app.setInput(this.switchOrigData);
-        const undoSwitch = document.getElementById("undo-switch");
-        undoSwitch.disabled = true;
-        $(undoSwitch).tooltip("hide");
-    }
-
-
-    /**
-     * Handler for maximise output click events.
-     * Resizes the output frame to be as large as possible, or restores it to its original size.
-     */
-    maximiseOutputClick(e) {
-        const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
-
-        if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
-            this.app.initialiseSplitter(true);
-            this.app.columnSplitter.collapse(0);
-            this.app.columnSplitter.collapse(1);
-            this.app.ioSplitter.collapse(0);
-
-            $(el).attr("data-original-title", "Restore output pane");
-            el.querySelector("i").innerHTML = "fullscreen_exit";
-        } else {
-            $(el).attr("data-original-title", "Maximise output pane");
-            el.querySelector("i").innerHTML = "fullscreen";
-            this.app.initialiseSplitter(false);
-            this.app.resetLayout();
-        }
-    }
-
 
     /**
      * Save bombe object then remove it from the DOM so that it does not cause performance issues.
@@ -369,7 +324,6 @@ class OutputWaiter {
         this.bombeEl = document.getElementById("bombe");
         this.bombeEl.parentNode.removeChild(this.bombeEl);
     }
-
 
     /**
      * Shows or hides the output loading screen.
@@ -402,7 +356,6 @@ class OutputWaiter {
                 outputElement.disabled = true;
                 outputLoader.style.visibility = "visible";
                 outputLoader.style.opacity = 1;
-                this.manager.controls.toggleBakeButtonFunction(true);
             }.bind(this), 200);
         } else {
             // Remove the Bombe from the DOM to save resources
@@ -414,218 +367,80 @@ class OutputWaiter {
             outputElement.disabled = false;
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
-            this.manager.controls.toggleBakeButtonFunction(false);
-            this.setStatusMsg("");
+            // this.setStatusMsg("");
         }
     }
 
-
     /**
-     * Sets the baking status message value.
+     * Adds a new output tab.
      *
-     * @param {string} msg
+     * @param {number} inputNum
+     * @param {boolean} [changeTab=true]
      */
-    setStatusMsg(msg) {
-        const el = document.querySelector("#output-loader .loading-msg");
+    addTab(inputNum, changeTab = true) {
+        const tabsWrapper = document.getElementById("output-tabs");
+        const numTabs = tabsWrapper.children.length;
 
-        el.textContent = msg;
-    }
+        if (numTabs < this.maxTabs) {
+            // Create a new tab element
+            const newTab = this.createTabElement(inputNum);
 
+            tabsWrapper.appendChild(newTab);
 
-    /**
-     * Returns true if the output contains carriage returns
-     *
-     * @returns {boolean}
-     */
-    async containsCR() {
-        await this.getDishStr();
-        return this.dishStr.indexOf("\r") >= 0;
-    }
+            if (numTabs > 0) {
+                tabsWrapper.parentElement.style.display = "block";
+                // output tab buttons?
 
-
-    /**
-     * Retrieves the current dish as a string, returning the cached version if possible.
-     *
-     * @returns {string}
-     */
-    async getDishStr() {
-        if (this.dishStr) return this.dishStr;
-
-        this.dishStr = await new Promise(resolve => {
-            this.manager.worker.getDishAs(this.app.dish, "string", r => {
-                resolve(r.value);
-            });
-        });
-        return this.dishStr;
-    }
-
-
-    /**
-     * Retrieves the current dish as an ArrayBuffer, returning the cached version if possible.
-     *
-     * @returns {ArrayBuffer}
-     */
-    async getDishBuffer() {
-        if (this.dishBuffer) return this.dishBuffer;
-
-        this.dishBuffer = await new Promise(resolve => {
-            this.manager.worker.getDishAs(this.app.dish, "ArrayBuffer", r => {
-                resolve(r.value);
-            });
-        });
-        return this.dishBuffer;
-    }
-
-
-    /**
-     * Triggers the BackgroundWorker to attempt Magic on the current output.
-     */
-    backgroundMagic() {
-        this.hideMagicButton();
-        if (!this.app.options.autoMagic) return;
-
-        const sample = this.dishStr ? this.dishStr.slice(0, 1000) :
-            this.dishBuffer ? this.dishBuffer.slice(0, 1000) : "";
-
-        if (sample.length) {
-            this.manager.background.magic(sample);
-        }
-    }
-
-
-    /**
-     * Handles the results of a background Magic call.
-     *
-     * @param {Object[]} options
-     */
-    backgroundMagicResult(options) {
-        if (!options.length ||
-            !options[0].recipe.length)
-            return;
-
-        const currentRecipeConfig = this.app.getRecipeConfig();
-        const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
-        const opSequence = options[0].recipe.map(o => o.op).join(", ");
-
-        this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
-    }
-
-
-    /**
-     * Handler for Magic click events.
-     *
-     * Loads the Magic recipe.
-     *
-     * @fires Manager#statechange
-     */
-    magicClick() {
-        const magicButton = document.getElementById("magic");
-        this.app.setRecipeConfig(JSON.parse(magicButton.getAttribute("data-recipe")));
-        window.dispatchEvent(this.manager.statechange);
-        this.hideMagicButton();
-    }
-
-
-    /**
-     * Displays the Magic button with a title and adds a link to a complete recipe.
-     *
-     * @param {string} opSequence
-     * @param {string} result
-     * @param {Object[]} recipeConfig
-     */
-    showMagicButton(opSequence, result, recipeConfig) {
-        const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
-        magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
-        magicButton.classList.remove("hidden");
-    }
-
-
-    /**
-     * Hides the Magic button and resets its values.
-     */
-    hideMagicButton() {
-        const magicButton = document.getElementById("magic");
-        magicButton.classList.add("hidden");
-        magicButton.setAttribute("data-recipe", "");
-        magicButton.setAttribute("data-original-title", "Magic!");
-    }
-
-
-    /**
-     * Handler for extract file events.
-     *
-     * @param {Event} e
-     */
-    async extractFileClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const el = e.target.nodeName === "I" ? e.target.parentNode : e.target;
-        const blobURL = el.getAttribute("blob-url");
-        const fileName = el.getAttribute("file-name");
-
-        const blob = await fetch(blobURL).then(r => r.blob());
-        this.manager.input.loadFile(new File([blob], fileName, {type: blob.type}));
-    }
-
-    /**
-     * Function to create a new tab
-     *
-     * @param inputNum
-     */
-    addTab(inputNum) {
-        const tabWrapper = document.getElementById("output-tabs");
-        const tabsList = tabWrapper.firstElementChild;
-
-        if (tabsList.children.length > 0) {
-            tabWrapper.style.display = "block";
-        }
-
-        document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-
-        const newTab = document.createElement("li");
-        newTab.id = `output-tab-${inputNum}`;
-        if (inputNum === this.manager.input.getActiveTab()) {
-            newTab.classList.add("active-output-tab");
-        }
-
-        const newTabContent = document.createElement("div");
-        newTabContent.classList.add("output-tab-content");
-        newTabContent.innerText = `Tab ${inputNum}`;
-
-        newTab.appendChild(newTabContent);
-        tabsList.appendChild(newTab);
-    }
-
-    /**
-     * Function to change tabs
-     *
-     * @param {Element} tabElement
-     */
-    changeTab(tabElement, changeInput=false) {
-        const liItem = tabElement.parentElement;
-        const newTabNum = liItem.id.replace("output-tab-", "");
-        const currentTabNum = this.manager.input.getActiveTab();
-
-        const activeTabs = document.getElementsByClassName("active-output-tab");
-        for (let i = 0; i < activeTabs.length; i++) {
-            activeTabs.item(i).classList.remove("active-output-tab");
-        }
-
-        document.getElementById(`output-tab-${currentTabNum}`).classList.remove("active-output-tab");
-        liItem.classList.add("active-output-tab");
-
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum === newTabNum) {
-                this.set(this.outputs[i].data.result, this.outputs[i].data.type, this.outputs[0].data.duration);
+                document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             }
         }
-        if (changeInput) {
-            this.manager.input.changeTab(document.getElementById(`input-tab-${newTabNum}`).firstElementChild, false);
+
+        if (changeTab) {
+            this.changeTab(inputNum);
         }
+    }
+
+    /**
+     * Changes the active tab
+     *
+     * @param {number} inputNum
+     */
+    changeTab(inputNum) {
+        const currentNum = this.getActiveTab();
+        if (this.getOutputIndex(inputNum) === -1) return;
+
+        const tabsWrapper = document.getElementById("output-tabs");
+        const tabs = tabsWrapper.children;
+
+        let found = false;
+        for (let i = 0; i < tabs.length; i++) {
+            if (tabs.item(i).getAttribute("inputNum") === inputNum.toString()) {
+                tabs.item(i).classList.add("active-output-tab");
+                found = true;
+            } else {
+                tabs.item(i).classList.remove("active-output-tab");
+            }
+        }
+        if (!found) {
+            let direction = "right";
+            if (currentNum > inputNum) {
+                direction = "left";
+            }
+
+            const newOutputs = this.getNearbyNums(inputNum, direction);
+            for (let i = 0; i < newOutputs.length; i++) {
+                tabs.item(i).setAttribute("inputNum", newOutputs[i].toString());
+                this.displayTabInfo(newOutputs[i]);
+                if (newOutputs[i] === inputNum) {
+                    tabs.item(i).classList.add("active-input-tab");
+                }
+            }
+        }
+
+        this.set(inputNum);
     }
 
     /**
@@ -634,42 +449,205 @@ class OutputWaiter {
      * @param {event} mouseEvent
      */
     changeTabClick(mouseEvent) {
-        if (!mouseEvent.srcElement) {
-            return;
+        if (!mouseEvent.srcElement) return;
+        const tabNum = mouseEvent.srcElement.parentElement.getAttribute("inputNum");
+        if (tabNum) {
+            this.changeTab(parseInt(tabNum, 10));
         }
-        this.changeTab(mouseEvent.srcElement, true);
     }
 
     /**
-     * Removes a tab from the output window, along with the value for it in outputs
+     * Generates a list of the nearby inputNums
      *
-     * @param {string} inputNum
-     * @param {string} newActiveNum
+     * @param {number} inputNum
+     * @param {string} direction
      */
-    removeTab(inputNum, newActiveNum) {
-        const tabLiItem = document.getElementById(`output-tab-${inputNum}`);
-
-        if (tabLiItem.parentElement.children.length === 2) {
-            document.getElementById("output-tabs").style.display = "none";
-
-            document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
-
-        }
-
-        tabLiItem.parentElement.removeChild(tabLiItem);
-
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum === inputNum) {
-                this.outputs.splice(i, 1);
-                break;
+    getNearbyNums(inputNum, direction) {
+        const nums = [];
+        if (direction === "left") {
+            let reachedEnd = false;
+            for (let i = 0; i < this.maxTabs; i++) {
+                let newNum;
+                if (i === 0) {
+                    newNum = inputNum;
+                } else {
+                    newNum = this.getNextInputNum(nums[i-1]);
+                }
+                if (newNum === nums[i-1]) {
+                    reachedEnd = true;
+                    nums.sort(function(a, b) {
+                        return b - a;
+                    });
+                }
+                if (reachedEnd) {
+                    newNum = this.getPreviousInputNum(nums[i-1]);
+                }
+                if (newNum >= 0) {
+                    nums.push(newNum);
+                }
+            }
+        } else {
+            let reachedEnd = false;
+            for (let i = 0; i < this.maxTabs; i++) {
+                let newNum;
+                if (i === 0) {
+                    newNum = inputNum;
+                } else {
+                    if (!reachedEnd) {
+                        newNum = this.getPreviousInputNum(nums[i-1]);
+                    }
+                    if (newNum === nums[i-1]) {
+                        reachedEnd = true;
+                        nums.sort(function(a, b) {
+                            return b - a;
+                        });
+                    }
+                    if (reachedEnd) {
+                        newNum = this.getNextInputNum(nums[i-1]);
+                    }
+                }
+                if (newNum >= 0) {
+                    nums.push(newNum);
+                }
             }
         }
-
-        this.changeTab(document.getElementById(`output-tab-${newActiveNum}`), false);
+        nums.sort(function(a, b) {
+            return a - b;
+        });
+        return nums;
     }
 
+    /**
+     * Gets the largest inputNum
+     *
+     * @returns {number}
+     */
+    getLargestInputNum() {
+        let largest = 0;
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum > largest) {
+                largest = this.outputs[i].inputNum;
+            }
+        }
+        return largest;
+    }
+
+    /**
+     * Gets the previous inputNum
+     *
+     * @param {number} inputNum - The current input number
+     * @returns {number}
+     */
+    getPreviousInputNum(inputNum) {
+        let num = -1;
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum < inputNum) {
+                if (this.outputs[i].inputNum > num) {
+                    num = this.outputs[i].inputNum;
+                }
+            }
+        }
+        return num;
+    }
+
+    /**
+     * Gets the next inputNum
+     *
+     * @param {number} inputNum - The current input number
+     * @returns {number}
+     */
+    getNextInputNum(inputNum) {
+        let num = this.getLargestInputNum();
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum > inputNum) {
+                if (this.outputs[i].inputNum < num) {
+                    num = this.outputs[i].inputNum;
+                }
+            }
+        }
+        return num;
+    }
+
+    /**
+     * Removes a tab and it's corresponding output
+     *
+     * @param {number} inputNum
+     */
+    removeTab(inputNum) {
+        if (this.getOutputIndex(inputNum) === -1) return;
+
+        const tabElement = this.getTabItem(inputNum);
+
+        this.removeOutput(inputNum);
+
+        if (tabElement !== null) {
+            // find new tab number?
+        }
+    }
+
+    /**
+     * Creates a new tab element to be added to the tab bar
+     *
+     * @param {number} inputNum
+     */
+    createTabElement(inputNum) {
+        const newTab = document.createElement("li");
+        newTab.setAttribute("inputNum", inputNum.toString());
+
+        const newTabContent = document.createElement("div");
+        newTabContent.classList.add("output-tab-content");
+        newTabContent.innerText = `Tab ${inputNum.toString()}`;
+
+        // Do we want remove tab button on output?
+        newTab.appendChild(newTabContent);
+
+        return newTab;
+    }
+
+    /**
+     * Gets the number of the current active tab
+     *
+     * @returns {number}
+     */
+    getActiveTab() {
+        const activeTabs = document.getElementsByClassName("active-output-tab");
+        if (activeTabs.length > 0) {
+            const activeTab = activeTabs.item(0);
+            const tabNum = activeTab.getAttribute("inputNum");
+            return parseInt(tabNum, 10);
+        }
+        return -1;
+    }
+
+    /**
+     * Gets the li element for a tab
+     *
+     * @param {number} inputNum
+     */
+    getTabItem(inputNum) {
+        const tabs = document.getElementById("output-tabs").children;
+        for (let i = 0; i < tabs.length; i++) {
+            if (parseInt(tabs.item(i).getAttribute("inputNum"), 10) === inputNum) {
+                return tabs.item(i);
+            }
+        }
+    }
+
+    /**
+     * Display output information in the tab header
+     *
+     * @param {number} inputNum
+     */
+    displayTabInfo(inputNum) {
+        const tabItem = this.getTabItem(inputNum);
+
+        if (!tabItem) return;
+
+        const tabContent = tabItem.firstElementChild;
+
+        tabContent.innerText = `Tab ${inputNum}`;
+
+    }
 }
 
 export default OutputWaiter;

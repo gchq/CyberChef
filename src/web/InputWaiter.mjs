@@ -90,7 +90,7 @@ class InputWaiter {
     }
 
     /**
-     * Removes a loaderworker using inputNum
+     * Removes a loaderworker
      *
      * @param {Object} workerObj
      */
@@ -203,14 +203,6 @@ class InputWaiter {
                 this.inputs.splice(i, 1);
             }
         }
-        // if (this.inputs.length === 0) {
-        //     this.inputs.push({
-        //         inputNum: inputNum,
-        //         data: "",
-        //         status: "loaded",
-        //         progress: 100
-        //     });
-        // }
     }
 
     /**
@@ -327,14 +319,11 @@ class InputWaiter {
         if (index === -1) {
             return null;
         }
-        if (this.inputs[index].inputNum === inputNum) {
-            if (typeof this.inputs[index].data === "string") {
-                return this.inputs[index].data;
-            } else {
-                return this.inputs[index].data.fileBuffer;
-            }
+        if (typeof this.inputs[index].data === "string") {
+            return this.inputs[index].data;
+        } else {
+            return this.inputs[index].data.fileBuffer;
         }
-        return null;
     }
 
     /**
@@ -359,7 +348,8 @@ class InputWaiter {
         const value = (textArea.value !== undefined) ? textArea.value : "";
         const inputNum = this.getActiveTab();
 
-        if (this.getInput(inputNum) === null || typeof this.getInput(inputNum) === "string") {
+        const input = this.getInput(inputNum);
+        if (input === null || typeof input === "string") {
             this.updateInputValue(inputNum, value);
         }
 
@@ -774,6 +764,8 @@ class InputWaiter {
             progress: 100
         });
 
+        this.manager.output.addOutput(inputNum, changeTab);
+
         const tabsWrapper = document.getElementById("input-tabs");
         const numTabs = tabsWrapper.children.length;
 
@@ -831,6 +823,8 @@ class InputWaiter {
             }
             this.refreshTabs(activeTab);
         }
+
+        this.manager.output.removeTab(inputNum);
     }
 
     /**
@@ -883,6 +877,8 @@ class InputWaiter {
         }
 
         this.changeTab(activeTab);
+
+        // MAKE THE OUTPUT REFRESH TOO
     }
 
     /**
@@ -966,14 +962,8 @@ class InputWaiter {
      * @param {number} inputNum
      */
     changeTab(inputNum) {
-        const inputIdx = this.getInputIndex(inputNum);
-        let currentIdx = -1;
-        try {
-            currentIdx = this.getActiveTab();
-        } catch (err) {}
-        if (inputIdx === -1) {
-            return;
-        }
+        const currentNum = this.getActiveTab();
+        if (this.getInputIndex(inputNum) === -1) return;
 
         const tabsWrapper = document.getElementById("input-tabs");
         const tabs = tabsWrapper.children;
@@ -990,7 +980,7 @@ class InputWaiter {
         if (!found) {
             // Shift the tabs here
             let direction = "right";
-            if (currentIdx > inputIdx) {
+            if (currentNum > inputNum) {
                 direction = "left";
             }
 
@@ -1122,9 +1112,8 @@ class InputWaiter {
             const activeTab = activeTabs.item(0);
             const tabNum = activeTab.getAttribute("inputNum");
             return parseInt(tabNum, 10);
-        } else {
-            return -1;
         }
+        return -1;
     }
 
     /**
