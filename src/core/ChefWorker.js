@@ -6,7 +6,6 @@
  * @license Apache-2.0
  */
 
-import "babel-polyfill";
 import Chef from "./Chef";
 import OperationConfig from "./config/OperationConfig.json";
 import OpModules from "./config/modules/OpModules";

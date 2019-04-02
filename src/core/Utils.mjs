@@ -1027,6 +1027,7 @@ class Utils {
             "Comma":         ",",
             "Semi-colon":    ";",
             "Colon":         ":",
+            "Tab":           "\t",
             "Line feed":     "\n",
             "CRLF":          "\r\n",
             "Forward slash": "/",

@@ -284,7 +284,8 @@ module.exports = function (grunt) {
                     warningsFilter: [
                         /source-map/,
                         /dependency is an expression/,
-                        /export 'default'/
+                        /export 'default'/,
+                        /Can't resolve 'sodium'/
                     ],
                 }
             },

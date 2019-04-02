@@ -81,6 +81,10 @@ class SeasonalWaiter {
         </div>`;
         optionsBody.appendChild(optionItem);
 
+        if (!this.app.options.hasOwnProperty("clippy")) {
+            this.app.options.clippy = true;
+        }
+
         this.manager.options.load();
     }
 
@@ -95,7 +99,7 @@ class SeasonalWaiter {
         }
 
         if (!this.app.options.clippy) {
-            this.clippyTimeouts.forEach(t => clearTimeout(t));
+            if (this.clippyTimeouts) this.clippyTimeouts.forEach(t => clearTimeout(t));
             return;
         }
 
