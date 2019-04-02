@@ -1023,9 +1023,11 @@ class Utils {
     static charRep(token) {
         return {
             "Space":         " ",
+            "Percent":       "%",
             "Comma":         ",",
             "Semi-colon":    ";",
             "Colon":         ":",
+            "Tab":           "\t",
             "Line feed":     "\n",
             "CRLF":          "\r\n",
             "Forward slash": "/",
@@ -1047,6 +1049,7 @@ class Utils {
     static regexRep(token) {
         return {
             "Space":         /\s+/g,
+            "Percent":       /%/g,
             "Comma":         /,/g,
             "Semi-colon":    /;/g,
             "Colon":         /:/g,
