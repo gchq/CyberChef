@@ -1,7 +1,9 @@
 /**
- * @file Implementation Web Crypto interfaces for GOST algorithms
- * @version 1.76
- * @copyright 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * Implementation Web Crypto interfaces for GOST algorithms
+ * 1.76
+ * 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * 
+ * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
 /* 
@@ -37,7 +39,6 @@
      * 
      */ // <editor-fold defaultstate="collapsed">
     module.exports = factory(require('./gostRandom'));
-    
     // </editor-fold>
 
 }(this, function (GostRandom) {

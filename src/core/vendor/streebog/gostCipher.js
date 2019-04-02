@@ -1,7 +1,9 @@
 /**
- * @file GOST 28147-89/GOST R 34.12-2015/GOST R 32.13-2015 Encryption Algorithm
- * @version 1.76
- * @copyright 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * GOST 28147-89/GOST R 34.12-2015/GOST R 32.13-2015 Encryption Algorithm
+ * 1.76
+ * 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * 
+ * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
 /*

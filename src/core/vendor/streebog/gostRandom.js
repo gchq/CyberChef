@@ -1,7 +1,9 @@
 /** 
- * @file Implementation Web Crypto random generatore for GOST algorithms
- * @version 1.76
- * @copyright 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * Implementation Web Crypto random generatore for GOST algorithms
+ * 1.76
+ * 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * 
+ * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
 /*
@@ -36,9 +38,7 @@
      * Module imports and exports
      * 
      */ // <editor-fold defaultstate="collapsed">
-    if (typeof exports === 'object') {
-        module.exports = factory();
-    }
+    module.exports = factory();
     // </editor-fold>
 
 }(this, function () {

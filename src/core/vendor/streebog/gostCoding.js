@@ -1,7 +1,9 @@
 /**
- * @file Coding algorithms: Base64, Hex, Int16, Chars, BER and PEM
- * @version 1.76
- * @copyright 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * Coding algorithms: Base64, Hex, Int16, Chars, BER and PEM
+ * version 1.76
+ * 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * 
+ * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
 /*
@@ -36,9 +38,7 @@
      * Module imports and exports
      * 
      */ // <editor-fold defaultstate="collapsed">
-    if (typeof exports === 'object') {
-        module.exports = factory(require('./gostCrypto'));
-    }
+    module.exports = factory(require('./gostCrypto'));
     // </editor-fold>
 
 }(this, function (gostCrypto) {

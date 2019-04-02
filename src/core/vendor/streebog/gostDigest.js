@@ -1,7 +1,9 @@
 /**
- * @file GOST R 34.11-94 / GOST R 34.11-12 implementation
- * @version 1.76
- * @copyright 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * GOST R 34.11-94 / GOST R 34.11-12 implementation
+ * 1.76
+ * 2014-2016, Rudolf Nickolaev. All rights reserved.
+ * 
+ * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
 /*
@@ -40,9 +42,7 @@
      * Module imports and exports
      * 
      */ // <editor-fold defaultstate="collapsed">
-    if (typeof exports === 'object') {
-        module.exports = factory(require('./gostRandom'), require('./gostCipher'));
-    }
+    module.exports = factory(require('./gostRandom'), require('./gostCipher'));
     // </editor-fold>
 
 }(this, function (GostRandom, GostCipher) {

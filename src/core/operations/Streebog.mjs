@@ -26,7 +26,36 @@ class Streebog extends Operation {
         this.infoURL = "https://en.wikipedia.org/wiki/Streebog";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                "name": "Version",
+                "type": "option",
+                "value": ["2012", "1994"]
+            },
+            // Paramset sBox for GOST 28147-89. Used only if version = 1994
+            {
+                "name": "S-Box",
+                "type": "option",
+                "value": [
+                    "D-A",
+                    "D-SC",
+                    "E-TEST",
+                    "E-A",
+                    "E-B",
+                    "E-C",
+                    "E-D",
+                    "E-SC",
+                    "E-Z",
+                    "D-TEST"
+                ]
+            },
+            // 512 bits digest, valid only for algorithm "Streebog"
+            {
+                "name": "Length",
+                "type": "option",
+                "value": ["256", "512"]
+            }
+        ];
     }
 
     /**
@@ -36,16 +65,29 @@ class Streebog extends Operation {
      */
     run(input, args) {
         try {
-            const gostDigest = new GostDigest({name: 'GOST R 34.11', version: 1994});
+            const version = parseInt(args[0], 10);
+            let sBox = args[1];
+            let length = parseInt(args[2], 10);
+
+            // 1994 old-style 256 bits digest based on GOST 28147-89
+            if (version === 1994) {
+                length = 256;
+            }
+
+            if (version === 2012) {
+                sBox = "";
+            }
+
+            const gostDigest = new GostDigest({name: "GOST R 34.11", version, sBox, length });
             const gostCoding = new GostCoding();
 
-            const decode = gostCoding.Chars.decode(input, 'utf8');
-            let hexEncode = gostCoding.Hex.encode(gostDigest.digest(decode))
-            
-            return hexEncode.replace(/[^\-A-Fa-f0-9]/g, '').toLowerCase();; 
+
+            const decode = gostCoding.Chars.decode(input);
+            const hexEncode = gostCoding.Hex.encode(gostDigest.digest(decode));
+
+            return hexEncode.replace(/[^\-A-Fa-f0-9]/g, "").toLowerCase();
         } catch (err) {
-            console.log(err)
-            throw new OperationError("Test");
+            throw new OperationError(`Invalid Input, Details ${err.message}`);
         }
     }
 
