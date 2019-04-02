@@ -368,6 +368,61 @@ class Utils {
 
 
     /**
+     * Converts a string to an ArrayBuffer.
+     * Treats the string as UTF-8 if any values are over 255.
+     *
+     * @param {string} str
+     * @returns {ArrayBuffer}
+     *
+     * @example
+     * // returns [72,101,108,108,111]
+     * Utils.strToArrayBuffer("Hello");
+     *
+     * // returns [228,189,160,229,165,189]
+     * Utils.strToArrayBuffer("你好");
+     */
+    static strToArrayBuffer(str) {
+        const arr = new Uint8Array(str.length);
+        let i = str.length, b;
+        while (i--) {
+            b = str.charCodeAt(i);
+            arr[i] = b;
+            // If any of the bytes are over 255, read as UTF-8
+            if (b > 255) return Utils.strToUtf8ArrayBuffer(str);
+        }
+        return arr.buffer;
+    }
+
+
+    /**
+     * Converts a string to a UTF-8 ArrayBuffer.
+     *
+     * @param {string} str
+     * @returns {ArrayBuffer}
+     *
+     * @example
+     * // returns [72,101,108,108,111]
+     * Utils.strToUtf8ArrayBuffer("Hello");
+     *
+     * // returns [228,189,160,229,165,189]
+     * Utils.strToUtf8ArrayBuffer("你好");
+     */
+    static strToUtf8ArrayBuffer(str) {
+        const utf8Str = utf8.encode(str);
+
+        if (str.length !== utf8Str.length) {
+            if (ENVIRONMENT_IS_WORKER()) {
+                self.setOption("attemptHighlight", false);
+            } else if (ENVIRONMENT_IS_WEB()) {
+                window.app.options.attemptHighlight = false;
+            }
+        }
+
+        return Utils.strToArrayBuffer(utf8Str);
+    }
+
+
+    /**
      * Converts a string to a byte array.
      * Treats the string as UTF-8 if any values are over 255.
      *
@@ -459,7 +514,7 @@ class Utils {
     /**
      * Attempts to convert a byte array to a UTF-8 string.
      *
-     * @param {byteArray} byteArray
+     * @param {byteArray|Uint8Array} byteArray
      * @returns {string}
      *
      * @example
@@ -505,6 +560,7 @@ class Utils {
     static byteArrayToChars(byteArray) {
         if (!byteArray) return "";
         let str = "";
+        // String concatenation appears to be faster than an array join
         for (let i = 0; i < byteArray.length;) {
             str += String.fromCharCode(byteArray[i++]);
         }
@@ -524,8 +580,8 @@ class Utils {
      * Utils.arrayBufferToStr(Uint8Array.from([104,101,108,108,111]).buffer);
      */
     static arrayBufferToStr(arrayBuffer, utf8=true) {
-        const byteArray = Array.prototype.slice.call(new Uint8Array(arrayBuffer));
-        return utf8 ? Utils.byteArrayToUtf8(byteArray) : Utils.byteArrayToChars(byteArray);
+        const arr = new Uint8Array(arrayBuffer);
+        return utf8 ? Utils.byteArrayToUtf8(arr) : Utils.byteArrayToChars(arr);
     }
 
 
