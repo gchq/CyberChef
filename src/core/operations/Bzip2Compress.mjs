@@ -24,7 +24,7 @@ class Bzip2Compress extends Operation {
         this.description = "Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).";
         this.infoURL = "https://wikipedia.org/wiki/Bzip2";
         this.inputType = "ArrayBuffer";
-        this.outputType = "File";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 name: "Block size (100s of kb)",
@@ -35,11 +35,6 @@ class Bzip2Compress extends Operation {
                 name: "Work factor",
                 type: "number",
                 value: 30
-            },
-            {
-                name: "Compressed filename",
-                type: "string",
-                value: "compressed.bz2"
             }
         ];
     }
@@ -63,7 +58,8 @@ class Bzip2Compress extends Operation {
                 if (bzip2cc.error !== 0) {
                     reject(new OperationError(bzip2cc.error_msg));
                 } else {
-                    resolve(new File([bzip2cc.output], filename));
+                    const output = bzip2cc.output;
+                    resolve(output.buffer.slice(output.byteOffset, output.byteLength + output.byteOffset));
                 }
             });
         });
