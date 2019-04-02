@@ -6,8 +6,8 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import * as GostDigest from "../vendor/streebog/gostDigest";
-import * as GostCoding from "../vendor/streebog/gostCoding";
+import GostCoding from "../vendor/streebog/gostCoding";
+import GostDigest from "../vendor/streebog/gostDigest";
 
 /**
  * Streebog operation
@@ -80,7 +80,6 @@ class Streebog extends Operation {
 
             const gostDigest = new GostDigest({name: "GOST R 34.11", version, sBox, length });
             const gostCoding = new GostCoding();
-
 
             const decode = gostCoding.Chars.decode(input);
             const hexEncode = gostCoding.Hex.encode(gostDigest.digest(decode));
