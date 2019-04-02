@@ -149,78 +149,75 @@ class Dish {
      */
     async _translate(toType, notUTF8=false) {
         log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
-        const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
 
-        // Convert data to intermediate byteArray type
+        // Convert data to intermediate ArrayBuffer type
         try {
             switch (this.type) {
                 case Dish.STRING:
-                    this.value = this.value ? Utils.strToByteArray(this.value) : [];
+                    this.value = this.value ? Utils.strToArrayBuffer(this.value) : new ArrayBuffer;
                     break;
                 case Dish.NUMBER:
-                    this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
+                    this.value = typeof this.value === "number" ? Utils.strToArrayBuffer(this.value.toString()) : new ArrayBuffer;
                     break;
                 case Dish.HTML:
-                    this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
+                    this.value = this.value ? Utils.strToArrayBuffer(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : new ArrayBuffer;
                     break;
-                case Dish.ARRAY_BUFFER:
-                    // Array.from() would be nicer here, but it's slightly slower
-                    this.value = Array.prototype.slice.call(new Uint8Array(this.value));
+                case Dish.BYTE_ARRAY:
+                    this.value = new Uint8Array(this.value).buffer;
                     break;
                 case Dish.BIG_NUMBER:
-                    this.value = BigNumber.isBigNumber(this.value) ? Utils.strToByteArray(this.value.toFixed()) : [];
+                    this.value = BigNumber.isBigNumber(this.value) ? Utils.strToArrayBuffer(this.value.toFixed()) : new ArrayBuffer;
                     break;
                 case Dish.JSON:
-                    this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
+                    this.value = this.value ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
                     break;
                 case Dish.FILE:
-                    this.value = await Utils.readFile(this.value);
-                    this.value = Array.prototype.slice.call(this.value);
+                    this.value = (await Utils.readFile(this.value)).buffer;
                     break;
                 case Dish.LIST_FILE:
                     this.value = await Promise.all(this.value.map(async f => Utils.readFile(f)));
-                    this.value = this.value.map(b => Array.prototype.slice.call(b));
-                    this.value = [].concat.apply([], this.value);
+                    this.value = concatenateTypedArrays(...this.value).buffer;
                     break;
                 default:
                     break;
             }
         } catch (err) {
-            throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);
+            throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to ArrayBuffer: ${err}`);
         }
 
-        this.type = Dish.BYTE_ARRAY;
+        this.type = Dish.ARRAY_BUFFER;
 
-        // Convert from byteArray to toType
+        // Convert from ArrayBuffer to toType
         try {
             switch (toType) {
                 case Dish.STRING:
                 case Dish.HTML:
-                    this.value = this.value ? byteArrayToStr(this.value) : "";
+                    this.value = this.value ? Utils.arrayBufferToStr(this.value, !notUTF8) : "";
                     this.type = Dish.STRING;
                     break;
                 case Dish.NUMBER:
-                    this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
+                    this.value = this.value ? parseFloat(Utils.arrayBufferToStr(this.value, !notUTF8)) : 0;
                     this.type = Dish.NUMBER;
                     break;
-                case Dish.ARRAY_BUFFER:
-                    this.value = new Uint8Array(this.value).buffer;
+                case Dish.BYTE_ARRAY:
+                    this.value = Array.prototype.slice.call(new Uint8Array(this.value));
                     this.type = Dish.ARRAY_BUFFER;
                     break;
                 case Dish.BIG_NUMBER:
                     try {
-                        this.value = new BigNumber(byteArrayToStr(this.value));
+                        this.value = new BigNumber(Utils.arrayBufferToStr(this.value, !notUTF8));
                     } catch (err) {
                         this.value = new BigNumber(NaN);
                     }
                     this.type = Dish.BIG_NUMBER;
                     break;
                 case Dish.JSON:
-                    this.value = JSON.parse(byteArrayToStr(this.value));
+                    this.value = JSON.parse(Utils.arrayBufferToStr(this.value, !notUTF8));
                     this.type = Dish.JSON;
                     break;
                 case Dish.FILE:
                     this.value = new File(this.value, "unknown");
+                    this.type = Dish.FILE;
                     break;
                 case Dish.LIST_FILE:
                     this.value = [new File(this.value, "unknown")];
@@ -230,7 +227,7 @@ class Dish {
                     break;
             }
         } catch (err) {
-            throw new DishError(`Error translating from byteArray to ${Dish.enumLookup(toType)}: ${err}`);
+            throw new DishError(`Error translating from ArrayBuffer to ${Dish.enumLookup(toType)}: ${err}`);
         }
     }
 
@@ -372,6 +369,26 @@ class Dish {
         return newDish;
     }
 
+}
+
+/**
+ * Concatenates a list of Uint8Arrays together
+ *
+ * @param {Uint8Array[]} arrays
+ * @returns {Uint8Array}
+ */
+function concatenateTypedArrays(...arrays) {
+    let totalLength = 0;
+    for (const arr of arrays) {
+        totalLength += arr.length;
+    }
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const arr of arrays) {
+        result.set(arr, offset);
+        offset += arr.length;
+    }
+    return result;
 }
 
 

@@ -8,7 +8,6 @@
 import "./stylesheets/index.js";
 
 // Libs
-import "babel-polyfill";
 import "arrive";
 import "snackbarjs";
 import "bootstrap-material-design";

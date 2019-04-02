@@ -28,6 +28,8 @@ import Fletcher64Checksum from "./Fletcher64Checksum";
 import Adler32Checksum from "./Adler32Checksum";
 import CRC16Checksum from "./CRC16Checksum";
 import CRC32Checksum from "./CRC32Checksum";
+import BLAKE2b from "./BLAKE2b";
+import BLAKE2s from "./BLAKE2s";
 
 /**
  * Generate all hashes operation
@@ -86,6 +88,14 @@ class GenerateAllHashes extends Operation {
                 "\nWhirlpool-0: " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-0"]) +
                 "\nWhirlpool-T: " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-T"]) +
                 "\nWhirlpool:   " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool"]) +
+                "\nBLAKE2b-128: " + (new BLAKE2b).run(arrayBuffer, ["128", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-160: " + (new BLAKE2b).run(arrayBuffer, ["160", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-256: " + (new BLAKE2b).run(arrayBuffer, ["256", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-384: " + (new BLAKE2b).run(arrayBuffer, ["384", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-512: " + (new BLAKE2b).run(arrayBuffer, ["512", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-128: " + (new BLAKE2s).run(arrayBuffer, ["128", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-160: " + (new BLAKE2s).run(arrayBuffer, ["160", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-256: " + (new BLAKE2s).run(arrayBuffer, ["256", "Hex", {string: "", option: "UTF8"}]) +
                 "\nSSDEEP:      " + (new SSDEEP()).run(str) +
                 "\nCTPH:        " + (new CTPH()).run(str) +
                 "\n\nChecksums:" +
