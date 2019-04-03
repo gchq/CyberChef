@@ -170,7 +170,6 @@ class InputWaiter {
      */
     closeFile(inputNum) {
         this.removeLoaderWorker(this.getLoaderWorker(inputNum));
-        this.removeInput(inputNum);
 
         if (inputNum === this.getActiveTab()) {
             const fileOverlay = document.getElementById("input-file"),
@@ -670,7 +669,9 @@ class InputWaiter {
      */
     displayTabInfo(inputNum) {
         const tabItem = this.getTabItem(inputNum);
-        const input = this.inputs[this.getInputIndex(inputNum)];
+        const index = this.getInputIndex(inputNum);
+        if (index === -1) return;
+        const input = this.inputs[index];
         if (!tabItem) {
             return;
         }
@@ -756,13 +757,13 @@ class InputWaiter {
         } else {
             inputNum = this.getLargestInputNum() + 1;
         }
-
         this.inputs.push({
             inputNum: inputNum,
             data: "",
             status: "loaded",
             progress: 100
         });
+
 
         this.manager.output.addOutput(inputNum, changeTab);
 
@@ -917,6 +918,7 @@ class InputWaiter {
                     inputs.sort(function(a, b) {
                         return b - a;
                     });
+                    break;
                 }
                 if (reachedEnd) {
                     newNum = this.getPreviousInputNum(inputs[i-1]);
@@ -940,6 +942,7 @@ class InputWaiter {
                         inputs.sort(function(a, b) {
                             return b - a;
                         });
+                        break;
                     }
                     if (reachedEnd) {
                         newNum = this.getNextInputNum(inputs[i-1]);
@@ -998,7 +1001,7 @@ class InputWaiter {
 
         const input = this.getInput(inputNum);
         if (typeof input === "string") {
-            this.set(this.getInput(inputNum));
+            this.set(this.getInput(inputNum), true);
         } else {
             this.setFile(inputNum);
         }
@@ -1157,6 +1160,7 @@ class InputWaiter {
      * Resets the input, output and info areas
      */
     clearAllIoClick() {
+        this.manager.worker.cancelBake();
         for (let i = this.inputs.length - 1; i >= 0; i--) {
             this.removeTab(this.inputs[i].inputNum);
         }

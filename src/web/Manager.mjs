@@ -82,7 +82,7 @@ class Manager {
      * Sets up the various components and listeners.
      */
     setup() {
-        this.input.addTab();
+        this.input.addTab(true);
         this.input.setupLoaderWorker();
         this.worker.setupChefWorker();
         this.recipe.initialiseOperationDragNDrop();

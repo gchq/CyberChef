@@ -93,8 +93,10 @@ class WorkerWaiter {
             return;
         }
 
-        this.chefWorkers[index].worker.terminate();
-        this.chefWorkers.splice(index, 1);
+        if (this.chefWorkers.length > 1 || this.chefWorkers[index].active) {
+            this.chefWorkers[index].worker.terminate();
+            this.chefWorkers.splice(index, 1);
+        }
 
         // There should always be a ChefWorker loaded
         if (this.chefWorkers.length === 0) {
@@ -158,6 +160,7 @@ class WorkerWaiter {
                 } else {
                     // The ChefWorker is no longer needed
                     log.debug("No more inputs to bake. Closing ChefWorker.");
+                    currentWorker.active = false;
                     this.removeChefWorker(currentWorker);
 
                     this.displayProgress();
@@ -216,7 +219,7 @@ class WorkerWaiter {
         this.manager.output.updateOutputValue(data, inputNum);
         this.manager.output.updateOutputStatus("baked", inputNum);
 
-        this.manager.recipe.updateBreakpointIndicator(this.app.progress);
+        // this.manager.recipe.updateBreakpointIndicator(this.app.progress);
     }
 
     /**
@@ -280,11 +283,12 @@ class WorkerWaiter {
         //     }
         // }
 
-        // What are these for?
         // Should be a value for each input, not just one
+        // Get store the progress for every output
+        // When we run set(), update the breakpoint indicator then
         // this.app.progress = this.outputs[0].data.progress;
         // this.app.dish = this.outputs[0].data.dish;
-        this.manager.recipe.updateBreakpointIndicator(this.app.progress);
+        // this.manager.recipe.updateBreakpointIndicator(this.app.progress);
         // Don't need to update the output here as updateOutput() will take care of that
         document.getElementById("bake").style.background = "";
         this.totalOutputs = 0; // Reset for next time

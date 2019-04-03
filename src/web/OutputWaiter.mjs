@@ -408,13 +408,11 @@ class OutputWaiter {
         const zip = new Zlib.Zip();
         for (let i = 0; i < this.outputs.length; i++) {
             const name = Utils.strToByteArray(this.outputs[i].inputNum + fileExt);
-            log.error(this.getOutput(this.outputs[i].inputNum));
             let out = this.getOutput(this.outputs[i].inputNum);
             if (typeof out === "string") {
                 out = Utils.strToUtf8ByteArray(out);
             }
             out = new Uint8Array(out);
-            log.error(out);
             // options.filename = Utils.strToByteArray(this.outputs[i].inputNum + ".dat");
             zip.addFile(out, {filename: name});
         }
@@ -569,6 +567,7 @@ class OutputWaiter {
                     nums.sort(function(a, b) {
                         return b - a;
                     });
+                    break;
                 }
                 if (reachedEnd) {
                     newNum = this.getPreviousInputNum(nums[i-1]);
@@ -592,6 +591,7 @@ class OutputWaiter {
                         nums.sort(function(a, b) {
                             return b - a;
                         });
+                        break;
                     }
                     if (reachedEnd) {
                         newNum = this.getNextInputNum(nums[i-1]);
