@@ -7,6 +7,9 @@
 
 import Utils from "../core/Utils";
 import FileSaver from "file-saver";
+import zip from "zlibjs/bin/zip.min";
+
+const Zlib = zip.Zlib;
 
 /**
   * Waiter to handle events related to the output
@@ -31,16 +34,17 @@ class OutputWaiter {
      * Gets the output for the specified input number
      *
      * @param {number} inputNum
-     * @returns {Object}
+     * @returns {string | ArrayBuffer}
      */
     getOutput(inputNum) {
         const index = this.getOutputIndex(inputNum);
         if (index === -1) return -1;
 
-        if (typeof this.outputs[index].data.result === "string") {
-            return this.outputs[index].data.result;
+        log.error(this.outputs[index]);
+        if (typeof this.outputs[index].data.dish.value === "string") {
+            return this.outputs[index].data.dish.value;
         } else {
-            return this.outputs[index].data.result || "";
+            return this.outputs[index].data.dish.value || "";
         }
     }
 
@@ -65,7 +69,7 @@ class OutputWaiter {
      * @returns {string | ArrayBuffer}
      */
     getActive() {
-        return this.getOutput(this.getActiveTab()).data;
+        return this.getOutput(this.getActiveTab());
     }
 
     /**
@@ -124,7 +128,6 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputMessage(statusMessage, inputNum) {
-        // log.error(`MSG: ${statusMessage}; inputNum: ${inputNum}`);
         const index = this.getOutputIndex(inputNum);
         if (index === -1) return;
 
@@ -372,6 +375,54 @@ class OutputWaiter {
     }
 
     /**
+     * Handler for save click events.
+     * Saves the current output to a file.
+     */
+    saveClick() {
+        this.downloadFile(this.getActiveTab());
+    }
+
+    /**
+     * Handler for file download events.
+     */
+    async downloadFile() {
+        const fileName = window.prompt("Please enter a filename: ", "download.dat");
+        const file = new File([this.getActive()], fileName);
+        FileSaver.saveAs(file, fileName, false);
+    }
+
+    /**
+     * Handler for save all click event
+     * Saves all outputs to a single archvie file
+     */
+    saveAllClick() {
+        this.downloadAllFiles();
+    }
+
+    /**
+     * Handler for download all files events.
+     */
+    async downloadAllFiles() {
+        const fileName = window.prompt("Please enter a filename: ", "download.zip");
+        const fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
+        const zip = new Zlib.Zip();
+        for (let i = 0; i < this.outputs.length; i++) {
+            const name = Utils.strToByteArray(this.outputs[i].inputNum + fileExt);
+            log.error(this.getOutput(this.outputs[i].inputNum));
+            let out = this.getOutput(this.outputs[i].inputNum);
+            if (typeof out === "string") {
+                out = Utils.strToUtf8ByteArray(out);
+            }
+            out = new Uint8Array(out);
+            log.error(out);
+            // options.filename = Utils.strToByteArray(this.outputs[i].inputNum + ".dat");
+            zip.addFile(out, {filename: name});
+        }
+        const file = new File([zip.compress()], fileName);
+        FileSaver.saveAs(file, fileName, false);
+    }
+
+    /**
      * Adds a new output tab.
      *
      * @param {number} inputNum
@@ -389,7 +440,11 @@ class OutputWaiter {
 
             if (numTabs > 0) {
                 tabsWrapper.parentElement.style.display = "block";
-                // output tab buttons?
+
+                const tabButtons = document.getElementsByClassName("output-tab-buttons");
+                for (let i = 0; i < tabButtons.length; i++) {
+                    tabButtons.item(i).style.display = "inline-block";
+                }
 
                 document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
@@ -399,7 +454,7 @@ class OutputWaiter {
         }
 
         if (changeTab) {
-            this.changeTab(inputNum);
+            this.changeTab(inputNum, false);
         }
     }
 
@@ -407,8 +462,9 @@ class OutputWaiter {
      * Changes the active tab
      *
      * @param {number} inputNum
+     * @param {boolean} [changeInput = false]
      */
-    changeTab(inputNum) {
+    changeTab(inputNum, changeInput = false) {
         const currentNum = this.getActiveTab();
         if (this.getOutputIndex(inputNum) === -1) return;
 
@@ -435,12 +491,16 @@ class OutputWaiter {
                 tabs.item(i).setAttribute("inputNum", newOutputs[i].toString());
                 this.displayTabInfo(newOutputs[i]);
                 if (newOutputs[i] === inputNum) {
-                    tabs.item(i).classList.add("active-input-tab");
+                    tabs.item(i).classList.add("active-output-tab");
                 }
             }
         }
 
         this.set(inputNum);
+
+        if (changeInput) {
+            this.manager.input.changeTab(inputNum, false);
+        }
     }
 
     /**
@@ -452,7 +512,38 @@ class OutputWaiter {
         if (!mouseEvent.srcElement) return;
         const tabNum = mouseEvent.srcElement.parentElement.getAttribute("inputNum");
         if (tabNum) {
-            this.changeTab(parseInt(tabNum, 10));
+            this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
+        }
+    }
+
+    /**
+     * Handler for changing to the left tab
+     */
+    changeTabLeft() {
+        const currentTab = this.getActiveTab();
+        const currentOutput = this.getOutputIndex(currentTab);
+        if (currentOutput > 0) {
+            this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
+        } else {
+            this.changeTab(this.getSmallestInputNum(), this.app.options.syncTabs);
+        }
+    }
+
+    /**
+     * Handler for changing to the right tab
+     */
+    changeTabRight() {
+        const currentTab = this.getActiveTab();
+        this.changeTab(this.getNextInputNum(currentTab), this.app.options.syncTabs);
+    }
+
+    /**
+     * Handler for go to tab button clicked
+     */
+    goToTab() {
+        const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
+        if (this.getOutputIndex(tabNum)) {
+            this.changeTab(tabNum, this.app.options.syncTabs);
         }
     }
 
@@ -533,13 +624,28 @@ class OutputWaiter {
     }
 
     /**
+     * Gets the smallest inputNum
+     *
+     * @returns {number}
+     */
+    getSmallestInputNum() {
+        let smallest = this.getLargestInputNum();
+        for (let i = 0; i < this.outputs.length; i++) {
+            if (this.outputs[i].inputNum < smallest) {
+                smallest = this.outputs[i].inputNum;
+            }
+        }
+        return smallest;
+    }
+
+    /**
      * Gets the previous inputNum
      *
      * @param {number} inputNum - The current input number
      * @returns {number}
      */
     getPreviousInputNum(inputNum) {
-        let num = -1;
+        let num = this.getSmallestInputNum();
         for (let i = 0; i < this.outputs.length; i++) {
             if (this.outputs[i].inputNum < inputNum) {
                 if (this.outputs[i].inputNum > num) {
@@ -574,6 +680,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     removeTab(inputNum) {
+        let activeTab = this.getActiveTab();
         if (this.getOutputIndex(inputNum) === -1) return;
 
         const tabElement = this.getTabItem(inputNum);
@@ -582,7 +689,65 @@ class OutputWaiter {
 
         if (tabElement !== null) {
             // find new tab number?
+            if (inputNum === activeTab) {
+                activeTab = this.getPreviousInputNum(activeTab);
+                if (activeTab === this.getActiveTab()) {
+                    activeTab = this.getNextInputNum(activeTab);
+                }
+            }
+            this.refreshTabs(activeTab);
         }
+    }
+
+    /**
+     * Redraw the entire tab bar to remove any outdated tabs
+     * @param {number} activeTab
+     */
+    refreshTabs(activeTab) {
+        const tabsList = document.getElementById("output-tabs");
+        let newInputs = this.getNearbyNums(activeTab, "right");
+        if (newInputs.length < this.maxTabs) {
+            newInputs = this.getNearbyNums(activeTab, "left");
+        }
+
+        for (let i = tabsList.children.length - 1; i >= 0; i--) {
+            tabsList.children.item(i).remove();
+        }
+
+        for (let i = 0; i < newInputs.length; i++) {
+            tabsList.appendChild(this.createTabElement(newInputs[i]));
+            this.displayTabInfo(newInputs[i]);
+        }
+
+        if (newInputs.length > 1) {
+            tabsList.parentElement.style.display = "block";
+
+            const tabButtons = document.getElementsByClassName("output-tab-buttons");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons.item(i).style.display = "inline-block";
+            }
+
+            document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+            document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+            document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+            document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+
+        } else {
+            tabsList.parentElement.style.display = "none";
+
+            const tabButtons = document.getElementsByClassName("output-tab-buttons");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons.item(i).style.display = "none";
+            }
+
+            document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
+        }
+
+        this.changeTab(activeTab);
+
     }
 
     /**

@@ -158,14 +158,15 @@ class Manager {
         // this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
         document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addTab.bind(this.input));
-        document.getElementById("btn-previous-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
-        document.getElementById("btn-next-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
-        document.getElementById("btn-go-to-tab").addEventListener("click", this.input.goToTab.bind(this.input));
+        document.getElementById("btn-previous-input-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
+        document.getElementById("btn-next-input-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
+        document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
         this.addDynamicListener("#input-tabs li .btn-close-tab i", "click", this.input.removeTabClick, this.input);
         this.addDynamicListener("#input-tabs li .input-tab-content", "click", this.input.changeTabClick, this.input);
 
         // Output
-        // document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
+        document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
+        document.getElementById("save-all-to-file").addEventListener("click", this.output.saveAllClick.bind(this.output));
         // document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         // document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
         // document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
@@ -183,6 +184,9 @@ class Manager {
         // document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
         // this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);
+        document.getElementById("btn-previous-output-tab").addEventListener("click", this.output.changeTabLeft.bind(this.output));
+        document.getElementById("btn-next-output-tab").addEventListener("click", this.output.changeTabRight.bind(this.output));
+        document.getElementById("btn-go-to-output-tab").addEventListener("click", this.output.goToTab.bind(this.output));
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));

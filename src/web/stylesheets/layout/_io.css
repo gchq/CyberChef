@@ -85,7 +85,8 @@
     background-color: var(--primary-background-colour);
 }
 
-.tab-buttons {
+.input-tab-buttons,
+.output-tab-buttons {
     transition: 1s all ease;
     display: none;
 }

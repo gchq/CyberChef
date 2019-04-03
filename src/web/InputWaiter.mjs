@@ -554,7 +554,7 @@ class InputWaiter {
                 this.setFile(inputNum);
             }
         }
-        this.changeTab(inputNum);
+        this.changeTab(inputNum, this.app.options.syncTabs);
     }
 
     /**
@@ -778,7 +778,7 @@ class InputWaiter {
             if (numTabs > 0) {
                 tabsWrapper.parentElement.style.display = "block";
 
-                const tabButtons = document.getElementsByClassName("tab-buttons");
+                const tabButtons = document.getElementsByClassName("input-tab-buttons");
                 for (let i = 0; i < tabButtons.length; i++) {
                     tabButtons.item(i).style.display = "inline-block";
                 }
@@ -850,7 +850,7 @@ class InputWaiter {
         if (newInputs.length > 1) {
             tabsList.parentElement.style.display = "block";
 
-            const tabButtons = document.getElementsByClassName("tab-buttons");
+            const tabButtons = document.getElementsByClassName("input-tab-buttons");
             for (let i = 0; i < tabButtons.length; i++) {
                 tabButtons.item(i).style.display = "inline-block";
             }
@@ -861,7 +861,7 @@ class InputWaiter {
         } else {
             tabsList.parentElement.style.display = "none";
 
-            const tabButtons = document.getElementsByClassName("tab-buttons");
+            const tabButtons = document.getElementsByClassName("input-tab-buttons");
             for (let i = 0; i < tabButtons.length; i++) {
                 tabButtons.item(i).style.display = "none";
             }
@@ -877,7 +877,7 @@ class InputWaiter {
         }
 
         this.changeTab(activeTab);
-
+        this.manager.output.refreshTabs(activeTab);
         // MAKE THE OUTPUT REFRESH TOO
     }
 
@@ -960,8 +960,9 @@ class InputWaiter {
      * Changes the active tab
      *
      * @param {number} inputNum
+     * @param {boolean} [changeOutput=false]
      */
-    changeTab(inputNum) {
+    changeTab(inputNum, changeOutput = false) {
         const currentNum = this.getActiveTab();
         if (this.getInputIndex(inputNum) === -1) return;
 
@@ -1002,6 +1003,10 @@ class InputWaiter {
             this.setFile(inputNum);
         }
 
+        if (changeOutput) {
+            this.manager.output.changeTab(inputNum, false);
+        }
+
     }
 
     /**
@@ -1015,7 +1020,7 @@ class InputWaiter {
         }
         const tabNum = mouseEvent.srcElement.parentElement.getAttribute("inputNum");
         if (tabNum) {
-            this.changeTab(parseInt(tabNum, 10));
+            this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
         }
     }
 
@@ -1026,9 +1031,9 @@ class InputWaiter {
         const currentTab = this.getActiveTab();
         const currentInput = this.getInputIndex(currentTab);
         if (currentInput > 0) {
-            this.changeTab(this.getPreviousInputNum(currentTab));
+            this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
         } else {
-            this.changeTab(this.inputs[0].inputNum);
+            this.changeTab(this.inputs[0].inputNum, this.app.options.syncTabs);
         }
     }
 
@@ -1037,7 +1042,7 @@ class InputWaiter {
      */
     changeTabRight() {
         const currentTab = this.getActiveTab();
-        this.changeTab(this.getNextInputNum(currentTab));
+        this.changeTab(this.getNextInputNum(currentTab), this.app.options.syncTabs);
     }
 
     /**
@@ -1046,7 +1051,7 @@ class InputWaiter {
     goToTab() {
         const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
         if (this.getInputIndex(tabNum)) {
-            this.changeTab(tabNum);
+            this.changeTab(tabNum, this.app.options.syncTabs);
         }
     }
 
@@ -1063,6 +1068,21 @@ class InputWaiter {
             }
         }
         return largest;
+    }
+
+    /**
+     * Gets the smallest inputNum
+     *
+     * @returns {number}
+     */
+    getSmallestInputNum() {
+        let smallest = this.getLargestInputNum();
+        for (let i = 0; i < this.inputs.length; i++) {
+            if (this.inputs[i].inputNum < smallest) {
+                smallest = this.inputs[i].inputNum;
+            }
+        }
+        return smallest;
     }
 
     /**
@@ -1138,7 +1158,7 @@ class InputWaiter {
      */
     clearAllIoClick() {
         for (let i = this.inputs.length - 1; i >= 0; i--) {
-            this.removeInput(this.inputs[i].inputNum);
+            this.removeTab(this.inputs[i].inputNum);
         }
         this.refreshTabs();
     }
