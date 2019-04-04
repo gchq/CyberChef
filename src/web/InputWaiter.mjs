@@ -296,7 +296,8 @@ class InputWaiter {
 
             if (this.pendingFiles.length > 0) {
                 log.debug("Loading file completed. Loading next file.");
-                const nextFile = this.pendingFiles.pop();
+                const nextFile = this.pendingFiles[0];
+                this.pendingFiles.splice(0, 1);
                 currentWorker.inputNum = nextFile.inputNum;
                 currentWorker.worker.postMessage({
                     file: nextFile.file,
