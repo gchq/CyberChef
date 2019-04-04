@@ -96,6 +96,9 @@ class App {
         window.removeEventListener("error", window.loadingErrorHandler);
 
         document.dispatchEvent(this.manager.apploaded);
+
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
     }
 
 

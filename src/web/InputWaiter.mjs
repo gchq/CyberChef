@@ -52,6 +52,14 @@ class InputWaiter {
     }
 
     /**
+     * Calculates the maximum number of tabs to display
+     */
+    calcMaxTabs() {
+        const numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
+        this.maxTabs = numTabs;
+    }
+
+    /**
      * Terminates any existing loader workers and sets up a new worker
      */
     setupLoaderWorker() {
@@ -779,11 +787,6 @@ class InputWaiter {
             if (numTabs > 0) {
                 tabsWrapper.parentElement.style.display = "block";
 
-                const tabButtons = document.getElementsByClassName("input-tab-buttons");
-                for (let i = 0; i < tabButtons.length; i++) {
-                    tabButtons.item(i).style.display = "inline-block";
-                }
-
                 document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
@@ -851,21 +854,11 @@ class InputWaiter {
         if (newInputs.length > 1) {
             tabsList.parentElement.style.display = "block";
 
-            const tabButtons = document.getElementsByClassName("input-tab-buttons");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons.item(i).style.display = "inline-block";
-            }
-
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
         } else {
             tabsList.parentElement.style.display = "none";
-
-            const tabButtons = document.getElementsByClassName("input-tab-buttons");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons.item(i).style.display = "none";
-            }
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
@@ -898,65 +891,40 @@ class InputWaiter {
 
     /**
      * Generates a list of the nearby inputNums
-     *
-     * @param {number} inputNum
-     * @param {string} direction
+     * @param inputNum
+     * @param direction
      */
     getNearbyNums(inputNum, direction) {
-        const inputs = [];
-        if (direction === "left") {
-            let reachedEnd = false;
-            for (let i = 0; i < this.maxTabs; i++) {
-                let newNum;
-                if (i === 0) {
-                    newNum = inputNum;
-                } else {
-                    newNum = this.getNextInputNum(inputs[i-1]);
-                }
-                if (newNum === inputs[i-1]) {
-                    reachedEnd = true;
-                    inputs.sort(function(a, b) {
-                        return b - a;
-                    });
-                    break;
-                }
-                if (reachedEnd) {
-                    newNum = this.getPreviousInputNum(inputs[i-1]);
-                }
-                if (newNum >= 0) {
-                    inputs.push(newNum);
+        const nums = [];
+        for (let i = 0; i < this.maxTabs; i++) {
+            let newNum;
+            if (i === 0) {
+                newNum = inputNum;
+            } else {
+                switch (direction) {
+                    case "left":
+                        newNum = this.getNextInputNum(nums[i - 1]);
+                        if (newNum === nums[i - 1]) {
+                            direction = "right";
+                            newNum = this.getPreviousInputNum(nums[i - 1]);
+                        }
+                        break;
+                    case "right":
+                        newNum = this.getPreviousInputNum(nums[i - 1]);
+                        if (newNum === nums[i - 1]) {
+                            direction = "left";
+                            newNum = this.getNextInputNum(nums[i - 1]);
+                        }
                 }
             }
-        } else {
-            let reachedEnd = false;
-            for (let i = 0; i < this.maxTabs; i++) {
-                let newNum;
-                if (i === 0) {
-                    newNum = inputNum;
-                } else {
-                    if (!reachedEnd) {
-                        newNum = this.getPreviousInputNum(inputs[i-1]);
-                    }
-                    if (newNum === inputs[i-1]) {
-                        reachedEnd = true;
-                        inputs.sort(function(a, b) {
-                            return b - a;
-                        });
-                        break;
-                    }
-                    if (reachedEnd) {
-                        newNum = this.getNextInputNum(inputs[i-1]);
-                    }
-                }
-                if (newNum >= 0) {
-                    inputs.push(newNum);
-                }
+            if (!nums.includes(newNum) && (newNum > 0)) {
+                nums.push(newNum);
             }
         }
-        inputs.sort(function(a, b) {
+        nums.sort(function(a, b) {
             return a - b;
         });
-        return inputs;
+        return nums;
     }
 
     /**
@@ -1162,7 +1130,8 @@ class InputWaiter {
     clearAllIoClick() {
         this.manager.worker.cancelBake();
         for (let i = this.inputs.length - 1; i >= 0; i--) {
-            this.removeTab(this.inputs[i].inputNum);
+            this.manager.output.removeOutput(this.inputs[i].inputNum);
+            this.removeInput(this.inputs[i].inputNum);
         }
         this.refreshTabs();
     }

@@ -27,7 +27,16 @@ class OutputWaiter {
         this.manager = manager;
 
         this.outputs = [];
+
         this.maxTabs = 4; // Calculate this
+    }
+
+    /**
+     * Calculates the maximum number of tabs to display
+     */
+    calcMaxTabs() {
+        const numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
+        this.maxTabs = numTabs;
     }
 
     /**
@@ -40,7 +49,6 @@ class OutputWaiter {
         const index = this.getOutputIndex(inputNum);
         if (index === -1) return -1;
 
-        log.error(this.outputs[index]);
         if (typeof this.outputs[index].data.dish.value === "string") {
             return this.outputs[index].data.dish.value;
         } else {
@@ -112,6 +120,7 @@ class OutputWaiter {
         let index = this.getOutputIndex(inputNum);
         if (index === -1) {
             index = this.addOutput(inputNum);
+            this.addTab(inputNum, true);
         }
 
         this.outputs[index].data = data;
@@ -439,11 +448,6 @@ class OutputWaiter {
             if (numTabs > 0) {
                 tabsWrapper.parentElement.style.display = "block";
 
-                const tabButtons = document.getElementsByClassName("output-tab-buttons");
-                for (let i = 0; i < tabButtons.length; i++) {
-                    tabButtons.item(i).style.display = "inline-block";
-                }
-
                 document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
@@ -547,59 +551,34 @@ class OutputWaiter {
 
     /**
      * Generates a list of the nearby inputNums
-     *
-     * @param {number} inputNum
-     * @param {string} direction
+     * @param inputNum
+     * @param direction
      */
     getNearbyNums(inputNum, direction) {
         const nums = [];
-        if (direction === "left") {
-            let reachedEnd = false;
-            for (let i = 0; i < this.maxTabs; i++) {
-                let newNum;
-                if (i === 0) {
-                    newNum = inputNum;
-                } else {
-                    newNum = this.getNextInputNum(nums[i-1]);
-                }
-                if (newNum === nums[i-1]) {
-                    reachedEnd = true;
-                    nums.sort(function(a, b) {
-                        return b - a;
-                    });
-                    break;
-                }
-                if (reachedEnd) {
-                    newNum = this.getPreviousInputNum(nums[i-1]);
-                }
-                if (newNum >= 0) {
-                    nums.push(newNum);
+        for (let i = 0; i < this.maxTabs; i++) {
+            let newNum;
+            if (i === 0) {
+                newNum = inputNum;
+            } else {
+                switch (direction) {
+                    case "left":
+                        newNum = this.getNextInputNum(nums[i - 1]);
+                        if (newNum === nums[i - 1]) {
+                            direction = "right";
+                            newNum = this.getPreviousInputNum(nums[i - 1]);
+                        }
+                        break;
+                    case "right":
+                        newNum = this.getPreviousInputNum(nums[i - 1]);
+                        if (newNum === nums[i - 1]) {
+                            direction = "left";
+                            newNum = this.getNextInputNum(nums[i - 1]);
+                        }
                 }
             }
-        } else {
-            let reachedEnd = false;
-            for (let i = 0; i < this.maxTabs; i++) {
-                let newNum;
-                if (i === 0) {
-                    newNum = inputNum;
-                } else {
-                    if (!reachedEnd) {
-                        newNum = this.getPreviousInputNum(nums[i-1]);
-                    }
-                    if (newNum === nums[i-1]) {
-                        reachedEnd = true;
-                        nums.sort(function(a, b) {
-                            return b - a;
-                        });
-                        break;
-                    }
-                    if (reachedEnd) {
-                        newNum = this.getNextInputNum(nums[i-1]);
-                    }
-                }
-                if (newNum >= 0) {
-                    nums.push(newNum);
-                }
+            if (!nums.includes(newNum) && (newNum > 0)) {
+                nums.push(newNum);
             }
         }
         nums.sort(function(a, b) {
@@ -722,11 +701,6 @@ class OutputWaiter {
         if (newInputs.length > 1) {
             tabsList.parentElement.style.display = "block";
 
-            const tabButtons = document.getElementsByClassName("output-tab-buttons");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons.item(i).style.display = "inline-block";
-            }
-
             document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
@@ -734,11 +708,6 @@ class OutputWaiter {
 
         } else {
             tabsList.parentElement.style.display = "none";
-
-            const tabButtons = document.getElementsByClassName("output-tab-buttons");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons.item(i).style.display = "none";
-            }
 
             document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
             document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";

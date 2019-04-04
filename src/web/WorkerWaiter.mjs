@@ -275,7 +275,22 @@ class WorkerWaiter {
      */
     bakingComplete() {
         this.setBakingStatus(false);
+        let duration = new Date().getTime() - this.bakeStartTime;
+        duration = duration.toString() + "ms";
+        const progress = this.getBakeProgress();
 
+        let width = progress.total.toString().length;
+        if (duration.length > width) {
+            width = duration.length;
+        }
+        width = width < 2 ? 2 : width;
+
+        const totalStr = progress.total.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const durationStr = duration.padStart(width, " ").replace(/ /g, "&nbsp;");
+
+        const msg = `Total: ${totalStr}<br>Time: ${durationStr}`;
+
+        document.getElementById("bake-info").innerHTML = msg;
         // look into changing this to something better
         // for (let i = 0; i < this.outputs.length; i++) {
         //     if (this.outputs[i].data.error) {
@@ -308,6 +323,7 @@ class WorkerWaiter {
      */
     bake(input, recipeConfig, options, progress, step) {
         this.setBakingStatus(true);
+        this.bakeStartTime = new Date().getTime();
 
         if (typeof input === "string") {
             input = [{
