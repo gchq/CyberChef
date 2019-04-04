@@ -139,7 +139,8 @@ class WorkerWaiter {
                 this.updateOutput(r.data, r.data.inputNum);
 
                 if (this.inputs.length > 0) {
-                    const nextInput = this.inputs.pop();
+                    const nextInput = this.inputs[0];
+                    this.inputs.splice(0, 1);
                     log.debug(`Baking input ${nextInput.inputNum}.`);
                     this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
                     this.manager.output.updateOutputMessage("Baking...", nextInput.inputNum);
