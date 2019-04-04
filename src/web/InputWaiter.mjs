@@ -533,9 +533,9 @@ class InputWaiter {
     inputOpen(e) {
         e.preventDefault();
 
-        if (e.srcElement.files.length > 0) {
-            this.loadUIFiles(e.srcElement.files);
-            e.srcElement.value = "";
+        if (e.target.files.length > 0) {
+            this.loadUIFiles(e.target.files);
+            e.target.value = "";
         }
     }
 
@@ -880,10 +880,10 @@ class InputWaiter {
      * @param {event} mouseEvent
      */
     removeTabClick(mouseEvent) {
-        if (!mouseEvent.srcElement) {
+        if (!mouseEvent.target) {
             return;
         }
-        const tabNum = mouseEvent.srcElement.parentElement.parentElement.getAttribute("inputNum");
+        const tabNum = mouseEvent.target.parentElement.parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.removeTab(parseInt(tabNum, 10));
         }
@@ -986,10 +986,10 @@ class InputWaiter {
      * @param {event} mouseEvent
      */
     changeTabClick(mouseEvent) {
-        if (!mouseEvent.srcElement) {
+        if (!mouseEvent.target) {
             return;
         }
-        const tabNum = mouseEvent.srcElement.parentElement.getAttribute("inputNum");
+        const tabNum = mouseEvent.target.parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
         }
