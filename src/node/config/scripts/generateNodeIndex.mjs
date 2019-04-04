@@ -40,7 +40,7 @@ let code = `/**
 
 import "babel-polyfill";
 import NodeDish from "./NodeDish";
-import { wrap, help, bake, explainExludedFunction } from "./api";
+import { _wrap, help, bake, _explainExludedFunction } from "./api";
 import {
     // import as core_ to avoid name clashes after wrap.
 `;
@@ -74,11 +74,11 @@ function generateChef() {
 `;
 
 includedOperations.forEach((op) => {
-    code += `        "${decapitalise(op)}": wrap(core_${op}),\n`;
+    code += `        "${decapitalise(op)}": _wrap(core_${op}),\n`;
 });
 
 excludedOperations.forEach((op) => {
-    code += `        "${decapitalise(op)}": explainExludedFunction("${op}"),\n`;
+    code += `        "${decapitalise(op)}": _explainExludedFunction("${op}"),\n`;
 });
 
 code += `    };

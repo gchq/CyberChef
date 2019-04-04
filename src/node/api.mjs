@@ -127,17 +127,16 @@ function prepareOp(opInstance, input, args) {
 
 
 /**
- * createArgOptions
+ * createArgInfo
  *
- * Create an object of options for each option or togglestring argument
- * in the given operation.
+ * Create an object of options for each argument in the given operation
  *
  * Argument names are converted to camel case for consistency.
  *
  * @param {Operation} op - the operation to extract args from
- * @returns {{}} - arrays of options for option and toggleString args.
+ * @returns {{}} - arrays of options for args.
 */
-function createArgOptions(op) {
+function createArgInfo(op) {
     const result = {};
     op.args.forEach((a) => {
         if (a.type === "option" || a.type === "editableOption") {
@@ -173,7 +172,7 @@ function createArgOptions(op) {
  * @returns {Function} The operation's run function, wrapped in
  * some type conversion logic
  */
-export function wrap(OpClass) {
+export function _wrap(OpClass) {
 
     // Check to see if class's run function is async.
     const opInstance = new OpClass();
@@ -218,7 +217,7 @@ export function wrap(OpClass) {
 
     // used in chef.help
     wrapped.opName = OpClass.name;
-    wrapped.argOptions = createArgOptions(opInstance);
+    wrapped.args = createArgInfo(opInstance);
 
     return wrapped;
 }
@@ -321,7 +320,7 @@ export function bake(){
  * Explain that the given operation is not included in the Node.js version.
  * @param {String} name - name of operation
  */
-export function explainExludedFunction(name) {
+export function _explainExludedFunction(name) {
     /**
      * Throw new error type with useful message.
     */
