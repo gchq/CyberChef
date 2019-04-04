@@ -544,7 +544,7 @@ class OutputWaiter {
      */
     goToTab() {
         const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
-        if (this.getOutputIndex(tabNum)) {
+        if (this.getOutputIndex(tabNum) >= 0) {
             this.changeTab(tabNum, this.app.options.syncTabs);
         }
     }

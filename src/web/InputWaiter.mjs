@@ -266,7 +266,7 @@ class InputWaiter {
     /**
      * Handler for messages sent back by LoaderWorkers
      *
-     * @param {MessageEvent} else
+     * @param {MessageEvent} e
      */
     handleLoaderMessage(e) {
         const r = e.data;
@@ -1022,7 +1022,7 @@ class InputWaiter {
      */
     goToTab() {
         const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
-        if (this.getInputIndex(tabNum)) {
+        if (this.getInputIndex(tabNum) >= 0) {
             this.changeTab(tabNum, this.app.options.syncTabs);
         }
     }
