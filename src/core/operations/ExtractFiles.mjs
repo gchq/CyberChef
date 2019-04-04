@@ -23,7 +23,7 @@ class ExtractFiles extends Operation {
 
         this.name = "Extract Files";
         this.module = "Default";
-        this.description = "TODO";
+        this.description = "Performs file carving to attempt to extract files from the input.<br><br>This operation is currently capable of carving out the following formats:<ul><li>JPG</li><li>EXE</li><li>ZIP</li><li>PDF</li><li>PNG</li><li>BMP</li><li>FLV</li><li>RTF</li><li>DOCX, PPTX, XLSX</li><li>EPUB</li><li>GZIP</li><li>ZLIB</li><li>ELF, BIN, AXF, O, PRX, SO</li></ul>";
         this.infoURL = "https://forensicswiki.org/wiki/File_Carving";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";

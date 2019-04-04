@@ -133,11 +133,15 @@ module.exports = {
         warningsFilter: [
             /source-map/,
             /dependency is an expression/,
-            /export 'default'/
+            /export 'default'/,
+            /Can't resolve 'sodium'/
         ],
     },
     node: {
-        fs: "empty"
+        fs: "empty",
+        "child_process": "empty",
+        net: "empty",
+        tls: "empty"
     },
     performance: {
         hints: false

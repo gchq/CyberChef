@@ -14,21 +14,20 @@ import DishString from "./DishString";
 class DishHTML extends DishTranslationType {
 
     /**
-     * convert the given value to a ByteArray
+     * convert the given value to a ArrayBuffer
      * @param {String} value
      */
-    static toByteArray() {
+    static toArrayBuffer() {
         DishHTML.checkForValue(this.value);
-        this.value = this.value ? Utils.strToByteArray(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : [];
+        this.value = this.value ? Utils.strToArrayBuffer(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : new ArrayBuffer;
     }
 
     /**
-     * convert the given value from a ByteArray
-     * @param {function} byteArrayToStr
+     * convert the given value from a ArrayBuffer
+     * @param {boolean} notUTF8
      */
-    static fromByteArray(byteArrayToStr) {
-        DishHTML.checkForValue(this.value);
-        DishString.fromByteArray(this.value, byteArrayToStr);
+    static fromArrayBuffer(notUTF8) {
+        DishString.fromByteArray(this.value, notUTF8);
     }
 }
 

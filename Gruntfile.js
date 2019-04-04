@@ -158,7 +158,7 @@ module.exports = function (grunt) {
             },
             configs: ["*.{js,mjs}"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
-            web: ["src/web/**/*.{js,mjs}"],
+            web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
             node: ["src/node/**/*.{js,mjs}"],
             tests: ["tests/**/*.{js,mjs}"],
         },
@@ -351,7 +351,8 @@ module.exports = function (grunt) {
                     warningsFilter: [
                         /source-map/,
                         /dependency is an expression/,
-                        /export 'default'/
+                        /export 'default'/,
+                        /Can't resolve 'sodium'/
                     ],
                 }
             },

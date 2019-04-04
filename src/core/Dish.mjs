@@ -11,7 +11,7 @@ import BigNumber from "bignumber.js";
 import log from "loglevel";
 
 import {
-    DishArrayBuffer,
+    DishByteArray,
     DishBigNumber,
     DishFile,
     DishHTML,
@@ -199,7 +199,6 @@ class Dish {
         return clone.get(type, notUTF8);
     }
 
-
     /**
      * Validates that the value is the type that has been specified.
      * May have to disable parts of BYTE_ARRAY validation if it effects performance.
@@ -351,16 +350,17 @@ class Dish {
 
         // Node environment => translate is sync
         if (Utils.isNode()) {
-            this._toByteArray();
-            this._fromByteArray(toType, notUTF8);
+            this._toArrayBuffer();
+            this.type = Dish.ARRAY_BUFFER;
+            this._fromArrayBuffer(toType, notUTF8);
 
         // Browser environment => translate is async
         } else {
             return new Promise((resolve, reject) => {
-                this._toByteArray()
-                    .then(() => this.type = Dish.BYTE_ARRAY)
+                this._toArrayBuffer()
+                    .then(() => this.type = Dish.ARRAY_BUFFER)
                     .then(() => {
-                        this._fromByteArray(toType);
+                        this._fromArrayBuffer(toType);
                         resolve();
                     })
                     .catch(reject);
@@ -376,37 +376,37 @@ class Dish {
      *
      * @returns {Promise || undefined}
      */
-    _toByteArray() {
+    _toArrayBuffer() {
         // Using 'bind' here to allow this.value to be mutated within translation functions
         const toByteArrayFuncs = {
             browser: {
-                [Dish.STRING]:          () => Promise.resolve(DishString.toByteArray.bind(this)()),
-                [Dish.NUMBER]:          () => Promise.resolve(DishNumber.toByteArray.bind(this)()),
-                [Dish.HTML]:            () => Promise.resolve(DishHTML.toByteArray.bind(this)()),
-                [Dish.ARRAY_BUFFER]:    () => Promise.resolve(DishArrayBuffer.toByteArray.bind(this)()),
-                [Dish.BIG_NUMBER]:      () => Promise.resolve(DishBigNumber.toByteArray.bind(this)()),
-                [Dish.JSON]:            () => Promise.resolve(DishJSON.toByteArray.bind(this)()),
-                [Dish.FILE]:            () => DishFile.toByteArray.bind(this)(),
-                [Dish.LIST_FILE]:       () => DishListFile.toByteArray.bind(this)(),
-                [Dish.BYTE_ARRAY]:      () => Promise.resolve(),
+                [Dish.STRING]:          () => Promise.resolve(DishString.toArrayBuffer.bind(this)()),
+                [Dish.NUMBER]:          () => Promise.resolve(DishNumber.toArrayBuffer.bind(this)()),
+                [Dish.HTML]:            () => Promise.resolve(DishHTML.toArrayBuffer.bind(this)()),
+                [Dish.ARRAY_BUFFER]:    () => Promise.resolve(),
+                [Dish.BIG_NUMBER]:      () => Promise.resolve(DishBigNumber.toArrayBuffer.bind(this)()),
+                [Dish.JSON]:            () => Promise.resolve(DishJSON.toArrayBuffer.bind(this)()),
+                [Dish.FILE]:            () => DishFile.toArrayBuffer.bind(this)(),
+                [Dish.LIST_FILE]:       () => DishListFile.toArrayBuffer.bind(this)(),
+                [Dish.BYTE_ARRAY]:      () => Promise.resolve(DishByteArray.toArrayBuffer.bind(this)()),
             },
             node: {
-                [Dish.STRING]:          () => DishString.toByteArray.bind(this)(),
-                [Dish.NUMBER]:          () => DishNumber.toByteArray.bind(this)(),
-                [Dish.HTML]:            () => DishHTML.toByteArray.bind(this)(),
-                [Dish.ARRAY_BUFFER]:    () => DishArrayBuffer.toByteArray.bind(this)(),
-                [Dish.BIG_NUMBER]:      () => DishBigNumber.toByteArray.bind(this)(),
-                [Dish.JSON]:            () => DishJSON.toByteArray.bind(this)(),
-                [Dish.FILE]:            () => DishFile.toByteArray.bind(this)(),
-                [Dish.LIST_FILE]:       () => DishListFile.toByteArray.bind(this)(),
-                [Dish.BYTE_ARRAY]:      () => {},
+                [Dish.STRING]:          () => DishString.toArrayBuffer.bind(this)(),
+                [Dish.NUMBER]:          () => DishNumber.toArrayBuffer.bind(this)(),
+                [Dish.HTML]:            () => DishHTML.toArrayBuffer.bind(this)(),
+                [Dish.ARRAY_BUFFER]:    () => {},
+                [Dish.BIG_NUMBER]:      () => DishBigNumber.toArrayBuffer.bind(this)(),
+                [Dish.JSON]:            () => DishJSON.toArrayBuffer.bind(this)(),
+                [Dish.FILE]:            () => DishFile.toArrayBuffer.bind(this)(),
+                [Dish.LIST_FILE]:       () => DishListFile.toArrayBuffer.bind(this)(),
+                [Dish.BYTE_ARRAY]:      () => DishByteArray.toArrayBuffer.bind(this)(),
             }
         };
 
         try {
             return toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
         } catch (err) {
-            throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to byteArray: ${err}`);
+            throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to ArrayBuffer: ${err}`);
         }
     }
 
@@ -416,31 +416,32 @@ class Dish {
      * @param {number} toType - the Dish enum to convert to
      * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
     */
-    _fromByteArray(toType, notUTF8) {
-        const byteArrayToStr = notUTF8 ? Utils.byteArrayToChars : Utils.byteArrayToUtf8;
+    _fromArrayBuffer(toType, notUTF8) {
 
         // Using 'bind' here to allow this.value to be mutated within translation functions
         const toTypeFunctions = {
-            [Dish.STRING]:          () => DishString.fromByteArray.bind(this)(byteArrayToStr),
-            [Dish.NUMBER]:          () => DishNumber.fromByteArray.bind(this)(byteArrayToStr),
-            [Dish.HTML]:            () => DishHTML.fromByteArray.bind(this)(byteArrayToStr),
-            [Dish.ARRAY_BUFFER]:    () => DishArrayBuffer.fromByteArray.bind(this)(),
-            [Dish.BIG_NUMBER]:      () => DishBigNumber.fromByteArray.bind(this)(byteArrayToStr),
-            [Dish.JSON]:            () => DishJSON.fromByteArray.bind(this)(byteArrayToStr),
-            [Dish.FILE]:            () => DishFile.fromByteArray.bind(this)(),
-            [Dish.LIST_FILE]:       () => DishListFile.fromByteArray.bind(this)(),
-            [Dish.BYTE_ARRAY]:      () => {},
+            [Dish.STRING]:          () => DishString.fromArrayBuffer.bind(this)(notUTF8),
+            [Dish.NUMBER]:          () => DishNumber.fromArrayBuffer.bind(this)(notUTF8),
+            [Dish.HTML]:            () => DishHTML.fromArrayBuffer.bind(this)(notUTF8),
+            [Dish.ARRAY_BUFFER]:    () => {},
+            [Dish.BIG_NUMBER]:      () => DishBigNumber.fromArrayBuffer.bind(this)(notUTF8),
+            [Dish.JSON]:            () => DishJSON.fromArrayBuffer.bind(this)(notUTF8),
+            [Dish.FILE]:            () => DishFile.fromArrayBuffer.bind(this)(),
+            [Dish.LIST_FILE]:       () => DishListFile.fromArrayBuffer.bind(this)(),
+            [Dish.BYTE_ARRAY]:      () => DishByteArray.fromArrayBuffer.bind(this)(),
         };
 
         try {
             toTypeFunctions[toType]();
             this.type = toType;
         } catch (err) {
-            throw new DishError(`Error translating from byteArray to ${Dish.enumLookup(toType)}: ${err}`);
+            throw new DishError(`Error translating from ArrayBuffer to ${Dish.enumLookup(toType)}: ${err}`);
         }
     }
 
 }
+
+
 
 
 /**

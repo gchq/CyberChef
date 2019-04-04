@@ -27,10 +27,20 @@ class File {
      * @param {Object} stats (optional) - file stats e.g. lastModified
      */
     constructor(data, name="", stats={}) {
+
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+
         const buffers = data.map((d) => {
             if (d instanceof File) {
                 return Buffer.from(d.data);
             }
+
+            if (d instanceof ArrayBuffer) {
+                return Buffer.from(d);
+            }
+
             return Buffer.from(d);
         });
         const totalLength = buffers.reduce((p, c) => p + c.length, 0);

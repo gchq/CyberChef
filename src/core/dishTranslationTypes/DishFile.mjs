@@ -13,17 +13,18 @@ import Utils from "../Utils";
 class DishFile extends DishTranslationType {
 
     /**
-     * convert the given value to a ByteArray
+     * convert the given value to an ArrayBuffer
      * @param {File} value
      */
-    static toByteArray() {
+    static toArrayBuffer() {
         DishFile.checkForValue(this.value);
         if (Utils.isNode()) {
+            // TODO
             this.value = Utils.readFileSync(this.value);
         } else {
             return new Promise((resolve, reject) => {
                 Utils.readFile(this.value)
-                    .then(v => this.value = Array.prototype.slice.call(v))
+                    .then(v => this.value = v.buffer)
                     .then(resolve)
                     .catch(reject);
             });
@@ -31,13 +32,11 @@ class DishFile extends DishTranslationType {
     }
 
     /**
-     * convert the given value from a ByteArray
-     * @param {ByteArray} value
-     * @param {function} byteArrayToStr
+     * convert the given value from an ArrayBuffer
      */
-    static fromByteArray() {
+    static fromArrayBuffer() {
         DishFile.checkForValue(this.value);
-        this.value = new File(this.value, "file.txt");
+        this.value = new File(this.value, "unknown");
     }
 }
 

@@ -8,6 +8,7 @@
 
 /* Libraries */
 import "highlight.js/styles/vs.css";
+import "../static/clippy_assets/clippy.css";
 
 /* Frameworks */
 import "./vendors/bootstrap.scss";

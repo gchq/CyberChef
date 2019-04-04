@@ -5,7 +5,7 @@
  */
 
 
-import DishArrayBuffer from "./DishArrayBuffer";
+import DishByteArray from "./DishByteArray";
 import DishBigNumber from "./DishBigNumber";
 import DishFile from "./DishFile";
 import DishHTML from "./DishHTML";
@@ -15,7 +15,7 @@ import DishNumber from "./DishNumber";
 import DishString from "./DishString";
 
 export {
-    DishArrayBuffer,
+    DishByteArray,
     DishBigNumber,
     DishFile,
     DishHTML,

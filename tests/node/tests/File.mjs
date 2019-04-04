@@ -2,7 +2,8 @@ import assert from "assert";
 import it from "../assertionHandler";
 import TestRegister from "../../lib/TestRegister";
 import File from "../../../src/node/File";
-import {zip} from "../../../src/node/index";
+import {zip, Dish} from "../../../src/node/index";
+import { DishBigNumber } from "../../../src/core/dishTranslationTypes/index.mjs";
 
 TestRegister.addApiTests([
     it("File: should exist", () => {
@@ -31,4 +32,52 @@ TestRegister.addApiTests([
         const file =  new File([uint8Array], "sample.txt");
         assert.strictEqual(file.type, "application/unknown");
     }),
+
+    it("File: should be able to make a dish from it", () => {
+        const uint8Array = new Uint8Array(Buffer.from("hello"));
+        const file =  new File([uint8Array], "sample.txt");
+        try {
+            const dish = new Dish(file, 7);
+            assert.ok(dish.valid());
+        } catch (e) {
+            assert.fail(e.message);
+        }
+    }),
+
+    it("File: should allow dish to translate to ArrayBuffer", () => {
+        const uint8Array = new Uint8Array(Buffer.from("hello"));
+        const file =  new File([uint8Array], "sample.txt");
+        try {
+            const dish = new Dish(file, 7);
+            assert.ok(dish.value);
+
+            dish.get(4);
+            assert.strictEqual(dish.type, 4);
+            assert.ok(dish.valid());
+
+        } catch (e) {
+            assert.fail(e.message);
+        }
+    }),
+
+    it("File: should allow dish to translate from ArrayBuffer to File", () => {
+        const uint8Array = new Uint8Array(Buffer.from("hello"));
+        const file =  new File([uint8Array], "sample.txt");
+        try {
+            const dish = new Dish(file, 7);
+            assert.ok(dish.value);
+
+            // translate to ArrayBuffer
+            dish.get(4);
+            assert.ok(dish.valid());
+
+            // translate back to File
+            dish.get(7);
+            assert.ok(dish.valid());
+
+        } catch (e) {
+            assert.fail(e.message);
+        }
+    })
+
 ]);

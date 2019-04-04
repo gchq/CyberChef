@@ -48,7 +48,6 @@ class TestRegister {
      * Runs all the tests in the register.
      */
     runTests () {
-        console.log("run tests");
         return Promise.all(
             this.tests.map(function(test, i) {
                 const chef = new Chef();

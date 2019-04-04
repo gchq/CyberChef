@@ -14,20 +14,20 @@ import Utils from "../Utils";
 class DishNumber extends DishTranslationType {
 
     /**
-     * convert the given value to a ByteArray
+     * convert the given value to a ArrayBuffer
      */
-    static toByteArray() {
+    static toArrayBuffer() {
         DishNumber.checkForValue(this.value);
-        this.value = typeof this.value === "number" ? Utils.strToByteArray(this.value.toString()) : [];
+        this.value = typeof this.value === "number" ? Utils.strToArrayBuffer(this.value.toString()) : new ArrayBuffer;
     }
 
     /**
-     * convert the given value from a ByteArray
-     * @param {function} byteArrayToStr
+     * convert the given value from a ArrayBuffer
+     * @param {boolean} notUTF8
      */
-    static fromByteArray(byteArrayToStr) {
+    static fromArrayBuffer(notUTF8) {
         DishNumber.checkForValue(this.value);
-        this.value = this.value ? parseFloat(byteArrayToStr(this.value)) : 0;
+        this.value = this.value ? parseFloat(Utils.arrayBufferToStr(this.value, !notUTF8)) : 0;
     }
 }
 

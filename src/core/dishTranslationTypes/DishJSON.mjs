@@ -13,21 +13,20 @@ import Utils from "../Utils";
 class DishJSON extends DishTranslationType {
 
     /**
-     * convert the given value to a ByteArray
+     * convert the given value to a ArrayBuffer
      */
-    static toByteArray() {
+    static toArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = this.value ? Utils.strToByteArray(JSON.stringify(this.value, null, 4)) : [];
+        this.value = this.value ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
     }
 
     /**
-     * convert the given value from a ByteArray
-     * @param {ByteArray} value
-     * @param {function} byteArrayToStr
+     * convert the given value from a ArrayBuffer
+     * @param {boolean} notUTF8
      */
-    static fromByteArray(byteArrayToStr) {
+    static fromArrayBuffer(notUTF8) {
         DishJSON.checkForValue(this.value);
-        this.value = JSON.parse(byteArrayToStr(this.value));
+        this.value = JSON.parse(Utils.arrayBufferToStr(this.value, !notUTF8));
     }
 }
 

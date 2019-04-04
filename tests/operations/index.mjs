@@ -10,7 +10,6 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-import "babel-polyfill";
 
 import {
     setLongTestFailure,
@@ -38,6 +37,7 @@ import "./tests/BitwiseOp";
 import "./tests/ByteRepr";
 import "./tests/CartesianProduct";
 import "./tests/CharEnc";
+import "./tests/Charts";
 import "./tests/Checksum";
 import "./tests/Ciphers";
 import "./tests/Code";
@@ -92,6 +92,8 @@ import "./tests/Enigma";
 import "./tests/Bombe";
 import "./tests/MultipleBombe";
 import "./tests/Typex";
+import "./tests/BLAKE2b";
+import "./tests/BLAKE2s";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";

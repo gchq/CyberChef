@@ -20,18 +20,18 @@ class DishTranslationType {
     }
 
     /**
-     * convert the given value to a ByteArray
+     * convert the given value to a ArrayBuffer
      * @param {*} value
      */
-    static toByteArray() {
+    static toArrayBuffer() {
         throw new Error("toByteArray has not been implemented");
     }
 
     /**
-     * convert the given value from a ByteArray
-     * @param {function} byteArrayToStr
+     * convert the given value from a ArrayBuffer
+     * @param {boolean} notUTF8
      */
-    static fromByteArray(byteArrayToStr=undefined) {
+    static fromArrayBuffer(notUTF8=undefined) {
         throw new Error("toType has not been implemented");
     }
 }
