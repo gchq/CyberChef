@@ -387,7 +387,7 @@ class Dish {
                 [Dish.BIG_NUMBER]:      () => Promise.resolve(DishBigNumber.toArrayBuffer.bind(this)()),
                 [Dish.JSON]:            () => Promise.resolve(DishJSON.toArrayBuffer.bind(this)()),
                 [Dish.FILE]:            () => DishFile.toArrayBuffer.bind(this)(),
-                [Dish.LIST_FILE]:       () => DishListFile.toArrayBuffer.bind(this)(),
+                [Dish.LIST_FILE]:       () => Promise.resolve(DishListFile.toArrayBuffer.bind(this)()),
                 [Dish.BYTE_ARRAY]:      () => Promise.resolve(DishByteArray.toArrayBuffer.bind(this)()),
             },
             node: {

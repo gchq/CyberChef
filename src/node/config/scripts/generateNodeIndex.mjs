@@ -41,6 +41,7 @@ let code = `/**
 import "babel-polyfill";
 import NodeDish from "./NodeDish";
 import { _wrap, help, bake, _explainExludedFunction } from "./api";
+import File from "./File";
 import {
     // import as core_ to avoid name clashes after wrap.
 `;
@@ -52,6 +53,8 @@ includedOperations.forEach((op) => {
 
 code +=`
 } from "../core/operations/index";
+
+global.File = File;
 
 // Define global environment functions
 global.ENVIRONMENT_IS_WORKER = function() {

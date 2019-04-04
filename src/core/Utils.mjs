@@ -94,7 +94,7 @@ class Utils {
         const paddedBytes = new Array(numBytes);
         paddedBytes.fill(padByte);
 
-        Array.prototype.map.call(arr, function(b, i) {
+        [...arr].forEach((b, i) => {
             paddedBytes[i] = b;
         });
 
@@ -1033,8 +1033,10 @@ class Utils {
         if (!Utils.isNode()) {
             throw new TypeError("Browser environment cannot support readFileSync");
         }
-
-        return file.data.buffer;
+        // Resist using node's Buffer.buffer here - this yields a 8192 length byteArray
+        // regardless of the length of the buffer.
+        const arrayBuffer = Uint8Array.from(file.data);
+        return arrayBuffer.buffer;
     }
 
 

@@ -17,14 +17,7 @@ class DishListFile extends DishTranslationType {
      */
     static toArrayBuffer() {
         DishListFile.checkForValue(this.value);
-        if (Utils.isNode()) {
-            // TODO
-            this.value = [].concat.apply([], this.value.map(f => Utils.readFileSync(f)).map(b => Array.prototype.slice.call(b)));
-        } else {
-            return new Promise((resolve, reject) => {
-                resolve(DishListFile.concatenateTypedArrays(...this.value).buffer);
-            });
-        }
+        this.value = DishListFile.concatenateTypedArrays(...this.value).buffer;
     }
 
     /**

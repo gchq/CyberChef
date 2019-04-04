@@ -79,11 +79,6 @@ export function logTestReport(testStatus, results) {
         }
     }
 
-    if (!testStatus.allTestsPassing) {
-        console.log("\nFailing tests:\n");
-        results.filter(r => r.status !== "passing").forEach(handleTestResult);
-    }
-
     process.exit(testStatus.allTestsPassing ? 0 : 1);
 }
 

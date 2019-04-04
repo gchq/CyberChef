@@ -12,6 +12,7 @@
 import "babel-polyfill";
 import NodeDish from "./NodeDish";
 import { _wrap, help, bake, _explainExludedFunction } from "./api";
+import File from "./File";
 import {
     // import as core_ to avoid name clashes after wrap.
     A1Z26CipherDecode as core_A1Z26CipherDecode,
@@ -315,6 +316,8 @@ import {
     ZlibInflate as core_ZlibInflate,
 
 } from "../core/operations/index";
+
+global.File = File;
 
 // Define global environment functions
 global.ENVIRONMENT_IS_WORKER = function() {
