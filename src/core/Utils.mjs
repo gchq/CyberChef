@@ -1027,7 +1027,13 @@ class Utils {
     }
 
     /**
-     * 
+     * Synchronously read the raw data from a File object.
+     *
+     * Only works in the Node environment
+     *
+     * @param {File} file - a File shim object (see src/node/File.mjs)
+     * @returns {ArrayBuffer} the data from the file in an ArrayBuffer
+     * @throws {TypeError} thrown if the method is called from a browser environment
      */
     static readFileSync(file) {
         if (!Utils.isNode()) {

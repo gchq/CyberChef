@@ -5,7 +5,6 @@
  */
 
 import DishTranslationType from "./DishTranslationType";
-import Utils from "../Utils";
 
 /**
  * Translation methods for ListFile Dishes
