@@ -30,8 +30,13 @@ class AdvancedEntropy extends Operation {
         this.infoURL = "";
         this.inputType = "byteArray";
         this.outputType = "html";
-        this.presentType = "html";
-        this.args = [];
+        this.args = [
+            {
+                "name": "Visualization",
+                "type": "option",
+                "value": ["Histogram (Bar)", "Histogram (Line)"]
+            }
+        ];
     }
 
     /**
@@ -64,66 +69,15 @@ class AdvancedEntropy extends Operation {
     /**
      * Calculates the frequency of bytes in the input.
      * 
-     * @param {byteArray} inputBytes
-     * @returns {frequency}
+     * @param {object} svg
+     * @param {function} xScale
+     * @param {function} yScale
+     * @param {integer} svgHeight
+     * @param {integer} svgWidth
+     * @param {object} margins
+     * @returns {undefined}
      */
-    calculateByteFrequency(inputBytes) {
-        console.log(inputBytes);
-
-        let byteFrequency = [];
-        for (let i = 0; i < 256; i++) {
-            let count = 0;
-            for (let byte of inputBytes) {
-                if (byte === i) {
-                    count++;
-                }
-            }
-
-            byteFrequency.push(count / (inputBytes.length + 1))
-        }
-
-        return byteFrequency;
-    }
-
-    /**
-     * Creates a byte frequency histogram
-     * 
-     * @param {byteArray} entropyData
-     * @returns {HTML}
-     */
-    createByteFrequencyHistogram(entropyData) {
-        const byteFrequency = entropyData.byteFrequency;
-
-        const svgWidth = 500,
-            svgHeight = 500,
-            binWidth = 1;
-
-        const document = new nodom.Document();
-        let svg = document.createElement("svg");
-        svg = d3.select(svg)
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
-        
-        const margins = {top: 30, right: 20, bottom: 50, left: 30};
-
-        const yScale = d3.scaleLinear()
-            .domain(d3.extent(byteFrequency, d => d))
-            .range([svgHeight - margins.bottom, margins.top])
-
-        const xScale = d3.scaleLinear()
-            .domain([0, byteFrequency.length - 1])
-            .range([margins.left - binWidth, svgWidth - margins.right])
-
-        svg.selectAll("rect")
-            .data(byteFrequency)
-            .enter().append("rect")
-            .attr("x", (_, i) => xScale(i) + binWidth)
-            .attr("y", (dataPoint) => yScale(dataPoint))
-            .attr("width", binWidth)
-            .attr("height", dataPoint => yScale(0) - yScale(dataPoint))
-            .attr("fill", "blue")
-
+    createHistogramAxes(svg, xScale, yScale, svgHeight, svgWidth, margins) {
         // Axes
         const yAxis = d3.axisLeft()
             .scale(yScale);
@@ -132,7 +86,7 @@ class AdvancedEntropy extends Operation {
             .scale(xScale)
 
         svg.append("g")
-            .attr("transform", `translate(${binWidth}, ${svgHeight - margins.bottom})`)
+            .attr("transform", `translate(0, ${svgHeight - margins.bottom})`)
             .call(xAxis);
 
         svg.append("g")
@@ -158,6 +112,118 @@ class AdvancedEntropy extends Operation {
             .attr("transform", `translate(${svgWidth / 2}, ${margins.top - 10})`)
             .style("text-anchor", "middle")
             .text("Byte Frequency")
+    }
+
+    /**
+     * Calculates the frequency of bytes in the input.
+     * 
+     * @param {byteArray} inputBytes
+     * @returns {frequency}
+     */
+    calculateByteFrequency(inputBytes) {
+        console.log(inputBytes);
+
+        let byteFrequency = [];
+        for (let i = 0; i < 256; i++) {
+            let count = 0;
+            for (let byte of inputBytes) {
+                if (byte === i) {
+                    count++;
+                }
+            }
+
+            byteFrequency.push(count / (inputBytes.length + 1))
+        }
+
+        return byteFrequency;
+    }
+
+    /**
+     * Calculates the frequency of bytes in the input.
+     * 
+     * @param {byteArray} input
+     * @returns {frequency}
+     */
+    createByteFrequencyLineHistogram(entropyData) {
+        const byteFrequency = entropyData.byteFrequency;
+
+        const margins = {top: 30, right: 20, bottom: 50, left: 30};
+
+        const svgWidth = 500,
+            svgHeight = 500;
+
+        const document = new nodom.Document();
+        let svg = document.createElement("svg");
+
+        svg = d3.select(svg)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
+
+        const yScale = d3.scaleLinear()
+            .domain(d3.extent(byteFrequency, d => d))
+            .range([svgHeight - margins.bottom, margins.top]);
+
+        const xScale = d3.scaleLinear()
+            .domain([0, byteFrequency.length - 1])
+            .range([margins.left, svgWidth - margins.right]);
+
+        const line = d3.line()
+            .x((d, i) => { return xScale(i)}) 
+            .y((d) => { return yScale(d)})
+            .curve(d3.curveMonotoneX);
+
+        svg.append('path')
+            .datum(byteFrequency)
+            .attr("class", "line")
+            .attr("d", line)
+            .attr("fill", "steelblue");
+
+        this.createHistogramAxes(svg, xScale, yScale, svgHeight, svgWidth, margins);    
+
+        return svg._groups[0][0].outerHTML;
+    }
+
+    /**
+     * Creates a byte frequency histogram
+     * 
+     * @param {byteArray} entropyData
+     * @returns {HTML}
+     */
+    createByteFrequencyBarHistogram(entropyData) {
+        const byteFrequency = entropyData.byteFrequency;
+
+        const svgWidth = 500,
+            svgHeight = 500,
+            binWidth = 1;
+
+        const document = new nodom.Document();
+        let svg = document.createElement("svg");
+        svg = d3.select(svg)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
+        
+        const margins = {top: 30, right: 20, bottom: 50, left: 30};
+
+        const yScale = d3.scaleLinear()
+            .domain(d3.extent(byteFrequency, d => d))
+            .range([svgHeight - margins.bottom, margins.top]);
+
+        const xScale = d3.scaleLinear()
+            .domain([0, byteFrequency.length - 1])
+            .range([margins.left - binWidth, svgWidth - margins.right]);
+
+        svg.selectAll("rect")
+            .data(byteFrequency)
+            .enter().append("rect")
+            .attr("x", (_, i) => xScale(i) + binWidth)
+            .attr("y", (dataPoint) => yScale(dataPoint))
+            .attr("width", binWidth)
+            .attr("height", dataPoint => yScale(0) - yScale(dataPoint))
+            .attr("fill", "blue");
+
+        this.createHistogramAxes(svg, xScale, yScale, svgHeight, svgWidth, margins);
 
         return svg._groups[0][0].outerHTML;
     }
@@ -167,13 +233,19 @@ class AdvancedEntropy extends Operation {
      * @param {Object[]} args
      * @returns {html}
      */
-    run(input, args) {       
+    run(input, args) {     
+        const visualizationType = args[0];
+
         const entropyData = {
             entropy: this.calculateShannonEntropy(input),
             byteFrequency: this.calculateByteFrequency(input) 
         }; 
-        let svgData = this.createByteFrequencyHistogram(entropyData)
-       return svgData
+        
+        let svgData;
+        if (visualizationType === "Histogram (Bar)") svgData = this.createByteFrequencyBarHistogram(entropyData);
+        else if (visualizationType === "Histogram (Line)") svgData = this.createByteFrequencyLineHistogram(entropyData);
+
+        return svgData;  
     }
 }
 
