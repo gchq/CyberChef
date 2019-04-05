@@ -16,7 +16,7 @@ module.exports = function(api) {
             }]
         ],
         "plugins": [
-            "babel-plugin-syntax-dynamic-import",
+            "dynamic-import-node",
             [
                 "babel-plugin-transform-builtin-extend", {
                     "globals": ["Error"]

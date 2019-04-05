@@ -10,7 +10,6 @@
 import chef from "./index";
 import repl from "repl";
 import File from "./File";
-import "babel-polyfill";
 
 /*eslint no-console: ["off"] */
 

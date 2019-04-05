@@ -9,7 +9,6 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import "babel-polyfill";
 
 import {
     setLongTestFailure,

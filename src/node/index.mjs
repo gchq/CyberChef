@@ -9,7 +9,6 @@
 /* eslint camelcase: 0 */
 
 
-import "babel-polyfill";
 import NodeDish from "./NodeDish";
 import { _wrap, help, bake, _explainExludedFunction } from "./api";
 import File from "./File";
