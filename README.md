@@ -50,7 +50,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
  - Drag and drop
      - Operations can be dragged in and out of the recipe list, or reorganised.
-     - Files up to 500MB can be dragged over the input box to load them directly into the browser.
+     - Files up to 2GB can be dragged over the input box to load them directly into the browser.
  - Auto Bake
      - Whenever you modify the input or the recipe, CyberChef will automatically "bake" for you and produce the output immediately.
      - This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).
@@ -67,7 +67,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Highlighting
      - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][11]).
  - Save to file and load from file
-     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 500MB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
+     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
  - CyberChef is entirely client-side
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be compiled into a single HTML file. You can download this file and drop it into a virtual machine, share it with other people, or use it independently on your local machine.
