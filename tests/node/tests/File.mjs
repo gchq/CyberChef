@@ -3,7 +3,6 @@ import it from "../assertionHandler";
 import TestRegister from "../../lib/TestRegister";
 import File from "../../../src/node/File";
 import {zip, Dish} from "../../../src/node/index";
-import { DishBigNumber } from "../../../src/core/dishTranslationTypes/index.mjs";
 
 TestRegister.addApiTests([
     it("File: should exist", () => {

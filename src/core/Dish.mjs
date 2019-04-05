@@ -442,8 +442,6 @@ class Dish {
 }
 
 
-
-
 /**
  * Dish data type enum for byte arrays.
  * @readonly
