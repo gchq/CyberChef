@@ -34,7 +34,7 @@ class AdvancedEntropy extends Operation {
             {
                 "name": "Visualization",
                 "type": "option",
-                "value": ["Histogram (Bar)", "Histogram (Line)", "Curve"]
+                "value": ["Histogram (Bar)", "Histogram (Line)", "Curve", "Image"]
             }
         ];
     }
@@ -71,10 +71,11 @@ class AdvancedEntropy extends Operation {
      * @param inputBytes 
      * @returns {entropyData}
      */
-    calculateScanningEntropy(inputBytes) {
-        let entropyData = [];
-        let binSelection = Math.ceil(inputBytes.length / 256);
-        let binWidth =  binSelection < 256 ? 256 : binSelection; 
+    calculateScanningEntropy(inputBytes, binWidth) {
+        const entropyData = [];
+        binWidth = binWidth 
+            ? Math.floor(inputBytes.length / binWidth) 
+            : Math.floor(inputBytes.length / 256);
         
         for (let bytePos = 0; bytePos < inputBytes.length; bytePos+=binWidth) {
             const block = inputBytes.slice(bytePos, bytePos+binWidth)
@@ -294,7 +295,53 @@ class AdvancedEntropy extends Operation {
 
         this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "Scanning Entropy" , `Block (${binWidth}B)`, "Entropy");    
 
-        console.log('TEST', entropyData);
+        return svg._groups[0][0].outerHTML;
+    }
+
+    /**
+     * Creates an image representation of the entropy
+     * 
+     * @param {byteArray} input
+     * @param {number} blockSize
+     * @returns {HTML}
+     */
+    createEntropyImage(inputBytes) {
+        const svgHeight = 100,
+            svgWidth = 100,
+            cellSize = 1,
+            nodes = [];
+        
+        const { entropyData } = this.calculateScanningEntropy(inputBytes, svgWidth*svgHeight);
+
+        for (let i = 0; i < entropyData.length; i++) {
+            nodes.push({
+                x: i % svgWidth,
+                y: Math.floor(i / svgWidth),
+                entropy: entropyData[i]
+            });
+        }
+
+        const document = new nodom.Document();
+        let svg = document.createElement("svg");
+        svg = d3.select(svg)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
+
+        const greyScale = d3.scaleLinear()
+            .domain([0, d3.max(entropyData, d => d)])
+            .range(["#000000", "#FFFFFF"])
+            .interpolate(d3.interpolateRgb);
+
+        svg
+            .selectAll("rect")
+            .data(nodes)
+            .enter().append("rect")
+            .attr("x", (d, i) => d.x * cellSize)
+            .attr("y", (d, i) => d.y * cellSize)
+            .attr("width", cellSize)
+            .attr("height", cellSize)
+            .style("fill", (d) => greyScale(d.entropy))
 
         return svg._groups[0][0].outerHTML;
     }
@@ -316,7 +363,8 @@ class AdvancedEntropy extends Operation {
         if (visualizationType === "Histogram (Bar)") svgData = this.createByteFrequencyBarHistogram(entropyData);
         else if (visualizationType === "Histogram (Line)") svgData = this.createByteFrequencyLineHistogram(entropyData);
         else if (visualizationType === "Curve") svgData = this.createEntropyCurve(input);
-       
+        else if (visualizationType === "Image") svgData = this.createEntropyImage(input);
+
         return svgData;  
     }
 }
