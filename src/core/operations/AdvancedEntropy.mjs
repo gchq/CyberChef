@@ -34,7 +34,7 @@ class AdvancedEntropy extends Operation {
             {
                 "name": "Visualization",
                 "type": "option",
-                "value": ["Histogram (Bar)", "Histogram (Line)"]
+                "value": ["Histogram (Bar)", "Histogram (Line)", "Curve"]
             }
         ];
     }
@@ -66,6 +66,26 @@ class AdvancedEntropy extends Operation {
         return -entropy;
     }
 
+        /**
+     * 
+     * @param inputBytes 
+     * @returns {entropyData}
+     */
+    calculateScanningEntropy(inputBytes) {
+        let entropyData = [];
+        let binSelection = Math.ceil(inputBytes.length / 256);
+        let binWidth =  binSelection < 256 ? 256 : binSelection; 
+        
+        for (let bytePos = 0; bytePos < inputBytes.length; bytePos+=binWidth) {
+            const block = inputBytes.slice(bytePos, bytePos+binWidth)
+            const blockEntropy = this.calculateShannonEntropy(block);
+            entropyData.push(blockEntropy);
+        }
+
+        return { entropyData, binWidth };
+    }
+
+
     /**
      * Calculates the frequency of bytes in the input.
      * 
@@ -75,9 +95,11 @@ class AdvancedEntropy extends Operation {
      * @param {integer} svgHeight
      * @param {integer} svgWidth
      * @param {object} margins
+     * @param {string} xTitle
+     * @param {string} yTitle
      * @returns {undefined}
      */
-    createHistogramAxes(svg, xScale, yScale, svgHeight, svgWidth, margins) {
+    createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, title, xTitle, yTitle) {
         // Axes
         const yAxis = d3.axisLeft()
             .scale(yScale);
@@ -100,18 +122,18 @@ class AdvancedEntropy extends Operation {
             .attr("x", 0 - (svgHeight / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Frequency (%)")
+            .text(yTitle)
 
         svg.append("text")
             .attr("transform", `translate(${svgWidth / 2}, ${svgHeight - margins.bottom + 40})`)
             .style("text-anchor", "middle")
-            .text("Byte")
+            .text(xTitle)
 
         // Add title
         svg.append("text")
             .attr("transform", `translate(${svgWidth / 2}, ${margins.top - 10})`)
             .style("text-anchor", "middle")
-            .text("Byte Frequency")
+            .text(title)
     }
 
     /**
@@ -175,11 +197,10 @@ class AdvancedEntropy extends Operation {
 
         svg.append('path')
             .datum(byteFrequency)
-            .attr("class", "line")
             .attr("d", line)
             .attr("fill", "steelblue");
 
-        this.createHistogramAxes(svg, xScale, yScale, svgHeight, svgWidth, margins);    
+        this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "", "Byte", "Byte Frequency");    
 
         return svg._groups[0][0].outerHTML;
     }
@@ -223,7 +244,57 @@ class AdvancedEntropy extends Operation {
             .attr("height", dataPoint => yScale(0) - yScale(dataPoint))
             .attr("fill", "blue");
 
-        this.createHistogramAxes(svg, xScale, yScale, svgHeight, svgWidth, margins);
+        this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "", "Byte", "Byte Frequency");
+
+        return svg._groups[0][0].outerHTML;
+    }
+
+    /**
+     * Creates a byte frequency histogram
+     * 
+     * @param {byteArray} input
+     * @param {number} blockSize
+     * @returns {HTML}
+     */
+    createEntropyCurve(input) {
+        const { entropyData, binWidth } = this.calculateScanningEntropy(input);
+
+        const svgWidth = 500,
+            svgHeight = 500;
+
+        const document = new nodom.Document();
+        let svg = document.createElement("svg");
+        svg = d3.select(svg)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
+
+        const margins = {top: 30, right: 20, bottom: 50, left: 30};
+
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(entropyData, d => d)])
+            .range([svgHeight - margins.bottom, margins.top]);
+
+        const xScale = d3.scaleLinear()
+            .domain([0, entropyData.length])
+            .range([margins.left, svgWidth - margins.right]);
+
+        const line = d3.line()
+            .x((d, i) => { return xScale(i)}) 
+            .y((d) => { return yScale(d)})
+            .curve(d3.curveMonotoneX);
+
+        if (entropyData.length > 0 ) {
+            svg.append('path')
+                .datum(entropyData)
+                .attr("d", line);
+
+            svg.selectAll("path").attr("fill", "none").attr("stroke", "steelblue");
+        }
+
+        this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "Scanning Entropy" , `Block (${binWidth}B)`, "Entropy");    
+
+        console.log('TEST', entropyData);
 
         return svg._groups[0][0].outerHTML;
     }
@@ -244,7 +315,8 @@ class AdvancedEntropy extends Operation {
         let svgData;
         if (visualizationType === "Histogram (Bar)") svgData = this.createByteFrequencyBarHistogram(entropyData);
         else if (visualizationType === "Histogram (Line)") svgData = this.createByteFrequencyLineHistogram(entropyData);
-
+        else if (visualizationType === "Curve") svgData = this.createEntropyCurve(input);
+       
         return svgData;  
     }
 }
