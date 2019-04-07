@@ -1,6 +1,6 @@
 /**
- * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2016
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 
