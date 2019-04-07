@@ -5,8 +5,8 @@
  */
 
 import Operation from "../Operation";
-import bzip2 from "../vendor/bzip2";
 import OperationError from "../errors/OperationError";
+import Bzip2 from "libbzip2-wasm";
 
 /**
  * Bzip2 Decompress operation
@@ -23,9 +23,15 @@ class Bzip2Decompress extends Operation {
         this.module = "Compression";
         this.description = "Decompresses data using the Bzip2 algorithm.";
         this.infoURL = "https://wikipedia.org/wiki/Bzip2";
-        this.inputType = "byteArray";
-        this.outputType = "string";
-        this.args = [];
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
+        this.args = [
+            {
+                name: "Use low-memory, slower decompression algorithm",
+                type: "boolean",
+                value: false
+            }
+        ];
         this.patterns = [
             {
                 "match": "^\\x42\\x5a\\x68",
@@ -41,14 +47,24 @@ class Bzip2Decompress extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const compressed = new Uint8Array(input);
-
-        try {
-            const bzip2Reader = bzip2.array(compressed);
-            return bzip2.simple(bzip2Reader);
-        } catch (err) {
-            throw new OperationError(err);
+        const [small] = args;
+        if (input.byteLength <= 0) {
+            throw new OperationError("Please provide an input.");
         }
+        if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Loading Bzip2...");
+        return new Promise((resolve, reject) => {
+            Bzip2().then(bzip2 => {
+                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Decompressing data...");
+                const inpArray = new Uint8Array(input);
+                const bzip2cc = bzip2.decompressBZ2(inpArray, small ? 1 : 0);
+                if (bzip2cc.error !== 0) {
+                    reject(new OperationError(bzip2cc.error_msg));
+                } else {
+                    const output = bzip2cc.output;
+                    resolve(output.buffer.slice(output.byteOffset, output.byteLength + output.byteOffset));
+                }
+            });
+        });
     }
 
 }

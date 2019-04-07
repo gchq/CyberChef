@@ -117,7 +117,7 @@
     "jsqr": "^1.2.0",
     "jsrsasign": "8.0.12",
     "kbpgp": "2.1.0",
-    "libbzip2-wasm": "0.0.3",
+    "libbzip2-wasm": "0.0.4",
     "libyara-wasm": "0.0.12",
     "lodash": "^4.17.11",
     "loglevel": "^1.6.1",
