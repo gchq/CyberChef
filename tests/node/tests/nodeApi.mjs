@@ -331,8 +331,8 @@ TestRegister.addApiTests([
 
     it("Composable Dish: Should construct empty dish object", () => {
         const dish = new Dish();
-        assert.deepEqual(dish.value, []);
-        assert.strictEqual(dish.type, 0);
+        assert.strictEqual(dish.value.byteLength, new ArrayBuffer(0).byteLength);
+        assert.strictEqual(dish.type, 4);
     }),
 
     it("Composable Dish: constructed dish should have apply prototype functions", () => {

@@ -36,8 +36,8 @@ class Dish {
      * literal input
      */
     constructor(dishOrInput=null, type = null) {
-        this.value = [];
-        this.type = Dish.BYTE_ARRAY;
+        this.value = new ArrayBuffer(0);
+        this.type = Dish.ARRAY_BUFFER;
 
         // Case: dishOrInput is dish object
         if (dishOrInput &&
