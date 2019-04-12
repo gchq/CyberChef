@@ -4,7 +4,6 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const NodeExternals = require("webpack-node-externals");
-const Inliner = require("web-resource-inliner");
 const glob = require("glob");
 const path = require("path");
 
@@ -43,18 +42,16 @@ module.exports = function (grunt) {
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        ["eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web", "inline", "chmod"]);
+        [
+            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web",
+            "copy:standalone", "zip:standalone", "clean:standalone", "chmod"
+        ]);
 
     grunt.registerTask("default",
         "Lints the code base",
         ["eslint", "exec:repoSize"]);
 
-    grunt.registerTask("inline",
-        "Compiles a production build of CyberChef into a single, portable web page.",
-        ["exec:generateConfig", "webpack:webInline", "runInliner", "clean:inlineScripts"]);
 
-
-    grunt.registerTask("runInliner", runInliner);
     grunt.registerTask("doc", "docs");
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
@@ -72,6 +69,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-accessibility");
     grunt.loadNpmTasks("grunt-concurrent");
     grunt.loadNpmTasks("grunt-contrib-connect");
+    grunt.loadNpmTasks("grunt-zip");
 
 
     // Project configuration
@@ -94,32 +92,6 @@ module.exports = function (grunt) {
         },
         moduleEntryPoints = listEntryModules();
 
-    /**
-     * Compiles a production build of CyberChef into a single, portable web page.
-     */
-    function runInliner() {
-        const done = this.async();
-        Inliner.html({
-            relativeTo: "build/prod/",
-            fileContent: grunt.file.read("build/prod/cyberchef.htm"),
-            images: true,
-            svgs: true,
-            scripts: true,
-            links: true,
-            strict: true
-        }, function(error, result) {
-            if (error) {
-                if (error instanceof Error) {
-                    done(error);
-                } else {
-                    done(new Error(error));
-                }
-            } else {
-                grunt.file.write("build/prod/cyberchef.htm", result);
-                done(true);
-            }
-        });
-    }
 
     /**
      * Generates an entry list for all the modules.
@@ -130,7 +102,7 @@ module.exports = function (grunt) {
         glob.sync("./src/core/config/modules/*.mjs").forEach(file => {
             const basename = path.basename(file);
             if (basename !== "Default.mjs" && basename !== "OpModules.mjs")
-                entryModules[basename.split(".mjs")[0]] = path.resolve(file);
+                entryModules["modules/" + basename.split(".mjs")[0]] = path.resolve(file);
         });
 
         return entryModules;
@@ -143,7 +115,7 @@ module.exports = function (grunt) {
             node: ["build/node/*"],
             config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
-            inlineScripts: ["build/prod/scripts.js"],
+            standalone: ["build/prod/CyberChef*.html"]
         },
         eslint: {
             options: {
@@ -225,33 +197,6 @@ module.exports = function (grunt) {
                     ]
                 };
             },
-            webInline: {
-                mode: "production",
-                target: "web",
-                entry: "./src/web/index.js",
-                output: {
-                    filename: "scripts.js",
-                    path: __dirname + "/build/prod"
-                },
-                plugins: [
-                    new webpack.DefinePlugin(Object.assign({}, BUILD_CONSTANTS, {
-                        INLINE: "true"
-                    })),
-                    new HtmlWebpackPlugin({
-                        filename: "cyberchef.htm",
-                        template: "./src/web/html/index.html",
-                        compileTime: compileTime,
-                        version: pkg.version + "s",
-                        inline: true,
-                        minify: {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            minifyJS: true,
-                            minifyCSS: true
-                        }
-                    }),
-                ]
-            },
             node: {
                 mode: "production",
                 target: "node",
@@ -317,6 +262,18 @@ module.exports = function (grunt) {
                 }
             }
         },
+        zip: {
+            standalone: {
+                cwd: "build/prod/",
+                src: [
+                    "build/prod/**/*",
+                    "!build/prod/index.html",
+                    "!build/prod/BundleAnalyzerReport.html",
+                    "!build/prod/sitemap.js"
+                ],
+                dest: `build/prod/CyberChef_v${pkg.version}.zip`
+            }
+        },
         connect: {
             prod: {
                 options: {
@@ -329,10 +286,16 @@ module.exports = function (grunt) {
             ghPages: {
                 options: {
                     process: function (content, srcpath) {
-                        // Add Google Analytics code to index.html
                         if (srcpath.indexOf("index.html") >= 0) {
+                            // Add Google Analytics code to index.html
                             content = content.replace("</body></html>",
                                 grunt.file.read("src/web/static/ga.html") + "</body></html>");
+
+                            // Add Structured Data for SEO
+                            content = content.replace("</head>",
+                                "<script type='application/ld+json'>" +
+                                JSON.stringify(grunt.file.read("src/web/static/structuredData.json")) +
+                                "</script>");
                             return grunt.template.process(content, srcpath);
                         } else {
                             return content;
@@ -350,6 +313,28 @@ module.exports = function (grunt) {
                         src: "docs/**",
                         dest: "build/prod/"
                     },
+                ]
+            },
+            standalone: {
+                options: {
+                    process: function (content, srcpath) {
+                        if (srcpath.indexOf("index.html") >= 0) {
+                            // Replace download link with version number
+                            content = content.replace(/<a [^>]+>Download CyberChef.+?<\/a>/,
+                                `<span>Version ${pkg.version}</span>`);
+
+                            return grunt.template.process(content, srcpath);
+                        } else {
+                            return content;
+                        }
+                    },
+                    noProcess: ["**", "!**/*.html"]
+                },
+                files: [
+                    {
+                        src: "build/prod/index.html",
+                        dest: `build/prod/CyberChef_v${pkg.version}.html`
+                    }
                 ]
             }
         },
@@ -406,7 +391,7 @@ module.exports = function (grunt) {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
             },
             browserTests: {
-                command: "./node_modules/.bin/nightwatch --env prod,inline"
+                command: "./node_modules/.bin/nightwatch --env prod"
             }
         },
     });
