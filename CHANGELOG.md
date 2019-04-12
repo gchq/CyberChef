@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.30.0] - 2019-04-12
+- 'Decode Protobuf' operation added [@n1474335] | [#533]
+
 ### [8.29.0] - 2019-03-31
 - 'BLAKE2s' and 'BLAKE2b' hashing operations added [@h345983745] | [#525]
 
@@ -124,6 +127,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.30.0]: https://github.com/gchq/CyberChef/releases/tag/v8.30.0
 [8.29.0]: https://github.com/gchq/CyberChef/releases/tag/v8.29.0
 [8.28.0]: https://github.com/gchq/CyberChef/releases/tag/v8.28.0
 [8.27.0]: https://github.com/gchq/CyberChef/releases/tag/v8.27.0
@@ -223,3 +227,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#506]: https://github.com/gchq/CyberChef/pull/506
 [#516]: https://github.com/gchq/CyberChef/pull/516
 [#525]: https://github.com/gchq/CyberChef/pull/525
+[#533]: https://github.com/gchq/CyberChef/pull/533
