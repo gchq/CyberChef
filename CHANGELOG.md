@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.31.0] - 2019-04-12
+- The downloadable version of CyberChef is now a .zip file containing separate modules rather than a single .htm file. It is still completely standalone and will not make any external network requests. This change reduces the complexity of the build process significantly. [@n1474335]
+
 ### [8.30.0] - 2019-04-12
 - 'Decode Protobuf' operation added [@n1474335] | [#533]
 
@@ -127,6 +130,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.31.0]: https://github.com/gchq/CyberChef/releases/tag/v8.31.0
 [8.30.0]: https://github.com/gchq/CyberChef/releases/tag/v8.30.0
 [8.29.0]: https://github.com/gchq/CyberChef/releases/tag/v8.29.0
 [8.28.0]: https://github.com/gchq/CyberChef/releases/tag/v8.28.0
