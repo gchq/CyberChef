@@ -167,6 +167,9 @@ module.exports = function (grunt) {
                     }, moduleEntryPoints),
                     output: {
                         path: __dirname + "/build/prod",
+                        filename: chunkData => {
+                            return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
+                        },
                         globalObject: "this"
                     },
                     resolve: {
@@ -294,8 +297,8 @@ module.exports = function (grunt) {
                             // Add Structured Data for SEO
                             content = content.replace("</head>",
                                 "<script type='application/ld+json'>" +
-                                JSON.stringify(grunt.file.read("src/web/static/structuredData.json")) +
-                                "</script>");
+                                JSON.stringify(JSON.parse(grunt.file.read("src/web/static/structuredData.json"))) +
+                                "</script></head>");
                             return grunt.template.process(content, srcpath);
                         } else {
                             return content;
