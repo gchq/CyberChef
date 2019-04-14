@@ -214,6 +214,30 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
+    /**
+     * Handler for hide-opt click events.
+     * Updates the icon status.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    hideOptClick(e) {
+        const icon = e.target;
+
+        if (icon.getAttribute("hide-opt") === "false") {
+            icon.setAttribute("hide-opt", "true");
+            icon.innerText = "keyboard_arrow_down";
+            icon.classList.add("hide-options-selected");
+            icon.parentNode.previousElementSibling.style.display = "none";
+        } else {
+            icon.setAttribute("hide-opt", "false");
+            icon.innerText = "keyboard_arrow_up";
+            icon.classList.remove("hide-options-selected");
+            icon.parentNode.previousElementSibling.style.display = "grid";
+        }
+
+        window.dispatchEvent(this.manager.statechange);
+    }
 
     /**
      * Handler for disable click events.
