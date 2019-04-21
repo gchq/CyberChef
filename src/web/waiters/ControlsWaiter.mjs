@@ -334,6 +334,36 @@ class ControlsWaiter {
 
 
     /**
+     * Hides the options for all the operations in the current recipe.
+     */
+    hideRecipeOptClick() {
+        const icon = document.getElementById("hide-icon");
+
+        if (icon.getAttribute("hide-opt") === "false") {
+            icon.setAttribute("hide-opt", "true");
+            icon.setAttribute("data-original-title", "Show options");
+            icon.children[0].innerText = "keyboard_arrow_down";
+            Array.from(document.getElementsByClassName("hide-options")).forEach(function(item){
+                item.setAttribute("hide-opt", "true");
+                item.innerText = "keyboard_arrow_down";
+                item.classList.add("hide-options-selected");
+                item.parentNode.previousElementSibling.style.display = "none";
+            });
+        } else {
+            icon.setAttribute("hide-opt", "false");
+            icon.setAttribute("data-original-title", "Hide options");
+            icon.children[0].innerText = "keyboard_arrow_up";
+            Array.from(document.getElementsByClassName("hide-options")).forEach(function(item){
+                item.setAttribute("hide-opt", "false");
+                item.innerText = "keyboard_arrow_up";
+                item.classList.remove("hide-options-selected");
+                item.parentNode.previousElementSibling.style.display = "grid";
+            });
+        }
+    }
+
+
+    /**
      * Populates the bug report information box with useful technical info.
      *
      * @param {event} e

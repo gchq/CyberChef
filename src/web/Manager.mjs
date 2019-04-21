@@ -120,6 +120,7 @@ class Manager {
         document.getElementById("load-delete-button").addEventListener("click", this.controls.loadDeleteClick.bind(this.controls));
         document.getElementById("load-name").addEventListener("change", this.controls.loadNameChange.bind(this.controls));
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
+        document.getElementById("hide-icon").addEventListener("click", this.controls.hideRecipeOptClick.bind(this.recipe));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
 
