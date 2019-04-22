@@ -45,6 +45,11 @@ class DESEncrypt extends Operation {
                 "value": ["CBC", "CFB", "OFB", "CTR", "ECB"]
             },
             {
+                "name": "Padding",
+                "type": "option",
+                "value": ["PKCS#7", "Null byte"]
+            },
+            {
                 "name": "Input",
                 "type": "option",
                 "value": ["Raw", "Hex"]
@@ -65,7 +70,7 @@ class DESEncrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            [,, mode, inputType, outputType] = args;
+            [,, mode, padding, inputType, outputType] = args;
 
         if (key.length !== 8) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -79,7 +84,15 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
         const cipher = forge.cipher.createCipher("DES-" + mode, key);
         cipher.start({iv: iv});
         cipher.update(forge.util.createBuffer(input));
-        cipher.finish();
+        if (padding === "PKCS#7") {
+            cipher.finish();
+        } else if (padding === "Null byte") {
+            cipher.finish(function(blockSize, buffer, decrypt) {
+                if (!decrypt) {
+                    return buffer.fillWithByte(0, blockSize);
+                }
+            });
+        }
 
         return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
     }
