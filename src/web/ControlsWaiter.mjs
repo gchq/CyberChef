@@ -58,7 +58,7 @@ class ControlsWaiter {
      */
     bakeClick() {
         if (document.getElementById("bake").textContent.indexOf("Bake") > 0) {
-            this.app.bake();
+            this.app.manager.input.getAll();
         } else {
             this.manager.worker.cancelBake();
         }
@@ -123,7 +123,7 @@ class ControlsWaiter {
             window.location.host +
             window.location.pathname;
         const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
-        const inputStr = toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
+        const inputStr = toBase64(this.app.getInput().input, "A-Za-z0-9+/"); // B64 alphabet with no padding
 
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
         // Only inlcude input if it is less than 50KB (51200 * 4/3 as it is Base64 encoded)
