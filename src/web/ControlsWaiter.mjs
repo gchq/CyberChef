@@ -338,7 +338,7 @@ class ControlsWaiter {
         const saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
 
         if (reportBugInfo) {
-            reportBugInfo.innerHTML = `* Version: ${PKG_VERSION + (typeof INLINE === "undefined" ? "" : "s")}
+            reportBugInfo.innerHTML = `* Version: ${PKG_VERSION}
 * Compile time: ${COMPILE_TIME}
 * User-Agent:
 ${navigator.userAgent}

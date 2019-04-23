@@ -48,7 +48,7 @@ module.exports = {
             "process.browser": "true"
         }),
         new MiniCssExtractPlugin({
-            filename: "[name].css"
+            filename: "assets/[name].css"
         }),
     ],
     resolve: {
@@ -80,7 +80,12 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
                     "css-loader",
                     "postcss-loader",
                 ]
@@ -88,7 +93,12 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
                     "css-loader",
                     "sass-loader",
                 ]
@@ -97,7 +107,9 @@ module.exports = {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000
+                    limit: 10000,
+                    name: "[hash].[ext]",
+                    outputPath: "assets"
                 }
             },
             {
@@ -120,7 +132,9 @@ module.exports = {
                 exclude: /web\/static/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000
+                    limit: 10000,
+                    name: "[hash].[ext]",
+                    outputPath: "assets"
                 }
             },
         ]
