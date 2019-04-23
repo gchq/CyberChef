@@ -241,7 +241,11 @@
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab">
                                     <i class="material-icons">add</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input" onclick="document.getElementById('open-file').click();">
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-folder" data-toggle="tooltip" title="Open folder as input">
+                                    <i class="material-icons">folder_open</i>
+                                    <input type="file" id="open-folder" style="display: none" multiple directory webkitdirectory>
+                                </button>
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input">
                                     <i class="material-icons">input</i>
                                     <input type="file" id="open-file" style="display: none" multiple>
                                 </button>
@@ -260,9 +264,17 @@
                             <span id="btn-previous-input-tab" class="input-tab-buttons">
                                 &lt;
                             </span>
-                            <span id="btn-go-to-input-tab" class="input-tab-buttons">
+                            <span id="btn-input-tab-dropdown" class="input-tab-buttons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 ···
                             </span>
+                            <div class="dropdown-menu" aria-labelledby="btn-input-tab-dropdown">
+                                <a id="btn-go-to-input-tab" class="dropdown-item">
+                                    Go to tab
+                                </a>
+                                <a id="btn-find-input-tab" class="dropdown-item">
+                                    Find tab
+                                </a>
+                            </div>
                             <span id="btn-next-input-tab" class="input-tab-buttons">
                                 &gt;
                             </span>
@@ -294,7 +306,7 @@
                         <div class="title no-select">
                             <label for="output-text">Output</label>
                             <span class="float-right">
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a file">
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a file" style="display: none">
                                         <i class="material-icons">archive</i>
                                     </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-to-file" data-toggle="tooltip" title="Save output to file">
@@ -755,6 +767,68 @@
                         <button type="button" class="btn btn-danger" id="confirm-no" data-dismiss="modal">
                             No
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="input-tab-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Find Input Tab</h5>
+                    </div>
+                    <div class="modal-body" id="input-tab-body">
+                        <h6>Load Status</h6>
+                        <div class="checkbox .input-find-option">
+                            <label for="input-show-pending">
+                                <input type="checkbox" id="input-show-pending" checked="">
+                                Pending
+                            </label>
+                        </div>
+                        <div class="checkbox .input-find-option">
+                            <label for="input-show-loading">
+                                <input type="checkbox" id="input-show-loading" checked="">
+                                Loading
+                            </label>
+                        </div>
+                        <div class="checkbox .input-find-option">
+                            <label for="input-show-loaded">
+                                <input type="checkbox" id="input-show-loaded" checked="">
+                                Loaded
+                            </label>
+                        </div>
+                        <div class="form-group .input-find-option">
+                            <label for="input-filename-filter" class="bmd-label-floating">Filename</label>
+                            <input type="text" class="form-control" id="input-filename-filter">
+                        </div>
+                        <div class="form-group .input-find-option">
+                            <label for="input-content-filter" class="bmd-label-floating">Content</label>
+                            <input type="text" class="form-control" id="input-content-filter">
+                        </div>
+                        <div class="form-group .input-find-option">
+                                <label for="input-num-results" class="bmd-label-floating">Number of results</label>
+                                <input type="number" class="form-control" id="input-num-results" value="20">
+                            </div>
+                        <h6>Results</h6>
+                        <ul id="input-search-results"></ul>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="input-filter-refresh">Refresh</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="loading-files-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Loading Files...</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Loading files. This may take a while...</p>
                     </div>
                 </div>
             </div>
