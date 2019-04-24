@@ -21,8 +21,8 @@ class Dish {
      * @param {Dish} [dish=null] - A dish to clone
      */
     constructor(dish=null) {
-        this.value = [];
-        this.type = Dish.BYTE_ARRAY;
+        this.value = new ArrayBuffer(0);
+        this.type = Dish.ARRAY_BUFFER;
 
         if (dish &&
             dish.hasOwnProperty("value") &&

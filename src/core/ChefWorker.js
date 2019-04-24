@@ -178,7 +178,7 @@ self.loadRequiredModules = function(recipeConfig) {
         if (!OpModules.hasOwnProperty(module)) {
             log.info(`Loading ${module} module`);
             self.sendStatusMessage(`Loading ${module} module`);
-            self.importScripts(`${self.docURL}/${module}.js`);
+            self.importScripts(`${self.docURL}/modules/${module}.js`);
             self.sendStatusMessage("");
         }
     });
