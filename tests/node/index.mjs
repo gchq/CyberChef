@@ -30,6 +30,7 @@ import TestRegister from "../lib/TestRegister";
 import "./tests/nodeApi";
 import "./tests/operations";
 import "./tests/File";
+import "./tests/NodeDish";
 
 const testStatus = {
     allTestsPassing: true,
