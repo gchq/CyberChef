@@ -120,9 +120,10 @@ class App {
      *
      * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
      *   whole recipe.
+     * @param input - The inputs to bake
      */
-    bake(step=false) {
-        if (this.baking) return;
+    bake(step=false, input) {
+        // if (this.baking) return;
 
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
@@ -131,7 +132,7 @@ class App {
         this.manager.recipe.updateBreakpointIndicator(false);
 
         this.manager.worker.bake(
-            this.getAllInput(),     // The user's input
+            input,     // The user's input
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,           // Options set by the user
             this.progress,          // The current position in the recipe
@@ -151,7 +152,10 @@ class App {
 
         if (this.autoBake_ && !this.baking) {
             log.debug("Auto-baking");
-            this.bake();
+            this.manager.input.inputWorker.postMessage({
+                action: "autobake",
+                data: this.manager.input.getActiveTab()
+            });
         } else {
             this.manager.controls.showStaleIndicator();
         }
@@ -177,23 +181,13 @@ class App {
         this.manager.worker.silentBake(recipeConfig);
     }
 
-
-    /**
-     * Gets the user's input data.
-     *
-     * @returns {string}
-     */
-    getInput() {
-        return this.manager.input.getActive();
-    }
-
     /**
      * Gets the user's input data for all tabs.
      *
      * @returns {Array}
      */
     getAllInput() {
-        return this.manager.input.getAll();
+        this.manager.input.getAll();
     }
 
     /**
@@ -686,8 +680,8 @@ class App {
 
         // Update the current history state (not creating a new one)
         if (this.options.updateUrl) {
-            this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
-            window.history.replaceState({}, title, this.lastStateUrl);
+            // this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
+            // window.history.replaceState({}, title, this.lastStateUrl);
         }
     }
 

@@ -26,7 +26,7 @@ class OutputWaiter {
         this.app = app;
         this.manager = manager;
 
-        this.outputs = [];
+        this.outputs = {};
 
         this.maxTabs = 4; // Calculate this
     }
@@ -46,29 +46,15 @@ class OutputWaiter {
      * @returns {string | ArrayBuffer}
      */
     getOutput(inputNum) {
-        const index = this.getOutputIndex(inputNum);
-        if (index === -1) return -1;
+        if (this.outputs[inputNum] === undefined || this.outputs[inputNum] === null) return -1;
 
-        if (typeof this.outputs[index].data.dish.value === "string") {
-            return this.outputs[index].data.dish.value;
+        if (this.outputs[inputNum].data === null) return "";
+
+        if (typeof this.outputs[inputNum].data.dish.value === "string") {
+            return this.outputs[inputNum].data.dish.value;
         } else {
-            return this.outputs[index].data.dish.value || "";
+            return this.outputs[inputNum].data.dish.value || "";
         }
-    }
-
-    /**
-     * Gets the index of the output for the specified input number
-     *
-     * @param {number} inputNum
-     * @returns {number}
-     */
-    getOutputIndex(inputNum) {
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum === inputNum) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -88,10 +74,10 @@ class OutputWaiter {
      * @param {boolean} [changeTab=true]
      */
     addOutput(inputNum, changeTab = true) {
-        const index = this.getOutputIndex(inputNum);
-        if (index !== -1) {
+        const output = this.getOutput(inputNum);
+        if (output !== -1) {
             // Remove the output if it already exists
-            this.outputs.splice(index, 1);
+            delete this.outputs[inputNum];
         }
         const newOutput = {
             data: null,
@@ -102,11 +88,10 @@ class OutputWaiter {
             status: "inactive"
         };
 
-        this.outputs.push(newOutput);
+        this.outputs[inputNum] = newOutput;
 
         // add new tab
         this.addTab(inputNum, changeTab);
-        return this.outputs.indexOf(newOutput);
     }
 
     /**
@@ -117,13 +102,11 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputValue(data, inputNum) {
-        let index = this.getOutputIndex(inputNum);
-        if (index === -1) {
-            index = this.addOutput(inputNum);
-            this.addTab(inputNum, true);
+        if (this.getOutput(inputNum) === -1) {
+            this.addOutput(inputNum);
         }
 
-        this.outputs[index].data = data;
+        this.outputs[inputNum].data = data;
 
         // set output here
         this.set(inputNum);
@@ -137,10 +120,8 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputMessage(statusMessage, inputNum) {
-        const index = this.getOutputIndex(inputNum);
-        if (index === -1) return;
-
-        this.outputs[index].statusMessage = statusMessage;
+        if (this.getOutput(inputNum) === -1) return;
+        this.outputs[inputNum].statusMessage = statusMessage;
         this.set(inputNum);
     }
 
@@ -153,10 +134,9 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputError(error, inputNum) {
-        const index = this.getOutputIndex(inputNum);
-        if (index === -1) return;
+        if (this.getOutput(inputNum) === -1) return;
 
-        this.outputs[index].error = error;
+        this.outputs[inputNum].error = error;
 
         // call handle error here
         // or make the error handling part of set()
@@ -170,10 +150,8 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputStatus(status, inputNum) {
-        const index = this.getOutputIndex(inputNum);
-        if (index === -1) return;
-
-        this.outputs[index].status = status;
+        if (this.getOutput(inputNum) === -1) return;
+        this.outputs[inputNum].status = status;
 
         this.set(inputNum);
     }
@@ -184,10 +162,9 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     removeOutput(inputNum) {
-        const index = this.getOutputIndex(inputNum);
-        if (index === -1) return;
+        if (this.getOutput(inputNum) === -1) return;
 
-        this.outputs.splice(index, 1);
+        delete (this.outputs[inputNum]);
     }
 
     /**
@@ -196,9 +173,11 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     set(inputNum) {
-        const outputIndex = this.getOutputIndex(inputNum);
-        if (outputIndex === -1) return;
-        const output = this.outputs[outputIndex];
+        const output = this.outputs[inputNum];
+        if (output === undefined || output === null) return;
+
+        if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
+
         const outputText = document.getElementById("output-text");
         const outputHtml = document.getElementById("output-html");
         const outputFile = document.getElementById("output-file");
@@ -208,6 +187,11 @@ class OutputWaiter {
         // If pending or baking, show loader and status message
         // If error, style the tab and handle the error
         // If done, display the output if it's the active tab
+        if (output.status === "inactive" || output.status === "stale") {
+            this.manager.controls.showStaleIndicator();
+        } else {
+            this.manager.controls.hideStaleIndicator();
+        }
 
         if (output.status === "inactive") {
             // An output is inactive when it has been created but has not been baked at all
@@ -229,7 +213,6 @@ class OutputWaiter {
             // otherwise don't do anything
             if (inputNum === this.getActiveTab()) {
                 this.toggleLoader(true);
-
                 document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
             }
 
@@ -246,6 +229,7 @@ class OutputWaiter {
                 this.toggleLoader(false);
                 this.closeFile();
                 let scriptElements, lines, length;
+                const duration = output.data.duration;
 
                 switch (output.data.type) {
                     case "html":
@@ -267,6 +251,7 @@ class OutputWaiter {
                                 log.error(err);
                             }
                         }
+                        length = output.data.dish.value.length;
 
                         break;
                     case "ArrayBuffer":
@@ -277,8 +262,8 @@ class OutputWaiter {
 
                         outputText.value = "";
                         outputHtml.innerHTML = "";
-                        length = output.data.result.byteLength;
 
+                        length = output.data.result.length;
                         this.setFile(output.data.result);
                         break;
                     case "string":
@@ -296,6 +281,8 @@ class OutputWaiter {
                         length = output.data.result.length;
                         break;
                 }
+                this.setOutputInfo(length, lines, duration);
+                this.backgroundMagic();
             }
         }
     }
@@ -368,7 +355,7 @@ class OutputWaiter {
                 outputElement.disabled = true;
                 outputLoader.style.visibility = "visible";
                 outputLoader.style.opacity = 1;
-            }.bind(this), 200);
+            }, 200);
         } else {
             // Remove the Bombe from the DOM to save resources
             this.outputLoaderTimeout = setTimeout(function () {
@@ -388,7 +375,7 @@ class OutputWaiter {
      * Saves the current output to a file.
      */
     saveClick() {
-        this.downloadFile(this.getActiveTab());
+        this.downloadFile();
     }
 
     /**
@@ -452,6 +439,8 @@ class OutputWaiter {
                 document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+
+                document.getElementById("save-all-to-file").style.display = "inline-block";
             }
         }
 
@@ -468,7 +457,7 @@ class OutputWaiter {
      */
     changeTab(inputNum, changeInput = false) {
         const currentNum = this.getActiveTab();
-        if (this.getOutputIndex(inputNum) === -1) return;
+        if (this.getOutput(inputNum) === -1) return;
 
         const tabsWrapper = document.getElementById("output-tabs");
         const tabs = tabsWrapper.children;
@@ -523,12 +512,7 @@ class OutputWaiter {
      */
     changeTabLeft() {
         const currentTab = this.getActiveTab();
-        const currentOutput = this.getOutputIndex(currentTab);
-        if (currentOutput > 0) {
-            this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
-        } else {
-            this.changeTab(this.getSmallestInputNum(), this.app.options.syncTabs);
-        }
+        this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
     }
 
     /**
@@ -594,9 +578,11 @@ class OutputWaiter {
      */
     getLargestInputNum() {
         let largest = 0;
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum > largest) {
-                largest = this.outputs[i].inputNum;
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = parseInt(inputNums[i], 10);
+            if (iNum > largest) {
+                largest = iNum;
             }
         }
         return largest;
@@ -609,9 +595,11 @@ class OutputWaiter {
      */
     getSmallestInputNum() {
         let smallest = this.getLargestInputNum();
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum < smallest) {
-                smallest = this.outputs[i].inputNum;
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = parseInt(inputNums[i], 10);
+            if (iNum < smallest) {
+                smallest = iNum;
             }
         }
         return smallest;
@@ -625,10 +613,12 @@ class OutputWaiter {
      */
     getPreviousInputNum(inputNum) {
         let num = this.getSmallestInputNum();
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum < inputNum) {
-                if (this.outputs[i].inputNum > num) {
-                    num = this.outputs[i].inputNum;
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = parseInt(inputNums[i], 10);
+            if (iNum < inputNum) {
+                if (iNum > num) {
+                    num = iNum;
                 }
             }
         }
@@ -643,10 +633,12 @@ class OutputWaiter {
      */
     getNextInputNum(inputNum) {
         let num = this.getLargestInputNum();
-        for (let i = 0; i < this.outputs.length; i++) {
-            if (this.outputs[i].inputNum > inputNum) {
-                if (this.outputs[i].inputNum < num) {
-                    num = this.outputs[i].inputNum;
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = parseInt(inputNums[i], 10);
+            if (iNum > inputNum) {
+                if (iNum < num) {
+                    num = iNum;
                 }
             }
         }
@@ -660,7 +652,7 @@ class OutputWaiter {
      */
     removeTab(inputNum) {
         let activeTab = this.getActiveTab();
-        if (this.getOutputIndex(inputNum) === -1) return;
+        if (this.getOutput(inputNum) === -1) return;
 
         const tabElement = this.getTabItem(inputNum);
 
@@ -706,6 +698,8 @@ class OutputWaiter {
             document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
 
+            document.getElementById("save-all-to-file").style.display = "inline-block";
+
         } else {
             tabsList.parentElement.style.display = "none";
 
@@ -713,6 +707,8 @@ class OutputWaiter {
             document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
             document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
             document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
+
+            document.getElementById("save-all-to-file").style.display = "none";
         }
 
         this.changeTab(activeTab);
@@ -781,6 +777,159 @@ class OutputWaiter {
 
         tabContent.innerText = `Tab ${inputNum}`;
 
+    }
+
+    /**
+     * Displays information about the output.
+     *
+     * @param {number} length - The length of the current output string
+     * @param {number} lines - The number of the lines in the current output string
+     * @param {number} duration - The length of time (ms) it took to generate the output
+     */
+    setOutputInfo(length, lines, duration) {
+        if (!length) return;
+        let width = length.toString().length;
+        width = width < 4 ? 4 : width;
+
+        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const timeStr = (duration.toString() + "ms").padStart(width, " ").replace(/ /g, "&nbsp;");
+
+        let msg = "time: " + timeStr + "<br>length: " + lengthStr;
+
+        if (typeof lines === "number") {
+            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            msg += "<br>lines: " + linesStr;
+        }
+
+        document.getElementById("output-info").innerHTML = msg;
+        document.getElementById("input-selection-info").innerHTML = "";
+        document.getElementById("output-selection-info").innerHTML = "";
+    }
+
+    /**
+     * Triggers the BackgroundWorker to attempt Magic on the current output.
+     */
+    backgroundMagic() {
+        this.hideMagicButton();
+        if (!this.app.options.autoMagic || this.getActive()) return;
+        const sample = this.getActive().slice(0, 1000) || "";
+
+        if (sample.length) {
+            this.manager.background.magic(sample);
+        }
+    }
+
+    /**
+     * Handles the results of a background Magic call.
+     *
+     * @param {Object[]} options
+     */
+    backgroundMagicResult(options) {
+        if (!options.length ||
+            !options[0].recipe.length)
+            return;
+
+        const currentRecipeConfig = this.app.getRecipeConfig();
+        const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
+        const opSequence = options[0].recipe.map(o => o.op).join(", ");
+
+        this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
+    }
+
+    /**
+     * Handler for Magic click events.
+     *
+     * Loads the Magic recipe.
+     *
+     * @fires Manager#statechange
+     */
+    magicClick() {
+        const magicButton = document.getElementById("magic");
+        this.app.setRecipeConfig(JSON.parse(magicButton.getAttribute("data-recipe")));
+        window.dispatchEvent(this.manager.statechange);
+        this.hideMagicButton();
+    }
+
+    /**
+     * Displays the Magic button with a title and adds a link to a complete recipe.
+     *
+     * @param {string} opSequence
+     * @param {string} result
+     * @param {Object[]} recipeConfig
+     */
+    showMagicButton(opSequence, result, recipeConfig) {
+        const magicButton = document.getElementById("magic");
+        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
+        magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
+        magicButton.classList.remove("hidden");
+    }
+
+
+    /**
+     * Hides the Magic button and resets its values.
+     */
+    hideMagicButton() {
+        const magicButton = document.getElementById("magic");
+        magicButton.classList.add("hidden");
+        magicButton.setAttribute("data-recipe", "");
+        magicButton.setAttribute("data-original-title", "Magic!");
+    }
+
+
+    /**
+     * Handler for file slice display events.
+     */
+    displayFileSlice() {
+        const startTime = new Date().getTime(),
+            showFileOverlay = document.getElementById("show-file-overlay"),
+            sliceFromEl = document.getElementById("output-file-slice-from"),
+            sliceToEl = document.getElementById("output-file-slice-to"),
+            sliceFrom = parseInt(sliceFromEl.value, 10),
+            sliceTo = parseInt(sliceToEl.value, 10),
+            str = Utils.arrayBufferToStr(this.getActive().slice(sliceFrom, sliceTo));
+
+        document.getElementById("output-text").classList.remove("blur");
+        showFileOverlay.style.display = "block";
+
+    }
+
+
+    /**
+     * Handler for copy click events.
+     * Copies the output to the clipboard
+     */
+    copyClick() {
+        const output = this.getActive();
+
+        // Create invisible textarea to populate with the raw dish string (not the printable version that
+        // contains dots instead of the actual bytes)
+        const textarea = document.createElement("textarea");
+        textarea.style.position = "fixed";
+        textarea.style.top = 0;
+        textarea.style.left = 0;
+        textarea.style.width = 0;
+        textarea.style.height = 0;
+        textarea.style.border = "none";
+
+        textarea.value = output;
+        document.body.appendChild(textarea);
+
+        let success = false;
+        try {
+            textarea.select();
+            success = output && document.execCommand("copy");
+        } catch (err) {
+            success = false;
+        }
+
+        if (success) {
+            this.app.alert("Copied raw output successfully.", 2000);
+        } else {
+            this.app.alert("Sorry, the output could not be copied.", 3000);
+        }
+
+        // Clean up
+        document.body.removeChild(textarea);
     }
 }
 

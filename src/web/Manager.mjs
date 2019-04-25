@@ -82,8 +82,8 @@ class Manager {
      * Sets up the various components and listeners.
      */
     setup() {
-        this.input.addTab(true);
-        this.input.setupLoaderWorker();
+        this.input.setupInputWorker();
+        this.input.addInput();
         this.worker.setupChefWorker();
         this.recipe.initialiseOperationDragNDrop();
         this.controls.initComponents();
@@ -145,10 +145,10 @@ class Manager {
 
         // Input
         this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
-        this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
+        // this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
-        document.getElementById("clr-io").addEventListener("click", this.input.clearAllIoClick.bind(this.input));
-        this.addListeners("#open-file", "change", this.input.inputOpen, this.input);
+        // document.getElementById("clr-io").addEventListener("click", this.input.clearAllIoClick.bind(this.input));
+        this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
         this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
         this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
         this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
@@ -156,22 +156,37 @@ class Manager {
         // document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
         // document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
         // this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
-        document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
-        document.getElementById("btn-new-tab").addEventListener("click", this.input.addTab.bind(this.input));
+        // document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
+        document.getElementById("btn-new-tab").addEventListener("click", this.input.addInput.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
-        document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
+        // document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
+        // document.getElementById("btn-find-input-tab").addEventListener("click", this.input.findTab.bind(this.input));
         this.addDynamicListener("#input-tabs li .btn-close-tab i", "click", this.input.removeTabClick, this.input);
         this.addDynamicListener("#input-tabs li .input-tab-content", "click", this.input.changeTabClick, this.input);
+        // document.getElementById("input-show-pending").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-show-loading").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-show-loaded").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-filename-filter").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-filename-filter").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-content-filter").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-content-filter").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-num-results").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-num-results").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
+        // document.getElementById("input-filter-refresh").addEventListener("click", this.input.filterTabSearch.bind(this.input));
+        // this.addDynamicListener(".input-filter-result", "click", this.input.filterItemClick, this.input);
+        document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
+        document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
+
 
         // Output
         document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
         document.getElementById("save-all-to-file").addEventListener("click", this.output.saveAllClick.bind(this.output));
-        // document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
+        document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         // document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
         // document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
         // document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
-        // document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
+        document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
         // document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
         // document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
         // document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
@@ -179,8 +194,8 @@ class Manager {
         // document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
         // this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
         // this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
-        // this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
-        // this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
+        this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
+        this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
         // document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
         // this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);

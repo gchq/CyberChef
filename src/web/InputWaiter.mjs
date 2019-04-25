@@ -6,6 +6,7 @@
  */
 
 import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker";
+import InputWorker from "worker-loader?inline&fallback=false!./InputWorker";
 import Utils from "../core/Utils";
 import { toBase64 } from "../core/lib/Base64";
 import { isImage } from "../core/lib/FileType";
@@ -44,11 +45,11 @@ class InputWaiter {
             145, //Scroll
         ];
 
+        this.inputWorker = null;
         this.loaderWorkers = [];
+        this.workerId = 0;
         this.maxWorkers = navigator.hardwareConcurrency || 4;
-        this.inputs = [];
-        this.pendingFiles = [];
-        this.maxTabs = 4; // Calculate this
+        this.maxTabs = 4;
     }
 
     /**
@@ -56,42 +57,83 @@ class InputWaiter {
      */
     calcMaxTabs() {
         const numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
-        this.maxTabs = numTabs;
+        this.maxTabs = (numTabs > 1) ? numTabs : 2;
+        if (this.inputWorker) {
+            this.inputWorker.postMessage({
+                action: "updateMaxTabs",
+                data: this.maxTabs
+            });
+        }
     }
 
     /**
-     * Terminates any existing loader workers and sets up a new worker
+     * Terminates any existing workers and sets up a new InputWorker and LoaderWorker
      */
-    setupLoaderWorker() {
-        for (let i = 0; i < this.loaderWorkers.length; i++) {
-            const worker = this.loaderWorkers.pop();
-            worker.terminate();
+    setupInputWorker() {
+        if (this.inputWorker !== null) this.inputWorker.terminate();
+
+        for (let i = this.loaderWorkers.length - 1; i >= 0; i--) {
+            this.removeLoaderWorker(this.loaderWorkers[i]);
         }
 
-        this.addLoaderWorker();
+        log.debug("Adding new InputWorker");
+        this.inputWorker = new InputWorker();
+        this.inputWorker.postMessage({
+            action: "updateMaxWorkers",
+            data: this.maxWorkers
+        });
+        this.inputWorker.postMessage({
+            action: "updateMaxTabs",
+            data: this.maxTabs
+        });
+        this.inputWorker.addEventListener("message", this.handleInputWorkerMessage.bind(this));
+
+        if (this.loaderWorkers.length === 0) {
+            this.activateLoaderWorker();
+        }
+
+    }
+
+    /**
+     * Activates a loaderWorker and sends it to the InputWorker
+     */
+    activateLoaderWorker() {
+        const workerIdx = this.addLoaderWorker(true);
+        if (workerIdx === -1) return;
+
+        const workerObj = this.loaderWorkers[workerIdx];
+        this.inputWorker.postMessage({
+            action: "loaderWorkerReady",
+            data: {
+                id: workerObj.id,
+                port: workerObj.port
+            }
+        }, [workerObj.port]);
     }
 
     /**
      * Adds a new loaderWorker
      *
+     * @param {boolean} [active=false]
      * @returns {number} The index of the created worker
      */
     addLoaderWorker() {
-        for (let i = 0; i < this.loaderWorkers.length; i++) {
-            if (!this.loaderWorkers[i].active) {
-                return i;
-            }
-        }
         if (this.loaderWorkers.length === this.maxWorkers) {
             return -1;
         }
         log.debug("Adding new LoaderWorker.");
         const newWorker = new LoaderWorker();
-        newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+        const messageChannel = new MessageChannel();
+        const workerId = this.workerId++;
+        // newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+        newWorker.postMessage({
+            port: messageChannel.port1,
+            id: workerId
+        }, [messageChannel.port1]);
         const newWorkerObj = {
             worker: newWorker,
-            active: false,
-            inputNum: 0
+            id: workerId,
+            port: messageChannel.port2
         };
         this.loaderWorkers.push(newWorkerObj);
         return this.loaderWorkers.indexOf(newWorkerObj);
@@ -107,6 +149,7 @@ class InputWaiter {
         if (idx === -1) {
             return;
         }
+        log.debug(`Terminating worker ${this.loaderWorkers[idx].id}`);
         this.loaderWorkers[idx].worker.terminate();
         this.loaderWorkers.splice(idx, 1);
         if (this.loaderWorkers.length === 0) {
@@ -116,70 +159,135 @@ class InputWaiter {
     }
 
     /**
-     * Finds and returns the object for the loaderWorker of a given inputNum
+     * Finds and returns the object for the loaderWorker of a given id
      *
-     * @param {number} inputNum
+     * @param {number} id
      */
-    getLoaderWorker(inputNum) {
+    getLoaderWorker(id) {
+        const idx = this.getLoaderWorkerIndex(id);
+        if (idx === -1) return;
+        return this.loaderWorkers[idx];
+    }
+
+    /**
+     * Gets the index for the loaderWorker of a given id
+     *
+     * @param {number} id
+     */
+    getLoaderWorkerIndex(id) {
         for (let i = 0; i < this.loaderWorkers.length; i++) {
-            if (this.loaderWorkers[i].inputNum === inputNum) {
-                return this.loaderWorkers[i];
+            if (this.loaderWorkers[i].id === id) {
+                return i;
             }
+        }
+        return -1;
+    }
+
+    // removeInput should talk to the worker
+
+    /**
+     * Handler for messages sent back by the inputWorker
+     *
+     * @param {MessageEvent} e
+     */
+    handleInputWorkerMessage(e) {
+        const r = e.data;
+
+        if (!r.hasOwnProperty("action")) {
+            log.error("No action");
+            return;
+        }
+
+        log.debug(`Receiving ${r.action} from InputWorker.`);
+
+        switch (r.action) {
+            case "activateLoaderWorker":
+                this.activateLoaderWorker();
+                break;
+            case "loadInput":
+                this.loaderWorkers[r.data.workerIdx].worker.postMessage({
+                    file: r.data.file,
+                    inputNum: r.data.inputNum
+                });
+                this.loaderWorkers[r.data.workerIdx].inputNum = r.data.inputNum;
+                this.loaderWorkers[r.data.workerIdx].active = true;
+                break;
+            case "terminateLoaderWorker":
+                this.removeLoaderWorker(this.getLoaderWorker(r.data));
+                break;
+            case "allInputs":
+                this.app.bake(false, r.data);
+                break;
+            case "refreshTabs":
+                this.refreshTabs(r.data.nums, r.data.activeTab);
+                break;
+            case "changeTab":
+                this.changeTab(r.data, this.app.options.syncTabs);
+                break;
+            case "updateTabHeader":
+                this.updateTabHeader(r.data);
+                break;
+            case "updateFileProgress":
+                this.updateFileProgress(r.data.inputNum, r.data.progress);
+                break;
+            case "loadingInfo":
+                this.showLoadingInfo(r.data);
+                break;
+            case "setInput":
+                this.set(r.data, true);
+                break;
+            case "inputAdded":
+                this.inputAdded(r.data.changeTab, r.data.inputNum);
+                break;
+            case "addInputs":
+                this.addInputs(r.data);
+                break;
+            default:
+                log.error(`Unknown action ${r.action}.`);
+        }
+        // Handle the responses and use them to control the UI / other workers / stuff
+    }
+
+    // get / set input
+    /**
+     * Gets the input for the active tab
+     */
+    getActive() {
+        const textArea = document.getElementById("input-text");
+        const value = (textArea.value !== undefined) ? textArea.value : "";
+        const inputNum = this.getActiveTab();
+
+        if (this.fileBuffer) {
+            return this.fileBuffer;
+        } else {
+            this.updateInputValue(inputNum, value);
+            return value;
         }
     }
 
     /**
-     * Loads a file into the input
-     *
-     * @param {File} file
-     * @param {number} inputNum
+     * Gets the input for all tabs
      */
-    loadFile(file, inputNum) {
-        if (file && inputNum) {
-            this.closeFile(this.getLoaderWorker(inputNum));
-            let loaded = false;
-
-            const workerId = this.addLoaderWorker();
-            if (workerId !== -1) {
-                this.loaderWorkers[workerId].active = true;
-                this.loaderWorkers[workerId].inputNum = inputNum;
-                this.loaderWorkers[workerId].worker.postMessage({
-                    file: file,
-                    inputNum: inputNum
-                });
-                loaded = true;
-            } else {
-                this.pendingFiles.push({
-                    file: file,
-                    inputNum: inputNum
-                });
-            }
-            if (this.getInput(inputNum) !== null) {
-                this.removeInput(inputNum);
-            }
-            this.inputs.push({
-                inputNum: inputNum,
-                data: {
-                    fileBuffer: new ArrayBuffer(),
-                    name: file.name,
-                    size: file.size.toLocaleString(),
-                    type: file.type || "unknown"
-                },
-                status: (loaded) ?  "loading" : "pending",
-                progress: 0
-            });
-        }
+    getAll() {
+        this.inputWorker.postMessage({
+            action: "getAll"
+        });
     }
 
     /**
-     * Closes a file and removes it from inputs
+     * Sets the input in the input area
      *
-     * @param {number} inputNum
+     * @param inputData
+     * @param {boolean} [silent=false]
      */
-    closeFile(inputNum) {
-        this.removeLoaderWorker(this.getLoaderWorker(inputNum));
+    set(inputData, silent=false) {
+        const inputText = document.getElementById("input-text");
+        const activeTab = this.getActiveTab();
+        if (inputData.inputNum !== activeTab) return;
 
-        if (inputNum === this.getActiveTab()) {
+        if (typeof inputData.input === "string") {
+            inputText.value = inputData.input;
+            // close file
             const fileOverlay = document.getElementById("input-file"),
                 fileName = document.getElementById("input-file-name"),
                 fileSize = document.getElementById("input-file-size"),
@@ -192,225 +300,131 @@ class InputWaiter {
             fileType.textContent = "";
             fileLoaded.textContent = "";
 
-            const inputText = document.getElementById("input-text"),
-                fileThumb = document.getElementById("input-file-thumbnail");
             inputText.style.overflow = "auto";
             inputText.classList.remove("blur");
-            fileThumb.src = require("./static/images/file-128x128.png");
+
+            const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
+                inputData.input.count("\n") + 1 : null;
+            this.setInputInfo(inputData.input.length, lines);
+        } else {
+            this.setFile(inputData);
+            // show file info here
         }
+
+        if (!silent) window.dispatchEvent(this.manager.statechange);
+
     }
 
     /**
-     * Remove an input from the input list
-     * @param {number} inputNum
+     * Shows file details
+     *
+     * @param inputData
      */
-    removeInput(inputNum) {
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum === inputNum) {
-                this.inputs.splice(i, 1);
-            }
-        }
+    setFile(inputData) {
+        const activeTab = this.getActiveTab();
+        if (inputData.inputNum !== activeTab) return;
+
+        const fileOverlay = document.getElementById("input-file"),
+            fileName = document.getElementById("input-file-name"),
+            fileSize = document.getElementById("input-file-size"),
+            fileType = document.getElementById("input-file-type"),
+            fileLoaded = document.getElementById("input-file-loaded");
+
+        fileOverlay.style.display = "block";
+        fileName.textContent = inputData.name;
+        fileSize.textContent = inputData.size + " bytes";
+        fileType.textContent = inputData.type;
+        fileLoaded.textContent = inputData.progress + "%";
+
+        this.displayFilePreview(inputData);
     }
 
     /**
-     * Updates the progress value of an input
+     * Shows a chunk of the file in the input behind the file overlay
+     *
+     * @param {Object} inputData
+     * @param {number} inputData.inputNum
+     * @param {ArrayBuffer} inputData.input
+     */
+    displayFilePreview(inputData) {
+        const activeTab = this.getActiveTab(),
+            input = inputData.input,
+            inputText = document.getElementById("input-text");
+        if (inputData.inputNum !== activeTab) return;
+        inputText.style.overflow = "hidden";
+        inputText.classList.add("blur");
+        inputText.value = Utils.printable(Utils.arrayBufferToStr(input));
+    }
+
+    /**
+     * Updates the displayed input progress for a file
      *
      * @param {number} inputNum
      * @param {number} progress
      */
-    updateInputProgress(inputNum, progress) {
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum === inputNum) {
-                // Don't let progress go over 100
-                this.inputs[i].progress = (progress <= 100) ? progress : 100;
-            }
+    updateFileProgress(inputNum, progress) {
+        const activeTab = this.getActiveTab();
+        if (inputNum !== activeTab) return;
+
+        const fileLoaded = document.getElementById("input-file-loaded");
+        fileLoaded.textContent = progress + "%";
+
+        if (progress < 100) {
+            // setTimeout(function() {
+            //     this.inputWorker.postMessage({
+            //         action: "getInputProgress",
+            //         data: activeTab
+            //     });
+            // }.bind(this), 100);
+        } else {
+            this.inputWorker.postMessage({
+                action: "setInput",
+                data: inputNum
+            });
         }
     }
 
+
     /**
-     * Updates the stored value of an input
+     * Updates the input value for the specified inputNum
      *
      * @param {number} inputNum
-     * @param {ArrayBuffer | String} value
+     * @param {string | ArrayBuffer} value
      */
     updateInputValue(inputNum, value) {
-
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum === inputNum) {
-                if (typeof value === "string") {
-                    this.inputs[i].data = value;
-                } else {
-                    this.inputs[i].data.fileBuffer = value;
-
-                    if (inputNum === this.getActiveTab()) {
-                        this.displayFilePreview();
-                    }
-                }
-                this.inputs[i].progress = 100;
-                this.inputs[i].status = "loaded";
-                return;
-            }
-        }
-        // If we get to here, an input for inputNum could not be found
-
-        if (typeof value === "string") {
-            this.inputs.push({
+        this.inputWorker.postMessage({
+            action: "updateInputValue",
+            data: {
                 inputNum: inputNum,
-                data: value,
-                status: "loaded",
-                progress: 100
-            });
-        }
+                value: value
+            }
+        });
     }
 
     /**
-     * Handler for messages sent back by LoaderWorkers
+     * Displays information about the input.
      *
-     * @param {MessageEvent} e
+     * @param {number} length - The length of the current input string
+     * @param {number} lines - The number of the lines in the current input string
      */
-    handleLoaderMessage(e) {
-        const r = e.data;
-        let inputNum = 0;
+    setInputInfo(length, lines) {
+        let width = length.toString().length.toLocaleString();
+        width = width < 2 ? 2 : width;
 
-        if (r.hasOwnProperty("inputNum")) {
-            inputNum = r.inputNum;
+        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        let msg = "length: " + lengthStr;
+
+        if (typeof lines === "number") {
+            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            msg += "<br>lines: " + linesStr;
         }
 
-        if (r.hasOwnProperty("progress")) {
-            this.updateInputProgress(inputNum, r.progress);
-            this.setFile(inputNum);
-            // UI here
-        }
-
-        if (r.hasOwnProperty("error")) {
-            this.app.alert(r.error, 10000);
-        }
-
-        if (r.hasOwnProperty("fileBuffer")) {
-            log.debug(`Input file ${inputNum} loaded.`);
-            this.updateInputValue(inputNum, r.fileBuffer);
-
-            this.setLoadingInfo();
-
-            const currentWorker = this.getLoaderWorker(inputNum);
-
-            if (this.pendingFiles.length > 0) {
-                log.debug("Loading file completed. Loading next file.");
-                const nextFile = this.pendingFiles[0];
-                this.pendingFiles.splice(0, 1);
-                currentWorker.inputNum = nextFile.inputNum;
-                currentWorker.worker.postMessage({
-                    file: nextFile.file,
-                    inputNum: nextFile.inputNum
-                });
-
-            } else {
-                // LoaderWorker no longer needed
-                log.debug("Loading file completed. Closing LoaderWorker.");
-                const progress = this.getLoadProgress();
-                if (progress.total === progress.loaded) {
-                    window.dispatchEvent(this.manager.statechange);
-                }
-                this.removeLoaderWorker(currentWorker);
-            }
-
-        }
-    }
-
-    /**
-     * Gets the input for the specified input number
-     *
-     * @param {number} inputNum
-     */
-    getInput(inputNum) {
-        const index = this.getInputIndex(inputNum);
-        if (index === -1) {
-            return null;
-        }
-        if (typeof this.inputs[index].data === "string") {
-            return this.inputs[index].data;
-        } else {
-            return this.inputs[index].data.fileBuffer;
-        }
-    }
-
-    /**
-     * Gets the index of the input in the inputs list
-     *
-     * @param {number} inputNum
-     */
-    getInputIndex(inputNum) {
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum === inputNum) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Gets the input for the active tab
-     */
-    getActive() {
-        const textArea = document.getElementById("input-text");
-        const value = (textArea.value !== undefined) ? textArea.value : "";
-        const inputNum = this.getActiveTab();
-
-        const input = this.getInput(inputNum);
-        if (input === null || typeof input === "string") {
-            this.updateInputValue(inputNum, value);
-        }
-
-        return this.getInput(inputNum);
+        document.getElementById("input-info").innerHTML = msg;
 
     }
+    // get progress
 
-    /**
-     * Gets the input for all tabs
-     */
-    getAll() {
-        // Need to make sure here that the active input is actually saved in this inputs
-        this.getActive();
-        const inputs = [];
-
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].status === "loaded") {
-                inputs.push({
-                    inputNum: this.inputs[i].inputNum,
-                    input: this.getInput(this.inputs[i].inputNum) || ""
-                });
-            }
-        }
-        if (inputs.length === 0) {
-            inputs.push({
-                inputNum: 1,
-                input: ""
-            });
-        }
-        return inputs;
-    }
-
-    /**
-     * Get the progress of the loaderWorkers
-     */
-    getLoadProgress() {
-        const totalInputs = this.inputs.length;
-        const pendingInputs = this.pendingFiles.length;
-        let loadingInputs = 0;
-        for (let i = 0; i < this.loaderWorkers.length; i++) {
-            if (this.loaderWorkers[i].active) {
-                loadingInputs += 0;
-            }
-        }
-        return {
-            total: totalInputs,
-            pending: pendingInputs,
-            loading: loadingInputs,
-            loaded: (totalInputs - pendingInputs - loadingInputs)
-        };
-    }
-
-
+    // inputChange
     /**
      * Handler for input change events
      *
@@ -420,53 +434,28 @@ class InputWaiter {
      */
     inputChange(e) {
         // Ignore this function if the input is a file
-        const input = this.getActive();
-        if (typeof input !== "string") return;
+        const fileOverlay = document.getElementById("input-file");
+        if (fileOverlay.style.display === "block") return;
 
-        // Remove highlighting from input and output panes as the offsets might be different now
-        // this.manager.highlighter.removeHighlights();
+        const textArea = document.getElementById("input-text");
+        const value = (textArea.value !== undefined) ? textArea.value : "";
+        const activeTab = this.getActiveTab();
 
-        // Reset recipe progress as any previous processing will be redundant now
         this.app.progress = 0;
 
-        // Update the input metadata info
-        const lines = input.length < (this.app.options.ioDisplayThreshold * 1024) ?
-            input.count("\n") + 1 : null;
-
-        this.setInputInfo(input.length, lines);
-        this.displayTabInfo(this.getActiveTab());
+        const lines = value.length < (this.app.options.ioDisplayThreshold * 1024) ?
+            (value.count("\n") + 1) : null;
+        this.setInputInfo(value.length, lines);
+        this.updateInputValue(activeTab, value);
+        this.updateTabHeader({inputNum: activeTab, input: value});
 
         if (e && this.badKeys.indexOf(e.keyCode) < 0) {
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
         }
     }
+    // inputPaste
 
-    /**
-     * Handler for input paste events.
-     * Checks that the size of the input is below the display limit, otherwise treats it as a file/blob.
-     *
-     * @param {event} e
-     */
-    inputPaste(e) {
-        const pastedData = e.clipboardData.getData("Text");
-
-        if (pastedData.length < (this.app.options.ioDisplayThreshold * 1024)) {
-            this.inputChange(e);
-        } else {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const file = new File([pastedData], "PastedData", {
-                type: "text/plain",
-                lastModified: Date.now()
-            });
-
-            this.loadFile(file, this.getActiveTab());
-            this.set(file);
-            return false;
-        }
-    }
 
     /**
      * Handler for input dragover events.
@@ -496,9 +485,10 @@ class InputWaiter {
         e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
     }
 
+    // inputDrop
     /**
      * Handler for input drop events.
-     * Loads the dragged data into the input textarea
+     * Loads the dragged data.
      *
      * @param {event} e
      */
@@ -515,8 +505,8 @@ class InputWaiter {
         e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
 
         if (text) {
-            this.closeFile(this.getActiveTab());
-            this.set(text);
+            // close file
+            // set text output
             return;
         }
 
@@ -541,197 +531,122 @@ class InputWaiter {
     }
 
     /**
-     * Load files from the UI into the input, creating tabs if needed
+     * Load files from the UI into the inputWorker, creating tabs if needed
      *
      * @param files
      */
     loadUIFiles(files) {
-        let inputNum;
-        if (files.length > 20) {
-            this.manager.controls.setAutoBake(false);
-            this.app.alert("Auto-Bake is disabled by default when inputting more than 20 files.", 5000);
-        }
-        for (let i = 0; i < files.length; i++) {
-            inputNum = this.getActiveTab();
-            if (i > 0) {
-                inputNum = this.addTab(false);
-            }
-            this.loadFile(files[i], inputNum);
+        const numFiles = files.length;
+        log.debug(`Loading ${numFiles} files.`);
+        // Show something in the UI to make it clear we're loading files
 
-            if (inputNum ===  this.getActiveTab()) {
-                this.setFile(inputNum);
-            }
-        }
-        this.changeTab(inputNum, this.app.options.syncTabs);
+        this.inputWorker.postMessage({
+            action: "loadUIFiles",
+            data: files
+        });
+
+        this.hideLoadingMessage();
     }
 
     /**
-     * Sets the input in the input area
-     *
-     * @param {string|File} input
-     * @param {boolean} [silent=false] - Suppress statechange event
-     *
-     * @fires Manager#statechange
-     *
+     * Displays a message to show the app is loading files
      */
-    set(input, silent=false) {
-        const inputText = document.getElementById("input-text");
-        const inputNum = this.getActiveTab();
-        if (input instanceof File) {
-            this.setFile(inputNum);
-            inputText.value = "";
-            this.setInputInfo(input.size, null);
-            this.displayTabInfo(inputNum);
-        } else {
-            inputText.value = input;
-            this.updateInputValue(inputNum, input);
-            this.closeFile(inputNum);
+    showLoadingMessage() {
+        $("#loading-files-modal").modal("show");
+    }
 
-            if (!silent) window.dispatchEvent(this.manager.statechange);
+    /**
+     * Hides the loading message
+     */
+    hideLoadingMessage() {
+        $("#loading-files-modal").modal("hide");
+    }
 
-            const lines = input.length < (this.app.options.ioDisplayThreshold * 1024) ?
-                input.count("\n") + 1 : null;
-            this.setInputInfo(input.length, lines);
-            this.displayTabInfo(inputNum);
+    /**
+     * Checks the length of the files input. If it's 0, hide loading message
+     */
+    checkInputFiles() {
+        const fileInput = document.getElementById("open-file");
+        const folderInput = document.getElementById("open-folder");
+
+        if (fileInput.value.length === 0 && folderInput.value.length === 0) {
+            this.hideLoadingMessage();
         }
     }
 
     /**
-     * Shows file details
-     *
-     * @param {number} inputNum
+     * Handler for open input button click.
+     * Opens the open file dialog.
      */
-    setFile(inputNum) {
-        if (inputNum === this.getActiveTab()) {
-            for (let i = 0; i < this.inputs.length; i++) {
-                if (this.inputs[i].inputNum === inputNum && typeof this.inputs[i].data !== "string") {
-                    const fileOverlay = document.getElementById("input-file"),
-                        fileName = document.getElementById("input-file-name"),
-                        fileSize = document.getElementById("input-file-size"),
-                        fileType = document.getElementById("input-file-type"),
-                        fileLoaded = document.getElementById("input-file-loaded"),
-                        fileObj = this.inputs[i];
-                    fileOverlay.style.display = "block";
-                    fileName.textContent = fileObj.data.name;
-                    fileSize.textContent = fileObj.data.size + " bytes";
-                    fileType.textContent = fileObj.data.type;
-                    fileLoaded.textContent = fileObj.progress + "%";
-
-                    this.setInputInfo(fileObj.data.size, null);
-                    this.displayFilePreview();
-                }
-            }
-        }
-        this.displayTabInfo(inputNum);
+    inputOpenClick() {
+        this.showLoadingMessage();
+        document.getElementById("open-file").click();
+        document.body.onfocus = this.checkInputFiles.bind(this);
     }
 
     /**
-     * Displays information about the input.
-     *
-     * @param {number} length - The length of the current input string
-     * @param {number} lines - The number of the lines in the current input string
+     * Handler for open folder button click
+     * Opens the open folder dialog.
      */
-    setInputInfo(length, lines) {
-        // This should also update the tab?
-        let width = length.toString().length;
+    folderOpenClick() {
+        this.showLoadingMessage();
+        document.getElementById("open-folder").click();
+        document.body.onfocus = this.checkInputFiles.bind(this);
+    }
+
+    // set / setFile
+        // get the data for the active tab from inputWorker
+        // display it!
+
+    // setinputInfo
+    /**
+     * Display the loaded files information in the input header
+     * @param loadedData
+     */
+    showLoadingInfo(loadedData) {
+        const pending = loadedData.pending;
+        const loading = loadedData.loading;
+        const loaded = loadedData.loaded;
+        const total = loadedData.total;
+
+        let width = total.toString().length;
         width = width < 2 ? 2 : width;
 
-        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        let msg = "length: " + lengthStr;
-
-        if (typeof lines === "number") {
-            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>lines: " + linesStr;
-        }
-
-        document.getElementById("input-info").innerHTML = msg;
-
-    }
-
-    /**
-     * Display progress information for file loading in header
-     */
-    setLoadingInfo() {
-        const progress = this.getLoadProgress();
-        let width = progress.total.toString().length;
-        width = width < 2 ? 2 : width;
-
-        const totalStr = progress.total.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const totalStr = total.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
         let msg = "Total: " + totalStr;
 
-        const loadedStr = progress.loaded.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const loadedStr = loaded.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
         msg += "<br>Loaded: " + loadedStr;
 
-        if (progress.pending > 0) {
-            const pendingStr = progress.pending.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        if (pending > 0) {
+            const pendingStr = pending.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
             msg += "<br>Pending: " + pendingStr;
-
+        } else if (loading > 0) {
+            const loadingStr = loading.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            msg += "<br>Loading: " + loadingStr;
         }
 
         document.getElementById("input-files-info").innerHTML = msg;
-    }
 
-    /**
-     * Display input information in the tab header
-     *
-     * @param {number} inputNum
-     */
-    displayTabInfo(inputNum) {
-        const tabItem = this.getTabItem(inputNum);
-        const index = this.getInputIndex(inputNum);
-        if (index === -1) return;
-        const input = this.inputs[index];
-        if (!tabItem) {
-            return;
-        }
-
-        const tabContent = tabItem.firstElementChild;
-        if (typeof input.data !== "string") {
-            tabContent.innerText = `${inputNum}: ${input.data.name}`;
-        } else {
-            if (input.data.length > 0) {
-                const inputText = input.data.slice(0, 100).split(/[\r\n]/)[0];
-                tabContent.innerText = `${inputNum}: ${inputText}`;
-            } else {
-                tabContent.innerText = `${inputNum}: New Tab`;
-            }
-        }
+        this.updateFileProgress(loadedData.activeProgress.inputNum, loadedData.activeProgress.progress);
     }
+    // displayTabInfo
+        // simple getInput for each tab
 
-    /**
-     * Shows a chunk of the file in the input behind the file overlay.
-     */
-    displayFilePreview() {
-        const inputNum = this.getActiveTab(),
-            input = this.getInput(inputNum),
-            inputText = document.getElementById("input-text"),
-            fileSlice = input.slice(0, 4096),
-            fileThumb = document.getElementById("input-file-thumbnail"),
-            arrBuffer = new Uint8Array(input),
-            type = isImage(arrBuffer);
-        if (type && type !== "image/tiff" && this.app.options.imagePreview && input.byteLength < 1024000) {
-            // Don't show TIFFs as not much supports them
-            fileThumb.src = `data:${type};base64,${toBase64(arrBuffer)}`;
-        } else {
-            fileThumb.src = require("./static/images/file-128x128.png");
-        }
-        inputText.style.overflow = "hidden";
-        inputText.classList.add("blur");
-        inputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
-        if (this.getInput(inputNum).byteLength > 4096) {
-            inputText.value += "[truncated]...";
-        }
-    }
+    // displayFilePreview
 
     /**
      * Create a tab element for the input tab bar
      *
      * @param {number} inputNum
+     * @param {boolean} [active=false]
      * @returns {Element}
      */
-    createTabElement(inputNum) {
+    createTabElement(inputNum, active) {
         const newTab = document.createElement("li");
         newTab.setAttribute("inputNum", inputNum.toString());
+
+        if (active) newTab.classList.add("active-input-tab");
 
         const newTabContent = document.createElement("div");
         newTabContent.classList.add("input-tab-content");
@@ -753,345 +668,133 @@ class InputWaiter {
         return newTab;
     }
 
+    // addTab
+        // UI bit can be done here
+        // Adding an input should be sent to the inputWorker
+
+    // removeTab
+        // UI here
+        // remove input sent to the inputWorker
+
+    // refreshTabs
     /**
-     * Adds a new input to inputs.
-     * Will create a new tab if there's less than maxtabs visible.
+     * Redraw the tab bar with an updated list of tabs
      *
-     * @param {boolean} [changeTab=true]
-     */
-    addTab(changeTab = true) {
-        let inputNum;
-        if (this.inputs.length === 0) {
-            inputNum = 1;
-        } else {
-            inputNum = this.getLargestInputNum() + 1;
-        }
-        this.inputs.push({
-            inputNum: inputNum,
-            data: "",
-            status: "loaded",
-            progress: 100
-        });
-
-
-        this.manager.output.addOutput(inputNum, changeTab);
-
-        const tabsWrapper = document.getElementById("input-tabs");
-        const numTabs = tabsWrapper.children.length;
-
-        if (numTabs < this.maxTabs) {
-            // Create a tab element
-            const newTab = this.createTabElement(inputNum);
-
-            tabsWrapper.appendChild(newTab);
-
-            if (numTabs > 0) {
-                tabsWrapper.parentElement.style.display = "block";
-
-                document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            }
-
-        }
-
-        if (changeTab) {
-            this.changeTab(inputNum);
-        }
-
-        return inputNum;
-
-    }
-
-    /**
-     * Removes a tab and it's corresponding input
-     *
-     * @param {number} inputNum
-     */
-    removeTab(inputNum) {
-        const inputIdx = this.getInputIndex(inputNum);
-        let activeTab = this.getActiveTab();
-        if (inputIdx === -1) {
-            return;
-        }
-
-        const tabElement = this.getTabItem(inputNum);
-
-        this.removeInput(inputNum);
-
-        if (tabElement !== null) {
-            if (inputNum === activeTab) {
-                activeTab = this.getPreviousInputNum(activeTab);
-                if (activeTab === this.getActiveTab()) {
-                    activeTab = this.getNextInputNum(activeTab);
-                }
-            }
-            this.refreshTabs(activeTab);
-        }
-
-        this.manager.output.removeTab(inputNum);
-    }
-
-    /**
-     * Redraw the entire tab bar to remove any outdated tabs
+     * @param nums
      * @param {number} activeTab
      */
-    refreshTabs(activeTab) {
+    refreshTabs(nums, activeTab) {
         const tabsList = document.getElementById("input-tabs");
-        let newInputs = this.getNearbyNums(activeTab, "right");
-        if (newInputs.length < this.maxTabs) {
-            newInputs = this.getNearbyNums(activeTab, "left");
-        }
 
         for (let i = tabsList.children.length - 1; i >= 0; i--) {
             tabsList.children.item(i).remove();
         }
 
-        for (let i = 0; i < newInputs.length; i++) {
-            tabsList.appendChild(this.createTabElement(newInputs[i]));
-            this.displayTabInfo(newInputs[i]);
+        for (let i = 0; i < nums.length; i++) {
+            let active = false;
+            if (nums[i] === activeTab) active = true;
+            tabsList.appendChild(this.createTabElement(nums[i], active));
         }
 
-        if (newInputs.length > 1) {
+        if (nums.length > 1) {
             tabsList.parentElement.style.display = "block";
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+
+            document.getElementById("save-all-to-file").style.display = "inline-block";
         } else {
             tabsList.parentElement.style.display = "none";
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
-        }
 
-        if (newInputs.length === 0) {
-            activeTab = this.addTab();
-            this.displayTabInfo(activeTab);
+            document.getElementById("save-all-to-file").style.display = "none";
         }
 
         this.changeTab(activeTab);
-        this.manager.output.refreshTabs(activeTab);
-        // MAKE THE OUTPUT REFRESH TOO
     }
 
     /**
-     * Handler for remove tab button click
-     * @param {event} mouseEvent
-     */
-    removeTabClick(mouseEvent) {
-        if (!mouseEvent.target) {
-            return;
-        }
-        const tabNum = mouseEvent.target.parentElement.parentElement.getAttribute("inputNum");
-        if (tabNum) {
-            this.removeTab(parseInt(tabNum, 10));
-        }
-    }
-
-    /**
-     * Generates a list of the nearby inputNums
-     * @param inputNum
-     * @param direction
-     */
-    getNearbyNums(inputNum, direction) {
-        const nums = [];
-        for (let i = 0; i < this.maxTabs; i++) {
-            let newNum;
-            if (i === 0) {
-                newNum = inputNum;
-            } else {
-                switch (direction) {
-                    case "left":
-                        newNum = this.getNextInputNum(nums[i - 1]);
-                        if (newNum === nums[i - 1]) {
-                            direction = "right";
-                            newNum = this.getPreviousInputNum(nums[i - 1]);
-                        }
-                        break;
-                    case "right":
-                        newNum = this.getPreviousInputNum(nums[i - 1]);
-                        if (newNum === nums[i - 1]) {
-                            direction = "left";
-                            newNum = this.getNextInputNum(nums[i - 1]);
-                        }
-                }
-            }
-            if (!nums.includes(newNum) && (newNum > 0)) {
-                nums.push(newNum);
-            }
-        }
-        nums.sort(function(a, b) {
-            return a - b;
-        });
-        return nums;
-    }
-
-    /**
-     * Changes the active tab
+     * Change the active tab
      *
      * @param {number} inputNum
      * @param {boolean} [changeOutput=false]
      */
-    changeTab(inputNum, changeOutput = false) {
-        const currentNum = this.getActiveTab();
-        if (this.getInputIndex(inputNum) === -1) return;
-
-        const tabsWrapper = document.getElementById("input-tabs");
-        const tabs = tabsWrapper.children;
-
+    changeTab(inputNum, changeOutput) {
+        const tabsList = document.getElementById("input-tabs");
         let found = false;
-        for (let i = 0; i < tabs.length; i++) {
-            if (tabs.item(i).getAttribute("inputNum") === inputNum.toString()) {
-                tabs.item(i).classList.add("active-input-tab");
+        let minNum = Number.MAX_SAFE_INTEGER;
+        for (let i = 0; i < tabsList.children.length; i++) {
+            const tabNum = parseInt(tabsList.children.item(i).getAttribute("inputNum"), 10);
+            if (tabNum === inputNum) {
+                tabsList.children.item(i).classList.add("active-input-tab");
                 found = true;
             } else {
-                tabs.item(i).classList.remove("active-input-tab");
+                tabsList.children.item(i).classList.remove("active-input-tab");
+            }
+            if (tabNum < minNum) {
+                minNum = tabNum;
             }
         }
         if (!found) {
-            // Shift the tabs here
             let direction = "right";
-            if (currentNum > inputNum) {
+            if (inputNum < minNum) {
                 direction = "left";
             }
-
-            const newInputs = this.getNearbyNums(inputNum, direction);
-
-            for (let i = 0; i < newInputs.length; i++) {
-                tabs.item(i).setAttribute("inputNum", newInputs[i].toString());
-                this.displayTabInfo(newInputs[i]);
-                if (newInputs[i] === inputNum) {
-                    tabs.item(i).classList.add("active-input-tab");
+            this.inputWorker.postMessage({
+                action: "refreshTabs",
+                data: {
+                    inputNum: inputNum,
+                    direction: direction
                 }
-            }
-        }
-
-        const input = this.getInput(inputNum);
-        if (typeof input === "string") {
-            this.set(this.getInput(inputNum), true);
+            });
         } else {
-            this.setFile(inputNum);
+            this.inputWorker.postMessage({
+                action: "setInput",
+                data: inputNum
+            });
         }
 
         if (changeOutput) {
             this.manager.output.changeTab(inputNum, false);
         }
-
     }
 
     /**
-     * Handler for changing tabs event
+     * Handler for clicking on a tab
      *
      * @param {event} mouseEvent
      */
     changeTabClick(mouseEvent) {
-        if (!mouseEvent.target) {
-            return;
-        }
+        if (!mouseEvent.target) return;
+
         const tabNum = mouseEvent.target.parentElement.getAttribute("inputNum");
-        if (tabNum) {
+        if (tabNum >= 0) {
             this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
         }
     }
 
-    /**
-     * Handler for changing to the left tab
-     */
-    changeTabLeft() {
-        const currentTab = this.getActiveTab();
-        const currentInput = this.getInputIndex(currentTab);
-        if (currentInput > 0) {
-            this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
-        } else {
-            this.changeTab(this.inputs[0].inputNum, this.app.options.syncTabs);
-        }
-    }
 
     /**
-     * Handler for changing to the right tab
+     * Updates the tab header to display the new input content
      */
-    changeTabRight() {
-        const currentTab = this.getActiveTab();
-        this.changeTab(this.getNextInputNum(currentTab), this.app.options.syncTabs);
-    }
-
-    /**
-     * Handler for go to tab button clicked
-     */
-    goToTab() {
-        const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
-        if (this.getInputIndex(tabNum) >= 0) {
-            this.changeTab(tabNum, this.app.options.syncTabs);
-        }
-    }
-
-    /**
-     * Gets the largest inputNum
-     *
-     * @returns {number}
-     */
-    getLargestInputNum() {
-        let largest = 0;
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum > largest) {
-                largest = this.inputs[i].inputNum;
+    updateTabHeader(headerData) {
+        const tabsList = document.getElementById("input-tabs");
+        const inputNum = headerData.inputNum;
+        const inputData = headerData.input.slice(0, 100);
+        for (let i = 0; i < tabsList.children.length; i++) {
+            if (tabsList.children.item(i).getAttribute("inputNum") === inputNum.toString()) {
+                tabsList.children.item(i).firstElementChild.innerText = `${inputNum}: ${inputData}`;
+                break;
             }
         }
-        return largest;
     }
+    // removeTabClick
 
-    /**
-     * Gets the smallest inputNum
-     *
-     * @returns {number}
-     */
-    getSmallestInputNum() {
-        let smallest = this.getLargestInputNum();
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum < smallest) {
-                smallest = this.inputs[i].inputNum;
-            }
-        }
-        return smallest;
-    }
-
-    /**
-     * Gets the previous inputNum
-     *
-     * @param {number} inputNum - The current input number
-     * @returns {number}
-     */
-    getPreviousInputNum(inputNum) {
-        let num = -1;
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum < inputNum) {
-                if (this.inputs[i].inputNum > num) {
-                    num = this.inputs[i].inputNum;
-                }
-            }
-        }
-        return num;
-    }
-
-    /**
-     * Gets the next inputNum
-     *
-     * @param {number} inputNum - The current input number
-     * @returns {number}
-     */
-    getNextInputNum(inputNum) {
-        let num = this.getLargestInputNum();
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum > inputNum) {
-                if (this.inputs[i].inputNum < num) {
-                    num = this.inputs[i].inputNum;
-                }
-            }
-        }
-        return num;
-    }
+    // move getNearbyNums / getLargest / getSmallest / getNext / getPrevious to inputWorker
 
     /**
      * Gets the number of the current active tab
@@ -1125,34 +828,136 @@ class InputWaiter {
     }
 
     /**
-     * Handler for clear all IO events.
-     * Resets the input, output and info areas
+     * Gets a list of tab numbers for the currently open tabs
      */
-    clearAllIoClick() {
-        this.manager.worker.cancelBake();
-        for (let i = this.inputs.length - 1; i >= 0; i--) {
-            this.manager.output.removeOutput(this.inputs[i].inputNum);
-            this.removeInput(this.inputs[i].inputNum);
+    getTabList() {
+        const nums = [];
+        const tabs = document.getElementById("input-tabs").children;
+        for (let i = 0; i < tabs.length; i++) {
+            nums.push(parseInt(tabs.item(i).getAttribute("inputNum"), 10));
         }
-        this.refreshTabs();
+        return nums;
+    }
+
+    // clearAllIO
+        // could just re-run setup to create a new inputWorker
+
+    // clearIO
+        // reset current tab
+
+    // filter stuff should be sent to the inputWorker
+        // returns a filterResult message that is handled and used to update the UI
+
+    /**
+     * Sets the console log level in the worker.
+     *
+     * @param {string} level
+     */
+    setLogLevel(level) {
+        if (!this.inputWorker) return;
+        this.inputWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 
     /**
-     * Handler for clear IO click event.
-     * Resets the input for the current tab
+     * Sends a message to the inputWorker to add a new input.
      */
-    clearIoClick() {
-        const inputNum = this.getActiveTab();
-        this.removeInput(inputNum);
+    addInput() {
+        if (!this.inputWorker) return;
+        this.inputWorker.postMessage({
+            action: "addInput"
+        });
+    }
 
-        this.inputs.push({
-            inputNum: inputNum,
-            data: "",
-            status: "loaded",
-            progress: 0
+    /**
+     * Handler for when the inputWorker adds a new input
+     *
+     * @param {boolean} changeTab
+     * @param {number} inputNum
+     */
+    inputAdded(changeTab, inputNum) {
+        if (changeTab) {
+            this.changeTab(inputNum);
+        }
+        this.manager.output.addOutput(inputNum, changeTab);
+    }
+
+    /**
+     * Handler for when the inputWorker adds multiple inputs
+     *
+     * @param {array} inputNums
+     */
+    addInputs(inputNums) {
+        for (let i = 0; i < inputNums.length; i++) {
+            this.manager.output.addOutput(inputNums[i], false);
+        }
+        this.changeTab(inputNums[inputNums.length - 1], this.app.options.syncTabs);
+    }
+
+    /**
+     * Sends a message to the inputWorker to remove an input.
+     * If the input tab is on the screen, refreshes the tabs
+     *
+     * @param {number} inputNum
+     */
+    removeInput(inputNum) {
+        let refresh = false;
+        if (this.getTabItem(inputNum) !== null) {
+            refresh = true;
+        }
+        this.inputWorker.postMessage({
+            action: "removeInput",
+            data: {
+                inputNum: inputNum,
+                refreshTabs: refresh
+            }
         });
 
-        this.set("");
+        this.manager.output.removeOutput(inputNum);
+    }
+
+    /**
+     * Handler for clicking on a remove tab button
+     * @param {event} mouseEvent
+     */
+    removeTabClick(mouseEvent) {
+        if (!mouseEvent.target) {
+            return;
+        }
+        const tabNum = mouseEvent.target.parentElement.parentElement.getAttribute("inputNum");
+        if (tabNum) {
+            this.removeInput(parseInt(tabNum, 10));
+        }
+    }
+
+    /**
+     * Handler for clicking on next tab button
+     */
+    changeTabRight() {
+        const activeTab = this.getActiveTab();
+        this.inputWorker.postMessage({
+            action: "changeTabRight",
+            data: {
+                activeTab: activeTab,
+                nums: this.getTabList()
+            }
+        });
+    }
+
+    /**
+     * Handler for clicking on next tab button
+     */
+    changeTabLeft() {
+        const activeTab = this.getActiveTab();
+        this.inputWorker.postMessage({
+            action: "changeTabLeft",
+            data: {
+                activeTab: activeTab,
+                nums: this.getTabList()
+            }
+        });
     }
 }
 

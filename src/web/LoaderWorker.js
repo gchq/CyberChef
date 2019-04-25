@@ -6,6 +6,21 @@
  * @license Apache-2.0
  */
 
+self.port = null;
+self.id = null;
+
+
+self.handlePortMessage = function(e) {
+    const r = e.data;
+    log.debug(`LoaderWorker receiving command '${r.action}'`);
+
+    switch (r.action) {
+        case "loadInput":
+            self.loadFile(r.data.file, r.data.inputNum);
+            break;
+    }
+};
+
 
 /**
  * Respond to message from parent thread.
@@ -16,6 +31,12 @@ self.addEventListener("message", function(e) {
         self.loadFile(r.file, r.inputNum);
     } else if (r.hasOwnProperty("file")) {
         self.loadFile(r.file, "");
+    } else if (r.hasOwnProperty("port")) {
+        self.port = r.port;
+        self.id = r.id;
+        self.port.onmessage = function(e) {
+            self.handlePortMessage(e);
+        };
     }
 });
 
@@ -28,17 +49,21 @@ self.addEventListener("message", function(e) {
  */
 self.loadFile = function(file, inputNum) {
     const reader = new FileReader();
-    const data = new Uint8Array(file.size);
+    let data;
+    try {
+        data = new Uint8Array(file.size);
+    } catch (err) {
+        self.port.postMessage({"error": err, "inputNum": inputNum});
+    }
     let offset = 0;
     const CHUNK_SIZE = 10485760; // 10MiB
 
     const seek = function() {
         if (offset >= file.size) {
-            self.postMessage({"progress": 100, "inputNum": inputNum});
-            self.postMessage({"fileBuffer": data.buffer, "inputNum": inputNum}, [data.buffer]);
+            self.port.postMessage({"fileBuffer": data.buffer, "inputNum": inputNum, "id": self.id}, [data.buffer]);
             return;
         }
-        self.postMessage({"progress": Math.round(offset / file.size * 100), "inputNum": inputNum});
+        // self.port.postMessage({"progress": Math.round(offset / file.size * 100), "inputNum": inputNum});
         const slice = file.slice(offset, offset + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
     };
@@ -50,7 +75,7 @@ self.loadFile = function(file, inputNum) {
     };
 
     reader.onerror = function(e) {
-        self.postMessage({"error": reader.error.message});
+        self.port.postMessage({"error": reader.error.message, "inputNum": inputNum});
     };
 
     seek();

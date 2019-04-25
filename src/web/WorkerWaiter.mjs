@@ -139,32 +139,12 @@ class WorkerWaiter {
                 this.updateOutput(r.data, r.data.inputNum);
 
                 if (this.inputs.length > 0) {
-                    const nextInput = this.inputs[0];
-                    this.inputs.splice(0, 1);
-                    log.debug(`Baking input ${nextInput.inputNum}.`);
-                    this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
-                    this.manager.output.updateOutputMessage("Baking...", nextInput.inputNum);
-                    currentWorker.inputNum = nextInput.inputNum;
-                    currentWorker.active = true;
-                    currentWorker.worker.postMessage({
-                        action: "bake",
-                        data: {
-                            input: nextInput.input,
-                            recipeConfig: nextInput.recipeConfig,
-                            options: nextInput.options,
-                            progress: nextInput.progress,
-                            step: nextInput.step,
-                            inputNum: nextInput.inputNum
-                        }
-                    });
-                    this.displayProgress();
+                    this.bakeNextInput(this.chefWorkers.indexOf(currentWorker));
                 } else {
                     // The ChefWorker is no longer needed
                     log.debug("No more inputs to bake. Closing ChefWorker.");
                     currentWorker.active = false;
                     this.removeChefWorker(currentWorker);
-
-                    this.displayProgress();
 
                     const progress = this.getBakeProgress();
                     if (progress.total === progress.baked) {
@@ -208,6 +188,7 @@ class WorkerWaiter {
                 break;
         }
     }
+
 
     /**
      * Update the value of an output
@@ -268,7 +249,6 @@ class WorkerWaiter {
         this.inputs = [];
         this.totalOutputs = 0;
         this.manager.controls.showStaleIndicator();
-        this.displayProgress();
     }
 
     /**
@@ -312,9 +292,39 @@ class WorkerWaiter {
     }
 
     /**
+     * Bakes the next input
+     *
+     * @param {number} workerIdx
+     */
+    bakeNextInput(workerIdx) {
+        if (this.inputs.length === 0) return;
+        if (workerIdx === -1) return;
+        if (!this.chefWorkers[workerIdx]) return;
+
+        const nextInput = this.inputs.splice(0, 1)[0];
+
+        log.debug(`Baking input ${nextInput.inputNum}.`);
+        this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
+        this.manager.output.updateOutputMessage("Baking...", nextInput.inputNum);
+
+
+        this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
+        this.chefWorkers[workerIdx].active = true;
+        this.chefWorkers[workerIdx].worker.postMessage({
+            action: "bake",
+            data: {
+                input: nextInput.input,
+                recipeConfig: this.recipeConfig,
+                options: this.options,
+                progress: this.progress,
+                step: this.step,
+                inputNum: nextInput.inputNum
+            }
+        });
+    }
+
+    /**
      * Bakes the current input using the current recipe.
-     * Either sends the input and recipe to a ChefWorker,
-     * or, if there's already the max running, adds it to inputs
      *
      * @param {string | Array} input
      * @param {Object[]} recipeConfig
@@ -332,6 +342,34 @@ class WorkerWaiter {
                 inputNum: this.manager.input.getActiveTab()
             }];
         }
+
+        for (let i = 0; i < input.length; i++) {
+            this.manager.output.updateOutputStatus("pending", input[i].inputNum);
+
+            for (let x = 0; x < this.inputs.length; x++) {
+                if (this.inputs[x].inputNum === input[i].inputNum) {
+                    this.inputs.splice(x, 1);
+                    break;
+                }
+            }
+        }
+
+        this.totalOutputs += input.length;
+        this.inputs = input;
+
+        this.recipeConfig = recipeConfig;
+        this.options = options;
+        this.progress = progress;
+        this.step = step;
+
+        for (let i = 0; i < this.maxWorkers; i++) {
+            const workerIdx = this.addChefWorker();
+            if (workerIdx === -1) break;
+            this.bakeNextInput(workerIdx);
+        }
+        this.displayProgress();
+        return;
+
 
         for (let i = 0; i < input.length; i++) {
             this.totalOutputs++;
@@ -468,6 +506,12 @@ class WorkerWaiter {
         }
 
         bakeInfo.innerHTML = msg;
+
+        if (progress.total !== progress.baked) {
+            setTimeout(function() {
+                this.displayProgress();
+            }.bind(this), 100);
+        }
 
     }
 }
