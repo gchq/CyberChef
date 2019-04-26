@@ -215,9 +215,6 @@ class InputWaiter {
             case "terminateLoaderWorker":
                 this.removeLoaderWorker(this.getLoaderWorker(r.data));
                 break;
-            case "allInputs":
-                this.app.bake(false, r.data);
-                break;
             case "refreshTabs":
                 this.refreshTabs(r.data.nums, r.data.activeTab);
                 break;
@@ -234,13 +231,19 @@ class InputWaiter {
                 this.showLoadingInfo(r.data);
                 break;
             case "setInput":
-                this.set(r.data, true);
+                this.set(r.data.inputObj, r.data.silent);
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
                 break;
             case "addInputs":
                 this.addInputs(r.data);
+                break;
+            case "queueInput":
+                this.manager.worker.queueInput(r.data);
+                break;
+            case "bake":
+                this.app.bake(false);
                 break;
             default:
                 log.error(`Unknown action ${r.action}.`);
@@ -281,9 +284,10 @@ class InputWaiter {
      * @param {boolean} [silent=false]
      */
     set(inputData, silent=false) {
-        const inputText = document.getElementById("input-text");
         const activeTab = this.getActiveTab();
         if (inputData.inputNum !== activeTab) return;
+
+        const inputText = document.getElementById("input-text");
 
         if (typeof inputData.input === "string") {
             inputText.value = inputData.input;
@@ -370,16 +374,19 @@ class InputWaiter {
         fileLoaded.textContent = progress + "%";
 
         if (progress < 100) {
-            // setTimeout(function() {
-            //     this.inputWorker.postMessage({
-            //         action: "getInputProgress",
-            //         data: activeTab
-            //     });
-            // }.bind(this), 100);
+            setTimeout(function() {
+                this.inputWorker.postMessage({
+                    action: "getInputProgress",
+                    data: activeTab
+                });
+            }.bind(this), 100);
         } else {
             this.inputWorker.postMessage({
                 action: "setInput",
-                data: inputNum
+                data: {
+                    inputNum: inputNum,
+                    silent: true
+                }
             });
         }
     }
@@ -531,21 +538,35 @@ class InputWaiter {
     }
 
     /**
-     * Load files from the UI into the inputWorker, creating tabs if needed
+     * Load files from the UI into the inputWorker
      *
      * @param files
      */
     loadUIFiles(files) {
         const numFiles = files.length;
+        const activeTab = this.getActiveTab();
         log.debug(`Loading ${numFiles} files.`);
         // Show something in the UI to make it clear we're loading files
 
-        this.inputWorker.postMessage({
-            action: "loadUIFiles",
-            data: files
+        this.hideLoadingMessage();
+        this.showLoadingInfo({
+            pending: numFiles,
+            loading: 0,
+            loaded: 0,
+            total: numFiles,
+            activeProgress: {
+                inputNum: activeTab,
+                progress: 0
+            }
         });
 
-        this.hideLoadingMessage();
+        this.inputWorker.postMessage({
+            action: "loadUIFiles",
+            data: {
+                files: files,
+                activeTab: activeTab
+            }
+        });
     }
 
     /**
@@ -601,7 +622,14 @@ class InputWaiter {
     // setinputInfo
     /**
      * Display the loaded files information in the input header
-     * @param loadedData
+     * @param {object} loadedData
+     * @param {number} loadedData.pending
+     * @param {number} loadedData.loading
+     * @param {number} loadedData.loaded
+     * @param {number} loadedData.total
+     * @param {object} loadedData.activeProgress
+     * @param {number} loadedData.activeProgress.inputNum
+     * @param {number} loadedData.activeProgress.progress
      */
     showLoadingInfo(loadedData) {
         const pending = loadedData.pending;
@@ -629,6 +657,15 @@ class InputWaiter {
         document.getElementById("input-files-info").innerHTML = msg;
 
         this.updateFileProgress(loadedData.activeProgress.inputNum, loadedData.activeProgress.progress);
+
+        if (loaded < total) {
+            setTimeout(function() {
+                this.inputWorker.postMessage({
+                    action: "getLoadProgress",
+                    data: this.getActiveTab()
+                });
+            }.bind(this), 100);
+        }
     }
     // displayTabInfo
         // simple getInput for each tab
@@ -754,7 +791,10 @@ class InputWaiter {
         } else {
             this.inputWorker.postMessage({
                 action: "setInput",
-                data: inputNum
+                data: {
+                    inputNum: inputNum,
+                    silent: true
+                }
             });
         }
 
@@ -890,10 +930,19 @@ class InputWaiter {
      * @param {array} inputNums
      */
     addInputs(inputNums) {
+        const activeTab = this.getActiveTab();
         for (let i = 0; i < inputNums.length; i++) {
+            if (inputNums[i] === activeTab) continue;
             this.manager.output.addOutput(inputNums[i], false);
         }
-        this.changeTab(inputNums[inputNums.length - 1], this.app.options.syncTabs);
+        // this.changeTab(inputNums[inputNums.length - 1], this.app.options.syncTabs);
+        this.inputWorker.postMessage({
+            action: "refreshTabs",
+            data: {
+                inputNum: this.getActiveTab(),
+                direction: "left"
+            }
+        });
     }
 
     /**
@@ -958,6 +1007,14 @@ class InputWaiter {
                 nums: this.getTabList()
             }
         });
+    }
+
+    /**
+     * Handler for go to tab button clicked
+     */
+    goToTab() {
+        const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
+        this.changeTab(tabNum, this.app.options.syncTabs);
     }
 }
 

@@ -13,6 +13,9 @@ self.pendingFiles = [];
 self.inputs = {};
 self.loaderWorkerPorts = [];
 self.currentInputNum = 1;
+self.numInputs = 0;
+self.pendingInputs = 0;
+self.loadingInputs = 0;
 
 /**
  * Respond to message from parent thread.
@@ -82,21 +85,10 @@ self.addEventListener("message", function(e) {
 });
 
 self.getLoadProgress = function(inputNum) {
-    const inputNums = Object.keys(self.inputs);
-    const total = inputNums.length;
+    const total = self.numInputs;
     const pending = self.pendingFiles.length;
-    let loaded = 0;
-    let loading = 0;
-
-    for (let i = 0; i < inputNums.length; i++) {
-        switch (self.inputs[inputNums[i]].status) {
-            case "loading":
-                loading++;
-                break;
-            case "loaded":
-                loaded++;
-        }
-    }
+    const loading = self.loadingInputs;
+    const loaded = total - pending - loading;
 
     self.postMessage({
         action: "loadingInfo",
@@ -111,12 +103,6 @@ self.getLoadProgress = function(inputNum) {
             }
         }
     });
-
-    if (loaded < total) {
-        setTimeout(function(inputNum) {
-            self.getLoadProgress(inputNum);
-        }, 100);
-    }
 };
 
 self.autoBake = function(inputNum) {
@@ -127,17 +113,19 @@ self.autoBake = function(inputNum) {
             inputData = inputData.fileBuffer;
         }
         self.postMessage({
-            action: "allInputs",
-            data: [{
+            action: "queueInput",
+            data: {
                 input: inputData,
                 inputNum: parseInt(inputNum, 10)
-            }]
+            }
+        });
+        self.postMessage({
+            action: "bake"
         });
     }
 };
 
 self.getAllInputs = function() {
-    const inputs = [];
     const inputNums = Object.keys(self.inputs);
 
     for (let i = 0; i < inputNums.length; i++) {
@@ -146,16 +134,17 @@ self.getAllInputs = function() {
             if (typeof inputData !== "string") {
                 inputData = inputData.fileBuffer;
             }
-            inputs.push({
-                input: inputData,
-                inputNum: inputNums[i]
+            self.postMessage({
+                action: "queueInput",
+                data: {
+                    input: inputData,
+                    inputNum: inputNums[i]
+                }
             });
         }
     }
-
     self.postMessage({
-        action: "allInputs",
-        data: inputs
+        action: "bake"
     });
 
 };
@@ -165,15 +154,11 @@ self.getInputObj = function(inputNum) {
 };
 
 self.getInputValue = function(inputNum) {
-    for (let i = 0; i < self.inputs.length; i++) {
-        if (self.inputs[i].inputNum === inputNum) {
-            if (self.inputs[i].status === "loaded") {
-                let inputData = self.inputs[i].data;
-                if (typeof inputData !== "string") {
-                    inputData = inputData.fileBuffer;
-                }
-                return inputData;
-            }
+    if (self.inputs[inputNum]) {
+        if (typeof self.inputs[inputNum].data === "string") {
+            return self.inputs[inputNum].data;
+        } else {
+            return self.inputs[inputNum].fileBuffer;
         }
     }
     return "";
@@ -308,7 +293,9 @@ self.updateTabHeader = function(inputNum) {
     });
 };
 
-self.setInput = function(inputNum) {
+self.setInput = function(inputData) {
+    const inputNum = inputData.inputNum;
+    const silent = inputData.silent;
     const input = self.getInputObj(inputNum);
     if (input === undefined || input === null) return;
 
@@ -327,7 +314,10 @@ self.setInput = function(inputNum) {
 
     self.postMessage({
         action: "setInput",
-        data: inputObj
+        data: {
+            inputObj: inputObj,
+            silent: silent
+        }
     });
     self.getInputProgress(inputNum);
 };
@@ -426,12 +416,29 @@ self.handleLoaderMessage = function(e) {
         inputNum = r.inputNum;
     }
 
+    if (r.hasOwnProperty("error")) {
+        self.updateInputStatus(r.inputNum, "error");
+        self.updateInputProgress(r.inputNum, 0);
+
+        log.error(r.error);
+        self.loadingInputs--;
+
+        self.terminateLoaderWorker(r.id);
+        self.activateLoaderWorker();
+
+        return;
+    }
+
     if (r.hasOwnProperty("fileBuffer")) {
         log.debug(`Input file ${inputNum} loaded.`);
+        self.loadingInputs--;
         self.updateInputValue({
             inputNum: inputNum,
             value: r.fileBuffer
         });
+
+        self.setInput({inputNum: inputNum, silent: false});
+
         const idx = self.getLoaderWorkerIdx(r.id);
         self.loadNextFile(idx);
     } else if (r.hasOwnProperty("progress")) {
@@ -450,6 +457,7 @@ self.loadNextFile = function(workerIdx) {
 
     const nextFile = self.pendingFiles.splice(0, 1)[0];
     self.loaderWorkerPorts[workerIdx].inputNum = nextFile.inputNum;
+    self.loadingInputs++;
     port.postMessage({
         action: "loadInput",
         data: {
@@ -484,16 +492,31 @@ self.terminateLoaderWorker = function(id) {
 
 /**
  * Loads files using LoaderWorkers
+ *
+ * @param {object} filesData
+ * @param filesData.files
+ * @param {number} filesData.activeTab
  */
-self.loadFiles = function(files) {
+self.loadFiles = function(filesData) {
+    const files = filesData.files;
+    const activeTab = filesData.activeTab;
     let lastInputNum = -1;
     const inputNums = [];
     for (let i = 0; i < files.length; i++) {
-        lastInputNum = self.addInput(false, "file", {
-            name: files[i].name,
-            size: files[i].size.toLocaleString(),
-            type: files[i].type || "unknown"
-        });
+        if (i === 0 && self.getInputValue(activeTab) === "") {
+            self.removeInput(activeTab);
+            lastInputNum = self.addInput(false, "file", {
+                name: files[i].name,
+                size: files[i].size.toLocaleString(),
+                type: files[i].type || "unknown"
+            }, activeTab);
+        } else {
+            lastInputNum = self.addInput(false, "file", {
+                name: files[i].name,
+                size: files[i].size.toLocaleString(),
+                type: files[i].type || "unknown"
+            });
+        }
         inputNums.push(lastInputNum);
 
         self.pendingFiles.push({
@@ -526,9 +549,10 @@ self.loadFiles = function(files) {
  * @param {string} fileData.name
  * @param {string} fileData.size
  * @param {string} fileData.type
+ * @param {number} inputNum
  */
-self.addInput = function(changeTab=false, type, fileData={name: "unknown", size: "unknown", type: "unknown"}) {
-    const inputNum = self.currentInputNum++;
+self.addInput = function(changeTab=false, type, fileData={name: "unknown", size: "unknown", type: "unknown"}, inputNum = self.currentInputNum++) {
+    self.numInputs++;
     const newInputObj = {
         inputNum: inputNum
     };
@@ -571,12 +595,21 @@ self.addInput = function(changeTab=false, type, fileData={name: "unknown", size:
 self.removeInput = function(removeInputData) {
     const inputNum = removeInputData.inputNum;
     const refreshTabs = removeInputData.refreshTabs;
+    self.numInputs--;
 
     delete self.inputs[inputNum];
 
     for (let i = 0; i < self.loaderWorkerPorts.length; i++) {
         if (self.loaderWorkerPorts[i].inputNum === inputNum) {
+            self.loadingInputs--;
             self.terminateLoaderWorker(self.loaderWorkerPorts[i].id);
+        }
+    }
+
+    for (let i = 0; i < self.pendingFiles.length; i++) {
+        if (self.pendingFiles[i].inputNum === inputNum) {
+            self.pendingFiles.splice(i, 1);
+            break;
         }
     }
 

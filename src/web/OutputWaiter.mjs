@@ -27,6 +27,7 @@ class OutputWaiter {
         this.manager = manager;
 
         this.outputs = {};
+        this.activeTab = -1;
 
         this.maxTabs = 4; // Calculate this
     }
@@ -466,6 +467,7 @@ class OutputWaiter {
         for (let i = 0; i < tabs.length; i++) {
             if (tabs.item(i).getAttribute("inputNum") === inputNum.toString()) {
                 tabs.item(i).classList.add("active-output-tab");
+                this.activeTab = inputNum;
                 found = true;
             } else {
                 tabs.item(i).classList.remove("active-output-tab");
@@ -482,6 +484,7 @@ class OutputWaiter {
                 tabs.item(i).setAttribute("inputNum", newOutputs[i].toString());
                 this.displayTabInfo(newOutputs[i]);
                 if (newOutputs[i] === inputNum) {
+                    this.activeTab = inputNum;
                     tabs.item(i).classList.add("active-output-tab");
                 }
             }
@@ -740,13 +743,7 @@ class OutputWaiter {
      * @returns {number}
      */
     getActiveTab() {
-        const activeTabs = document.getElementsByClassName("active-output-tab");
-        if (activeTabs.length > 0) {
-            const activeTab = activeTabs.item(0);
-            const tabNum = activeTab.getAttribute("inputNum");
-            return parseInt(tabNum, 10);
-        }
-        return -1;
+        return this.activeTab;
     }
 
     /**

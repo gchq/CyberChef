@@ -120,7 +120,6 @@ class App {
      *
      * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
      *   whole recipe.
-     * @param input - The inputs to bake
      */
     bake(step=false, input) {
         // if (this.baking) return;
@@ -132,7 +131,6 @@ class App {
         this.manager.recipe.updateBreakpointIndicator(false);
 
         this.manager.worker.bake(
-            input,     // The user's input
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,           // Options set by the user
             this.progress,          // The current position in the recipe

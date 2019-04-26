@@ -160,7 +160,7 @@ class Manager {
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInput.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
-        // document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
+        document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
         // document.getElementById("btn-find-input-tab").addEventListener("click", this.input.findTab.bind(this.input));
         this.addDynamicListener("#input-tabs li .btn-close-tab i", "click", this.input.removeTabClick, this.input);
         this.addDynamicListener("#input-tabs li .input-tab-content", "click", this.input.changeTabClick, this.input);
