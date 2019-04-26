@@ -49,7 +49,7 @@ self.addEventListener("message", function(e) {
  */
 self.loadFile = function(file, inputNum) {
     const reader = new FileReader();
-    if (file.size >= 256*256*256*127) {
+    if (file.size >= 256*256*256*128) {
         self.port.postMessage({"error": "File size too large.", "inputNum": inputNum, "id": self.id});
         return;
     }
