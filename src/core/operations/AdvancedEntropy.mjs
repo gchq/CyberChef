@@ -73,9 +73,9 @@ class AdvancedEntropy extends Operation {
      */
     calculateScanningEntropy(inputBytes, binWidth) {
         const entropyData = [];
-        binWidth = binWidth ?
-            Math.floor(inputBytes.length / binWidth) :
-            Math.floor(inputBytes.length / 256);
+
+        if (inputBytes.length < 256) binWidth = 8;
+        else binWidth = 256;
 
         for (let bytePos = 0; bytePos < inputBytes.length; bytePos+=binWidth) {
             const block = inputBytes.slice(bytePos, bytePos+binWidth);
@@ -145,14 +145,15 @@ class AdvancedEntropy extends Operation {
     calculateByteFrequency(inputBytes) {
         const byteFrequency = [];
         for (let i = 0; i < 256; i++) {
-            let count = 0;
-            for (const byte of inputBytes) {
-                if (byte === i) {
-                    count++;
+            if (inputBytes.length > 0) {
+                let count = 0;
+                for (const byte of inputBytes) {
+                    if (byte === i) count++;
                 }
+                byteFrequency.push(count / inputBytes.length);
+            } else {
+                byteFrequency.push(0);
             }
-
-            byteFrequency.push(count / (inputBytes.length + 1));
         }
 
         return byteFrequency;
@@ -179,7 +180,7 @@ class AdvancedEntropy extends Operation {
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
         const yScale = d3.scaleLinear()
-            .domain(d3.extent(byteFrequency, d => d))
+            .domain([0, d3.max(byteFrequency, d => d)])
             .range([svgHeight - margins.bottom, margins.top]);
 
         const xScale = d3.scaleLinear()
@@ -193,8 +194,9 @@ class AdvancedEntropy extends Operation {
 
         svg.append("path")
             .datum(byteFrequency)
-            .attr("d", line)
-            .attr("fill", "steelblue");
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("d", line);
 
         this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "", "Byte", "Byte Frequency");
 
@@ -221,8 +223,9 @@ class AdvancedEntropy extends Operation {
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
+        const yExtent = d3.extent(byteFrequency, d => d);
         const yScale = d3.scaleLinear()
-            .domain(d3.extent(byteFrequency, d => d))
+            .domain(yExtent)
             .range([svgHeight - margins.bottom, margins.top]);
 
         const xScale = d3.scaleLinear()
@@ -235,7 +238,7 @@ class AdvancedEntropy extends Operation {
             .attr("x", (_, i) => xScale(i) + binWidth)
             .attr("y", dataPoint => yScale(dataPoint))
             .attr("width", binWidth)
-            .attr("height", dataPoint => yScale(0) - yScale(dataPoint))
+            .attr("height", dataPoint => yScale(yExtent[0]) - yScale(dataPoint))
             .attr("fill", "blue");
 
         this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "", "Byte", "Byte Frequency");
@@ -350,7 +353,7 @@ class AdvancedEntropy extends Operation {
         } else if (visualizationType === "Curve") {
             return this.createEntropyCurve(this.calculateScanningEntropy(input).entropyData);
         } else if (visualizationType === "Image") {
-            return this.createEntropyImage(this.calculateScanningEntropy(input, 10000).entropyData);
+            return this.createEntropyImage(this.calculateScanningEntropy(input).entropyData);
         }
     }
 }
