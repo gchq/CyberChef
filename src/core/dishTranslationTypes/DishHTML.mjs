@@ -4,14 +4,13 @@
  * @license Apache-2.0
  */
 
-import DishTranslationType from "./DishTranslationType";
-import Utils from "../Utils";
 import DishString from "./DishString";
+import Utils from "../Utils";
 
 /**
  * Translation methods for HTML Dishes
  */
-class DishHTML extends DishTranslationType {
+class DishHTML extends DishString {
 
     /**
      * convert the given value to a ArrayBuffer
@@ -22,13 +21,6 @@ class DishHTML extends DishTranslationType {
         this.value = this.value ? Utils.strToArrayBuffer(Utils.unescapeHtml(Utils.stripHtmlTags(this.value, true))) : new ArrayBuffer;
     }
 
-    /**
-     * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
-     */
-    static fromArrayBuffer(notUTF8) {
-        DishString.fromByteArray(this.value, notUTF8);
-    }
 }
 
 export default DishHTML;

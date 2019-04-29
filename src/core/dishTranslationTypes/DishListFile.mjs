@@ -5,6 +5,7 @@
  */
 
 import DishTranslationType from "./DishTranslationType";
+import Utils from "../Utils.mjs";
 
 /**
  * Translation methods for ListFile Dishes
@@ -16,6 +17,10 @@ class DishListFile extends DishTranslationType {
      */
     static toArrayBuffer() {
         DishListFile.checkForValue(this.value);
+
+        if (Utils.isNode()) {
+            this.value = this.value.map(file => Uint8Array.from(file.data));
+        }
         this.value = DishListFile.concatenateTypedArrays(...this.value).buffer;
     }
 

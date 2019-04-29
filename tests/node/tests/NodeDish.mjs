@@ -1,8 +1,12 @@
 import assert from "assert";
 import it from "../assertionHandler";
-import TestRegister from "../../lib/TestRegister";
-import { Dish, toBase32, SHA3 } from "../../../src/node/index";
 import fs from "fs";
+
+import BigNumber from "bignumber.js";
+
+import { Dish, toBase32, SHA3 } from "../../../src/node/index";
+import File from "../../../src/node/File";
+import TestRegister from "../../lib/TestRegister";
 
 TestRegister.addApiTests([
     it("Composable Dish: Should have top level Dish object", () => {
@@ -61,8 +65,135 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "493e8136b759370a415ef2cf2f7a69690441ff86592aba082bc2e2e0");
     }),
 
-    // it("Dish translation: ArrayBuffer to ArrayBuffer", () => {
-    //     const dish = new Dish();
-        
-    // }),
+    it("Dish translation: ArrayBuffer to ArrayBuffer", () => {
+        const dish = new Dish(new ArrayBuffer(10), 4);
+        dish.get("array buffer");
+        assert.strictEqual(dish.value.byteLength, 10);
+        assert.strictEqual(dish.type, 4);
+    }),
+
+    it("Dish translation: ArrayBuffer and String", () => {
+        const dish = new Dish("some string", 1);
+        dish.get("array buffer");
+
+        assert.strictEqual(dish.type, 4);
+        assert.deepStrictEqual(dish.value, new ArrayBuffer(11));
+        assert.deepEqual(dish.value.byteLength, 11);
+
+        dish.get("string");
+        assert.strictEqual(dish.type, 1);
+        assert.strictEqual(dish.value, "some string");
+    }),
+
+    it("Dish translation: ArrayBuffer and number", () => {
+        const dish = new Dish(100, 2);
+        dish.get(4);
+
+        assert.strictEqual(dish.type, 4);
+        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.strictEqual(dish.value.byteLength, 3);
+
+        // Check the data in ArrayBuffer represents 100 as a string.
+        const view = new DataView(dish.value, 0);
+        assert.strictEqual(String.fromCharCode(view.getUint8(0), view.getUint8(1), view.getUint8(2)), "100");
+
+        dish.get("number");
+        assert.strictEqual(dish.type, 2);
+        assert.strictEqual(dish.value, 100);
+    }),
+
+    it("Dish translation: ArrayBuffer and byte array", () => {
+        const dish = new Dish(new Uint8Array([1, 2, 3]), 0);
+        dish.get(4);
+
+        // Check intermediate value
+        const check = new Uint8Array(dish.value);
+        assert.deepEqual(check, [1, 2, 3]);
+
+        // Check converts back OK
+        dish.get(0);
+        assert.deepEqual(dish.value, new Uint8Array([1, 2, 3]));
+    }),
+
+    it("Dish translation: ArrayBuffer and HTML", () => {
+        const html = `<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    </head>
+    <body>
+    <a href="https://github.com">Click here</a>
+    <script src="script.js"></script>
+    </body>
+</html>`.replace(/\n|\s{4}/g, ""); //remove newlines, tabs
+
+        const dish = new Dish(html, Dish.HTML);
+        dish.get(4);
+
+        dish.get(3);
+        assert.strictEqual(dish.value, "Click here");
+    }),
+
+    it("Dish translation: ArrayBuffer and BigNumber", () => {
+        const number = BigNumber(4001);
+        const dish = new Dish(number, Dish.BIG_NUMBER);
+
+        dish.get(Dish.ARRAY_BUFFER);
+        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.strictEqual(dish.value.byteLength, 4);
+
+        // Check the data in ArrayBuffer represents 4001 as a string.
+        const view = new DataView(dish.value, 0);
+        assert.strictEqual(String.fromCharCode(view.getUint8(0), view.getUint8(1), view.getUint8(2), view.getUint8(3)), "4001");
+
+        dish.get(5);
+        assert.deepStrictEqual(dish.value, number);
+    }),
+
+    it("Dish translation: ArrayBuffer and JSON", () => {
+        const jsonString = "{\"a\": 123455, \"b\": { \"aa\": [1,2,3]}}";
+        const dish = new Dish(JSON.parse(jsonString), Dish.JSON);
+
+        dish.get(Dish.ARRAY_BUFFER);
+        dish.get(Dish.JSON);
+
+        assert.deepStrictEqual(dish.value, JSON.parse(jsonString));
+    }),
+
+    it("Dish translation: ArrayBuffer and File", () => {
+        const file = new File("abcd", "unknown");
+        const dish = new Dish(file, Dish.FILE);
+
+        dish.get(Dish.ARRAY_BUFFER);
+        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.strictEqual(dish.value.byteLength, 4);
+
+        // Check the data in ArrayBuffer represents "abcd"
+        const view = new DataView(dish.value, 0);
+        assert.strictEqual(String.fromCharCode(view.getUint8(0), view.getUint8(1), view.getUint8(2), view.getUint8(3)), "abcd");
+
+        dish.get(Dish.FILE);
+
+        assert.deepStrictEqual(dish.value.data, file.data);
+        assert.strictEqual(dish.value.name, file.name);
+        assert.strictEqual(dish.value.type, file.type);
+        // Do not test lastModified
+    }),
+
+    it("Dish translation: ArrayBuffer and ListFile", () => {
+        const file1 = new File("abcde", "unknown");
+        const file2 = new File("fghijk", "unknown");
+
+        const dish = new Dish([file1, file2], Dish.LIST_FILE);
+
+        dish.get(Dish.ARRAY_BUFFER);
+        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.strictEqual(dish.value.byteLength, 11);
+
+        dish.get(Dish.LIST_FILE);
+        const dataArray = new Uint8Array(dish.value[0].data);
+        // cant store chars in a Uint8Array, so make it a normal one.
+        const actual = Array.prototype.slice.call(dataArray).map(c => String.fromCharCode(c)).join("");
+        assert.strictEqual(actual, "abcdefghijk");
+    }),
 ]);

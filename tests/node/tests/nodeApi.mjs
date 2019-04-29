@@ -15,9 +15,8 @@ import it from "../assertionHandler";
 import chef from "../../../src/node/index";
 import OperationError from "../../../src/core/errors/OperationError";
 import NodeDish from "../../../src/node/NodeDish";
-import fs from "fs";
 
-import { toBase32, Dish, SHA3 } from "../../../src/node/index";
+import { toBase32} from "../../../src/node/index";
 import TestRegister from "../../lib/TestRegister";
 
 TestRegister.addApiTests([
@@ -324,8 +323,6 @@ TestRegister.addApiTests([
         ]);
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
     }),
-
-
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {
         try {

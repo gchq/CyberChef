@@ -19,7 +19,6 @@ class DishFile extends DishTranslationType {
     static toArrayBuffer() {
         DishFile.checkForValue(this.value);
         if (Utils.isNode()) {
-            // TODO
             this.value = Utils.readFileSync(this.value);
         } else {
             return new Promise((resolve, reject) => {

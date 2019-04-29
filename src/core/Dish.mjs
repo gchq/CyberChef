@@ -208,7 +208,7 @@ class Dish {
     valid() {
         switch (this.type) {
             case Dish.BYTE_ARRAY:
-                if (!(this.value instanceof Array)) {
+                if (!(this.value instanceof Uint8Array) && !(this.value instanceof Array)) {
                     return false;
                 }
 
