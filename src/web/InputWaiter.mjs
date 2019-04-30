@@ -280,7 +280,13 @@ class InputWaiter {
     /**
      * Sets the input in the input area
      *
-     * @param inputData
+     * @param {object} inputData
+     * @param {number} inputData.inputNum
+     * @param {string | object} inputData.input
+     * @param {string} inputData.name
+     * @param {string} inputData.size
+     * @param {string} inputData.type
+     * @param {number} inputData.progress
      * @param {boolean} [silent=false]
      */
     set(inputData, silent=false) {
@@ -768,7 +774,7 @@ class InputWaiter {
             document.getElementById("save-all-to-file").style.display = "none";
         }
 
-        this.changeTab(activeTab);
+        this.changeTab(activeTab, this.app.options.syncTabs);
     }
 
     /**
@@ -899,8 +905,6 @@ class InputWaiter {
         return nums;
     }
 
-    // clearAllIO
-        // could just re-run setup to create a new inputWorker
     /**
      * Handler for clear all IO events.
      * Resets the input, output and info areas
@@ -918,8 +922,23 @@ class InputWaiter {
         this.addInput(true);
     }
 
-    // clearIO
-        // reset current tab
+    /**
+     * Handler for clear IO click event.
+     * Resets the input for the current tab
+     */
+    clearIoClick() {
+        const inputNum = this.getActiveTab();
+        if (inputNum === -1) return;
+
+        this.updateInputValue(inputNum, "");
+
+        this.set({
+            inputNum: inputNum,
+            input: ""
+        });
+
+        this.updateTabHeader({inputNum: inputNum, input: ""});
+    }
 
     // filter stuff should be sent to the inputWorker
         // returns a filterResult message that is handled and used to update the UI
@@ -964,7 +983,7 @@ class InputWaiter {
      */
     inputAdded(changeTab, inputNum) {
         if (changeTab) {
-            this.changeTab(inputNum);
+            this.changeTab(inputNum, this.app.options.syncTabs);
         }
         this.manager.output.addOutput(inputNum, changeTab);
     }
@@ -1009,7 +1028,7 @@ class InputWaiter {
             }
         });
 
-        this.manager.output.removeOutput(inputNum);
+        this.manager.output.removeTab(inputNum);
     }
 
     /**

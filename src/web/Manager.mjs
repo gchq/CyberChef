@@ -156,7 +156,7 @@ class Manager {
         // document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
         // document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
         // this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
-        // document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
+        document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
