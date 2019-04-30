@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 
+import Utils from "../core/Utils";
 
 self.maxWorkers = 4;
 self.maxTabs = 1;
@@ -78,6 +79,9 @@ self.addEventListener("message", function(e) {
             break;
         case "autobake":
             self.autoBake(r.data);
+            break;
+        case "filterTabs":
+            self.filterTabs(r.data);
             break;
         default:
             log.error(`Unknown action '${r.action}'.`);
@@ -641,3 +645,56 @@ self.changeTabLeft = function(inputNum, tabNums) {
         self.refreshTabs(newInput, "left");
     }
 };
+
+self.filterTabs = function(searchData) {
+    const showPending = searchData.showPending;
+    const showLoading = searchData.showLoading;
+    const showLoaded = searchData.showLoaded;
+
+    const fileNameFilter = searchData.fileNameFilter;
+    const contentFilter = searchData.contentFilter;
+    const numResults = searchData.numResults;
+
+    const inputs = [];
+    const inputNums = Object.keys(self.inputs);
+    for (let i = 0; i < inputNums.length; i++) {
+        const iNum = inputNums[i];
+        let textDisplay = "";
+        let addInput = false;
+        if (self.inputs[iNum].status === "pending" && showPending ||
+            self.inputs[iNum].status === "loading" && showLoading ||
+            self.inputs[iNum].status === "loaded" && showLoaded) {
+            if (typeof self.inputs[iNum].data === "string") {
+                if (self.inputs[iNum].data.slice(0, 4096).toLowerCase().includes(contentFilter)) {
+                    textDisplay = self.inputs[iNum].data.slice(0, 4096);
+                    addInput = true;
+                }
+            } else {
+                if (self.inputs[iNum].data.name.toLowerCase().includes(fileNameFilter) &&
+                    Utils.arrayBufferToStr(self.inputs[iNum].data.fileBuffer.slice(0, 4096)).toLowerCase().includes(contentFilter)) {
+                    textDisplay = self.inputs[iNum].data.name;
+                    addInput = true;
+                }
+            }
+        }
+
+        if (addInput) {
+            if (textDisplay === "" || textDisplay === undefined) {
+                textDisplay = "New Tab";
+            }
+            const inputItem = {
+                inputNum: iNum,
+                textDisplay: textDisplay
+            };
+            inputs.push(inputItem);
+        }
+        if (inputs.length >= numResults) {
+            break;
+        }
+    }
+
+    self.postMessage({
+        action: "displayTabSearchResults",
+        data: inputs
+    });
+}

@@ -247,6 +247,9 @@ class InputWaiter {
             case "bake":
                 this.app.bake(false);
                 break;
+            case "displayTabSearchResults":
+                this.displayTabSearchResults(r.data);
+                break;
             default:
                 log.error(`Unknown action ${r.action}.`);
         }
@@ -1080,6 +1083,78 @@ class InputWaiter {
         const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
         this.changeTab(tabNum, this.app.options.syncTabs);
     }
+
+    /**
+     * Handler for find tab button clicked
+     */
+    findTab() {
+        this.filterTabSearch();
+        $("#input-tab-modal").modal();
+    }
+
+    /**
+     * Sends a message to the inputWorker to search the inputs
+     */
+    filterTabSearch() {
+        const showPending = document.getElementById("input-show-pending").checked;
+        const showLoading = document.getElementById("input-show-loading").checked;
+        const showLoaded = document.getElementById("input-show-loaded").checked;
+
+        const fileNameFilter = document.getElementById("input-filename-filter").value;
+        const contentFilter = document.getElementById("input-content-filter").value;
+        const numResults = parseInt(document.getElementById("input-num-results").value, 10);
+
+        this.inputWorker.postMessage({
+            action: "filterTabs",
+            data: {
+                showPending: showPending,
+                showLoading: showLoading,
+                showLoaded: showLoaded,
+                fileNameFilter: fileNameFilter,
+                contentFilter: contentFilter,
+                numResults: numResults
+            }
+        });
+    }
+
+    /**
+     * Displays the results of a tab search in the find tab box
+     *
+     * @param {object[]} results
+     *
+     */
+    displayTabSearchResults(results) {
+        const resultsList = document.getElementById("input-search-results");
+
+        for (let i = resultsList.children.length - 1; i >= 0; i--) {
+            resultsList.children.item(i).remove();
+        }
+
+        for (let i = 0; i < results.length; i++) {
+            const newListItem = document.createElement("li");
+            newListItem.classList.add("input-filter-result");
+            newListItem.setAttribute("inputNum", results[i].inputNum);
+            newListItem.innerText = `${results[i].inputNum}: ${results[i].textDisplay}`;
+
+            resultsList.appendChild(newListItem);
+        }
+    }
+
+    /**
+     * Handler for clicking on a filter result
+     *
+     * @param {event} e
+     */
+    filterItemClick(e) {
+        if (!e.target) return;
+        const inputNum = parseInt(e.target.getAttribute("inputNum"), 10);
+        if (inputNum <= 0) return;
+
+        $("#input-tab-modal").modal("hide");
+        this.changeTab(inputNum, this.app.options.syncTabs);
+    }
+
+
 }
 
 export default InputWaiter;
