@@ -697,4 +697,4 @@ self.filterTabs = function(searchData) {
         action: "displayTabSearchResults",
         data: inputs
     });
-}
+};
