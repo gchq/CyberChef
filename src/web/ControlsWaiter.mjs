@@ -378,6 +378,8 @@ ${navigator.userAgent}
         const bakeButton = document.getElementById("bake"),
             btnText = bakeButton.querySelector("span");
 
+        bakeButton.style.background = "";
+
         if (cancel) {
             btnText.innerText = "Cancel";
             bakeButton.classList.remove("btn-success");
