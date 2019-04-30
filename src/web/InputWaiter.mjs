@@ -91,9 +91,6 @@ class InputWaiter {
         });
         this.inputWorker.addEventListener("message", this.handleInputWorkerMessage.bind(this));
 
-        if (this.loaderWorkers.length === 0) {
-            this.activateLoaderWorker();
-        }
 
     }
 
@@ -101,7 +98,7 @@ class InputWaiter {
      * Activates a loaderWorker and sends it to the InputWorker
      */
     activateLoaderWorker() {
-        const workerIdx = this.addLoaderWorker(true);
+        const workerIdx = this.addLoaderWorker();
         if (workerIdx === -1) return;
 
         const workerObj = this.loaderWorkers[workerIdx];
@@ -117,7 +114,6 @@ class InputWaiter {
     /**
      * Adds a new loaderWorker
      *
-     * @param {boolean} [active=false]
      * @returns {number} The index of the created worker
      */
     addLoaderWorker() {
