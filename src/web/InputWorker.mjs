@@ -44,7 +44,7 @@ self.addEventListener("message", function(e) {
             self.updateInputValue(r.data);
             break;
         case "getInputProgress":
-            self.getInputProgress(r.data);
+            self.getLoadProgress(r.data);
             break;
         case "updateInputProgress":
             self.updateInputProgress(r.data);
@@ -62,7 +62,7 @@ self.addEventListener("message", function(e) {
             log.setLevel(r.data, false);
             break;
         case "addInput":
-            self.addInput(true, "string");
+            self.addInput(r.data, "string");
             break;
         case "refreshTabs":
             self.refreshTabs(r.data.inputNum, r.data.direction);

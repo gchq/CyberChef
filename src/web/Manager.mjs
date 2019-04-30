@@ -83,7 +83,7 @@ class Manager {
      */
     setup() {
         this.input.setupInputWorker();
-        this.input.addInput();
+        this.input.addInput(true);
         this.worker.setupChefWorker();
         this.recipe.initialiseOperationDragNDrop();
         this.controls.initComponents();
@@ -147,7 +147,7 @@ class Manager {
         this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
         this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
-        // document.getElementById("clr-io").addEventListener("click", this.input.clearAllIoClick.bind(this.input));
+        document.getElementById("clr-io").addEventListener("click", this.input.clearAllIoClick.bind(this.input));
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
         this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
         this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
@@ -157,7 +157,7 @@ class Manager {
         // document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
         // this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
         // document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
-        document.getElementById("btn-new-tab").addEventListener("click", this.input.addInput.bind(this.input));
+        document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
         document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));

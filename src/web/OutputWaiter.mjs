@@ -169,6 +169,17 @@ class OutputWaiter {
     }
 
     /**
+     * Removes all output tabs
+     */
+    removeAllOutputs() {
+        this.outputs = {};
+        const tabs = document.getElementById("output-tabs").children;
+        for (let i = tabs.length - 1; i >= 0; i--) {
+            tabs.item(i).remove();
+        }
+    }
+
+    /**
      * Sets the output in the output textarea.
      *
      * @param {number} inputNum
@@ -427,7 +438,7 @@ class OutputWaiter {
         const tabsWrapper = document.getElementById("output-tabs");
         const numTabs = tabsWrapper.children.length;
 
-        if (numTabs < this.maxTabs) {
+        if (this.getTabItem(inputNum) === undefined && numTabs < this.maxTabs) {
             // Create a new tab element
             const newTab = this.createTabElement(inputNum);
 
@@ -442,6 +453,15 @@ class OutputWaiter {
                 document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
 
                 document.getElementById("save-all-to-file").style.display = "inline-block";
+            } else {
+                tabsWrapper.parentElement.style.display = "none";
+
+                document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
+                document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
+                document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
+                document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
+
+                document.getElementById("save-all-to-file").style.display = "none";
             }
         }
 

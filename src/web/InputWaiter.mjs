@@ -70,7 +70,10 @@ class InputWaiter {
      * Terminates any existing workers and sets up a new InputWorker and LoaderWorker
      */
     setupInputWorker() {
-        if (this.inputWorker !== null) this.inputWorker.terminate();
+        if (this.inputWorker !== null) {
+            this.inputWorker.terminate();
+            this.inputWorker = null;
+        }
 
         for (let i = this.loaderWorkers.length - 1; i >= 0; i--) {
             this.removeLoaderWorker(this.loaderWorkers[i]);
@@ -183,7 +186,6 @@ class InputWaiter {
         return -1;
     }
 
-    // removeInput should talk to the worker
 
     /**
      * Handler for messages sent back by the inputWorker
@@ -228,7 +230,7 @@ class InputWaiter {
                 this.updateFileProgress(r.data.inputNum, r.data.progress);
                 break;
             case "loadingInfo":
-                this.showLoadingInfo(r.data);
+                this.showLoadingInfo(r.data, true);
                 break;
             case "setInput":
                 this.set(r.data.inputObj, r.data.silent);
@@ -248,10 +250,8 @@ class InputWaiter {
             default:
                 log.error(`Unknown action ${r.action}.`);
         }
-        // Handle the responses and use them to control the UI / other workers / stuff
     }
 
-    // get / set input
     /**
      * Gets the input for the active tab
      */
@@ -373,14 +373,7 @@ class InputWaiter {
         const fileLoaded = document.getElementById("input-file-loaded");
         fileLoaded.textContent = progress + "%";
 
-        if (progress < 100) {
-            setTimeout(function() {
-                this.inputWorker.postMessage({
-                    action: "getInputProgress",
-                    data: activeTab
-                });
-            }.bind(this), 100);
-        } else {
+        if (progress === 100) {
             this.inputWorker.postMessage({
                 action: "setInput",
                 data: {
@@ -390,7 +383,6 @@ class InputWaiter {
             });
         }
     }
-
 
     /**
      * Updates the input value for the specified inputNum
@@ -429,9 +421,7 @@ class InputWaiter {
         document.getElementById("input-info").innerHTML = msg;
 
     }
-    // get progress
 
-    // inputChange
     /**
      * Handler for input change events
      *
@@ -461,7 +451,6 @@ class InputWaiter {
             window.dispatchEvent(this.manager.statechange);
         }
     }
-    // inputPaste
 
     /**
      * Handler for input paste events
@@ -520,7 +509,6 @@ class InputWaiter {
         e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
     }
 
-    // inputDrop
     /**
      * Handler for input drop events.
      * Loads the dragged data.
@@ -586,7 +574,7 @@ class InputWaiter {
                 inputNum: activeTab,
                 progress: 0
             }
-        });
+        }, false);
 
         this.inputWorker.postMessage({
             action: "loadUIFiles",
@@ -658,8 +646,9 @@ class InputWaiter {
      * @param {object} loadedData.activeProgress
      * @param {number} loadedData.activeProgress.inputNum
      * @param {number} loadedData.activeProgress.progress
+     * @param {boolean} autoRefresh
      */
-    showLoadingInfo(loadedData) {
+    showLoadingInfo(loadedData, autoRefresh) {
         const pending = loadedData.pending;
         const loading = loadedData.loading;
         const loaded = loadedData.loaded;
@@ -686,7 +675,7 @@ class InputWaiter {
 
         this.updateFileProgress(loadedData.activeProgress.inputNum, loadedData.activeProgress.progress);
 
-        if (loaded < total) {
+        if (loaded < total && autoRefresh) {
             setTimeout(function() {
                 this.inputWorker.postMessage({
                     action: "getLoadProgress",
@@ -852,7 +841,10 @@ class InputWaiter {
     updateTabHeader(headerData) {
         const tabsList = document.getElementById("input-tabs");
         const inputNum = headerData.inputNum;
-        const inputData = headerData.input.slice(0, 100);
+        let inputData = "New Tab";
+        if (headerData.input.length > 0) {
+            inputData = headerData.input.slice(0, 100);
+        }
         for (let i = 0; i < tabsList.children.length; i++) {
             if (tabsList.children.item(i).getAttribute("inputNum") === inputNum.toString()) {
                 tabsList.children.item(i).firstElementChild.innerText = `${inputNum}: ${inputData}`;
@@ -909,6 +901,22 @@ class InputWaiter {
 
     // clearAllIO
         // could just re-run setup to create a new inputWorker
+    /**
+     * Handler for clear all IO events.
+     * Resets the input, output and info areas
+     */
+    clearAllIoClick() {
+        this.manager.worker.cancelBake();
+        this.manager.output.removeAllOutputs();
+
+        const tabsList = document.getElementById("input-tabs").children;
+        for (let i = tabsList.length - 1; i >= 0; i--) {
+            tabsList.item(i).remove();
+        }
+
+        this.setupInputWorker();
+        this.addInput(true);
+    }
 
     // clearIO
         // reset current tab
@@ -931,12 +939,21 @@ class InputWaiter {
 
     /**
      * Sends a message to the inputWorker to add a new input.
+     * @param {boolean} [changeTab=false]
      */
-    addInput() {
+    addInput(changeTab=false) {
         if (!this.inputWorker) return;
         this.inputWorker.postMessage({
-            action: "addInput"
+            action: "addInput",
+            data: changeTab
         });
+    }
+
+    /**
+     * Handler for add input button clicked
+     */
+    addInputClick() {
+        this.addInput(true);
     }
 
     /**
