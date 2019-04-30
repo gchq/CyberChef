@@ -463,6 +463,34 @@ class InputWaiter {
     }
     // inputPaste
 
+    /**
+     * Handler for input paste events
+     * Checks that the size of the input is below the display limit, otherwise treats it as a file/blob
+     *
+     * @param {event} e
+     */
+    inputPaste(e) {
+        const pastedData = e.clipboardData.getData("Text");
+        if (pastedData.length < (this.app.options.ioDisplayThreshold * 1024)) {
+            // inputChange() was being fired before the input value
+            // was set, so add it here instead
+            e.preventDefault();
+            document.getElementById("input-text").value += pastedData;
+            this.inputChange(e);
+        } else {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const file = new File([pastedData], "PastedData", {
+                type: "text/plain",
+                lastModified: Date.now()
+            });
+
+            this.loadUIFiles([file]);
+            return false;
+        }
+    }
+
 
     /**
      * Handler for input dragover events.

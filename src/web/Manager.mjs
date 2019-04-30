@@ -145,7 +145,7 @@ class Manager {
 
         // Input
         this.addMultiEventListener("#input-text", "keyup", this.input.inputChange, this.input);
-        // this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
+        this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
         // document.getElementById("clr-io").addEventListener("click", this.input.clearAllIoClick.bind(this.input));
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
