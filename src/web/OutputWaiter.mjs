@@ -414,9 +414,10 @@ class OutputWaiter {
         const fileName = window.prompt("Please enter a filename: ", "download.zip");
         const fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
         const zip = new Zlib.Zip();
-        for (let i = 0; i < this.outputs.length; i++) {
-            const name = Utils.strToByteArray(this.outputs[i].inputNum + fileExt);
-            let out = this.getOutput(this.outputs[i].inputNum);
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const name = Utils.strToByteArray(inputNums[i] + fileExt);
+            let out = this.getOutput(inputNums[i]);
             if (typeof out === "string") {
                 out = Utils.strToUtf8ByteArray(out);
             }
@@ -479,6 +480,7 @@ class OutputWaiter {
     changeTab(inputNum, changeInput = false) {
         const currentNum = this.getActiveTab();
         if (this.getOutput(inputNum) === -1) return;
+        this.hideMagicButton();
 
         const tabsWrapper = document.getElementById("output-tabs");
         const tabs = tabsWrapper.children;
@@ -828,10 +830,9 @@ class OutputWaiter {
      */
     backgroundMagic() {
         this.hideMagicButton();
-        if (!this.app.options.autoMagic || this.getActive()) return;
+        if (!this.app.options.autoMagic || !this.getActive()) return;
         const sample = this.getActive().slice(0, 1000) || "";
-
-        if (sample.length) {
+        if (sample.length || sample.byteLength) {
             this.manager.background.magic(sample);
         }
     }
