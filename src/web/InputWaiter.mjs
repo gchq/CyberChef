@@ -105,10 +105,9 @@ class InputWaiter {
         this.inputWorker.postMessage({
             action: "loaderWorkerReady",
             data: {
-                id: workerObj.id,
-                port: workerObj.port
+                id: workerObj.id
             }
-        }, [workerObj.port]);
+        });
     }
 
     /**
@@ -122,17 +121,12 @@ class InputWaiter {
         }
         log.debug("Adding new LoaderWorker.");
         const newWorker = new LoaderWorker();
-        const messageChannel = new MessageChannel();
         const workerId = this.workerId++;
-        // newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
-        newWorker.postMessage({
-            port: messageChannel.port1,
-            id: workerId
-        }, [messageChannel.port1]);
+        newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+        newWorker.postMessage({id: workerId});
         const newWorkerObj = {
             worker: newWorker,
-            id: workerId,
-            port: messageChannel.port2
+            id: workerId
         };
         this.loaderWorkers.push(newWorkerObj);
         return this.loaderWorkers.indexOf(newWorkerObj);
@@ -151,10 +145,6 @@ class InputWaiter {
         log.debug(`Terminating worker ${this.loaderWorkers[idx].id}`);
         this.loaderWorkers[idx].worker.terminate();
         this.loaderWorkers.splice(idx, 1);
-        if (this.loaderWorkers.length === 0) {
-            // There should always be 1 loaderworker loaded
-            this.addLoaderWorker();
-        }
     }
 
     /**
@@ -182,6 +172,44 @@ class InputWaiter {
         return -1;
     }
 
+    /**
+     * Sends an input to be loaded to the loaderWorker
+     *
+     * @param {object} inputData
+     * @param {File} inputData.file
+     * @param {number} inputData.inputNum
+     * @param {number} inputData.workerId
+     */
+    loadInput(inputData) {
+        const idx = this.getLoaderWorkerIndex(inputData.workerId);
+        if (idx === -1) return;
+        this.loaderWorkers[idx].worker.postMessage({
+            file: inputData.file,
+            inputNum: inputData.inputNum
+        });
+    }
+
+    /**
+     * Handler for messages sent back by the loaderWorker
+     *
+     * @param {MessageEvent} e
+     */
+    handleLoaderMessage(e) {
+        const r = e.data;
+
+        if (r.hasOwnProperty("fileBuffer")) {
+            this.inputWorker.postMessage({
+                action: "loaderWorkerMessage",
+                data: r
+            }, [r.fileBuffer]);
+        } else {
+            this.inputWorker.postMessage({
+                action: "loaderWorkerMessage",
+                data: r
+            });
+        }
+    }
+
 
     /**
      * Handler for messages sent back by the inputWorker
@@ -203,12 +231,7 @@ class InputWaiter {
                 this.activateLoaderWorker();
                 break;
             case "loadInput":
-                this.loaderWorkers[r.data.workerIdx].worker.postMessage({
-                    file: r.data.file,
-                    inputNum: r.data.inputNum
-                });
-                this.loaderWorkers[r.data.workerIdx].inputNum = r.data.inputNum;
-                this.loaderWorkers[r.data.workerIdx].active = true;
+                this.loadInput(r.data);
                 break;
             case "terminateLoaderWorker":
                 this.removeLoaderWorker(this.getLoaderWorker(r.data));
@@ -271,6 +294,7 @@ class InputWaiter {
      * Gets the input for all tabs
      */
     getAll() {
+        this.manager.controls.toggleBakeButtonFunction(false, true);
         this.inputWorker.postMessage({
             action: "getAll"
         });

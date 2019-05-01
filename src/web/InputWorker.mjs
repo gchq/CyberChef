@@ -12,7 +12,7 @@ self.maxWorkers = 4;
 self.maxTabs = 1;
 self.pendingFiles = [];
 self.inputs = {};
-self.loaderWorkerPorts = [];
+self.loaderWorkers = [];
 self.currentInputNum = 1;
 self.numInputs = 0;
 self.pendingInputs = 0;
@@ -82,6 +82,9 @@ self.addEventListener("message", function(e) {
             break;
         case "filterTabs":
             self.filterTabs(r.data);
+            break;
+        case "loaderWorkerMessage":
+            self.handleLoaderMessage(r.data);
             break;
         default:
             log.error(`Unknown action '${r.action}'.`);
@@ -390,8 +393,8 @@ self.updateInputValue = function(inputData) {
 };
 
 self.getLoaderWorkerIdx = function(workerId) {
-    for (let i = 0; i < self.loaderWorkerPorts.length; i++) {
-        if (self.loaderWorkerPorts[i].id === workerId) {
+    for (let i = 0; i < self.loaderWorkers.length; i++) {
+        if (self.loaderWorkers[i].id === workerId) {
             return i;
         }
     }
@@ -401,19 +404,14 @@ self.getLoaderWorkerIdx = function(workerId) {
 self.loaderWorkerReady = function(workerData) {
     const newWorkerObj = {
         id: workerData.id,
-        port: workerData.port,
         inputNum: -1,
         active: true
     };
-    newWorkerObj.port.onmessage = function (e) {
-        self.handleLoaderMessage(e);
-    };
-    self.loaderWorkerPorts.push(newWorkerObj);
-    self.loadNextFile(self.loaderWorkerPorts.indexOf(newWorkerObj));
+    self.loaderWorkers.push(newWorkerObj);
+    self.loadNextFile(self.loaderWorkers.indexOf(newWorkerObj));
 };
 
-self.handleLoaderMessage = function(e) {
-    const r = e.data;
+self.handleLoaderMessage = function(r) {
     let inputNum = 0;
 
     if (r.hasOwnProperty("inputNum")) {
@@ -451,30 +449,31 @@ self.handleLoaderMessage = function(e) {
 };
 
 self.loadNextFile = function(workerIdx) {
-    if (workerIdx === -1) return; // No more workers can be created
-    const port = self.loaderWorkerPorts[workerIdx].port;
+    if (workerIdx === -1) return;
+    const id = self.loaderWorkers[workerIdx].id;
     if (self.pendingFiles.length === 0) {
-        const workerObj = self.loaderWorkerPorts.splice(workerIdx, 1)[0];
+        const workerObj = self.loaderWorkers.splice(workerIdx, 1)[0];
         self.terminateLoaderWorker(workerObj.id);
         return;
     }
 
     const nextFile = self.pendingFiles.splice(0, 1)[0];
-    self.loaderWorkerPorts[workerIdx].inputNum = nextFile.inputNum;
+    self.loaderWorkers[workerIdx].inputNum = nextFile.inputNum;
     self.loadingInputs++;
-    port.postMessage({
+    self.postMessage({
         action: "loadInput",
         data: {
             file: nextFile.file,
-            inputNum: nextFile.inputNum
+            inputNum: nextFile.inputNum,
+            workerId: id
         }
     });
 };
 
 self.activateLoaderWorker = function() {
-    for (let i = 0; i < self.loaderWorkerPorts.length; i++) {
-        if (!self.loaderWorkerPorts[i].active) {
-            self.loaderWorkerPorts[i].active = true;
+    for (let i = 0; i < self.loaderWorkers.length; i++) {
+        if (!self.loaderWorkers[i].active) {
+            self.loaderWorkers[i].active = true;
             self.loadNextFile(i);
             return;
         }
@@ -603,10 +602,10 @@ self.removeInput = function(removeInputData) {
 
     delete self.inputs[inputNum];
 
-    for (let i = 0; i < self.loaderWorkerPorts.length; i++) {
-        if (self.loaderWorkerPorts[i].inputNum === inputNum) {
+    for (let i = 0; i < self.loaderWorkers.length; i++) {
+        if (self.loaderWorkers[i].inputNum === inputNum) {
             self.loadingInputs--;
-            self.terminateLoaderWorker(self.loaderWorkerPorts[i].id);
+            self.terminateLoaderWorker(self.loaderWorkers[i].id);
         }
     }
 

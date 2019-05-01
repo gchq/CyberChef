@@ -57,9 +57,10 @@ class ControlsWaiter {
      * Handler to trigger baking.
      */
     bakeClick() {
-        if (document.getElementById("bake").textContent.indexOf("Bake") > 0) {
+        const btnBake = document.getElementById("bake");
+        if (btnBake.textContent.indexOf("Bake") > 0) {
             this.app.manager.input.getAll();
-        } else {
+        } else if (btnBake.textContent.indexOf("Cancel") > 0) {
             this.manager.worker.cancelBake();
         }
     }
@@ -370,11 +371,12 @@ ${navigator.userAgent}
 
 
     /**
-     * Switches the Bake button between 'Bake' and 'Cancel' functions.
+     * Switches the Bake button between 'Bake', 'Cancel' and 'Loading' functions.
      *
      * @param {boolean} cancel - Whether to change to cancel or not
+     * @param {boolean} loading - Whether to change to loading or not
      */
-    toggleBakeButtonFunction(cancel) {
+    toggleBakeButtonFunction(cancel, loading) {
         const bakeButton = document.getElementById("bake"),
             btnText = bakeButton.querySelector("span");
 
@@ -383,10 +385,17 @@ ${navigator.userAgent}
         if (cancel) {
             btnText.innerText = "Cancel";
             bakeButton.classList.remove("btn-success");
+            bakeButton.classList.remove("btn-warning");
             bakeButton.classList.add("btn-danger");
+        } else if (loading) {
+            btnText.innerText = "Loading...";
+            bakeButton.classList.remove("btn-success");
+            bakeButton.classList.remove("btn-danger");
+            bakeButton.classList.add("btn-warning");
         } else {
             btnText.innerText = "Bake!";
             bakeButton.classList.remove("btn-danger");
+            bakeButton.classList.remove("btn-warning");
             bakeButton.classList.add("btn-success");
         }
     }
