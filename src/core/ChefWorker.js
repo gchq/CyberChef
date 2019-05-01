@@ -95,7 +95,7 @@ async function bake(data) {
     self.loadRequiredModules(data.recipeConfig);
 
     try {
-        self.inputNum = data.inputNum;
+        self.inputNum = parseInt(data.inputNum, 10);
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
@@ -104,13 +104,25 @@ async function bake(data) {
             data.step            // Whether or not to take one step or execute the whole recipe
         );
         if (typeof response.result === "string") {
-            self.postMessage({
-                action: "bakeComplete",
-                data: Object.assign(response, {
-                    id: data.id,
-                    inputNum: data.inputNum
-                })
-            });
+            if (response.progress !== data.progress + data.recipeConfig.length) {
+                self.postMessage({
+                    action: "bakeError",
+                    data: {
+                        error: response.result,
+                        id: data.id,
+                        inputNum: data.inputNum,
+                        progress: response.progress
+                    }
+                });
+            } else {
+                self.postMessage({
+                    action: "bakeComplete",
+                    data: Object.assign(response, {
+                        id: data.id,
+                        inputNum: data.inputNum
+                    })
+                });
+            }
         } else {
             self.postMessage({
                 action: "bakeComplete",
@@ -123,10 +135,11 @@ async function bake(data) {
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: Object.assign(err, {
+            data: {
+                error: err,
                 id: data.id,
                 inputNum: data.inputNum
-            })
+            }
         });
     }
     self.inputNum = -1;

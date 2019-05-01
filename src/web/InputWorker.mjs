@@ -312,20 +312,29 @@ self.setInput = function(inputData) {
         input: inputVal
     };
     if (typeof inputVal !== "string") {
-        inputObj.input = inputVal.fileBuffer.slice(0, 4096);
+        const fileSlice = inputVal.fileBuffer.slice(0, 512001);
+        inputObj.input = fileSlice;
         inputObj.name = inputVal.name;
         inputObj.size = inputVal.size;
         inputObj.type = inputVal.type;
         inputObj.progress = input.progress;
-    }
 
-    self.postMessage({
-        action: "setInput",
-        data: {
-            inputObj: inputObj,
-            silent: silent
-        }
-    });
+        self.postMessage({
+            action: "setInput",
+            data: {
+                inputObj: inputObj,
+                silent: silent
+            }
+        }, [fileSlice]);
+    } else {
+        self.postMessage({
+            action: "setInput",
+            data: {
+                inputObj: inputObj,
+                silent: silent
+            }
+        });
+    }
     self.getInputProgress(inputNum);
 };
 

@@ -132,15 +132,17 @@ class OutputWaiter {
      *
      * @param {Error} error
      * @param {number} inputNum
+     * @param {number} [progress=0]
      */
-    updateOutputError(error, inputNum) {
+    updateOutputError(error, inputNum, progress=0) {
         if (this.getOutput(inputNum) === -1) return;
 
         this.outputs[inputNum].error = error;
+        this.outputs[inputNum].progress = progress;
+        this.updateOutputStatus("error", inputNum);
 
         // call handle error here
         // or make the error handling part of set()
-        this.set(inputNum);
     }
 
     /**
@@ -152,6 +154,11 @@ class OutputWaiter {
     updateOutputStatus(status, inputNum) {
         if (this.getOutput(inputNum) === -1) return;
         this.outputs[inputNum].status = status;
+
+        if (status !== "error") {
+            delete this.outputs[inputNum].error;
+            delete this.outputs[inputNum].progress;
+        }
 
         this.set(inputNum);
     }
@@ -186,8 +193,9 @@ class OutputWaiter {
     set(inputNum) {
         const output = this.outputs[inputNum];
         if (output === undefined || output === null) return;
-
         if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
+
+        if (inputNum !== this.getActiveTab()) return;
 
         const outputText = document.getElementById("output-text");
         const outputHtml = document.getElementById("output-html");
@@ -204,11 +212,35 @@ class OutputWaiter {
             this.manager.controls.hideStaleIndicator();
         }
 
-        if (output.status === "inactive") {
-            // An output is inactive when it has been created but has not been baked at all
-            // show a blank here
-            if (inputNum === this.getActiveTab()) {
-                this.toggleLoader(false);
+        this.manager.recipe.updateBreakpointIndicator(false);
+
+        if (output.status === "pending" || output.status === "baking") {
+            // show the loader and the status message if it's being shown
+            // otherwise don't do anything
+            this.toggleLoader(true);
+            document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
+
+        } else if (output.status === "error") {
+            // style the tab if it's being shown
+            // run app.handleError()
+            this.toggleLoader(false);
+            outputText.style.display = "block";
+            outputHtml.style.display = "none";
+            outputFile.style.display = "none";
+            outputHighlighter.display = "none";
+            inputHighlighter.display = "none";
+
+            outputText.value = output.error;
+            outputHtml.innerHTML = "";
+
+            this.manager.recipe.updateBreakpointIndicator(output.progress);
+        } else if (output.status === "baked" || output.status === "inactive") {
+            this.displayTabInfo(inputNum);
+            this.toggleLoader(false);
+            this.closeFile();
+            let scriptElements, lines, length;
+
+            if (output.data === null) {
                 outputText.style.display = "block";
                 outputHtml.style.display = "none";
                 outputFile.style.display = "none";
@@ -218,83 +250,63 @@ class OutputWaiter {
                 outputText.value = "";
                 outputHtml.innerHTML = "";
 
-            }
-        } else if (output.status === "pending" || output.status === "baking") {
-            // show the loader and the status message if it's being shown
-            // otherwise don't do anything
-            if (inputNum === this.getActiveTab()) {
-                this.toggleLoader(true);
-                document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
+                lines = 0;
+                length = 0;
+                return;
             }
 
-        } else if (output.status === "error") {
-            // style the tab if it's being shown
-            // run app.handleError()
-            if (inputNum === this.getActiveTab()) {
-                this.toggleLoader(false);
-            }
-        } else if (output.status === "baked") {
-            // Display the output if it's the active tab
-            this.displayTabInfo(inputNum);
-            if (inputNum === this.getActiveTab()) {
-                this.toggleLoader(false);
-                this.closeFile();
-                let scriptElements, lines, length;
-                const duration = output.data.duration;
+            switch (output.data.type) {
+                case "html":
+                    outputText.style.display = "none";
+                    outputHtml.style.display = "block";
+                    outputFile.style.display = "none";
+                    outputHighlighter.style.display = "none";
+                    inputHighlighter.style.display = "none";
 
-                switch (output.data.type) {
-                    case "html":
-                        outputText.style.display = "none";
-                        outputHtml.style.display = "block";
-                        outputFile.style.display = "none";
-                        outputHighlighter.style.display = "none";
-                        inputHighlighter.style.display = "none";
+                    outputText.value = "";
+                    outputHtml.innerHTML = output.data.result;
 
-                        outputText.value = "";
-                        outputHtml.innerHTML = output.data.result;
-
-                        // Execute script sections
-                        scriptElements = outputHtml.querySelectorAll("script");
-                        for (let i = 0; i < scriptElements.length; i++) {
-                            try {
-                                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-                            } catch (err) {
-                                log.error(err);
-                            }
+                    // Execute script sections
+                    scriptElements = outputHtml.querySelectorAll("script");
+                    for (let i = 0; i < scriptElements.length; i++) {
+                        try {
+                            eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+                        } catch (err) {
+                            log.error(err);
                         }
-                        length = output.data.dish.value.length;
+                    }
+                    length = output.data.dish.value.length;
 
-                        break;
-                    case "ArrayBuffer":
-                        outputText.style.display = "block";
-                        outputHtml.style.display = "none";
-                        outputHighlighter.display = "none";
-                        inputHighlighter.display = "none";
+                    break;
+                case "ArrayBuffer":
+                    outputText.style.display = "block";
+                    outputHtml.style.display = "none";
+                    outputHighlighter.display = "none";
+                    inputHighlighter.display = "none";
 
-                        outputText.value = "";
-                        outputHtml.innerHTML = "";
+                    outputText.value = "";
+                    outputHtml.innerHTML = "";
 
-                        length = output.data.result.length;
-                        this.setFile(output.data.result);
-                        break;
-                    case "string":
-                    default:
-                        outputText.style.display = "block";
-                        outputHtml.style.display = "none";
-                        outputFile.style.display = "none";
-                        outputHighlighter.display = "block";
-                        inputHighlighter.display = "block";
+                    length = output.data.result.length;
+                    this.setFile(output.data.result);
+                    break;
+                case "string":
+                default:
+                    outputText.style.display = "block";
+                    outputHtml.style.display = "none";
+                    outputFile.style.display = "none";
+                    outputHighlighter.display = "block";
+                    inputHighlighter.display = "block";
 
-                        outputText.value = Utils.printable(output.data.result, true);
-                        outputHtml.innerHTML = "";
+                    outputText.value = Utils.printable(output.data.result, true);
+                    outputHtml.innerHTML = "";
 
-                        lines = output.data.result.count("\n") + 1;
-                        length = output.data.result.length;
-                        break;
-                }
-                this.setOutputInfo(length, lines, duration);
-                this.backgroundMagic();
+                    lines = output.data.result.count("\n") + 1;
+                    length = output.data.result.length;
+                    break;
             }
+            this.setOutputInfo(length, lines, output.data.duration);
+            this.backgroundMagic();
         }
     }
 
@@ -555,7 +567,7 @@ class OutputWaiter {
      */
     goToTab() {
         const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
-        if (this.getOutputIndex(tabNum) >= 0) {
+        if (this.getOutput(tabNum) !== undefined) {
             this.changeTab(tabNum, this.app.options.syncTabs);
         }
     }

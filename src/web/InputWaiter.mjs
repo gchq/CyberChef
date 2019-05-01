@@ -20,8 +20,8 @@ class InputWaiter {
     /**
      * InputWaiter constructor.
      *
-     * @param {App} app - The main view object for CyberChef
-     * @param {Manager} manager- The CyberChef event manager.
+     * @param {App} app - The main view object for CyberChef.
+     * @param {Manager} manager - The CyberChef event manager.
      */
     constructor(app, manager) {
         this.app = app;
@@ -341,7 +341,6 @@ class InputWaiter {
             this.setInputInfo(inputData.input.length, lines);
         } else {
             this.setFile(inputData);
-            // show file info here
         }
 
         if (!silent) window.dispatchEvent(this.manager.statechange);
@@ -372,6 +371,15 @@ class InputWaiter {
         this.displayFilePreview(inputData);
     }
 
+
+    /**
+     * Reset the input thumbnail to the default icon
+     */
+    resetFileThumb() {
+        const fileThumb = document.getElementById("input-file-thumbnail");
+        fileThumb.src = require("./static/images/file-128x128.png");
+    }
+
     /**
      * Shows a chunk of the file in the input behind the file overlay
      *
@@ -382,11 +390,28 @@ class InputWaiter {
     displayFilePreview(inputData) {
         const activeTab = this.getActiveTab(),
             input = inputData.input,
-            inputText = document.getElementById("input-text");
+            inputText = document.getElementById("input-text"),
+            fileThumb = document.getElementById("input-file-thumbnail");
         if (inputData.inputNum !== activeTab) return;
         inputText.style.overflow = "hidden";
         inputText.classList.add("blur");
-        inputText.value = Utils.printable(Utils.arrayBufferToStr(input));
+        inputText.value = Utils.printable(Utils.arrayBufferToStr(input.slice(0, 4096)));
+
+        // Display image in thumbnail if we want
+        if (this.app.options.imagePreview) {
+            const inputArr = new Uint8Array(input),
+                type = isImage(inputArr);
+            if (type && type !== "image/tiff" && inputArr.byteLength <= 512000) {
+                const blob = new Blob([inputArr], {type: type}),
+                    url = URL.createObjectURL(blob);
+                fileThumb.src = url;
+            } else {
+                this.resetFileThumb();
+            }
+        } else {
+            this.resetFileThumb();
+        }
+
     }
 
     /**

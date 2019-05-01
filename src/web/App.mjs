@@ -79,6 +79,9 @@ class App {
         if (!this.workerLoaded || !this.appLoaded ||
             !document.getElementById("loader-wrapper")) return;
 
+        // Bake initial input
+        this.getAllInput();
+
         // Trigger CSS animations to remove preloader
         document.body.classList.add("loaded");
 

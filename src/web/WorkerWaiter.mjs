@@ -137,24 +137,13 @@ class WorkerWaiter {
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
                 this.updateOutput(r.data, r.data.inputNum);
-
-                if (this.inputs.length > 0) {
-                    this.bakeNextInput(this.chefWorkers.indexOf(currentWorker));
-                } else {
-                    // The ChefWorker is no longer needed
-                    log.debug("No more inputs to bake. Closing ChefWorker.");
-                    currentWorker.active = false;
-                    this.removeChefWorker(currentWorker);
-
-                    const progress = this.getBakeProgress();
-                    if (progress.total === progress.baked) {
-                        this.bakingComplete();
-                    }
-                }
+                this.workerFinished(currentWorker);
 
                 break;
-            case "BakeError":
-                this.manager.output.updateOutputError(r.data, inputNum);
+            case "bakeError":
+                if (!r.data.hasOwnProperty("progress")) this.app.handleError(r.data.error);
+                this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
+                this.workerFinished(currentWorker);
                 // do more here
                 break;
             case "dishReturned":
@@ -196,7 +185,6 @@ class WorkerWaiter {
      * @param {number} inputNum
      */
     updateOutput(data, inputNum) {
-
         this.manager.output.updateOutputValue(data, inputNum);
         this.manager.output.updateOutputStatus("baked", inputNum);
 
@@ -242,12 +230,38 @@ class WorkerWaiter {
      */
     cancelBake() {
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+            const inputNum = this.chefWorkers[i].inputNum;
             this.removeChefWorker(this.chefWorkers[i]);
+            this.manager.output.updateOutputStatus("inactive", inputNum);
         }
         this.setBakingStatus(false);
+
+        for (let i = 0; i < this.inputs.length; i++) {
+            this.manager.output.updateOutputStatus("inactive", this.inputs[i].inputNum);
+        }
+
         this.inputs = [];
         this.totalOutputs = 0;
         this.manager.controls.showStaleIndicator();
+    }
+
+    /**
+     * Handle a worker completing baking
+     */
+    workerFinished(workerObj) {
+        if (this.inputs.length > 0) {
+            this.bakeNextInput(this.chefWorkers.indexOf(workerObj));
+        } else {
+            // The ChefWorker is no longer needed
+            log.debug("No more inputs to bake. Closing ChefWorker.");
+            workerObj.active = false;
+            this.removeChefWorker(workerObj);
+
+            const progress = this.getBakeProgress();
+            if (progress.total === progress.baked) {
+                this.bakingComplete();
+            }
+        }
     }
 
     /**
@@ -371,6 +385,7 @@ class WorkerWaiter {
      */
     queueInput(inputData) {
         this.manager.output.updateOutputStatus("pending", inputData.inputNum);
+        this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`);
 
         this.totalOutputs++;
         this.inputs.push(inputData);
