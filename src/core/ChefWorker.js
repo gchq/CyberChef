@@ -25,6 +25,7 @@ self.chef = new Chef();
 
 self.OpModules = OpModules;
 self.OperationConfig = OperationConfig;
+self.inputNum = -1;
 
 
 // Tell the app that the worker has loaded and is ready to operate
@@ -94,6 +95,7 @@ async function bake(data) {
     self.loadRequiredModules(data.recipeConfig);
 
     try {
+        self.inputNum = data.inputNum;
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
@@ -127,6 +129,7 @@ async function bake(data) {
             })
         });
     }
+    self.inputNum = -1;
 }
 
 
@@ -206,7 +209,8 @@ self.sendStatusMessage = function(msg) {
     self.postMessage({
         action: "statusMessage",
         data: {
-            message: msg
+            message: msg,
+            inputNum: self.inputNum || -1
         }
     });
 };

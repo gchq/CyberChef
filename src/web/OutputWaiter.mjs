@@ -83,8 +83,7 @@ class OutputWaiter {
         const newOutput = {
             data: null,
             inputNum: inputNum,
-            // statusMessage: `Input ${inputNum} has not been baked yet.`,
-            statusMessage: "",
+            statusMessage: `Input ${inputNum} has not been baked yet.`,
             error: null,
             status: "inactive"
         };
@@ -355,6 +354,9 @@ class OutputWaiter {
 
         if (value) {
             this.manager.controls.hideStaleIndicator();
+
+            // Don't add the bombe if it's already there!
+            if (animation.children.length > 0) return;
 
             // Start a timer to add the Bombe to the DOM just before we make it
             // visible so that there is no stuttering

@@ -169,7 +169,6 @@ class WorkerWaiter {
                 break;
             case "statusMessage":
                 // Status message should be done per output
-                // log.error(r);
                 this.manager.output.updateOutputMessage(r.data.message, r.data.inputNum);
                 break;
             case "optionUpdate":
@@ -305,7 +304,7 @@ class WorkerWaiter {
 
         log.debug(`Baking input ${nextInput.inputNum}.`);
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
-        this.manager.output.updateOutputMessage("Baking...", nextInput.inputNum);
+        this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum);
 
 
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
