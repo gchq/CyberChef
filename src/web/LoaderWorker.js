@@ -10,7 +10,7 @@ self.port = null;
 self.id = null;
 
 
-self.handlePortMessage = function(e) {
+self.handleMessage = function(e) {
     const r = e.data;
     log.debug(`LoaderWorker receiving command '${r.action}'`);
 
@@ -31,12 +31,8 @@ self.addEventListener("message", function(e) {
         self.loadFile(r.file, r.inputNum);
     } else if (r.hasOwnProperty("file")) {
         self.loadFile(r.file, "");
-    } else if (r.hasOwnProperty("port")) {
-        self.port = r.port;
+    } else if (r.hasOwnProperty("id")) {
         self.id = r.id;
-        self.port.onmessage = function(e) {
-            self.handlePortMessage(e);
-        };
     }
 });
 
@@ -50,7 +46,7 @@ self.addEventListener("message", function(e) {
 self.loadFile = function(file, inputNum) {
     const reader = new FileReader();
     if (file.size >= 256*256*256*128) {
-        self.port.postMessage({"error": "File size too large.", "inputNum": inputNum, "id": self.id});
+        self.postMessage({"error": "File size too large.", "inputNum": inputNum, "id": self.id});
         return;
     }
     const data = new Uint8Array(file.size);
@@ -59,10 +55,10 @@ self.loadFile = function(file, inputNum) {
 
     const seek = function() {
         if (offset >= file.size) {
-            self.port.postMessage({"fileBuffer": data.buffer, "inputNum": inputNum, "id": self.id}, [data.buffer]);
+            self.postMessage({"fileBuffer": data.buffer, "inputNum": inputNum, "id": self.id}, [data.buffer]);
             return;
         }
-        self.port.postMessage({"progress": Math.round(offset / file.size * 100), "inputNum": inputNum});
+        self.postMessage({"progress": Math.round(offset / file.size * 100), "inputNum": inputNum});
         const slice = file.slice(offset, offset + CHUNK_SIZE);
         reader.readAsArrayBuffer(slice);
     };
@@ -74,7 +70,7 @@ self.loadFile = function(file, inputNum) {
     };
 
     reader.onerror = function(e) {
-        self.port.postMessage({"error": reader.error.message, "inputNum": inputNum});
+        self.postMessage({"error": reader.error.message, "inputNum": inputNum});
     };
 
     seek();
