@@ -459,6 +459,15 @@ class InputWaiter {
                 value: value
             }
         });
+        let includeInput = false;
+        const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
+        if (recipeStr.length > 0 && recipeStr.length <= 68267) {
+            includeInput = true;
+        }
+        this.setUrl({
+            includeInput: includeInput,
+            input: recipeStr
+        });
     }
 
     /**
@@ -1214,7 +1223,7 @@ class InputWaiter {
      * @param {string} urlData.input
      */
     setUrl(urlData) {
-        this.app.updateUrl(urlData.includeInput, urlData.input);
+        this.app.updateTitle(urlData.includeInput, urlData.input, true);
     }
 
 

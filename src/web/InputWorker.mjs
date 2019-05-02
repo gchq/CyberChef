@@ -126,7 +126,8 @@ self.autoBake = function(inputNum) {
             action: "queueInput",
             data: {
                 input: inputData,
-                inputNum: parseInt(inputNum, 10)
+                inputNum: parseInt(inputNum, 10),
+                override: true
             }
         });
         self.postMessage({
@@ -148,7 +149,8 @@ self.getAllInputs = function() {
                 action: "queueInput",
                 data: {
                     input: inputData,
-                    inputNum: inputNums[i]
+                    inputNum: inputNums[i],
+                    override: false
                 }
             });
         }
@@ -315,13 +317,13 @@ self.setInput = function(inputData) {
         input: inputVal
     };
     if (typeof inputVal !== "string") {
-        inputVal = inputVal.fileBuffer;
-        const fileSlice = inputVal.slice(0, 512001);
-        inputObj.input = fileSlice;
         inputObj.name = inputVal.name;
         inputObj.size = inputVal.size;
         inputObj.type = inputVal.type;
         inputObj.progress = input.progress;
+        inputVal = inputVal.fileBuffer;
+        const fileSlice = inputVal.slice(0, 512001);
+        inputObj.input = fileSlice;
 
         self.postMessage({
             action: "setInput",
@@ -389,20 +391,6 @@ self.updateInputValue = function(inputData) {
         }
         self.inputs[inputNum].status = "loaded";
         self.inputs[inputNum].progress = 100;
-
-        let includeInput = false;
-        const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
-        if (recipeStr.length > 0 && recipeStr.length <= 68267) {
-            includeInput = true;
-        }
-
-        self.postMessage({
-            action: "setUrl",
-            data: {
-                includeInput: includeInput,
-                input: recipeStr
-            }
-        });
         return;
     }
 

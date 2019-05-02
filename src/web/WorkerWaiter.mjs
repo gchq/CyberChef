@@ -322,6 +322,7 @@ class WorkerWaiter {
         if (typeof nextInput.inputNum === "string") nextInput.inputNum = parseInt(nextInput.inputNum, 10);
 
         log.debug(`Baking input ${nextInput.inputNum}.`);
+        this.setBakingStatus(true);
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
         this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum);
 
@@ -386,14 +387,9 @@ class WorkerWaiter {
      * @param {object} inputData
      * @param {string | ArrayBuffer} inputData.input
      * @param {number} inputData.inputNum
+     * @param {boolean} inputData.override
      */
     queueInput(inputData) {
-        for (let i = 0; i < this.inputs.length; i++) {
-            if (this.inputs[i].inputNum === inputData.inputNum) {
-                this.inputs[i] = inputData;
-                return;
-            }
-        }
         for (let i = 0; i < this.chefWorkers; i++) {
             if (this.chefWorkers[i].inputNum === inputData.inputNum) {
                 this.chefWorkers[i].worker.terminate();
@@ -406,8 +402,18 @@ class WorkerWaiter {
         this.manager.output.updateOutputStatus("pending", inputData.inputNum);
         this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`);
 
-        this.totalOutputs++;
-        this.inputs.push(inputData);
+
+        if (inputData.override) {
+            for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+                this.removeChefWorker(this.chefWorkers[i]);
+            }
+            this.totalOutputs = 1;
+            this.inputs = [inputData];
+            this.bakeNextInput(this.addChefWorker());
+        } else {
+            this.totalOutputs++;
+            this.inputs.push(inputData);
+        }
     }
 
     /**

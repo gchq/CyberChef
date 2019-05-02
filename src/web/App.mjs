@@ -151,7 +151,7 @@ class App {
         // has completed.
         if (this.autoBakePause) return false;
 
-        if (this.autoBake_) {
+        if (this.autoBake_ && !this.baking) {
             log.debug("Auto-baking");
             this.manager.input.inputWorker.postMessage({
                 action: "autobake",
@@ -397,11 +397,10 @@ class App {
         this.manager.recipe.initialiseOperationDragNDrop();
     }
 
-
     /**
-     * Checks for input and recipe in the URI parameters and loads them if present.
+     *
      */
-    loadURIParams() {
+    getURIParams() {
         // Load query string or hash from URI (depending on which is populated)
         // We prefer getting the hash by splitting the href rather than referencing
         // location.hash as some browsers (Firefox) automatically URL decode it,
@@ -409,8 +408,16 @@ class App {
         const params = window.location.search ||
             window.location.href.split("#")[1] ||
             window.location.hash;
-        this.uriParams = Utils.parseURIParams(params);
+        const parsedParams = Utils.parseURIParams(params);
+        return parsedParams;
+    }
+
+    /**
+     * Checks for input and recipe in the URI parameters and loads them if present.
+     */
+    loadURIParams() {
         this.autoBakePause = true;
+        this.uriParams = this.getURIParams();
 
         // Read in recipe from URI params
         if (this.uriParams.recipe) {
@@ -662,16 +669,17 @@ class App {
         this.progress = 0;
         this.autoBake();
 
-        this.updateUrl(false, "");
+        this.updateTitle(false, null, true);
     }
 
     /**
-     * Update the page URL to contain the new recipe and input
+     * Update the page title to contain the new recipe
      *
      * @param {boolean} includeInput
      * @param {string} input
+     * @param {boolean} [changeUrl=true]
      */
-    updateUrl(includeInput, input) {
+    updateTitle(includeInput, input, changeUrl=true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
@@ -690,7 +698,7 @@ class App {
         document.title = title;
 
         // Update the current history state (not creating a new one)
-        if (this.options.updateUrl) {
+        if (this.options.updateUrl && changeUrl) {
             this.lastStateUrl = this.manager.controls.generateStateUrl(true, includeInput, input, recipeConfig);
             window.history.replaceState({}, title, this.lastStateUrl);
         }

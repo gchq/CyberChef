@@ -113,6 +113,7 @@ class ControlsWaiter {
      *
      * @param {boolean} includeRecipe - Whether to include the recipe in the URL.
      * @param {boolean} includeInput - Whether to include the input in the URL.
+     * @param {string} input
      * @param {Object[]} [recipeConfig] - The recipe configuration object array.
      * @param {string} [baseURL] - The CyberChef URL, set to the current URL if not included
      * @returns {string}
@@ -126,6 +127,15 @@ class ControlsWaiter {
         const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
 
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
+
+        // If we don't get passed an input, get it from the current URI
+        if (input === null) {
+            const params = this.app.getURIParams();
+            if (params.input) {
+                includeInput = true;
+                input = params.input;
+            }
+        }
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
@@ -333,7 +343,7 @@ class ControlsWaiter {
         e.preventDefault();
 
         const reportBugInfo = document.getElementById("report-bug-info");
-        const saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
+        const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
 
         if (reportBugInfo) {
             reportBugInfo.innerHTML = `* Version: ${PKG_VERSION}
