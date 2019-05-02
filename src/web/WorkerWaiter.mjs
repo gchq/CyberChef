@@ -322,7 +322,6 @@ class WorkerWaiter {
         if (typeof nextInput.inputNum === "string") nextInput.inputNum = parseInt(nextInput.inputNum, 10);
 
         log.debug(`Baking input ${nextInput.inputNum}.`);
-        this.setBakingStatus(true);
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
         this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum);
 
@@ -404,12 +403,8 @@ class WorkerWaiter {
 
 
         if (inputData.override) {
-            for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
-                this.removeChefWorker(this.chefWorkers[i]);
-            }
             this.totalOutputs = 1;
             this.inputs = [inputData];
-            this.bakeNextInput(this.addChefWorker());
         } else {
             this.totalOutputs++;
             this.inputs.push(inputData);

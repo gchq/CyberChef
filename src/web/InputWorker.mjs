@@ -127,7 +127,7 @@ self.autoBake = function(inputNum) {
             data: {
                 input: inputData,
                 inputNum: parseInt(inputNum, 10),
-                override: true
+                override: false
             }
         });
         self.postMessage({

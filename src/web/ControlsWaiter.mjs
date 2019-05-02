@@ -387,19 +387,19 @@ ${navigator.userAgent}
         const bakeButton = document.getElementById("bake"),
             btnText = bakeButton.querySelector("span");
 
-        bakeButton.style.background = "";
-
         if (cancel) {
             btnText.innerText = "Cancel";
             bakeButton.classList.remove("btn-success");
             bakeButton.classList.remove("btn-warning");
             bakeButton.classList.add("btn-danger");
         } else if (loading) {
+            bakeButton.style.background = "";
             btnText.innerText = "Loading...";
             bakeButton.classList.remove("btn-success");
             bakeButton.classList.remove("btn-danger");
             bakeButton.classList.add("btn-warning");
         } else {
+            bakeButton.style.background = "";
             btnText.innerText = "Bake!";
             bakeButton.classList.remove("btn-danger");
             bakeButton.classList.remove("btn-warning");

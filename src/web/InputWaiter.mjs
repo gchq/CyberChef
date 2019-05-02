@@ -745,6 +745,14 @@ class InputWaiter {
 
         this.updateFileProgress(loadedData.activeProgress.inputNum, loadedData.activeProgress.progress);
 
+        const inputTitle = document.getElementById("input").firstElementChild;
+        if (loaded < total) {
+            const percentComplete = (loaded + loading) / total * 100;
+            inputTitle.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
+        } else {
+            inputTitle.style.background = "";
+        }
+
         if (loaded < total && autoRefresh) {
             setTimeout(function() {
                 this.inputWorker.postMessage({

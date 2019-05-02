@@ -198,7 +198,10 @@ class App {
      * @param {boolean} [silent=false] - Suppress statechange event
      */
     setInput(input, silent=false) {
-        this.manager.input.set(input, silent);
+        // Assume that there aren't any inputs
+        let inputNum = this.manager.input.getActiveTab();
+        if (inputNum === -1) inputNum = 1;
+        this.manager.input.updateInputValue(inputNum, input);
     }
 
 
@@ -446,7 +449,7 @@ class App {
         if (this.uriParams.input) {
             try {
                 const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData, true);
+                this.setInput(inputData, false);
             } catch (err) {}
         }
 
