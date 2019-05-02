@@ -242,7 +242,7 @@ class WorkerWaiter {
 
         this.inputs = [];
         this.totalOutputs = 0;
-        this.manager.controls.showStaleIndicator();
+        this.manager.output.set(this.manager.output.getActiveTab());
     }
 
     /**
