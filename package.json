@@ -62,7 +62,7 @@
     "jsdoc-babel": "^0.5.0",
     "mini-css-extract-plugin": "^0.6.0",
     "nightwatch": "^1.0.19",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "postcss-css-variables": "^0.12.0",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
