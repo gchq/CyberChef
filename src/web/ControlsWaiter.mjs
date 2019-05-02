@@ -117,22 +117,19 @@ class ControlsWaiter {
      * @param {string} [baseURL] - The CyberChef URL, set to the current URL if not included
      * @returns {string}
      */
-    generateStateUrl(includeRecipe, includeInput, recipeConfig, baseURL) {
+    generateStateUrl(includeRecipe, includeInput, input, recipeConfig, baseURL) {
         recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
         const link = baseURL || window.location.protocol + "//" +
             window.location.host +
             window.location.pathname;
         const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
-        const inputStr = toBase64(this.app.getInput().input, "A-Za-z0-9+/"); // B64 alphabet with no padding
 
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
-        // Only inlcude input if it is less than 50KB (51200 * 4/3 as it is Base64 encoded)
-        includeInput = includeInput && (inputStr.length > 0) && (inputStr.length <= 68267);
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", inputStr] : undefined,
+            includeInput ? ["input", input] : undefined,
         ];
 
         const hash = params

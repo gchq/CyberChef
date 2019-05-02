@@ -79,9 +79,6 @@ class App {
         if (!this.workerLoaded || !this.appLoaded ||
             !document.getElementById("loader-wrapper")) return;
 
-        // Bake initial input
-        this.getAllInput();
-
         // Trigger CSS animations to remove preloader
         document.body.classList.add("loaded");
 
@@ -90,7 +87,10 @@ class App {
         setTimeout(function() {
             document.getElementById("loader-wrapper").remove();
             document.body.classList.remove("loaded");
-        }, 1000);
+
+            // Bake initial input
+            this.getAllInput();
+        }.bind(this), 1000);
 
         // Clear the loading message interval
         clearInterval(window.loadingMsgsInt);
@@ -125,7 +125,7 @@ class App {
      *   whole recipe.
      */
     bake(step=false, input) {
-        // if (this.baking) return;
+        if (this.baking) return;
 
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
@@ -151,7 +151,7 @@ class App {
         // has completed.
         if (this.autoBakePause) return false;
 
-        if (this.autoBake_ && !this.baking) {
+        if (this.autoBake_) {
             log.debug("Auto-baking");
             this.manager.input.inputWorker.postMessage({
                 action: "autobake",
@@ -662,6 +662,16 @@ class App {
         this.progress = 0;
         this.autoBake();
 
+        this.updateUrl(false, "");
+    }
+
+    /**
+     * Update the page URL to contain the new recipe and input
+     *
+     * @param {boolean} includeInput
+     * @param {string} input
+     */
+    updateUrl(includeInput, input) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
@@ -681,8 +691,8 @@ class App {
 
         // Update the current history state (not creating a new one)
         if (this.options.updateUrl) {
-            // this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
-            // window.history.replaceState({}, title, this.lastStateUrl);
+            this.lastStateUrl = this.manager.controls.generateStateUrl(true, includeInput, input, recipeConfig);
+            window.history.replaceState({}, title, this.lastStateUrl);
         }
     }
 

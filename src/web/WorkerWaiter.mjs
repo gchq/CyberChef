@@ -69,7 +69,12 @@ class WorkerWaiter {
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
+
         newWorker.postMessage({"action": "docURL", "data": docURL});
+        newWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
 
         // Store the worker, whether or not it's active, and the inputNum as an object
         const newWorkerObj = {
@@ -138,7 +143,6 @@ class WorkerWaiter {
                 log.debug(`Bake ${inputNum} complete.`);
                 this.updateOutput(r.data, r.data.inputNum);
                 this.workerFinished(currentWorker);
-
                 break;
             case "bakeError":
                 if (!r.data.hasOwnProperty("progress")) this.app.handleError(r.data.error);
@@ -315,11 +319,11 @@ class WorkerWaiter {
         if (!this.chefWorkers[workerIdx]) return;
 
         const nextInput = this.inputs.splice(0, 1)[0];
+        if (typeof nextInput.inputNum === "string") nextInput.inputNum = parseInt(nextInput.inputNum, 10);
 
         log.debug(`Baking input ${nextInput.inputNum}.`);
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
         this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum);
-
 
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
         this.chefWorkers[workerIdx].active = true;
@@ -384,6 +388,21 @@ class WorkerWaiter {
      * @param {number} inputData.inputNum
      */
     queueInput(inputData) {
+        for (let i = 0; i < this.inputs.length; i++) {
+            if (this.inputs[i].inputNum === inputData.inputNum) {
+                this.inputs[i] = inputData;
+                return;
+            }
+        }
+        for (let i = 0; i < this.chefWorkers; i++) {
+            if (this.chefWorkers[i].inputNum === inputData.inputNum) {
+                this.chefWorkers[i].worker.terminate();
+                this.chefWorkers.splice(i, 1);
+                this.bakeNextInput(this.addChefWorker());
+                this.bakingInputs--;
+                break;
+            }
+        }
         this.manager.output.updateOutputStatus("pending", inputData.inputNum);
         this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`);
 

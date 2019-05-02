@@ -89,6 +89,10 @@ class InputWaiter {
             action: "updateMaxTabs",
             data: this.maxTabs
         });
+        this.inputWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
         this.inputWorker.addEventListener("message", this.handleInputWorkerMessage.bind(this));
 
 
@@ -268,6 +272,9 @@ class InputWaiter {
                 break;
             case "displayTabSearchResults":
                 this.displayTabSearchResults(r.data);
+                break;
+            case "setUrl":
+                this.setUrl(r.data);
                 break;
             default:
                 log.error(`Unknown action ${r.action}.`);
@@ -1197,6 +1204,17 @@ class InputWaiter {
 
         $("#input-tab-modal").modal("hide");
         this.changeTab(inputNum, this.app.options.syncTabs);
+    }
+
+    /**
+     * Update the input URL to the new value
+     *
+     * @param {object} urlData
+     * @param {boolean} urlData.includeInput
+     * @param {string} urlData.input
+     */
+    setUrl(urlData) {
+        this.app.updateUrl(urlData.includeInput, urlData.input);
     }
 
 

@@ -7,6 +7,7 @@
  */
 
 import Utils from "../core/Utils";
+import {toBase64} from "../core/lib/Base64";
 
 self.maxWorkers = 4;
 self.maxTabs = 1;
@@ -27,6 +28,8 @@ self.addEventListener("message", function(e) {
         log.error("No action");
         return;
     }
+
+    log.debug(`Receiving ${r.action} from InputWaiter.`);
 
     switch (r.action) {
         case "loadUIFiles":
@@ -306,13 +309,14 @@ self.setInput = function(inputData) {
     const input = self.getInputObj(inputNum);
     if (input === undefined || input === null) return;
 
-    const inputVal = input.data;
+    let inputVal = input.data;
     const inputObj = {
         inputNum: inputNum,
         input: inputVal
     };
     if (typeof inputVal !== "string") {
-        const fileSlice = inputVal.fileBuffer.slice(0, 512001);
+        inputVal = inputVal.fileBuffer;
+        const fileSlice = inputVal.slice(0, 512001);
         inputObj.input = fileSlice;
         inputObj.name = inputVal.name;
         inputObj.size = inputVal.size;
@@ -385,6 +389,20 @@ self.updateInputValue = function(inputData) {
         }
         self.inputs[inputNum].status = "loaded";
         self.inputs[inputNum].progress = 100;
+
+        let includeInput = false;
+        const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
+        if (recipeStr.length > 0 && recipeStr.length <= 68267) {
+            includeInput = true;
+        }
+
+        self.postMessage({
+            action: "setUrl",
+            data: {
+                includeInput: includeInput,
+                input: recipeStr
+            }
+        });
         return;
     }
 
