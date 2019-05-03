@@ -131,13 +131,6 @@
             };
             window.addEventListener("error", loadingErrorHandler);
         </script>
-        <% if (htmlWebpackPlugin.options.inline) { %>
-            <meta name="robots" content="noindex" />
-        <% } else { %>
-            <script type="application/ld+json">
-                <% print(JSON.stringify(require("../static/structuredData.json"))); %>
-            </script>
-        <% } %>
     </head>
     <body>
         <!-- Preloader overlay -->
@@ -153,11 +146,7 @@
         <div id="content-wrapper">
             <div id="banner" class="row">
                 <div class="col" style="text-align: left; padding-left: 10px;">
-                    <% if (htmlWebpackPlugin.options.inline) { %>
-                        <span>Version <%= htmlWebpackPlugin.options.version %></span>
-                    <% } else { %>
-                        <a href="cyberchef.htm" download>Download CyberChef <i class="material-icons">file_download</i></a>
-                    <% } %>
+                    <a href="CyberChef_v<%= htmlWebpackPlugin.options.version %>.zip" download>Download CyberChef <i class="material-icons">file_download</i></a>
                 </div>
                 <div class="col-md-6" id="notice-wrapper">
                     <span id="notice">
