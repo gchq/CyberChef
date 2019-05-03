@@ -51,10 +51,10 @@ class OutputWaiter {
 
         if (this.outputs[inputNum].data === null) return "";
 
-        if (typeof this.outputs[inputNum].data.dish.value === "string") {
-            return this.outputs[inputNum].data.dish.value;
+        if (typeof this.outputs[inputNum].data.result === "string") {
+            return this.outputs[inputNum].data.result;
         } else {
-            return this.outputs[inputNum].data.dish.value || "";
+            return this.outputs[inputNum].data.result || "";
         }
     }
 
