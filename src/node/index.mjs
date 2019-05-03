@@ -199,6 +199,7 @@ import {
     ParseX509Certificate as core_ParseX509Certificate,
     PlayMedia as core_PlayMedia,
     PowerSet as core_PowerSet,
+    ProtobufDecode as core_ProtobufDecode,
     PseudoRandomNumberGenerator as core_PseudoRandomNumberGenerator,
     RC2Decrypt as core_RC2Decrypt,
     RC2Encrypt as core_RC2Encrypt,
@@ -299,6 +300,8 @@ import {
     Unique as core_Unique,
     Untar as core_Untar,
     Unzip as core_Unzip,
+    VarIntDecode as core_VarIntDecode,
+    VarIntEncode as core_VarIntEncode,
     VigenèreDecode as core_VigenèreDecode,
     VigenèreEncode as core_VigenèreEncode,
     Whirlpool as core_Whirlpool,
@@ -521,6 +524,7 @@ function generateChef() {
         "parseX509Certificate": _wrap(core_ParseX509Certificate),
         "playMedia": _wrap(core_PlayMedia),
         "powerSet": _wrap(core_PowerSet),
+        "protobufDecode": _wrap(core_ProtobufDecode),
         "pseudoRandomNumberGenerator": _wrap(core_PseudoRandomNumberGenerator),
         "RC2Decrypt": _wrap(core_RC2Decrypt),
         "RC2Encrypt": _wrap(core_RC2Encrypt),
@@ -621,6 +625,8 @@ function generateChef() {
         "unique": _wrap(core_Unique),
         "untar": _wrap(core_Untar),
         "unzip": _wrap(core_Unzip),
+        "varIntDecode": _wrap(core_VarIntDecode),
+        "varIntEncode": _wrap(core_VarIntEncode),
         "vigenèreDecode": _wrap(core_VigenèreDecode),
         "vigenèreEncode": _wrap(core_VigenèreEncode),
         "whirlpool": _wrap(core_Whirlpool),
@@ -852,6 +858,7 @@ const parseUserAgent = chef.parseUserAgent;
 const parseX509Certificate = chef.parseX509Certificate;
 const playMedia = chef.playMedia;
 const powerSet = chef.powerSet;
+const protobufDecode = chef.protobufDecode;
 const pseudoRandomNumberGenerator = chef.pseudoRandomNumberGenerator;
 const RC2Decrypt = chef.RC2Decrypt;
 const RC2Encrypt = chef.RC2Encrypt;
@@ -954,6 +961,8 @@ const unescapeUnicodeCharacters = chef.unescapeUnicodeCharacters;
 const unique = chef.unique;
 const untar = chef.untar;
 const unzip = chef.unzip;
+const varIntDecode = chef.varIntDecode;
+const varIntEncode = chef.varIntEncode;
 const vigenèreDecode = chef.vigenèreDecode;
 const vigenèreEncode = chef.vigenèreEncode;
 const whirlpool = chef.whirlpool;
@@ -1167,6 +1176,7 @@ const operations = [
     parseX509Certificate,
     playMedia,
     powerSet,
+    protobufDecode,
     pseudoRandomNumberGenerator,
     RC2Decrypt,
     RC2Encrypt,
@@ -1269,6 +1279,8 @@ const operations = [
     unique,
     untar,
     unzip,
+    varIntDecode,
+    varIntEncode,
     vigenèreDecode,
     vigenèreEncode,
     whirlpool,
@@ -1487,6 +1499,7 @@ export {
     parseX509Certificate,
     playMedia,
     powerSet,
+    protobufDecode,
     pseudoRandomNumberGenerator,
     RC2Decrypt,
     RC2Encrypt,
@@ -1589,6 +1602,8 @@ export {
     unique,
     untar,
     unzip,
+    varIntDecode,
+    varIntEncode,
     vigenèreDecode,
     vigenèreEncode,
     whirlpool,
