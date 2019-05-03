@@ -370,7 +370,7 @@ class Dish {
     }
 
     /**
-     * Convert this.value to a ByteArray
+     * Convert this.value to an ArrayBuffer
      *
      * If running in a browser, _toByteArray is asynchronous.
      *
@@ -404,14 +404,14 @@ class Dish {
         };
 
         try {
-            return toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
+            toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
         } catch (err) {
             throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to ArrayBuffer: ${err}`);
         }
     }
 
     /**
-     * Convert this.value to the given type.
+     * Convert this.value to the given type from ArrayBuffer
      *
      * @param {number} toType - the Dish enum to convert to
      * @param {boolean} [notUTF8=false] - Do not treat strings as UTF8.
