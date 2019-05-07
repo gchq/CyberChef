@@ -8,6 +8,7 @@
 import Utils from "../core/Utils";
 import FileSaver from "file-saver";
 import zip from "zlibjs/bin/zip.min";
+import ZipWorker from "worker-loader?inline&fallback=false!./ZipWorker";
 
 const Zlib = zip.Zlib;
 
@@ -28,6 +29,8 @@ class OutputWaiter {
 
         this.outputs = {};
         this.activeTab = -1;
+
+        this.zipWorker = null;
 
         this.maxTabs = 4; // Calculate this
     }
@@ -85,7 +88,8 @@ class OutputWaiter {
             inputNum: inputNum,
             statusMessage: `Input ${inputNum} has not been baked yet.`,
             error: null,
-            status: "inactive"
+            status: "inactive",
+            bakeId: -1
         };
 
         this.outputs[inputNum] = newOutput;
@@ -164,6 +168,17 @@ class OutputWaiter {
     }
 
     /**
+     * Updates the stored bake ID for the output in the ouptut array
+     *
+     * @param {number} bakeId
+     * @param {number} inputNum
+     */
+    updateOutputBakeId(bakeId, inputNum) {
+        if (this.getOutput(inputNum) === -1) return;
+        this.outputs[inputNum].bakeId = bakeId;
+    }
+
+    /**
      * Removes an output from the output array.
      *
      * @param {number} inputNum
@@ -202,11 +217,13 @@ class OutputWaiter {
         const outputFile = document.getElementById("output-file");
         const outputHighlighter = document.getElementById("output-highlighter");
         const inputHighlighter = document.getElementById("input-highlighter");
-        // If inactive, show blank
         // If pending or baking, show loader and status message
         // If error, style the tab and handle the error
         // If done, display the output if it's the active tab
-        if (output.status === "inactive" || output.status === "stale") {
+        // If inactive, show the last bake value (or blank)
+        if (output.status === "inactive" ||
+            output.status === "stale" ||
+            (output.status === "baked" && output.bakeId < this.manager.worker.bakeId)) {
             this.manager.controls.showStaleIndicator();
         } else {
             this.manager.controls.hideStaleIndicator();
@@ -421,10 +438,111 @@ class OutputWaiter {
         this.downloadAllFiles();
     }
 
+
+    /**
+     * Spawns a new ZipWorker and sends it the outputs so that they can
+     * be zipped for download
+     */
+    downloadAllFiles() {
+
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = inputNums[i];
+            if (this.outputs[iNum].status !== "baked" ||
+            this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
+                if (window.confirm("Not all outputs have been baked yet. Continue downloading outputs?")) {
+                    break;
+                } else {
+                    return;
+                }
+            }
+        }
+
+        const fileName = window.prompt("Please enter a filename: ", "download.zip");
+
+        if (fileName === null || fileName === "") {
+            // Don't zip the files if there isn't a filename
+            this.app.alert("No filename was specified.", 3000);
+            return;
+        }
+
+        let fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
+
+        if (fileExt === null) {
+            // Use .dat as the default file extension
+            fileExt = ".dat";
+        }
+
+        if (this.zipWorker !== null) {
+            this.terminateZipWorker();
+        }
+
+        const downloadButton = document.getElementById("save-all-to-file");
+
+        downloadButton.disabled = true;
+        downloadButton.classList.add("spin");
+        $("[data-toggle='tooltip']").tooltip("hide");
+
+        downloadButton.firstElementChild.innerHTML = "autorenew";
+
+        log.debug("Creating ZipWorker");
+        this.zipWorker = new ZipWorker();
+        this.zipWorker.postMessage({
+            outputs: this.outputs,
+            filename: fileName,
+            fileExtension: fileExt
+        });
+        this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
+
+    }
+
+    /**
+     * Terminate the ZipWorker
+     */
+    terminateZipWorker() {
+        if (this.zipWorker === null) return; // Already terminated
+
+        log.debug("Terminating ZipWorker.");
+
+        this.zipWorker.terminate();
+        this.zipWorker = null;
+    }
+
+
+    /**
+     * Handle messages sent back by the ZipWorker
+     */
+    handleZipWorkerMessage(e) {
+        const r = e.data;
+        if (!r.hasOwnProperty("zippedFile")) {
+            log.error("No zipped file was sent in the message.");
+            this.terminateZipWorker();
+            return;
+        }
+        if (!r.hasOwnProperty("filename")) {
+            log.error("No filename was sent in the message.");
+            this.terminateZipWorker();
+            return;
+        }
+
+        const file = new File([r.zippedFile], r.filename);
+        FileSaver.saveAs(file, r.filename, false);
+
+        this.terminateZipWorker();
+
+        const downloadButton = document.getElementById("save-all-to-file");
+
+        downloadButton.disabled = false;
+        downloadButton.classList.remove("spin");
+
+        downloadButton.firstElementChild.innerHTML = "archive";
+    }
+
+
     /**
      * Handler for download all files events.
      */
-    async downloadAllFiles() {
+    async downloadAllFilesOld() {
         const fileName = window.prompt("Please enter a filename: ", "download.zip");
         const fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
         const zip = new Zlib.Zip();
@@ -931,7 +1049,11 @@ class OutputWaiter {
      * Copies the output to the clipboard
      */
     copyClick() {
-        const output = this.getActive();
+        let output = this.getActive();
+
+        if (typeof output !== "string") {
+            output = Utils.arrayBufferToStr(output);
+        }
 
         // Create invisible textarea to populate with the raw dish string (not the printable version that
         // contains dots instead of the actual bytes)

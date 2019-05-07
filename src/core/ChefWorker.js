@@ -93,7 +93,6 @@ self.addEventListener("message", function(e) {
 async function bake(data) {
     // Ensure the relevant modules are loaded
     self.loadRequiredModules(data.recipeConfig);
-
     try {
         self.inputNum = parseInt(data.inputNum, 10);
         const response = await self.chef.bake(
@@ -119,7 +118,8 @@ async function bake(data) {
                     action: "bakeComplete",
                     data: Object.assign(response, {
                         id: data.id,
-                        inputNum: data.inputNum
+                        inputNum: data.inputNum,
+                        bakeId: data.bakeId
                     })
                 });
             }
@@ -128,7 +128,8 @@ async function bake(data) {
                 action: "bakeComplete",
                 data: Object.assign(response, {
                     id: data.id,
-                    inputNum: data.inputNum
+                    inputNum: data.inputNum,
+                    bakeId: data.bakeId
                 })
             }, [response.result]);
         }

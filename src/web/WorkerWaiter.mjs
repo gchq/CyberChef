@@ -26,6 +26,7 @@ class WorkerWaiter {
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.inputs = [];
         this.totalOutputs = 0;
+        this.bakeId = 0;
     }
 
     /**
@@ -141,7 +142,7 @@ class WorkerWaiter {
         switch (r.action) {
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
-                this.updateOutput(r.data, r.data.inputNum);
+                this.updateOutput(r.data, r.data.inputNum, r.data.bakeId);
                 this.workerFinished(currentWorker);
                 break;
             case "bakeError":
@@ -187,11 +188,12 @@ class WorkerWaiter {
      *
      * @param {Object} data
      * @param {number} inputNum
+     * @param {number} bakeId
      */
-    updateOutput(data, inputNum) {
+    updateOutput(data, inputNum, bakeId) {
+        this.manager.output.updateOutputBakeId(bakeId, inputNum);
         this.manager.output.updateOutputValue(data, inputNum);
         this.manager.output.updateOutputStatus("baked", inputNum);
-
         // this.manager.recipe.updateBreakpointIndicator(this.app.progress);
     }
 
@@ -337,7 +339,8 @@ class WorkerWaiter {
                     options: this.options,
                     progress: this.progress,
                     step: this.step,
-                    inputNum: nextInput.inputNum
+                    inputNum: nextInput.inputNum,
+                    bakeId: this.bakeId
                 }
             });
         } else {
@@ -349,7 +352,8 @@ class WorkerWaiter {
                     options: this.options,
                     progress: this.progress,
                     step: this.step,
-                    inputNum: nextInput.inputNum
+                    inputNum: nextInput.inputNum,
+                    bakeId: this.bakeId
                 }
             }, [nextInput.input]);
         }
@@ -366,7 +370,7 @@ class WorkerWaiter {
     bake(recipeConfig, options, progress, step) {
         this.setBakingStatus(true);
         this.bakeStartTime = new Date().getTime();
-
+        this.bakeId++;
         this.recipeConfig = recipeConfig;
         this.options = options;
         this.progress = progress;
