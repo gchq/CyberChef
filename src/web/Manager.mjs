@@ -185,7 +185,7 @@ class Manager {
         document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
         document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
-        // document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
+        document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
         document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
         document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
         document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
