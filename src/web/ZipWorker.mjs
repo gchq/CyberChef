@@ -53,10 +53,10 @@ self.zipFiles = function(outputs, filename, fileExtension) {
         let output;
         if (outputs[iNum].data === null) {
             output = new Uint8Array(0);
-        } else if (typeof outputs[iNum].data.result === "string") {
-            output = new Uint8Array(Utils.strToArrayBuffer(outputs[iNum].data.result));
+        } else if (typeof outputs[iNum].data.dish.value === "string") {
+            output = new Uint8Array(Utils.strToArrayBuffer(outputs[iNum].data.dish.value));
         } else {
-            output = new Uint8Array(outputs[iNum].data.result);
+            output = new Uint8Array(outputs[iNum].data.dish.value);
         }
         zip.addFile(output, {filename: name});
     }
