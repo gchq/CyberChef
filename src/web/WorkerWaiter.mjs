@@ -519,6 +519,28 @@ class WorkerWaiter {
         }
 
     }
+
+    /**
+     * Asks the ChefWorker to calculate highlight offsets if possible.
+     *
+     * @param {Object[]} recipeConfig
+     * @param {string} direction
+     * @param {Object} pos - The position object for the highlight.
+     * @param {number} pos.start - The start offset.
+     * @param {number} pos.end - The end offset.
+     */
+    highlight(recipeConfig, direction, pos) {
+        const workerIdx = this.addChefWorker();
+        if (workerIdx === -1) return;
+        this.chefWorkers[workerIdx].worker.postMessage({
+            action: "highlight",
+            data: {
+                recipeConfig: recipeConfig,
+                direction: direction,
+                pos: pos
+            }
+        });
+    }
 }
 
 export default WorkerWaiter;

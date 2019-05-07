@@ -504,6 +504,9 @@ class InputWaiter {
         const fileOverlay = document.getElementById("input-file");
         if (fileOverlay.style.display === "block") return;
 
+        // Remove highlighting from input and output panes as the offsets might be different now
+        this.manager.highlighter.removeHighlights();
+
         const textArea = document.getElementById("input-text");
         const value = (textArea.value !== undefined) ? textArea.value : "";
         const activeTab = this.getActiveTab();
@@ -857,6 +860,10 @@ class InputWaiter {
      */
     changeTab(inputNum, changeOutput) {
         const tabsList = document.getElementById("input-tabs");
+
+        this.manager.highlighter.removeHighlights();
+        getSelection().removeAllRanges();
+
         let found = false;
         let minNum = Number.MAX_SAFE_INTEGER;
         for (let i = 0; i < tabsList.children.length; i++) {
@@ -985,6 +992,9 @@ class InputWaiter {
         this.manager.worker.cancelBake();
         this.manager.output.removeAllOutputs();
 
+        this.manager.highlighter.removeHighlights();
+        getSelection().removeAllRanges();
+
         const tabsList = document.getElementById("input-tabs").children;
         for (let i = tabsList.length - 1; i >= 0; i--) {
             tabsList.item(i).remove();
@@ -1001,6 +1011,9 @@ class InputWaiter {
     clearIoClick() {
         const inputNum = this.getActiveTab();
         if (inputNum === -1) return;
+
+        this.manager.highlighter.removeHighlights();
+        getSelection().removeAllRanges();
 
         this.updateInputValue(inputNum, "");
 

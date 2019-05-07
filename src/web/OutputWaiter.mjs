@@ -47,14 +47,27 @@ class OutputWaiter {
      * Gets the output for the specified input number
      *
      * @param {number} inputNum
+     * @param {boolean} raw
      * @returns {string | ArrayBuffer}
      */
-    getOutput(inputNum) {
+    getOutput(inputNum, raw=true) {
         if (this.outputs[inputNum] === undefined || this.outputs[inputNum] === null) return -1;
 
         if (this.outputs[inputNum].data === null) return "";
 
-        if (typeof this.outputs[inputNum].data.result === "string") {
+        if (raw) {
+            let data = this.outputs[inputNum].data.dish.value;
+            if (Array.isArray(data)) {
+                data = new Uint8Array(data.length);
+
+                for (let i = 0; i < data.length; i++) {
+                    data[i] = this.outputs[inputNum].data.dish.value[i];
+                }
+
+                data = data.buffer;
+            }
+            return data;
+        } else if (typeof this.outputs[inputNum].data.result === "string") {
             return this.outputs[inputNum].data.result;
         } else {
             return this.outputs[inputNum].data.result || "";
@@ -64,10 +77,11 @@ class OutputWaiter {
     /**
      * Gets the output string or FileBuffer for the active input
      *
+     * @param {boolean} [raw=true]
      * @returns {string | ArrayBuffer}
      */
-    getActive() {
-        return this.getOutput(this.getActiveTab());
+    getActive(raw=true) {
+        return this.getOutput(this.getActiveTab(), raw);
     }
 
     /**
@@ -426,7 +440,7 @@ class OutputWaiter {
      */
     async downloadFile() {
         const fileName = window.prompt("Please enter a filename: ", "download.dat");
-        const file = new File([this.getActive()], fileName);
+        const file = new File([this.getActive(true)], fileName);
         FileSaver.saveAs(file, fileName, false);
     }
 
@@ -624,7 +638,11 @@ class OutputWaiter {
     changeTab(inputNum, changeInput = false) {
         const currentNum = this.getActiveTab();
         if (this.getOutput(inputNum) === -1) return;
+
         this.hideMagicButton();
+
+        this.manager.highlighter.removeHighlights();
+        getSelection().removeAllRanges();
 
         const tabsWrapper = document.getElementById("output-tabs");
         const tabs = tabsWrapper.children;
@@ -974,8 +992,9 @@ class OutputWaiter {
      */
     backgroundMagic() {
         this.hideMagicButton();
-        if (!this.app.options.autoMagic || !this.getActive()) return;
-        const sample = this.getActive().slice(0, 1000) || "";
+        if (!this.app.options.autoMagic || !this.getActive(true)) return;
+        const sample = this.getActive(true).slice(0, 1000) || "";
+
         if (sample.length || sample.byteLength) {
             this.manager.background.magic(sample);
         }
@@ -1048,7 +1067,7 @@ class OutputWaiter {
             sliceToEl = document.getElementById("output-file-slice-to"),
             sliceFrom = parseInt(sliceFromEl.value, 10),
             sliceTo = parseInt(sliceToEl.value, 10),
-            str = Utils.arrayBufferToStr(this.getActive().slice(sliceFrom, sliceTo));
+            str = Utils.arrayBufferToStr(this.getActive(true).slice(sliceFrom, sliceTo));
 
         document.getElementById("output-text").classList.remove("blur");
         showFileOverlay.style.display = "block";
@@ -1061,7 +1080,7 @@ class OutputWaiter {
      * Copies the output to the clipboard
      */
     copyClick() {
-        let output = this.getActive();
+        let output = this.getActive(true);
 
         if (typeof output !== "string") {
             output = Utils.arrayBufferToStr(output);
@@ -1096,6 +1115,15 @@ class OutputWaiter {
 
         // Clean up
         document.body.removeChild(textarea);
+    }
+
+    /**
+     * Returns true if the output contains carriage returns
+     *
+     * @returns {boolean}
+     */
+    containsCR() {
+        return this.getActive(true).indexOf("\r") >= 0;
     }
 }
 
