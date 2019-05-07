@@ -378,6 +378,8 @@ class HighlighterWaiter {
     displayHighlights(pos, direction) {
         if (!pos) return;
 
+        if (this.manager.input.getActiveTab() !== this.manager.output.getActiveTab()) return;
+
         const io = direction === "forward" ? "output" : "input";
 
         document.getElementById(io + "-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
