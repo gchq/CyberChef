@@ -276,24 +276,11 @@ class InputWaiter {
             case "setUrl":
                 this.setUrl(r.data);
                 break;
+            case "inputSwitch":
+                this.manager.output.inputSwitch(r.data);
+                break;
             default:
                 log.error(`Unknown action ${r.action}.`);
-        }
-    }
-
-    /**
-     * Gets the input for the active tab
-     */
-    getActive() {
-        const textArea = document.getElementById("input-text");
-        const value = (textArea.value !== undefined) ? textArea.value : "";
-        const inputNum = this.getActiveTab();
-
-        if (this.fileBuffer) {
-            return this.fileBuffer;
-        } else {
-            this.updateInputValue(inputNum, value);
-            return value;
         }
     }
 
@@ -452,13 +439,6 @@ class InputWaiter {
      * @param {string | ArrayBuffer} value
      */
     updateInputValue(inputNum, value) {
-        this.inputWorker.postMessage({
-            action: "updateInputValue",
-            data: {
-                inputNum: inputNum,
-                value: value
-            }
-        });
         let includeInput = false;
         const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
         if (recipeStr.length > 0 && recipeStr.length <= 68267) {
@@ -468,6 +448,50 @@ class InputWaiter {
             includeInput: includeInput,
             input: recipeStr
         });
+
+        if (typeof value === "string") {
+            this.inputWorker.postMessage({
+                action: "updateInputValue",
+                data: {
+                    inputNum: inputNum,
+                    value: value
+                }
+            });
+        } else {
+            this.inputWorker.postMessage({
+                action: "updateInputValue",
+                data: {
+                    inputNum: inputNum,
+                    value: value
+                }
+            }, [value]);
+        }
+    }
+
+    /**
+     * Updates the .data property for the input of the specified inputNum
+     *
+     * @param {number} inputNum
+     * @param {object} inputData
+     */
+    updateInputObj(inputNum, inputData) {
+        if (typeof inputData === "string") {
+            this.inputWorker.postMessage({
+                action: "updateInputObj",
+                data: {
+                    inputNum: inputNum,
+                    data: inputData
+                }
+            });
+        } else {
+            this.inputWorker.postMessage({
+                action: "updateInputObj",
+                data: {
+                    inputNum: inputNum,
+                    data: inputData
+                }
+            }, [inputData.fileBuffer]);
+        }
     }
 
     /**

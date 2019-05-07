@@ -463,11 +463,9 @@ class OutputWaiter {
      * be zipped for download
      */
     downloadAllFiles() {
-
         const inputNums = Object.keys(this.outputs);
         for (let i = 0; i < inputNums.length; i++) {
             const iNum = inputNums[i];
-            log.error(this.outputs[iNum]);
             if (this.outputs[iNum].status !== "baked" ||
             this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
                 if (window.confirm("Not all outputs have been baked yet. Continue downloading outputs?")) {
@@ -1124,6 +1122,67 @@ class OutputWaiter {
      */
     containsCR() {
         return this.getActive(true).indexOf("\r") >= 0;
+    }
+
+    /**
+     * Handler for switch click events.
+     * Moves the current output into the input textarea.
+     */
+    switchClick() {
+        const active = this.getActive(true);
+        if (typeof active === "string") {
+            this.manager.input.inputWorker.postMessage({
+                action: "inputSwitch",
+                data: {
+                    inputNum: this.manager.input.getActiveTab(),
+                    outputData: active
+                }
+            });
+        } else {
+            this.manager.input.inputWorker.postMessage({
+                action: "inputSwitch",
+                data: {
+                    inputNum: this.manager.input.getActiveTab(),
+                    outputData: active
+                }
+            }, [active]);
+        }
+    }
+
+    /**
+     * Handler for when the inputWorker has switched the inputs.
+     * Stores the old input
+     *
+     * @param {object} switchData
+     * @param {number} switchData.inputNum
+     * @param {string | object} switchData.data
+     * @param {ArrayBuffer} switchData.data.fileBuffer
+     * @param {number} switchData.data.size
+     * @param {string} switchData.data.type
+     * @param {string} switchData.data.name
+     */
+    inputSwitch(switchData) {
+        this.switchOrigData = switchData;
+        document.getElementById("undo-switch").disabled = false;
+    }
+
+    /**
+     * Handler for undo switch click events.
+     * Removes the output from the input and replaces the input that was removed.
+     */
+    undoSwitchClick() {
+        this.manager.input.updateInputObj(this.switchOrigData.inputNum, this.switchOrigData.data);
+        const undoSwitch = document.getElementById("undo-switch");
+        undoSwitch.disabled = true;
+        $(undoSwitch).tooltip("hide");
+
+        this.manager.input.inputWorker.postMessage({
+            action: "setInput",
+            data: {
+                inputNum: this.switchOrigData.inputNum,
+                silent: false
+            }
+        });
     }
 }
 

@@ -47,6 +47,9 @@ self.addEventListener("message", function(e) {
         case "updateInputValue":
             self.updateInputValue(r.data);
             break;
+        case "updateInputObj":
+            self.updateInputObj(r.data);
+            break;
         case "getInputProgress":
             self.getLoadProgress(r.data);
             break;
@@ -88,6 +91,9 @@ self.addEventListener("message", function(e) {
             break;
         case "loaderWorkerMessage":
             self.handleLoaderMessage(r.data);
+            break;
+        case "inputSwitch":
+            self.inputSwitch(r.data);
             break;
         default:
             log.error(`Unknown action '${r.action}'.`);
@@ -407,6 +413,15 @@ self.updateInputValue = function(inputData) {
     }
 };
 
+self.updateInputObj = function(inputData) {
+    const inputNum = inputData.inputNum;
+    const data = inputData.data;
+
+    if (self.getInputObj(inputNum) === -1) return;
+
+    self.inputs[inputNum].data = data;
+};
+
 self.getLoaderWorkerIdx = function(workerId) {
     for (let i = 0; i < self.loaderWorkers.length; i++) {
         if (self.loaderWorkers[i].id === workerId) {
@@ -711,4 +726,41 @@ self.filterTabs = function(searchData) {
         action: "displayTabSearchResults",
         data: inputs
     });
+};
+
+/**
+ * Swaps the input and outputs, and sends the old input back to the main thread.
+ *
+ * @param {object} switchData
+ * @param {number} switchData.inputNum
+ * @param {string | ArrayBuffer} switchData.outputData
+ */
+self.inputSwitch = function(switchData) {
+    const currentInput = self.getInputObj(switchData.inputNum);
+    const currentData = currentInput.data;
+    if (currentInput === undefined || currentInput === null) return;
+
+    if (typeof switchData.outputData === "object") {
+        // ArrayBuffer
+        currentInput.data = {
+            fileBuffer: switchData.outputData,
+            name: "output.dat",
+            size: switchData.outputData.byteLength.toLocaleString(),
+            type: "unknown" // Could run detect file type here
+        };
+    } else {
+        // String
+        currentInput.data = switchData.outputData;
+    }
+
+    self.postMessage({
+        action: "inputSwitch",
+        data: {
+            data: currentData,
+            inputNum: switchData.inputNum
+        }
+    });
+
+    self.setInput({inputNum: switchData.inputNum, silent: false});
+
 };
