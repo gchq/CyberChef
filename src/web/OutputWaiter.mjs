@@ -435,7 +435,12 @@ class OutputWaiter {
      * Saves all outputs to a single archvie file
      */
     saveAllClick() {
-        this.downloadAllFiles();
+        const downloadButton = document.getElementById("save-all-to-file");
+        if (downloadButton.firstElementChild.innerHTML === "archive") {
+            this.downloadAllFiles();
+        } else if (window.confirm("Cancel zipping of outputs?")) {
+            this.terminateZipWorker();
+        }
     }
 
 
@@ -448,6 +453,7 @@ class OutputWaiter {
         const inputNums = Object.keys(this.outputs);
         for (let i = 0; i < inputNums.length; i++) {
             const iNum = inputNums[i];
+            log.error(this.outputs[iNum]);
             if (this.outputs[iNum].status !== "baked" ||
             this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
                 if (window.confirm("Not all outputs have been baked yet. Continue downloading outputs?")) {
@@ -458,12 +464,16 @@ class OutputWaiter {
             }
         }
 
-        const fileName = window.prompt("Please enter a filename: ", "download.zip");
+        let fileName = window.prompt("Please enter a filename: ", "download.zip");
 
         if (fileName === null || fileName === "") {
             // Don't zip the files if there isn't a filename
             this.app.alert("No filename was specified.", 3000);
             return;
+        }
+
+        if (!fileName.match(/.zip$/)) {
+            fileName += ".zip";
         }
 
         let fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
@@ -479,9 +489,9 @@ class OutputWaiter {
 
         const downloadButton = document.getElementById("save-all-to-file");
 
-        downloadButton.disabled = true;
         downloadButton.classList.add("spin");
-        $("[data-toggle='tooltip']").tooltip("hide");
+        downloadButton.title = `Downloading ${inputNums.length} files...`;
+        downloadButton.setAttribute("data-original-title", `Downloading ${inputNums.length} files...`);
 
         downloadButton.firstElementChild.innerHTML = "autorenew";
 
@@ -506,6 +516,15 @@ class OutputWaiter {
 
         this.zipWorker.terminate();
         this.zipWorker = null;
+
+        const downloadButton = document.getElementById("save-all-to-file");
+
+        downloadButton.classList.remove("spin");
+        downloadButton.title = "Save all outputs to a zip file";
+        downloadButton.setAttribute("data-original-title", "Save all outputs to a zip file");
+
+        downloadButton.firstElementChild.innerHTML = "archive";
+
     }
 
 
@@ -529,13 +548,6 @@ class OutputWaiter {
         FileSaver.saveAs(file, r.filename, false);
 
         this.terminateZipWorker();
-
-        const downloadButton = document.getElementById("save-all-to-file");
-
-        downloadButton.disabled = false;
-        downloadButton.classList.remove("spin");
-
-        downloadButton.firstElementChild.innerHTML = "archive";
     }
 
 
