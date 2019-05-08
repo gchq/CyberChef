@@ -847,7 +847,7 @@ class InputWaiter {
             tabsList.appendChild(this.createTabElement(nums[i], active));
         }
 
-        if (nums.length > 0) {
+        if (nums.length > 1) {
             tabsList.parentElement.style.display = "block";
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
