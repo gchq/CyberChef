@@ -233,7 +233,7 @@
 #show-file-overlay {
     position: absolute;
     right: 15px;
-    top: 15px;
+    top: calc(var(--title-height) + 10px);
     cursor: pointer;
     display: none;
 }

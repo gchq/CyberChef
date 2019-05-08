@@ -158,9 +158,6 @@ class OutputWaiter {
         this.outputs[inputNum].error = error;
         this.outputs[inputNum].progress = progress;
         this.updateOutputStatus("error", inputNum);
-
-        // call handle error here
-        // or make the error handling part of set()
     }
 
     /**
@@ -245,6 +242,8 @@ class OutputWaiter {
 
         this.manager.recipe.updateBreakpointIndicator(false);
 
+        document.getElementById("show-file-overlay").style.display = "none";
+
         if (output.status === "pending" || output.status === "baking") {
             // show the loader and the status message if it's being shown
             // otherwise don't do anything
@@ -256,6 +255,7 @@ class OutputWaiter {
             // run app.handleError()
             this.toggleLoader(false);
             outputText.style.display = "block";
+            outputText.classList.remove("blur");
             outputHtml.style.display = "none";
             outputFile.style.display = "none";
             outputHighlighter.display = "none";
@@ -439,7 +439,10 @@ class OutputWaiter {
      * Handler for file download events.
      */
     async downloadFile() {
-        const fileName = window.prompt("Please enter a filename: ", "download.dat");
+        let fileName = window.prompt("Please enter a filename: ", "download.dat");
+
+        if (fileName === null) fileName = "download.dat";
+
         const file = new File([this.getActive(true)], fileName);
         FileSaver.saveAs(file, fileName, false);
     }
@@ -608,6 +611,7 @@ class OutputWaiter {
                 document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
                 document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                document.getElementById("show-file-overlay").style.top = "calc(var(--tab-height) + var(--title-height) + 10px)";
 
                 document.getElementById("save-all-to-file").style.display = "inline-block";
             } else {
@@ -617,6 +621,7 @@ class OutputWaiter {
                 document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
                 document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
                 document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
+                document.getElementById("show-file-overlay").style.top = "calc(var(--title-height) + 10px)";
 
                 document.getElementById("save-all-to-file").style.display = "none";
             }
@@ -882,6 +887,7 @@ class OutputWaiter {
             document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+            document.getElementById("show-file-overlay").style.top = "calc(var(--tab-height) + var(--title-height) + 10px)";
 
             document.getElementById("save-all-to-file").style.display = "inline-block";
 
@@ -892,6 +898,7 @@ class OutputWaiter {
             document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
             document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
             document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
+            document.getElementById("show-file-overlay").style.top = "calc(var(--title-height) + 10px)";
 
             document.getElementById("save-all-to-file").style.display = "none";
         }
@@ -1059,7 +1066,11 @@ class OutputWaiter {
      * Handler for file slice display events.
      */
     displayFileSlice() {
-        const startTime = new Date().getTime(),
+        const outputText = document.getElementById("output-text"),
+            outputHtml = document.getElementById("output-html"),
+            outputFile = document.getElementById("output-file"),
+            outputHighlighter = document.getElementById("output-highlighter"),
+            inputHighlighter = document.getElementById("input-highlighter"),
             showFileOverlay = document.getElementById("show-file-overlay"),
             sliceFromEl = document.getElementById("output-file-slice-from"),
             sliceToEl = document.getElementById("output-file-slice-to"),
@@ -1067,10 +1078,49 @@ class OutputWaiter {
             sliceTo = parseInt(sliceToEl.value, 10),
             str = Utils.arrayBufferToStr(this.getActive(true).slice(sliceFrom, sliceTo));
 
-        document.getElementById("output-text").classList.remove("blur");
+        outputText.classList.remove("blur");
         showFileOverlay.style.display = "block";
+        outputText.value = str;
+
+
+        outputText.style.display = "block";
+        outputHtml.style.display = "none";
+        outputFile.style.display = "none";
+        outputHighlighter.display = "block";
+        inputHighlighter.display = "block";
 
     }
+
+    /**
+     * Handler for show file overlay events
+     *
+     * @param {Event} e
+     */
+    showFileOverlayClick(e) {
+        const showFileOverlay = e.target;
+
+        document.getElementById("output-text").classList.add("blur");
+        showFileOverlay.style.display = "none";
+        this.set(this.getActiveTab());
+    }
+
+    /**
+     * Handler for extract file events.
+     *
+     * @param {Event} e
+     */
+    async extractFileClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const el = e.target.nodeName === "I" ? e.target.parentNode : e.target;
+        const blobURL = el.getAttribute("blob-url");
+        const fileName = el.getAttribute("file-name");
+
+        const blob = await fetch(blobURL).then(r => r.blob());
+        this.manager.input.loadUIFiles([new File([blob], fileName, {type: blob.type})]);
+    }
+
 
 
     /**

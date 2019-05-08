@@ -205,6 +205,8 @@ class WorkerWaiter {
     setBakingStatus(bakingStatus) {
         this.app.baking = bakingStatus;
         this.manager.controls.toggleBakeButtonFunction(bakingStatus);
+
+        if (bakingStatus) this.manager.output.hideMagicButton();
     }
 
     /**
@@ -403,7 +405,7 @@ class WorkerWaiter {
             }
         }
         this.manager.output.updateOutputStatus("pending", inputData.inputNum);
-        this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`);
+        this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`, inputData.inputNum);
 
 
         if (inputData.override) {
