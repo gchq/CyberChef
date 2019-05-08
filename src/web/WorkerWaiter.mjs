@@ -148,6 +148,7 @@ class WorkerWaiter {
             case "bakeError":
                 if (!r.data.hasOwnProperty("progress")) this.app.handleError(r.data.error);
                 this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
+                this.app.progress = r.data.progress;
                 this.workerFinished(currentWorker);
                 // do more here
                 break;
@@ -378,7 +379,11 @@ class WorkerWaiter {
         this.progress = progress;
         this.step = step;
 
-        for (let i = 0; i < this.maxWorkers; i++) {
+        let numWorkers = this.maxWorkers;
+        if (this.inputs.length < numWorkers) {
+            numWorkers = this.inputs.length;
+        }
+        for (let i = 0; i < numWorkers; i++) {
             const workerIdx = this.addChefWorker();
             if (workerIdx === -1) break;
             this.bakeNextInput(workerIdx);
