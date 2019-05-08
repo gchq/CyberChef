@@ -1092,7 +1092,7 @@ class OutputWaiter {
 
         outputText.classList.remove("blur");
         showFileOverlay.style.display = "block";
-        outputText.value = str;
+        outputText.value = Utils.printable(str);
 
 
         outputText.style.display = "block";
