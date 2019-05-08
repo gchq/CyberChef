@@ -828,15 +828,6 @@ class InputWaiter {
         return newTab;
     }
 
-    // addTab
-        // UI bit can be done here
-        // Adding an input should be sent to the inputWorker
-
-    // removeTab
-        // UI here
-        // remove input sent to the inputWorker
-
-    // refreshTabs
     /**
      * Redraw the tab bar with an updated list of tabs
      *
@@ -856,22 +847,18 @@ class InputWaiter {
             tabsList.appendChild(this.createTabElement(nums[i], active));
         }
 
-        if (nums.length > 1) {
+        if (nums.length > 0) {
             tabsList.parentElement.style.display = "block";
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-
-            document.getElementById("save-all-to-file").style.display = "inline-block";
         } else {
             tabsList.parentElement.style.display = "none";
 
             document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
             document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
-
-            document.getElementById("save-all-to-file").style.display = "none";
         }
 
         this.changeTab(activeTab, this.app.options.syncTabs);
@@ -1092,24 +1079,49 @@ class InputWaiter {
      * @param {number} inputNum
      */
     inputAdded(changeTab, inputNum) {
-        if (changeTab) {
-            this.changeTab(inputNum, this.app.options.syncTabs);
-        }
+        this.addTab(inputNum, changeTab);
         this.manager.output.addOutput(inputNum, changeTab);
     }
 
     /**
-     * Handler for when the inputWorker adds multiple inputs
+     * Adds a new input tab.
      *
-     * @param {array} inputNums
+     * @param {number} inputNum
+     * @param {boolean} [changeTab=true]
      */
-    addInputs(inputNums) {
-        const activeTab = this.getActiveTab();
-        for (let i = 0; i < inputNums.length; i++) {
-            if (inputNums[i] === activeTab) continue;
-            this.manager.output.addOutput(inputNums[i], false);
+    addTab(inputNum, changeTab = true) {
+        const tabsWrapper = document.getElementById("input-tabs");
+        const numTabs = tabsWrapper.children.length;
+
+        if (!this.getTabItem(inputNum) && numTabs < this.maxTabs) {
+            const newTab = this.createTabElement(inputNum, false);
+
+            tabsWrapper.appendChild(newTab);
+
+            if (numTabs > 0) {
+                tabsWrapper.parentElement.style.display = "block";
+
+                document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+            } else {
+                tabsWrapper.parentElement.style.display = "none";
+
+                document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
+                document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
+                document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
+            }
         }
-        // this.changeTab(inputNums[inputNums.length - 1], this.app.options.syncTabs);
+
+        if (changeTab) {
+            this.changeTab(inputNum, true);
+        }
+    }
+
+    /**
+     * Handler for when the inputWorker adds multiple inputs
+     */
+    addInputs() {
         this.inputWorker.postMessage({
             action: "refreshTabs",
             data: {

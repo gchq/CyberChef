@@ -77,6 +77,20 @@ class OutputWaiter {
     }
 
     /**
+     * Checks if an output exists in the output dictionary
+     *
+     * @param {number} inputNum
+     * @returns {boolean}
+     */
+    outputExists(inputNum) {
+        if (this.outputs[inputNum] === undefined ||
+            this.outputs[inputNum] === null) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Gets the output string or FileBuffer for the active input
      *
      * @param {boolean} [raw=true]
@@ -94,11 +108,9 @@ class OutputWaiter {
      * @param {boolean} [changeTab=true]
      */
     addOutput(inputNum, changeTab = true) {
-        const output = this.getOutput(inputNum);
-        if (output !== -1) {
-            // Remove the output if it already exists
-            delete this.outputs[inputNum];
-        }
+        // Remove the output (will only get removed if it already exists)
+        this.removeOutput(inputNum);
+
         const newOutput = {
             data: null,
             inputNum: inputNum,
@@ -122,7 +134,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputValue(data, inputNum) {
-        if (this.getOutput(inputNum) === -1) {
+        if (!this.outputExists(inputNum)) {
             this.addOutput(inputNum);
         }
 
@@ -140,14 +152,14 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputMessage(statusMessage, inputNum) {
-        if (this.getOutput(inputNum) === -1) return;
+        if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].statusMessage = statusMessage;
         this.set(inputNum);
     }
 
     /**
      * Updates the error value for the output in the output array.
-     * If this is the active output tab, calls app.handleError.
+    * If this is the active output tab, calls app.handleError.
      * Otherwise, the error will be handled when the output is switched to
      *
      * @param {Error} error
@@ -155,7 +167,7 @@ class OutputWaiter {
      * @param {number} [progress=0]
      */
     updateOutputError(error, inputNum, progress=0) {
-        if (this.getOutput(inputNum) === -1) return;
+        if (!this.outputExists(inputNum)) return;
 
         this.outputs[inputNum].error = error;
         this.outputs[inputNum].progress = progress;
@@ -169,7 +181,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputStatus(status, inputNum) {
-        if (this.getOutput(inputNum) === -1) return;
+        if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].status = status;
 
         if (status !== "error") {
@@ -186,7 +198,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputBakeId(bakeId, inputNum) {
-        if (this.getOutput(inputNum) === -1) return;
+        if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].bakeId = bakeId;
     }
 
@@ -197,7 +209,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     updateOutputProgress(progress, inputNum) {
-        if (this.getOutput(inputNum) === -1) return;
+        if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].progress = progress;
     }
 
@@ -207,7 +219,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     removeOutput(inputNum) {
-        if (this.getOutput(inputNum) === -1) return;
+        if (!this.outputExists(inputNum)) return;
 
         delete (this.outputs[inputNum]);
     }
@@ -437,7 +449,6 @@ class OutputWaiter {
             outputElement.disabled = false;
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
-            // this.setStatusMsg("");
         }
     }
 
@@ -579,29 +590,6 @@ class OutputWaiter {
         this.terminateZipWorker();
     }
 
-
-    /**
-     * Handler for download all files events.
-     */
-    async downloadAllFilesOld() {
-        const fileName = window.prompt("Please enter a filename: ", "download.zip");
-        const fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
-        const zip = new Zlib.Zip();
-        const inputNums = Object.keys(this.outputs);
-        for (let i = 0; i < inputNums.length; i++) {
-            const name = Utils.strToByteArray(inputNums[i] + fileExt);
-            let out = this.getOutput(inputNums[i]);
-            if (typeof out === "string") {
-                out = Utils.strToUtf8ByteArray(out);
-            }
-            out = new Uint8Array(out);
-            // options.filename = Utils.strToByteArray(this.outputs[i].inputNum + ".dat");
-            zip.addFile(out, {filename: name});
-        }
-        const file = new File([zip.compress()], fileName);
-        FileSaver.saveAs(file, fileName, false);
-    }
-
     /**
      * Adds a new output tab.
      *
@@ -653,8 +641,8 @@ class OutputWaiter {
      * @param {boolean} [changeInput = false]
      */
     changeTab(inputNum, changeInput = false) {
+        if (!this.outputExists(inputNum)) return;
         const currentNum = this.getActiveTab();
-        if (this.getOutput(inputNum) === -1) return;
 
         this.hideMagicButton();
 
@@ -732,7 +720,7 @@ class OutputWaiter {
      */
     goToTab() {
         const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
-        if (this.getOutput(tabNum) !== undefined) {
+        if (this.outputExists(tabNum)) {
             this.changeTab(tabNum, this.app.options.syncTabs);
         }
     }
@@ -855,8 +843,8 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     removeTab(inputNum) {
+        if (!this.outputExists(inputNum)) return;
         let activeTab = this.getActiveTab();
-        if (this.getOutput(inputNum) === -1) return;
 
         const tabElement = this.getTabItem(inputNum);
 

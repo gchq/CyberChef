@@ -563,13 +563,7 @@ self.loadFiles = function(filesData) {
         self.activateLoaderWorker();
     }
 
-    // self.refreshTabs(lastInputNum, "right");
     self.getLoadProgress();
-
-    self.postMessage({
-        action: "addInputs",
-        data: inputNums
-    });
 };
 
 /**
@@ -611,15 +605,15 @@ self.addInput = function(changeTab=false, type, fileData={name: "unknown", size:
     }
     self.inputs[inputNum] = newInputObj;
 
-    if (changeTab) {
-        self.postMessage({
-            action: "inputAdded",
-            data: {
-                changeTab: changeTab,
-                inputNum: inputNum
-            }
-        });
-    }
+
+    self.postMessage({
+        action: "inputAdded",
+        data: {
+            changeTab: changeTab,
+            inputNum: inputNum
+        }
+
+    });
 
     return inputNum;
 };
