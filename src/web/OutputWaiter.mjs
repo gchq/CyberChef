@@ -7,10 +7,7 @@
 
 import Utils from "../core/Utils";
 import FileSaver from "file-saver";
-import zip from "zlibjs/bin/zip.min";
 import ZipWorker from "worker-loader?inline&fallback=false!./ZipWorker";
-
-const Zlib = zip.Zlib;
 
 /**
   * Waiter to handle events related to the output
