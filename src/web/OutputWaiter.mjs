@@ -65,6 +65,8 @@ class OutputWaiter {
                 }
 
                 data = data.buffer;
+            } else if (typeof data !== "object" && typeof data !== "string") {
+                data = String(data);
             }
             return data;
         } else if (typeof this.outputs[inputNum].data.result === "string") {
@@ -226,131 +228,133 @@ class OutputWaiter {
      *
      * @param {number} inputNum
      */
-    set(inputNum) {
-        const output = this.outputs[inputNum];
-        if (output === undefined || output === null) return;
-        if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
+    async set(inputNum) {
+        return new Promise(function(resolve, reject) {
+            const output = this.outputs[inputNum];
+            if (output === undefined || output === null) return;
+            if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
-        if (inputNum !== this.getActiveTab()) return;
+            if (inputNum !== this.getActiveTab()) return;
 
-        const outputText = document.getElementById("output-text");
-        const outputHtml = document.getElementById("output-html");
-        const outputFile = document.getElementById("output-file");
-        const outputHighlighter = document.getElementById("output-highlighter");
-        const inputHighlighter = document.getElementById("input-highlighter");
-        // If pending or baking, show loader and status message
-        // If error, style the tab and handle the error
-        // If done, display the output if it's the active tab
-        // If inactive, show the last bake value (or blank)
-        if (output.status === "inactive" ||
-            output.status === "stale" ||
-            (output.status === "baked" && output.bakeId < this.manager.worker.bakeId)) {
-            this.manager.controls.showStaleIndicator();
-        } else {
-            this.manager.controls.hideStaleIndicator();
-        }
-
-        if (output.progress !== undefined) {
-            this.manager.recipe.updateBreakpointIndicator(output.progress);
-        } else {
-            this.manager.recipe.updateBreakpointIndicator(false);
-        }
-
-        document.getElementById("show-file-overlay").style.display = "none";
-
-        if (output.status === "pending" || output.status === "baking") {
-            // show the loader and the status message if it's being shown
-            // otherwise don't do anything
-            this.toggleLoader(true);
-            document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
-
-        } else if (output.status === "error") {
-            // style the tab if it's being shown
-            // run app.handleError()
-            this.toggleLoader(false);
-            outputText.style.display = "block";
-            outputText.classList.remove("blur");
-            outputHtml.style.display = "none";
-            outputFile.style.display = "none";
-            outputHighlighter.display = "none";
-            inputHighlighter.display = "none";
-
-            outputText.value = output.error;
-            outputHtml.innerHTML = "";
-        } else if (output.status === "baked" || output.status === "inactive") {
-            this.displayTabInfo(inputNum);
-            this.toggleLoader(false);
-            this.closeFile();
-            let scriptElements, lines, length;
-
-            if (output.data === null) {
-                outputText.style.display = "block";
-                outputHtml.style.display = "none";
-                outputFile.style.display = "none";
-                outputHighlighter.display = "block";
-                inputHighlighter.display = "block";
-
-                outputText.value = "";
-                outputHtml.innerHTML = "";
-
-                lines = 0;
-                length = 0;
-                return;
+            const outputText = document.getElementById("output-text");
+            const outputHtml = document.getElementById("output-html");
+            const outputFile = document.getElementById("output-file");
+            const outputHighlighter = document.getElementById("output-highlighter");
+            const inputHighlighter = document.getElementById("input-highlighter");
+            // If pending or baking, show loader and status message
+            // If error, style the tab and handle the error
+            // If done, display the output if it's the active tab
+            // If inactive, show the last bake value (or blank)
+            if (output.status === "inactive" ||
+                output.status === "stale" ||
+                (output.status === "baked" && output.bakeId < this.manager.worker.bakeId)) {
+                this.manager.controls.showStaleIndicator();
+            } else {
+                this.manager.controls.hideStaleIndicator();
             }
 
-            switch (output.data.type) {
-                case "html":
-                    outputText.style.display = "none";
-                    outputHtml.style.display = "block";
-                    outputFile.style.display = "none";
-                    outputHighlighter.style.display = "none";
-                    inputHighlighter.style.display = "none";
+            if (output.progress !== undefined) {
+                this.manager.recipe.updateBreakpointIndicator(output.progress);
+            } else {
+                this.manager.recipe.updateBreakpointIndicator(false);
+            }
 
-                    outputText.value = "";
-                    outputHtml.innerHTML = output.data.result;
+            document.getElementById("show-file-overlay").style.display = "none";
 
-                    // Execute script sections
-                    scriptElements = outputHtml.querySelectorAll("script");
-                    for (let i = 0; i < scriptElements.length; i++) {
-                        try {
-                            eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-                        } catch (err) {
-                            log.error(err);
-                        }
-                    }
-                    length = output.data.dish.value.length;
+            if (output.status === "pending" || output.status === "baking") {
+                // show the loader and the status message if it's being shown
+                // otherwise don't do anything
+                this.toggleLoader(true);
+                document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
 
-                    break;
-                case "ArrayBuffer":
-                    outputText.style.display = "block";
-                    outputHtml.style.display = "none";
-                    outputHighlighter.display = "none";
-                    inputHighlighter.display = "none";
+            } else if (output.status === "error") {
+                // style the tab if it's being shown
+                // run app.handleError()
+                this.toggleLoader(false);
+                outputText.style.display = "block";
+                outputText.classList.remove("blur");
+                outputHtml.style.display = "none";
+                outputFile.style.display = "none";
+                outputHighlighter.display = "none";
+                inputHighlighter.display = "none";
 
-                    outputText.value = "";
-                    outputHtml.innerHTML = "";
+                outputText.value = output.error;
+                outputHtml.innerHTML = "";
+            } else if (output.status === "baked" || output.status === "inactive") {
+                this.displayTabInfo(inputNum);
+                this.toggleLoader(false);
+                this.closeFile();
+                let scriptElements, lines, length;
 
-                    length = output.data.result.length;
-                    this.setFile(output.data.result);
-                    break;
-                case "string":
-                default:
+                if (output.data === null) {
                     outputText.style.display = "block";
                     outputHtml.style.display = "none";
                     outputFile.style.display = "none";
                     outputHighlighter.display = "block";
                     inputHighlighter.display = "block";
 
-                    outputText.value = Utils.printable(output.data.result, true);
+                    outputText.value = "";
                     outputHtml.innerHTML = "";
 
-                    lines = output.data.result.count("\n") + 1;
-                    length = output.data.result.length;
-                    break;
+                    lines = 0;
+                    length = 0;
+                    return;
+                }
+
+                switch (output.data.type) {
+                    case "html":
+                        outputText.style.display = "none";
+                        outputHtml.style.display = "block";
+                        outputFile.style.display = "none";
+                        outputHighlighter.style.display = "none";
+                        inputHighlighter.style.display = "none";
+
+                        outputText.value = "";
+                        outputHtml.innerHTML = output.data.result;
+
+                        // Execute script sections
+                        scriptElements = outputHtml.querySelectorAll("script");
+                        for (let i = 0; i < scriptElements.length; i++) {
+                            try {
+                                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+                            } catch (err) {
+                                log.error(err);
+                            }
+                        }
+                        length = output.data.dish.value.length;
+
+                        break;
+                    case "ArrayBuffer":
+                        outputText.style.display = "block";
+                        outputHtml.style.display = "none";
+                        outputHighlighter.display = "none";
+                        inputHighlighter.display = "none";
+
+                        outputText.value = "";
+                        outputHtml.innerHTML = "";
+
+                        length = output.data.result.length;
+                        this.setFile(output.data.result);
+                        break;
+                    case "string":
+                    default:
+                        outputText.style.display = "block";
+                        outputHtml.style.display = "none";
+                        outputFile.style.display = "none";
+                        outputHighlighter.display = "block";
+                        inputHighlighter.display = "block";
+
+                        outputText.value = Utils.printable(output.data.result, true);
+                        outputHtml.innerHTML = "";
+
+                        lines = output.data.result.count("\n") + 1;
+                        length = output.data.result.length;
+                        break;
+                }
+                this.setOutputInfo(length, lines, output.data.duration);
+                this.backgroundMagic();
             }
-            this.setOutputInfo(length, lines, output.data.duration);
-            this.backgroundMagic();
-        }
+        }.bind(this));
     }
 
     /**
@@ -359,8 +363,6 @@ class OutputWaiter {
      * @param {ArrayBuffer} buf
      */
     setFile(buf) {
-        const file = new File([buf], "output.dat");
-
         // Display file overlay in output area with details
         const fileOverlay = document.getElementById("output-file"),
             fileSize = document.getElementById("output-file-size"),
@@ -368,7 +370,7 @@ class OutputWaiter {
             fileSlice = buf.slice(0, 4096);
 
         fileOverlay.style.display = "block";
-        fileSize.textContent = file.size.toLocaleString() + " bytes";
+        fileSize.textContent = buf.byteLength.toLocaleString() + " bytes";
 
         outputText.classList.add("blur");
         outputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));

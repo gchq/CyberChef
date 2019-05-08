@@ -306,39 +306,40 @@ class InputWaiter {
      * @param {number} inputData.progress
      * @param {boolean} [silent=false]
      */
-    set(inputData, silent=false) {
-        const activeTab = this.getActiveTab();
-        if (inputData.inputNum !== activeTab) return;
+    async set(inputData, silent=false) {
+        return new Promise(function(resolve, reject) {
+            const activeTab = this.getActiveTab();
+            if (inputData.inputNum !== activeTab) return;
 
-        const inputText = document.getElementById("input-text");
+            const inputText = document.getElementById("input-text");
 
-        if (typeof inputData.input === "string") {
-            inputText.value = inputData.input;
-            // close file
-            const fileOverlay = document.getElementById("input-file"),
-                fileName = document.getElementById("input-file-name"),
-                fileSize = document.getElementById("input-file-size"),
-                fileType = document.getElementById("input-file-type"),
-                fileLoaded = document.getElementById("input-file-loaded");
+            if (typeof inputData.input === "string") {
+                inputText.value = inputData.input;
+                // close file
+                const fileOverlay = document.getElementById("input-file"),
+                    fileName = document.getElementById("input-file-name"),
+                    fileSize = document.getElementById("input-file-size"),
+                    fileType = document.getElementById("input-file-type"),
+                    fileLoaded = document.getElementById("input-file-loaded");
 
-            fileOverlay.style.display = "none";
-            fileName.textContent = "";
-            fileSize.textContent = "";
-            fileType.textContent = "";
-            fileLoaded.textContent = "";
+                fileOverlay.style.display = "none";
+                fileName.textContent = "";
+                fileSize.textContent = "";
+                fileType.textContent = "";
+                fileLoaded.textContent = "";
 
-            inputText.style.overflow = "auto";
-            inputText.classList.remove("blur");
+                inputText.style.overflow = "auto";
+                inputText.classList.remove("blur");
 
-            const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
-                inputData.input.count("\n") + 1 : null;
-            this.setInputInfo(inputData.input.length, lines);
-        } else {
-            this.setFile(inputData);
-        }
+                const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
+                    inputData.input.count("\n") + 1 : null;
+                this.setInputInfo(inputData.input.length, lines);
+            } else {
+                this.setFile(inputData);
+            }
 
-        if (!silent) window.dispatchEvent(this.manager.statechange);
-
+            if (!silent) window.dispatchEvent(this.manager.statechange);
+        }.bind(this));
     }
 
     /**
