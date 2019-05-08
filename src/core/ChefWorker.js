@@ -102,37 +102,15 @@ async function bake(data) {
             data.progress,       // The current position in the recipe
             data.step            // Whether or not to take one step or execute the whole recipe
         );
-        if (typeof response.result === "string") {
-            if (response.progress !== data.progress + data.recipeConfig.length) {
-                self.postMessage({
-                    action: "bakeError",
-                    data: {
-                        error: response.result,
-                        id: data.id,
-                        inputNum: data.inputNum,
-                        progress: response.progress
-                    }
-                });
-            } else {
-                self.postMessage({
-                    action: "bakeComplete",
-                    data: Object.assign(response, {
-                        id: data.id,
-                        inputNum: data.inputNum,
-                        bakeId: data.bakeId
-                    })
-                });
-            }
-        } else {
-            self.postMessage({
-                action: "bakeComplete",
-                data: Object.assign(response, {
-                    id: data.id,
-                    inputNum: data.inputNum,
-                    bakeId: data.bakeId
-                })
-            }, [response.result]);
-        }
+        self.postMessage({
+            action: "bakeComplete",
+            data: Object.assign(response, {
+                id: data.id,
+                inputNum: data.inputNum,
+                bakeId: data.bakeId,
+                progress: response.progress
+            })
+        });
     } catch (err) {
         self.postMessage({
             action: "bakeError",

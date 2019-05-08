@@ -7,7 +7,6 @@
  */
 
 import Utils from "../core/Utils";
-import {toBase64} from "../core/lib/Base64";
 
 self.maxWorkers = 4;
 self.maxTabs = 1;

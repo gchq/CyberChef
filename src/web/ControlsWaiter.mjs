@@ -5,7 +5,6 @@
  */
 
 import Utils from "../core/Utils";
-import {toBase64} from "../core/lib/Base64";
 
 
 /**

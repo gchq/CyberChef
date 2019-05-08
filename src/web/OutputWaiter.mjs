@@ -172,7 +172,6 @@ class OutputWaiter {
 
         if (status !== "error") {
             delete this.outputs[inputNum].error;
-            delete this.outputs[inputNum].progress;
         }
 
         this.set(inputNum);
@@ -187,6 +186,17 @@ class OutputWaiter {
     updateOutputBakeId(bakeId, inputNum) {
         if (this.getOutput(inputNum) === -1) return;
         this.outputs[inputNum].bakeId = bakeId;
+    }
+
+    /**
+     * Updates the stored progress value for the output in the output array
+     *
+     * @param {number} progress
+     * @param {number} inputNum
+     */
+    updateOutputProgress(progress, inputNum) {
+        if (this.getOutput(inputNum) === -1) return;
+        this.outputs[inputNum].progress = progress;
     }
 
     /**
@@ -240,7 +250,11 @@ class OutputWaiter {
             this.manager.controls.hideStaleIndicator();
         }
 
-        this.manager.recipe.updateBreakpointIndicator(false);
+        if (output.progress !== undefined) {
+            this.manager.recipe.updateBreakpointIndicator(output.progress);
+        } else {
+            this.manager.recipe.updateBreakpointIndicator(false);
+        }
 
         document.getElementById("show-file-overlay").style.display = "none";
 
@@ -263,8 +277,6 @@ class OutputWaiter {
 
             outputText.value = output.error;
             outputHtml.innerHTML = "";
-
-            this.manager.recipe.updateBreakpointIndicator(output.progress);
         } else if (output.status === "baked" || output.status === "inactive") {
             this.displayTabInfo(inputNum);
             this.toggleLoader(false);
@@ -1120,7 +1132,6 @@ class OutputWaiter {
         const blob = await fetch(blobURL).then(r => r.blob());
         this.manager.input.loadUIFiles([new File([blob], fileName, {type: blob.type})]);
     }
-
 
 
     /**

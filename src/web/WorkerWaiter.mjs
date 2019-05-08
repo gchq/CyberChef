@@ -142,11 +142,18 @@ class WorkerWaiter {
         switch (r.action) {
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
-                this.updateOutput(r.data, r.data.inputNum, r.data.bakeId);
-                this.workerFinished(currentWorker);
+
+                if (r.data.error) {
+                    this.app.handleError(r.data.error);
+                    this.manager.output.updateOutputError(r.data.result, inputNum, r.data.progress);
+                    this.workerFinished(currentWorker);
+                } else {
+                    this.updateOutput(r.data, r.data.inputNum, r.data.bakeId, r.data.progress);
+                    this.workerFinished(currentWorker);
+                }
                 break;
             case "bakeError":
-                if (!r.data.hasOwnProperty("progress")) this.app.handleError(r.data.error);
+                this.app.handleError(r.data.error);
                 this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
                 this.app.progress = r.data.progress;
                 this.workerFinished(currentWorker);
@@ -190,9 +197,11 @@ class WorkerWaiter {
      * @param {Object} data
      * @param {number} inputNum
      * @param {number} bakeId
+     * @param {number} progress
      */
-    updateOutput(data, inputNum, bakeId) {
+    updateOutput(data, inputNum, bakeId, progress) {
         this.manager.output.updateOutputBakeId(bakeId, inputNum);
+        this.manager.output.updateOutputProgress(progress, inputNum);
         this.manager.output.updateOutputValue(data, inputNum);
         this.manager.output.updateOutputStatus("baked", inputNum);
         // this.manager.recipe.updateBreakpointIndicator(this.app.progress);
