@@ -70,7 +70,7 @@ self.loadFile = function(file, inputNum) {
     };
 
     reader.onerror = function(e) {
-        self.postMessage({"error": reader.error.message, "inputNum": inputNum});
+        self.postMessage({"error": reader.error.message, "inputNum": inputNum, "id": self.id});
     };
 
     seek();

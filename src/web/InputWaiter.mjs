@@ -361,7 +361,13 @@ class InputWaiter {
         fileName.textContent = inputData.name;
         fileSize.textContent = inputData.size + " bytes";
         fileType.textContent = inputData.type;
-        fileLoaded.textContent = inputData.progress + "%";
+        if (inputData.status === "error") {
+            fileLoaded.textContent = "Error";
+            fileLoaded.style.color = "#FF0000";
+        } else {
+            fileLoaded.style.color = "";
+            fileLoaded.textContent = inputData.progress + "%";
+        }
 
         this.displayFilePreview(inputData);
     }
@@ -420,7 +426,13 @@ class InputWaiter {
         if (inputNum !== activeTab) return;
 
         const fileLoaded = document.getElementById("input-file-loaded");
-        fileLoaded.textContent = progress + "%";
+        if (progress === "error") {
+            fileLoaded.textContent = "Error";
+            fileLoaded.style.color = "#FF0000";
+        } else {
+            fileLoaded.textContent = progress + "%";
+            fileLoaded.style.color = "";
+        }
 
         if (progress === 100) {
             this.inputWorker.postMessage({
@@ -789,6 +801,10 @@ class InputWaiter {
                 });
             }.bind(this), 100);
         }
+
+        if (loaded === total) {
+            this.app.autoBake();
+        }
     }
     // displayTabInfo
         // simple getInput for each tab
@@ -1096,6 +1112,7 @@ class InputWaiter {
         if (!this.getTabItem(inputNum) && numTabs < this.maxTabs) {
             const newTab = this.createTabElement(inputNum, false);
 
+
             tabsWrapper.appendChild(newTab);
 
             if (numTabs > 0) {
@@ -1111,6 +1128,11 @@ class InputWaiter {
                 document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
                 document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
             }
+
+            this.inputWorker.postMessage({
+                action: "updateTabHeader",
+                data: inputNum
+            });
         }
 
         if (changeTab) {

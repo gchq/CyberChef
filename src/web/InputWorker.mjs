@@ -94,6 +94,9 @@ self.addEventListener("message", function(e) {
         case "inputSwitch":
             self.inputSwitch(r.data);
             break;
+        case "updateTabHeader":
+            self.updateTabHeader(r.data);
+            break;
         default:
             log.error(`Unknown action '${r.action}'.`);
     }
@@ -184,6 +187,9 @@ self.getInputValue = function(inputNum) {
 self.getInputProgress = function(inputNum) {
     const inputObj = self.getInputObj(inputNum);
     if (inputObj === undefined || inputObj === null) return;
+    if (inputObj.status === "error") {
+        return "error";
+    }
     return inputObj.progress;
 };
 
@@ -326,6 +332,7 @@ self.setInput = function(inputData) {
         inputObj.size = inputVal.size;
         inputObj.type = inputVal.type;
         inputObj.progress = input.progress;
+        inputObj.status = input.status;
         inputVal = inputVal.fileBuffer;
         const fileSlice = inputVal.slice(0, 512001);
         inputObj.input = fileSlice;
@@ -346,7 +353,7 @@ self.setInput = function(inputData) {
             }
         });
     }
-    self.getInputProgress(inputNum);
+    self.updateTabHeader(inputNum);
 };
 
 self.refreshTabs = function(inputNum, direction) {
@@ -362,16 +369,11 @@ self.refreshTabs = function(inputNum, direction) {
     for (let i = 0; i < nums.length; i++) {
         self.updateTabHeader(nums[i]);
     }
-
-    // self.setInput(inputNum);
 };
 
 self.updateInputStatus = function(inputNum, status) {
-    for (let i = 0; i < self.inputs.length; i++) {
-        if (self.inputs[i].inputNum === inputNum) {
-            self.inputs[i].status = status;
-            return;
-        }
+    if (self.inputs[inputNum] !== undefined) {
+        self.inputs[inputNum].status = status;
     }
 };
 
@@ -448,8 +450,8 @@ self.handleLoaderMessage = function(r) {
     }
 
     if (r.hasOwnProperty("error")) {
-        self.updateInputStatus(r.inputNum, "error");
         self.updateInputProgress(r.inputNum, 0);
+        self.updateInputStatus(r.inputNum, "error");
 
         log.error(r.error);
         self.loadingInputs--;
@@ -457,6 +459,7 @@ self.handleLoaderMessage = function(r) {
         self.terminateLoaderWorker(r.id);
         self.activateLoaderWorker();
 
+        self.setInput({inputNum: inputNum, silent: true});
         return;
     }
 
@@ -468,7 +471,7 @@ self.handleLoaderMessage = function(r) {
             value: r.fileBuffer
         });
 
-        self.setInput({inputNum: inputNum, silent: false});
+        // self.setInput({inputNum: inputNum, silent: false});
 
         const idx = self.getLoaderWorkerIdx(r.id);
         self.loadNextFile(idx);
@@ -564,6 +567,7 @@ self.loadFiles = function(filesData) {
     }
 
     self.getLoadProgress();
+    self.setInput({inputNum: activeTab, silent: false});
 };
 
 /**
@@ -612,7 +616,6 @@ self.addInput = function(changeTab=false, type, fileData={name: "unknown", size:
             changeTab: changeTab,
             inputNum: inputNum
         }
-
     });
 
     return inputNum;
