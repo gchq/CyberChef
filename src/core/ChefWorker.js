@@ -6,7 +6,6 @@
  * @license Apache-2.0
  */
 
-import "babel-polyfill";
 import Chef from "./Chef";
 import OperationConfig from "./config/OperationConfig.json";
 import OpModules from "./config/modules/OpModules";
@@ -179,7 +178,7 @@ self.loadRequiredModules = function(recipeConfig) {
         if (!OpModules.hasOwnProperty(module)) {
             log.info(`Loading ${module} module`);
             self.sendStatusMessage(`Loading ${module} module`);
-            self.importScripts(`${self.docURL}/${module}.js`);
+            self.importScripts(`${self.docURL}/modules/${module}.js`);
             self.sendStatusMessage("");
         }
     });
