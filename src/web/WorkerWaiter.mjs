@@ -204,7 +204,6 @@ class WorkerWaiter {
         this.manager.output.updateOutputProgress(progress, inputNum);
         this.manager.output.updateOutputValue(data, inputNum);
         this.manager.output.updateOutputStatus("baked", inputNum);
-        // this.manager.recipe.updateBreakpointIndicator(this.app.progress);
     }
 
     /**
@@ -303,20 +302,6 @@ class WorkerWaiter {
         const msg = `Total: ${totalStr}<br>Time: ${durationStr}`;
 
         document.getElementById("bake-info").innerHTML = msg;
-        // look into changing this to something better
-        // for (let i = 0; i < this.outputs.length; i++) {
-        //     if (this.outputs[i].data.error) {
-        //         this.app.handleError(this.outputs[i].error);
-        //     }
-        // }
-
-        // Should be a value for each input, not just one
-        // Get store the progress for every output
-        // When we run set(), update the breakpoint indicator then
-        // this.app.progress = this.outputs[0].data.progress;
-        // this.app.dish = this.outputs[0].data.dish;
-        // this.manager.recipe.updateBreakpointIndicator(this.app.progress);
-        // Don't need to update the output here as updateOutput() will take care of that
         document.getElementById("bake").style.background = "";
         this.totalOutputs = 0; // Reset for next time
         log.debug("--- Bake complete ---");
