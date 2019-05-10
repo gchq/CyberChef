@@ -573,13 +573,13 @@ self.loadFiles = function(filesData) {
 /**
  * Adds an input to the input array
  *
- * @param {boolean} [changetab=false] - Whether or not to send a message to the main thread that the input has been created
+ * @param {boolean} [changetab=false] - Whether or not to change to the new input
  * @param {string} type - Either "string" or "file"
  * @param {Object} fileData - Contains information about the file to be added to the input
  * @param {string} fileData.name
  * @param {string} fileData.size
  * @param {string} fileData.type
- * @param {number} inputNum
+ * @param {number} inputNum - Defaults to auto-incrementing self.currentInputNum
  */
 self.addInput = function(changeTab=false, type, fileData={name: "unknown", size: "unknown", type: "unknown"}, inputNum = self.currentInputNum++) {
     self.numInputs++;

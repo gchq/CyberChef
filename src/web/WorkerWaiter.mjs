@@ -145,7 +145,7 @@ class WorkerWaiter {
 
                 if (r.data.error) {
                     this.app.handleError(r.data.error);
-                    this.manager.output.updateOutputError(r.data.result, inputNum, r.data.progress);
+                    this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
                     this.workerFinished(currentWorker);
                 } else {
                     this.updateOutput(r.data, r.data.inputNum, r.data.bakeId, r.data.progress);
@@ -171,7 +171,7 @@ class WorkerWaiter {
                 break;
             case "statusMessage":
                 // Status message should be done per output
-                this.manager.output.updateOutputMessage(r.data.message, r.data.inputNum);
+                this.manager.output.updateOutputMessage(r.data.message, r.data.inputNum, true);
                 break;
             case "optionUpdate":
                 log.debug(`Setting ${r.data.option} to ${r.data.value}`);
@@ -202,7 +202,7 @@ class WorkerWaiter {
     updateOutput(data, inputNum, bakeId, progress) {
         this.manager.output.updateOutputBakeId(bakeId, inputNum);
         this.manager.output.updateOutputProgress(progress, inputNum);
-        this.manager.output.updateOutputValue(data, inputNum);
+        this.manager.output.updateOutputValue(data, inputNum, false);
         this.manager.output.updateOutputStatus("baked", inputNum);
     }
 
@@ -321,8 +321,8 @@ class WorkerWaiter {
         if (typeof nextInput.inputNum === "string") nextInput.inputNum = parseInt(nextInput.inputNum, 10);
 
         log.debug(`Baking input ${nextInput.inputNum}.`);
+        this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum, false);
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
-        this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum);
 
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
         this.chefWorkers[workerIdx].active = true;
@@ -403,8 +403,8 @@ class WorkerWaiter {
                 break;
             }
         }
+        this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`, inputData.inputNum, false);
         this.manager.output.updateOutputStatus("pending", inputData.inputNum);
-        this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`, inputData.inputNum);
 
 
         if (inputData.override) {

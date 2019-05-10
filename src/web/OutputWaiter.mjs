@@ -129,16 +129,16 @@ class OutputWaiter {
      *
      * @param {Object} data
      * @param {number} inputNum
+     * @param {boolean} set
      */
-    updateOutputValue(data, inputNum) {
+    updateOutputValue(data, inputNum, set=true) {
         if (!this.outputExists(inputNum)) {
             this.addOutput(inputNum);
         }
 
         this.outputs[inputNum].data = data;
 
-        // set output here
-        this.set(inputNum);
+        if (set) this.set(inputNum);
     }
 
     /**
@@ -147,11 +147,12 @@ class OutputWaiter {
      *
      * @param {string} statusMessage
      * @param {number} inputNum
+     * @param {boolean} [set=true]
      */
-    updateOutputMessage(statusMessage, inputNum) {
+    updateOutputMessage(statusMessage, inputNum, set=true) {
         if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].statusMessage = statusMessage;
-        this.set(inputNum);
+        if (set) this.set(inputNum);
     }
 
     /**
@@ -166,7 +167,9 @@ class OutputWaiter {
     updateOutputError(error, inputNum, progress=0) {
         if (!this.outputExists(inputNum)) return;
 
-        this.outputs[inputNum].error = error;
+        const errorString = error.displayStr || error.toString();
+
+        this.outputs[inputNum].error = errorString;
         this.outputs[inputNum].progress = progress;
         this.updateOutputStatus("error", inputNum);
     }
@@ -278,7 +281,6 @@ class OutputWaiter {
 
             } else if (output.status === "error") {
                 // style the tab if it's being shown
-                // run app.handleError()
                 this.toggleLoader(false);
                 outputText.style.display = "block";
                 outputText.classList.remove("blur");
