@@ -833,6 +833,7 @@ class InputWaiter {
         newTabButtonIcon.innerText = "clear";
 
         newTabButton.appendChild(newTabButtonIcon);
+        newTabButton.addEventListener("click", this.removeTabClick.bind(this));
 
         newTab.appendChild(newTabContent);
         newTab.appendChild(newTabButton);
@@ -1179,7 +1180,7 @@ class InputWaiter {
         if (!mouseEvent.target) {
             return;
         }
-        const tabNum = mouseEvent.target.parentElement.parentElement.getAttribute("inputNum");
+        const tabNum = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.removeInput(parseInt(tabNum, 10));
         }
