@@ -419,13 +419,17 @@ class InputWaiter {
      * Updates the displayed input progress for a file
      *
      * @param {number} inputNum
-     * @param {number} progress
+     * @param {number | string} progress
      */
     updateFileProgress(inputNum, progress) {
         const activeTab = this.getActiveTab();
         if (inputNum !== activeTab) return;
 
         const fileLoaded = document.getElementById("input-file-loaded");
+        let oldProgress = fileLoaded.textContent;
+        if (oldProgress !== "Error") {
+            oldProgress = parseInt(oldProgress.replace("%", ""), 10);
+        }
         if (progress === "error") {
             fileLoaded.textContent = "Error";
             fileLoaded.style.color = "#FF0000";
@@ -434,12 +438,12 @@ class InputWaiter {
             fileLoaded.style.color = "";
         }
 
-        if (progress === 100) {
+        if (progress === 100 && progress !== oldProgress) {
             this.inputWorker.postMessage({
                 action: "setInput",
                 data: {
                     inputNum: inputNum,
-                    silent: true
+                    silent: false
                 }
             });
         }
@@ -801,15 +805,7 @@ class InputWaiter {
                 });
             }.bind(this), 100);
         }
-
-        if (loaded === total) {
-            this.app.autoBake();
-        }
     }
-    // displayTabInfo
-        // simple getInput for each tab
-
-    // displayFilePreview
 
     /**
      * Create a tab element for the input tab bar
