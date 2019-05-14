@@ -847,6 +847,7 @@ class InputWaiter {
         newTabButtonIcon.innerText = "clear";
 
         newTabButton.appendChild(newTabButtonIcon);
+        newTabButton.addEventListener("click", this.removeTabClick.bind(this));
 
         newTab.appendChild(newTabContent);
         newTab.appendChild(newTabButton);
