@@ -117,7 +117,7 @@ class InputWaiter {
     /**
      * Adds a new loaderWorker
      *
-     * @returns {number} The index of the created worker
+     * @returns {number} - The index of the created worker
      */
     addLoaderWorker() {
         if (this.loaderWorkers.length === this.maxWorkers) {
@@ -139,7 +139,9 @@ class InputWaiter {
     /**
      * Removes a loaderworker
      *
-     * @param {Object} workerObj
+     * @param {Object} workerObj - Object containing the loaderWorker and its id
+     * @param {LoaderWorker} workerObj.worker - The actual loaderWorker
+     * @param {number} workerObj.id - The ID of the loaderWorker
      */
     removeLoaderWorker(workerObj) {
         const idx = this.loaderWorkers.indexOf(workerObj);
@@ -154,7 +156,8 @@ class InputWaiter {
     /**
      * Finds and returns the object for the loaderWorker of a given id
      *
-     * @param {number} id
+     * @param {number} id - The ID of the loaderWorker to find
+     * @returns {object}
      */
     getLoaderWorker(id) {
         const idx = this.getLoaderWorkerIndex(id);
@@ -165,7 +168,8 @@ class InputWaiter {
     /**
      * Gets the index for the loaderWorker of a given id
      *
-     * @param {number} id
+     * @param {number} id - The ID of hte loaderWorker to find
+     * @returns {number} The current index of the loaderWorker in the array
      */
     getLoaderWorkerIndex(id) {
         for (let i = 0; i < this.loaderWorkers.length; i++) {
@@ -179,10 +183,10 @@ class InputWaiter {
     /**
      * Sends an input to be loaded to the loaderWorker
      *
-     * @param {object} inputData
-     * @param {File} inputData.file
-     * @param {number} inputData.inputNum
-     * @param {number} inputData.workerId
+     * @param {object} inputData - Object containing the input to be loaded
+     * @param {File} inputData.file - The actual file object to load
+     * @param {number} inputData.inputNum - The inputNum for the file object
+     * @param {number} inputData.workerId - The ID of the loaderWorker that will load it
      */
     loadInput(inputData) {
         const idx = this.getLoaderWorkerIndex(inputData.workerId);
@@ -195,6 +199,7 @@ class InputWaiter {
 
     /**
      * Handler for messages sent back by the loaderWorker
+     * Sends the message straight to the inputWorker to be handled there.
      *
      * @param {MessageEvent} e
      */
@@ -249,9 +254,6 @@ class InputWaiter {
             case "updateTabHeader":
                 this.updateTabHeader(r.data);
                 break;
-            case "updateFileProgress":
-                this.updateFileProgress(r.data.inputNum, r.data.progress);
-                break;
             case "loadingInfo":
                 this.showLoadingInfo(r.data, true);
                 break;
@@ -260,9 +262,6 @@ class InputWaiter {
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
-                break;
-            case "addInputs":
-                this.addInputs(r.data);
                 break;
             case "queueInput":
                 this.manager.worker.queueInput(r.data);
@@ -285,7 +284,7 @@ class InputWaiter {
     }
 
     /**
-     * Gets the input for all tabs
+     * Sends a message to the inputWorker to get all inputs
      */
     getAll() {
         this.manager.controls.toggleBakeButtonFunction(false, true);
@@ -297,14 +296,14 @@ class InputWaiter {
     /**
      * Sets the input in the input area
      *
-     * @param {object} inputData
-     * @param {number} inputData.inputNum
-     * @param {string | object} inputData.input
-     * @param {string} inputData.name
-     * @param {string} inputData.size
-     * @param {string} inputData.type
-     * @param {number} inputData.progress
-     * @param {boolean} [silent=false]
+     * @param {object} inputData - Object containing the input and its metadata
+     * @param {number} inputData.inputNum - The unique inputNum for the selected input
+     * @param {string | object} inputData.input - The actual input data
+     * @param {string} inputData.name - The name of the input file
+     * @param {number} inputData.size - The size in bytes of the input file
+     * @param {string} inputData.type - The MIME type of the input file
+     * @param {number} inputData.progress - The load progress of the input file
+     * @param {boolean} [silent=false] - If true, fires the manager statechange event
      */
     async set(inputData, silent=false) {
         return new Promise(function(resolve, reject) {
@@ -315,7 +314,6 @@ class InputWaiter {
 
             if (typeof inputData.input === "string") {
                 inputText.value = inputData.input;
-                // close file
                 const fileOverlay = document.getElementById("input-file"),
                     fileName = document.getElementById("input-file-name"),
                     fileSize = document.getElementById("input-file-size"),
@@ -343,9 +341,15 @@ class InputWaiter {
     }
 
     /**
-     * Shows file details
+     * Displays file details
      *
-     * @param inputData
+     * @param {object} inputData - Object containing the input and its metadata
+     * @param {number} inputData.inputNum - The unique inputNum for the selected input
+     * @param {string | object} inputData.input - The actual input data
+     * @param {string} inputData.name - The name of the input file
+     * @param {number} inputData.size - The size in bytes of the input file
+     * @param {string} inputData.type - The MIME type of the input file
+     * @param {number} inputData.progress - The load progress of the input file
      */
     setFile(inputData) {
         const activeTab = this.getActiveTab();
@@ -384,9 +388,9 @@ class InputWaiter {
     /**
      * Shows a chunk of the file in the input behind the file overlay
      *
-     * @param {Object} inputData
-     * @param {number} inputData.inputNum
-     * @param {ArrayBuffer} inputData.input
+     * @param {Object} inputData - Object containing the input data
+     * @param {number} inputData.inputNum - The inputNum of the file being displayed
+     * @param {ArrayBuffer} inputData.input - The actual input to display
      */
     displayFilePreview(inputData) {
         const activeTab = this.getActiveTab(),
@@ -398,11 +402,12 @@ class InputWaiter {
         inputText.classList.add("blur");
         inputText.value = Utils.printable(Utils.arrayBufferToStr(input.slice(0, 4096)));
 
-        // Display image in thumbnail if we want
         if (this.app.options.imagePreview) {
             const inputArr = new Uint8Array(input),
                 type = isImage(inputArr);
             if (type && type !== "image/tiff" && inputArr.byteLength <= 512000) {
+                // Most browsers don't support displaying TIFFs, so ignore them
+                // Assume anything over 512000 bytes is truncated
                 const blob = new Blob([inputArr], {type: type}),
                     url = URL.createObjectURL(blob);
                 fileThumb.src = url;
@@ -416,10 +421,10 @@ class InputWaiter {
     }
 
     /**
-     * Updates the displayed input progress for a file
+     * Updates the displayed load progress for a file
      *
      * @param {number} inputNum
-     * @param {number | string} progress
+     * @param {number | string} progress - Either a number or "error"
      */
     updateFileProgress(inputNum, progress) {
         const activeTab = this.getActiveTab();
@@ -439,6 +444,7 @@ class InputWaiter {
         }
 
         if (progress === 100 && progress !== oldProgress) {
+            // Don't set the input if the progress hasn't changed
             this.inputWorker.postMessage({
                 action: "setInput",
                 data: {
@@ -450,7 +456,7 @@ class InputWaiter {
     }
 
     /**
-     * Updates the input value for the specified inputNum
+     * Updates the stored value for the specified inputNum
      *
      * @param {number} inputNum
      * @param {string | ArrayBuffer} value
@@ -475,6 +481,7 @@ class InputWaiter {
                 }
             });
         } else {
+            // ArrayBuffer is transferable
             this.inputWorker.postMessage({
                 action: "updateInputValue",
                 data: {
@@ -486,10 +493,11 @@ class InputWaiter {
     }
 
     /**
-     * Updates the .data property for the input of the specified inputNum
+     * Updates the .data property for the input of the specified inputNum.
+     * Used for switching the output into the input
      *
-     * @param {number} inputNum
-     * @param {object} inputData
+     * @param {number} inputNum - The inputNum of the input we're changing
+     * @param {object} inputData - The new data object
      */
     updateInputObj(inputNum, inputData) {
         if (typeof inputData === "string") {
@@ -534,7 +542,8 @@ class InputWaiter {
     }
 
     /**
-     * Handler for input change events
+     * Handler for input change events.
+     * Updates the value stored in the inputWorker
      *
      * @param {event} e
      *
@@ -575,8 +584,9 @@ class InputWaiter {
     inputPaste(e) {
         const pastedData = e.clipboardData.getData("Text");
         if (pastedData.length < (this.app.options.ioDisplayThreshold * 1024)) {
-            // inputChange() was being fired before the input value
-            // was set, so add it here instead
+            // Pasting normally fires the inputChange() event before
+            // changing the value, so instead change it here ourselves
+            // and manually fire inputChange()
             e.preventDefault();
             document.getElementById("input-text").value += pastedData;
             this.inputChange(e);
@@ -642,8 +652,9 @@ class InputWaiter {
         e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
 
         if (text) {
-            // close file
-            // set text output
+            // Append the text to the current input and fire inputChange()
+            document.getElementById("input-text").value += text;
+            this.inputChange(e);
             return;
         }
 
@@ -670,14 +681,16 @@ class InputWaiter {
     /**
      * Load files from the UI into the inputWorker
      *
-     * @param files
+     * @param {FileList} files - The list of files to be loaded
      */
     loadUIFiles(files) {
+        log.error(files);
         const numFiles = files.length;
         const activeTab = this.getActiveTab();
         log.debug(`Loading ${numFiles} files.`);
-        // Show something in the UI to make it clear we're loading files
 
+        // Display the number of files as pending so the user
+        // knows that we've received the files.
         this.hideLoadingMessage();
         this.showLoadingInfo({
             pending: numFiles,
@@ -714,7 +727,8 @@ class InputWaiter {
     }
 
     /**
-     * Checks the length of the files input. If it's 0, hide loading message
+     * Checks the length of the files input.
+     * If it's 0, hide loading message
      */
     checkInputFiles() {
         const fileInput = document.getElementById("open-file");
@@ -732,6 +746,8 @@ class InputWaiter {
     inputOpenClick() {
         this.showLoadingMessage();
         document.getElementById("open-file").click();
+
+        // When the document body regains focus, check if there's files in the input field
         document.body.onfocus = this.checkInputFiles.bind(this);
     }
 
@@ -742,25 +758,23 @@ class InputWaiter {
     folderOpenClick() {
         this.showLoadingMessage();
         document.getElementById("open-folder").click();
+
+        // When the document body regains focus, check if there's files in the input field
         document.body.onfocus = this.checkInputFiles.bind(this);
     }
 
-    // set / setFile
-        // get the data for the active tab from inputWorker
-        // display it!
-
-    // setinputInfo
     /**
-     * Display the loaded files information in the input header
-     * @param {object} loadedData
-     * @param {number} loadedData.pending
-     * @param {number} loadedData.loading
-     * @param {number} loadedData.loaded
-     * @param {number} loadedData.total
-     * @param {object} loadedData.activeProgress
-     * @param {number} loadedData.activeProgress.inputNum
-     * @param {number} loadedData.activeProgress.progress
-     * @param {boolean} autoRefresh
+     * Display the loaded files information in the input header.
+     * Also, sets the background of the Input header to be a progress bar
+     * @param {object} loadedData - Object containing the loading information
+     * @param {number} loadedData.pending - How many files are pending (not loading / loaded)
+     * @param {number} loadedData.loading - How many files are being loaded
+     * @param {number} loadedData.loaded - How many files have been loaded
+     * @param {number} loadedData.total - The total number of files
+     * @param {object} loadedData.activeProgress - Object containing data about the active tab
+     * @param {number} loadedData.activeProgress.inputNum - The inputNum of the input the progress is for
+     * @param {number} loadedData.activeProgress.progress - The loading progress of the active input
+     * @param {boolean} autoRefresh - If true, automatically refreshes the loading info by sending a message to the inputWorker after 100ms
      */
     showLoadingInfo(loadedData, autoRefresh) {
         const pending = loadedData.pending;
@@ -810,8 +824,8 @@ class InputWaiter {
     /**
      * Create a tab element for the input tab bar
      *
-     * @param {number} inputNum
-     * @param {boolean} [active=false]
+     * @param {number} inputNum - The inputNum of the new tab
+     * @param {boolean} [active=false] - If true, sets the tab to active
      * @returns {Element}
      */
     createTabElement(inputNum, active) {
@@ -841,10 +855,11 @@ class InputWaiter {
     }
 
     /**
-     * Redraw the tab bar with an updated list of tabs
+     * Redraw the tab bar with an updated list of tabs.
+     * Then changes to the activeTab
      *
-     * @param nums
-     * @param {number} activeTab
+     * @param {number[]} nums - The inputNums of the tab bar to be drawn
+     * @param {number} activeTab - The inputNum of the active tab
      */
     refreshTabs(nums, activeTab) {
         const tabsList = document.getElementById("input-tabs");
@@ -877,10 +892,10 @@ class InputWaiter {
     }
 
     /**
-     * Change the active tab
+     * Change to a different tab.
      *
-     * @param {number} inputNum
-     * @param {boolean} [changeOutput=false]
+     * @param {number} inputNum - The inputNum of the tab to change to
+     * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
     changeTab(inputNum, changeOutput) {
         const tabsList = document.getElementById("input-tabs");
@@ -961,9 +976,6 @@ class InputWaiter {
             }
         }
     }
-    // removeTabClick
-
-    // move getNearbyNums / getLargest / getSmallest / getNext / getPrevious to inputWorker
 
     /**
      * Gets the number of the current active tab
@@ -983,7 +995,7 @@ class InputWaiter {
     /**
      * Gets the li element for the tab of an input number
      *
-     * @param {number} inputNum
+     * @param {number} inputNum - The inputNum of the tab we're trying to find
      * @returns {Element}
      */
     getTabItem(inputNum) {
@@ -998,6 +1010,8 @@ class InputWaiter {
 
     /**
      * Gets a list of tab numbers for the currently open tabs
+     *
+     * @returns {number[]}
      */
     getTabList() {
         const nums = [];
@@ -1010,7 +1024,7 @@ class InputWaiter {
 
     /**
      * Handler for clear all IO events.
-     * Resets the input, output and info areas
+     * Resets the input, output and info areas, and creates a new inputWorker
      */
     clearAllIoClick() {
         this.manager.worker.cancelBake();
@@ -1049,9 +1063,6 @@ class InputWaiter {
         this.updateTabHeader({inputNum: inputNum, input: ""});
     }
 
-    // filter stuff should be sent to the inputWorker
-        // returns a filterResult message that is handled and used to update the UI
-
     /**
      * Sets the console log level in the worker.
      *
@@ -1067,7 +1078,7 @@ class InputWaiter {
 
     /**
      * Sends a message to the inputWorker to add a new input.
-     * @param {boolean} [changeTab=false]
+     * @param {boolean} [changeTab=false] - If true, changes the tab to the new input
      */
     addInput(changeTab=false) {
         if (!this.inputWorker) return;
@@ -1078,7 +1089,7 @@ class InputWaiter {
     }
 
     /**
-     * Handler for add input button clicked
+     * Handler for add input button clicked.
      */
     addInputClick() {
         this.addInput(true);
@@ -1087,8 +1098,8 @@ class InputWaiter {
     /**
      * Handler for when the inputWorker adds a new input
      *
-     * @param {boolean} changeTab
-     * @param {number} inputNum
+     * @param {boolean} changeTab - Whether or not to change to the new input tab
+     * @param {number} inputNum - The new inputNum
      */
     inputAdded(changeTab, inputNum) {
         this.addTab(inputNum, changeTab);
@@ -1098,8 +1109,8 @@ class InputWaiter {
     /**
      * Adds a new input tab.
      *
-     * @param {number} inputNum
-     * @param {boolean} [changeTab=true]
+     * @param {number} inputNum - The inputNum of the new tab
+     * @param {boolean} [changeTab=true] - If true, changes to the new tab once it's been added
      */
     addTab(inputNum, changeTab = true) {
         const tabsWrapper = document.getElementById("input-tabs");
@@ -1137,23 +1148,10 @@ class InputWaiter {
     }
 
     /**
-     * Handler for when the inputWorker adds multiple inputs
-     */
-    addInputs() {
-        this.inputWorker.postMessage({
-            action: "refreshTabs",
-            data: {
-                inputNum: this.getActiveTab(),
-                direction: "left"
-            }
-        });
-    }
-
-    /**
      * Sends a message to the inputWorker to remove an input.
      * If the input tab is on the screen, refreshes the tabs
      *
-     * @param {number} inputNum
+     * @param {number} inputNum - The inputNum of the tab to be removed
      */
     removeInput(inputNum) {
         let refresh = false;
@@ -1173,13 +1171,14 @@ class InputWaiter {
 
     /**
      * Handler for clicking on a remove tab button
+     *
      * @param {event} mouseEvent
      */
     removeTabClick(mouseEvent) {
         if (!mouseEvent.target) {
             return;
         }
-        const tabNum = mouseEvent.target.parentElement.parentElement.getAttribute("inputNum");
+        const tabNum = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.removeInput(parseInt(tabNum, 10));
         }
@@ -1200,7 +1199,7 @@ class InputWaiter {
     }
 
     /**
-     * Handler for clicking on next tab button
+     * Handler for clicking on previous tab button
      */
     changeTabLeft() {
         const activeTab = this.getActiveTab();
@@ -1257,7 +1256,7 @@ class InputWaiter {
     /**
      * Displays the results of a tab search in the find tab box
      *
-     * @param {object[]} results
+     * @param {object[]} results - List of results objects
      *
      */
     displayTabSearchResults(results) {
@@ -1294,9 +1293,9 @@ class InputWaiter {
     /**
      * Update the input URL to the new value
      *
-     * @param {object} urlData
-     * @param {boolean} urlData.includeInput
-     * @param {string} urlData.input
+     * @param {object} urlData - Object containing the URL data
+     * @param {boolean} urlData.includeInput - If true, the input is included in the title
+     * @param {string} urlData.input - The input data to be included
      */
     setUrl(urlData) {
         this.app.updateTitle(urlData.includeInput, urlData.input, true);
