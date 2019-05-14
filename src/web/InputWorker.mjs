@@ -20,6 +20,8 @@ self.loadingInputs = 0;
 
 /**
  * Respond to message from parent thread.
+ *
+ * @param {MessageEvent} e
  */
 self.addEventListener("message", function(e) {
     const r = e.data;
@@ -49,14 +51,11 @@ self.addEventListener("message", function(e) {
         case "updateInputObj":
             self.updateInputObj(r.data);
             break;
-        case "getInputProgress":
-            self.getLoadProgress(r.data);
-            break;
         case "updateInputProgress":
             self.updateInputProgress(r.data);
             break;
-        case "getAll":
-            self.getAllInputs();
+        case "bakeAll":
+            self.bakeAllInputs();
             break;
         case "getLoadProgress":
             self.getLoadProgress(r.data);
@@ -102,6 +101,12 @@ self.addEventListener("message", function(e) {
     }
 });
 
+/**
+ * Gets the load progress of the input files, and the
+ * load progress for the input given in inputNum
+ *
+ * @param {number} inputNum - The input to get the file loading progress for
+ */
 self.getLoadProgress = function(inputNum) {
     const total = self.numInputs;
     const pending = self.pendingFiles.length;
@@ -123,6 +128,12 @@ self.getLoadProgress = function(inputNum) {
     });
 };
 
+/**
+ * Fired when an autobake is initiated.
+ * Queues the active input and sends a bake command.
+ *
+ * @param {number} inputNum - The input to be baked
+ */
 self.autoBake = function(inputNum) {
     const input = self.getInputObj(inputNum);
     if (input) {
@@ -144,7 +155,11 @@ self.autoBake = function(inputNum) {
     }
 };
 
-self.getAllInputs = function() {
+/**
+ * Fired when we want to bake all inputs (bake button clicked)
+ * Queues all of the loaded inputs and sends a bake command
+ */
+self.bakeAllInputs = function() {
     const inputNums = Object.keys(self.inputs);
 
     for (let i = 0; i < inputNums.length; i++) {
@@ -169,10 +184,22 @@ self.getAllInputs = function() {
 
 };
 
+/**
+ * Gets the stored object for a specific inputNum
+ *
+ * @param {number} inputNum - The input we want to get the object for
+ * @returns {object}
+ */
 self.getInputObj = function(inputNum) {
     return self.inputs[inputNum];
 };
 
+/**
+ * Gets the stored value for a specific inputNum.
+ *
+ * @param {number} inputNum - The input we want to get the value of
+ * @returns {string | ArrayBuffer}
+ */
 self.getInputValue = function(inputNum) {
     if (self.inputs[inputNum]) {
         if (typeof self.inputs[inputNum].data === "string") {
@@ -184,6 +211,12 @@ self.getInputValue = function(inputNum) {
     return "";
 };
 
+/**
+ * Gets the load progress for a specific inputNum
+ *
+ * @param {number} inputNum - The input we want to get the progress of
+ * @returns {number | string} - Returns "error" if there was a load error
+ */
 self.getInputProgress = function(inputNum) {
     const inputObj = self.getInputObj(inputNum);
     if (inputObj === undefined || inputObj === null) return;
@@ -193,11 +226,11 @@ self.getInputProgress = function(inputNum) {
     return inputObj.progress;
 };
 
-    /**
-     * Gets the largest inputNum
-     *
-     * @returns {number}
-     */
+/**
+ * Gets the largest inputNum of all the inputs
+ *
+ * @returns {number}
+ */
 self.getLargestInputNum = function() {
     let largest = 0;
     const inputNums = Object.keys(self.inputs);
@@ -210,11 +243,11 @@ self.getLargestInputNum = function() {
     return largest;
 };
 
-    /**
-     * Gets the smallest inputNum
-     *
-     * @returns {number}
-     */
+/**
+ * Gets the smallest inputNum of all the inputs
+ *
+ * @returns {number}
+ */
 self.getSmallestInputNum = function() {
     let smallest = self.getLargestInputNum();
     const inputNums = Object.keys(self.inputs);
@@ -228,7 +261,7 @@ self.getSmallestInputNum = function() {
 };
 
 /**
- * Gets the previous inputNum
+ * Gets the next smallest inputNum
  *
  * @param {number} inputNum - The current input number
  * @returns {number}
@@ -248,7 +281,7 @@ self.getPreviousInputNum = function(inputNum) {
 };
 
 /**
- * Gets the next inputNum
+ * Gets the next largest inputNum
  *
  * @param {number} inputNum - The current input number
  * @returns {number}
@@ -267,6 +300,14 @@ self.getNextInputNum = function(inputNum) {
     return num;
 };
 
+/**
+ * Gets a list of inputNums starting from the provided inputNum.
+ * If direction is "left", gets the inputNums higher than the provided number.
+ * If direction is "right", gets the inputNums lower than the provided number.
+ * @param {number} inputNum - The inputNum we want to get the neighbours of
+ * @param {string} direction - Either "left" or "right". Determines which direction we search for nearby numbers in
+ * @returns {number[]}
+ */
 self.getNearbyNums = function(inputNum, direction) {
     const nums = [];
     for (let i = 0; i < self.maxTabs; i++) {
@@ -279,14 +320,14 @@ self.getNearbyNums = function(inputNum, direction) {
                     newNum = self.getNextInputNum(nums[i - 1]);
                     if (newNum === nums[i - 1]) {
                         direction = "right";
-                        newNum = self.getPreviousInputNum(nums[i - 1]);
+                        newNum = self.getPreviousInputNum(nums[0]);
                     }
                     break;
                 case "right":
                     newNum = self.getPreviousInputNum(nums[i - 1]);
                     if (newNum === nums[i - 1]) {
                         direction = "left";
-                        newNum = self.getNextInputNum(nums[i - 1]);
+                        newNum = self.getNextInputNum(nums[0]);
                     }
             }
         }
@@ -300,6 +341,12 @@ self.getNearbyNums = function(inputNum, direction) {
     return nums;
 };
 
+/**
+ * Gets the data to display in the tab header for an input, and
+ * posts it back to the inputWaiter
+ *
+ * @param {number} inputNum - The inputNum of the tab header
+ */
 self.updateTabHeader = function(inputNum) {
     const input = self.getInputObj(inputNum);
     if (input === null || input === undefined) return;
@@ -316,6 +363,14 @@ self.updateTabHeader = function(inputNum) {
     });
 };
 
+/**
+ * Gets the input for a specific inputNum, and posts it to the inputWaiter
+ * so that it can be displayed in the input area
+ *
+ * @param {object} inputData
+ * @param {number} inputData.inputNum - The input to get the data for
+ * @param {boolean} inputData.silent - If false, the manager statechange event won't be fired
+ */
 self.setInput = function(inputData) {
     const inputNum = inputData.inputNum;
     const silent = inputData.silent;
@@ -356,6 +411,13 @@ self.setInput = function(inputData) {
     self.updateTabHeader(inputNum);
 };
 
+/**
+ * Gets the nearby inputNums to the provided number, and posts them
+ * to the inputWaiter to be displayed on the page.
+ *
+ * @param {number} inputNum - The inputNum to find the nearby numbers for
+ * @param {string} direction - The direction to search for inputNums in. Either "left" or "right"
+ */
 self.refreshTabs = function(inputNum, direction) {
     const nums = self.getNearbyNums(inputNum, direction);
     self.postMessage({
@@ -366,17 +428,31 @@ self.refreshTabs = function(inputNum, direction) {
         }
     });
 
+    // Update the tab headers for the new tabs
     for (let i = 0; i < nums.length; i++) {
         self.updateTabHeader(nums[i]);
     }
 };
 
+/**
+ * Update the stored status for an input
+ *
+ * @param {number} inputNum - The input that's having its status changed
+ * @param {string} status - The status of the input
+ */
 self.updateInputStatus = function(inputNum, status) {
     if (self.inputs[inputNum] !== undefined) {
         self.inputs[inputNum].status = status;
     }
 };
 
+/**
+ * Update the stored load progress of an input
+ *
+ * @param {object} inputData
+ * @param {number} inputData.inputNum - The input that's having its progress updated
+ * @param {number} inputData.progress - The load progress of the input
+ */
 self.updateInputProgress = function(inputData) {
     const inputNum = inputData.inputNum;
     const progress = inputData.progress;
@@ -386,6 +462,13 @@ self.updateInputProgress = function(inputData) {
     }
 };
 
+/**
+ * Update the stored value of an input.
+ *
+ * @param {object} inputData
+ * @param {number} inputData.inputNum - The input that's having its value updated
+ * @param {string | ArrayBuffer} inputData.value - The new value of the input
+ */
 self.updateInputValue = function(inputData) {
     const inputNum = inputData.inputNum;
     if (inputNum < 1) return;
@@ -401,9 +484,9 @@ self.updateInputValue = function(inputData) {
         return;
     }
 
-    // If we get to here, an input for inputNum could not be found
-    // Only do this if the value is a string, as loadFiles will create
-    // the input object for files
+    // If we get to here, an input for inputNum could not be found,
+    // so create a new one. Only do this if the value is a string, as
+    // loadFiles will create the input object for files
     if (typeof value === "string") {
         self.inputs.push({
             inputNum: inputNum,
@@ -414,6 +497,14 @@ self.updateInputValue = function(inputData) {
     }
 };
 
+/**
+ * Update the stored data object for an input.
+ * Used if we need to change a string to an ArrayBuffer
+ *
+ * @param {object} inputData
+ * @param {number} inputData.inputNum - The number of the input we're updating
+ * @param {object} inputData.data - The new data object for the input
+ */
 self.updateInputObj = function(inputData) {
     const inputNum = inputData.inputNum;
     const data = inputData.data;
@@ -423,6 +514,13 @@ self.updateInputObj = function(inputData) {
     self.inputs[inputNum].data = data;
 };
 
+/**
+ * Get the index of a loader worker object.
+ * Returns -1 if the worker could not be found
+ *
+ * @param {number} workerId - The ID of the worker we're searching for
+ * @returns {number}
+ */
 self.getLoaderWorkerIdx = function(workerId) {
     for (let i = 0; i < self.loaderWorkers.length; i++) {
         if (self.loaderWorkers[i].id === workerId) {
@@ -432,6 +530,14 @@ self.getLoaderWorkerIdx = function(workerId) {
     return -1;
 };
 
+/**
+ * Fires when a loaderWorker is ready to load files.
+ * Stores data about the new loaderWorker in the loaderWorkers array,
+ * and sends the next file to the loaderWorker to be loaded.
+ *
+ * @param {object} workerData
+ * @param {number} workerData.id - The ID of the new loaderWorker
+ */
 self.loaderWorkerReady = function(workerData) {
     const newWorkerObj = {
         id: workerData.id,
@@ -442,6 +548,16 @@ self.loaderWorkerReady = function(workerData) {
     self.loadNextFile(self.loaderWorkers.indexOf(newWorkerObj));
 };
 
+/**
+ * Handler for messages sent by loaderWorkers.
+ * (Messages are sent between the inputWorker and
+ * loaderWorkers via the main thread)
+ *
+ * @param {object} r - The data sent by the loaderWorker
+ * @param {number} r.inputNum - The inputNum which the message corresponds to
+ * @param {string} r.error - Present if an error is fired by the loaderWorker. Contains the error message string.
+ * @param {ArrayBuffer} r.fileBuffer - Present if a file has finished loading. Contains the loaded file buffer.
+ */
 self.handleLoaderMessage = function(r) {
     let inputNum = 0;
 
@@ -471,8 +587,6 @@ self.handleLoaderMessage = function(r) {
             value: r.fileBuffer
         });
 
-        // self.setInput({inputNum: inputNum, silent: false});
-
         const idx = self.getLoaderWorkerIdx(r.id);
         self.loadNextFile(idx);
     } else if (r.hasOwnProperty("progress")) {
@@ -480,6 +594,11 @@ self.handleLoaderMessage = function(r) {
     }
 };
 
+/**
+ * Loads the next file using a loaderWorker
+ *
+ * @param {number} - The loaderWorker which will load the file
+ */
 self.loadNextFile = function(workerIdx) {
     if (workerIdx === -1) return;
     const id = self.loaderWorkers[workerIdx].id;
@@ -502,6 +621,10 @@ self.loadNextFile = function(workerIdx) {
     });
 };
 
+/**
+ * Sends a message to the inputWaiter to create a new loaderWorker.
+ * If there's an inactive loaderWorker that already exists, use that instead.
+ */
 self.activateLoaderWorker = function() {
     for (let i = 0; i < self.loaderWorkers.length; i++) {
         if (!self.loaderWorkers[i].active) {
@@ -515,11 +638,17 @@ self.activateLoaderWorker = function() {
     });
 };
 
+/**
+ * Sends a message to the inputWaiter to terminate a loaderWorker.
+ *
+ * @param {number} id - The ID of the worker to be terminated
+ */
 self.terminateLoaderWorker = function(id) {
     self.postMessage({
         action: "terminateLoaderWorker",
         data: id
     });
+    // If we still have pending files, spawn a worker
     if (self.pendingFiles.length > 0) {
         self.activateLoaderWorker();
     }
@@ -529,8 +658,8 @@ self.terminateLoaderWorker = function(id) {
  * Loads files using LoaderWorkers
  *
  * @param {object} filesData
- * @param filesData.files
- * @param {number} filesData.activeTab
+ * @param {FileList} filesData.files - The list of files to be loaded
+ * @param {number} filesData.activeTab - The active tab in the UI
  */
 self.loadFiles = function(filesData) {
     const files = filesData.files;
@@ -562,6 +691,7 @@ self.loadFiles = function(filesData) {
     let max = self.maxWorkers;
     if (self.pendingFiles.length < self.maxWorkers) max = self.pendingFiles.length;
 
+    // Create loaderWorkers to load the new files
     for (let i = 0; i < max; i++) {
         self.activateLoaderWorker();
     }
@@ -571,14 +701,14 @@ self.loadFiles = function(filesData) {
 };
 
 /**
- * Adds an input to the input array
+ * Adds an input to the input dictionary
  *
  * @param {boolean} [changetab=false] - Whether or not to change to the new input
  * @param {string} type - Either "string" or "file"
- * @param {Object} fileData - Contains information about the file to be added to the input
- * @param {string} fileData.name
- * @param {string} fileData.size
- * @param {string} fileData.type
+ * @param {Object} fileData - Contains information about the file to be added to the input (only used when type is "file")
+ * @param {string} fileData.name - The filename of the input being added
+ * @param {number} fileData.size - The file size (in bytes) of the input being added
+ * @param {string} fileData.type - The MIME type of the input being added
  * @param {number} inputNum - Defaults to auto-incrementing self.currentInputNum
  */
 self.addInput = function(changeTab=false, type, fileData={name: "unknown", size: "unknown", type: "unknown"}, inputNum = self.currentInputNum++) {
@@ -609,7 +739,7 @@ self.addInput = function(changeTab=false, type, fileData={name: "unknown", size:
     }
     self.inputs[inputNum] = newInputObj;
 
-
+    // Tell the inputWaiter we've added an input, so it can create a tab to display it
     self.postMessage({
         action: "inputAdded",
         data: {
@@ -621,32 +751,48 @@ self.addInput = function(changeTab=false, type, fileData={name: "unknown", size:
     return inputNum;
 };
 
+/**
+ * Remove an input from the inputs dictionary
+ *
+ * @param {object} removeInputData
+ * @param {number} removeInputData.inputNum - The number of the input to be removed
+ * @param {boolean} removeInputData.refreshTabs - If true, refresh the tabs after removing the input
+ */
 self.removeInput = function(removeInputData) {
     const inputNum = removeInputData.inputNum;
     const refreshTabs = removeInputData.refreshTabs;
     self.numInputs--;
 
-    delete self.inputs[inputNum];
-
     for (let i = 0; i < self.loaderWorkers.length; i++) {
         if (self.loaderWorkers[i].inputNum === inputNum) {
+            // Terminate any loaderWorker that's loading the removed input
             self.loadingInputs--;
             self.terminateLoaderWorker(self.loaderWorkers[i].id);
+            break;
         }
     }
 
     for (let i = 0; i < self.pendingFiles.length; i++) {
+        // Remove the input from the pending files list
         if (self.pendingFiles[i].inputNum === inputNum) {
             self.pendingFiles.splice(i, 1);
             break;
         }
     }
 
+    delete self.inputs[inputNum];
+
     if (refreshTabs) {
         self.refreshTabs(inputNum, "left");
     }
 };
 
+/**
+ * Change to the next tab.
+ *
+ * @param {number} inputNum - The inputNum of the tab to change to
+ * @param {number[]} tabNums - List of the currently displayed tabs
+ */
 self.changeTabRight = function(inputNum, tabNums) {
     const newInput = self.getNextInputNum(inputNum);
     if (tabNums.includes(newInput)) {
@@ -655,10 +801,17 @@ self.changeTabRight = function(inputNum, tabNums) {
             data: newInput
         });
     } else {
+        // If the tab is not displayed, refresh the tabs to display it
         self.refreshTabs(newInput, "right");
     }
 };
 
+/**
+ * Change to the previous tab.
+ *
+ * @param {number} inputNum - The inputNum of the tab to change to
+ * @param {number[]} tabNums - List of the currently displayed tabs
+ */
 self.changeTabLeft = function(inputNum, tabNums) {
     const newInput = self.getPreviousInputNum(inputNum);
     if (tabNums.includes(newInput)) {
@@ -667,10 +820,23 @@ self.changeTabLeft = function(inputNum, tabNums) {
             data: newInput
         });
     } else {
+        // If the tab is not displayed, refresh the tabs to display it
         self.refreshTabs(newInput, "left");
     }
 };
 
+/**
+ * Search the inputs for any that match the filters provided,
+ * posting the results back to the inputWaiter
+ *
+ * @param {object} searchData - Object containing the search filters
+ * @param {boolean} searchData.showPending - If true, include pending inputs in the results
+ * @param {boolean} searchData.showLoading - If true, include loading inputs in the results
+ * @param {boolean} searchData.showLoaded - If true, include loaded inputs in the results
+ * @param {string} searchData.fileNameFilter - A string that must be present in the filename of an input
+ * @param {string} searchData.contentFilter - A string that must be present in the input contents
+ * @param {number} searchData.numResults - The maximum number of results to be returned
+ */
 self.filterTabs = function(searchData) {
     const showPending = searchData.showPending;
     const showLoading = searchData.showLoading;
@@ -718,6 +884,7 @@ self.filterTabs = function(searchData) {
         }
     }
 
+    // Send the results back to the inputWaiter
     self.postMessage({
         action: "displayTabSearchResults",
         data: inputs
@@ -728,8 +895,8 @@ self.filterTabs = function(searchData) {
  * Swaps the input and outputs, and sends the old input back to the main thread.
  *
  * @param {object} switchData
- * @param {number} switchData.inputNum
- * @param {string | ArrayBuffer} switchData.outputData
+ * @param {number} switchData.inputNum - The inputNum of the input to be switched to
+ * @param {string | ArrayBuffer} switchData.outputData - The data to switch to
  */
 self.inputSwitch = function(switchData) {
     const currentInput = self.getInputObj(switchData.inputNum);

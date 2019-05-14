@@ -186,11 +186,9 @@ class App {
 
     /**
      * Gets the user's input data for all tabs.
-     *
-     * @returns {Array}
      */
     getAllInput() {
-        this.manager.input.getAll();
+        this.manager.input.bakeAll();
     }
 
     /**

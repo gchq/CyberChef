@@ -43,8 +43,8 @@ class OutputWaiter {
     /**
      * Gets the output for the specified input number
      *
-     * @param {number} inputNum
-     * @param {boolean} raw
+     * @param {number} inputNum - The input to get the output for
+     * @param {boolean} [raw=true] - If true, returns the raw data instead of the presented result.
      * @returns {string | ArrayBuffer}
      */
     getOutput(inputNum, raw=true) {
@@ -76,7 +76,7 @@ class OutputWaiter {
     /**
      * Checks if an output exists in the output dictionary
      *
-     * @param {number} inputNum
+     * @param {number} inputNum - The number of the output we're looking for
      * @returns {boolean}
      */
     outputExists(inputNum) {
@@ -90,7 +90,7 @@ class OutputWaiter {
     /**
      * Gets the output string or FileBuffer for the active input
      *
-     * @param {boolean} [raw=true]
+     * @param {boolean} [raw=true] - If true, returns the raw data instead of the presented result.
      * @returns {string | ArrayBuffer}
      */
     getActive(raw=true) {
@@ -101,8 +101,8 @@ class OutputWaiter {
      * Adds a new output to the output array.
      * Creates a new tab if we have less than maxtabs tabs open
      *
-     * @param {number} inputNum
-     * @param {boolean} [changeTab=true]
+     * @param {number} inputNum - The inputNum of the new output
+     * @param {boolean} [changeTab=true] - If true, change to the new output
      */
     addOutput(inputNum, changeTab = true) {
         // Remove the output (will only get removed if it already exists)
@@ -119,7 +119,6 @@ class OutputWaiter {
 
         this.outputs[inputNum] = newOutput;
 
-        // add new tab
         this.addTab(inputNum, changeTab);
     }
 
@@ -127,7 +126,7 @@ class OutputWaiter {
      * Updates the value for the output in the output array.
      * If this is the active output tab, updates the output textarea
      *
-     * @param {Object} data
+     * @param {ArrayBuffer | String} data - The
      * @param {number} inputNum
      * @param {boolean} set
      */
@@ -741,14 +740,14 @@ class OutputWaiter {
                         newNum = this.getNextInputNum(nums[i - 1]);
                         if (newNum === nums[i - 1]) {
                             direction = "right";
-                            newNum = this.getPreviousInputNum(nums[i - 1]);
+                            newNum = this.getPreviousInputNum(nums[0]);
                         }
                         break;
                     case "right":
                         newNum = this.getPreviousInputNum(nums[i - 1]);
                         if (newNum === nums[i - 1]) {
                             direction = "left";
-                            newNum = this.getNextInputNum(nums[i - 1]);
+                            newNum = this.getNextInputNum(nums[0]);
                         }
                 }
             }

@@ -58,7 +58,7 @@ class ControlsWaiter {
     bakeClick() {
         const btnBake = document.getElementById("bake");
         if (btnBake.textContent.indexOf("Bake") > 0) {
-            this.app.manager.input.getAll();
+            this.app.manager.input.bakeAll();
         } else if (btnBake.textContent.indexOf("Cancel") > 0) {
             this.manager.worker.cancelBake();
         }
@@ -90,7 +90,7 @@ class ControlsWaiter {
 
 
     /**
-     * Populates the save disalog box with a URL incorporating the recipe and input.
+     * Populates the save dialog box with a URL incorporating the recipe and input.
      *
      * @param {Object[]} [recipeConfig] - The recipe configuration object array.
      */

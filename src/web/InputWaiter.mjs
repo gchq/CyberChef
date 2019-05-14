@@ -284,12 +284,12 @@ class InputWaiter {
     }
 
     /**
-     * Sends a message to the inputWorker to get all inputs
+     * Sends a message to the inputWorker to bake all inputs
      */
-    getAll() {
+    bakeAll() {
         this.manager.controls.toggleBakeButtonFunction(false, true);
         this.inputWorker.postMessage({
-            action: "getAll"
+            action: "bakeAll"
         });
     }
 
@@ -327,7 +327,7 @@ class InputWaiter {
                 fileLoaded.textContent = "";
 
                 inputText.style.overflow = "auto";
-                inputText.classList.remove("blur");
+            inputText.classList.remove("blur");
 
                 const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
                     inputData.input.count("\n") + 1 : null;
@@ -684,7 +684,6 @@ class InputWaiter {
      * @param {FileList} files - The list of files to be loaded
      */
     loadUIFiles(files) {
-        log.error(files);
         const numFiles = files.length;
         const activeTab = this.getActiveTab();
         log.debug(`Loading ${numFiles} files.`);
