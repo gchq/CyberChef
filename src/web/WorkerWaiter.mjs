@@ -365,7 +365,12 @@ class WorkerWaiter {
      * @param {boolean} step
      */
     bake(recipeConfig, options, progress, step) {
+        for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+            this.removeChefWorker(this.chefWorkers[i]);
+        }
+
         this.setBakingStatus(true);
+        this.manager.recipe.updateBreakpointIndicator(false);
         this.bakeStartTime = new Date().getTime();
         this.bakeId++;
         this.recipeConfig = recipeConfig;

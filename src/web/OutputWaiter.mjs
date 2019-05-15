@@ -528,8 +528,8 @@ class OutputWaiter {
         const downloadButton = document.getElementById("save-all-to-file");
 
         downloadButton.classList.add("spin");
-        downloadButton.title = `Downloading ${inputNums.length} files...`;
-        downloadButton.setAttribute("data-original-title", `Downloading ${inputNums.length} files...`);
+        downloadButton.title = `Zipping ${inputNums.length} files...`;
+        downloadButton.setAttribute("data-original-title", `Zipping ${inputNums.length} files...`);
 
         downloadButton.firstElementChild.innerHTML = "autorenew";
 
@@ -1170,7 +1170,7 @@ class OutputWaiter {
      * @returns {boolean}
      */
     containsCR() {
-        return this.getActive(true).indexOf("\r") >= 0;
+        return this.getActive(false).indexOf("\r") >= 0;
     }
 
     /**
@@ -1254,6 +1254,83 @@ class OutputWaiter {
             el.querySelector("i").innerHTML = "fullscreen";
             this.app.initialiseSplitter(false);
             this.app.resetLayout();
+        }
+    }
+
+    /**
+     * Handler for find tab button clicked
+     */
+    findTab() {
+        this.filterTabSearch();
+        $("#output-tab-modal").modal();
+    }
+
+    /**
+     * Searches the outputs using the filter settings and displays the results
+     */
+    filterTabSearch() {
+        const showPending = document.getElementById("output-show-pending").checked,
+            showBaking = document.getElementById("output-show-baking").checked,
+            showBaked = document.getElementById("output-show-baked").checked,
+            showStale = document.getElementById("output-show-stale").checked,
+            showErrored = document.getElementById("output-show-errored").checked,
+            contentFilter = document.getElementById("output-content-filter").value,
+            resultsList = document.getElementById("output-search-results"),
+            numResults = parseInt(document.getElementById("output-num-results").value, 10),
+            inputNums = Object.keys(this.outputs),
+            results = [];
+
+        // Search through the outputs for matching output results
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = inputNums[i],
+                output = this.outputs[iNum];
+
+            if (output.status === "pending" && showPending ||
+                output.status === "baking" && showBaking ||
+                output.status === "errored" && showErrored ||
+                output.status === "stale" && showStale ||
+                output.status === "inactive" && showStale) {
+                const outDisplay = {
+                    "pending": "Not baked yet",
+                    "baking": "Baking",
+                    "errored": "Errored",
+                    "stale": "Stale (output is out of date)",
+                    "inactive": "Not baked yet"
+                };
+                results.push({
+                    inputNum: iNum,
+                    textDisplay: outDisplay[output.status]
+                });
+            } else if (output.status === "baked" && showBaked) {
+                let data = this.getOutput(iNum, false).slice(0, 4096);
+                if (typeof data !== "string") {
+                    data = Utils.arrayBufferToStr(data);
+                }
+                data = data.replace(/[\r\n]/g, "");
+                if (data.toLowerCase().includes(contentFilter)) {
+                    results.push({
+                        inputNum: iNum,
+                        textDisplay: data.slice(0, 100)
+                    });
+                }
+            }
+
+            if (results.length >= numResults) {
+                break;
+            }
+        }
+
+        for (let i = resultsList.children.length - 1; i >= 0; i--) {
+            resultsList.children.item(i).remove();
+        }
+
+        for (let i = 0; i < results.length; i++) {
+            const newListItem = document.createElement("li");
+            newListItem.classList.add("output-filter-result");
+            newListItem.setAttribute("inputNum", results[i].inputNum);
+            newListItem.innerText = `${results[i].inputNum}: ${results[i].textDisplay}`;
+
+            resultsList.appendChild(newListItem);
         }
     }
 }

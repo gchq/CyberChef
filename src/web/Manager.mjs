@@ -201,6 +201,17 @@ class Manager {
         document.getElementById("btn-previous-output-tab").addEventListener("click", this.output.changeTabLeft.bind(this.output));
         document.getElementById("btn-next-output-tab").addEventListener("click", this.output.changeTabRight.bind(this.output));
         document.getElementById("btn-go-to-output-tab").addEventListener("click", this.output.goToTab.bind(this.output));
+        document.getElementById("btn-find-output-tab").addEventListener("click", this.output.findTab.bind(this.output));
+        document.getElementById("output-show-pending").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-show-baking").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-show-baked").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-content-filter").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-content-filter").addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-num-results").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-num-results").addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-filter-refresh").addEventListener("click", this.output.filterTabSearch.bind(this.output));
+        // this.addDynamicListener(".output-filter-result", "click", this.output.filterItemClick, this.output);
+
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));

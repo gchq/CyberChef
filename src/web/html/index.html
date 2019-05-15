@@ -331,9 +331,17 @@
                                 <span id="btn-previous-output-tab" class="output-tab-buttons">
                                     &lt;
                                 </span>
-                                <span id="btn-go-to-output-tab" class="output-tab-buttons">
+                                <span id="btn-output-tab-dropdown" class="output-tab-buttons" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
                                     ···
                                 </span>
+                                <div class="dropdown-menu" aria-labelledby="btn-input-tab-dropdown">
+                                    <a id="btn-go-to-output-tab" class="dropdown-item">
+                                        Go to tab
+                                    </a>
+                                    <a id="btn-find-output-tab" class="dropdown-item">
+                                        Find tab
+                                    </a>
+                                </div>
                                 <span id="btn-next-output-tab" class="output-tab-buttons">
                                     &gt;
                                 </span>
@@ -770,19 +778,19 @@
                     <div class="modal-body" id="input-tab-body">
                         <h6>Load Status</h6>
                         <ul id="input-find-options">
-                            <li class="checkbox .input-find-option">
+                            <li class="checkbox input-find-option">
                                 <label for="input-show-pending">
                                     <input type="checkbox" id="input-show-pending" checked="">
                                     Pending
                                 </label>
                             </li>
-                            <li class="checkbox .input-find-option">
+                            <li class="checkbox input-find-option">
                                 <label for="input-show-loading">
                                     <input type="checkbox" id="input-show-loading" checked="">
                                     Loading
                                 </label>
                             </li>
-                            <li class="checkbox .input-find-option">
+                            <li class="checkbox input-find-option">
                                 <label for="input-show-loaded">
                                     <input type="checkbox" id="input-show-loaded" checked="">
                                     Loaded
@@ -790,23 +798,85 @@
                             </li>
                         </ul>
                         <br>
-                        <div class="form-group .input-find-option">
+                        <div class="form-group input-find-option">
                             <label for="input-filename-filter" class="bmd-label-floating">Filename</label>
                             <input type="text" class="form-control" id="input-filename-filter">
                         </div>
-                        <div class="form-group .input-find-option">
+                        <div class="form-group input-find-option">
                             <label for="input-content-filter" class="bmd-label-floating">Content</label>
                             <input type="text" class="form-control" id="input-content-filter">
                         </div>
-                        <div class="form-group .input-find-option">
-                                <label for="input-num-results" class="bmd-label-floating">Number of results</label>
-                                <input type="number" class="form-control" id="input-num-results" value="20">
-                            </div>
+                        <div class="form-group input-find-option">
+                            <label for="input-num-results" class="bmd-label-floating">Number of results</label>
+                            <input type="number" class="form-control" id="input-num-results" value="20">
+                        </div>
+                        <br>
                         <h6>Results</h6>
                         <ul id="input-search-results"></ul>
                     </div>
                     <div class="modal-footer">
                             <button type="button" class="btn btn-primary" id="input-filter-refresh">Refresh</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="output-tab-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Find Output Tab</h5>
+                    </div>
+                    <div class="modal-body" id="output-tab-body">
+                        <h6>Bake Status</h6>
+                        <ul id="output-find-options">
+                            <li class="checkbox output-find-option">
+                                <label for="output-show-pending">
+                                    <input type="checkbox" id="output-show-pending" checked="">
+                                    Pending
+                                </label>
+                            </li>
+                            <li class="checkbox output-find-option">
+                                <label for="output-show-baking">
+                                    <input type="checkbox" id="output-show-baking" checked="">
+                                    Baking
+                                </label>
+                            </li>
+                            <li class="checkbox output-find-option">
+                                <label for="output-show-baked">
+                                    <input type="checkbox" id="output-show-baked" checked="">
+                                    Baked
+                                </label>
+                            </li>
+                            <li class="checkbox output-find-option">
+                                <label for="output-show-stale">
+                                    <input type="checkbox" id="output-show-stale" checked="">
+                                    Stale
+                                </label>
+                            </li>
+                            <li class="checkbox output-find-option">
+                                <label for="output-show-errored">
+                                    <input type="checkbox" id="output-show-errored" checked="">
+                                    Errored
+                                </label>
+                            </li>
+                        </ul>
+                        <br>
+                        <div class="form-group output-find-option">
+                            <label for="output-content-filter" class="bmd-label-floating">Content</label>
+                            <input type="text" class="form-control" id="output-content-filter">
+                        </div>
+                        <div class="form-group output-find-option">
+                            <label for="output-num-results" class="bmd-label-floating">Number of results</label>
+                            <input type="number" class="form-control" id="output-num-results" value="20">
+                        </div>
+                        <br>
+                        <h6>Results</h6>
+                        <ul id="output-search-results"></ul>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="output-filter-refresh">Refresh</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
