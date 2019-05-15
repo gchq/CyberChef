@@ -1333,6 +1333,21 @@ class OutputWaiter {
             resultsList.appendChild(newListItem);
         }
     }
+
+    /**
+     * Handler for clicking on a filter result.
+     * Changes to the clicked output
+     *
+     * @param {event} e
+     */
+    filterItemClick(e) {
+        if (!e.target) return;
+        const inputNum = parseInt(e.target.getAttribute("inputNum"), 10);
+        if (inputNum <= 0) return;
+
+        $("#output-tab-modal").modal("hide");
+        this.changeTab(inputNum, this.app.options.syncTabs);
+    }
 }
 
 export default OutputWaiter;

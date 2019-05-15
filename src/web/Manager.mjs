@@ -210,7 +210,7 @@ class Manager {
         document.getElementById("output-num-results").addEventListener("change", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-num-results").addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-filter-refresh").addEventListener("click", this.output.filterTabSearch.bind(this.output));
-        // this.addDynamicListener(".output-filter-result", "click", this.output.filterItemClick, this.output);
+        this.addDynamicListener(".output-filter-result", "click", this.output.filterItemClick, this.output);
 
 
         // Options
