@@ -146,11 +146,12 @@ class WorkerWaiter {
                 if (r.data.error) {
                     this.app.handleError(r.data.error);
                     this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
-                    this.workerFinished(currentWorker);
+                } else if (r.data.progress !== this.manager.recipe.getConfig().length) {
+                    this.manager.output.updateOutputError(r.data.result, inputNum, r.data.progress);
                 } else {
                     this.updateOutput(r.data, r.data.inputNum, r.data.bakeId, r.data.progress);
-                    this.workerFinished(currentWorker);
                 }
+                this.workerFinished(currentWorker);
                 break;
             case "bakeError":
                 this.app.handleError(r.data.error);

@@ -205,6 +205,8 @@ class Manager {
         document.getElementById("output-show-pending").addEventListener("change", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-show-baking").addEventListener("change", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-show-baked").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-show-stale").addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document.getElementById("output-show-errored").addEventListener("change", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-content-filter").addEventListener("change", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-content-filter").addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
         document.getElementById("output-num-results").addEventListener("change", this.output.filterTabSearch.bind(this.output));

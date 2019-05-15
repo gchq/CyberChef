@@ -1287,13 +1287,13 @@ class OutputWaiter {
 
             if (output.status === "pending" && showPending ||
                 output.status === "baking" && showBaking ||
-                output.status === "errored" && showErrored ||
+                output.status === "error" && showErrored ||
                 output.status === "stale" && showStale ||
                 output.status === "inactive" && showStale) {
                 const outDisplay = {
                     "pending": "Not baked yet",
                     "baking": "Baking",
-                    "errored": "Errored",
+                    "error": output.error || "Errored",
                     "stale": "Stale (output is out of date)",
                     "inactive": "Not baked yet"
                 };
@@ -1303,6 +1303,7 @@ class OutputWaiter {
                 });
             } else if (output.status === "baked" && showBaked) {
                 let data = this.getOutput(iNum, false).slice(0, 4096);
+                log.error(output);
                 if (typeof data !== "string") {
                     data = Utils.arrayBufferToStr(data);
                 }
