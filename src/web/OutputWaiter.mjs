@@ -514,12 +514,9 @@ class OutputWaiter {
             fileName += ".zip";
         }
 
-        let fileExt = window.prompt("Please enter a file extension for the files: ", ".txt");
+        let fileExt = window.prompt("Please enter a file extension for the files, or leave blank to detect automatically.", "");
 
-        if (fileExt === null) {
-            // Use .dat as the default file extension
-            fileExt = ".dat";
-        }
+        if (fileExt === null) fileExt = "";
 
         if (this.zipWorker !== null) {
             this.terminateZipWorker();
@@ -1076,7 +1073,7 @@ class OutputWaiter {
             sliceToEl = document.getElementById("output-file-slice-to"),
             sliceFrom = parseInt(sliceFromEl.value, 10),
             sliceTo = parseInt(sliceToEl.value, 10),
-            str = Utils.arrayBufferToStr(this.getActive(true).slice(sliceFrom, sliceTo));
+            str = Utils.arrayBufferToStr(this.getActive(false).slice(sliceFrom, sliceTo));
 
         outputText.classList.remove("blur");
         showFileOverlay.style.display = "block";

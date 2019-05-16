@@ -8,6 +8,7 @@
 
 import zip from "zlibjs/bin/zip.min";
 import Utils from "../core/Utils";
+import {detectFileType} from "../core/lib/FileType";
 
 const Zlib = zip.Zlib;
 
@@ -48,7 +49,7 @@ self.zipFiles = function(outputs, filename, fileExtension) {
 
     for (let i = 0; i < inputNums.length; i++) {
         const iNum = inputNums[i];
-        const name = Utils.strToByteArray(iNum + fileExtension);
+        let ext = fileExtension;
 
         let output;
         if (outputs[iNum].data === null) {
@@ -58,6 +59,18 @@ self.zipFiles = function(outputs, filename, fileExtension) {
         } else {
             output = new Uint8Array(outputs[iNum].data.dish.value);
         }
+
+        if (fileExtension === "") {
+            // Detect automatically
+            const types = detectFileType(output);
+            if (!types.length) {
+                ext = ".dat";
+            } else {
+                ext = `.${types[0].extension.split(",", 1)[0]}`;
+            }
+        }
+        const name = Utils.strToByteArray(iNum + ext);
+
         zip.addFile(output, {filename: name});
     }
 
