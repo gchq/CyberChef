@@ -98,11 +98,11 @@ class BindingsWaiter {
                     break;
                 case "Space": // Bake
                     e.preventDefault();
-                    this.app.bake();
+                    this.manager.controls.bakeClick();
                     break;
                 case "Quote": // Step through
                     e.preventDefault();
-                    this.app.bake(true);
+                    this.manager.controls.stepClick();
                     break;
                 case "KeyC": // Clear recipe
                     e.preventDefault();
@@ -119,6 +119,22 @@ class BindingsWaiter {
                 case "KeyM": // Switch input and output
                     e.preventDefault();
                     this.manager.output.switchClick();
+                    break;
+                case "KeyT": // New tab
+                    e.preventDefault();
+                    this.manager.input.addInputClick();
+                    break;
+                case "KeyW": // Close tab
+                    e.preventDefault();
+                    this.manager.input.removeInput(this.manager.input.getActiveTab());
+                    break;
+                case "ArrowLeft": // Go to previous tab
+                    e.preventDefault();
+                    this.manager.input.changeTabLeft();
+                    break;
+                case "ArrowRight": // Go to next tab
+                    e.preventDefault();
+                    this.manager.input.changeTabRight();
                     break;
                 default:
                     if (e.code.match(/Digit[0-9]/g)) { // Select nth operation
@@ -215,6 +231,26 @@ class BindingsWaiter {
             <td>Move output to input</td>
             <td>Ctrl+${modWinLin}+m</td>
             <td>Ctrl+${modMac}+m</td>
+        </tr>
+        <tr>
+            <td>Create a new tab</td>
+            <td>Ctrl+${modWinLin}+t</td>
+            <td>Ctrl+${modMac}+t</td>
+        </tr>
+        <tr>
+            <td>Close the current tab</td>
+            <td>Ctrl+${modWinLin}+w</td>
+            <td>Ctrl+${modMac}+w</td>
+        </tr>
+        <tr>
+            <td>Go to next tab</td>
+            <td>Ctrl+${modWinLin}+RightArrow</td>
+            <td>Ctrl+${modMac}+RightArrow</td>
+        </tr>
+        <tr>
+            <td>Go to previous tab</td>
+            <td>Ctrl+${modWinLin}+LeftArrow</td>
+            <td>Ctrl+${modMac}+LeftArrow</td>
         </tr>
         `;
     }
