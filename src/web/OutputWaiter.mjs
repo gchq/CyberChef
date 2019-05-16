@@ -114,7 +114,8 @@ class OutputWaiter {
             statusMessage: `Input ${inputNum} has not been baked yet.`,
             error: null,
             status: "inactive",
-            bakeId: -1
+            bakeId: -1,
+            progress: 0
         };
 
         this.outputs[inputNum] = newOutput;
@@ -1300,7 +1301,6 @@ class OutputWaiter {
                 });
             } else if (output.status === "baked" && showBaked) {
                 let data = this.getOutput(iNum, false).slice(0, 4096);
-                log.error(output);
                 if (typeof data !== "string") {
                     data = Utils.arrayBufferToStr(data);
                 }

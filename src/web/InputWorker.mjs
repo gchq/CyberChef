@@ -82,7 +82,7 @@ self.addEventListener("message", function(e) {
             self.changeTabLeft(r.data.activeTab, r.data.nums);
             break;
         case "autobake":
-            self.autoBake(r.data);
+            self.autoBake(r.data, false);
             break;
         case "filterTabs":
             self.filterTabs(r.data);
@@ -95,6 +95,9 @@ self.addEventListener("message", function(e) {
             break;
         case "updateTabHeader":
             self.updateTabHeader(r.data);
+            break;
+        case "step":
+            self.autoBake(r.data, true);
             break;
         default:
             log.error(`Unknown action '${r.action}'.`);
@@ -133,8 +136,10 @@ self.getLoadProgress = function(inputNum) {
  * Queues the active input and sends a bake command.
  *
  * @param {number} inputNum - The input to be baked
+ * @param {boolean} [step=false] - Set to true if we should only execute one operation instead of the
+ * whole recipe
  */
-self.autoBake = function(inputNum) {
+self.autoBake = function(inputNum, step=false) {
     const input = self.getInputObj(inputNum);
     if (input) {
         let inputData = input.data;
@@ -150,7 +155,8 @@ self.autoBake = function(inputNum) {
             }
         });
         self.postMessage({
-            action: "bake"
+            action: "bake",
+            data: step
         });
     }
 };
@@ -179,7 +185,8 @@ self.bakeAllInputs = function() {
         }
     }
     self.postMessage({
-        action: "bake"
+        action: "bake",
+        data: false
     });
 
 };

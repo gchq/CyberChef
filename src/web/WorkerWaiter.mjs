@@ -146,11 +146,15 @@ class WorkerWaiter {
                 if (r.data.error) {
                     this.app.handleError(r.data.error);
                     this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
-                } else if (r.data.progress !== this.manager.recipe.getConfig().length) {
-                    this.manager.output.updateOutputError(r.data.result, inputNum, r.data.progress);
                 } else {
                     this.updateOutput(r.data, r.data.inputNum, r.data.bakeId, r.data.progress);
                 }
+                this.app.progress = r.data.progress;
+
+                if (r.data.progress === this.recipeConfig.length) {
+                    this.step = false;
+                }
+
                 this.workerFinished(currentWorker);
                 break;
             case "bakeError":
@@ -328,7 +332,7 @@ class WorkerWaiter {
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
         this.chefWorkers[workerIdx].active = true;
         const input = nextInput.input;
-        if (typeof input === "string") {
+        if (input instanceof ArrayBuffer || ArrayBuffer.isView(input)) {
             this.chefWorkers[workerIdx].worker.postMessage({
                 action: "bake",
                 data: {
@@ -340,7 +344,7 @@ class WorkerWaiter {
                     inputNum: nextInput.inputNum,
                     bakeId: this.bakeId
                 }
-            });
+            }, [input]);
         } else {
             this.chefWorkers[workerIdx].worker.postMessage({
                 action: "bake",
@@ -353,7 +357,7 @@ class WorkerWaiter {
                     inputNum: nextInput.inputNum,
                     bakeId: this.bakeId
                 }
-            }, [nextInput.input]);
+            });
         }
     }
 

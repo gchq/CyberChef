@@ -111,25 +111,14 @@ async function bake(data) {
             })
         });
     } catch (err) {
-        if (err instanceof DOMException) {
-            self.postMessage({
-                action: "bakeError",
-                data: {
-                    error: err.message,
-                    id: data.id,
-                    inputNum: data.inputNum
-                }
-            });
-        } else {
-            self.postMessage({
-                action: "bakeError",
-                data: {
-                    error: err,
-                    id: data.id,
-                    inputNum: data.inputNum
-                }
-            });
-        }
+        self.postMessage({
+            action: "bakeError",
+            data: {
+                error: err.message || err,
+                id: data.id,
+                inputNum: data.inputNum
+            }
+        });
     }
     self.inputNum = -1;
 }

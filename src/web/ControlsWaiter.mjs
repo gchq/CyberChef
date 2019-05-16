@@ -69,7 +69,22 @@ class ControlsWaiter {
      * Handler for the 'Step through' command. Executes the next step of the recipe.
      */
     stepClick() {
-        this.app.bake(true);
+        if (this.manager.worker.step) {
+            // Step has already been clicked so get the data from the output
+            const activeTab = this.manager.input.getActiveTab();
+            this.manager.worker.queueInput({
+                input: this.manager.output.getOutput(activeTab, true),
+                inputNum: activeTab
+            });
+            this.app.progress = this.manager.output.outputs[activeTab].progress;
+            this.app.bake(true);
+        } else {
+            // First click of step, so get the output from the inputWorker
+            this.manager.input.inputWorker.postMessage({
+                action: "step",
+                data: this.manager.input.getActiveTab()
+            });
+        }
     }
 
 

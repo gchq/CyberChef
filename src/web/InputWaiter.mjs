@@ -267,7 +267,7 @@ class InputWaiter {
                 this.manager.worker.queueInput(r.data);
                 break;
             case "bake":
-                this.app.bake(false);
+                this.app.bake(r.data);
                 break;
             case "displayTabSearchResults":
                 this.displayTabSearchResults(r.data);
