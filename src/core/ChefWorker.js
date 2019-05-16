@@ -107,8 +107,7 @@ async function bake(data) {
             data: Object.assign(response, {
                 id: data.id,
                 inputNum: data.inputNum,
-                bakeId: data.bakeId,
-                progress: response.progress
+                bakeId: data.bakeId
             })
         });
     } catch (err) {
