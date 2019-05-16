@@ -124,7 +124,7 @@ class App {
      * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
      *   whole recipe.
      */
-    bake(step=false, input) {
+    bake(step=false) {
         if (this.baking) return;
 
         // Reset attemptHighlight flag
