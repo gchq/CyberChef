@@ -1029,6 +1029,7 @@ class InputWaiter {
     clearAllIoClick() {
         this.manager.worker.cancelBake();
         this.manager.output.removeAllOutputs();
+        this.manager.output.terminateZipWorker();
 
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
