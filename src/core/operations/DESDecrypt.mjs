@@ -47,7 +47,7 @@ class DESDecrypt extends Operation {
             {
                 "name": "Padding",
                 "type": "option",
-                "value": ["PKCS#7", "Null byte", "None"]
+                "value": ["PKCS#7", "Null byte", "No padding"]
             },
             {
                 "name": "Input",
@@ -92,7 +92,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
             result = decipher.finish(function(blockSize, buffer, decrypt) {
                 if (decrypt) {
                     var len = buffer.length(), count = 0;
-                    for(var i = len - 1; i > 0; --i) {
+                    for(var i = len - 1; i >= 8; --i) {
                         if (buffer.at(i) == "00") {
                             count += 1;
                         } else {
