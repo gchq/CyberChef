@@ -50,6 +50,7 @@ class InputWaiter {
         this.workerId = 0;
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.maxTabs = 4;
+        this.inputTimeout = null;
     }
 
     /**
@@ -266,8 +267,8 @@ class InputWaiter {
             case "queueInput":
                 this.manager.worker.queueInput(r.data);
                 break;
-            case "bake":
-                this.app.bake(r.data);
+            case "bakeAllInputs":
+                this.manager.worker.bakeAllInputs(r.data);
                 break;
             case "displayTabSearchResults":
                 this.displayTabSearchResults(r.data);
@@ -332,11 +333,11 @@ class InputWaiter {
                 const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
                     inputData.input.count("\n") + 1 : null;
                 this.setInputInfo(inputData.input.length, lines);
+                if (!silent) window.dispatchEvent(this.manager.statechange);
             } else {
                 this.setFile(inputData);
             }
 
-            if (!silent) window.dispatchEvent(this.manager.statechange);
         }.bind(this));
     }
 
@@ -452,6 +453,8 @@ class InputWaiter {
                     silent: false
                 }
             });
+            window.dispatchEvent(this.manager.statechange);
+
         }
     }
 
@@ -542,6 +545,38 @@ class InputWaiter {
     }
 
     /**
+     * Debouncer to stop functions from being executed multiple times in a
+     * short space of time
+     * https://davidwalsh.name/javascript-debounce-function
+     *
+     * @param {function} func - The function to be executed after the debounce time
+     * @param {number} wait - The time (ms) to wait before executing the function
+     * @param {array} args - Array of arguments to be passed to func
+     * @returns {function}
+     */
+    debounce(func, wait, args) {
+        return function() {
+            const context = this,
+                later = function() {
+                    this.inputTimeout = null;
+                    func.apply(context, args);
+                };
+            clearTimeout(this.inputTimeout);
+            this.inputTimeout = setTimeout(later, wait);
+        }.bind(this);
+    }
+
+    /**
+     * Handler for input change events.
+     * Debounces the input so we don't call autobake too often.
+     *
+     * @param {event} e
+     */
+    debounceInputChange(e) {
+        this.debounce(this.inputChange.bind(this), 100, [e])();
+    }
+
+    /**
      * Handler for input change events.
      * Updates the value stored in the inputWorker
      *
@@ -589,7 +624,7 @@ class InputWaiter {
             // and manually fire inputChange()
             e.preventDefault();
             document.getElementById("input-text").value += pastedData;
-            this.inputChange(e);
+            this.debounceInputChange(e);
         } else {
             e.preventDefault();
             e.stopPropagation();
@@ -1027,7 +1062,8 @@ class InputWaiter {
      * Resets the input, output and info areas, and creates a new inputWorker
      */
     clearAllIoClick() {
-        this.manager.worker.cancelBake();
+        this.manager.worker.cancelBake(true, true);
+        this.manager.worker.loaded = false;
         this.manager.output.removeAllOutputs();
         this.manager.output.terminateZipWorker();
 

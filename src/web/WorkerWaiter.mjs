@@ -22,10 +22,13 @@ class WorkerWaiter {
         this.app = app;
         this.manager = manager;
 
+        this.loaded = false;
         this.chefWorkers = [];
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.inputs = [];
+        this.inputNums = [];
         this.totalOutputs = 0;
+        this.loadingOutputs = 0;
         this.bakeId = 0;
     }
 
@@ -47,14 +50,6 @@ class WorkerWaiter {
      * @returns {number} The index of the created worker
      */
     addChefWorker() {
-        // First find if there are any inactive workers, as this will be
-        // more efficient than creating a new one
-        for (let i = 0; i < this.chefWorkers.length; i++) {
-            if (!this.chefWorkers[i].active) {
-                return i;
-            }
-        }
-
         if (this.chefWorkers.length === this.maxWorkers) {
             // Can't create any more workers
             return -1;
@@ -86,6 +81,22 @@ class WorkerWaiter {
 
         this.chefWorkers.push(newWorkerObj);
         return this.chefWorkers.indexOf(newWorkerObj);
+    }
+
+    /**
+     * Gets an inactive ChefWorker to be used for baking
+     *
+     * @param {boolean} [setActive=true] - If true, set the worker status to active
+     * @returns {number} - The index of the ChefWorker
+     */
+    getInactiveChefWorker(setActive=true) {
+        for (let i = 0; i < this.chefWorkers.length; i++) {
+            if (!this.chefWorkers[i].active) {
+                this.chefWorkers[i].active = setActive;
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -172,7 +183,12 @@ class WorkerWaiter {
             case "workerLoaded":
                 this.app.workerLoaded = true;
                 log.debug("ChefWorker loaded.");
-                this.app.loaded();
+                if (!this.loaded) {
+                    this.app.loaded();
+                    this.loaded = true;
+                } else {
+                    this.bakeNextInput(this.getInactiveChefWorker(false));
+                }
                 break;
             case "statusMessage":
                 // Status message should be done per output
@@ -227,7 +243,7 @@ class WorkerWaiter {
      * Get the progress of the ChefWorkers
      */
     getBakeProgress() {
-        const pendingInputs = this.inputs.length;
+        const pendingInputs = this.inputNums.length + this.loadingOutputs + this.inputs.length;
         let bakingInputs = 0;
 
         for (let i = 0; i < this.chefWorkers.length; i++) {
@@ -249,12 +265,17 @@ class WorkerWaiter {
 
     /**
      * Cancels the current bake by terminating and removing all ChefWorkers
+     *
+     * @param {boolean} [silent=false] - If true, don't set the output
+     * @param {boolean} killAll - If true, kills all chefWorkers regardless of status
      */
-    cancelBake() {
+    cancelBake(silent, killAll) {
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
-            const inputNum = this.chefWorkers[i].inputNum;
-            this.removeChefWorker(this.chefWorkers[i]);
-            this.manager.output.updateOutputStatus("inactive", inputNum);
+            if (this.chefWorkers[i].active || killAll) {
+                const inputNum = this.chefWorkers[i].inputNum;
+                this.removeChefWorker(this.chefWorkers[i]);
+                this.manager.output.updateOutputStatus("inactive", inputNum);
+            }
         }
         this.setBakingStatus(false);
 
@@ -262,23 +283,32 @@ class WorkerWaiter {
             this.manager.output.updateOutputStatus("inactive", this.inputs[i].inputNum);
         }
 
+        for (let i = 0; i < this.inputNums.length; i++) {
+            this.manager.output.updateOutputStatus("inactive", this.inputNums[i]);
+        }
+
         this.inputs = [];
+        this.inputNums = [];
         this.totalOutputs = 0;
-        this.manager.output.set(this.manager.output.getActiveTab());
+        if (!silent) this.manager.output.set(this.manager.output.getActiveTab());
     }
 
     /**
      * Handle a worker completing baking
+     *
+     * @param {object} workerObj - Object containing the worker information
+     * @param {ChefWorker} workerObj.worker - The actual worker object
+     * @param {number} workerObj.inputNum - The inputNum of the input being baked by the worker
+     * @param {boolean} workerObj.active - If true, the worker is currrently baking an input
      */
     workerFinished(workerObj) {
+        const workerIdx = this.chefWorkers.indexOf(workerObj);
+        this.chefWorkers[workerIdx].active = false;
         if (this.inputs.length > 0) {
-            this.bakeNextInput(this.chefWorkers.indexOf(workerObj));
-        } else {
+            this.bakeNextInput(workerIdx);
+        } else if (this.inputNums.length === 0 && this.loadingOutputs === 0) {
             // The ChefWorker is no longer needed
-            log.debug("No more inputs to bake. Closing ChefWorker.");
-            workerObj.active = false;
-            this.removeChefWorker(workerObj);
-
+            log.debug("No more inputs to bake.");
             const progress = this.getBakeProgress();
             if (progress.total === progress.baked) {
                 this.bakingComplete();
@@ -313,15 +343,15 @@ class WorkerWaiter {
     }
 
     /**
-     * Bakes the next input
+     * Bakes the next input and tells the inputWorker to load the next input
      *
-     * @param {number} workerIdx
+     * @param {number} workerIdx - The index of the worker to bake with
      */
     bakeNextInput(workerIdx) {
         if (this.inputs.length === 0) return;
         if (workerIdx === -1) return;
         if (!this.chefWorkers[workerIdx]) return;
-
+        this.chefWorkers[workerIdx].active = true;
         const nextInput = this.inputs.splice(0, 1)[0];
         if (typeof nextInput.inputNum === "string") nextInput.inputNum = parseInt(nextInput.inputNum, 10);
 
@@ -330,7 +360,6 @@ class WorkerWaiter {
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
 
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
-        this.chefWorkers[workerIdx].active = true;
         const input = nextInput.input;
         if (input instanceof ArrayBuffer || ArrayBuffer.isView(input)) {
             this.chefWorkers[workerIdx].worker.postMessage({
@@ -359,6 +388,17 @@ class WorkerWaiter {
                 }
             });
         }
+
+        if (this.inputNums.length > 0) {
+            this.manager.input.inputWorker.postMessage({
+                action: "bakeNext",
+                data: {
+                    inputNum: this.inputNums.splice(0, 1)[0],
+                    bakeId: this.bakeId
+                }
+            });
+            this.loadingOutputs++;
+        }
     }
 
     /**
@@ -370,10 +410,6 @@ class WorkerWaiter {
      * @param {boolean} step
      */
     bake(recipeConfig, options, progress, step) {
-        for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
-            this.removeChefWorker(this.chefWorkers[i]);
-        }
-
         this.setBakingStatus(true);
         this.manager.recipe.updateBreakpointIndicator(false);
         this.bakeStartTime = new Date().getTime();
@@ -383,15 +419,6 @@ class WorkerWaiter {
         this.progress = progress;
         this.step = step;
 
-        let numWorkers = this.maxWorkers;
-        if (this.inputs.length < numWorkers) {
-            numWorkers = this.inputs.length;
-        }
-        for (let i = 0; i < numWorkers; i++) {
-            const workerIdx = this.addChefWorker();
-            if (workerIdx === -1) break;
-            this.bakeNextInput(workerIdx);
-        }
         this.displayProgress();
     }
 
@@ -401,28 +428,65 @@ class WorkerWaiter {
      * @param {object} inputData
      * @param {string | ArrayBuffer} inputData.input
      * @param {number} inputData.inputNum
-     * @param {boolean} inputData.override
+     * @param {number} inputData.bakeId
      */
     queueInput(inputData) {
-        for (let i = 0; i < this.chefWorkers; i++) {
-            if (this.chefWorkers[i].inputNum === inputData.inputNum) {
-                this.chefWorkers[i].worker.terminate();
-                this.chefWorkers.splice(i, 1);
-                this.bakeNextInput(this.addChefWorker());
-                this.bakingInputs--;
-                break;
+        this.loadingOutputs--;
+
+        if (this.app.baking && inputData.bakeId === this.bakeId) {
+            this.inputs.push(inputData);
+            this.bakeNextInput(this.getInactiveChefWorker(true));
+        }
+    }
+
+    /**
+     * Queues a list of inputNums to be baked by ChefWorkers, and begins baking
+     *
+     * @param {object} inputData
+     * @param {number[]} inputData.nums
+     * @param {boolean} inputData.step
+     */
+    bakeAllInputs(inputData) {
+        if (this.app.baking) return;
+        const inputNums = inputData.nums;
+        const step = inputData.step;
+
+        // Use cancelBake to clear out the inputs
+        this.cancelBake(true, false);
+
+        this.inputNums = inputNums;
+        this.totalOutputs = inputNums.length;
+
+        let inactiveWorkers = 0;
+        for (let i = 0; i < this.chefWorkers.length; i++) {
+            if (!this.chefWorkers[i].active) {
+                inactiveWorkers++;
             }
         }
-        this.manager.output.updateOutputMessage(`Input ${inputData.inputNum} has not been baked yet.`, inputData.inputNum, false);
-        this.manager.output.updateOutputStatus("pending", inputData.inputNum);
 
+        let numWorkers = (inputNums.length > this.maxWorkers) ? this.maxWorkers : inputNums.length;
+        numWorkers -= inactiveWorkers;
 
-        if (inputData.override) {
-            this.totalOutputs = 1;
-            this.inputs = [inputData];
-        } else {
-            this.totalOutputs++;
-            this.inputs.push(inputData);
+        for (let i = 0; i < numWorkers; i++) {
+            this.addChefWorker();
+        }
+
+        this.app.bake(step);
+
+        for (let i = 0; i < numWorkers + inactiveWorkers; i++) {
+            this.manager.input.inputWorker.postMessage({
+                action: "bakeNext",
+                data: {
+                    inputNum: this.inputNums.splice(0, 1)[0],
+                    bakeId: this.bakeId
+                }
+            });
+            this.loadingOutputs++;
+        }
+
+        for (let i = 0; i < this.inputNums.length; i++) {
+            this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
+            this.manager.output.updateOutputStatus("pending", inputNums[i]);
         }
     }
 
@@ -433,9 +497,11 @@ class WorkerWaiter {
      * @param {Object[]} [recipeConfig]
      */
     silentBake(recipeConfig) {
-        // If there aren't any active ChefWorkers, addChefWorker will
-        // return an inactive worker instead of creating a new one
-        const workerId = this.addChefWorker();
+        // If there aren't any active ChefWorkers, try to add one
+        let workerId = this.getInactiveChefWorker();
+        if (workerId === -1) {
+            workerId = this.addChefWorker();
+        }
         if (workerId === -1) return;
         this.chefWorkers[workerId].worker.postMessage({
             action: "silentBake",
@@ -487,7 +553,6 @@ class WorkerWaiter {
      */
     displayProgress() {
         const progress = this.getBakeProgress();
-
         if (progress.total === progress.baked) return;
 
         const percentComplete = ((progress.pending + progress.baking) / progress.total) * 100;

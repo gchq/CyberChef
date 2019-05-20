@@ -60,7 +60,7 @@ class ControlsWaiter {
         if (btnBake.textContent.indexOf("Bake") > 0) {
             this.app.manager.input.bakeAll();
         } else if (btnBake.textContent.indexOf("Cancel") > 0) {
-            this.manager.worker.cancelBake();
+            this.manager.worker.cancelBake(false, true);
         }
     }
 
@@ -72,12 +72,14 @@ class ControlsWaiter {
         if (this.manager.worker.step) {
             // Step has already been clicked so get the data from the output
             const activeTab = this.manager.input.getActiveTab();
-            this.manager.worker.queueInput({
-                input: this.manager.output.getOutput(activeTab, true),
-                inputNum: activeTab
-            });
+            this.manager.worker.loadingOutputs++;
             this.app.progress = this.manager.output.outputs[activeTab].progress;
             this.app.bake(true);
+            this.manager.worker.queueInput({
+                input: this.manager.output.getOutput(activeTab, true),
+                inputNum: activeTab,
+                bakeId: this.manager.worker.bakeId
+            });
         } else {
             // First click of step, so get the output from the inputWorker
             this.manager.input.inputWorker.postMessage({

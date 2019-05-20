@@ -157,8 +157,6 @@ class App {
                 action: "autobake",
                 data: this.manager.input.getActiveTab()
             });
-
-            this.manager.controls.toggleBakeButtonFunction(false, true);
         } else {
             this.manager.controls.showStaleIndicator();
         }

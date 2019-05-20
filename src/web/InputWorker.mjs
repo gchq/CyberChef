@@ -57,6 +57,9 @@ self.addEventListener("message", function(e) {
         case "bakeAll":
             self.bakeAllInputs();
             break;
+        case "bakeNext":
+            self.bakeInput(r.data.inputNum, r.data.bakeId);
+            break;
         case "getLoadProgress":
             self.getLoadProgress(r.data);
             break;
@@ -142,53 +145,60 @@ self.getLoadProgress = function(inputNum) {
 self.autoBake = function(inputNum, step=false) {
     const input = self.getInputObj(inputNum);
     if (input) {
-        let inputData = input.data;
-        if (typeof inputData !== "string") {
-            inputData = inputData.fileBuffer;
-        }
         self.postMessage({
-            action: "queueInput",
+            action: "bakeAllInputs",
             data: {
-                input: inputData,
-                inputNum: parseInt(inputNum, 10),
-                override: false
+                nums: [parseInt(inputNum, 10)],
+                step: step
             }
-        });
-        self.postMessage({
-            action: "bake",
-            data: step
         });
     }
 };
 
 /**
  * Fired when we want to bake all inputs (bake button clicked)
- * Queues all of the loaded inputs and sends a bake command
+ * Sends a list of inputNums to the workerwaiter
  */
 self.bakeAllInputs = function() {
-    const inputNums = Object.keys(self.inputs);
+    const inputNums = Object.keys(self.inputs),
+        nums = [];
 
     for (let i = 0; i < inputNums.length; i++) {
         if (self.inputs[inputNums[i]].status === "loaded") {
-            let inputData = self.inputs[inputNums[i]].data;
-            if (typeof inputData !== "string") {
-                inputData = inputData.fileBuffer;
-            }
-            self.postMessage({
-                action: "queueInput",
-                data: {
-                    input: inputData,
-                    inputNum: inputNums[i],
-                    override: false
-                }
-            });
+            nums.push(parseInt(inputNums[i], 10));
         }
     }
     self.postMessage({
-        action: "bake",
-        data: false
+        action: "bakeAllInputs",
+        data: {
+            nums: nums,
+            step: false
+        }
     });
+};
 
+/**
+ * Gets the data for the provided inputNum and sends it to the WorkerWaiter
+ *
+ * @param {number} inputNum
+ * @param {number} bakeId
+ */
+self.bakeInput = function(inputNum, bakeId) {
+    const inputObj = self.getInputObj(inputNum);
+    if (inputObj === null || inputObj === undefined) return;
+    if (inputObj.status !== "loaded") return;
+
+    let inputData = inputObj.data;
+    if (typeof inputData !== "string") inputData = inputData.fileBuffer;
+
+    self.postMessage({
+        action: "queueInput",
+        data: {
+            input: inputData,
+            inputNum: inputNum,
+            bakeId: bakeId
+        }
+    });
 };
 
 /**
@@ -788,6 +798,10 @@ self.removeInput = function(removeInputData) {
     }
 
     delete self.inputs[inputNum];
+
+    if (Object.keys(self.inputs).length === 0) {
+        self.addInput(true, "string");
+    }
 
     if (refreshTabs) {
         self.refreshTabs(inputNum, "left");

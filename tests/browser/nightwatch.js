@@ -82,7 +82,6 @@ module.exports = {
         browser
             .useCss()
             .setValue("#input-text", "Don't Panic.")
-            .waitForElementNotVisible("#stale-indicator", 1000)
             .click("#bake");
 
         // Check output
