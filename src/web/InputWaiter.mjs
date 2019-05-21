@@ -1077,6 +1077,7 @@ class InputWaiter {
 
         this.setupInputWorker();
         this.addInput(true);
+        this.bakeAll();
     }
 
     /**
