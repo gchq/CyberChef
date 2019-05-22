@@ -34,7 +34,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -49,7 +49,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -64,7 +64,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -79,7 +79,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CFB", "Raw", "Hex"
+                    "CFB", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -94,7 +94,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "OFB", "Raw", "Hex"
+                    "OFB", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -109,7 +109,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CTR", "Raw", "Hex"
+                    "CTR", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -124,7 +124,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Raw", "Hex"
+                    "ECB", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -141,7 +141,7 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "GCM", "Raw", "Hex"
+                    "GCM", "PKCS#7", "Raw", "Hex"
                 ]
             }
         ],
@@ -156,7 +156,7 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -171,7 +171,7 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -186,7 +186,7 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -201,7 +201,7 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -218,7 +218,7 @@ Tag: fa6bbb34c8cde65a3d7b93fb094fc84f`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex"
+                    "GCM", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -233,7 +233,7 @@ Tag: fa6bbb34c8cde65a3d7b93fb094fc84f`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -248,7 +248,7 @@ Tag: fa6bbb34c8cde65a3d7b93fb094fc84f`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -263,7 +263,7 @@ Tag: fa6bbb34c8cde65a3d7b93fb094fc84f`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -278,7 +278,7 @@ Tag: fa6bbb34c8cde65a3d7b93fb094fc84f`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -293,7 +293,7 @@ Tag: fa6bbb34c8cde65a3d7b93fb094fc84f`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -310,7 +310,7 @@ Tag: be17cb31edb77f648b9d1032b235b33d`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex"
+                    "GCM", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -325,7 +325,7 @@ Tag: be17cb31edb77f648b9d1032b235b33d`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -340,7 +340,7 @@ Tag: be17cb31edb77f648b9d1032b235b33d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -355,7 +355,7 @@ Tag: be17cb31edb77f648b9d1032b235b33d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -370,7 +370,7 @@ Tag: be17cb31edb77f648b9d1032b235b33d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -385,7 +385,7 @@ Tag: be17cb31edb77f648b9d1032b235b33d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -402,7 +402,7 @@ Tag: 23ddbd3ee4de33f98a9ea9a170bdf268`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex"
+                    "GCM", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -417,7 +417,7 @@ Tag: 23ddbd3ee4de33f98a9ea9a170bdf268`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -435,7 +435,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -450,7 +450,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -465,7 +465,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -480,7 +480,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -495,7 +495,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -510,7 +510,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -623,7 +623,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Raw",
+                    "CBC", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -639,7 +639,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Raw",
+                    "CBC", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -655,7 +655,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CBC", "Hex", "Raw",
+                    "CBC", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -671,7 +671,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CFB", "Hex", "Raw",
+                    "CFB", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -687,7 +687,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "OFB", "Hex", "Raw",
+                    "OFB", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -703,7 +703,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CTR", "Hex", "Raw",
+                    "CTR", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -719,7 +719,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Raw",
+                    "ECB", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -735,7 +735,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "GCM", "Hex", "Raw",
+                    "GCM", "PKCS#7", "Hex", "Raw",
                     {"option": "Hex", "string": "16a3e732a605cc9ca29108f742ca0743"}
                 ]
             }
@@ -751,7 +751,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex",
+                    "CBC", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -767,7 +767,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex",
+                    "CFB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -783,7 +783,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex",
+                    "OFB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -799,7 +799,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex",
+                    "CTR", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -815,7 +815,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex",
+                    "GCM", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": "fa6bbb34c8cde65a3d7b93fb094fc84f"}
                 ]
             }
@@ -831,7 +831,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex",
+                    "ECB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -847,7 +847,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex",
+                    "CBC", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -863,7 +863,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex",
+                    "CFB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -879,7 +879,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex",
+                    "OFB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -895,7 +895,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex",
+                    "CTR", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -911,7 +911,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex",
+                    "GCM", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": "be17cb31edb77f648b9d1032b235b33d"}
                 ]
             }
@@ -927,7 +927,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex",
+                    "ECB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -943,7 +943,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex",
+                    "CBC", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -959,7 +959,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex",
+                    "CFB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -975,7 +975,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex",
+                    "OFB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -991,7 +991,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex",
+                    "CTR", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1007,7 +1007,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex",
+                    "GCM", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": "23ddbd3ee4de33f98a9ea9a170bdf268"}
                 ]
             }
@@ -1023,7 +1023,7 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex",
+                    "ECB", "PKCS#7", "Hex", "Hex",
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1042,7 +1042,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -1057,7 +1057,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -1072,7 +1072,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -1087,7 +1087,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -1102,7 +1102,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],
@@ -1117,7 +1117,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "PKCS#7", "Hex", "Hex"
                 ]
             }
         ],

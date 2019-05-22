@@ -59,7 +59,7 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": "$R0"
                     },
-                    "CTR", "Hex", "Raw",
+                    "CTR", "PKCS#7", "Hex", "Raw",
                     {
                         "option": "Hex",
                         "string": ""

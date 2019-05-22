@@ -45,6 +45,11 @@ class AESDecrypt extends Operation {
                 "value": ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"]
             },
             {
+                "name": "Padding",
+                "type": "option",
+                "value": ["PKCS#7", "Null byte", "No padding"]
+            },
+            {
                 "name": "Input",
                 "type": "option",
                 "value": ["Hex", "Raw"]
@@ -73,10 +78,8 @@ class AESDecrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            mode = args[2],
-            inputType = args[3],
-            outputType = args[4],
-            gcmTag = Utils.convertToByteString(args[5].string, args[5].option);
+            gcmTag = Utils.convertToByteString(args[6].string, args[6].option),
+            [,, mode, padding, inputType, outputType,] = args;
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -95,7 +98,28 @@ The following algorithms will be used based on the size of the key:
             tag: gcmTag
         });
         decipher.update(forge.util.createBuffer(input));
-        const result = decipher.finish();
+        var result = null;
+        if (padding === "PKCS#7") {
+            result = decipher.finish();
+        } else if (padding === "Null byte") {
+            result = decipher.finish(function(blockSize, buffer, decrypt) {
+                if (decrypt) {
+                    var len = buffer.length(), count = 0;
+                    for(var i = len - 1; i >= 8; --i) {
+                        if (buffer.at(i) == "00") {
+                            count += 1;
+                        } else {
+                            break;
+                        }
+                    }
+                    return buffer.truncate(count);
+                }
+            });
+        } else {
+            result = decipher.finish(function(blockSize, buffer, decrypt) {
+                return true;
+            });
+        };
 
         if (result) {
             return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();

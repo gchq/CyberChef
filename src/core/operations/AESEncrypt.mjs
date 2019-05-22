@@ -45,6 +45,11 @@ class AESEncrypt extends Operation {
                 "value": ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"]
             },
             {
+                "name": "Padding",
+                "type": "option",
+                "value": ["PKCS#7", "Null byte"]
+            },
+            {
                 "name": "Input",
                 "type": "option",
                 "value": ["Raw", "Hex"]
@@ -67,9 +72,7 @@ class AESEncrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            mode = args[2],
-            inputType = args[3],
-            outputType = args[4];
+            [,, mode, padding, inputType, outputType] = args;
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -85,7 +88,15 @@ The following algorithms will be used based on the size of the key:
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
         cipher.start({iv: iv});
         cipher.update(forge.util.createBuffer(input));
-        cipher.finish();
+        if (padding === "PKCS#7") {
+            cipher.finish();
+        } else if (padding === "Null byte") {
+            cipher.finish(function(blockSize, buffer, decrypt) {
+                if (!decrypt) {
+                    return buffer.fillWithByte(0, blockSize);
+                }
+            });
+        }
 
         if (outputType === "Hex") {
             if (mode === "GCM") {
