@@ -71,10 +71,12 @@ class ControlsWaiter {
     stepClick() {
         if (this.manager.worker.step) {
             // Step has already been clicked so get the data from the output
+            this.manager.worker.cancelBake();
             const activeTab = this.manager.input.getActiveTab();
             this.manager.worker.loadingOutputs++;
             this.app.progress = this.manager.output.outputs[activeTab].progress;
             this.app.bake(true);
+            this.manager.worker.bakeId++;
             this.manager.worker.queueInput({
                 input: this.manager.output.getOutput(activeTab, true),
                 inputNum: activeTab,
