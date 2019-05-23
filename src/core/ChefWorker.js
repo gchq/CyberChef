@@ -155,13 +155,23 @@ function silentBake(data) {
 async function getDishAs(data) {
     const value = await self.chef.getDishAs(data.dish, data.type);
 
-    self.postMessage({
-        action: "dishReturned",
-        data: {
-            value: value,
-            id: data.id
-        }
-    });
+    if (data.type === "ArrayBuffer") {
+        self.postMessage({
+            action: "dishReturned",
+            data: {
+                value: value,
+                id: data.id
+            }
+        }, [value]);
+    } else {
+        self.postMessage({
+            action: "dishReturned",
+            data: {
+                value: value,
+                id: data.id
+            }
+        });
+    }
 }
 
 

@@ -573,7 +573,7 @@ class InputWaiter {
      * @param {event} e
      */
     debounceInputChange(e) {
-        this.debounce(this.inputChange.bind(this), 100, [e])();
+        this.debounce(this.inputChange.bind(this), 50, [e])();
     }
 
     /**
@@ -1076,6 +1076,7 @@ class InputWaiter {
         }
 
         this.setupInputWorker();
+        this.manager.worker.setupChefWorker();
         this.addInput(true);
         this.bakeAll();
     }

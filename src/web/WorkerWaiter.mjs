@@ -24,24 +24,54 @@ class WorkerWaiter {
 
         this.loaded = false;
         this.chefWorkers = [];
+        this.dishWorker = null;
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.inputs = [];
         this.inputNums = [];
         this.totalOutputs = 0;
         this.loadingOutputs = 0;
         this.bakeId = 0;
+        this.callbacks = {};
+        this.callbackID = 0;
     }
 
     /**
      * Terminates any existing ChefWorkers and sets up a new worker
      */
     setupChefWorker() {
-        for (let i = 0; i < this.chefWorkers.length; i++) {
-            const worker = this.chefWorkers.pop();
-            worker.terminate();
+        for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+            this.removeChefWorker(this.chefWorkers[i]);
         }
 
         this.addChefWorker();
+        this.setupDishWorker();
+    }
+
+    /**
+     * Sets up a separate ChefWorker for performing dish operations.
+     * Using a separate worker so that we can run dish operations without
+     * affecting a bake which may be in progress.
+     */
+    setupDishWorker() {
+        if (this.dishWorker !== null) {
+            this.dishWorker.terminate();
+        }
+        log.debug("Adding new ChefWorker (DishWorker)");
+
+        this.dishWorker = new ChefWorker();
+        this.dishWorker.addEventListener("message", this.handleChefMessage.bind(this));
+
+        let docURL = document.location.href.split(/[#?]/)[0];
+        const index = docURL.lastIndexOf("/");
+        if (index > 0) {
+            docURL = docURL.substring(0, index);
+        }
+
+        this.dishWorker.postMessage({"action": "docURL", "data": docURL});
+        this.dishWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 
     /**
@@ -173,10 +203,11 @@ class WorkerWaiter {
                 this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
                 this.app.progress = r.data.progress;
                 this.workerFinished(currentWorker);
-                // do more here
                 break;
             case "dishReturned":
                 this.callbacks[r.data.id](r.data);
+                this.dishWorker.terminate();
+                this.dishWorker = null;
                 break;
             case "silentBakeComplete":
                 break;
@@ -447,47 +478,49 @@ class WorkerWaiter {
      * @param {boolean} inputData.step
      */
     bakeAllInputs(inputData) {
-        if (this.app.baking) return;
-        const inputNums = inputData.nums;
-        const step = inputData.step;
+        return new Promise(resolve => {
+            if (this.app.baking) return;
+            const inputNums = inputData.nums;
+            const step = inputData.step;
 
-        // Use cancelBake to clear out the inputs
-        this.cancelBake(true, false);
+            // Use cancelBake to clear out the inputs
+            this.cancelBake(true, false);
 
-        this.inputNums = inputNums;
-        this.totalOutputs = inputNums.length;
+            this.inputNums = inputNums;
+            this.totalOutputs = inputNums.length;
 
-        let inactiveWorkers = 0;
-        for (let i = 0; i < this.chefWorkers.length; i++) {
-            if (!this.chefWorkers[i].active) {
-                inactiveWorkers++;
-            }
-        }
-
-        let numWorkers = (inputNums.length > this.maxWorkers) ? this.maxWorkers : inputNums.length;
-        numWorkers -= inactiveWorkers;
-
-        for (let i = 0; i < numWorkers; i++) {
-            this.addChefWorker();
-        }
-
-        this.app.bake(step);
-
-        for (let i = 0; i < numWorkers + inactiveWorkers; i++) {
-            this.manager.input.inputWorker.postMessage({
-                action: "bakeNext",
-                data: {
-                    inputNum: this.inputNums.splice(0, 1)[0],
-                    bakeId: this.bakeId
+            let inactiveWorkers = 0;
+            for (let i = 0; i < this.chefWorkers.length; i++) {
+                if (!this.chefWorkers[i].active) {
+                    inactiveWorkers++;
                 }
-            });
-            this.loadingOutputs++;
-        }
+            }
 
-        for (let i = 0; i < this.inputNums.length; i++) {
-            this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
-            this.manager.output.updateOutputStatus("pending", inputNums[i]);
-        }
+            let numWorkers = (inputNums.length > this.maxWorkers) ? this.maxWorkers : inputNums.length;
+            numWorkers -= inactiveWorkers;
+
+            for (let i = 0; i < numWorkers; i++) {
+                this.addChefWorker();
+            }
+
+            this.app.bake(step);
+
+            for (let i = 0; i < numWorkers + inactiveWorkers; i++) {
+                this.manager.input.inputWorker.postMessage({
+                    action: "bakeNext",
+                    data: {
+                        inputNum: this.inputNums.splice(0, 1)[0],
+                        bakeId: this.bakeId
+                    }
+                });
+                this.loadingOutputs++;
+            }
+
+            for (let i = 0; i < this.inputNums.length; i++) {
+                this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
+                this.manager.output.updateOutputStatus("pending", inputNums[i]);
+            }
+        });
     }
 
     /**
@@ -520,11 +553,12 @@ class WorkerWaiter {
      */
     getDishAs(dish, type, callback) {
         const id = this.callbackID++;
-        const workerId = this.addChefWorker();
-        if (workerId === -1) return;
 
         this.callbacks[id] = callback;
-        this.chefWorkers[workerId].worker.postMessage({
+
+        if (this.dishWorker === null) this.setupDishWorker();
+
+        this.dishWorker.postMessage({
             action: "getDishAs",
             data: {
                 dish: dish,

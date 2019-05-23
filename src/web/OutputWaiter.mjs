@@ -241,12 +241,14 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async set(inputNum) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(async function(resolve, reject) {
             const output = this.outputs[inputNum];
             if (output === undefined || output === null) return;
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
             if (inputNum !== this.getActiveTab()) return;
+
+            this.toggleLoader(true);
 
             const outputText = document.getElementById("output-text");
             const outputHtml = document.getElementById("output-html");
@@ -276,9 +278,7 @@ class OutputWaiter {
             if (output.status === "pending" || output.status === "baking") {
                 // show the loader and the status message if it's being shown
                 // otherwise don't do anything
-                this.toggleLoader(true);
                 document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
-
             } else if (output.status === "error") {
                 // style the tab if it's being shown
                 this.toggleLoader(false);
@@ -292,8 +292,8 @@ class OutputWaiter {
                 outputText.value = output.error;
                 outputHtml.innerHTML = "";
             } else if (output.status === "baked" || output.status === "inactive") {
+                document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
                 this.displayTabInfo(inputNum);
-                this.toggleLoader(false);
                 this.closeFile();
                 let scriptElements, lines, length;
 
@@ -309,6 +309,7 @@ class OutputWaiter {
 
                     lines = 0;
                     length = 0;
+                    this.toggleLoader(false);
                     return;
                 }
 
@@ -332,8 +333,6 @@ class OutputWaiter {
                                 log.error(err);
                             }
                         }
-                        length = output.data.dish.value.length;
-
                         break;
                     case "ArrayBuffer":
                         outputText.style.display = "block";
@@ -344,8 +343,8 @@ class OutputWaiter {
                         outputText.value = "";
                         outputHtml.innerHTML = "";
 
-                        length = output.data.result.length;
-                        this.setFile(output.data.result);
+                        length = output.data.result.byteLength;
+                        this.setFile(await this.getDishBuffer(output.data.dish));
                         break;
                     case "string":
                     default:
@@ -362,6 +361,14 @@ class OutputWaiter {
                         length = output.data.result.length;
                         break;
                 }
+                this.toggleLoader(false);
+
+                if (output.data.type === "html") {
+                    const dishStr = await this.getDishStr(output.data.dish);
+                    length = dishStr.length;
+                    lines = dishStr.count("\n") + 1;
+                }
+
                 this.setOutputInfo(length, lines, output.data.duration);
                 this.backgroundMagic();
             }
@@ -396,6 +403,35 @@ class OutputWaiter {
     }
 
     /**
+     * Retrieves the dish as a string, returning the cached version if possible.
+     *
+     * @param {Dish} dish
+     * @returns {string}
+     */
+    async getDishStr(dish) {
+        return await new Promise(resolve => {
+            this.manager.worker.getDishAs(dish, "string", r => {
+                resolve(r.value);
+            });
+        });
+    }
+
+
+    /**
+     * Retrieves the dish as an ArrayBuffer, returning the cached version if possible.
+     *
+     * @param {Dish} dish
+     * @returns {ArrayBuffer}
+     */
+    async getDishBuffer(dish) {
+        return await new Promise(resolve => {
+            this.manager.worker.getDishAs(dish, "ArrayBuffer", r => {
+                resolve(r.value);
+            });
+        });
+    }
+
+    /**
      * Save bombe object then remove it from the DOM so that it does not cause performance issues.
      */
     saveBombe() {
@@ -410,7 +446,7 @@ class OutputWaiter {
      * recipe is taking longer than 200ms. We add it to the DOM just before that so that
      * it is ready to fade in without stuttering.
      *
-     * @param {boolean} value - true == show loader
+     * @param {boolean} value - If true, show the loader
      */
     toggleLoader(value) {
         clearTimeout(this.appendBombeTimeout);
@@ -489,57 +525,58 @@ class OutputWaiter {
      * Spawns a new ZipWorker and sends it the outputs so that they can
      * be zipped for download
      */
-    downloadAllFiles() {
-        const inputNums = Object.keys(this.outputs);
-        for (let i = 0; i < inputNums.length; i++) {
-            const iNum = inputNums[i];
-            if (this.outputs[iNum].status !== "baked" ||
-            this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
-                if (window.confirm("Not all outputs have been baked yet. Continue downloading outputs?")) {
-                    break;
-                } else {
-                    return;
+    async downloadAllFiles() {
+        return new Promise(resolve => {
+            const inputNums = Object.keys(this.outputs);
+            for (let i = 0; i < inputNums.length; i++) {
+                const iNum = inputNums[i];
+                if (this.outputs[iNum].status !== "baked" ||
+                this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
+                    if (window.confirm("Not all outputs have been baked yet. Continue downloading outputs?")) {
+                        break;
+                    } else {
+                        return;
+                    }
                 }
             }
-        }
 
-        let fileName = window.prompt("Please enter a filename: ", "download.zip");
+            let fileName = window.prompt("Please enter a filename: ", "download.zip");
 
-        if (fileName === null || fileName === "") {
-            // Don't zip the files if there isn't a filename
-            this.app.alert("No filename was specified.", 3000);
-            return;
-        }
+            if (fileName === null || fileName === "") {
+                // Don't zip the files if there isn't a filename
+                this.app.alert("No filename was specified.", 3000);
+                return;
+            }
 
-        if (!fileName.match(/.zip$/)) {
-            fileName += ".zip";
-        }
+            if (!fileName.match(/.zip$/)) {
+                fileName += ".zip";
+            }
 
-        let fileExt = window.prompt("Please enter a file extension for the files, or leave blank to detect automatically.", "");
+            let fileExt = window.prompt("Please enter a file extension for the files, or leave blank to detect automatically.", "");
 
-        if (fileExt === null) fileExt = "";
+            if (fileExt === null) fileExt = "";
 
-        if (this.zipWorker !== null) {
-            this.terminateZipWorker();
-        }
+            if (this.zipWorker !== null) {
+                this.terminateZipWorker();
+            }
 
-        const downloadButton = document.getElementById("save-all-to-file");
+            const downloadButton = document.getElementById("save-all-to-file");
 
-        downloadButton.classList.add("spin");
-        downloadButton.title = `Zipping ${inputNums.length} files...`;
-        downloadButton.setAttribute("data-original-title", `Zipping ${inputNums.length} files...`);
+            downloadButton.classList.add("spin");
+            downloadButton.title = `Zipping ${inputNums.length} files...`;
+            downloadButton.setAttribute("data-original-title", `Zipping ${inputNums.length} files...`);
 
-        downloadButton.firstElementChild.innerHTML = "autorenew";
+            downloadButton.firstElementChild.innerHTML = "autorenew";
 
-        log.debug("Creating ZipWorker");
-        this.zipWorker = new ZipWorker();
-        this.zipWorker.postMessage({
-            outputs: this.outputs,
-            filename: fileName,
-            fileExtension: fileExt
+            log.debug("Creating ZipWorker");
+            this.zipWorker = new ZipWorker();
+            this.zipWorker.postMessage({
+                outputs: this.outputs,
+                filename: fileName,
+                fileExtension: fileExt
+            });
+            this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
         });
-        this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
-
     }
 
     /**
@@ -993,10 +1030,12 @@ class OutputWaiter {
     /**
      * Triggers the BackgroundWorker to attempt Magic on the current output.
      */
-    backgroundMagic() {
+    async backgroundMagic() {
         this.hideMagicButton();
         if (!this.app.options.autoMagic || !this.getActive(true)) return;
-        const sample = this.getActive(true).slice(0, 1000) || "";
+        const dish = this.outputs[this.getActiveTab()].data.dish;
+        const buffer = await this.getDishBuffer(dish);
+        const sample = buffer.slice(0, 1000) || "";
 
         if (sample.length || sample.byteLength) {
             this.manager.background.magic(sample);
@@ -1063,7 +1102,9 @@ class OutputWaiter {
     /**
      * Handler for file slice display events.
      */
-    displayFileSlice() {
+    async displayFileSlice() {
+        document.querySelector("#output-loader .loading-msg").textContent = "Loading file slice...";
+        this.toggleLoader(true);
         const outputText = document.getElementById("output-text"),
             outputHtml = document.getElementById("output-html"),
             outputFile = document.getElementById("output-file"),
@@ -1074,11 +1115,13 @@ class OutputWaiter {
             sliceToEl = document.getElementById("output-file-slice-to"),
             sliceFrom = parseInt(sliceFromEl.value, 10),
             sliceTo = parseInt(sliceToEl.value, 10),
-            str = Utils.arrayBufferToStr(this.getActive(false).slice(sliceFrom, sliceTo));
+            dish = this.outputs[this.getActiveTab()].data.dish,
+            dishBuffer = await this.getDishBuffer(dish),
+            str = Utils.arrayBufferToStr(dishBuffer.slice(sliceFrom, sliceTo));
 
         outputText.classList.remove("blur");
         showFileOverlay.style.display = "block";
-        outputText.value = Utils.printable(str);
+        outputText.value = str;
 
 
         outputText.style.display = "block";
@@ -1087,6 +1130,7 @@ class OutputWaiter {
         outputHighlighter.display = "block";
         inputHighlighter.display = "block";
 
+        this.toggleLoader(false);
     }
 
     /**
