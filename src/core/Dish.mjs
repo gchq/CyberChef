@@ -404,7 +404,7 @@ class Dish {
         };
 
         try {
-            toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
+            return toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
         } catch (err) {
             throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to ArrayBuffer: ${err}`);
         }
