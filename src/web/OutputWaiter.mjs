@@ -1115,13 +1115,18 @@ class OutputWaiter {
             sliceToEl = document.getElementById("output-file-slice-to"),
             sliceFrom = parseInt(sliceFromEl.value, 10),
             sliceTo = parseInt(sliceToEl.value, 10),
-            dish = this.outputs[this.getActiveTab()].data.dish,
-            dishBuffer = await this.getDishBuffer(dish),
-            str = Utils.arrayBufferToStr(dishBuffer.slice(sliceFrom, sliceTo));
+            output = this.outputs[this.getActiveTab()].data;
+
+        let str;
+        if (output.type === "ArrayBuffer") {
+            str = Utils.arrayBufferToStr(output.result.slice(sliceFrom, sliceTo));
+        } else {
+            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish).slice(sliceFrom, sliceTo));
+        }
 
         outputText.classList.remove("blur");
         showFileOverlay.style.display = "block";
-        outputText.value = str;
+        outputText.value = Utils.printable(str, true);
 
 
         outputText.style.display = "block";
@@ -1343,7 +1348,19 @@ class OutputWaiter {
                     inputNum: iNum,
                     textDisplay: outDisplay[output.status]
                 });
-            } else if (output.status === "baked" && showBaked) {
+            } else if (output.status === "baked" && showBaked && output.progress === false) {
+                let data = this.getOutput(iNum, false).slice(0, 4096);
+                if (typeof data !== "string") {
+                    data = Utils.arrayBufferToStr(data);
+                }
+                data = data.replace(/[\r\n]/g, "");
+                if (data.toLowerCase().includes(contentFilter)) {
+                    results.push({
+                        inputNum: iNum,
+                        textDisplay: data.slice(0, 100)
+                    });
+                }
+            } else if (output.progress !== false && showErrored) {
                 let data = this.getOutput(iNum, false).slice(0, 4096);
                 if (typeof data !== "string") {
                     data = Utils.arrayBufferToStr(data);
