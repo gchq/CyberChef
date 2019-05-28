@@ -115,7 +115,7 @@ class OutputWaiter {
             error: null,
             status: "inactive",
             bakeId: -1,
-            progress: 0
+            progress: false
         };
 
         this.outputs[inputNum] = newOutput;
@@ -127,7 +127,7 @@ class OutputWaiter {
      * Updates the value for the output in the output array.
      * If this is the active output tab, updates the output textarea
      *
-     * @param {ArrayBuffer | String} data - The
+     * @param {ArrayBuffer | String} data
      * @param {number} inputNum
      * @param {boolean} set
      */

@@ -67,8 +67,10 @@ class Chef {
         }
 
         // If stepping with flow control, we have to start from the beginning
-        // but still want to skip all previous breakpoints
-        if (progress > 0 && containsFc) {
+        // but still want to skip all previous breakpoints.
+        // If stepping, we need to start from the beginning as the current dish
+        // value may not be for the correct input, so should be recalculated.
+        if (progress > 0 && containsFc || step) {
             recipe.removeBreaksUpTo(progress);
             progress = 0;
         }

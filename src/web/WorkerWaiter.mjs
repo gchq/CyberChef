@@ -253,6 +253,9 @@ class WorkerWaiter {
      */
     updateOutput(data, inputNum, bakeId, progress) {
         this.manager.output.updateOutputBakeId(bakeId, inputNum);
+        if (progress === this.recipeConfig.length) {
+            progress = false;
+        }
         this.manager.output.updateOutputProgress(progress, inputNum);
         this.manager.output.updateOutputValue(data, inputNum, false);
         this.manager.output.updateOutputStatus("baked", inputNum);
@@ -463,7 +466,6 @@ class WorkerWaiter {
      */
     queueInput(inputData) {
         this.loadingOutputs--;
-
         if (this.app.baking && inputData.bakeId === this.bakeId) {
             this.inputs.push(inputData);
             this.bakeNextInput(this.getInactiveChefWorker(true));

@@ -51,6 +51,8 @@ class InputWaiter {
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.maxTabs = 4;
         this.inputTimeout = null;
+        this.callbacks = {};
+        this.callbackID = 0;
     }
 
     /**
@@ -279,6 +281,9 @@ class InputWaiter {
             case "inputSwitch":
                 this.manager.output.inputSwitch(r.data);
                 break;
+            case "getInput":
+                this.callbacks[r.data.id](r.data);
+                break;
             default:
                 log.error(`Unknown action ${r.action}.`);
         }
@@ -288,6 +293,7 @@ class InputWaiter {
      * Sends a message to the inputWorker to bake all inputs
      */
     bakeAll() {
+        this.app.progress = 0;
         this.manager.controls.toggleBakeButtonFunction(false, true);
         this.inputWorker.postMessage({
             action: "bakeAll"
@@ -520,6 +526,57 @@ class InputWaiter {
                 }
             }, [inputData.fileBuffer]);
         }
+    }
+
+    /**
+     * Get the input value for the specified input
+     *
+     * @param {number} inputNum - The inputNum of the input to retrieve from the inputWorker
+     * @returns {ArrayBuffer | string}
+     */
+    async getInputValue(inputNum) {
+        return await new Promise(resolve => {
+            this.getInput(inputNum, false, r => {
+                resolve(r.data);
+            });
+        });
+    }
+
+    /**
+     * Get the input object for the specified input
+     *
+     * @param {number} inputNum - The inputNum of the input to retrieve from the inputWorker
+     * @returns {object}
+     */
+    async getInputObj(inputNum) {
+        return await new Promise(resolve => {
+            this.getInput(inputNum, true, r => {
+                resolve(r.data);
+            });
+        });
+    }
+
+    /**
+     * Gets the specified input from the inputWorker
+     *
+     * @param {number} inputNum - The inputNum of the data to get
+     * @param {boolean} getObj - If true, get the actual data object of the input instead of just the value
+     * @param {Function} callback - The callback to execute when the input is returned
+     * @returns {ArrayBuffer | string | object}
+     */
+    getInput(inputNum, getObj, callback) {
+        const id = this.callbackID++;
+
+        this.callbacks[id] = callback;
+
+        this.inputWorker.postMessage({
+            action: "getInput",
+            data: {
+                inputNum: inputNum,
+                getObj: getObj,
+                id: id
+            }
+        });
     }
 
     /**

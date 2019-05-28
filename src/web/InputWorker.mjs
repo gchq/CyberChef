@@ -102,6 +102,9 @@ self.addEventListener("message", function(e) {
         case "step":
             self.autoBake(r.data, true);
             break;
+        case "getInput":
+            self.getInput(r.data);
+            break;
         default:
             log.error(`Unknown action '${r.action}'.`);
     }
@@ -226,6 +229,34 @@ self.getInputValue = function(inputNum) {
         }
     }
     return "";
+};
+
+/**
+ * Gets the stored value or oobject for a specific inputNum and sends it to the inputWaiter.
+ *
+ * @param {object} inputData - Object containing data about the input to retrieve
+ * @param {number} inputData.inputNum - The inputNum of the input to get
+ * @param {boolean} inputData.getObj - If true, returns the entire input object instead of just the value
+ * @param {number} inputData.id - The callback ID for the callback to run when returned to the inputWaiter
+ */
+self.getInput = function(inputData) {
+    if (inputData.getObj) {
+        self.postMessage({
+            action: "getInput",
+            data: {
+                data: self.getInputObj(inputData.inputNum),
+                id: inputData.id
+            }
+        });
+    } else {
+        self.postMessage({
+            action: "getInput",
+            data: {
+                data: self.getInputValue(inputData.inputNum),
+                id: inputData.id
+            }
+        });
+    }
 };
 
 /**
