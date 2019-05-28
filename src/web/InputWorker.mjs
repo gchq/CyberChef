@@ -716,7 +716,11 @@ self.loadFiles = function(filesData) {
     const inputNums = [];
     for (let i = 0; i < files.length; i++) {
         if (i === 0 && self.getInputValue(activeTab) === "") {
-            self.removeInput(activeTab);
+            self.removeInput({
+                inputNum: activeTab,
+                refreshTabs: false,
+                removeChefWorker: false
+            });
             lastInputNum = self.addInput(false, "file", {
                 name: files[i].name,
                 size: files[i].size.toLocaleString(),
@@ -805,6 +809,7 @@ self.addInput = function(changeTab=false, type, fileData={name: "unknown", size:
  * @param {object} removeInputData
  * @param {number} removeInputData.inputNum - The number of the input to be removed
  * @param {boolean} removeInputData.refreshTabs - If true, refresh the tabs after removing the input
+ * @param {boolean} removeInputData.removeChefWorker - If true, remove a chefWorker from the WorkerWaiter
  */
 self.removeInput = function(removeInputData) {
     const inputNum = removeInputData.inputNum;
@@ -830,12 +835,14 @@ self.removeInput = function(removeInputData) {
 
     delete self.inputs[inputNum];
 
-    if (Object.keys(self.inputs).length === 0) {
-        self.addInput(true, "string");
-    }
-
     if (refreshTabs) {
         self.refreshTabs(inputNum, "left");
+    }
+
+    if (self.numInputs < self.maxWorkers && removeInputData.removeChefWorker) {
+        self.postMessage({
+            action: "removeChefWorker"
+        });
     }
 };
 

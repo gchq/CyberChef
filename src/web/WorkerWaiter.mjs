@@ -106,7 +106,7 @@ class WorkerWaiter {
         const newWorkerObj = {
             worker: newWorker,
             active: false,
-            inputNum: this.manager.input.getActiveTab()
+            inputNum: -1
         };
 
         this.chefWorkers.push(newWorkerObj);
@@ -141,6 +141,7 @@ class WorkerWaiter {
         }
 
         if (this.chefWorkers.length > 1 || this.chefWorkers[index].active) {
+            log.debug(`Removing ChefWorker at index ${index}`);
             this.chefWorkers[index].worker.terminate();
             this.chefWorkers.splice(index, 1);
         }
@@ -230,7 +231,6 @@ class WorkerWaiter {
                 this.app.options[r.data.option] = r.data.value;
                 break;
             case "setRegisters":
-                // Should this update with the tabs?
                 this.manager.recipe.setRegisters(r.data.opIndex, r.data.numPrevRegisters, r.data.registers);
                 break;
             case "highlightsCalculated":

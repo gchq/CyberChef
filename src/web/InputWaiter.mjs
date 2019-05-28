@@ -284,6 +284,9 @@ class InputWaiter {
             case "getInput":
                 this.callbacks[r.data.id](r.data);
                 break;
+            case "removeChefWorker":
+                this.removeChefWorker();
+                break;
             default:
                 log.error(`Unknown action ${r.action}.`);
         }
@@ -1200,6 +1203,17 @@ class InputWaiter {
     inputAdded(changeTab, inputNum) {
         this.addTab(inputNum, changeTab);
         this.manager.output.addOutput(inputNum, changeTab);
+
+        this.manager.worker.addChefWorker();
+    }
+
+    /**
+     * Remove a chefWorker from the workerWaiter if we remove an input
+     */
+    removeChefWorker() {
+        const workerIdx = this.manager.worker.getInactiveChefWorker(true);
+        const worker = this.manager.worker.chefWorkers[workerIdx];
+        this.manager.worker.removeChefWorker(worker);
     }
 
     /**
@@ -1258,7 +1272,8 @@ class InputWaiter {
             action: "removeInput",
             data: {
                 inputNum: inputNum,
-                refreshTabs: refresh
+                refreshTabs: refresh,
+                removeChefWorker: true
             }
         });
 
