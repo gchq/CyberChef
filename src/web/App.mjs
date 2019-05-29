@@ -193,9 +193,8 @@ class App {
      * Sets the user's input data.
      *
      * @param {string} input - The string to set the input to
-     * @param {boolean} [silent=false] - Suppress statechange event
      */
-    setInput(input, silent=false) {
+    setInput(input) {
         // Assume that there aren't any inputs
         let inputNum = this.manager.input.getActiveTab();
         if (inputNum === -1) inputNum = 1;
