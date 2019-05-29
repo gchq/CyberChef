@@ -383,6 +383,7 @@ class InputWaiter {
             fileLoaded.textContent = inputData.progress + "%";
         }
 
+        this.setInputInfo(inputData.size, null);
         this.displayFilePreview(inputData);
     }
 
