@@ -93,7 +93,10 @@ class InputWaiter {
         });
         this.inputWorker.postMessage({
             action: "updateMaxTabs",
-            data: this.maxTabs
+            data: {
+                maxTabs: this.maxTabs,
+                activeTab: this.getActiveTab()
+            }
         });
         this.inputWorker.postMessage({
             action: "setLogLevel",
@@ -271,6 +274,9 @@ class InputWaiter {
                 break;
             case "queueInput":
                 this.manager.worker.queueInput(r.data);
+                break;
+            case "queueInputError":
+                this.manager.worker.queueInputError(r.data);
                 break;
             case "bakeAllInputs":
                 this.manager.worker.bakeAllInputs(r.data);

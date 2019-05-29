@@ -473,14 +473,41 @@ class WorkerWaiter {
     }
 
     /**
+     * Handles if an error is thrown by QueueInput
+     *
+     * @param {object} inputData
+     * @param {number} inputData.inputNum
+     * @param {number} inputData.bakeId
+     */
+    queueInputError(inputData) {
+        this.loadingOutputs--;
+        if (this.app.baking && inputData.bakeId === this.bakeId) {
+            this.manager.output.updateOutputError("Error queueing the input for a bake.", inputData.inputNum, 0);
+
+            if (this.inputNums.length === 0) return;
+
+            // Load the next input
+            this.manager.input.inputWorker.postMessage({
+                action: "bakeNext",
+                data: {
+                    inputNum: this.inputNums.splice(0, 1)[0],
+                    bakeId: this.bakeId
+                }
+            });
+            this.loadingOutputs++;
+
+        }
+    }
+
+    /**
      * Queues a list of inputNums to be baked by ChefWorkers, and begins baking
      *
      * @param {object} inputData
      * @param {number[]} inputData.nums
      * @param {boolean} inputData.step
      */
-    bakeAllInputs(inputData) {
-        return new Promise(resolve => {
+    async bakeAllInputs(inputData) {
+        return await new Promise(resolve => {
             if (this.app.baking) return;
             const inputNums = inputData.nums;
             const step = inputData.step;
@@ -491,23 +518,22 @@ class WorkerWaiter {
             this.inputNums = inputNums;
             this.totalOutputs = inputNums.length;
 
-            let inactiveWorkers = 0;
-            for (let i = 0; i < this.chefWorkers.length; i++) {
-                if (!this.chefWorkers[i].active) {
-                    inactiveWorkers++;
-                }
-            }
-
-            let numWorkers = (inputNums.length > this.maxWorkers) ? this.maxWorkers : inputNums.length;
-            numWorkers -= inactiveWorkers;
-
-            for (let i = 0; i < numWorkers; i++) {
-                this.addChefWorker();
+            for (let i = 0; i < inputNums.length; i++) {
+                if (this.addChefWorker() === -1) break;
             }
 
             this.app.bake(step);
 
-            for (let i = 0; i < numWorkers + inactiveWorkers; i++) {
+            for (let i = 0; i < this.inputNums.length; i++) {
+                this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
+                this.manager.output.updateOutputStatus("pending", inputNums[i]);
+            }
+
+            let numBakes = this.chefWorkers.length;
+            if (this.inputNums.length < numBakes) {
+                numBakes = this.inputNums.length;
+            }
+            for (let i = 0; i < numBakes; i++) {
                 this.manager.input.inputWorker.postMessage({
                     action: "bakeNext",
                     data: {
@@ -516,11 +542,6 @@ class WorkerWaiter {
                     }
                 });
                 this.loadingOutputs++;
-            }
-
-            for (let i = 0; i < this.inputNums.length; i++) {
-                this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
-                this.manager.output.updateOutputStatus("pending", inputNums[i]);
             }
         });
     }

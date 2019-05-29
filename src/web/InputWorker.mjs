@@ -188,8 +188,18 @@ self.bakeAllInputs = function() {
  */
 self.bakeInput = function(inputNum, bakeId) {
     const inputObj = self.getInputObj(inputNum);
-    if (inputObj === null || inputObj === undefined) return;
-    if (inputObj.status !== "loaded") return;
+    if (inputObj === null ||
+        inputObj === undefined ||
+        inputObj.status !== "loaded") {
+        self.postMessage({
+            action: "queueInputError",
+            data: {
+                inputNum: inputNum,
+                bakeId: bakeId
+            }
+        });
+        return;
+    }
 
     let inputData = inputObj.data;
     if (typeof inputData !== "string") inputData = inputData.fileBuffer;
