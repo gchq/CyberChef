@@ -43,7 +43,7 @@ self.addEventListener("message", function(e) {
             self.maxWorkers = r.data;
             break;
         case "updateMaxTabs":
-            self.maxTabs = r.data;
+            self.updateMaxTabs(r.data.maxTabs, r.data.activeTab);
             break;
         case "updateInputValue":
             self.updateInputValue(r.data);
@@ -280,15 +280,9 @@ self.getInputProgress = function(inputNum) {
  * @returns {number}
  */
 self.getLargestInputNum = function() {
-    let largest = 0;
     const inputNums = Object.keys(self.inputs);
-    for (let i = 0; i < inputNums.length; i++) {
-        const num = parseInt(inputNums[i], 10);
-        if (num > largest) {
-            largest = num;
-        }
-    }
-    return largest;
+    if (inputNums.length === 0) return -1;
+    return Math.max(...inputNums);
 };
 
 /**
@@ -297,15 +291,9 @@ self.getLargestInputNum = function() {
  * @returns {number}
  */
 self.getSmallestInputNum = function() {
-    let smallest = self.getLargestInputNum();
     const inputNums = Object.keys(self.inputs);
-    for (let i = 0; i < inputNums.length; i++) {
-        const num = parseInt(inputNums[i], 10);
-        if (num < smallest) {
-            smallest = num;
-        }
-    }
-    return smallest;
+    if (inputNums.length === 0) return -1;
+    return Math.min(...inputNums);
 };
 
 /**
@@ -315,8 +303,9 @@ self.getSmallestInputNum = function() {
  * @returns {number}
  */
 self.getPreviousInputNum = function(inputNum) {
-    let num = -1;
     const inputNums = Object.keys(self.inputs);
+    if (inputNums.length === 0) return -1;
+    let num = Math.min(...inputNums);
     for (let i = 0; i < inputNums.length; i++) {
         const iNum = parseInt(inputNums[i], 10);
         if (iNum < inputNum) {
@@ -335,8 +324,8 @@ self.getPreviousInputNum = function(inputNum) {
  * @returns {number}
  */
 self.getNextInputNum = function(inputNum) {
-    let num = self.getLargestInputNum();
     const inputNums = Object.keys(self.inputs);
+    let num = Math.max(...inputNums);
     for (let i = 0; i < inputNums.length; i++) {
         const iNum = parseInt(inputNums[i], 10);
         if (iNum > inputNum) {
@@ -881,6 +870,19 @@ self.changeTabLeft = function(inputNum, tabNums) {
     } else {
         // If the tab is not displayed, refresh the tabs to display it
         self.refreshTabs(newInput, "left");
+    }
+};
+
+/**
+ * Updates the maximum number of tabs, and refreshes them if it changes
+ *
+ * @param {number} maxTabs - The new max number of tabs
+ * @param {number} activeTab - The currently selected tab
+ */
+self.updateMaxTabs = function(maxTabs, activeTab) {
+    if (self.maxTabs !== maxTabs) {
+        self.maxTabs = maxTabs;
+        self.refreshTabs(activeTab, "right");
     }
 };
 

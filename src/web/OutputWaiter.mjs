@@ -37,7 +37,10 @@ class OutputWaiter {
      */
     calcMaxTabs() {
         const numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
-        this.maxTabs = numTabs;
+        if (numTabs !== this.maxTabs) {
+            this.maxTabs = numTabs;
+            this.refreshTabs(this.getActiveTab());
+        }
     }
 
     /**
@@ -802,15 +805,9 @@ class OutputWaiter {
      * @returns {number}
      */
     getLargestInputNum() {
-        let largest = 0;
         const inputNums = Object.keys(this.outputs);
-        for (let i = 0; i < inputNums.length; i++) {
-            const iNum = parseInt(inputNums[i], 10);
-            if (iNum > largest) {
-                largest = iNum;
-            }
-        }
-        return largest;
+        if (inputNums.length === 0) return -1;
+        return Math.max(...inputNums);
     }
 
     /**
@@ -819,15 +816,9 @@ class OutputWaiter {
      * @returns {number}
      */
     getSmallestInputNum() {
-        let smallest = this.getLargestInputNum();
         const inputNums = Object.keys(this.outputs);
-        for (let i = 0; i < inputNums.length; i++) {
-            const iNum = parseInt(inputNums[i], 10);
-            if (iNum < smallest) {
-                smallest = iNum;
-            }
-        }
-        return smallest;
+        if (inputNums.length === 0) return -1;
+        return Math.min(...inputNums);
     }
 
     /**
@@ -837,8 +828,9 @@ class OutputWaiter {
      * @returns {number}
      */
     getPreviousInputNum(inputNum) {
-        let num = this.getSmallestInputNum();
         const inputNums = Object.keys(this.outputs);
+        if (inputNums.length === 0) return -1;
+        let num = Math.min(...inputNums);
         for (let i = 0; i < inputNums.length; i++) {
             const iNum = parseInt(inputNums[i], 10);
             if (iNum < inputNum) {
@@ -857,8 +849,9 @@ class OutputWaiter {
      * @returns {number}
      */
     getNextInputNum(inputNum) {
-        let num = this.getLargestInputNum();
         const inputNums = Object.keys(this.outputs);
+        if (inputNums.length === 0) return -1;
+        let num = Math.max(...inputNums);
         for (let i = 0; i < inputNums.length; i++) {
             const iNum = parseInt(inputNums[i], 10);
             if (iNum > inputNum) {

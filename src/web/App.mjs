@@ -200,6 +200,14 @@ class App {
         let inputNum = this.manager.input.getActiveTab();
         if (inputNum === -1) inputNum = 1;
         this.manager.input.updateInputValue(inputNum, input);
+
+        this.manager.input.inputWorker.postMessage({
+            action: "setInput",
+            data: {
+                inputNum: inputNum,
+                silent: true
+            }
+        });
     }
 
 
@@ -264,6 +272,8 @@ class App {
             expandToMin: false,
             onDrag: function() {
                 this.manager.recipe.adjustWidth();
+                this.manager.input.calcMaxTabs();
+                this.manager.output.calcMaxTabs();
             }.bind(this)
         });
 
@@ -536,6 +546,8 @@ class App {
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
         this.manager.recipe.adjustWidth();
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
     }
 
 

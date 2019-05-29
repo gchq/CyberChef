@@ -64,7 +64,10 @@ class InputWaiter {
         if (this.inputWorker) {
             this.inputWorker.postMessage({
                 action: "updateMaxTabs",
-                data: this.maxTabs
+                data: {
+                    maxTabs: this.maxTabs,
+                    activeTab: this.getActiveTab()
+                }
             });
         }
     }
