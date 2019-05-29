@@ -467,11 +467,15 @@ self.setInput = function(inputData) {
  */
 self.refreshTabs = function(inputNum, direction) {
     const nums = self.getNearbyNums(inputNum, direction);
+    const tabsLeft = (self.getSmallestInputNum() !== nums[0]);
+    const tabsRight = (self.getLargestInputNum() !== nums[nums.length - 1]);
     self.postMessage({
         action: "refreshTabs",
         data: {
             nums: nums,
-            activeTab: (nums.includes(inputNum)) ? inputNum : self.getNextInputNum(inputNum)
+            activeTab: (nums.includes(inputNum)) ? inputNum : self.getNextInputNum(inputNum),
+            tabsLeft: tabsLeft,
+            tabsRight: tabsRight
         }
     });
 

@@ -255,7 +255,7 @@ class InputWaiter {
                 this.removeLoaderWorker(this.getLoaderWorker(r.data));
                 break;
             case "refreshTabs":
-                this.refreshTabs(r.data.nums, r.data.activeTab);
+                this.refreshTabs(r.data.nums, r.data.activeTab, r.data.tabsLeft, r.data.tabsRight);
                 break;
             case "changeTab":
                 this.changeTab(r.data, this.app.options.syncTabs);
@@ -965,8 +965,10 @@ class InputWaiter {
      *
      * @param {number[]} nums - The inputNums of the tab bar to be drawn
      * @param {number} activeTab - The inputNum of the active tab
+     * @param {boolean} tabsLeft - True if there are tabs to the left of the currently displayed tabs
+     * @param {boolean} tabsRight - True if there are tabs to the right of the currently displayed tabs
      */
-    refreshTabs(nums, activeTab) {
+    refreshTabs(nums, activeTab, tabsLeft, tabsRight) {
         const tabsList = document.getElementById("input-tabs");
 
         for (let i = tabsList.children.length - 1; i >= 0; i--) {
@@ -977,6 +979,24 @@ class InputWaiter {
             let active = false;
             if (nums[i] === activeTab) active = true;
             tabsList.appendChild(this.createTabElement(nums[i], active));
+        }
+
+        const firstTabElement = document.getElementById("input-tabs").firstElementChild;
+        const lastTabElement = document.getElementById("input-tabs").lastElementChild;
+
+        if (firstTabElement) {
+            if (tabsLeft) {
+                firstTabElement.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
+            } else {
+                firstTabElement.style.boxShadow = "";
+            }
+        }
+        if (lastTabElement) {
+            if (tabsRight) {
+                lastTabElement.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
+            } else {
+                lastTabElement.style.boxShadow = "";
+            }
         }
 
         if (nums.length > 1) {
