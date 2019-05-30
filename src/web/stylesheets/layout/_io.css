@@ -303,10 +303,10 @@
     width: 100%;
 }
 
-.form-group.input-find-option {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+.form-group.input-group {
+    width: 70%;
+    float: left;
+    margin-bottom: 2rem;
 }
 
 .input-find-option .toggle-string {
@@ -324,17 +324,12 @@
     filter: brightness(97%);
 }
 
-#input-num-results-container {
-    width: 20%;
-    float: right;
-    margin: 0;
-}
-
 .form-group.output-find-option {
     width: 70%;
     float: left;
 }
 
+#input-num-results-container,
 #output-num-results-container {
     width: 20%;
     float: right;
@@ -345,9 +340,12 @@
 #input-find-options-checkboxes,
 #output-find-options-checkboxes {
     list-style: none;
-    width: 70%;
-    margin-top: auto;
-    margin-bottom: auto;
+    padding: 0;
+    margin: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: center;
+    width: fit-content;
 }
 
 #input-find-options-checkboxes li,
@@ -356,7 +354,6 @@
     flex-direction: row;
     float: left;
     padding: 10px;
-    width: auto;
     text-align: center;
 }
 

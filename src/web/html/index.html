@@ -789,10 +789,6 @@
                                     </label>
                                 </li>
                             </ul>
-                            <div class="form-group input-find-option" id="input-num-results-container">
-                                <label for="input-num-results" class="bmd-label-floating">Number of results</label>
-                                <input type="number" class="form-control" id="input-num-results" value="20" min="1">
-                            </div>
                         </div>
                         <div class="form-group input-group">
                             <div class="toggle-string">
@@ -807,7 +803,11 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
+                        <div class="form-group input-find-option" id="input-num-results-container">
+                            <label for="input-num-results" class="bmd-label-floating">Number of results</label>
+                            <input type="number" class="form-control" id="input-num-results" value="20" min="1">
+                        </div>
+                        <div style="clear:both"></div>
                         <h6>Results</h6>
                         <ul id="input-search-results"></ul>
                     </div>
