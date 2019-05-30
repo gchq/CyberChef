@@ -908,17 +908,26 @@ self.updateMaxTabs = function(maxTabs, activeTab) {
  * @param {boolean} searchData.showPending - If true, include pending inputs in the results
  * @param {boolean} searchData.showLoading - If true, include loading inputs in the results
  * @param {boolean} searchData.showLoaded - If true, include loaded inputs in the results
- * @param {string} searchData.fileNameFilter - A string that must be present in the filename of an input
- * @param {string} searchData.contentFilter - A string that must be present in the input contents
+ * @param {string} searchData.filter - A regular expression to match the inputs on
+ * @param {string} searchData.filterType - Either "CONTENT" or "FILENAME". Detemines what should be matched with filter
  * @param {number} searchData.numResults - The maximum number of results to be returned
  */
 self.filterTabs = function(searchData) {
-    const showPending = searchData.showPending;
-    const showLoading = searchData.showLoading;
-    const showLoaded = searchData.showLoaded;
+    const showPending = searchData.showPending,
+        showLoading = searchData.showLoading,
+        showLoaded = searchData.showLoaded,
+        filterType = searchData.filterType;
 
-    const fileNameFilter = searchData.fileNameFilter;
-    const contentFilter = searchData.contentFilter;
+    let filterExp;
+    try {
+        filterExp = new RegExp(searchData.filter, "i");
+    } catch (error) {
+        self.postMessage({
+            action: "filterTabError",
+            data: error.message
+        });
+        return;
+    }
     const numResults = searchData.numResults;
 
     const inputs = [];
@@ -930,17 +939,28 @@ self.filterTabs = function(searchData) {
         if (self.inputs[iNum].status === "pending" && showPending ||
             self.inputs[iNum].status === "loading" && showLoading ||
             self.inputs[iNum].status === "loaded" && showLoaded) {
-            if (typeof self.inputs[iNum].data === "string") {
-                if (self.inputs[iNum].data.slice(0, 4096).toLowerCase().includes(contentFilter)) {
-                    textDisplay = self.inputs[iNum].data.slice(0, 4096);
-                    addInput = true;
+            try {
+                if (typeof self.inputs[iNum].data === "string") {
+                    if (filterType.toLowerCase() === "content" &&
+                        filterExp.test(self.inputs[iNum].data.slice(0, 4096))) {
+                        textDisplay = self.inputs[iNum].data.slice(0, 4096);
+                        addInput = true;
+                    }
+                } else {
+                    if ((filterType.toLowerCase() === "filename" &&
+                        filterExp.test(self.inputs[iNum].data.name)) ||
+                        filterType.toLowerCase() === "content" &&
+                        filterExp.test(Utils.arrayBufferToStr(self.inputs[iNum].data.fileBuffer.slice(0, 4096)))) {
+                        textDisplay = self.inputs[iNum].data.name;
+                        addInput = true;
+                    }
                 }
-            } else {
-                if (self.inputs[iNum].data.name.toLowerCase().includes(fileNameFilter) &&
-                    Utils.arrayBufferToStr(self.inputs[iNum].data.fileBuffer.slice(0, 4096)).toLowerCase().includes(contentFilter)) {
-                    textDisplay = self.inputs[iNum].data.name;
-                    addInput = true;
-                }
+            } catch (error) {
+                self.postMessage({
+                    action: "filterTabError",
+                    data: error.message
+                });
+                return;
             }
         }
 

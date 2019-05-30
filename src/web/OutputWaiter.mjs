@@ -705,6 +705,28 @@ class OutputWaiter {
             }
 
             const newOutputs = this.getNearbyNums(inputNum, direction);
+
+            const tabsLeft = (newOutputs[0] !== this.getSmallestInputNum());
+            const tabsRight = (newOutputs[newOutputs.length - 1] !== this.getLargestInputNum());
+
+            const firstTabElement = document.getElementById("output-tabs").firstElementChild;
+            const lastTabElement = document.getElementById("output-tabs").lastElementChild;
+
+            if (firstTabElement) {
+                if (tabsLeft) {
+                    firstTabElement.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
+                } else {
+                    firstTabElement.style.boxShadow = "";
+                }
+            }
+            if (lastTabElement) {
+                if (tabsRight) {
+                    lastTabElement.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
+                } else {
+                    lastTabElement.style.boxShadow = "";
+                }
+            }
+
             for (let i = 0; i < newOutputs.length; i++) {
                 tabs.item(i).setAttribute("inputNum", newOutputs[i].toString());
                 this.displayTabInfo(newOutputs[i]);
@@ -906,6 +928,27 @@ class OutputWaiter {
         for (let i = 0; i < newInputs.length; i++) {
             tabsList.appendChild(this.createTabElement(newInputs[i]));
             this.displayTabInfo(newInputs[i]);
+        }
+
+        const tabsLeft = (newInputs[0] !== this.getSmallestInputNum());
+        const tabsRight = (newInputs[newInputs.length - 1] !== this.getLargestInputNum());
+
+        const firstTabElement = document.getElementById("output-tabs").firstElementChild;
+        const lastTabElement = document.getElementById("output-tabs").lastElementChild;
+
+        if (firstTabElement) {
+            if (tabsLeft) {
+                firstTabElement.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
+            } else {
+                firstTabElement.style.boxShadow = "";
+            }
+        }
+        if (lastTabElement) {
+            if (tabsRight) {
+                lastTabElement.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
+            } else {
+                lastTabElement.style.boxShadow = "";
+            }
         }
 
         if (newInputs.length > 1) {
@@ -1320,6 +1363,14 @@ class OutputWaiter {
             inputNums = Object.keys(this.outputs),
             results = [];
 
+        let contentFilterExp;
+        try {
+            contentFilterExp = new RegExp(contentFilter, "i");
+        } catch (error) {
+            this.app.handleError(error);
+            return;
+        }
+
         // Search through the outputs for matching output results
         for (let i = 0; i < inputNums.length; i++) {
             const iNum = inputNums[i],
@@ -1347,7 +1398,7 @@ class OutputWaiter {
                     data = Utils.arrayBufferToStr(data);
                 }
                 data = data.replace(/[\r\n]/g, "");
-                if (data.toLowerCase().includes(contentFilter)) {
+                if (contentFilterExp.test(data)) {
                     results.push({
                         inputNum: iNum,
                         textDisplay: data.slice(0, 100)
@@ -1359,7 +1410,7 @@ class OutputWaiter {
                     data = Utils.arrayBufferToStr(data);
                 }
                 data = data.replace(/[\r\n]/g, "");
-                if (data.toLowerCase().includes(contentFilter)) {
+                if (contentFilterExp.test(data)) {
                     results.push({
                         inputNum: iNum,
                         textDisplay: data.slice(0, 100)

@@ -297,19 +297,67 @@
 
 #input-find-options,
 #output-find-options {
-    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
 }
 
-#input-find-options li,
-#output-find-options li {
+.form-group.input-find-option {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-find-option .toggle-string {
+    width: 70%;
+    display: inline-block;
+}
+
+.input-find-option-append button {
+    border-top-right-radius: 4px;
+    background-color: var(--arg-background) !important;
+    margin: unset;
+}
+
+.input-find-option-append button:hover {
+    filter: brightness(97%);
+}
+
+#input-num-results-container {
+    width: 20%;
+    float: right;
+    margin: 0;
+}
+
+.form-group.output-find-option {
+    width: 70%;
+    float: left;
+}
+
+#output-num-results-container {
+    width: 20%;
+    float: right;
+    margin: 0;
+    margin-left: 10%;
+}
+
+#input-find-options-checkboxes,
+#output-find-options-checkboxes {
+    list-style: none;
+    width: 70%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#input-find-options-checkboxes li,
+#output-find-options-checkboxes li {
     display: flex;
     flex-direction: row;
     float: left;
     padding: 10px;
     width: auto;
     text-align: center;
-    vertical-align: middle;
 }
 
 

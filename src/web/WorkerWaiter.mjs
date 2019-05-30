@@ -626,13 +626,13 @@ class WorkerWaiter {
         }
 
         const bakeInfo = document.getElementById("bake-info");
-        let width = progress.total.toString().length;
+        let width = progress.total.toLocaleString().length;
         width = width < 2 ? 2 : width;
 
-        const totalStr = progress.total.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const bakedStr = progress.baked.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const pendingStr = progress.pending.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const bakingStr = progress.baking.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const bakedStr = progress.baked.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const pendingStr = progress.pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const bakingStr = progress.baking.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
 
         let msg = "Total: " + totalStr;
         msg += "<br>Baked: " + bakedStr;

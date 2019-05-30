@@ -284,6 +284,9 @@ class InputWaiter {
             case "displayTabSearchResults":
                 this.displayTabSearchResults(r.data);
                 break;
+            case "filterTabError":
+                this.app.handleError(r.data);
+                break;
             case "setUrl":
                 this.setUrl(r.data);
                 break;
@@ -886,20 +889,20 @@ class InputWaiter {
         const loaded = loadedData.loaded;
         const total = loadedData.total;
 
-        let width = total.toString().length;
+        let width = total.toLocaleString().length;
         width = width < 2 ? 2 : width;
 
-        const totalStr = total.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const totalStr = total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
         let msg = "Total: " + totalStr;
 
-        const loadedStr = loaded.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const loadedStr = loaded.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
         msg += "<br>Loaded: " + loadedStr;
 
         if (pending > 0) {
-            const pendingStr = pending.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const pendingStr = pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
             msg += "<br>Pending: " + pendingStr;
         } else if (loading > 0) {
-            const loadingStr = loading.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const loadingStr = loading.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
             msg += "<br>Loading: " + loadingStr;
         }
 
@@ -1377,8 +1380,8 @@ class InputWaiter {
         const showLoading = document.getElementById("input-show-loading").checked;
         const showLoaded = document.getElementById("input-show-loaded").checked;
 
-        const fileNameFilter = document.getElementById("input-filename-filter").value;
-        const contentFilter = document.getElementById("input-content-filter").value;
+        const filter = document.getElementById("input-filter").value;
+        const filterType = document.getElementById("input-filter-button").innerText;
         const numResults = parseInt(document.getElementById("input-num-results").value, 10);
 
         this.inputWorker.postMessage({
@@ -1387,11 +1390,21 @@ class InputWaiter {
                 showPending: showPending,
                 showLoading: showLoading,
                 showLoaded: showLoaded,
-                fileNameFilter: fileNameFilter,
-                contentFilter: contentFilter,
+                filter: filter,
+                filterType: filterType,
                 numResults: numResults
             }
         });
+    }
+
+    /**
+     * Handle when an option in the filter drop down box is clicked
+     *
+     * @param {event} mouseEvent
+     */
+    filterOptionClick(mouseEvent) {
+        document.getElementById("input-filter-button").innerText = mouseEvent.target.innerText;
+        this.filterTabSearch();
     }
 
     /**

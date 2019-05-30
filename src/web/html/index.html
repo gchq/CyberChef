@@ -768,38 +768,44 @@
                     </div>
                     <div class="modal-body" id="input-tab-body">
                         <h6>Load Status</h6>
-                        <ul id="input-find-options">
-                            <li class="checkbox input-find-option">
-                                <label for="input-show-pending">
-                                    <input type="checkbox" id="input-show-pending" checked="">
-                                    Pending
-                                </label>
-                            </li>
-                            <li class="checkbox input-find-option">
-                                <label for="input-show-loading">
-                                    <input type="checkbox" id="input-show-loading" checked="">
-                                    Loading
-                                </label>
-                            </li>
-                            <li class="checkbox input-find-option">
-                                <label for="input-show-loaded">
-                                    <input type="checkbox" id="input-show-loaded" checked="">
-                                    Loaded
-                                </label>
-                            </li>
-                        </ul>
-                        <br>
-                        <div class="form-group input-find-option">
-                            <label for="input-filename-filter" class="bmd-label-floating">Filename</label>
-                            <input type="text" class="form-control" id="input-filename-filter">
+                        <div id="input-find-options">
+                            <ul id="input-find-options-checkboxes">
+                                <li class="checkbox input-find-option">
+                                    <label for="input-show-pending">
+                                        <input type="checkbox" id="input-show-pending" checked="">
+                                        Pending
+                                    </label>
+                                </li>
+                                <li class="checkbox input-find-option">
+                                    <label for="input-show-loading">
+                                        <input type="checkbox" id="input-show-loading" checked="">
+                                        Loading
+                                    </label>
+                                </li>
+                                <li class="checkbox input-find-option">
+                                    <label for="input-show-loaded">
+                                        <input type="checkbox" id="input-show-loaded" checked="">
+                                        Loaded
+                                    </label>
+                                </li>
+                            </ul>
+                            <div class="form-group input-find-option" id="input-num-results-container">
+                                <label for="input-num-results" class="bmd-label-floating">Number of results</label>
+                                <input type="number" class="form-control" id="input-num-results" value="20" min="1">
+                            </div>
                         </div>
-                        <div class="form-group input-find-option">
-                            <label for="input-content-filter" class="bmd-label-floating">Content</label>
-                            <input type="text" class="form-control" id="input-content-filter">
-                        </div>
-                        <div class="form-group input-find-option">
-                            <label for="input-num-results" class="bmd-label-floating">Number of results</label>
-                            <input type="number" class="form-control" id="input-num-results" value="20">
+                        <div class="form-group input-group">
+                            <div class="toggle-string">
+                                <label for="input-filter" class="bmd-label-floating toggle-string">Filter (regex)</label>
+                                <input type="text" class="form-control toggle-string" id="input-filter">
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary dropdown-toggle" id="input-filter-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CONTENT</button>
+                                <div class="dropdown-menu toggle-dropdown">
+                                    <a class="dropdown-item" id="input-filter-content">Content</a>
+                                    <a class="dropdown-item" id="input-filter-filename">Filename</a>
+                                </div>
+                            </div>
                         </div>
                         <br>
                         <h6>Results</h6>
@@ -821,46 +827,47 @@
                     </div>
                     <div class="modal-body" id="output-tab-body">
                         <h6>Bake Status</h6>
-                        <ul id="output-find-options">
-                            <li class="checkbox output-find-option">
-                                <label for="output-show-pending">
-                                    <input type="checkbox" id="output-show-pending" checked="">
-                                    Pending
-                                </label>
-                            </li>
-                            <li class="checkbox output-find-option">
-                                <label for="output-show-baking">
-                                    <input type="checkbox" id="output-show-baking" checked="">
-                                    Baking
-                                </label>
-                            </li>
-                            <li class="checkbox output-find-option">
-                                <label for="output-show-baked">
-                                    <input type="checkbox" id="output-show-baked" checked="">
-                                    Baked
-                                </label>
-                            </li>
-                            <li class="checkbox output-find-option">
-                                <label for="output-show-stale">
-                                    <input type="checkbox" id="output-show-stale" checked="">
-                                    Stale
-                                </label>
-                            </li>
-                            <li class="checkbox output-find-option">
-                                <label for="output-show-errored">
-                                    <input type="checkbox" id="output-show-errored" checked="">
-                                    Errored
-                                </label>
-                            </li>
-                        </ul>
-                        <br>
-                        <div class="form-group output-find-option">
-                            <label for="output-content-filter" class="bmd-label-floating">Content</label>
-                            <input type="text" class="form-control" id="output-content-filter">
-                        </div>
-                        <div class="form-group output-find-option">
-                            <label for="output-num-results" class="bmd-label-floating">Number of results</label>
-                            <input type="number" class="form-control" id="output-num-results" value="20">
+                        <div id="output-find-options">
+                            <ul id="output-find-options-checkboxes">
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-pending">
+                                        <input type="checkbox" id="output-show-pending" checked="">
+                                        Pending
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-baking">
+                                        <input type="checkbox" id="output-show-baking" checked="">
+                                        Baking
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-baked">
+                                        <input type="checkbox" id="output-show-baked" checked="">
+                                        Baked
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-stale">
+                                        <input type="checkbox" id="output-show-stale" checked="">
+                                        Stale
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-errored">
+                                        <input type="checkbox" id="output-show-errored" checked="">
+                                        Errored
+                                    </label>
+                                </li>
+                            </ul>
+                            <div class="form-group output-find-option">
+                                <label for="output-content-filter" class="bmd-label-floating">Content filter (regex)</label>
+                                <input type="text" class="form-control" id="output-content-filter">
+                            </div>
+                            <div class="form-group output-find-option" id="output-num-results-container">
+                                <label for="output-num-results" class="bmd-label-floating">Number of results</label>
+                                <input type="number" class="form-control" id="output-num-results" value="20">
+                            </div>
                         </div>
                         <br>
                         <h6>Results</h6>

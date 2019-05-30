@@ -166,10 +166,9 @@ class Manager {
         document.getElementById("input-show-pending").addEventListener("change", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-show-loading").addEventListener("change", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-show-loaded").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-filename-filter").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-filename-filter").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-content-filter").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-content-filter").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
+        this.addListeners("#input-filter-content,#input-filter-filename", "click", this.input.filterOptionClick, this.input);
+        document.getElementById("input-filter").addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        document.getElementById("input-filter").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-num-results").addEventListener("change", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-num-results").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-filter-refresh").addEventListener("click", this.input.filterTabSearch.bind(this.input));
