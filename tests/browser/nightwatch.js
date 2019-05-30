@@ -82,6 +82,7 @@ module.exports = {
         browser
             .useCss()
             .setValue("#input-text", "Don't Panic.")
+            .pause(1000)
             .click("#bake");
 
         // Check output
