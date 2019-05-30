@@ -663,6 +663,9 @@ class OutputWaiter {
 
                 document.getElementById("save-all-to-file").style.display = "none";
             }
+        } else if (numTabs === this.maxTabs) {
+            // Can't create a new tab
+            document.getElementById("output-tabs").lastElementChild.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
         }
 
         if (changeTab) {

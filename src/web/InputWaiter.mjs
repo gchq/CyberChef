@@ -1283,6 +1283,9 @@ class InputWaiter {
                 action: "updateTabHeader",
                 data: inputNum
             });
+        } else if (numTabs === this.maxTabs) {
+            // Can't create a new tab
+            document.getElementById("input-tabs").lastElementChild.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
         }
 
         if (changeTab) {
