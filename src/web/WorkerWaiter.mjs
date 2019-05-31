@@ -663,7 +663,10 @@ class WorkerWaiter {
      * @param {number} pos.end - The end offset.
      */
     highlight(recipeConfig, direction, pos) {
-        const workerIdx = this.addChefWorker();
+        let workerIdx = this.getInactiveChefWorker(false);
+        if (workerIdx === -1) {
+            workerIdx = this.addChefWorker();
+        }
         if (workerIdx === -1) return;
         this.chefWorkers[workerIdx].worker.postMessage({
             action: "highlight",
