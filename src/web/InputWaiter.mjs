@@ -1168,6 +1168,17 @@ class InputWaiter {
             tabsList.item(i).remove();
         }
 
+        this.showLoadingInfo({
+            pending: 0,
+            loading: 0,
+            loaded: 1,
+            total: 1,
+            activeProgress: {
+                inputNum: 1,
+                progress: 100
+            }
+        });
+
         this.setupInputWorker();
         this.manager.worker.setupChefWorker();
         this.addInput(true);
