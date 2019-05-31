@@ -356,7 +356,7 @@ class WorkerWaiter {
     bakingComplete() {
         this.setBakingStatus(false);
         let duration = new Date().getTime() - this.bakeStartTime;
-        duration = duration.toString() + "ms";
+        duration = duration.toLocaleString() + "ms";
         const progress = this.getBakeProgress();
 
         let width = progress.total.toString().length;
@@ -365,7 +365,7 @@ class WorkerWaiter {
         }
         width = width < 2 ? 2 : width;
 
-        const totalStr = progress.total.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
         const durationStr = duration.padStart(width, " ").replace(/ /g, "&nbsp;");
 
         const msg = `Total: ${totalStr}<br>Time: ${durationStr}`;
