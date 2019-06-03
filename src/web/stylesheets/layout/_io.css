@@ -118,6 +118,10 @@
     float: left;
 }
 
+#btn-close-all-tabs {
+    color: var(--breakpoint-font-colour) !important;
+}
+
 .input-tab-content,
 .output-tab-content {
     width: 100%;
