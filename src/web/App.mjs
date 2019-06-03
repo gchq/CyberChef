@@ -89,7 +89,7 @@ class App {
             document.body.classList.remove("loaded");
 
             // Bake initial input
-            this.getAllInput();
+            this.manager.input.bakeAll();
         }.bind(this), 1000);
 
         // Clear the loading message interval
@@ -182,12 +182,6 @@ class App {
         this.manager.worker.silentBake(recipeConfig);
     }
 
-    /**
-     * Gets the user's input data for all tabs.
-     */
-    getAllInput() {
-        this.manager.input.bakeAll();
-    }
 
     /**
      * Sets the user's input data.
@@ -195,7 +189,8 @@ class App {
      * @param {string} input - The string to set the input to
      */
     setInput(input) {
-        // Assume that there aren't any inputs
+        // Get the currently active tab.
+        // If there isn't one, assume there are no inputs so use inputNum of 1
         let inputNum = this.manager.input.getActiveTab();
         if (inputNum === -1) inputNum = 1;
         this.manager.input.updateInputValue(inputNum, input);
@@ -423,7 +418,11 @@ class App {
     }
 
     /**
-     * Checks for input and recipe in the URI parameters and loads them if present.
+     * Searches the URI parameters for recipe and input parameters.
+     * If recipe is present, replaces the current recipe with the recipe provided in the URI.
+     * If input is present, decodes and sets the input to the one provided in the URI.
+     *
+     * @fires Manager#statechange
      */
     loadURIParams() {
         this.autoBakePause = true;
@@ -456,7 +455,7 @@ class App {
         if (this.uriParams.input) {
             try {
                 const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData, false);
+                this.setInput(inputData);
             } catch (err) {}
         }
 
