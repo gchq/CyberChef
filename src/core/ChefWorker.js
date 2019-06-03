@@ -37,9 +37,8 @@ self.postMessage({
 /**
  * Respond to message from parent thread.
  *
- * An inputNum only needs to be sent when baking.
- * (The background ChefWorker doesn't send one, but as
- * it only deals with one input at a time it isn't needed)
+ * inputNum is optional and only used for baking multiple inputs.
+ * Defaults to -1 when one isn't sent with the bake message.
  *
  * Messages should have the following format:
  * {
@@ -99,7 +98,7 @@ async function bake(data) {
     // Ensure the relevant modules are loaded
     self.loadRequiredModules(data.recipeConfig);
     try {
-        self.inputNum = data.inputNum;
+        self.inputNum = (data.inputNum !== undefined) ? data.inputNum : -1;
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
