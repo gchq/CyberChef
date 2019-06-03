@@ -324,6 +324,7 @@ class WorkerWaiter {
         this.inputs = [];
         this.inputNums = [];
         this.totalOutputs = 0;
+        this.loadingOutputs = 0;
         if (!silent) this.manager.output.set(this.manager.output.getActiveTab());
     }
 
@@ -359,18 +360,37 @@ class WorkerWaiter {
         duration = duration.toLocaleString() + "ms";
         const progress = this.getBakeProgress();
 
-        let width = progress.total.toString().length;
-        if (duration.length > width) {
-            width = duration.length;
+        if (progress.total > 1) {
+            let width = progress.total.toLocaleString().length;
+            if (duration.length > width) {
+                width = duration.length;
+            }
+            width = width < 2 ? 2 : width;
+
+            const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const durationStr = duration.padStart(width, " ").replace(/ /g, "&nbsp;");
+
+            const inputNums = Object.keys(this.manager.output.outputs);
+            let avgTime = 0,
+                numOutputs = 0;
+            for (let i = 0; i < inputNums.length; i++) {
+                const output = this.manager.output.outputs[inputNums[i]];
+                if (output.status === "baked") {
+                    numOutputs++;
+                    avgTime += output.data.duration;
+                }
+            }
+            avgTime = Math.round(avgTime / numOutputs).toLocaleString() + "ms";
+            avgTime = avgTime.padStart(width, " ").replace(/ /g, "&nbsp;");
+
+            const msg = `total: ${totalStr}<br>time: ${durationStr}<br>average: ${avgTime}`;
+
+            const bakeInfo = document.getElementById("bake-info");
+            bakeInfo.innerHTML = msg;
+            bakeInfo.style.display = "";
+        } else {
+            document.getElementById("bake-info").style.display = "none";
         }
-        width = width < 2 ? 2 : width;
-
-        const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const durationStr = duration.padStart(width, " ").replace(/ /g, "&nbsp;");
-
-        const msg = `Total: ${totalStr}<br>Time: ${durationStr}`;
-
-        document.getElementById("bake-info").innerHTML = msg;
         document.getElementById("bake").style.background = "";
         this.totalOutputs = 0; // Reset for next time
         log.debug("--- Bake complete ---");
@@ -518,7 +538,14 @@ class WorkerWaiter {
             this.inputNums = inputNums;
             this.totalOutputs = inputNums.length;
 
-            for (let i = 0; i < inputNums.length; i++) {
+            let inactiveWorkers = 0;
+            for (let i = 0; i < this.chefWorkers.length; i++) {
+                if (!this.chefWorkers[i].active) {
+                    inactiveWorkers++;
+                }
+            }
+
+            for (let i = 0; i < inputNums.length - inactiveWorkers; i++) {
                 if (this.addChefWorker() === -1) break;
             }
 
@@ -626,24 +653,28 @@ class WorkerWaiter {
         }
 
         const bakeInfo = document.getElementById("bake-info");
-        let width = progress.total.toLocaleString().length;
-        width = width < 2 ? 2 : width;
+        if (progress.total > 1) {
+            let width = progress.total.toLocaleString().length;
+            width = width < 2 ? 2 : width;
 
-        const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const bakedStr = progress.baked.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const pendingStr = progress.pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const bakingStr = progress.baking.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const bakedStr = progress.baked.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const pendingStr = progress.pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const bakingStr = progress.baking.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
 
-        let msg = "Total: " + totalStr;
-        msg += "<br>Baked: " + bakedStr;
+            let msg = "total: " + totalStr;
+            msg += "<br>baked: " + bakedStr;
 
-        if (progress.pending > 0) {
-            msg += "<br>Pending: " + pendingStr;
-        } else if (progress.baking > 0) {
-            msg += "<br>Baking: " + bakingStr;
+            if (progress.pending > 0) {
+                msg += "<br>pending: " + pendingStr;
+            } else if (progress.baking > 0) {
+                msg += "<br>baking: " + bakingStr;
+            }
+            bakeInfo.innerHTML = msg;
+            bakeInfo.style.display = "";
+        } else {
+            bakeInfo.style.display = "none";
         }
-
-        bakeInfo.innerHTML = msg;
 
         if (progress.total !== progress.baked) {
             setTimeout(function() {
