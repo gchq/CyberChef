@@ -87,6 +87,17 @@
     background-color: var(--primary-background-colour);
 }
 
+.input-tab-content+.btn-close-tab {
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 2px;
+}
+
+.input-tab-content+.btn-close-tab i {
+    font-size: 0.8em;
+}
+
 .input-tab-buttons,
 .output-tab-buttons {
     width: 25px;
