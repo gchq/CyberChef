@@ -37,6 +37,10 @@ self.postMessage({
 /**
  * Respond to message from parent thread.
  *
+ * An inputNum only needs to be sent when baking.
+ * (The background ChefWorker doesn't send one, but as
+ * it only deals with one input at a time it isn't needed)
+ *
  * Messages should have the following format:
  * {
  *     action: "bake" | "silentBake",
@@ -45,7 +49,8 @@ self.postMessage({
  *         recipeConfig: {[Object]},
  *         options: {Object},
  *         progress: {number},
- *         step: {boolean}
+ *         step: {boolean},
+ *         inputNum: {number} | undefined
  *     } | undefined
  * }
  */
@@ -94,7 +99,7 @@ async function bake(data) {
     // Ensure the relevant modules are loaded
     self.loadRequiredModules(data.recipeConfig);
     try {
-        self.inputNum = parseInt(data.inputNum, 10);
+        self.inputNum = data.inputNum;
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
@@ -103,25 +108,16 @@ async function bake(data) {
             data.step            // Whether or not to take one step or execute the whole recipe
         );
 
-        if (data.input instanceof ArrayBuffer) {
-            self.postMessage({
-                action: "bakeComplete",
-                data: Object.assign(response, {
-                    id: data.id,
-                    inputNum: data.inputNum,
-                    bakeId: data.bakeId
-                })
-            }, [data.input]);
-        } else {
-            self.postMessage({
-                action: "bakeComplete",
-                data: Object.assign(response, {
-                    id: data.id,
-                    inputNum: data.inputNum,
-                    bakeId: data.bakeId
-                })
-            });
-        }
+        const transferable = (data.input instanceof ArrayBuffer) ? [data.input] : undefined;
+        self.postMessage({
+            action: "bakeComplete",
+            data: Object.assign(response, {
+                id: data.id,
+                inputNum: data.inputNum,
+                bakeId: data.bakeId
+            })
+        }, transferable);
+
     } catch (err) {
         self.postMessage({
             action: "bakeError",
@@ -154,24 +150,14 @@ function silentBake(data) {
  */
 async function getDishAs(data) {
     const value = await self.chef.getDishAs(data.dish, data.type);
-
-    if (data.type === "ArrayBuffer") {
-        self.postMessage({
-            action: "dishReturned",
-            data: {
-                value: value,
-                id: data.id
-            }
-        }, [value]);
-    } else {
-        self.postMessage({
-            action: "dishReturned",
-            data: {
-                value: value,
-                id: data.id
-            }
-        });
-    }
+    const transferable = (data.type === "ArrayBuffer") ? [value] : undefined;
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: value,
+            id: data.id
+        }
+    }, transferable);
 }
 
 
@@ -223,7 +209,7 @@ self.sendStatusMessage = function(msg) {
         action: "statusMessage",
         data: {
             message: msg,
-            inputNum: self.inputNum || -1
+            inputNum: self.inputNum
         }
     });
 };
