@@ -403,7 +403,9 @@ class App {
     }
 
     /**
+     * Gets the URI params from the window and parses them to extract the actual values.
      *
+     * @returns {object}
      */
     getURIParams() {
         // Load query string or hash from URI (depending on which is populated)
