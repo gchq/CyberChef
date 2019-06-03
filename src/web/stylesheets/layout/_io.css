@@ -303,7 +303,8 @@
     width: 100%;
 }
 
-.form-group.input-group {
+#input-tab-body .form-group.input-group,
+#output-tab-body .form-group.input-group {
     width: 70%;
     float: left;
     margin-bottom: 2rem;
