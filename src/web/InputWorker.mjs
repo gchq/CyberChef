@@ -287,23 +287,36 @@ self.getInputProgress = function(inputNum) {
 /**
  * Gets the largest inputNum of all the inputs
  *
+ * @param {string[]} inputNums - The numbers to find the largest of
  * @returns {number}
  */
-self.getLargestInputNum = function() {
-    const inputNums = Object.keys(self.inputs);
-    if (inputNums.length === 0) return -1;
-    return Math.max(...inputNums);
+self.getLargestInputNum = function(inputNums) {
+    let max = -1;
+    for (let i = 0; i < inputNums.length; i++) {
+        // Object.keys() returns a string array, so parseInt here
+        const num = parseInt(inputNums[i], 10);
+        if (num > max) max = num;
+    }
+    return max;
 };
 
 /**
  * Gets the smallest inputNum of all the inputs
  *
+ * @param {string[]} inputNums - The numbers to find the smallest of
  * @returns {number}
  */
-self.getSmallestInputNum = function() {
-    const inputNums = Object.keys(self.inputs);
-    if (inputNums.length === 0) return -1;
-    return Math.min(...inputNums);
+self.getSmallestInputNum = function(inputNums) {
+    let min = Number.MAX_SAFE_INTEGER;
+    for (let i = 0; i < inputNums.length; i++) {
+        const num = parseInt(inputNums[i], 10);
+        if (num < min) min = num;
+    }
+
+    // Assume we don't have this many tabs!
+    if (min === Number.MAX_SAFE_INTEGER) return -1;
+
+    return min;
 };
 
 /**
@@ -315,7 +328,7 @@ self.getSmallestInputNum = function() {
 self.getPreviousInputNum = function(inputNum) {
     const inputNums = Object.keys(self.inputs);
     if (inputNums.length === 0) return -1;
-    let num = Math.min(...inputNums);
+    let num = self.getSmallestInputNum(inputNums);
     for (let i = 0; i < inputNums.length; i++) {
         const iNum = parseInt(inputNums[i], 10);
         if (iNum < inputNum) {
@@ -335,7 +348,7 @@ self.getPreviousInputNum = function(inputNum) {
  */
 self.getNextInputNum = function(inputNum) {
     const inputNums = Object.keys(self.inputs);
-    let num = Math.max(...inputNums);
+    let num = self.getLargestInputNum(inputNums);
     for (let i = 0; i < inputNums.length; i++) {
         const iNum = parseInt(inputNums[i], 10);
         if (iNum > inputNum) {
@@ -466,9 +479,11 @@ self.setInput = function(inputData) {
  * @param {string} direction - The direction to search for inputNums in. Either "left" or "right"
  */
 self.refreshTabs = function(inputNum, direction) {
-    const nums = self.getNearbyNums(inputNum, direction);
-    const tabsLeft = (self.getSmallestInputNum() !== nums[0]);
-    const tabsRight = (self.getLargestInputNum() !== nums[nums.length - 1]);
+    const nums = self.getNearbyNums(inputNum, direction),
+        inputNums = Object.keys(self.inputs),
+        tabsLeft = (self.getSmallestInputNum(inputNums) !== nums[0]),
+        tabsRight = (self.getLargestInputNum(inputNums) !== nums[nums.length - 1]);
+
     self.postMessage({
         action: "refreshTabs",
         data: {
