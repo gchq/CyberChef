@@ -599,35 +599,13 @@ class InputWaiter {
     }
 
     /**
-     * Debouncer to stop functions from being executed multiple times in a
-     * short space of time
-     * https://davidwalsh.name/javascript-debounce-function
-     *
-     * @param {function} func - The function to be executed after the debounce time
-     * @param {number} wait - The time (ms) to wait before executing the function
-     * @param {array} args - Array of arguments to be passed to func
-     * @returns {function}
-     */
-    debounce(func, wait, args) {
-        return function() {
-            const context = this,
-                later = function() {
-                    this.inputTimeout = null;
-                    func.apply(context, args);
-                };
-            clearTimeout(this.inputTimeout);
-            this.inputTimeout = setTimeout(later, wait);
-        }.bind(this);
-    }
-
-    /**
      * Handler for input change events.
      * Debounces the input so we don't call autobake too often.
      *
      * @param {event} e
      */
     debounceInputChange(e) {
-        this.debounce(this.inputChange.bind(this), 50, [e])();
+        this.app.debounce(this.inputChange, 50, "inputChange", this, [e])();
     }
 
     /**
