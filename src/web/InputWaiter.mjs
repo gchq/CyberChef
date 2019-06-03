@@ -1,7 +1,7 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
  * @author j433866 [j433866@gmail.com]
- * @copyright Crown Copyright 2019
+ * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
 
@@ -103,8 +103,6 @@ class InputWaiter {
             data: log.getLevel()
         });
         this.inputWorker.addEventListener("message", this.handleInputWorkerMessage.bind(this));
-
-
     }
 
     /**
@@ -238,7 +236,7 @@ class InputWaiter {
         const r = e.data;
 
         if (!r.hasOwnProperty("action")) {
-            log.error("No action");
+            log.error("A message was received from the InputWorker with no action property. Ignoring message.");
             return;
         }
 
@@ -497,24 +495,16 @@ class InputWaiter {
             input: recipeStr
         });
 
-        if (typeof value === "string") {
-            this.inputWorker.postMessage({
-                action: "updateInputValue",
-                data: {
-                    inputNum: inputNum,
-                    value: value
-                }
-            });
-        } else {
-            // ArrayBuffer is transferable
-            this.inputWorker.postMessage({
-                action: "updateInputValue",
-                data: {
-                    inputNum: inputNum,
-                    value: value
-                }
-            }, [value]);
-        }
+        // Value is either a string set by the input or an ArrayBuffer from a LoaderWorker,
+        // so is safe to use typeof === "string"
+        const transferable = (typeof value !== "string") ? [value] : undefined;
+        this.inputWorker.postMessage({
+            action: "updateInputValue",
+            data: {
+                inputNum: inputNum,
+                value: value
+            }
+        }, transferable);
     }
 
     /**
@@ -525,23 +515,14 @@ class InputWaiter {
      * @param {object} inputData - The new data object
      */
     updateInputObj(inputNum, inputData) {
-        if (typeof inputData === "string") {
-            this.inputWorker.postMessage({
-                action: "updateInputObj",
-                data: {
-                    inputNum: inputNum,
-                    data: inputData
-                }
-            });
-        } else {
-            this.inputWorker.postMessage({
-                action: "updateInputObj",
-                data: {
-                    inputNum: inputNum,
-                    data: inputData
-                }
-            }, [inputData.fileBuffer]);
-        }
+        const transferable = (typeof inputData !== "string") ? [inputData.fileBuffer] : undefined;
+        this.inputWorker.postMessage({
+            action: "updateInputObj",
+            data: {
+                inputNum: inputNum,
+                data: inputData
+            }
+        }, transferable);
     }
 
     /**
@@ -893,17 +874,17 @@ class InputWaiter {
         width = width < 2 ? 2 : width;
 
         const totalStr = total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        let msg = "Total: " + totalStr;
+        let msg = "total: " + totalStr;
 
         const loadedStr = loaded.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        msg += "<br>Loaded: " + loadedStr;
+        msg += "<br>loaded: " + loadedStr;
 
         if (pending > 0) {
             const pendingStr = pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>Pending: " + pendingStr;
+            msg += "<br>pending: " + pendingStr;
         } else if (loading > 0) {
             const loadingStr = loading.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>Loading: " + loadingStr;
+            msg += "<br>loading: " + loadingStr;
         }
 
         document.getElementById("input-files-info").innerHTML = msg;
@@ -1272,8 +1253,6 @@ class InputWaiter {
 
         if (!this.getTabItem(inputNum) && numTabs < this.maxTabs) {
             const newTab = this.createTabElement(inputNum, false);
-
-
             tabsWrapper.appendChild(newTab);
 
             if (numTabs > 0) {
