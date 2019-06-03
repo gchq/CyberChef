@@ -51,7 +51,7 @@ class OutputWaiter {
      * @returns {string | ArrayBuffer}
      */
     getOutput(inputNum, raw=true) {
-        if (this.outputs[inputNum] === undefined || this.outputs[inputNum] === null) return -1;
+        if (!this.outputExists(inputNum)) return -1;
 
         if (this.outputs[inputNum].data === null) return "";
 
@@ -740,7 +740,7 @@ class OutputWaiter {
             }
         }
 
-        this.set(inputNum);
+        this.app.debounce(this.set, 50, "setOutput", this, [inputNum])();
 
         if (changeInput) {
             this.manager.input.changeTab(inputNum, false);
@@ -758,6 +758,22 @@ class OutputWaiter {
         if (tabNum) {
             this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
         }
+    }
+
+    /**
+     * Handler for scrolling on the output tabs area
+     *
+     * @param {event} wheelEvent
+     */
+    scrollTab(wheelEvent) {
+        wheelEvent.preventDefault();
+
+        if (wheelEvent.deltaY > 0) {
+            this.changeTabLeft();
+        } else if (wheelEvent.deltaY < 0) {
+            this.changeTabRight();
+        }
+
     }
 
     /**

@@ -265,7 +265,7 @@ class InputWaiter {
                 this.showLoadingInfo(r.data, true);
                 break;
             case "setInput":
-                this.set(r.data.inputObj, r.data.silent);
+                this.app.debounce(this.set, 50, "setInput", this, [r.data.inputObj, r.data.siilent])();
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
@@ -1297,6 +1297,22 @@ class InputWaiter {
         if (tabNum) {
             this.removeInput(parseInt(tabNum, 10));
         }
+    }
+
+    /**
+     * Handler for scrolling on the input tabs area
+     *
+     * @param {event} wheelEvent
+     */
+    scrollTab(wheelEvent) {
+        wheelEvent.preventDefault();
+
+        if (wheelEvent.deltaY > 0) {
+            this.changeTabLeft();
+        } else if (wheelEvent.deltaY < 0) {
+            this.changeTabRight();
+        }
+
     }
 
     /**
