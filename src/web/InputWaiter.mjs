@@ -50,7 +50,6 @@ class InputWaiter {
         this.workerId = 0;
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.maxTabs = 4;
-        this.inputTimeout = null;
         this.callbacks = {};
         this.callbackID = 0;
     }
@@ -292,6 +291,7 @@ class InputWaiter {
                 this.manager.output.inputSwitch(r.data);
                 break;
             case "getInput":
+            case "getInputNums":
                 this.callbacks[r.data.id](r.data);
                 break;
             case "removeChefWorker":
@@ -575,6 +575,39 @@ class InputWaiter {
             }
         });
     }
+
+    /**
+     * Gets the number of inputs from the inputWorker
+     *
+     * @returns {object}
+     */
+    async getInputNums() {
+        return await new Promise(resolve => {
+            this.getNums(r => {
+                resolve({
+                    inputNums: r.inputNums,
+                    min: r.min,
+                    max: r.max
+                });
+            });
+        });
+    }
+
+    /**
+     * Gets a list of inputNums from the inputWorker, and sends
+     * them back to the specified callback
+     */
+    getNums(callback) {
+        const id = this.callbackID++;
+
+        this.callbacks[id] = callback;
+
+        this.inputWorker.postMessage({
+            action: "getInputNums",
+            data: id
+        });
+    }
+
 
     /**
      * Displays information about the input.
@@ -1346,8 +1379,9 @@ class InputWaiter {
     /**
      * Handler for go to tab button clicked
      */
-    goToTab() {
-        const tabNum = parseInt(window.prompt("Enter tab number:", this.getActiveTab().toString()), 10);
+    async goToTab() {
+        const inputNums = await this.getInputNums();
+        const tabNum = parseInt(window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.getActiveTab().toString()), 10);
         this.changeTab(tabNum, this.app.options.syncTabs);
     }
 

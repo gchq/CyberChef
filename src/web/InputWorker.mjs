@@ -105,6 +105,9 @@ self.addEventListener("message", function(e) {
         case "getInput":
             self.getInput(r.data);
             break;
+        case "getInputNums":
+            self.getInputNums(r.data);
+            break;
         default:
             log.error(`Unknown action '${r.action}'.`);
     }
@@ -250,23 +253,36 @@ self.getInputValue = function(inputNum) {
  * @param {number} inputData.id - The callback ID for the callback to run when returned to the inputWaiter
  */
 self.getInput = function(inputData) {
-    if (inputData.getObj) {
-        self.postMessage({
-            action: "getInput",
-            data: {
-                data: self.getInputObj(inputData.inputNum),
-                id: inputData.id
-            }
-        });
-    } else {
-        self.postMessage({
-            action: "getInput",
-            data: {
-                data: self.getInputValue(inputData.inputNum),
-                id: inputData.id
-            }
-        });
-    }
+    const inputNum = inputData.inputNum,
+        data = (inputData.getObj) ? self.getInputObj(inputNum) : self.getInputValue(inputNum);
+    self.postMessage({
+        action: "getInput",
+        data: {
+            data: data,
+            id: inputData.id
+        }
+    });
+};
+
+/**
+ * Gets a list of the stored inputNums, along with the minimum and maximum
+ *
+ * @param {number} id - The callback ID to be executed when returned to the inputWaiter
+ */
+self.getInputNums = function(id) {
+    const inputNums = Object.keys(self.inputs),
+        min = self.getSmallestInputNum(inputNums),
+        max = self.getLargestInputNum(inputNums);
+
+    self.postMessage({
+        action: "getInputNums",
+        data: {
+            inputNums: inputNums,
+            min: min,
+            max: max,
+            id: id
+        }
+    });
 };
 
 /**
