@@ -352,6 +352,16 @@ class InputWaiter {
                 const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
                     inputData.input.count("\n") + 1 : null;
                 this.setInputInfo(inputData.input.length, lines);
+
+                // Set URL to current input
+                const inputStr = toBase64(inputData.input, "A-Za-z0-9+/");
+                if (inputStr.length > 0 && inputStr.length <= 68267) {
+                    this.setUrl({
+                        includeInput: true,
+                        input: inputStr
+                    });
+                }
+
                 if (!silent) window.dispatchEvent(this.manager.statechange);
             } else {
                 this.setFile(inputData);
