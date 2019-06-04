@@ -102,9 +102,7 @@ async function bake(data) {
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
-            data.options,        // Options set by the user
-            data.progress,       // The current position in the recipe
-            data.step            // Whether or not to take one step or execute the whole recipe
+            data.options        // Options set by the user
         );
 
         const transferable = (data.input instanceof ArrayBuffer) ? [data.input] : undefined;

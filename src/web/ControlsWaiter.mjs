@@ -73,16 +73,17 @@ class ControlsWaiter {
         // Reset status using cancelBake
         this.manager.worker.cancelBake(true, false);
         const activeTab = this.manager.input.getActiveTab();
-
-        if (this.manager.output.outputs[activeTab].progress === false){
-            this.app.progress = 0;
-        } else {
-            this.app.progress = this.manager.output.outputs[activeTab].progress;
+        let progress = 0;
+        if (this.manager.output.outputs[activeTab].progress !== false) {
+            progress = this.manager.output.outputs[activeTab].progress;
         }
 
         this.manager.input.inputWorker.postMessage({
             action: "step",
-            data: activeTab
+            data: {
+                activeTab: activeTab,
+                progress: progress + 1
+            }
         });
     }
 

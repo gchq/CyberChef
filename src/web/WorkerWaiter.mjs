@@ -414,34 +414,35 @@ class WorkerWaiter {
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
 
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
-        const input = nextInput.input;
-        if (input instanceof ArrayBuffer || ArrayBuffer.isView(input)) {
-            this.chefWorkers[workerIdx].worker.postMessage({
-                action: "bake",
-                data: {
-                    input: input,
-                    recipeConfig: this.recipeConfig,
-                    options: this.options,
-                    progress: this.progress,
-                    step: this.step,
-                    inputNum: nextInput.inputNum,
-                    bakeId: this.bakeId
+        const input = nextInput.input,
+            recipeConfig = this.recipeConfig;
+
+        if (this.step) {
+            // Remove all breakpoints from the recipe up to progress
+            for (let i = 0; i < this.app.progress; i++) {
+                if (recipeConfig[i].hasOwnProperty("breakpoint")) {
+                    delete recipeConfig[i].breakpoint;
                 }
-            }, [input]);
-        } else {
-            this.chefWorkers[workerIdx].worker.postMessage({
-                action: "bake",
-                data: {
-                    input: input,
-                    recipeConfig: this.recipeConfig,
-                    options: this.options,
-                    progress: this.progress,
-                    step: this.step,
-                    inputNum: nextInput.inputNum,
-                    bakeId: this.bakeId
-                }
-            });
+            }
+
+            // Set a breakpoint at the next operation so we stop baking there
+            if (recipeConfig[this.app.progress]) recipeConfig[this.app.progress].breakpoint = true;
         }
+
+        let transferable;
+        if (input instanceof ArrayBuffer || ArrayBuffer.isView(input)) {
+            transferable = [input];
+        }
+        this.chefWorkers[workerIdx].worker.postMessage({
+            action: "bake",
+            data: {
+                input: input,
+                recipeConfig: recipeConfig,
+                options: this.options,
+                inputNum: nextInput.inputNum,
+                bakeId: this.bakeId
+            }
+        }, transferable);
 
         if (this.inputNums.length > 0) {
             this.manager.input.inputWorker.postMessage({
@@ -523,8 +524,9 @@ class WorkerWaiter {
      * Queues a list of inputNums to be baked by ChefWorkers, and begins baking
      *
      * @param {object} inputData
-     * @param {number[]} inputData.nums
-     * @param {boolean} inputData.step
+     * @param {number[]} inputData.nums - The inputNums to be queued for baking
+     * @param {boolean} inputData.step - If true, only execute the next operation in the recipe
+     * @param {number} inputData.progress - The current progress through the recipe. Used when stepping
      */
     async bakeAllInputs(inputData) {
         return await new Promise(resolve => {
@@ -537,6 +539,7 @@ class WorkerWaiter {
 
             this.inputNums = inputNums;
             this.totalOutputs = inputNums.length;
+            this.app.progress = inputData.progress;
 
             let inactiveWorkers = 0;
             for (let i = 0; i < this.chefWorkers.length; i++) {

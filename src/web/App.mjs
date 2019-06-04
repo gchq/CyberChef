@@ -156,7 +156,9 @@ class App {
             log.debug("Auto-baking");
             this.manager.input.inputWorker.postMessage({
                 action: "autobake",
-                data: this.manager.input.getActiveTab()
+                data: {
+                    activeTab: this.manager.input.getActiveTab()
+                }
             });
         } else {
             this.manager.controls.showStaleIndicator();

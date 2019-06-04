@@ -85,7 +85,7 @@ self.addEventListener("message", function(e) {
             self.changeTabLeft(r.data.activeTab, r.data.nums);
             break;
         case "autobake":
-            self.autoBake(r.data, false);
+            self.autoBake(r.data.activeTab, 0, false);
             break;
         case "filterTabs":
             self.filterTabs(r.data);
@@ -100,7 +100,7 @@ self.addEventListener("message", function(e) {
             self.updateTabHeader(r.data);
             break;
         case "step":
-            self.autoBake(r.data, true);
+            self.autoBake(r.data.activeTab, r.data.progress, true);
             break;
         case "getInput":
             self.getInput(r.data);
@@ -145,17 +145,19 @@ self.getLoadProgress = function(inputNum) {
  * Queues the active input and sends a bake command.
  *
  * @param {number} inputNum - The input to be baked
+ * @param {number} progress - The current progress of the bake through the recipe
  * @param {boolean} [step=false] - Set to true if we should only execute one operation instead of the
  * whole recipe
  */
-self.autoBake = function(inputNum, step=false) {
+self.autoBake = function(inputNum, progress, step=false) {
     const input = self.getInputObj(inputNum);
     if (input) {
         self.postMessage({
             action: "bakeAllInputs",
             data: {
                 nums: [parseInt(inputNum, 10)],
-                step: step
+                step: step,
+                progress: progress
             }
         });
     }
@@ -178,7 +180,8 @@ self.bakeAllInputs = function() {
         action: "bakeAllInputs",
         data: {
             nums: nums,
-            step: false
+            step: false,
+            progress: 0
         }
     });
 };
