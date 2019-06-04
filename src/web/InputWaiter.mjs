@@ -1381,7 +1381,11 @@ class InputWaiter {
      */
     async goToTab() {
         const inputNums = await this.getInputNums();
-        const tabNum = parseInt(window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.getActiveTab().toString()), 10);
+        let tabNum = window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.getActiveTab().toString());
+
+        if (tabNum === null) return;
+        tabNum = parseInt(tabNum, 10);
+
         this.changeTab(tabNum, this.app.options.syncTabs);
     }
 

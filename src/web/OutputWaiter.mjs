@@ -797,8 +797,12 @@ class OutputWaiter {
      */
     goToTab() {
         const min = this.getSmallestInputNum(),
-            max = this.getLargestInputNum(),
-            tabNum = parseInt(window.prompt(`Enter tab number (${min} - ${max}):`, this.getActiveTab().toString()), 10);
+            max = this.getLargestInputNum();
+
+        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.getActiveTab().toString());
+        if (tabNum === null) return;
+        tabNum = parseInt(tabNum, 10);
+
         if (this.outputExists(tabNum)) {
             this.changeTab(tabNum, this.app.options.syncTabs);
         }
