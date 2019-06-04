@@ -773,7 +773,47 @@ class OutputWaiter {
         } else if (wheelEvent.deltaY < 0) {
             this.changeTabRight();
         }
+    }
 
+    /**
+     * Handler for mouse down on the next tab button
+     */
+    nextTabClick() {
+        this.mousedown = true;
+        this.changeTabRight();
+        const time = 200;
+        const func = function(time) {
+            if (this.mousedown) {
+                this.changeTabRight();
+                const newTime = (time > 50) ? time = time - 10 : 50;
+                setTimeout(func.bind(this, [newTime]), newTime);
+            }
+        };
+        setTimeout(func.bind(this, [time]), time);
+    }
+
+    /**
+     * Handler for mouse down on the previous tab button
+     */
+    previousTabClick() {
+        this.mousedown = true;
+        this.changeTabLeft();
+        const time = 200;
+        const func = function(time) {
+            if (this.mousedown) {
+                this.changeTabLeft();
+                const newTime = (time > 50) ? time = time - 10 : 50;
+                setTimeout(func.bind(this, [newTime]), newTime);
+            }
+        };
+        setTimeout(func.bind(this, [time]), time);
+    }
+
+    /**
+     * Handler for mouse up event on the tab buttons
+     */
+    tabMouseUp() {
+        this.mousedown = false;
     }
 
     /**

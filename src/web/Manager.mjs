@@ -158,8 +158,10 @@ class Manager {
         this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
         document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
-        document.getElementById("btn-previous-input-tab").addEventListener("click", this.input.changeTabLeft.bind(this.input));
-        document.getElementById("btn-next-input-tab").addEventListener("click", this.input.changeTabRight.bind(this.input));
+        document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
+        document.getElementById("btn-next-input-tab").addEventListener("mousedown", this.input.nextTabClick.bind(this.input));
+        this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseup", this.input.tabMouseUp, this.input);
+        this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseout", this.input.tabMouseUp, this.input);
         document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
         document.getElementById("btn-find-input-tab").addEventListener("click", this.input.findTab.bind(this.input));
         this.addDynamicListener("#input-tabs li .input-tab-content", "wheel", this.input.scrollTab, this.input);
@@ -199,8 +201,10 @@ class Manager {
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "wheel", this.output.scrollTab, this.output);
-        document.getElementById("btn-previous-output-tab").addEventListener("click", this.output.changeTabLeft.bind(this.output));
-        document.getElementById("btn-next-output-tab").addEventListener("click", this.output.changeTabRight.bind(this.output));
+        document.getElementById("btn-previous-output-tab").addEventListener("mousedown", this.output.previousTabClick.bind(this.output));
+        document.getElementById("btn-next-output-tab").addEventListener("mousedown", this.output.nextTabClick.bind(this.output));
+        this.addListeners("#btn-next-output-tab,#btn-previous-output-tab", "mouseup", this.output.tabMouseUp, this.output);
+        this.addListeners("#btn-next-output-tab,#btn-previous-output-tab", "mouseout", this.output.tabMouseUp, this.output);
         document.getElementById("btn-go-to-output-tab").addEventListener("click", this.output.goToTab.bind(this.output));
         document.getElementById("btn-find-output-tab").addEventListener("click", this.output.findTab.bind(this.output));
         document.getElementById("output-show-pending").addEventListener("change", this.output.filterTabSearch.bind(this.output));
