@@ -72,7 +72,7 @@ class ControlsWaiter {
         if (this.app.baking) return;
         // Reset status using cancelBake
         this.manager.worker.cancelBake(true, false);
-        const activeTab = this.manager.input.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
         let progress = 0;
         if (this.manager.output.outputs[activeTab].progress !== false) {
             progress = this.manager.output.outputs[activeTab].progress;

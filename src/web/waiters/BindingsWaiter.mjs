@@ -126,7 +126,7 @@ class BindingsWaiter {
                     break;
                 case "KeyW": // Close tab
                     e.preventDefault();
-                    this.manager.input.removeInput(this.manager.input.getActiveTab());
+                    this.manager.input.removeInput(this.manager.tabs.getActiveInputTab());
                     break;
                 case "ArrowLeft": // Go to previous tab
                     e.preventDefault();

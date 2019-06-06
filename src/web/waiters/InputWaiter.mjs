@@ -48,8 +48,8 @@ class InputWaiter {
         this.inputWorker = null;
         this.loaderWorkers = [];
         this.workerId = 0;
-        this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.maxTabs = 4;
+        this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.callbacks = {};
         this.callbackID = 0;
     }
@@ -58,14 +58,14 @@ class InputWaiter {
      * Calculates the maximum number of tabs to display
      */
     calcMaxTabs() {
-        const numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
-        this.maxTabs = (numTabs > 1) ? numTabs : 2;
-        if (this.inputWorker) {
+        const numTabs = this.manager.tabs.calcMaxTabs();
+        if (this.inputWorker && this.maxTabs !== numTabs) {
+            this.maxTabs = numTabs;
             this.inputWorker.postMessage({
                 action: "updateMaxTabs",
                 data: {
-                    maxTabs: this.maxTabs,
-                    activeTab: this.getActiveTab()
+                    maxTabs: numTabs,
+                    activeTab: this.manager.tabs.getActiveInputTab()
                 }
             });
         }
@@ -94,7 +94,7 @@ class InputWaiter {
             action: "updateMaxTabs",
             data: {
                 maxTabs: this.maxTabs,
-                activeTab: this.getActiveTab()
+                activeTab: this.manager.tabs.getActiveInputTab()
             }
         });
         this.inputWorker.postMessage({
@@ -258,7 +258,7 @@ class InputWaiter {
                 this.changeTab(r.data, this.app.options.syncTabs);
                 break;
             case "updateTabHeader":
-                this.updateTabHeader(r.data);
+                this.manager.tabs.updateInputTabHeader(r.data.inputNum, r.data.input);
                 break;
             case "loadingInfo":
                 this.showLoadingInfo(r.data, true);
@@ -327,7 +327,7 @@ class InputWaiter {
      */
     async set(inputData, silent=false) {
         return new Promise(function(resolve, reject) {
-            const activeTab = this.getActiveTab();
+            const activeTab = this.manager.tabs.getActiveInputTab();
             if (inputData.inputNum !== activeTab) return;
 
             const inputText = document.getElementById("input-text");
@@ -383,7 +383,7 @@ class InputWaiter {
      * @param {number} inputData.progress - The load progress of the input file
      */
     setFile(inputData) {
-        const activeTab = this.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
         if (inputData.inputNum !== activeTab) return;
 
         const fileOverlay = document.getElementById("input-file"),
@@ -425,7 +425,7 @@ class InputWaiter {
      * @param {ArrayBuffer} inputData.input - The actual input to display
      */
     displayFilePreview(inputData) {
-        const activeTab = this.getActiveTab(),
+        const activeTab = this.manager.tabs.getActiveInputTab(),
             input = inputData.input,
             inputText = document.getElementById("input-text"),
             fileThumb = document.getElementById("input-file-thumbnail");
@@ -459,7 +459,7 @@ class InputWaiter {
      * @param {number | string} progress - Either a number or "error"
      */
     updateFileProgress(inputNum, progress) {
-        const activeTab = this.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
         if (inputNum !== activeTab) return;
 
         const fileLoaded = document.getElementById("input-file-loaded");
@@ -595,11 +595,7 @@ class InputWaiter {
     async getInputNums() {
         return await new Promise(resolve => {
             this.getNums(r => {
-                resolve({
-                    inputNums: r.inputNums,
-                    min: r.min,
-                    max: r.max
-                });
+                resolve(r);
             });
         });
     }
@@ -670,7 +666,7 @@ class InputWaiter {
 
         const textArea = document.getElementById("input-text");
         const value = (textArea.value !== undefined) ? textArea.value : "";
-        const activeTab = this.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
 
         this.app.progress = 0;
 
@@ -678,7 +674,7 @@ class InputWaiter {
             (value.count("\n") + 1) : null;
         this.setInputInfo(value.length, lines);
         this.updateInputValue(activeTab, value);
-        this.updateTabHeader({inputNum: activeTab, input: value});
+        this.manager.tabs.updateInputTabHeader(activeTab, value);
 
         if (e && this.badKeys.indexOf(e.keyCode) < 0) {
             // Fire the statechange event as the input has been modified
@@ -803,7 +799,7 @@ class InputWaiter {
      */
     loadUIFiles(files) {
         const numFiles = files.length;
-        const activeTab = this.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
         log.debug(`Loading ${numFiles} files.`);
 
         // Display the number of files as pending so the user
@@ -938,101 +934,10 @@ class InputWaiter {
             setTimeout(function() {
                 this.inputWorker.postMessage({
                     action: "getLoadProgress",
-                    data: this.getActiveTab()
+                    data: this.manager.tabs.getActiveInputTab()
                 });
             }.bind(this), 100);
         }
-    }
-
-    /**
-     * Create a tab element for the input tab bar
-     *
-     * @param {number} inputNum - The inputNum of the new tab
-     * @param {boolean} [active=false] - If true, sets the tab to active
-     * @returns {Element}
-     */
-    createTabElement(inputNum, active) {
-        const newTab = document.createElement("li");
-        newTab.setAttribute("inputNum", inputNum.toString());
-
-        if (active) newTab.classList.add("active-input-tab");
-
-        const newTabContent = document.createElement("div");
-        newTabContent.classList.add("input-tab-content");
-        newTabContent.innerText = `${inputNum.toString()}: New Tab`;
-
-        const newTabButton = document.createElement("button");
-        newTabButton.type = "button";
-        newTabButton.className = "btn btn-primary bmd-btn-icon btn-close-tab";
-
-        const newTabButtonIcon = document.createElement("i");
-        newTabButtonIcon.classList.add("material-icons");
-        newTabButtonIcon.innerText = "clear";
-
-        newTabButton.appendChild(newTabButtonIcon);
-        newTabButton.addEventListener("click", this.removeTabClick.bind(this));
-
-        newTab.appendChild(newTabContent);
-        newTab.appendChild(newTabButton);
-
-        return newTab;
-    }
-
-    /**
-     * Redraw the tab bar with an updated list of tabs.
-     * Then changes to the activeTab
-     *
-     * @param {number[]} nums - The inputNums of the tab bar to be drawn
-     * @param {number} activeTab - The inputNum of the active tab
-     * @param {boolean} tabsLeft - True if there are tabs to the left of the currently displayed tabs
-     * @param {boolean} tabsRight - True if there are tabs to the right of the currently displayed tabs
-     */
-    refreshTabs(nums, activeTab, tabsLeft, tabsRight) {
-        const tabsList = document.getElementById("input-tabs");
-
-        for (let i = tabsList.children.length - 1; i >= 0; i--) {
-            tabsList.children.item(i).remove();
-        }
-
-        for (let i = 0; i < nums.length; i++) {
-            let active = false;
-            if (nums[i] === activeTab) active = true;
-            tabsList.appendChild(this.createTabElement(nums[i], active));
-        }
-
-        const firstTabElement = document.getElementById("input-tabs").firstElementChild;
-        const lastTabElement = document.getElementById("input-tabs").lastElementChild;
-
-        if (firstTabElement) {
-            if (tabsLeft) {
-                firstTabElement.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
-            } else {
-                firstTabElement.style.boxShadow = "";
-            }
-        }
-        if (lastTabElement) {
-            if (tabsRight) {
-                lastTabElement.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
-            } else {
-                lastTabElement.style.boxShadow = "";
-            }
-        }
-
-        if (nums.length > 1) {
-            tabsList.parentElement.style.display = "block";
-
-            document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        } else {
-            tabsList.parentElement.style.display = "none";
-
-            document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
-        }
-
-        this.changeTab(activeTab, this.app.options.syncTabs);
     }
 
     /**
@@ -1042,26 +947,16 @@ class InputWaiter {
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
     changeTab(inputNum, changeOutput) {
-        const tabsList = document.getElementById("input-tabs");
-
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
-
-        let found = false;
-        let minNum = Number.MAX_SAFE_INTEGER;
-        for (let i = 0; i < tabsList.children.length; i++) {
-            const tabNum = parseInt(tabsList.children.item(i).getAttribute("inputNum"), 10);
-            if (tabNum === inputNum) {
-                tabsList.children.item(i).classList.add("active-input-tab");
-                found = true;
-            } else {
-                tabsList.children.item(i).classList.remove("active-input-tab");
-            }
-            if (tabNum < minNum) {
-                minNum = tabNum;
-            }
-        }
-        if (!found) {
+        if (this.manager.tabs.changeInputTab(inputNum)) {
+            this.inputWorker.postMessage({
+                action: "setInput",
+                data: {
+                    inputNum: inputNum,
+                    silent: true
+                }
+            });
+        } else {
+            const minNum = Math.min(...this.manager.tabs.getInputTabList());
             let direction = "right";
             if (inputNum < minNum) {
                 direction = "left";
@@ -1071,14 +966,6 @@ class InputWaiter {
                 data: {
                     inputNum: inputNum,
                     direction: direction
-                }
-            });
-        } else {
-            this.inputWorker.postMessage({
-                action: "setInput",
-                data: {
-                    inputNum: inputNum,
-                    silent: true
                 }
             });
         }
@@ -1100,70 +987,6 @@ class InputWaiter {
         if (tabNum >= 0) {
             this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
         }
-    }
-
-
-    /**
-     * Updates the tab header to display the new input content
-     */
-    updateTabHeader(headerData) {
-        const tabsList = document.getElementById("input-tabs");
-        const inputNum = headerData.inputNum;
-        let inputData = "New Tab";
-        if (headerData.input.length > 0) {
-            inputData = headerData.input.slice(0, 100);
-        }
-        for (let i = 0; i < tabsList.children.length; i++) {
-            if (tabsList.children.item(i).getAttribute("inputNum") === inputNum.toString()) {
-                tabsList.children.item(i).firstElementChild.innerText = `${inputNum}: ${inputData}`;
-                break;
-            }
-        }
-    }
-
-    /**
-     * Gets the number of the current active tab
-     *
-     * @returns {number}
-     */
-    getActiveTab() {
-        const activeTabs = document.getElementsByClassName("active-input-tab");
-        if (activeTabs.length > 0) {
-            const activeTab = activeTabs.item(0);
-            const tabNum = activeTab.getAttribute("inputNum");
-            return parseInt(tabNum, 10);
-        }
-        return -1;
-    }
-
-    /**
-     * Gets the li element for the tab of an input number
-     *
-     * @param {number} inputNum - The inputNum of the tab we're trying to find
-     * @returns {Element}
-     */
-    getTabItem(inputNum) {
-        const tabs = document.getElementById("input-tabs").children;
-        for (let i = 0; i < tabs.length; i++) {
-            if (parseInt(tabs.item(i).getAttribute("inputNum"), 10) === inputNum) {
-                return tabs.item(i);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets a list of tab numbers for the currently open tabs
-     *
-     * @returns {number[]}
-     */
-    getTabList() {
-        const nums = [];
-        const tabs = document.getElementById("input-tabs").children;
-        for (let i = 0; i < tabs.length; i++) {
-            nums.push(parseInt(tabs.item(i).getAttribute("inputNum"), 10));
-        }
-        return nums;
     }
 
     /**
@@ -1206,7 +1029,7 @@ class InputWaiter {
      * Resets the input for the current tab
      */
     clearIoClick() {
-        const inputNum = this.getActiveTab();
+        const inputNum = this.manager.tabs.getActiveInputTab();
         if (inputNum === -1) return;
 
         this.manager.highlighter.removeHighlights();
@@ -1219,7 +1042,7 @@ class InputWaiter {
             input: ""
         });
 
-        this.updateTabHeader({inputNum: inputNum, input: ""});
+        this.manager.tabs.updateInputTabHeader(inputNum, "");
     }
 
     /**
@@ -1283,25 +1106,17 @@ class InputWaiter {
      * @param {boolean} [changeTab=true] - If true, changes to the new tab once it's been added
      */
     addTab(inputNum, changeTab = true) {
-        const tabsWrapper = document.getElementById("input-tabs");
-        const numTabs = tabsWrapper.children.length;
+        const tabsWrapper = document.getElementById("input-tabs"),
+            numTabs = tabsWrapper.children.length;
 
-        if (!this.getTabItem(inputNum) && numTabs < this.maxTabs) {
-            const newTab = this.createTabElement(inputNum, false);
+        if (!this.manager.tabs.getInputTabItem(inputNum) && numTabs < this.maxTabs) {
+            const newTab = this.manager.tabs.createInputTabElement(inputNum, changeTab);
             tabsWrapper.appendChild(newTab);
 
             if (numTabs > 0) {
-                tabsWrapper.parentElement.style.display = "block";
-
-                document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
+                this.manager.tabs.showTabBar();
             } else {
-                tabsWrapper.parentElement.style.display = "none";
-
-                document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
-                document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
-                document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
+                this.manager.tabs.hideTabBar();
             }
 
             this.inputWorker.postMessage({
@@ -1313,9 +1128,19 @@ class InputWaiter {
             document.getElementById("input-tabs").lastElementChild.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
         }
 
-        if (changeTab) {
-            this.changeTab(inputNum, true);
-        }
+        if (changeTab) this.changeTab(inputNum, false);
+    }
+
+    /**
+     * Refreshes the input tabs, and changes to activeTab
+     *
+     * @param {number[]} nums - The inputNums to be displayed as tabs
+     * @param {number} activeTab - The tab to change to
+     * @param {boolean} tabsLeft - True if there are input tabs to the left of the displayed tabs
+     * @param {boolean} tabsRight - True if there are input tabs to the right of the displayed tabs
+     */
+    refreshTabs(nums, activeTab, tabsLeft, tabsRight) {
+        this.manager.tabs.refreshInputTabs(nums, activeTab, tabsLeft, tabsRight);
     }
 
     /**
@@ -1326,7 +1151,7 @@ class InputWaiter {
      */
     removeInput(inputNum) {
         let refresh = false;
-        if (this.getTabItem(inputNum) !== null) {
+        if (this.manager.tabs.getInputTabItem(inputNum) !== null) {
             refresh = true;
         }
         this.inputWorker.postMessage({
@@ -1385,7 +1210,7 @@ class InputWaiter {
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
-        setTimeout(func.bind(this, [time]), time);
+        this.tabTimeout = setTimeout(func.bind(this, [time]), time);
     }
 
     /**
@@ -1402,7 +1227,7 @@ class InputWaiter {
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
-        setTimeout(func.bind(this, [time]), time);
+        this.tabTimeout = setTimeout(func.bind(this, [time]), time);
     }
 
     /**
@@ -1410,18 +1235,20 @@ class InputWaiter {
      */
     tabMouseUp() {
         this.mousedown = false;
+
+        clearTimeout(this.tabTimeout);
+        this.tabTimeout = null;
     }
 
     /**
      * Changes to the next (right) tab
      */
     changeTabRight() {
-        const activeTab = this.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
         this.inputWorker.postMessage({
             action: "changeTabRight",
             data: {
-                activeTab: activeTab,
-                nums: this.getTabList()
+                activeTab: activeTab
             }
         });
     }
@@ -1430,12 +1257,11 @@ class InputWaiter {
      * Changes to the previous (left) tab
      */
     changeTabLeft() {
-        const activeTab = this.getActiveTab();
+        const activeTab = this.manager.tabs.getActiveInputTab();
         this.inputWorker.postMessage({
             action: "changeTabLeft",
             data: {
-                activeTab: activeTab,
-                nums: this.getTabList()
+                activeTab: activeTab
             }
         });
     }
@@ -1445,7 +1271,7 @@ class InputWaiter {
      */
     async goToTab() {
         const inputNums = await this.getInputNums();
-        let tabNum = window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.getActiveTab().toString());
+        let tabNum = window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.manager.tabs.getActiveInputTab().toString());
 
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);

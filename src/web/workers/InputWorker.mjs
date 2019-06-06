@@ -79,10 +79,10 @@ self.addEventListener("message", function(e) {
             self.removeInput(r.data);
             break;
         case "changeTabRight":
-            self.changeTabRight(r.data.activeTab, r.data.nums);
+            self.changeTabRight(r.data.activeTab);
             break;
         case "changeTabLeft":
-            self.changeTabLeft(r.data.activeTab, r.data.nums);
+            self.changeTabLeft(r.data.activeTab);
             break;
         case "autobake":
             self.autoBake(r.data.activeTab, 0, false);
@@ -887,38 +887,26 @@ self.removeInput = function(removeInputData) {
  * Change to the next tab.
  *
  * @param {number} inputNum - The inputNum of the tab to change to
- * @param {number[]} tabNums - List of the currently displayed tabs
  */
-self.changeTabRight = function(inputNum, tabNums) {
+self.changeTabRight = function(inputNum) {
     const newInput = self.getNextInputNum(inputNum);
-    if (tabNums.includes(newInput)) {
-        self.postMessage({
-            action: "changeTab",
-            data: newInput
-        });
-    } else {
-        // If the tab is not displayed, refresh the tabs to display it
-        self.refreshTabs(newInput, "right");
-    }
+    self.postMessage({
+        action: "changeTab",
+        data: newInput
+    });
 };
 
 /**
  * Change to the previous tab.
  *
  * @param {number} inputNum - The inputNum of the tab to change to
- * @param {number[]} tabNums - List of the currently displayed tabs
  */
-self.changeTabLeft = function(inputNum, tabNums) {
+self.changeTabLeft = function(inputNum) {
     const newInput = self.getPreviousInputNum(inputNum);
-    if (tabNums.includes(newInput)) {
-        self.postMessage({
-            action: "changeTab",
-            data: newInput
-        });
-    } else {
-        // If the tab is not displayed, refresh the tabs to display it
-        self.refreshTabs(newInput, "left");
-    }
+    self.postMessage({
+        action: "changeTab",
+        data: newInput
+    });
 };
 
 /**

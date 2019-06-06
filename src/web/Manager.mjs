@@ -16,6 +16,7 @@ import HighlighterWaiter from "./waiters/HighlighterWaiter";
 import SeasonalWaiter from "./waiters/SeasonalWaiter";
 import BindingsWaiter from "./waiters/BindingsWaiter";
 import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter";
+import TabWaiter from "./waiters/TabWaiter";
 
 
 /**
@@ -70,6 +71,7 @@ class Manager {
         this.seasonal    = new SeasonalWaiter(this.app, this);
         this.bindings    = new BindingsWaiter(this.app, this);
         this.background  = new BackgroundWorkerWaiter(this.app, this);
+        this.tabs        = new TabWaiter(this.app, this);
 
         // Object to store dynamic handlers to fire on elements that may not exist yet
         this.dynamicHandlers = {};

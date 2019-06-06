@@ -157,7 +157,7 @@ class App {
             this.manager.input.inputWorker.postMessage({
                 action: "autobake",
                 data: {
-                    activeTab: this.manager.input.getActiveTab()
+                    activeTab: this.manager.tabs.getActiveInputTab()
                 }
             });
         } else {
@@ -194,7 +194,7 @@ class App {
     setInput(input) {
         // Get the currently active tab.
         // If there isn't one, assume there are no inputs so use inputNum of 1
-        let inputNum = this.manager.input.getActiveTab();
+        let inputNum = this.manager.tabs.getActiveInputTab();
         if (inputNum === -1) inputNum = 1;
         this.manager.input.updateInputValue(inputNum, input);
 

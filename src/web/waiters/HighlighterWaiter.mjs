@@ -378,7 +378,7 @@ class HighlighterWaiter {
     displayHighlights(pos, direction) {
         if (!pos) return;
 
-        if (this.manager.input.getActiveTab() !== this.manager.output.getActiveTab()) return;
+        if (this.manager.tabs.getActiveInputTab() !== this.manager.tabs.getActiveOutputTab()) return;
 
         const io = direction === "forward" ? "output" : "input";
 

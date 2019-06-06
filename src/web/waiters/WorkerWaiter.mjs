@@ -325,7 +325,7 @@ class WorkerWaiter {
         this.inputNums = [];
         this.totalOutputs = 0;
         this.loadingOutputs = 0;
-        if (!silent) this.manager.output.set(this.manager.output.getActiveTab());
+        if (!silent) this.manager.output.set(this.manager.tabs.getActiveOutputTab());
     }
 
     /**

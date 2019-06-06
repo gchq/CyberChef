@@ -25,21 +25,19 @@ class OutputWaiter {
         this.manager = manager;
 
         this.outputs = {};
-        this.activeTab = -1;
-
         this.zipWorker = null;
-
-        this.maxTabs = 4; // Calculate this
+        this.maxTabs = 4;
+        this.tabTimeout = null;
     }
 
     /**
      * Calculates the maximum number of tabs to display
      */
     calcMaxTabs() {
-        const numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
+        const numTabs = this.manager.tabs.calcMaxTabs();
         if (numTabs !== this.maxTabs) {
             this.maxTabs = numTabs;
-            this.refreshTabs(this.getActiveTab());
+            this.refreshTabs(this.manager.tabs.getActiveOutputTab());
         }
     }
 
@@ -97,7 +95,7 @@ class OutputWaiter {
      * @returns {string | ArrayBuffer}
      */
     getActive(raw=true) {
-        return this.getOutput(this.getActiveTab(), raw);
+        return this.getOutput(this.manager.tabs.getActiveOutputTab(), raw);
     }
 
     /**
@@ -249,7 +247,7 @@ class OutputWaiter {
             if (output === undefined || output === null) return;
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
-            if (inputNum !== this.getActiveTab()) return;
+            if (inputNum !== this.manager.tabs.getActiveOutputTab()) return;
 
             this.toggleLoader(true);
 
@@ -636,33 +634,10 @@ class OutputWaiter {
         const tabsWrapper = document.getElementById("output-tabs");
         const numTabs = tabsWrapper.children.length;
 
-        if (this.getTabItem(inputNum) === undefined && numTabs < this.maxTabs) {
+        if (!this.manager.tabs.getOutputTabItem(inputNum) && numTabs < this.maxTabs) {
             // Create a new tab element
-            const newTab = this.createTabElement(inputNum);
-
+            const newTab = this.manager.tabs.createOutputTabElement(inputNum, changeTab);
             tabsWrapper.appendChild(newTab);
-
-            if (numTabs > 0) {
-                tabsWrapper.parentElement.style.display = "block";
-
-                document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-                document.getElementById("show-file-overlay").style.top = "calc(var(--tab-height) + var(--title-height) + 10px)";
-
-                document.getElementById("save-all-to-file").style.display = "inline-block";
-            } else {
-                tabsWrapper.parentElement.style.display = "none";
-
-                document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
-                document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
-                document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
-                document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
-                document.getElementById("show-file-overlay").style.top = "calc(var(--title-height) + 10px)";
-
-                document.getElementById("save-all-to-file").style.display = "none";
-            }
         } else if (numTabs === this.maxTabs) {
             // Can't create a new tab
             document.getElementById("output-tabs").lastElementChild.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
@@ -681,63 +656,24 @@ class OutputWaiter {
      */
     changeTab(inputNum, changeInput = false) {
         if (!this.outputExists(inputNum)) return;
-        const currentNum = this.getActiveTab();
+        const currentNum = this.manager.tabs.getActiveOutputTab();
 
         this.hideMagicButton();
 
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
-        const tabsWrapper = document.getElementById("output-tabs");
-        const tabs = tabsWrapper.children;
-
-        let found = false;
-        for (let i = 0; i < tabs.length; i++) {
-            if (tabs.item(i).getAttribute("inputNum") === inputNum.toString()) {
-                tabs.item(i).classList.add("active-output-tab");
-                this.activeTab = inputNum;
-                found = true;
-            } else {
-                tabs.item(i).classList.remove("active-output-tab");
-            }
-        }
-        if (!found) {
+        if (!this.manager.tabs.changeOutputTab(inputNum)) {
             let direction = "right";
             if (currentNum > inputNum) {
                 direction = "left";
             }
-
             const newOutputs = this.getNearbyNums(inputNum, direction);
 
             const tabsLeft = (newOutputs[0] !== this.getSmallestInputNum());
             const tabsRight = (newOutputs[newOutputs.length - 1] !== this.getLargestInputNum());
 
-            const firstTabElement = document.getElementById("output-tabs").firstElementChild;
-            const lastTabElement = document.getElementById("output-tabs").lastElementChild;
-
-            if (firstTabElement) {
-                if (tabsLeft) {
-                    firstTabElement.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
-                } else {
-                    firstTabElement.style.boxShadow = "";
-                }
-            }
-            if (lastTabElement) {
-                if (tabsRight) {
-                    lastTabElement.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
-                } else {
-                    lastTabElement.style.boxShadow = "";
-                }
-            }
-
-            for (let i = 0; i < newOutputs.length; i++) {
-                tabs.item(i).setAttribute("inputNum", newOutputs[i].toString());
-                this.displayTabInfo(newOutputs[i]);
-                if (newOutputs[i] === inputNum) {
-                    this.activeTab = inputNum;
-                    tabs.item(i).classList.add("active-output-tab");
-                }
-            }
+            this.manager.tabs.refreshOutputTabs(newOutputs, inputNum, tabsLeft, tabsRight);
         }
 
         this.app.debounce(this.set, 50, "setOutput", this, [inputNum])();
@@ -792,7 +728,7 @@ class OutputWaiter {
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
-        setTimeout(func.bind(this, [time]), time);
+        this.tabTimeout = setTimeout(func.bind(this, [time]), time);
     }
 
     /**
@@ -809,7 +745,7 @@ class OutputWaiter {
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
-        setTimeout(func.bind(this, [time]), time);
+        this.tabTimeout = setTimeout(func.bind(this, [time]), time);
     }
 
     /**
@@ -817,13 +753,16 @@ class OutputWaiter {
      */
     tabMouseUp() {
         this.mousedown = false;
+
+        clearTimeout(this.tabTimeout);
+        this.tabTimeout = null;
     }
 
     /**
      * Handler for changing to the left tab
      */
     changeTabLeft() {
-        const currentTab = this.getActiveTab();
+        const currentTab = this.manager.tabs.getActiveOutputTab();
         this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
     }
 
@@ -831,7 +770,7 @@ class OutputWaiter {
      * Handler for changing to the right tab
      */
     changeTabRight() {
-        const currentTab = this.getActiveTab();
+        const currentTab = this.manager.tabs.getActiveOutputTab();
         this.changeTab(this.getNextInputNum(currentTab), this.app.options.syncTabs);
     }
 
@@ -842,7 +781,7 @@ class OutputWaiter {
         const min = this.getSmallestInputNum(),
             max = this.getLargestInputNum();
 
-        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.getActiveTab().toString());
+        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.manager.tabs.getActiveOutputTab().toString());
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);
 
@@ -960,9 +899,9 @@ class OutputWaiter {
      */
     removeTab(inputNum) {
         if (!this.outputExists(inputNum)) return;
-        let activeTab = this.getActiveTab();
+        let activeTab = this.manager.tabs.getActiveOutputTab();
 
-        const tabElement = this.getTabItem(inputNum);
+        const tabElement = this.manager.tabs.getOutputTabItem(inputNum);
 
         this.removeOutput(inputNum);
 
@@ -970,7 +909,7 @@ class OutputWaiter {
             // find new tab number?
             if (inputNum === activeTab) {
                 activeTab = this.getPreviousInputNum(activeTab);
-                if (activeTab === this.getActiveTab()) {
+                if (activeTab === this.manager.tabs.getActiveOutputTab()) {
                     activeTab = this.getNextInputNum(activeTab);
                 }
             }
@@ -983,109 +922,15 @@ class OutputWaiter {
      * @param {number} activeTab
      */
     refreshTabs(activeTab) {
-        const tabsList = document.getElementById("output-tabs");
-        let newInputs = this.getNearbyNums(activeTab, "right");
-        if (newInputs.length < this.maxTabs) {
-            newInputs = this.getNearbyNums(activeTab, "left");
+        const minNum = Math.min(this.manager.tabs.getOutputTabList());
+        let direction = "right";
+        if (activeTab < minNum) {
+            direction = "left";
         }
-
-        for (let i = tabsList.children.length - 1; i >= 0; i--) {
-            tabsList.children.item(i).remove();
-        }
-
-        for (let i = 0; i < newInputs.length; i++) {
-            tabsList.appendChild(this.createTabElement(newInputs[i]));
-            this.displayTabInfo(newInputs[i]);
-        }
-
-        const tabsLeft = (newInputs[0] !== this.getSmallestInputNum());
-        const tabsRight = (newInputs[newInputs.length - 1] !== this.getLargestInputNum());
-
-        const firstTabElement = document.getElementById("output-tabs").firstElementChild;
-        const lastTabElement = document.getElementById("output-tabs").lastElementChild;
-
-        if (firstTabElement) {
-            if (tabsLeft) {
-                firstTabElement.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
-            } else {
-                firstTabElement.style.boxShadow = "";
-            }
-        }
-        if (lastTabElement) {
-            if (tabsRight) {
-                lastTabElement.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
-            } else {
-                lastTabElement.style.boxShadow = "";
-            }
-        }
-
-        if (newInputs.length > 1) {
-            tabsList.parentElement.style.display = "block";
-
-            document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-            document.getElementById("show-file-overlay").style.top = "calc(var(--tab-height) + var(--title-height) + 10px)";
-
-            document.getElementById("save-all-to-file").style.display = "inline-block";
-
-        } else {
-            tabsList.parentElement.style.display = "none";
-
-            document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
-            document.getElementById("show-file-overlay").style.top = "calc(var(--title-height) + 10px)";
-
-            document.getElementById("save-all-to-file").style.display = "none";
-        }
-
-        this.changeTab(activeTab);
-
-    }
-
-    /**
-     * Creates a new tab element to be added to the tab bar
-     *
-     * @param {number} inputNum
-     */
-    createTabElement(inputNum) {
-        const newTab = document.createElement("li");
-        newTab.setAttribute("inputNum", inputNum.toString());
-
-        const newTabContent = document.createElement("div");
-        newTabContent.classList.add("output-tab-content");
-        newTabContent.innerText = `Tab ${inputNum.toString()}`;
-
-        // Do we want remove tab button on output?
-        newTab.appendChild(newTabContent);
-
-        return newTab;
-    }
-
-    /**
-     * Gets the number of the current active tab
-     *
-     * @returns {number}
-     */
-    getActiveTab() {
-        return this.activeTab;
-    }
-
-    /**
-     * Gets the li element for a tab
-     *
-     * @param {number} inputNum
-     */
-    getTabItem(inputNum) {
-        const tabs = document.getElementById("output-tabs").children;
-        for (let i = 0; i < tabs.length; i++) {
-            if (parseInt(tabs.item(i).getAttribute("inputNum"), 10) === inputNum) {
-                return tabs.item(i);
-            }
-        }
+        const newNums = this.getNearbyNums(activeTab, direction),
+            tabsLeft = (newNums[0] !== this.getSmallestInputNum()),
+            tabsRight = (newNums[newNums.length] !== this.getLargestInputNum());
+        this.manager.tabs.refreshOutputTabs(newNums, activeTab, tabsLeft, tabsRight);
     }
 
     /**
@@ -1094,7 +939,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     displayTabInfo(inputNum) {
-        const tabItem = this.getTabItem(inputNum);
+        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
 
         if (!tabItem) return;
 
@@ -1137,7 +982,7 @@ class OutputWaiter {
     async backgroundMagic() {
         this.hideMagicButton();
         if (!this.app.options.autoMagic || !this.getActive(true)) return;
-        const dish = this.outputs[this.getActiveTab()].data.dish;
+        const dish = this.outputs[this.manager.tabs.getActiveOutputTab()].data.dish;
         const buffer = await this.getDishBuffer(dish);
         const sample = buffer.slice(0, 1000) || "";
 
@@ -1219,7 +1064,7 @@ class OutputWaiter {
             sliceToEl = document.getElementById("output-file-slice-to"),
             sliceFrom = parseInt(sliceFromEl.value, 10),
             sliceTo = parseInt(sliceToEl.value, 10),
-            output = this.outputs[this.getActiveTab()].data;
+            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
 
         let str;
         if (output.type === "ArrayBuffer") {
@@ -1252,7 +1097,7 @@ class OutputWaiter {
 
         document.getElementById("output-text").classList.add("blur");
         showFileOverlay.style.display = "none";
-        this.set(this.getActiveTab());
+        this.set(this.manager.tabs.getActiveOutputTab());
     }
 
     /**
@@ -1330,22 +1175,15 @@ class OutputWaiter {
      */
     switchClick() {
         const active = this.getActive(true);
+        const transferable = (typeof active === "string" ? undefined : [active]);
         if (typeof active === "string") {
             this.manager.input.inputWorker.postMessage({
                 action: "inputSwitch",
                 data: {
-                    inputNum: this.manager.input.getActiveTab(),
+                    inputNum: this.manager.tabs.getActiveInputTab(),
                     outputData: active
                 }
-            });
-        } else {
-            this.manager.input.inputWorker.postMessage({
-                action: "inputSwitch",
-                data: {
-                    inputNum: this.manager.input.getActiveTab(),
-                    outputData: active
-                }
-            }, [active]);
+            }, transferable);
         }
     }
 
