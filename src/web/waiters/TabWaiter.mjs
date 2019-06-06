@@ -288,8 +288,6 @@ class TabWaiter {
         } else {
             this.hideTabBar();
         }
-
-        this.changeTab(activeTab, io);
     }
 
     /**

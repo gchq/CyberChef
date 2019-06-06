@@ -947,7 +947,8 @@ class InputWaiter {
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
     changeTab(inputNum, changeOutput) {
-        if (this.manager.tabs.changeInputTab(inputNum)) {
+        if (this.manager.tabs.getInputTabItem(inputNum) !== null) {
+            this.manager.tabs.changeInputTab(inputNum);
             this.inputWorker.postMessage({
                 action: "setInput",
                 data: {
@@ -1245,6 +1246,7 @@ class InputWaiter {
      */
     changeTabRight() {
         const activeTab = this.manager.tabs.getActiveInputTab();
+        if (activeTab === -1) return;
         this.inputWorker.postMessage({
             action: "changeTabRight",
             data: {
@@ -1258,6 +1260,7 @@ class InputWaiter {
      */
     changeTabLeft() {
         const activeTab = this.manager.tabs.getActiveInputTab();
+        if (activeTab === -1) return;
         this.inputWorker.postMessage({
             action: "changeTabLeft",
             data: {
