@@ -4,18 +4,18 @@
  * @license Apache-2.0
  */
 
-import WorkerWaiter from "./WorkerWaiter";
-import WindowWaiter from "./WindowWaiter";
-import ControlsWaiter from "./ControlsWaiter";
-import RecipeWaiter from "./RecipeWaiter";
-import OperationsWaiter from "./OperationsWaiter";
-import InputWaiter from "./InputWaiter";
-import OutputWaiter from "./OutputWaiter";
-import OptionsWaiter from "./OptionsWaiter";
-import HighlighterWaiter from "./HighlighterWaiter";
-import SeasonalWaiter from "./SeasonalWaiter";
-import BindingsWaiter from "./BindingsWaiter";
-import BackgroundWorkerWaiter from "./BackgroundWorkerWaiter";
+import WorkerWaiter from "./waiters/WorkerWaiter";
+import WindowWaiter from "./waiters/WindowWaiter";
+import ControlsWaiter from "./waiters/ControlsWaiter";
+import RecipeWaiter from "./waiters/RecipeWaiter";
+import OperationsWaiter from "./waiters/OperationsWaiter";
+import InputWaiter from "./waiters/InputWaiter";
+import OutputWaiter from "./waiters/OutputWaiter";
+import OptionsWaiter from "./waiters/OptionsWaiter";
+import HighlighterWaiter from "./waiters/HighlighterWaiter";
+import SeasonalWaiter from "./waiters/SeasonalWaiter";
+import BindingsWaiter from "./waiters/BindingsWaiter";
+import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter";
 
 
 /**

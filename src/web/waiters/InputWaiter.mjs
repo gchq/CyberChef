@@ -5,11 +5,11 @@
  * @license Apache-2.0
  */
 
-import LoaderWorker from "worker-loader?inline&fallback=false!./LoaderWorker";
-import InputWorker from "worker-loader?inline&fallback=false!./InputWorker";
-import Utils from "../core/Utils";
-import { toBase64 } from "../core/lib/Base64";
-import { isImage } from "../core/lib/FileType";
+import LoaderWorker from "worker-loader?inline&fallback=false!../workers/LoaderWorker";
+import InputWorker from "worker-loader?inline&fallback=false!../workers/InputWorker";
+import Utils from "../../core/Utils";
+import { toBase64 } from "../../core/lib/Base64";
+import { isImage } from "../../core/lib/FileType";
 
 
 /**
@@ -413,7 +413,7 @@ class InputWaiter {
      */
     resetFileThumb() {
         const fileThumb = document.getElementById("input-file-thumbnail");
-        fileThumb.src = require("./static/images/file-128x128.png");
+        fileThumb.src = require("../static/images/file-128x128.png");
     }
 
     /**

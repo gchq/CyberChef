@@ -5,9 +5,9 @@
  * @license Apache-2.0
  */
 
-import Utils from "../core/Utils";
+import Utils from "../../core/Utils";
 import FileSaver from "file-saver";
-import ZipWorker from "worker-loader?inline&fallback=false!./ZipWorker";
+import ZipWorker from "worker-loader?inline&fallback=false!../workers/ZipWorker";
 
 /**
   * Waiter to handle events related to the output

@@ -7,8 +7,8 @@
  */
 
 import zip from "zlibjs/bin/zip.min";
-import Utils from "../core/Utils";
-import {detectFileType} from "../core/lib/FileType";
+import Utils from "../../core/Utils";
+import {detectFileType} from "../../core/lib/FileType";
 
 const Zlib = zip.Zlib;
 

@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../core/Utils";
+import Utils from "../../core/Utils";
 
 self.maxWorkers = 4;
 self.maxTabs = 1;
