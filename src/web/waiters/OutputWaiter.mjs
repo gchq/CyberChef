@@ -293,7 +293,6 @@ class OutputWaiter {
                 inputHighlighter.display = "none";
 
                 outputText.value = output.error;
-                outputText.scroll(0, 0);
                 outputHtml.innerHTML = "";
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
@@ -327,7 +326,6 @@ class OutputWaiter {
 
                         outputText.value = "";
                         outputHtml.innerHTML = output.data.result;
-                        outputHtml.scroll(0, 0);
 
                         // Execute script sections
                         scriptElements = outputHtml.querySelectorAll("script");
@@ -360,7 +358,6 @@ class OutputWaiter {
                         inputHighlighter.display = "block";
 
                         outputText.value = Utils.printable(output.data.result, true);
-                        outputText.scroll(0, 0);
                         outputHtml.innerHTML = "";
 
                         lines = output.data.result.count("\n") + 1;
@@ -744,6 +741,9 @@ class OutputWaiter {
         }
 
         this.app.debounce(this.set, 50, "setOutput", this, [inputNum])();
+
+        document.getElementById("output-html").scroll(0, 0);
+        document.getElementById("output-text").scroll(0, 0);
 
         if (changeInput) {
             this.manager.input.changeTab(inputNum, false);

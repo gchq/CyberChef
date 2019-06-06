@@ -699,7 +699,14 @@ class InputWaiter {
             // changing the value, so instead change it here ourselves
             // and manually fire inputChange()
             e.preventDefault();
-            document.getElementById("input-text").value += pastedData;
+            const inputText = document.getElementById("input-text");
+            const selStart = inputText.selectionStart;
+            const selEnd = inputText.selectionEnd;
+            const startVal = inputText.value.slice(0, selStart);
+            const endVal = inputText.value.slice(selEnd);
+
+            inputText.value = startVal + pastedData + endVal;
+            inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
             this.debounceInputChange(e);
         } else {
             e.preventDefault();
