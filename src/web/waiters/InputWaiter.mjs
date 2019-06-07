@@ -48,7 +48,7 @@ class InputWaiter {
         this.inputWorker = null;
         this.loaderWorkers = [];
         this.workerId = 0;
-        this.maxTabs = 4;
+        this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.callbacks = {};
         this.callbackID = 0;
@@ -264,7 +264,7 @@ class InputWaiter {
                 this.showLoadingInfo(r.data, true);
                 break;
             case "setInput":
-                this.app.debounce(this.set, 50, "setInput", this, [r.data.inputObj, r.data.siilent])();
+                this.app.debounce(this.set, 50, "setInput", this, [r.data.inputObj, r.data.silent])();
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
@@ -1142,6 +1142,14 @@ class InputWaiter {
      */
     refreshTabs(nums, activeTab, tabsLeft, tabsRight) {
         this.manager.tabs.refreshInputTabs(nums, activeTab, tabsLeft, tabsRight);
+
+        this.inputWorker.postMessage({
+            action: "setInput",
+            data: {
+                inputNum: activeTab,
+                silent: true
+            }
+        });
     }
 
     /**

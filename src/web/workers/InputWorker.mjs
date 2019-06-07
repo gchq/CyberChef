@@ -873,7 +873,7 @@ self.removeInput = function(removeInputData) {
     delete self.inputs[inputNum];
 
     if (refreshTabs) {
-        self.refreshTabs(inputNum, "left");
+        self.refreshTabs(self.getPreviousInputNum(inputNum), "left");
     }
 
     if (self.numInputs < self.maxWorkers && removeInputData.removeChefWorker) {

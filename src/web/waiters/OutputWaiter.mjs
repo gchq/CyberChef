@@ -26,7 +26,7 @@ class OutputWaiter {
 
         this.outputs = {};
         this.zipWorker = null;
-        this.maxTabs = 4;
+        this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.tabTimeout = null;
     }
 
@@ -37,7 +37,7 @@ class OutputWaiter {
         const numTabs = this.manager.tabs.calcMaxTabs();
         if (numTabs !== this.maxTabs) {
             this.maxTabs = numTabs;
-            this.refreshTabs(this.manager.tabs.getActiveOutputTab());
+            this.refreshTabs(this.manager.tabs.getActiveOutputTab(), "right");
         }
     }
 
@@ -242,14 +242,13 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async set(inputNum) {
+        if (inputNum !== this.manager.tabs.getActiveOutputTab()) return;
+        this.toggleLoader(true);
+
         return new Promise(async function(resolve, reject) {
             const output = this.outputs[inputNum];
             if (output === undefined || output === null) return;
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
-
-            if (inputNum !== this.manager.tabs.getActiveOutputTab()) return;
-
-            this.toggleLoader(true);
 
             const outputText = document.getElementById("output-text");
             const outputHtml = document.getElementById("output-html");
@@ -799,7 +798,7 @@ class OutputWaiter {
         const nums = [];
         for (let i = 0; i < this.maxTabs; i++) {
             let newNum;
-            if (i === 0) {
+            if (i === 0 && this.outputs[inputNum] !== undefined) {
                 newNum = inputNum;
             } else {
                 switch (direction) {
@@ -899,37 +898,26 @@ class OutputWaiter {
      */
     removeTab(inputNum) {
         if (!this.outputExists(inputNum)) return;
-        let activeTab = this.manager.tabs.getActiveOutputTab();
 
         const tabElement = this.manager.tabs.getOutputTabItem(inputNum);
 
         this.removeOutput(inputNum);
 
         if (tabElement !== null) {
-            // find new tab number?
-            if (inputNum === activeTab) {
-                activeTab = this.getPreviousInputNum(activeTab);
-                if (activeTab === this.manager.tabs.getActiveOutputTab()) {
-                    activeTab = this.getNextInputNum(activeTab);
-                }
-            }
-            this.refreshTabs(activeTab);
+            this.refreshTabs(this.getPreviousInputNum(inputNum), "left");
         }
     }
 
     /**
      * Redraw the entire tab bar to remove any outdated tabs
      * @param {number} activeTab
+     * @param {string} direction - Either "left" or "right"
      */
-    refreshTabs(activeTab) {
-        const minNum = Math.min(this.manager.tabs.getOutputTabList());
-        let direction = "right";
-        if (activeTab < minNum) {
-            direction = "left";
-        }
+    refreshTabs(activeTab, direction) {
         const newNums = this.getNearbyNums(activeTab, direction),
             tabsLeft = (newNums[0] !== this.getSmallestInputNum()),
-            tabsRight = (newNums[newNums.length] !== this.getLargestInputNum());
+            tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum());
+
         this.manager.tabs.refreshOutputTabs(newNums, activeTab, tabsLeft, tabsRight);
     }
 

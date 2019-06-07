@@ -64,6 +64,7 @@ class Manager {
         this.controls    = new ControlsWaiter(this.app, this);
         this.recipe      = new RecipeWaiter(this.app, this);
         this.ops         = new OperationsWaiter(this.app, this);
+        this.tabs        = new TabWaiter(this.app, this);
         this.input       = new InputWaiter(this.app, this);
         this.output      = new OutputWaiter(this.app, this);
         this.options     = new OptionsWaiter(this.app, this);
@@ -71,7 +72,6 @@ class Manager {
         this.seasonal    = new SeasonalWaiter(this.app, this);
         this.bindings    = new BindingsWaiter(this.app, this);
         this.background  = new BackgroundWorkerWaiter(this.app, this);
-        this.tabs        = new TabWaiter(this.app, this);
 
         // Object to store dynamic handlers to fire on elements that may not exist yet
         this.dynamicHandlers = {};
