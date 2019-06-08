@@ -395,6 +395,7 @@
         "ops": [
             "Entropy",
             "Frequency distribution",
+            "Index of Coincidence",
             "Chi Square",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
