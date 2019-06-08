@@ -49,6 +49,7 @@ import "./tests/Hash";
 import "./tests/HaversineDistance";
 import "./tests/Hexdump";
 import "./tests/Image";
+import "./tests/IndexOfCoincidence";
 import "./tests/Jump";
 import "./tests/JSONBeautify";
 import "./tests/JSONMinify";
