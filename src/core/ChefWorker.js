@@ -213,6 +213,24 @@ self.sendStatusMessage = function(msg) {
 
 
 /**
+ * Send progress update to the app.
+ *
+ * @param {number} progress
+ * @param {number} total
+ */
+self.sendProgressMessage = function(progress, total) {
+    self.postMessage({
+        action: "progressMessage",
+        data: {
+            progress: progress,
+            total: total,
+            inputNum: self.inputNum
+        }
+    });
+};
+
+
+/**
  * Send an option value update to the app.
  *
  * @param {string} option

@@ -221,8 +221,10 @@ class WorkerWaiter {
                 }
                 break;
             case "statusMessage":
-                // Status message should be done per output
                 this.manager.output.updateOutputMessage(r.data.message, r.data.inputNum, true);
+                break;
+            case "progressMessage":
+                this.manager.output.updateOutputProgress(r.data.progress, r.data.total, r.data.inputNum);
                 break;
             case "optionUpdate":
                 log.debug(`Setting ${r.data.option} to ${r.data.value}`);
@@ -256,7 +258,12 @@ class WorkerWaiter {
         }
         this.manager.output.updateOutputProgress(progress, inputNum);
         this.manager.output.updateOutputValue(data, inputNum, false);
-        this.manager.output.updateOutputStatus("baked", inputNum);
+
+        if (progress !== false) {
+            this.manager.output.updateOutputStatus("error", inputNum);
+        } else {
+            this.manager.output.updateOutputStatus("baked", inputNum);
+        }
     }
 
     /**
@@ -317,6 +324,11 @@ class WorkerWaiter {
 
         for (let i = 0; i < this.inputNums.length; i++) {
             this.manager.output.updateOutputStatus("inactive", this.inputNums[i]);
+        }
+
+        const tabList = this.manager.tabs.getOutputTabList();
+        for (let i = 0; i < tabList.length; i++) {
+            this.manager.tabs.getOutputTabItem(tabList[i]).style.background = "";
         }
 
         this.inputs = [];
@@ -642,7 +654,7 @@ class WorkerWaiter {
         const bakeButton = document.getElementById("bake");
         if (this.app.baking) {
             if (percentComplete < 100) {
-                document.getElementById("bake").style.background = `linear-gradient(to left, #fea79a ${percentComplete}%, #f44336 ${percentComplete}%)`;
+                bakeButton.style.background = `linear-gradient(to left, #fea79a ${percentComplete}%, #f44336 ${percentComplete}%)`;
             } else {
                 bakeButton.style.background = "";
             }

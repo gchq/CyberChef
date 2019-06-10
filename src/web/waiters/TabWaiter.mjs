@@ -400,6 +400,48 @@ class TabWaiter {
         this.updateTabHeader(inputNum, data, "output");
     }
 
+    /**
+     * Updates the tab background to display the progress of the current tab
+     *
+     * @param {number} inputNum - The inputNum of the tab
+     * @param {number} progress - The current progress
+     * @param {number} total - The total which the progress is a percent of
+     * @param {string} io - Either "input" or "output"
+     */
+    updateTabProgress(inputNum, progress, total, io) {
+        const tabItem = this.getTabItem(inputNum, io);
+        if (tabItem === null) return;
+
+        const percentComplete = (progress / total) * 100;
+        if (percentComplete === 100 || progress === false) {
+            tabItem.style.background = "";
+        } else {
+            tabItem.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
+        }
+    }
+
+    /**
+     * Updates the input tab background to display its progress
+     *
+     * @param {number} inputNum
+     * @param {number} progress
+     * @param {number} total
+     */
+    updateInputTabProgress(inputNum, progress, total) {
+        this.updateTabProgress(inputNum, progress, total, "input");
+    }
+
+    /**
+     * Updates the output tab background to display its progress
+     *
+     * @param {number} inputNum
+     * @param {number} progress
+     * @param {number} total
+     */
+    updateOutputTabProgress(inputNum, progress, total) {
+        this.updateTabProgress(inputNum, progress, total, "output");
+    }
+
 }
 
 export default TabWaiter;

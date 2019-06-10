@@ -154,6 +154,9 @@ class OutputWaiter {
 
         this.outputs[inputNum].data = data;
 
+        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
+        if (tabItem) tabItem.style.background = "";
+
         if (set) this.set(inputNum);
     }
 
@@ -223,11 +226,15 @@ class OutputWaiter {
      * Updates the stored progress value for the output in the output array
      *
      * @param {number} progress
+     * @param {number} total
      * @param {number} inputNum
      */
-    updateOutputProgress(progress, inputNum) {
+    updateOutputProgress(progress, total, inputNum) {
         if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].progress = progress;
+
+        this.manager.tabs.updateOutputTabProgress(inputNum, progress, total);
+
     }
 
     /**
@@ -283,7 +290,7 @@ class OutputWaiter {
                 this.manager.controls.hideStaleIndicator();
             }
 
-            if (output.progress !== undefined) {
+            if (output.progress !== undefined && !this.app.baking) {
                 this.manager.recipe.updateBreakpointIndicator(output.progress);
             } else {
                 this.manager.recipe.updateBreakpointIndicator(false);
@@ -305,7 +312,11 @@ class OutputWaiter {
                 outputHighlighter.display = "none";
                 inputHighlighter.display = "none";
 
-                outputText.value = output.error;
+                if (output.error) {
+                    outputText.value = output.error;
+                } else {
+                    outputText.value = output.data.result;
+                }
                 outputHtml.innerHTML = "";
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
@@ -953,6 +964,8 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async displayTabInfo(inputNum) {
+        if (!this.outputExists(inputNum)) return;
+
         const dish = this.getOutputDish(inputNum);
         let tabStr = "";
 
@@ -960,11 +973,18 @@ class OutputWaiter {
             tabStr = await this.getDishStr(this.getOutputDish(inputNum));
             tabStr = tabStr.replace(/[\n\r]/g, "");
         }
-
         tabStr = tabStr.slice(0, 200);
-
         this.manager.tabs.updateOutputTabHeader(inputNum, tabStr);
+        this.manager.tabs.updateOutputTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length);
 
+        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
+        if (tabItem) {
+            if (this.outputs[inputNum].status === "error") {
+                tabItem.style.color = "#FF0000";
+            } else {
+                tabItem.style.color = "";
+            }
+        }
     }
 
     /**

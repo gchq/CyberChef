@@ -204,6 +204,7 @@ class Recipe  {
 
                 if (ENVIRONMENT_IS_WORKER()) {
                     self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
+                    self.sendProgressMessage(i + 1, this.opList.length);
                 }
 
                 if (op.flowControl) {
