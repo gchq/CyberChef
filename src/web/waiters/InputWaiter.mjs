@@ -212,6 +212,12 @@ class InputWaiter {
     handleLoaderMessage(e) {
         const r = e.data;
 
+        if (r.hasOwnProperty("progress") && r.hasOwnProperty("inputNum")) {
+            this.manager.tabs.updateInputTabProgress(r.inputNum, r.progress, 100);
+        } else if (r.hasOwnProperty("fileBuffer")) {
+            this.manager.tabs.updateInputTabProgress(r.inputNum, 100, 100);
+        }
+
         if (r.hasOwnProperty("fileBuffer")) {
             this.inputWorker.postMessage({
                 action: "loaderWorkerMessage",

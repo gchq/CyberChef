@@ -413,7 +413,7 @@ class TabWaiter {
         if (tabItem === null) return;
 
         const percentComplete = (progress / total) * 100;
-        if (percentComplete === 100 || progress === false) {
+        if (percentComplete >= 100 || progress === false) {
             tabItem.style.background = "";
         } else {
             tabItem.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
