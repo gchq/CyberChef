@@ -207,8 +207,6 @@ class WorkerWaiter {
                 break;
             case "dishReturned":
                 this.callbacks[r.data.id](r.data);
-                this.dishWorker.terminate();
-                this.dishWorker = null;
                 break;
             case "silentBakeComplete":
                 break;
@@ -623,10 +621,8 @@ class WorkerWaiter {
 
     /**
      * Sets the console log level in the workers.
-     *
-     * @param {string} level
      */
-    setLogLevel(level) {
+    setLogLevel() {
         for (let i = 0; i < this.chefWorkers.length; i++) {
             this.chefWorkers[i].worker.postMessage({
                 action: "setLogLevel",

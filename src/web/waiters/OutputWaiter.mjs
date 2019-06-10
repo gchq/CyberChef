@@ -75,6 +75,21 @@ class OutputWaiter {
     }
 
     /**
+     * Gets the dish object for an output.
+     *
+     * @param inputNum - The inputNum of the output to get the dish of
+     * @returns {Dish}
+     */
+    getOutputDish(inputNum) {
+        if (this.outputExists(inputNum) &&
+            this.outputs[inputNum].data &&
+            this.outputs[inputNum].data.dish) {
+            return this.outputs[inputNum].data.dish;
+        }
+        return null;
+    }
+
+    /**
      * Checks if an output exists in the output dictionary
      *
      * @param {number} inputNum - The number of the output we're looking for
@@ -189,6 +204,7 @@ class OutputWaiter {
             delete this.outputs[inputNum].error;
         }
 
+        this.displayTabInfo(inputNum);
         this.set(inputNum);
     }
 
@@ -293,7 +309,6 @@ class OutputWaiter {
                 outputHtml.innerHTML = "";
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
-                this.displayTabInfo(inputNum);
                 this.closeFile();
                 let scriptElements, lines, length;
 
@@ -642,6 +657,8 @@ class OutputWaiter {
             document.getElementById("output-tabs").lastElementChild.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
         }
 
+        this.displayTabInfo(inputNum);
+
         if (changeTab) {
             this.changeTab(inputNum, false);
         }
@@ -673,6 +690,10 @@ class OutputWaiter {
             const tabsRight = (newOutputs[newOutputs.length - 1] !== this.getLargestInputNum());
 
             this.manager.tabs.refreshOutputTabs(newOutputs, inputNum, tabsLeft, tabsRight);
+
+            for (let i = 0; i < newOutputs.length; i++) {
+                this.displayTabInfo(newOutputs[i]);
+            }
         }
 
         this.app.debounce(this.set, 50, "setOutput", this, [inputNum])();
@@ -919,6 +940,11 @@ class OutputWaiter {
             tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum());
 
         this.manager.tabs.refreshOutputTabs(newNums, activeTab, tabsLeft, tabsRight);
+
+        for (let i = 0; i < newNums.length; i++) {
+            this.displayTabInfo(newNums[i]);
+        }
+
     }
 
     /**
@@ -926,14 +952,26 @@ class OutputWaiter {
      *
      * @param {number} inputNum
      */
-    displayTabInfo(inputNum) {
+    async displayTabInfo(inputNum) {
         const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
-
         if (!tabItem) return;
 
-        const tabContent = tabItem.firstElementChild;
+        const tabContent = tabItem.firstElementChild,
+            dish = this.getOutputDish(inputNum);
+        let tabStr = "";
 
-        tabContent.innerText = `Tab ${inputNum}`;
+        if (dish !== null) {
+            tabStr = await this.getDishStr(this.getOutputDish(inputNum));
+            tabStr = tabStr.replace(/[\n\r]/g, "");
+        }
+
+        tabStr = tabStr.slice(0, 200);
+        if (tabStr === "") {
+            tabStr = `Tab ${inputNum}`;
+        } else {
+            tabStr = `${inputNum}: ${tabStr}`;
+        }
+        tabContent.innerText = tabStr;
 
     }
 
