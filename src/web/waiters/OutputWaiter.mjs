@@ -953,11 +953,7 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async displayTabInfo(inputNum) {
-        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
-        if (!tabItem) return;
-
-        const tabContent = tabItem.firstElementChild,
-            dish = this.getOutputDish(inputNum);
+        const dish = this.getOutputDish(inputNum);
         let tabStr = "";
 
         if (dish !== null) {
@@ -966,12 +962,8 @@ class OutputWaiter {
         }
 
         tabStr = tabStr.slice(0, 200);
-        if (tabStr === "") {
-            tabStr = `Tab ${inputNum}`;
-        } else {
-            tabStr = `${inputNum}: ${tabStr}`;
-        }
-        tabContent.innerText = tabStr;
+
+        this.manager.tabs.updateOutputTabHeader(inputNum, tabStr);
 
     }
 
