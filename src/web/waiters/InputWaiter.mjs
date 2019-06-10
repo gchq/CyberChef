@@ -674,7 +674,7 @@ class InputWaiter {
             (value.count("\n") + 1) : null;
         this.setInputInfo(value.length, lines);
         this.updateInputValue(activeTab, value);
-        this.manager.tabs.updateInputTabHeader(activeTab, value);
+        this.manager.tabs.updateInputTabHeader(activeTab, value.replace(/[\n\r]/g, "").slice(0, 100));
 
         if (e && this.badKeys.indexOf(e.keyCode) < 0) {
             // Fire the statechange event as the input has been modified

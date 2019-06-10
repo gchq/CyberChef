@@ -433,6 +433,8 @@ self.updateTabHeader = function(inputNum) {
     if (typeof inputData !== "string") {
         inputData = input.data.name;
     }
+    inputData = inputData.replace(/[\n\r]/g, "");
+
     self.postMessage({
         action: "updateTabHeader",
         data: {
