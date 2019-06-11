@@ -975,7 +975,9 @@ class OutputWaiter {
         }
         tabStr = tabStr.slice(0, 200);
         this.manager.tabs.updateOutputTabHeader(inputNum, tabStr);
-        this.manager.tabs.updateOutputTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length);
+        if (this.manager.worker.recipeConfig !== undefined) {
+            this.manager.tabs.updateOutputTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length);
+        }
 
         const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
         if (tabItem) {

@@ -68,6 +68,7 @@ class BackgroundWorkerWaiter {
                 break;
             case "optionUpdate":
             case "statusMessage":
+            case "progressMessage":
                 // Ignore these messages
                 break;
             default:
