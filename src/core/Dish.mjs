@@ -8,6 +8,7 @@
 import Utils from "./Utils";
 import DishError from "./errors/DishError";
 import BigNumber from "bignumber.js";
+import {detectFileType} from "./lib/FileType";
 import log from "loglevel";
 
 /**
@@ -142,6 +143,23 @@ class Dish {
 
 
     /**
+     * Detects the MIME type of the current dish
+     *
+     * @returns {string}
+     */
+    async detectDishType() {
+        const data = new Uint8Array(this.value),
+            types = detectFileType(data);
+
+        if (!types.length || !types[0].mime || !types[0].mime === "text/plain") {
+            return null;
+        } else {
+            return types[0].mime;
+        }
+    }
+
+
+    /**
      * Returns the title of the data up to the specified length
      *
      * @param {number} maxLength - The maximum title length
@@ -157,6 +175,13 @@ class Dish {
                 break;
             case Dish.LIST_FILE:
                 title = `${this.value.length} file(s)`;
+                break;
+            case Dish.ARRAY_BUFFER:
+            case Dish.BYTE_ARRAY:
+                title = await this.detectDishType();
+                if (title === null) {
+                    title = await this.get("string");
+                }
                 break;
             default:
                 title = await this.get("string");

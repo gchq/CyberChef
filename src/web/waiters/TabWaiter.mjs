@@ -159,6 +159,22 @@ class TabWaiter {
 
         newTab.appendChild(newTabContent);
 
+        if (io === "input") {
+            const newTabButton = document.createElement("button"),
+                newTabButtonIcon = document.createElement("i");
+            newTabButton.type = "button";
+            newTabButton.className = "btn btn-primary bmd-btn-icon btn-close-tab";
+
+            newTabButtonIcon.classList.add("material-icons");
+            newTabButtonIcon.innerText = "clear";
+
+            newTabButton.appendChild(newTabButtonIcon);
+
+            newTabButton.addEventListener("click", this.manager.input.removeTabClick.bind(this.manager.input));
+
+            newTab.appendChild(newTabButton);
+        }
+
         return newTab;
     }
 
@@ -170,22 +186,7 @@ class TabWaiter {
      * @returns {Element}
      */
     createInputTabElement(inputNum, active=false) {
-        const newTab = this.createTabElement(inputNum, active, "input"),
-            newTabButton = document.createElement("button"),
-            newTabButtonIcon = document.createElement("i");
-        newTabButton.type = "button";
-        newTabButton.className = "btn btn-primary bmd-btn-icon btn-close-tab";
-
-        newTabButtonIcon.classList.add("material-icons");
-        newTabButtonIcon.innerText = "clear";
-
-        newTabButton.appendChild(newTabButtonIcon);
-
-        newTabButton.addEventListener("click", this.manager.input.removeTabClick.bind(this.manager.input));
-
-        newTab.appendChild(newTabButton);
-
-        return newTab;
+        return this.createTabElement(inputNum, active, "input");
     }
 
     /**
