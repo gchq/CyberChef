@@ -166,7 +166,6 @@ class Manager {
         this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseout", this.input.tabMouseUp, this.input);
         document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
         document.getElementById("btn-find-input-tab").addEventListener("click", this.input.findTab.bind(this.input));
-        this.addDynamicListener("#input-tabs li .input-tab-content", "wheel", this.input.scrollTab, this.input);
         this.addDynamicListener("#input-tabs li .input-tab-content", "click", this.input.changeTabClick, this.input);
         document.getElementById("input-show-pending").addEventListener("change", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-show-loading").addEventListener("change", this.input.filterTabSearch.bind(this.input));
@@ -202,7 +201,6 @@ class Manager {
         document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);
-        this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "wheel", this.output.scrollTab, this.output);
         document.getElementById("btn-previous-output-tab").addEventListener("mousedown", this.output.previousTabClick.bind(this.output));
         document.getElementById("btn-next-output-tab").addEventListener("mousedown", this.output.nextTabClick.bind(this.output));
         this.addListeners("#btn-next-output-tab,#btn-previous-output-tab", "mouseup", this.output.tabMouseUp, this.output);

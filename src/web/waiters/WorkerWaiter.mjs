@@ -6,6 +6,7 @@
  */
 
 import ChefWorker from "worker-loader?inline&fallback=false!../../core/ChefWorker";
+import DishWorker from "worker-loader?inline&fallback=false!../workers/DishWorker";
 
 /**
  * Waiter to handle conversations with the ChefWorker
@@ -24,8 +25,6 @@ class WorkerWaiter {
 
         this.loaded = false;
         this.chefWorkers = [];
-        this.dishWorker = null;
-        this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.inputs = [];
         this.inputNums = [];
         this.totalOutputs = 0;
@@ -33,6 +32,19 @@ class WorkerWaiter {
         this.bakeId = 0;
         this.callbacks = {};
         this.callbackID = 0;
+
+        this.maxWorkers = 1;
+        if (navigator.hardwareConcurrency !== undefined &&
+            navigator.hardwareConcurrency > 1) {
+            this.maxWorkers = navigator.hardwareConcurrency - 1;
+        }
+
+        // Store dishWorker action (getDishAs or getDishTitle)
+        this.dishWorker = {
+            worker: null,
+            currentAction: ""
+        };
+        this.dishWorkerQueue = [];
     }
 
     /**
@@ -48,30 +60,20 @@ class WorkerWaiter {
     }
 
     /**
-     * Sets up a separate ChefWorker for performing dish operations.
-     * Using a separate worker so that we can run dish operations without
-     * affecting a bake which may be in progress.
+     * Sets up a DishWorker to be used for performing Dish operations
      */
     setupDishWorker() {
-        if (this.dishWorker !== null) {
-            this.dishWorker.terminate();
+        if (this.dishWorker.worker !== null) {
+            this.dishWorker.worker.terminate();
         }
-        log.debug("Adding new ChefWorker (DishWorker)");
+        log.debug("Adding new DishWorker");
 
-        this.dishWorker = new ChefWorker();
-        this.dishWorker.addEventListener("message", this.handleChefMessage.bind(this));
+        this.dishWorker.worker = new DishWorker();
+        this.dishWorker.worker.addEventListener("message", this.handleDishMessage.bind(this));
 
-        let docURL = document.location.href.split(/[#?]/)[0];
-        const index = docURL.lastIndexOf("/");
-        if (index > 0) {
-            docURL = docURL.substring(0, index);
+        if (this.dishWorkerQueue.length > 0) {
+            this.postDishMessage(this.dishWorkerQueue.splice(0, 1));
         }
-
-        this.dishWorker.postMessage({"action": "docURL", "data": docURL});
-        this.dishWorker.postMessage({
-            action: "setLogLevel",
-            data: log.getLevel()
-        });
     }
 
     /**
@@ -241,7 +243,6 @@ class WorkerWaiter {
                 break;
         }
     }
-
 
     /**
      * Update the value of an output
@@ -608,6 +609,31 @@ class WorkerWaiter {
     }
 
     /**
+     * Handler for messages sent back from DishWorker
+     *
+     * @param {MessageEvent} e
+     */
+    handleDishMessage(e) {
+        const r = e.data;
+        log.debug(`Receiving ${r.action} from DishWorker`);
+
+        switch (r.action) {
+            case "dishReturned":
+                this.dishWorker.currentAction = "";
+                this.callbacks[r.data.id](r.data);
+
+                if (this.dishWorkerQueue.length > 0) {
+                    this.postDishMessage(this.dishWorkerQueue.splice(0, 1)[0]);
+                }
+
+                break;
+            default:
+                log.error("Unrecognised message from DishWorker", e);
+                break;
+        }
+    }
+
+    /**
      * Asks the ChefWorker to return the dish as the specified type
      *
      * @param {Dish} dish
@@ -619,9 +645,9 @@ class WorkerWaiter {
 
         this.callbacks[id] = callback;
 
-        if (this.dishWorker === null) this.setupDishWorker();
+        if (this.dishWorker.worker === null) this.setupDishWorker();
 
-        this.dishWorker.postMessage({
+        this.postDishMessage({
             action: "getDishAs",
             data: {
                 dish: dish,
@@ -644,9 +670,9 @@ class WorkerWaiter {
 
         this.callbacks[id] = callback;
 
-        if (this.dishWorker === null) this.setupDishWorker();
+        if (this.dishWorker.worker === null) this.setupDishWorker();
 
-        this.dishWorker.postMessage({
+        this.postDishMessage({
             action: "getDishTitle",
             data: {
                 dish: dish,
@@ -654,6 +680,39 @@ class WorkerWaiter {
                 id: id
             }
         });
+    }
+
+    /**
+     * Queues a message to be sent to the dishWorker
+     *
+     * @param {object} message
+     * @param {string} message.action
+     * @param {object} message.data
+     * @param {Dish} message.data.dish
+     * @param {number} message.data.id
+     */
+    queueDishMessage(message) {
+        if (message.action === "getDishAs") {
+            this.dishWorkerQueue = [message].concat(this.dishWorkerQueue);
+        } else {
+            this.dishWorkerQueue.push(message);
+        }
+    }
+
+    /**
+     * Sends a message to the DishWorker
+     *
+     * @param {object} message
+     * @param {string} message.action
+     * @param {object} message.data
+     */
+    postDishMessage(message) {
+        if (this.dishWorker.currentAction !== "") {
+            this.queueDishMessage(message);
+        } else {
+            this.dishWorker.currentAction = message.action;
+            this.dishWorker.worker.postMessage(message);
+        }
     }
 
     /**

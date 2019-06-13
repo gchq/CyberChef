@@ -157,6 +157,8 @@ class TabWaiter {
 
         newTabContent.innerText = `Tab ${inputNum.toString()}`;
 
+        newTabContent.addEventListener("wheel", this.manager[io].scrollTab.bind(this.manager[io]), {passive: false});
+
         newTab.appendChild(newTabContent);
 
         if (io === "input") {

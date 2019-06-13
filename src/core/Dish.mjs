@@ -144,11 +144,10 @@ class Dish {
 
     /**
      * Detects the MIME type of the current dish
-     *
      * @returns {string}
      */
     async detectDishType() {
-        const data = new Uint8Array(this.value),
+        const data = new Uint8Array(this.value.slice(0, 2048)),
             types = detectFileType(data);
 
         if (!types.length || !types[0].mime || !types[0].mime === "text/plain") {
@@ -168,7 +167,6 @@ class Dish {
     async getTitle(maxLength) {
         let title = "";
 
-        // LIST OF FILES - Say e.g. "3 files"
         switch (this.type) {
             case Dish.FILE:
                 title = this.value.name;
@@ -180,6 +178,7 @@ class Dish {
             case Dish.BYTE_ARRAY:
                 title = await this.detectDishType();
                 if (title === null) {
+                    this.value = this.value.slice(0, 2048);
                     title = await this.get("string");
                 }
                 break;

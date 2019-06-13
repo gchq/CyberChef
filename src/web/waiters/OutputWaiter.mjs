@@ -269,7 +269,8 @@ class OutputWaiter {
         this.toggleLoader(true);
 
         return new Promise(async function(resolve, reject) {
-            const output = this.outputs[inputNum];
+            const output = this.outputs[inputNum],
+                activeTab = this.manager.tabs.getActiveOutputTab();
             if (output === undefined || output === null) return;
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
@@ -370,7 +371,7 @@ class OutputWaiter {
                         outputHtml.innerHTML = "";
 
                         length = output.data.result.byteLength;
-                        this.setFile(await this.getDishBuffer(output.data.dish));
+                        this.setFile(await this.getDishBuffer(output.data.dish), activeTab);
                         break;
                     case "string":
                     default:
@@ -405,8 +406,10 @@ class OutputWaiter {
      * Shows file details
      *
      * @param {ArrayBuffer} buf
+     * @param {number} activeTab
      */
-    setFile(buf) {
+    setFile(buf, activeTab) {
+        if (activeTab !== this.manager.tabs.getActiveOutputTab()) return;
         // Display file overlay in output area with details
         const fileOverlay = document.getElementById("output-file"),
             fileSize = document.getElementById("output-file-size"),

@@ -49,9 +49,14 @@ class InputWaiter {
         this.loaderWorkers = [];
         this.workerId = 0;
         this.maxTabs = this.manager.tabs.calcMaxTabs();
-        this.maxWorkers = navigator.hardwareConcurrency || 4;
         this.callbacks = {};
         this.callbackID = 0;
+
+        this.maxWorkers = 1;
+        if (navigator.hardwareConcurrency !== undefined &&
+            navigator.hardwareConcurrency > 1) {
+            this.maxWorkers = navigator.hardwareConcurrency - 1;
+        }
     }
 
     /**
