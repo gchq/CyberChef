@@ -168,6 +168,18 @@ class Chef {
         return await newDish.get(type);
     }
 
+    /**
+     * Gets the title of a dish and returns it
+     *
+     * @param {Dish} dish
+     * @param {number} [maxLength=100]
+     * @returns {string}
+     */
+    async getDishTitle(dish, maxLength=100) {
+        const newDish = new Dish(dish);
+        return await newDish.getTitle(maxLength);
+    }
+
 }
 
 export default Chef;

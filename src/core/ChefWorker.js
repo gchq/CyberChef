@@ -68,6 +68,9 @@ self.addEventListener("message", function(e) {
         case "getDishAs":
             getDishAs(r.data);
             break;
+        case "getDishTitle":
+            getDishTitle(r.data);
+            break;
         case "docURL":
             // Used to set the URL of the current document so that scripts can be
             // imported into an inline worker.
@@ -155,6 +158,26 @@ async function getDishAs(data) {
             id: data.id
         }
     }, transferable);
+}
+
+
+/**
+ * Gets the dish title
+ *
+ * @param {object} data
+ * @param {Dish} data.dish
+ * @param {number} data.maxLength
+ * @param {number} data.id
+ */
+async function getDishTitle(data) {
+    const title = await self.chef.getDishTitle(data.dish, data.maxLength);
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: title,
+            id: data.id
+        }
+    });
 }
 
 

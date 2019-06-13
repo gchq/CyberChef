@@ -142,6 +142,32 @@ class Dish {
 
 
     /**
+     * Returns the title of the data up to the specified length
+     *
+     * @param {number} maxLength - The maximum title length
+     * @returns {string}
+     */
+    async getTitle(maxLength) {
+        let title = "";
+
+        // LIST OF FILES - Say e.g. "3 files"
+        switch (this.type) {
+            case Dish.FILE:
+                title = this.value.name;
+                break;
+            case Dish.LIST_FILE:
+                title = `${this.value.length} file(s)`;
+                break;
+            default:
+                title = await this.get("string");
+        }
+
+        title = title.slice(0, maxLength);
+        return title;
+    }
+
+
+    /**
      * Translates the data to the given type format.
      *
      * @param {number} toType - The data type of value, see Dish enums.

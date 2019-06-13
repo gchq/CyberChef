@@ -442,7 +442,6 @@ class OutputWaiter {
         });
     }
 
-
     /**
      * Retrieves the dish as an ArrayBuffer, returning the cached version if possible.
      *
@@ -452,6 +451,21 @@ class OutputWaiter {
     async getDishBuffer(dish) {
         return await new Promise(resolve => {
             this.manager.worker.getDishAs(dish, "ArrayBuffer", r => {
+                resolve(r.value);
+            });
+        });
+    }
+
+    /**
+     * Retrieves the title of the Dish as a string
+     *
+     * @param {Dish} dish
+     * @param {number} maxLength
+     * @returns {string}
+     */
+    async getDishTitle(dish, maxLength) {
+        return await new Promise(resolve => {
+            this.manager.worker.getDishTitle(dish, maxLength, r=> {
                 resolve(r.value);
             });
         });
@@ -970,10 +984,9 @@ class OutputWaiter {
         let tabStr = "";
 
         if (dish !== null) {
-            tabStr = await this.getDishStr(this.getOutputDish(inputNum));
+            tabStr = await this.getDishTitle(this.getOutputDish(inputNum), 100);
             tabStr = tabStr.replace(/[\n\r]/g, "");
         }
-        tabStr = tabStr.slice(0, 200);
         this.manager.tabs.updateOutputTabHeader(inputNum, tabStr);
         if (this.manager.worker.recipeConfig !== undefined) {
             this.manager.tabs.updateOutputTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length);

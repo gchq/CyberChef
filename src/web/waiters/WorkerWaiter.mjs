@@ -632,6 +632,31 @@ class WorkerWaiter {
     }
 
     /**
+     * Asks the ChefWorker to get the title of the dish
+     *
+     * @param {Dish} dish
+     * @param {number} maxLength
+     * @param {Function} callback
+     * @returns {string}
+     */
+    getDishTitle(dish, maxLength, callback) {
+        const id = this.callbackID++;
+
+        this.callbacks[id] = callback;
+
+        if (this.dishWorker === null) this.setupDishWorker();
+
+        this.dishWorker.postMessage({
+            action: "getDishTitle",
+            data: {
+                dish: dish,
+                maxLength: maxLength,
+                id: id
+            }
+        });
+    }
+
+    /**
      * Sets the console log level in the workers.
      */
     setLogLevel() {
