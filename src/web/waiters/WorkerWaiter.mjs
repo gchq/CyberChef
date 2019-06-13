@@ -65,6 +65,7 @@ class WorkerWaiter {
     setupDishWorker() {
         if (this.dishWorker.worker !== null) {
             this.dishWorker.worker.terminate();
+            this.dishWorker.currentAction = "";
         }
         log.debug("Adding new DishWorker");
 
@@ -72,7 +73,7 @@ class WorkerWaiter {
         this.dishWorker.worker.addEventListener("message", this.handleDishMessage.bind(this));
 
         if (this.dishWorkerQueue.length > 0) {
-            this.postDishMessage(this.dishWorkerQueue.splice(0, 1));
+            this.postDishMessage(this.dishWorkerQueue.splice(0, 1)[0]);
         }
     }
 
@@ -646,7 +647,6 @@ class WorkerWaiter {
         this.callbacks[id] = callback;
 
         if (this.dishWorker.worker === null) this.setupDishWorker();
-
         this.postDishMessage({
             action: "getDishAs",
             data: {
