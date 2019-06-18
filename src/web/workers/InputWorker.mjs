@@ -7,6 +7,7 @@
  */
 
 import Utils from "../../core/Utils";
+import {detectFileType} from "../../core/lib/FileType";
 
 self.maxWorkers = 4;
 self.maxTabs = 1;
@@ -1023,12 +1024,21 @@ self.inputSwitch = function(switchData) {
     if (currentInput === undefined || currentInput === null) return;
 
     if (typeof switchData.outputData === "object") {
+        const output = new Uint8Array(switchData.outputData),
+            types = detectFileType(output);
+        let type = "unknown",
+            ext = "dat";
+        if (types.length) {
+            type = types[0].mime;
+            ext = types[0].extension.split(",", 1)[0];
+        }
+
         // ArrayBuffer
         currentInput.data = {
             fileBuffer: switchData.outputData,
-            name: "output.dat",
+            name: `output.${ext}`,
             size: switchData.outputData.byteLength.toLocaleString(),
-            type: "unknown" // Could run detect file type here
+            type: type
         };
     } else {
         // String

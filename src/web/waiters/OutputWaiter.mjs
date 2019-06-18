@@ -1229,18 +1229,15 @@ class OutputWaiter {
      * Handler for switch click events.
      * Moves the current output into the input textarea.
      */
-    switchClick() {
-        const active = this.getActive(true);
-        const transferable = (typeof active === "string" ? undefined : [active]);
-        if (typeof active === "string") {
-            this.manager.input.inputWorker.postMessage({
-                action: "inputSwitch",
-                data: {
-                    inputNum: this.manager.tabs.getActiveInputTab(),
-                    outputData: active
-                }
-            }, transferable);
-        }
+    async switchClick() {
+        const active = await this.getDishBuffer(this.getOutputDish(this.manager.tabs.getActiveOutputTab()));
+        this.manager.input.inputWorker.postMessage({
+            action: "inputSwitch",
+            data: {
+                inputNum: this.manager.tabs.getActiveInputTab(),
+                outputData: active
+            }
+        }, [active]);
     }
 
     /**
