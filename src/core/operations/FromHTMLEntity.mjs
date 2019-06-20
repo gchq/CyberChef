@@ -1047,8 +1047,6 @@ const entityToByte = {
     "rbbrk": 10099,
     "lobrk": 10214,
     "robrk": 10215,
-    "lang": 10216,
-    "rang": 10217,
     "Lang": 10218,
     "Rang": 10219,
     "loang": 10220,
@@ -1534,6 +1532,6 @@ const entityToByte = {
     "xopf": 120169,
     "yopf": 120170,
     "zopf": 120171
-  }
+};
 
 export default FromHTMLEntity;
