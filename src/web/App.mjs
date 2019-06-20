@@ -108,7 +108,7 @@ class App {
     handleError(err, logToConsole) {
         if (logToConsole) log.error(err);
         const msg = err.displayStr || err.toString();
-        this.alert(msg, this.options.errorTimeout, !this.options.showErrors);
+        this.alert(Utils.escapeHtml(msg), this.options.errorTimeout, !this.options.showErrors);
     }
 
 

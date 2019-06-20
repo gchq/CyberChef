@@ -293,7 +293,9 @@ class HTMLIngredient {
         const op = el.parentNode.parentNode;
         const target = op.querySelectorAll(".arg")[this.target];
 
-        target.value = el.childNodes[el.selectedIndex].getAttribute("populate-value");
+        const popVal = el.childNodes[el.selectedIndex].getAttribute("populate-value");
+        if (popVal !== "") target.value = popVal;
+
         const evt = new Event("change");
         target.dispatchEvent(evt);
 
