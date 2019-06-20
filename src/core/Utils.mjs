@@ -836,7 +836,7 @@ class Utils {
             args = m[2]
                 .replace(/"/g, '\\"') // Escape double quotes
                 .replace(/(^|,|{|:)'/g, '$1"') // Replace opening ' with "
-                .replace(/([^\\]|[^\\]\\\\)'(,|:|}|$)/g, '$1"$2') // Replace closing ' with "
+                .replace(/([^\\]|(?:\\\\)+)'(,|:|}|$)/g, '$1"$2') // Replace closing ' with "
                 .replace(/\\'/g, "'"); // Unescape single quotes
             args = "[" + args + "]";
 
