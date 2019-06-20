@@ -23,7 +23,7 @@ class AddTextToImage extends Operation {
 
         this.name = "Add Text To Image";
         this.module = "Image";
-        this.description = "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.<br><br>Note: This may cause a degradation in image quality, especially when using font sizes larger than 72.";
+        this.description = "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -152,14 +152,12 @@ class AddTextToImage extends Operation {
 
 
             // Make Webpack load the png font images
-            const fontImages = [
+            await Promise.all([
                 import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.png"),
                 import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.png"),
                 import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.png"),
                 import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.png")
-            ];
-
-            await Promise.all(fontImages);
+            ]);
 
             const font = fontsMap[fontFace];
 
@@ -190,14 +188,18 @@ class AddTextToImage extends Operation {
                 }
             });
 
-            // Scale the image to a factor of 72, so we can print the text at any size
-            const scaleFactor = 72 / size;
-            if (size !== 72) {
+            // Create a temporary image to hold the rendered text
+            const textImage = new jimp(jimp.measureText(jimpFont, text), jimp.measureTextHeight(jimpFont, text));
+            textImage.print(jimpFont, 0, 0, text);
+
+            // Scale the rendered text image to the correct size
+            const scaleFactor = size / 72;
+            if (size !== 1) {
                 // Use bicubic for decreasing size
-                if (size > 72) {
-                    image.scale(scaleFactor, jimp.RESIZE_BICUBIC);
+                if (size > 1) {
+                    textImage.scale(scaleFactor, jimp.RESIZE_BICUBIC);
                 } else {
-                    image.scale(scaleFactor, jimp.RESIZE_BILINEAR);
+                    textImage.scale(scaleFactor, jimp.RESIZE_BILINEAR);
                 }
             }
 
@@ -207,14 +209,11 @@ class AddTextToImage extends Operation {
                     xPos = 0;
                     break;
                 case "Center":
-                    xPos = (image.getWidth() / 2) - (jimp.measureText(jimpFont, text) / 2);
+                    xPos = (image.getWidth() / 2) - (textImage.getWidth() / 2);
                     break;
                 case "Right":
-                    xPos = image.getWidth() - jimp.measureText(jimpFont, text);
+                    xPos = image.getWidth() - textImage.getWidth();
                     break;
-                default:
-                    // Adjust x position for the scaled image
-                    xPos = xPos * scaleFactor;
             }
 
             switch (vAlign) {
@@ -222,25 +221,15 @@ class AddTextToImage extends Operation {
                     yPos = 0;
                     break;
                 case "Middle":
-                    yPos = (image.getHeight() / 2) - (jimp.measureTextHeight(jimpFont, text) / 2);
+                    yPos = (image.getHeight() / 2) - (textImage.getHeight() / 2);
                     break;
                 case "Bottom":
-                    yPos = image.getHeight() - jimp.measureTextHeight(jimpFont, text);
+                    yPos = image.getHeight() - textImage.getHeight();
                     break;
-                default:
-                    // Adjust y position for the scaled image
-                    yPos = yPos * scaleFactor;
             }
 
-            image.print(jimpFont, xPos, yPos, text);
-
-            if (size !== 72) {
-                if (size > 72) {
-                    image.scale(1 / scaleFactor, jimp.RESIZE_BILINEAR);
-                } else {
-                    image.scale(1 / scaleFactor, jimp.RESIZE_BICUBIC);
-                }
-            }
+            // Blit the rendered text image onto the original source image
+            image.blit(textImage, xPos, yPos);
 
             let imageBuffer;
             if (image.getMIME() === "image/gif") {
