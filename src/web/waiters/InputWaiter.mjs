@@ -815,7 +815,6 @@ class InputWaiter {
 
         // Display the number of files as pending so the user
         // knows that we've received the files.
-        this.hideLoadingMessage();
         this.showLoadingInfo({
             pending: numFiles,
             loading: 0,
@@ -837,42 +836,11 @@ class InputWaiter {
     }
 
     /**
-     * Displays a message to show the app is loading files
-     */
-    showLoadingMessage() {
-        $("#loading-files-modal").modal("show");
-    }
-
-    /**
-     * Hides the loading message
-     */
-    hideLoadingMessage() {
-        $("#loading-files-modal").modal("hide");
-    }
-
-    /**
-     * Checks the length of the files input.
-     * If it's 0, hide loading message
-     */
-    checkInputFiles() {
-        const fileInput = document.getElementById("open-file");
-        const folderInput = document.getElementById("open-folder");
-
-        if (fileInput.value.length === 0 && folderInput.value.length === 0) {
-            this.hideLoadingMessage();
-        }
-    }
-
-    /**
      * Handler for open input button click.
      * Opens the open file dialog.
      */
     inputOpenClick() {
-        this.showLoadingMessage();
         document.getElementById("open-file").click();
-
-        // When the document body regains focus, check if there's files in the input field
-        document.body.onfocus = this.checkInputFiles.bind(this);
     }
 
     /**
@@ -880,11 +848,7 @@ class InputWaiter {
      * Opens the open folder dialog.
      */
     folderOpenClick() {
-        this.showLoadingMessage();
         document.getElementById("open-folder").click();
-
-        // When the document body regains focus, check if there's files in the input field
-        document.body.onfocus = this.checkInputFiles.bind(this);
     }
 
     /**
