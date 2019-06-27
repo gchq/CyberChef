@@ -88,8 +88,8 @@ class PGPVerify extends Operation {
                         text += "\n";
                     }
                     text += [
-                        `PGP fingerprint: ${km.get_pgp_fingerprint().toString("hex")}`,
                         `PGP key ID: ${km.get_pgp_short_key_id()}`,
+                        `PGP fingerprint: ${km.get_pgp_fingerprint().toString("hex")}`,
                         `Signed on ${new Date(ds.sig.when_generated() * 1000).toUTCString()}`,
                         "----------------------------------\n"
                     ].join("\n");
