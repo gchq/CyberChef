@@ -9,54 +9,52 @@ import OperationError from "../errors/OperationError";
 import Bzip2 from "libbzip2-wasm";
 
 /**
- * Bzip2 Decompress operation
+ * Bzip2 Compress operation
  */
-class Bzip2Decompress extends Operation {
+class Bzip2Compress extends Operation {
 
     /**
-     * Bzip2Decompress constructor
+     * Bzip2Compress constructor
      */
     constructor() {
         super();
 
-        this.name = "Bzip2 Decompress";
+        this.name = "Bzip2 Compress";
         this.module = "Compression";
-        this.description = "Decompresses data using the Bzip2 algorithm.";
+        this.description = "Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).";
         this.infoURL = "https://wikipedia.org/wiki/Bzip2";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [
             {
-                name: "Use low-memory, slower decompression algorithm",
-                type: "boolean",
-                value: false
-            }
-        ];
-        this.patterns = [
+                name: "Block size (100s of kb)",
+                type: "number",
+                value: 9
+            },
             {
-                "match": "^\\x42\\x5a\\x68",
-                "flags": "",
-                "args": []
+                name: "Work factor",
+                type: "number",
+                value: 30
             }
         ];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {File}
      */
     run(input, args) {
-        const [small] = args;
+        const [blockSize, workFactor] = args;
         if (input.byteLength <= 0) {
             throw new OperationError("Please provide an input.");
         }
         if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Loading Bzip2...");
         return new Promise((resolve, reject) => {
             Bzip2().then(bzip2 => {
-                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Decompressing data...");
+                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Compressing data...");
                 const inpArray = new Uint8Array(input);
-                const bzip2cc = bzip2.decompressBZ2(inpArray, small ? 1 : 0);
+                const bzip2cc = bzip2.compressBZ2(inpArray, blockSize, workFactor);
                 if (bzip2cc.error !== 0) {
                     reject(new OperationError(bzip2cc.error_msg));
                 } else {
@@ -69,4 +67,4 @@ class Bzip2Decompress extends Operation {
 
 }
 
-export default Bzip2Decompress;
+export default Bzip2Compress;
