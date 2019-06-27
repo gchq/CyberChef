@@ -74,7 +74,7 @@ Normalized: ${ic * 26}
 - English text generally has an IC of between 0.67 to 0.78.
 - 'Random' text is determined by the probability that each letter occurs the same number of times as another.
 
-The graph shows the IC of the input data. A low IC generally means that the text is random, encoded or encrypted.
+The graph shows the IC of the input data. A low IC generally means that the text is random, compressed or encrypted.
 
 <script type='application/javascript'>
   var canvas = document.getElementById("chart-area"),
