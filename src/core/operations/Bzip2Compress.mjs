@@ -29,7 +29,9 @@ class Bzip2Compress extends Operation {
             {
                 name: "Block size (100s of kb)",
                 type: "number",
-                value: 9
+                value: 9,
+                min: 1,
+                max: 9
             },
             {
                 name: "Work factor",
