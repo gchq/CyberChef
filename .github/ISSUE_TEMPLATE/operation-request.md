@@ -1,6 +1,6 @@
 ---
 name: Operation request
-about: Suggest an operation
+about: Suggest a new operation
 title: 'Operation request: <Insert title here>'
 labels: operation
 assignees: ''
