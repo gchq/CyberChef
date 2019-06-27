@@ -52,6 +52,7 @@ import "./tests/Image";
 import "./tests/Jump";
 import "./tests/JSONBeautify";
 import "./tests/JSONMinify";
+import "./tests/JSONtoCSV";
 import "./tests/JWTDecode";
 import "./tests/JWTSign";
 import "./tests/JWTVerify";
