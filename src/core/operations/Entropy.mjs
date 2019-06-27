@@ -383,7 +383,7 @@ class Entropy extends Operation {
     run(input, args) {
         const visualizationType = args[0];
 
-        if (visualizationType === 'Shannon') {
+        if (visualizationType === "Shannon") {
             return this.createShannonEntropyVisualization(this.calculateShannonEntropy(input));
         } else if (visualizationType === "Histogram (Bar)") {
             return this.createByteFrequencyBarHistogram(this.calculateByteFrequency(input));
