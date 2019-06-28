@@ -617,6 +617,23 @@ class RecipeWaiter {
             ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
             ingredientChildRule.style.gridColumn = "1 / span 4";
         }
+
+        // Hide Chef icon on Bake button if the page is compressed
+        const bakeIcon = document.querySelector("#bake img");
+
+        if (recList.clientWidth < 370) {
+            // Hide Chef icon on Bake button
+            bakeIcon.style.display = "none";
+        } else {
+            bakeIcon.style.display = "inline-block";
+        }
+
+        // Scale controls to fit pane width
+        const controls = document.getElementById("controls");
+        const controlsContent = document.getElementById("controls-content");
+        const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
+
+        controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
     }
 
 }

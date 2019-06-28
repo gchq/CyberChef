@@ -21,6 +21,14 @@
     background-color: var(--secondary-background-colour);
 }
 
+#controls-content {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: center left;
+}
+
 #auto-bake-label {
     display: inline-block;
     width: 100px;

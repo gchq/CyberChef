@@ -244,7 +244,7 @@ class App {
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
-     * @param {boolean} [minimise=false] - Set this flag if attempting to minimuse frames to 0 width
+     * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseSplitter(minimise=false) {
         if (this.columnSplitter) this.columnSplitter.destroy();
@@ -252,9 +252,9 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 370, 450],
+            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
-            expandToMin: false,
+            expandToMin: true,
             onDrag: function() {
                 this.manager.recipe.adjustWidth();
             }.bind(this)
