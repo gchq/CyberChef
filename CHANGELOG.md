@@ -2,6 +2,10 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.34.0] - 2019-06-28
+- Various new visualisations added to the 'Entropy' operation [@MShwed] | [#535]
+- Efficiency improvements made to the 'Entropy' operation for large file support [@n1474335]
+
 ### [8.33.0] - 2019-06-27
 - 'Bzip2 Compress' operation added and 'Bzip2 Decompress' operation greatly improved [@artemisbot] | [#531]
 
@@ -136,6 +140,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.34.0]: https://github.com/gchq/CyberChef/releases/tag/v8.34.0
 [8.33.0]: https://github.com/gchq/CyberChef/releases/tag/v8.33.0
 [8.32.0]: https://github.com/gchq/CyberChef/releases/tag/v8.32.0
 [8.31.0]: https://github.com/gchq/CyberChef/releases/tag/v8.31.0
@@ -198,6 +203,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@anthony-arnold]: https://github.com/anthony-arnold
 [@masq]: https://github.com/masq
 [@Ge0rg3]: https://github.com/Ge0rg3
+[@MShwed]: https://github.com/MShwed
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -242,4 +248,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#525]: https://github.com/gchq/CyberChef/pull/525
 [#531]: https://github.com/gchq/CyberChef/pull/531
 [#533]: https://github.com/gchq/CyberChef/pull/533
+[#535]: https://github.com/gchq/CyberChef/pull/535
 [#571]: https://github.com/gchq/CyberChef/pull/571
