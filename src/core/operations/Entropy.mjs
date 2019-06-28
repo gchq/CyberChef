@@ -8,7 +8,6 @@ import * as d3temp from "d3";
 import * as nodomtemp from "nodom";
 
 import Operation from "../Operation";
-import Utils from "../Utils";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
 const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
@@ -25,16 +24,17 @@ class Entropy extends Operation {
         super();
 
         this.name = "Entropy";
-        this.module = "Default";
+        this.module = "Charts";
         this.description = "Shannon Entropy, in the context of information theory, is a measure of the rate at which information is produced by a source of data. It can be used, in a broad sense, to detect whether data is likely to be structured or unstructured. 8 is the maximum, representing highly unstructured, 'random' data. English language text usually falls somewhere between 3.5 and 5. Properly encrypted or compressed data should have an entropy of over 7.5.";
         this.infoURL = "https://wikipedia.org/wiki/Entropy_(information_theory)";
-        this.inputType = "byteArray";
-        this.outputType = "html";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "json";
+        this.presentType = "html";
         this.args = [
             {
                 "name": "Visualisation",
                 "type": "option",
-                "value": ["Shannon", "Histogram (Bar)", "Histogram (Line)", "Curve", "Image"]
+                "value": ["Shannon scale", "Histogram (Bar)", "Histogram (Line)", "Curve", "Image"]
             }
         ];
     }
@@ -42,19 +42,27 @@ class Entropy extends Operation {
     /**
      * Calculates the frequency of bytes in the input.
      *
-     * @param {byteArray} input
-     * @returns {frequency}
+     * @param {Uint8Array} input
+     * @returns {number}
      */
     calculateShannonEntropy(input) {
         const prob = [],
-            uniques = input.unique(),
-            str = Utils.byteArrayToChars(input);
+            occurrences = new Array(256).fill(0);
 
+        // Count occurrences of each byte in the input
         let i;
-        for (i = 0; i < uniques.length; i++) {
-            prob.push(str.count(Utils.chr(uniques[i])) / input.length);
+        for (i = 0; i < input.length; i++) {
+            occurrences[input[i]]++;
         }
 
+        // Store probability list
+        for (i = 0; i < occurrences.length; i++) {
+            if (occurrences[i] > 0) {
+                prob.push(occurrences[i] / input.length);
+            }
+        }
+
+        // Calculate Shannon entropy
         let entropy = 0,
             p;
 
@@ -67,17 +75,16 @@ class Entropy extends Operation {
     }
 
     /**
+     * Calculates the scanning entropy of the input
      *
-     * @param inputBytes
-     * @returns {entropyData}
+     * @param {Uint8Array} inputBytes
+     * @returns {Object}
      */
-    calculateScanningEntropy(inputBytes, binWidth) {
+    calculateScanningEntropy(inputBytes) {
         const entropyData = [];
+        const binWidth = inputBytes.length < 256 ? 8 : 256;
 
-        if (inputBytes.length < 256) binWidth = 8;
-        else binWidth = 256;
-
-        for (let bytePos = 0; bytePos < inputBytes.length; bytePos+=binWidth) {
+        for (let bytePos = 0; bytePos < inputBytes.length; bytePos += binWidth) {
             const block = inputBytes.slice(bytePos, bytePos+binWidth);
             entropyData.push(this.calculateShannonEntropy(block));
         }
@@ -96,7 +103,6 @@ class Entropy extends Operation {
      * @param {object} margins
      * @param {string} xTitle
      * @param {string} yTitle
-     * @returns {undefined}
      */
     createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, title, xTitle, yTitle) {
         // Axes
@@ -138,31 +144,31 @@ class Entropy extends Operation {
     /**
      * Calculates the frequency of bytes in the input.
      *
-     * @param {byteArray} inputBytes
-     * @returns {frequency}
+     * @param {Uint8Array} inputBytes
+     * @returns {number[]}
      */
     calculateByteFrequency(inputBytes) {
-        const byteFrequency = [];
-        for (let i = 0; i < 256; i++) {
-            if (inputBytes.length > 0) {
-                let count = 0;
-                for (const byte of inputBytes) {
-                    if (byte === i) count++;
-                }
-                byteFrequency.push(count / inputBytes.length);
-            } else {
-                byteFrequency.push(0);
-            }
+        const freq = new Array(256).fill(0);
+        if (inputBytes.length === 0) return freq;
+
+        // Count occurrences of each byte in the input
+        let i;
+        for (i = 0; i < inputBytes.length; i++) {
+            freq[inputBytes[i]]++;
         }
 
-        return byteFrequency;
+        for (i = 0; i < freq.length; i++) {
+            freq[i] = freq[i] / inputBytes.length;
+        }
+
+        return freq;
     }
 
     /**
      * Calculates the frequency of bytes in the input.
      *
-     * @param {byteArray} byteFrequency
-     * @returns {frequency}
+     * @param {number[]} byteFrequency
+     * @returns {HTML}
      */
     createByteFrequencyLineHistogram(byteFrequency) {
         const margins = { top: 30, right: 20, bottom: 50, left: 30 };
@@ -205,7 +211,7 @@ class Entropy extends Operation {
     /**
      * Creates a byte frequency histogram
      *
-     * @param {byteArray} byteFrequency
+     * @param {number[]} byteFrequency
      * @returns {HTML}
      */
     createByteFrequencyBarHistogram(byteFrequency) {
@@ -248,8 +254,7 @@ class Entropy extends Operation {
     /**
      * Creates a byte frequency histogram
      *
-     * @param {byteArray} input
-     * @param {number} blockSize
+     * @param {number[]} entropyData
      * @returns {HTML}
      */
     createEntropyCurve(entropyData) {
@@ -294,8 +299,7 @@ class Entropy extends Operation {
     /**
      * Creates an image representation of the entropy
      *
-     * @param {byteArray} input
-     * @param {number} blockSize
+     * @param {number[]} entropyData
      * @returns {HTML}
      */
     createEntropyImage(entropyData) {
@@ -341,7 +345,7 @@ class Entropy extends Operation {
      * Displays the entropy as a scale bar for web apps.
      *
      * @param {number} entropy
-     * @returns {html}
+     * @returns {HTML}
      */
     createShannonEntropyVisualization(entropy) {
         return `Shannon entropy: ${entropy}
@@ -376,23 +380,49 @@ class Entropy extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {html}
+     * @returns {json}
      */
     run(input, args) {
         const visualizationType = args[0];
+        input = new Uint8Array(input);
 
-        if (visualizationType === "Shannon") {
-            return this.createShannonEntropyVisualization(this.calculateShannonEntropy(input));
-        } else if (visualizationType === "Histogram (Bar)") {
-            return this.createByteFrequencyBarHistogram(this.calculateByteFrequency(input));
-        } else if (visualizationType === "Histogram (Line)") {
-            return this.createByteFrequencyLineHistogram(this.calculateByteFrequency(input));
-        } else if (visualizationType === "Curve") {
-            return this.createEntropyCurve(this.calculateScanningEntropy(input).entropyData);
-        } else if (visualizationType === "Image") {
-            return this.createEntropyImage(this.calculateScanningEntropy(input).entropyData);
+        switch (visualizationType) {
+            case "Histogram (Bar)":
+            case "Histogram (Line)":
+                return this.calculateByteFrequency(input);
+            case "Curve":
+            case "Image":
+                return this.calculateScanningEntropy(input).entropyData;
+            case "Shannon scale":
+            default:
+                return this.calculateShannonEntropy(input);
+        }
+    }
+
+    /**
+     * Displays the entropy in a visualisation for web apps.
+     *
+     * @param {json} entropyData
+     * @param {Object[]} args
+     * @returns {html}
+     */
+    present(entropyData, args) {
+        const visualizationType = args[0];
+
+        switch (visualizationType) {
+            case "Histogram (Bar)":
+                return this.createByteFrequencyBarHistogram(entropyData);
+            case "Histogram (Line)":
+                return this.createByteFrequencyLineHistogram(entropyData);
+            case "Curve":
+                return this.createEntropyCurve(entropyData);
+            case "Image":
+                return this.createEntropyImage(entropyData);
+            case "Shannon scale":
+            default:
+                return this.createShannonEntropyVisualization(entropyData);
         }
     }
 }
