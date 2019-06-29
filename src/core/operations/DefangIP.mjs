@@ -24,18 +24,8 @@ class DefangIP extends Operation {
         this.infoURL = "https://isc.sans.edu/forums/diary/Defang+all+the+things/22744/";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [
-            {
-                name: "IPV4",
-                type: "boolean",
-                value: true
-            },
-            {
-                name: "IPV6",
-                type: "boolean",
-                value: true
-            }
-        ];
+        this.args = [];
+
     }
 
     /**
@@ -44,18 +34,17 @@ class DefangIP extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [IPV4, IPV6] = args;
 
-        if (IPV4) {
-            input = input.replace(IPV4_REGEX, x => {
-                return x.replace(/\./g, "[.]");
-            });
-        }
-        if (IPV6) {
-            input = input.replace(IPV6_REGEX, x => {
-                return x.replace(/:/g, "[:]");
-            });
-        }
+
+        input = input.replace(IPV4_REGEX, x => {
+            return x.replace(/\./g, "[.]");
+        });
+
+
+        input = input.replace(IPV6_REGEX, x => {
+            return x.replace(/:/g, "[:]");
+        });
+
         return input;
     }
 }
