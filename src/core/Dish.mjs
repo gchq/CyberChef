@@ -166,24 +166,25 @@ class Dish {
      */
     async getTitle(maxLength) {
         let title = "";
+        const cloned = this.clone();
 
         switch (this.type) {
             case Dish.FILE:
-                title = this.value.name;
+                title = cloned.value.name;
                 break;
             case Dish.LIST_FILE:
-                title = `${this.value.length} file(s)`;
+                title = `${cloned.value.length} file(s)`;
                 break;
             case Dish.ARRAY_BUFFER:
             case Dish.BYTE_ARRAY:
-                title = await this.detectDishType();
+                title = await cloned.detectDishType();
                 if (title === null) {
-                    this.value = this.value.slice(0, 2048);
-                    title = await this.get("string");
+                    cloned.value = cloned.value.slice(0, 2048);
+                    title = await cloned.get(Dish.STRING);
                 }
                 break;
             default:
-                title = await this.get("string");
+                title = await cloned.get(Dish.STRING);
         }
 
         title = title.slice(0, maxLength);
