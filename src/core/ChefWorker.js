@@ -49,8 +49,8 @@ self.postMessage({
  *         options: {Object},
  *         progress: {number},
  *         step: {boolean},
- *         inputNum: {number} | undefined
- *     } | undefined
+ *         [inputNum=-1]: {number}
+ *     }
  * }
  */
 self.addEventListener("message", function(e) {
@@ -105,7 +105,7 @@ async function bake(data) {
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
-            data.options        // Options set by the user
+            data.options         // Options set by the user
         );
 
         const transferable = (data.input instanceof ArrayBuffer) ? [data.input] : undefined;
