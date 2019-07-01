@@ -124,16 +124,21 @@ class RecipeWaiter {
      * @param {event} evt
      */
     opSortEnd(evt) {
-        if (this.removeIntent) {
-            if (evt.item.parentNode.id === "rec-list") {
-                evt.item.remove();
-            }
+        if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
+            evt.item.remove();
             return;
         }
 
         // Reinitialise the popover on the original element in the ops list because for some reason it
-        // gets destroyed and recreated.
-        this.manager.ops.enableOpsListPopovers(evt.clone);
+        // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
+        let enableOpsElement;
+        if (evt.clone.parentNode && evt.clone.parentNode.classList.contains("op-list")) {
+            enableOpsElement = evt.clone;
+        } else {
+            enableOpsElement = evt.item;
+            $(evt.item).attr("data-toggle", "popover");
+        }
+        this.manager.ops.enableOpsListPopovers(enableOpsElement);
 
         if (evt.item.parentNode.id !== "rec-list") {
             return;
@@ -612,6 +617,23 @@ class RecipeWaiter {
             ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
             ingredientChildRule.style.gridColumn = "1 / span 4";
         }
+
+        // Hide Chef icon on Bake button if the page is compressed
+        const bakeIcon = document.querySelector("#bake img");
+
+        if (recList.clientWidth < 370) {
+            // Hide Chef icon on Bake button
+            bakeIcon.style.display = "none";
+        } else {
+            bakeIcon.style.display = "inline-block";
+        }
+
+        // Scale controls to fit pane width
+        const controls = document.getElementById("controls");
+        const controlsContent = document.getElementById("controls-content");
+        const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
+
+        controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
     }
 
 }

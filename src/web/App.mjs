@@ -264,9 +264,9 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 370, 450],
+            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
-            expandToMin: false,
+            expandToMin: true,
             onDrag: this.debounce(function() {
                 this.manager.recipe.adjustWidth();
                 this.manager.input.calcMaxTabs();

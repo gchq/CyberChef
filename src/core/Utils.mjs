@@ -201,11 +201,20 @@ class Utils {
      * Utils.parseEscapedChars("\\n");
      */
     static parseEscapedChars(str) {
-        return str.replace(/(\\)?\\([bfnrtv0'"]|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\})/g, function(m, a, b) {
+        return str.replace(/(\\)?\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, a, b) {
             if (a === "\\") return "\\"+b;
             switch (b[0]) {
+                case "\\":
+                    return "\\";
                 case "0":
-                    return "\0";
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                    return String.fromCharCode(parseInt(b, 8));
                 case "b":
                     return "\b";
                 case "t":
