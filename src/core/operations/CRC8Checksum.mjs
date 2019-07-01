@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
 
 /**
  * CRC-8 Checksum operation
@@ -25,19 +24,36 @@ class CRC8Checksum extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
-            /* Example arguments. See the project wiki for full details.
             {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
+              "name": "Algorithm",
+              "type": "option",
+              "value": [
+                  "CRC-8"
+              ]  
             }
-            */
-        ];
+        ]
+    }
+
+    calculateCRC8(algorithmName, polynomial, initializationValue, refIn, refOut, xorOut, check) {
+        let initializationValue = this.reverseBits();
+
+        return crc;
+    }
+
+    /**
+     * For an 8 bit initialization value reverse the bits. 
+     * 
+     * @param input 
+     */
+    reverseBits(input) {
+        let reflectedBits = input.toString(2).split('');
+        for (let i = 0; i < hashSize / 2; i++) {
+            let x = reflectedBits[i];
+            reflectedBits[i] = reflectedBits[hashSize - i - 1];
+            reflectedBits[hashSize - i - 1] = x;
+        }
+
+        return parseInt(reflectedBits.join(''));
     }
 
     /**
@@ -46,11 +62,21 @@ class CRC8Checksum extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        // const [firstArg, secondArg] = args;
+        const algorithm = args[0];
 
-        throw new OperationError("Test");
+        if (algorithm === "CRC-8") {
+            return this.calculateCRC8(algorithm, 0x7, 0x0, false, false, 0x0, 0xF4)
+        }
+
+        return "";
     }
 
 }
+
+const hashSize = 8;
+
+// const CRC8AlgoParameters = {
+//     'CRC8'
+// }
 
 export default CRC8Checksum;
