@@ -1,6 +1,6 @@
 info face="Roboto" size=72 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=1,1,1,1 spacing=-2,-2
 common lineHeight=85 base=67 scaleW=512 scaleH=512 pages=1 packed=0
-page id=0 file="images/Roboto72White.png"
+page id=0 file="Roboto72White.png"
 chars count=98
 char id=0       x=0    y=0    width=0    height=0    xoffset=-1   yoffset=66   xadvance=0    page=0    chnl=0 
 char id=10      x=0    y=0    width=70   height=99   xoffset=2    yoffset=-11  xadvance=74   page=0    chnl=0 

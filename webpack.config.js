@@ -104,7 +104,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(ico|eot|ttf|woff|woff2|fnt)$/,
+                test: /\.(ico|eot|ttf|woff|woff2)$/,
                 loader: "url-loader",
                 options: {
                     limit: 10000,
@@ -119,9 +119,17 @@ module.exports = {
                     encoding: "base64"
                 }
             },
+            { // Store font .fnt and .png files in a separate fonts folder
+                test: /(\.fnt$|bmfonts\/.+\.png$)/,
+                loader: "file-loader",
+                options: {
+                    name: "[name].[ext]",
+                    outputPath: "assets/fonts"
+                }
+            },
             { // First party images are saved as files to be cached
                 test: /\.(png|jpg|gif)$/,
-                exclude: /node_modules/,
+                exclude: /(node_modules|bmfonts)/,
                 loader: "file-loader",
                 options: {
                     name: "images/[name].[ext]"
