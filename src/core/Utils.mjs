@@ -595,22 +595,6 @@ class Utils {
 
 
     /**
-     * Converts a string to an ArrayBuffer.
-     *
-     * @param {string} string
-     */
-    static strToArrayBuffer(string) {
-        const arrayBuffer = new ArrayBuffer(string.length * 2);
-        const arrayBufferView = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < string.length; i++) {
-            arrayBufferView[i] = string.charCodeAt(i);
-        }
-
-        return arrayBuffer;
-    }
-
-
-    /**
      * Parses CSV data and returns it as a two dimensional array or strings.
      *
      * @param {string} data
