@@ -60,7 +60,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                exclude: /node_modules\/(?!jsesc|crypto-api|bootstrap)/,
                 options: {
                     configFile: path.resolve(__dirname, "babel.config.js"),
                     cacheDirectory: true,
