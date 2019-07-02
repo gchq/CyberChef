@@ -6,7 +6,6 @@
  * @license Apache-2.0
  */
 
-self.port = null;
 self.id = null;
 
 
