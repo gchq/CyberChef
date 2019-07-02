@@ -102,7 +102,11 @@
             "JWT Decode",
             "Citrix CTX1 Encode",
             "Citrix CTX1 Decode",
-            "Pseudo-Random Number Generator"
+            "Pseudo-Random Number Generator",
+            "Enigma",
+            "Bombe",
+            "Multiple Bombe",
+            "Typex"
         ]
     },
     {
@@ -165,6 +169,9 @@
             "Parse URI",
             "URL Encode",
             "URL Decode",
+            "Protobuf Decode",
+            "VarInt Encode",
+            "VarInt Decode",
             "Format MAC addresses",
             "Change IP format",
             "Group IP addresses",
@@ -293,6 +300,8 @@
             "HAS-160",
             "Whirlpool",
             "Snefru",
+            "BLAKE2b",
+            "BLAKE2s",
             "SSDEEP",
             "CTPH",
             "Compare SSDEEP hashes",
@@ -377,7 +386,11 @@
             "Image Hue/Saturation/Lightness",
             "Sharpen Image",
             "Convert Image Format",
-            "Add Text To Image"
+            "Add Text To Image",
+            "Hex Density chart",
+            "Scatter chart",
+            "Series chart",
+            "Heatmap chart"
         ]
     },
     {
@@ -385,6 +398,7 @@
         "ops": [
             "Entropy",
             "Frequency distribution",
+            "Index of Coincidence",
             "Chi Square",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
@@ -394,6 +408,7 @@
             "Generate QR Code",
             "Parse QR Code",
             "Haversine distance",
+            "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
             "XKCD Random Number"

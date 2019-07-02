@@ -100,7 +100,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
 /**
  * To Hexadecimal delimiters.
  */
-export const TO_HEX_DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
+export const TO_HEX_DELIM_OPTIONS = ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
 
 
 /**

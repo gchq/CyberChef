@@ -124,16 +124,21 @@ class RecipeWaiter {
      * @param {event} evt
      */
     opSortEnd(evt) {
-        if (this.removeIntent) {
-            if (evt.item.parentNode.id === "rec-list") {
-                evt.item.remove();
-            }
+        if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
+            evt.item.remove();
             return;
         }
 
         // Reinitialise the popover on the original element in the ops list because for some reason it
-        // gets destroyed and recreated.
-        this.manager.ops.enableOpsListPopovers(evt.clone);
+        // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
+        let enableOpsElement;
+        if (evt.clone.parentNode && evt.clone.parentNode.classList.contains("op-list")) {
+            enableOpsElement = evt.clone;
+        } else {
+            enableOpsElement = evt.item;
+            $(evt.item).attr("data-toggle", "popover");
+        }
+        this.manager.ops.enableOpsListPopovers(enableOpsElement);
 
         if (evt.item.parentNode.id !== "rec-list") {
             return;
@@ -205,6 +210,7 @@ class RecipeWaiter {
      * @fires Manager#statechange
      */
     ingChange(e) {
+        if (e && e.target && e.target.classList.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -340,10 +346,11 @@ class RecipeWaiter {
     /**
      * Moves or removes the breakpoint indicator in the recipe based on the position.
      *
-     * @param {number} position
+     * @param {number|boolean} position - If boolean, turn off all indicators
      */
     updateBreakpointIndicator(position) {
         const operations = document.querySelectorAll("#rec-list li.operation");
+        if (typeof position === "boolean") position = operations.length;
         for (let i = 0; i < operations.length; i++) {
             if (i === position) {
                 operations[i].classList.add("break");
@@ -430,6 +437,23 @@ class RecipeWaiter {
 
 
     /**
+     * Triggers various change events for operation arguments that have just been initialised.
+     *
+     * @param {HTMLElement} op
+     */
+    triggerArgEvents(op) {
+        // Trigger populateOption and argSelector events
+        const triggerableOptions = op.querySelectorAll(".populate-option, .arg-selector");
+        const evt = new Event("change", {bubbles: true});
+        if (triggerableOptions.length) {
+            for (const el of triggerableOptions) {
+                el.dispatchEvent(evt);
+            }
+        }
+    }
+
+
+    /**
      * Handler for operationadd events.
      *
      * @listens Manager#operationadd
@@ -438,6 +462,8 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
+
+        this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -591,6 +617,23 @@ class RecipeWaiter {
             ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
             ingredientChildRule.style.gridColumn = "1 / span 4";
         }
+
+        // Hide Chef icon on Bake button if the page is compressed
+        const bakeIcon = document.querySelector("#bake img");
+
+        if (recList.clientWidth < 370) {
+            // Hide Chef icon on Bake button
+            bakeIcon.style.display = "none";
+        } else {
+            bakeIcon.style.display = "inline-block";
+        }
+
+        // Scale controls to fit pane width
+        const controls = document.getElementById("controls");
+        const controlsContent = document.getElementById("controls-content");
+        const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
+
+        controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
     }
 
 }

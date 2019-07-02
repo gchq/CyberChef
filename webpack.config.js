@@ -48,7 +48,7 @@ module.exports = {
             "process.browser": "true"
         }),
         new MiniCssExtractPlugin({
-            filename: "[name].css"
+            filename: "assets/[name].css"
         }),
     ],
     resolve: {
@@ -80,7 +80,12 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
                     "css-loader",
                     "postcss-loader",
                 ]
@@ -88,7 +93,12 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
                     "css-loader",
                     "sass-loader",
                 ]
@@ -97,11 +107,20 @@ module.exports = {
                 test: /\.(ico|eot|ttf|woff|woff2|fnt)$/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000
+                    limit: 10000,
+                    name: "[hash].[ext]",
+                    outputPath: "assets"
+                }
+            },
+            {
+                test: /\.svg$/,
+                loader: "svg-url-loader",
+                options: {
+                    encoding: "base64"
                 }
             },
             { // First party images are saved as files to be cached
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif)$/,
                 exclude: /node_modules/,
                 loader: "file-loader",
                 options: {
@@ -109,11 +128,13 @@ module.exports = {
                 }
             },
             { // Third party images are inlined
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000
+                    limit: 10000,
+                    name: "[hash].[ext]",
+                    outputPath: "assets"
                 }
             },
         ]
@@ -126,11 +147,15 @@ module.exports = {
         warningsFilter: [
             /source-map/,
             /dependency is an expression/,
-            /export 'default'/
+            /export 'default'/,
+            /Can't resolve 'sodium'/
         ],
     },
     node: {
-        fs: "empty"
+        fs: "empty",
+        "child_process": "empty",
+        net: "empty",
+        tls: "empty"
     },
     performance: {
         hints: false

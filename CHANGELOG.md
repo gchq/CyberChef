@@ -2,6 +2,40 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.34.0] - 2019-06-28
+- Various new visualisations added to the 'Entropy' operation [@MShwed] | [#535]
+- Efficiency improvements made to the 'Entropy' operation for large file support [@n1474335]
+
+### [8.33.0] - 2019-06-27
+- 'Bzip2 Compress' operation added and 'Bzip2 Decompress' operation greatly improved [@artemisbot] | [#531]
+
+### [8.32.0] - 2019-06-27
+- 'Indec of Coincidence' operation added [@Ge0rg3] | [#571]
+
+### [8.31.0] - 2019-04-12
+- The downloadable version of CyberChef is now a .zip file containing separate modules rather than a single .htm file. It is still completely standalone and will not make any external network requests. This change reduces the complexity of the build process significantly. [@n1474335]
+
+### [8.30.0] - 2019-04-12
+- 'Decode Protobuf' operation added [@n1474335] | [#533]
+
+### [8.29.0] - 2019-03-31
+- 'BLAKE2s' and 'BLAKE2b' hashing operations added [@h345983745] | [#525]
+
+### [8.28.0] - 2019-03-31
+- 'Heatmap Chart', 'Hex Density Chart', 'Scatter Chart' and 'Series Chart' operation added [@artemisbot] [@tlwr] | [#496] [#143]
+
+### [8.27.0] - 2019-03-14
+- 'Enigma', 'Typex', 'Bombe' and 'Multiple Bombe' operations added [@s2224834] | [#516]
+- See [this wiki article](https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex) for a full explanation of these operations.
+- New Bombe-style loading animation added for long-running operations [@n1474335]
+- New operation argument types added: `populateMultiOption` and `argSelector` [@n1474335]
+
+### [8.26.0] - 2019-03-09
+- Various image manipulation operations added [@j433866] | [#506]
+
+### [8.25.0] - 2019-03-09
+- 'Extract Files' operation added and more file formats supported [@n1474335] | [#440]
+
 ### [8.24.0] - 2019-02-08
 - 'DNS over HTTPS' operation added [@h345983745] | [#489]
 
@@ -106,6 +140,16 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.34.0]: https://github.com/gchq/CyberChef/releases/tag/v8.34.0
+[8.33.0]: https://github.com/gchq/CyberChef/releases/tag/v8.33.0
+[8.32.0]: https://github.com/gchq/CyberChef/releases/tag/v8.32.0
+[8.31.0]: https://github.com/gchq/CyberChef/releases/tag/v8.31.0
+[8.30.0]: https://github.com/gchq/CyberChef/releases/tag/v8.30.0
+[8.29.0]: https://github.com/gchq/CyberChef/releases/tag/v8.29.0
+[8.28.0]: https://github.com/gchq/CyberChef/releases/tag/v8.28.0
+[8.27.0]: https://github.com/gchq/CyberChef/releases/tag/v8.27.0
+[8.26.0]: https://github.com/gchq/CyberChef/releases/tag/v8.26.0
+[8.25.0]: https://github.com/gchq/CyberChef/releases/tag/v8.25.0
 [8.24.0]: https://github.com/gchq/CyberChef/releases/tag/v8.24.0
 [8.23.1]: https://github.com/gchq/CyberChef/releases/tag/v8.23.1
 [8.23.0]: https://github.com/gchq/CyberChef/releases/tag/v8.23.0
@@ -142,7 +186,9 @@ All major and minor version changes will be documented in this file. Details of 
 [@j433866]: https://github.com/j433866
 [@GCHQ77703]: https://github.com/GCHQ77703
 [@h345983745]: https://github.com/h345983745
+[@s2224834]: https://github.com/s2224834
 [@artemisbot]: https://github.com/artemisbot
+[@tlwr]: https://github.com/tlwr
 [@picapi]: https://github.com/picapi
 [@Dachande663]: https://github.com/Dachande663
 [@JustAnotherMark]: https://github.com/JustAnotherMark
@@ -156,9 +202,12 @@ All major and minor version changes will be documented in this file. Details of 
 [@Cynser]: https://github.com/Cynser
 [@anthony-arnold]: https://github.com/anthony-arnold
 [@masq]: https://github.com/masq
+[@Ge0rg3]: https://github.com/Ge0rg3
+[@MShwed]: https://github.com/MShwed
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
+[#143]: https://github.com/gchq/CyberChef/pull/143
 [#224]: https://github.com/gchq/CyberChef/pull/224
 [#239]: https://github.com/gchq/CyberChef/pull/239
 [#248]: https://github.com/gchq/CyberChef/pull/248
@@ -180,6 +229,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#394]: https://github.com/gchq/CyberChef/pull/394
 [#428]: https://github.com/gchq/CyberChef/pull/428
 [#439]: https://github.com/gchq/CyberChef/pull/439
+[#440]: https://github.com/gchq/CyberChef/pull/440
 [#441]: https://github.com/gchq/CyberChef/pull/441
 [#443]: https://github.com/gchq/CyberChef/pull/443
 [#446]: https://github.com/gchq/CyberChef/pull/446
@@ -192,3 +242,11 @@ All major and minor version changes will be documented in this file. Details of 
 [#468]: https://github.com/gchq/CyberChef/pull/468
 [#476]: https://github.com/gchq/CyberChef/pull/476
 [#489]: https://github.com/gchq/CyberChef/pull/489
+[#496]: https://github.com/gchq/CyberChef/pull/496
+[#506]: https://github.com/gchq/CyberChef/pull/506
+[#516]: https://github.com/gchq/CyberChef/pull/516
+[#525]: https://github.com/gchq/CyberChef/pull/525
+[#531]: https://github.com/gchq/CyberChef/pull/531
+[#533]: https://github.com/gchq/CyberChef/pull/533
+[#535]: https://github.com/gchq/CyberChef/pull/535
+[#571]: https://github.com/gchq/CyberChef/pull/571
