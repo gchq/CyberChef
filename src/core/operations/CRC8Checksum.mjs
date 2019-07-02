@@ -5,6 +5,9 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
+
+import { toHex } from "../lib/Hex";
 
 /**
  * CRC-8 Checksum operation
@@ -19,8 +22,8 @@ class CRC8Checksum extends Operation {
 
         this.name = "CRC-8 Checksum";
         this.module = "Crypto";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.";
+        this.infoURL = "https://wikipedia.org/wiki/Cyclic_redundancy_check";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
@@ -28,36 +31,97 @@ class CRC8Checksum extends Operation {
               "name": "Algorithm",
               "type": "option",
               "value": [
-                  "CRC-8"
+                  "CRC-8",
+                  "CRC-8/CDMA2000",
+                  "CRC-8/DARC",
+                  "CRC-8/DVB-S2",
+                  "CRC-8/EBU",
+                  "CRC-8/I-CODE",
+                  "CRC-8/ITU",
+                  "CRC-8/MAXIM",
+                  "CRC-8/ROHC",
+                  "CRC-8/WCDMA"
               ]  
             }
         ]
     }
 
-    calculateCRC8(algorithmName, polynomial, initializationValue, refIn, refOut, xorOut, check) {
-        let initializationValue = this.reverseBits();
+    /**
+     * Generates the pre-computed lookup table for byte division 
+     * 
+     * @param polynomial 
+     */
+    calculateCRC8LookupTable(polynomial) {
+        const crc8Table = new Uint8Array(256);
 
-        return crc;
+        let currentByte;
+        for (let i = 0; i < 256; i++) {
+            currentByte = i;
+            for (let bit = 0; bit < 8; bit++) {
+                if ((currentByte & 0x80) != 0) {
+                    currentByte <<= 1;
+                    currentByte ^= polynomial;
+                } else {
+                    currentByte <<= 1;
+                }
+            }
+
+            crc8Table[i] = currentByte;
+        }   
+
+        return crc8Table;
     }
 
     /**
-     * For an 8 bit initialization value reverse the bits. 
+     * Calculates the CRC-8 Checksum from an input
      * 
-     * @param input 
+     * @param {ArrayBuffer} input
+     * @param {number} polynomial
+     * @param {number} initializationValue
+     * @param {boolean} inputReflection
+     * @param {boolean} outputReflection
+     * @param {number} xorOut
+     * @param {number} check
      */
-    reverseBits(input) {
-        let reflectedBits = input.toString(2).split('');
-        for (let i = 0; i < hashSize / 2; i++) {
-            let x = reflectedBits[i];
-            reflectedBits[i] = reflectedBits[hashSize - i - 1];
-            reflectedBits[hashSize - i - 1] = x;
+    calculateCRC8(input, polynomial, initializationValue, inputReflection, outputReflection, xorOut, check) {
+        const crcSize = 8;        
+        const crcTable = this.calculateCRC8LookupTable(polynomial);
+        
+        let crc = initializationValue != 0 ? initializationValue : 0;
+        let currentByte, position;
+
+        input = new Uint8Array(input);
+        for (let inputByte of input) {
+            currentByte = inputReflection ? this.reverseBits(inputByte, crcSize) : inputByte;
+
+            position = (currentByte ^ crc ) & 255;
+            crc = crcTable[position];
         }
 
-        return parseInt(reflectedBits.join(''));
+        crc = outputReflection ? this.reverseBits(crc, crcSize) : crc; 
+
+        if (xorOut != 0) crc = crc ^ xorOut;
+
+        return toHex(new Uint8Array([crc]));
     }
 
     /**
-     * @param {byteArray} input
+     * Reverse the bits for a given input byte. 
+     * 
+     * @param {number} input 
+     */
+    reverseBits(input, hashSize) {
+        let reversedByte = 0;
+        for (let i = hashSize - 1; i >= 0; i--) {
+            reversedByte |= ((input & 1) << i);
+            input >>= 1;
+        }
+
+        return reversedByte;
+    }
+
+    /**
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -65,18 +129,29 @@ class CRC8Checksum extends Operation {
         const algorithm = args[0];
 
         if (algorithm === "CRC-8") {
-            return this.calculateCRC8(algorithm, 0x7, 0x0, false, false, 0x0, 0xF4)
+            return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x0, 0xF4);
+        } else if (algorithm === "CRC-8/CDMA2000") {
+            return this.calculateCRC8(input, 0x9B, 0xFF, false, false, 0x0, 0xDA);
+        } else if (algorithm === "CRC-8/DARC") {
+            return this.calculateCRC8(input, 0x39, 0x0, true, true, 0x0, 0x15);
+        } else if (algorithm === "CRC-8/DVB-S2") {
+            return this.calculateCRC8(input, 0xD5, 0x0, false, false, 0x0, 0xBC);
+        } else if (algorithm === "CRC-8/EBU") {
+            return this.calculateCRC8(input, 0x1D, 0xFF, true, true, 0x0, 0x97);
+        } else if (algorithm === "CRC-8/I-CODE") {
+            return this.calculateCRC8(input, 0x1D, 0xFD, false, false, 0x0, 0x7E);
+        } else if (algorithm === "CRC-8/ITU") {
+            return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x55, 0xA1);
+        } else if (algorithm === "CRC-8/MAXIM") {
+            return this.calculateCRC8(input, 0x31, 0x0, true, true, 0x0, 0xA1);
+        } else if (algorithm === "CRC-8/ROHC") {
+            return this.calculateCRC8(input, 0x7, 0xFF, true, true, 0x0, 0xD0);
+        } else if (algorithm === "CRC-8/WCDMA") {
+            return this.calculateCRC8(input, 0x9B, 0x0, true, true, 0x0, 0x25);
         }
 
-        return "";
+        throw new OperationError("Unknown checksum algorithm");
     }
-
 }
-
-const hashSize = 8;
-
-// const CRC8AlgoParameters = {
-//     'CRC8'
-// }
 
 export default CRC8Checksum;
