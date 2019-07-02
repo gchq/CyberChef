@@ -233,7 +233,9 @@ class OutputWaiter {
         if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].progress = progress;
 
-        this.manager.tabs.updateOutputTabProgress(inputNum, progress, total);
+        if (progress !== false) {
+            this.manager.tabs.updateOutputTabProgress(inputNum, progress, total);
+        }
 
     }
 

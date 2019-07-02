@@ -68,23 +68,8 @@ class ControlsWaiter {
     /**
      * Handler for the 'Step through' command. Executes the next step of the recipe.
      */
-    async stepClick() {
-        if (this.app.baking) return;
-        // Reset status using cancelBake
-        this.manager.worker.cancelBake(true, false);
-        const activeTab = this.manager.tabs.getActiveInputTab();
-        let progress = 0;
-        if (this.manager.output.outputs[activeTab].progress !== false) {
-            progress = this.manager.output.outputs[activeTab].progress;
-        }
-
-        this.manager.input.inputWorker.postMessage({
-            action: "step",
-            data: {
-                activeTab: activeTab,
-                progress: progress + 1
-            }
-        });
+    stepClick() {
+        this.app.step();
     }
 
 
@@ -394,30 +379,32 @@ ${navigator.userAgent}
     /**
      * Switches the Bake button between 'Bake', 'Cancel' and 'Loading' functions.
      *
-     * @param {boolean} cancel - Whether to change to cancel or not
-     * @param {boolean} loading - Whether to change to loading or not
+     * @param {string} func - The function to change to. Either "cancel", "loading" or "bake"
      */
-    toggleBakeButtonFunction(cancel, loading) {
+    toggleBakeButtonFunction(func) {
         const bakeButton = document.getElementById("bake"),
             btnText = bakeButton.querySelector("span");
 
-        if (cancel) {
-            btnText.innerText = "Cancel";
-            bakeButton.classList.remove("btn-success");
-            bakeButton.classList.remove("btn-warning");
-            bakeButton.classList.add("btn-danger");
-        } else if (loading) {
-            bakeButton.style.background = "";
-            btnText.innerText = "Loading...";
-            bakeButton.classList.remove("btn-success");
-            bakeButton.classList.remove("btn-danger");
-            bakeButton.classList.add("btn-warning");
-        } else {
-            bakeButton.style.background = "";
-            btnText.innerText = "Bake!";
-            bakeButton.classList.remove("btn-danger");
-            bakeButton.classList.remove("btn-warning");
-            bakeButton.classList.add("btn-success");
+        switch (func) {
+            case "cancel":
+                btnText.innerText = "Cancel";
+                bakeButton.classList.remove("btn-success");
+                bakeButton.classList.remove("btn-warning");
+                bakeButton.classList.add("btn-danger");
+                break;
+            case "loading":
+                bakeButton.style.background = "";
+                btnText.innerText = "Loading...";
+                bakeButton.classList.remove("btn-success");
+                bakeButton.classList.remove("btn-danger");
+                bakeButton.classList.add("btn-warning");
+                break;
+            default:
+                bakeButton.style.background = "";
+                btnText.innerText = "Bake!";
+                bakeButton.classList.remove("btn-danger");
+                bakeButton.classList.remove("btn-warning");
+                bakeButton.classList.add("btn-success");
         }
     }
 

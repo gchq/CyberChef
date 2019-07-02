@@ -167,6 +167,34 @@ class App {
 
 
     /**
+     * Executes the next step of the recipe.
+     */
+    step() {
+        if (this.baking) return;
+
+        // Reset status using cancelBake
+        this.manager.worker.cancelBake(true, false);
+
+        const activeTab = this.manager.tabs.getActiveInputTab();
+        if (activeTab === -1) return;
+
+        let progress = 0;
+        if (this.manager.output.outputs[activeTab].progress !== false) {
+            log.error(this.manager.output.outputs[activeTab]);
+            progress = this.manager.output.outputs[activeTab].progress;
+        }
+
+        this.manager.input.inputWorker.postMessage({
+            action: "step",
+            data: {
+                activeTab: activeTab,
+                progress: progress + 1
+            }
+        });
+    }
+
+
+    /**
      * Runs a silent bake, forcing the browser to load and cache all the relevant JavaScript code needed
      * to do a real bake.
      *

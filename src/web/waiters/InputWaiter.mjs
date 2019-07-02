@@ -55,6 +55,8 @@ class InputWaiter {
         this.maxWorkers = 1;
         if (navigator.hardwareConcurrency !== undefined &&
             navigator.hardwareConcurrency > 1) {
+            // Subtract 1 from hardwareConcurrency value to avoid using
+            // the entire available resources
             this.maxWorkers = navigator.hardwareConcurrency - 1;
         }
     }
@@ -223,17 +225,11 @@ class InputWaiter {
             this.manager.tabs.updateInputTabProgress(r.inputNum, 100, 100);
         }
 
-        if (r.hasOwnProperty("fileBuffer")) {
-            this.inputWorker.postMessage({
-                action: "loaderWorkerMessage",
-                data: r
-            }, [r.fileBuffer]);
-        } else {
-            this.inputWorker.postMessage({
-                action: "loaderWorkerMessage",
-                data: r
-            });
-        }
+        const transferable = r.hasOwnProperty("fileBuffer") ? [r.fileBuffer] : undefined;
+        this.inputWorker.postMessage({
+            action: "loaderWorkerMessage",
+            data: r
+        }, transferable);
     }
 
 
@@ -318,7 +314,7 @@ class InputWaiter {
      */
     bakeAll() {
         this.app.progress = 0;
-        this.manager.controls.toggleBakeButtonFunction(false, true);
+        this.manager.controls.toggleBakeButtonFunction("loading");
         this.inputWorker.postMessage({
             action: "bakeAll"
         });

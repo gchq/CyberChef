@@ -194,6 +194,7 @@ class WorkerWaiter {
                 } else {
                     this.updateOutput(r.data, r.data.inputNum, r.data.bakeId, r.data.progress);
                 }
+
                 this.app.progress = r.data.progress;
 
                 if (r.data.progress === this.recipeConfig.length) {
@@ -258,11 +259,16 @@ class WorkerWaiter {
         if (progress === this.recipeConfig.length) {
             progress = false;
         }
-        this.manager.output.updateOutputProgress(progress, inputNum);
+        this.manager.output.updateOutputProgress(progress, this.recipeConfig.length, inputNum);
         this.manager.output.updateOutputValue(data, inputNum, false);
 
         if (progress !== false) {
             this.manager.output.updateOutputStatus("error", inputNum);
+
+            if (inputNum === this.manager.tabs.getActiveInputTab()) {
+                this.manager.recipe.updateBreakpointIndicator(progress);
+            }
+
         } else {
             this.manager.output.updateOutputStatus("baked", inputNum);
         }
@@ -275,7 +281,7 @@ class WorkerWaiter {
      */
     setBakingStatus(bakingStatus) {
         this.app.baking = bakingStatus;
-        this.manager.controls.toggleBakeButtonFunction(bakingStatus);
+        this.manager.controls.toggleBakeButtonFunction(bakingStatus ? "cancel" : "bake");
 
         if (bakingStatus) this.manager.output.hideMagicButton();
     }
@@ -403,6 +409,7 @@ class WorkerWaiter {
         } else {
             document.getElementById("bake-info").style.display = "none";
         }
+
         document.getElementById("bake").style.background = "";
         this.totalOutputs = 0; // Reset for next time
         log.debug("--- Bake complete ---");
@@ -431,9 +438,11 @@ class WorkerWaiter {
 
         if (this.step) {
             // Remove all breakpoints from the recipe up to progress
-            for (let i = 0; i < this.app.progress; i++) {
-                if (recipeConfig[i].hasOwnProperty("breakpoint")) {
-                    delete recipeConfig[i].breakpoint;
+            if (nextInput.progress !== false) {
+                for (let i = 0; i < nextInput.progress; i++) {
+                    if (recipeConfig[i].hasOwnProperty("breakpoint")) {
+                        delete recipeConfig[i].breakpoint;
+                    }
                 }
             }
 
