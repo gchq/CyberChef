@@ -314,7 +314,7 @@ class InputWaiter {
      */
     bakeAll() {
         this.app.progress = 0;
-        this.manager.controls.toggleBakeButtonFunction("loading");
+        this.app.debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, ["loading"]);
         this.inputWorker.postMessage({
             action: "bakeAll"
         });

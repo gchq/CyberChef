@@ -209,15 +209,8 @@ class TabWaiter {
         document.getElementById("input-tabs-wrapper").style.display = "block";
         document.getElementById("output-tabs-wrapper").style.display = "block";
 
-        document.getElementById("input-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("input-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("input-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-
-        document.getElementById("output-wrapper").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("output-highlighter").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("output-file").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("output-loader").style.height = "calc(100% - var(--tab-height) - var(--title-height))";
-        document.getElementById("show-file-overlay").style.top = "calc(var(--tab-height) + var(--title-height) + 10px)";
+        document.getElementById("input-wrapper").classList.add("show-tabs");
+        document.getElementById("output-wrapper").classList.add("show-tabs");
 
         document.getElementById("save-all-to-file").style.display = "inline-block";
     }
@@ -229,15 +222,8 @@ class TabWaiter {
         document.getElementById("input-tabs-wrapper").style.display = "none";
         document.getElementById("output-tabs-wrapper").style.display = "none";
 
-        document.getElementById("input-wrapper").style.height = "calc(100% - var(--title-height))";
-        document.getElementById("input-highlighter").style.height = "calc(100% - var(--title-height))";
-        document.getElementById("input-file").style.height = "calc(100% - var(--title-height))";
-
-        document.getElementById("output-wrapper").style.height = "calc(100% - var(--title-height))";
-        document.getElementById("output-highlighter").style.height = "calc(100% - var(--title-height))";
-        document.getElementById("output-file").style.height = "calc(100% - var(--title-height))";
-        document.getElementById("output-loader").style.height = "calc(100% - var(--title-height))";
-        document.getElementById("show-file-overlay").style.top = "calc(var(--title-height) + 10px)";
+        document.getElementById("input-wrapper").classList.remove("show-tabs");
+        document.getElementById("output-wrapper").classList.remove("show-tabs");
 
         document.getElementById("save-all-to-file").style.display = "none";
     }

@@ -27,7 +27,6 @@
 #output-wrapper{
     margin: 0;
     padding: 0;
-    height: calc(100% - var(--title-height));
 }
 
 #output-wrapper .textarea-wrapper {
@@ -154,9 +153,26 @@
     width: fit-content;
 }
 
+#input-wrapper,
+#output-wrapper,
+#input-wrapper > * ,
+#output-wrapper > .textarea-wrapper > #output-loader {
+    height: calc(100% - var(--title-height));
+}
+
+#input-wrapper.show-tabs,
+#input-wrapper.show-tabs > *,
+#output-wrapper.show-tabs,
+#output-wrapper > .textarea-wrapper > #output-loader {
+    height: calc(100% - var(--tab-height) - var(--title-height));
+}
+
+#output-wrapper > .textarea-wrapper > * {
+    height: 100%;
+}
+
 .input-wrapper.textarea-wrapper {
     width: 100%;
-    height: calc(100% - var(--title-height));
     box-sizing: border-box;
     overflow: hidden;
     pointer-events: auto;
@@ -175,7 +191,6 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: calc(100% - var(--title-height));
     padding: 3px;
     margin: 0;
     overflow: hidden;
@@ -193,7 +208,6 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - var(--title-height));
     margin: 0;
     background-color: var(--primary-background-colour);
     visibility: hidden;
@@ -232,7 +246,6 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: calc(100% - var(--title-height));
     display: none;
 }
 

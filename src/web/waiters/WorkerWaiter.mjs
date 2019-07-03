@@ -281,7 +281,7 @@ class WorkerWaiter {
      */
     setBakingStatus(bakingStatus) {
         this.app.baking = bakingStatus;
-        this.manager.controls.toggleBakeButtonFunction(bakingStatus ? "cancel" : "bake");
+        this.app.debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, [bakingStatus ? "cancel" : "bake"])();
 
         if (bakingStatus) this.manager.output.hideMagicButton();
     }
