@@ -19,7 +19,7 @@ class FromHTMLEntity extends Operation {
         super();
 
         this.name = "From HTML Entity";
-        this.module = "Default";
+        this.module = "Encodings";
         this.description = "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>";
         this.infoURL = "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
         this.inputType = "string";
@@ -40,7 +40,7 @@ class FromHTMLEntity extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const regex = /&(#?x?[a-zA-Z0-9]{1,8});/g;
+        const regex = /&(#?x?[a-zA-Z0-9]{1,20});/g;
         let output = "",
             m,
             i = 0;
@@ -547,6 +547,7 @@ const entityToByte = {
     "InvisibleComma": 8291,
     "euro": 8364,
     "tdot": 8411,
+    "TripleDot": 8411,
     "DotDot": 8412,
     "Copf": 8450,
     "incare": 8453,
@@ -1026,6 +1027,7 @@ const entityToByte = {
     "EmptySmallSquare": 9723,
     "FilledSmallSquare": 9724,
     "starf": 9733,
+    "bigstar": 9733,
     "star": 9734,
     "phone": 9742,
     "female": 9792,

@@ -19,7 +19,7 @@ class ToHTMLEntity extends Operation {
         super();
 
         this.name = "To HTML Entity";
-        this.module = "Default";
+        this.module = "Encodings";
         this.description = "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>";
         this.infoURL = "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
         this.inputType = "string";
@@ -33,7 +33,7 @@ class ToHTMLEntity extends Operation {
             {
                 "name": "Convert to",
                 "type": "option",
-                "value": ["Named entities where possible", "Numeric entities", "Hex entities"]
+                "value": ["Named entities", "Numeric entities", "Hex entities"]
             }
         ];
     }
@@ -548,7 +548,7 @@ const byteToEntity = {
     8290: "&InvisibleTimes;",
     8291: "&InvisibleComma;",
     8364: "&euro;",
-    8411: "&tdot; &TripleDot;",
+    8411: "&tdot;",
     8412: "&DotDot;",
     8450: "&Copf;",
     8453: "&incare;",
@@ -998,7 +998,7 @@ const byteToEntity = {
     9722: "&lltri;",
     9723: "&EmptySmallSquare;",
     9724: "&FilledSmallSquare;",
-    9733: "&starf; &bigstar;",
+    9733: "&starf;",
     9734: "&star;",
     9742: "&phone;",
     9792: "&female;",
