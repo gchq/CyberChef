@@ -26,6 +26,7 @@ import Fletcher16Checksum from "./Fletcher16Checksum";
 import Fletcher32Checksum from "./Fletcher32Checksum";
 import Fletcher64Checksum from "./Fletcher64Checksum";
 import Adler32Checksum from "./Adler32Checksum";
+import CRC8Checksum from "./CRC8Checksum";
 import CRC16Checksum from "./CRC16Checksum";
 import CRC32Checksum from "./CRC32Checksum";
 import BLAKE2b from "./BLAKE2b";
@@ -104,8 +105,9 @@ class GenerateAllHashes extends Operation {
                 "\nFletcher-32: " + (new Fletcher32Checksum).run(byteArray, []) +
                 "\nFletcher-64: " + (new Fletcher64Checksum).run(byteArray, []) +
                 "\nAdler-32:    " + (new Adler32Checksum).run(byteArray, []) +
-                "\nCRC-16:      " + (new CRC16Checksum).run(str, []) +
-                "\nCRC-32:      " + (new CRC32Checksum).run(str, []);
+                "\nCRC-8:       " + (new CRC8Checksum).run(arrayBuffer, ["CRC-8"]) +
+                "\nCRC-16:      " + (new CRC16Checksum).run(arrayBuffer, []) +
+                "\nCRC-32:      " + (new CRC32Checksum).run(arrayBuffer, []);
 
         return output;
     }

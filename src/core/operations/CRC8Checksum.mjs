@@ -7,7 +7,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 
-import { toHex } from "../lib/Hex";
+import { toHexFast } from "../lib/Hex";
 
 /**
  * CRC-8 Checksum operation
@@ -101,7 +101,7 @@ class CRC8Checksum extends Operation {
 
         if (xorOut !== 0) crc = crc ^ xorOut;
 
-        return toHex(new Uint8Array([crc]));
+        return toHexFast(new Uint8Array([crc]));
     }
 
     /**
@@ -127,29 +127,30 @@ class CRC8Checksum extends Operation {
     run(input, args) {
         const algorithm = args[0];
 
-        if (algorithm === "CRC-8") {
-            return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x0);
-        } else if (algorithm === "CRC-8/CDMA2000") {
-            return this.calculateCRC8(input, 0x9B, 0xFF, false, false, 0x0);
-        } else if (algorithm === "CRC-8/DARC") {
-            return this.calculateCRC8(input, 0x39, 0x0, true, true, 0x0);
-        } else if (algorithm === "CRC-8/DVB-S2") {
-            return this.calculateCRC8(input, 0xD5, 0x0, false, false, 0x0);
-        } else if (algorithm === "CRC-8/EBU") {
-            return this.calculateCRC8(input, 0x1D, 0xFF, true, true, 0x0);
-        } else if (algorithm === "CRC-8/I-CODE") {
-            return this.calculateCRC8(input, 0x1D, 0xFD, false, false, 0x0);
-        } else if (algorithm === "CRC-8/ITU") {
-            return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x55);
-        } else if (algorithm === "CRC-8/MAXIM") {
-            return this.calculateCRC8(input, 0x31, 0x0, true, true, 0x0);
-        } else if (algorithm === "CRC-8/ROHC") {
-            return this.calculateCRC8(input, 0x7, 0xFF, true, true, 0x0);
-        } else if (algorithm === "CRC-8/WCDMA") {
-            return this.calculateCRC8(input, 0x9B, 0x0, true, true, 0x0);
+        switch (algorithm) {
+            case "CRC-8":
+                return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x0);
+            case "CRC-8/CDMA2000":
+                return this.calculateCRC8(input, 0x9B, 0xFF, false, false, 0x0);
+            case "CRC-8/DARC":
+                return this.calculateCRC8(input, 0x39, 0x0, true, true, 0x0);
+            case "CRC-8/DVB-S2":
+                return this.calculateCRC8(input, 0xD5, 0x0, false, false, 0x0);
+            case "CRC-8/EBU":
+                return this.calculateCRC8(input, 0x1D, 0xFF, true, true, 0x0);
+            case "CRC-8/I-CODE":
+                return this.calculateCRC8(input, 0x1D, 0xFD, false, false, 0x0);
+            case "CRC-8/ITU":
+                return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x55);
+            case "CRC-8/MAXIM":
+                return this.calculateCRC8(input, 0x31, 0x0, true, true, 0x0);
+            case "CRC-8/ROHC":
+                return this.calculateCRC8(input, 0x7, 0xFF, true, true, 0x0);
+            case "CRC-8/WCDMA":
+                return this.calculateCRC8(input, 0x9B, 0x0, true, true, 0x0);
+            default:
+                throw new OperationError("Unknown checksum algorithm");
         }
-
-        throw new OperationError("Unknown checksum algorithm");
     }
 }
 
