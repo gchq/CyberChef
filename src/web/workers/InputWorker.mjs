@@ -793,7 +793,16 @@ self.loadFiles = function(filesData) {
  * @param {string} fileData.type - The MIME type of the input being added
  * @param {number} inputNum - Defaults to auto-incrementing self.currentInputNum
  */
-self.addInput = function(changeTab=false, type, fileData={name: "unknown", size: "unknown", type: "unknown"}, inputNum = self.currentInputNum++) {
+self.addInput = function(
+    changeTab = false,
+    type,
+    fileData = {
+        name: "unknown",
+        size: "unknown",
+        type: "unknown"
+    },
+    inputNum = self.currentInputNum++
+) {
     self.numInputs++;
     const newInputObj = {
         inputNum: inputNum
