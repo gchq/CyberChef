@@ -30,6 +30,127 @@ const ALL_BYTES = [
 
 TestRegister.addTests([
     {
+        name: "CRC-8: nothing",
+        input: "",
+        expectedOutput: "00",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: default check",
+        input: "123456789",
+        expectedOutput: "f4",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: CDMA2000",
+        input: "123456789",
+        expectedOutput: "da",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/CDMA2000"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: DARC",
+        input: "123456789",
+        expectedOutput: "15",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/DARC"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: DVB-S2",
+        input: "123456789",
+        expectedOutput: "bc",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/DVB-S2"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: EBU",
+        input: "123456789",
+        expectedOutput: "97",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/EBU"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: I-CODE",
+        input: "123456789",
+        expectedOutput: "7e",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/I-CODE"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: ITU",
+        input: "123456789",
+        expectedOutput: "a1",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/ITU"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: MAXIM",
+        input: "123456789",
+        expectedOutput: "a1",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/MAXIM"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: ROHC",
+        input: "123456789",
+        expectedOutput: "d0",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/ROHC"]
+            }
+        ]
+    },
+    {
+        name: "CRC-8: WCDMA",
+        input: "123456789",
+        expectedOutput: "25",
+        recipeConfig: [
+            {
+                "op": "CRC-8 Checksum",
+                "args": ["CRC-8/WCDMA"]
+            }
+        ]
+    },
+    {
         name: "CRC-16: nothing",
         input: "",
         expectedOutput: "0000",
@@ -116,5 +237,5 @@ TestRegister.addTests([
                 "args": []
             }
         ]
-    },
+    }
 ]);
