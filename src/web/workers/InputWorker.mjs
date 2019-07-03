@@ -243,7 +243,7 @@ self.getInputValue = function(inputNum) {
         if (typeof self.inputs[inputNum].data === "string") {
             return self.inputs[inputNum].data;
         } else {
-            return self.inputs[inputNum].fileBuffer;
+            return self.inputs[inputNum].data.fileBuffer;
         }
     }
     return "";
