@@ -231,6 +231,7 @@ class Manager {
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
         document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
         document.getElementById("logLevel").addEventListener("change", this.options.logLevelChange.bind(this.options));
+        document.getElementById("imagePreview").addEventListener("change", this.input.renderFileThumb.bind(this.input));
 
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));

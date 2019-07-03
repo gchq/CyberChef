@@ -415,6 +415,34 @@ class InputWaiter {
         this.displayFilePreview(inputData);
     }
 
+    /**
+     * Render the input thumbnail
+     */
+    async renderFileThumb() {
+        const activeTab = this.manager.tabs.getActiveInputTab(),
+            input = await this.getInputValue(activeTab),
+            fileThumb = document.getElementById("input-file-thumbnail");
+
+        if (typeof input === "string" ||
+            !this.app.options.imagePreview) {
+            this.resetFileThumb();
+            return;
+        }
+
+        const inputArr = new Uint8Array(input),
+            type = isImage(inputArr);
+
+        if (type && type !== "image/tiff" && inputArr.byteLength <= 512000) {
+            // Most browsers don't support displaying TIFFs, so ignore them
+            // Don't render images over 512000 bytes
+            const blob = new Blob([inputArr], {type: type}),
+                url = URL.createObjectURL(blob);
+            fileThumb.src = url;
+        } else {
+            this.resetFileThumb();
+        }
+
+    }
 
     /**
      * Reset the input thumbnail to the default icon
@@ -434,28 +462,13 @@ class InputWaiter {
     displayFilePreview(inputData) {
         const activeTab = this.manager.tabs.getActiveInputTab(),
             input = inputData.input,
-            inputText = document.getElementById("input-text"),
-            fileThumb = document.getElementById("input-file-thumbnail");
+            inputText = document.getElementById("input-text");
         if (inputData.inputNum !== activeTab) return;
         inputText.style.overflow = "hidden";
         inputText.classList.add("blur");
         inputText.value = Utils.printable(Utils.arrayBufferToStr(input.slice(0, 4096)));
 
-        if (this.app.options.imagePreview) {
-            const inputArr = new Uint8Array(input),
-                type = isImage(inputArr);
-            if (type && type !== "image/tiff" && inputArr.byteLength <= 512000) {
-                // Most browsers don't support displaying TIFFs, so ignore them
-                // Assume anything over 512000 bytes is truncated
-                const blob = new Blob([inputArr], {type: type}),
-                    url = URL.createObjectURL(blob);
-                fileThumb.src = url;
-            } else {
-                this.resetFileThumb();
-            }
-        } else {
-            this.resetFileThumb();
-        }
+        this.renderFileThumb();
 
     }
 
