@@ -22,7 +22,7 @@ All major and minor version changes will be documented in this file. Details of 
 - 'Bzip2 Compress' operation added and 'Bzip2 Decompress' operation greatly improved [@artemisbot] | [#531]
 
 ### [8.32.0] - 2019-06-27
-- 'Indec of Coincidence' operation added [@Ge0rg3] | [#571]
+- 'Index of Coincidence' operation added [@Ge0rg3] | [#571]
 
 ### [8.31.0] - 2019-04-12
 - The downloadable version of CyberChef is now a .zip file containing separate modules rather than a single .htm file. It is still completely standalone and will not make any external network requests. This change reduces the complexity of the build process significantly. [@n1474335]
