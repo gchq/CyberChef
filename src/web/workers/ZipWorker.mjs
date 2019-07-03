@@ -8,6 +8,7 @@
 
 import zip from "zlibjs/bin/zip.min";
 import Utils from "../../core/Utils";
+import Dish from "../../core/Dish";
 import {detectFileType} from "../../core/lib/FileType";
 
 const Zlib = zip.Zlib;
@@ -43,7 +44,7 @@ self.setOption = function(...args) {};
  * @param {string} filename
  * @param {string} fileExtension
  */
-self.zipFiles = function(outputs, filename, fileExtension) {
+self.zipFiles = async function(outputs, filename, fileExtension) {
     const zip = new Zlib.Zip();
     const inputNums = Object.keys(outputs);
 
@@ -51,14 +52,8 @@ self.zipFiles = function(outputs, filename, fileExtension) {
         const iNum = inputNums[i];
         let ext = fileExtension;
 
-        let output;
-        if (outputs[iNum].data === null) {
-            output = new Uint8Array(0);
-        } else if (typeof outputs[iNum].data.dish.value === "string") {
-            output = new Uint8Array(Utils.strToArrayBuffer(outputs[iNum].data.dish.value));
-        } else {
-            output = new Uint8Array(outputs[iNum].data.dish.value);
-        }
+        const cloned = new Dish(outputs[iNum].data.dish);
+        const output = new Uint8Array(await cloned.get(Dish.ARRAY_BUFFER));
 
         if (fileExtension === "") {
             // Detect automatically
