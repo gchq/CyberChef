@@ -1,36 +1,36 @@
 /**
- * @author tlwr [toby@toby.codes]
- * @copyright Crown Copyright 2017
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 
 import Operation from "../Operation";
-import kbpgp from "kbpgp";
-import { ASP, importPrivateKey, importPublicKey } from "../lib/PGP";
 import OperationError from "../errors/OperationError";
+
+import kbpgp from "kbpgp";
+import { ASP, importPublicKey } from "../lib/PGP";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
- * PGP Decrypt and Verify operation
+ * PGP Verify operation
  */
-class PGPDecryptAndVerify extends Operation {
+class PGPVerify extends Operation {
 
     /**
-     * PGPDecryptAndVerify constructor
+     * PGPVerify constructor
      */
     constructor() {
         super();
 
-        this.name = "PGP Decrypt and Verify";
+        this.name = "PGP Verify";
         this.module = "PGP";
         this.description = [
             "Input: the ASCII-armoured encrypted PGP message you want to verify.",
             "<br><br>",
-            "Arguments: the ASCII-armoured PGP public key of the signer, ",
-            "the ASCII-armoured private key of the recipient (and the private key password if necessary).",
+            "Argument: the ASCII-armoured PGP public key of the signer",
             "<br><br>",
-            "This operation uses PGP to decrypt and verify an encrypted digital signature.",
+            "This operation uses PGP to decrypt a clearsigned message.",
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
@@ -44,16 +44,6 @@ class PGPDecryptAndVerify extends Operation {
                 "name": "Public key of signer",
                 "type": "text",
                 "value": ""
-            },
-            {
-                "name": "Private key of recipient",
-                "type": "text",
-                "value": ""
-            },
-            {
-                "name": "Private key password",
-                "type": "string",
-                "value": ""
             }
         ];
     }
@@ -65,15 +55,12 @@ class PGPDecryptAndVerify extends Operation {
      */
     async run(input, args) {
         const signedMessage = input,
-            [publicKey, privateKey, passphrase] = args,
+            [publicKey] = args,
             keyring = new kbpgp.keyring.KeyRing();
         let unboxedLiterals;
 
         if (!publicKey) throw new OperationError("Enter the public key of the signer.");
-        if (!privateKey) throw new OperationError("Enter the private key of the recipient.");
-        const privKey = await importPrivateKey(privateKey, passphrase);
         const pubKey = await importPublicKey(publicKey);
-        keyring.add_key_manager(privKey);
         keyring.add_key_manager(pubKey);
 
         try {
@@ -121,4 +108,4 @@ class PGPDecryptAndVerify extends Operation {
 
 }
 
-export default PGPDecryptAndVerify;
+export default PGPVerify;
