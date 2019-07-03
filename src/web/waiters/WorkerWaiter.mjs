@@ -275,7 +275,7 @@ class WorkerWaiter {
     }
 
     /**
-     * Updates the UI to show if baking is in process or not.
+     * Updates the UI to show if baking is in progress or not.
      *
      * @param {boolean} bakingStatus
      */

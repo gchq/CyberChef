@@ -10,8 +10,11 @@
 import Utils from "../../core/Utils";
 import {detectFileType} from "../../core/lib/FileType";
 
+// Default max values
+// These will be correctly calculated automatically
 self.maxWorkers = 4;
 self.maxTabs = 1;
+
 self.pendingFiles = [];
 self.inputs = {};
 self.loaderWorkers = [];
@@ -250,7 +253,7 @@ self.getInputValue = function(inputNum) {
 };
 
 /**
- * Gets the stored value or oobject for a specific inputNum and sends it to the inputWaiter.
+ * Gets the stored value or object for a specific inputNum and sends it to the inputWaiter.
  *
  * @param {object} inputData - Object containing data about the input to retrieve
  * @param {number} inputData.inputNum - The inputNum of the input to get

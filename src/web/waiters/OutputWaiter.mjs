@@ -176,7 +176,7 @@ class OutputWaiter {
 
     /**
      * Updates the error value for the output in the output array.
-    * If this is the active output tab, calls app.handleError.
+     * If this is the active output tab, calls app.handleError.
      * Otherwise, the error will be handled when the output is switched to
      *
      * @param {Error} error
@@ -470,7 +470,7 @@ class OutputWaiter {
      */
     async getDishTitle(dish, maxLength) {
         return await new Promise(resolve => {
-            this.manager.worker.getDishTitle(dish, maxLength, r=> {
+            this.manager.worker.getDishTitle(dish, maxLength, r => {
                 resolve(r.value);
             });
         });
