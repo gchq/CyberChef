@@ -104,7 +104,7 @@ select.form-control:not([size]):not([multiple]), select.custom-file-control:not(
     color: var(--primary-font-colour);
 }
 
-.form-control
+.form-control,
 .is-focused .form-control {
     background-image:
         linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
