@@ -1040,9 +1040,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Streebog",
-                args: [
-                    "2012", "D-A", "256"
-                ]
+                args: ["256"]
             }
         ]
     },
@@ -1053,9 +1051,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Streebog",
-                args: [
-                    "2012", "D-A", "256"
-                ]
+                args: ["256"]
             }
         ]
     },
@@ -1066,9 +1062,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Streebog",
-                args: [
-                    "2012", "D-A", "512"
-                ]
+                args: ["512"]
             }
         ]
     },
@@ -1079,9 +1073,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Streebog",
-                args: [
-                    "2012", "D-A", "512"
-                ]
+                args: ["512"]
             }
         ]
     },
@@ -1091,10 +1083,8 @@ TestRegister.addTests([
         expectedOutput: "981e5f3ca30c841487830f84fb433e13ac1101569b9c13584ac483234cd656c0",
         recipeConfig: [
             {
-                op: "Streebog",
-                args: [
-                    "1994", "D-A", "256"
-                ]
+                op: "GOST hash",
+                args: ["D-A"]
             }
         ]
     },
@@ -1104,10 +1094,8 @@ TestRegister.addTests([
         expectedOutput: "2cefc2f7b7bdc514e18ea57fa74ff357e7fa17d652c75f69cb1be7893ede48eb",
         recipeConfig: [
             {
-                op: "Streebog",
-                args: [
-                    "1994", "D-A", "256"
-                ]
+                op: "GOST hash",
+                args: ["D-A"]
             }
         ]
     }

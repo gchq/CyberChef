@@ -106,8 +106,7 @@
             "Enigma",
             "Bombe",
             "Multiple Bombe",
-            "Typex",
-            "Streebog"
+            "Typex"
         ]
     },
     {
@@ -303,6 +302,8 @@
             "Snefru",
             "BLAKE2b",
             "BLAKE2s",
+            "GOST hash",
+            "Streebog",
             "SSDEEP",
             "CTPH",
             "Compare SSDEEP hashes",

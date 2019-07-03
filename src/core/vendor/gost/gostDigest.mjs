@@ -1192,8 +1192,8 @@ function GostDigest(algorithm) // <editor-fold defaultstate="collapsed">
             // Define chiper algorithm
             this.sBox = (algorithm.sBox || (algorithm.procreator === 'SC' ? 'D-SC' : 'D-A')).toUpperCase();
 
-            if (!GostCipher)
-                GostCipher = root.GostCipher;
+            //if (!GostCipher)
+            //    GostCipher = root.GostCipher;
             if (!GostCipher)
                 throw new NotSupportedError('Object GostCipher not found');
 
