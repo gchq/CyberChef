@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.37.0] - 2019-07-03
+- 'CRC-8 Checksum' operation added [@MShwed] | [#591]
+
 ### [8.36.0] - 2019-07-03
 - 'PGP Verify' operation added [@artemisbot] | [#585]
 
@@ -146,6 +149,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.37.0]: https://github.com/gchq/CyberChef/releases/tag/v8.37.0
 [8.36.0]: https://github.com/gchq/CyberChef/releases/tag/v8.36.0
 [8.35.0]: https://github.com/gchq/CyberChef/releases/tag/v8.35.0
 [8.34.0]: https://github.com/gchq/CyberChef/releases/tag/v8.34.0
@@ -260,3 +264,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#535]: https://github.com/gchq/CyberChef/pull/535
 [#571]: https://github.com/gchq/CyberChef/pull/571
 [#585]: https://github.com/gchq/CyberChef/pull/585
+[#591]: https://github.com/gchq/CyberChef/pull/591
