@@ -25,8 +25,8 @@ class ImageBrightnessContrast extends Operation {
         this.module = "Image";
         this.description = "Adjust the brightness or contrast of an image.";
         this.infoURL = "";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
@@ -47,19 +47,19 @@ class ImageBrightnessContrast extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     async run(input, args) {
         const [brightness, contrast] = args;
-        if (!isImage(input)) {
+        if (!isImage(new Uint8Array(input))) {
             throw new OperationError("Invalid file type.");
         }
 
         let image;
         try {
-            image = await jimp.read(Buffer.from(input));
+            image = await jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
@@ -75,8 +75,13 @@ class ImageBrightnessContrast extends Operation {
                 image.contrast(contrast / 100);
             }
 
-            const imageBuffer = await image.getBufferAsync(jimp.AUTO);
-            return [...imageBuffer];
+            let imageBuffer;
+            if (image.getMIME() === "image/gif") {
+                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            } else {
+                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+            }
+            return imageBuffer.buffer;
         } catch (err) {
             throw new OperationError(`Error adjusting image brightness or contrast. (${err})`);
         }
@@ -84,18 +89,19 @@ class ImageBrightnessContrast extends Operation {
 
     /**
      * Displays the image using HTML for web apps
-     * @param {byteArray} data
+     * @param {ArrayBuffer} data
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
+        const dataArray = new Uint8Array(data);
 
-        const type = isImage(data);
+        const type = isImage(dataArray);
         if (!type) {
             throw new OperationError("Invalid file type.");
         }
 
-        return `<img src="data:${type};base64,${toBase64(data)}">`;
+        return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
 
 }
