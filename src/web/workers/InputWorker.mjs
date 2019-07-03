@@ -1,5 +1,6 @@
 /**
- * Web Worker to handle loading data
+ * Web worker to handle the inputs.
+ * Handles storage, modification and retrieval of the inputs.
  *
  * @author j433866 [j433866@gmail.com]
  * @copyright Crown Copyright 2019
