@@ -26,10 +26,6 @@ self.addEventListener("message", function(e) {
         log.error("No filename was passed to the ZipWorker");
         return;
     }
-    if (!r.hasOwnProperty("fileExtension")) {
-        log.error("No file extension was passed to the ZipWorker");
-        return;
-    }
 
     self.zipFiles(r.outputs, r.filename, r.fileExtension);
 });
@@ -55,7 +51,7 @@ self.zipFiles = async function(outputs, filename, fileExtension) {
         const cloned = new Dish(outputs[iNum].data.dish);
         const output = new Uint8Array(await cloned.get(Dish.ARRAY_BUFFER));
 
-        if (fileExtension === "") {
+        if (fileExtension === undefined || fileExtension === "") {
             // Detect automatically
             const types = detectFileType(output);
             if (!types.length) {
