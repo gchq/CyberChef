@@ -156,19 +156,25 @@
 #input-wrapper,
 #output-wrapper,
 #input-wrapper > * ,
-#output-wrapper > .textarea-wrapper > #output-loader {
+#output-wrapper > .textarea-wrapper > div,
+#output-wrapper > .textarea-wrapper > textarea {
     height: calc(100% - var(--title-height));
 }
 
 #input-wrapper.show-tabs,
 #input-wrapper.show-tabs > *,
 #output-wrapper.show-tabs,
-#output-wrapper > .textarea-wrapper > #output-loader {
+#output-wrapper.show-tabs > .textarea-wrapper > div,
+#output-wrapper.show-tabs > .textarea-wrapper > textarea {
     height: calc(100% - var(--tab-height) - var(--title-height));
 }
 
-#output-wrapper > .textarea-wrapper > * {
+#output-wrapper > .textarea-wrapper > #output-html {
     height: 100%;
+}
+
+#show-file-overlay {
+    height: 32px;
 }
 
 .input-wrapper.textarea-wrapper {
