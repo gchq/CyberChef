@@ -153,6 +153,14 @@
     width: fit-content;
 }
 
+.tabs-left > li:first-child {
+    box-shadow: 15px 0px 15px -15px var(--primary-border-colour) inset;
+}
+
+.tabs-right > li:last-child {
+    box-shadow: -15px 0px 15px -15px var(--primary-border-colour) inset;
+}
+
 #input-wrapper,
 #output-wrapper,
 #input-wrapper > * ,

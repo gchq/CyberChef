@@ -315,13 +315,10 @@ self.getInputProgress = function(inputNum) {
  * @returns {number}
  */
 self.getLargestInputNum = function(inputNums) {
-    let max = -1;
-    for (let i = 0; i < inputNums.length; i++) {
-        // Object.keys() returns a string array, so parseInt here
-        const num = parseInt(inputNums[i], 10);
-        if (num > max) max = num;
-    }
-    return max;
+    return inputNums.reduce((acc, val) => {
+        val = parseInt(val, 10);
+        return val > acc ? val : acc;
+    }, -1);
 };
 
 /**
@@ -331,11 +328,10 @@ self.getLargestInputNum = function(inputNums) {
  * @returns {number}
  */
 self.getSmallestInputNum = function(inputNums) {
-    let min = Number.MAX_SAFE_INTEGER;
-    for (let i = 0; i < inputNums.length; i++) {
-        const num = parseInt(inputNums[i], 10);
-        if (num < min) min = num;
-    }
+    const min = inputNums.reduce((acc, val) => {
+        val = parseInt(val, 10);
+        return val < acc ? val : acc;
+    }, Number.MAX_SAFE_INTEGER);
 
     // Assume we don't have this many tabs!
     if (min === Number.MAX_SAFE_INTEGER) return -1;

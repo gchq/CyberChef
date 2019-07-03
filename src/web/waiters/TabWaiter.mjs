@@ -251,23 +251,16 @@ class TabWaiter {
             tabsList.appendChild(this.createTabElement(nums[i], active, io));
         }
 
-        const firstTab = tabsList.firstElementChild,
-            lastTab = tabsList.lastElementChild;
-
         // Display shadows if there are tabs left / right of the displayed tabs
-        if (firstTab) {
-            if (tabsLeft) {
-                firstTab.style.boxShadow = "15px 0px 15px -15px var(--primary-border-colour) inset";
-            } else {
-                firstTab.style.boxShadow = "";
-            }
+        if (tabsLeft) {
+            tabsList.classList.add("tabs-left");
+        } else {
+            tabsList.classList.remove("tabs-left");
         }
-        if (lastTab) {
-            if (tabsRight) {
-                lastTab.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
-            } else {
-                lastTab.style.boxShadow = "";
-            }
+        if (tabsRight) {
+            tabsList.classList.add("tabs-right");
+        } else {
+            tabsList.classList.remove("tabs-right");
         }
 
         // Show or hide the tab bar depending on how many tabs we have
