@@ -348,16 +348,11 @@ self.getSmallestInputNum = function(inputNums) {
 self.getPreviousInputNum = function(inputNum) {
     const inputNums = Object.keys(self.inputs);
     if (inputNums.length === 0) return -1;
-    let num = self.getSmallestInputNum(inputNums);
-    for (let i = 0; i < inputNums.length; i++) {
-        const iNum = parseInt(inputNums[i], 10);
-        if (iNum < inputNum) {
-            if (iNum > num) {
-                num = iNum;
-            }
-        }
-    }
-    return num;
+
+    return inputNums.reduce((acc, val) => {
+        val = parseInt(val, 10);
+        return (val < inputNum && val > acc) ? val : acc;
+    }, self.getSmallestInputNum(inputNums));
 };
 
 /**
@@ -368,16 +363,11 @@ self.getPreviousInputNum = function(inputNum) {
  */
 self.getNextInputNum = function(inputNum) {
     const inputNums = Object.keys(self.inputs);
-    let num = self.getLargestInputNum(inputNums);
-    for (let i = 0; i < inputNums.length; i++) {
-        const iNum = parseInt(inputNums[i], 10);
-        if (iNum > inputNum) {
-            if (iNum < num) {
-                num = iNum;
-            }
-        }
-    }
-    return num;
+
+    return inputNums.reduce((acc, val) => {
+        val = parseInt(val, 10);
+        return (val > inputNum && val < acc) ? val : acc;
+    }, self.getLargestInputNum(inputNums));
 };
 
 /**
