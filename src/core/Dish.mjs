@@ -166,29 +166,27 @@ class Dish {
      */
     async getTitle(maxLength) {
         let title = "";
-        const cloned = this.clone();
+        let cloned;
 
         switch (this.type) {
             case Dish.FILE:
-                title = cloned.value.name;
+                title = this.value.name;
                 break;
             case Dish.LIST_FILE:
-                title = `${cloned.value.length} file(s)`;
+                title = `${this.value.length} file(s)`;
                 break;
             case Dish.ARRAY_BUFFER:
             case Dish.BYTE_ARRAY:
-                title = await cloned.detectDishType();
-                if (title === null) {
-                    cloned.value = cloned.value.slice(0, 2048);
-                    title = await cloned.get(Dish.STRING);
-                }
-                break;
+                title = await this.detectDishType();
+                if (title !== null) break;
+                // fall through if no mime type was detected
             default:
+                cloned = this.clone();
+                cloned.value = cloned.value.slice(0, 256);
                 title = await cloned.get(Dish.STRING);
         }
 
-        title = title.slice(0, maxLength);
-        return title;
+        return title.slice(0, maxLength);
     }
 
 
