@@ -25,8 +25,7 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
-        clearTimeout(this.resetLayoutTimeout);
-        this.resetLayoutTimeout = setTimeout(this.app.resetLayout.bind(this.app), 200);
+        this.app.debounce(this.app.resetLayout, 200, "windowResize", this.app, [])();
     }
 
 

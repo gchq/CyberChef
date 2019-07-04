@@ -82,7 +82,43 @@ div.toggle-string {
 .operation .is-focused [class*=' bmd-label'],
 .operation .is-focused label,
 .operation .checkbox label:hover {
-    color: #1976d2;
+    color: var(--input-highlight-colour);
+}
+
+.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
+    border-color: var(--input-border-colour);
+    color: var(--input-highlight-colour);
+}
+
+.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--input-highlight-colour);
+    color: var(--input-highlight-colour);
+}
+
+.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
+.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--disabled-font-colour);
+    color: var(--disabled-font-colour);
+}
+
+.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
+.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--breakpoint-font-colour);
+    color: var(--breakpoint-font-colour);
+}
+
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--fc-breakpoint-operation-font-colour);
+    color: var(--fc-breakpoint-operation-font-colour);
 }
 
 .operation .form-control {
@@ -97,7 +133,7 @@ div.toggle-string {
 
 .operation .form-control:hover {
     background-image:
-        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
         linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
     filter: brightness(97%);
 }
@@ -105,7 +141,7 @@ div.toggle-string {
 .operation .form-control:focus {
     background-color: var(--arg-background);
     background-image:
-        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
         linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
     filter: brightness(100%);
 }
@@ -205,19 +241,19 @@ div.toggle-string {
 }
 
 .disable-icon {
-    color: #9e9e9e;
+    color: var(--disable-icon-colour);
 }
 
 .disable-icon-selected {
-    color: #f44336;
+    color: var(--disable-icon-selected-colour);
 }
 
 .breakpoint {
-    color: #9e9e9e;
+    color: var(--breakpoint-icon-colour);
 }
 
 .breakpoint-selected {
-    color: #f44336;
+    color: var(--breakpoint-icon-selected-colour);
 }
 
 .break {

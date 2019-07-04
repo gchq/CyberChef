@@ -35,6 +35,14 @@
 
     --banner-font-colour: #468847;
     --banner-bg-colour: #dff0d8;
+    --banner-url-colour: #1976d2;
+
+    --category-list-font-colour: #1976d2;
+
+    --loader-background-colour: var(--secondary-border-colour);
+    --loader-outer-colour: #3498db;
+    --loader-middle-colour: #e74c3c;
+    --loader-inner-colour: #f9c922;
 
 
     /* Operation colours */
@@ -76,6 +84,13 @@
     --arg-label-colour: #388e3c;
 
 
+    /* Operation buttons */
+    --disable-icon-colour: #9e9e9e;
+    --disable-icon-selected-colour: #f44336;
+    --breakpoint-icon-colour: #9e9e9e;
+    --breakpoint-icon-selected-colour: #f44336;
+
+
     /* Buttons */
     --btn-default-font-colour: #333;
     --btn-default-bg-colour: #fff;
@@ -114,4 +129,6 @@
     --popover-border-colour: #ccc;
     --code-background: #f9f2f4;
     --code-font-colour: #c7254e;
+    --input-highlight-colour: #1976d2;
+    --input-border-colour: #424242;
 }
