@@ -170,7 +170,7 @@ export const FILE_SIGNATURES = {
             mime: "image/vnd.adobe.photoshop",
             description: "",
             signature: {
-                0: 0x38,
+                0: 0x38, // 8BPS
                 1: 0x42,
                 2: 0x50,
                 3: 0x53,
@@ -182,6 +182,28 @@ export const FILE_SIGNATURES = {
                 9: 0x0,
                 10: 0x0,
                 11: 0x0
+            },
+            extractor: null
+        },
+        {
+            name: "Photoshop Large Document",
+            extension: "psb",
+            mime: "application/x-photoshop",
+            description: "",
+            signature: {
+                0: 0x38, // 8BPS
+                1: 0x42,
+                2: 0x50,
+                3: 0x53,
+                4: 0x0,
+                5: 0x2,
+                6: 0x0,
+                7: 0x0,
+                8: 0x0,
+                9: 0x0,
+                10: 0x0,
+                11: 0x0,
+                12: 0x0
             },
             extractor: null
         },
@@ -233,8 +255,112 @@ export const FILE_SIGNATURES = {
                 5: 0x0,
                 6: [0x10, 0x20, 0x30, 0x40, 0x80],
                 7: [0x10, 0x20, 0x30, 0x40, 0x80],
-                9: 0x00,
+                9: 0x0,
                 10: [0x0, 0x1]
+            },
+            extractor: null
+        },
+        {
+            name: "Radiance High Dynamic Range image",
+            extension: "hdr",
+            mime: "image/vnd.radiance",
+            description: "",
+            signature: {
+                0: 0x23, // #?RADIANCE
+                1: 0x3f,
+                2: 0x52,
+                3: 0x41,
+                4: 0x44,
+                5: 0x49,
+                6: 0x41,
+                7: 0x4e,
+                8: 0x43,
+                9: 0x45,
+                10: 0x0a
+            },
+            extractor: null
+        },
+        {
+            name: "Sony ARW image",
+            extension: "arw",
+            mime: "image/x-raw",
+            description: "",
+            signature: {
+                0: 0x05,
+                1: 0x0,
+                2: 0x0,
+                3: 0x0,
+                4: 0x41,
+                5: 0x57,
+                6: 0x31,
+                7: 0x2e
+            },
+            extractor: null
+        },
+        {
+            name: "Fujifilm Raw Image",
+            extension: "raf",
+            mime: "image/x-raw",
+            description: "",
+            signature: {
+                0: 0x46, // FUJIFILMCCD-RAW
+                1: 0x55,
+                2: 0x4a,
+                3: 0x49,
+                4: 0x46,
+                5: 0x49,
+                6: 0x4c,
+                7: 0x4d,
+                8: 0x43,
+                9: 0x43,
+                10: 0x44,
+                11: 0x2d,
+                12: 0x52,
+                13: 0x41,
+                14: 0x57
+            },
+            extractor: null
+        },
+        {
+            name: "Minolta RAW image",
+            extension: "mrw",
+            mime: "image/x-raw",
+            description: "",
+            signature: {
+                0: 0x0,
+                1: 0x4d, // MRM
+                2: 0x52,
+                3: 0x4d
+            },
+            extractor: null
+        },
+        {
+            name: "Adobe Bridge Thumbnail Cache",
+            extension: "bct",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0x6c,
+                1: 0x6e,
+                2: 0x62,
+                3: 0x74,
+                4: 0x02,
+                5: 0x0,
+                6: 0x0,
+                7: 0x0
+            },
+            extractor: null
+        },
+        {
+            name: "Microsoft Document Imaging",
+            extension: "mdi",
+            mime: "image/vnd.ms-modi",
+            description: "",
+            signature: {
+                0: 0x45,
+                1: 0x50,
+                2: 0x2a,
+                3: 0x00
             },
             extractor: null
         }
@@ -534,6 +660,97 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "Audacity",
+            extension: "au",
+            mime: "audio/x-au",
+            description: "",
+            signature: {
+                0: 0x64, // dns.
+                1: 0x6e,
+                2: 0x73,
+                3: 0x2e,
+
+                24: 0x41, // AudacityBlockFile
+                25: 0x75,
+                26: 0x64,
+                27: 0x61,
+                28: 0x63,
+                29: 0x69,
+                30: 0x74,
+                31: 0x79,
+                32: 0x42,
+                33: 0x6c,
+                34: 0x6f,
+                35: 0x63,
+                36: 0x6b,
+                37: 0x46,
+                38: 0x69,
+                39: 0x6c,
+                40: 0x65
+            },
+            extractor: null
+        },
+        {
+            name: "Audacity Block",
+            extension: "auf",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0x41, // AudacityBlockFile
+                1: 0x75,
+                2: 0x64,
+                3: 0x61,
+                4: 0x63,
+                5: 0x69,
+                6: 0x74,
+                7: 0x79,
+                8: 0x42,
+                9: 0x6c,
+                10: 0x6f,
+                11: 0x63,
+                12: 0x6b,
+                13: 0x46,
+                14: 0x69,
+                15: 0x6c,
+                16: 0x65
+            },
+            extractor: null
+        },
+        {
+            name: "Audio Interchange File",
+            extension: "aif",
+            mime: "audio/x-aiff",
+            description: "",
+            signature: {
+                0: 0x46, // FORM
+                1: 0x4f,
+                2: 0x52,
+                3: 0x4d,
+                8: 0x41, // AIFF
+                9: 0x49,
+                10: 0x46,
+                11: 0x46
+            },
+            extractor: null
+        },
+        {
+            name: "Audio Interchange File (compressed)",
+            extension: "aifc",
+            mime: "audio/x-aifc",
+            description: "",
+            signature: {
+                0: 0x46, // FORM
+                1: 0x4f,
+                2: 0x52,
+                3: 0x4d,
+                8: 0x41, // AIFC
+                9: 0x49,
+                10: 0x46,
+                11: 0x43
+            },
+            extractor: null
+        }
     ],
     "Documents": [
         {
@@ -898,6 +1115,110 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "ARJ Archive",
+            extension: "arj",
+            mime: "application/x-arj-compressed",
+            description: "",
+            signature: {
+                0: 0x60,
+                1: 0xea,
+                8: [0x0, 0x10, 0x14],
+                9: 0x0,
+                10: 0x2
+            },
+            extractor: null
+        },
+        {
+            name: "WinAce Archive",
+            extension: "ace",
+            mime: "application/x-ace-compressed",
+            description: "",
+            signature: {
+                7: 0x2a, // **ACE**
+                8: 0x2a,
+                9: 0x41,
+                10: 0x43,
+                11: 0x45,
+                12: 0x2a,
+                13: 0x2a
+            },
+            extractor: null
+        },
+        {
+            name: "Macintosh BinHex Encoded File",
+            extension: "hqx",
+            mime: "application/mac-binhex",
+            description: "",
+            signature: {
+                11: 0x6d,  // must be converted with BinHex
+                12: 0x75,
+                13: 0x73,
+                14: 0x74,
+                15: 0x20,
+                16: 0x62,
+                17: 0x65,
+                18: 0x20,
+                19: 0x63,
+                20: 0x6f,
+                21: 0x6e,
+                22: 0x76,
+                23: 0x65,
+                24: 0x72,
+                25: 0x74,
+                26: 0x65,
+                27: 0x64,
+                28: 0x20,
+                29: 0x77,
+                30: 0x69,
+                31: 0x74,
+                32: 0x68,
+                33: 0x20,
+                34: 0x42,
+                35: 0x69,
+                36: 0x6e,
+                37: 0x48,
+                38: 0x65,
+                39: 0x78
+            },
+            extractor: null
+        },
+        {
+            name: "ALZip Archive",
+            extension: "alz",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0x41, // ALZ
+                1: 0x4c,
+                2: 0x5a,
+                3: 0x01,
+                4: 0x0a,
+                5: 0x0,
+                6: 0x0,
+                7: 0x0
+            },
+            extractor: null
+        },
+        {
+            name: "KGB Compressed Archive",
+            extension: "kgb",
+            mime: "application/x-kgb-compressed",
+            description: "",
+            signature: {
+                0: 0x4b, // KGB_arch -
+                1: 0x47,
+                2: 0x42,
+                3: 0x5f,
+                4: 0x61,
+                5: 0x72,
+                6: 0x63,
+                7: 0x68,
+                8: 0x20,
+                9: 0x2d
+            },
+            extractor: null
+        }
     ],
     "Miscellaneous": [
         {
@@ -1041,6 +1362,43 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "BitTorrent link",
+            extension: "torrent",
+            mime: "application/x-bittorrent",
+            description: "",
+            signature: [
+                {
+                    0: 0x64, // d8:announce##:
+                    1: 0x38,
+                    2: 0x3a,
+                    3: 0x61,
+                    4: 0x6e,
+                    5: 0x6e,
+                    6: 0x6f,
+                    7: 0x75,
+                    8: 0x6e,
+                    9: 0x63,
+                    10: 0x65,
+                    11: 0x23,
+                    12: 0x23,
+                    13: 0x3a
+                },
+                {
+                    0: 0x64, // d4:infod
+                    1: 0x34,
+                    2: 0x3a,
+                    3: 0x69,
+                    4: 0x6e,
+                    5: 0x66,
+                    6: 0x6f,
+                    7: 0x64,
+                    8: [0x34, 0x35, 0x36],
+                    9: 0x3a
+                }
+            ],
+            extractor: null
+        }
     ]
 };
 
