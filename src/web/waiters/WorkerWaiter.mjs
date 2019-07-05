@@ -178,7 +178,7 @@ class WorkerWaiter {
         let inputNum = 0;
         log.debug(`Receiving ${r.action} from ChefWorker.`);
 
-        if (r.data.hasOwnProperty("inputNum")) {
+        if ("inputNum" in r.data) {
             inputNum = r.data.inputNum;
         }
 
@@ -440,7 +440,7 @@ class WorkerWaiter {
             // Remove all breakpoints from the recipe up to progress
             if (nextInput.progress !== false) {
                 for (let i = 0; i < nextInput.progress; i++) {
-                    if (recipeConfig[i].hasOwnProperty("breakpoint")) {
+                    if ("breakpoint" in recipeConfig[i]) {
                         delete recipeConfig[i].breakpoint;
                     }
                 }

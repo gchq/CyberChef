@@ -219,13 +219,14 @@ class InputWaiter {
     handleLoaderMessage(e) {
         const r = e.data;
 
-        if (r.hasOwnProperty("progress") && r.hasOwnProperty("inputNum")) {
+        if (Object.prototype.hasOwnProperty.call(r, "progress") &&
+            Object.prototype.hasOwnProperty.call(r, "inputNum")) {
             this.manager.tabs.updateInputTabProgress(r.inputNum, r.progress, 100);
-        } else if (r.hasOwnProperty("fileBuffer")) {
+        } else if (Object.prototype.hasOwnProperty.call(r, "fileBuffer")) {
             this.manager.tabs.updateInputTabProgress(r.inputNum, 100, 100);
         }
 
-        const transferable = r.hasOwnProperty("fileBuffer") ? [r.fileBuffer] : undefined;
+        const transferable = Object.prototype.hasOwnProperty.call(r, "fileBuffer") ? [r.fileBuffer] : undefined;
         this.inputWorker.postMessage({
             action: "loaderWorkerMessage",
             data: r
@@ -241,7 +242,7 @@ class InputWaiter {
     handleInputWorkerMessage(e) {
         const r = e.data;
 
-        if (!r.hasOwnProperty("action")) {
+        if (!("action" in r)) {
             log.error("A message was received from the InputWorker with no action property. Ignoring message.");
             return;
         }
