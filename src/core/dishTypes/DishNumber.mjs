@@ -5,13 +5,13 @@
  */
 
 
-import DishTranslationType from "./DishTranslationType";
+import DishType from "./DishType";
 import Utils from "../Utils";
 
 /**
  * Translation methods for number dishes
  */
-class DishNumber extends DishTranslationType {
+class DishNumber extends DishType {
 
     /**
      * convert the given value to a ArrayBuffer

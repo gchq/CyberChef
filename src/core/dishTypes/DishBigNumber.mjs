@@ -4,14 +4,14 @@
  * @license Apache-2.0
  */
 
-import DishTranslationType from "./DishTranslationType";
+import DishType from "./DishType";
 import Utils from "../Utils";
 import BigNumber from "bignumber.js";
 
 /**
  * translation methods for BigNumber Dishes
  */
-class DishBigNumber extends DishTranslationType {
+class DishBigNumber extends DishType {
 
     /**
      * convert the given value to a ArrayBuffer

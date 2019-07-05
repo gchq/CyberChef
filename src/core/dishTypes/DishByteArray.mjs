@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import DishTranslationType from "./DishTranslationType";
+import DishType from "./DishType";
 
 /**
  * Translation methods for ArrayBuffer Dishes
  */
-class DishByteArray extends DishTranslationType {
+class DishByteArray extends DishType {
 
     /**
      * convert the given value to a ArrayBuffer

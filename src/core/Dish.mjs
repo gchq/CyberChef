@@ -19,7 +19,7 @@ import {
     DishListFile,
     DishNumber,
     DishString,
-} from "./dishTranslationTypes";
+} from "./dishTypes";
 
 
 /**

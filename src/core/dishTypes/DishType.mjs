@@ -8,7 +8,7 @@
 /**
  * Abstract class for dish translation methods
  */
-class DishTranslationType {
+class DishType {
 
     /**
      * Warn translations dont work without value from bind
@@ -24,7 +24,7 @@ class DishTranslationType {
      * @param {*} value
      */
     static toArrayBuffer() {
-        throw new Error("toByteArray has not been implemented");
+        throw new Error("toArrayBuffer has not been implemented");
     }
 
     /**
@@ -32,8 +32,8 @@ class DishTranslationType {
      * @param {boolean} notUTF8
      */
     static fromArrayBuffer(notUTF8=undefined) {
-        throw new Error("toType has not been implemented");
+        throw new Error("fromArrayBuffer has not been implemented");
     }
 }
 
-export default DishTranslationType;
+export default DishType;

@@ -6,7 +6,6 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const NodeExternals = require("webpack-node-externals");
 const glob = require("glob");
 const path = require("path");
-const UglifyJSWebpackPlugin = require("uglifyjs-webpack-plugin");
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -91,7 +90,7 @@ module.exports = function (grunt) {
                 return typeof importScripts === "function";
             },
             ENVIRONMENT_IS_NODE: function() {
-                return typeof process === "object" && typeof require === "function";
+                return typeof process === "object" && process.versions !== null && process.versions.node !== null && typeof require === "function";
             },
             ENVIRONMENT_IS_WEB: function() {
                 return typeof window === "object";
@@ -226,17 +225,6 @@ module.exports = function (grunt) {
                         maxChunks: 1
                     })
                 ],
-                optimization: {
-                    minimizer: NODE_PROD ? [
-                        new UglifyJSWebpackPlugin({
-                            cache: true,
-                            parallel: true,
-                            uglifyOptions: {
-                                "keep_fnames": true,
-                            }
-                        })
-                    ] : []
-                }
             },
             nodeRepl: {
                 mode: NODE_PROD ? "production" : "development",
@@ -257,17 +245,6 @@ module.exports = function (grunt) {
                         maxChunks: 1
                     })
                 ],
-                optimization: {
-                    minimizer: NODE_PROD ? [
-                        new UglifyJSWebpackPlugin({
-                            parallel: true,
-                            cache: true,
-                            uglifyOptions: {
-                                "keep_fnames": true,
-                            }
-                        })
-                    ] : []
-                }
             }
         },
         "webpack-dev-server": {

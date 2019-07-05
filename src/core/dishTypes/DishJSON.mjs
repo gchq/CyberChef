@@ -4,13 +4,13 @@
  * @license Apache-2.0
  */
 
-import DishTranslationType from "./DishTranslationType";
+import DishType from "./DishType";
 import Utils from "../Utils";
 
 /**
  * Translation methods for JSON dishes
  */
-class DishJSON extends DishTranslationType {
+class DishJSON extends DishType {
 
     /**
      * convert the given value to a ArrayBuffer

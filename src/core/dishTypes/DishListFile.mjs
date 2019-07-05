@@ -4,13 +4,14 @@
  * @license Apache-2.0
  */
 
-import DishTranslationType from "./DishTranslationType";
+import DishType from "./DishType";
 import Utils from "../Utils.mjs";
+
 
 /**
  * Translation methods for ListFile Dishes
  */
-class DishListFile extends DishTranslationType {
+class DishListFile extends DishType {
 
     /**
      * convert the given value to a ArrayBuffer

@@ -13,7 +13,7 @@ script:
   - grunt test
   - grunt test-node
   - grunt docs
-  - NODE_ENV=production grunt node
+  - npm run node-prod
   - grunt prod --msg="$COMPILE_MSG"
   - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
 before_deploy:
