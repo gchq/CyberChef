@@ -9,6 +9,7 @@ import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
 import { gaussianBlur } from "../lib/ImageManipulation";
+import { isWorkerEnvironment } from "../Utils";
 import jimp from "jimp";
 
 /**
@@ -73,16 +74,16 @@ class SharpenImage extends Operation {
         }
 
         try {
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage("Sharpening image... (Cloning image)");
             const blurMask = image.clone();
 
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage("Sharpening image... (Blurring cloned image)");
             const blurImage = gaussianBlur(image.clone(), radius, 3);
 
 
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage("Sharpening image... (Creating unsharp mask)");
             blurMask.scan(0, 0, blurMask.bitmap.width, blurMask.bitmap.height, function(x, y, idx) {
                 const blurRed = blurImage.bitmap.data[idx];
@@ -99,7 +100,7 @@ class SharpenImage extends Operation {
                 this.bitmap.data[idx + 2] = (normalBlue > blurBlue) ? normalBlue - blurBlue : 0;
             });
 
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage("Sharpening image... (Merging with unsharp mask)");
             image.scan(0, 0, image.bitmap.width, image.bitmap.height, function(x, y, idx) {
                 let maskRed = blurMask.bitmap.data[idx];

@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Bzip2 from "libbzip2-wasm";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * Bzip2 Decompress operation
@@ -51,10 +52,10 @@ class Bzip2Decompress extends Operation {
         if (input.byteLength <= 0) {
             throw new OperationError("Please provide an input.");
         }
-        if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Loading Bzip2...");
+        if (isWorkerEnvironment()) self.sendStatusMessage("Loading Bzip2...");
         return new Promise((resolve, reject) => {
             Bzip2().then(bzip2 => {
-                if (ENVIRONMENT_IS_WORKER()) self.sendStatusMessage("Decompressing data...");
+                if (isWorkerEnvironment()) self.sendStatusMessage("Decompressing data...");
                 const inpArray = new Uint8Array(input);
                 const bzip2cc = bzip2.decompressBZ2(inpArray, small ? 1 : 0);
                 if (bzip2cc.error !== 0) {

@@ -1154,17 +1154,24 @@ class Utils {
 
 /**
  * Check whether the code is running in a Node.js environment
+ * @returns {boolean}
  */
 export function isNodeEnvironment() {
     return typeof process !== "undefined" && process.versions != null && process.versions.node != null;
 }
 
-/** */
+/**
+ * Check whether the code is running in a web environment
+ * @returns {boolean}
+*/
 export function isWebEnvironment() {
     return typeof window === "object";
 }
 
-/** */
+/**
+ * Check whether the code is running in a worker
+ * @returns {boolean}
+*/
 export function isWorkerEnvironment() {
     return typeof importScripts === "function";
 }

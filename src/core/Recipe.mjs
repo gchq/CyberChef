@@ -9,6 +9,7 @@ import OperationError from "./errors/OperationError";
 import Operation from "./Operation";
 import DishError from "./errors/DishError";
 import log from "loglevel";
+import { isWorkerEnvironment } from "./Utils";
 
 // Cache container for modules
 let modules = null;
@@ -202,7 +203,7 @@ class Recipe  {
                 input = await dish.get(op.inputType);
                 log.debug(`Executing operation '${op.name}'`);
 
-                if (ENVIRONMENT_IS_WORKER()) {
+                if (isWorkerEnvironment()) {
                     self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
                     self.sendProgressMessage(i + 1, this.opList.length);
                 }

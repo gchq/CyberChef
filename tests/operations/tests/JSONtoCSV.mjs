@@ -6,7 +6,7 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister";
 
 const EXPECTED_CSV_SINGLE = "a,b,c\r\n1,2,3\r\n";
 const EXPECTED_CSV_MULTIPLE = "a,b,c\r\n1,2,3\r\n1,2,3\r\n";
