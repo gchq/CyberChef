@@ -8,8 +8,9 @@ import util from "util";
 import Dish from "../core/Dish";
 
 /**
- * Subclass of Dish where `get` and `_translate` are synchronous.
- * Also define functions to improve coercion behaviour.
+ * Subclass of Dish for use in the Node.js environment.
+ *
+ * Adds some helper functions and improves coercion for Node.js logging.
  */
 class NodeDish extends Dish {
 

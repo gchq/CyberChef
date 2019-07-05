@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 export default  [
+    // This functionality can be done more easily using JavaScript
     "Fork",
     "Merge",
     "Jump",
@@ -18,11 +19,6 @@ export default  [
     "JavaScriptMinify",
     "JavaScriptParser",
 
-    // Relies on state of recipe.
-    // "Magic",
-
-    "RenderImage",
+    // Irrelevant in Node console
     "SyntaxHighlighter",
-
-    "DetectFileType",
 ];
