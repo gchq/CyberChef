@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import Dish from "../Dish";
 import XRegExp from "xregexp";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * Register operation
@@ -72,7 +73,7 @@ class Register extends Operation {
 
         if (!registers) return state;
 
-        if (ENVIRONMENT_IS_WORKER()) {
+        if (isWorkerEnvironment()) {
             self.setRegisters(state.forkOffset + state.progress, state.numRegisters, registers.slice(1));
         }
 

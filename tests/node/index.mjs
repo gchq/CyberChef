@@ -15,17 +15,6 @@ import {
     logTestReport,
 } from "../lib/utils";
 
-// Define global environment functions
-global.ENVIRONMENT_IS_WORKER = function() {
-    return typeof importScripts === "function";
-};
-global.ENVIRONMENT_IS_NODE = function() {
-    return typeof process === "object" && typeof require === "function";
-};
-global.ENVIRONMENT_IS_WEB = function() {
-    return typeof window === "object";
-};
-
 import TestRegister from "../lib/TestRegister";
 import "./tests/nodeApi";
 import "./tests/operations";

@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import Utils from "../Utils";
 import forge from "node-forge/dist/forge.min.js";
 import BigNumber from "bignumber.js";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * Pseudo-Random Number Generator operation
@@ -50,7 +51,7 @@ class PseudoRandomNumberGenerator extends Operation {
 
         let bytes;
 
-        if (ENVIRONMENT_IS_WORKER() && self.crypto) {
+        if (isWorkerEnvironment() && self.crypto) {
             bytes = self.crypto.getRandomValues(new Uint8Array(numBytes));
             bytes = Utils.arrayBufferToStr(bytes.buffer);
         } else {

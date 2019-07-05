@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import Utils from "../Utils";
 import { bitOp, xor } from "../lib/BitwiseOp";
 import { toHex } from "../lib/Hex";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * XOR Brute Force operation
@@ -94,7 +95,7 @@ class XORBruteForce extends Operation {
 
         input = input.slice(sampleOffset, sampleOffset + sampleLength);
 
-        if (ENVIRONMENT_IS_WORKER())
+        if (isWorkerEnvironment())
             self.sendStatusMessage("Calculating " + Math.pow(256, keyLength) + " values...");
 
         /**
@@ -114,7 +115,7 @@ class XORBruteForce extends Operation {
         };
 
         for (let key = 1, l = Math.pow(256, keyLength); key < l; key++) {
-            if (key % 10000 === 0 && ENVIRONMENT_IS_WORKER()) {
+            if (key % 10000 === 0 && isWorkerEnvironment()) {
                 self.sendStatusMessage("Calculating " + l + " values... " + Math.floor(key / l * 100) + "%");
             }
 

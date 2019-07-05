@@ -6,6 +6,8 @@
 
 import Operation from "../Operation";
 import bcrypt from "bcryptjs";
+import { isWorkerEnvironment } from "../Utils";
+
 
 /**
  * Bcrypt compare operation
@@ -43,7 +45,7 @@ class BcryptCompare extends Operation {
 
         const match = await bcrypt.compare(input, hash, null, p => {
             // Progress callback
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
         });
 

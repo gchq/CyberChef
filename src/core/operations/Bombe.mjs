@@ -8,8 +8,9 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
-import {BombeMachine} from "../lib/Bombe";
-import {ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector} from "../lib/Enigma";
+import { isWorkerEnvironment } from "../Utils";
+import { BombeMachine } from "../lib/Bombe";
+import { ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector } from "../lib/Enigma";
 
 /**
  * Bombe operation
@@ -139,7 +140,7 @@ class Bombe extends Operation {
         const ciphertext = input.slice(offset);
         const reflector = new Reflector(reflectorstr);
         let update;
-        if (ENVIRONMENT_IS_WORKER()) {
+        if (isWorkerEnvironment()) {
             update = this.updateStatus;
         } else {
             update = undefined;

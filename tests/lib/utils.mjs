@@ -8,16 +8,6 @@
  * @license Apache-2.0
  */
 
-// Define global environment functions
-global.ENVIRONMENT_IS_WORKER = function() {
-    return typeof importScripts === "function";
-};
-global.ENVIRONMENT_IS_NODE = function() {
-    return typeof process === "object" && typeof require === "function";
-};
-global.ENVIRONMENT_IS_WEB = function() {
-    return typeof window === "object";
-};
 
 /**
  * Helper function to convert a status to an icon.

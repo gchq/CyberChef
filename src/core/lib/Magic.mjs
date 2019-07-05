@@ -1,5 +1,5 @@
 import OperationConfig from "../config/OperationConfig.json";
-import Utils from "../Utils";
+import Utils, { isWorkerEnvironment } from "../Utils";
 import Recipe from "../Recipe";
 import Dish from "../Dish";
 import {detectFileType} from "./FileType";
@@ -390,7 +390,7 @@ class Magic {
         const dish = new Dish();
         dish.set(input, Dish.ARRAY_BUFFER);
 
-        if (ENVIRONMENT_IS_WORKER()) self.loadRequiredModules(recipeConfig);
+        if (isWorkerEnvironment()) self.loadRequiredModules(recipeConfig);
 
         const recipe = new Recipe(recipeConfig);
         try {

@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64.mjs";
+import { isWorkerEnvironment } from "../Utils";
 import jimp from "jimp";
 
 /**
@@ -102,7 +103,7 @@ class ResizeImage extends Operation {
                 height = image.getHeight() * (height / 100);
             }
 
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage("Resizing image...");
             if (aspect) {
                 image.scaleToFit(width, height, resizeMap[resizeAlg]);

@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64.mjs";
+import { isWorkerEnvironment } from "../Utils";
 import jimp from "jimp";
 
 /**
@@ -65,12 +66,12 @@ class ImageBrightnessContrast extends Operation {
         }
         try {
             if (brightness !== 0) {
-                if (ENVIRONMENT_IS_WORKER())
+                if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image brightness...");
                 image.brightness(brightness / 100);
             }
             if (contrast !== 0) {
-                if (ENVIRONMENT_IS_WORKER())
+                if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image contrast...");
                 image.contrast(contrast / 100);
             }

@@ -173,7 +173,7 @@ class Utils {
      * @returns {string}
      */
     static printable(str, preserveWs=false) {
-        if (ENVIRONMENT_IS_WEB() && window.app && !window.app.options.treatAsUtf8) {
+        if (isWebEnvironment() && window.app && !window.app.options.treatAsUtf8) {
             str = Utils.byteArrayToChars(Utils.strToByteArray(str));
         }
 
@@ -410,9 +410,9 @@ class Utils {
         const utf8Str = utf8.encode(str);
 
         if (str.length !== utf8Str.length) {
-            if (ENVIRONMENT_IS_WORKER()) {
+            if (isWorkerEnvironment()) {
                 self.setOption("attemptHighlight", false);
-            } else if (ENVIRONMENT_IS_WEB()) {
+            } else if (isWebEnvironment()) {
                 window.app.options.attemptHighlight = false;
             }
         }
@@ -465,9 +465,9 @@ class Utils {
         const utf8Str = utf8.encode(str);
 
         if (str.length !== utf8Str.length) {
-            if (ENVIRONMENT_IS_WORKER()) {
+            if (isWorkerEnvironment()) {
                 self.setOption("attemptHighlight", false);
-            } else if (ENVIRONMENT_IS_WEB()) {
+            } else if (isWebEnvironment()) {
                 window.app.options.attemptHighlight = false;
             }
         }
@@ -528,9 +528,9 @@ class Utils {
         try {
             const utf8Str = utf8.decode(str);
             if (str.length !== utf8Str.length) {
-                if (ENVIRONMENT_IS_WORKER()) {
+                if (isWorkerEnvironment()) {
                     self.setOption("attemptHighlight", false);
-                } else if (ENVIRONMENT_IS_WEB()) {
+                } else if (isWebEnvironment()) {
                     window.app.options.attemptHighlight = false;
                 }
             }
@@ -992,7 +992,7 @@ class Utils {
      */
     static readFile(file) {
 
-        if (Utils.isNode()) {
+        if (isNodeEnvironment()) {
             return Buffer.from(file).buffer;
 
         } else {
@@ -1036,7 +1036,7 @@ class Utils {
      * @throws {TypeError} thrown if the method is called from a browser environment
      */
     static readFileSync(file) {
-        if (!Utils.isNode()) {
+        if (!isNodeEnvironment()) {
             throw new TypeError("Browser environment cannot support readFileSync");
         }
 
@@ -1141,13 +1141,23 @@ class Utils {
         }[token];
     }
 
-    /**
-     * Check if code is running in a Node environment
-     */
-    static isNode() {
-        return typeof process !== "undefined" && process.versions != null && process.versions.node != null;
-    }
+}
 
+/**
+ * Check whether the code is running in a Node.js environment
+ */
+export function isNodeEnvironment() {
+    return typeof process !== "undefined" && process.versions != null && process.versions.node != null;
+}
+
+/** */
+export function isWebEnvironment() {
+    return typeof window === "object";
+}
+
+/** */
+export function isWorkerEnvironment() {
+    return typeof importScripts === "function";
 }
 
 export default Utils;
@@ -1267,12 +1277,13 @@ String.prototype.count = function(chr) {
  * @param {string} msg
  */
 export function sendStatusMessage(msg) {
-    if (ENVIRONMENT_IS_WORKER())
+    if (isWorkerEnvironment())
         self.sendStatusMessage(msg);
-    else if (ENVIRONMENT_IS_WEB())
+    else if (isWebEnvironment())
         app.alert(msg, 10000);
-    else if (ENVIRONMENT_IS_NODE())
-        log.debug(msg);
+    else if (isNodeEnvironment())
+        // eslint-disable-next-line no-console
+        console.debug(msg);
 }
 
 

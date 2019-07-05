@@ -5,7 +5,7 @@
  */
 
 import DishType from "./DishType";
-import Utils from "../Utils";
+import Utils, { isNodeEnvironment } from "../Utils";
 
 /**
  * Translation methods for file Dishes
@@ -18,7 +18,7 @@ class DishFile extends DishType {
      */
     static toArrayBuffer() {
         DishFile.checkForValue(this.value);
-        if (Utils.isNode()) {
+        if (isNodeEnvironment()) {
             this.value = Utils.readFileSync(this.value);
         } else {
             return new Promise((resolve, reject) => {

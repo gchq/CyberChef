@@ -7,6 +7,7 @@
 import Dish from "./Dish";
 import Recipe from "./Recipe";
 import log from "loglevel";
+import { isWorkerEnvironment } from "./Utils";
 
 /**
  * The main controller for CyberChef.
@@ -46,7 +47,7 @@ class Chef {
             notUTF8     = options && options.hasOwnProperty("treatAsUtf8") && !options.treatAsUtf8;
         let error = false;
 
-        if (containsFc && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+        if (containsFc && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
         // Clean up progress
         if (progress >= recipeConfig.length) {

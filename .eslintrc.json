@@ -106,9 +106,6 @@
 
         "COMPILE_TIME": false,
         "COMPILE_MSG": false,
-        "PKG_VERSION": false,
-        "ENVIRONMENT_IS_WORKER": false,
-        "ENVIRONMENT_IS_NODE": false,
-        "ENVIRONMENT_IS_WEB": false
+        "PKG_VERSION": false
     }
 }

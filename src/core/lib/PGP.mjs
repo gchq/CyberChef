@@ -11,6 +11,7 @@
  */
 
 import OperationError from "../errors/OperationError";
+import { isWorkerEnvironment } from "../Utils";
 import kbpgp from "kbpgp";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
@@ -45,7 +46,7 @@ export const ASP = kbpgp.ASP({
                 msg = `Stage: ${info.what}`;
         }
 
-        if (ENVIRONMENT_IS_WORKER())
+        if (isWorkerEnvironment())
             self.sendStatusMessage(msg);
     }
 });

@@ -5,7 +5,7 @@
  */
 
 import DishType from "./DishType";
-import Utils from "../Utils.mjs";
+import { isNodeEnvironment } from "../Utils.mjs";
 
 
 /**
@@ -19,7 +19,7 @@ class DishListFile extends DishType {
     static toArrayBuffer() {
         DishListFile.checkForValue(this.value);
 
-        if (Utils.isNode()) {
+        if (isNodeEnvironment()) {
             this.value = this.value.map(file => Uint8Array.from(file.data));
         }
         this.value = DishListFile.concatenateTypedArrays(...this.value).buffer;

@@ -6,7 +6,8 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {DELIM_OPTIONS} from "../lib/Delim";
+import { DELIM_OPTIONS } from "../lib/Delim";
+import { isWorkerEnvironment } from "../Utils";
 import OperationError from "../errors/OperationError";
 
 /**
@@ -61,7 +62,7 @@ class FromCharcode extends Operation {
             return [];
         }
 
-        if (base !== 16 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+        if (base !== 16 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
         // Split into groups of 2 if the whole string is concatenated and
         // too long to be a single character

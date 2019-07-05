@@ -6,8 +6,8 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {scanForFileTypes} from "../lib/FileType";
-import {FILE_SIGNATURES} from "../lib/FileSignatures";
+import { scanForFileTypes } from "../lib/FileType";
+import { FILE_SIGNATURES } from "../lib/FileSignatures";
 
 /**
  * Scan for Embedded Files operation

@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import Utils from "../Utils";
 import OperationError from "../errors/OperationError";
 import scryptsy from "scryptsy";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * Scrypt operation
@@ -73,7 +74,7 @@ class Scrypt extends Operation {
                 input, salt, iterations, memFactor, parallelFactor, keyLength,
                 p => {
                     // Progress callback
-                    if (ENVIRONMENT_IS_WORKER())
+                    if (isWorkerEnvironment())
                         self.sendStatusMessage(`Progress: ${p.percent.toFixed(0)}%`);
                 }
             );

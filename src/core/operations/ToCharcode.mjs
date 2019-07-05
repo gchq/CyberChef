@@ -6,8 +6,9 @@
 
 import Operation from "../Operation";
 import Utils from "../Utils";
-import {DELIM_OPTIONS} from "../lib/Delim";
+import { DELIM_OPTIONS } from "../lib/Delim";
 import OperationError from "../errors/OperationError";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * To Charcode operation
@@ -69,11 +70,11 @@ class ToCharcode extends Operation {
                 else if (ordinal < 4294967296) padding = 8;
                 else padding = 2;
 
-                if (padding > 2 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+                if (padding > 2 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
                 output += Utils.hex(ordinal, padding) + delim;
             } else {
-                if (ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+                if (isWorkerEnvironment()) self.setOption("attemptHighlight", false);
                 output += ordinal.toString(base) + delim;
             }
         }

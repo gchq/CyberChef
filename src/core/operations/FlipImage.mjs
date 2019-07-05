@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
+import { isWorkerEnvironment } from "../Utils";
 import jimp from "jimp";
 
 /**
@@ -55,7 +56,7 @@ class FlipImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage("Flipping image...");
             switch (flipAxis){
                 case "Horizontal":

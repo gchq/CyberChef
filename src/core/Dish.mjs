@@ -5,7 +5,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "./Utils";
+import Utils, { isNodeEnvironment } from "./Utils";
 import DishError from "./errors/DishError";
 import BigNumber from "bignumber.js";
 import log from "loglevel";
@@ -140,7 +140,7 @@ class Dish {
         if (this.type !== type) {
 
             // Node environment => _translate is sync
-            if (Utils.isNode()) {
+            if (isNodeEnvironment()) {
                 this._translate(type, notUTF8);
                 return this.value;
 
@@ -349,7 +349,7 @@ class Dish {
         log.debug(`Translating Dish from ${Dish.enumLookup(this.type)} to ${Dish.enumLookup(toType)}`);
 
         // Node environment => translate is sync
-        if (Utils.isNode()) {
+        if (isNodeEnvironment()) {
             this._toArrayBuffer();
             this.type = Dish.ARRAY_BUFFER;
             this._fromArrayBuffer(toType, notUTF8);
@@ -404,7 +404,7 @@ class Dish {
         };
 
         try {
-            return toByteArrayFuncs[Utils.isNode() && "node" || "browser"][this.type]();
+            return toByteArrayFuncs[isNodeEnvironment() && "node" || "browser"][this.type]();
         } catch (err) {
             throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to ArrayBuffer: ${err}`);
         }

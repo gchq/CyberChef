@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import bcrypt from "bcryptjs";
+import { isWorkerEnvironment } from "../Utils";
 
 /**
  * Bcrypt operation
@@ -44,7 +45,7 @@ class Bcrypt extends Operation {
 
         return await bcrypt.hash(input, salt, null, p => {
             // Progress callback
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
         });
 

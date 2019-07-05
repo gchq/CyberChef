@@ -5,7 +5,9 @@
  */
 
 import Operation from "../Operation";
-import {fromHex} from "../lib/Hex";
+import { fromHex } from "../lib/Hex";
+import { isWorkerEnvironment } from "../Utils";
+
 
 /**
  * From Hexdump operation
@@ -55,7 +57,7 @@ class FromHexdump extends Operation {
         const w = (width - 13) / 4;
         // w should be the specified width of the hexdump and therefore a round number
         if (Math.floor(w) !== w || input.indexOf("\r") !== -1 || output.indexOf(13) !== -1) {
-            if (ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+            if (isWorkerEnvironment()) self.setOption("attemptHighlight", false);
         }
         return output;
     }

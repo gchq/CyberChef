@@ -86,15 +86,6 @@ module.exports = function (grunt) {
             COMPILE_TIME: JSON.stringify(compileTime),
             COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
             PKG_VERSION: JSON.stringify(pkg.version),
-            ENVIRONMENT_IS_WORKER: function() {
-                return typeof importScripts === "function";
-            },
-            ENVIRONMENT_IS_NODE: function() {
-                return typeof process === "object" && process.versions !== null && process.versions.node !== null && typeof require === "function";
-            },
-            ENVIRONMENT_IS_WEB: function() {
-                return typeof window === "object";
-            }
         },
         moduleEntryPoints = listEntryModules();
 

@@ -6,6 +6,7 @@
 
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
+import { isWorkerEnvironment } from "../Utils";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64";
 import jimp from "jimp";
@@ -67,7 +68,7 @@ class BlurImage extends Operation {
                     image.blur(blurAmount);
                     break;
                 case "Gaussian":
-                    if (ENVIRONMENT_IS_WORKER())
+                    if (isWorkerEnvironment())
                         self.sendStatusMessage("Gaussian blurring image. This may take a while...");
                     image.gaussian(blurAmount);
                     break;

@@ -8,6 +8,7 @@ import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import { isImage } from "../lib/FileType";
 import { toBase64 } from "../lib/Base64.mjs";
+import { isWorkerEnvironment } from "../Utils";
 import jimp from "jimp";
 
 /**
@@ -73,7 +74,7 @@ class ImageHueSaturationLightness extends Operation {
         }
         try {
             if (hue !== 0) {
-                if (ENVIRONMENT_IS_WORKER())
+                if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image hue...");
                 image.colour([
                     {
@@ -83,7 +84,7 @@ class ImageHueSaturationLightness extends Operation {
                 ]);
             }
             if (saturation !== 0) {
-                if (ENVIRONMENT_IS_WORKER())
+                if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image saturation...");
                 image.colour([
                     {
@@ -93,7 +94,7 @@ class ImageHueSaturationLightness extends Operation {
                 ]);
             }
             if (lightness !== 0) {
-                if (ENVIRONMENT_IS_WORKER())
+                if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image lightness...");
                 image.colour([
                     {
