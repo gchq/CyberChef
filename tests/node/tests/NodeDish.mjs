@@ -77,7 +77,7 @@ TestRegister.addApiTests([
         dish.get("array buffer");
 
         assert.strictEqual(dish.type, 4);
-        assert.deepStrictEqual(dish.value, new ArrayBuffer(11));
+        assert.deepStrictEqual(dish.value, new Uint8Array([0x73, 0x6f, 0x6d, 0x65, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67]).buffer);
         assert.deepEqual(dish.value.byteLength, 11);
 
         dish.get("string");
@@ -90,7 +90,7 @@ TestRegister.addApiTests([
         dish.get(4);
 
         assert.strictEqual(dish.type, 4);
-        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.deepStrictEqual(dish.value, new Uint8Array([0x31, 0x30, 0x30]).buffer);
         assert.strictEqual(dish.value.byteLength, 3);
 
         // Check the data in ArrayBuffer represents 100 as a string.
@@ -108,11 +108,11 @@ TestRegister.addApiTests([
 
         // Check intermediate value
         const check = new Uint8Array(dish.value);
-        assert.deepEqual(check, [1, 2, 3]);
+        assert.deepEqual(check, new Uint8Array([1, 2, 3]));
 
         // Check converts back OK
         dish.get(0);
-        assert.deepEqual(dish.value, new Uint8Array([1, 2, 3]));
+        assert.deepEqual(dish.value, [1, 2, 3]);
     }),
 
     it("Dish translation: ArrayBuffer and HTML", () => {
@@ -139,7 +139,7 @@ TestRegister.addApiTests([
         const dish = new Dish(number, Dish.BIG_NUMBER);
 
         dish.get(Dish.ARRAY_BUFFER);
-        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.deepStrictEqual(dish.value, new Uint8Array([0x34, 0x30, 0x30, 0x31]).buffer);
         assert.strictEqual(dish.value.byteLength, 4);
 
         // Check the data in ArrayBuffer represents 4001 as a string.
@@ -165,7 +165,7 @@ TestRegister.addApiTests([
         const dish = new Dish(file, Dish.FILE);
 
         dish.get(Dish.ARRAY_BUFFER);
-        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.deepStrictEqual(dish.value, new Uint8Array([0x61, 0x62, 0x63, 0x64]).buffer);
         assert.strictEqual(dish.value.byteLength, 4);
 
         // Check the data in ArrayBuffer represents "abcd"
@@ -187,7 +187,7 @@ TestRegister.addApiTests([
         const dish = new Dish([file1, file2], Dish.LIST_FILE);
 
         dish.get(Dish.ARRAY_BUFFER);
-        assert.deepStrictEqual(dish.value, new ArrayBuffer(10));
+        assert.deepStrictEqual(dish.value, new Uint8Array([0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b]).buffer);
         assert.strictEqual(dish.value.byteLength, 11);
 
         dish.get(Dish.LIST_FILE);
