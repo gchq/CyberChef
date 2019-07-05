@@ -81,7 +81,7 @@ class SeasonalWaiter {
         </div>`;
         optionsBody.appendChild(optionItem);
 
-        if (!this.app.options.hasOwnProperty("clippy")) {
+        if (!("clippy" in this.app.options)) {
             this.app.options.clippy = true;
         }
 

@@ -124,7 +124,7 @@ class Protobuf {
         // Get the field key/values
         const key = field.key;
         const value = field.value;
-        object[key] = object.hasOwnProperty(key) ?
+        object[key] = Object.prototype.hasOwnProperty.call(object, key) ?
             object[key] instanceof Array ?
                 object[key].concat([value]) :
                 [object[key], value] :

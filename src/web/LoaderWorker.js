@@ -12,7 +12,7 @@
  */
 self.addEventListener("message", function(e) {
     const r = e.data;
-    if (r.hasOwnProperty("file")) {
+    if (Object.prototype.hasOwnProperty.call(r, "file")) {
         self.loadFile(r.file);
     }
 });

@@ -38,6 +38,8 @@
 
         // disable rules from base configurations
         "no-control-regex": "off",
+        "require-atomic-updates": "off",
+        "no-async-promise-executor": "off",
 
         // stylistic conventions
         "brace-style": ["error", "1tbs"],

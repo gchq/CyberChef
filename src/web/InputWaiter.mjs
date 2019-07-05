@@ -267,16 +267,16 @@ class InputWaiter {
      */
     handleLoaderMessage(e) {
         const r = e.data;
-        if (r.hasOwnProperty("progress")) {
+        if (Object.prototype.hasOwnProperty.call(r, "progress")) {
             const fileLoaded = document.getElementById("input-file-loaded");
             fileLoaded.textContent = r.progress + "%";
         }
 
-        if (r.hasOwnProperty("error")) {
+        if (Object.prototype.hasOwnProperty.call(r, "error")) {
             this.app.alert(r.error, 10000);
         }
 
-        if (r.hasOwnProperty("fileBuffer")) {
+        if (Object.prototype.hasOwnProperty.call(r, "fileBuffer")) {
             log.debug("Input file loaded");
             this.fileBuffer = r.fileBuffer;
             this.displayFilePreview();

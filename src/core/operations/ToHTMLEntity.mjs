@@ -59,13 +59,13 @@ class ToHTMLEntity extends Operation {
             } else if (convertAll) {
                 output += byteToEntity[charcodes[i]] || "&#" + charcodes[i] + ";";
             } else if (numeric) {
-                if (charcodes[i] > 255 || byteToEntity.hasOwnProperty(charcodes[i])) {
+                if (charcodes[i] > 255 || charcodes[i] in byteToEntity) {
                     output += "&#" + charcodes[i] + ";";
                 } else {
                     output += Utils.chr(charcodes[i]);
                 }
             } else if (hexa) {
-                if (charcodes[i] > 255 || byteToEntity.hasOwnProperty(charcodes[i])) {
+                if (charcodes[i] > 255 || charcodes[i] in byteToEntity) {
                     output += "&#x" + Utils.hex(charcodes[i]) + ";";
                 } else {
                     output += Utils.chr(charcodes[i]);

@@ -45,11 +45,11 @@ for (const opObj in Ops) {
         args:        op.args
     };
 
-    if (op.hasOwnProperty("patterns")) {
+    if ("patterns" in op) {
         operationConfig[op.name].patterns = op.patterns;
     }
 
-    if (!modules.hasOwnProperty(op.module))
+    if (!(op.module in modules))
         modules[op.module] = {};
     modules[op.module][op.name] = opObj;
 }

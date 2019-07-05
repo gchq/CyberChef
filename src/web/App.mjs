@@ -216,7 +216,7 @@ class App {
 
             for (let j = 0; j < catConf.ops.length; j++) {
                 const opName = catConf.ops[j];
-                if (!this.operations.hasOwnProperty(opName)) {
+                if (!(opName in this.operations)) {
                     log.warn(`${opName} could not be found.`);
                     continue;
                 }
@@ -330,7 +330,7 @@ class App {
     validFavourites(favourites) {
         const validFavs = [];
         for (let i = 0; i < favourites.length; i++) {
-            if (this.operations.hasOwnProperty(favourites[i])) {
+            if (favourites[i] in this.operations) {
                 validFavs.push(favourites[i]);
             } else {
                 this.alert(`The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. ` +

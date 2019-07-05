@@ -50,7 +50,7 @@ class JWTVerify extends Operation {
                 "none"
             ]});
 
-            if (verified.hasOwnProperty("name") && verified.name === "JsonWebTokenError") {
+            if (Object.prototype.hasOwnProperty.call(verified, "name") && verified.name === "JsonWebTokenError") {
                 throw new OperationError(verified.message);
             }
 
