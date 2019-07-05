@@ -77,7 +77,7 @@ class GroupIPAddresses extends Operation {
                 ip = strToIpv4(match[1]) >>> 0;
                 network = ip & ipv4Mask;
 
-                if (ipv4Networks.hasOwnProperty(network)) {
+                if (network in ipv4Networks) {
                     ipv4Networks[network].push(ip);
                 } else {
                     ipv4Networks[network] = [ip];
@@ -93,7 +93,7 @@ class GroupIPAddresses extends Operation {
 
                 networkStr = ipv6ToStr(network, true);
 
-                if (ipv6Networks.hasOwnProperty(networkStr)) {
+                if (networkStr in ipv6Networks) {
                     ipv6Networks[networkStr].push(ip);
                 } else {
                     ipv6Networks[networkStr] = [ip];

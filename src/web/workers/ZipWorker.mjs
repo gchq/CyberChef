@@ -18,11 +18,11 @@ const Zlib = zip.Zlib;
  */
 self.addEventListener("message", function(e) {
     const r = e.data;
-    if (!r.hasOwnProperty("outputs")) {
+    if (!("outputs" in r)) {
         log.error("No files were passed to the ZipWorker.");
         return;
     }
-    if (!r.hasOwnProperty("filename")) {
+    if (!("filename" in r)) {
         log.error("No filename was passed to the ZipWorker");
         return;
     }

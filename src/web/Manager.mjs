@@ -321,7 +321,7 @@ class Manager {
             callback: callback.bind(scope || this)
         };
 
-        if (this.dynamicHandlers.hasOwnProperty(eventType)) {
+        if (Object.prototype.hasOwnProperty.call(this.dynamicHandlers, eventType)) {
             // Listener already exists, add new handler to the appropriate list
             this.dynamicHandlers[eventType].push(eventConfig);
         } else {

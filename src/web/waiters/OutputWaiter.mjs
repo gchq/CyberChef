@@ -651,12 +651,12 @@ class OutputWaiter {
      */
     handleZipWorkerMessage(e) {
         const r = e.data;
-        if (!r.hasOwnProperty("zippedFile")) {
+        if (!("zippedFile" in r)) {
             log.error("No zipped file was sent in the message.");
             this.terminateZipWorker();
             return;
         }
-        if (!r.hasOwnProperty("filename")) {
+        if (!("filename" in r)) {
             log.error("No filename was sent in the message.");
             this.terminateZipWorker();
             return;

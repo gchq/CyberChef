@@ -79,7 +79,8 @@ class NodeRecipe {
     execute(dish) {
         return this.opList.reduce((prev, curr) => {
             // CASE where opList item is op and args
-            if (curr.hasOwnProperty("op") && curr.hasOwnProperty("args")) {
+            if (Object.prototype.hasOwnProperty.call(curr, "op") &&
+                Object.prototype.hasOwnProperty.call(curr, "args")) {
                 return curr.op(prev, curr.args);
             }
             // CASE opList item is just op.

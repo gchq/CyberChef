@@ -42,8 +42,8 @@ class Dish {
 
         // Case: dishOrInput is dish object
         if (dishOrInput &&
-            dishOrInput.hasOwnProperty("value") &&
-            dishOrInput.hasOwnProperty("type")) {
+            Object.prototype.hasOwnProperty.call(dishOrInput, "value") &&
+            Object.prototype.hasOwnProperty.call(dishOrInput, "type")) {
             this.set(dishOrInput.value, dishOrInput.type);
         // input and type defined separately
         } else if (dishOrInput && type !== null) {
@@ -205,7 +205,7 @@ class Dish {
      * Detects the MIME type of the current dish
      * @returns {string}
      */
-    async detectDishType() {
+    detectDishType() {
         const data = new Uint8Array(this.value.slice(0, 2048)),
             types = detectFileType(data);
 
@@ -236,7 +236,7 @@ class Dish {
                 break;
             case Dish.ARRAY_BUFFER:
             case Dish.BYTE_ARRAY:
-                title = await this.detectDishType();
+                title = this.detectDishType();
                 if (title !== null) break;
                 // fall through if no mime type was detected
             default:

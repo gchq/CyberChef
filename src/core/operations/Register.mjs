@@ -102,7 +102,7 @@ class Register extends Operation {
             args = args.map(arg => {
                 if (typeof arg !== "string" && typeof arg !== "object") return arg;
 
-                if (typeof arg === "object" && arg.hasOwnProperty("string")) {
+                if (typeof arg === "object" && Object.prototype.hasOwnProperty.call(arg, "string")) {
                     arg.string = replaceRegister(arg.string);
                     return arg;
                 }

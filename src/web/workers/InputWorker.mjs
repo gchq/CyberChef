@@ -30,7 +30,7 @@ self.loadingInputs = 0;
  */
 self.addEventListener("message", function(e) {
     const r = e.data;
-    if (!r.hasOwnProperty("action")) {
+    if (!("action" in r)) {
         log.error("No action");
         return;
     }
@@ -639,11 +639,11 @@ self.loaderWorkerReady = function(workerData) {
 self.handleLoaderMessage = function(r) {
     let inputNum = 0;
 
-    if (r.hasOwnProperty("inputNum")) {
+    if ("inputNum" in r) {
         inputNum = r.inputNum;
     }
 
-    if (r.hasOwnProperty("error")) {
+    if ("error" in r) {
         self.updateInputProgress(r.inputNum, 0);
         self.updateInputStatus(r.inputNum, "error");
 
@@ -657,7 +657,7 @@ self.handleLoaderMessage = function(r) {
         return;
     }
 
-    if (r.hasOwnProperty("fileBuffer")) {
+    if ("fileBuffer" in r) {
         log.debug(`Input file ${inputNum} loaded.`);
         self.loadingInputs--;
         self.updateInputValue({
@@ -667,7 +667,7 @@ self.handleLoaderMessage = function(r) {
 
         const idx = self.getLoaderWorkerIdx(r.id);
         self.loadNextFile(idx);
-    } else if (r.hasOwnProperty("progress")) {
+    } else if ("progress" in r) {
         self.updateInputProgress(r);
     }
 };
