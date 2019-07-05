@@ -41,7 +41,7 @@ class Chef {
         const startTime = new Date().getTime(),
             recipe      = new Recipe(recipeConfig),
             containsFc  = recipe.containsFlowControl(),
-            notUTF8     = options && options.hasOwnProperty("treatAsUtf8") && !options.treatAsUtf8;
+            notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
         let error = false,
             progress = 0;
 

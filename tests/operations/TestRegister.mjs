@@ -66,7 +66,7 @@ import Chef from "../../src/core/Chef";
                             ret.output = "Expected an error but did not receive one.";
                         } else if (result.result === test.expectedOutput) {
                             ret.status = "passing";
-                        } else if (test.hasOwnProperty("expectedMatch") && test.expectedMatch.test(result.result)) {
+                        } else if ("expectedMatch" in test && test.expectedMatch.test(result.result)) {
                             ret.status = "passing";
                         } else {
                             ret.status = "failing";

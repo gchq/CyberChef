@@ -26,11 +26,11 @@ self.handleMessage = function(e) {
  */
 self.addEventListener("message", function(e) {
     const r = e.data;
-    if (r.hasOwnProperty("file") && (r.hasOwnProperty("inputNum"))) {
+    if (Object.prototype.hasOwnProperty.call(r, "file") && Object.prototype.hasOwnProperty.call(r, "inputNum")) {
         self.loadFile(r.file, r.inputNum);
-    } else if (r.hasOwnProperty("file")) {
+    } else if (Object.prototype.hasOwnProperty.call(r, "file")) {
         self.loadFile(r.file, "");
-    } else if (r.hasOwnProperty("id")) {
+    } else if (Object.prototype.hasOwnProperty.call(r, "id")) {
         self.id = r.id;
     }
 });

@@ -209,7 +209,7 @@ self.loadRequiredModules = function(recipeConfig) {
     recipeConfig.forEach(op => {
         const module = self.OperationConfig[op.op].module;
 
-        if (!OpModules.hasOwnProperty(module)) {
+        if (!(module in OpModules)) {
             log.info(`Loading ${module} module`);
             self.sendStatusMessage(`Loading ${module} module`);
             self.importScripts(`${self.docURL}/modules/${module}.js`);

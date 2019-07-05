@@ -26,8 +26,8 @@ class Dish {
         this.type = Dish.ARRAY_BUFFER;
 
         if (dish &&
-            dish.hasOwnProperty("value") &&
-            dish.hasOwnProperty("type")) {
+            Object.prototype.hasOwnProperty.call(dish, "value") &&
+            Object.prototype.hasOwnProperty.call(dish, "type")) {
             this.set(dish.value, dish.type);
         }
     }

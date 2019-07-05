@@ -98,14 +98,14 @@ export class TypexMachine extends Enigma.EnigmaBase {
                 if (x === " ") {
                     inputMod += "X";
                 } else if (mode) {
-                    if (KEYBOARD_REV.hasOwnProperty(x)) {
+                    if (Object.prototype.hasOwnProperty.call(KEYBOARD_REV, x)) {
                         inputMod += KEYBOARD_REV[x];
                     } else {
                         mode = false;
                         inputMod += "V" + x;
                     }
                 } else {
-                    if (KEYBOARD_REV.hasOwnProperty(x)) {
+                    if (Object.prototype.hasOwnProperty.call(KEYBOARD_REV, x)) {
                         mode = true;
                         inputMod += "Z" + KEYBOARD_REV[x];
                     } else {

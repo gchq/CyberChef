@@ -338,7 +338,7 @@ class Magic {
         }
 
         // Prune branches that result in unhelpful outputs
-        results = results.filter(r =>
+        const prunedResults = results.filter(r =>
             (r.useful || r.data.length > 0) &&          // The operation resulted in ""
             (                                           // One of the following must be true
                 r.languageScores[0].probability > 0 ||    // Some kind of language was found
@@ -349,7 +349,7 @@ class Magic {
         );
 
         // Return a sorted list of possible recipes along with their properties
-        return results.sort((a, b) => {
+        return prunedResults.sort((a, b) => {
             // Each option is sorted based on its most likely language (lower is better)
             let aScore = a.languageScores[0].score,
                 bScore = b.languageScores[0].score;
@@ -450,7 +450,7 @@ class Magic {
         const opPatterns = [];
 
         for (const op in OperationConfig) {
-            if (!OperationConfig[op].hasOwnProperty("patterns")) continue;
+            if (!("patterns" in OperationConfig[op])) continue;
 
             OperationConfig[op].patterns.forEach(pattern => {
                 opPatterns.push({
