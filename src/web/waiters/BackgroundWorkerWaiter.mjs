@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import ChefWorker from "worker-loader?inline&fallback=false!../core/ChefWorker";
+import ChefWorker from "worker-loader?inline&fallback=false!../../core/ChefWorker";
 
 /**
  * Waiter to handle conversations with a ChefWorker in the background.
@@ -68,6 +68,7 @@ class BackgroundWorkerWaiter {
                 break;
             case "optionUpdate":
             case "statusMessage":
+            case "progressMessage":
                 // Ignore these messages
                 break;
             default:

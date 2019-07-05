@@ -22,6 +22,10 @@
     padding-right: 10px;
 }
 
+#banner a {
+    color: var(--banner-url-colour);
+}
+
 #notice-wrapper {
     text-align: center;
     overflow: hidden;

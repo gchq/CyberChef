@@ -168,6 +168,7 @@ OptionsWaiter.prototype.logLevelChange = function (e) {
     const level = e.target.value;
     log.setLevel(level, false);
     this.manager.worker.setLogLevel();
+    this.manager.input.setLogLevel();
 };
 
 export default OptionsWaiter;

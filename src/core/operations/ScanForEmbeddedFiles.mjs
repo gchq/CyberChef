@@ -55,12 +55,13 @@ class ScanForEmbeddedFiles extends Operation {
         if (types.length) {
             types.forEach(type => {
                 numFound++;
-                output += "\nOffset " + type.offset + " (0x" + Utils.hex(type.offset) + "):\n" +
-                    "  File extension: " + type.fileDetails.extension + "\n" +
-                    "  MIME type:      " + type.fileDetails.mime + "\n";
+                output += `\nOffset ${type.offset} (0x${Utils.hex(type.offset)}):
+  File type:   ${type.fileDetails.name}
+  Extension:   ${type.fileDetails.extension}
+  MIME type:   ${type.fileDetails.mime}\n`;
 
                 if (type.fileDetails.description && type.fileDetails.description.length) {
-                    output += "  Description:    " + type.fileDetails.description + "\n";
+                    output += `  Description: ${type.fileDetails.description}\n`;
                 }
             });
         }

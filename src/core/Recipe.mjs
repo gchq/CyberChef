@@ -200,7 +200,12 @@ class Recipe  {
 
             try {
                 input = await dish.get(op.inputType);
-                log.debug("Executing operation");
+                log.debug(`Executing operation '${op.name}'`);
+
+                if (ENVIRONMENT_IS_WORKER()) {
+                    self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
+                    self.sendProgressMessage(i + 1, this.opList.length);
+                }
 
                 if (op.flowControl) {
                     // Package up the current state

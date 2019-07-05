@@ -5,8 +5,8 @@
  */
 
 import clippy from "clippyjs";
-import "./static/clippy_assets/agents/Clippy/agent.js";
-import clippyMap from "./static/clippy_assets/agents/Clippy/map.png";
+import "../static/clippy_assets/agents/Clippy/agent.js";
+import clippyMap from "../static/clippy_assets/agents/Clippy/map.png";
 
 /**
  * Waiter to handle seasonal events and easter eggs.

@@ -2,6 +2,28 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [8.38.0] - 2019-07-03
+- 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
+
+### [8.37.0] - 2019-07-03
+- 'CRC-8 Checksum' operation added [@MShwed] | [#591]
+
+### [8.36.0] - 2019-07-03
+- 'PGP Verify' operation added [@artemisbot] | [#585]
+
+### [8.35.0] - 2019-07-03
+- 'Sharpen Image', 'Convert Image Format' and 'Add Text To Image' operations added [@j433866] | [#515]
+
+### [8.34.0] - 2019-06-28
+- Various new visualisations added to the 'Entropy' operation [@MShwed] | [#535]
+- Efficiency improvements made to the 'Entropy' operation for large file support [@n1474335]
+
+### [8.33.0] - 2019-06-27
+- 'Bzip2 Compress' operation added and 'Bzip2 Decompress' operation greatly improved [@artemisbot] | [#531]
+
+### [8.32.0] - 2019-06-27
+- 'Index of Coincidence' operation added [@Ge0rg3] | [#571]
+
 ### [8.31.0] - 2019-04-12
 - The downloadable version of CyberChef is now a .zip file containing separate modules rather than a single .htm file. It is still completely standalone and will not make any external network requests. This change reduces the complexity of the build process significantly. [@n1474335]
 
@@ -130,6 +152,13 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[8.38.0]: https://github.com/gchq/CyberChef/releases/tag/v8.38.0
+[8.37.0]: https://github.com/gchq/CyberChef/releases/tag/v8.37.0
+[8.36.0]: https://github.com/gchq/CyberChef/releases/tag/v8.36.0
+[8.35.0]: https://github.com/gchq/CyberChef/releases/tag/v8.35.0
+[8.34.0]: https://github.com/gchq/CyberChef/releases/tag/v8.34.0
+[8.33.0]: https://github.com/gchq/CyberChef/releases/tag/v8.33.0
+[8.32.0]: https://github.com/gchq/CyberChef/releases/tag/v8.32.0
 [8.31.0]: https://github.com/gchq/CyberChef/releases/tag/v8.31.0
 [8.30.0]: https://github.com/gchq/CyberChef/releases/tag/v8.30.0
 [8.29.0]: https://github.com/gchq/CyberChef/releases/tag/v8.29.0
@@ -189,6 +218,8 @@ All major and minor version changes will be documented in this file. Details of 
 [@Cynser]: https://github.com/Cynser
 [@anthony-arnold]: https://github.com/anthony-arnold
 [@masq]: https://github.com/masq
+[@Ge0rg3]: https://github.com/Ge0rg3
+[@MShwed]: https://github.com/MShwed
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -229,6 +260,13 @@ All major and minor version changes will be documented in this file. Details of 
 [#489]: https://github.com/gchq/CyberChef/pull/489
 [#496]: https://github.com/gchq/CyberChef/pull/496
 [#506]: https://github.com/gchq/CyberChef/pull/506
+[#515]: https://github.com/gchq/CyberChef/pull/515
 [#516]: https://github.com/gchq/CyberChef/pull/516
 [#525]: https://github.com/gchq/CyberChef/pull/525
+[#530]: https://github.com/gchq/CyberChef/pull/530
+[#531]: https://github.com/gchq/CyberChef/pull/531
 [#533]: https://github.com/gchq/CyberChef/pull/533
+[#535]: https://github.com/gchq/CyberChef/pull/535
+[#571]: https://github.com/gchq/CyberChef/pull/571
+[#585]: https://github.com/gchq/CyberChef/pull/585
+[#591]: https://github.com/gchq/CyberChef/pull/591

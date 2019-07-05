@@ -8,6 +8,7 @@
 import Utils, { isNodeEnvironment } from "./Utils";
 import DishError from "./errors/DishError";
 import BigNumber from "bignumber.js";
+import { detectFileType } from "./lib/FileType";
 import log from "loglevel";
 
 import {
@@ -197,6 +198,54 @@ class Dish {
     presentAs(type, notUTF8=false) {
         const clone = this.clone();
         return clone.get(type, notUTF8);
+    }
+
+
+    /**
+     * Detects the MIME type of the current dish
+     * @returns {string}
+     */
+    async detectDishType() {
+        const data = new Uint8Array(this.value.slice(0, 2048)),
+            types = detectFileType(data);
+
+        if (!types.length || !types[0].mime || !types[0].mime === "text/plain") {
+            return null;
+        } else {
+            return types[0].mime;
+        }
+    }
+
+
+    /**
+     * Returns the title of the data up to the specified length
+     *
+     * @param {number} maxLength - The maximum title length
+     * @returns {string}
+     */
+    async getTitle(maxLength) {
+        let title = "";
+        let cloned;
+
+        switch (this.type) {
+            case Dish.FILE:
+                title = this.value.name;
+                break;
+            case Dish.LIST_FILE:
+                title = `${this.value.length} file(s)`;
+                break;
+            case Dish.ARRAY_BUFFER:
+            case Dish.BYTE_ARRAY:
+                title = await this.detectDishType();
+                if (title !== null) break;
+                // fall through if no mime type was detected
+            default:
+                cloned = this.clone();
+                cloned.value = cloned.value.slice(0, 256);
+                title = await cloned.get(Dish.STRING);
+        }
+
+        return title.slice(0, maxLength);
     }
 
     /**

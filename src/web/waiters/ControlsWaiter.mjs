@@ -4,8 +4,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../core/Utils";
-import {toBase64} from "../core/lib/Base64";
+import Utils from "../../core/Utils";
 
 
 /**
@@ -57,10 +56,11 @@ class ControlsWaiter {
      * Handler to trigger baking.
      */
     bakeClick() {
-        if (document.getElementById("bake").textContent.indexOf("Bake") > 0) {
-            this.app.bake();
-        } else {
-            this.manager.worker.cancelBake();
+        const btnBake = document.getElementById("bake");
+        if (btnBake.textContent.indexOf("Bake") > 0) {
+            this.app.manager.input.bakeAll();
+        } else if (btnBake.textContent.indexOf("Cancel") > 0) {
+            this.manager.worker.cancelBake(false, true);
         }
     }
 
@@ -69,7 +69,7 @@ class ControlsWaiter {
      * Handler for the 'Step through' command. Executes the next step of the recipe.
      */
     stepClick() {
-        this.app.bake(true);
+        this.app.step();
     }
 
 
@@ -90,7 +90,7 @@ class ControlsWaiter {
 
 
     /**
-     * Populates the save disalog box with a URL incorporating the recipe and input.
+     * Populates the save dialog box with a URL incorporating the recipe and input.
      *
      * @param {Object[]} [recipeConfig] - The recipe configuration object array.
      */
@@ -112,26 +112,33 @@ class ControlsWaiter {
      *
      * @param {boolean} includeRecipe - Whether to include the recipe in the URL.
      * @param {boolean} includeInput - Whether to include the input in the URL.
+     * @param {string} input
      * @param {Object[]} [recipeConfig] - The recipe configuration object array.
      * @param {string} [baseURL] - The CyberChef URL, set to the current URL if not included
      * @returns {string}
      */
-    generateStateUrl(includeRecipe, includeInput, recipeConfig, baseURL) {
+    generateStateUrl(includeRecipe, includeInput, input, recipeConfig, baseURL) {
         recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
         const link = baseURL || window.location.protocol + "//" +
             window.location.host +
             window.location.pathname;
         const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
-        const inputStr = toBase64(this.app.getInput(), "A-Za-z0-9+/"); // B64 alphabet with no padding
 
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
-        // Only inlcude input if it is less than 50KB (51200 * 4/3 as it is Base64 encoded)
-        includeInput = includeInput && (inputStr.length > 0) && (inputStr.length <= 68267);
+
+        // If we don't get passed an input, get it from the current URI
+        if (input === null) {
+            const params = this.app.getURIParams();
+            if (params.input) {
+                includeInput = true;
+                input = params.input;
+            }
+        }
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", inputStr] : undefined,
+            includeInput ? ["input", input] : undefined,
         ];
 
         const hash = params
@@ -335,7 +342,7 @@ class ControlsWaiter {
         e.preventDefault();
 
         const reportBugInfo = document.getElementById("report-bug-info");
-        const saveLink = this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/");
+        const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
 
         if (reportBugInfo) {
             reportBugInfo.innerHTML = `* Version: ${PKG_VERSION}
@@ -370,22 +377,34 @@ ${navigator.userAgent}
 
 
     /**
-     * Switches the Bake button between 'Bake' and 'Cancel' functions.
+     * Switches the Bake button between 'Bake', 'Cancel' and 'Loading' functions.
      *
-     * @param {boolean} cancel - Whether to change to cancel or not
+     * @param {string} func - The function to change to. Either "cancel", "loading" or "bake"
      */
-    toggleBakeButtonFunction(cancel) {
+    toggleBakeButtonFunction(func) {
         const bakeButton = document.getElementById("bake"),
             btnText = bakeButton.querySelector("span");
 
-        if (cancel) {
-            btnText.innerText = "Cancel";
-            bakeButton.classList.remove("btn-success");
-            bakeButton.classList.add("btn-danger");
-        } else {
-            btnText.innerText = "Bake!";
-            bakeButton.classList.remove("btn-danger");
-            bakeButton.classList.add("btn-success");
+        switch (func) {
+            case "cancel":
+                btnText.innerText = "Cancel";
+                bakeButton.classList.remove("btn-success");
+                bakeButton.classList.remove("btn-warning");
+                bakeButton.classList.add("btn-danger");
+                break;
+            case "loading":
+                bakeButton.style.background = "";
+                btnText.innerText = "Loading...";
+                bakeButton.classList.remove("btn-success");
+                bakeButton.classList.remove("btn-danger");
+                bakeButton.classList.add("btn-warning");
+                break;
+            default:
+                bakeButton.style.background = "";
+                btnText.innerText = "Bake!";
+                bakeButton.classList.remove("btn-danger");
+                bakeButton.classList.remove("btn-warning");
+                bakeButton.classList.add("btn-success");
         }
     }
 

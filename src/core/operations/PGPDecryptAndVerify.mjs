@@ -93,7 +93,7 @@ class PGPDecryptAndVerify extends Operation {
                             text += `${signer.username} `;
                         }
                         if (signer.comment) {
-                            text += `${signer.comment} `;
+                            text += `(${signer.comment}) `;
                         }
                         if (signer.email) {
                             text += `<${signer.email}>`;
@@ -101,8 +101,9 @@ class PGPDecryptAndVerify extends Operation {
                         text += "\n";
                     }
                     text += [
+                        `PGP key ID: ${km.get_pgp_short_key_id()}`,
                         `PGP fingerprint: ${km.get_pgp_fingerprint().toString("hex")}`,
-                        `Signed on ${new Date(ds.sig.hashed_subpackets[0].time * 1000).toUTCString()}`,
+                        `Signed on ${new Date(ds.sig.when_generated() * 1000).toUTCString()}`,
                         "----------------------------------\n"
                     ].join("\n");
                     text += unboxedLiterals.toString();
