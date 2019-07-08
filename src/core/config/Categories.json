@@ -122,7 +122,8 @@
             "PGP Encrypt",
             "PGP Decrypt",
             "PGP Encrypt and Sign",
-            "PGP Decrypt and Verify"
+            "PGP Decrypt and Verify",
+            "Parse SSH Host Key"
         ]
     },
     {
