@@ -80,6 +80,13 @@ class ParseSSHHostKey extends Operation {
      * @returns {byteArray}
      */
     convertKeyToBinary(inputKey, inputFormat) {
+        const keyPattern = new RegExp(/^(?:[ssh]|[ecdsa-sha2])\S+\s+(\S*)/),
+            keyMatch = inputKey.match(keyPattern);
+
+        if (keyMatch) {
+            inputKey = keyMatch[1];
+        }
+
         if (inputFormat === "Auto") {
             inputFormat = this.detectKeyFormat(inputKey);
         }
