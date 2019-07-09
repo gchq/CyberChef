@@ -26,32 +26,35 @@ module.exports = function (grunt) {
         "A persistent task which creates a development build whenever source files are modified.",
         ["clean:dev", "clean:config", "exec:generateConfig", "concurrent:dev"]);
 
-    grunt.registerTask("node",
-        "Compiles CyberChef into a single NodeJS module.",
-        ["clean", "exec:generateConfig", "exec:generateNodeIndex",  "webpack:node", "webpack:nodeRepl",  "chmod:build"]);
-
-    grunt.registerTask("test",
-        "A task which runs all the operation tests in the tests directory.",
-        ["clean", "exec:generateConfig", "exec:opTests"]);
-
-    grunt.registerTask("testui",
-        "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
-        ["connect:prod", "exec:browserTests"]);
-
-    grunt.registerTask("test-node",
-        "Run all the node tests in the tests directory",
-        ["clean", "exec:generateConfig", "exec:generateNodeIndex", "exec:nodeTests"]);
-
-    grunt.registerTask("docs",
-        "Compiles documentation in the /docs directory.",
-        ["clean:docs", "jsdoc", "chmod:docs"]);
-
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
             "eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web",
             "copy:standalone", "zip:standalone", "clean:standalone", "chmod"
         ]);
+
+    grunt.registerTask("node",
+        "Compiles CyberChef into a single NodeJS module.",
+        [
+            "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig",
+            "exec:generateNodeIndex", "webpack:node", "webpack:nodeRepl", "chmod:build"
+        ]);
+
+    grunt.registerTask("test",
+        "A task which runs all the operation tests in the tests directory.",
+        [
+            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex",
+            "exec:nodeTests", "exec:opTests"
+        ]);
+
+    grunt.registerTask("testui",
+        "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
+        ["connect:prod", "exec:browserTests"]);
+
+    grunt.registerTask("docs",
+        "Compiles documentation in the /docs directory.",
+        ["clean:docs", "jsdoc", "chmod:docs"]);
+
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -110,7 +113,8 @@ module.exports = function (grunt) {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
             node: ["build/node/*"],
-            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs", "src/node/index.mjs", "src/node/config/OperationConfig.json"],
+            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
+            nodeConfig: ["src/node/index.mjs", "src/node/config/OperationConfig.json"],
             docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             standalone: ["build/prod/CyberChef*.html"]
         },
