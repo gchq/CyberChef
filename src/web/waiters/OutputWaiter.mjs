@@ -5,7 +5,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../../core/Utils";
+import Utils from "../../core/Utils.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline&fallback=false!../workers/ZipWorker";
 

@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {ALPHABET_OPTIONS} from "../lib/Base58";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {ALPHABET_OPTIONS} from "../lib/Base58.mjs";
 
 /**
  * To Base58 operation

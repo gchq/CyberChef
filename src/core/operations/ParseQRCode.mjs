@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import { parseQrCode } from "../lib/QRCode";
+import { parseQrCode } from "../lib/QRCode.mjs";
 
 /**
  * Parse QR Code operation

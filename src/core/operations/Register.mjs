@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Dish from "../Dish";
+import Operation from "../Operation.mjs";
+import Dish from "../Dish.mjs";
 import XRegExp from "xregexp";
-import { isWorkerEnvironment } from "../Utils";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * Register operation

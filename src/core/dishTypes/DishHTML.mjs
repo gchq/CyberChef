@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import DishString from "./DishString";
-import Utils from "../Utils";
+import DishString from "./DishString.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Translation methods for HTML Dishes

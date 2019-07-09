@@ -5,9 +5,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import TLVParser from "../lib/TLVParser";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import TLVParser from "../lib/TLVParser.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Parse TLV operation

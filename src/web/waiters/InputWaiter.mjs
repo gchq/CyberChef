@@ -7,9 +7,9 @@
 
 import LoaderWorker from "worker-loader?inline&fallback=false!../workers/LoaderWorker";
 import InputWorker from "worker-loader?inline&fallback=false!../workers/InputWorker";
-import Utils from "../../core/Utils";
-import { toBase64 } from "../../core/lib/Base64";
-import { isImage } from "../../core/lib/FileType";
+import Utils from "../../core/Utils.mjs";
+import { toBase64 } from "../../core/lib/Base64.mjs";
+import { isImage } from "../../core/lib/FileType.mjs";
 
 
 /**

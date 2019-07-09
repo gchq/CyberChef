@@ -7,7 +7,7 @@
 import * as d3temp from "d3";
 import * as nodomtemp from "nodom";
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
 const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;

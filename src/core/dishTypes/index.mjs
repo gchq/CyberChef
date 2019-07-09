@@ -5,14 +5,14 @@
  */
 
 
-import DishByteArray from "./DishByteArray";
-import DishBigNumber from "./DishBigNumber";
-import DishFile from "./DishFile";
-import DishHTML from "./DishHTML";
-import DishJSON from "./DishJSON";
-import DishListFile from "./DishListFile";
-import DishNumber from "./DishNumber";
-import DishString from "./DishString";
+import DishByteArray from "./DishByteArray.mjs";
+import DishBigNumber from "./DishBigNumber.mjs";
+import DishFile from "./DishFile.mjs";
+import DishHTML from "./DishHTML.mjs";
+import DishJSON from "./DishJSON.mjs";
+import DishListFile from "./DishListFile.mjs";
+import DishNumber from "./DishNumber.mjs";
+import DishString from "./DishString.mjs";
 
 export {
     DishByteArray,

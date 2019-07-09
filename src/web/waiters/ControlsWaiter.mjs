@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../../core/Utils";
+import Utils from "../../core/Utils.mjs";
 
 
 /**

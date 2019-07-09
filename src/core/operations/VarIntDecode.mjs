@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Protobuf from "../lib/Protobuf";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Protobuf from "../lib/Protobuf.mjs";
 
 /**
  * VarInt Decode operation

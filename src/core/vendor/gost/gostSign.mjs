@@ -33,8 +33,8 @@
  * 
  */
 
- import GostRandom from './gostRandom';
- import GostDigest from './gostDigest';
+ import GostRandom from './gostRandom.mjs';
+ import GostDigest from './gostDigest.mjs';
 
  import crypto from 'crypto';
 

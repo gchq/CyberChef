@@ -6,8 +6,8 @@
  * @license Apache-2.0
  *
  */
-import {FILE_SIGNATURES} from "./FileSignatures";
-import {sendStatusMessage} from "../Utils";
+import {FILE_SIGNATURES} from "./FileSignatures.mjs";
+import {sendStatusMessage} from "../Utils.mjs";
 
 
 /**

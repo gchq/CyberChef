@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import snakeCase from "lodash/snakeCase";
-import Operation from "../Operation";
-import { replaceVariableNames } from "../lib/Code";
+import snakeCase from "lodash/snakeCase.js";
+import Operation from "../Operation.mjs";
+import { replaceVariableNames } from "../lib/Code.mjs";
 
 /**
  * To Snake case operation

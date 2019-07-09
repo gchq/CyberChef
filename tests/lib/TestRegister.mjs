@@ -9,7 +9,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import Chef from "../../src/core/Chef";
+import Chef from "../../src/core/Chef.mjs";
 
 /**
  * Object to store and run the list of tests.

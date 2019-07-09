@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
-import {scanForFileTypes, extractFile} from "../lib/FileType";
-import {FILE_SIGNATURES} from "../lib/FileSignatures";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import {scanForFileTypes, extractFile} from "../lib/FileType.mjs";
+import {FILE_SIGNATURES} from "../lib/FileSignatures.mjs";
 
 /**
  * Extract Files operation

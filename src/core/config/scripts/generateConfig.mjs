@@ -14,7 +14,7 @@
 import path from "path";
 import fs  from "fs";
 import process from "process";
-import * as Ops from "../../operations/index";
+import * as Ops from "../../operations/index.mjs";
 
 const dir = path.join(process.cwd() + "/src/core/config/");
 if (!fs.existsSync(dir)) {
@@ -84,7 +84,7 @@ for (const module in modules) {
 
     for (const opName in modules[module]) {
         const objName = modules[module][opName];
-        code += `import ${objName} from "../../operations/${objName}";\n`;
+        code += `import ${objName} from "../../operations/${objName}.mjs";\n`;
     }
 
     code += `
@@ -124,7 +124,7 @@ let opModulesCode = `/**
 `;
 
 for (const module in modules) {
-    opModulesCode += `import ${module}Module from "./${module}";\n`;
+    opModulesCode += `import ${module}Module from "./${module}.mjs";\n`;
 }
 
 opModulesCode += `

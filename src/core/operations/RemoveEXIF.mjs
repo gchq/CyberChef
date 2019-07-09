@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import { removeEXIF } from "../vendor/remove-exif";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import { removeEXIF } from "../vendor/remove-exif.mjs";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Remove EXIF operation

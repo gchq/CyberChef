@@ -6,7 +6,7 @@
  * @license Apache-2.0
  *
  */
-import Stream from "./Stream";
+import Stream from "./Stream.mjs";
 
 /**
  * A categorised table of file types, including signatures to identify them and functions

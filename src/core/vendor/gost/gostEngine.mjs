@@ -30,10 +30,10 @@
  * 
  */
 
-import GostRandom from './gostRandom';
-import GostCipher from './gostCipher';
-import GostDigest from './gostDigest';
-import GostSign from './gostSign';
+import GostRandom from './gostRandom.mjs';
+import GostCipher from './gostCipher.mjs';
+import GostDigest from './gostDigest.mjs';
+import GostSign from './gostSign.mjs';
 
 /*
     * Engine definition base on normalized algorithm identifier

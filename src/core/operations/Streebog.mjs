@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import GostDigest from "../vendor/gost/gostDigest";
-import {toHexFast} from "../lib/Hex";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import GostDigest from "../vendor/gost/gostDigest.mjs";
+import {toHexFast} from "../lib/Hex.mjs";
 
 /**
  * Streebog operation

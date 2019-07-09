@@ -4,19 +4,19 @@
  * @license Apache-2.0
  */
 
-import WorkerWaiter from "./waiters/WorkerWaiter";
-import WindowWaiter from "./waiters/WindowWaiter";
-import ControlsWaiter from "./waiters/ControlsWaiter";
-import RecipeWaiter from "./waiters/RecipeWaiter";
-import OperationsWaiter from "./waiters/OperationsWaiter";
-import InputWaiter from "./waiters/InputWaiter";
-import OutputWaiter from "./waiters/OutputWaiter";
-import OptionsWaiter from "./waiters/OptionsWaiter";
-import HighlighterWaiter from "./waiters/HighlighterWaiter";
-import SeasonalWaiter from "./waiters/SeasonalWaiter";
-import BindingsWaiter from "./waiters/BindingsWaiter";
-import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter";
-import TabWaiter from "./waiters/TabWaiter";
+import WorkerWaiter from "./waiters/WorkerWaiter.mjs";
+import WindowWaiter from "./waiters/WindowWaiter.mjs";
+import ControlsWaiter from "./waiters/ControlsWaiter.mjs";
+import RecipeWaiter from "./waiters/RecipeWaiter.mjs";
+import OperationsWaiter from "./waiters/OperationsWaiter.mjs";
+import InputWaiter from "./waiters/InputWaiter.mjs";
+import OutputWaiter from "./waiters/OutputWaiter.mjs";
+import OptionsWaiter from "./waiters/OptionsWaiter.mjs";
+import HighlighterWaiter from "./waiters/HighlighterWaiter.mjs";
+import SeasonalWaiter from "./waiters/SeasonalWaiter.mjs";
+import BindingsWaiter from "./waiters/BindingsWaiter.mjs";
+import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter.mjs";
+import TabWaiter from "./waiters/TabWaiter.mjs";
 
 
 /**

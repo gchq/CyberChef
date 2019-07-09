@@ -7,8 +7,8 @@
  * @license Apache-2.0
  */
 
-import Utils from "../../core/Utils";
-import {detectFileType} from "../../core/lib/FileType";
+import Utils from "../../core/Utils.mjs";
+import {detectFileType} from "../../core/lib/FileType.mjs";
 
 // Default max values
 // These will be correctly calculated automatically

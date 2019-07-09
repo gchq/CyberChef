@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { fromHex } from "../lib/Hex";
-import { isWorkerEnvironment } from "../Utils";
+import Operation from "../Operation.mjs";
+import { fromHex } from "../lib/Hex.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 
 /**

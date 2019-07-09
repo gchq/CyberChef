@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * From Hex operation

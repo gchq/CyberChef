@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {detectFileType} from "../lib/FileType";
-import {FILE_SIGNATURES} from "../lib/FileSignatures";
+import Operation from "../Operation.mjs";
+import {detectFileType} from "../lib/FileType.mjs";
+import {FILE_SIGNATURES} from "../lib/FileSignatures.mjs";
 
 /**
  * Detect File Type operation

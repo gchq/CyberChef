@@ -404,26 +404,26 @@ module.exports = function (grunt) {
                 command: [
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
-                    "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node src/core/config/scripts/generateConfig.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
                 ].join(";")
             },
             generateNodeIndex: {
                 command: [
                     "echo '\n--- Regenerating node index ---'",
-                    "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node src/node/config/scripts/generateNodeIndex.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
                 ].join(";"),
             },
             opTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node tests/operations/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
             },
             browserTests: {
                 command: "./node_modules/.bin/nightwatch --env prod"
             },
             nodeTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node tests/node/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
             }
         },
     });

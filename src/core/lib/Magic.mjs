@@ -1,8 +1,8 @@
 import OperationConfig from "../config/OperationConfig.json";
-import Utils, { isWorkerEnvironment } from "../Utils";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
-import {detectFileType} from "./FileType";
+import Utils, { isWorkerEnvironment } from "../Utils.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
+import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
 
 /**

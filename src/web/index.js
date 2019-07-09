@@ -13,10 +13,10 @@ import "snackbarjs";
 import "bootstrap-material-design/js/index";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
-import * as CanvasComponents from "../core/lib/CanvasComponents";
+import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
-import App from "./App";
+import App from "./App.mjs";
 import Categories from "../core/config/Categories.json";
 import OperationConfig from "../core/config/OperationConfig.json";
 

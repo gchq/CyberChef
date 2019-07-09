@@ -4,35 +4,35 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import MD2 from "./MD2";
-import MD4 from "./MD4";
-import MD5 from "./MD5";
-import MD6 from "./MD6";
-import SHA0 from "./SHA0";
-import SHA1 from "./SHA1";
-import SHA2 from "./SHA2";
-import SHA3 from "./SHA3";
-import Keccak from "./Keccak";
-import Shake from "./Shake";
-import RIPEMD from "./RIPEMD";
-import HAS160 from "./HAS160";
-import Whirlpool from "./Whirlpool";
-import SSDEEP from "./SSDEEP";
-import CTPH from "./CTPH";
-import Fletcher8Checksum from "./Fletcher8Checksum";
-import Fletcher16Checksum from "./Fletcher16Checksum";
-import Fletcher32Checksum from "./Fletcher32Checksum";
-import Fletcher64Checksum from "./Fletcher64Checksum";
-import Adler32Checksum from "./Adler32Checksum";
-import CRC8Checksum from "./CRC8Checksum";
-import CRC16Checksum from "./CRC16Checksum";
-import CRC32Checksum from "./CRC32Checksum";
-import BLAKE2b from "./BLAKE2b";
-import BLAKE2s from "./BLAKE2s";
-import Streebog from "./Streebog";
-import GOSTHash from "./GOSTHash";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import MD2 from "./MD2.mjs";
+import MD4 from "./MD4.mjs";
+import MD5 from "./MD5.mjs";
+import MD6 from "./MD6.mjs";
+import SHA0 from "./SHA0.mjs";
+import SHA1 from "./SHA1.mjs";
+import SHA2 from "./SHA2.mjs";
+import SHA3 from "./SHA3.mjs";
+import Keccak from "./Keccak.mjs";
+import Shake from "./Shake.mjs";
+import RIPEMD from "./RIPEMD.mjs";
+import HAS160 from "./HAS160.mjs";
+import Whirlpool from "./Whirlpool.mjs";
+import SSDEEP from "./SSDEEP.mjs";
+import CTPH from "./CTPH.mjs";
+import Fletcher8Checksum from "./Fletcher8Checksum.mjs";
+import Fletcher16Checksum from "./Fletcher16Checksum.mjs";
+import Fletcher32Checksum from "./Fletcher32Checksum.mjs";
+import Fletcher64Checksum from "./Fletcher64Checksum.mjs";
+import Adler32Checksum from "./Adler32Checksum.mjs";
+import CRC8Checksum from "./CRC8Checksum.mjs";
+import CRC16Checksum from "./CRC16Checksum.mjs";
+import CRC32Checksum from "./CRC32Checksum.mjs";
+import BLAKE2b from "./BLAKE2b.mjs";
+import BLAKE2s from "./BLAKE2s.mjs";
+import Streebog from "./Streebog.mjs";
+import GOSTHash from "./GOSTHash.mjs";
 
 /**
  * Generate all hashes operation

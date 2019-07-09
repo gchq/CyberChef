@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import { scanForFileTypes } from "../lib/FileType";
-import { FILE_SIGNATURES } from "../lib/FileSignatures";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import { scanForFileTypes } from "../lib/FileType.mjs";
+import { FILE_SIGNATURES } from "../lib/FileSignatures.mjs";
 
 /**
  * Scan for Embedded Files operation

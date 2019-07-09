@@ -8,8 +8,8 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Parses an IPv4 CIDR range (e.g. 192.168.0.0/24) and displays information about it.

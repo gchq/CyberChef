@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-import Dish from "../../core/Dish";
+import Dish from "../../core/Dish.mjs";
 
 self.addEventListener("message", function(e) {
     // Handle message from the main thread

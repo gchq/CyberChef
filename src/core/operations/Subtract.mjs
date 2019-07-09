@@ -6,9 +6,9 @@
  */
 
 import BigNumber from "bignumber.js";
-import Operation from "../Operation";
-import { sub, createNumArray } from "../lib/Arithmetic";
-import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import { sub, createNumArray } from "../lib/Arithmetic.mjs";
+import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 
 /**

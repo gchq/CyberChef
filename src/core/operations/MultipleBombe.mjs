@@ -7,11 +7,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import { BombeMachine } from "../lib/Bombe";
-import { ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector } from "../lib/Enigma";
-import { isWorkerEnvironment } from "../Utils";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { BombeMachine } from "../lib/Bombe.mjs";
+import { ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector } from "../lib/Enigma.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 
 /**

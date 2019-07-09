@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import TestRegister from "../../lib/TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 const ASCII_TEXT = "A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.";
 

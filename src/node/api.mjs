@@ -8,11 +8,11 @@
 
 /*eslint no-console: ["off"] */
 
-import NodeDish from "./NodeDish";
-import NodeRecipe from "./NodeRecipe";
+import NodeDish from "./NodeDish.mjs";
+import NodeRecipe from "./NodeRecipe.mjs";
 import OperationConfig from "../core/config/OperationConfig.json";
-import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils";
-import ExludedOperationError from "../core/errors/ExcludedOperationError";
+import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
+import ExludedOperationError from "../core/errors/ExcludedOperationError.mjs";
 
 
 /**

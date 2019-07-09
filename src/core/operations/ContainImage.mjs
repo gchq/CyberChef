@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import { isImage } from "../lib/FileType";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { isWorkerEnvironment } from "../Utils";
+import { isWorkerEnvironment } from "../Utils.mjs";
 import jimp from "jimp";
 
 /**

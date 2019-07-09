@@ -1,6 +1,6 @@
-import TestRegister from "../../lib/TestRegister";
-import Dish from "../../src/core/Dish";
-import it from "../node/assertionHandler";
+import TestRegister from "../../lib/TestRegister.mjs";
+import Dish from "../../src/core/Dish.mjs";
+import it from "../node/assertionHandler.mjs";
 import assert from "assert";
 
 TestRegister.addApiTests([

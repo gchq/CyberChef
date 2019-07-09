@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {toHex} from "../lib/Hex";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {toHex} from "../lib/Hex.mjs";
 
 /**
  * To Hex Content operation

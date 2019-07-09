@@ -6,9 +6,9 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import OperationError from "../errors/OperationError";
-import * as Enigma from "../lib/Enigma";
-import Utils from "../Utils";
+import OperationError from "../errors/OperationError.mjs";
+import * as Enigma from "../lib/Enigma.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * A set of example Typex rotors. No Typex rotor wirings are publicly available, so these are

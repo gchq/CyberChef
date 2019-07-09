@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {INFLATE_BUFFER_TYPE} from "../lib/Zlib";
-import rawinflate from "zlibjs/bin/rawinflate.min";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
+import rawinflate from "zlibjs/bin/rawinflate.min.js";
+import OperationError from "../errors/OperationError.mjs";
 
 const Zlib = rawinflate.Zlib;
 

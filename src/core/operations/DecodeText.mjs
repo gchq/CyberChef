@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import cptable from "../vendor/js-codepage/cptable.js";
-import {IO_FORMAT} from "../lib/ChrEnc";
+import {IO_FORMAT} from "../lib/ChrEnc.mjs";
 
 /**
  * Decode text operation

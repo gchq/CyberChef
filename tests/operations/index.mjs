@@ -16,7 +16,7 @@ import {
     logTestReport,
 } from "../lib/utils";
 
-import TestRegister from "../lib/TestRegister";
+import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/BCD";
 import "./tests/BSON";
 import "./tests/Base58";

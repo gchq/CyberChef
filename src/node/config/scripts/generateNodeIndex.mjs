@@ -13,9 +13,9 @@
 
 import fs from "fs";
 import path from "path";
-import * as operations from "../../../core/operations/index";
-import { decapitalise } from "../../apiUtils";
-import excludedOperations from "../excludedOperations";
+import * as operations from "../../../core/operations/index.mjs";
+import { decapitalise } from "../../apiUtils.mjs";
+import excludedOperations from "../excludedOperations.mjs";
 
 const includedOperations = Object.keys(operations).filter((op => excludedOperations.indexOf(op) === -1));
 
@@ -38,9 +38,9 @@ let code = `/**
 /* eslint camelcase: 0 */
 
 
-import NodeDish from "./NodeDish";
-import { _wrap, help, bake, _explainExludedFunction } from "./api";
-import File from "./File";
+import NodeDish from "./NodeDish.mjs";
+import { _wrap, help, bake, _explainExludedFunction } from "./api.mjs";
+import File from "./File.mjs";
 import {
     // import as core_ to avoid name clashes after wrap.
 `;

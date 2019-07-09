@@ -5,8 +5,8 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Provided default Enigma rotor set.

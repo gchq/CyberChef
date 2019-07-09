@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import { isImage } from "../lib/FileType";
-import { toBase64 } from "../lib/Base64";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { isImage } from "../lib/FileType.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
 
 /**

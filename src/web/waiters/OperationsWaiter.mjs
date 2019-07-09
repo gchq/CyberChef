@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import HTMLOperation from "../HTMLOperation";
+import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 
 

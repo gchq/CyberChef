@@ -6,11 +6,11 @@
  * @license Apache-2.0
  */
 
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 import jsQR from "jsqr";
 import qr from "qr-image";
 import jimp from "jimp";
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
 
 /**
  * Parses a QR code image from an image

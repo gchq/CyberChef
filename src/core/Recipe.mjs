@@ -5,11 +5,11 @@
  */
 
 import OperationConfig from "./config/OperationConfig.json";
-import OperationError from "./errors/OperationError";
-import Operation from "./Operation";
-import DishError from "./errors/DishError";
+import OperationError from "./errors/OperationError.mjs";
+import Operation from "./Operation.mjs";
+import DishError from "./errors/DishError.mjs";
 import log from "loglevel";
-import { isWorkerEnvironment } from "./Utils";
+import { isWorkerEnvironment } from "./Utils.mjs";
 
 // Cache container for modules
 let modules = null;
@@ -62,7 +62,7 @@ class Recipe  {
         if (!modules) {
             // Using Webpack Magic Comments to force the dynamic import to be included in the main chunk
             // https://webpack.js.org/api/module-methods/
-            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules");
+            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules.mjs");
             modules = modules.default;
         }
 

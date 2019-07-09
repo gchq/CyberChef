@@ -32,8 +32,8 @@
  * 
  */
 
-import GostRandom from './gostRandom';
-import gostEngine from './gostEngine';
+import GostRandom from './gostRandom.mjs';
+import gostEngine from './gostEngine.mjs';
 
 import crypto from 'crypto'
 

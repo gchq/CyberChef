@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import otp from "otp";
-import ToBase32 from "./ToBase32";
+import ToBase32 from "./ToBase32.mjs";
 
 /**
  * Generate TOTP operation

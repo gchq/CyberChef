@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-import { toHex, fromHex } from "./Hex";
+import { toHex, fromHex } from "./Hex.mjs";
 
 /**
  * Formats Distinguished Name (DN) strings.

@@ -8,10 +8,10 @@
 import * as d3temp from "d3";
 import * as d3hexbintemp from "d3-hexbin";
 import * as nodomtemp from "nodom";
-import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
+import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts.mjs";
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
 const d3hexbin = d3hexbintemp.default ? d3hexbintemp.default : d3hexbintemp;

@@ -6,10 +6,10 @@
  * @license Apache-2.0
  */
 
-import zip from "zlibjs/bin/zip.min";
-import Utils from "../../core/Utils";
-import Dish from "../../core/Dish";
-import {detectFileType} from "../../core/lib/FileType";
+import zip from "zlibjs/bin/zip.min.js";
+import Utils from "../../core/Utils.mjs";
+import Dish from "../../core/Dish.mjs";
+import {detectFileType} from "../../core/lib/FileType.mjs";
 
 const Zlib = zip.Zlib;
 

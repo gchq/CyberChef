@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Dish from "./Dish";
-import Recipe from "./Recipe";
+import Dish from "./Dish.mjs";
+import Recipe from "./Recipe.mjs";
 import log from "loglevel";
-import { isWorkerEnvironment } from "./Utils";
+import { isWorkerEnvironment } from "./Utils.mjs";
 
 /**
  * The main controller for CyberChef.

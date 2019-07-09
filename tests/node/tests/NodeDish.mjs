@@ -1,12 +1,12 @@
 import assert from "assert";
-import it from "../assertionHandler";
+import it from "../assertionHandler.mjs";
 import fs from "fs";
 
 import BigNumber from "bignumber.js";
 
-import { Dish, toBase32, SHA3 } from "../../../src/node/index";
-import File from "../../../src/node/File";
-import TestRegister from "../../lib/TestRegister";
+import { Dish, toBase32, SHA3 } from "../../../src/node/index.mjs";
+import File from "../../../src/node/File.mjs";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addApiTests([
     it("Composable Dish: Should have top level Dish object", () => {

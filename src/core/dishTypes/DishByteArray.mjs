@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import DishType from "./DishType";
+import DishType from "./DishType.mjs";
 
 /**
  * Translation methods for ArrayBuffer Dishes

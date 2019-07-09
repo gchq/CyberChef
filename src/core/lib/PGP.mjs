@@ -10,8 +10,8 @@
  *
  */
 
-import OperationError from "../errors/OperationError";
-import { isWorkerEnvironment } from "../Utils";
+import OperationError from "../errors/OperationError.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 import kbpgp from "kbpgp";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;

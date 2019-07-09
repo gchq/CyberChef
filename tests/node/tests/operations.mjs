@@ -17,7 +17,7 @@
  */
 
 import assert from "assert";
-import it from "../assertionHandler";
+import it from "../assertionHandler.mjs";
 import fs from "fs";
 
 import {
@@ -33,9 +33,9 @@ import {
     toBase64,
     toHex,
 } from "../../../src/node/index";
-import chef from "../../../src/node/index";
-import TestRegister from "../../lib/TestRegister";
-import File from "../../../src/node/File";
+import chef from "../../../src/node/index.mjs";
+import TestRegister from "../../lib/TestRegister.mjs";
+import File from "../../../src/node/File.mjs";
 
 global.File = File;
 

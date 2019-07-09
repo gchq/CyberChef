@@ -5,10 +5,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import cptable from "../vendor/js-codepage/cptable.js";
-import {IO_FORMAT} from "../lib/ChrEnc";
+import {IO_FORMAT} from "../lib/ChrEnc.mjs";
 
 /**
  * Text Encoding Brute Force operation

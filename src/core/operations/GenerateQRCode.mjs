@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import { generateQrCode } from "../lib/QRCode";
-import { toBase64 } from "../lib/Base64";
-import { isImage } from "../lib/FileType";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { generateQrCode } from "../lib/QRCode.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
+import { isImage } from "../lib/FileType.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Generate QR Code operation

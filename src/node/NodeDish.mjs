@@ -5,7 +5,7 @@
  */
 
 import util from "util";
-import Dish from "../core/Dish";
+import Dish from "../core/Dish.mjs";
 
 /**
  * Subclass of Dish for use in the Node.js environment.

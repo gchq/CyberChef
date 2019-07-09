@@ -32,7 +32,7 @@
  * 
  */
 
-import gostCrypto from './gostCrypto';
+import gostCrypto from './gostCrypto.mjs';
 
 /**
  * The Coding interface provides string converting methods: Base64, Hex, 

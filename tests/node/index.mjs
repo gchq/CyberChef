@@ -15,7 +15,7 @@ import {
     logTestReport,
 } from "../lib/utils";
 
-import TestRegister from "../lib/TestRegister";
+import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/nodeApi";
 import "./tests/operations";
 import "./tests/File";

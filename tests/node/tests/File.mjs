@@ -1,8 +1,8 @@
 import assert from "assert";
-import it from "../assertionHandler";
-import TestRegister from "../../lib/TestRegister";
-import File from "../../../src/node/File";
-import {zip, Dish} from "../../../src/node/index";
+import it from "../assertionHandler.mjs";
+import TestRegister from "../../lib/TestRegister.mjs";
+import File from "../../../src/node/File.mjs";
+import {zip, Dish} from "../../../src/node/index.mjs";
 
 TestRegister.addApiTests([
     it("File: should exist", () => {

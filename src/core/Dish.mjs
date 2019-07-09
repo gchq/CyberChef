@@ -5,22 +5,20 @@
  * @license Apache-2.0
  */
 
-import Utils, { isNodeEnvironment } from "./Utils";
-import DishError from "./errors/DishError";
+import Utils, { isNodeEnvironment } from "./Utils.mjs";
+import DishError from "./errors/DishError.mjs";
 import BigNumber from "bignumber.js";
-import { detectFileType } from "./lib/FileType";
+import { detectFileType } from "./lib/FileType.mjs";
 import log from "loglevel";
 
-import {
-    DishByteArray,
-    DishBigNumber,
-    DishFile,
-    DishHTML,
-    DishJSON,
-    DishListFile,
-    DishNumber,
-    DishString,
-} from "./dishTypes";
+import DishByteArray from "./dishTypes/DishByteArray.mjs";
+import DishBigNumber from "./dishTypes/DishBigNumber.mjs";
+import DishFile from "./dishTypes/DishFile.mjs";
+import DishHTML from "./dishTypes/DishHTML.mjs";
+import DishJSON from "./dishTypes/DishJSON.mjs";
+import DishListFile from "./dishTypes/DishListFile.mjs";
+import DishNumber from "./dishTypes/DishNumber.mjs";
+import DishString from "./dishTypes/DishString.mjs";
 
 
 /**
@@ -234,15 +232,22 @@ class Dish {
             case Dish.LIST_FILE:
                 title = `${this.value.length} file(s)`;
                 break;
+            case Dish.JSON:
+                title = "application/json";
+                break;
             case Dish.ARRAY_BUFFER:
             case Dish.BYTE_ARRAY:
                 title = this.detectDishType();
                 if (title !== null) break;
                 // fall through if no mime type was detected
             default:
-                cloned = this.clone();
-                cloned.value = cloned.value.slice(0, 256);
-                title = await cloned.get(Dish.STRING);
+                try {
+                    cloned = this.clone();
+                    cloned.value = cloned.value.slice(0, 256);
+                    title = await cloned.get(Dish.STRING);
+                } catch (err) {
+                    log.error(`${Dish.enumLookup(this.type)} cannot be sliced. ${err}`);
+                }
         }
 
         return title.slice(0, maxLength);

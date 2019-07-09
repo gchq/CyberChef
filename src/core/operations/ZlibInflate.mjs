@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {INFLATE_BUFFER_TYPE} from "../lib/Zlib";
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
+import Operation from "../Operation.mjs";
+import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
+import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
 

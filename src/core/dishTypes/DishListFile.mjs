@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import DishType from "./DishType";
+import DishType from "./DishType.mjs";
 import { isNodeEnvironment } from "../Utils.mjs";
 
 

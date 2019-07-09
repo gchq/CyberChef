@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import scryptsy from "scryptsy";
-import { isWorkerEnvironment } from "../Utils";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * Scrypt operation

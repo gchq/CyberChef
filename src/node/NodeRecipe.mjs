@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import {operations} from "./index";
-import { sanitise } from "./apiUtils";
+import {operations} from "./index.mjs";
+import { sanitise } from "./apiUtils.mjs";
 
 /**
  * Similar to core/Recipe, Recipe controls a list of operations and

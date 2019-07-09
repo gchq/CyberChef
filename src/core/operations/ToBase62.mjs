@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
-import Utils from "../Utils";
-import {toHexFast} from "../lib/Hex";
+import Utils from "../Utils.mjs";
+import {toHexFast} from "../lib/Hex.mjs";
 
 /**
  * To Base62 operation

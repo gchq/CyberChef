@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import DishType from "./DishType";
-import Utils, { isNodeEnvironment } from "../Utils";
+import DishType from "./DishType.mjs";
+import Utils, { isNodeEnvironment } from "../Utils.mjs";
 
 /**
  * Translation methods for file Dishes

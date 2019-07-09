@@ -5,8 +5,8 @@
  */
 
 
-import DishType from "./DishType";
-import Utils from "../Utils";
+import DishType from "./DishType.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Translation methods for string dishes

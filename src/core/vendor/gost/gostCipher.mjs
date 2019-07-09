@@ -32,7 +32,7 @@
  * 
  */
 
-import GostRandom from './gostRandom';
+import GostRandom from './gostRandom.mjs';
 
 import crypto from 'crypto'
 

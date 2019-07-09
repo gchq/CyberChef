@@ -11,13 +11,13 @@
  */
 
 import assert from "assert";
-import it from "../assertionHandler";
-import chef from "../../../src/node/index";
-import OperationError from "../../../src/core/errors/OperationError";
-import NodeDish from "../../../src/node/NodeDish";
+import it from "../assertionHandler.mjs";
+import chef from "../../../src/node/index.mjs";
+import OperationError from "../../../src/core/errors/OperationError.mjs";
+import NodeDish from "../../../src/node/NodeDish.mjs";
 
-import { toBase32} from "../../../src/node/index";
-import TestRegister from "../../lib/TestRegister";
+import { toBase32} from "../../../src/node/index.mjs";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addApiTests([
     it("should have some operations", () => {

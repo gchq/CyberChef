@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import { detectFileType } from "../core/lib/FileType";
+import { detectFileType } from "../core/lib/FileType.mjs";
 
 
 /**
