@@ -2,6 +2,12 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+## [9.0.0] - 2019-07-09
+- [Multiple inputs](https://github.com/gchq/CyberChef/wiki/Multiple-Inputs) are now supported in the main web UI, allowing you to upload and process multiple files at once [@j433866] [#566]
+- A [Node.js API](https://github.com/gchq/CyberChef/wiki/Node-API) has been implemented, meaning that CyberChef can now be used as a library, either to provide specific operations, or an entire baking environment [@d98762625] [#291]
+- A [read-eval-print loop (REPL)](https://github.com/gchq/CyberChef/wiki/Node-API#repl) is also included to enable prototyping and experimentation with the API [@d98762625] [#291]
+- Light and dark Solarized themes added [@j433866] [#566]
+
 ### [8.38.0] - 2019-07-03
 - 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
 
@@ -152,6 +158,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.0.0]: https://github.com/gchq/CyberChef/releases/tag/v9.0.0
 [8.38.0]: https://github.com/gchq/CyberChef/releases/tag/v8.38.0
 [8.37.0]: https://github.com/gchq/CyberChef/releases/tag/v8.37.0
 [8.36.0]: https://github.com/gchq/CyberChef/releases/tag/v8.36.0
@@ -231,6 +238,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#277]: https://github.com/gchq/CyberChef/issues/277
 [#281]: https://github.com/gchq/CyberChef/pull/281
 [#284]: https://github.com/gchq/CyberChef/pull/284
+[#291]: https://github.com/gchq/CyberChef/pull/291
 [#294]: https://github.com/gchq/CyberChef/pull/294
 [#296]: https://github.com/gchq/CyberChef/pull/296
 [#298]: https://github.com/gchq/CyberChef/pull/298
@@ -267,6 +275,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#531]: https://github.com/gchq/CyberChef/pull/531
 [#533]: https://github.com/gchq/CyberChef/pull/533
 [#535]: https://github.com/gchq/CyberChef/pull/535
+[#566]: https://github.com/gchq/CyberChef/pull/566
 [#571]: https://github.com/gchq/CyberChef/pull/571
 [#585]: https://github.com/gchq/CyberChef/pull/585
 [#591]: https://github.com/gchq/CyberChef/pull/591
