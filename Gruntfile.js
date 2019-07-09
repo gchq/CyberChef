@@ -171,7 +171,7 @@ module.exports = function (grunt) {
                     },
                     resolve: {
                         alias: {
-                            "./config/modules/OpModules": "./config/modules/Default"
+                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
                         }
                     },
                     plugins: [
@@ -268,7 +268,7 @@ module.exports = function (grunt) {
                     }, moduleEntryPoints),
                     resolve: {
                         alias: {
-                            "./config/modules/OpModules": "./config/modules/Default"
+                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
                         }
                     },
                     plugins: [

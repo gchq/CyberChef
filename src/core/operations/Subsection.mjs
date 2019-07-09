@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import XRegExp from "xregexp";
 import Operation from "../Operation.mjs";
 import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
@@ -22,7 +21,7 @@ class Subsection extends Operation {
 
         this.name = "Subsection";
         this.flowControl = true;
-        this.module = "Regex";
+        this.module = "Default";
         this.description = "Select a part of the input data using a regular expression (regex), and run all subsequent operations on each match separately.<br><br>You can use up to one capture group, where the recipe will only be run on the data in the capture group. If there's more than one capture group, only the first one will be operated on.";
         this.infoURL = "";
         this.inputType = "string";
@@ -87,7 +86,7 @@ class Subsection extends Operation {
             if (!caseSensitive) flags += "i";
             if (global) flags += "g";
 
-            const regex = new XRegExp(section, flags),
+            const regex = new RegExp(section, flags),
                 recipe = new Recipe();
 
             recipe.addOperations(subOpList);
