@@ -3,10 +3,10 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 ## [9.0.0] - 2019-07-09
-- [Multiple inputs](https://github.com/gchq/CyberChef/wiki/Multiple-Inputs) are now supported in the main web UI, allowing you to upload and process multiple files at once [@j433866] [#566]
-- A [Node.js API](https://github.com/gchq/CyberChef/wiki/Node-API) has been implemented, meaning that CyberChef can now be used as a library, either to provide specific operations, or an entire baking environment [@d98762625] [#291]
-- A [read-eval-print loop (REPL)](https://github.com/gchq/CyberChef/wiki/Node-API#repl) is also included to enable prototyping and experimentation with the API [@d98762625] [#291]
-- Light and dark Solarized themes added [@j433866] [#566]
+- [Multiple inputs](https://github.com/gchq/CyberChef/wiki/Multiple-Inputs) are now supported in the main web UI, allowing you to upload and process multiple files at once [@j433866] | [#566]
+- A [Node.js API](https://github.com/gchq/CyberChef/wiki/Node-API) has been implemented, meaning that CyberChef can now be used as a library, either to provide specific operations, or an entire baking environment [@d98762625] | [#291]
+- A [read-eval-print loop (REPL)](https://github.com/gchq/CyberChef/wiki/Node-API#repl) is also included to enable prototyping and experimentation with the API [@d98762625] | [#291]
+- Light and dark Solarized themes added [@j433866] | [#566]
 
 ### [8.38.0] - 2019-07-03
 - 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
