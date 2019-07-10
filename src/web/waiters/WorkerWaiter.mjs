@@ -178,7 +178,7 @@ class WorkerWaiter {
         let inputNum = 0;
         log.debug(`Receiving ${r.action} from ChefWorker.`);
 
-        if ("inputNum" in r.data) {
+        if (Object.prototype.hasOwnProperty.call(r.data, "inputNum")) {
             inputNum = r.data.inputNum;
         }
 

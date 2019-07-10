@@ -6,6 +6,7 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline&fallback=false!../workers/ZipWorker";
 
@@ -42,39 +43,6 @@ class OutputWaiter {
     }
 
     /**
-     * Gets the output for the specified input number
-     *
-     * @param {number} inputNum - The input to get the output for
-     * @param {boolean} [raw=true] - If true, returns the raw data instead of the presented result.
-     * @returns {string | ArrayBuffer}
-     */
-    getOutput(inputNum, raw=true) {
-        if (!this.outputExists(inputNum)) return -1;
-
-        if (this.outputs[inputNum].data === null) return "";
-
-        if (raw) {
-            let data = this.outputs[inputNum].data.dish.value;
-            if (Array.isArray(data)) {
-                data = new Uint8Array(data.length);
-
-                for (let i = 0; i < data.length; i++) {
-                    data[i] = this.outputs[inputNum].data.dish.value[i];
-                }
-
-                data = data.buffer;
-            } else if (typeof data !== "object" && typeof data !== "string") {
-                data = String(data);
-            }
-            return data;
-        } else if (typeof this.outputs[inputNum].data.result === "string") {
-            return this.outputs[inputNum].data.result;
-        } else {
-            return this.outputs[inputNum].data.result || "";
-        }
-    }
-
-    /**
      * Gets the dish object for an output.
      *
      * @param inputNum - The inputNum of the output to get the dish of
@@ -101,16 +69,6 @@ class OutputWaiter {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Gets the output string or FileBuffer for the active input
-     *
-     * @param {boolean} [raw=true] - If true, returns the raw data instead of the presented result.
-     * @returns {string | ArrayBuffer}
-     */
-    getActive(raw=true) {
-        return this.getOutput(this.manager.tabs.getActiveOutputTab(), raw);
     }
 
     /**
@@ -150,6 +108,10 @@ class OutputWaiter {
     updateOutputValue(data, inputNum, set=true) {
         if (!this.outputExists(inputNum)) {
             this.addOutput(inputNum);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(data, "dish")) {
+            data.dish = new Dish(data.dish);
         }
 
         this.outputs[inputNum].data = data;
@@ -267,13 +229,13 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async set(inputNum) {
-        if (inputNum !== this.manager.tabs.getActiveOutputTab()) return;
+        if (inputNum !== this.manager.tabs.getActiveOutputTab() ||
+            !this.outputExists(inputNum)) return;
         this.toggleLoader(true);
 
         return new Promise(async function(resolve, reject) {
             const output = this.outputs[inputNum],
                 activeTab = this.manager.tabs.getActiveOutputTab();
-            if (output === undefined || output === null) return;
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
             const outputText = document.getElementById("output-text");
@@ -281,6 +243,7 @@ class OutputWaiter {
             const outputFile = document.getElementById("output-file");
             const outputHighlighter = document.getElementById("output-highlighter");
             const inputHighlighter = document.getElementById("input-highlighter");
+
             // If pending or baking, show loader and status message
             // If error, style the tab and handle the error
             // If done, display the output if it's the active tab
@@ -544,11 +507,17 @@ class OutputWaiter {
      * Handler for file download events.
      */
     async downloadFile() {
+        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        if (dish === null) {
+            this.app.alert("Could not find any output data to download. Has this output been baked?", 3000);
+            return;
+        }
         let fileName = window.prompt("Please enter a filename: ", "download.dat");
 
         if (fileName === null) fileName = "download.dat";
 
-        const file = new File([this.getActive(true)], fileName);
+        const data = await dish.get(Dish.ARRAY_BUFFER),
+            file = new File([data], fileName);
         FileSaver.saveAs(file, fileName, false);
     }
 
@@ -684,7 +653,7 @@ class OutputWaiter {
             tabsWrapper.appendChild(newTab);
         } else if (numTabs === this.maxTabs) {
             // Can't create a new tab
-            document.getElementById("output-tabs").lastElementChild.style.boxShadow = "-15px 0px 15px -15px var(--primary-border-colour) inset";
+            document.getElementById("output-tabs").lastElementChild.classList.add("tabs-right");
         }
 
         this.displayTabInfo(inputNum);
@@ -1039,8 +1008,8 @@ class OutputWaiter {
      */
     async backgroundMagic() {
         this.hideMagicButton();
-        if (!this.app.options.autoMagic || !this.getActive(true)) return;
-        const dish = this.outputs[this.manager.tabs.getActiveOutputTab()].data.dish;
+        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        if (!this.app.options.autoMagic || dish === null) return;
         const buffer = await this.getDishBuffer(dish);
         const sample = buffer.slice(0, 1000) || "";
 
@@ -1181,11 +1150,13 @@ class OutputWaiter {
      * Copies the output to the clipboard
      */
     copyClick() {
-        let output = this.getActive(true);
-
-        if (typeof output !== "string") {
-            output = Utils.arrayBufferToStr(output);
+        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        if (dish === null) {
+            this.app.alert("Could not find data to copy. Has this output been baked yet?", 3000);
+            return;
         }
+
+        const output = dish.get(Dish.STRING);
 
         // Create invisible textarea to populate with the raw dish string (not the printable version that
         // contains dots instead of the actual bytes)
@@ -1223,8 +1194,14 @@ class OutputWaiter {
      *
      * @returns {boolean}
      */
-    containsCR() {
-        return this.getActive(false).indexOf("\r") >= 0;
+    async containsCR() {
+        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        if (dish === null) return;
+
+        if (dish.type === Dish.STRING) {
+            const data = await dish.get(Dish.STRING);
+            return data.indexOf("\r") >= 0;
+        }
     }
 
     /**
@@ -1312,7 +1289,7 @@ class OutputWaiter {
     /**
      * Searches the outputs using the filter settings and displays the results
      */
-    filterTabSearch() {
+    async filterTabSearch() {
         const showPending = document.getElementById("output-show-pending").checked,
             showBaking = document.getElementById("output-show-baking").checked,
             showBaked = document.getElementById("output-show-baked").checked,
@@ -1349,15 +1326,26 @@ class OutputWaiter {
                     "stale": "Stale (output is out of date)",
                     "inactive": "Not baked yet"
                 };
-                results.push({
-                    inputNum: iNum,
-                    textDisplay: outDisplay[output.status]
-                });
-            } else if (output.status === "baked" && showBaked && output.progress === false) {
-                let data = this.getOutput(iNum, false).slice(0, 4096);
-                if (typeof data !== "string") {
-                    data = Utils.arrayBufferToStr(data);
+
+                // If the output has a dish object, check it against the filter
+                if (Object.prototype.hasOwnProperty.call(output, "data") &&
+                    output.data &&
+                    Object.prototype.hasOwnProperty.call(output.data, "dish")) {
+                    const data = output.data.dish.get(Dish.STRING);
+                    if (contentFilterExp.test(data)) {
+                        results.push({
+                            inputNum: iNum,
+                            textDisplay: data.slice(0, 100)
+                        });
+                    }
+                } else {
+                    results.push({
+                        inputNum: iNum,
+                        textDisplay: outDisplay[output.status]
+                    });
                 }
+            } else if (output.status === "baked" && showBaked && output.progress === false) {
+                let data = await output.data.dish.get(Dish.STRING);
                 data = data.replace(/[\r\n]/g, "");
                 if (contentFilterExp.test(data)) {
                     results.push({
@@ -1366,10 +1354,7 @@ class OutputWaiter {
                     });
                 }
             } else if (output.progress !== false && showErrored) {
-                let data = this.getOutput(iNum, false).slice(0, 4096);
-                if (typeof data !== "string") {
-                    data = Utils.arrayBufferToStr(data);
-                }
+                let data = await output.data.dish.get(Dish.STRING);
                 data = data.replace(/[\r\n]/g, "");
                 if (contentFilterExp.test(data)) {
                     results.push({
