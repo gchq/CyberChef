@@ -3,7 +3,6 @@
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const NodeExternals = require("webpack-node-externals");
 const glob = require("glob");
 const path = require("path");
 
@@ -15,7 +14,6 @@ const path = require("path");
  * @license Apache-2.0
  */
 
-const NODE_PROD = process.env.NODE_ENV === "production";
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -36,8 +34,7 @@ module.exports = function (grunt) {
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
         [
-            "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig",
-            "exec:generateNodeIndex", "webpack:node", "webpack:nodeRepl", "chmod:build"
+            "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
         ]);
 
     grunt.registerTask("test",
@@ -201,46 +198,6 @@ module.exports = function (grunt) {
                     ]
                 };
             },
-            node: {
-                mode: NODE_PROD ? "production" : "development",
-                target: "node",
-                entry: "./src/node/index.mjs",
-                externals: [NodeExternals({
-                    whitelist: ["crypto-api/src/crypto-api"]
-                })],
-                output: {
-                    filename: "CyberChef.js",
-                    path: __dirname + "/build/node",
-                    library: "CyberChef",
-                    libraryTarget: "commonjs2"
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.LimitChunkCountPlugin({
-                        maxChunks: 1
-                    })
-                ],
-            },
-            nodeRepl: {
-                mode: NODE_PROD ? "production" : "development",
-                target: "node",
-                entry: "./src/node/repl-index.mjs",
-                externals: [NodeExternals({
-                    whitelist: ["crypto-api/src/crypto-api"]
-                })],
-                output: {
-                    filename: "CyberChef-repl.js",
-                    path: __dirname + "/build/node",
-                    library: "CyberChef",
-                    libraryTarget: "commonjs2"
-                },
-                plugins: [
-                    new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new webpack.optimize.LimitChunkCountPlugin({
-                        maxChunks: 1
-                    })
-                ],
-            }
         },
         "webpack-dev-server": {
             options: {

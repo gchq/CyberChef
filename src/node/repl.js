@@ -7,9 +7,9 @@
  * @license Apache-2.0
  */
 
-import chef from "./index.mjs";
-import repl from "repl";
-import File from "./File.mjs";
+const chef = require("./cjs.js");
+const repl = require("repl");
+
 
 /*eslint no-console: ["off"] */
 
@@ -26,7 +26,7 @@ const replServer = repl.start({
     prompt: "chef > ",
 });
 
-global.File = File;
+global.File = chef.File;
 
 Object.keys(chef).forEach((key) => {
     if (key !== "operations") {

@@ -12,7 +12,6 @@ script:
   - grunt lint
   - grunt test
   - grunt docs
-  - npm run node-prod
   - grunt prod --msg="$COMPILE_MSG"
   - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
 before_deploy:
@@ -34,7 +33,7 @@ deploy:
     file_glob: true
     file:
       - build/prod/*.zip
-      - build/node/CyberChef.js
+      - src/node/cjs.js
     on:
       repo: gchq/CyberChef
       tags: true
