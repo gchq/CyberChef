@@ -121,6 +121,7 @@
 
     /* Misc. */
     --drop-file-border-colour: purple;
+    --table-border-colour: var(--hl3);
     --popover-background: turquoise;
     --popover-border-colour: violet;
     --code-background: black;
