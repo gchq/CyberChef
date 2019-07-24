@@ -493,8 +493,8 @@ self.setInput = function(inputData) {
 self.refreshTabs = function(inputNum, direction) {
     const nums = self.getNearbyNums(inputNum, direction),
         inputNums = Object.keys(self.inputs),
-        tabsLeft = (self.getSmallestInputNum(inputNums) !== nums[0]),
-        tabsRight = (self.getLargestInputNum(inputNums) !== nums[nums.length - 1]);
+        tabsLeft = (self.getSmallestInputNum(inputNums) !== nums[0] && nums.length > 0),
+        tabsRight = (self.getLargestInputNum(inputNums) !== nums[nums.length - 1] && nums.length > 0);
 
     self.postMessage({
         action: "refreshTabs",

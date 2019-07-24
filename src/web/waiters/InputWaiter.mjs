@@ -988,9 +988,13 @@ class InputWaiter {
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
-        const tabsList = document.getElementById("input-tabs").children;
-        for (let i = tabsList.length - 1; i >= 0; i--) {
-            tabsList.item(i).remove();
+        const tabsList = document.getElementById("input-tabs");
+        const tabsListChildren = tabsList.children;
+
+        tabsList.classList.remove("tabs-left");
+        tabsList.classList.remove("tabs-right");
+        for (let i = tabsListChildren.length - 1; i >= 0; i--) {
+            tabsListChildren.item(i).remove();
         }
 
         this.showLoadingInfo({

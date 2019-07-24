@@ -217,9 +217,13 @@ class OutputWaiter {
      */
     removeAllOutputs() {
         this.outputs = {};
-        const tabs = document.getElementById("output-tabs").children;
-        for (let i = tabs.length - 1; i >= 0; i--) {
-            tabs.item(i).remove();
+        const tabsList = document.getElementById("output-tabs");
+        const tabsListChildren = tabsList.children;
+
+        tabsList.classList.remove("tabs-left");
+        tabsList.classList.remove("tabs-right");
+        for (let i = tabsListChildren.length - 1; i >= 0; i--) {
+            tabsListChildren.item(i).remove();
         }
     }
 
@@ -935,8 +939,8 @@ class OutputWaiter {
      */
     refreshTabs(activeTab, direction) {
         const newNums = this.getNearbyNums(activeTab, direction),
-            tabsLeft = (newNums[0] !== this.getSmallestInputNum()),
-            tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum());
+            tabsLeft = (newNums[0] !== this.getSmallestInputNum() && newNums.length > 0),
+            tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum() && newNums.length > 0);
 
         this.manager.tabs.refreshOutputTabs(newNums, activeTab, tabsLeft, tabsRight);
 
