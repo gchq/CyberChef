@@ -148,6 +148,15 @@ optgroup {
     width: auto !important;
 }
 
+.table,
+.table-hover tbody tr:hover {
+    color: var(--primary-font-colour);
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid var(--table-border-colour);
+}
+
 .popover {
     background-color: var(--popover-background);
     border-color: var(--popover-border-colour);

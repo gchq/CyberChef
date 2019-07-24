@@ -138,6 +138,7 @@
 
     /* Misc. */
     --drop-file-border-colour: var(--base01);
+    --table-border-colour: var(--base01);
     --popover-background: var(--base02);
     --popover-border-colour: var(--base01);
     --code-background: var(--base03);
