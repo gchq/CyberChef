@@ -1153,14 +1153,14 @@ class OutputWaiter {
      * Handler for copy click events.
      * Copies the output to the clipboard
      */
-    copyClick() {
+    async copyClick() {
         const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
         if (dish === null) {
             this.app.alert("Could not find data to copy. Has this output been baked yet?", 3000);
             return;
         }
 
-        const output = dish.get(Dish.STRING);
+        const output = await dish.get(Dish.STRING);
 
         // Create invisible textarea to populate with the raw dish string (not the printable version that
         // contains dots instead of the actual bytes)
@@ -1335,7 +1335,7 @@ class OutputWaiter {
                 if (Object.prototype.hasOwnProperty.call(output, "data") &&
                     output.data &&
                     Object.prototype.hasOwnProperty.call(output.data, "dish")) {
-                    const data = output.data.dish.get(Dish.STRING);
+                    const data = await output.data.dish.get(Dish.STRING);
                     if (contentFilterExp.test(data)) {
                         results.push({
                             inputNum: iNum,
