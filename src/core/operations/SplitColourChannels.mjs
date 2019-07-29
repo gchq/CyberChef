@@ -26,18 +26,19 @@ class SplitColourChannels extends Operation {
         this.module = "Image";
         this.description = "Splits the given image into its red, green and blue colour channels.";
         this.infoURL = "https://wikipedia.org/wiki/Channel_(digital_image)";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {List<File>}
      */
     async run(input, args) {
+        input = new Uint8Array(input);
         // Make sure that the input is an image
         if (!isImage(input)) throw new OperationError("Invalid file type.");
 

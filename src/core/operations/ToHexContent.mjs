@@ -23,7 +23,7 @@ class ToHexContent extends Operation {
         this.module = "Default";
         this.description = "Converts special characters in a string to hexadecimal. This format is used by SNORT for representing hex within ASCII text.<br><br>e.g. <code>foo=bar</code> becomes <code>foo|3d|bar</code>.";
         this.infoURL = "http://manual-snort-org.s3-website-us-east-1.amazonaws.com/node32.html#SECTION00451000000000000000";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -40,11 +40,12 @@ class ToHexContent extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         const convert = args[0];
         const spaces = args[1];
         if (convert === "All chars") {

@@ -22,7 +22,7 @@ class Tar extends Operation {
         this.module = "Compression";
         this.description = "Packs the input into a tarball.<br><br>No support for multiple files at this time.";
         this.infoURL = "https://wikipedia.org/wiki/Tar_(computing)";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "File";
         this.args = [
             {
@@ -34,11 +34,13 @@ class Tar extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     run(input, args) {
+        input = new Uint8Array(input);
+
         const Tarball = function() {
             this.bytes = new Array(512);
             this.position = 0;

@@ -106,9 +106,9 @@ class FromBase64 extends Operation {
     }
 
     /**
-     * @param {ArrayBuffer} input
+     * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const [alphabet, removeNonAlphChars] = args;

@@ -22,13 +22,13 @@ class Adler32Checksum extends Operation {
         this.module = "Crypto";
         this.description = "Adler-32 is a checksum algorithm which was invented by Mark Adler in 1995, and is a modification of the Fletcher checksum. Compared to a cyclic redundancy check of the same length, it trades reliability for speed (preferring the latter).<br><br>Adler-32 is more reliable than Fletcher-16, and slightly less reliable than Fletcher-32.";
         this.infoURL = "https://wikipedia.org/wiki/Adler-32";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -36,6 +36,7 @@ class Adler32Checksum extends Operation {
         const MOD_ADLER = 65521;
         let a = 1,
             b = 0;
+        input = new Uint8Array(input);
 
         for (let i = 0; i < input.length; i++) {
             a += input[i];

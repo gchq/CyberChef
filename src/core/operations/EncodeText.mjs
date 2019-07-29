@@ -31,7 +31,7 @@ class EncodeText extends Operation {
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
         this.inputType = "string";
-        this.outputType = "byteArray";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 "name": "Encoding",
@@ -44,13 +44,12 @@ class EncodeText extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
         const format = IO_FORMAT[args[0]];
-        let encoded = cptable.utils.encode(format, input);
-        encoded = Array.from(encoded);
-        return encoded;
+        const encoded = cptable.utils.encode(format, input);
+        return new Uint8Array(encoded).buffer;
     }
 
 }
