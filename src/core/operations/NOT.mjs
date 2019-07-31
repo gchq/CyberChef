@@ -22,17 +22,18 @@ class NOT extends Operation {
         this.module = "Default";
         this.description = "Returns the inverse of each byte.";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#NOT";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         return bitOp(input, null, not);
     }
 

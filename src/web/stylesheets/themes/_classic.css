@@ -125,6 +125,7 @@
 
     /* Misc. */
     --drop-file-border-colour: #3a87ad;
+    --table-border-colour: #ccc;
     --popover-background: #fff;
     --popover-border-colour: #ccc;
     --code-background: #f9f2f4;

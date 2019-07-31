@@ -24,7 +24,7 @@ class ToBase62 extends Operation {
         this.module = "Default";
         this.description = "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.";
         this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -36,11 +36,12 @@ class ToBase62 extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         if (input.length < 1) return "";
 
         const ALPHABET = Utils.expandAlphRange(args[0]).join("");

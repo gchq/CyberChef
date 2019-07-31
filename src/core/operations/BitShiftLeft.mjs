@@ -21,8 +21,8 @@ class BitShiftLeft extends Operation {
         this.module = "Default";
         this.description = "Shifts the bits in each byte towards the left by the specified amount.";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 "name": "Amount",
@@ -33,16 +33,17 @@ class BitShiftLeft extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
         const amount = args[0];
+        input = new Uint8Array(input);
 
         return input.map(b => {
             return (b << amount) & 0xff;
-        });
+        }).buffer;
     }
 
     /**

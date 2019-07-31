@@ -515,8 +515,9 @@ class InputWaiter {
      *
      * @param {number} inputNum
      * @param {string | ArrayBuffer} value
+     * @param {boolean} [force=false] - If true, forces the value to be updated even if the type is different to the currently stored type
      */
-    updateInputValue(inputNum, value) {
+    updateInputValue(inputNum, value, force=false) {
         let includeInput = false;
         const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
         if (recipeStr.length > 0 && recipeStr.length <= 68267) {
@@ -534,7 +535,8 @@ class InputWaiter {
             action: "updateInputValue",
             data: {
                 inputNum: inputNum,
-                value: value
+                value: value,
+                force: force
             }
         }, transferable);
     }
@@ -988,9 +990,13 @@ class InputWaiter {
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
-        const tabsList = document.getElementById("input-tabs").children;
-        for (let i = tabsList.length - 1; i >= 0; i--) {
-            tabsList.item(i).remove();
+        const tabsList = document.getElementById("input-tabs");
+        const tabsListChildren = tabsList.children;
+
+        tabsList.classList.remove("tabs-left");
+        tabsList.classList.remove("tabs-right");
+        for (let i = tabsListChildren.length - 1; i >= 0; i--) {
+            tabsListChildren.item(i).remove();
         }
 
         this.showLoadingInfo({
@@ -1021,7 +1027,7 @@ class InputWaiter {
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
-        this.updateInputValue(inputNum, "");
+        this.updateInputValue(inputNum, "", true);
 
         this.set({
             inputNum: inputNum,

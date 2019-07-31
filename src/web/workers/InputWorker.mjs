@@ -493,8 +493,8 @@ self.setInput = function(inputData) {
 self.refreshTabs = function(inputNum, direction) {
     const nums = self.getNearbyNums(inputNum, direction),
         inputNums = Object.keys(self.inputs),
-        tabsLeft = (self.getSmallestInputNum(inputNums) !== nums[0]),
-        tabsRight = (self.getLargestInputNum(inputNums) !== nums[nums.length - 1]);
+        tabsLeft = (self.getSmallestInputNum(inputNums) !== nums[0] && nums.length > 0),
+        tabsRight = (self.getLargestInputNum(inputNums) !== nums[nums.length - 1] && nums.length > 0);
 
     self.postMessage({
         action: "refreshTabs",
@@ -546,10 +546,13 @@ self.updateInputProgress = function(inputData) {
  * @param {object} inputData
  * @param {number} inputData.inputNum - The input that's having its value updated
  * @param {string | ArrayBuffer} inputData.value - The new value of the input
+ * @param {boolean} inputData.force - If true, still updates the input value if the input type is different to the stored value
  */
 self.updateInputValue = function(inputData) {
     const inputNum = inputData.inputNum;
     if (inputNum < 1) return;
+    if (Object.prototype.hasOwnProperty.call(self.inputs[inputNum].data, "fileBuffer") &&
+    typeof inputData.value === "string" && !inputData.force) return;
     const value = inputData.value;
     if (self.inputs[inputNum] !== undefined) {
         if (typeof value === "string") {
