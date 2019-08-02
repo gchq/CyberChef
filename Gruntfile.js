@@ -48,6 +48,10 @@ module.exports = function (grunt) {
         "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
         ["connect:prod", "exec:browserTests"]);
 
+    grunt.registerTask("testnodeconsumer",
+        "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
+        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:testESMDeepImportNodeConsumer", "exec:teardownNodeConsumers"]);
+
     grunt.registerTask("docs",
         "Compiles documentation in the /docs directory.",
         ["clean:docs", "jsdoc", "chmod:docs"]);
@@ -87,7 +91,8 @@ module.exports = function (grunt) {
             COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
             PKG_VERSION: JSON.stringify(pkg.version),
         },
-        moduleEntryPoints = listEntryModules();
+        moduleEntryPoints = listEntryModules(),
+        nodeConsumerTestPath = "~/tmp-cyberchef";
 
 
     /**
@@ -385,7 +390,44 @@ module.exports = function (grunt) {
             },
             nodeTests: {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
-            }
+            },
+            setupNodeConsumers: {
+                command: [
+                    "echo '\n--- Testing node conumers ---'",
+                    "npm link",
+                    `mkdir ${nodeConsumerTestPath}`,
+                    `cp tests/node/consumers/* ${nodeConsumerTestPath}`,
+                    `cd ${nodeConsumerTestPath}`,
+                    "npm link cyberchef"
+                ].join(";"),
+            },
+            teardownNodeConsumers: {
+                command: [
+                    `rm -rf ${nodeConsumerTestPath}`,
+                    "echo '\n--- Node consumer tests complete ---'"
+                ].join(";"),
+            },
+            testCJSNodeConsumer: {
+                command: [
+                    `cd ${nodeConsumerTestPath}`,
+                    "node --no-warnings cjs-consumer.js",
+                ].join(";"),
+                stdout: false,
+            },
+            testESMNodeConsumer: {
+                command: [
+                    `cd ${nodeConsumerTestPath}`,
+                    "node --no-warnings --experimental-modules esm-consumer.mjs",
+                ].join(";"),
+                stdout: false,
+            },
+            testESMDeepImportNodeConsumer: {
+                command: [
+                    `cd ${nodeConsumerTestPath}`,
+                    "node --no-warnings --experimental-modules esm-deep-import-consumer.mjs",
+                ].join(";"),
+                stdout: false,
+            },
         },
     });
 };
