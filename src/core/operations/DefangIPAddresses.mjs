@@ -8,19 +8,19 @@ import Operation from "../Operation";
 
 
 /**
- * Defang IP operation
+ * Defang IP Addresses operation
  */
-class DefangIP extends Operation {
+class DefangIPAddresses extends Operation {
 
     /**
-     * DefangIP constructor
+     * DefangIPAddresses constructor
      */
     constructor() {
         super();
 
-        this.name = "Defang IP";
+        this.name = "Defang IP Addresses";
         this.module = "Default";
-        this.description = "Takes a IPV4 or IPV6 address and 'Defangs' it; meaning the IP becomes invalid, removing the risk of accidentally utilising it as an IP address.";
+        this.description = "Takes a IPv4 or IPv6 address and 'Defangs' it, meaning the IP becomes invalid, removing the risk of accidentally utilising it as an IP address.";
         this.infoURL = "https://isc.sans.edu/forums/diary/Defang+all+the+things/22744/";
         this.inputType = "string";
         this.outputType = "string";
@@ -34,12 +34,9 @@ class DefangIP extends Operation {
      * @returns {string}
      */
     run(input, args) {
-
-
         input = input.replace(IPV4_REGEX, x => {
             return x.replace(/\./g, "[.]");
         });
-
 
         input = input.replace(IPV6_REGEX, x => {
             return x.replace(/:/g, "[:]");
@@ -49,7 +46,7 @@ class DefangIP extends Operation {
     }
 }
 
-export default DefangIP;
+export default DefangIPAddresses;
 
 
 /**
