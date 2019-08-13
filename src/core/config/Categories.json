@@ -179,7 +179,8 @@
             "Group IP addresses",
             "Encode NetBIOS Name",
             "Decode NetBIOS Name",
-            "Defang URL"
+            "Defang URL",
+            "Defang IP Addresses"
         ]
     },
     {
