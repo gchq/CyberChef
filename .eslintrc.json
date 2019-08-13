@@ -38,6 +38,8 @@
 
         // disable rules from base configurations
         "no-control-regex": "off",
+        "require-atomic-updates": "off",
+        "no-async-promise-executor": "off",
 
         // stylistic conventions
         "brace-style": ["error", "1tbs"],
@@ -106,9 +108,6 @@
 
         "COMPILE_TIME": false,
         "COMPILE_MSG": false,
-        "PKG_VERSION": false,
-        "ENVIRONMENT_IS_WORKER": false,
-        "ENVIRONMENT_IS_NODE": false,
-        "ENVIRONMENT_IS_WEB": false
+        "PKG_VERSION": false
     }
 }

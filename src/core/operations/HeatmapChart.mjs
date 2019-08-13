@@ -7,11 +7,11 @@
 
 import * as d3temp from "d3";
 import * as nodomtemp from "nodom";
-import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts";
+import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts.mjs";
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
 const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;

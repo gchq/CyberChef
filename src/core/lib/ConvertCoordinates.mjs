@@ -8,7 +8,7 @@
 
 import geohash from "ngeohash";
 import geodesy from "geodesy";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Co-ordinate formats

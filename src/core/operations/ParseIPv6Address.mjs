@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP.mjs";
 import BigNumber from "bignumber.js";
 
 /**

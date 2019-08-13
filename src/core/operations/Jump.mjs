@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { getLabelIndex } from "../lib/FlowControl";
+import Operation from "../Operation.mjs";
+import { getLabelIndex } from "../lib/FlowControl.mjs";
 
 /**
  * Jump operation

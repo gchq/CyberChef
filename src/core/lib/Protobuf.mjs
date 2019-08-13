@@ -1,4 +1,4 @@
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
 
 /**
  * Protobuf lib. Contains functions to decode protobuf serialised
@@ -16,14 +16,14 @@ class Protobuf {
     /**
      * Protobuf constructor
      *
-     * @param {byteArray} data
+     * @param {byteArray|Uint8Array} data
      */
     constructor(data) {
-        // Check we have a byteArray
-        if (data instanceof Array) {
+        // Check we have a byteArray or Uint8Array
+        if (data instanceof Array || data instanceof Uint8Array) {
             this.data = data;
         } else {
-            throw new Error("Protobuf input must be a byteArray");
+            throw new Error("Protobuf input must be a byteArray or Uint8Array");
         }
 
         // Set up masks
@@ -124,7 +124,7 @@ class Protobuf {
         // Get the field key/values
         const key = field.key;
         const value = field.value;
-        object[key] = object.hasOwnProperty(key) ?
+        object[key] = Object.prototype.hasOwnProperty.call(object, key) ?
             object[key] instanceof Array ?
                 object[key].concat([value]) :
                 [object[key], value] :

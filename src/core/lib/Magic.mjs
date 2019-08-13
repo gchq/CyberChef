@@ -1,8 +1,8 @@
 import OperationConfig from "../config/OperationConfig.json";
-import Utils from "../Utils";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
-import {detectFileType} from "./FileType";
+import Utils, { isWorkerEnvironment } from "../Utils.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
+import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
 
 /**
@@ -312,6 +312,11 @@ class Magic {
                 return;
             }
 
+            // If the recipe returned an empty buffer, do not continue
+            if (_buffersEqual(output, new ArrayBuffer())) {
+                return;
+            }
+
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
@@ -333,7 +338,7 @@ class Magic {
         }
 
         // Prune branches that result in unhelpful outputs
-        results = results.filter(r =>
+        const prunedResults = results.filter(r =>
             (r.useful || r.data.length > 0) &&          // The operation resulted in ""
             (                                           // One of the following must be true
                 r.languageScores[0].probability > 0 ||    // Some kind of language was found
@@ -344,7 +349,7 @@ class Magic {
         );
 
         // Return a sorted list of possible recipes along with their properties
-        return results.sort((a, b) => {
+        return prunedResults.sort((a, b) => {
             // Each option is sorted based on its most likely language (lower is better)
             let aScore = a.languageScores[0].score,
                 bScore = b.languageScores[0].score;
@@ -390,12 +395,17 @@ class Magic {
         const dish = new Dish();
         dish.set(input, Dish.ARRAY_BUFFER);
 
-        if (ENVIRONMENT_IS_WORKER()) self.loadRequiredModules(recipeConfig);
+        if (isWorkerEnvironment()) self.loadRequiredModules(recipeConfig);
 
         const recipe = new Recipe(recipeConfig);
         try {
             await recipe.execute(dish);
-            return dish.get(Dish.ARRAY_BUFFER);
+            // Return an empty buffer if the recipe did not run to completion
+            if (recipe.lastRunOp === recipe.opList[recipe.opList.length - 1]) {
+                return dish.get(Dish.ARRAY_BUFFER);
+            } else {
+                return new ArrayBuffer();
+            }
         } catch (err) {
             // If there are errors, return an empty buffer
             return new ArrayBuffer();
@@ -440,7 +450,7 @@ class Magic {
         const opPatterns = [];
 
         for (const op in OperationConfig) {
-            if (!OperationConfig[op].hasOwnProperty("patterns")) continue;
+            if (!("patterns" in OperationConfig[op])) continue;
 
             OperationConfig[op].patterns.forEach(pattern => {
                 opPatterns.push({

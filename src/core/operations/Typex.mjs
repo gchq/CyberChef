@@ -6,10 +6,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import {LETTERS, Reflector} from "../lib/Enigma";
-import {ROTORS, REFLECTORS, TypexMachine, Plugboard, Rotor} from "../lib/Typex";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {LETTERS, Reflector} from "../lib/Enigma.mjs";
+import {ROTORS, REFLECTORS, TypexMachine, Plugboard, Rotor} from "../lib/Typex.mjs";
 
 /**
  * Typex operation

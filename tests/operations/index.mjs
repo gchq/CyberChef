@@ -11,18 +11,12 @@
  * @license Apache-2.0
  */
 
-// Define global environment functions
-global.ENVIRONMENT_IS_WORKER = function() {
-    return typeof importScripts === "function";
-};
-global.ENVIRONMENT_IS_NODE = function() {
-    return typeof process === "object" && typeof require === "function";
-};
-global.ENVIRONMENT_IS_WEB = function() {
-    return typeof window === "object";
-};
+import {
+    setLongTestFailure,
+    logTestReport,
+} from "../lib/utils";
 
-import TestRegister from "./TestRegister";
+import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/BCD";
 import "./tests/BSON";
 import "./tests/Base58";
@@ -49,9 +43,11 @@ import "./tests/Hash";
 import "./tests/HaversineDistance";
 import "./tests/Hexdump";
 import "./tests/Image";
+import "./tests/IndexOfCoincidence";
 import "./tests/Jump";
 import "./tests/JSONBeautify";
 import "./tests/JSONMinify";
+import "./tests/JSONtoCSV";
 import "./tests/JWTDecode";
 import "./tests/JWTSign";
 import "./tests/JWTVerify";
@@ -95,81 +91,20 @@ import "./tests/ParseSSHHostKey";
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
 
-let allTestsPassing = true;
-const testStatusCounts = {
-    total: 0,
+// import "./tests/nodeApi/nodeApi";
+// import "./tests/nodeApi/ops";
+
+const testStatus = {
+    allTestsPassing: true,
+    counts: {
+        total: 0,
+    }
 };
 
+setLongTestFailure();
 
-/**
- * Helper function to convert a status to an icon.
- *
- * @param {string} status
- * @returns {string}
- */
-function statusToIcon(status) {
-    const icons = {
-        erroring: "🔥",
-        failing: "❌",
-        passing: "✔️️",
-    };
-    return icons[status] || "?";
-}
-
-
-/**
- * Displays a given test result in the console.
- *
- * @param {Object} testResult
- */
-function handleTestResult(testResult) {
-    allTestsPassing = allTestsPassing && testResult.status === "passing";
-    const newCount = (testStatusCounts[testResult.status] || 0) + 1;
-    testStatusCounts[testResult.status] = newCount;
-    testStatusCounts.total += 1;
-
-    console.log([
-        statusToIcon(testResult.status),
-        testResult.test.name
-    ].join(" "));
-
-    if (testResult.output) {
-        console.log(
-            testResult.output
-                .trim()
-                .replace(/^/, "\t")
-                .replace(/\n/g, "\n\t")
-        );
-    }
-}
-
-
-/**
- * Fail if the process takes longer than 60 seconds.
- */
-setTimeout(function() {
-    console.log("Tests took longer than 60 seconds to run, returning.");
-    process.exit(1);
-}, 60 * 1000);
-
+const logOpsTestReport = logTestReport.bind(null, testStatus);
 
 TestRegister.runTests()
-    .then(function(results) {
-        results.forEach(handleTestResult);
+    .then(logOpsTestReport);
 
-        console.log("\n");
-
-        for (const testStatus in testStatusCounts) {
-            const count = testStatusCounts[testStatus];
-            if (count > 0) {
-                console.log(testStatus.toUpperCase(), count);
-            }
-        }
-
-        if (!allTestsPassing) {
-            console.log("\nFailing tests:\n");
-            results.filter(r => r.status !== "passing").forEach(handleTestResult);
-        }
-
-        process.exit(allTestsPassing ? 0 : 1);
-    });

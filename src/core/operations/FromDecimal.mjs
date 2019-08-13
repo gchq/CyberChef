@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {DELIM_OPTIONS} from "../lib/Delim";
-import {fromDecimal} from "../lib/Decimal";
+import Operation from "../Operation.mjs";
+import {DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {fromDecimal} from "../lib/Decimal.mjs";
 
 /**
  * From Decimal operation

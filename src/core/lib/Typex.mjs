@@ -6,9 +6,9 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import OperationError from "../errors/OperationError";
-import * as Enigma from "../lib/Enigma";
-import Utils from "../Utils";
+import OperationError from "../errors/OperationError.mjs";
+import * as Enigma from "../lib/Enigma.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * A set of example Typex rotors. No Typex rotor wirings are publicly available, so these are
@@ -98,14 +98,14 @@ export class TypexMachine extends Enigma.EnigmaBase {
                 if (x === " ") {
                     inputMod += "X";
                 } else if (mode) {
-                    if (KEYBOARD_REV.hasOwnProperty(x)) {
+                    if (Object.prototype.hasOwnProperty.call(KEYBOARD_REV, x)) {
                         inputMod += KEYBOARD_REV[x];
                     } else {
                         mode = false;
                         inputMod += "V" + x;
                     }
                 } else {
-                    if (KEYBOARD_REV.hasOwnProperty(x)) {
+                    if (Object.prototype.hasOwnProperty.call(KEYBOARD_REV, x)) {
                         mode = true;
                         inputMod += "Z" + KEYBOARD_REV[x];
                     } else {

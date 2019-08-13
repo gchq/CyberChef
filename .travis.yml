@@ -1,6 +1,7 @@
 language: node_js
 node_js:
   - lts/*
+cache: npm
 addons:
   chrome: stable
 install: npm install
@@ -11,9 +12,9 @@ script:
   - grunt lint
   - grunt test
   - grunt docs
-  - grunt node
   - grunt prod --msg="$COMPILE_MSG"
   - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
+  - grunt testnodeconsumer
 before_deploy:
   - grunt exec:sitemap
   - grunt copy:ghPages
@@ -33,7 +34,7 @@ deploy:
     file_glob: true
     file:
       - build/prod/*.zip
-      - build/node/CyberChef.js
+      - src/node/cjs.js
     on:
       repo: gchq/CyberChef
       tags: true

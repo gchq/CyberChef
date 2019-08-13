@@ -13,7 +13,7 @@ import colors from "colors";
 import process from "process";
 import fs from "fs";
 import path from "path";
-import EscapeString from "../../operations/EscapeString";
+import EscapeString from "../../operations/EscapeString.mjs";
 
 
 const dir = path.join(process.cwd() + "/src/core/operations/");
@@ -130,8 +130,8 @@ prompt.get(schema, (err, result) => {
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * ${result.opName} operation

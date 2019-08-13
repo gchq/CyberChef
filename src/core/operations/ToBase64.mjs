@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {toBase64, ALPHABET_OPTIONS} from "../lib/Base64";
+import Operation from "../Operation.mjs";
+import {toBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
 
 /**
  * To Base64 operation

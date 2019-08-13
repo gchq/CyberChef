@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Protobuf from "../lib/Protobuf";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Protobuf from "../lib/Protobuf.mjs";
 
 /**
  * Protobuf Decode operation
@@ -23,17 +23,18 @@ class ProtobufDecode extends Operation {
         this.module = "Default";
         this.description = "Decodes any Protobuf encoded data to a JSON representation of the data using the field number as the field key.";
         this.infoURL = "https://wikipedia.org/wiki/Protocol_Buffers";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {JSON}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         try {
             return Protobuf.decode(input);
         } catch (err) {

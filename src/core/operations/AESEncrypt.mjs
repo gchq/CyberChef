@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import forge from "node-forge/dist/forge.min.js";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * AES Encrypt operation
@@ -65,8 +65,8 @@ class AESEncrypt extends Operation {
      * @throws {OperationError} if invalid key length
      */
     run(input, args) {
-        const key = Utils.convertToByteArray(args[0].string, args[0].option),
-            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2],
             inputType = args[3],
             outputType = args[4];

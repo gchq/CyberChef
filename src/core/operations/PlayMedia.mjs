@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import { fromBase64, toBase64 } from "../lib/Base64";
-import { fromHex } from "../lib/Hex";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
-import { isType, detectFileType } from "../lib/FileType";
+import { fromBase64, toBase64 } from "../lib/Base64.mjs";
+import { fromHex } from "../lib/Hex.mjs";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import { isType, detectFileType } from "../lib/FileType.mjs";
 
 /**
  * PlayMedia operation

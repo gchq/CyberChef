@@ -6,9 +6,9 @@
  * @license Apache-2.0
  */
 
-import Chef from "./Chef";
+import Chef from "./Chef.mjs";
 import OperationConfig from "./config/OperationConfig.json";
-import OpModules from "./config/modules/OpModules";
+import OpModules from "./config/modules/OpModules.mjs";
 
 // Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
@@ -25,6 +25,8 @@ self.chef = new Chef();
 
 self.OpModules = OpModules;
 self.OperationConfig = OperationConfig;
+self.inputNum = -1;
+
 
 // Tell the app that the worker has loaded and is ready to operate
 self.postMessage({
@@ -35,6 +37,9 @@ self.postMessage({
 /**
  * Respond to message from parent thread.
  *
+ * inputNum is optional and only used for baking multiple inputs.
+ * Defaults to -1 when one isn't sent with the bake message.
+ *
  * Messages should have the following format:
  * {
  *     action: "bake" | "silentBake",
@@ -43,8 +48,9 @@ self.postMessage({
  *         recipeConfig: {[Object]},
  *         options: {Object},
  *         progress: {number},
- *         step: {boolean}
- *     } | undefined
+ *         step: {boolean},
+ *         [inputNum=-1]: {number}
+ *     }
  * }
  */
 self.addEventListener("message", function(e) {
@@ -61,6 +67,9 @@ self.addEventListener("message", function(e) {
             break;
         case "getDishAs":
             getDishAs(r.data);
+            break;
+        case "getDishTitle":
+            getDishTitle(r.data);
             break;
         case "docURL":
             // Used to set the URL of the current document so that scripts can be
@@ -91,30 +100,35 @@ self.addEventListener("message", function(e) {
 async function bake(data) {
     // Ensure the relevant modules are loaded
     self.loadRequiredModules(data.recipeConfig);
-
     try {
+        self.inputNum = (data.inputNum !== undefined) ? data.inputNum : -1;
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
-            data.options,        // Options set by the user
-            data.progress,       // The current position in the recipe
-            data.step            // Whether or not to take one step or execute the whole recipe
+            data.options         // Options set by the user
         );
 
+        const transferable = (data.input instanceof ArrayBuffer) ? [data.input] : undefined;
         self.postMessage({
             action: "bakeComplete",
             data: Object.assign(response, {
-                id: data.id
+                id: data.id,
+                inputNum: data.inputNum,
+                bakeId: data.bakeId
             })
-        });
+        }, transferable);
+
     } catch (err) {
         self.postMessage({
             action: "bakeError",
-            data: Object.assign(err, {
-                id: data.id
-            })
+            data: {
+                error: err.message || err,
+                id: data.id,
+                inputNum: data.inputNum
+            }
         });
     }
+    self.inputNum = -1;
 }
 
 
@@ -136,11 +150,31 @@ function silentBake(data) {
  */
 async function getDishAs(data) {
     const value = await self.chef.getDishAs(data.dish, data.type);
-
+    const transferable = (data.type === "ArrayBuffer") ? [value] : undefined;
     self.postMessage({
         action: "dishReturned",
         data: {
             value: value,
+            id: data.id
+        }
+    }, transferable);
+}
+
+
+/**
+ * Gets the dish title
+ *
+ * @param {object} data
+ * @param {Dish} data.dish
+ * @param {number} data.maxLength
+ * @param {number} data.id
+ */
+async function getDishTitle(data) {
+    const title = await self.chef.getDishTitle(data.dish, data.maxLength);
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: title,
             id: data.id
         }
     });
@@ -175,7 +209,7 @@ self.loadRequiredModules = function(recipeConfig) {
     recipeConfig.forEach(op => {
         const module = self.OperationConfig[op.op].module;
 
-        if (!OpModules.hasOwnProperty(module)) {
+        if (!(module in OpModules)) {
             log.info(`Loading ${module} module`);
             self.sendStatusMessage(`Loading ${module} module`);
             self.importScripts(`${self.docURL}/modules/${module}.js`);
@@ -193,7 +227,28 @@ self.loadRequiredModules = function(recipeConfig) {
 self.sendStatusMessage = function(msg) {
     self.postMessage({
         action: "statusMessage",
-        data: msg
+        data: {
+            message: msg,
+            inputNum: self.inputNum
+        }
+    });
+};
+
+
+/**
+ * Send progress update to the app.
+ *
+ * @param {number} progress
+ * @param {number} total
+ */
+self.sendProgressMessage = function(progress, total) {
+    self.postMessage({
+        action: "progressMessage",
+        data: {
+            progress: progress,
+            total: total,
+            inputNum: self.inputNum
+        }
     });
 };
 

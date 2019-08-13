@@ -5,7 +5,7 @@
  * @license Apache-2.0
  */
 
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * @constant

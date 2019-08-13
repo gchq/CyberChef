@@ -5,8 +5,8 @@
  */
 
 import ExifParser from "exif-parser";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Extract EXIF operation

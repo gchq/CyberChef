@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Dish from "./Dish";
-import Ingredient from "./Ingredient";
+import Dish from "./Dish.mjs";
+import Ingredient from "./Ingredient.mjs";
 
 /**
  * The Operation specified by the user to be run.

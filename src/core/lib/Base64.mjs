@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
 
 
 /**
@@ -63,7 +63,7 @@ export function toBase64(data, alphabet="A-Za-z0-9+/=") {
 /**
  * UnBase64's the input string using the given alphabet, returning a byte array.
  *
- * @param {byteArray} data
+ * @param {string} data
  * @param {string} [alphabet="A-Za-z0-9+/="]
  * @param {string} [returnType="string"] - Either "string" or "byteArray"
  * @param {boolean} [removeNonAlphChars=true]

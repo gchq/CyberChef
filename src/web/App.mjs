@@ -41,6 +41,7 @@ class App {
         this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
+        this.timeouts      = {};
     }
 
 
@@ -87,7 +88,10 @@ class App {
         setTimeout(function() {
             document.getElementById("loader-wrapper").remove();
             document.body.classList.remove("loaded");
-        }, 1000);
+
+            // Bake initial input
+            this.manager.input.bakeAll();
+        }.bind(this), 1000);
 
         // Clear the loading message interval
         clearInterval(window.loadingMsgsInt);
@@ -96,6 +100,9 @@ class App {
         window.removeEventListener("error", window.loadingErrorHandler);
 
         document.dispatchEvent(this.manager.apploaded);
+
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
     }
 
 
@@ -108,7 +115,7 @@ class App {
     handleError(err, logToConsole) {
         if (logToConsole) log.error(err);
         const msg = err.displayStr || err.toString();
-        this.alert(msg, this.options.errorTimeout, !this.options.showErrors);
+        this.alert(Utils.escapeHtml(msg), this.options.errorTimeout, !this.options.showErrors);
     }
 
 
@@ -128,7 +135,6 @@ class App {
         this.manager.recipe.updateBreakpointIndicator(false);
 
         this.manager.worker.bake(
-            this.getInput(),        // The user's input
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,           // Options set by the user
             this.progress,          // The current position in the recipe
@@ -148,10 +154,43 @@ class App {
 
         if (this.autoBake_ && !this.baking) {
             log.debug("Auto-baking");
-            this.bake();
+            this.manager.input.inputWorker.postMessage({
+                action: "autobake",
+                data: {
+                    activeTab: this.manager.tabs.getActiveInputTab()
+                }
+            });
         } else {
             this.manager.controls.showStaleIndicator();
         }
+    }
+
+
+    /**
+     * Executes the next step of the recipe.
+     */
+    step() {
+        if (this.baking) return;
+
+        // Reset status using cancelBake
+        this.manager.worker.cancelBake(true, false);
+
+        const activeTab = this.manager.tabs.getActiveInputTab();
+        if (activeTab === -1) return;
+
+        let progress = 0;
+        if (this.manager.output.outputs[activeTab].progress !== false) {
+            log.error(this.manager.output.outputs[activeTab]);
+            progress = this.manager.output.outputs[activeTab].progress;
+        }
+
+        this.manager.input.inputWorker.postMessage({
+            action: "step",
+            data: {
+                activeTab: activeTab,
+                progress: progress + 1
+            }
+        });
     }
 
 
@@ -176,23 +215,24 @@ class App {
 
 
     /**
-     * Gets the user's input data.
-     *
-     * @returns {string}
-     */
-    getInput() {
-        return this.manager.input.get();
-    }
-
-
-    /**
      * Sets the user's input data.
      *
      * @param {string} input - The string to set the input to
-     * @param {boolean} [silent=false] - Suppress statechange event
      */
-    setInput(input, silent=false) {
-        this.manager.input.set(input, silent);
+    setInput(input) {
+        // Get the currently active tab.
+        // If there isn't one, assume there are no inputs so use inputNum of 1
+        let inputNum = this.manager.tabs.getActiveInputTab();
+        if (inputNum === -1) inputNum = 1;
+        this.manager.input.updateInputValue(inputNum, input);
+
+        this.manager.input.inputWorker.postMessage({
+            action: "setInput",
+            data: {
+                inputNum: inputNum,
+                silent: true
+            }
+        });
     }
 
 
@@ -216,7 +256,7 @@ class App {
 
             for (let j = 0; j < catConf.ops.length; j++) {
                 const opName = catConf.ops[j];
-                if (!this.operations.hasOwnProperty(opName)) {
+                if (!(opName in this.operations)) {
                     log.warn(`${opName} could not be found.`);
                     continue;
                 }
@@ -244,7 +284,7 @@ class App {
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
-     * @param {boolean} [minimise=false] - Set this flag if attempting to minimuse frames to 0 width
+     * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseSplitter(minimise=false) {
         if (this.columnSplitter) this.columnSplitter.destroy();
@@ -252,12 +292,14 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 370, 450],
+            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
-            expandToMin: false,
-            onDrag: function() {
+            expandToMin: true,
+            onDrag: this.debounce(function() {
                 this.manager.recipe.adjustWidth();
-            }.bind(this)
+                this.manager.input.calcMaxTabs();
+                this.manager.output.calcMaxTabs();
+            }, 50, "dragSplitter", this, [])
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
@@ -330,7 +372,7 @@ class App {
     validFavourites(favourites) {
         const validFavs = [];
         for (let i = 0; i < favourites.length; i++) {
-            if (this.operations.hasOwnProperty(favourites[i])) {
+            if (favourites[i] in this.operations) {
                 validFavs.push(favourites[i]);
             } else {
                 this.alert(`The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. ` +
@@ -391,11 +433,12 @@ class App {
         this.manager.recipe.initialiseOperationDragNDrop();
     }
 
-
     /**
-     * Checks for input and recipe in the URI parameters and loads them if present.
+     * Gets the URI params from the window and parses them to extract the actual values.
+     *
+     * @returns {object}
      */
-    loadURIParams() {
+    getURIParams() {
         // Load query string or hash from URI (depending on which is populated)
         // We prefer getting the hash by splitting the href rather than referencing
         // location.hash as some browsers (Firefox) automatically URL decode it,
@@ -403,8 +446,20 @@ class App {
         const params = window.location.search ||
             window.location.href.split("#")[1] ||
             window.location.hash;
-        this.uriParams = Utils.parseURIParams(params);
+        const parsedParams = Utils.parseURIParams(params);
+        return parsedParams;
+    }
+
+    /**
+     * Searches the URI parameters for recipe and input parameters.
+     * If recipe is present, replaces the current recipe with the recipe provided in the URI.
+     * If input is present, decodes and sets the input to the one provided in the URI.
+     *
+     * @fires Manager#statechange
+     */
+    loadURIParams() {
         this.autoBakePause = true;
+        this.uriParams = this.getURIParams();
 
         // Read in recipe from URI params
         if (this.uriParams.recipe) {
@@ -433,7 +488,7 @@ class App {
         if (this.uriParams.input) {
             try {
                 const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData, true);
+                this.setInput(inputData);
             } catch (err) {}
         }
 
@@ -522,6 +577,8 @@ class App {
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
         this.manager.recipe.adjustWidth();
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
     }
 
 
@@ -656,6 +713,17 @@ class App {
         this.progress = 0;
         this.autoBake();
 
+        this.updateTitle(false, null, true);
+    }
+
+    /**
+     * Update the page title to contain the new recipe
+     *
+     * @param {boolean} includeInput
+     * @param {string} input
+     * @param {boolean} [changeUrl=true]
+     */
+    updateTitle(includeInput, input, changeUrl=true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
@@ -674,8 +742,8 @@ class App {
         document.title = title;
 
         // Update the current history state (not creating a new one)
-        if (this.options.updateUrl) {
-            this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
+        if (this.options.updateUrl && changeUrl) {
+            this.lastStateUrl = this.manager.controls.generateStateUrl(true, includeInput, input, recipeConfig);
             window.history.replaceState({}, title, this.lastStateUrl);
         }
     }
@@ -689,6 +757,29 @@ class App {
      */
     popState(e) {
         this.loadURIParams();
+    }
+
+
+    /**
+     * Debouncer to stop functions from being executed multiple times in a
+     * short space of time
+     * https://davidwalsh.name/javascript-debounce-function
+     *
+     * @param {function} func - The function to be executed after the debounce time
+     * @param {number} wait - The time (ms) to wait before executing the function
+     * @param {string} id - Unique ID to reference the timeout for the function
+     * @param {object} scope - The object to bind to the debounced function
+     * @param {array} args - Array of arguments to be passed to func
+     * @returns {function}
+     */
+    debounce(func, wait, id, scope, args) {
+        return function() {
+            const later = function() {
+                func.apply(scope, args);
+            };
+            clearTimeout(this.timeouts[id]);
+            this.timeouts[id] = setTimeout(later, wait);
+        }.bind(this);
     }
 
 }

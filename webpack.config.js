@@ -53,14 +53,14 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            jquery: "jquery/src/jquery"
-        }
+            jquery: "jquery/src/jquery",
+        },
     },
     module: {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                exclude: /node_modules\/(?!jsesc|crypto-api|bootstrap)/,
                 options: {
                     configFile: path.resolve(__dirname, "babel.config.js"),
                     cacheDirectory: true,
@@ -119,9 +119,17 @@ module.exports = {
                     encoding: "base64"
                 }
             },
+            { // Store font .fnt and .png files in a separate fonts folder
+                test: /(\.fnt$|bmfonts\/.+\.png$)/,
+                loader: "file-loader",
+                options: {
+                    name: "[name].[ext]",
+                    outputPath: "assets/fonts"
+                }
+            },
             { // First party images are saved as files to be cached
                 test: /\.(png|jpg|gif)$/,
-                exclude: /node_modules/,
+                exclude: /(node_modules|bmfonts)/,
                 loader: "file-loader",
                 options: {
                     name: "images/[name].[ext]"

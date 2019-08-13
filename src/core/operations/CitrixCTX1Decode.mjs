@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import cptable from "../vendor/js-codepage/cptable.js";
 
 /**
@@ -23,17 +23,18 @@ class CitrixCTX1Decode extends Operation {
         this.module = "Encodings";
         this.description = "Decodes strings in a Citrix CTX1 password format to plaintext.";
         this.infoURL = "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         if (input.length % 4 !== 0) {
             throw new OperationError("Incorrect hash length");
         }

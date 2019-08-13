@@ -5,11 +5,11 @@
  */
 
 import r from "jsrsasign";
-import { fromBase64 } from "../lib/Base64";
-import { toHex } from "../lib/Hex";
-import { formatByteStr, formatDnStr } from "../lib/PublicKey";
-import Operation from "../Operation";
-import Utils from "../Utils";
+import { fromBase64 } from "../lib/Base64.mjs";
+import { toHex } from "../lib/Hex.mjs";
+import { formatByteStr, formatDnStr } from "../lib/PublicKey.mjs";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Parse X.509 certificate operation

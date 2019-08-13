@@ -7,9 +7,9 @@
  * @license Apache-2.0
  */
 
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
-import {Rotor, Plugboard, a2i, i2a} from "./Enigma";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import {Rotor, Plugboard, a2i, i2a} from "./Enigma.mjs";
 
 /**
  * Convenience/optimisation subclass of Rotor

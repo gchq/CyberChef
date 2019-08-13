@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
