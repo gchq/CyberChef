@@ -63,8 +63,6 @@ class ParseUDP extends Operation {
      * @returns {html}
      */
     present(data) {
-        // const currentRecipeConfig = this.state.opList.map(op => op.config);
-        // console.log(currentRecipeConfig);
         const html = [];
         html.push("<table class='table table-hover table-sm table-bordered' style='table-layout: fixed'>");
         html.push("<tr>");
