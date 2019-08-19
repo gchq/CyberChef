@@ -22,7 +22,7 @@ class ParseUDP extends Operation {
 
         this.name = "Parse UDP";
         this.module = "Default";
-        this.description = "Parses a UDP header and payload if present.";
+        this.description = "Parses a UDP header and payload (if present).";
         this.infoURL = "https://wikipedia.org/wiki/User_Datagram_Protocol";
         this.inputType = "byteArray";
         this.outputType = "json";
@@ -44,7 +44,7 @@ class ParseUDP extends Operation {
         //Parse Header
         const UDPPacket = {
             "Source port": s.readInt(2),
-            "Desination port": s.readInt(2),
+            "Destination port": s.readInt(2),
             "Length": s.readInt(2),
             "Checksum": toHex(s.getBytes(2), "0x")
         };

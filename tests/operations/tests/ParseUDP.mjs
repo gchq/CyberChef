@@ -12,7 +12,7 @@ TestRegister.addTests([
     {
         name: "Parse UDP: No Data - JSON",
         input: "04 89 00 35 00 2c 01 01",
-        expectedOutput: "{\"Source port\":1161,\"Desination port\":53,\"Length\":44,\"Checksum\":\"0x010x01\"}",
+        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0x010x01\"}",
         recipeConfig: [
             {
                 op: "From Hex",
@@ -30,7 +30,7 @@ TestRegister.addTests([
     }, {
         name: "Parse UDP: With Data - JSON",
         input: "04 89 00 35 00 2c 01 01 02 02",
-        expectedOutput: "{\"Source port\":1161,\"Desination port\":53,\"Length\":44,\"Checksum\":\"0x010x01\",\"Data\":\"0x020x02\"}",
+        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0x010x01\",\"Data\":\"0x020x02\"}",
         recipeConfig: [
             {
                 op: "From Hex",
