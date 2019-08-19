@@ -105,9 +105,19 @@ export default class Stream {
             bitBufLen = 0;
 
         // Add remaining bits from current byte
+        console.log("Bit pos:  " + this.bitPos.toString(2));
+        console.log("Pos:  " + this.position.toString(2));
+
         bitBuf = (this.bytes[this.position++] & bitMask(this.bitPos)) >>> this.bitPos;
         bitBufLen = 8 - this.bitPos;
         this.bitPos = 0;
+
+        console.log("Bit pos:  " + this.bitPos.toString(2));
+        console.log("Bit buff: " + bitBuf.toString(2));
+        console.log("Bit buff len: " + bitBufLen.toString(2));
+        console.log("Num  bits: " + numBits.toString(2));
+
+
 
         // Not enough bits yet
         while (bitBufLen < numBits) {
@@ -115,14 +125,26 @@ export default class Stream {
             bitBufLen += 8;
         }
 
+        console.log("Pos:  " + this.position.toString(2));
+
         // Reverse back to numBits
         if (bitBufLen > numBits) {
+            
             const excess = bitBufLen - numBits;
-            bitBuf &= (1 << numBits) - 1;
+            console.log("Excess: " + excess.toString(2));
+            console.log("Bit buff: " + bitBuf.toString(2));
+            console.log("Mask: " + ((1 << numBits) - 1).toString(2));
+            //bitBuf &= (1 << numBits) - 1;
+            bitBuf &= 256 - (1 << numBits);
+            bitBuf = bitBuf >> excess;
             bitBufLen -= excess;
             this.position--;
             this.bitPos = 8 - excess;
         }
+
+        console.log("Bit buff len: " + bitBufLen.toString(2));
+        console.log("Bit buff: " + bitBuf.toString(2));
+        console.log("Pos:  " + this.position.toString(2));
 
         return bitBuf;
 
