@@ -205,7 +205,7 @@ class Protobuf {
                     (this.data[this.offset] & this.VALUE) << shift :
                 (this.data[this.offset] & this.VALUE) * Math.pow(2, shift);
             shift += 7;
-        } while ((this.data[this.offset++] & this.MSD) === this.MSB);
+        } while ((this.data[this.offset++] & this.MSB) === this.MSB);
         return fieldNumber;
     }
 
