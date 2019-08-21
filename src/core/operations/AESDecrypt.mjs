@@ -91,7 +91,7 @@ The following algorithms will be used based on the size of the key:
 
         const decipher = forge.cipher.createDecipher("AES-" + mode, key);
         decipher.start({
-            iv: iv,
+            iv: iv.length === 0 ? "" : iv,
             tag: gcmTag
         });
         decipher.update(forge.util.createBuffer(input));
