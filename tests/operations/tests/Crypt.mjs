@@ -18,6 +18,42 @@ TestRegister.addTests([
      *
      * All random data blocks (binary input, keys and IVs) were generated from /dev/urandom using dd:
      * > dd if=/dev/urandom of=key.txt bs=16 count=1
+     *
+     *
+     * The following is a Python script used to generate the AES-GCM tests.
+     * It uses PyCryptodome (https://www.pycryptodome.org) to handle the AES encryption and decryption.
+     *
+     * from Crypto.Cipher import AES
+     * import binascii
+
+     * input_data = "0123456789ABCDEF"
+     * key = binascii.unhexlify("00112233445566778899aabbccddeeff")
+     * iv = binascii.unhexlify("ffeeddccbbaa99887766554433221100")
+     *
+     * cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
+     * cipher_text, tag = cipher.encrypt_and_digest(binascii.unhexlify(input_data))
+     *
+     * cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
+     * decrypted = cipher.decrypt_and_verify(cipher_text, tag)
+     *
+     * key = binascii.hexlify(key).decode("UTF-8")
+     * iv = binascii.hexlify(iv).decode("UTF-8")
+     * cipher_text = binascii.hexlify(cipher_text).decode("UTF-8")
+     * tag = binascii.hexlify(tag).decode("UTF-8")
+     * decrypted = binascii.hexlify(decrypted).decode("UTF-8")
+     *
+     * print("Key: {}\nIV : {}\nInput data: {}\n\nEncrypted ciphertext: {}\nGCM tag: {}\n\nDecrypted plaintext : {}".format(key, iv, input_data, cipher_text, tag, decrypted))
+     *
+     *
+     * Outputs:
+     * Key: 00112233445566778899aabbccddeeff
+     * IV : ffeeddccbbaa99887766554433221100
+     * Input data: 0123456789ABCDEF
+     *
+     * Encrypted ciphertext: 8feeafedfdb2f6f9
+     * GCM tag: 654ef4957c6e2b0cc6501d8f9bcde032
+     *
+     * Decrypted plaintext : 0123456789abcdef
      */
     {
         name: "AES Encrypt: no key",
@@ -838,7 +874,7 @@ The following algorithms will be used based on the size of the key:
     },
     {
         name: "AES Decrypt: AES-128-GCM, Binary",
-        input: "fa17fcbf5e8763322c1b0c8562e1512ed9d702ef70c1643572b9de3e34ae6b535e6c1b992432aa6d06fb6f80c861262aef66e7c26035afe77bd3861261e4e092b523f058f8ebef2143db21bc16d02f7a011efb07419300cb41c3b884d1d8d6a766b8963c",
+        input: "5a29debb5c5f38cdf8aee421bd94dbbf3399947faddf205f88b3ad8ecb0c51214ec0e28bf78942dfa212d7eb15259bbdcac677b4c05f473eeb9331d74f31d441d97d56eb5c73b586342d72128ca528813543dc0fc7eddb7477172cc9194c18b2e1383e4e",
         expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
         recipeConfig: [
             {
@@ -847,7 +883,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": "fa6bbb34c8cde65a3d7b93fb094fc84f"}
+                    {"option": "Hex", "string": "70fad2ca19412c20f40fd06918736e56"}
                 ]
             }
         ],
@@ -934,7 +970,7 @@ The following algorithms will be used based on the size of the key:
     },
     {
         name: "AES Decrypt: AES-192-GCM, Binary",
-        input: "ed22946f96964d300b45f5ce2d9601ba87682da1a603c90e6d4f7738729b0602f613ee392c9bfc7792594474f1213fb99185851f02ece4df0e93995e49f97aa4d0a337d7a80d83e4219dae5a3d36658f8659cdd5ed7c32707f98656fab7fb43f7a61e37c",
+        input: "318b479d919d506f0cd904f2676fab263a7921b6d7e0514f36e03ae2333b77fa66ef5600babcb2ee9718aeb71fc357412343c1f2cb351d8715bb0aedae4a6468124f9c4aaf6a721b306beddbe63a978bec8baeeba4b663be33ee5bc982746bd4aed1c38b",
         expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
         recipeConfig: [
             {
@@ -943,7 +979,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": "be17cb31edb77f648b9d1032b235b33d"}
+                    {"option": "Hex", "string": "86db597d5302595223cadbd990f1309b"}
                 ]
             }
         ],
@@ -1030,7 +1066,7 @@ The following algorithms will be used based on the size of the key:
     },
     {
         name: "AES Decrypt: AES-256-GCM, Binary",
-        input: "e3f1b236eaf3b9df69df8133a1b417fa42b242d8ad49e4d2f3469aca7e2a41737e4f2c8a0d212143287088fad51743577dc6dfa8ed328ca90113cbeb9b137926b2168cc037bdc371777e6ee02b9d9c017b6054fd83d43b4885fbe9c044a8574f1491a893",
+        input: "1287f188ad4d7ab0d9ff69b3c29cb11f861389532d8cb9337181da2e8cfc74a84927e8c0dd7a28a32fd485afe694259a63c199b199b95edd87c7aa95329feac340f2b78b72956a85f367044d821766b1b7135815571df44900695f1518cf3ae38ecb650f",
         expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
         recipeConfig: [
             {
@@ -1039,7 +1075,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": "23ddbd3ee4de33f98a9ea9a170bdf268"}
+                    {"option": "Hex", "string": "821b1e5f32dad052e502775a523d957a"}
                 ]
             }
         ],
