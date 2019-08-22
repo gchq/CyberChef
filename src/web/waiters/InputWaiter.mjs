@@ -222,8 +222,6 @@ class InputWaiter {
         if (Object.prototype.hasOwnProperty.call(r, "progress") &&
             Object.prototype.hasOwnProperty.call(r, "inputNum")) {
             this.manager.tabs.updateInputTabProgress(r.inputNum, r.progress, 100);
-        } else if (Object.prototype.hasOwnProperty.call(r, "fileBuffer")) {
-            this.manager.tabs.updateInputTabProgress(r.inputNum, 100, 100);
         }
 
         const transferable = Object.prototype.hasOwnProperty.call(r, "fileBuffer") ? [r.fileBuffer] : undefined;
@@ -305,6 +303,9 @@ class InputWaiter {
             case "removeChefWorker":
                 this.removeChefWorker();
                 break;
+            case "fileLoaded":
+                this.fileLoaded(r.data.inputNum);
+                break;
             default:
                 log.error(`Unknown action ${r.action}.`);
         }
@@ -331,7 +332,7 @@ class InputWaiter {
      * @param {number} inputData.size - The size in bytes of the input file
      * @param {string} inputData.type - The MIME type of the input file
      * @param {number} inputData.progress - The load progress of the input file
-     * @param {boolean} [silent=false] - If true, fires the manager statechange event
+     * @param {boolean} [silent=false] - If false, fires the manager statechange event
      */
     async set(inputData, silent=false) {
         return new Promise(function(resolve, reject) {
@@ -373,7 +374,7 @@ class InputWaiter {
 
                 if (!silent) window.dispatchEvent(this.manager.statechange);
             } else {
-                this.setFile(inputData);
+                this.setFile(inputData, silent);
             }
 
         }.bind(this));
@@ -389,8 +390,9 @@ class InputWaiter {
      * @param {number} inputData.size - The size in bytes of the input file
      * @param {string} inputData.type - The MIME type of the input file
      * @param {number} inputData.progress - The load progress of the input file
+     * @param {boolean} [silent=true] - If false, fires the manager statechange event
      */
-    setFile(inputData) {
+    setFile(inputData, silent=true) {
         const activeTab = this.manager.tabs.getActiveInputTab();
         if (inputData.inputNum !== activeTab) return;
 
@@ -414,6 +416,30 @@ class InputWaiter {
 
         this.setInputInfo(inputData.size, null);
         this.displayFilePreview(inputData);
+
+        if (!silent) window.dispatchEvent(this.manager.statechange);
+    }
+
+    /**
+     * Update file details when a file completes loading
+     *
+     * @param {number} inputNum - The inputNum of the input which has finished loading
+     */
+    fileLoaded(inputNum) {
+        this.manager.tabs.updateInputTabProgress(inputNum, 100, 100);
+
+        const activeTab = this.manager.tabs.getActiveInputTab();
+        if (activeTab !== inputNum) return;
+
+        this.inputWorker.postMessage({
+            action: "setInput",
+            data: {
+                inputNum: inputNum,
+                silent: false
+            }
+        });
+
+        this.updateFileProgress(inputNum, 100);
     }
 
     /**
@@ -494,19 +520,6 @@ class InputWaiter {
         } else {
             fileLoaded.textContent = progress + "%";
             fileLoaded.style.color = "";
-        }
-
-        if (progress === 100 && progress !== oldProgress) {
-            // Don't set the input if the progress hasn't changed
-            this.inputWorker.postMessage({
-                action: "setInput",
-                data: {
-                    inputNum: inputNum,
-                    silent: false
-                }
-            });
-            window.dispatchEvent(this.manager.statechange);
-
         }
     }
 
@@ -711,33 +724,50 @@ class InputWaiter {
      *
      * @param {event} e
      */
-    inputPaste(e) {
-        const pastedData = e.clipboardData.getData("Text");
-        if (pastedData.length < (this.app.options.ioDisplayThreshold * 1024)) {
-            // Pasting normally fires the inputChange() event before
-            // changing the value, so instead change it here ourselves
-            // and manually fire inputChange()
-            e.preventDefault();
-            const inputText = document.getElementById("input-text");
-            const selStart = inputText.selectionStart;
-            const selEnd = inputText.selectionEnd;
-            const startVal = inputText.value.slice(0, selStart);
-            const endVal = inputText.value.slice(selEnd);
+    async inputPaste(e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-            inputText.value = startVal + pastedData + endVal;
-            inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
-            this.debounceInputChange(e);
-        } else {
-            e.preventDefault();
-            e.stopPropagation();
-
+        const self = this;
+        /**
+         * Triggers the input file/binary data overlay
+         *
+         * @param {string} pastedData
+         */
+        function triggerOverlay(pastedData) {
             const file = new File([pastedData], "PastedData", {
                 type: "text/plain",
                 lastModified: Date.now()
             });
 
-            this.loadUIFiles([file]);
+            self.loadUIFiles([file]);
+        }
+
+        const pastedData = e.clipboardData.getData("Text");
+        const inputText = document.getElementById("input-text");
+        const selStart = inputText.selectionStart;
+        const selEnd = inputText.selectionEnd;
+        const startVal = inputText.value.slice(0, selStart);
+        const endVal = inputText.value.slice(selEnd);
+        const val = startVal + pastedData + endVal;
+
+        if (val.length >= (this.app.options.ioDisplayThreshold * 1024)) {
+            // Data too large to display, use overlay
+            triggerOverlay(val);
             return false;
+        } else if (await this.preserveCarriageReturns(val)) {
+            // Data contains a carriage return and the user doesn't wish to edit it, use overlay
+            // We check this in a separate condition to make sure it is not run unless absolutely
+            // necessary.
+            triggerOverlay(val);
+            return false;
+        } else {
+            // Pasting normally fires the inputChange() event before
+            // changing the value, so instead change it here ourselves
+            // and manually fire inputChange()
+            inputText.value = val;
+            inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
+            this.debounceInputChange(e);
         }
     }
 
@@ -813,6 +843,46 @@ class InputWaiter {
             this.loadUIFiles(e.target.files);
             e.target.value = "";
         }
+    }
+
+    /**
+     * Checks if an input contains carriage returns.
+     * If a CR is detected, checks if the preserve CR option has been set,
+     * and if not, asks the user for their preference.
+     *
+     * @param {string} input - The input to be checked
+     * @returns {boolean} - If true, the input contains a CR which should be
+     *      preserved, so display an overlay so it can't be edited
+     */
+    async preserveCarriageReturns(input) {
+        if (input.indexOf("\r") < 0) return false;
+
+        const optionsStr = "This behaviour can be changed in the <a href='#' onclick='document.getElementById(\"options\").click()'>Options pane</a>";
+        if (!this.app.options.userSetCR) {
+            // User has not set a CR preference yet
+            let preserve = await new Promise(function(resolve, reject) {
+                this.app.confirm(
+                    "Carriage Return Detected",
+                    "A <a href='https://wikipedia.org/wiki/Carriage_return'>carriage return</a> (<code>\\r</code>, <code>0x0d</code>) was detected in your input. As HTML textareas <a href='https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element'>can't display carriage returns</a>, editing must be turned off to preserve them. <br>Alternatively, you can enable editing but your carriage returns will not be preserved.<br><br>This preference will be saved but can be toggled in the options pane.",
+                    "Preserve Carriage Returns",
+                    "Enable Editing", resolve, this);
+            }.bind(this));
+            if (preserve === undefined) {
+                // The confirm pane was closed without picking a specific choice
+                this.app.alert(`Not preserving carriage returns.\n${optionsStr}`, 5000);
+                preserve = false;
+            }
+            this.manager.options.updateOption("preserveCR", preserve);
+            this.manager.options.updateOption("userSetCR", true);
+        } else {
+            if (this.app.options.preserveCR) {
+                this.app.alert(`A carriage return (\\r, 0x0d) was detected in your input, so editing has been disabled to preserve it.<br>${optionsStr}`, 10000);
+            } else {
+                this.app.alert(`A carriage return (\\r, 0x0d) was detected in your input. Editing is remaining enabled, but carriage returns will not be preserved.<br>${optionsStr}`, 10000);
+            }
+        }
+
+        return this.app.options.preserveCR;
     }
 
     /**

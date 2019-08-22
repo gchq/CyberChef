@@ -53,7 +53,9 @@ function main() {
         logLevel:            "info",
         autoMagic:           true,
         imagePreview:        true,
-        syncTabs:            true
+        syncTabs:            true,
+        preserveCR:          true,
+        userSetCR:           false
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
