@@ -48,6 +48,7 @@ class TestRegister {
      * Runs all the tests in the register.
      */
     runTests () {
+        console.log("Running tests...");
         return Promise.all(
             this.tests.map(function(test, i) {
                 const chef = new Chef();
@@ -103,6 +104,8 @@ class TestRegister {
      * Run all api related tests and wrap results in report format
      */
     runApiTests() {
+        console.log("Running tests...");
+
         return Promise.all(this.apiTests.map(async function(test, i) {
             const result = {
                 test: test,

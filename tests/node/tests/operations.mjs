@@ -906,7 +906,7 @@ smothering ampersand abreast
     }),
 
     it("to unix timestamp", () => {
-        assert.strictEqual(chef.toUNIXTimestamp("04-01-2001").toString(), "986083200 (Sun 1 April 2001 00:00:00 UTC)");
+        assert.strictEqual(chef.toUNIXTimestamp("2001-04-01").toString(), "986083200 (Sun 1 April 2001 00:00:00 UTC)");
     }),
 
     it("Translate DateTime format", () => {
