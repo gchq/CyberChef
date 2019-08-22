@@ -2,11 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
-### [9.2.0] - 2019-08-13
-- 'Defang IP Addresses' operation added [@h345983745] | [#556]
-
-### [9.1.0] - 2019-08-13
+### [9.1.0] - 2019-08-22
 - 'Parse SSH Host Key' operation added [@j433866] | [#595]
+- 'Defang IP Addresses' operation added [@h345983745] | [#556]
 
 ## [9.0.0] - 2019-07-09
 - [Multiple inputs](https://github.com/gchq/CyberChef/wiki/Multiple-Inputs) are now supported in the main web UI, allowing you to upload and process multiple files at once [@j433866] | [#566]
@@ -164,7 +162,6 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
-[9.2.0]: https://github.com/gchq/CyberChef/releases/tag/v9.2.0
 [9.1.0]: https://github.com/gchq/CyberChef/releases/tag/v9.1.0
 [9.0.0]: https://github.com/gchq/CyberChef/releases/tag/v9.0.0
 [8.38.0]: https://github.com/gchq/CyberChef/releases/tag/v8.38.0
