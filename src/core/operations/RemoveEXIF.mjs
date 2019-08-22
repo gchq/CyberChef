@@ -27,17 +27,18 @@ class RemoveEXIF extends Operation {
             "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Exif";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         // Do nothing if input is empty
         if (input.length === 0) return input;
 

@@ -103,11 +103,17 @@ module.exports = {
                     "sass-loader",
                 ]
             },
+            /**
+             * The limit for these files has been increased to 60,000 (60KB)
+             * to ensure the material icons font is inlined.
+             *
+             * See: https://github.com/gchq/CyberChef/issues/612
+             */
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000,
+                    limit: 60000,
                     name: "[hash].[ext]",
                     outputPath: "assets"
                 }

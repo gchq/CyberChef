@@ -23,7 +23,7 @@ class OR extends Operation {
         this.module = "Default";
         this.description = "OR the input with the given key.<br>e.g. <code>fe023da5</code>";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#OR";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [
             {
@@ -36,12 +36,13 @@ class OR extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
+        input = new Uint8Array(input);
 
         return bitOp(input, key, or);
     }

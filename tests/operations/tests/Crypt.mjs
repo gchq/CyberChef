@@ -55,6 +55,21 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
+        name: "AES Encrypt: AES-128-CTR, no IV, ASCII",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "a98c9e8e3b7c894384d740e4f0f4ed0be2bbb1e0e13a255812c3c6b0a629e4ad759c075b2469c6f4fb2c0cf9",
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": ""},
+                    "CTR", "Raw", "Hex"
+                ]
+            }
+        ],
+    },
+    {
         name: "AES Encrypt: AES-128-CBC with IV, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "4fa077d50cc71a57393e7b542c4e3aea0fb75383b97083f2f568ffc13c0e7a47502ec6d9f25744a061a3a5e55fe95e8d",
@@ -640,6 +655,22 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-128-CTR, no IV, ASCII",
+        input: "a98c9e8e3b7c894384d740e4f0f4ed0be2bbb1e0e13a255812c3c6b0a629e4ad759c075b2469c6f4fb2c0cf9",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": ""},
+                    "CTR", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
             }

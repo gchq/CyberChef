@@ -235,6 +235,10 @@ class Dish {
             case Dish.JSON:
                 title = "application/json";
                 break;
+            case Dish.NUMBER:
+            case Dish.BIG_NUMBER:
+                title = this.value.toString();
+                break;
             case Dish.ARRAY_BUFFER:
             case Dish.BYTE_ARRAY:
                 title = this.detectDishType();
@@ -283,7 +287,21 @@ class Dish {
             case Dish.ARRAY_BUFFER:
                 return this.value instanceof ArrayBuffer;
             case Dish.BIG_NUMBER:
-                return BigNumber.isBigNumber(this.value);
+                if (BigNumber.isBigNumber(this.value)) return true;
+                /*
+                    If a BigNumber is passed between WebWorkers it is serialised as a JSON
+                    object with a coefficient (c), exponent (e) and sign (s). We detect this
+                    and reinitialise it as a BigNumber object.
+                */
+                if (Object.keys(this.value).sort().equals(["c", "e", "s"])) {
+                    const temp = new BigNumber();
+                    temp.c = this.value.c;
+                    temp.e = this.value.e;
+                    temp.s = this.value.s;
+                    this.value = temp;
+                    return true;
+                }
+                return false;
             case Dish.JSON:
                 // All values can be serialised in some manner, so we return true in all cases
                 return true;

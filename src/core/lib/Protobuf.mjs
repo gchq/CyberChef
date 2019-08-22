@@ -16,14 +16,14 @@ class Protobuf {
     /**
      * Protobuf constructor
      *
-     * @param {byteArray} data
+     * @param {byteArray|Uint8Array} data
      */
     constructor(data) {
-        // Check we have a byteArray
-        if (data instanceof Array) {
+        // Check we have a byteArray or Uint8Array
+        if (data instanceof Array || data instanceof Uint8Array) {
             this.data = data;
         } else {
-            throw new Error("Protobuf input must be a byteArray");
+            throw new Error("Protobuf input must be a byteArray or Uint8Array");
         }
 
         // Set up masks
@@ -205,7 +205,7 @@ class Protobuf {
                     (this.data[this.offset] & this.VALUE) << shift :
                 (this.data[this.offset] & this.VALUE) * Math.pow(2, shift);
             shift += 7;
-        } while ((this.data[this.offset++] & this.MSD) === this.MSB);
+        } while ((this.data[this.offset++] & this.MSB) === this.MSB);
         return fieldNumber;
     }
 

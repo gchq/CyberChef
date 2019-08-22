@@ -23,7 +23,7 @@ class ToDecimal extends Operation {
         this.name = "To Decimal";
         this.module = "Default";
         this.description = "Converts the input data to an ordinal integer array.<br><br>e.g. <code>Hello</code> becomes <code>72 101 108 108 111</code>";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -40,11 +40,12 @@ class ToDecimal extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         const delim = Utils.charRep(args[0]),
             signed = args[1];
         if (signed) {

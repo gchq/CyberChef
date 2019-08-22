@@ -122,7 +122,8 @@
             "PGP Encrypt",
             "PGP Decrypt",
             "PGP Encrypt and Sign",
-            "PGP Decrypt and Verify"
+            "PGP Decrypt and Verify",
+            "Parse SSH Host Key"
         ]
     },
     {
@@ -166,6 +167,7 @@
             "Parse IP range",
             "Parse IPv6 address",
             "Parse IPv4 header",
+            "Parse SSH Host Key",
             "Parse URI",
             "URL Encode",
             "URL Decode",
@@ -177,7 +179,8 @@
             "Group IP addresses",
             "Encode NetBIOS Name",
             "Decode NetBIOS Name",
-            "Defang URL"
+            "Defang URL",
+            "Defang IP Addresses"
         ]
     },
     {

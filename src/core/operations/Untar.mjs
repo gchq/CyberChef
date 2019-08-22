@@ -23,7 +23,7 @@ class Untar extends Operation {
         this.module = "Compression";
         this.description = "Unpacks a tarball and displays it per file.";
         this.infoURL = "https://wikipedia.org/wiki/Tar_(computing)";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";
         this.args = [];
@@ -37,11 +37,12 @@ class Untar extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {List<File>}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         const stream = new Stream(input),
             files = [];
 
