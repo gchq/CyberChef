@@ -568,11 +568,18 @@
                         </div>
 
                         <div class="checkbox option-item">
-                                <label for="syncTabs">
-                                    <input type="checkbox" option="syncTabs" id="syncTabs">
-                                    Keep the current tab in sync between the input and output.
-                                </label>
-                            </div>
+                            <label for="syncTabs">
+                                <input type="checkbox" option="syncTabs" id="syncTabs">
+                                Keep the current tab in sync between the input and output.
+                            </label>
+                        </div>
+
+                        <div class="checkbox option-item">
+                            <label for="preserveCR" data-toggle="tooltip" data-placement="right" data-html="true" title="As HTML textareas don't support carriage returns, editing input must be turned off to preserve them.<br><br>When this option is enabled, editing will be disabled when an input with carriage returns is detected to preserve them. Otherwise, editing will remain enabled but carriage returns will not be preserved.">
+                                <input type="checkbox" option="preserveCR" id="preserveCR">
+                                Preserve carriage returns.
+                            </label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="reset-options">Reset options to default</button>
