@@ -857,9 +857,9 @@ class InputWaiter {
                 this.manager.options.updateOption("userSetCR", true);
             } else {
                 if (this.app.options.preserveCR) {
-                    this.app.alert(`Carriage return(s) detected in input, so editing has been disabled to preserve them. ${optionsStr}`, 6000);
+                    this.app.alert(`A carriage return was detected in your input, so editing has been disabled to preserve it. ${optionsStr}`, 6000);
                 } else {
-                    this.app.alert(`Carriage return(s) detected in input. Editing is remaining enabled, but any carriage returns will be removed. ${optionsStr}`, 6000);
+                    this.app.alert(`A carriage return was detected in your input. Editing is remaining enabled, but any carriage returns will be removed. ${optionsStr}`, 6000);
                 }
             }
             return this.app.options.preserveCR;
