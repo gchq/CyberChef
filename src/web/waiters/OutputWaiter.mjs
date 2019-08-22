@@ -546,7 +546,7 @@ class OutputWaiter {
                     "Cancel zipping",
                     resolve, this);
             }.bind(this));
-            if (!cancel && cancel !== undefined) {
+            if (!cancel) {
                 this.terminateZipWorker();
             }
         }

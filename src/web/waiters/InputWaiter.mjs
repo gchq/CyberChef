@@ -728,30 +728,46 @@ class InputWaiter {
         e.preventDefault();
         e.stopPropagation();
 
-        const pastedData = e.clipboardData.getData("Text");
-        const preserve = await this.preserveCarriageReturns(pastedData);
-
-        if (pastedData.length < (this.app.options.ioDisplayThreshold * 1024) && !preserve) {
-            // Pasting normally fires the inputChange() event before
-            // changing the value, so instead change it here ourselves
-            // and manually fire inputChange()
-            const inputText = document.getElementById("input-text");
-            const selStart = inputText.selectionStart;
-            const selEnd = inputText.selectionEnd;
-            const startVal = inputText.value.slice(0, selStart);
-            const endVal = inputText.value.slice(selEnd);
-
-            inputText.value = startVal + pastedData + endVal;
-            inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
-            this.debounceInputChange(e);
-        } else {
+        const self = this;
+        /**
+         * Triggers the input file/binary data overlay
+         *
+         * @param {string} pastedData
+         */
+        function triggerOverlay(pastedData) {
             const file = new File([pastedData], "PastedData", {
                 type: "text/plain",
                 lastModified: Date.now()
             });
 
-            this.loadUIFiles([file]);
+            self.loadUIFiles([file]);
+        }
+
+        const pastedData = e.clipboardData.getData("Text");
+        const inputText = document.getElementById("input-text");
+        const selStart = inputText.selectionStart;
+        const selEnd = inputText.selectionEnd;
+        const startVal = inputText.value.slice(0, selStart);
+        const endVal = inputText.value.slice(selEnd);
+        const val = startVal + pastedData + endVal;
+
+        if (val.length >= (this.app.options.ioDisplayThreshold * 1024)) {
+            // Data too large to display, use overlay
+            triggerOverlay(val);
             return false;
+        } else if (await this.preserveCarriageReturns(val)) {
+            // Data contains a carriage return and the user doesn't wish to edit it, use overlay
+            // We check this in a separate condition to make sure it is not run unless absolutely
+            // necessary.
+            triggerOverlay(val);
+            return false;
+        } else {
+            // Pasting normally fires the inputChange() event before
+            // changing the value, so instead change it here ourselves
+            // and manually fire inputChange()
+            inputText.value = val;
+            inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
+            this.debounceInputChange(e);
         }
     }
 
@@ -839,33 +855,34 @@ class InputWaiter {
      *      preserved, so display an overlay so it can't be edited
      */
     async preserveCarriageReturns(input) {
-        if (input.indexOf("\r") >= 0) {
-            const optionsStr = "This behaviour can be changed in the <a href='#' onclick='document.getElementById(\"options\").click()'>options</a>";
-            if (!this.app.options.userSetCR) {
-                let preserve = await new Promise(function(resolve, reject) {
-                    this.app.confirm(
-                        "Carriage Return Detected",
-                        "A carriage return was detected in your input. As HTML textareas can't display carriage returns, editing must be turned off to preserve them. <br>Alternatively, you can enable editing but your carriage returns will not be preserved.<br><br>This preference will be saved, and can be toggled in the options.",
-                        "Preserve Carriage Returns",
-                        "Enable Editing", resolve, this);
-                }.bind(this));
-                if (preserve === undefined) {
-                    this.app.alert(`Not preserving carriage returns. ${optionsStr}`, 4000);
-                    preserve = false;
-                }
-                this.manager.options.updateOption("preserveCR", preserve);
-                this.manager.options.updateOption("userSetCR", true);
-            } else {
-                if (this.app.options.preserveCR) {
-                    this.app.alert(`A carriage return was detected in your input, so editing has been disabled to preserve it. ${optionsStr}`, 6000);
-                } else {
-                    this.app.alert(`A carriage return was detected in your input. Editing is remaining enabled, but any carriage returns will be removed. ${optionsStr}`, 6000);
-                }
+        if (input.indexOf("\r") < 0) return false;
+
+        const optionsStr = "This behaviour can be changed in the <a href='#' onclick='document.getElementById(\"options\").click()'>Options pane</a>";
+        if (!this.app.options.userSetCR) {
+            // User has not set a CR preference yet
+            let preserve = await new Promise(function(resolve, reject) {
+                this.app.confirm(
+                    "Carriage Return Detected",
+                    "A <a href='https://wikipedia.org/wiki/Carriage_return'>carriage return</a> (<code>\\r</code>, <code>0x0d</code>) was detected in your input. As HTML textareas <a href='https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element'>can't display carriage returns</a>, editing must be turned off to preserve them. <br>Alternatively, you can enable editing but your carriage returns will not be preserved.<br><br>This preference will be saved but can be toggled in the options pane.",
+                    "Preserve Carriage Returns",
+                    "Enable Editing", resolve, this);
+            }.bind(this));
+            if (preserve === undefined) {
+                // The confirm pane was closed without picking a specific choice
+                this.app.alert(`Not preserving carriage returns.\n${optionsStr}`, 5000);
+                preserve = false;
             }
-            return this.app.options.preserveCR;
+            this.manager.options.updateOption("preserveCR", preserve);
+            this.manager.options.updateOption("userSetCR", true);
         } else {
-            return false;
+            if (this.app.options.preserveCR) {
+                this.app.alert(`A carriage return (\\r, 0x0d) was detected in your input, so editing has been disabled to preserve it.<br>${optionsStr}`, 10000);
+            } else {
+                this.app.alert(`A carriage return (\\r, 0x0d) was detected in your input. Editing is remaining enabled, but carriage returns will not be preserved.<br>${optionsStr}`, 10000);
+            }
         }
+
+        return this.app.options.preserveCR;
     }
 
     /**
