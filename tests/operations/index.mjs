@@ -88,6 +88,7 @@ import "./tests/BLAKE2s";
 import "./tests/Protobuf";
 import "./tests/ParseSSHHostKey";
 import "./tests/DefangIP";
+import "./tests/ParseUDP";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";
