@@ -77,7 +77,7 @@ If your operation does not rely on a library, just leave this blank and it will 
             required: true,
             message: `The output type should be one of: ${ioTypes.join(", ")}.`
         },
-        inputSwapable: {
+        inputSwappable: {
             description: "Input swappable option shows an icon that can swap input values of two ingredients.",
             example: "true/false",
             prompt: "Show input swaping",
@@ -158,7 +158,7 @@ class ${moduleName} extends Operation {
         this.infoURL = "${result.infoURL}";
         this.inputType = "${result.inputType}";
         this.outputType = "${result.outputType}";
-        this.inputSwapable = "${result.inputSwapable}";
+        this.inputSwappable = "${result.inputSwappable}";
         this.args = [
             /* Example arguments. See the project wiki for full details.
             {

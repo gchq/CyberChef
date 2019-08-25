@@ -23,7 +23,7 @@ class ConvertMass extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/Orders_of_magnitude_(mass)";
         this.inputType = "BigNumber";
         this.outputType = "BigNumber";
-        this.inputSwapable = true;
+        this.inputSwappable = true;
         this.args = [
             {
                 "name": "Input units",

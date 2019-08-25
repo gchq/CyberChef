@@ -24,7 +24,7 @@ class Operation {
         this._disabled        = false;
         this._flowControl     = false;
         this._manualBake      = false;
-        this._inputSwapable   = false;
+        this._inputSwappable   = false;
         this._ingList         = [];
 
         // Public fields
@@ -318,12 +318,12 @@ class Operation {
     }
 
      /**
-     * Returns true if this Operation has swapable input values.
+     * Returns true if this Operation has swappable input values.
      *
      * @returns {boolean}
      */
-    get inputSwapable() {
-        return this._inputSwapable;
+    get inputSwappable() {
+        return this._inputSwappable;
     }
 
 
@@ -332,8 +332,8 @@ class Operation {
      *
      * @param {boolean} value
      */
-    set inputSwapable(value) {
-        this._inputSwapable = !!value;
+    set inputSwappable(value) {
+        this._inputSwappable = !!value;
     }
 
 }

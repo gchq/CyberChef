@@ -41,7 +41,7 @@ for (const opObj in Ops) {
         inputType:     op.inputType,
         outputType:    op.presentType,
         flowControl:   op.flowControl,
-        inputSwapable: op.inputSwapable,
+        inputSwappable: op.inputSwappable,
         manualBake:    op.manualBake,
         args:          op.args
     };
