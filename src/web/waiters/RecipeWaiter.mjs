@@ -261,6 +261,23 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
+    /**
+     * Handler for swap input click event.
+     * Swaps values of two inputs.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    swapInputClick(e) {
+        const si = e.target;
+        const ings = si.parentNode.parentNode.querySelectorAll(".arg");
+
+        if (ings.length === 2) {
+            const left = ings[0], right = ings[1];
+            [left.value, right.value] = [right.value, left.value];
+            this.ingChange();
+        }
+    }
 
     /**
      * Handler for operation doubleclick events.

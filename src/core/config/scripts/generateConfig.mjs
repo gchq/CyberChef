@@ -35,14 +35,15 @@ for (const opObj in Ops) {
     const op = new Ops[opObj]();
 
     operationConfig[op.name] = {
-        module:      op.module,
-        description: op.description,
-        infoURL:     op.infoURL,
-        inputType:   op.inputType,
-        outputType:  op.presentType,
-        flowControl: op.flowControl,
-        manualBake:  op.manualBake,
-        args:        op.args
+        module:        op.module,
+        description:   op.description,
+        infoURL:       op.infoURL,
+        inputType:     op.inputType,
+        outputType:    op.presentType,
+        flowControl:   op.flowControl,
+        inputSwapable: op.inputSwapable,
+        manualBake:    op.manualBake,
+        args:          op.args
     };
 
     if ("patterns" in op) {
