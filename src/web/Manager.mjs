@@ -137,6 +137,7 @@ class Manager {
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
+        this.addDynamicListener(".swap-icon", "click", this.recipe.swapInputClick, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
         this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
