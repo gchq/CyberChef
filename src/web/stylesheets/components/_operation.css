@@ -240,11 +240,6 @@ div.toggle-string {
     cursor: pointer;
 }
 
-.swap-icon {
-    margin-top: 1.75rem;
-    cursor: pointer;
-}
-
 .disable-icon {
     color: var(--disable-icon-colour);
 }

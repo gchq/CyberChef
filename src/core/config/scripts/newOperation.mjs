@@ -77,14 +77,6 @@ If your operation does not rely on a library, just leave this blank and it will 
             required: true,
             message: `The output type should be one of: ${ioTypes.join(", ")}.`
         },
-        inputSwapable: {
-            description: "Input swappable option shows an icon that can swap input values of two ingredients.",
-            example: "true/false",
-            prompt: "Show input swaping",
-            type: "boolean",
-            default: "false",
-            message: "Enter true or false to specify if input spawing should be shown."
-        },
         highlight: {
             description: "If your operation does not change the length of the input in any way, we can enable highlighting. If it does change the length in a predictable way, we may still be able to enable highlighting and calculate the correct offsets. If this is not possible, we will disable highlighting for this operation.",
             example: "true/false",
@@ -158,7 +150,6 @@ class ${moduleName} extends Operation {
         this.infoURL = "${result.infoURL}";
         this.inputType = "${result.inputType}";
         this.outputType = "${result.outputType}";
-        this.inputSwapable = "${result.inputSwapable}";
         this.args = [
             /* Example arguments. See the project wiki for full details.
             {

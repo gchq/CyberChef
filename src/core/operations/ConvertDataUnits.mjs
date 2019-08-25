@@ -23,7 +23,6 @@ class ConvertDataUnits extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/Orders_of_magnitude_(data)";
         this.inputType = "BigNumber";
         this.outputType = "BigNumber";
-        this.inputSwapable = true;
         this.args = [
             {
                 "name": "Input units",
