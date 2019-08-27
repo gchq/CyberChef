@@ -15,6 +15,9 @@ All major and minor version changes will be documented in this file. Details of 
 - A [read-eval-print loop (REPL)](https://github.com/gchq/CyberChef/wiki/Node-API#repl) is also included to enable prototyping and experimentation with the API [@d98762625] | [#291]
 - Light and dark Solarized themes added [@j433866] | [#566]
 
+<details>
+    <summary>Click to expand v8 minor versions</summary>
+    
 ### [8.38.0] - 2019-07-03
 - 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
 
@@ -135,6 +138,8 @@ All major and minor version changes will be documented in this file. Details of 
 
 ### [8.1.0] - 2018-08-19
 - 'Dechunk HTTP response' operation added [@sevzero] | [#311]
+
+</details>
 
 ## [8.0.0] - 2018-08-05
 - Codebase rewritten using [ES modules](https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/) and [classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) [@n1474335] [@d98762625] [@artemisbot] [@picapi] | [#284]
