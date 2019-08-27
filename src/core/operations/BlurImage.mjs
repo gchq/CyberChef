@@ -64,7 +64,7 @@ class BlurImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            switch (blurType){
+            switch (blurType) {
                 case "Fast":
                     if (isWorkerEnvironment())
                         self.sendStatusMessage("Fast blurring image...");

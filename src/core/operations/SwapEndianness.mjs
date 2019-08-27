@@ -79,7 +79,7 @@ class SwapEndianness extends Operation {
             const word = data.slice(i, i + wordLength);
 
             // Pad word if too short
-            if (padIncompleteWords && word.length < wordLength){
+            if (padIncompleteWords && word.length < wordLength) {
                 for (j = word.length; j < wordLength; j++) {
                     word.push(0);
                 }

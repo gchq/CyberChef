@@ -85,7 +85,7 @@ function getWords(length=3) {
     const words = [];
     let word;
     let previousWord;
-    while (words.length < length){
+    while (words.length < length) {
         do {
             word = wordList[Math.floor(Math.random() * wordList.length)];
         } while (previousWord === word);

@@ -134,7 +134,7 @@ CMYK: ${cmyk}
     static _hslToRgb(h, s, l) {
         let r, g, b;
 
-        if (s === 0){
+        if (s === 0) {
             r = g = b = l; // achromatic
         } else {
             const hue2rgb = function hue2rgb(p, q, t) {

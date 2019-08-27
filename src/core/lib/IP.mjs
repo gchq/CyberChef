@@ -241,7 +241,7 @@ export function ipv6ListedRange(match, includeNetworkInfo) {
     ipv6List = ipv6List.filter(function(str) {
         return str.trim();
     });
-    for (let i =0; i < ipv6List.length; i++){
+    for (let i =0; i < ipv6List.length; i++) {
         ipv6List[i] = ipv6List[i].trim();
     }
     const ipv6CidrList = ipv6List.filter(function(a) {
@@ -502,8 +502,8 @@ export function ipv6Compare(a, b) {
     const a_ = strToIpv6(a),
         b_ = strToIpv6(b);
 
-    for (let i = 0; i < a_.length; i++){
-        if (a_[i] !== b_[i]){
+    for (let i = 0; i < a_.length; i++) {
+        if (a_[i] !== b_[i]) {
             return a_[i] - b_[i];
         }
     }
