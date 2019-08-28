@@ -1083,6 +1083,7 @@ class OutputWaiter {
         magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
+        magicButton.classList.add("pulse");
     }
 
 
@@ -1092,6 +1093,7 @@ class OutputWaiter {
     hideMagicButton() {
         const magicButton = document.getElementById("magic");
         magicButton.classList.add("hidden");
+        magicButton.classList.remove("pulse");
         magicButton.setAttribute("data-recipe", "");
         magicButton.setAttribute("data-original-title", "Magic!");
     }

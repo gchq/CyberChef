@@ -633,7 +633,7 @@ class App {
      * Pops up a message to the user and writes it to the console log.
      *
      * @param {string} str - The message to display (HTML supported)
-     * @param {number} timeout - The number of milliseconds before the alert closes automatically
+     * @param {number} [timeout=0] - The number of milliseconds before the alert closes automatically
      *     0 for never (until the user closes it)
      * @param {boolean} [silent=false] - Don't show the message in the popup, only print it to the
      *     console
@@ -646,13 +646,11 @@ class App {
      * // Pops up a box with the message "Happy Christmas!" that will disappear after 5 seconds.
      * this.alert("Happy Christmas!", 5000);
      */
-    alert(str, timeout, silent) {
+    alert(str, timeout=0, silent=false) {
         const time = new Date();
 
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
-
-        timeout = timeout || 0;
 
         this.currentSnackbar = $.snackbar({
             content: str,
