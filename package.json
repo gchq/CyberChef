@@ -31,10 +31,9 @@
   "module": "src/node/index.mjs",
   "bugs": "https://github.com/gchq/CyberChef/issues",
   "browserslist": [
-    "Chrome >= 40",
-    "Firefox >= 35",
-    "Edge >= 14",
-    "node >= 6.5"
+    "Chrome >= 50",
+    "Firefox >= 38",
+    "node >= 10"
   ],
   "devDependencies": {
     "@babel/core": "^7.5.0",
