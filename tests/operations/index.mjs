@@ -109,4 +109,3 @@ const logOpsTestReport = logTestReport.bind(null, testStatus);
 
 TestRegister.runTests()
     .then(logOpsTestReport);
-

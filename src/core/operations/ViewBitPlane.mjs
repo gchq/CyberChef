@@ -62,7 +62,6 @@ class ViewBitPlane extends Operation {
             throw new OperationError("Error: Bit argument must be between 0 and 7");
         }
 
-        parsedImage.rgba(true);
 
         let pixel, bin, newPixelValue;
 
@@ -73,9 +72,11 @@ class ViewBitPlane extends Operation {
 
             if (bin.charAt(bitIndex) === "1") newPixelValue = 0;
 
-            for (let i=0; i < 4; i++) {
+            for (let i=0; i < 3; i++) {
                 this.bitmap.data[idx + i] = newPixelValue;
             }
+            this.bitmap.data[idx + 3] = 255;
+
         });
 
         const imageBuffer = await parsedImage.getBufferAsync(jimp.AUTO);
