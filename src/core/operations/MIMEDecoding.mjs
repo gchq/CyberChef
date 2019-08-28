@@ -7,6 +7,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
+import {fromHex} from "../lib/Hex.mjs";
 import { fromBase64 } from "../lib/Base64";
 
 /**
@@ -51,10 +52,6 @@ class MIMEDecoding extends Operation {
 
         let mimeEncodedText = Utils.byteArrayToUtf8(input)
 
-        // const encodedWordRegex = /(\=\?)(.*?)(\?\=)/g;
-
-        // let encodedWords = mimeEncodedText.match(encodedWordRegex);
-
         let parsedString = "";
         let currentPos = 0;
         let pastPosition = 0;
@@ -73,7 +70,8 @@ class MIMEDecoding extends Operation {
             if (fillerText.indexOf('\n') > 0) console.log('LF detected', fillerText.indexOf('\n'));
             if (fillerText.indexOf('\r\n') > 0) console.log('CRLF detected', fillerText.indexOf('\r\n'));
             if (fillerText.indexOf('\x20') > 0) console.log('SPACE detected', fillerText.indexOf('\x20'));
-            
+            if (fillerText.indexOf('\n\x20') > 0) console.log('newline SPACE detected', fillerText.indexOf('\x20'));
+
             if (fillerText !== '\r\n')
                 parsedString += fillerText
 
@@ -90,20 +88,6 @@ class MIMEDecoding extends Operation {
         }
 
         return parsedString;
-        // let cleansedWord;
-        // for (let word of encodedWords) {
-        //     cleansedWord = word.replace('=?', '').replace('?=', '').split('?');
-        //     let charset = cleansedWord[0];
-        //     let encoding = cleansedWord[1];
-        //     let encodedText = cleansedWord[2];
-
-        //     if (encoding.toLowerCase() === 'b') {
-        //         encodedText = fromBase64(encodedText);
-        //     }
-
-        //     console.log(cleansedWord);
-        // }
-
 
         throw new OperationError("Test");
     }
@@ -119,6 +103,14 @@ class MIMEDecoding extends Operation {
             encodedText = fromBase64(encodedBlock);
         } else {
             encodedText = encodedBlock;
+            let encodedChars = encodedText.indexOf("=");
+            if (encodedChars > 0) {
+                let extractedHex = encodedText.substring(encodedChars + 1, encodedChars + 3);
+                console.log("EXTRACTED HEX", extractedHex)
+                encodedText = encodedText.replace(`=${extractedHex}`, Utils.byteArrayToChars(fromHex(`=${extractedHex}`)))
+            }
+
+            encodedText = encodedText.replace("_", " ");
         }
 
         return encodedText;
