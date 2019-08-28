@@ -270,11 +270,7 @@ module.exports = function (grunt) {
                     {
                         src: "build/prod/index.html",
                         dest: "build/prod/index.html"
-                    },
-                    {
-                        expand: true,
-                        dest: "build/prod/"
-                    },
+                    }
                 ]
             },
             standalone: {
