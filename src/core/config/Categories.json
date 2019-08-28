@@ -378,6 +378,7 @@
             "Remove EXIF",
             "Extract EXIF",
             "Split Colour Channels",
+            "Extract RGBA",
             "View Bit Plane",
             "Extract LSB",
             "Rotate Image",
