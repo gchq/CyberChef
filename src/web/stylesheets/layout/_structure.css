@@ -45,6 +45,10 @@ div#output {
     position: relative;
 }
 
+#operations {
+    overflow: auto;
+}
+
 .split.split-horizontal, .gutter.gutter-horizontal {
     height: 100%;
     float: left;
