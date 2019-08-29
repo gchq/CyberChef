@@ -380,6 +380,7 @@
             "Split Colour Channels",
             "Extract RGBA",
             "View Bit Plane",
+            "Randomize Colour Palette",
             "Extract LSB",
             "Rotate Image",
             "Resize Image",
