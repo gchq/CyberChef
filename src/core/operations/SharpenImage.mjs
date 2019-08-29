@@ -62,7 +62,7 @@ class SharpenImage extends Operation {
     async run(input, args) {
         const [radius, amount, threshold] = args;
 
-        if (!isImage(new Uint8Array(input))){
+        if (!isImage(new Uint8Array(input))) {
             throw new OperationError("Invalid file type.");
         }
 

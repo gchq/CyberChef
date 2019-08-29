@@ -52,17 +52,10 @@ module.exports = function (grunt) {
         "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
         ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:testESMDeepImportNodeConsumer", "exec:teardownNodeConsumers"]);
 
-    grunt.registerTask("docs",
-        "Compiles documentation in the /docs directory.",
-        ["clean:docs", "jsdoc", "chmod:docs"]);
-
-
     grunt.registerTask("default",
         "Lints the code base",
         ["eslint", "exec:repoSize"]);
 
-
-    grunt.registerTask("doc", "docs");
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
 
@@ -70,7 +63,6 @@ module.exports = function (grunt) {
     // Load tasks provided by each plugin
     grunt.loadNpmTasks("grunt-eslint");
     grunt.loadNpmTasks("grunt-webpack");
-    grunt.loadNpmTasks("grunt-jsdoc");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-watch");
@@ -117,7 +109,6 @@ module.exports = function (grunt) {
             node: ["build/node/*"],
             config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
             nodeConfig: ["src/node/index.mjs", "src/node/config/OperationConfig.json"],
-            docs: ["docs/*", "!docs/*.conf.json", "!docs/*.ico", "!docs/*.png"],
             standalone: ["build/prod/CyberChef*.html"]
         },
         eslint: {
@@ -129,22 +120,6 @@ module.exports = function (grunt) {
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
             node: ["src/node/**/*.{js,mjs}"],
             tests: ["tests/**/*.{js,mjs}"],
-        },
-        jsdoc: {
-            options: {
-                destination: "docs",
-                template: "node_modules/ink-docstrap/template",
-                recurse: true,
-                readme: "./README.md",
-                configure: "docs/jsdoc.conf.json"
-            },
-            all: {
-                src: [
-                    "src/**/*.js",
-                    "src/**/*.mjs",
-                    "!src/core/vendor/**/*"
-                ],
-            }
         },
         accessibility: {
             options: {
@@ -295,12 +270,7 @@ module.exports = function (grunt) {
                     {
                         src: "build/prod/index.html",
                         dest: "build/prod/index.html"
-                    },
-                    {
-                        expand: true,
-                        src: "docs/**",
-                        dest: "build/prod/"
-                    },
+                    }
                 ]
             },
             standalone: {
@@ -332,12 +302,6 @@ module.exports = function (grunt) {
                     mode: "755",
                 },
                 src: ["build/**/*", "build/"]
-            },
-            docs: {
-                options: {
-                    mode: "755",
-                },
-                src: ["docs/**/*", "docs/"]
             }
         },
         watch: {

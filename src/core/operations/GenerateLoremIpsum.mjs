@@ -47,7 +47,7 @@ class GenerateLoremIpsum extends Operation {
      */
     run(input, args) {
         const [length, lengthType] = args;
-        if (length < 1){
+        if (length < 1) {
             throw new OperationError("Length must be greater than 0");
         }
         switch (lengthType) {

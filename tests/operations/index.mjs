@@ -26,6 +26,7 @@ import "./tests/BitwiseOp";
 import "./tests/ByteRepr";
 import "./tests/CartesianProduct";
 import "./tests/CharEnc";
+import "./tests/ChangeIPFormat";
 import "./tests/Charts";
 import "./tests/Checksum";
 import "./tests/Ciphers";
@@ -88,6 +89,7 @@ import "./tests/BLAKE2s";
 import "./tests/Protobuf";
 import "./tests/ParseSSHHostKey";
 import "./tests/DefangIP";
+import "./tests/ParseUDP";
 
 // Cannot test operations that use the File type yet
 //import "./tests/SplitColourChannels";

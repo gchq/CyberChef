@@ -337,6 +337,29 @@
     fill: var(--primary-font-colour);
 }
 
+.pulse {
+    box-shadow: 0 0 0 0 rgba(90, 153, 212, .3);
+    animation: pulse 1.5s 1;
+}
+
+.pulse:hover {
+    animation-play-state: paused;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 20px rgba(90, 153, 212, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+    }
+}
+
 #input-find-options,
 #output-find-options {
     display: flex;

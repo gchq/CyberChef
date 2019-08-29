@@ -58,7 +58,7 @@ class FlipImage extends Operation {
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Flipping image...");
-            switch (flipAxis){
+            switch (flipAxis) {
                 case "Horizontal":
                     image.flip(true, false);
                     break;

@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
 [![dependencies Status](https://david-dm.org/gchq/CyberChef/status.svg)](https://david-dm.org/gchq/CyberChef)
 [![npm](https://img.shields.io/npm/v/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
-![](https://reposs.herokuapp.com/?path=gchq/CyberChef&color=blue)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
 [![Gitter](https://badges.gitter.im/gchq/CyberChef.svg)](https://gitter.im/gchq/CyberChef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
@@ -77,9 +76,9 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 CyberChef is built to support
 
- - Google Chrome 40+
- - Mozilla Firefox 35+
- - Microsoft Edge 14+
+ - Google Chrome 50+
+ - Mozilla Firefox 38+
+
 
 ## Node.js support
 

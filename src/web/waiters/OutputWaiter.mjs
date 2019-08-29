@@ -217,6 +217,9 @@ class OutputWaiter {
      */
     removeAllOutputs() {
         this.outputs = {};
+
+        this.resetSwitch();
+
         const tabsList = document.getElementById("output-tabs");
         const tabsListChildren = tabsList.children;
 
@@ -516,9 +519,10 @@ class OutputWaiter {
             this.app.alert("Could not find any output data to download. Has this output been baked?", 3000);
             return;
         }
-        let fileName = window.prompt("Please enter a filename: ", "download.dat");
+        const fileName = window.prompt("Please enter a filename: ", "download.dat");
 
-        if (fileName === null) fileName = "download.dat";
+        // Assume if the user clicks cancel they don't want to download
+        if (fileName === null) return;
 
         const data = await dish.get(Dish.ARRAY_BUFFER),
             file = new File([data], fileName);
@@ -529,12 +533,22 @@ class OutputWaiter {
      * Handler for save all click event
      * Saves all outputs to a single archvie file
      */
-    saveAllClick() {
+    async saveAllClick() {
         const downloadButton = document.getElementById("save-all-to-file");
         if (downloadButton.firstElementChild.innerHTML === "archive") {
             this.downloadAllFiles();
-        } else if (window.confirm("Cancel zipping of outputs?")) {
-            this.terminateZipWorker();
+        } else {
+            const cancel = await new Promise(function(resolve, reject) {
+                this.app.confirm(
+                    "Cancel zipping?",
+                    "The outputs are currently being zipped for download.<br>Cancel zipping?",
+                    "Continue zipping",
+                    "Cancel zipping",
+                    resolve, this);
+            }.bind(this));
+            if (!cancel) {
+                this.terminateZipWorker();
+            }
         }
     }
 
@@ -544,57 +558,61 @@ class OutputWaiter {
      * be zipped for download
      */
     async downloadAllFiles() {
-        return new Promise(resolve => {
-            const inputNums = Object.keys(this.outputs);
-            for (let i = 0; i < inputNums.length; i++) {
-                const iNum = inputNums[i];
-                if (this.outputs[iNum].status !== "baked" ||
-                this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
-                    if (window.confirm("Not all outputs have been baked yet. Continue downloading outputs?")) {
-                        break;
-                    } else {
-                        return;
-                    }
+        const inputNums = Object.keys(this.outputs);
+        for (let i = 0; i < inputNums.length; i++) {
+            const iNum = inputNums[i];
+            if (this.outputs[iNum].status !== "baked" ||
+            this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
+                const continueDownloading = await new Promise(function(resolve, reject) {
+                    this.app.confirm(
+                        "Incomplete outputs",
+                        "Not all outputs have been baked yet. Continue downloading outputs?",
+                        "Download", "Cancel", resolve, this);
+                }.bind(this));
+                if (continueDownloading) {
+                    break;
+                } else {
+                    return;
                 }
             }
+        }
 
-            let fileName = window.prompt("Please enter a filename: ", "download.zip");
+        let fileName = window.prompt("Please enter a filename: ", "download.zip");
 
-            if (fileName === null || fileName === "") {
-                // Don't zip the files if there isn't a filename
-                this.app.alert("No filename was specified.", 3000);
-                return;
-            }
+        if (fileName === null || fileName === "") {
+            // Don't zip the files if there isn't a filename
+            this.app.alert("No filename was specified.", 3000);
+            return;
+        }
 
-            if (!fileName.match(/.zip$/)) {
-                fileName += ".zip";
-            }
+        if (!fileName.match(/.zip$/)) {
+            fileName += ".zip";
+        }
 
-            let fileExt = window.prompt("Please enter a file extension for the files, or leave blank to detect automatically.", "");
+        let fileExt = window.prompt("Please enter a file extension for the files, or leave blank to detect automatically.", "");
 
-            if (fileExt === null) fileExt = "";
+        if (fileExt === null) fileExt = "";
 
-            if (this.zipWorker !== null) {
-                this.terminateZipWorker();
-            }
+        if (this.zipWorker !== null) {
+            this.terminateZipWorker();
+        }
 
-            const downloadButton = document.getElementById("save-all-to-file");
+        const downloadButton = document.getElementById("save-all-to-file");
 
-            downloadButton.classList.add("spin");
-            downloadButton.title = `Zipping ${inputNums.length} files...`;
-            downloadButton.setAttribute("data-original-title", `Zipping ${inputNums.length} files...`);
+        downloadButton.classList.add("spin");
+        downloadButton.title = `Zipping ${inputNums.length} files...`;
+        downloadButton.setAttribute("data-original-title", `Zipping ${inputNums.length} files...`);
 
-            downloadButton.firstElementChild.innerHTML = "autorenew";
+        downloadButton.firstElementChild.innerHTML = "autorenew";
 
-            log.debug("Creating ZipWorker");
-            this.zipWorker = new ZipWorker();
-            this.zipWorker.postMessage({
-                outputs: this.outputs,
-                filename: fileName,
-                fileExtension: fileExt
-            });
-            this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
+        log.debug("Creating ZipWorker");
+        this.zipWorker = new ZipWorker();
+        this.zipWorker.postMessage({
+            outputs: this.outputs,
+            filename: fileName,
+            fileExtension: fileExt
         });
+        this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
     }
 
     /**
@@ -1065,6 +1083,7 @@ class OutputWaiter {
         magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
+        magicButton.classList.add("pulse");
     }
 
 
@@ -1074,6 +1093,7 @@ class OutputWaiter {
     hideMagicButton() {
         const magicButton = document.getElementById("magic");
         magicButton.classList.add("hidden");
+        magicButton.classList.remove("pulse");
         magicButton.setAttribute("data-recipe", "");
         magicButton.setAttribute("data-original-title", "Magic!");
     }
@@ -1213,14 +1233,39 @@ class OutputWaiter {
      * Moves the current output into the input textarea.
      */
     async switchClick() {
-        const active = await this.getDishBuffer(this.getOutputDish(this.manager.tabs.getActiveOutputTab()));
+        const activeTab = this.manager.tabs.getActiveOutputTab();
+        const transferable = [];
+
+        const switchButton = document.getElementById("switch");
+        switchButton.classList.add("spin");
+        switchButton.disabled = true;
+        switchButton.firstElementChild.innerHTML = "autorenew";
+        $(switchButton).tooltip("hide");
+
+        let active = await this.getDishBuffer(this.getOutputDish(activeTab));
+
+        if (!this.outputExists(activeTab)) {
+            this.resetSwitchButton();
+            return;
+        }
+
+        if (this.outputs[activeTab].data.type === "string" &&
+            active.byteLength <= this.app.options.ioDisplayThreshold * 1024) {
+            const dishString = await this.getDishStr(this.getOutputDish(activeTab));
+            if (!await this.manager.input.preserveCarriageReturns(dishString)) {
+                active = dishString;
+            }
+        } else {
+            transferable.push(active);
+        }
+
         this.manager.input.inputWorker.postMessage({
             action: "inputSwitch",
             data: {
-                inputNum: this.manager.tabs.getActiveInputTab(),
+                inputNum: activeTab,
                 outputData: active
             }
-        }, [active]);
+        }, transferable);
     }
 
     /**
@@ -1238,6 +1283,9 @@ class OutputWaiter {
     inputSwitch(switchData) {
         this.switchOrigData = switchData;
         document.getElementById("undo-switch").disabled = false;
+
+        this.resetSwitchButton();
+
     }
 
     /**
@@ -1246,17 +1294,35 @@ class OutputWaiter {
      */
     undoSwitchClick() {
         this.manager.input.updateInputObj(this.switchOrigData.inputNum, this.switchOrigData.data);
+
+        this.manager.input.fileLoaded(this.switchOrigData.inputNum);
+
+        this.resetSwitch();
+    }
+
+    /**
+     * Removes the switch data and resets the switch buttons
+     */
+    resetSwitch() {
+        if (this.switchOrigData !== undefined) {
+            delete this.switchOrigData;
+        }
+
         const undoSwitch = document.getElementById("undo-switch");
         undoSwitch.disabled = true;
         $(undoSwitch).tooltip("hide");
 
-        this.manager.input.inputWorker.postMessage({
-            action: "setInput",
-            data: {
-                inputNum: this.switchOrigData.inputNum,
-                silent: false
-            }
-        });
+        this.resetSwitchButton();
+    }
+
+    /**
+     * Resets the switch button to its usual state
+     */
+    resetSwitchButton() {
+        const switchButton = document.getElementById("switch");
+        switchButton.classList.remove("spin");
+        switchButton.disabled = false;
+        switchButton.firstElementChild.innerHTML = "open_in_browser";
     }
 
     /**

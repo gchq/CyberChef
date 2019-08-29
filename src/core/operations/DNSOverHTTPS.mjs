@@ -111,7 +111,7 @@ class DNSOverHTTPS extends Operation {
  * @returns {JSON}
  */
 function extractData(data) {
-    if (typeof(data) == "undefined"){
+    if (typeof(data) == "undefined") {
         return [];
     } else {
         const dataValues = [];

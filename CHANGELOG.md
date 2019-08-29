@@ -2,11 +2,12 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
-### [9.2.0] - 2019-08-13
-- 'Defang IP Addresses' operation added [@h345983745] | [#556]
+### [9.2.0] - 2019-08-23
+- 'Parse UDP' operation added [@h345983745] | [#614]
 
-### [9.1.0] - 2019-08-13
+### [9.1.0] - 2019-08-22
 - 'Parse SSH Host Key' operation added [@j433866] | [#595]
+- 'Defang IP Addresses' operation added [@h345983745] | [#556]
 
 ## [9.0.0] - 2019-07-09
 - [Multiple inputs](https://github.com/gchq/CyberChef/wiki/Multiple-Inputs) are now supported in the main web UI, allowing you to upload and process multiple files at once [@j433866] | [#566]
@@ -14,6 +15,9 @@ All major and minor version changes will be documented in this file. Details of 
 - A [read-eval-print loop (REPL)](https://github.com/gchq/CyberChef/wiki/Node-API#repl) is also included to enable prototyping and experimentation with the API [@d98762625] | [#291]
 - Light and dark Solarized themes added [@j433866] | [#566]
 
+<details>
+    <summary>Click to expand v8 minor versions</summary>
+    
 ### [8.38.0] - 2019-07-03
 - 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
 
@@ -134,6 +138,8 @@ All major and minor version changes will be documented in this file. Details of 
 
 ### [8.1.0] - 2018-08-19
 - 'Dechunk HTTP response' operation added [@sevzero] | [#311]
+
+</details>
 
 ## [8.0.0] - 2018-08-05
 - Codebase rewritten using [ES modules](https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/) and [classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) [@n1474335] [@d98762625] [@artemisbot] [@picapi] | [#284]
@@ -289,3 +295,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#585]: https://github.com/gchq/CyberChef/pull/585
 [#591]: https://github.com/gchq/CyberChef/pull/591
 [#595]: https://github.com/gchq/CyberChef/pull/595
+[#614]: https://github.com/gchq/CyberChef/pull/614

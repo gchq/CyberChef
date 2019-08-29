@@ -123,9 +123,9 @@
                 document.getElementById("preloader-error").innerHTML =
                     "CyberChef encountered an error while loading.<br><br>" +
                     "The following browser versions are supported:" +
-                    "<ul><li>Google Chrome 40+</li><li>Mozilla Firefox 35+</li><li>Microsoft Edge 14+</li></ul>" +
+                    "<ul><li>Google Chrome 50+</li><li>Mozilla Firefox 38+</li></ul>" +
                     "Your user agent is:<br>" + escapeHtml(navigator.userAgent) + "<br><br>" +
-                    "If your browser is supported, please <a href='https://github.com/gchq/CyberChef/issues/new'>" +
+                    "If your browser is supported, please <a href='https://github.com/gchq/CyberChef/issues/new/choose'>" +
                     "raise an issue</a> including the following details:<br><br>" +
                     "<pre>" + escapeHtml(msg) + "</pre>";
             };
@@ -563,16 +563,23 @@
                         <div class="checkbox option-item">
                             <label for="imagePreview">
                                 <input type="checkbox" option="imagePreview" id="imagePreview">
-                                Render a preview of the input if it's detected to be an image.
+                                Render a preview of the input if it's detected to be an image
                             </label>
                         </div>
 
                         <div class="checkbox option-item">
-                                <label for="syncTabs">
-                                    <input type="checkbox" option="syncTabs" id="syncTabs">
-                                    Keep the current tab in sync between the input and output.
-                                </label>
-                            </div>
+                            <label for="syncTabs">
+                                <input type="checkbox" option="syncTabs" id="syncTabs">
+                                Keep the current tab in sync between the input and output
+                            </label>
+                        </div>
+
+                        <div class="checkbox option-item">
+                            <label for="preserveCR" data-toggle="tooltip" data-placement="right" data-html="true" title="As HTML textareas don't support carriage returns, editing input must be turned off to preserve them.<br><br>When this option is enabled, editing is disabled for pasted text that contains carriage returns. Otherwise, editing will remain enabled but carriage returns will not be preserved.">
+                                <input type="checkbox" option="preserveCR" id="preserveCR">
+                                Preserve carriage returns when pasting an input
+                            </label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="reset-options">Reset options to default</button>
@@ -702,7 +709,7 @@
                                 <br>
                                 <pre id="report-bug-info"></pre>
                                 <br>
-                                <a class="btn btn-primary" href="https://github.com/gchq/CyberChef/issues/new" role="button">Raise issue on GitHub</a>
+                                <a class="btn btn-primary" href="https://github.com/gchq/CyberChef/issues/new/choose" role="button">Raise issue on GitHub</a>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="about" style="padding: 20px;">
                                 <h5><strong>What</strong></h5>

@@ -48,7 +48,7 @@ class ImageFilter extends Operation {
      */
     async run(input, args) {
         const [filterType] = args;
-        if (!isImage(new Uint8Array(input))){
+        if (!isImage(new Uint8Array(input))) {
             throw new OperationError("Invalid file type.");
         }
 

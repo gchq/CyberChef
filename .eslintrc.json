@@ -43,6 +43,7 @@
 
         // stylistic conventions
         "brace-style": ["error", "1tbs"],
+        "space-before-blocks": ["error", "always"],
         "block-spacing": "error",
         "array-bracket-spacing": "error",
         "comma-spacing": "error",

@@ -327,13 +327,13 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
  * @param {string} input - The input data to be split
  * @returns {number[]} An array of the different items in the string, stored as floats
  */
-function splitInput (input){
+function splitInput (input) {
     const split = [];
 
     input.split(/\s+/).forEach(item => {
         // Remove any character that isn't a digit, decimal point or negative sign
         item = item.replace(/[^0-9.-]/g, "");
-        if (item.length > 0){
+        if (item.length > 0) {
             // Turn the item into a float
             split.push(parseFloat(item));
         }
@@ -350,7 +350,7 @@ function splitInput (input){
  * @param {number} precision - The precision the result should be rounded to
  * @returns {{string: string, degrees: number}} An object containing the raw converted value (obj.degrees), and a formatted string version (obj.string)
  */
-function convDMSToDD (degrees, minutes, seconds, precision){
+function convDMSToDD (degrees, minutes, seconds, precision) {
     const absDegrees = Math.abs(degrees);
     let conv = absDegrees + (minutes / 60) + (seconds / 3600);
     let outString = round(conv, precision) + "°";
@@ -566,7 +566,7 @@ export function findFormat (input, delim) {
     // Test DMS/DDM/DD formats
     if (testData !== undefined) {
         const split = splitInput(testData);
-        switch (split.length){
+        switch (split.length) {
             case 3:
                 return "Degrees Minutes Seconds";
             case 2:

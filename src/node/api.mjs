@@ -295,7 +295,7 @@ export function help(input) {
  * bake [Wrapped] - Perform an array of operations on some input.
  * @returns {Function}
  */
-export function bake(){
+export function bake() {
 
     /**
      * bake

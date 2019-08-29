@@ -109,7 +109,7 @@ export function mean(data) {
  */
 export function median(data) {
     if ((data.length % 2) === 0 && data.length > 0) {
-        data.sort(function(a, b){
+        data.sort(function(a, b) {
             return a.minus(b);
         });
         const first = data[Math.floor(data.length / 2)];

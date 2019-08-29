@@ -34,7 +34,7 @@ class MicrosoftScriptDecoder extends Operation {
     run(input, args) {
         const matcher = /#@~\^.{6}==(.+).{6}==\^#~@/;
         const encodedData = matcher.exec(input);
-        if (encodedData){
+        if (encodedData) {
             return MicrosoftScriptDecoder._decode(encodedData[1]);
         } else {
             return "";
