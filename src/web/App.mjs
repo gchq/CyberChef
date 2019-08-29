@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Utils from "../core/Utils";
+import Utils, { debounce } from "../core/Utils";
 import {fromBase64} from "../core/lib/Base64";
 import Manager from "./Manager";
 import HTMLCategory from "./HTMLCategory";
@@ -41,7 +41,6 @@ class App {
         this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
-        this.timeouts      = {};
     }
 
 
@@ -295,7 +294,7 @@ class App {
             minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
             expandToMin: true,
-            onDrag: this.debounce(function() {
+            onDrag: debounce(function() {
                 this.manager.recipe.adjustWidth();
                 this.manager.input.calcMaxTabs();
                 this.manager.output.calcMaxTabs();
@@ -723,6 +722,7 @@ class App {
         this.updateTitle(false, null, true);
     }
 
+
     /**
      * Update the page title to contain the new recipe
      *
@@ -764,29 +764,6 @@ class App {
      */
     popState(e) {
         this.loadURIParams();
-    }
-
-
-    /**
-     * Debouncer to stop functions from being executed multiple times in a
-     * short space of time
-     * https://davidwalsh.name/javascript-debounce-function
-     *
-     * @param {function} func - The function to be executed after the debounce time
-     * @param {number} wait - The time (ms) to wait before executing the function
-     * @param {string} id - Unique ID to reference the timeout for the function
-     * @param {object} scope - The object to bind to the debounced function
-     * @param {array} args - Array of arguments to be passed to func
-     * @returns {function}
-     */
-    debounce(func, wait, id, scope, args) {
-        return function() {
-            const later = function() {
-                func.apply(scope, args);
-            };
-            clearTimeout(this.timeouts[id]);
-            this.timeouts[id] = setTimeout(later, wait);
-        }.bind(this);
     }
 
 }

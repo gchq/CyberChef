@@ -5,9 +5,9 @@
  * @license Apache-2.0
  */
 
-import LoaderWorker from "worker-loader?inline&fallback=false!../workers/LoaderWorker";
-import InputWorker from "worker-loader?inline&fallback=false!../workers/InputWorker";
-import Utils from "../../core/Utils.mjs";
+import LoaderWorker from "worker-loader?inline&fallback=false!../workers/LoaderWorker.js";
+import InputWorker from "worker-loader?inline&fallback=false!../workers/InputWorker.mjs";
+import Utils, { debounce } from "../../core/Utils.mjs";
 import { toBase64 } from "../../core/lib/Base64.mjs";
 import { isImage } from "../../core/lib/FileType.mjs";
 
@@ -270,7 +270,7 @@ class InputWaiter {
                 this.showLoadingInfo(r.data, true);
                 break;
             case "setInput":
-                this.app.debounce(this.set, 50, "setInput", this, [r.data.inputObj, r.data.silent])();
+                debounce(this.set, 50, "setInput", this, [r.data.inputObj, r.data.silent])();
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
@@ -316,7 +316,7 @@ class InputWaiter {
      */
     bakeAll() {
         this.app.progress = 0;
-        this.app.debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, ["loading"]);
+        debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, ["loading"]);
         this.inputWorker.postMessage({
             action: "bakeAll"
         });
@@ -681,7 +681,7 @@ class InputWaiter {
      * @param {event} e
      */
     debounceInputChange(e) {
-        this.app.debounce(this.inputChange, 50, "inputChange", this, [e])();
+        debounce(this.inputChange, 50, "inputChange", this, [e])();
     }
 
     /**

@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import { debounce } from "../../core/Utils.mjs";
+
 /**
  * Waiter to handle events related to the window object.
  */
@@ -25,7 +27,7 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
-        this.app.debounce(this.app.resetLayout, 200, "windowResize", this.app, [])();
+        debounce(this.app.resetLayout, 200, "windowResize", this.app, [])();
     }
 
 

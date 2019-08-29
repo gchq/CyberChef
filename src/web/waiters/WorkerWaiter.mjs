@@ -5,8 +5,9 @@
  * @license Apache-2.0
  */
 
-import ChefWorker from "worker-loader?inline&fallback=false!../../core/ChefWorker";
-import DishWorker from "worker-loader?inline&fallback=false!../workers/DishWorker";
+import ChefWorker from "worker-loader?inline&fallback=false!../../core/ChefWorker.js";
+import DishWorker from "worker-loader?inline&fallback=false!../workers/DishWorker.mjs";
+import { debounce } from "../../core/Utils.mjs";
 
 /**
  * Waiter to handle conversations with the ChefWorker
@@ -281,7 +282,7 @@ class WorkerWaiter {
      */
     setBakingStatus(bakingStatus) {
         this.app.baking = bakingStatus;
-        this.app.debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, [bakingStatus ? "cancel" : "bake"])();
+        debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, [bakingStatus ? "cancel" : "bake"])();
 
         if (bakingStatus) this.manager.output.hideMagicButton();
     }

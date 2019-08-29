@@ -45,7 +45,7 @@ div#output {
     position: relative;
 }
 
-#operations {
+#operations.split {
     overflow: auto;
 }
 

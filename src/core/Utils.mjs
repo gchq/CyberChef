@@ -1303,6 +1303,30 @@ export function sendStatusMessage(msg) {
         console.debug(msg);
 }
 
+const debounceTimeouts = {};
+
+/**
+ * Debouncer to stop functions from being executed multiple times in a
+ * short space of time
+ * https://davidwalsh.name/javascript-debounce-function
+ *
+ * @param {function} func - The function to be executed after the debounce time
+ * @param {number} wait - The time (ms) to wait before executing the function
+ * @param {string} id - Unique ID to reference the timeout for the function
+ * @param {object} scope - The object to bind to the debounced function
+ * @param {array} args - Array of arguments to be passed to func
+ * @returns {function}
+ */
+export function debounce(func, wait, id, scope, args) {
+    return function() {
+        const later = function() {
+            func.apply(scope, args);
+        };
+        clearTimeout(debounceTimeouts[id]);
+        debounceTimeouts[id] = setTimeout(later, wait);
+    };
+}
+
 
 /*
  * Polyfills

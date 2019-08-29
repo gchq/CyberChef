@@ -5,10 +5,10 @@
  * @license Apache-2.0
  */
 
-import Utils from "../../core/Utils.mjs";
+import Utils, { debounce } from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
-import ZipWorker from "worker-loader?inline&fallback=false!../workers/ZipWorker";
+import ZipWorker from "worker-loader?inline&fallback=false!../workers/ZipWorker.mjs";
 
 /**
   * Waiter to handle events related to the output
@@ -369,7 +369,7 @@ class OutputWaiter {
                 }
 
                 this.setOutputInfo(length, lines, output.data.duration);
-                this.backgroundMagic();
+                debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
             }
         }.bind(this));
     }
@@ -717,7 +717,7 @@ class OutputWaiter {
             }
         }
 
-        this.app.debounce(this.set, 50, "setOutput", this, [inputNum])();
+        debounce(this.set, 50, "setOutput", this, [inputNum])();
 
         document.getElementById("output-html").scroll(0, 0);
         document.getElementById("output-text").scroll(0, 0);
