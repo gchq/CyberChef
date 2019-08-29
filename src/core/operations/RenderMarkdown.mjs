@@ -4,8 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import MarkdownIt from "markdown-it";
+import hljs from "highlight.js";
 
 /**
  * Render Markdown operation
@@ -20,7 +21,7 @@ class RenderMarkdown extends Operation {
 
         this.name = "Render Markdown";
         this.module = "Default";
-        this.description = "Renders Markdown as HTML.";
+        this.description = "Renders input Markdown as HTML.";
         this.infoURL = "https://wikipedia.org/wiki/Markdown";
         this.inputType = "string";
         this.outputType = "html";
@@ -31,9 +32,9 @@ class RenderMarkdown extends Operation {
                 value: false
             },
             {
-                name: "Convert \\n to &lt;br&gt;",
+                name: "Enable syntax highlighting",
                 type: "boolean",
-                value: false
+                value: true
             }
         ];
     }
@@ -44,10 +45,19 @@ class RenderMarkdown extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [convertLinks, convertNewLine] = args,
+        const [convertLinks, enableHighlighting] = args,
             md = new MarkdownIt({
-                breaks: convertNewLine,
-                linkify: convertLinks
+                linkify: convertLinks,
+                html: false, // Explicitly disable HTML rendering
+                highlight: function(str, lang) {
+                    if (lang && hljs.getLanguage(lang) && enableHighlighting) {
+                        try {
+                            return hljs.highlight(lang, str).value;
+                        } catch (__) {}
+                    }
+
+                    return "";
+                }
             }),
             rendered = md.render(input);
 
