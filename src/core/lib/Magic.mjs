@@ -1,7 +1,8 @@
 import OperationConfig from "../config/OperationConfig.json";
-import Utils from "../Utils";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
+import Utils, { isWorkerEnvironment } from "../Utils.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
+import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
 
 /**
@@ -92,7 +93,14 @@ class Magic {
      * @returns {string} [type.desc] - Description
      */
     detectFileType() {
-        return Magic.magicFileType(this.inputBuffer);
+        const fileType = detectFileType(this.inputBuffer);
+
+        if (!fileType.length) return null;
+        return {
+            ext: fileType[0].extension,
+            mime: fileType[0].mime,
+            desc: fileType[0].description
+        };
     }
 
     /**
@@ -265,10 +273,10 @@ class Magic {
      *                                      performance)
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
      * @param {boolean} [useful=false] - Whether the current recipe should be scored highly
-     * @param {string} [filter=null] - The regex crib provided by the user, to filter the operation output
+     * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation output
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
-    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, filter=null) {
+    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null) {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
@@ -277,20 +285,17 @@ class Magic {
         let results = [];
 
         // Record the properties of the current data
-        // Only if there either wasn't a filter provided,
-        // or the filter matches in the data
-        if (filter == null || new RegExp(filter).test(this.inputStr)){
-            results.push({
-                recipe: recipeConfig,
-                data: this.inputStr.slice(0, 100),
-                languageScores: this.detectLanguage(extLang),
-                fileType: this.detectFileType(),
-                isUTF8: this.isUTF8(),
-                entropy: this.calcEntropy(),
-                matchingOps: matchingOps,
-                useful: useful
-            });
-        }
+        results.push({
+            recipe: recipeConfig,
+            data: this.inputStr.slice(0, 100),
+            languageScores: this.detectLanguage(extLang),
+            fileType: this.detectFileType(),
+            isUTF8: this.isUTF8(),
+            entropy: this.calcEntropy(),
+            matchingOps: matchingOps,
+            useful: useful,
+            matchesCrib: crib && crib.test(this.inputStr)
+        });
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
         // Execute each of the matching operations, then recursively call the speculativeExecution()
@@ -307,9 +312,14 @@ class Magic {
                 return;
             }
 
+            // If the recipe returned an empty buffer, do not continue
+            if (_buffersEqual(output, new ArrayBuffer())) {
+                return;
+            }
+
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
-                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, filter);
+                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
 
             results = results.concat(speculativeResults);
         }));
@@ -321,14 +331,14 @@ class Magic {
             await Promise.all(bfEncodings.map(async enc => {
                 const magic = new Magic(enc.data, this.opPatterns),
                     bfResults = await magic.speculativeExecution(
-                        depth-1, extLang, false, [...recipeConfig, enc.conf], useful, filter);
+                        depth-1, extLang, false, [...recipeConfig, enc.conf], false, crib);
 
                 results = results.concat(bfResults);
             }));
         }
 
         // Prune branches that result in unhelpful outputs
-        results = results.filter(r =>
+        const prunedResults = results.filter(r =>
             (r.useful || r.data.length > 0) &&          // The operation resulted in ""
             (                                           // One of the following must be true
                 r.languageScores[0].probability > 0 ||    // Some kind of language was found
@@ -339,7 +349,7 @@ class Magic {
         );
 
         // Return a sorted list of possible recipes along with their properties
-        return results.sort((a, b) => {
+        return prunedResults.sort((a, b) => {
             // Each option is sorted based on its most likely language (lower is better)
             let aScore = a.languageScores[0].score,
                 bScore = b.languageScores[0].score;
@@ -385,12 +395,17 @@ class Magic {
         const dish = new Dish();
         dish.set(input, Dish.ARRAY_BUFFER);
 
-        if (ENVIRONMENT_IS_WORKER()) self.loadRequiredModules(recipeConfig);
+        if (isWorkerEnvironment()) self.loadRequiredModules(recipeConfig);
 
         const recipe = new Recipe(recipeConfig);
         try {
             await recipe.execute(dish);
-            return dish.get(Dish.ARRAY_BUFFER);
+            // Return an empty buffer if the recipe did not run to completion
+            if (recipe.lastRunOp === recipe.opList[recipe.opList.length - 1]) {
+                return dish.get(Dish.ARRAY_BUFFER);
+            } else {
+                return new ArrayBuffer();
+            }
         } catch (err) {
             // If there are errors, return an empty buffer
             return new ArrayBuffer();
@@ -435,7 +450,7 @@ class Magic {
         const opPatterns = [];
 
         for (const op in OperationConfig) {
-            if (!OperationConfig[op].hasOwnProperty("patterns")) continue;
+            if (!("patterns" in OperationConfig[op])) continue;
 
             OperationConfig[op].patterns.forEach(pattern => {
                 opPatterns.push({
@@ -788,451 +803,8 @@ class Magic {
         }[code];
     }
 
-
-    /**
-     * Given a buffer, detects magic byte sequences at specific positions and returns the
-     * extension and mime type.
-     *
-     * @param {Uint8Array} buf
-     * @returns {Object} type
-     * @returns {string} type.ext - File extension
-     * @returns {string} type.mime - Mime type
-     * @returns {string} [type.desc] - Description
-     */
-    static magicFileType(buf) {
-        if (!(buf && buf.length > 1)) {
-            return null;
-        }
-
-        if (buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF) {
-            return {
-                ext: "jpg",
-                mime: "image/jpeg"
-            };
-        }
-
-        if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47) {
-            return {
-                ext: "png",
-                mime: "image/png"
-            };
-        }
-
-        if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) {
-            return {
-                ext: "gif",
-                mime: "image/gif"
-            };
-        }
-
-        if (buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50) {
-            return {
-                ext: "webp",
-                mime: "image/webp"
-            };
-        }
-
-        // needs to be before `tif` check
-        if (((buf[0] === 0x49 && buf[1] === 0x49 && buf[2] === 0x2A && buf[3] === 0x0) || (buf[0] === 0x4D && buf[1] === 0x4D && buf[2] === 0x0 && buf[3] === 0x2A)) && buf[8] === 0x43 && buf[9] === 0x52) {
-            return {
-                ext: "cr2",
-                mime: "image/x-canon-cr2"
-            };
-        }
-
-        if ((buf[0] === 0x49 && buf[1] === 0x49 && buf[2] === 0x2A && buf[3] === 0x0) || (buf[0] === 0x4D && buf[1] === 0x4D && buf[2] === 0x0 && buf[3] === 0x2A)) {
-            return {
-                ext: "tif",
-                mime: "image/tiff"
-            };
-        }
-
-        if (buf[0] === 0x42 && buf[1] === 0x4D) {
-            return {
-                ext: "bmp",
-                mime: "image/bmp"
-            };
-        }
-
-        if (buf[0] === 0x49 && buf[1] === 0x49 && buf[2] === 0xBC) {
-            return {
-                ext: "jxr",
-                mime: "image/vnd.ms-photo"
-            };
-        }
-
-        if (buf[0] === 0x38 && buf[1] === 0x42 && buf[2] === 0x50 && buf[3] === 0x53) {
-            return {
-                ext: "psd",
-                mime: "image/vnd.adobe.photoshop"
-            };
-        }
-
-        // needs to be before `zip` check
-        if (buf[0] === 0x50 && buf[1] === 0x4B && buf[2] === 0x3 && buf[3] === 0x4 && buf[30] === 0x6D && buf[31] === 0x69 && buf[32] === 0x6D && buf[33] === 0x65 && buf[34] === 0x74 && buf[35] === 0x79 && buf[36] === 0x70 && buf[37] === 0x65 && buf[38] === 0x61 && buf[39] === 0x70 && buf[40] === 0x70 && buf[41] === 0x6C && buf[42] === 0x69 && buf[43] === 0x63 && buf[44] === 0x61 && buf[45] === 0x74 && buf[46] === 0x69 && buf[47] === 0x6F && buf[48] === 0x6E && buf[49] === 0x2F && buf[50] === 0x65 && buf[51] === 0x70 && buf[52] === 0x75 && buf[53] === 0x62 && buf[54] === 0x2B && buf[55] === 0x7A && buf[56] === 0x69 && buf[57] === 0x70) {
-            return {
-                ext: "epub",
-                mime: "application/epub+zip"
-            };
-        }
-
-        if (buf[0] === 0x50 && buf[1] === 0x4B && (buf[2] === 0x3 || buf[2] === 0x5 || buf[2] === 0x7) && (buf[3] === 0x4 || buf[3] === 0x6 || buf[3] === 0x8)) {
-            return {
-                ext: "zip",
-                mime: "application/zip"
-            };
-        }
-
-        if (buf[257] === 0x75 && buf[258] === 0x73 && buf[259] === 0x74 && buf[260] === 0x61 && buf[261] === 0x72) {
-            return {
-                ext: "tar",
-                mime: "application/x-tar"
-            };
-        }
-
-        if (buf[0] === 0x52 && buf[1] === 0x61 && buf[2] === 0x72 && buf[3] === 0x21 && buf[4] === 0x1A && buf[5] === 0x7 && (buf[6] === 0x0 || buf[6] === 0x1)) {
-            return {
-                ext: "rar",
-                mime: "application/x-rar-compressed"
-            };
-        }
-
-        if (buf[0] === 0x1F && buf[1] === 0x8B && buf[2] === 0x8) {
-            return {
-                ext: "gz",
-                mime: "application/gzip"
-            };
-        }
-
-        if (buf[0] === 0x42 && buf[1] === 0x5A && buf[2] === 0x68) {
-            return {
-                ext: "bz2",
-                mime: "application/x-bzip2"
-            };
-        }
-
-        if (buf[0] === 0x37 && buf[1] === 0x7A && buf[2] === 0xBC && buf[3] === 0xAF && buf[4] === 0x27 && buf[5] === 0x1C) {
-            return {
-                ext: "7z",
-                mime: "application/x-7z-compressed"
-            };
-        }
-
-        if (buf[0] === 0x78 && buf[1] === 0x01) {
-            return {
-                ext: "dmg, zlib",
-                mime: "application/x-apple-diskimage, application/x-deflate"
-            };
-        }
-
-        if ((buf[0] === 0x0 && buf[1] === 0x0 && buf[2] === 0x0 && (buf[3] === 0x18 || buf[3] === 0x20) && buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70) || (buf[0] === 0x33 && buf[1] === 0x67 && buf[2] === 0x70 && buf[3] === 0x35) || (buf[0] === 0x0 && buf[1] === 0x0 && buf[2] === 0x0 && buf[3] === 0x1C && buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70 && buf[8] === 0x6D && buf[9] === 0x70 && buf[10] === 0x34 && buf[11] === 0x32 && buf[16] === 0x6D && buf[17] === 0x70 && buf[18] === 0x34 && buf[19] === 0x31 && buf[20] === 0x6D && buf[21] === 0x70 && buf[22] === 0x34 && buf[23] === 0x32 && buf[24] === 0x69 && buf[25] === 0x73 && buf[26] === 0x6F && buf[27] === 0x6D)) {
-            return {
-                ext: "mp4",
-                mime: "video/mp4"
-            };
-        }
-
-        if ((buf[0] === 0x0 && buf[1] === 0x0 && buf[2] === 0x0 && buf[3] === 0x1C && buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70 && buf[8] === 0x4D && buf[9] === 0x34 && buf[10] === 0x56)) {
-            return {
-                ext: "m4v",
-                mime: "video/x-m4v"
-            };
-        }
-
-        if (buf[0] === 0x4D && buf[1] === 0x54 && buf[2] === 0x68 && buf[3] === 0x64) {
-            return {
-                ext: "mid",
-                mime: "audio/midi"
-            };
-        }
-
-        // needs to be before the `webm` check
-        if (buf[31] === 0x6D && buf[32] === 0x61 && buf[33] === 0x74 && buf[34] === 0x72 && buf[35] === 0x6f && buf[36] === 0x73 && buf[37] === 0x6B && buf[38] === 0x61) {
-            return {
-                ext: "mkv",
-                mime: "video/x-matroska"
-            };
-        }
-
-        if (buf[0] === 0x1A && buf[1] === 0x45 && buf[2] === 0xDF && buf[3] === 0xA3) {
-            return {
-                ext: "webm",
-                mime: "video/webm"
-            };
-        }
-
-        if (buf[0] === 0x0 && buf[1] === 0x0 && buf[2] === 0x0 && buf[3] === 0x14 && buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70) {
-            return {
-                ext: "mov",
-                mime: "video/quicktime"
-            };
-        }
-
-        if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 && buf[8] === 0x41 && buf[9] === 0x56 && buf[10] === 0x49) {
-            return {
-                ext: "avi",
-                mime: "video/x-msvideo"
-            };
-        }
-
-        if (buf[0] === 0x30 && buf[1] === 0x26 && buf[2] === 0xB2 && buf[3] === 0x75 && buf[4] === 0x8E && buf[5] === 0x66 && buf[6] === 0xCF && buf[7] === 0x11 && buf[8] === 0xA6 && buf[9] === 0xD9) {
-            return {
-                ext: "wmv",
-                mime: "video/x-ms-wmv"
-            };
-        }
-
-        if (buf[0] === 0x0 && buf[1] === 0x0 && buf[2] === 0x1 && buf[3].toString(16)[0] === "b") {
-            return {
-                ext: "mpg",
-                mime: "video/mpeg"
-            };
-        }
-
-        if ((buf[0] === 0x49 && buf[1] === 0x44 && buf[2] === 0x33) || (buf[0] === 0xFF && buf[1] === 0xfb)) {
-            return {
-                ext: "mp3",
-                mime: "audio/mpeg"
-            };
-        }
-
-        if ((buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70 && buf[8] === 0x4D && buf[9] === 0x34 && buf[10] === 0x41) || (buf[0] === 0x4D && buf[1] === 0x34 && buf[2] === 0x41 && buf[3] === 0x20)) {
-            return {
-                ext: "m4a",
-                mime: "audio/m4a"
-            };
-        }
-
-        if (buf[0] === 0x4F && buf[1] === 0x67 && buf[2] === 0x67 && buf[3] === 0x53) {
-            return {
-                ext: "ogg",
-                mime: "audio/ogg"
-            };
-        }
-
-        if (buf[0] === 0x66 && buf[1] === 0x4C && buf[2] === 0x61 && buf[3] === 0x43) {
-            return {
-                ext: "flac",
-                mime: "audio/x-flac"
-            };
-        }
-
-        if (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 && buf[8] === 0x57 && buf[9] === 0x41 && buf[10] === 0x56 && buf[11] === 0x45) {
-            return {
-                ext: "wav",
-                mime: "audio/x-wav"
-            };
-        }
-
-        if (buf[0] === 0x23 && buf[1] === 0x21 && buf[2] === 0x41 && buf[3] === 0x4D && buf[4] === 0x52 && buf[5] === 0x0A) {
-            return {
-                ext: "amr",
-                mime: "audio/amr"
-            };
-        }
-
-        if (buf[0] === 0x25 && buf[1] === 0x50 && buf[2] === 0x44 && buf[3] === 0x46) {
-            return {
-                ext: "pdf",
-                mime: "application/pdf"
-            };
-        }
-
-        if (buf[0] === 0x4D && buf[1] === 0x5A) {
-            return {
-                ext: "exe",
-                mime: "application/x-msdownload"
-            };
-        }
-
-        if ((buf[0] === 0x43 || buf[0] === 0x46) && buf[1] === 0x57 && buf[2] === 0x53) {
-            return {
-                ext: "swf",
-                mime: "application/x-shockwave-flash"
-            };
-        }
-
-        if (buf[0] === 0x7B && buf[1] === 0x5C && buf[2] === 0x72 && buf[3] === 0x74 && buf[4] === 0x66) {
-            return {
-                ext: "rtf",
-                mime: "application/rtf"
-            };
-        }
-
-        if (buf[0] === 0x77 && buf[1] === 0x4F && buf[2] === 0x46 && buf[3] === 0x46 && buf[4] === 0x00 && buf[5] === 0x01 && buf[6] === 0x00 && buf[7] === 0x00) {
-            return {
-                ext: "woff",
-                mime: "application/font-woff"
-            };
-        }
-
-        if (buf[0] === 0x77 && buf[1] === 0x4F && buf[2] === 0x46 && buf[3] === 0x32 && buf[4] === 0x00 && buf[5] === 0x01 && buf[6] === 0x00 && buf[7] === 0x00) {
-            return {
-                ext: "woff2",
-                mime: "application/font-woff"
-            };
-        }
-
-        if (buf[34] === 0x4C && buf[35] === 0x50 && ((buf[8] === 0x02 && buf[9] === 0x00 && buf[10] === 0x01) || (buf[8] === 0x01 && buf[9] === 0x00 && buf[10] === 0x00) || (buf[8] === 0x02 && buf[9] === 0x00 && buf[10] === 0x02))) {
-            return {
-                ext: "eot",
-                mime: "application/octet-stream"
-            };
-        }
-
-        if (buf[0] === 0x00 && buf[1] === 0x01 && buf[2] === 0x00 && buf[3] === 0x00 && buf[4] === 0x00) {
-            return {
-                ext: "ttf",
-                mime: "application/font-sfnt"
-            };
-        }
-
-        if (buf[0] === 0x4F && buf[1] === 0x54 && buf[2] === 0x54 && buf[3] === 0x4F && buf[4] === 0x00) {
-            return {
-                ext: "otf",
-                mime: "application/font-sfnt"
-            };
-        }
-
-        if (buf[0] === 0x00 && buf[1] === 0x00 && buf[2] === 0x01 && buf[3] === 0x00) {
-            return {
-                ext: "ico",
-                mime: "image/x-icon"
-            };
-        }
-
-        if (buf[0] === 0x46 && buf[1] === 0x4C && buf[2] === 0x56 && buf[3] === 0x01) {
-            return {
-                ext: "flv",
-                mime: "video/x-flv"
-            };
-        }
-
-        if (buf[0] === 0x25 && buf[1] === 0x21) {
-            return {
-                ext: "ps",
-                mime: "application/postscript"
-            };
-        }
-
-        if (buf[0] === 0xFD && buf[1] === 0x37 && buf[2] === 0x7A && buf[3] === 0x58 && buf[4] === 0x5A && buf[5] === 0x00) {
-            return {
-                ext: "xz",
-                mime: "application/x-xz"
-            };
-        }
-
-        if (buf[0] === 0x53 && buf[1] === 0x51 && buf[2] === 0x4C && buf[3] === 0x69) {
-            return {
-                ext: "sqlite",
-                mime: "application/x-sqlite3"
-            };
-        }
-
-        /**
-         *
-         * Added by n1474335 [n1474335@gmail.com] from here on
-         *
-         */
-        if ((buf[0] === 0x1F && buf[1] === 0x9D) || (buf[0] === 0x1F && buf[1] === 0xA0)) {
-            return {
-                ext: "z, tar.z",
-                mime: "application/x-gtar"
-            };
-        }
-
-        if (buf[0] === 0x7F && buf[1] === 0x45 && buf[2] === 0x4C && buf[3] === 0x46) {
-            return {
-                ext: "none, axf, bin, elf, o, prx, puff, so",
-                mime: "application/x-executable",
-                desc: "Executable and Linkable Format file. No standard file extension."
-            };
-        }
-
-        if (buf[0] === 0xCA && buf[1] === 0xFE && buf[2] === 0xBA && buf[3] === 0xBE) {
-            return {
-                ext: "class",
-                mime: "application/java-vm"
-            };
-        }
-
-        if (buf[0] === 0xEF && buf[1] === 0xBB && buf[2] === 0xBF) {
-            return {
-                ext: "txt",
-                mime: "text/plain",
-                desc: "UTF-8 encoded Unicode byte order mark detected, commonly but not exclusively seen in text files."
-            };
-        }
-
-        // Must be before Little-endian UTF-16 BOM
-        if (buf[0] === 0xFF && buf[1] === 0xFE && buf[2] === 0x00 && buf[3] === 0x00) {
-            return {
-                ext: "UTF32LE",
-                mime: "charset/utf32le",
-                desc: "Little-endian UTF-32 encoded Unicode byte order mark detected."
-            };
-        }
-
-        if (buf[0] === 0xFF && buf[1] === 0xFE) {
-            return {
-                ext: "UTF16LE",
-                mime: "charset/utf16le",
-                desc: "Little-endian UTF-16 encoded Unicode byte order mark detected."
-            };
-        }
-
-        if ((buf[0x8001] === 0x43 && buf[0x8002] === 0x44 && buf[0x8003] === 0x30 && buf[0x8004] === 0x30 && buf[0x8005] === 0x31) ||
-            (buf[0x8801] === 0x43 && buf[0x8802] === 0x44 && buf[0x8803] === 0x30 && buf[0x8804] === 0x30 && buf[0x8805] === 0x31) ||
-            (buf[0x9001] === 0x43 && buf[0x9002] === 0x44 && buf[0x9003] === 0x30 && buf[0x9004] === 0x30 && buf[0x9005] === 0x31)) {
-            return {
-                ext: "iso",
-                mime: "application/octet-stream",
-                desc: "ISO 9660 CD/DVD image file"
-            };
-        }
-
-        if (buf[0] === 0xD0 && buf[1] === 0xCF && buf[2] === 0x11 && buf[3] === 0xE0 && buf[4] === 0xA1 && buf[5] === 0xB1 && buf[6] === 0x1A && buf[7] === 0xE1) {
-            return {
-                ext: "doc, xls, ppt",
-                mime: "application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint",
-                desc: "Microsoft Office documents"
-            };
-        }
-
-        if (buf[0] === 0x64 && buf[1] === 0x65 && buf[2] === 0x78 && buf[3] === 0x0A && buf[4] === 0x30 && buf[5] === 0x33 && buf[6] === 0x35 && buf[7] === 0x00) {
-            return {
-                ext: "dex",
-                mime: "application/octet-stream",
-                desc: "Dalvik Executable (Android)"
-            };
-        }
-
-        if (buf[0] === 0x4B && buf[1] === 0x44 && buf[2] === 0x4D) {
-            return {
-                ext: "vmdk",
-                mime: "application/vmdk, application/x-virtualbox-vmdk"
-            };
-        }
-
-        if (buf[0] === 0x43 && buf[1] === 0x72 && buf[2] === 0x32 && buf[3] === 0x34) {
-            return {
-                ext: "crx",
-                mime: "application/crx",
-                desc: "Google Chrome extension or packaged app"
-            };
-        }
-
-        if (buf[0] === 0x78 && (buf[1] === 0x01 || buf[1] === 0x9C || buf[1] === 0xDA || buf[1] === 0x5e)) {
-            return {
-                ext: "zlib",
-                mime: "application/x-deflate"
-            };
-        }
-
-        return null;
-    }
-
 }
+
 
 /**
  * Byte frequencies of various languages generated from Wikipedia dumps taken in late 2017 and early 2018.

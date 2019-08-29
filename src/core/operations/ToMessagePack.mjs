@@ -4,9 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import notepack from "notepack.io";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * To MessagePack operation
@@ -35,10 +36,12 @@ class ToMessagePack extends Operation {
      */
     run(input, args) {
         try {
-            if (ENVIRONMENT_IS_WORKER()) {
+            if (isWorkerEnvironment()) {
                 return notepack.encode(input);
             } else {
-                return notepack.encode(input).buffer;
+                const res = notepack.encode(input);
+                // Safely convert from Node Buffer to ArrayBuffer using the correct view of the data
+                return (new Uint8Array(res)).buffer;
             }
         } catch (err) {
             throw new OperationError(`Could not encode JSON to MessagePack: ${err}`);

@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
 /**
@@ -31,8 +31,6 @@ const banner = `/**
  * limitations under the License.
  */`;
 
-const vendorCSS = new ExtractTextPlugin("vendor.css");
-const projectCSS = new ExtractTextPlugin("styles.css");
 
 module.exports = {
     plugins: [
@@ -46,19 +44,23 @@ module.exports = {
             raw: true,
             entryOnly: true
         }),
-        vendorCSS,
-        projectCSS
+        new webpack.DefinePlugin({
+            "process.browser": "true"
+        }),
+        new MiniCssExtractPlugin({
+            filename: "assets/[name].css"
+        }),
     ],
     resolve: {
         alias: {
-            jquery: "jquery/src/jquery"
-        }
+            jquery: "jquery/src/jquery",
+        },
     },
     module: {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules\/(?!jsesc|crypto-api)/,
+                exclude: /node_modules\/(?!jsesc|crypto-api|bootstrap)/,
                 options: {
                     configFile: path.resolve(__dirname, "babel.config.js"),
                     cacheDirectory: true,
@@ -77,43 +79,76 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: projectCSS.extract({
-                    use: [
-                        { loader: "css-loader" },
-                        { loader: "postcss-loader" },
-                    ]
-                })
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
+                    "css-loader",
+                    "postcss-loader",
+                ]
             },
             {
                 test: /\.scss$/,
-                use: vendorCSS.extract({
-                    use: [
-                        { loader: "css-loader" },
-                        { loader: "sass-loader" }
-                    ]
-                })
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
+                    "css-loader",
+                    "sass-loader",
+                ]
             },
+            /**
+             * The limit for these files has been increased to 60,000 (60KB)
+             * to ensure the material icons font is inlined.
+             *
+             * See: https://github.com/gchq/CyberChef/issues/612
+             */
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000
+                    limit: 60000,
+                    name: "[hash].[ext]",
+                    outputPath: "assets"
+                }
+            },
+            {
+                test: /\.svg$/,
+                loader: "svg-url-loader",
+                options: {
+                    encoding: "base64"
+                }
+            },
+            { // Store font .fnt and .png files in a separate fonts folder
+                test: /(\.fnt$|bmfonts\/.+\.png$)/,
+                loader: "file-loader",
+                options: {
+                    name: "[name].[ext]",
+                    outputPath: "assets/fonts"
                 }
             },
             { // First party images are saved as files to be cached
-                test: /\.(png|jpg|gif|svg)$/,
-                exclude: /node_modules/,
+                test: /\.(png|jpg|gif)$/,
+                exclude: /(node_modules|bmfonts)/,
                 loader: "file-loader",
                 options: {
                     name: "images/[name].[ext]"
                 }
             },
             { // Third party images are inlined
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
                 loader: "url-loader",
                 options: {
-                    limit: 10000
+                    limit: 10000,
+                    name: "[hash].[ext]",
+                    outputPath: "assets"
                 }
             },
         ]
@@ -126,11 +161,15 @@ module.exports = {
         warningsFilter: [
             /source-map/,
             /dependency is an expression/,
-            /export 'default'/
+            /export 'default'/,
+            /Can't resolve 'sodium'/
         ],
     },
     node: {
-        fs: "empty"
+        fs: "empty",
+        "child_process": "empty",
+        net: "empty",
+        tls: "empty"
     },
     performance: {
         hints: false

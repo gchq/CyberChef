@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import CryptoApi from "crypto-api/src/crypto-api";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import CryptoApi from "crypto-api/src/crypto-api.mjs";
 
 /**
  * HMAC operation
@@ -20,7 +20,7 @@ class HMAC extends Operation {
         super();
 
         this.name = "HMAC";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.";
         this.infoURL = "https://wikipedia.org/wiki/HMAC";
         this.inputType = "ArrayBuffer";

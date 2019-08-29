@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64";
+import Operation from "../Operation.mjs";
+import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
 
 /**
  * From Base64 operation
@@ -106,9 +106,9 @@ class FromBase64 extends Operation {
     }
 
     /**
-     * @param {ArrayBuffer} input
+     * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const [alphabet, removeNonAlphChars] = args;

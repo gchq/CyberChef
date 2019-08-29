@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import * as esprima from "esprima";
 import escodegen from "escodegen";
 import esmangle from "esmangle";

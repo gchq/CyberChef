@@ -13,7 +13,7 @@ import colors from "colors";
 import process from "process";
 import fs from "fs";
 import path from "path";
-import EscapeString from "../../operations/EscapeString";
+import EscapeString from "../../operations/EscapeString.mjs";
 
 
 const dir = path.join(process.cwd() + "/src/core/operations/");
@@ -130,8 +130,8 @@ prompt.get(schema, (err, result) => {
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * ${result.opName} operation
@@ -222,7 +222,7 @@ export default ${moduleName};
     console.log(`\nNext steps:
 1. Add your operation to ${colors.green("src/core/config/Categories.json")}
 2. Write your operation code.
-3. Write tests in ${colors.green("test/tests/operations/")}
+3. Write tests in ${colors.green("tests/operations/tests/")}
 4. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
 5. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
 

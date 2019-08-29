@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * To Table operation
@@ -57,7 +57,7 @@ class ToTable extends Operation {
         const [cellDelims, rowDelims, firstRowHeader, format] = args;
 
         // Process the input into a nested array of elements.
-        const tableData = Utils.parseCSV(input, cellDelims.split(""), rowDelims.split(""));
+        const tableData = Utils.parseCSV(Utils.escapeHtml(input), cellDelims.split(""), rowDelims.split(""));
 
         if (!tableData.length) return "";
 

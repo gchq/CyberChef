@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import moment from "moment-timezone";
-import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime";
+import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
 /**
  * Translate DateTime Format operation
@@ -61,7 +61,7 @@ class TranslateDateTimeFormat extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args.splice(1);
+        const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args.slice(1);
         let date;
 
         try {

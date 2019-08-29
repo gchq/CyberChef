@@ -1,15 +1,19 @@
 language: node_js
 node_js:
-  - node
+  - lts/*
+cache: npm
+addons:
+  chrome: stable
 install: npm install
 before_script:
   - npm install -g grunt
+  - export NODE_OPTIONS=--max_old_space_size=2048
 script:
   - grunt lint
   - grunt test
-  - grunt docs
-  - grunt node
+  - grunt testnodeconsumer
   - grunt prod --msg="$COMPILE_MSG"
+  - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
 before_deploy:
   - grunt exec:sitemap
   - grunt copy:ghPages
@@ -26,9 +30,10 @@ deploy:
     skip_cleanup: true
     api_key:
       secure: "HV1WSKv4l/0Y2bKKs1iBJocBcmLj08PCRUeEM/jTwA4jqJ8EiLHWiXtER/D5sEg2iibRVKd2OQjfrmS6bo4AiwdeVgAKmv0FtS2Jw+391N8Nd5AkEANHa5Om/IpHLTL2YRAjpJTsDpY72bMUTJIwjQA3TFJkgrpOw6KYfohOcgbxLpZ4XuNJRU3VL4Hsxdv5V9aOVmfFOmMOVPQlakXy7NgtW5POp1f2WJwgcZxylkR1CjwaqMyXmSoVl46pyH3tr5+dptsQoKSGdi6sIHGA60oDotFPcm+0ifa47wZw+vapuuDi4tdNxhrHGaDMG8xiE0WFDHwQUDlk2/+W7j9SEX0H3Em7us371JXRp56EDwEcDa34VpVkC6i8HGcHK55hnxVbMZXGf3qhOFD8wY7qMbjMRvIpucrMHBi86OfkDfv0vDj2LyvIl5APj/AX50BrE0tfH1MZbH26Jkx4NdlkcxQ14GumarmUqfmVvbX/fsoA6oUuAAE9ZgRRi3KHO4wci6KUcRfdm+XOeUkaBFsL86G3EEYIvrtBTuaypdz+Cx7nd1iPZyWMx5Y1gXnVzha4nBdV4+7l9JIsFggD8QVpw2uHXQiS1KXFjOeqA3DBD8tjMB7q26Fl2fD3jkOo4BTbQ2NrRIZUu/iL+fOmMPsyMt2qulB0yaSBCfkbEq8xrUA="
+    file_glob: true
     file:
-      - build/prod/cyberchef.htm
-      - build/node/CyberChef.js
+      - build/prod/*.zip
+      - src/node/cjs.js
     on:
       repo: gchq/CyberChef
       tags: true

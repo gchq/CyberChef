@@ -5,9 +5,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import {ipv4CidrRange, ipv4HyphenatedRange, ipv4ListedRange, ipv6CidrRange, ipv6HyphenatedRange, ipv6ListedRange} from "../lib/IP";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {ipv4CidrRange, ipv4HyphenatedRange, ipv4ListedRange, ipv6CidrRange, ipv6HyphenatedRange, ipv6ListedRange} from "../lib/IP.mjs";
 
 /**
  * Parse IP range operation
@@ -21,7 +21,7 @@ class ParseIPRange extends Operation {
         super();
 
         this.name = "Parse IP range";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Given a CIDR range (e.g. <code>10.0.0.0/24</code>), hyphenated range (e.g. <code>10.0.0.0 - 10.0.1.0</code>), or a list of IPs and/or CIDR ranges (separated by a new line), this operation provides network information and enumerates all IP addresses in the range.<br><br>IPv6 is supported but will not be enumerated.";
         this.infoURL = "https://wikipedia.org/wiki/Subnetwork";
         this.inputType = "string";

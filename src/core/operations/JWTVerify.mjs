@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * JWT Verify operation
@@ -50,7 +50,7 @@ class JWTVerify extends Operation {
                 "none"
             ]});
 
-            if (verified.hasOwnProperty("name") && verified.name === "JsonWebTokenError") {
+            if (Object.prototype.hasOwnProperty.call(verified, "name") && verified.name === "JsonWebTokenError") {
                 throw new OperationError(verified.message);
             }
 

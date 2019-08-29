@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * UNIX Timestamp to Windows Filetime operation
@@ -51,7 +51,7 @@ class UNIXTimestampToWindowsFiletime extends Operation {
 
         input = new BigNumber(input);
 
-        if (units === "Seconds (s)"){
+        if (units === "Seconds (s)") {
             input = input.multipliedBy(new BigNumber("10000000"));
         } else if (units === "Milliseconds (ms)") {
             input = input.multipliedBy(new BigNumber("10000"));
@@ -65,7 +65,7 @@ class UNIXTimestampToWindowsFiletime extends Operation {
 
         input = input.plus(new BigNumber("116444736000000000"));
 
-        if (format === "Hex"){
+        if (format === "Hex") {
             return input.toString(16);
         } else {
             return input.toFixed();

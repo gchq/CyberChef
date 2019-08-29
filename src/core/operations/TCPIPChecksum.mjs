@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * TCP/IP Checksum operation
@@ -19,20 +19,21 @@ class TCPIPChecksum extends Operation {
         super();
 
         this.name = "TCP/IP Checksum";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.";
         this.infoURL = "https://wikipedia.org/wiki/IPv4_header_checksum";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         let csum = 0;
 
         for (let i = 0; i < input.length; i++) {

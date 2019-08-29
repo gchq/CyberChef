@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Parse colour code operation
@@ -96,7 +96,7 @@ class ParseColourCode extends Operation {
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
 
         // Generate output
-        return `<div id="colorpicker" style="display: inline-block"></div>
+        return `<div id="colorpicker" style="white-space: normal;"></div>
 Hex:  ${hex}
 RGB:  ${rgb}
 RGBA: ${rgba}
@@ -109,12 +109,12 @@ CMYK: ${cmyk}
         color: '${rgba}',
         container: true,
         inline: true,
-    }).on('changeColor', function(e) {
-        var color = e.color.toRGB();
-        document.getElementById('input-text').value = 'rgba(' +
-            color.r + ', ' + color.g + ', ' + color.b + ', ' + color.a + ')';
-        window.app.autoBake();
-    }).children(".colorpicker").removeClass('dropdown-menu');
+        useAlpha: true
+    }).on('colorpickerChange', function(e) {
+        var color = e.color.string('rgba');
+        document.getElementById('input-text').value = color;
+        window.app.manager.input.debounceInputChange(new Event("keyup"));
+    });
 </script>`;
     }
 
@@ -134,7 +134,7 @@ CMYK: ${cmyk}
     static _hslToRgb(h, s, l) {
         let r, g, b;
 
-        if (s === 0){
+        if (s === 0) {
             r = g = b = l; // achromatic
         } else {
             const hue2rgb = function hue2rgb(p, q, t) {

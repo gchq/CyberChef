@@ -5,9 +5,9 @@
  */
 
 import XRegExp from "xregexp";
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Regular expression operation
@@ -228,40 +228,36 @@ function regexList (input, regex, displayTotal, matches, captureGroups) {
 function regexHighlight (input, regex, displayTotal) {
     let output = "",
         title = "",
-        m,
         hl = 1,
-        i = 0,
         total = 0;
+    const captureGroups = [];
 
-    while ((m = regex.exec(input))) {
-        // Moves pointer when an empty string is matched (prevents infinite loop)
-        if (m.index === regex.lastIndex) {
-            regex.lastIndex++;
-        }
+    output = input.replace(regex, (match, ...args) => {
+        args.pop(); // Throw away full string
+        const offset = args.pop(),
+            groups = args;
 
-        // Add up to match
-        output += Utils.escapeHtml(input.slice(i, m.index));
-
-        title = `Offset: ${m.index}\n`;
-        if (m.length > 1) {
+        title = `Offset: ${offset}\n`;
+        if (groups.length) {
             title += "Groups:\n";
-            for (let n = 1; n < m.length; ++n) {
-                title += `\t${n}: ${m[n]}\n`;
+            for (let i = 0; i < groups.length; i++) {
+                title += `\t${i+1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
             }
         }
-
-        // Add match with highlighting
-        output += "<span class='hl"+hl+"' title='"+title+"'>" + Utils.escapeHtml(m[0]) + "</span>";
 
         // Switch highlight
         hl = hl === 1 ? 2 : 1;
 
-        i = regex.lastIndex;
-        total++;
-    }
+        // Store highlighted match and replace with a placeholder
+        captureGroups.push(`<span class='hl${hl}' title='${title}'>${Utils.escapeHtml(match)}</span>`);
+        return `[cc_capture_group_${total++}]`;
+    });
 
-    // Add all after final match
-    output += Utils.escapeHtml(input.slice(i, input.length));
+    // Safely escape all remaining text, then replace placeholders
+    output = Utils.escapeHtml(output);
+    output = output.replace(/\[cc_capture_group_(\d+)\]/g, (_, i) => {
+        return captureGroups[i];
+    });
 
     if (displayTotal)
         output = "Total found: " + total + "\n\n" + output;

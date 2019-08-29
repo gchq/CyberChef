@@ -8,7 +8,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * To Quoted Printable operation
@@ -25,17 +25,18 @@ class ToQuotedPrintable extends Operation {
         this.module = "Default";
         this.description = "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in e-mail.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.";
         this.infoURL = "https://wikipedia.org/wiki/Quoted-printable";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         let mimeEncodedStr = this.mimeEncode(input);
 
         // fix line breaks
@@ -73,7 +74,7 @@ class ToQuotedPrintable extends Operation {
     /**
      * Encodes mime data.
      *
-     * @param {byteArray} buffer
+     * @param {byteArray|Uint8Array} buffer
      * @returns {string}
      */
     mimeEncode(buffer) {

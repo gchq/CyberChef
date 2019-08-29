@@ -81,7 +81,11 @@
                     if (!el.classList.contains("loading"))
                         el.classList.add("loading"); // Causes CSS transition on first message
                     el.innerHTML = msg;
-                } catch (err) {} // Ignore errors if DOM not yet ready
+                } catch (err) {
+                    // This error was likely caused by the DOM not being ready yet,
+                    // so we wait another second and then try again.
+                    setTimeout(changeLoadingMsg, 1000);
+                }
             }
 
             changeLoadingMsg();
@@ -119,21 +123,14 @@
                 document.getElementById("preloader-error").innerHTML =
                     "CyberChef encountered an error while loading.<br><br>" +
                     "The following browser versions are supported:" +
-                    "<ul><li>Google Chrome 40+</li><li>Mozilla Firefox 35+</li><li>Microsoft Edge 14+</li></ul>" +
+                    "<ul><li>Google Chrome 50+</li><li>Mozilla Firefox 38+</li></ul>" +
                     "Your user agent is:<br>" + escapeHtml(navigator.userAgent) + "<br><br>" +
-                    "If your browser is supported, please <a href='https://github.com/gchq/CyberChef/issues/new'>" +
+                    "If your browser is supported, please <a href='https://github.com/gchq/CyberChef/issues/new/choose'>" +
                     "raise an issue</a> including the following details:<br><br>" +
                     "<pre>" + escapeHtml(msg) + "</pre>";
             };
             window.addEventListener("error", loadingErrorHandler);
         </script>
-        <% if (htmlWebpackPlugin.options.inline) { %>
-            <meta name="robots" content="noindex" />
-        <% } else { %>
-            <script type="application/ld+json">
-                <% print(JSON.stringify(require("../static/structuredData.json"))); %>
-            </script>
-        <% } %>
     </head>
     <body>
         <!-- Preloader overlay -->
@@ -149,11 +146,7 @@
         <div id="content-wrapper">
             <div id="banner" class="row">
                 <div class="col" style="text-align: left; padding-left: 10px;">
-                    <% if (htmlWebpackPlugin.options.inline) { %>
-                        <span>Version <%= htmlWebpackPlugin.options.version %></span>
-                    <% } else { %>
-                        <a href="cyberchef.htm" download>Download CyberChef <i class="material-icons">file_download</i></a>
-                    <% } %>
+                    <a href="CyberChef_v<%= htmlWebpackPlugin.options.version %>.zip" download>Download CyberChef <i class="material-icons">file_download</i></a>
                 </div>
                 <div class="col-md-6" id="notice-wrapper">
                     <span id="notice">
@@ -198,7 +191,7 @@
                     <ul id="rec-list" class="list-area no-select"></ul>
 
                     <div id="controls" class="no-select">
-                        <div class="d-flex align-items-center">
+                        <div id="controls-content" class="d-flex align-items-center">
                             <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe">
                                 Step
                             </button>
@@ -225,6 +218,17 @@
                         <div class="title no-select">
                             <label for="input-text">Input</label>
                             <span class="float-right">
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab">
+                                    <i class="material-icons">add</i>
+                                </button>
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-folder" data-toggle="tooltip" title="Open folder as input">
+                                    <i class="material-icons">folder_open</i>
+                                    <input type="file" id="open-folder" style="display: none" multiple directory webkitdirectory>
+                                </button>
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input">
+                                    <i class="material-icons">input</i>
+                                    <input type="file" id="open-file" style="display: none" multiple>
+                                </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output">
                                     <i class="material-icons">delete</i>
                                 </button>
@@ -232,17 +236,42 @@
                                     <i class="material-icons">view_compact</i>
                                 </button>
                             </span>
+                            <div class="io-info" id="input-files-info"></div>
                             <div class="io-info" id="input-info"></div>
                             <div class="io-info" id="input-selection-info"></div>
                         </div>
-                        <div class="textarea-wrapper no-select">
+                        <div id="input-tabs-wrapper" style="display: none;" class="no-select">
+                            <span id="btn-previous-input-tab" class="input-tab-buttons">
+                                &lt;
+                            </span>
+                            <span id="btn-input-tab-dropdown" class="input-tab-buttons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                ···
+                            </span>
+                            <div class="dropdown-menu" aria-labelledby="btn-input-tab-dropdown">
+                                <a id="btn-go-to-input-tab" class="dropdown-item">
+                                    Go to tab
+                                </a>
+                                <a id="btn-find-input-tab" class="dropdown-item">
+                                    Find tab
+                                </a>
+                                <a id="btn-close-all-tabs" class="dropdown-item">
+                                    Close all tabs
+                                </a>
+                            </div>
+                            <span id="btn-next-input-tab" class="input-tab-buttons">
+                                &gt;
+                            </span>
+                            <ul id="input-tabs">
+                            </ul>
+                        </div>
+                        <div class="textarea-wrapper no-select input-wrapper" id="input-wrapper">
                             <div id="input-highlighter" class="no-select"></div>
-                            <textarea id="input-text" spellcheck="false"></textarea>
-                            <div id="input-file">
-                                <div class="file-overlay"></div>
+                            <textarea id="input-text" class="input-text" spellcheck="false"></textarea>
+                            <div class="input-file" id="input-file">
+                                <div class="file-overlay" id="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="io-card card">
-                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon" id="input-file-thumbnail"/>
                                         <div class="card-body">
                                             <button type="button" class="close" id="input-file-close">&times;</button>
                                             Name: <span id="input-file-name"></span><br>
@@ -260,14 +289,17 @@
                         <div class="title no-select">
                             <label for="output-text">Output</label>
                             <span class="float-right">
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a zip file" style="display: none">
+                                        <i class="material-icons">archive</i>
+                                    </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-to-file" data-toggle="tooltip" title="Save output to file">
                                     <i class="material-icons">save</i>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="copy-output" data-toggle="tooltip" title="Copy raw output to the clipboard">
                                     <i class="material-icons">content_copy</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Move output to input">
-                                    <i class="material-icons">loop</i>
+                                <button type="button" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Replace input with output">
+                                    <i class="material-icons">open_in_browser</i>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="undo-switch" data-toggle="tooltip" title="Undo" disabled="disabled">
                                     <i class="material-icons">undo</i>
@@ -276,6 +308,7 @@
                                     <i class="material-icons">fullscreen</i>
                                 </button>
                             </span>
+                            <div class="io-info" id="bake-info"></div>
                             <div class="io-info" id="output-info"></div>
                             <div class="io-info" id="output-selection-info"></div>
                             <button type="button" class="btn btn-primary bmd-btn-icon hidden" id="magic" data-toggle="tooltip" title="Magic!" data-html="true">
@@ -287,36 +320,61 @@
                                 <i class="material-icons">access_time</i>
                             </span>
                         </div>
-                        <div class="textarea-wrapper">
-                            <div id="output-highlighter" class="no-select"></div>
-                            <div id="output-html"></div>
-                            <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
-                            <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
-                            <div id="output-file">
-                                <div class="file-overlay"></div>
-                                <div style="position: relative; height: 100%;">
-                                    <div class="io-card card">
-                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
-                                        <div class="card-body">
-                                            Size: <span id="output-file-size"></span><br>
-                                            <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
-                                            <div class="input-group">
-                                                <span class="input-group-btn">
-                                                    <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
-                                                          <i class="material-icons">search</i>
-                                                    </button>
-                                                </span>
-                                                <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
-                                                <div class="input-group-addon">to</div>
-                                                <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
+                        <div id="output-wrapper">
+                            <div id="output-tabs-wrapper" style="display: none" class="no-select">
+                                <span id="btn-previous-output-tab" class="output-tab-buttons">
+                                    &lt;
+                                </span>
+                                <span id="btn-output-tab-dropdown" class="output-tab-buttons" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                                    ···
+                                </span>
+                                <div class="dropdown-menu" aria-labelledby="btn-input-tab-dropdown">
+                                    <a id="btn-go-to-output-tab" class="dropdown-item">
+                                        Go to tab
+                                    </a>
+                                    <a id="btn-find-output-tab" class="dropdown-item">
+                                        Find tab
+                                    </a>
+                                </div>
+                                <span id="btn-next-output-tab" class="output-tab-buttons">
+                                    &gt;
+                                </span>
+                                <ul id="output-tabs">
+                                </ul>
+                            </div>
+                            <div class="textarea-wrapper">
+                                <div id="output-highlighter" class="no-select"></div>
+                                <div id="output-html"></div>
+                                <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
+                                <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
+                                <div id="output-file">
+                                    <div class="file-overlay"></div>
+                                    <div style="position: relative; height: 100%;">
+                                        <div class="io-card card">
+                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                            <div class="card-body">
+                                                Size: <span id="output-file-size"></span><br>
+                                                <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
+                                                <div class="input-group">
+                                                    <span class="input-group-btn">
+                                                        <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
+                                                            <i class="material-icons">search</i>
+                                                        </button>
+                                                    </span>
+                                                    <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
+                                                    <div class="input-group-addon">to</div>
+                                                    <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="output-loader">
-                                <div class="loader"></div>
-                                <div class="loading-msg"></div>
+                                <div id="output-loader">
+                                    <div id="output-loader-animation">
+                                        <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
+                                    </div>
+                                    <div class="loading-msg"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -324,7 +382,7 @@
             </div>
         </div>
 
-        <div class="modal" id="save-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="save-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -384,7 +442,7 @@
             </div>
         </div>
 
-        <div class="modal" id="load-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="load-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -411,7 +469,7 @@
             </div>
         </div>
 
-        <div class="modal" id="options-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="options-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -426,6 +484,8 @@
                                 <option value="classic">Classic</option>
                                 <option value="dark">Dark</option>
                                 <option value="geocities">GeoCities</option>
+                                <option value="solarizedDark">Solarized Dark</option>
+                                <option value="solarizedLight">Solarized Light</option>
                             </select>
                         </div>
 
@@ -499,6 +559,27 @@
                                 Attempt to detect encoded data automagically
                             </label>
                         </div>
+
+                        <div class="checkbox option-item">
+                            <label for="imagePreview">
+                                <input type="checkbox" option="imagePreview" id="imagePreview">
+                                Render a preview of the input if it's detected to be an image
+                            </label>
+                        </div>
+
+                        <div class="checkbox option-item">
+                            <label for="syncTabs">
+                                <input type="checkbox" option="syncTabs" id="syncTabs">
+                                Keep the current tab in sync between the input and output
+                            </label>
+                        </div>
+
+                        <div class="checkbox option-item">
+                            <label for="preserveCR" data-toggle="tooltip" data-placement="right" data-html="true" title="As HTML textareas don't support carriage returns, editing input must be turned off to preserve them.<br><br>When this option is enabled, editing is disabled for pasted text that contains carriage returns. Otherwise, editing will remain enabled but carriage returns will not be preserved.">
+                                <input type="checkbox" option="preserveCR" id="preserveCR">
+                                Preserve carriage returns when pasting an input
+                            </label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="reset-options">Reset options to default</button>
@@ -508,7 +589,7 @@
             </div>
         </div>
 
-        <div class="modal" id="favourites-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="favourites-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -534,7 +615,7 @@
             </div>
         </div>
 
-        <div class="modal" id="support-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="support-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -581,7 +662,7 @@
                                     What sort of things can I do with CyberChef?
                                 </a>
                                 <div class="collapse" id="faq-examples">
-                                    <p>There are around 200 operations in CyberChef allowing you to carry out simple and complex tasks easily. Here are some examples:</p>
+                                    <p>There are around 300 operations in CyberChef allowing you to carry out simple and complex tasks easily. Here are some examples:</p>
                                     <ul>
                                         <li><a href="#recipe=From_Base64('A-Za-z0-9%2B/%3D',true)&input=VTI4Z2JHOXVaeUJoYm1RZ2RHaGhibXR6SUdadmNpQmhiR3dnZEdobElHWnBjMmd1">Decode a Base64-encoded string</a></li>
                                         <li><a href="#recipe=Translate_DateTime_Format('Standard%20date%20and%20time','DD/MM/YYYY%20HH:mm:ss','UTC','dddd%20Do%20MMMM%20YYYY%20HH:mm:ss%20Z%20z','Australia/Queensland')&input=MTUvMDYvMjAxNSAyMDo0NTowMA">Convert a date and time to a different time zone</a></li>
@@ -600,7 +681,7 @@
                                 </a>
                                 <div class="collapse" id="faq-load-files">
                                     <p>Yes! Just drag your file over the input box and drop it.</p>
-                                    <p>CyberChef can handle files up to around 500MB (depending on your browser), however some of the operations may take a very long time to run over this much data.</p>
+                                    <p>CyberChef can handle files up to around 2GB (depending on your browser), however some of the operations may take a very long time to run over this much data.</p>
                                     <p>If the output is larger than a certain threshold (default 1MiB), it will be presented to you as a file available for download. Slices of the file can be viewed in the output if you need to inspect them.</p>
                                 </div>
                                 <br>
@@ -628,7 +709,7 @@
                                 <br>
                                 <pre id="report-bug-info"></pre>
                                 <br>
-                                <a class="btn btn-primary" href="https://github.com/gchq/CyberChef/issues/new" role="button">Raise issue on GitHub</a>
+                                <a class="btn btn-primary" href="https://github.com/gchq/CyberChef/issues/new/choose" role="button">Raise issue on GitHub</a>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="about" style="padding: 20px;">
                                 <h5><strong>What</strong></h5>
@@ -670,7 +751,7 @@
             </div>
         </div>
 
-        <div class="modal" id="confirm-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -689,5 +770,125 @@
             </div>
         </div>
 
+        <div class="modal fade" id="input-tab-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Find Input Tab</h5>
+                    </div>
+                    <div class="modal-body" id="input-tab-body">
+                        <h6>Load Status</h6>
+                        <div id="input-find-options">
+                            <ul id="input-find-options-checkboxes">
+                                <li class="checkbox input-find-option">
+                                    <label for="input-show-pending">
+                                        <input type="checkbox" id="input-show-pending" checked="">
+                                        Pending
+                                    </label>
+                                </li>
+                                <li class="checkbox input-find-option">
+                                    <label for="input-show-loading">
+                                        <input type="checkbox" id="input-show-loading" checked="">
+                                        Loading
+                                    </label>
+                                </li>
+                                <li class="checkbox input-find-option">
+                                    <label for="input-show-loaded">
+                                        <input type="checkbox" id="input-show-loaded" checked="">
+                                        Loaded
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="form-group input-group">
+                            <div class="toggle-string">
+                                <label for="input-filter" class="bmd-label-floating toggle-string">Filter (regex)</label>
+                                <input type="text" class="form-control toggle-string" id="input-filter">
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary dropdown-toggle" id="input-filter-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CONTENT</button>
+                                <div class="dropdown-menu toggle-dropdown">
+                                    <a class="dropdown-item" id="input-filter-content">Content</a>
+                                    <a class="dropdown-item" id="input-filter-filename">Filename</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group input-find-option" id="input-num-results-container">
+                            <label for="input-num-results" class="bmd-label-floating">Number of results</label>
+                            <input type="number" class="form-control" id="input-num-results" value="20" min="1">
+                        </div>
+                        <div style="clear:both"></div>
+                        <h6>Results</h6>
+                        <ul id="input-search-results"></ul>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="input-filter-refresh">Refresh</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="output-tab-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Find Output Tab</h5>
+                    </div>
+                    <div class="modal-body" id="output-tab-body">
+                        <h6>Bake Status</h6>
+                        <div id="output-find-options">
+                            <ul id="output-find-options-checkboxes">
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-pending">
+                                        <input type="checkbox" id="output-show-pending" checked="">
+                                        Pending
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-baking">
+                                        <input type="checkbox" id="output-show-baking" checked="">
+                                        Baking
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-baked">
+                                        <input type="checkbox" id="output-show-baked" checked="">
+                                        Baked
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-stale">
+                                        <input type="checkbox" id="output-show-stale" checked="">
+                                        Stale
+                                    </label>
+                                </li>
+                                <li class="checkbox output-find-option">
+                                    <label for="output-show-errored">
+                                        <input type="checkbox" id="output-show-errored" checked="">
+                                        Errored
+                                    </label>
+                                </li>
+                            </ul>
+                            <div class="form-group output-find-option">
+                                <label for="output-content-filter" class="bmd-label-floating">Content filter (regex)</label>
+                                <input type="text" class="form-control" id="output-content-filter">
+                            </div>
+                            <div class="form-group output-find-option" id="output-num-results-container">
+                                <label for="output-num-results" class="bmd-label-floating">Number of results</label>
+                                <input type="number" class="form-control" id="output-num-results" value="20">
+                            </div>
+                        </div>
+                        <br>
+                        <h6>Results</h6>
+                        <ul id="output-search-results"></ul>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="output-filter-refresh">Refresh</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

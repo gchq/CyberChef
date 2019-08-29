@@ -6,9 +6,9 @@
  */
 
 import BigNumber from "bignumber.js";
-import Operation from "../Operation";
-import { median, createNumArray } from "../lib/Arithmetic";
-import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import { median, createNumArray } from "../lib/Arithmetic.mjs";
+import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Median operation
@@ -43,7 +43,7 @@ class Median extends Operation {
      */
     run(input, args) {
         const val = median(createNumArray(input, args[0]));
-        return val instanceof BigNumber ? val : new BigNumber(NaN);
+        return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
     }
 
 }
