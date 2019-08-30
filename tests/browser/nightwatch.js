@@ -194,20 +194,12 @@ module.exports = {
             .click(otherCat)
             .expect.element(genUUID).to.be.visible;
 
-        // Drag and drop op into recipe
+        // Add op to recipe
+        /* mouseButtonUp drops wherever the actual cursor is, not necessarily in the right place,
+        so we can't test Sortable.js properly using Nightwatch. html-dnd doesn't work either.
+        Instead of relying on drag and drop, we double click on the op to load it. */
         browser
             .getLocationInView(genUUID)
-            .moveToElement(genUUID, 10, 10)
-            .mouseButtonDown("left")
-            .pause(100)
-            .useCss()
-            .moveToElement("#rec-list", 10, 10)
-            .waitForElementVisible(".sortable-ghost", 100)
-            .mouseButtonUp("left")
-            /* mouseButtonUp drops wherever the actual cursor is, not necessarily in the right place
-            so we can't test Sortable.js properly using Nightwatch. html-dnd doesn't work either.
-            Instead of relying on the drop, we double click on the op to load it. */
-            .useXpath()
             .moveToElement(genUUID, 10, 10)
             .doubleClick()
             .useCss()
