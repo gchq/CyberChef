@@ -20,8 +20,8 @@ class RenderMarkdown extends Operation {
         super();
 
         this.name = "Render Markdown";
-        this.module = "Default";
-        this.description = "Renders input Markdown as HTML.";
+        this.module = "Code";
+        this.description = "Renders input Markdown as HTML. HTML rendering is disabled to avoid XSS.";
         this.infoURL = "https://wikipedia.org/wiki/Markdown";
         this.inputType = "string";
         this.outputType = "html";
