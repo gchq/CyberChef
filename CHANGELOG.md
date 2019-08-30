@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.3.0] - 2019-08-30
+- 'Show on map' operation added [@j433866] | [#477]
+
 ### [9.2.0] - 2019-08-23
 - 'Parse UDP' operation added [@h345983745] | [#614]
 
@@ -170,6 +173,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.3.0]: https://github.com/gchq/CyberChef/releases/tag/v9.3.0
 [9.2.0]: https://github.com/gchq/CyberChef/releases/tag/v9.2.0
 [9.1.0]: https://github.com/gchq/CyberChef/releases/tag/v9.1.0
 [9.0.0]: https://github.com/gchq/CyberChef/releases/tag/v9.0.0
@@ -279,6 +283,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#467]: https://github.com/gchq/CyberChef/pull/467
 [#468]: https://github.com/gchq/CyberChef/pull/468
 [#476]: https://github.com/gchq/CyberChef/pull/476
+[#477]: https://github.com/gchq/CyberChef/pull/477
 [#489]: https://github.com/gchq/CyberChef/pull/489
 [#496]: https://github.com/gchq/CyberChef/pull/496
 [#506]: https://github.com/gchq/CyberChef/pull/506
