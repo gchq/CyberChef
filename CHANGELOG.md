@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.4.0] - 2019-08-30
+- 'Render Markdown' operation added [@j433866] | [#627]
+
 ### [9.3.0] - 2019-08-30
 - 'Show on map' operation added [@j433866] | [#477]
 
@@ -173,6 +176,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.4.0]: https://github.com/gchq/CyberChef/releases/tag/v9.4.0
 [9.3.0]: https://github.com/gchq/CyberChef/releases/tag/v9.3.0
 [9.2.0]: https://github.com/gchq/CyberChef/releases/tag/v9.2.0
 [9.1.0]: https://github.com/gchq/CyberChef/releases/tag/v9.1.0
@@ -301,3 +305,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#591]: https://github.com/gchq/CyberChef/pull/591
 [#595]: https://github.com/gchq/CyberChef/pull/595
 [#614]: https://github.com/gchq/CyberChef/pull/614
+[#627]: https://github.com/gchq/CyberChef/pull/627
