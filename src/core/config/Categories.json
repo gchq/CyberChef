@@ -358,7 +358,8 @@
             "BSON serialise",
             "BSON deserialise",
             "To MessagePack",
-            "From MessagePack"
+            "From MessagePack",
+            "Render Markdown"
         ]
     },
     {
