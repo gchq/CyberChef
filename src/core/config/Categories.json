@@ -228,6 +228,7 @@
             "Convert speed",
             "Convert data units",
             "Convert co-ordinate format",
+            "Show on map",
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
