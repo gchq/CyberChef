@@ -72,3 +72,12 @@ export const JOIN_DELIM_OPTIONS = [
     {name: "Nothing (join chars)", value: ""}
 ];
 
+/*
+  RGBA list delimiters.
+*/
+export const RGBA_DELIM_OPTIONS = [
+    {name: "Comma", value: ","},
+    {name: "Space", value: " "},
+    {name: "CRLF", value: "\\r\\n"},
+    {name: "Line Feed", value: "\n"}
+];
