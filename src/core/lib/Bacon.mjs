@@ -1,5 +1,5 @@
 /**
- * Bacon resources.
+ * Bacon Cipher resources.
  *
  * @author Karsten Silkenbäumer [github.com/kassi]
  * @copyright Karsten Silkenbäumer 2019
@@ -33,12 +33,12 @@ export const BACON_TRANSLATIONS_FOR_ENCODING = [
     BACON_TRANSLATION_AB
 ];
 export const BACON_CLEARER_MAP = {
-    [BACON_TRANSLATIONS[0]]: /[^01]/g,
-    [BACON_TRANSLATIONS[1]]: /[^ABab]/g,
-    [BACON_TRANSLATIONS[2]]: /[^A-Za-z]/g,
+    [BACON_TRANSLATION_01]: /[^01]/g,
+    [BACON_TRANSLATION_AB]: /[^ABab]/g,
+    [BACON_TRANSLATION_CASE]: /[^A-Za-z]/g,
 };
 export const BACON_NORMALIZE_MAP = {
-    [BACON_TRANSLATIONS[1]]: {
+    [BACON_TRANSLATION_AB]: {
         "A": "0",
         "B": "1",
         "a": "0",

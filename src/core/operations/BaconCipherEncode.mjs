@@ -1,10 +1,8 @@
 /**
- * BaconCipher operation.
- *
-* @author Karsten Silkenbäumer [github.com/kassi]
-* @copyright Karsten Silkenbäumer 2019
-* @license Apache-2.0
-*/
+ * @author Karsten Silkenbäumer [github.com/kassi]
+ * @copyright Karsten Silkenbäumer 2019
+ * @license Apache-2.0
+ */
 
 import Operation from "../Operation";
 import {
@@ -14,19 +12,19 @@ import {
 } from "../lib/Bacon";
 
 /**
-* BaconCipherEncode operation
-*/
+ * Bacon Cipher Encode operation
+ */
 class BaconCipherEncode extends Operation {
     /**
-    * BaconCipherEncode constructor
-    */
+     * BaconCipherEncode constructor
+     */
     constructor() {
         super();
 
         this.name = "Bacon Cipher Encode";
         this.module = "Default";
-        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography(a method of hiding a secret message as opposed to just a cipher) devised by Francis Bacon in 1605.[1][2][3] A message is concealed in the presentation of text, rather than its content.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Bacon%27s_cipher";
+        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
+        this.infoURL = "https://wikipedia.org/wiki/Bacon%27s_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -54,10 +52,10 @@ class BaconCipherEncode extends Operation {
     }
 
     /**
-    * @param {String} input
-    * @param {Object[]} args
-    * @returns {String}
-    */
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     run(input, args) {
         const [alphabet, translation, keep, invert] = args;
 

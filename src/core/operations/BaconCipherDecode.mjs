@@ -1,10 +1,8 @@
 /**
- * BaconCipher operation.
- *
-* @author Karsten Silkenbäumer [github.com/kassi]
-* @copyright Karsten Silkenbäumer 2019
-* @license Apache-2.0
-*/
+ * @author Karsten Silkenbäumer [github.com/kassi]
+ * @copyright Karsten Silkenbäumer 2019
+ * @license Apache-2.0
+ */
 
 import Operation from "../Operation";
 import {
@@ -14,19 +12,19 @@ import {
 } from "../lib/Bacon";
 
 /**
-* BaconCipherDecode operation
-*/
+ * Bacon Cipher Decode operation
+ */
 class BaconCipherDecode extends Operation {
     /**
-    * BaconCipherDecode constructor
-    */
+     * BaconCipherDecode constructor
+     */
     constructor() {
         super();
 
         this.name = "Bacon Cipher Decode";
         this.module = "Default";
-        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography(a method of hiding a secret message as opposed to just a cipher) devised by Francis Bacon in 1605.[1][2][3] A message is concealed in the presentation of text, rather than its content.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Bacon%27s_cipher";
+        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
+        this.infoURL = "https://wikipedia.org/wiki/Bacon%27s_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -49,10 +47,10 @@ class BaconCipherDecode extends Operation {
     }
 
     /**
-    * @param {String} input
-    * @param {Object[]} args
-    * @returns {String}
-    */
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     run(input, args) {
         const [alphabet, translation, invert] = args;
         const alphabetObject = BACON_ALPHABETS[alphabet];
@@ -97,8 +95,8 @@ class BaconCipherDecode extends Operation {
         const inputArray = input.match(/(.{5})/g) || [];
 
         let output = "";
-        for (let index = 0; index < inputArray.length; index++) {
-            const code = inputArray[index];
+        for (let i = 0; i < inputArray.length; i++) {
+            const code = inputArray[i];
             const number = parseInt(code, 2);
             output += number < alphabetObject.alphabet.length ? alphabetObject.alphabet[number] : "?";
         }

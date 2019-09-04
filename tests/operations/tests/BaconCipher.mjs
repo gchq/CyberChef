@@ -1,11 +1,11 @@
 /**
- * BaconCipher tests.
+ * Bacon Cipher tests.
  *
  * @author Karsten Silkenbäumer [github.com/kassi]
  * @copyright Karsten Silkenbäumer 2019
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister";
 import { BACON_ALPHABETS, BACON_TRANSLATIONS } from "../../../src/core/lib/Bacon";
 
 const alphabets = Object.keys(BACON_ALPHABETS);
@@ -242,9 +242,7 @@ TestRegister.addTests([
                 args: [alphabets[1], translations[3], true]
             }
         ],
-    }
-]);
-TestRegister.addTests([
+    },
     {
         name: "Bacon Encode: no input",
         input: "",
