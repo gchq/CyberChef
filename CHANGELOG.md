@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.6.0] - 2019-09-04
+- 'Bacon Cipher Encode' and 'Bacon Cipher Decode' operations added [@kassi] | [#500]
+
 ### [9.5.0] - 2019-09-04
 - Various Steganography operations added: 'Extract LSB', 'Extract RGBA', 'Randomize Colour Palette', and 'View Bit Plane' [@Ge0rg3] | [#625]
 
@@ -179,6 +182,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.6.0]: https://github.com/gchq/CyberChef/releases/tag/v9.6.0
 [9.5.0]: https://github.com/gchq/CyberChef/releases/tag/v9.5.0
 [9.4.0]: https://github.com/gchq/CyberChef/releases/tag/v9.4.0
 [9.3.0]: https://github.com/gchq/CyberChef/releases/tag/v9.3.0
@@ -253,6 +257,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@masq]: https://github.com/masq
 [@Ge0rg3]: https://github.com/Ge0rg3
 [@MShwed]: https://github.com/MShwed
+[@kassi]: https://github.com/kassi
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -294,6 +299,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#477]: https://github.com/gchq/CyberChef/pull/477
 [#489]: https://github.com/gchq/CyberChef/pull/489
 [#496]: https://github.com/gchq/CyberChef/pull/496
+[#500]: https://github.com/gchq/CyberChef/pull/500
 [#506]: https://github.com/gchq/CyberChef/pull/506
 [#515]: https://github.com/gchq/CyberChef/pull/515
 [#516]: https://github.com/gchq/CyberChef/pull/516
