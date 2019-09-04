@@ -62,7 +62,7 @@ class ImageHueSaturationLightness extends Operation {
     async run(input, args) {
         const [hue, saturation, lightness] = args;
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

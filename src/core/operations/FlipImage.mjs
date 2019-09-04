@@ -45,7 +45,7 @@ class FlipImage extends Operation {
      */
     async run(input, args) {
         const [flipAxis] = args;
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid input file type.");
         }
 

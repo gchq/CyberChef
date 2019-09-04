@@ -6,8 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import Utils from "../Utils";
-import { isImage } from "../lib/FileType";
+import Utils from "../Utils.mjs";
+import { fromBinary } from "../lib/Binary.mjs";
+import { isImage } from "../lib/FileType.mjs";
 import jimp from "jimp";
 
 /**
@@ -24,8 +25,8 @@ class ExtractLSB extends Operation {
         this.name = "Extract LSB";
         this.module = "Image";
         this.description = "Extracts the Least Significant Bit data from each pixel in an image. This is a common way to hide data in Steganography.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit_in_digital_steganography";
-        this.inputType = "byteArray";
+        this.infoURL = "https://wikipedia.org/wiki/Bit_numbering#Least_significant_bit_in_digital_steganography";
+        this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [
             {
@@ -62,9 +63,9 @@ class ExtractLSB extends Operation {
     }
 
     /**
-     * @param {File} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {File}
+     * @returns {byteArray}
      */
     async run(input, args) {
         if (!isImage(input)) throw new OperationError("Please enter a valid image file.");
@@ -72,7 +73,7 @@ class ExtractLSB extends Operation {
         const bit = 7 - args.pop(),
             pixelOrder = args.pop(),
             colours = args.filter(option => option !== "").map(option => COLOUR_OPTIONS.indexOf(option)),
-            parsedImage = await jimp.read(Buffer.from(input)),
+            parsedImage = await jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height,
             rgba = parsedImage.bitmap.data;
@@ -103,8 +104,7 @@ class ExtractLSB extends Operation {
             }
         }
 
-        return Utils.convertToByteArray(combinedBinary, "binary");
-
+        return fromBinary(combinedBinary);
     }
 
 }

@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { isImage } from "../lib/FileType";
+import { isImage } from "../lib/FileType.mjs";
 import jimp from "jimp";
 
 import {RGBA_DELIM_OPTIONS} from "../lib/Delim.mjs";
@@ -25,8 +25,8 @@ class ExtractRGBA extends Operation {
         this.name = "Extract RGBA";
         this.module = "Image";
         this.description = "Extracts each pixel's RGBA value in an image. These are sometimes used in Steganography to hide text or data.";
-        this.infoURL = "https://en.wikipedia.org/wiki/RGBA_color_space";
-        this.inputType = "byteArray";
+        this.infoURL = "https://wikipedia.org/wiki/RGBA_color_space";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -43,7 +43,7 @@ class ExtractRGBA extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -52,7 +52,7 @@ class ExtractRGBA extends Operation {
 
         const delimiter = args[0],
             includeAlpha = args[1],
-            parsedImage = await jimp.read(Buffer.from(input));
+            parsedImage = await jimp.read(input);
 
         let bitmap = parsedImage.bitmap.data;
         bitmap = includeAlpha ? bitmap : bitmap.filter((val, idx) => idx % 4 !== 3);

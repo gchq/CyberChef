@@ -54,7 +54,7 @@ class ImageBrightnessContrast extends Operation {
      */
     async run(input, args) {
         const [brightness, contrast] = args;
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

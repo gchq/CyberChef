@@ -107,7 +107,7 @@ class ContainImage extends Operation {
             "Bottom": jimp.VERTICAL_ALIGN_BOTTOM
         };
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

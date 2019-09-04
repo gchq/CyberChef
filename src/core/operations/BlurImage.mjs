@@ -53,7 +53,7 @@ class BlurImage extends Operation {
     async run(input, args) {
         const [blurAmount, blurType] = args;
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

@@ -38,7 +38,7 @@ class DitherImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

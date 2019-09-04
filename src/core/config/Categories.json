@@ -369,7 +369,11 @@
             "Scan for Embedded Files",
             "Extract Files",
             "Remove EXIF",
-            "Extract EXIF"
+            "Extract EXIF",
+            "Extract RGBA",
+            "View Bit Plane",
+            "Randomize Colour Palette",
+            "Extract LSB"
         ]
     },
     {
@@ -380,10 +384,6 @@
             "Remove EXIF",
             "Extract EXIF",
             "Split Colour Channels",
-            "Extract RGBA",
-            "View Bit Plane",
-            "Randomize Colour Palette",
-            "Extract LSB",
             "Rotate Image",
             "Resize Image",
             "Blur Image",

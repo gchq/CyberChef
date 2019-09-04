@@ -47,7 +47,7 @@ class ImageOpacity extends Operation {
      */
     async run(input, args) {
         const [opacity] = args;
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

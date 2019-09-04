@@ -93,7 +93,7 @@ class ConvertImageFormat extends Operation {
 
         const mime = formatMap[format];
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file format.");
         }
         let image;

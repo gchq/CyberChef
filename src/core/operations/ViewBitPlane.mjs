@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
-import { isImage } from "../lib/FileType";
-import { toBase64 } from "../lib/Base64";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import { isImage } from "../lib/FileType.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
 
 /**
@@ -24,10 +24,10 @@ class ViewBitPlane extends Operation {
 
         this.name = "View Bit Plane";
         this.module = "Image";
-        this.description = "Extracts and displays a bit plane of any given image. These show only a single bit from each pixel, and so are often used to hide messages in Steganography.";
+        this.description = "Extracts and displays a bit plane of any given image. These show only a single bit from each pixel, and can be used to hide messages in Steganography.";
         this.infoURL = "https://wikipedia.org/wiki/Bit_plane";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
@@ -44,15 +44,15 @@ class ViewBitPlane extends Operation {
     }
 
     /**
-     * @param {File} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {File}
+     * @returns {ArrayBuffer}
      */
     async run(input, args) {
         if (!isImage(input)) throw new OperationError("Please enter a valid image file.");
 
         const [colour, bit] = args,
-            parsedImage = await jimp.read(Buffer.from(input)),
+            parsedImage = await jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height,
             colourIndex = COLOUR_OPTIONS.indexOf(colour),
@@ -61,7 +61,6 @@ class ViewBitPlane extends Operation {
         if (bit < 0 || bit > 7) {
             throw new OperationError("Error: Bit argument must be between 0 and 7");
         }
-
 
         let pixel, bin, newPixelValue;
 
@@ -81,12 +80,12 @@ class ViewBitPlane extends Operation {
 
         const imageBuffer = await parsedImage.getBufferAsync(jimp.AUTO);
 
-        return Array.from(imageBuffer);
+        return new Uint8Array(imageBuffer).buffer;
     }
 
     /**
      * Displays the extracted data as an image for web apps.
-     * @param {byteArray} data
+     * @param {ArrayBuffer} data
      * @returns {html}
      */
     present(data) {

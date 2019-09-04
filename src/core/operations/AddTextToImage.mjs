@@ -121,7 +121,7 @@ class AddTextToImage extends Operation {
         let xPos = args[3],
             yPos = args[4];
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

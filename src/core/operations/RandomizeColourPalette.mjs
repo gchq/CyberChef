@@ -6,12 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import Utils from "../Utils";
-import PseudoRandomNumberGenerator from "./PseudoRandomNumberGenerator.mjs";
-import { isImage } from "../lib/FileType";
+import Utils from "../Utils.mjs";
+import { isImage } from "../lib/FileType.mjs";
 import { runHash } from "../lib/Hash.mjs";
-import { toBase64 } from "../lib/Base64";
+import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
+import { toHex } from "../lib/Hex.mjs";
 
 /**
  * Randomize Colour Palette operation
@@ -26,10 +26,10 @@ class RandomizeColourPalette extends Operation {
 
         this.name = "Randomize Colour Palette";
         this.module = "Image";
-        this.description = "Randomize's each colour in an image's colour palette. This can often reveal text or symbols that were previously a very similar colour to their surroundings.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Indexed_color";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.description = "Randomizes each colour in an image's colour palette. This can often reveal text or symbols that were previously a very similar colour to their surroundings, a technique sometimes used in Steganography.";
+        this.infoURL = "https://wikipedia.org/wiki/Indexed_color";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
@@ -41,15 +41,15 @@ class RandomizeColourPalette extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     async run(input, args) {
         if (!isImage(input)) throw new OperationError("Please enter a valid image file.");
 
-        const seed = args[0] || (new PseudoRandomNumberGenerator()).run("", [5, "Hex"]),
-            parsedImage = await jimp.read(Buffer.from(input)),
+        const seed = args[0] || (Math.random().toString().substr(2)),
+            parsedImage = await jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height;
 
@@ -64,16 +64,16 @@ class RandomizeColourPalette extends Operation {
 
         const imageBuffer = await parsedImage.getBufferAsync(jimp.AUTO);
 
-        return Array.from(imageBuffer);
+        return new Uint8Array(imageBuffer).buffer;
     }
 
     /**
      * Displays the extracted data as an image for web apps.
-     * @param {byteArray} data
+     * @param {ArrayBuffer} data
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
         const type = isImage(data);
 
         return `<img src="data:${type};base64,${toBase64(data)}">`;

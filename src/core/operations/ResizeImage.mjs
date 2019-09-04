@@ -87,7 +87,7 @@ class ResizeImage extends Operation {
             "Bezier": jimp.RESIZE_BEZIER
         };
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 
