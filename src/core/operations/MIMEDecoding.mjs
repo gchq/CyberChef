@@ -7,8 +7,9 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import Utils from "../Utils";
-import {fromHex} from "../lib/Hex.mjs";
+import { fromHex } from "../lib/Hex.mjs";
 import { fromBase64 } from "../lib/Base64";
+import cptable from "../vendor/js-codepage/cptable.js";
 
 /**
  * MIME Decoding operation
@@ -23,24 +24,11 @@ class MIMEDecoding extends Operation {
 
         this.name = "MIME Decoding";
         this.module = "Default";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "Enables the decoding of MIME message header extensions for non-ASCII text";
+        this.infoURL = "https://tools.ietf.org/html/rfc2047";
         this.inputType = "byteArray";
         this.outputType = "string";
-        this.args = [
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
-        ];
+        this.args = [];
     }
 
     /**
@@ -49,73 +37,135 @@ class MIMEDecoding extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        const mimeEncodedText = Utils.byteArrayToUtf8(input);
+        const encodedHeaders = mimeEncodedText.replace(/\r\n/g, "\n");
 
-        let mimeEncodedText = Utils.byteArrayToUtf8(input)
+        const decodedHeader = this.decodeHeaders(encodedHeaders);
 
-        let parsedString = "";
-        let currentPos = 0;
-        let pastPosition = 0;
-        while (currentPos >= 0) {
-            
-            // Find starting text
-            currentPos = mimeEncodedText.indexOf("=?", pastPosition);
-            console.log('CURRENT POSITION', currentPos);
-            if (currentPos < 0) break;
-
-            // Add existing unparsed string
-            let fillerText = mimeEncodedText.substring(pastPosition, currentPos);
-            console.log("PROCESSING RANGE", pastPosition, ' ' ,currentPos)
-            console.log('FILLER TEXT: ', fillerText);
-            if (fillerText.indexOf('\r') > 0) console.log('CR detected', fillerText.indexOf('\r'));
-            if (fillerText.indexOf('\n') > 0) console.log('LF detected', fillerText.indexOf('\n'));
-            if (fillerText.indexOf('\r\n') > 0) console.log('CRLF detected', fillerText.indexOf('\r\n'));
-            if (fillerText.indexOf('\x20') > 0) console.log('SPACE detected', fillerText.indexOf('\x20'));
-            if (fillerText.indexOf('\n\x20') > 0) console.log('newline SPACE detected', fillerText.indexOf('\x20'));
-
-            if (fillerText !== '\r\n')
-                parsedString += fillerText
-
-            pastPosition = currentPos;
-
-            // find ending text
-            currentPos = mimeEncodedText.indexOf("?=", pastPosition);
-
-            // Process block
-            let encodedTextBlock = mimeEncodedText.substring(pastPosition + 2, currentPos);
-            pastPosition = currentPos + 2;
-
-            parsedString += this.parseEncodedWord(encodedTextBlock);
-        }
-
-        return parsedString;
-
-        throw new OperationError("Test");
+        return decodedHeader;
     }
 
-    parseEncodedWord(encodedWord) {
-        let [charset, encoding, encodedBlock] = encodedWord.split('?');
+    /**
+     * Decode MIME header strings
+     * 
+     * @param headerString
+     */
+    decodeHeaders(headerString) {
+        // No encoded words detected
+        let i = headerString.indexOf("=?");
+        if (i === -1) return headerString;
 
-        console.log('CURRENT BLOCK TO PROCESS', encodedBlock);
-        console.log('CURRENT CHARSET', charset);
+        let decodedHeaders = headerString.slice(0, i);
+        let header = headerString.slice(i);
 
-        let encodedText = '';
-        if (encoding.toLowerCase() === 'b') {
-            encodedText = fromBase64(encodedBlock);
-        } else {
-            encodedText = encodedBlock;
-            let encodedChars = encodedText.indexOf("=");
-            if (encodedChars > 0) {
-                let extractedHex = encodedText.substring(encodedChars + 1, encodedChars + 3);
-                console.log("EXTRACTED HEX", extractedHex)
-                encodedText = encodedText.replace(`=${extractedHex}`, Utils.byteArrayToChars(fromHex(`=${extractedHex}`)))
+        let isBetweenWords = false;
+        let start, cur, charset, encoding, j, end, text;
+        while (header.length > -1) {
+            start = header.indexOf("=?");
+            if (start === -1) break;
+            cur = start + "=?".length;
+
+            i = header.slice(cur).indexOf("?");
+            if (i === -1) break;
+
+            charset = header.slice(cur, cur + i);
+            cur += i + "?".length;
+
+            if (header.length < cur + "Q??=".length) break;
+
+            encoding = header[cur];
+            cur += 1;
+
+            if (header[cur] !== "?") break;
+
+            cur += 1;
+
+            j = header.slice(cur).indexOf("?=");
+            if (j === -1) break;
+
+            text = header.slice(cur, cur + j);
+            end = cur + j + "?=".length;
+
+            if (encoding.toLowerCase() === "b") {
+                text = fromBase64(text);
+            } else if (encoding.toLowerCase() === "q") {
+                text = this.parseQEncodedWord(text);
+            } else {
+                isBetweenWords = false;
+                decodedHeaders += header.slice(0, start + 2);
+                header = header.slice(start + 2);
             }
 
-            encodedText = encodedText.replace("_", " ");
+            if (start > 0 && (!isBetweenWords || header.slice(0, start).search(/\S/g) > -1)) {
+                decodedHeaders += header.slice(0, start);
+            }
+
+            decodedHeaders += this.convertFromCharset(charset, text);
+
+            header = header.slice(end);
+            isBetweenWords = true;
         }
 
-        return encodedText;
+        if (header.length > 0) {
+            decodedHeaders += header;
+        }
+
+        return decodedHeaders;
     }
 
+    /**
+     * Converts decoded text for supported charsets.
+     * Supports UTF-8, US-ASCII, ISO-8859-*
+     *
+     * @param encodedWord
+     */
+    convertFromCharset(charset, encodedText) {
+        charset = charset.toLowerCase();
+        const parsedCharset = charset.split("-");
+
+        if (parsedCharset.length === 2 && parsedCharset[0] === "utf" && charset === "utf-8") {
+            return cptable.utils.decode(65001, encodedText);
+        } else if (parsedCharset.length === 2 && charset === "us-ascii") {
+            return cptable.utils.decode(20127, encodedText);
+        } else if (parsedCharset.length === 3 && parsedCharset[0] === "iso" && parsedCharset[1] === "8859") {
+            const isoCharset = parseInt(parsedCharset[2], 10);
+            if (isoCharset >= 1 && isoCharset <= 16) {
+                return cptable.utils.decode(28590 + isoCharset, encodedText);
+            }
+        }
+
+        throw new OperationError("Unhandled Charset");
+    }
+
+    /**
+     * Parses a Q encoded word
+     *
+     * @param encodedWord
+     */
+    parseQEncodedWord(encodedWord) {
+        let decodedWord = "";
+        for (let i = 0; i < encodedWord.length; i++) {
+            if (encodedWord[i] === "_") {
+                decodedWord += " ";
+            // Parse hex encoding
+            } else if (encodedWord[i] === "=") {
+                if ((i + 2) >= encodedWord.length) throw new OperationError("Incorrectly Encoded Word");
+                const decodedHex = Utils.byteArrayToChars(fromHex(encodedWord.substring(i + 1, i + 3)));
+                decodedWord += decodedHex;
+                i += 2;
+            } else if (
+                (encodedWord[i].charCodeAt(0) >= " ".charCodeAt(0) && encodedWord[i].charCodeAt(0) <= "~".charCodeAt(0)) ||
+                encodedWord[i] === "\n" ||
+                encodedWord[i] === "\r" ||
+                encodedWord[i] === "\t") {
+                decodedWord += encodedWord[i];
+            } else {
+                throw new OperationError("Incorrectly Encoded Word");
+            }
+        }
+
+        return decodedWord;
+    }
 }
 
 export default MIMEDecoding;
