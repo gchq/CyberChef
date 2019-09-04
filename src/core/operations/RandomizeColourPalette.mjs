@@ -11,7 +11,6 @@ import { isImage } from "../lib/FileType.mjs";
 import { runHash } from "../lib/Hash.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import jimp from "jimp";
-import { toHex } from "../lib/Hex.mjs";
 
 /**
  * Randomize Colour Palette operation
