@@ -85,6 +85,8 @@
             "Vigenère Decode",
             "To Morse Code",
             "From Morse Code",
+            "Bacon Cipher Encode",
+            "Bacon Cipher Decode",
             "Bifid Cipher Encode",
             "Bifid Cipher Decode",
             "Affine Cipher Encode",
