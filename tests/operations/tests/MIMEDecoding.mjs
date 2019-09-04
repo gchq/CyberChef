@@ -10,9 +10,53 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        name: "Encoded =?",
-        input: "=?=?utf-8?q?test?=",
-        expectedOutput: "=?test",
+        name: "Encoded comments",
+        input: "(=?ISO-8859-1?Q?a?=)",
+        expectedOutput: "(a)",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "Encoded adjacent comments whitespace",
+        input: "(=?ISO-8859-1?Q?a?= b)",
+        expectedOutput: "(a b)",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "Encoded adjacent single whitespace ignored",
+        input: "(=?ISO-8859-1?Q?a?= =?ISO-8859-1?Q?b?=)",
+        expectedOutput: "(ab)",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "Encoded adjacent double whitespace ignored",
+        input: "(=?ISO-8859-1?Q?a?=  =?ISO-8859-1?Q?b?=)",
+        expectedOutput: "(ab)",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "Encoded adjacent CRLF whitespace ignored",
+        input: "(=?ISO-8859-1?Q?a?=\r\n =?ISO-8859-1?Q?b?=)",
+        expectedOutput: "(ab)",
         recipeConfig: [
             {
                 "op": "MIME Decoding",
@@ -32,15 +76,14 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "UTF-8 Encodings Single Header",
-        input: "=?utf-8?q?=C2=A1Hola,?= =?utf-8?q?_se=C3=B1or!?=",
-        expectedOutput: "¡Hola, señor!",
+        name: "ISO Decoding",
+        input: "From: =?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>\nTo: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <keld@dkuug.dk>\nCC: =?ISO-8859-1?Q?Andr=E9?= Pirard <PIRARD@vm1.ulg.ac.be>\nSubject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=\n=?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=",
+        expectedOutput: "From: Keith Moore <moore@cs.utk.edu>\nTo: Keld Jørn Simonsen <keld@dkuug.dk>\nCC: André Pirard <PIRARD@vm1.ulg.ac.be>\nSubject: If you can read this you understand the example.",
         recipeConfig: [
             {
                 "op": "MIME Decoding",
                 "args": []
             }
         ]
-    },
-
+    }
 ]);
