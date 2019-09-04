@@ -7,8 +7,6 @@ assignees: ''
 
 ---
 
-<!-- Prefix the title above with 'Operation request:' -->
-
 ## Summary
 
 ### Example Input

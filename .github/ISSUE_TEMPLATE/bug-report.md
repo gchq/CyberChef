@@ -7,19 +7,18 @@ assignees: ''
 
 ---
 
-<!-- Prefix the title above with 'Bug report:' -->
 **Describe the bug**
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior or a link to the recipe / input used to cause the bug:
+Steps to reproduce the behaviour or a link to the recipe / input used to cause the bug:
 
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+**Expected behaviour**
 A clear and concise description of what you expected to happen.
 
 **Screenshots**
