@@ -1,4 +1,4 @@
-import sm from "sitemap";
+import Sitemap from "sitemap";
 import OperationConfig from "../../core/config/OperationConfig.json";
 
 
@@ -10,7 +10,7 @@ import OperationConfig from "../../core/config/OperationConfig.json";
  * @license Apache-2.0
  */
 
-const sitemap = sm.createSitemap({
+const sitemap = Sitemap.createSitemap({
     hostname: "https://gchq.github.io/CyberChef",
 });
 

@@ -140,8 +140,7 @@ module.exports = function (grunt) {
                     mode: "production",
                     target: "web",
                     entry: Object.assign({
-                        main: "./src/web/index.js",
-                        sitemap: "./src/web/static/sitemap.js"
+                        main: "./src/web/index.js"
                     }, moduleEntryPoints),
                     output: {
                         path: __dirname + "/build/prod",
@@ -232,7 +231,6 @@ module.exports = function (grunt) {
                     "build/prod/**/*",
                     "!build/prod/index.html",
                     "!build/prod/BundleAnalyzerReport.html",
-                    "!build/prod/sitemap.js"
                 ],
                 dest: `build/prod/CyberChef_v${pkg.version}.zip`
             }
@@ -328,7 +326,7 @@ module.exports = function (grunt) {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node build/prod/sitemap.js > build/prod/sitemap.xml"
+                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml"
             },
             generateConfig: {
                 command: [
