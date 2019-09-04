@@ -1,6 +1,6 @@
 /**
  * MIME Header Decoding tests
- * 
+ *
  * @author mshwed [m@ttshwed.com]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0

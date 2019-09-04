@@ -47,7 +47,7 @@ class MIMEDecoding extends Operation {
 
     /**
      * Decode MIME header strings
-     * 
+     *
      * @param headerString
      */
     decodeHeaders(headerString) {
