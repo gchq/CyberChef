@@ -46,7 +46,7 @@ class RotateImage extends Operation {
     async run(input, args) {
         const [degrees] = args;
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
 

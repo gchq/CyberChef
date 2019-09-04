@@ -40,7 +40,7 @@ class ToBase64 extends Operation {
      */
     run(input, args) {
         const alphabet = args[0];
-        return toBase64(new Uint8Array(input), alphabet);
+        return toBase64(input, alphabet);
     }
 
     /**

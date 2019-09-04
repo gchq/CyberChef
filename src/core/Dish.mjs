@@ -177,7 +177,7 @@ class Dish {
         this.type = type;
 
         if (!this.valid()) {
-            const sample = Utils.truncate(JSON.stringify(this.value), 13);
+            const sample = Utils.truncate(JSON.stringify(this.value), 25);
             throw new DishError(`Data is not a valid ${Dish.enumLookup(type)}: ${sample}`);
         }
     }

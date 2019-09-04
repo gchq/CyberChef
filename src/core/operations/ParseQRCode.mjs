@@ -51,7 +51,7 @@ class ParseQRCode extends Operation {
     async run(input, args) {
         const [normalise] = args;
 
-        if (!isImage(new Uint8Array(input))) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
         return await parseQrCode(input, normalise);
