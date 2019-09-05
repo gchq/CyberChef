@@ -30,26 +30,13 @@ class OCR extends Operation {
         this.infoURL = "https://en.wikipedia.org/wiki/Optical_character_recognition";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
-        this.args = [
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
-        ];
+        this.args = [];
     }
 
     /**
      * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {Object}
+     * @returns {string}
      */
     async run(input, args) {
         if (!isImage(input)) {
@@ -72,10 +59,8 @@ class OCR extends Operation {
 
             const result = await worker.recognize(image)
                 .progress(progress => {
-                    if (isWorkerEnvironment()) self.sendStatusMessage(`${progress.status} - ${parseFloat(progress.progress).toFixed(2)}%`);
+                    if (isWorkerEnvironment()) self.sendStatusMessage(`${progress.status} - ${(parseFloat(progress.progress)*100).toFixed(2)}%`);
                 });
-
-            console.log(result);
 
             return result.text;
         } catch (err) {
