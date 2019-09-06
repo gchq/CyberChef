@@ -43,9 +43,8 @@ class NodeRecipe {
             } else {
                 throw new TypeError("Inputted function not a Chef operation.");
             }
-        // CASE: op with configuration
+        // CASE: op, maybe with configuration
         } else if (ing.op) {
-            // Return op and args pair for opList item.
             const sanitisedOp = this._validateIngredient(ing.op);
             if (ing.args) {
                 return {op: sanitisedOp, args: ing.args};
