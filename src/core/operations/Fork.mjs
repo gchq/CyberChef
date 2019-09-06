@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
+import Operation from "../Operation.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
 
 /**
  * Fork operation
@@ -89,7 +89,7 @@ class Fork extends Operation {
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
             // Baseline ing values for each tranche so that registers are reset
-            subOpList.forEach((op, i) => {
+            recipe.opList.forEach((op, i) => {
                 op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
             });
 

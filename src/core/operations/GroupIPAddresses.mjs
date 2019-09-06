@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {IP_DELIM_OPTIONS} from "../lib/Delim";
-import {ipv6ToStr, genIpv6Mask, IPV4_REGEX, strToIpv6,  ipv4ToStr, IPV6_REGEX, strToIpv4} from "../lib/IP";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {IP_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {ipv6ToStr, genIpv6Mask, IPV4_REGEX, strToIpv6,  ipv4ToStr, IPV6_REGEX, strToIpv4} from "../lib/IP.mjs";
 
 /**
  * Group IP addresses operation
@@ -77,7 +77,7 @@ class GroupIPAddresses extends Operation {
                 ip = strToIpv4(match[1]) >>> 0;
                 network = ip & ipv4Mask;
 
-                if (ipv4Networks.hasOwnProperty(network)) {
+                if (network in ipv4Networks) {
                     ipv4Networks[network].push(ip);
                 } else {
                     ipv4Networks[network] = [ip];
@@ -93,7 +93,7 @@ class GroupIPAddresses extends Operation {
 
                 networkStr = ipv6ToStr(network, true);
 
-                if (ipv6Networks.hasOwnProperty(networkStr)) {
+                if (networkStr in ipv6Networks) {
                     ipv6Networks[networkStr].push(ip);
                 } else {
                     ipv6Networks[networkStr] = [ip];

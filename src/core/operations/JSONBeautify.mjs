@@ -6,7 +6,7 @@
  */
 
 import vkbeautify from "vkbeautify";
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * JSON Beautify operation

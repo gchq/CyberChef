@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
+import Operation from "../Operation.mjs";
+import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
 

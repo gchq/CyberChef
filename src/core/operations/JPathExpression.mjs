@@ -5,8 +5,8 @@
  */
 
 import jpath from "jsonpath";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * JPath expression operation

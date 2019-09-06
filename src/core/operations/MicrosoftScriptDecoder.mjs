@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Microsoft Script Decoder operation
@@ -34,7 +34,7 @@ class MicrosoftScriptDecoder extends Operation {
     run(input, args) {
         const matcher = /#@~\^.{6}==(.+).{6}==\^#~@/;
         const encodedData = matcher.exec(input);
-        if (encodedData){
+        if (encodedData) {
             return MicrosoftScriptDecoder._decode(encodedData[1]);
         } else {
             return "";

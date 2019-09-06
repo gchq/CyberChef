@@ -5,10 +5,11 @@
  */
 
 import OperationConfig from "./config/OperationConfig.json";
-import OperationError from "./errors/OperationError";
-import Operation from "./Operation";
-import DishError from "./errors/DishError";
+import OperationError from "./errors/OperationError.mjs";
+import Operation from "./Operation.mjs";
+import DishError from "./errors/DishError.mjs";
 import log from "loglevel";
+import { isWorkerEnvironment } from "./Utils.mjs";
 
 // Cache container for modules
 let modules = null;
@@ -61,7 +62,7 @@ class Recipe  {
         if (!modules) {
             // Using Webpack Magic Comments to force the dynamic import to be included in the main chunk
             // https://webpack.js.org/api/module-methods/
-            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules");
+            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules.mjs");
             modules = modules.default;
         }
 
@@ -200,7 +201,12 @@ class Recipe  {
 
             try {
                 input = await dish.get(op.inputType);
-                log.debug("Executing operation");
+                log.debug(`Executing operation '${op.name}'`);
+
+                if (isWorkerEnvironment()) {
+                    self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
+                    self.sendProgressMessage(i + 1, this.opList.length);
+                }
 
                 if (op.flowControl) {
                     // Package up the current state

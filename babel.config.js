@@ -4,21 +4,23 @@ module.exports = function(api) {
     return {
         "presets": [
             ["@babel/preset-env", {
-                "targets": {
-                    "chrome": 40,
-                    "firefox": 35,
-                    "edge": 14,
-                    "node": "6.5"
-                },
                 "modules": false,
-                "useBuiltIns": "entry"
+                "useBuiltIns": "entry",
+                "corejs": 3
             }]
         ],
         "plugins": [
-            "babel-plugin-syntax-dynamic-import",
-            ["babel-plugin-transform-builtin-extend", {
-                "globals": ["Error"]
-            }]
+            "dynamic-import-node",
+            [
+                "babel-plugin-transform-builtin-extend", {
+                    "globals": ["Error"]
+                }
+            ],
+            [
+                "@babel/plugin-transform-runtime", {
+                    "regenerator": true
+                }
+            ]
         ]
     };
 };

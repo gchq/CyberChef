@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {HASH_DELIM_OPTIONS} from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {HASH_DELIM_OPTIONS} from "../lib/Delim.mjs";
 import ctphjs from "ctph.js";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Compare CTPH hashes operation

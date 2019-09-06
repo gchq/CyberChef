@@ -3,8 +3,8 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * DNS over HTTPS operation
@@ -111,7 +111,7 @@ class DNSOverHTTPS extends Operation {
  * @returns {JSON}
  */
 function extractData(data) {
-    if (typeof(data) == "undefined"){
+    if (typeof(data) == "undefined") {
         return [];
     } else {
         const dataValues = [];

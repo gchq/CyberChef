@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import kebabCase from "lodash/kebabCase";
-import Operation from "../Operation";
-import { replaceVariableNames } from "../lib/Code";
+import kebabCase from "lodash/kebabCase.js";
+import Operation from "../Operation.mjs";
+import { replaceVariableNames } from "../lib/Code.mjs";
 
 /**
  * To Kebab case operation

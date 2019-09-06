@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Dish from "../Dish";
-import { getLabelIndex } from "../lib/FlowControl";
+import Operation from "../Operation.mjs";
+import Dish from "../Dish.mjs";
+import { getLabelIndex } from "../lib/FlowControl.mjs";
 
 /**
  * Conditional Jump operation

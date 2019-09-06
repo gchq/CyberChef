@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {fromBase64, toBase64} from "../lib/Base64";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {fromBase64, toBase64} from "../lib/Base64.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Show Base64 offsets operation

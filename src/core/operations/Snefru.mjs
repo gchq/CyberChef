@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {runHash} from "../lib/Hash";
+import Operation from "../Operation.mjs";
+import {runHash} from "../lib/Hash.mjs";
 
 /**
  * Snefru operation
