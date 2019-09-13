@@ -383,6 +383,7 @@
         "ops": [
             "Render Image",
             "Play Media",
+            "Optical Character Recognition",
             "Remove EXIF",
             "Extract EXIF",
             "Split Colour Channels",
@@ -405,8 +406,7 @@
             "Hex Density chart",
             "Scatter chart",
             "Series chart",
-            "Heatmap chart",
-            "OCR"
+            "Heatmap chart"
         ]
     },
     {
