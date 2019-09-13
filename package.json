@@ -143,6 +143,7 @@
     "sortablejs": "^1.9.0",
     "split.js": "^1.5.11",
     "ssdeep.js": "0.0.2",
+    "tesseract.js": "^2.0.0-alpha.15",
     "ua-parser-js": "^0.7.20",
     "utf8": "^3.0.0",
     "vkbeautify": "^0.99.3",
