@@ -70,13 +70,13 @@ TestRegister.addApiTests([
     }),
 
     it("AES decrypt: toggleString and option", () => {
-        const result = AESDecrypt("812c34ae6af353244a63c6ce23b7c34286b60be28ea4645523d4494700e7", {
+        const result = AESDecrypt("4a123af235a507bbc9d5871721d61b98504d569a9a5a7847e2d78315fec7", {
             key: {
                 string: "some longer key1",
                 option: "utf8",
             },
             iv: {
-                string: "some iv",
+                string: "some iv some iv1",
                 option: "utf8",
             },
             mode: "OFB",
@@ -916,8 +916,13 @@ smothering ampersand abreast
     it("Triple DES encrypt / decrypt", () => {
         assert.strictEqual(
             chef.tripleDESDecrypt(
-                chef.tripleDESEncrypt("Destroy Money", {key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"}}),
-                {key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"}}).toString(),
+                chef.tripleDESEncrypt("Destroy Money", {
+                    key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
+                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}}),
+                {
+                    key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
+                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}
+                }).toString(),
             "Destroy Money");
     }),
 
