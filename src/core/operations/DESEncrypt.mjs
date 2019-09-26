@@ -64,8 +64,8 @@ class DESEncrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType] = args;
-        var iv = Utils.convertToByteArray(args[1].string, args[1].option)
 
         if (key.length !== 8) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -78,29 +78,29 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
 
         const cipher = forge.cipher.createCipher("DES-" + mode, key);
 
-        if (mode === "CTR"){
+        if (mode === "CTR") {
             // Temp workaround until https://github.com/digitalbazaar/forge/issues/721 is fixed
-            const blockSize = cipher.mode.blockSize
-            var blockOutputs = forge.util.createBuffer();
-            var numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1
+            const blockSize = cipher.mode.blockSize;
+            const blockOutputs = forge.util.createBuffer();
+            const numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1;
             if (iv.length < blockSize) {
-                var ivLen = iv.length
-                for (var i=0; i < blockSize - ivLen; i++){
-                    iv.unshift(0)
+                const ivLen = iv.length;
+                for (let i=0; i < blockSize - ivLen; i++) {
+                    iv.unshift(0);
                 }
             }
-            for (var i=0; i < numBlocks; i++) {
-                cipher.start({iv: iv})
-                cipher.update(forge.util.createBuffer().fillWithByte(0,blockSize))
-                blockOutputs.putBuffer(cipher.output)
-                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF
+            for (let j=0; j < numBlocks; j++) {
+                cipher.start({iv: iv});
+                cipher.update(forge.util.createBuffer().fillWithByte(0, blockSize));
+                blockOutputs.putBuffer(cipher.output);
+                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF;
             }
 
-            var output = forge.util.createBuffer()
-            for (var i=0; i < input.length; i++) {
-                output.putByte(input.charCodeAt(i)^blockOutputs.getByte())
+            const output = forge.util.createBuffer();
+            for (let k=0; k < input.length; k++) {
+                output.putByte(input.charCodeAt(k)^blockOutputs.getByte());
             }
-            cipher.output=output
+            cipher.output=output;
         } else {
             cipher.start({iv: iv});
             cipher.update(forge.util.createBuffer(input));

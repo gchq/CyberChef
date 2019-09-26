@@ -64,8 +64,8 @@ class DESDecrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv  = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType] = args;
-        var iv = Utils.convertToByteArray(args[1].string, args[1].option)
 
         if (key.length !== 8) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -77,36 +77,36 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("DES-" + mode, key);
-        var result
+        let result;
 
-        if (mode === "CTR"){
+        if (mode === "CTR") {
             // Temp workaround until https://github.com/digitalbazaar/forge/issues/721 is fixed
-            const blockSize = decipher.mode.blockSize
-            var blockOutputs = forge.util.createBuffer();
-            var numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1 
+            const blockSize = decipher.mode.blockSize;
+            const blockOutputs = forge.util.createBuffer();
+            const numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1;
             if (iv.length < blockSize) {
-                var ivLen = iv.length
-                for (var i=0; i < blockSize - ivLen; i++){
-                    iv.unshift(0)
+                const ivLen = iv.length;
+                for (let i=0; i < blockSize - ivLen; i++) {
+                    iv.unshift(0);
                 }
             }
-            for (var i=0; i < numBlocks; i++) {
-                decipher.start({iv: iv})
-                decipher.update(forge.util.createBuffer().fillWithByte(0,blockSize))
-                blockOutputs.putBuffer(decipher.output)
-                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF
+            for (let j=0; j < numBlocks; j++) {
+                decipher.start({iv: iv});
+                decipher.update(forge.util.createBuffer().fillWithByte(0, blockSize));
+                blockOutputs.putBuffer(decipher.output);
+                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF;
             }
 
-            var output = forge.util.createBuffer()
-            for (var i=0; i < input.length; i++) {
-                output.putByte(input.charCodeAt(i)^blockOutputs.getByte())
+            const output = forge.util.createBuffer();
+            for (let k=0; k < input.length; k++) {
+                output.putByte(input.charCodeAt(k)^blockOutputs.getByte());
             }
-            result = true
-            decipher.output = output
+            result = true;
+            decipher.output = output;
         } else {
             decipher.start({iv: iv});
             decipher.update(forge.util.createBuffer(input));
-            result = decipher.finish();    
+            result = decipher.finish();
         }
 
         if (result) {
