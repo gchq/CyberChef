@@ -84,6 +84,12 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
             const blockSize = decipher.mode.blockSize
             var blockOutputs = forge.util.createBuffer();
             var numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1 
+            if (iv.length < blockSize) {
+                var ivLen = iv.length
+                for (var i=0; i < blockSize - ivLen; i++){
+                    iv.unshift(0)
+                }
+            }
             for (var i=0; i < numBlocks; i++) {
                 decipher.start({iv: iv})
                 decipher.update(forge.util.createBuffer().fillWithByte(0,blockSize))
