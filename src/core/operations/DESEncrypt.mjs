@@ -64,8 +64,8 @@ class DESEncrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType] = args;
+        var iv = Utils.convertToByteArray(args[1].string, args[1].option)
 
         if (key.length !== 8) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -77,9 +77,29 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("DES-" + mode, key);
-        cipher.start({iv: iv});
-        cipher.update(forge.util.createBuffer(input));
-        cipher.finish();
+
+        if (mode === "CTR"){
+            // Temp workaround until https://github.com/digitalbazaar/forge/issues/721 is fixed
+            const blockSize = cipher.mode.blockSize
+            var blockOutputs = forge.util.createBuffer();
+            var numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1
+            for (var i=0; i < numBlocks; i++) {
+                cipher.start({iv: iv})
+                cipher.update(forge.util.createBuffer().fillWithByte(0,blockSize))
+                blockOutputs.putBuffer(cipher.output)
+                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF
+            }
+
+            var output = forge.util.createBuffer()
+            for (var i=0; i < input.length; i++) {
+                output.putByte(input.charCodeAt(i)^blockOutputs.getByte())
+            }
+            cipher.output=output
+        } else {
+            cipher.start({iv: iv});
+            cipher.update(forge.util.createBuffer(input));
+            cipher.finish();
+        }
 
         return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
     }
