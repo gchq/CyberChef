@@ -77,35 +77,9 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("DES-" + mode, key);
-
-        if (mode === "CTR") {
-            // Temp workaround until https://github.com/digitalbazaar/forge/issues/721 is fixed
-            const blockSize = cipher.mode.blockSize;
-            const blockOutputs = forge.util.createBuffer();
-            const numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1;
-            if (iv.length < blockSize) {
-                const ivLen = iv.length;
-                for (let i=0; i < blockSize - ivLen; i++) {
-                    iv.unshift(0);
-                }
-            }
-            for (let j=0; j < numBlocks; j++) {
-                cipher.start({iv: iv});
-                cipher.update(forge.util.createBuffer().fillWithByte(0, blockSize));
-                blockOutputs.putBuffer(cipher.output);
-                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF;
-            }
-
-            const output = forge.util.createBuffer();
-            for (let k=0; k < input.length; k++) {
-                output.putByte(input.charCodeAt(k)^blockOutputs.getByte());
-            }
-            cipher.output=output;
-        } else {
-            cipher.start({iv: iv});
-            cipher.update(forge.util.createBuffer(input));
-            cipher.finish();
-        }
+        cipher.start({iv: iv});
+        cipher.update(forge.util.createBuffer(input));
+        cipher.finish();
 
         return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
     }

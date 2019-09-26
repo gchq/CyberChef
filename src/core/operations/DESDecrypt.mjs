@@ -64,7 +64,7 @@ class DESDecrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv  = Utils.convertToByteArray(args[1].string, args[1].option),
+            iv = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType] = args;
 
         if (key.length !== 8) {
@@ -77,37 +77,9 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("DES-" + mode, key);
-        let result;
-
-        if (mode === "CTR") {
-            // Temp workaround until https://github.com/digitalbazaar/forge/issues/721 is fixed
-            const blockSize = decipher.mode.blockSize;
-            const blockOutputs = forge.util.createBuffer();
-            const numBlocks = input.length % blockSize === 0 ? input.length >> 3 : (input.length >> 3) + 1;
-            if (iv.length < blockSize) {
-                const ivLen = iv.length;
-                for (let i=0; i < blockSize - ivLen; i++) {
-                    iv.unshift(0);
-                }
-            }
-            for (let j=0; j < numBlocks; j++) {
-                decipher.start({iv: iv});
-                decipher.update(forge.util.createBuffer().fillWithByte(0, blockSize));
-                blockOutputs.putBuffer(decipher.output);
-                iv[iv.length-1] = (iv[iv.length-1] + 1) & 0xFFFFFFFF;
-            }
-
-            const output = forge.util.createBuffer();
-            for (let k=0; k < input.length; k++) {
-                output.putByte(input.charCodeAt(k)^blockOutputs.getByte());
-            }
-            result = true;
-            decipher.output = output;
-        } else {
-            decipher.start({iv: iv});
-            decipher.update(forge.util.createBuffer(input));
-            result = decipher.finish();
-        }
+        decipher.start({iv: iv});
+        decipher.update(forge.util.createBuffer(input));
+        const result = decipher.finish();
 
         if (result) {
             return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
