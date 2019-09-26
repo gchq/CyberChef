@@ -6,23 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import forge from "node-forge/dist/forge.min.js";
 import OperationError from "../errors/OperationError.mjs";
-import { Blowfish } from "../vendor/Blowfish.mjs";
-import { toBase64 } from "../lib/Base64.mjs";
-import { toHexFast } from "../lib/Hex.mjs";
-
-/**
- * Lookup table for Blowfish output types.
- */
-const BLOWFISH_OUTPUT_TYPE_LOOKUP = {
-    Base64: 0, Hex: 1, String: 2, Raw: 3
-};
-/**
- * Lookup table for Blowfish modes.
- */
-const BLOWFISH_MODE_LOOKUP = {
-    ECB: 0, CBC: 1, PCBC: 2, CFB: 3, OFB: 4, CTR: 5
-};
+import { Blowfish } from "../lib/Blowfish.mjs";
 
 /**
  * Blowfish Decrypt operation
@@ -57,7 +43,7 @@ class BlowfishDecrypt extends Operation {
             {
                 "name": "Mode",
                 "type": "option",
-                "value": ["CBC", "PCBC", "CFB", "OFB", "CTR", "ECB"]
+                "value": ["CBC", "CFB", "OFB", "CTR", "ECB"]
             },
             {
                 "name": "Input",
@@ -79,21 +65,27 @@ class BlowfishDecrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            [,, mode, inputType, outputType] = args;
+            iv = Utils.convertToByteString(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
 
         if (key.length === 0) throw new OperationError("Enter a key");
 
-        input = inputType === "Raw" ? Utils.strToByteArray(input) : input;
+        input = Utils.convertToByteString(input, inputType);
 
-        Blowfish.setIV(toBase64(iv), 0);
-
-        const result = Blowfish.decrypt(input, key, {
-            outputType: BLOWFISH_OUTPUT_TYPE_LOOKUP[inputType], // This actually means inputType. The library is weird.
-            cipherMode: BLOWFISH_MODE_LOOKUP[mode]
+        const decipher = Blowfish.createDecipher(key, mode);
+        decipher.start({
+            iv: iv.length === 0 ? "" : iv,
         });
+        decipher.update(forge.util.createBuffer(input));
+        const result = decipher.finish();
 
-        return outputType === "Hex" ? toHexFast(Utils.strToByteArray(result)) : result;
+        if (result) {
+            return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+        } else {
+            throw new OperationError("Unable to decrypt input with these parameters.");
+        }
     }
 
 }

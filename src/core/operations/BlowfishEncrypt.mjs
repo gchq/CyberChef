@@ -6,24 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import forge from "node-forge/dist/forge.min.js";
 import OperationError from "../errors/OperationError.mjs";
-import { Blowfish } from "../vendor/Blowfish.mjs";
-import { toBase64 } from "../lib/Base64.mjs";
-
-/**
- * Lookup table for Blowfish output types.
- */
-const BLOWFISH_OUTPUT_TYPE_LOOKUP = {
-    Base64: 0, Hex: 1, String: 2, Raw: 3
-};
-
-/**
- * Lookup table for Blowfish modes.
- */
-const BLOWFISH_MODE_LOOKUP = {
-    ECB: 0, CBC: 1, PCBC: 2, CFB: 3, OFB: 4, CTR: 5
-};
-
+import { Blowfish } from "../lib/Blowfish.mjs";
 
 /**
  * Blowfish Encrypt operation
@@ -58,7 +43,7 @@ class BlowfishEncrypt extends Operation {
             {
                 "name": "Mode",
                 "type": "option",
-                "value": ["CBC", "PCBC", "CFB", "OFB", "CTR", "ECB"]
+                "value": ["CBC", "CFB", "OFB", "CTR", "ECB"]
             },
             {
                 "name": "Input",
@@ -80,21 +65,25 @@ class BlowfishEncrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            [,, mode, inputType, outputType] = args;
+            iv = Utils.convertToByteString(args[1].string, args[1].option),
+            mode = args[2],
+            inputType = args[3],
+            outputType = args[4];
 
         if (key.length === 0) throw new OperationError("Enter a key");
 
         input = Utils.convertToByteString(input, inputType);
 
-        Blowfish.setIV(toBase64(iv), 0);
+        const cipher = Blowfish.createCipher(key, mode);
+        cipher.start({iv: iv});
+        cipher.update(forge.util.createBuffer(input));
+        cipher.finish();
 
-        const enc = Blowfish.encrypt(input, key, {
-            outputType: BLOWFISH_OUTPUT_TYPE_LOOKUP[outputType],
-            cipherMode: BLOWFISH_MODE_LOOKUP[mode]
-        });
-
-        return outputType === "Raw" ? Utils.byteArrayToChars(enc) : enc;
+        if (outputType === "Hex") {
+            return cipher.output.toHex();
+        } else {
+            return cipher.output.getBytes();
+        }
     }
 
 }
