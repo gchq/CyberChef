@@ -539,7 +539,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
     {
         name: "DES Encrypt: DES-CTR, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        expectedOutput: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
+        expectedOutput: "09015087e15b0937c462fd5974af0c4b5880de136a5680453c99f4500628cbeca769623515d836985110b93eacfea7fa4a7b2b3cb4f67acbb5f7e8ddb5a5d445da74bf6572b0a874befa3888c81110776388e400afd8dc908dcc0c018c7753355f8a1c9f",
         recipeConfig: [
             {
                 "op": "DES Encrypt",
@@ -1162,7 +1162,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
     {
         name: "DES Decrypt: DES-CTR, Binary",
         input: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
-        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "7a0e643132750e96b76dc9efa7810bea2b8feaa5b97887e44f96c0e6d506cc4dd4665683c6f63139221f8d887fd0a05b39741f8a67d87d6ac6f8dc6b668bd3e4a97b8bd3a19eafd5cdf50c3e1b3f17d61087d0b67cf6db31fec338b75f5954942c852829",
         recipeConfig: [
             {
                 "op": "DES Decrypt",
