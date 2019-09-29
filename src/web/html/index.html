@@ -141,12 +141,12 @@
         </div>
         <!-- End preloader overlay -->
         <button type="button" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">
-            <i class="material-icons">star</i>
+            <em class="material-icons">star</em>
         </button>
         <div id="content-wrapper">
             <div id="banner" class="row">
                 <div class="col" style="text-align: left; padding-left: 10px;">
-                    <a href="CyberChef_v<%= htmlWebpackPlugin.options.version %>.zip" download>Download CyberChef <i class="material-icons">file_download</i></a>
+                    <a href="CyberChef_v<%= htmlWebpackPlugin.options.version %>.zip" download>Download CyberChef <em class="material-icons">file_download</em></a>
                 </div>
                 <div class="col-md-6" id="notice-wrapper">
                     <span id="notice">
@@ -161,8 +161,8 @@
                     </span>
                 </div>
                 <div class="col" style="text-align: right; padding-right: 0;">
-                    <a href="#" id="options">Options <i class="material-icons">settings</i></a>
-                    <a href="#" id="support" data-toggle="modal" data-target="#support-modal">About / Support <i class="material-icons">help</i></a>
+                    <a href="#" id="options">Options <em class="material-icons">settings</em></a>
+                    <a href="#" id="support" data-toggle="modal" data-target="#support-modal">About / Support <em class="material-icons">help</em></a>
                 </div>
             </div>
             <div id="workspace-wrapper">
@@ -178,13 +178,13 @@
                         Recipe
                         <span class="float-right">
                             <button type="button" class="btn btn-primary bmd-btn-icon" id="save" data-toggle="tooltip" title="Save recipe">
-                                <i class="material-icons">save</i>
+                                <em class="material-icons">save</em>
                             </button>
                             <button type="button" class="btn btn-primary bmd-btn-icon" id="load" data-toggle="tooltip" title="Load recipe">
-                                <i class="material-icons">folder</i>
+                                <em class="material-icons">folder</em>
                             </button>
                             <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-recipe" data-toggle="tooltip" title="Clear recipe">
-                                <i class="material-icons">delete</i>
+                                <em class="material-icons">delete</em>
                             </button>
                         </span>
                     </div>
@@ -219,21 +219,21 @@
                             <label for="input-text">Input</label>
                             <span class="float-right">
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab">
-                                    <i class="material-icons">add</i>
+                                    <em class="material-icons">add</em>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-folder" data-toggle="tooltip" title="Open folder as input">
-                                    <i class="material-icons">folder_open</i>
+                                    <em class="material-icons">folder_open</em>
                                     <input type="file" id="open-folder" style="display: none" multiple directory webkitdirectory>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input">
-                                    <i class="material-icons">input</i>
+                                    <em class="material-icons">input</em>
                                     <input type="file" id="open-file" style="display: none" multiple>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output">
-                                    <i class="material-icons">delete</i>
+                                    <em class="material-icons">delete</em>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="reset-layout" data-toggle="tooltip" title="Reset pane layout">
-                                    <i class="material-icons">view_compact</i>
+                                    <em class="material-icons">view_compact</em>
                                 </button>
                             </span>
                             <div class="io-info" id="input-files-info"></div>
@@ -290,22 +290,22 @@
                             <label for="output-text">Output</label>
                             <span class="float-right">
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a zip file" style="display: none">
-                                        <i class="material-icons">archive</i>
+                                        <em class="material-icons">archive</em>
                                     </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-to-file" data-toggle="tooltip" title="Save output to file">
-                                    <i class="material-icons">save</i>
+                                    <em class="material-icons">save</em>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="copy-output" data-toggle="tooltip" title="Copy raw output to the clipboard">
-                                    <i class="material-icons">content_copy</i>
+                                    <em class="material-icons">content_copy</em>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Replace input with output">
-                                    <i class="material-icons">open_in_browser</i>
+                                    <em class="material-icons">open_in_browser</em>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="undo-switch" data-toggle="tooltip" title="Undo" disabled="disabled">
-                                    <i class="material-icons">undo</i>
+                                    <em class="material-icons">undo</em>
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="maximise-output" data-toggle="tooltip" title="Maximise output pane">
-                                    <i class="material-icons">fullscreen</i>
+                                    <em class="material-icons">fullscreen</em>
                                 </button>
                             </span>
                             <div class="io-info" id="bake-info"></div>
@@ -317,7 +317,7 @@
                                 </svg>
                             </button>
                             <span id="stale-indicator" class="hidden" data-toggle="tooltip" title="The output is stale. The input or recipe has changed since this output was generated. Bake again to get the new value.">
-                                <i class="material-icons">access_time</i>
+                                <em class="material-icons">access_time</em>
                             </span>
                         </div>
                         <div id="output-wrapper">
@@ -358,7 +358,7 @@
                                                 <div class="input-group">
                                                     <span class="input-group-btn">
                                                         <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
-                                                            <i class="material-icons">search</i>
+                                                            <em class="material-icons">search</em>
                                                         </button>
                                                     </span>
                                                     <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
