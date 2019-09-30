@@ -1,12 +1,11 @@
 /**
  * @author gchq77703 []
  * @copyright Crown Copyright 2018
- ` * @license Apache-2.0
+ * @license Apache-2.0
  */
 
 import Operation from "../Operation";
 import forge from "node-forge/dist/forge.min.js";
-import PrimeWorker from "node-forge/dist/prime.worker.min.js";
 
 /**
  * Generate RSA Key Pair operation
@@ -54,13 +53,9 @@ class GenerateRSAKeyPair extends Operation {
      */
     async run(input, args) {
         const [keyLength, outputFormat] = args;
-        let workerScript;
 
         return new Promise((resolve, reject) => {
-            if (ENVIRONMENT_IS_WORKER || window) {
-                workerScript = ENVIRONMENT_IS_WORKER() ? self.URL.createObjectURL(new Blob([PrimeWorker])) : window.URL.createObjectURL(new Blob([PrimeWorker]));
-            }
-            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: 2, workerScript}, (err, keypair) => {
+            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: -1}, (err, keypair) => {
                 if (err) return reject(err);
 
                 let result;
