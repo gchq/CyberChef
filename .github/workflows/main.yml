@@ -18,7 +18,7 @@ jobs:
     - name: Unit Tests
       run: |
         npx grunt test
-        npx grunt testnodeconsumer
+        sudo npx grunt testnodeconsumer
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
     - name: Build & Deploy
