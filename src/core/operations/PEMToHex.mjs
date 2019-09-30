@@ -5,7 +5,7 @@
  */
 
 import r from "jsrsasign";
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * PEM to Hex operation
@@ -21,7 +21,7 @@ class PEMToHex extends Operation {
         this.name = "PEM to Hex";
         this.module = "PublicKey";
         this.description = "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.";
-        this.infoURL = "https://en.wikipedia.org/wiki/X.690#DER_encoding";
+        this.infoURL = "https://wikipedia.org/wiki/X.690#DER_encoding";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {fromHex, toHex} from "../lib/Hex";
-import {ipv4ToStr, protocolLookup} from "../lib/IP";
-import TCPIPChecksum from "./TCPIPChecksum";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {fromHex, toHex} from "../lib/Hex.mjs";
+import {ipv4ToStr, protocolLookup} from "../lib/IP.mjs";
+import TCPIPChecksum from "./TCPIPChecksum.mjs";
 
 /**
  * Parse IPv4 header operation
@@ -23,7 +23,7 @@ class ParseIPv4Header extends Operation {
         super();
 
         this.name = "Parse IPv4 header";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Given an IPv4 header, this operations parses and displays each field in an easily readable format.";
         this.infoURL = "https://wikipedia.org/wiki/IPv4#Header";
         this.inputType = "string";

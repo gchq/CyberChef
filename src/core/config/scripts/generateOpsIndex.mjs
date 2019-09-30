@@ -39,7 +39,7 @@ let code = `/**
 `;
 
 opObjs.forEach(obj => {
-    code += `import ${obj} from "./${obj}";\n`;
+    code += `import ${obj} from "./${obj}.mjs";\n`;
 });
 
 code += `

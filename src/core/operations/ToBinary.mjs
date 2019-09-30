@@ -4,9 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {BIN_DELIM_OPTIONS} from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {toBinary} from "../lib/Binary.mjs";
 
 /**
  * To Binary operation
@@ -23,7 +24,7 @@ class ToBinary extends Operation {
         this.module = "Default";
         this.description = "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>";
         this.infoURL = "https://wikipedia.org/wiki/Binary_code";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -35,24 +36,13 @@ class ToBinary extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0] || "Space"),
-            padding = 8;
-        let output = "";
-
-        for (let i = 0; i < input.length; i++) {
-            output += input[i].toString(2).padStart(padding, "0") + delim;
-        }
-
-        if (delim.length) {
-            return output.slice(0, -delim.length);
-        } else {
-            return output;
-        }
+        input = new Uint8Array(input);
+        return toBinary(input, args[0]);
     }
 
     /**

@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import cptable from "../vendor/js-codepage/cptable.js";
-import {IO_FORMAT} from "../lib/ChrEnc";
+import {IO_FORMAT} from "../lib/ChrEnc.mjs";
 
 /**
  * Decode text operation
@@ -20,7 +20,7 @@ class DecodeText extends Operation {
         super();
 
         this.name = "Decode text";
-        this.module = "CharEnc";
+        this.module = "Encodings";
         this.description = [
             "Decodes text from the chosen character encoding.",
             "<br><br>",
@@ -30,7 +30,7 @@ class DecodeText extends Operation {
             "</ul>",
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -42,13 +42,13 @@ class DecodeText extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
         const format = IO_FORMAT[args[0]];
-        return cptable.utils.decode(format, input);
+        return cptable.utils.decode(format, new Uint8Array(input));
     }
 
 }

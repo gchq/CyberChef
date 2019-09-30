@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import bcrypt from "bcryptjs";
 
 /**
@@ -20,7 +20,7 @@ class BcryptParse extends Operation {
         super();
 
         this.name = "Bcrypt parse";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Parses a bcrypt hash to determine the number of rounds used, the salt, and the password hash.";
         this.infoURL = "https://wikipedia.org/wiki/Bcrypt";
         this.inputType = "string";

@@ -4,8 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import bcrypt from "bcryptjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
+
 
 /**
  * Bcrypt compare operation
@@ -19,7 +21,7 @@ class BcryptCompare extends Operation {
         super();
 
         this.name = "Bcrypt compare";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "Tests whether the input matches the given bcrypt hash. To test multiple possible passwords, use the 'Fork' operation.";
         this.infoURL = "https://wikipedia.org/wiki/Bcrypt";
         this.inputType = "string";
@@ -43,7 +45,7 @@ class BcryptCompare extends Operation {
 
         const match = await bcrypt.compare(input, hash, null, p => {
             // Progress callback
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
         });
 

@@ -8,6 +8,7 @@
 
 :root {
     --title-height: 48px;
+    --tab-height: 40px;
 }
 
 .title {
@@ -52,6 +53,7 @@
     line-height: 30px;
     background-color: var(--primary-background-colour);
     flex-direction: row;
+    padding-left: 10px;
 }
 
 .io-card.card:hover {
@@ -60,10 +62,16 @@
 
 .io-card.card>img {
     float: left;
-    width: 128px;
-    height: 128px;
-    margin-left: 10px;
-    margin-top: 11px;
+    width: auto;
+    height: auto;
+    max-width: 128px;
+    max-height: 128px;
+    margin-left: auto;
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    padding: 0px;
+
 }
 
 .io-card.card .card-body .close {
@@ -90,4 +98,8 @@
 .io-card.card input[type=number] {
     padding-right: 6px;
     padding-left: 6px;
+}
+
+#files .card-header .float-right a:hover {
+    text-decoration: none;
 }

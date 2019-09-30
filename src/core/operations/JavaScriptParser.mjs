@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import * as esprima from "esprima";
 
 /**
@@ -21,7 +21,7 @@ class JavaScriptParser extends Operation {
         this.name = "JavaScript Parser";
         this.module = "Code";
         this.description = "Returns an Abstract Syntax Tree for valid JavaScript code.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Abstract_syntax_tree";
+        this.infoURL = "https://wikipedia.org/wiki/Abstract_syntax_tree";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -39,8 +39,14 @@ div#output {
 
 .split {
     box-sizing: border-box;
-    overflow: auto;
+    /* overflow: auto;
+    Removed to enable Background Magic button pulse to overflow.
+    Replace this rule if it seems to be causing problems. */
     position: relative;
+}
+
+#operations.split {
+    overflow: auto;
 }
 
 .split.split-horizontal, .gutter.gutter-horizontal {

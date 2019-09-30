@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {DELIM_OPTIONS} from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 
 
 /**
@@ -23,24 +23,34 @@ class ToDecimal extends Operation {
         this.name = "To Decimal";
         this.module = "Default";
         this.description = "Converts the input data to an ordinal integer array.<br><br>e.g. <code>Hello</code> becomes <code>72 101 108 108 111</code>";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
                 "name": "Delimiter",
                 "type": "option",
                 "value": DELIM_OPTIONS
+            },
+            {
+                "name": "Support signed values",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0]);
+        input = new Uint8Array(input);
+        const delim = Utils.charRep(args[0]),
+            signed = args[1];
+        if (signed) {
+            input = input.map(v => v > 0x7F ? v - 0xFF - 1 : v);
+        }
         return input.join(delim);
     }
 

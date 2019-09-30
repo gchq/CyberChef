@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { search } from "../lib/Extract";
+import Operation from "../Operation.mjs";
+import { search, DOMAIN_REGEX } from "../lib/Extract.mjs";
 
 /**
  * Extract domains operation
@@ -20,7 +20,7 @@ class ExtractDomains extends Operation {
 
         this.name = "Extract domains";
         this.module = "Regex";
-        this.description = "Extracts domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.";
+        this.description = "Extracts fully qualified domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -38,10 +38,8 @@ class ExtractDomains extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const displayTotal = args[0],
-            regex = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
-
-        return search(input, regex, null, displayTotal);
+        const displayTotal = args[0];
+        return search(input, DOMAIN_REGEX, null, displayTotal);
     }
 
 }

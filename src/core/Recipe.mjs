@@ -4,11 +4,15 @@
  * @license Apache-2.0
  */
 
-// import Operation from "./Operation.js";
-import OpModules from "./config/modules/OpModules";
 import OperationConfig from "./config/OperationConfig.json";
-import OperationError from "./errors/OperationError";
+import OperationError from "./errors/OperationError.mjs";
+import Operation from "./Operation.mjs";
+import DishError from "./errors/DishError.mjs";
 import log from "loglevel";
+import { isWorkerEnvironment } from "./Utils.mjs";
+
+// Cache container for modules
+let modules = null;
 
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
@@ -36,16 +40,43 @@ class Recipe  {
      * @param {Object} recipeConfig
      */
     _parseConfig(recipeConfig) {
-        for (let c = 0; c < recipeConfig.length; c++) {
-            const operationName = recipeConfig[c].op;
-            const opConf = OperationConfig[operationName];
-            const opObj = OpModules[opConf.module][operationName];
-            const operation = new opObj();
-            operation.ingValues = recipeConfig[c].args;
-            operation.breakpoint = recipeConfig[c].breakpoint;
-            operation.disabled = recipeConfig[c].disabled;
-            this.addOperation(operation);
+        recipeConfig.forEach(c => {
+            this.opList.push({
+                name: c.op,
+                module: OperationConfig[c.op].module,
+                ingValues: c.args,
+                breakpoint: c.breakpoint,
+                disabled: c.disabled,
+            });
+        });
+    }
+
+
+    /**
+     * Populate elements of opList with operation instances.
+     * Dynamic import here removes top-level cyclic dependency issue.
+     *
+     * @private
+     */
+    async _hydrateOpList() {
+        if (!modules) {
+            // Using Webpack Magic Comments to force the dynamic import to be included in the main chunk
+            // https://webpack.js.org/api/module-methods/
+            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules.mjs");
+            modules = modules.default;
         }
+
+        this.opList = this.opList.map(o => {
+            if (o instanceof Operation) {
+                return o;
+            } else {
+                const op = new modules[o.module][o.name]();
+                op.ingValues = o.ingValues;
+                op.breakpoint = o.breakpoint;
+                op.disabled = o.disabled;
+                return op;
+            }
+        });
     }
 
 
@@ -55,7 +86,10 @@ class Recipe  {
      * @returns {Object[]}
      */
     get config() {
-        return this.opList.map(op => op.config);
+        return this.opList.map(op => ({
+            op: op.name,
+            args: op.ingValues,
+        }));
     }
 
 
@@ -75,7 +109,19 @@ class Recipe  {
      * @param {Operation[]} operations
      */
     addOperations(operations) {
-        this.opList = this.opList.concat(operations);
+        operations.forEach(o => {
+            if (o instanceof Operation) {
+                this.opList.push(o);
+            } else {
+                this.opList.push({
+                    name: o.name,
+                    module: o.module,
+                    ingValues: o.args,
+                    breakpoint: o.breakpoint,
+                    disabled: o.disabled,
+                });
+            }
+        });
     }
 
 
@@ -108,7 +154,7 @@ class Recipe  {
 
 
     /**
-     * Returns true if there is an Flow Control Operation in this Recipe.
+     * Returns true if there is a Flow Control Operation in this Recipe.
      *
      * @returns {boolean}
      */
@@ -137,6 +183,8 @@ class Recipe  {
 
         if (startFrom === 0) this.lastRunOp = null;
 
+        await this._hydrateOpList();
+
         log.debug(`[*] Executing recipe of ${this.opList.length} operations, starting at ${startFrom}`);
 
         for (let i = startFrom; i < this.opList.length; i++) {
@@ -153,7 +201,12 @@ class Recipe  {
 
             try {
                 input = await dish.get(op.inputType);
-                log.debug("Executing operation");
+                log.debug(`Executing operation '${op.name}'`);
+
+                if (isWorkerEnvironment()) {
+                    self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
+                    self.sendProgressMessage(i + 1, this.opList.length);
+                }
 
                 if (op.flowControl) {
                     // Package up the current state
@@ -181,6 +234,10 @@ class Recipe  {
                     (err.type && err.type === "OperationError")) {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
+                    dish.set(err.message, "string");
+                    return i;
+                } else if (err instanceof DishError ||
+                    (err.type && err.type === "DishError")) {
                     dish.set(err.message, "string");
                     return i;
                 } else {
@@ -250,7 +307,8 @@ class Recipe  {
      * @returns {function} highlights[].b
      * @returns {Object[]} highlights[].args
      */
-    generateHighlightList() {
+    async generateHighlightList() {
+        await this._hydrateOpList();
         const highlights = [];
 
         for (let i = 0; i < this.opList.length; i++) {

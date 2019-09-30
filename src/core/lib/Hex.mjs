@@ -6,13 +6,13 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
 
 
 /**
  * Convert a byte array into a hex string.
  *
- * @param {Uint8Array|byteArray} data
+ * @param {byteArray|Uint8Array|ArrayBuffer} data
  * @param {string} [delim=" "]
  * @param {number} [padding=2]
  * @returns {string}
@@ -26,6 +26,7 @@ import Utils from "../Utils";
  */
 export function toHex(data, delim=" ", padding=2) {
     if (!data) return "";
+    if (data instanceof ArrayBuffer) data = new Uint8Array(data);
 
     let output = "";
 
@@ -47,7 +48,7 @@ export function toHex(data, delim=" ", padding=2) {
 /**
  * Convert a byte array into a hex string as efficiently as possible with no options.
  *
- * @param {byteArray} data
+ * @param {byteArray|Uint8Array|ArrayBuffer} data
  * @returns {string}
  *
  * @example
@@ -56,6 +57,7 @@ export function toHex(data, delim=" ", padding=2) {
  */
 export function toHexFast(data) {
     if (!data) return "";
+    if (data instanceof ArrayBuffer) data = new Uint8Array(data);
 
     const output = [];
 
@@ -100,7 +102,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
 /**
  * To Hexadecimal delimiters.
  */
-export const TO_HEX_DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
+export const TO_HEX_DELIM_OPTIONS = ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
 
 
 /**

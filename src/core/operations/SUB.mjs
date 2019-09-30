@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import { bitOp, sub } from "../lib/BitwiseOp";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import { bitOp, sub, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
 
 /**
  * SUB operation
@@ -30,7 +30,7 @@ class SUB extends Operation {
                 "name": "Key",
                 "type": "toggleString",
                 "value": "",
-                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
+                "toggleValues": BITWISE_OP_DELIMS
             }
         ];
     }

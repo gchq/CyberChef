@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP";
-import BigInteger from "jsbn";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP.mjs";
+import BigNumber from "bignumber.js";
 
 /**
  * Parse IPv6 address operation
@@ -22,7 +22,7 @@ class ParseIPv6Address extends Operation {
         super();
 
         this.name = "Parse IPv6 address";
-        this.module = "JSBN";
+        this.module = "Default";
         this.description = "Displays the longhand and shorthand versions of a valid IPv6 address.<br><br>Recognises all reserved ranges and parses encapsulated or tunnelled addresses including Teredo and 6to4.";
         this.infoURL = "https://wikipedia.org/wiki/IPv6_address";
         this.inputType = "string";
@@ -147,7 +147,7 @@ class ParseIPv6Address extends Operation {
                 const v4Addr = ipv4ToStr((ipv6[1] << 16) + ipv6[2]),
                     slaId = ipv6[3],
                     interfaceIdStr = ipv6[4].toString(16) + ipv6[5].toString(16) + ipv6[6].toString(16) + ipv6[7].toString(16),
-                    interfaceId = new BigInteger(interfaceIdStr, 16);
+                    interfaceId = new BigNumber(interfaceIdStr, 16);
 
                 output += "\n\nEncapsulated IPv4 address: " + v4Addr +
                     "\nSLA ID: " + slaId +

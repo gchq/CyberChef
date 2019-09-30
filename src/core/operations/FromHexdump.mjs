@@ -4,8 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {fromHex} from "../lib/Hex";
+import Operation from "../Operation.mjs";
+import { fromHex } from "../lib/Hex.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
+
 
 /**
  * From Hexdump operation
@@ -55,7 +57,7 @@ class FromHexdump extends Operation {
         const w = (width - 13) / 4;
         // w should be the specified width of the hexdump and therefore a round number
         if (Math.floor(w) !== w || input.indexOf("\r") !== -1 || output.indexOf(13) !== -1) {
-            if (ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+            if (isWorkerEnvironment()) self.setOption("attemptHighlight", false);
         }
         return output;
     }

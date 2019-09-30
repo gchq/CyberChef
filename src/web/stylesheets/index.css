@@ -10,6 +10,8 @@
 @import "./themes/_classic.css";
 @import "./themes/_dark.css";
 @import "./themes/_geocities.css";
+@import "./themes/_solarizedDark.css";
+@import "./themes/_solarizedLight.css";
 
 /* Utilities */
 @import "./utils/_overrides.css";

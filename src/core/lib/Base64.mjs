@@ -6,13 +6,13 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
 
 
 /**
  * Base64's the input byte array using the given alphabet, returning a string.
  *
- * @param {byteArray|Uint8Array|string} data
+ * @param {byteArray|Uint8Array|ArrayBuffer|string} data
  * @param {string} [alphabet="A-Za-z0-9+/="]
  * @returns {string}
  *
@@ -25,6 +25,9 @@ import Utils from "../Utils";
  */
 export function toBase64(data, alphabet="A-Za-z0-9+/=") {
     if (!data) return "";
+    if (data instanceof ArrayBuffer) {
+        data = new Uint8Array(data);
+    }
     if (typeof data == "string") {
         data = Utils.strToByteArray(data);
     }
@@ -63,7 +66,7 @@ export function toBase64(data, alphabet="A-Za-z0-9+/=") {
 /**
  * UnBase64's the input string using the given alphabet, returning a byte array.
  *
- * @param {byteArray} data
+ * @param {string} data
  * @param {string} [alphabet="A-Za-z0-9+/="]
  * @param {string} [returnType="string"] - Either "string" or "byteArray"
  * @param {boolean} [removeNonAlphChars=true]
@@ -126,14 +129,14 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
  * Base64 alphabets.
  */
 export const ALPHABET_OPTIONS = [
-    {name: "Standard: A-Za-z0-9+/=", value: "A-Za-z0-9+/="},
-    {name: "URL safe: A-Za-z0-9-_", value: "A-Za-z0-9-_"},
+    {name: "Standard (RFC 4648): A-Za-z0-9+/=", value: "A-Za-z0-9+/="},
+    {name: "URL safe (RFC 4648 \u00A75): A-Za-z0-9-_", value: "A-Za-z0-9-_"},
     {name: "Filename safe: A-Za-z0-9+-=", value: "A-Za-z0-9+\\-="},
     {name: "itoa64: ./0-9A-Za-z=", value: "./0-9A-Za-z="},
     {name: "XML: A-Za-z0-9_.", value: "A-Za-z0-9_."},
     {name: "y64: A-Za-z0-9._-", value: "A-Za-z0-9._-"},
     {name: "z64: 0-9a-zA-Z+/=", value: "0-9a-zA-Z+/="},
-    {name: "Radix-64: 0-9A-Za-z+/=", value: "0-9A-Za-z+/="},
+    {name: "Radix-64 (RFC 4880): 0-9A-Za-z+/=", value: "0-9A-Za-z+/="},
     {name: "Uuencoding: [space]-_", value: " -_"},
     {name: "Xxencoding: +-0-9A-Za-z", value: "+\\-0-9A-Za-z"},
     {name: "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r", value: "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"},

@@ -5,11 +5,11 @@
  */
 
 import r from "jsrsasign";
-import { fromBase64 } from "../lib/Base64";
-import { toHex } from "../lib/Hex";
-import { formatByteStr, formatDnStr } from "../lib/PublicKey";
-import Operation from "../Operation";
-import Utils from "../Utils";
+import { fromBase64 } from "../lib/Base64.mjs";
+import { toHex } from "../lib/Hex.mjs";
+import { formatByteStr, formatDnStr } from "../lib/PublicKey.mjs";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Parse X.509 certificate operation
@@ -181,8 +181,8 @@ class ParseX509Certificate extends Operation {
 Serial number:    ${new r.BigInteger(sn, 16).toString()} (0x${sn})
 Algorithm ID:     ${cert.getSignatureAlgorithmField()}
 Validity
-  Not Before:     ${nbDate} (dd-mm-yy hh:mm:ss) (${cert.getNotBefore()})
-  Not After:      ${naDate} (dd-mm-yy hh:mm:ss) (${cert.getNotAfter()})
+  Not Before:     ${nbDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotBefore()})
+  Not After:      ${naDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotAfter()})
 Issuer
 ${issuerStr}
 Subject
@@ -206,12 +206,15 @@ ${extensions}`;
  * @returns {string}
  */
 function formatDate (dateStr) {
-    return dateStr[4] + dateStr[5] + "/" +
-        dateStr[2] + dateStr[3] + "/" +
-        dateStr[0] + dateStr[1] + " " +
-        dateStr[6] + dateStr[7] + ":" +
+    if (dateStr.length === 13) { // UTC Time
+        dateStr = (dateStr[0] < "5" ? "20" : "19") + dateStr;
+    }
+    return dateStr[6] + dateStr[7] + "/" +
+        dateStr[4] + dateStr[5] + "/" +
+        dateStr[0] + dateStr[1] + dateStr[2] + dateStr[3] + " " +
         dateStr[8] + dateStr[9] + ":" +
-        dateStr[10] + dateStr[11];
+        dateStr[10] + dateStr[11] + ":" +
+        dateStr[12] + dateStr[13];
 }
 
 export default ParseX509Certificate;

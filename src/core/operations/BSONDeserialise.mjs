@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import bsonjs from "bson";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import bson from "bson";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * BSON deserialise operation
@@ -35,8 +35,6 @@ class BSONDeserialise extends Operation {
      */
     run(input, args) {
         if (!input.byteLength) return "";
-
-        const bson = new bsonjs();
 
         try {
             const data = bson.deserialize(new Buffer(input));

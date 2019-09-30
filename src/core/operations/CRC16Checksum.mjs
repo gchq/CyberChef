@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import JSCRC from "js-crc";
 
 /**
@@ -19,7 +19,7 @@ class CRC16Checksum extends Operation {
         super();
 
         this.name = "CRC-16 Checksum";
-        this.module = "Hashing";
+        this.module = "Crypto";
         this.description = "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.";
         this.infoURL = "https://wikipedia.org/wiki/Cyclic_redundancy_check";
         this.inputType = "ArrayBuffer";

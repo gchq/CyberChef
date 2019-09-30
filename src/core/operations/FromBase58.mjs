@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {ALPHABET_OPTIONS} from "../lib/Base58";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {ALPHABET_OPTIONS} from "../lib/Base58.mjs";
 
 /**
  * From Base58 operation
@@ -71,6 +71,11 @@ class FromBase58 extends Operation {
 
         if (input.length === 0) return [];
 
+        let zeroPrefix = 0;
+        for (let i = 0; i < input.length && input[i] === alphabet[0]; i++) {
+            zeroPrefix++;
+        }
+
         [].forEach.call(input, function(c, charIndex) {
             const index = alphabet.indexOf(c);
 
@@ -97,6 +102,10 @@ class FromBase58 extends Operation {
                 carry = carry >> 8;
             }
         });
+
+        while (zeroPrefix--) {
+            result.push(0);
+        }
 
         return result.reverse();
     }
