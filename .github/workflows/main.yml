@@ -1,6 +1,9 @@
 name: Test & Deploy
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   test:
@@ -8,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - name: Setup
       run: |
         npm i
@@ -24,8 +27,8 @@ jobs:
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@master
+      uses: peaceiris/actions-gh-pages@v2.4.0
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build/prod
+        PERSONAL_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        PUBLISH_BRANCH: gh-pages
+        PUBLISH_DIR: ./build/prod
