@@ -1,4 +1,4 @@
-name: Test
+name: Test & Deploy
 
 on: [push]
 
@@ -12,29 +12,19 @@ jobs:
     - name: Setup
       run: |
         npm i
-        npm i -g grunt
         export NODE_OPTIONS=--max_old_space_size=2048
     - name: Lint
-      run: grunt lint
+      run: npx grunt lint
     - name: Unit Tests
       run: |
-        grunt test
-        grunt testnodeconsumer
+        npx grunt test
+        npx grunt testnodeconsumer
     - name: UI Tests
-      run: xvfb-run --server-args="-screen 0 1200x800x24" grunt testui
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup
-      run: |
-        npm i
-        npm i -g grunt
-        export NODE_OPTIONS=--max_old_space_size=2048
+      run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
     - name: Build & Deploy
       uses: JamesIves/github-pages-deploy-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: build/prod
-        BUILD_SCRIPT: grunt prod
+        BUILD_SCRIPT: npx grunt prod
