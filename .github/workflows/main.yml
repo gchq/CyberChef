@@ -19,12 +19,13 @@ jobs:
       run: |
         npx grunt test
         sudo npx grunt testnodeconsumer
+    - name: Production Build
+      run: npx grunt prod
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
-    - name: Build & Deploy
+    - name: Deploy
       uses: JamesIves/github-pages-deploy-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: build/prod
-        BUILD_SCRIPT: npx grunt prod
