@@ -1372,8 +1372,27 @@ DES uses a key length of 8 bytes (64 bits).`,
             }
         ],
     },
+    /* The following expectedOutputs are generated with this Python script with pyCryptoDome
+    from Crypto.Cipher import Blowfish
+    import binascii
 
-    // The following expectedOutputs are generated with pyCryptoDome
+    input_data = b"The quick brown fox jumps over the lazy dog."
+    key = binascii.unhexlify("0011223344556677")
+    iv = binascii.unhexlify("0000000000000000")
+    mode = Blowfish.MODE_CBC
+
+    if mode == Blowfish.MODE_ECB or mode == Blowfish.MODE_CBC:
+        padding_len = 8-(len(input_data) & 7)
+        for i in range(padding_len):
+            input_data += bytes([padding_len])
+
+    cipher = Blowfish.new(key, mode)  # set iv, nonce, segment_size etc. here
+    cipher_text = cipher.encrypt(input_data)
+
+    cipher_text = binascii.hexlify(cipher_text).decode("UTF-8")
+
+    print("Encrypted: {}".format(cipher_text))
+*/
     {
         name: "Blowfish Encrypt: ECB, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
