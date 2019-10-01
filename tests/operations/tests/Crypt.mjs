@@ -76,7 +76,7 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
-        name: "AES Encrypt: AES-128-CBC, no IV, ASCII",
+        name: "AES Encrypt: AES-128-CBC with IV0, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "2ef6c3fdb1314b5c2c326a2087fe1a82d5e73bf605ec8431d73e847187fc1c8fbbe969c177df1ecdf8c13f2f505f9498",
         recipeConfig: [
@@ -84,14 +84,14 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Encrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Raw", "Hex"
                 ]
             }
         ],
     },
     {
-        name: "AES Encrypt: AES-128-CTR, no IV, ASCII",
+        name: "AES Encrypt: AES-128-CTR with IV0, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "a98c9e8e3b7c894384d740e4f0f4ed0be2bbb1e0e13a255812c3c6b0a629e4ad759c075b2469c6f4fb2c0cf9",
         recipeConfig: [
@@ -99,14 +99,14 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Encrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Raw", "Hex"
                 ]
             }
         ],
     },
     {
-        name: "AES Encrypt: AES-128-CBC with IV, ASCII",
+        name: "AES Encrypt: AES-128-CBC with IV1, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "4fa077d50cc71a57393e7b542c4e3aea0fb75383b97083f2f568ffc13c0e7a47502ec6d9f25744a061a3a5e55fe95e8d",
         recipeConfig: [
@@ -537,9 +537,10 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
+        // play.golang.org/p/4Qm2hfLGsqc
         name: "DES Encrypt: DES-CTR, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        expectedOutput: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
+        expectedOutput: "09015087e15b0937c462fd5974af0c4b5880de136a5680453c99f4500628cbeca769623515d836985110b93eacfea7fa4a7b2b3cb4f67acbb5f7e8ddb5a5d445da74bf6572b0a874befa3888c81110776388e400afd8dc908dcc0c018c7753355f8a1c9f",
         recipeConfig: [
             {
                 "op": "DES Encrypt",
@@ -630,9 +631,10 @@ DES uses a key length of 8 bytes (64 bits).`,
         ],
     },
     {
+        // play.golang.org/p/RElT6pVeNz2
         name: "Triple DES Encrypt: DES-EDE3-CTR, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        expectedOutput: "874d32cd7bdae52c254687e2d7e7093b077af2ec70878f99315f52a21ded5fb10c80a47e6271384335ac47376c758f675484fd7b8be9568aaec643f0d15cffdf3fe54ef3a1b2da50d5d8c7994d7a4a94e0a13a4d437443f0f1f39e93dd13ff06a80c66e4",
+        expectedOutput: "874d32cd7bdae52cd8630d3ab2bf373e7110e13713caa6a8bfed9d9dd802d0ebe93128ac0d0f05abcc56237b75fb69207dba11e68ddc4b0118a4c75e7248bbd80aaba4dd4436642546ec6ca7fa7526f3b0018ed5194c409dc2c1484530b968af554984f3",
         recipeConfig: [
             {
                 "op": "Triple DES Encrypt",
@@ -681,7 +683,7 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
-        name: "AES Decrypt: AES-128-CBC, no IV, ASCII",
+        name: "AES Decrypt: AES-128-CBC with IV0, ASCII",
         input: "2ef6c3fdb1314b5c2c326a2087fe1a82d5e73bf605ec8431d73e847187fc1c8fbbe969c177df1ecdf8c13f2f505f9498",
         expectedOutput: "The quick brown fox jumps over the lazy dog.",
         recipeConfig: [
@@ -689,7 +691,7 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Decrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
@@ -697,7 +699,7 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
-        name: "AES Decrypt: AES-128-CTR, no IV, ASCII",
+        name: "AES Decrypt: AES-128-CTR with IV0, ASCII",
         input: "a98c9e8e3b7c894384d740e4f0f4ed0be2bbb1e0e13a255812c3c6b0a629e4ad759c075b2469c6f4fb2c0cf9",
         expectedOutput: "The quick brown fox jumps over the lazy dog.",
         recipeConfig: [
@@ -705,7 +707,7 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Decrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
@@ -1160,9 +1162,10 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
+        // play.golang.org/p/FpvqncmPk7R
         name: "DES Decrypt: DES-CTR, Binary",
         input: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
-        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "7a0e643132750e96b76dc9efa7810bea2b8feaa5b97887e44f96c0e6d506cc4dd4665683c6f63139221f8d887fd0a05b39741f8a67d87d6ac6f8dc6b668bd3e4a97b8bd3a19eafd5cdf50c3e1b3f17d61087d0b67cf6db31fec338b75f5954942c852829",
         recipeConfig: [
             {
                 "op": "DES Decrypt",
@@ -1253,9 +1256,10 @@ DES uses a key length of 8 bytes (64 bits).`,
         ],
     },
     {
+        // play.golang.org/p/iBacN9kX_RO
         name: "Triple DES Decrypt: DES-EDE3-CTR, Binary",
         input: "874d32cd7bdae52c254687e2d7e7093b077af2ec70878f99315f52a21ded5fb10c80a47e6271384335ac47376c758f675484fd7b8be9568aaec643f0d15cffdf3fe54ef3a1b2da50d5d8c7994d7a4a94e0a13a4d437443f0f1f39e93dd13ff06a80c66e4",
-        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "7a0e643132750e9625205bc6fb10dc848c53b7cb5a654d1242aecb6191ad3b5114727e5044a0ee11311575873c54829a80f9471ac473a0bbe5e791a23be75062f7e8f2210d998f9fbbaf3a5bb3dacd494d42d82950e3ab273f821eb979168315a80ad20f",
         recipeConfig: [
             {
                 "op": "Triple DES Decrypt",
