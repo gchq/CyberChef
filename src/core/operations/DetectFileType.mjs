@@ -23,10 +23,10 @@ class DetectFileType extends Operation {
         this.module = "Default";
         this.description = "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: " +
             Object.keys(FILE_SIGNATURES).map(cat =>
-                FILE_SIGNATURES[cat].map(sig =>
-                    sig.extension.split(",")[0]
-                ).join(", ")
-            ).join(", ") + ".";
+                [].concat.apply([], FILE_SIGNATURES[cat].map(sig =>
+                    sig.extension.split(",")
+                )).unique().join(", ")
+            ).unique().join(", ") + ".";
         this.infoURL = "https://wikipedia.org/wiki/List_of_file_signatures";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
