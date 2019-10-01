@@ -48,7 +48,7 @@ class BlowfishDecrypt extends Operation {
             {
                 "name": "Input",
                 "type": "option",
-                "value": ["Hex", "Base64", "Raw"]
+                "value": ["Hex", "Raw"]
             },
             {
                 "name": "Output",

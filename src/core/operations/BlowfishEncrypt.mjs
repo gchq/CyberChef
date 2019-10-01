@@ -53,7 +53,7 @@ class BlowfishEncrypt extends Operation {
             {
                 "name": "Output",
                 "type": "option",
-                "value": ["Hex", "Base64", "Raw"]
+                "value": ["Hex", "Raw"]
             }
         ];
     }
