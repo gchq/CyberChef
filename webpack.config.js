@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 
 /**
@@ -50,6 +51,13 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "assets/[name].css"
         }),
+        new CopyWebpackPlugin([
+            {
+                context: "src/core/vendor/",
+                from: "tesseract/**/*",
+                to: "assets/"
+            }
+        ])
     ],
     resolve: {
         alias: {

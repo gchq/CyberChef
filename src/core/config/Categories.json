@@ -383,6 +383,7 @@
         "ops": [
             "Render Image",
             "Play Media",
+            "Optical Character Recognition",
             "Remove EXIF",
             "Extract EXIF",
             "Split Colour Channels",

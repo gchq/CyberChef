@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.7.0] - 2019-09-13
+- 'Optical Character Recognition' operation added [@MShwed] [@n1474335] | [#632]
+
 ### [9.6.0] - 2019-09-04
 - 'Bacon Cipher Encode' and 'Bacon Cipher Decode' operations added [@kassi] | [#500]
 
@@ -182,6 +185,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.7.0]: https://github.com/gchq/CyberChef/releases/tag/v9.7.0
 [9.6.0]: https://github.com/gchq/CyberChef/releases/tag/v9.6.0
 [9.5.0]: https://github.com/gchq/CyberChef/releases/tag/v9.5.0
 [9.4.0]: https://github.com/gchq/CyberChef/releases/tag/v9.4.0
@@ -317,3 +321,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#614]: https://github.com/gchq/CyberChef/pull/614
 [#625]: https://github.com/gchq/CyberChef/pull/625
 [#627]: https://github.com/gchq/CyberChef/pull/627
+[#632]: https://github.com/gchq/CyberChef/pull/632
