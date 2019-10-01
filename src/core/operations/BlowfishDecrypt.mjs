@@ -79,9 +79,7 @@ Blowfish uses a key length of 8 bytes (64 bits).`);
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = Blowfish.createDecipher(key, mode);
-        decipher.start({
-            iv: iv.length === 0 ? "" : iv,
-        });
+        decipher.start({iv: iv});
         decipher.update(forge.util.createBuffer(input));
         const result = decipher.finish();
 
