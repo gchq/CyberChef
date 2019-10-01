@@ -70,7 +70,11 @@ class BlowfishEncrypt extends Operation {
             inputType = args[3],
             outputType = args[4];
 
-        if (key.length === 0) throw new OperationError("Enter a key");
+        if (key.length !== 8) {
+            throw new OperationError(`Invalid key length: ${key.length} bytes
+
+Blowfish uses a key length of 8 bytes (64 bits).`);
+        }
 
         input = Utils.convertToByteString(input, inputType);
 
