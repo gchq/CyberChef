@@ -418,7 +418,7 @@ export const FILE_SIGNATURES = {
         }
     ],
     "Video": [
-        {
+        { // Place before webm
             name: "Matroska Multimedia Container",
             extension: "mkv",
             mime: "video/x-matroska",
@@ -444,11 +444,7 @@ export const FILE_SIGNATURES = {
                 0: 0x1a,
                 1: 0x45,
                 2: 0xdf,
-                3: 0xa3,
-                4: 0x01,
-                5: 0x00,
-                6: 0x00,
-                7: 0x00
+                3: 0xa3
             },
             extractor: null
         },
