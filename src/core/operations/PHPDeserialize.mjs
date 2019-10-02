@@ -128,8 +128,7 @@ class PHPDeserialize extends Operation {
             switch (kind) {
                 case "n":
                     expect(";");
-                    return "";
-
+                    return "null";
                 case "i":
                 case "d":
                 case "b": {
