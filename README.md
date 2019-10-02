@@ -50,23 +50,31 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Drag and drop
      - Operations can be dragged in and out of the recipe list, or reorganised.
      - Files up to 2GB can be dragged over the input box to load them directly into the browser.
+     
  - Auto Bake
      - Whenever you modify the input or the recipe, CyberChef will automatically "bake" for you and produce the output immediately.
      - This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).
+     
  - Automated encoding detection
      - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect which encodings your data is under. If it finds a suitable operation which can make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
+     
  - Breakpoints
      - You can set breakpoints on any operation in your recipe to pause execution before running it.
      - You can also step through the recipe one operation at a time to see what the data looks like at each stage.
+     
  - Save and load recipes
      - If you come up with an awesome recipe that you know you’ll want to use again, just click "Save recipe" and add it to your local storage. It'll be waiting for you next time you visit CyberChef.
      - You can also copy the URL, which includes your recipe and input, to easily share it with others.
+     
  - Search
      - If you know the name of the operation you want or a word associated with it, start typing it into the search field and any matching operations will immediately be shown.
+     
  - Highlighting
      - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][11]).
+     
  - Save to file and load from file
      - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
+     
  - CyberChef is entirely client-side
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be compiled into a single HTML file. You can download this file and drop it into a virtual machine, share it with other people, or use it independently on your local machine.
