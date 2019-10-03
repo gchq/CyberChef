@@ -6,8 +6,18 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
+<script type="text/javascript" src="/md5.js></script>  
+<script type="text/javascript" src="/sha1.js"></script>  
+<script type="text/javascript" src="/sha256.js"></script>  
+<script type="text/javascript" src="/sha512.js"></script>
 
 TestRegister.addTests([
+{document.getElementById("MD5").value=hex_md5(document.getElementById('"Hello, World!")
+},
+{document.getElementById("SHA1").value=hex_sha1(document.getElementById('"Hello, World!")
+},
+{document.getElementById("SHA256").value=hex_sha256(document.getElementById('"Hello, World!")
+},
     {
         name: "MD2",
         input: "Hello, World!",
@@ -41,6 +51,8 @@ TestRegister.addTests([
             }
         ]
     },
+
+
     {
         name: "MD6",
         input: "Hello, World!",
