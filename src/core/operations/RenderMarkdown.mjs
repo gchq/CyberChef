@@ -82,13 +82,14 @@ class RenderMarkdown extends Operation {
             return self.renderToken(tokens, idx, options);
         };
 
+        // eslint-disable-next-line camelcase
         md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
             const token = tokens[idx];
-            if (token.attrIndex('target') >= 0) {
+            if (token.attrIndex("target") >= 0) {
                 // Target attribute already set, do not replace.
                 return;
             }
-            token.attrPush(['target', '_blank']); // add new attribute
+            token.attrPush(["target", "_blank"]); // add new attribute
 
             // pass token to default renderer.
             return defaultRender(tokens, idx, options, env, self);
