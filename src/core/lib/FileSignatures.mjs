@@ -415,7 +415,59 @@ export const FILE_SIGNATURES = {
                 6: 0x30
             },
             extractor: null
-        }
+        },
+        {
+            name: "AutoCAD Drawing",
+            extension: "dwg,123d",
+            mime: "application/acad",
+            description: "",
+            signature: {
+                0: 0x41,
+                1: 0x43,
+                2: 0x31,
+                3: 0x30,
+                4: [0x30, 0x31],
+                5: [0x30, 0x31, 0x32, 0x33, 0x34, 0x35],
+                6: 0x00
+            },
+            extractor: null
+        },
+        {
+            name: "AutoCAD Drawing",
+            extension: "dwg,dwt",
+            mime: "application/acad",
+            description: "",
+            signature: [
+                {
+                    0: 0x41,
+                    1: 0x43,
+                    2: 0x31,
+                    3: 0x30,
+                    4: 0x31,
+                    5: 0x38,
+                    6: 0x00
+                },
+                {
+                    0: 0x41,
+                    1: 0x43,
+                    2: 0x31,
+                    3: 0x30,
+                    4: 0x32,
+                    5: 0x34,
+                    6: 0x00
+                },
+                {
+                    0: 0x41,
+                    1: 0x43,
+                    2: 0x31,
+                    3: 0x30,
+                    4: 0x32,
+                    5: 0x37,
+                    6: 0x00
+                }
+            ],
+            extractor: null
+        },
     ],
     "Video": [
         { // Place before webm
@@ -613,6 +665,59 @@ export const FILE_SIGNATURES = {
                 3: 0x1
             },
             extractor: extractFLV
+        },
+        {
+            name: "OGG Video",
+            extension: "ogv,ogm,opus,ogx",
+            mime: "video/ogg",
+            description: "",
+            signature: [
+                {
+                    0: 0x4f, // OggS
+                    1: 0x67,
+                    2: 0x67,
+                    3: 0x53,
+                    4: 0x00,
+                    5: 0x02,
+                    28: 0x01,
+                    29: 0x76, // video
+                    30: 0x69,
+                    31: 0x64,
+                    32: 0x65,
+                    33: 0x6f
+                },
+                {
+                    0: 0x4f, // OggS
+                    1: 0x67,
+                    2: 0x67,
+                    3: 0x53,
+                    4: 0x00,
+                    5: 0x02,
+                    28: 0x80,
+                    29: 0x74, // theora
+                    30: 0x68,
+                    31: 0x65,
+                    32: 0x6f,
+                    33: 0x72,
+                    34: 0x61
+                },
+                {
+                    0: 0x4f, // OggS
+                    1: 0x67,
+                    2: 0x67,
+                    3: 0x53,
+                    4: 0x00,
+                    5: 0x02,
+                    28: 0x66, // fishead
+                    29: 0x69,
+                    30: 0x73,
+                    31: 0x68,
+                    32: 0x65,
+                    33: 0x61,
+                    34: 0x64
+                }
+            ],
+            extractor: null
         },
     ],
     "Audio": [
@@ -882,6 +987,19 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
+            name: "Encapsulated PostScript",
+            extension: "eps,ai",
+            mime: "application/eps",
+            description: "",
+            signature: {
+                0: 0xc5,
+                1: 0xd0,
+                2: 0xd3,
+                3: 0xc6
+            },
+            extractor: null
+        },
+        {
             name: "Rich Text Format",
             extension: "rtf",
             mime: "application/rtf",
@@ -1075,6 +1193,22 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
+            name: "WordPerfect document",
+            extension: "wpd,wp,wp5,wp6,wpp,bk!,wcm",
+            mime: "application/wordperfect",
+            description: "",
+            signature: {
+                0: 0xff,
+                1: 0x57,
+                2: 0x50,
+                3: 0x43,
+                7: [0x00, 0x01, 0x02],
+                8: 0x01,
+                9: 0x0a
+            },
+            extractor: null
+        },
+        {
             name: "EPUB e-book",
             extension: "epub",
             mime: "application/epub+zip",
@@ -1120,7 +1254,7 @@ export const FILE_SIGNATURES = {
         {
             name: "Windows Portable Executable",
             extension: "exe,dll,drv,vxd,sys,ocx,vbx,com,fon,scr",
-            mime: "application/x-msdownload",
+            mime: "application/vnd.microsoft.portable-executable",
             description: "",
             signature: {
                 0: 0x4d,
@@ -1131,7 +1265,7 @@ export const FILE_SIGNATURES = {
             extractor: extractMZPE
         },
         {
-            name: "Executable and Linkable Format file",
+            name: "Executable and Linkable Format",
             extension: "elf,bin,axf,o,prx,so",
             mime: "application/x-executable",
             description: "Executable and Linkable Format file. No standard file extension.",
@@ -1144,7 +1278,7 @@ export const FILE_SIGNATURES = {
             extractor: extractELF
         },
         {
-            name: "MacOS Mach-O object file",
+            name: "MacOS Mach-O object",
             extension: "dylib",
             mime: "application/octet-stream",
             description: "",
@@ -1161,7 +1295,7 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
-            name: "MacOS Mach-O 64-bit object file",
+            name: "MacOS Mach-O 64-bit object",
             extension: "dylib",
             mime: "application/octet-stream",
             description: "",
@@ -1549,7 +1683,7 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
-            name: "Microsoft Cabinet file",
+            name: "Microsoft Cabinet",
             extension: "cab",
             mime: "vnd.ms-cab-compressed",
             description: "",
@@ -1578,10 +1712,27 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "lzop compressed",
+            extension: "lzop,lzo",
+            mime: "application/x-lzop",
+            description: "",
+            signature: {
+                0: 0x89,
+                1: 0x4c, // LZO
+                2: 0x5a,
+                3: 0x4f,
+                4: 0x00,
+                5: 0x0d,
+                6: 0x0a,
+                7: 0x1a
+            },
+            extractor: null
+        },
     ],
     "Miscellaneous": [
         {
-            name: "UTF-8 text file",
+            name: "UTF-8 text",
             extension: "txt",
             mime: "text/plain",
             description: "UTF-8 encoded Unicode byte order mark, commonly but not exclusively seen in text files.",
@@ -1592,8 +1743,8 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
-        { // Place before UTF-16 LE file
-            name: "UTF-32 LE file",
+        { // Place before UTF-16 LE text
+            name: "UTF-32 LE text",
             extension: "utf32le",
             mime: "charset/utf32le",
             description: "Little-endian UTF-32 encoded Unicode byte order mark.",
@@ -1606,7 +1757,7 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
-            name: "UTF-16 LE file",
+            name: "UTF-16 LE text",
             extension: "utf16le",
             mime: "charset/utf16le",
             description: "Little-endian UTF-16 encoded Unicode byte order mark.",
@@ -1964,6 +2115,223 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "TCP Packet",
+            extension: "tcp",
+            mime: "application/tcp",
+            description: "",
+            signature: {
+                12: 0x08,
+                13: 0x00,
+                14: 0x45,
+                15: 0x00,
+                21: 0x00,
+                22: b => b >= 0x01 && b <= 0x80,
+                23: 0x06
+            },
+            extractor: null
+        },
+        {
+            name: "UDP Packet",
+            extension: "udp",
+            mime: "application/udp",
+            description: "",
+            signature: {
+                12: 0x08,
+                13: 0x00,
+                14: 0x45,
+                15: 0x00,
+                16: [0x00, 0x01, 0x02, 0x03, 0x04, 0x05],
+                22: b => b >= 0x01 && b <= 0x80,
+                23: 0x11
+            },
+            extractor: null
+        },
+        {
+            name: "Compiled HTML",
+            extension: "chm,chw,chi",
+            mime: "application/vnd.ms-htmlhelp",
+            description: "",
+            signature: {
+                0: 0x49, // ITSF
+                1: 0x54,
+                2: 0x53,
+                3: 0x46,
+                4: 0x03,
+                5: 0x00,
+                6: 0x00,
+                7: 0x00
+            },
+            extractor: null
+        },
+        {
+            name: "Windows Password",
+            extension: "pwl",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0xe3,
+                1: 0x82,
+                2: 0x85,
+                3: 0x96
+            },
+            extractor: null
+        },
+        {
+            name: "Bitlocker recovery key",
+            extension: "bitlocker",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0xff,
+                1: 0xfe,
+                2: 0x42,
+                3: 0x00,
+                4: 0x69,
+                5: 0x00,
+                6: 0x74,
+                7: 0x00,
+                8: 0x4c,
+                9: 0x00,
+                10: 0x6f,
+                11: 0x00,
+                12: 0x63,
+                13: 0x00,
+                14: 0x6b,
+                15: 0x00,
+                16: 0x65,
+                17: 0x00,
+                18: 0x72,
+                19: 0x00,
+                20: 0x20,
+                21: 0x00
+            },
+            extractor: null
+        },
+        {
+            name: "Certificate",
+            extension: "cer,cat,p7b,p7c,p7m,p7s,swz,rsa,crl,crt,der",
+            mime: "application/pkix-cert",
+            description: "",
+            signature: {
+                0: 0x30,
+                1: 0x82,
+                4: [0x06, 0x0a, 0x30]
+            },
+            extractor: null
+        },
+        {
+            name: "Certificate",
+            extension: "cat,swz,p7m",
+            mime: "application/vnd.ms-pki.seccat",
+            description: "",
+            signature: {
+                0: 0x30,
+                1: 0x83,
+                2: b => b !== 0x00,
+                5: 0x06,
+                6: 0x09
+            },
+            extractor: null
+        },
+        {
+            name: "PGP pubring",
+            extension: "pkr,gpg",
+            mime: "application/pgp-keys",
+            description: "",
+            signature: {
+                0: 0x99,
+                1: 0x01,
+                2: [0x0d, 0xa2],
+                3: 0x04
+            },
+            extractor: null
+        },
+        {
+            name: "PGP secring",
+            extension: "skr",
+            mime: "application/pgp-keys",
+            description: "",
+            signature: [
+                {
+                    0: 0x95,
+                    1: 0x01,
+                    2: 0xcf,
+                    3: 0x04
+                },
+                {
+                    0: 0x95,
+                    1: 0x03,
+                    2: 0xc6,
+                    3: 0x04
+                }
+            ],
+            extractor: null
+        },
+        {
+            name: "PGP Safe",
+            extension: "pgd",
+            mime: "application/pgp-keys",
+            description: "",
+            signature: {
+                0: 0x50, // PGPdMAIN
+                1: 0x47,
+                2: 0x50,
+                3: 0x64,
+                4: 0x4d,
+                5: 0x41,
+                6: 0x49,
+                7: 0x4e,
+                8: 0x60,
+                9: 0x01,
+                10: 0x00
+            },
+            extractor: null
+        },
+        {
+            name: "Task Scheduler",
+            extension: "job",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: [0x00, 0x01, 0x02, 0x03],
+                1: [0x05, 0x06],
+                2: 0x01,
+                3: 0x00,
+                20: 0x46,
+                21: 0x00
+            },
+            extractor: null
+        },
+        {
+            name: "Windows Shortcut",
+            extension: "lnk",
+            mime: "application/x-ms-shortcut",
+            description: "",
+            signature: {
+                0: 0x4c,
+                1: 0x00,
+                2: 0x00,
+                3: 0x00,
+                4: 0x01,
+                5: 0x14,
+                6: 0x02,
+                7: 0x00,
+                8: 0x00,
+                9: 0x00,
+                10: 0x00,
+                11: 0x00,
+                12: 0xc0,
+                13: 0x00,
+                14: 0x00,
+                15: 0x00,
+                16: 0x00,
+                17: 0x00,
+                18: 0x00,
+                19: 0x46
+            },
+            extractor: null
+        }
     ]
 };
 
@@ -2307,9 +2675,10 @@ export function extractRTF(bytes, offset) {
 export function extractPListXML(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    // Find closing tag (</plist>\n)
-    stream.continueUntil([0x3c, 0x2f, 0x70, 0x6c, 0x69, 0x73, 0x74, 0x3e, 0x0a]);
-    stream.moveForwardsBy(9);
+    // Find closing tag (</plist>)
+    stream.continueUntil([0x3c, 0x2f, 0x70, 0x6c, 0x69, 0x73, 0x74, 0x3e]);
+    stream.moveForwardsBy(8);
+    stream.consumeIf(0x0a);
 
     return stream.carve();
 }

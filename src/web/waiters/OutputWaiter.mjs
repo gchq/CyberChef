@@ -1046,15 +1046,25 @@ class OutputWaiter {
      * @param {Object[]} options
      */
     backgroundMagicResult(options) {
-        if (!options.length ||
-            !options[0].recipe.length)
-            return;
+        if (!options.length) return;
 
         const currentRecipeConfig = this.app.getRecipeConfig();
-        const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
-        const opSequence = options[0].recipe.map(o => o.op).join(", ");
+        let msg = "",
+            newRecipeConfig;
 
-        this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
+        if (options[0].recipe.length) {
+            const opSequence = options[0].recipe.map(o => o.op).join(", ");
+            newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
+            msg = `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(options[0].data), 30)}"</span>`;
+        } else if (options[0].fileType && options[0].fileType.name) {
+            const ft = options[0].fileType;
+            newRecipeConfig = currentRecipeConfig.concat([{op: "Detect File Type", args: []}]);
+            msg = `<i>${ft.name}</i> file detected`;
+        } else {
+            return;
+        }
+
+        this.showMagicButton(msg, newRecipeConfig);
     }
 
     /**
@@ -1072,15 +1082,14 @@ class OutputWaiter {
     }
 
     /**
-     * Displays the Magic button with a title and adds a link to a complete recipe.
+     * Displays the Magic button with a title and adds a link to a recipe.
      *
-     * @param {string} opSequence
-     * @param {string} result
+     * @param {string} msg
      * @param {Object[]} recipeConfig
      */
-    showMagicButton(opSequence, result, recipeConfig) {
+    showMagicButton(msg, recipeConfig) {
         const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
+        magicButton.setAttribute("data-original-title", msg);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
         magicButton.classList.add("pulse");
