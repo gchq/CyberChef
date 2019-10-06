@@ -379,6 +379,7 @@
             "Bcrypt compare",
             "Bcrypt parse",
             "Scrypt",
+            "Argon2",
             "NT Hash",
             "LM Hash",
             "Fletcher-8 Checksum",
