@@ -320,6 +320,7 @@
             "Bcrypt compare",
             "Bcrypt parse",
             "Scrypt",
+            "Argon2",
             "Fletcher-8 Checksum",
             "Fletcher-16 Checksum",
             "Fletcher-32 Checksum",

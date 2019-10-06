@@ -133,6 +133,11 @@ Tiger-128`;
 
     }),
 
+    it("argon2", async () => {
+        const result = await chef.argon2("argon2password");
+        assert.strictEqual(result.toString(), "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw");
+    }),
+
     it("Bcrypt", async () => {
         const result = await chef.bcrypt("Put a Sock In It");
         const strResult = result.toString();
