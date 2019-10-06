@@ -340,18 +340,18 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: [
                     "echo '\n--- Regenerating node index ---'",
-                    "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
+                    "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
                 ].join(";"),
             },
             opTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node tests/operations/index.mjs"
             },
             browserTests: {
                 command: "./node_modules/.bin/nightwatch --env prod"
             },
             nodeTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
+                command: "node --experimental-modules --no-warnings --no-deprecation --es-module-specifier-resolution=node tests/node/index.mjs"
             },
             setupNodeConsumers: {
                 command: [
