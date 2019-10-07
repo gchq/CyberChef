@@ -4,11 +4,11 @@ travis.log
 build
 .vscode
 .*.swp
-.DS_Store
 src/core/config/modules/*
 src/core/config/OperationConfig.json
 src/core/operations/index.mjs
 src/node/config/OperationConfig.json
+src/node/index.mjs
 **/*.DS_Store
 tests/browser/output/*
 
