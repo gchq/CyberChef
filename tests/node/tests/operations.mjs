@@ -137,7 +137,7 @@ Tiger-128`;
         const result = await chef.bcrypt("Put a Sock In It");
         const strResult = result.toString();
         assert.equal(strResult.length, 60);
-        assert.equal(strResult.slice(0,7), "$2a$10$");
+        assert.equal(strResult.slice(0, 7), "$2a$10$");
     }),
 
     it("bcryptCompare", async() => {
@@ -787,9 +787,9 @@ qzXhatD7eP41N/FC3SfhyhX7hFbagO7MJG2AS5bmSvcuCdcNwDwXd94B+7bfYgJI
 RKbr272yDwkyzGn+zmxzvMUt6ak5PNzfmadvhMZvIfDftswpGYpXIUU0GObOgP2t
 pCGTErs=
 =Ya+/
------END PGP PRIVATE KEY BLOCK-----`
+-----END PGP PRIVATE KEY BLOCK-----`;
 
-        const message = "A Fool and His Money are Soon Parted"
+        const message = "A Fool and His Money are Soon Parted";
 
         const encrypted = await chef.PGPEncrypt(message, {
             publicKeyOfRecipient: pbkey,
@@ -797,7 +797,7 @@ pCGTErs=
         const result = await chef.PGPDecrypt(encrypted, {
             privateKeyOfRecipient: privateKey,
         });
-        
+
         assert.strictEqual(result.toString(), message);
     }),
 
