@@ -62,9 +62,9 @@ class OpticalCharacterRecognition extends Operation {
         try {
             const image = `data:${type};base64,${toBase64(input)}`;
             const worker = new TesseractWorker({
-                workerPath: `${assetDir}/tesseract/worker.min.js`,
-                langPath: `${assetDir}/tesseract/lang-data/`,
-                corePath: `${assetDir}/tesseract/tesseract-core.wasm.js`,
+                workerPath: `${assetDir}tesseract/worker.min.js`,
+                langPath: `${assetDir}tesseract/lang-data`,
+                corePath: `${assetDir}tesseract/tesseract-core.wasm.js`,
             });
             const result = await worker.recognize(image)
                 .progress(progress => {

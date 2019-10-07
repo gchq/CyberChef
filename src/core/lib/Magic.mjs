@@ -97,6 +97,7 @@ class Magic {
 
         if (!fileType.length) return null;
         return {
+            name: fileType[0].name,
             ext: fileType[0].extension,
             mime: fileType[0].mime,
             desc: fileType[0].description

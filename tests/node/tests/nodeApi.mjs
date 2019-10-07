@@ -259,6 +259,13 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
 
+    it("chef.bake: should take single JSON object desribing op with optional args", () => {
+        const result = chef.bake("some input", {
+            op: chef.toHex,
+        });
+        assert.strictEqual(result.toString(), "73 6f 6d 65 20 69 6e 70 75 74");
+    }),
+
     it("chef.bake: should take single JSON object describing op and args ARRAY", () => {
         const result = chef.bake("some input", {
             op: chef.toHex,
@@ -295,6 +302,21 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "67;63;72;66;146;72;66;144;72;66;65;72;62;60;72;66;71;72;66;145;72;67;60;72;67;65;72;67;64");
     }),
 
+    it("chef.bake: should take multiple ops in JSON object form, some without args", () => {
+        const result = chef.bake("some input", [
+            {
+                op: chef.toHex,
+            },
+            {
+                op: "to octal",
+                args: {
+                    delimiter: "Semi-colon",
+                }
+            }
+        ]);
+        assert.strictEqual(result.toString(), "67;63;40;66;146;40;66;144;40;66;65;40;62;60;40;66;71;40;66;145;40;67;60;40;67;65;40;67;64");
+    }),
+
     it("chef.bake: should handle op with multiple args", () => {
         const result = chef.bake("some input", {
             op: "to morse code",
@@ -322,6 +344,17 @@ TestRegister.addApiTests([
                 "args": [false] }
         ]);
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+    }),
+
+    it("chef.bake: should accept Clean JSON format from Chef website - args optional", () => {
+        const result = chef.bake("some input", [
+            { "op": "To Morse Code" },
+            { "op": "Hex to PEM",
+                "args": ["SOMETHING"] },
+            { "op": "To Snake case",
+                "args": [false] }
+        ]);
+        assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
     }),
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {
