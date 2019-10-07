@@ -104,8 +104,6 @@ class TestRegister {
      * Run all api related tests and wrap results in report format
      */
     runApiTests() {
-        console.log("Running tests...");
-
         return Promise.all(this.apiTests.map(async function(test, i) {
             const result = {
                 test: test,
