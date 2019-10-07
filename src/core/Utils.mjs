@@ -201,8 +201,7 @@ class Utils {
      * Utils.parseEscapedChars("\\n");
      */
     static parseEscapedChars(str) {
-        return str.replace(/(\\)?\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, a, b) {
-            if (a === "\\") return "\\"+b;
+        return str.replace(/\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, b) {
             switch (b[0]) {
                 case "\\":
                     return "\\";
