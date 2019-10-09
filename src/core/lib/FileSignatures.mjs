@@ -2451,7 +2451,7 @@ export function extractJPEG(bytes, offset) {
 export function extractMZPE(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    // Move to PE header pointer
+    // Read pointer to PE header
     stream.moveTo(0x3c);
     const peAddress = stream.readInt(4, "le");
 
@@ -2462,12 +2462,36 @@ export function extractMZPE(bytes, offset) {
     stream.moveForwardsBy(6);
     const numSections = stream.readInt(2, "le");
 
-    // Get optional header size
-    stream.moveForwardsBy(12);
-    const optionalHeaderSize = stream.readInt(2, "le");
+    // Read Optional Header Magic to determine the state of the image file
+    // 0x10b = normal exeuctable, 0x107 = ROM image, 0x20b = PE32+ executable
+    stream.moveForwardsBy(16);
+    const optionalMagic = stream.readInt(2, "le");
+    const pe32Plus = optionalMagic === 0x20b;
 
-    // Move past optional header to section header
-    stream.moveForwardsBy(2 + optionalHeaderSize);
+    // Move to Data Directory
+    const dataDirectoryOffset = pe32Plus ? 112 : 96;
+    stream.moveForwardsBy(dataDirectoryOffset - 2);
+
+    // Read Certificate Table address and size (IMAGE_DIRECTORY_ENTRY_SECURITY)
+    stream.moveForwardsBy(32);
+    const certTableAddress = stream.readInt(4, "le");
+    const certTableSize = stream.readInt(4, "le");
+
+    // PE files can contain extra data appended to the end of the file called an "overlay".
+    // This data is not covered by the PE header and could be any arbitrary format, so its
+    // length cannot be determined without contextual information.
+    // However, the Attribute Certificate Table is stored in the overlay - usually right at
+    // the end. Therefore, if this table is defined, we can use its offset and size to carve
+    // out the entire PE file, including the overlay.
+    // If the Certificate Table is not defined, we continue to parse the PE file as best we
+    // can up to the end of the final section, not including any appended data in the overlay.
+    if (certTableAddress > 0) {
+        stream.moveTo(certTableAddress + certTableSize);
+        return stream.carve();
+    }
+
+    // Move past Optional Header to Section Header
+    stream.moveForwardsBy(88);
 
     // Move to final section header
     stream.moveForwardsBy((numSections - 1) * 0x28);
