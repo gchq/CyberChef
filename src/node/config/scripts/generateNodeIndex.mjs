@@ -41,6 +41,7 @@ let code = `/**
 import NodeDish from "./NodeDish.mjs";
 import { _wrap, help, bake, _explainExludedFunction } from "./api.mjs";
 import File from "./File.mjs";
+import { OperationError, DishError, ExcludedOperationError } from "../core/errors/index";
 import {
     // import as core_ to avoid name clashes after wrap.
 `;
@@ -115,6 +116,9 @@ Object.keys(operations).forEach((op) => {
 code += "    NodeDish as Dish,\n";
 code += "    prebaked as bake,\n";
 code += "    help,\n";
+code += "    OperationError,\n";
+code += "    ExcludedOperationError,\n";
+code += "    DishError,\n";
 code += "};\n";
 
 
