@@ -3,6 +3,7 @@ npm-debug.log
 travis.log
 build
 .vscode
+．idea
 .*.swp
 .DS_Store
 src/core/config/modules/*

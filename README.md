@@ -21,6 +21,14 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
+## Quick start with docker-compose
+```
+git clone https://github.com/gchq/CyberChef.git && cd CyberChef
+docker-compose up -d
+```
+
+open this address in your browser: _http://localhost:8080/_
+
 
 ## How it works
 
