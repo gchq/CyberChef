@@ -192,7 +192,8 @@
             "Encode text",
             "Decode text",
             "Remove Diacritics",
-            "Unescape Unicode Characters"
+            "Unescape Unicode Characters",
+            "Convert to NATO alphabet"
         ]
     },
     {
