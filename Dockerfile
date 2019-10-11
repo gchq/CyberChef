@@ -4,7 +4,7 @@ FROM nginx
 ## Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
 
-## From 'build' copy website to default nginx public folder
+## From 'build' directory copy website to default nginx public folder
 COPY ./build/prod /usr/share/nginx/html
 
 EXPOSE 80
