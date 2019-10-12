@@ -90,7 +90,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
         const delimRegex = delim === "Auto" ? /[^a-f\d]/gi : Utils.regexRep(delim);
         data = data.replace(delimRegex, "");
     }
-
+    
     const output = [];
     for (let i = 0; i < data.length; i += byteLen) {
         output.push(parseInt(data.substr(i, byteLen), 16));

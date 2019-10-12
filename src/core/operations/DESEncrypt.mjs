@@ -19,7 +19,6 @@ class DESEncrypt extends Operation {
      */
     constructor() {
         super();
-
         this.name = "DES Encrypt";
         this.module = "Ciphers";
         this.description = "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br>Triple DES uses a key length of 24 bytes (192 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
@@ -73,9 +72,13 @@ class DESEncrypt extends Operation {
 DES uses a key length of 8 bytes (64 bits).
 Triple DES uses a key length of 24 bytes (192 bits).`);
         }
+        else if(iv.length !== 8) {
+            throw new OperationError(`Invalid IV length: ${iv.length} bytes
 
+DES uses a iv length of 8 bytes (64 bits).`);
+
+        }
         input = Utils.convertToByteString(input, inputType);
-
         const cipher = forge.cipher.createCipher("DES-" + mode, key);
         cipher.start({iv: iv});
         cipher.update(forge.util.createBuffer(input));

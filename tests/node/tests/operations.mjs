@@ -415,7 +415,7 @@ color: white;
             },
             iv: {
                 string: "threetwo",
-                option: "Hex",
+                option: "utf8",
             },
             mode: "ECB",
         });
