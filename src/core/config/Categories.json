@@ -382,6 +382,7 @@
         "name": "Multimedia",
         "ops": [
             "Render Image",
+            "Generate Image",
             "Play Media",
             "Optical Character Recognition",
             "Remove EXIF",
