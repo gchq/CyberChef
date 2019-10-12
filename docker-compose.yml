@@ -1,0 +1,8 @@
+version: '2.0'
+
+services:
+    cyberchef:
+        restart: always
+        image: loopsun/cyberchef:latest
+        ports:
+            - 8080:80
