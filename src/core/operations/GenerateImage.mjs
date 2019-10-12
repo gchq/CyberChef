@@ -25,7 +25,7 @@ class GenerateImage extends Operation {
 
         this.name = "Generate Image";
         this.module = "Image";
-        this.description = "Generate a Image using the input as pixel values.";
+        this.description = "Generate an Image using the input as pixel values.";
         this.infoURL = "";
         this.inputType = "byteArray";
         this.outputType = "ArrayBuffer";
