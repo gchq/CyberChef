@@ -1550,7 +1550,7 @@ export const FILE_SIGNATURES = {
             mime: "application/x-vhd",
             description: "",
             signature: {
-                0: 0x63, // conectix
+                0: 0x63, // connectix
                 1: 0x6f,
                 2: 0x6e,
                 3: 0x65,
