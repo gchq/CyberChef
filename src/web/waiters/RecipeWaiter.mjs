@@ -628,12 +628,21 @@ class RecipeWaiter {
             bakeIcon.style.display = "inline-block";
         }
 
-        // Scale controls to fit pane width
-        const controls = document.getElementById("controls");
-        const controlsContent = document.getElementById("controls-content");
-        const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
+        // Hide recipe controls when output is maximised
+        if (document.getElementById("i") === "fullscreen") {
+          document.getElementById("controls").style.display = "none";
+        }
+        else {
+          // Show recipe controls if they are not already shown
+          document.getElementById("controls").style.display = "inherit";
 
-        controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
+          // Scale controls to fit pane width
+          const controls = document.getElementById("controls");
+          const controlsContent = document.getElementById("controls-content");
+          const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
+
+          controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        }
     }
 
 }
