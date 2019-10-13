@@ -174,7 +174,7 @@ class OutputWaiter {
     }
 
     /**
-     * Updates the stored bake ID for the output in the ouptut array
+     * Updates the stored bake ID for the output in the output array
      *
      * @param {number} bakeId
      * @param {number} inputNum
