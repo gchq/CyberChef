@@ -945,7 +945,7 @@ self.updateMaxTabs = function(maxTabs, activeTab) {
  * @param {boolean} searchData.showLoading - If true, include loading inputs in the results
  * @param {boolean} searchData.showLoaded - If true, include loaded inputs in the results
  * @param {string} searchData.filter - A regular expression to match the inputs on
- * @param {string} searchData.filterType - Either "CONTENT" or "FILENAME". Detemines what should be matched with filter
+ * @param {string} searchData.filterType - Either "CONTENT" or "FILENAME". Determines what should be matched with filter
  * @param {number} searchData.numResults - The maximum number of results to be returned
  */
 self.filterTabs = function(searchData) {
