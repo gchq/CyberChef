@@ -355,7 +355,7 @@ module.exports = function (grunt) {
             },
             setupNodeConsumers: {
                 command: [
-                    "echo '\n--- Testing node conumers ---'",
+                    "echo '\n--- Testing node consumers ---'",
                     "npm link",
                     `mkdir ${nodeConsumerTestPath}`,
                     `cp tests/node/consumers/* ${nodeConsumerTestPath}`,
