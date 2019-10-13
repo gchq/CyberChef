@@ -14,7 +14,7 @@ import clippyMap from "../static/clippy_assets/agents/Clippy/map.png";
 class SeasonalWaiter {
 
     /**
-     * SeasonalWaiter contructor.
+     * SeasonalWaiter constructor.
      *
      * @param {App} app - The main view object for CyberChef.
      * @param {Manager} manager - The CyberChef event manager.
