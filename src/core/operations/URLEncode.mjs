@@ -49,7 +49,7 @@ class URLEncode extends Operation {
      * @returns {string}
      */
     encodeAllChars (str) {
-        // TODO Do this programatically
+        // TODO Do this programmatically
         return encodeURIComponent(str)
             .replace(/!/g, "%21")
             .replace(/#/g, "%23")

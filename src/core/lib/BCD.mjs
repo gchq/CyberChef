@@ -22,7 +22,7 @@ export const ENCODING_SCHEME = [
 /**
  * Lookup table for the binary value of each digit representation.
  *
- * I wrote a very nice algorithm to generate 8 4 2 1 encoding programatically,
+ * I wrote a very nice algorithm to generate 8 4 2 1 encoding programmatically,
  * but unfortunately it's much easier (if less elegant) to use lookup tables
  * when supporting multiple encoding schemes.
  *
