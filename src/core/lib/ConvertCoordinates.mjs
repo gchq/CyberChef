@@ -1,5 +1,5 @@
 /**
- * Co-ordinate conversion resources.
+ * Coordinate conversion resources.
  *
  * @author j433866 [j433866@gmail.com]
  * @copyright Crown Copyright 2019
@@ -24,7 +24,7 @@ const LatLonEllipsoidal = geodesy.LatLonEllipsoidal,
     Utm = geodesy.Utm;
 
 /**
- * Co-ordinate formats
+ * Coordinate formats
  */
 export const FORMATS = [
     "Degrees Minutes Seconds",
@@ -56,7 +56,7 @@ const NO_CHANGE = [
  * @param {string} outDelim - The delimiter to separate the output with
  * @param {string} includeDir - Whether or not to include the compass direction in the output
  * @param {number} precision - Precision of the result
- * @returns {string} A formatted string of the converted co-ordinates
+ * @returns {string} A formatted string of the converted coordinates
  */
 export function convertCoordinates (input, inFormat, inDelim, outFormat, outDelim, includeDir, precision) {
     let isPair = false,
@@ -112,7 +112,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         } else {
             split = input.split(inDelim);
         }
-        // Replace any co-ordinate symbols with spaces so we can split on them later
+        // Replace any coordinate symbols with spaces so we can split on them later
         for (let i = 0; i < split.length; i++) {
             split[i] = split[i].replace(/[°˝´'"]/g, " ");
         }
@@ -158,16 +158,16 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
                     lon = convDMSToDD(splitLong[0], splitLong[1], splitLong[2], 10);
                     latlon = new LatLonEllipsoidal(lat.degrees, lon.degrees);
                 } else {
-                    throw new OperationError("Invalid co-ordinate format for Degrees Minutes Seconds");
+                    throw new OperationError("Invalid coordinate format for Degrees Minutes Seconds");
                 }
             } else {
-                // Not a pair, so only try to convert one set of co-ordinates
+                // Not a pair, so only try to convert one set of coordinates
                 splitLat = splitInput(split[0]);
                 if (splitLat.length >= 3) {
                     lat = convDMSToDD(splitLat[0], splitLat[1], splitLat[2]);
                     latlon = new LatLonEllipsoidal(lat.degrees, lat.degrees);
                 } else {
-                    throw new OperationError("Invalid co-ordinate format for Degrees Minutes Seconds");
+                    throw new OperationError("Invalid coordinate format for Degrees Minutes Seconds");
                 }
             }
             break;
@@ -176,17 +176,17 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
                 splitLat = splitInput(split[0]);
                 splitLong = splitInput(split[1]);
                 if (splitLat.length !== 2 || splitLong.length !== 2) {
-                    throw new OperationError("Invalid co-ordinate format for Degrees Decimal Minutes.");
+                    throw new OperationError("Invalid coordinate format for Degrees Decimal Minutes.");
                 }
                 // Convert to decimal degrees, and then convert to a geodesy object
                 lat = convDDMToDD(splitLat[0], splitLat[1], 10);
                 lon = convDDMToDD(splitLong[0], splitLong[1], 10);
                 latlon = new LatLonEllipsoidal(lat.degrees, lon.degrees);
             } else {
-                // Not a pair, so only try to convert one set of co-ordinates
+                // Not a pair, so only try to convert one set of coordinates
                 splitLat = splitInput(input);
                 if (splitLat.length !== 2) {
-                    throw new OperationError("Invalid co-ordinate format for Degrees Decimal Minutes.");
+                    throw new OperationError("Invalid coordinate format for Degrees Decimal Minutes.");
                 }
                 lat = convDDMToDD(splitLat[0], splitLat[1], 10);
                 latlon = new LatLonEllipsoidal(lat.degrees, lat.degrees);
@@ -197,14 +197,14 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
                 splitLat =  splitInput(split[0]);
                 splitLong = splitInput(split[1]);
                 if (splitLat.length !== 1 || splitLong.length !== 1) {
-                    throw new OperationError("Invalid co-ordinate format for Decimal Degrees.");
+                    throw new OperationError("Invalid coordinate format for Decimal Degrees.");
                 }
                 latlon = new LatLonEllipsoidal(splitLat[0], splitLong[0]);
             } else {
-                // Not a pair, so only try to convert one set of co-ordinates
+                // Not a pair, so only try to convert one set of coordinates
                 splitLat = splitInput(split[0]);
                 if (splitLat.length !== 1) {
-                    throw new OperationError("Invalid co-ordinate format for Decimal Degrees.");
+                    throw new OperationError("Invalid coordinate format for Decimal Degrees.");
                 }
                 latlon = new LatLonEllipsoidal(splitLat[0], splitLat[0]);
             }
@@ -275,7 +275,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         case "Ordnance Survey National Grid":
             osng = OsGridRef.latLonToOsGrid(latlon);
             if (osng.toString() === "") {
-                throw new OperationError("Could not convert co-ordinates to OS National Grid. Are the co-ordinates in range?");
+                throw new OperationError("Could not convert coordinates to OS National Grid. Are the coordinates in range?");
             }
             // OSNG wants a precision that's an even number between 2 and 10
             if (precision % 2 !== 0) {
@@ -293,7 +293,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
     }
 
     if (convLat === undefined) {
-        throw new OperationError("Error converting co-ordinates.");
+        throw new OperationError("Error converting coordinates.");
     }
 
     if (outFormat.includes("Degrees")) {
@@ -357,9 +357,9 @@ function splitInput (input) {
 /**
  * Convert Degrees Minutes Seconds to Decimal Degrees
  *
- * @param {number} degrees - The degrees of the input co-ordinates
- * @param {number} minutes - The minutes of the input co-ordinates
- * @param {number} seconds - The seconds of the input co-ordinates
+ * @param {number} degrees - The degrees of the input coordinates
+ * @param {number} minutes - The minutes of the input coordinates
+ * @param {number} seconds - The seconds of the input coordinates
  * @param {number} precision - The precision the result should be rounded to
  * @returns {{string: string, degrees: number}} An object containing the raw converted value (obj.degrees), and a formatted string version (obj.string)
  */
@@ -467,7 +467,7 @@ function convDDToDDM (decDegrees, precision) {
 /**
  * Finds and returns the compass directions in an input string
  *
- * @param {string} input - The input co-ordinates containing the direction
+ * @param {string} input - The input coordinates containing the direction
  * @param {string} delim - The delimiter separating latitide and longitude
  * @returns {string[]} String array containing the latitude and longitude directions
  */
@@ -526,7 +526,7 @@ export function findDirs(input, delim) {
 }
 
 /**
- * Detects the co-ordinate format of the input data
+ * Detects the coordinate format of the input data
  *
  * @param {string} input - The input data whose format we need to detect
  * @param {string} delim - The delimiter separating the data in input
@@ -620,7 +620,7 @@ export function findDelim (input) {
         if (input.includes(delim)) {
             const splitInput = input.split(delim);
             if (splitInput.length <= 3 && splitInput.length > 0) {
-                // Don't want to try and convert more than 2 co-ordinates
+                // Don't want to try and convert more than 2 coordinates
                 return delim;
             }
         }

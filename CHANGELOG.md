@@ -83,7 +83,7 @@ All major and minor version changes will be documented in this file. Details of 
 - 'DNS over HTTPS' operation added [@h345983745] | [#489]
 
 ### [8.23.1] - 2019-01-18
-- 'Convert co-ordinate format' operation added [@j433866] | [#476]
+- 'Convert coordinate format' operation added [@j433866] | [#476]
 
 ### [8.23.0] - 2019-01-18
 - 'YARA Rules' operation added [@artemisbot] | [#468]

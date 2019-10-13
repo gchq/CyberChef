@@ -8,7 +8,7 @@ import Operation from "../Operation.mjs";
 import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates.mjs";
 
 /**
- * Convert co-ordinate format operation
+ * Convert coordinate format operation
  */
 class ConvertCoordinateFormat extends Operation {
 
@@ -18,9 +18,9 @@ class ConvertCoordinateFormat extends Operation {
     constructor() {
         super();
 
-        this.name = "Convert co-ordinate format";
+        this.name = "Convert coordinate format";
         this.module = "Hashing";
-        this.description = "Converts geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>The operation can try to detect the input co-ordinate format and delimiter automatically, but this may not always work correctly.";
+        this.description = "Converts geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>The operation can try to detect the input coordinate format and delimiter automatically, but this may not always work correctly.";
         this.infoURL = "https://wikipedia.org/wiki/Geographic_coordinate_conversion";
         this.inputType = "string";
         this.outputType = "string";
