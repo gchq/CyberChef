@@ -56,7 +56,7 @@ class UNIXTimestampToWindowsFiletime extends Operation {
         } else if (units === "Milliseconds (ms)") {
             input = input.multipliedBy(new BigNumber("10000"));
         } else if (units === "Microseconds (μs)") {
-            input = input.multiplyiedBy(new BigNumber("10"));
+            input = input.multipliedBy(new BigNumber("10"));
         } else if (units === "Nanoseconds (ns)") {
             input = input.dividedBy(new BigNumber("100"));
         } else {
