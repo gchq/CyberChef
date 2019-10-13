@@ -39,7 +39,7 @@ let code = `/**
 
 
 import NodeDish from "./NodeDish.mjs";
-import { _wrap, help, bake, _explainExludedFunction } from "./api.mjs";
+import { _wrap, help, bake, _explainExcludedFunction } from "./api.mjs";
 import File from "./File.mjs";
 import { OperationError, DishError, ExcludedOperationError } from "../core/errors/index";
 import {
@@ -70,7 +70,7 @@ includedOperations.forEach((op) => {
 });
 
 excludedOperations.forEach((op) => {
-    code += `        "${decapitalise(op)}": _explainExludedFunction("${op}"),\n`;
+    code += `        "${decapitalise(op)}": _explainExcludedFunction("${op}"),\n`;
 });
 
 code += `    };
