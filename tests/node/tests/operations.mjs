@@ -885,17 +885,17 @@ smothering ampersand abreast
     it("toBase64: editableOption", () => {
         const result = toBase64("some input", {
             alphabet: {
-                value: "0-9A-W"
+                value: "0-9A-W+/a-zXYZ="
             },
         });
-        assert.strictEqual(result.toString(), "SPI1R1T0");
+        assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions key is value", () => {
         const result = toBase64("some input", {
-            alphabet: "0-9A-W",
+            alphabet: "0-9A-W+/a-zXYZ=",
         });
-        assert.strictEqual(result.toString(), "SPI1R1T0");
+        assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions default", () => {
