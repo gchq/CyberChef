@@ -1,7 +1,7 @@
-import TestRegister from "../lib/TestRegister.mjs";
-import Categories from "../../src/core/config/Categories.json";
-import OperationConfig from "../../src/core/config/OperationConfig.json";
-import it from "../node/assertionHandler.mjs";
+import TestRegister from "../../lib/TestRegister.mjs";
+import Categories from "../../../src/core/config/Categories.json";
+import OperationConfig from "../../../src/core/config/OperationConfig.json";
+import it from "../assertionHandler.mjs";
 import assert from "assert";
 
 TestRegister.addApiTests([

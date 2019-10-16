@@ -17,11 +17,6 @@ import {
 } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
-
-// Generic tests
-import "./Categories.mjs";
-
-// Operation tests
 import "./tests/BCD.mjs";
 import "./tests/BSON.mjs";
 import "./tests/BaconCipher.mjs";
@@ -110,9 +105,6 @@ const testStatus = {
 setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
-
-TestRegister.runApiTests()
-    .then(logOpsTestReport);
 
 TestRegister.runTests()
     .then(logOpsTestReport);
