@@ -14,6 +14,17 @@ const path = require("path");
  * @license Apache-2.0
  */
 
+const chainCommands = function(cmds) {
+    const win = process.platform === "win32";
+    if (!win) {
+        return cmds.join(";");
+    }
+    return cmds
+        // Chain Command is different here
+        .join("&&")
+        // Windows does not support \n properly
+        .replace("\n", "\\n");
+};
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -316,10 +327,10 @@ module.exports = function (grunt) {
         },
         exec: {
             repoSize: {
-                command: [
+                command: chainCommands([
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
                     "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
-                ].join(";"),
+                ]),
                 stderr: false
             },
             cleanGit: {
@@ -329,20 +340,20 @@ module.exports = function (grunt) {
                 command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml"
             },
             generateConfig: {
-                command: [
+                command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
-                ].join(";")
+                ])
             },
             generateNodeIndex: {
-                command: [
+                command: chainCommands([
                     "echo '\n--- Regenerating node index ---'",
                     "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
-                ].join(";"),
+                ]),
             },
             opTests: {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
@@ -354,40 +365,40 @@ module.exports = function (grunt) {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
             },
             setupNodeConsumers: {
-                command: [
+                command: chainCommands([
                     "echo '\n--- Testing node consumers ---'",
                     "npm link",
                     `mkdir ${nodeConsumerTestPath}`,
                     `cp tests/node/consumers/* ${nodeConsumerTestPath}`,
                     `cd ${nodeConsumerTestPath}`,
                     "npm link cyberchef"
-                ].join(";"),
+                ]),
             },
             teardownNodeConsumers: {
-                command: [
+                command: chainCommands([
                     `rm -rf ${nodeConsumerTestPath}`,
                     "echo '\n--- Node consumer tests complete ---'"
-                ].join(";"),
+                ]),
             },
             testCJSNodeConsumer: {
-                command: [
+                command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     "node --no-warnings cjs-consumer.js",
-                ].join(";"),
+                ]),
                 stdout: false,
             },
             testESMNodeConsumer: {
-                command: [
+                command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     "node --no-warnings --experimental-modules esm-consumer.mjs",
-                ].join(";"),
+                ]),
                 stdout: false,
             },
             testESMDeepImportNodeConsumer: {
-                command: [
+                command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     "node --no-warnings --experimental-modules esm-deep-import-consumer.mjs",
-                ].join(";"),
+                ]),
                 stdout: false,
             },
         },
