@@ -943,10 +943,10 @@ smothering ampersand abreast
             chef.tripleDESDecrypt(
                 chef.tripleDESEncrypt("Destroy Money", {
                     key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}}),
+                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}}),
                 {
                     key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}
+                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}
                 }).toString(),
             "Destroy Money");
     }),

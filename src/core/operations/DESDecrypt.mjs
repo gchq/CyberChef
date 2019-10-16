@@ -76,7 +76,8 @@ Triple DES uses a key length of 24 bytes (192 bits).`);
         if (iv.length !== 8) {
             throw new OperationError(`Invalid IV length: ${iv.length} bytes
 
-DES uses an IV length of 8 bytes (64 bits).`);
+DES uses an IV length of 8 bytes (64 bits).
+Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         }
 
         input = Utils.convertToByteString(input, inputType);
