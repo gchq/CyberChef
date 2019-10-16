@@ -14,18 +14,6 @@ const path = require("path");
  * @license Apache-2.0
  */
 
-const chainCommands = function(cmds) {
-    const win = process.platform === "win32";
-    if (!win) {
-        return cmds.join(";");
-    }
-    return cmds
-        // Chain Command is different here
-        .join("&&")
-        // Windows does not support \n properly
-        .replace("\n", "\\n");
-};
-
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
     grunt.file.preserveBOM = false;
@@ -111,6 +99,26 @@ module.exports = function (grunt) {
         });
 
         return entryModules;
+    }
+
+    /**
+     * Detects the correct delimiter to use to chain shell commands together
+     * based on the current OS.
+     *
+     * @param {string[]} cmds
+     * @returns {string}
+     */
+    function chainCommands(cmds) {
+        const win = process.platform === "win32";
+        if (!win) {
+            return cmds.join(";");
+        }
+        return cmds
+            // && means that subsequent commands will not be executed if the
+            // previous one fails. & would coninue on a fail
+            .join("&&")
+            // Windows does not support \n properly
+            .replace("\n", "\\n");
     }
 
     grunt.initConfig({
