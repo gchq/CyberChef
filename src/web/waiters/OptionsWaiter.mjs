@@ -58,7 +58,7 @@ class OptionsWaiter {
 
     /**
      * Handler for options click events.
-     * Dispays the options pane.
+     * Displays the options pane.
      *
      * @param {event} e
      */

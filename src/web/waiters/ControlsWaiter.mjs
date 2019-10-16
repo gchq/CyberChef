@@ -25,7 +25,7 @@ class ControlsWaiter {
 
 
     /**
-     * Initialise Bootstrap componenets
+     * Initialise Bootstrap components
      */
     initComponents() {
         $("body").bootstrapMaterialDesign();

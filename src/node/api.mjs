@@ -12,7 +12,7 @@ import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
 import OperationConfig from "../core/config/OperationConfig.json";
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
-import ExludedOperationError from "../core/errors/ExcludedOperationError.mjs";
+import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
 
 
 /**
@@ -320,12 +320,12 @@ export function bake() {
  * Explain that the given operation is not included in the Node.js version.
  * @param {String} name - name of operation
  */
-export function _explainExludedFunction(name) {
+export function _explainExcludedFunction(name) {
     /**
      * Throw new error type with useful message.
     */
     const func = () => {
-        throw new ExludedOperationError(`Sorry, the ${name} operation is not available in the Node.js version of CyberChef.`);
+        throw new ExcludedOperationError(`Sorry, the ${name} operation is not available in the Node.js version of CyberChef.`);
     };
     // Add opName prop so NodeRecipe can handle it, just like wrap does.
     func.opName = name;
