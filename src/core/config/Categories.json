@@ -123,6 +123,7 @@
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
             "Parse SSH Host Key"
@@ -284,6 +285,7 @@
             "Zip",
             "Unzip",
             "Bzip2 Decompress",
+            "Bzip2 Compress",
             "Tar",
             "Untar"
         ]
@@ -370,6 +372,7 @@
             "Detect File Type",
             "Scan for Embedded Files",
             "Extract Files",
+            "YARA Rules",
             "Remove EXIF",
             "Extract EXIF",
             "Extract RGBA",
@@ -401,6 +404,7 @@
             "Cover Image",
             "Image Hue/Saturation/Lightness",
             "Sharpen Image",
+            "Normalise Image",
             "Convert Image Format",
             "Add Text To Image",
             "Hex Density chart",

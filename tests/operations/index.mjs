@@ -17,6 +17,11 @@ import {
 } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
+
+// Generic tests
+import "./Categories.mjs";
+
+// Operation tests
 import "./tests/BCD.mjs";
 import "./tests/BSON.mjs";
 import "./tests/BaconCipher.mjs";
@@ -95,9 +100,6 @@ import "./tests/ParseUDP.mjs";
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
 
-// import "./tests/nodeApi/nodeApi.mjs";
-// import "./tests/nodeApi/ops.mjs";
-
 const testStatus = {
     allTestsPassing: true,
     counts: {
@@ -108,6 +110,9 @@ const testStatus = {
 setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
+
+TestRegister.runApiTests()
+    .then(logOpsTestReport);
 
 TestRegister.runTests()
     .then(logOpsTestReport);
