@@ -21,6 +21,8 @@ import "./tests/operations.mjs";
 import "./tests/File.mjs";
 import "./tests/Dish.mjs";
 import "./tests/NodeDish.mjs";
+import "./tests/Utils.mjs";
+import "./tests/Categories.mjs";
 
 const testStatus = {
     allTestsPassing: true,
