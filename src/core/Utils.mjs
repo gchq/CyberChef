@@ -201,8 +201,8 @@ class Utils {
      * Utils.parseEscapedChars("\\n");
      */
     static parseEscapedChars(str) {
-        return str.replace(/\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, b) {
-            switch (b[0]) {
+        return str.replace(/\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, a) {
+            switch (a[0]) {
                 case "\\":
                     return "\\";
                 case "0":
@@ -213,7 +213,7 @@ class Utils {
                 case "5":
                 case "6":
                 case "7":
-                    return String.fromCharCode(parseInt(b, 8));
+                    return String.fromCharCode(parseInt(a, 8));
                 case "b":
                     return "\b";
                 case "t":
@@ -231,12 +231,12 @@ class Utils {
                 case "'":
                     return "'";
                 case "x":
-                    return String.fromCharCode(parseInt(b.substr(1), 16));
+                    return String.fromCharCode(parseInt(a.substr(1), 16));
                 case "u":
-                    if (b[1] === "{")
-                        return String.fromCodePoint(parseInt(b.slice(2, -1), 16));
+                    if (a[1] === "{")
+                        return String.fromCodePoint(parseInt(a.slice(2, -1), 16));
                     else
-                        return String.fromCharCode(parseInt(b.substr(1), 16));
+                        return String.fromCharCode(parseInt(a.substr(1), 16));
             }
         });
     }
