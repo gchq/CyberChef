@@ -51,7 +51,7 @@ class BLAKE2s extends Operation {
     /**
      * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {string} The input having been hashed with BLAKE2s in the encoding format speicifed.
+     * @returns {string} The input having been hashed with BLAKE2s in the encoding format specified.
      */
     run(input, args) {
         const [outSize, outFormat] = args;

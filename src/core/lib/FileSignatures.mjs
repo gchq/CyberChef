@@ -2463,7 +2463,7 @@ export function extractMZPE(bytes, offset) {
     const numSections = stream.readInt(2, "le");
 
     // Read Optional Header Magic to determine the state of the image file
-    // 0x10b = normal exeuctable, 0x107 = ROM image, 0x20b = PE32+ executable
+    // 0x10b = normal executable, 0x107 = ROM image, 0x20b = PE32+ executable
     stream.moveForwardsBy(16);
     const optionalMagic = stream.readInt(2, "le");
     const pe32Plus = optionalMagic === 0x20b;

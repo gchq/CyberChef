@@ -57,7 +57,7 @@ class HammingDistance extends Operation {
             samples = input.split(delim);
 
         if (samples.length !== 2) {
-            throw new OperationError("Error: You can only calculae the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.");
+            throw new OperationError("Error: You can only calculate the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.");
         }
 
         if (samples[0].length !== samples[1].length) {

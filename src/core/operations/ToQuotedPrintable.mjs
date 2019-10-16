@@ -108,7 +108,7 @@ class ToQuotedPrintable extends Operation {
      * @private
      * @param {number} nr
      * @param {byteArray[]} ranges
-     * @returns {bolean}
+     * @returns {boolean}
      */
     _checkRanges(nr, ranges) {
         for (let i = ranges.length - 1; i >= 0; i--) {

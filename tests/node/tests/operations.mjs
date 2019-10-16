@@ -1028,7 +1028,7 @@ ExifImageHeight: 57`);
         const zipped = chef.zip("some file content", {
             filename: "sample.zip",
             comment: "added",
-            operaringSystem: "Unix",
+            operatingSystem: "Unix",
         });
 
         assert.strictEqual(zipped.type, 7);
