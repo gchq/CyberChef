@@ -57,7 +57,7 @@ TestRegister.addTests([
     {
         name: "Fork, Conditional Jump, Encodings",
         input: "Some data with a 1 in it\nSome data with a 2 in it",
-        expectedOutput: "U29tZSBkYXRhIHdpdGggYSAxIGluIGl0\n53 6f 6d 65 20 64 61 74 61 20 77 69 74 68 20 61 20 32 20 69 6e 20 69 74\n",
+        expectedOutput: "U29tZSBkYXRhIHdpdGggYSAxIGluIGl0\n53 6f 6d 65 20 64 61 74 61 20 77 69 74 68 20 61 20 32 20 69 6e 20 69 74",
         recipeConfig: [
             {"op": "Fork", "args": ["\\n", "\\n", false]},
             {"op": "Conditional Jump", "args": ["1", false, "skipReturn", "10"]},
