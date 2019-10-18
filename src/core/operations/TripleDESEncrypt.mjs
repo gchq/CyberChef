@@ -75,7 +75,7 @@ class TripleDESEncrypt extends Operation {
 Triple DES uses a key length of 24 bytes (192 bits).
 DES uses a key length of 8 bytes (64 bits).`);
         }
-        if (iv.length !== 8) {
+        if (iv.length !== 8 && mode !== "ECB") {
             throw new OperationError(`Invalid IV length: ${iv.length} bytes
 
 Triple DES uses an IV length of 8 bytes (64 bits).
