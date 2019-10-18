@@ -31,7 +31,7 @@ import {
     cartesianProduct,
     CSSMinify,
     toBase64,
-    toHex,
+    toHex
 } from "../../../src/node/index";
 import chef from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
@@ -1058,6 +1058,21 @@ ExifImageHeight: 57`);
 
         assert.equal(unzipped.value[0].data, "some content");
     }),
+
+    it("YARA Rule Matching", async () => {
+        const input = "foobar foobar bar foo foobar";
+        const output = "Rule \"foo\" matches (4 times):\nPos 0, length 3, identifier $re1, data: \"foo\"\nPos 7, length 3, identifier $re1, data: \"foo\"\nPos 18, length 3, identifier $re1, data: \"foo\"\nPos 22, length 3, identifier $re1, data: \"foo\"\nRule \"bar\" matches (4 times):\nPos 3, length 3, identifier $re1, data: \"bar\"\nPos 10, length 3, identifier $re1, data: \"bar\"\nPos 14, length 3, identifier $re1, data: \"bar\"\nPos 25, length 3, identifier $re1, data: \"bar\"\n";
+
+        const res = await chef.YARARules(input, {
+            rules: "rule foo {strings: $re1 = /foo/ condition: $re1} rule bar {strings: $re1 = /bar/ condition: $re1}",
+            showStrings: true,
+            showStringLengths: true,
+            showMetadata: true
+        });
+
+        assert.equal(output, res.value);
+    }),
+
 
 ]);
 
