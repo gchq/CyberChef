@@ -629,7 +629,7 @@ class RecipeWaiter {
         }
 
         // Hide recipe controls when output is maximised
-        if (document.getElementById("maximise-output").getAttribute("data-original-title" === "Restore output pane") {
+        if (document.getElementById("maximise-output".getAttribute("data-original-title").indexOf("Restore") === 0) {
             document.getElementById("controls").style.display = "none";
         } else {
             // Show recipe controls if they are not already shown
