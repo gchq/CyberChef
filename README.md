@@ -9,13 +9,13 @@
 
 #### *The Cyber Swiss Army Knife*
 
-CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
+CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR or Base64; more complex encryption like AES, DES and Blowfish; creating binary and hexdumps; compression and decompression of data; calculating hashes and checksums; IPv6 and X.509 parsing; changing character encodings; and much more.
 
 The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years.
 
 ## Live demo
 
-CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!
+CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There are still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!
 
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
@@ -26,12 +26,12 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 There are four main areas in CyberChef:
 
- 1. The **input** box in the top right, where you can paste, type or drag the text or file you want to operate on.
- 2. The **output** box in the bottom right, where the outcome of your processing will be displayed.
- 3. The **operations** list on the far left, where you can find all the operations that CyberChef is capable of in categorised lists, or by searching.
- 4. The **recipe** area in the middle, where you can drag the operations that you want to use and specify arguments and options.
+ 1. The **input** box in the top right, where you can paste, type or drag the text or file on which you want to operate.
+ 2. The **output** box in the bottom right, in which the outcome of your processing will be displayed.
+ 3. The **operations** list on the far left, in which you can find all the operations of which CyberChef is capable in categorised lists or by searching.
+ 4. The **recipe** area in the middle, in which you can drag the operations that you want to use and specify arguments and options.
 
-You can use as many operations as you like in simple or complex ways. Some examples are as follows:
+You can use as many operations as you like in simple or complex ways. Some examples follow:
 
  - [Decode a Base64-encoded string][2]
  - [Convert a date and time to a different time zone][3]
@@ -49,12 +49,12 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
  - Drag and drop
      - Operations can be dragged in and out of the recipe list, or reorganised.
-     - Files up to 2GB can be dragged over the input box to load them directly into the browser.
+     - Files up to 2GB can be dragged over the input box to be loaded directly into the browser.
  - Auto Bake
      - Whenever you modify the input or the recipe, CyberChef will automatically "bake" for you and produce the output immediately.
      - This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).
  - Automated encoding detection
-     - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect which encodings your data is under. If it finds a suitable operation which can make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
+     - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect under which encodings your data is. If it finds a suitable operation which can make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
  - Breakpoints
      - You can set breakpoints on any operation in your recipe to pause execution before running it.
      - You can also step through the recipe one operation at a time to see what the data looks like at each stage.
@@ -62,11 +62,11 @@ You can use as many operations as you like in simple or complex ways. Some examp
      - If you come up with an awesome recipe that you know you’ll want to use again, just click "Save recipe" and add it to your local storage. It'll be waiting for you next time you visit CyberChef.
      - You can also copy the URL, which includes your recipe and input, to easily share it with others.
  - Search
-     - If you know the name of the operation you want or a word associated with it, start typing it into the search field and any matching operations will immediately be shown.
+     - If you know the name of the operation you want or a word associated with it, start typing it into the search field, and any matching operations will immediately be shown.
  - Highlighting
-     - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][11]).
+     - When you highlight text in the input or output, the offset and length values will be displayed and the corresponding data will be, if possible, highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][11]).
  - Save to file and load from file
-     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
+     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser); however, some operations may take a very long time to run over this much data.
  - CyberChef is entirely client-side
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be compiled into a single HTML file. You can download this file and drop it into a virtual machine, share it with other people, or use it independently on your local machine.
@@ -82,7 +82,7 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier does not work in `v12`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier do not work in `v12`. For more information, see the Node API page in the project's [wiki pages](https://github.com/gchq/CyberChef/wiki)
 
 
 ## Contributing
