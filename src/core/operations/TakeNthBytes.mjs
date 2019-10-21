@@ -49,24 +49,24 @@ class TakeNthBytes extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        let n = args[0];
-        let start = args[1];
-        let eachLine = args[2];
+        const n = args[0];
+        const start = args[1];
+        const eachLine = args[2];
 
-        if (parseInt(n) !== n || n <= 0) {
-            throw new OperationError("'Take every' must be a positive integer.")
+        if (parseInt(n, 10) !== n || n <= 0) {
+            throw new OperationError("'Take every' must be a positive integer.");
         }
-        if (parseInt(start) !== start || start < 0) {
-            throw new OperationError("'Starting at' must be a positive or zero integer.")
+        if (parseInt(start, 10) !== start || start < 0) {
+            throw new OperationError("'Starting at' must be a positive or zero integer.");
         }
-        
+
         let offset = 0;
-        let output = [];
+        const output = [];
         for (let i = 0; i < input.length; i++) {
-            if (eachLine && input[i] == 0x0a) {
+            if (eachLine && input[i] === 0x0a) {
                 output.push(0x0a);
                 offset = i + 1;
-            } else if (i - offset >= start && (i - (start + offset)) % n == 0) {
+            } else if (i - offset >= start && (i - (start + offset)) % n === 0) {
                 output.push(input[i]);
             }
         }
