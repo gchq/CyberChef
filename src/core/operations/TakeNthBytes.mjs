@@ -64,6 +64,7 @@ class TakeNthBytes extends Operation {
         let output = [];
         for (let i = 0; i < input.length; i++) {
             if (eachLine && input[i] == 0x0a) {
+                output.push(0x0a);
                 offset = i + 1;
             } else if (i - offset >= start && (i - (start + offset)) % n == 0) {
                 output.push(input[i]);
