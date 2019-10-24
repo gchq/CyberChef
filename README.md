@@ -71,6 +71,12 @@ You can use as many operations as you like in simple or complex ways. Some examp
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be downloaded and run locally. You can use the link in the top left corner of the app to download a full copy of CyberChef and drop it into a virtual machine, share it with other people, or host it in a closed network.
 
+## Url prefilling
+
+By manipulation of CyberChef's url hash, you can change the initial settings with which the page opens.
+The format is `https://gchq.github.io/CyberChef/#recipe=Function()&input=...`
+
+Supported options are `recipe`, `input`, and `theme`.
 
 ## Browser support
 
