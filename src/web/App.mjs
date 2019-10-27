@@ -492,8 +492,9 @@ class App {
             } catch (err) {}
         }
 
+        // Read in theme from URI params
         if (this.uriParams.theme) {
-            document.querySelector(":root").className = this.uriParams.theme;
+            this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
         }
 
         this.autoBakePause = false;

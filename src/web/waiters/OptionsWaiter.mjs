@@ -153,14 +153,28 @@ class OptionsWaiter {
 
 
     /**
-     * Changes the theme by setting the class of the <html> element.
+     * Theme change event listener
      *
      * @param {Event} e
      */
     themeChange(e) {
         const themeClass = e.target.value;
 
-        document.querySelector(":root").className = themeClass;
+        this.changeTheme(themeClass);
+    }
+
+
+    /**
+     * Changes the theme by setting the class of the <html> element.
+     *
+     * @param (string} theme
+     */
+    changeTheme(theme) {
+        document.querySelector(":root").className = theme;
+
+        // Update theme selection
+        const themeSelect = document.getElementById("theme");
+        themeSelect.selectedIndex = themeSelect.querySelector(`option[value="${theme}"`).index;
     }
 
 
