@@ -1,7 +1,0 @@
-node_modules
-npm-debug.log
-travis.log
-build/*
-!build/node
-.vscode
-.github
