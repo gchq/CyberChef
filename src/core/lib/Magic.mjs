@@ -355,17 +355,17 @@ class Magic {
             let aScore = a.languageScores[0].score,
                 bScore = b.languageScores[0].score;
 
-            // If a recipe results in a file being detected, it receives a relatively good score
-            if (a.fileType) aScore = 500;
-            if (b.fileType) bScore = 500;
-
             // If the result is valid UTF8, its score gets boosted (lower being better)
             if (a.isUTF8) aScore -= 100;
             if (b.isUTF8) bScore -= 100;
 
+            // If a recipe results in a file being detected, it receives a relatively good score
+            if (a.fileType && aScore > 500) aScore = 500;
+            if (b.fileType && bScore > 500) bScore = 500;
+
             // If the option is marked useful, give it a good score
-            if (a.useful) aScore = 100;
-            if (b.useful) bScore = 100;
+            if (a.useful && aScore > 100) aScore = 100;
+            if (b.useful && bScore > 100) bScore = 100;
 
             // Shorter recipes are better, so we add the length of the recipe to the score
             aScore += a.recipe.length;
@@ -498,7 +498,7 @@ class Magic {
      * Taken from http://wikistats.wmflabs.org/display.php?t=wp
      *
      * @param {string} code - ISO 639 code
-     * @returns {string} The full name of the languge
+     * @returns {string} The full name of the language
      */
     static codeToLanguage(code) {
         return {
