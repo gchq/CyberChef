@@ -20,6 +20,7 @@
 
 #banner div {
     flex-basis: auto;
+    overflow: hidden;
 }
 
 #banner i {
