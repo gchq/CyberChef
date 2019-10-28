@@ -355,6 +355,17 @@ ${navigator.userAgent}
         }
     }
 
+    /**
+     * Open the page in a new window.
+     *
+     * @param {event} e
+     */
+    editButtonClick(e) {
+        e.preventDefault();
+        const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
+        window.open(saveLink, "_blank");
+    }
+
 
     /**
      * Shows the stale indicator to show that the input or recipe has changed
