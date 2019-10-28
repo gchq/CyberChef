@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * JSON to CSV operation
@@ -51,6 +51,10 @@ class JSONToCSV extends Operation {
         this.rowDelim = rowDelim;
         const self = this;
 
+        if (!(input instanceof Array)) {
+            input = [input];
+        }
+
         try {
             // If the JSON is an array of arrays, this is easy
             if (input[0] instanceof Array) {
@@ -89,6 +93,8 @@ class JSONToCSV extends Operation {
      * @returns {string}
      */
     escapeCellContents(data) {
+        if (typeof data === "number") data = data.toString();
+
         // Double quotes should be doubled up
         data = data.replace(/"/g, '""');
 

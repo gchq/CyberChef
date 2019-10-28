@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 const ASCII_TEXT = "A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.";
 
@@ -248,7 +248,8 @@ IOE1W/Zqmqzq+4frwnzWwYv9/U1RwIs/qlFVnzliREOzW+om8EncSSd7fQ==
 =fEAT
 -----END PGP MESSAGE-----
 `,
-        expectedOutput: `Signed by PGP fingerprint: e94e06dd0b3744a0e970de9d84246548df98e485
+        expectedOutput: `Signed by PGP key ID: DF98E485
+PGP fingerprint: e94e06dd0b3744a0e970de9d84246548df98e485
 Signed on Tue, 29 May 2018 15:44:52 GMT
 ----------------------------------
 ${UTF8_TEXT}`,
@@ -282,4 +283,30 @@ H2qMY1O7hezH3fp+EZzCAccJMtK7VPk13WAgMRH22HirG4aK1i75IVOtjBgObzDh
             }
         ]
     },
+    {
+        name: "PGP Verify: ASCII, Alice",
+        input: `-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAQEIAB0WIQRLbJy6MLpYOr9qojE+2VNAUiMLOgUCXRTsvwAKCRA+2VNAUiML
+OuaHBADMMNtsuN92Fb+UrDimsv6TDQpbJhDkwp9kZdKYP5HAmSYAhXBG7N+YCMw+
+v2FSpUu9jJiPBm1K1SEwLufQVexoRv6RsBNolRFB07sArau0s0DnIXUchCZWvyTP
+1KsjBnDr84U2b11H58g4DlTT4gQrz30rFuHz9AGmPAtDHbSXIA==
+=vnk/
+-----END PGP SIGNATURE-----`,
+        expectedOutput: `Signed by PGP key ID: DF98E485
+PGP fingerprint: e94e06dd0b3744a0e970de9d84246548df98e485
+Signed on Thu, 27 Jun 2019 16:20:15 GMT
+----------------------------------
+A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.`,
+        recipeConfig: [
+            {
+                "op": "PGP Verify",
+                "args": [ALICE_PUBLIC]
+            }
+        ]
+    }
 ]);

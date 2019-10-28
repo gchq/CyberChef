@@ -4,9 +4,10 @@
  * @license Apache-2.0
  */
 
-import Dish from "./Dish";
-import Recipe from "./Recipe";
+import Dish from "./Dish.mjs";
+import Recipe from "./Recipe.mjs";
 import log from "loglevel";
+import { isWorkerEnvironment } from "./Utils.mjs";
 
 /**
  * The main controller for CyberChef.
@@ -28,8 +29,6 @@ class Chef {
      * @param {Object[]} recipeConfig - The recipe configuration object
      * @param {Object} options - The options object storing various user choices
      * @param {boolean} options.attempHighlight - Whether or not to attempt highlighting
-     * @param {number} progress - The position in the recipe to start from
-     * @param {number} [step] - Whether to only execute one operation in the recipe
      *
      * @returns {Object} response
      * @returns {string} response.result - The output of the recipe
@@ -38,46 +37,20 @@ class Chef {
      * @returns {number} response.duration - The number of ms it took to execute the recipe
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
     */
-    async bake(input, recipeConfig, options, progress, step) {
+    async bake(input, recipeConfig, options) {
         log.debug("Chef baking");
         const startTime = new Date().getTime(),
             recipe      = new Recipe(recipeConfig),
             containsFc  = recipe.containsFlowControl(),
-            notUTF8     = options && options.hasOwnProperty("treatAsUtf8") && !options.treatAsUtf8;
-        let error = false;
-
-        if (containsFc && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
-
-        // Clean up progress
-        if (progress >= recipeConfig.length) {
+            notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
+        let error = false,
             progress = 0;
-        }
 
-        if (step) {
-            // Unset breakpoint on this step
-            recipe.setBreakpoint(progress, false);
-            // Set breakpoint on next step
-            recipe.setBreakpoint(progress + 1, true);
-        }
+        if (containsFc && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
-        // If the previously run operation presented a different value to its
-        // normal output, we need to recalculate it.
-        if (recipe.lastOpPresented(progress)) {
-            progress = 0;
-        }
-
-        // If stepping with flow control, we have to start from the beginning
-        // but still want to skip all previous breakpoints
-        if (progress > 0 && containsFc) {
-            recipe.removeBreaksUpTo(progress);
-            progress = 0;
-        }
-
-        // If starting from scratch, load data
-        if (progress === 0) {
-            const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
-            this.dish.set(input, type);
-        }
+        // Load data
+        const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
+        this.dish.set(input, type);
 
         try {
             progress = await recipe.execute(this.dish, progress);
@@ -194,6 +167,18 @@ class Chef {
     async getDishAs(dish, type) {
         const newDish = new Dish(dish);
         return await newDish.get(type);
+    }
+
+    /**
+     * Gets the title of a dish and returns it
+     *
+     * @param {Dish} dish
+     * @param {number} [maxLength=100]
+     * @returns {string}
+     */
+    async getDishTitle(dish, maxLength=100) {
+        const newDish = new Dish(dish);
+        return await newDish.getTitle(maxLength);
     }
 
 }

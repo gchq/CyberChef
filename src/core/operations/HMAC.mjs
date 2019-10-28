@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import CryptoApi from "crypto-api/src/crypto-api";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import CryptoApi from "crypto-api/src/crypto-api.mjs";
 
 /**
  * HMAC operation

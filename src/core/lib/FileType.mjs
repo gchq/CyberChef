@@ -6,8 +6,8 @@
  * @license Apache-2.0
  *
  */
-import {FILE_SIGNATURES} from "./FileSignatures";
-import {sendStatusMessage} from "../Utils";
+import {FILE_SIGNATURES} from "./FileSignatures.mjs";
+import {sendStatusMessage} from "../Utils.mjs";
 
 
 /**
@@ -75,7 +75,7 @@ function bytesMatch(sig, buf, offset=0) {
  * Given a buffer, detects magic byte sequences at specific positions and returns the
  * extension and mime type.
  *
- * @param {Uint8Array} buf
+ * @param {Uint8Array|ArrayBuffer} buf
  * @param {string[]} [categories=All] - Which categories of file to look for
  * @returns {Object[]} types
  * @returns {string} type.name - Name of file type
@@ -84,6 +84,10 @@ function bytesMatch(sig, buf, offset=0) {
  * @returns {string} [type.desc] - Description
  */
 export function detectFileType(buf, categories=Object.keys(FILE_SIGNATURES)) {
+    if (buf instanceof ArrayBuffer) {
+        buf = new Uint8Array(buf);
+    }
+
     if (!(buf && buf.length > 1)) {
         return [];
     }
@@ -174,7 +178,7 @@ export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
  * @param {Uint8Array} buf - The buffer to search
  * @param {Object} sig - A single signature object (Not an array of signatures)
  * @param {number} offset - Where to start search from
- * @returs {number} The position of the match or -1 if one cannot be found.
+ * @returns {number} The position of the match or -1 if one cannot be found.
  */
 function locatePotentialSig(buf, sig, offset) {
     // Find values for first key and value in sig
@@ -203,7 +207,7 @@ function locatePotentialSig(buf, sig, offset) {
  * Detects whether the given buffer is a file of the type specified.
  *
  * @param {string|RegExp} type
- * @param {Uint8Array} buf
+ * @param {Uint8Array|ArrayBuffer} buf
  * @returns {string|false} The mime type or false if the type does not match
  */
 export function isType(type, buf) {
@@ -230,7 +234,7 @@ export function isType(type, buf) {
 /**
  * Detects whether the given buffer contains an image file.
  *
- * @param {Uint8Array} buf
+ * @param {Uint8Array|ArrayBuffer} buf
  * @returns {string|false} The mime type or false if the type does not match
  */
 export function isImage(buf) {

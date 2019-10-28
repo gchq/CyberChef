@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import HTMLIngredient from "./HTMLIngredient";
+import HTMLIngredient from "./HTMLIngredient.mjs";
 
 
 /**

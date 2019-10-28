@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import * as disassemble from "../vendor/DisassembleX86-64";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import * as disassemble from "../vendor/DisassembleX86-64.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Disassemble x86 operation

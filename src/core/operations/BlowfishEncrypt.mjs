@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import { Blowfish } from "../vendor/Blowfish";
-import { toBase64 } from "../lib/Base64";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { Blowfish } from "../vendor/Blowfish.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
 
 /**
  * Lookup table for Blowfish output types.

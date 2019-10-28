@@ -85,6 +85,8 @@
             "Vigenère Decode",
             "To Morse Code",
             "From Morse Code",
+            "Bacon Cipher Encode",
+            "Bacon Cipher Decode",
             "Bifid Cipher Encode",
             "Bifid Cipher Decode",
             "Affine Cipher Encode",
@@ -122,8 +124,10 @@
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Verify",
             "PGP Encrypt and Sign",
-            "PGP Decrypt and Verify"
+            "PGP Decrypt and Verify",
+            "Parse SSH Host Key"
         ]
     },
     {
@@ -167,15 +171,21 @@
             "Parse IP range",
             "Parse IPv6 address",
             "Parse IPv4 header",
+            "Parse UDP",
+            "Parse SSH Host Key",
             "Parse URI",
             "URL Encode",
             "URL Decode",
+            "Protobuf Decode",
+            "VarInt Encode",
+            "VarInt Decode",
             "Format MAC addresses",
             "Change IP format",
             "Group IP addresses",
             "Encode NetBIOS Name",
             "Decode NetBIOS Name",
-            "Defang URL"
+            "Defang URL",
+            "Defang IP Addresses"
         ]
     },
     {
@@ -195,8 +205,8 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
-			"To Case Insensitive Regex",
-			"From Case Insensitive Regex",
+            "To Case Insensitive Regex",
+            "From Case Insensitive Regex",
             "Add line numbers",
             "Remove line numbers",
             "To Table",
@@ -222,6 +232,7 @@
             "Convert speed",
             "Convert data units",
             "Convert co-ordinate format",
+            "Show on map",
             "Parse UNIX file permissions",
             "Swap endianness",
             "Parse colour code",
@@ -275,6 +286,7 @@
             "Zip",
             "Unzip",
             "Bzip2 Decompress",
+            "Bzip2 Compress",
             "Tar",
             "Untar"
         ]
@@ -298,6 +310,10 @@
             "HAS-160",
             "Whirlpool",
             "Snefru",
+            "BLAKE2b",
+            "BLAKE2s",
+            "GOST hash",
+            "Streebog",
             "SSDEEP",
             "CTPH",
             "Compare SSDEEP hashes",
@@ -312,6 +328,7 @@
             "Fletcher-32 Checksum",
             "Fletcher-64 Checksum",
             "Adler-32 Checksum",
+            "CRC-8 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
             "TCP/IP Checksum"
@@ -346,7 +363,8 @@
             "BSON serialise",
             "BSON deserialise",
             "To MessagePack",
-            "From MessagePack"
+            "From MessagePack",
+            "Render Markdown"
         ]
     },
     {
@@ -355,8 +373,13 @@
             "Detect File Type",
             "Scan for Embedded Files",
             "Extract Files",
+            "YARA Rules",
             "Remove EXIF",
-            "Extract EXIF"
+            "Extract EXIF",
+            "Extract RGBA",
+            "View Bit Plane",
+            "Randomize Colour Palette",
+            "Extract LSB"
         ]
     },
     {
@@ -364,6 +387,7 @@
         "ops": [
             "Render Image",
             "Play Media",
+            "Optical Character Recognition",
             "Remove EXIF",
             "Extract EXIF",
             "Split Colour Channels",
@@ -379,7 +403,15 @@
             "Image Filter",
             "Contain Image",
             "Cover Image",
-            "Image Hue/Saturation/Lightness"
+            "Image Hue/Saturation/Lightness",
+            "Sharpen Image",
+            "Normalise Image",
+            "Convert Image Format",
+            "Add Text To Image",
+            "Hex Density chart",
+            "Scatter chart",
+            "Series chart",
+            "Heatmap chart"
         ]
     },
     {
@@ -387,6 +419,7 @@
         "ops": [
             "Entropy",
             "Frequency distribution",
+            "Index of Coincidence",
             "Chi Square",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
@@ -396,6 +429,7 @@
             "Generate QR Code",
             "Parse QR Code",
             "Haversine distance",
+            "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
             "XKCD Random Number"

@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * PHP Deserialize operation
@@ -128,8 +128,7 @@ class PHPDeserialize extends Operation {
             switch (kind) {
                 case "n":
                     expect(";");
-                    return "";
-
+                    return "null";
                 case "i":
                 case "d":
                 case "b": {

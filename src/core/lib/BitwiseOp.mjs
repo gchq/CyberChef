@@ -9,7 +9,7 @@
 /**
  * Runs bitwise operations across the input data.
  *
- * @param {byteArray} input
+ * @param {byteArray|Uint8Array} input
  * @param {byteArray} key
  * @param {function} func - The bitwise calculation to carry out
  * @param {boolean} nullPreserving

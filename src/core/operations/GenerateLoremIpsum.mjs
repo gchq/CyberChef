@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import { GenerateParagraphs, GenerateSentences, GenerateWords, GenerateBytes } from "../lib/LoremIpsum";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { GenerateParagraphs, GenerateSentences, GenerateWords, GenerateBytes } from "../lib/LoremIpsum.mjs";
 
 /**
  * Generate Lorem Ipsum operation
@@ -47,7 +47,7 @@ class GenerateLoremIpsum extends Operation {
      */
     run(input, args) {
         const [length, lengthType] = args;
-        if (length < 1){
+        if (length < 1) {
             throw new OperationError("Length must be greater than 0");
         }
         switch (lengthType) {

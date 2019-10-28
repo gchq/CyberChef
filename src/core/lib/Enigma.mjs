@@ -5,8 +5,8 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Provided default Enigma rotor set.
@@ -184,10 +184,10 @@ class PairMapBase {
                 // self-stecker
                 return;
             }
-            if (this.map.hasOwnProperty(a)) {
+            if (Object.prototype.hasOwnProperty.call(this.map, a)) {
                 throw new OperationError(`${name} connects ${pair[0]} more than once`);
             }
-            if (this.map.hasOwnProperty(b)) {
+            if (Object.prototype.hasOwnProperty.call(this.map, b)) {
                 throw new OperationError(`${name} connects ${pair[1]} more than once`);
             }
             this.map[a] = b;
@@ -203,7 +203,7 @@ class PairMapBase {
      * @returns {number}
      */
     transform(c) {
-        if (!this.map.hasOwnProperty(c)) {
+        if (!Object.prototype.hasOwnProperty.call(this.map, c)) {
             return c;
         }
         return this.map[c];

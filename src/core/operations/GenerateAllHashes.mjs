@@ -4,30 +4,35 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import MD2 from "./MD2";
-import MD4 from "./MD4";
-import MD5 from "./MD5";
-import MD6 from "./MD6";
-import SHA0 from "./SHA0";
-import SHA1 from "./SHA1";
-import SHA2 from "./SHA2";
-import SHA3 from "./SHA3";
-import Keccak from "./Keccak";
-import Shake from "./Shake";
-import RIPEMD from "./RIPEMD";
-import HAS160 from "./HAS160";
-import Whirlpool from "./Whirlpool";
-import SSDEEP from "./SSDEEP";
-import CTPH from "./CTPH";
-import Fletcher8Checksum from "./Fletcher8Checksum";
-import Fletcher16Checksum from "./Fletcher16Checksum";
-import Fletcher32Checksum from "./Fletcher32Checksum";
-import Fletcher64Checksum from "./Fletcher64Checksum";
-import Adler32Checksum from "./Adler32Checksum";
-import CRC16Checksum from "./CRC16Checksum";
-import CRC32Checksum from "./CRC32Checksum";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import MD2 from "./MD2.mjs";
+import MD4 from "./MD4.mjs";
+import MD5 from "./MD5.mjs";
+import MD6 from "./MD6.mjs";
+import SHA0 from "./SHA0.mjs";
+import SHA1 from "./SHA1.mjs";
+import SHA2 from "./SHA2.mjs";
+import SHA3 from "./SHA3.mjs";
+import Keccak from "./Keccak.mjs";
+import Shake from "./Shake.mjs";
+import RIPEMD from "./RIPEMD.mjs";
+import HAS160 from "./HAS160.mjs";
+import Whirlpool from "./Whirlpool.mjs";
+import SSDEEP from "./SSDEEP.mjs";
+import CTPH from "./CTPH.mjs";
+import Fletcher8Checksum from "./Fletcher8Checksum.mjs";
+import Fletcher16Checksum from "./Fletcher16Checksum.mjs";
+import Fletcher32Checksum from "./Fletcher32Checksum.mjs";
+import Fletcher64Checksum from "./Fletcher64Checksum.mjs";
+import Adler32Checksum from "./Adler32Checksum.mjs";
+import CRC8Checksum from "./CRC8Checksum.mjs";
+import CRC16Checksum from "./CRC16Checksum.mjs";
+import CRC32Checksum from "./CRC32Checksum.mjs";
+import BLAKE2b from "./BLAKE2b.mjs";
+import BLAKE2s from "./BLAKE2s.mjs";
+import Streebog from "./Streebog.mjs";
+import GOSTHash from "./GOSTHash.mjs";
 
 /**
  * Generate all hashes operation
@@ -58,44 +63,56 @@ class GenerateAllHashes extends Operation {
         const arrayBuffer = input,
             str = Utils.arrayBufferToStr(arrayBuffer, false),
             byteArray = new Uint8Array(arrayBuffer),
-            output = "MD2:         " + (new MD2()).run(arrayBuffer, []) +
-                "\nMD4:         " + (new MD4()).run(arrayBuffer, []) +
-                "\nMD5:         " + (new MD5()).run(arrayBuffer, []) +
-                "\nMD6:         " + (new MD6()).run(str, []) +
-                "\nSHA0:        " + (new SHA0()).run(arrayBuffer, []) +
-                "\nSHA1:        " + (new SHA1()).run(arrayBuffer, []) +
-                "\nSHA2 224:    " + (new SHA2()).run(arrayBuffer, ["224"]) +
-                "\nSHA2 256:    " + (new SHA2()).run(arrayBuffer, ["256"]) +
-                "\nSHA2 384:    " + (new SHA2()).run(arrayBuffer, ["384"]) +
-                "\nSHA2 512:    " + (new SHA2()).run(arrayBuffer, ["512"]) +
-                "\nSHA3 224:    " + (new SHA3()).run(arrayBuffer, ["224"]) +
-                "\nSHA3 256:    " + (new SHA3()).run(arrayBuffer, ["256"]) +
-                "\nSHA3 384:    " + (new SHA3()).run(arrayBuffer, ["384"]) +
-                "\nSHA3 512:    " + (new SHA3()).run(arrayBuffer, ["512"]) +
-                "\nKeccak 224:  " + (new Keccak()).run(arrayBuffer, ["224"]) +
-                "\nKeccak 256:  " + (new Keccak()).run(arrayBuffer, ["256"]) +
-                "\nKeccak 384:  " + (new Keccak()).run(arrayBuffer, ["384"]) +
-                "\nKeccak 512:  " + (new Keccak()).run(arrayBuffer, ["512"]) +
-                "\nShake 128:   " + (new Shake()).run(arrayBuffer, ["128", 256]) +
-                "\nShake 256:   " + (new Shake()).run(arrayBuffer, ["256", 512]) +
-                "\nRIPEMD-128:  " + (new RIPEMD()).run(arrayBuffer, ["128"]) +
-                "\nRIPEMD-160:  " + (new RIPEMD()).run(arrayBuffer, ["160"]) +
-                "\nRIPEMD-256:  " + (new RIPEMD()).run(arrayBuffer, ["256"]) +
-                "\nRIPEMD-320:  " + (new RIPEMD()).run(arrayBuffer, ["320"]) +
-                "\nHAS-160:     " + (new HAS160()).run(arrayBuffer, []) +
-                "\nWhirlpool-0: " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-0"]) +
-                "\nWhirlpool-T: " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-T"]) +
-                "\nWhirlpool:   " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool"]) +
-                "\nSSDEEP:      " + (new SSDEEP()).run(str) +
-                "\nCTPH:        " + (new CTPH()).run(str) +
+            output = "MD2:          " + (new MD2()).run(arrayBuffer, []) +
+                "\nMD4:          " + (new MD4()).run(arrayBuffer, []) +
+                "\nMD5:          " + (new MD5()).run(arrayBuffer, []) +
+                "\nMD6:          " + (new MD6()).run(str, []) +
+                "\nSHA0:         " + (new SHA0()).run(arrayBuffer, []) +
+                "\nSHA1:         " + (new SHA1()).run(arrayBuffer, []) +
+                "\nSHA2 224:     " + (new SHA2()).run(arrayBuffer, ["224"]) +
+                "\nSHA2 256:     " + (new SHA2()).run(arrayBuffer, ["256"]) +
+                "\nSHA2 384:     " + (new SHA2()).run(arrayBuffer, ["384"]) +
+                "\nSHA2 512:     " + (new SHA2()).run(arrayBuffer, ["512"]) +
+                "\nSHA3 224:     " + (new SHA3()).run(arrayBuffer, ["224"]) +
+                "\nSHA3 256:     " + (new SHA3()).run(arrayBuffer, ["256"]) +
+                "\nSHA3 384:     " + (new SHA3()).run(arrayBuffer, ["384"]) +
+                "\nSHA3 512:     " + (new SHA3()).run(arrayBuffer, ["512"]) +
+                "\nKeccak 224:   " + (new Keccak()).run(arrayBuffer, ["224"]) +
+                "\nKeccak 256:   " + (new Keccak()).run(arrayBuffer, ["256"]) +
+                "\nKeccak 384:   " + (new Keccak()).run(arrayBuffer, ["384"]) +
+                "\nKeccak 512:   " + (new Keccak()).run(arrayBuffer, ["512"]) +
+                "\nShake 128:    " + (new Shake()).run(arrayBuffer, ["128", 256]) +
+                "\nShake 256:    " + (new Shake()).run(arrayBuffer, ["256", 512]) +
+                "\nRIPEMD-128:   " + (new RIPEMD()).run(arrayBuffer, ["128"]) +
+                "\nRIPEMD-160:   " + (new RIPEMD()).run(arrayBuffer, ["160"]) +
+                "\nRIPEMD-256:   " + (new RIPEMD()).run(arrayBuffer, ["256"]) +
+                "\nRIPEMD-320:   " + (new RIPEMD()).run(arrayBuffer, ["320"]) +
+                "\nHAS-160:      " + (new HAS160()).run(arrayBuffer, []) +
+                "\nWhirlpool-0:  " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-0"]) +
+                "\nWhirlpool-T:  " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool-T"]) +
+                "\nWhirlpool:    " + (new Whirlpool()).run(arrayBuffer, ["Whirlpool"]) +
+                "\nBLAKE2b-128:  " + (new BLAKE2b).run(arrayBuffer, ["128", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-160:  " + (new BLAKE2b).run(arrayBuffer, ["160", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-256:  " + (new BLAKE2b).run(arrayBuffer, ["256", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-384:  " + (new BLAKE2b).run(arrayBuffer, ["384", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2b-512:  " + (new BLAKE2b).run(arrayBuffer, ["512", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-128:  " + (new BLAKE2s).run(arrayBuffer, ["128", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-160:  " + (new BLAKE2s).run(arrayBuffer, ["160", "Hex", {string: "", option: "UTF8"}]) +
+                "\nBLAKE2s-256:  " + (new BLAKE2s).run(arrayBuffer, ["256", "Hex", {string: "", option: "UTF8"}]) +
+                "\nStreebog-256: " + (new Streebog).run(arrayBuffer, ["256"]) +
+                "\nStreebog-512: " + (new Streebog).run(arrayBuffer, ["512"]) +
+                "\nGOST:         " + (new GOSTHash).run(arrayBuffer, ["D-A"]) +
+                "\nSSDEEP:       " + (new SSDEEP()).run(str) +
+                "\nCTPH:         " + (new CTPH()).run(str) +
                 "\n\nChecksums:" +
-                "\nFletcher-8:  " + (new Fletcher8Checksum).run(byteArray, []) +
-                "\nFletcher-16: " + (new Fletcher16Checksum).run(byteArray, []) +
-                "\nFletcher-32: " + (new Fletcher32Checksum).run(byteArray, []) +
-                "\nFletcher-64: " + (new Fletcher64Checksum).run(byteArray, []) +
-                "\nAdler-32:    " + (new Adler32Checksum).run(byteArray, []) +
-                "\nCRC-16:      " + (new CRC16Checksum).run(str, []) +
-                "\nCRC-32:      " + (new CRC32Checksum).run(str, []);
+                "\nFletcher-8:   " + (new Fletcher8Checksum).run(byteArray, []) +
+                "\nFletcher-16:  " + (new Fletcher16Checksum).run(byteArray, []) +
+                "\nFletcher-32:  " + (new Fletcher32Checksum).run(byteArray, []) +
+                "\nFletcher-64:  " + (new Fletcher64Checksum).run(byteArray, []) +
+                "\nAdler-32:     " + (new Adler32Checksum).run(byteArray, []) +
+                "\nCRC-8:        " + (new CRC8Checksum).run(arrayBuffer, ["CRC-8"]) +
+                "\nCRC-16:       " + (new CRC16Checksum).run(arrayBuffer, []) +
+                "\nCRC-32:       " + (new CRC32Checksum).run(arrayBuffer, []);
 
         return output;
     }

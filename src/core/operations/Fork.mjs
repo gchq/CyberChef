@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
+import Operation from "../Operation.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
 
 /**
  * Fork operation
@@ -76,8 +76,8 @@ class Fork extends Operation {
         }
 
         const recipe = new Recipe();
-        let output = "",
-            progress = 0;
+        const outputs = [];
+        let progress = 0;
 
         state.forkOffset += state.progress + 1;
 
@@ -104,10 +104,10 @@ class Fork extends Operation {
                 }
                 progress = err.progress + 1;
             }
-            output += await dish.get(outputType) + mergeDelim;
+            outputs.push(await dish.get(outputType));
         }
 
-        state.dish.set(output, outputType);
+        state.dish.set(outputs.join(mergeDelim), outputType);
         state.progress += progress;
         return state;
     }

@@ -5,9 +5,9 @@
  */
 
 import XRegExp from "xregexp";
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Regular expression operation
@@ -230,6 +230,7 @@ function regexHighlight (input, regex, displayTotal) {
         title = "",
         hl = 1,
         total = 0;
+    const captureGroups = [];
 
     output = input.replace(regex, (match, ...args) => {
         args.pop(); // Throw away full string
@@ -247,9 +248,15 @@ function regexHighlight (input, regex, displayTotal) {
         // Switch highlight
         hl = hl === 1 ? 2 : 1;
 
-        total++;
+        // Store highlighted match and replace with a placeholder
+        captureGroups.push(`<span class='hl${hl}' title='${title}'>${Utils.escapeHtml(match)}</span>`);
+        return `[cc_capture_group_${total++}]`;
+    });
 
-        return `<span class='hl${hl}' title='${title}'>${Utils.escapeHtml(match)}</span>`;
+    // Safely escape all remaining text, then replace placeholders
+    output = Utils.escapeHtml(output);
+    output = output.replace(/\[cc_capture_group_(\d+)\]/g, (_, i) => {
+        return captureGroups[i];
     });
 
     if (displayTotal)

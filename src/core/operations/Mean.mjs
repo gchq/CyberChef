@@ -5,9 +5,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { mean, createNumArray } from "../lib/Arithmetic";
-import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import { mean, createNumArray } from "../lib/Arithmetic.mjs";
+import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim.mjs";
 import BigNumber from "bignumber.js";
 
 /**

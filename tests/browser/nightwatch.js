@@ -75,13 +75,14 @@ module.exports = {
         // Confirm that it has been added to the recipe
         browser
             .useCss()
-            .waitForElementVisible(op)
+            .waitForElementVisible(op, 100)
             .expect.element(op).text.to.contain("To Hex");
 
         // Enter input
         browser
             .useCss()
             .setValue("#input-text", "Don't Panic.")
+            .pause(1000)
             .click("#bake");
 
         // Check output
@@ -104,6 +105,10 @@ module.exports = {
 
         // BSON
         loadOp("BSON deserialise", browser)
+            .waitForElementNotVisible("#output-loader", 5000);
+
+        // Charts
+        loadOp("Entropy", browser)
             .waitForElementNotVisible("#output-loader", 5000);
 
         // Ciphers
@@ -134,6 +139,10 @@ module.exports = {
         loadOp("Encode text", browser)
             .waitForElementNotVisible("#output-loader", 5000);
 
+        // Hashing
+        loadOp("Streebog", browser)
+            .waitForElementNotVisible("#output-loader", 5000);
+
         // Image
         loadOp("Extract EXIF", browser)
             .waitForElementNotVisible("#output-loader", 5000);
@@ -161,6 +170,54 @@ module.exports = {
         // UserAgent
         loadOp("Parse User Agent", browser)
             .waitForElementNotVisible("#output-loader", 5000);
+
+        // YARA
+        loadOp("YARA Rules", browser)
+            .waitForElementNotVisible("#output-loader", 5000);
+
+        browser.click("#clr-recipe");
+    },
+
+    "Move around the UI": browser => {
+        const otherCat = "//a[contains(@class, 'category-title') and contains(@data-target, '#catOther')]",
+            genUUID = "//li[contains(@class, 'operation') and text()='Generate UUID']";
+
+        browser.useXpath();
+
+        // Scroll to a lower category
+        browser
+            .getLocationInView(otherCat)
+            .expect.element(otherCat).to.be.visible;
+
+        // Open category
+        browser
+            .click(otherCat)
+            .expect.element(genUUID).to.be.visible;
+
+        // Add op to recipe
+        /* mouseButtonUp drops wherever the actual cursor is, not necessarily in the right place,
+        so we can't test Sortable.js properly using Nightwatch. html-dnd doesn't work either.
+        Instead of relying on drag and drop, we double click on the op to load it. */
+        browser
+            .getLocationInView(genUUID)
+            .moveToElement(genUUID, 10, 10)
+            .doubleClick()
+            .useCss()
+            .waitForElementVisible(".operation .op-title", 1000)
+            .waitForElementNotVisible("#stale-indicator", 1000)
+            .expect.element("#output-text").to.have.value.which.matches(/[\da-f-]{36}/);
+
+        browser.click("#clr-recipe");
+    },
+
+    "Search": browser => {
+        // Search for an op
+        browser
+            .useCss()
+            .clearValue("#search")
+            .setValue("#search", "md5")
+            .useXpath()
+            .waitForElementVisible("//ul[@id='search-results']//u[text()='MD5']", 1000);
     },
 
     after: browser => {

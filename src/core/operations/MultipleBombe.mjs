@@ -7,10 +7,12 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import {BombeMachine} from "../lib/Bombe";
-import {ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector} from "../lib/Enigma";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { BombeMachine } from "../lib/Bombe.mjs";
+import { ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector } from "../lib/Enigma.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
+
 
 /**
  * Convenience method for flattening the preset ROTORS object into a newline-separated string.
@@ -222,7 +224,7 @@ class MultipleBombe extends Operation {
         crib = crib.replace(/[^A-Za-z]/g, "").toUpperCase();
         const ciphertext = input.slice(offset);
         let update;
-        if (ENVIRONMENT_IS_WORKER()) {
+        if (isWorkerEnvironment()) {
             update = this.updateStatus;
         } else {
             update = undefined;

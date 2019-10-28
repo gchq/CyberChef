@@ -10,162 +10,101 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-import "babel-polyfill";
 
-// Define global environment functions
-global.ENVIRONMENT_IS_WORKER = function() {
-    return typeof importScripts === "function";
-};
-global.ENVIRONMENT_IS_NODE = function() {
-    return typeof process === "object" && typeof require === "function";
-};
-global.ENVIRONMENT_IS_WEB = function() {
-    return typeof window === "object";
-};
+import {
+    setLongTestFailure,
+    logTestReport,
+} from "../lib/utils.mjs";
 
-import TestRegister from "./TestRegister";
-import "./tests/BCD";
-import "./tests/BSON";
-import "./tests/Base58";
-import "./tests/Base64";
-import "./tests/Base62";
-import "./tests/BitwiseOp";
-import "./tests/ByteRepr";
-import "./tests/CartesianProduct";
-import "./tests/CharEnc";
-import "./tests/Checksum";
-import "./tests/Ciphers";
-import "./tests/Code";
-import "./tests/Comment";
-import "./tests/Compress";
-import "./tests/ConditionalJump";
-import "./tests/Crypt";
-import "./tests/CSV";
-import "./tests/DateTime";
-import "./tests/ExtractEmailAddresses";
-import "./tests/Fork";
-import "./tests/FromDecimal";
-import "./tests/Hash";
-import "./tests/HaversineDistance";
-import "./tests/Hexdump";
-import "./tests/Image";
-import "./tests/Jump";
-import "./tests/JSONBeautify";
-import "./tests/JSONMinify";
-import "./tests/JWTDecode";
-import "./tests/JWTSign";
-import "./tests/JWTVerify";
-import "./tests/MS";
-import "./tests/Magic";
-import "./tests/MorseCode";
-import "./tests/NetBIOS";
-import "./tests/OTP";
-import "./tests/PGP";
-import "./tests/PHP";
-import "./tests/ParseIPRange";
-import "./tests/ParseQRCode";
-import "./tests/PowerSet";
-import "./tests/Regex";
-import "./tests/Register";
-import "./tests/RemoveDiacritics";
-import "./tests/Rotate";
-import "./tests/SeqUtils";
-import "./tests/SetDifference";
-import "./tests/SetIntersection";
-import "./tests/SetUnion";
-import "./tests/StrUtils";
-import "./tests/SymmetricDifference";
-import "./tests/TextEncodingBruteForce";
-import "./tests/TranslateDateTimeFormat";
-import "./tests/Magic";
-import "./tests/ParseTLV";
-import "./tests/Media";
-import "./tests/ToFromInsensitiveRegex";
+import TestRegister from "../lib/TestRegister.mjs";
+import "./tests/BCD.mjs";
+import "./tests/BSON.mjs";
+import "./tests/BaconCipher.mjs";
+import "./tests/Base58.mjs";
+import "./tests/Base64.mjs";
+import "./tests/Base62.mjs";
+import "./tests/BitwiseOp.mjs";
+import "./tests/ByteRepr.mjs";
+import "./tests/CartesianProduct.mjs";
+import "./tests/CharEnc.mjs";
+import "./tests/ChangeIPFormat.mjs";
+import "./tests/Charts.mjs";
+import "./tests/Checksum.mjs";
+import "./tests/Ciphers.mjs";
+import "./tests/Code.mjs";
+import "./tests/Comment.mjs";
+import "./tests/Compress.mjs";
+import "./tests/ConditionalJump.mjs";
+import "./tests/Crypt.mjs";
+import "./tests/CSV.mjs";
+import "./tests/DateTime.mjs";
+import "./tests/ExtractEmailAddresses.mjs";
+import "./tests/Fork.mjs";
+import "./tests/FromDecimal.mjs";
+import "./tests/Hash.mjs";
+import "./tests/HaversineDistance.mjs";
+import "./tests/Hexdump.mjs";
+import "./tests/Image.mjs";
+import "./tests/IndexOfCoincidence.mjs";
+import "./tests/Jump.mjs";
+import "./tests/JSONBeautify.mjs";
+import "./tests/JSONMinify.mjs";
+import "./tests/JSONtoCSV.mjs";
+import "./tests/JWTDecode.mjs";
+import "./tests/JWTSign.mjs";
+import "./tests/JWTVerify.mjs";
+import "./tests/MS.mjs";
+import "./tests/Magic.mjs";
+import "./tests/MorseCode.mjs";
+import "./tests/NetBIOS.mjs";
+import "./tests/OTP.mjs";
+import "./tests/PGP.mjs";
+import "./tests/PHP.mjs";
+import "./tests/ParseIPRange.mjs";
+import "./tests/ParseQRCode.mjs";
+import "./tests/PowerSet.mjs";
+import "./tests/Regex.mjs";
+import "./tests/Register.mjs";
+import "./tests/RemoveDiacritics.mjs";
+import "./tests/Rotate.mjs";
+import "./tests/SeqUtils.mjs";
+import "./tests/SetDifference.mjs";
+import "./tests/SetIntersection.mjs";
+import "./tests/SetUnion.mjs";
+import "./tests/StrUtils.mjs";
+import "./tests/SymmetricDifference.mjs";
+import "./tests/TextEncodingBruteForce.mjs";
+import "./tests/TranslateDateTimeFormat.mjs";
+import "./tests/Magic.mjs";
+import "./tests/ParseTLV.mjs";
+import "./tests/Media.mjs";
+import "./tests/ToFromInsensitiveRegex.mjs";
 import "./tests/YARA.mjs";
-import "./tests/ConvertCoordinateFormat";
-import "./tests/Enigma";
-import "./tests/Bombe";
-import "./tests/MultipleBombe";
-import "./tests/Typex";
+import "./tests/ConvertCoordinateFormat.mjs";
+import "./tests/Enigma.mjs";
+import "./tests/Bombe.mjs";
+import "./tests/MultipleBombe.mjs";
+import "./tests/Typex.mjs";
+import "./tests/BLAKE2b.mjs";
+import "./tests/BLAKE2s.mjs";
+import "./tests/Protobuf.mjs";
+import "./tests/ParseSSHHostKey.mjs";
+import "./tests/DefangIP.mjs";
+import "./tests/ParseUDP.mjs";
 
 // Cannot test operations that use the File type yet
-//import "./tests/SplitColourChannels";
+// import "./tests/SplitColourChannels.mjs";
 
-let allTestsPassing = true;
-const testStatusCounts = {
-    total: 0,
+const testStatus = {
+    allTestsPassing: true,
+    counts: {
+        total: 0,
+    }
 };
 
+setLongTestFailure();
 
-/**
- * Helper function to convert a status to an icon.
- *
- * @param {string} status
- * @returns {string}
- */
-function statusToIcon(status) {
-    const icons = {
-        erroring: "🔥",
-        failing: "❌",
-        passing: "✔️️",
-    };
-    return icons[status] || "?";
-}
-
-
-/**
- * Displays a given test result in the console.
- *
- * @param {Object} testResult
- */
-function handleTestResult(testResult) {
-    allTestsPassing = allTestsPassing && testResult.status === "passing";
-    const newCount = (testStatusCounts[testResult.status] || 0) + 1;
-    testStatusCounts[testResult.status] = newCount;
-    testStatusCounts.total += 1;
-
-    console.log([
-        statusToIcon(testResult.status),
-        testResult.test.name
-    ].join(" "));
-
-    if (testResult.output) {
-        console.log(
-            testResult.output
-                .trim()
-                .replace(/^/, "\t")
-                .replace(/\n/g, "\n\t")
-        );
-    }
-}
-
-
-/**
- * Fail if the process takes longer than 60 seconds.
- */
-setTimeout(function() {
-    console.log("Tests took longer than 60 seconds to run, returning.");
-    process.exit(1);
-}, 60 * 1000);
-
+const logOpsTestReport = logTestReport.bind(null, testStatus);
 
 TestRegister.runTests()
-    .then(function(results) {
-        results.forEach(handleTestResult);
-
-        console.log("\n");
-
-        for (const testStatus in testStatusCounts) {
-            const count = testStatusCounts[testStatus];
-            if (count > 0) {
-                console.log(testStatus.toUpperCase(), count);
-            }
-        }
-
-        if (!allTestsPassing) {
-            console.log("\nFailing tests:\n");
-            results.filter(r => r.status !== "passing").forEach(handleTestResult);
-        }
-
-        process.exit(allTestsPassing ? 0 : 1);
-    });
+    .then(logOpsTestReport);

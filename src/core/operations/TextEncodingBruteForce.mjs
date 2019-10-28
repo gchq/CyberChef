@@ -5,10 +5,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import cptable from "../vendor/js-codepage/cptable.js";
-import {IO_FORMAT} from "../lib/ChrEnc";
+import {IO_FORMAT} from "../lib/ChrEnc.mjs";
 
 /**
  * Text Encoding Brute Force operation
@@ -79,7 +79,7 @@ class TextEncodingBruteForce extends Operation {
         let table = "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Encoding</th><th>Value</th></tr>";
 
         for (const enc in encodings) {
-            const value = Utils.printable(encodings[enc], true);
+            const value = Utils.escapeHtml(Utils.printable(encodings[enc], true));
             table += `<tr><td>${enc}</td><td>${value}</td></tr>`;
         }
 

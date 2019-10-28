@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Bit shift right operation
@@ -21,8 +21,8 @@ class BitShiftRight extends Operation {
         this.module = "Default";
         this.description = "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
-        this.inputType = "byteArray";
-        this.outputType = "byteArray";
+        this.inputType = "ArrayBuffer";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 "name": "Amount",
@@ -38,18 +38,19 @@ class BitShiftRight extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
         const amount = args[0],
             type = args[1],
             mask = type === "Logical shift" ? 0 : 0x80;
+        input = new Uint8Array(input);
 
         return input.map(b => {
             return (b >>> amount) ^ (b & mask);
-        });
+        }).buffer;
     }
 
     /**
