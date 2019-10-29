@@ -50,7 +50,7 @@ class Diff extends Operation {
             {
                 "name": "Show subtraction",
                 "type": "boolean",
-                "value": true
+                "value": false
             },
             {
                 "name": "Ignore whitespace",
@@ -123,7 +123,7 @@ class Diff extends Operation {
             } else if (diff[i].removed) {
                 if (showRemoved) output += "<span class='hl3'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else if (!showSubtraction) {
-                output += Utils.escapeHtml(diff[i].value) + "</span>";
+                output += Utils.escapeHtml(diff[i].value);
             }
         }
 
