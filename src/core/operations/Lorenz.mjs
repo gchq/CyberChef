@@ -254,8 +254,7 @@ class Lorenz extends Operation {
             x2 = args[15],
             x3 = args[16],
             x4 = args[17],
-            x5 = args[18],
-            figShifted = false;
+            x5 = args[18];
 
         this.reverseTable();
 
@@ -308,68 +307,8 @@ class Lorenz extends Operation {
         const psiSettings = chosenSetting.S; // Pin settings for Psi links (S)
         const muSettings = chosenSetting.M; // Pin settings for Motor links (M)
 
-        let ita2 = "";
-        if (mode === "Send") {
-
-            // Convert input text to ITA2 (including figure/letter shifts)
-            ita2 = Array.prototype.map.call(input, function(character) {
-                const letter = character.toUpperCase();
-
-                if (intype === "Plaintext") {
-                    if (validChars.indexOf(letter) === -1) throw new OperationError("Invalid Plaintext character : "+letter);
-
-                    if (!figShifted && figShiftedChars.indexOf(letter) !== -1) {
-                        // in letters mode and next char needs to be figure shifted
-                        figShifted = true;
-                        return "55" + figShiftArr[letter];
-                    } else if (figShifted) {
-                        // in figures mode and next char needs to be letter shifted
-                        if (letter==="\n") return "34";
-                        if (letter==="\r") return "4";
-                        if (figShiftedChars.indexOf(letter) === -1) {
-                            figShifted = false;
-                            return "88" + letter;
-                        } else {
-                            return figShiftArr[letter];
-                        }
-
-                    } else {
-                        if (letter==="\n") return "34";
-                        if (letter==="\r") return "4";
-                        return letter;
-                    }
-
-                } else {
-
-                    if (validITA2.indexOf(letter) === -1) {
-                        let errltr = letter;
-                        if (errltr==="\n") errltr = "Carriage Return";
-                        if (errltr===" ") errltr = "Space";
-                        throw new OperationError("Invalid ITA2 character : "+errltr);
-                    }
-                    return letter;
-
-                }
-
-            });
-
-        } else {
-
-            // Receive input should always be ITA2
-            ita2 = Array.prototype.map.call(input, function(character) {
-                const letter = character.toUpperCase();
-                if (validITA2.indexOf(letter) === -1) {
-                    let errltr = letter;
-                    if (errltr==="\n") errltr = "Carriage Return";
-                    if (errltr===" ") errltr = "Space";
-                    throw new OperationError("Invalid ITA2 character : "+errltr);
-                }
-                return letter;
-            });
-
-        }
-
-        const ita2Input = ita2.join("");
+        // Convert input text to ITA2 (including figure/letter shifts)
+        const ita2Input = this.convertToITA2(input, intype, mode);
 
         let thisPsi = [];
         let thisChi = [];
@@ -381,6 +320,7 @@ class Lorenz extends Operation {
         const letters = Array.prototype.map.call(ita2Input, function(character) {
             const letter = character.toUpperCase();
 
+            // Store lugs used in limitations, need these later
             let x2bptr = x2+1;
             if (x2bptr===32) x2bptr=1;
             let s1bptr = s1+1;
@@ -406,13 +346,18 @@ class Lorenz extends Operation {
                 return "";
             }
 
+            // The encipher calculation
+
+            // We calculate Bitwise XOR for each of the 5 bits across our input ( K XOR Psi XOR Chi )
             const xorSum = [];
             for (let i=0;i<=4;i++) {
                 xorSum[i] = ITA2_TABLE[letter][i] ^ thisPsi[i] ^ thisChi[i];
             }
             const resultStr = xorSum.join("");
 
-            // Move Chi wheels one back after each letter
+            // Wheel movement
+
+            // Chi wheels always move one back after each letter
             if (--x1 < 1) x1 = 41;
             if (--x2 < 1) x2 = 31;
             if (--x3 < 1) x3 = 29;
@@ -426,6 +371,8 @@ class Lorenz extends Operation {
             if (m61lug === 1) {
                 if (--m37 < 1) m37 = 37;
             }
+
+            // Psi wheels only move sometimes, dependent on M37 current setting and limitations
 
             const basicmotor = m37lug;
             let totalmotor = basicmotor;
@@ -441,7 +388,7 @@ class Lorenz extends Operation {
 
             // Limitations here
             if (model==="SZ42a") {
-                // Chi 2 one back lim - The active character of chi 2 (2nd Chi wheel) in the previous position
+                // Chi 2 one back lim - The active character of Chi 2 (2nd Chi wheel) in the previous position
                 lim = chiSettings[2][x2bptr-1];
                 if (kt) {
                     //p5 back 2
@@ -481,13 +428,13 @@ class Lorenz extends Operation {
                 }
 
             } else if (model==="SZ40") {
-                // SZ40
+                // SZ40 - just move based on the M37 motor wheel
                 totalmotor = basicmotor;
             } else {
                 throw new OperationError("Lorenz model type not recognised");
             }
 
-            // increment Psi wheels when current totalmotor active
+            // Move the Psi wheels when current totalmotor active
             if (totalmotor === 1) {
                 if (--s1 < 1) s1 = 43;
                 if (--s2 < 1) s2 = 47;
@@ -501,58 +448,16 @@ class Lorenz extends Operation {
 
             let rtnstr = self.REVERSE_ITA2_TABLE[resultStr];
             if (format==="5/8/9") {
-                if (rtnstr==="+") rtnstr="5";
-                if (rtnstr==="-") rtnstr="8";
-                if (rtnstr===".") rtnstr="9";
+                if (rtnstr==="+") rtnstr="5"; // + or 5 used to represent figure shift
+                if (rtnstr==="-") rtnstr="8"; // - or 8 used to represent letter shift
+                if (rtnstr===".") rtnstr="9"; // . or 9 used to represent space
             }
             return rtnstr;
         });
 
         const ita2output = letters.join("");
-        let output = "";
 
-        if (mode === "Receive") {
-
-            figShifted = false;
-
-            // Convert output ITA2 to plaintext (including figure/letter shifts)
-            const out = Array.prototype.map.call(ita2output, function(letter) {
-
-                if (outtype === "Plaintext") {
-
-                    if (letter === "5" || letter === "+") {
-                        figShifted = true;
-                        return;
-                    } else if (letter === "8" || letter === "-") {
-                        figShifted = false;
-                        return;
-                    } else if (letter === "9") {
-                        return " ";
-                    } else if (letter === "3") {
-                        return "\n";
-                    } else if (letter === "4") {
-                        return "";
-                    }
-
-
-                    if (figShifted) {
-                        return self.REVERSE_FIGSHIFT_TABLE[letter];
-                    } else {
-                        return letter;
-                    }
-
-                } else {
-                    return letter;
-                }
-
-            });
-            output = out.join("");
-
-        } else {
-            output = ita2output;
-        }
-
-        return output;
+        return this.convertFromITA2(ita2output, outtype, mode);
 
     }
 
@@ -585,6 +490,109 @@ class Lorenz extends Operation {
             }
         });
         return arr;
+    }
+
+    /**
+     * Convert input plaintext to ITA2
+     */
+    convertToITA2(input, intype, mode) {
+        let result = "";
+        let figShifted = false;
+
+        for (const character of input) {
+            const letter = character.toUpperCase();
+
+            // Convert input text to ITA2 (including figure/letter shifts)
+            if (intype === "ITA2" || mode === "Receive") {
+                if (validITA2.indexOf(letter) === -1) {
+                    let errltr = letter;
+                    if (errltr==="\n") errltr = "Carriage Return";
+                    if (errltr===" ") errltr = "Space";
+                    throw new OperationError("Invalid ITA2 character : "+errltr);
+                }
+                result += letter;
+            } else {
+                if (validChars.indexOf(letter) === -1) throw new OperationError("Invalid Plaintext character : "+letter);
+
+                if (!figShifted && figShiftedChars.indexOf(letter) !== -1) {
+                    // in letters mode and next char needs to be figure shifted
+                    figShifted = true;
+                    result += "55" + figShiftArr[letter];
+                } else if (figShifted) {
+                    // in figures mode and next char needs to be letter shifted
+                    if (letter==="\n") {
+                        result += "34";
+                    } else if (letter==="\r") {
+                        result += "4";
+                    } else if (figShiftedChars.indexOf(letter) === -1) {
+                        figShifted = false;
+                        result += "88" + letter;
+                    } else {
+                        result += figShiftArr[letter];
+                    }
+
+                } else {
+                    if (letter==="\n") {
+                        result += "34";
+                    } else if (letter==="\r") {
+                        result += "4";
+                    } else {
+                        result += letter;
+                    }
+                }
+
+            }
+
+        }
+
+        return result;
+    }
+
+    /**
+     * Convert final result ITA2 to plaintext
+     */
+    convertFromITA2(input, outtype, mode) {
+        let result = "";
+        let figShifted = false;
+        for (const letter of input) {
+            if (mode === "Receive") {
+
+                // Convert output ITA2 to plaintext (including figure/letter shifts)
+                if (outtype === "Plaintext") {
+
+                    if (letter === "5" || letter === "+") {
+                        figShifted = true;
+                    } else if (letter === "8" || letter === "-") {
+                        figShifted = false;
+                    } else if (letter === "9") {
+                        result += " ";
+                    } else if (letter === "3") {
+                        result += "\n";
+                    } else if (letter === "4") {
+                        result += "";
+                    } else if (letter === "/") {
+                        result += "/";
+                    } else {
+
+                        if (figShifted) {
+                            result += this.REVERSE_FIGSHIFT_TABLE[letter];
+                        } else {
+                            result += letter;
+                        }
+
+                    }
+
+                } else {
+                    result += letter;
+                }
+
+            } else {
+                result += letter;
+            }
+        }
+
+        return result;
+
     }
 
 }
@@ -651,6 +659,7 @@ const figShiftArr = {
     "%": "F",
     "@": "G",
     "£": "H",
+    "": "J",
     "(": "K",
     ")": "L",
     ".": "M",
