@@ -101,6 +101,9 @@ An installation walkthrough, how-to guides for adding new operations and themes,
 
  - Push your changes to your fork.
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.
+ 
+ P.S.: 
+Follow [Github Flow](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/github-flow) to collaborate!
 
 
 ## Licencing
