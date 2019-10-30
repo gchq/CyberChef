@@ -149,6 +149,10 @@ class AnalyseHash extends Operation {
                     "FSB-384",
                 ];
                 break;
+            case 480:
+                possibleHashFunctions = [
+                    "BCrypt",
+                ];
             case 512:
                 possibleHashFunctions = [
                     "SHA-512",
