@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.8.0] - 2019-10-31
+- 'Avro to JSON' operation added [@jarrodconnolly] | [#865]
+
 ### [9.7.0] - 2019-09-13
 - 'Optical Character Recognition' operation added [@MShwed] [@n1474335] | [#632]
 
@@ -185,6 +188,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.8.0]: https://github.com/gchq/CyberChef/releases/tag/v9.8.0
 [9.7.0]: https://github.com/gchq/CyberChef/releases/tag/v9.7.0
 [9.6.0]: https://github.com/gchq/CyberChef/releases/tag/v9.6.0
 [9.5.0]: https://github.com/gchq/CyberChef/releases/tag/v9.5.0
@@ -262,6 +266,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@Ge0rg3]: https://github.com/Ge0rg3
 [@MShwed]: https://github.com/MShwed
 [@kassi]: https://github.com/kassi
+[@jarrodconnolly]: https://github.com/jarrodconnolly
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -322,3 +327,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#625]: https://github.com/gchq/CyberChef/pull/625
 [#627]: https://github.com/gchq/CyberChef/pull/627
 [#632]: https://github.com/gchq/CyberChef/pull/632
+[#865]: https://github.com/gchq/CyberChef/pull/865
