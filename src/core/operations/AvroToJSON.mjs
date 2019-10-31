@@ -20,25 +20,26 @@ class AvroToJSON extends Operation {
         super();
 
         this.name = "Avro to JSON";
-        this.module = "Avro";
+        this.module = "Serialise";
         this.description = "Converts Avro encoded data into JSON.";
-        this.infoURL = "https://avro.apache.org/docs/current/spec.html";
+        this.infoURL = "https://wikipedia.org/wiki/Apache_Avro";
         this.inputType = "ArrayBuffer";
-        this.outputType = "JSON";
-        this.args = [{
-            name: "Force Valid JSON",
-            type: "boolean",
-            value: true
-        }];
+        this.outputType = "string";
+        this.args = [
+            {
+                name: "Force Valid JSON",
+                type: "boolean",
+                value: true
+            }
+        ];
     }
 
     /**
      * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {JSON}
+     * @returns {string}
      */
     run(input, args) {
-        const self = this;
         if (input.byteLength <= 0) {
             throw new OperationError("Please provide an input.");
         }
@@ -59,12 +60,8 @@ class AvroToJSON extends Operation {
                 })
                 .on("end", function () {
                     if (forceJSON) {
-                        self.presentType = "JSON";
-                        self.outputType = "JSON";
-                        resolve(result.length === 1 ? result[0] : result);
+                        resolve(result.length === 1 ? JSON.stringify(result[0], null, 4) : JSON.stringify(result, null, 4));
                     } else {
-                        self.presentType = "string";
-                        self.outputType = "string";
                         const data = result.reduce((result, current) => result + JSON.stringify(current) + "\n", "");
                         resolve(data);
                     }
