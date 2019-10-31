@@ -59,7 +59,8 @@
             "From Braille",
             "Parse TLV",
             "CSV to JSON",
-            "JSON to CSV"
+            "JSON to CSV",
+            "Avro to JSON"
         ]
     },
     {
