@@ -1,7 +1,7 @@
 # CyberChef
 
 [![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
-[![dependencies Status](https://david-dm.org/gchq/CyberChef/status.svg)](https://david-dm.org/gchq/CyberChef)
+[![Dependencies Status](https://david-dm.org/gchq/CyberChef/status.svg)](https://david-dm.org/gchq/CyberChef)
 [![npm](https://img.shields.io/npm/v/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
 [![Gitter](https://badges.gitter.im/gchq/CyberChef.svg)](https://gitter.im/gchq/CyberChef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
@@ -82,7 +82,7 @@ Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`.
 
 ## Browser support
 
-CyberChef is built to support
+CyberChef is built to support:
 
  - Google Chrome 50+
  - Mozilla Firefox 38+
@@ -90,7 +90,7 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier does not work in `v12`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier does not work in `v12`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
 
 
 ## Contributing
