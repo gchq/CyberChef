@@ -399,6 +399,8 @@ class RecipeWaiter {
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
 
+        $(item).find("[data-toggle='tooltip']").tooltip();
+
         item.dispatchEvent(this.manager.operationadd);
         return item;
     }
