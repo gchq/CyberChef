@@ -86,6 +86,7 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.5.5",
     "arrive": "^2.4.1",
+    "avsc": "^5.4.16",
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^9.0.0",
