@@ -55,6 +55,11 @@ class AESDecrypt extends Operation {
                 "value": ["Raw", "Hex"]
             },
             {
+                "name": "Padding",
+                "type": "option",
+                "value": ["No", "Yes"]
+            },
+            {
                 "name": "GCM Tag",
                 "type": "toggleString",
                 "value": "",
@@ -76,8 +81,8 @@ class AESDecrypt extends Operation {
             mode = args[2],
             inputType = args[3],
             outputType = args[4],
-            gcmTag = Utils.convertToByteString(args[5].string, args[5].option);
-
+            gcmTag = Utils.convertToByteString(args[6].string, args[6].option);
+        var padding = args[5];
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
 
@@ -95,8 +100,8 @@ The following algorithms will be used based on the size of the key:
             tag: gcmTag
         });
         decipher.update(forge.util.createBuffer(input));
-        const result = decipher.finish();
-
+        const result = (padding === "No") ? decipher.finish() : decipher.finish(() => true);
+        console.log(result);
         if (result) {
             return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
         } else {
