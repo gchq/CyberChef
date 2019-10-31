@@ -69,7 +69,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "Generate Base64 Windows Powershell",
+        name: "Generate Base64 Windows PowerShell",
         input: "ZABpAHIAIAAiAGMAOgBcAHAAcgBvAGcAcgBhAG0AIABmAGkAbABlAHMAIgAgAA==",
         expectedOutput: "dir \"c:\\program files\" ",
         recipeConfig: [

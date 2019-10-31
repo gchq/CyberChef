@@ -453,6 +453,7 @@ class App {
      * Searches the URI parameters for recipe and input parameters.
      * If recipe is present, replaces the current recipe with the recipe provided in the URI.
      * If input is present, decodes and sets the input to the one provided in the URI.
+     * If theme is present, uses the theme.
      *
      * @fires Manager#statechange
      */
@@ -489,6 +490,11 @@ class App {
                 const inputData = fromBase64(this.uriParams.input);
                 this.setInput(inputData);
             } catch (err) {}
+        }
+
+        // Read in theme from URI params
+        if (this.uriParams.theme) {
+            this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
         }
 
         this.autoBakePause = false;

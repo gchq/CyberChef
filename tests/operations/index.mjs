@@ -95,9 +95,6 @@ import "./tests/ParseUDP.mjs";
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
 
-// import "./tests/nodeApi/nodeApi.mjs";
-// import "./tests/nodeApi/ops.mjs";
-
 const testStatus = {
     allTestsPassing: true,
     counts: {

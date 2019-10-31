@@ -7,7 +7,7 @@
  */
 
 import Utils from "../Utils.mjs";
-
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Base64's the input byte array using the given alphabet, returning a string.
@@ -33,6 +33,9 @@ export function toBase64(data, alphabet="A-Za-z0-9+/=") {
     }
 
     alphabet = Utils.expandAlphRange(alphabet).join("");
+    if (alphabet.length !== 64 && alphabet.length !== 65) { // Allow for padding
+        throw new OperationError(`Invalid Base64 alphabet length (${alphabet.length}): ${alphabet}`);
+    }
 
     let output = "",
         chr1, chr2, chr3,
@@ -86,6 +89,9 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
 
     alphabet = alphabet || "A-Za-z0-9+/=";
     alphabet = Utils.expandAlphRange(alphabet).join("");
+    if (alphabet.length !== 64 && alphabet.length !== 65) { // Allow for padding
+        throw new OperationError(`Invalid Base64 alphabet length (${alphabet.length}): ${alphabet}`);
+    }
 
     const output = [];
     let chr1, chr2, chr3,

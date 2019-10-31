@@ -26,8 +26,8 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (if relevant, please complete the following information):**
  - OS: [e.g. Windows] 
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ - Browser: [e.g. chrome 72, firefox 60]
+ - CyberChef version: [e.g. 9.7.14]
 
 **Additional context**
 Add any other context about the problem here.

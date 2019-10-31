@@ -61,7 +61,7 @@ class YARARules extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
+    async run(input, args) {
         if (isWorkerEnvironment())
             self.sendStatusMessage("Instantiating YARA...");
         const [rules, showStrings, showLengths, showMeta, showCounts] = args;

@@ -31,7 +31,7 @@ import {
     cartesianProduct,
     CSSMinify,
     toBase64,
-    toHex,
+    toHex
 } from "../../../src/node/index";
 import chef from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
@@ -412,7 +412,7 @@ color: white;
             },
             iv: {
                 string: "threetwo",
-                option: "Hex",
+                option: "utf8",
             },
             mode: "ECB",
         });
@@ -427,7 +427,7 @@ color: white;
             },
             iv: {
                 string: "threetwo",
-                option: "Hex",
+                option: "utf8",
             },
             mode: "ECB",
         });
@@ -897,17 +897,17 @@ smothering ampersand abreast
     it("toBase64: editableOption", () => {
         const result = toBase64("some input", {
             alphabet: {
-                value: "0-9A-W"
+                value: "0-9A-W+/a-zXYZ="
             },
         });
-        assert.strictEqual(result.toString(), "SPI1R1T0");
+        assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions key is value", () => {
         const result = toBase64("some input", {
-            alphabet: "0-9A-W",
+            alphabet: "0-9A-W+/a-zXYZ=",
         });
-        assert.strictEqual(result.toString(), "SPI1R1T0");
+        assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions default", () => {
@@ -955,10 +955,10 @@ smothering ampersand abreast
             chef.tripleDESDecrypt(
                 chef.tripleDESEncrypt("Destroy Money", {
                     key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}}),
+                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}}),
                 {
                     key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}
+                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}
                 }).toString(),
             "Destroy Money");
     }),
@@ -1040,7 +1040,7 @@ ExifImageHeight: 57`);
         const zipped = chef.zip("some file content", {
             filename: "sample.zip",
             comment: "added",
-            operaringSystem: "Unix",
+            operatingSystem: "Unix",
         });
 
         assert.strictEqual(zipped.type, 7);
@@ -1070,6 +1070,21 @@ ExifImageHeight: 57`);
 
         assert.equal(unzipped.value[0].data, "some content");
     }),
+
+    it("YARA Rule Matching", async () => {
+        const input = "foobar foobar bar foo foobar";
+        const output = "Rule \"foo\" matches (4 times):\nPos 0, length 3, identifier $re1, data: \"foo\"\nPos 7, length 3, identifier $re1, data: \"foo\"\nPos 18, length 3, identifier $re1, data: \"foo\"\nPos 22, length 3, identifier $re1, data: \"foo\"\nRule \"bar\" matches (4 times):\nPos 3, length 3, identifier $re1, data: \"bar\"\nPos 10, length 3, identifier $re1, data: \"bar\"\nPos 14, length 3, identifier $re1, data: \"bar\"\nPos 25, length 3, identifier $re1, data: \"bar\"\n";
+
+        const res = await chef.YARARules(input, {
+            rules: "rule foo {strings: $re1 = /foo/ condition: $re1} rule bar {strings: $re1 = /bar/ condition: $re1}",
+            showStrings: true,
+            showStringLengths: true,
+            showMetadata: true
+        });
+
+        assert.equal(output, res.value);
+    }),
+
 
 ]);
 

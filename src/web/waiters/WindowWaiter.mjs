@@ -33,7 +33,7 @@ class WindowWaiter {
 
     /**
      * Handler for window blur events.
-     * Saves the current time so that we can calculate how long the window was unfocussed for when
+     * Saves the current time so that we can calculate how long the window was unfocused for when
      * focus is returned.
      */
     windowBlur() {

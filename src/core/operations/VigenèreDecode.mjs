@@ -55,7 +55,7 @@ class VigenèreDecode extends Operation {
                 keyIndex = alphabet.indexOf(chr);
                 msgIndex = alphabet.indexOf(input[i]);
                 // Subtract indexes from each other, add 26 just in case the value is negative,
-                // modulo to remove if neccessary
+                // modulo to remove if necessary
                 output += alphabet[(msgIndex - keyIndex + alphabet.length) % 26];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 chr = key[(i - fail) % key.length].toLowerCase();

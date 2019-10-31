@@ -31,7 +31,9 @@ class HTMLIngredient {
         this.target = config.target;
         this.defaultIndex = config.defaultIndex || 0;
         this.toggleValues = config.toggleValues;
-        this.id = "ing-" + this.app.nextIngId();
+        this.ingId = this.app.nextIngId();
+        this.id = "ing-" + this.ingId;
+        this.tabIndex = this.ingId + 2; // Input = 1, Search = 2
         this.min = (typeof config.min === "number") ? config.min : "";
         this.max = (typeof config.max === "number") ? config.max : "";
         this.step = config.step || 1;
@@ -56,6 +58,7 @@ class HTMLIngredient {
                     <input type="text"
                         class="form-control arg"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
                         ${this.disabled ? "disabled" : ""}>
@@ -69,6 +72,7 @@ class HTMLIngredient {
                     <input type="text"
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
                         ${this.disabled ? "disabled" : ""}>
@@ -82,6 +86,7 @@ class HTMLIngredient {
                         <input type="text"
                             class="form-control arg toggle-string"
                             id="${this.id}"
+                            tabindex="${this.tabIndex}"
                             arg-name="${this.name}"
                             value="${this.value}"
                             ${this.disabled ? "disabled" : ""}>
@@ -104,6 +109,7 @@ class HTMLIngredient {
                     <input type="number"
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
                         min="${this.min}"
@@ -120,6 +126,7 @@ class HTMLIngredient {
                             <input type="checkbox"
                                 class="arg"
                                 id="${this.id}"
+                                tabindex="${this.tabIndex}"
                                 arg-name="${this.name}"
                                 ${this.value ? " checked" : ""}
                                 ${this.disabled ? " disabled" : ""}
@@ -135,6 +142,7 @@ class HTMLIngredient {
                     <select
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
@@ -157,6 +165,7 @@ class HTMLIngredient {
                     <select
                         class="form-control arg no-state-change populate-option"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
@@ -186,6 +195,7 @@ class HTMLIngredient {
                     <input type="text"
                         class="form-control arg"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value[this.defaultIndex].value}"
                         ${this.disabled ? "disabled" : ""}>
@@ -215,6 +225,7 @@ class HTMLIngredient {
                     <input type="text"
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value[this.defaultIndex].value}"
                         ${this.disabled ? "disabled" : ""}>
@@ -244,6 +255,7 @@ class HTMLIngredient {
                     <textarea
                         class="form-control arg"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         rows="${this.rows ? this.rows : 3}"
                         ${this.disabled ? "disabled" : ""}>${this.value}</textarea>
@@ -256,6 +268,7 @@ class HTMLIngredient {
                     <select
                         class="form-control arg inline arg-selector"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
