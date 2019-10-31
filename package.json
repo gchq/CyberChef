@@ -1,6 +1,6 @@
 {
   "name": "cyberchef",
-  "version": "9.7.19",
+  "version": "9.8.0",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
@@ -86,6 +86,7 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.5.5",
     "arrive": "^2.4.1",
+    "avsc": "^5.4.16",
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^9.0.0",
