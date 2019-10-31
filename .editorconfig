@@ -12,3 +12,4 @@ indent_size = 4
 [{package.json,.travis.yml,nightwatch.json}]
 indent_style = space
 indent_size = 2
+add the navbar in between the texts
