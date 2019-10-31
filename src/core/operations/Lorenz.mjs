@@ -381,15 +381,15 @@ class Lorenz extends Operation {
             p5[2] = p5[1];
             p5[1] = p5[0];
             if (mode==="Send") {
-                p5[0] = ITA2_TABLE[letter][4];
+                p5[0] = parseInt(ITA2_TABLE[letter][4], 10);
             } else {
-                p5[0] = xorSum[4];
+                p5[0] = parseInt(xorSum[4], 10);
             }
 
             // Limitations here
             if (model==="SZ42a") {
                 // Chi 2 one back lim - The active character of Chi 2 (2nd Chi wheel) in the previous position
-                lim = chiSettings[2][x2bptr-1];
+                lim = parseInt(chiSettings[2][x2bptr-1], 10);
                 if (kt) {
                     //p5 back 2
                     if (lim===p5[2]) {
@@ -408,8 +408,8 @@ class Lorenz extends Operation {
 
             } else if (model==="SZ42b") {
                 // Chi 2 one back + Psi 1 one back.
-                const x2b1lug = chiSettings[2][x2bptr-1];
-                const s1b1lug = psiSettings[1][s1bptr-1];
+                const x2b1lug = parseInt(chiSettings[2][x2bptr-1], 10);
+                const s1b1lug = parseInt(psiSettings[1][s1bptr-1], 10);
                 lim = 1;
                 if (x2b1lug===s1b1lug) lim=0;
                 if (kt) {
