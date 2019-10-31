@@ -91,7 +91,7 @@ import "./tests/Protobuf.mjs";
 import "./tests/ParseSSHHostKey.mjs";
 import "./tests/DefangIP.mjs";
 import "./tests/ParseUDP.mjs";
-import "./tests/AvroToJSON";
+import "./tests/AvroToJSON.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";

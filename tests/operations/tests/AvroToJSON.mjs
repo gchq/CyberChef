@@ -1,5 +1,4 @@
 /**
- *
  * Avro to JSON tests.
  *
  * @author jarrodconnolly [jarrod@nestedquotes.ca]
