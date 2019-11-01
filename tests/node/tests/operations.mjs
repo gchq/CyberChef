@@ -353,10 +353,10 @@ color: white;
 
     it("Decode text", () => {
         const encoded = chef.encodeText("Ugly Duckling", {
-            encoding: "UTF16LE (1200)",
+            encoding: "UTF-16LE (1200)",
         });
         const result = chef.decodeText(encoded, {
-            encoding: "UTF16LE (1200)",
+            encoding: "UTF-16LE (1200)",
         });
         assert.strictEqual(result.toString(), "Ugly Duckling");
     }),
