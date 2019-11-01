@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.9.0] - 2019-11-01
+- Added support for 109 more character encodings [@n1474335]
+
 ### [9.8.0] - 2019-10-31
 - 'Avro to JSON' operation added [@jarrodconnolly] | [#865]
 
@@ -188,6 +191,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.9.0]: https://github.com/gchq/CyberChef/releases/tag/v9.9.0
 [9.8.0]: https://github.com/gchq/CyberChef/releases/tag/v9.8.0
 [9.7.0]: https://github.com/gchq/CyberChef/releases/tag/v9.7.0
 [9.6.0]: https://github.com/gchq/CyberChef/releases/tag/v9.6.0
