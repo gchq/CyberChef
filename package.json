@@ -96,6 +96,7 @@
     "bootstrap-material-design": "^4.1.2",
     "bson": "^4.0.2",
     "chi-squared": "^1.1.0",
+    "codepage": "^1.14.0",
     "core-js": "^3.2.1",
     "crypto-api": "^0.8.5",
     "crypto-js": "^3.1.9-1",
