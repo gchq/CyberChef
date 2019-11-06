@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import {
     BACON_ALPHABETS,
     BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP,
     swapZeroAndOne
-} from "../lib/Bacon";
+} from "../lib/Bacon.mjs";
 
 /**
  * Bacon Cipher Decode operation
