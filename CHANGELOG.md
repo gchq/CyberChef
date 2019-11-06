@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.10.0] - 2019-11-06
+- 'Lorenz' operation added [@VirtualColossus] | [#528]
+
 ### [9.9.0] - 2019-11-01
 - Added support for 109 more character encodings [@n1474335]
 
@@ -191,6 +194,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.10.0]: https://github.com/gchq/CyberChef/releases/tag/v9.10.0
 [9.9.0]: https://github.com/gchq/CyberChef/releases/tag/v9.9.0
 [9.8.0]: https://github.com/gchq/CyberChef/releases/tag/v9.8.0
 [9.7.0]: https://github.com/gchq/CyberChef/releases/tag/v9.7.0
@@ -271,6 +275,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@MShwed]: https://github.com/MShwed
 [@kassi]: https://github.com/kassi
 [@jarrodconnolly]: https://github.com/jarrodconnolly
+[@VirtualColossus]: https://github.com/VirtualColossus
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -317,6 +322,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#515]: https://github.com/gchq/CyberChef/pull/515
 [#516]: https://github.com/gchq/CyberChef/pull/516
 [#525]: https://github.com/gchq/CyberChef/pull/525
+[#528]: https://github.com/gchq/CyberChef/pull/528
 [#530]: https://github.com/gchq/CyberChef/pull/530
 [#531]: https://github.com/gchq/CyberChef/pull/531
 [#533]: https://github.com/gchq/CyberChef/pull/533
