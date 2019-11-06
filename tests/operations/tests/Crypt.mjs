@@ -1376,27 +1376,29 @@ DES uses a key length of 8 bytes (64 bits).`,
             }
         ],
     },
-    /* The following expectedOutputs are generated with this Python script with pyCryptoDome
-    from Crypto.Cipher import Blowfish
-    import binascii
+    /*
+        The following expectedOutputs are generated with this Python script with pyCryptoDome
 
-    input_data = b"The quick brown fox jumps over the lazy dog."
-    key = binascii.unhexlify("0011223344556677")
-    iv = binascii.unhexlify("0000000000000000")
-    mode = Blowfish.MODE_CBC
+        from Crypto.Cipher import Blowfish
+        import binascii
 
-    if mode == Blowfish.MODE_ECB or mode == Blowfish.MODE_CBC:
-        padding_len = 8-(len(input_data) & 7)
-        for i in range(padding_len):
-            input_data += bytes([padding_len])
+        input_data = b"The quick brown fox jumps over the lazy dog."
+        key = binascii.unhexlify("0011223344556677")
+        iv = binascii.unhexlify("0000000000000000")
+        mode = Blowfish.MODE_CBC
 
-    cipher = Blowfish.new(key, mode)  # set iv, nonce, segment_size etc. here
-    cipher_text = cipher.encrypt(input_data)
+        if mode == Blowfish.MODE_ECB or mode == Blowfish.MODE_CBC:
+            padding_len = 8-(len(input_data) & 7)
+            for i in range(padding_len):
+                input_data += bytes([padding_len])
 
-    cipher_text = binascii.hexlify(cipher_text).decode("UTF-8")
+        cipher = Blowfish.new(key, mode)  # set iv, nonce, segment_size etc. here
+        cipher_text = cipher.encrypt(input_data)
 
-    print("Encrypted: {}".format(cipher_text))
-*/
+        cipher_text = binascii.hexlify(cipher_text).decode("UTF-8")
+
+        print("Encrypted: {}".format(cipher_text))
+    */
     {
         name: "Blowfish Encrypt: ECB, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
@@ -1555,7 +1557,7 @@ DES uses a key length of 8 bytes (64 bits).`,
     {
         name: "Blowfish Encrypt: CFB, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        // see above. pyCryptoDome produeces a different value with its default settings
+        // see above. pyCryptoDome produces a different value with its default settings
         expectedOutput: "e6ac1324d1576beab00e855de3f4ac1f5e3cbf89f4c2a743a5737895067ac5012e5bdb92477e256cc07bf691b58e721179b550e694abb0be7cbdc42586db755bf795f4338f47d356c57453afa6277e46aaeb3405f9744654a477f06c2ad92ede90555759",
         recipeConfig: [
             {
@@ -1574,7 +1576,7 @@ DES uses a key length of 8 bytes (64 bits).`,
         name: "Blowfish Decrypt: CFB, ASCII",
         input: "c8ca123592570c1fcb138d4ec08f7af14ad49363245be1ac25029c8ffc508b3217e75faaa5566426180fec8f",
         expectedOutput: "The quick brown fox jumps over the lazy dog.",
-        // see above. pyCryptoDome produeces a different value with its default settings
+        // see above. pyCryptoDome produces a different value with its default settings
         recipeConfig: [
             {
                 "op": "Blowfish Decrypt",
@@ -1592,7 +1594,7 @@ DES uses a key length of 8 bytes (64 bits).`,
         name: "Blowfish Decrypt: CFB, Binary",
         input: "e6ac1324d1576beab00e855de3f4ac1f5e3cbf89f4c2a743a5737895067ac5012e5bdb92477e256cc07bf691b58e721179b550e694abb0be7cbdc42586db755bf795f4338f47d356c57453afa6277e46aaeb3405f9744654a477f06c2ad92ede90555759",
         expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        // see above. pyCryptoDome produeces a different value with its default settings
+        // see above. pyCryptoDome produces a different value with its default settings
         recipeConfig: [
             {
                 "op": "Blowfish Decrypt",
