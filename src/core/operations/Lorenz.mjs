@@ -21,21 +21,21 @@ class Lorenz extends Operation {
         super();
 
         this.name = "Lorenz";
-        this.module = "Default";
-        this.description = "The Lorenz SZ40/42 cipher attachment was a WW2 German rotor cipher machine with twelve rotors which attached in-line between remote teleprinters.<br><br>It used the Vernam cipher with two groups of five rotors (named the psi(ψ) wheels and chi(χ) wheels at Bletchley Park) to create two pseudorandom streams of five bits, encoded in ITA2, which were XOR added to the plaintext. Two other rotors, dubbed the mu(μ) or motor wheels, could hold up the stepping of the psi wheels meaning they stepped intermittently.<br><br>Each rotor has a different number of cams/lugs around their circumference which could be set active or inactive changing the key stream.<br><br>Three models of the Lorenz are emulated, SZ40, SZ42a and SZ42b and three example wheel patterns (the lug settings) are included (KH, ZMUG & BREAM) with the option to set a custom set using the letter 'x' for active or '.' for an inactive lug.<br><br>The input can either be plaintext or ITA2 when sending and ITA2 when receiving.<br><br>To learn more, Virtual Lorenz, an online, browser based simulation of the Lorenz SZ40/42 is available at <a href='https://lorenz.virtualcolossus.co.uk'>https://lorenz.virtualcolossus.co.uk</a>.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Lorenz_cipher";
+        this.module = "Bletchley";
+        this.description = "The Lorenz SZ40/42 cipher attachment was a WW2 German rotor cipher machine with twelve rotors which attached in-line between remote teleprinters.<br><br>It used the Vernam cipher with two groups of five rotors (named the psi(ψ) wheels and chi(χ) wheels at Bletchley Park) to create two pseudorandom streams of five bits, encoded in ITA2, which were XOR added to the plaintext. Two other rotors, dubbed the mu(μ) or motor wheels, could hold up the stepping of the psi wheels meaning they stepped intermittently.<br><br>Each rotor has a different number of cams/lugs around their circumference which could be set active or inactive changing the key stream.<br><br>Three models of the Lorenz are emulated, SZ40, SZ42a and SZ42b and three example wheel patterns (the lug settings) are included (KH, ZMUG & BREAM) with the option to set a custom set using the letter 'x' for active or '.' for an inactive lug.<br><br>The input can either be plaintext or ITA2 when sending and ITA2 when receiving.<br><br>To learn more, Virtual Lorenz, an online, browser based simulation of the Lorenz SZ40/42 is available at <a href='https://lorenz.virtualcolossus.co.uk' target='_blank'>https://lorenz.virtualcolossus.co.uk</a>.";
+        this.infoURL = "https://wikipedia.org/wiki/Lorenz_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Model",
                 type: "option",
-                "value": ["SZ40", "SZ42a", "SZ42b"]
+                value: ["SZ40", "SZ42a", "SZ42b"]
             },
             {
                 name: "Wheel Pattern",
                 type: "argSelector",
-                "value": [
+                value: [
                     {
                         name: "KH Pattern",
                         off: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
@@ -65,7 +65,7 @@ class Lorenz extends Operation {
             {
                 name: "Mode",
                 type: "argSelector",
-                "value": [
+                value: [
                     {
                         name: "Send",
                         on: [4],
@@ -81,77 +81,77 @@ class Lorenz extends Operation {
             {
                 name: "Input Type",
                 type: "option",
-                "value": ["Plaintext", "ITA2"]
+                value: ["Plaintext", "ITA2"]
             },
             {
                 name: "Output Type",
                 type: "option",
-                "value": ["Plaintext", "ITA2"]
+                value: ["Plaintext", "ITA2"]
             },
             {
                 name: "ITA2 Format",
                 type: "option",
-                "value": ["5/8/9", "+/-/."]
+                value: ["5/8/9", "+/-/."]
             },
             {
                 name: "Ψ1 start (1-43)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Ψ2 start (1-47)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Ψ3 start (1-51)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Ψ4 start (1-53)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Ψ5 start (1-59)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Μ37 start (1-37)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Μ61 start (1-61)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Χ1 start (1-41)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Χ2 start (1-31)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Χ3 start (1-29)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Χ4 start (1-26)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Χ5 start (1-23)",
                 type: "number",
-                "value": 1
+                value: 1
             },
             {
                 name: "Ψ1 lugs (43)",

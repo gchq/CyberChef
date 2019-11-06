@@ -1,5 +1,6 @@
 /**
  * Lorenz SZ40/42a/42b machine tests.
+ *
  * @author VirtualColossus
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
