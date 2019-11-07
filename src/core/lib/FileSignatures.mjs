@@ -1485,7 +1485,7 @@ export const FILE_SIGNATURES = {
                 4: 0x5a,
                 5: 0x0
             },
-            extractor: null
+            extractor: extractXZ
         },
         {
             name: "Tarball",
@@ -2804,6 +2804,21 @@ export function extractZlib(bytes, offset) {
     // Skip over final checksum
     stream.moveForwardsBy(4);
 
+    return stream.carve();
+}
+
+
+/**
+ * XZ extractor
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {string}
+ */
+export function extractXZ(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+    stream.continueUntil([0x00, 0x00, 0x00, 0x00, 0x04, 0x59, 0x5a]);
+    stream.moveForwardsBy(7);
     return stream.carve();
 }
 
