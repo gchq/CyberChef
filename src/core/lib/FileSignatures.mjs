@@ -40,7 +40,7 @@ export const FILE_SIGNATURES = {
                 4: [0x37, 0x39], // 7|9
                 5: 0x61  // a
             },
-            extractor: null
+            extractor: extractGIF
         },
         {
             name: "Portable Network Graphics image",
@@ -2441,6 +2441,36 @@ export function extractJPEG(bytes, offset) {
 
 
 /**
+ * GIF extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractGIF(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+    stream.continueUntil([0x21, 0xff]);
+    stream.continueUntil([0x21, 0xf9]);
+    while (stream.hasMore()) {
+        stream.continueUntil(0x2c);
+        stream.moveForwardsBy(11);
+        while (stream.getBytes(2) !== [0x21, 0xf9]) {
+            stream.moveBackwardsBy(2);
+            stream.moveForwardsBy(stream.getBytes(1)[0]);
+            if (!stream.getBytes(1)[0])
+                break;
+            stream.moveBackwardsBy(1);
+        }
+        if (stream.getBytes(1)[0] === 0x3b)
+            break;
+        stream.moveBackwardsBy(1);
+    }
+    stream.moveBackwardsBy(10);
+    return stream.carve();
+}
+
+
+/**
  * Portable executable extractor.
  * Assumes that the offset refers to an MZ header.
  *
@@ -2809,7 +2839,7 @@ export function extractZlib(bytes, offset) {
 
 
 /**
- * XZ extractor
+ * XZ extractor.
  *
  * @param {Uint8Array} bytes
  * @param {Number} offset
