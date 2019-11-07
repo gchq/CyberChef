@@ -2449,11 +2449,21 @@ export function extractJPEG(bytes, offset) {
  */
 export function extractGIF(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
+
+    //Move to application extension block.
     stream.continueUntil([0x21, 0xff]);
+
+    //Move to Graphic Control Extension for frame #1.
     stream.continueUntil([0x21, 0xf9]);
     while (stream.hasMore()) {
+
+        //Move to Image descriptor.
         stream.continueUntil(0x2c);
+
+        //Move past Image descriptor to the image data.
         stream.moveForwardsBy(11);
+
+        //Loop until next Graphic Control Extension.
         while (stream.getBytes(2) !== [0x21, 0xf9]) {
             stream.moveBackwardsBy(2);
             stream.moveForwardsBy(stream.getBytes(1)[0]);
@@ -2461,6 +2471,7 @@ export function extractGIF(bytes, offset) {
                 break;
             stream.moveBackwardsBy(1);
         }
+        //When the end of the file is [0x00, 0x3b], end.
         if (stream.getBytes(1)[0] === 0x3b)
             break;
         stream.moveBackwardsBy(1);
