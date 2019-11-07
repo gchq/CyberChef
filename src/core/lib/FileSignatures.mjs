@@ -2817,8 +2817,13 @@ export function extractZlib(bytes, offset) {
  */
 export function extractXZ(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
+
+    // Move forward to EOF marker
     stream.continueUntil([0x00, 0x00, 0x00, 0x00, 0x04, 0x59, 0x5a]);
+
+    // Move over EOF marker
     stream.moveForwardsBy(7);
+
     return stream.carve();
 }
 
