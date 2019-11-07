@@ -2465,7 +2465,6 @@ export function extractGIF(bytes, offset) {
             break;
         stream.moveBackwardsBy(1);
     }
-    stream.moveBackwardsBy(10);
     return stream.carve();
 }
 
