@@ -2651,6 +2651,8 @@ export function extractBMP(bytes, offset) {
  */
 export function extractWAV(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size field.
     stream.moveTo(4);
 
     // Move to file size.
