@@ -2583,10 +2583,10 @@ export function extractGIF(bytes, offset) {
     // Move to Graphic Control Extension for frame #1.
     stream.continueUntil([0x21, 0xf9]);
     stream.moveForwardsBy(2);
-    while (stream.hasMore()) {
 
+    while (stream.hasMore()) {
         // Move to Image descriptor.
-        stream.moveForwardsBy(stream.getBytes(1)[0]+1);
+        stream.moveForwardsBy(stream.readInt(1) + 1);
 
         // Move past Image descriptor to the image data.
         stream.moveForwardsBy(11);
@@ -2594,14 +2594,16 @@ export function extractGIF(bytes, offset) {
         // Loop until next Graphic Control Extension.
         while (stream.getBytes(2) !== [0x21, 0xf9]) {
             stream.moveBackwardsBy(2);
-            stream.moveForwardsBy(stream.getBytes(1)[0]);
-            if (!stream.getBytes(1)[0])
+            stream.moveForwardsBy(stream.readInt(1));
+            if (!stream.readInt(1))
                 break;
             stream.moveBackwardsBy(1);
         }
+
         // When the end of the file is [0x00, 0x3b], end.
-        if (stream.getBytes(1)[0] === 0x3b)
+        if (stream.readInt(1) === 0x3b)
             break;
+
         stream.moveForwardsBy(1);
     }
     return stream.carve();
@@ -3010,10 +3012,14 @@ export function extractBZIP2(bytes, offset) {
         [0xbb, 0x92, 0x29, 0xc2, 0x84],
         [0x5d, 0xc9, 0x14, 0xe1, 0x42],
         [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
-        [0x17, 0x72, 0x45, 0x38, 0x50]];
+        [0x17, 0x72, 0x45, 0x38, 0x50]
+    ];
 
     for (let i = 0; i < lookingfor.length; i++) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> Tidied up GIF and BZIP2 extractors
         // Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
         if (stream.getBytes(5).join("") === lookingfor[i].join(""))
