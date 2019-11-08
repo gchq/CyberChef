@@ -2450,31 +2450,33 @@ export function extractJPEG(bytes, offset) {
 export function extractGIF(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    //Move to application extension block.
+    // Move to application extension block.
     stream.continueUntil([0x21, 0xff]);
 
-    //Move to Graphic Control Extension for frame #1.
+    // Move to Graphic Control Extension for frame #1.
     stream.continueUntil([0x21, 0xf9]);
     stream.moveForwardsBy(2);
+
     while (stream.hasMore()) {
+        // Move to Image descriptor.
+        stream.moveForwardsBy(stream.readInt(1) + 1);
 
-        //Move to Image descriptor.
-        stream.moveForwardsBy(stream.getBytes(1)[0]+1);
-
-        //Move past Image descriptor to the image data.
+        // Move past Image descriptor to the image data.
         stream.moveForwardsBy(11);
 
-        //Loop until next Graphic Control Extension.
+        // Loop until next Graphic Control Extension.
         while (stream.getBytes(2) !== [0x21, 0xf9]) {
             stream.moveBackwardsBy(2);
-            stream.moveForwardsBy(stream.getBytes(1)[0]);
-            if (!stream.getBytes(1)[0])
+            stream.moveForwardsBy(stream.readInt(1));
+            if (!stream.readInt(1))
                 break;
             stream.moveBackwardsBy(1);
         }
-        //When the end of the file is [0x00, 0x3b], end.
-        if (stream.getBytes(1)[0] === 0x3b)
+
+        // When the end of the file is [0x00, 0x3b], end.
+        if (stream.readInt(1) === 0x3b)
             break;
+
         stream.moveForwardsBy(1);
     }
     return stream.carve();
@@ -2828,7 +2830,7 @@ export function extractGZIP(bytes, offset) {
 export function extractBZIP2(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    //The EOFs shifted between all possible combinations.
+    // The EOFs shifted between all possible combinations.
     const lookingfor = [
         [0x77, 0x24, 0x53, 0x85, 0x09],
         [0xee, 0x48, 0xa7, 0x0a, 0x12],
@@ -2838,16 +2840,16 @@ export function extractBZIP2(bytes, offset) {
         [0xbb, 0x92, 0x29, 0xc2, 0x84],
         [0x5d, 0xc9, 0x14, 0xe1, 0x42],
         [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
-        [0x17, 0x72, 0x45, 0x38, 0x50]];
+        [0x17, 0x72, 0x45, 0x38, 0x50]
+    ];
 
     for (let i = 0; i < lookingfor.length; i++) {
-
-        //Continue until an EOF.
+        // Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
         if (stream.getBytes(5).join("") === lookingfor[i].join(""))
             break;
 
-        //Jump back to the start if invalid EOF.
+        // Jump back to the start if invalid EOF.
         stream.moveTo(0);
     }
     stream.moveForwardsBy(4);
