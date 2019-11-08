@@ -1444,7 +1444,7 @@ export const FILE_SIGNATURES = {
                 1: 0x5a,
                 2: 0x68
             },
-            extractor: null
+            extractor: extractBZIP2
         },
         {
             name: "7zip",
@@ -2813,6 +2813,42 @@ export function extractGZIP(bytes, offset) {
     // Skip over checksum and size of original uncompressed input
     stream.moveForwardsBy(8);
 
+    return stream.carve();
+}
+
+
+/**
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractBZIP2(bytes, offset){
+    const stream = new Stream(bytes.slice(offset));
+    
+    //The EOFs shifted between all possible combinations.
+    var lookingfor = [
+                        [0x77, 0x24, 0x53, 0x85, 0x09],
+                        [0xee, 0x48, 0xa7, 0x0a, 0x12],
+                        [0xdc, 0x91, 0x4e, 0x14, 0x24],
+                        [0xb9, 0x22, 0x9c, 0x28, 0x48],
+                        [0x72, 0x45, 0x38, 0x50, 0x90],
+                        [0xbb, 0x92, 0x29, 0xc2, 0x84],
+                        [0x5d, 0xc9, 0x14, 0xe1, 0x42],
+                        [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
+                        [0x17, 0x72, 0x45, 0x38, 0x50]];
+    
+    for(let i = 0; i < 9; i++){
+
+        //Continue until an EOF.
+        stream.continueUntil(lookingfor[i]);
+        if(stream.getBytes(5).join("") == lookingfor[i].join(""))
+            break;
+
+        //Jump back to the start if invalid EOF.
+        stream.moveTo(0);
+    }
+    stream.moveForwardsBy(4);
+    
     return stream.carve();
 }
 
