@@ -736,7 +736,7 @@ export const FILE_SIGNATURES = {
                 10: 0x56,
                 11: 0x45
             },
-            extractor: null
+            extractor: extractWAV
         },
         {
             name: "OGG audio",
@@ -2639,6 +2639,22 @@ export function extractBMP(bytes, offset) {
     // Move to end of file (file size minus header and size field)
     stream.moveForwardsBy(bmpSize - 6);
 
+    return stream.carve();
+}
+
+/**
+ * WAV extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractWAV(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+    stream.moveTo(4);
+
+    // Move to file size.
+    stream.moveTo(stream.readInt(4, "le")-4);
     return stream.carve();
 }
 
