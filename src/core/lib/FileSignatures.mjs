@@ -2851,7 +2851,6 @@ export function extractBZIP2(bytes, offset) {
         stream.moveTo(0);
     }
     stream.moveForwardsBy(4);
-    console.log("test: ", stream.position.toString(16));
     return stream.carve();
 }
 
