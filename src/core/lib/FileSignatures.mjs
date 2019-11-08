@@ -40,7 +40,7 @@ export const FILE_SIGNATURES = {
                 4: [0x37, 0x39], // 7|9
                 5: 0x61  // a
             },
-            extractor: null
+            extractor: extractGIF
         },
         {
             name: "Portable Network Graphics image",
@@ -1444,7 +1444,7 @@ export const FILE_SIGNATURES = {
                 1: 0x5a,
                 2: 0x68
             },
-            extractor: null
+            extractor: extractBZIP2
         },
         {
             name: "7zip",
@@ -1485,7 +1485,7 @@ export const FILE_SIGNATURES = {
                 4: 0x5a,
                 5: 0x0
             },
-            extractor: null
+            extractor: extractXZ
         },
         {
             name: "Tarball",
@@ -2441,6 +2441,46 @@ export function extractJPEG(bytes, offset) {
 
 
 /**
+ * GIF extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractGIF(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    //Move to application extension block.
+    stream.continueUntil([0x21, 0xff]);
+
+    //Move to Graphic Control Extension for frame #1.
+    stream.continueUntil([0x21, 0xf9]);
+    while (stream.hasMore()) {
+
+        //Move to Image descriptor.
+        stream.continueUntil(0x2c);
+
+        //Move past Image descriptor to the image data.
+        stream.moveForwardsBy(11);
+
+        //Loop until next Graphic Control Extension.
+        while (stream.getBytes(2) !== [0x21, 0xf9]) {
+            stream.moveBackwardsBy(2);
+            stream.moveForwardsBy(stream.getBytes(1)[0]);
+            if (!stream.getBytes(1)[0])
+                break;
+            stream.moveBackwardsBy(1);
+        }
+        //When the end of the file is [0x00, 0x3b], end.
+        if (stream.getBytes(1)[0] === 0x3b)
+            break;
+        stream.moveBackwardsBy(1);
+    }
+    return stream.carve();
+}
+
+
+/**
  * Portable executable extractor.
  * Assumes that the offset refers to an MZ header.
  *
@@ -2778,6 +2818,42 @@ export function extractGZIP(bytes, offset) {
 
 
 /**
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractBZIP2(bytes, offset){
+    const stream = new Stream(bytes.slice(offset));
+    
+    //The EOFs shifted between all possible combinations.
+    var lookingfor = [
+                        [0x77, 0x24, 0x53, 0x85, 0x09],
+                        [0xee, 0x48, 0xa7, 0x0a, 0x12],
+                        [0xdc, 0x91, 0x4e, 0x14, 0x24],
+                        [0xb9, 0x22, 0x9c, 0x28, 0x48],
+                        [0x72, 0x45, 0x38, 0x50, 0x90],
+                        [0xbb, 0x92, 0x29, 0xc2, 0x84],
+                        [0x5d, 0xc9, 0x14, 0xe1, 0x42],
+                        [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
+                        [0x17, 0x72, 0x45, 0x38, 0x50]];
+    
+    for(let i = 0; i < 9; i++){
+
+        //Continue until an EOF.
+        stream.continueUntil(lookingfor[i]);
+        if(stream.getBytes(5).join("") == lookingfor[i].join(""))
+            break;
+
+        //Jump back to the start if invalid EOF.
+        stream.moveTo(0);
+    }
+    stream.moveForwardsBy(4);
+    
+    return stream.carve();
+}
+
+
+/**
  * Zlib extractor.
  *
  * @param {Uint8Array} bytes
@@ -2803,6 +2879,26 @@ export function extractZlib(bytes, offset) {
 
     // Skip over final checksum
     stream.moveForwardsBy(4);
+
+    return stream.carve();
+}
+
+
+/**
+ * XZ extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {string}
+ */
+export function extractXZ(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move forward to EOF marker
+    stream.continueUntil([0x00, 0x00, 0x00, 0x00, 0x04, 0x59, 0x5a]);
+
+    // Move over EOF marker
+    stream.moveForwardsBy(7);
 
     return stream.carve();
 }
