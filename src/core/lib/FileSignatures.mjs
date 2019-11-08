@@ -2455,10 +2455,11 @@ export function extractGIF(bytes, offset) {
 
     //Move to Graphic Control Extension for frame #1.
     stream.continueUntil([0x21, 0xf9]);
+    stream.moveForwardsBy(2);
     while (stream.hasMore()) {
 
         //Move to Image descriptor.
-        stream.continueUntil(0x2c);
+        stream.moveForwardsBy(stream.getBytes(1)[0]+1);
 
         //Move past Image descriptor to the image data.
         stream.moveForwardsBy(11);
@@ -2474,7 +2475,7 @@ export function extractGIF(bytes, offset) {
         //When the end of the file is [0x00, 0x3b], end.
         if (stream.getBytes(1)[0] === 0x3b)
             break;
-        stream.moveBackwardsBy(1);
+        stream.moveForwardsBy(1);
     }
     return stream.carve();
 }
@@ -2818,37 +2819,38 @@ export function extractGZIP(bytes, offset) {
 
 
 /**
+ * BZIP2 extractor.
+ *
  * @param {Uint8Array} bytes
  * @param {Number} offset
  * @returns {Uint8Array}
  */
-export function extractBZIP2(bytes, offset){
+export function extractBZIP2(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
-    
+
     //The EOFs shifted between all possible combinations.
-    var lookingfor = [
-                        [0x77, 0x24, 0x53, 0x85, 0x09],
-                        [0xee, 0x48, 0xa7, 0x0a, 0x12],
-                        [0xdc, 0x91, 0x4e, 0x14, 0x24],
-                        [0xb9, 0x22, 0x9c, 0x28, 0x48],
-                        [0x72, 0x45, 0x38, 0x50, 0x90],
-                        [0xbb, 0x92, 0x29, 0xc2, 0x84],
-                        [0x5d, 0xc9, 0x14, 0xe1, 0x42],
-                        [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
-                        [0x17, 0x72, 0x45, 0x38, 0x50]];
-    
-    for(let i = 0; i < 9; i++){
+    const lookingfor = [
+        [0x77, 0x24, 0x53, 0x85, 0x09],
+        [0xee, 0x48, 0xa7, 0x0a, 0x12],
+        [0xdc, 0x91, 0x4e, 0x14, 0x24],
+        [0xb9, 0x22, 0x9c, 0x28, 0x48],
+        [0x72, 0x45, 0x38, 0x50, 0x90],
+        [0xbb, 0x92, 0x29, 0xc2, 0x84],
+        [0x5d, 0xc9, 0x14, 0xe1, 0x42],
+        [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
+        [0x17, 0x72, 0x45, 0x38, 0x50]];
+
+    for (let i = 0; i < lookingfor.length; i++) {
 
         //Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
-        if(stream.getBytes(5).join("") == lookingfor[i].join(""))
+        if (stream.getBytes(5).join("") === lookingfor[i].join(""))
             break;
 
         //Jump back to the start if invalid EOF.
         stream.moveTo(0);
     }
     stream.moveForwardsBy(4);
-    
     return stream.carve();
 }
 
