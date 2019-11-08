@@ -1870,7 +1870,7 @@ export const FILE_SIGNATURES = {
                 2: 0x4c,
                 3: 0x69
             },
-            extractor: null
+            extractor: extractSQLITE
         },
         {
             name: "BitTorrent link",
@@ -1993,7 +1993,7 @@ export const FILE_SIGNATURES = {
                 6: 0x4c,
                 7: 0x65
             },
-            extractor: null
+            extractor: extractEVT
         },
         {
             name: "Windows Event Log",
@@ -2009,7 +2009,7 @@ export const FILE_SIGNATURES = {
                 5: 0x6c,
                 6: 0x65
             },
-            extractor: null
+            extractor: extractEVTX
         },
         {
             name: "Windows Pagedump",
@@ -2329,6 +2329,133 @@ export const FILE_SIGNATURES = {
                 17: 0x00,
                 18: 0x00,
                 19: 0x46
+            },
+            extractor: null
+        },
+        {
+            name: "Bash",
+            extension: "bash",
+            mime: "application/bash",
+            description: "",
+            signature: {
+                0: 0x23, // #!/bin/bash
+                1: 0x21,
+                2: 0x2f,
+                3: 0x62,
+                4: 0x69,
+                5: 0x6e,
+                6: 0x2f,
+                7: 0x62,
+                8: 0x61,
+                9: 0x73,
+                10: 0x68,
+            },
+            extractor: null
+        },
+        {
+            name: "Shell",
+            extension: "sh",
+            mime: "application/sh",
+            description: "",
+            signature: {
+                0: 0x23, // #!/bin/sh
+                1: 0x21,
+                2: 0x2f,
+                3: 0x62,
+                4: 0x69,
+                5: 0x6e,
+                6: 0x2f,
+                7: 0x73,
+                8: 0x68,
+            },
+            extractor: null
+        },
+        {
+            name: "Python",
+            extension: "py,pyc,pyd,pyo,pyw,pyz",
+            mime: "application/python",
+            description: "",
+            signature: {
+                0: 0x23, // #!/usr/bin/python(2|3)
+                1: 0x21,
+                2: 0x2f,
+                3: 0x75,
+                4: 0x73,
+                5: 0x72,
+                6: 0x2f,
+                7: 0x62,
+                8: 0x69,
+                9: 0x6e,
+                10: 0x2f,
+                11: 0x70,
+                12: 0x79,
+                13: 0x74,
+                14: 0x68,
+                15: 0x6f,
+                16: 0x6e,
+                17: [0x32, 0x33, 0xa, 0xd],
+            },
+            extractor: null
+        },
+        {
+            name: "Ruby",
+            extension: "rb",
+            mime: "application/ruby",
+            description: "",
+            signature: {
+                0: 0x23, // #!/usr/bin/ruby
+                1: 0x21,
+                2: 0x2f,
+                3: 0x75,
+                4: 0x73,
+                5: 0x72,
+                6: 0x2f,
+                7: 0x62,
+                8: 0x69,
+                9: 0x6e,
+                10: 0x2f,
+                11: 0x72,
+                12: 0x75,
+                13: 0x62,
+                14: 0x79,
+            },
+            extractor: null
+        },
+        {
+            name: "perl",
+            extension: "pl,pm,t,pod",
+            mime: "application/perl",
+            description: "",
+            signature: {
+                0: 0x23, // #!/usr/bin/perl
+                1: 0x21,
+                2: 0x2f,
+                3: 0x75,
+                4: 0x73,
+                5: 0x72,
+                6: 0x2f,
+                7: 0x62,
+                8: 0x69,
+                9: 0x6e,
+                10: 0x2f,
+                11: 0x70,
+                12: 0x65,
+                13: 0x72,
+                14: 0x6c,
+            },
+            extractor: null
+        },
+        {
+            name: "php",
+            extension: "php,phtml,php3,php4,php5,php7,phps,php-s,pht,phar",
+            mime: "application/php",
+            description: "",
+            signature: {
+                0: 0x3c, // <?php
+                1: 0x3f,
+                2: 0x70,
+                3: 0x68,
+                4: 0x70,
             },
             extractor: null
         }
@@ -2745,6 +2872,32 @@ export function extractRTF(bytes, offset) {
         }
     }
 
+    return stream.carve();
+}
+
+
+/**
+ * SQLITE extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractSQLITE(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    stream.moveTo(16);
+
+    // Extract the size of the page.
+    const pageSize = stream.readInt(2);
+
+    stream.moveTo(28);
+
+    // Extract the number of pages.
+    const numPages = stream.readInt(4);
+
+    // Move to the end of all the pages.
+    stream.moveTo(pageSize*numPages);
     return stream.carve();
 }
 
@@ -3175,4 +3328,55 @@ function readHuffmanCode(stream, table) {
     stream.moveBackwardsByBits(maxCodeLength - codeLength);
 
     return codeWithLength & 0xffff;
+}
+
+
+/**
+ * EVTX extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractEVTX(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+    stream.moveTo(0x28);
+
+    // Move to first ELFCHNK.
+    const total = stream.readInt(4, "le") - 0x2c;
+    stream.moveForwardsBy(total);
+    while (stream.hasMore()) {
+
+        // Loop through ELFCHNKs.
+        if (stream.getBytes(7).join("") === [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join(""))
+            stream.moveForwardsBy(0xfff9);
+        else
+            break;
+    }
+    return stream.carve();
+}
+
+
+/**
+ * EVT extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractEVT(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    stream.moveTo(0x14);
+
+    // Extract offset of EOF.
+    const eofoffset = stream.readInt(4, "le");
+    stream.moveTo(eofoffset);
+
+    // Extract the size of the EOF.
+    const eofsize = stream.readInt(4, "le");
+
+    // Move past EOF.
+    stream.moveForwardsBy(eofsize-4);
+    return stream.carve();
 }
