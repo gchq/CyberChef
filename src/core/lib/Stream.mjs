@@ -155,17 +155,64 @@ export default class Stream {
         }
 
         // val is an array
-        let found = false;
-        while (!found && this.position < this.length) {
-            while (++this.position < this.length && this.bytes[this.position] !== val[0]) {
-                continue;
-            }
+
+
+        /**
+         * Build's the skip forward table from the value to be searched.
+         *
+         * @param val
+         * @param len
+         */
+        function preprocess(val, len) {
+            const skiptable = new Array();
+            val.forEach(function(element, index) {
+                skiptable[element] = len - index;
+            });
+            return skiptable;
+        }
+
+        const length = val.length;
+
+        const initial = val[length-1];
+
+        this.position = length;
+
+        // Get the skip table.
+        const skiptable = preprocess(val, length);
+        let found = true;
+
+        while (this.position < this.length) {
+
+            // Until we hit the final element of val in the stream.
+            while ((this.position < this.length) && (this.bytes[this.position++] !== initial));
+
             found = true;
-            for (let i = 1; i < val.length; i++) {
-                if (this.position + i > this.length || this.bytes[this.position + i] !== val[i])
+
+            // Loop through the elements comparing them to val.
+            for (let x = length-1; x != -1; x--) {
+                if (this.bytes[(this.position-length) + x] !== val[x]) {
                     found = false;
+
+                    // If element is not equal to val's element then jump forward by the correct amount.
+                    this.position += skiptable[val[x]];
+                    break;
+                }
+            }
+            if (found) {
+                this.position = (this.position - length);
+                break;
             }
         }
+    }
+
+
+    /**
+     * Consume bytes if it matches the supplied value.
+     *
+     * @param val
+     */
+    consumeWhile(val) {
+        while ((this.position < this.length) && (this.bytes[this.position++] === val));
     }
 
     /**
