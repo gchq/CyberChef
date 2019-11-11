@@ -3349,7 +3349,7 @@ export function extractEVTX(bytes, offset) {
 
         // Loop through ELFCHNKs.
         if (stream.getBytes(7).join("") !== [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join(""))
-            break;    
+            break;
         stream.moveForwardsBy(0xfff9);
     }
     stream.consumeWhile(0x00);
