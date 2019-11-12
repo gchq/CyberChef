@@ -189,7 +189,7 @@ export default class Stream {
             found = true;
 
             // Loop through the elements comparing them to val.
-            for (let x = length-1; x !== -1; x--) {
+            for (let x = length-1; x+1; x--) {
                 if (this.bytes[(this.position-length) + x] !== val[x]) {
                     found = false;
 
