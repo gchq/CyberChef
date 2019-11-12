@@ -2583,10 +2583,10 @@ export function extractGIF(bytes, offset) {
     // Move to Graphic Control Extension for frame #1.
     stream.continueUntil([0x21, 0xf9]);
     stream.moveForwardsBy(2);
-    while (stream.hasMore()) {
 
+    while (stream.hasMore()) {
         // Move to Image descriptor.
-        stream.moveForwardsBy(stream.getBytes(1)[0]+1);
+        stream.moveForwardsBy(stream.readInt(1) + 1);
 
         // Move past Image descriptor to the image data.
         stream.moveForwardsBy(11);
@@ -2594,14 +2594,16 @@ export function extractGIF(bytes, offset) {
         // Loop until next Graphic Control Extension.
         while (stream.getBytes(2) !== [0x21, 0xf9]) {
             stream.moveBackwardsBy(2);
-            stream.moveForwardsBy(stream.getBytes(1)[0]);
-            if (!stream.getBytes(1)[0])
+            stream.moveForwardsBy(stream.readInt(1));
+            if (!stream.readInt(1))
                 break;
             stream.moveBackwardsBy(1);
         }
+
         // When the end of the file is [0x00, 0x3b], end.
-        if (stream.getBytes(1)[0] === 0x3b)
+        if (stream.readInt(1) === 0x3b)
             break;
+
         stream.moveForwardsBy(1);
     }
     return stream.carve();
@@ -2769,6 +2771,7 @@ export function extractBMP(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * WAV extractor.
  *
@@ -2783,7 +2786,7 @@ export function extractWAV(bytes, offset) {
     stream.moveTo(4);
 
     // Move to file size.
-    stream.moveTo(stream.readInt(4, "le")-4);
+    stream.moveTo(stream.readInt(4, "le") - 4);
 
     return stream.carve();
 }
@@ -2886,18 +2889,17 @@ export function extractRTF(bytes, offset) {
 export function extractSQLITE(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    stream.moveTo(16);
-
     // Extract the size of the page.
+    stream.moveTo(16);
     const pageSize = stream.readInt(2);
 
-    stream.moveTo(28);
-
     // Extract the number of pages.
+    stream.moveTo(28);
     const numPages = stream.readInt(4);
 
     // Move to the end of all the pages.
     stream.moveTo(pageSize*numPages);
+
     return stream.carve();
 }
 
@@ -3010,10 +3012,10 @@ export function extractBZIP2(bytes, offset) {
         [0xbb, 0x92, 0x29, 0xc2, 0x84],
         [0x5d, 0xc9, 0x14, 0xe1, 0x42],
         [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
-        [0x17, 0x72, 0x45, 0x38, 0x50]];
+        [0x17, 0x72, 0x45, 0x38, 0x50]
+    ];
 
     for (let i = 0; i < lookingfor.length; i++) {
-
         // Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
         if (stream.getBytes(5).join("") === lookingfor[i].join(""))
@@ -3340,13 +3342,13 @@ function readHuffmanCode(stream, table) {
  */
 export function extractEVTX(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
-    stream.moveTo(0x28);
 
     // Move to first ELFCHNK.
+    stream.moveTo(0x28);
     const total = stream.readInt(4, "le") - 0x2c;
     stream.moveForwardsBy(total);
-    while (stream.hasMore()) {
 
+    while (stream.hasMore()) {
         // Loop through ELFCHNKs.
         if (stream.getBytes(7).join("") !== [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join(""))
             break;
@@ -3367,16 +3369,15 @@ export function extractEVTX(bytes, offset) {
 export function extractEVT(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    stream.moveTo(0x14);
-
     // Extract offset of EOF.
-    const eofoffset = stream.readInt(4, "le");
-    stream.moveTo(eofoffset);
+    stream.moveTo(0x14);
+    const eofOffset = stream.readInt(4, "le");
+    stream.moveTo(eofOffset);
 
     // Extract the size of the EOF.
-    const eofsize = stream.readInt(4, "le");
+    const eofSize = stream.readInt(4, "le");
 
     // Move past EOF.
-    stream.moveForwardsBy(eofsize-4);
+    stream.moveForwardsBy(eofSize-4);
     return stream.carve();
 }
