@@ -158,14 +158,15 @@ export default class Stream {
 
 
         /**
-         * Build's the skip forward table from the value to be searched.
+         * Builds the skip forward table from the value to be searched.
          *
-         * @param val
-         * @param len
+         * @param {Uint8Array} val
+         * @param {Number} len
+         * @returns {Uint8Array}
          */
         function preprocess(val, len) {
             const skiptable = new Array();
-            val.forEach(function(element, index) {
+            val.forEach((element, index) => {
                 skiptable[element] = len - index;
             });
             return skiptable;
@@ -189,8 +190,8 @@ export default class Stream {
             found = true;
 
             // Loop through the elements comparing them to val.
-            for (let x = length-1; x+1; x--) {
-                if (this.bytes[(this.position-length) + x] !== val[x]) {
+            for (let x = length-1; x > -1; x--) {
+                if (this.bytes[this.position-length + x] !== val[x]) {
                     found = false;
 
                     // If element is not equal to val's element then jump forward by the correct amount.
@@ -199,7 +200,7 @@ export default class Stream {
                 }
             }
             if (found) {
-                this.position = (this.position - length);
+                this.position -= length;
                 break;
             }
         }
@@ -209,10 +210,11 @@ export default class Stream {
     /**
      * Consume bytes if it matches the supplied value.
      *
-     * @param val
+     * @param {Number} val
      */
     consumeWhile(val) {
-        while ((this.position < this.length) && (this.bytes[this.position++] === val));
+        while ((this.position < this.length) && (this.bytes[(this.position++)] === val))
+        this.position--;
     }
 
     /**
