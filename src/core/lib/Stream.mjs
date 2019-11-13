@@ -190,7 +190,7 @@ export default class Stream {
             found = true;
 
             // Loop through the elements comparing them to val.
-            for (let x = length-1; x > -1; x--) {
+            for (let x = length-1; x >= 0; x--) {
                 if (this.bytes[this.position-length + x] !== val[x]) {
                     found = false;
 
@@ -213,7 +213,12 @@ export default class Stream {
      * @param {Number} val
      */
     consumeWhile(val) {
-        while ((++this.position < this.length) && (this.bytes[(this.position)] === val));
+        while (this.position < this.length){
+            if (this.bytes[this.position] !== val){
+                break;
+            }
+            this.position++;
+        }
     }
 
     /**
