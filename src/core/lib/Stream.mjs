@@ -213,8 +213,8 @@ export default class Stream {
      * @param {Number} val
      */
     consumeWhile(val) {
-        while (this.position < this.length){
-            if (this.bytes[this.position] !== val){
+        while (this.position < this.length) {
+            if (this.bytes[this.position] !== val) {
                 break;
             }
             this.position++;
