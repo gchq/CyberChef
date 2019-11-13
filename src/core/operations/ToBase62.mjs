@@ -44,12 +44,15 @@ class ToBase62 extends Operation {
         input = new Uint8Array(input);
         if (input.length < 1) return "";
 
-        const ALPHABET = Utils.expandAlphRange(args[0]).join("");
-        const BN = BigNumber.clone({ ALPHABET });
+        const alphabet = Utils.expandAlphRange(args[0]).join("");
+        const BN62 = BigNumber.clone({ ALPHABET: alphabet });
 
         input = toHexFast(input).toUpperCase();
 
-        const number = new BN(input, 16);
+        // Read number in as hex using normal alphabet
+        const normalized = new BigNumber(input, 16);
+        // Copy to BigNumber clone that uses the specified Base62 alphabet
+        const number = new BN62(normalized);
 
         return number.toString(62);
     }
