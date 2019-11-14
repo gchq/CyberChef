@@ -59,7 +59,7 @@ class FromMorseCode extends Operation {
         const letterDelim = Utils.charRep(args[0]);
         const wordDelim = Utils.charRep(args[1]);
 
-        input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); //hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
+        input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); // hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
         input = input.replace(/\.|·|dot/ig, "<dot>");
 
         let words = input.split(wordDelim);

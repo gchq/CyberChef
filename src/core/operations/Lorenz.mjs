@@ -391,7 +391,7 @@ class Lorenz extends Operation {
                 // Chi 2 one back lim - The active character of Chi 2 (2nd Chi wheel) in the previous position
                 lim = parseInt(chiSettings[2][x2bptr-1], 10);
                 if (kt) {
-                    //p5 back 2
+                    // p5 back 2
                     if (lim===p5[2]) {
                         lim = 0;
                     } else {
@@ -413,7 +413,7 @@ class Lorenz extends Operation {
                 lim = 1;
                 if (x2b1lug===s1b1lug) lim=0;
                 if (kt) {
-                     //p5 back 2
+                     // p5 back 2
                     if (lim===p5[2]) {
                         lim=0;
                     } else {

@@ -29,20 +29,20 @@ class InputWaiter {
 
         // Define keys that don't change the input so we don't have to autobake when they are pressed
         this.badKeys = [
-            16, //Shift
-            17, //Ctrl
-            18, //Alt
-            19, //Pause
-            20, //Caps
-            27, //Esc
-            33, 34, 35, 36, //PgUp, PgDn, End, Home
-            37, 38, 39, 40, //Directional
-            44, //PrntScrn
-            91, 92, //Win
-            93, //Context
-            112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, //F1-12
-            144, //Num
-            145, //Scroll
+            16, // Shift
+            17, // Ctrl
+            18, // Alt
+            19, // Pause
+            20, // Caps
+            27, // Esc
+            33, 34, 35, 36, // PgUp, PgDn, End, Home
+            37, 38, 39, 40, // Directional
+            44, // PrntScrn
+            91, 92, // Win
+            93, // Context
+            112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, // F1-12
+            144, // Num
+            145, // Scroll
         ];
 
         this.inputWorker = null;
