@@ -446,7 +446,6 @@ class HighlighterWaiter {
         }
 
         const cssClass = "hl1";
-        // if (colour) cssClass += "-"+colour;
 
         // Remove HTML tags
         text = text
