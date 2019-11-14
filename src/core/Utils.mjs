@@ -758,15 +758,15 @@ class Utils {
             "%7E": "~",
             "%21": "!",
             "%24": "$",
-            //"%26": "&",
+            // "%26": "&",
             "%27": "'",
             "%28": "(",
             "%29": ")",
             "%2A": "*",
-            //"%2B": "+",
+            // "%2B": "+",
             "%2C": ",",
             "%3B": ";",
-            //"%3D": "=",
+            // "%3D": "=",
             "%3A": ":",
             "%40": "@",
             "%2F": "/",
@@ -1335,14 +1335,14 @@ export function debounce(func, wait, id, scope, args) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 if (!String.prototype.padStart) {
     String.prototype.padStart = function padStart(targetLength, padString) {
-        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        targetLength = targetLength>>0; // floor if number or convert non-number to 0;
         padString = String((typeof padString !== "undefined" ? padString : " "));
         if (this.length > targetLength) {
             return String(this);
         } else {
             targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); // append to original to ensure we are longer than needed
             }
             return padString.slice(0, targetLength) + String(this);
         }
@@ -1354,14 +1354,14 @@ if (!String.prototype.padStart) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
 if (!String.prototype.padEnd) {
     String.prototype.padEnd = function padEnd(targetLength, padString) {
-        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        targetLength = targetLength>>0; // floor if number or convert non-number to 0;
         padString = String((typeof padString !== "undefined" ? padString : " "));
         if (this.length > targetLength) {
             return String(this);
         } else {
             targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); // append to original to ensure we are longer than needed
             }
             return String(this) + padString.slice(0, targetLength);
         }

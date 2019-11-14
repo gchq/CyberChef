@@ -47,6 +47,7 @@
         "block-spacing": "error",
         "array-bracket-spacing": "error",
         "comma-spacing": "error",
+	"spaced-comment": ["error", "always", { "exceptions": ["/"] } ],
         "comma-style": "error",
         "computed-property-spacing": "error",
         "no-trailing-spaces": "warn",

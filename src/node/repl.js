@@ -11,7 +11,7 @@ const chef = require("./cjs.js");
 const repl = require("repl");
 
 
-/*eslint no-console: ["off"] */
+/* eslint no-console: ["off"] */
 
 console.log(`
    ______      __              ________         ____

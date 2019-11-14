@@ -1099,7 +1099,7 @@ TestRegister.addTests([
             }
         ]
     }
-    /*{ // This takes a LONG time to run (over a minute usually).
+    /* { // This takes a LONG time to run (over a minute usually).
         name: "Scrypt: RFC test vector 4",
         input: "pleaseletmein",
         expectedOutput: "2101cb9b6a511aaeaddbbe09cf70f881ec568d574a2ffd4dabe5ee9820adaa478e56fd8f4ba5d09ffa1c6d927c40f4c337304049e8a952fbcbf45c6fa77a41a4",
@@ -1115,5 +1115,5 @@ TestRegister.addTests([
                 ]
             }
         ]
-    },*/
+    }, */
 ]);
