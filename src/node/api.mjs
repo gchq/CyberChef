@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: ["off"] */
+/* eslint no-console: ["off"] */
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";

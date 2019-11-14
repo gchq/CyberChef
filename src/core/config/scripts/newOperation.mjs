@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: ["off"] */
+/* eslint no-console: ["off"] */
 
 import prompt from "prompt";
 import colors from "colors";
@@ -208,7 +208,7 @@ ${result.highlight ? `
 export default ${moduleName};
 `;
 
-    //console.log(template);
+    // console.log(template);
 
     const filename = path.join(dir, `./${moduleName}.mjs`);
     if (fs.existsSync(filename)) {

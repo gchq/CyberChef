@@ -125,7 +125,7 @@ TestRegister.addApiTests([
     <a href="https://github.com">Click here</a>
     <script src="script.js"></script>
     </body>
-</html>`.replace(/\n|\s{4}/g, ""); //remove newlines, tabs
+</html>`.replace(/\n|\s{4}/g, ""); // remove newlines, tabs
 
         const dish = new Dish(html, Dish.HTML);
         dish.get(4);
