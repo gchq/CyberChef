@@ -2745,7 +2745,7 @@ export function extractMACHO(bytes, offset) {
      * @returns {bool}
      */
     function isMagic64(magic) {
-        return magic === MHCIGAM64 || magic === MHCIGAM64;
+        return magic === MHCIGAM64 || magic === MHMAGIC64;
     }
 
 
@@ -2821,16 +2821,16 @@ export function extractMACHO(bytes, offset) {
 
 
     const MHCIGAM64 = "207250237254";
+    const MHMAGIC64 = "254237250207";
     const MHCIGAM = "206250237254";
     const LCSEGEMENT64 = 0x19;
     const LCSEGEMENT = 0x1;
+
     const stream = new Stream(bytes.slice(offset));
     const magic = stream.getBytes(4).join("");
-    const is64 = isMagic64(magic);
-    const isSwap = shouldSwapBytes(magic) ? "le" : "be";
 
     // Move to the end of the final segment.
-    stream.moveTo(dumpMachHeader(stream, is64, isSwap));
+    stream.moveTo(dumpMachHeader(stream, isMagic64(magic), shouldSwapBytes(magic) ? "le" : "be"));
     return stream.carve();
 }
 
