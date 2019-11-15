@@ -1297,7 +1297,12 @@ export const FILE_SIGNATURES = {
                     0: 0xce,
                     1: 0xfa,
                     2: 0xed,
-                    3: 0xfe
+                    3: 0xfe,
+                    4: 0x07,
+                    5: 0x00,
+                    6: 0x00,
+                    7: 0x00,
+                    8: 0x03
                 }
             ],
             extractor: extractMACHO
@@ -2850,8 +2855,12 @@ export function extractTAR(bytes, offset) {
 
         // Move to ustar identifier.
         stream.moveForwardsBy(0x101);
-        if (stream.getBytes(5).join("") !== [0x75, 0x73, 0x74, 0x61, 0x72].join(""))
+        if (stream.getBytes(5).join("") !== [0x75, 0x73, 0x74, 0x61, 0x72].join("")) {
+
+            // This is needed since if it were not here it relies on there being at least 0x106 padding of 0s at the end of the TAR
+            stream.moveBackwardsBy(0x101);
             break;
+        }
 
         // Move back to file size field.
         stream.moveBackwardsBy(0x8a);
