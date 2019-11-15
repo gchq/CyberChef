@@ -1302,7 +1302,7 @@ export const FILE_SIGNATURES = {
                     5: 0x00,
                     6: 0x00,
                     7: 0x00,
-                    8: 0x03
+                    8: [0x01, 0x02, 0x03]
                 }
             ],
             extractor: extractMACHO
