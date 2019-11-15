@@ -2737,6 +2737,11 @@ export function extractZIP(bytes, offset) {
  */
 export function extractMACHO(bytes, offset) {
 
+    // Magic bytes.
+    const MHCIGAM64 = "207250237254";
+    const MHMAGIC64 = "254237250207";
+    const MHCIGAM = "206250237254";
+
 
     /**
      * Checks to see if the file is 64-bit.
@@ -2771,6 +2776,9 @@ export function extractMACHO(bytes, offset) {
      */
     function dumpSegmentCommands(stream, offset, isSwap, ncmds) {
         let total = 0;
+        const LCSEGEMENT64 = 0x19;
+        const LCSEGEMENT = 0x1;
+
         for (let i = 0; i < ncmds; i++) {
 
             // Move to start of segment.
@@ -2819,12 +2827,6 @@ export function extractMACHO(bytes, offset) {
         return dumpSegmentCommands(stream, loadCommandsOffset, isSwap, ncmds);
     }
 
-
-    const MHCIGAM64 = "207250237254";
-    const MHMAGIC64 = "254237250207";
-    const MHCIGAM = "206250237254";
-    const LCSEGEMENT64 = 0x19;
-    const LCSEGEMENT = 0x1;
 
     const stream = new Stream(bytes.slice(offset));
     const magic = stream.getBytes(4).join("");
