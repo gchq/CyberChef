@@ -54,31 +54,31 @@ class ToCaseInsensitiveRegex extends Operation {
 
         // Example: [a-z] -> [a-zA-Z]
         input = input.replace(/[a-z]-[a-z]/g, m => `${m}${m[0].toUpperCase()}-${m[2].toUpperCase()}`);
-        
+
         // Example: [a-z] -> [a-zA-Z]
         input = input.replace(/[A-Z]-[A-Z]/g, m => `${m}${m[0].toLowerCase()}-${m[2].toLowerCase()}`);
-        
+
         // Example: [H-d] -> [A-DH-dh-z]
         input = input.replace(/[A-Z]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}${m[0].toLowerCase()}-z`);
-        
+
         // Example: [!-D] -> [!-Da-d]
         input = input.replace(/[ -@]-[A-Z]/g, m => `${m}a-${m[2].toLowerCase()}`);
-        
+
         // Example: [%-^] -> [%-^a-z]
         input = input.replace(/[ -@]-[[-`]/g, m => `${m}a-z`);
-        
+
         // Example: [K-`] -> [K-`k-z]
         input = input.replace(/[A-Z]-[[-`]/g, m => `${m}${m[0].toLowerCase()}-z`);
-        
+
         // Example: [[-}] -> [[-}A-Z]
         input = input.replace(/[[-`]-[{-~]/g, m => `${m}A-Z`);
-        
+
         // Example: [b-}] -> [b-}B-Z]
         input = input.replace(/[a-z]-[{-~]/g, m => `${m}${m[0].toUpperCase()}-Z`);
-        
+
         // Example: [<-j] -> [<-z]
         input = input.replace(/[ -@]-[a-z]/g, m => `${m[0]}-z`);
-        
+
         // Example: [^-j] -> [A-J^-j]
         input = input.replace(/[[-`]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}`);
         return input;
