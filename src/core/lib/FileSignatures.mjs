@@ -2857,7 +2857,7 @@ export function extractTAR(bytes, offset) {
         stream.moveForwardsBy(0x101);
         if (stream.getBytes(5).join("") !== [0x75, 0x73, 0x74, 0x61, 0x72].join("")) {
 
-            // Needed since if it were not here it relies on there being at least 0x106 padding of 0s at the end of the TAR.
+            // Needed since we cannot rely on there being at least 0x106 padding of 0s at the end of the TAR(even though there usually is).
             stream.moveBackwardsBy(0x106);
             break;
         }
