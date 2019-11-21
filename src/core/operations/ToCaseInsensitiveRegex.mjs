@@ -51,36 +51,35 @@ class ToCaseInsensitiveRegex extends Operation {
         }
 
         // Example: [test] -> [[tT][eE][sS][tT]]
-        input = preProcess(input);
+        return preProcess(input)
 
         // Example: [A-Z] -> [A-Za-z]
-        input = input.replace(/[A-Z]-[A-Z]/ig, m => `${m[0].toUpperCase()}-${m[2].toUpperCase()}${m[0].toLowerCase()}-${m[2].toLowerCase()}`);
+        .replace(/[A-Z]-[A-Z]/ig, m => `${m[0].toUpperCase()}-${m[2].toUpperCase()}${m[0].toLowerCase()}-${m[2].toLowerCase()}`)
 
         // Example: [H-d] -> [A-DH-dh-z]
-        input = input.replace(/[A-Z]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}${m[0].toLowerCase()}-z`);
+        .replace(/[A-Z]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}${m[0].toLowerCase()}-z`)
 
         // Example: [!-D] -> [!-Da-d]
-        input = input.replace(/\\?[ -@]-[A-Z]/g, m => `${m}a-${m[2].toLowerCase()}`);
+        .replace(/\\?[ -@]-[A-Z]/g, m => `${m}a-${m[2].toLowerCase()}`)
 
         // Example: [%-^] -> [%-^a-z]
-        input = input.replace(/\\?[ -@]-\\?[[-`]/g, m => `${m}a-z`);
+        .replace(/\\?[ -@]-\\?[[-`]/g, m => `${m}a-z`)
 
         // Example: [K-`] -> [K-`k-z]
-        input = input.replace(/[A-Z]-\\?[[-`]/g, m => `${m}${m[0].toLowerCase()}-z`);
+        .replace(/[A-Z]-\\?[[-`]/g, m => `${m}${m[0].toLowerCase()}-z`)
 
         // Example: [[-}] -> [[-}A-Z]
-        input = input.replace(/\\?[[-`]-\\?[{-~]/g, m => `${m}A-Z`);
+        .replace(/\\?[[-`]-\\?[{-~]/g, m => `${m}A-Z`)
 
         // Example: [b-}] -> [b-}B-Z]
-        input = input.replace(/[a-z]-\\?[{-~]/g, m => `${m}${m[0].toUpperCase()}-Z`);
+        .replace(/[a-z]-\\?[{-~]/g, m => `${m}${m[0].toUpperCase()}-Z`)
 
         // Example: [<-j] -> [<-z]
-        input = input.replace(/\\?[ -@]-[a-z]/g, m => `${m[0]}-z`);
+        .replace(/\\?[ -@]-[a-z]/g, m => `${m[0]}-z`)
 
         // Example: [^-j] -> [A-J^-j]
-        input = input.replace(/\\?[[-`]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}`);
+        .replace(/\\?[[-`]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}`);
 
-        return input;
     }
 }
 
