@@ -53,32 +53,32 @@ class ToCaseInsensitiveRegex extends Operation {
         // Example: [test] -> [[tT][eE][sS][tT]]
         return preProcess(input)
 
-        // Example: [A-Z] -> [A-Za-z]
-        .replace(/[A-Z]-[A-Z]/ig, m => `${m[0].toUpperCase()}-${m[2].toUpperCase()}${m[0].toLowerCase()}-${m[2].toLowerCase()}`)
+            // Example: [A-Z] -> [A-Za-z]
+            .replace(/[A-Z]-[A-Z]/ig, m => `${m[0].toUpperCase()}-${m[2].toUpperCase()}${m[0].toLowerCase()}-${m[2].toLowerCase()}`)
 
-        // Example: [H-d] -> [A-DH-dh-z]
-        .replace(/[A-Z]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}${m[0].toLowerCase()}-z`)
+            // Example: [H-d] -> [A-DH-dh-z]
+            .replace(/[A-Z]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}${m[0].toLowerCase()}-z`)
 
-        // Example: [!-D] -> [!-Da-d]
-        .replace(/\\?[ -@]-[A-Z]/g, m => `${m}a-${m[2].toLowerCase()}`)
+            // Example: [!-D] -> [!-Da-d]
+            .replace(/\\?[ -@]-[A-Z]/g, m => `${m}a-${m[2].toLowerCase()}`)
 
-        // Example: [%-^] -> [%-^a-z]
-        .replace(/\\?[ -@]-\\?[[-`]/g, m => `${m}a-z`)
+            // Example: [%-^] -> [%-^a-z]
+            .replace(/\\?[ -@]-\\?[[-`]/g, m => `${m}a-z`)
 
-        // Example: [K-`] -> [K-`k-z]
-        .replace(/[A-Z]-\\?[[-`]/g, m => `${m}${m[0].toLowerCase()}-z`)
+            // Example: [K-`] -> [K-`k-z]
+            .replace(/[A-Z]-\\?[[-`]/g, m => `${m}${m[0].toLowerCase()}-z`)
 
-        // Example: [[-}] -> [[-}A-Z]
-        .replace(/\\?[[-`]-\\?[{-~]/g, m => `${m}A-Z`)
+            // Example: [[-}] -> [[-}A-Z]
+            .replace(/\\?[[-`]-\\?[{-~]/g, m => `${m}A-Z`)
 
-        // Example: [b-}] -> [b-}B-Z]
-        .replace(/[a-z]-\\?[{-~]/g, m => `${m}${m[0].toUpperCase()}-Z`)
+            // Example: [b-}] -> [b-}B-Z]
+            .replace(/[a-z]-\\?[{-~]/g, m => `${m}${m[0].toUpperCase()}-Z`)
 
-        // Example: [<-j] -> [<-z]
-        .replace(/\\?[ -@]-[a-z]/g, m => `${m[0]}-z`)
+            // Example: [<-j] -> [<-z]
+            .replace(/\\?[ -@]-[a-z]/g, m => `${m[0]}-z`)
 
-        // Example: [^-j] -> [A-J^-j]
-        .replace(/\\?[[-`]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}`);
+            // Example: [^-j] -> [A-J^-j]
+            .replace(/\\?[[-`]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}`);
 
     }
 }
