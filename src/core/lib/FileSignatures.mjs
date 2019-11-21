@@ -2994,6 +2994,8 @@ export function extractOLE2(bytes, offset) {
 
         // Attempt to determine what directory entry it is.
         for (const element of entries) {
+
+            // If the byte pattern matches.
             if (stream.getBytes(element[1]).join("") === element[0].join("")) {
                 stream.moveBackwardsBy(element[1]);
                 found = true;
