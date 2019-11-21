@@ -32,6 +32,7 @@ class ToCaseInsensitiveRegex extends Operation {
      * @returns {string}
      */
     run(input, args) {
+
         /**
          * Simulates look behind behaviour since javascript doesn't support it.
          *
