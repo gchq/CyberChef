@@ -26,7 +26,7 @@ module.exports = function (grunt) {
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
-            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web",
+            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
             "copy:standalone", "zip:standalone", "clean:standalone", "chmod"
         ]);
 
@@ -58,6 +58,19 @@ module.exports = function (grunt) {
     grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
 
+    grunt.registerTask("findModules",
+        "Finds all generated modules and updates the entry point list for Webpack",
+        function(arg1, arg2) {
+            const moduleEntryPoints = listEntryModules();
+
+            grunt.log.writeln(`Found ${Object.keys(moduleEntryPoints).length} modules.`);
+
+            grunt.config.set("webpack.web.entry",
+                Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints));
+        });
+
 
     // Load tasks provided by each plugin
     grunt.loadNpmTasks("grunt-eslint");
@@ -83,7 +96,53 @@ module.exports = function (grunt) {
             PKG_VERSION: JSON.stringify(pkg.version),
         },
         moduleEntryPoints = listEntryModules(),
-        nodeConsumerTestPath = "~/tmp-cyberchef";
+        nodeConsumerTestPath = "~/tmp-cyberchef",
+        /**
+         * Configuration for Webpack production build. Defined as a function so that it
+         * can be recalculated when new modules are generated.
+         */
+        webpackProdConf = () => {
+            return {
+                mode: "production",
+                target: "web",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
+                output: {
+                    path: __dirname + "/build/prod",
+                    filename: chunkData => {
+                        return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
+                    },
+                    globalObject: "this"
+                },
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
+                    }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        chunks: ["main"],
+                        compileTime: compileTime,
+                        version: pkg.version,
+                        minify: {
+                            removeComments: true,
+                            collapseWhitespace: true,
+                            minifyJS: true,
+                            minifyCSS: true
+                        }
+                    }),
+                    new BundleAnalyzerPlugin({
+                        analyzerMode: "static",
+                        reportFilename: "BundleAnalyzerReport.html",
+                        openAnalyzer: false
+                    }),
+                ]
+            };
+        };
 
 
     /**
@@ -154,48 +213,7 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
-            web: () => {
-                return {
-                    mode: "production",
-                    target: "web",
-                    entry: Object.assign({
-                        main: "./src/web/index.js"
-                    }, moduleEntryPoints),
-                    output: {
-                        path: __dirname + "/build/prod",
-                        filename: chunkData => {
-                            return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
-                        },
-                        globalObject: "this"
-                    },
-                    resolve: {
-                        alias: {
-                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
-                        }
-                    },
-                    plugins: [
-                        new webpack.DefinePlugin(BUILD_CONSTANTS),
-                        new HtmlWebpackPlugin({
-                            filename: "index.html",
-                            template: "./src/web/html/index.html",
-                            chunks: ["main"],
-                            compileTime: compileTime,
-                            version: pkg.version,
-                            minify: {
-                                removeComments: true,
-                                collapseWhitespace: true,
-                                minifyJS: true,
-                                minifyCSS: true
-                            }
-                        }),
-                        new BundleAnalyzerPlugin({
-                            analyzerMode: "static",
-                            reportFilename: "BundleAnalyzerReport.html",
-                            openAnalyzer: false
-                        }),
-                    ]
-                };
-            },
+            web: webpackProdConf(),
         },
         "webpack-dev-server": {
             options: {
@@ -345,7 +363,8 @@ module.exports = function (grunt) {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml"
+                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
+                sync: true
             },
             generateConfig: {
                 command: chainCommands([
@@ -354,7 +373,8 @@ module.exports = function (grunt) {
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
-                ])
+                ]),
+                sync: true
             },
             generateNodeIndex: {
                 command: chainCommands([
@@ -362,6 +382,7 @@ module.exports = function (grunt) {
                     "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
                 ]),
+                sync: true
             },
             opTests: {
                 command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
@@ -381,6 +402,7 @@ module.exports = function (grunt) {
                     `cd ${nodeConsumerTestPath}`,
                     "npm link cyberchef"
                 ]),
+                sync: true
             },
             teardownNodeConsumers: {
                 command: chainCommands([
