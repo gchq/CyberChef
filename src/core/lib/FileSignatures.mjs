@@ -3002,6 +3002,8 @@ export function extractOLE2(bytes, offset) {
 
                 // Move forwards by the size of the comp obj.
                 if (element[2] === "Comp Obj") {
+
+                    // The size of the Comp Obj entry - 128. Since we add 128 later.
                     total += (128*6);
                     stream.moveTo(total);
                 } else if (element[2] === "Entry") {
