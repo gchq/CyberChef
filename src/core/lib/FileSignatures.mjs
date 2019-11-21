@@ -3016,6 +3016,8 @@ export function extractOLE2(bytes, offset) {
 
         // If we have found a valid entry, move forwards by 128.
         if (found) {
+
+            // Every entry is at least 128 in size, some are bigger which is dealt with by the above if statement.
             total += 128;
             stream.moveForwardsBy(128);
         }
