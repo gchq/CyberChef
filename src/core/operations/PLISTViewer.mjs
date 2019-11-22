@@ -46,112 +46,66 @@ class PLISTViewer extends Operation {
      */
     run(input, args) {
 
-        const reserved = [["<string>","</string>",8],
-                    ["<real>","</real>",6],
-                    ["<integer>","</integer>",9],
-                    ["<date>","</date>", 6],
-                    ["<data>","</data>",6],
-                    ["<array>","</array>",7],
-                    ["<dict>","</dict>",6],
-                    ["<key>","</key>",5],
-                    ["<false/>",false,8],
-                    ["<true/>",true,7]];
-        
-        function the_viewer(input, dictionary_flag){
-            var new_dict = new Array();
-            var result = new Array();
-            var new_key = null;
-            while(dictionary_flag ? input.slice(0,7) != "</dict>" : input.slice(0,8) != "</array>"){
-                reserved.forEach( function (elem, index){
-                    var element = elem[0];
-                    var endelement = elem[1];
-                    var length = elem[2];
-                    let temp = input.slice(0,length);
-                    if(temp == element){
-                        input = input.slice(length);
-                        if(temp == "<dict>"){
-                            var returned = the_viewer(input, true);
-                            input = returned[1];
-                            if(new_key)
-                                new_dict[new_key] = returned[0];
-                            else
-                                new_dict["plist"] = returned[0];
-                            new_key = null;
-                        }else if(temp == "<array>"){
-                            var returned = the_viewer(input, false);
-                            if(dictionary_flag)
-                                new_dict[new_key] = returned[0];
-                            else
-                                result.push(returned[0]);
-                            input = returned[1];
-                            new_key = null;
-                        }else if(temp == "<key>"){
-                            var end = input.indexOf(endelement);
-                            new_key = input.slice(0, end);
-                            input = input.slice(end+length+1);
-                        }else if(temp == "<true/>" || temp == "<false/>"){
-                            new_dict[new_key] = endelement;
-                            new_key = null;
-                        }else{
-                            var end = input.indexOf(endelement);
-                            var toadd = input.slice(0, end);
-                            if(temp == "<integer>")
-                                toadd = parseInt(toadd);
-                            else if(temp == "<real>")
-                                toadd = parseFloat(toadd);
-                            if(dictionary_flag){
-                                new_dict[new_key] = toadd;
-                                new_key = null;
-                            }else{
-                                result.push(toadd);
-                            }
-                            input = input.slice(end+length+1);
-                        }
-                    }
-                });
-            }
-            if(dictionary_flag){
-                input = input.slice(7);
-                return [new_dict, input];
-            }else{
-                input = input.slice(8);
-                return [result, input];
-            }
-        }
-        
+        // Regexes are designed to transform the xml format into a reasonably more readable string format.
+        input = input.slice(input.indexOf("<plist"))
+            .replace(/<plist.+>/g, "plist => ")
+            .replace(/<dict>/g, "{")
+            .replace(/<\/dict>/g, "}")
+            .replace(/<array>/g, "[")
+            .replace(/<\/array>/g, "]")
+            .replace(/<key>.+<\/key>/g, m => `${m.slice(5, m.indexOf(/<\/key>/g)-5)}\t=> `)
+            .replace(/<real>.+<\/real>/g, m => `${m.slice(6, m.indexOf(/<\/real>/g)-6)}\n`)
+            .replace(/<string>.+<\/string>/g, m => `${m.slice(8, m.indexOf(/<\/string>/g)-8)}\n`)
+            .replace(/<integer>.+<\/integer>/g, m => `${m.slice(9, m.indexOf(/<\/integer>/g)-9)}\n`)
+            .replace(/<false\/>/g, m => "false")
+            .replace(/<true\/>/g, m => "true")
+            .replace(/<\/plist>/g, "/plist")
+            .replace(/<date>.+<\/date>/g, m => `${m.slice(6, m.indexOf(/<\/integer>/g)-6)}`)
+            .replace(/<data>(\s|.)+?<\/data>/g, m => `${m.slice(6, m.indexOf(/<\/data>/g)-6)}`)
+            .replace(/[ \t\r\f\v]/g, "");
+
         let result = "";
-        function print_it(input, depth) {
-            Object.keys(input).forEach((key, index) => {
-                if(typeof(input[key]) == "object") {
-                    result += (("\t".repeat(depth)) + key + ": {\n");
-                    print_it(input[key], depth+1);
-                    result += (("\t".repeat(depth)) + "}\n");
+
+        /**
+         * Formats the input after the regex has replaced all of the relevant parts.
+         *
+         * @param {array} input
+         * @param {number} depthCount
+         */
+        function printIt(input, depthCount) {
+            if (!(input.length))
+                return;
+
+            // If the current position points at a larger dynamic structure.
+            if (input[0].indexOf("=>") !== -1) {
+
+                // If the LHS also points at a larger structure (nested plists in a dictionary).
+                if (input[1].indexOf("=>") !== -1) {
+                    result += ("\t".repeat(depthCount)) + input[0].slice(0, -2) + " => " + input[1].slice(0, -2) + " =>\n";
                 } else {
-                    result += (("\t".repeat(depth)) + key + " : " + input[key] + "\n");
+                    result += ("\t".repeat(depthCount)) + input[0].slice(0, -2) + " => " + input[1] + "\n";
                 }
-            });
+
+                // Controls the tab depth for how many opening braces there have been.
+                if (input[1] === "{" || input[1] === "[") {
+                    depthCount += 1;
+                }
+                input = input.slice(1);
+            } else {
+                // Controls the tab depth for how many closing braces there have been.
+                if (input[0] === "}" || input[0] === "]")
+                    depthCount--;
+
+                // Has to be here since the formatting breaks otherwise.
+                result += ("\t".repeat(depthCount)) + input[0] + "\n";
+                if (input[0] === "{" || input[0] === "[")
+                    depthCount++;
+            }
+            printIt(input.slice(1), depthCount);
         }
 
-        while (input.indexOf("<plist") !== -1){
-            input = input.replace(/<plist.+>/, "<dict>");
-        }
-        while (input.indexOf("</plist>") !== -1){
-            input = input.replace(/<\/plist>/, "</dict>");
-        }
-        console.log(input);
-        while(input.indexOf("\n") !== -1)
-            input = input.replace("\n", "");
-        while(input.indexOf("\t") !== -1)
-            input = input.replace("\t", "");
-        while(input.indexOf(" ") !== -1)
-            input = input.replace(" ", "");
-        console.log(input);
-        input = input.slice(input.indexOf("<dict>")+6);
-        //return input
-        var other = the_viewer(input, 1);
-        print_it(other[0],1);
-        result = "{\n" + result;
-        result += "}";
+        input = input.split("\n").filter(e => e !== "");
+        printIt(input, 0);
         return result;
     }
 }
