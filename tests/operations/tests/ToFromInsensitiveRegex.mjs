@@ -184,5 +184,5 @@ TestRegister.addTests([
                 args: [],
             },
         ],
-    },
+    }
 ]);
