@@ -51,11 +51,17 @@ class ToCaseInsensitiveRegex extends Operation {
             return result;
         }
 
+        try {
+            RegExp(input);
+        } catch (error) {
+            return "Invalid Regular Expression (Please note this version of node does not support look behinds).";
+        }
+
         // Example: [test] -> [[tT][eE][sS][tT]]
         return preProcess(input)
 
             // Example: [A-Z] -> [A-Za-z]
-            .replace(/[A-Z]-[A-Z]/ig, m => `${m[0].toUpperCase()}-${m[2].toUpperCase()}${m[0].toLowerCase()}-${m[2].toLowerCase()}`)
+            .replace(/([A-Z]-[A-Z]|[a-z]-[a-z])/g, m => `${m[0].toUpperCase()}-${m[2].toUpperCase()}${m[0].toLowerCase()}-${m[2].toLowerCase()}`)
 
             // Example: [H-d] -> [A-DH-dh-z]
             .replace(/[A-Z]-[a-z]/g, m => `A-${m[2].toUpperCase()}${m}${m[0].toLowerCase()}-z`)
