@@ -302,6 +302,13 @@ class HighlighterWaiter {
         }
     }
 
+    /**
+     * Resets mouse variable to up position.
+     * Used on tab change.
+     */
+    mouseUp(){
+        this.mouseButtonDown = false;
+    }
 
     /**
      * Given start and end offsets, writes the HTML for the selection info element with the correct
@@ -376,9 +383,10 @@ class HighlighterWaiter {
      * @param {string} direction
      */
     displayHighlights(pos, direction) {
-        if (!pos) return;
+        if (!pos || pos.length === 0) return;
 
-        if (this.manager.tabs.getActiveInputTab() !== this.manager.tabs.getActiveOutputTab()) return;
+        const inputNum = this.manager.tabs.getActiveInputTab();
+        if (inputNum !== this.manager.tabs.getActiveOutputTab()) return;
 
         const io = direction === "forward" ? "output" : "input";
 
@@ -387,6 +395,13 @@ class HighlighterWaiter {
             document.getElementById(io + "-text"),
             document.getElementById(io + "-highlighter"),
             pos);
+
+        if (direction === "forward"){
+            this.highlightInput(pos);
+        }
+        else{
+            this.manager.input.updateInputHighlight(inputNum, pos)
+        }
     }
 
 

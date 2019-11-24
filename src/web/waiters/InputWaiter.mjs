@@ -328,6 +328,7 @@ class InputWaiter {
      * @param {object} inputData - Object containing the input and its metadata
      * @param {number} inputData.inputNum - The unique inputNum for the selected input
      * @param {string | object} inputData.input - The actual input data
+     * @param {object} inputData.pos - The highlight object for the selected tab
      * @param {string} inputData.name - The name of the input file
      * @param {number} inputData.size - The size in bytes of the input file
      * @param {string} inputData.type - The MIME type of the input file
@@ -371,6 +372,10 @@ class InputWaiter {
                         input: inputStr
                     });
                 }
+
+                //Restore highlighting
+                this.updateInputHighlight(inputData.inputNum, inputData.pos);
+                this.restoreHighlighting();
 
                 if (!silent) window.dispatchEvent(this.manager.statechange);
             } else {
@@ -552,6 +557,23 @@ class InputWaiter {
                 force: force
             }
         }, transferable);
+    }
+
+    /**
+     * Updates the saved highlight property for the specified inputNum
+     * Used for restoring highlight on tab switch
+     *
+     * @param {number} inputNum
+     * @param {Object} pos - The position object for the highlight.
+     */
+    updateInputHighlight(inputNum, pos) {
+        this.inputWorker.postMessage({
+            action: "updateInputHighlight",
+            data: {
+                inputNum: inputNum,
+                pos: pos
+            }
+        });
     }
 
     /**
@@ -846,6 +868,16 @@ class InputWaiter {
     }
 
     /**
+     * Restore the highlighting of the active tabs from the saved highlight data
+     */
+    async restoreHighlighting() {
+        const activeTab = this.manager.tabs.getActiveInputTab();
+        const tabObj = await this.getInputObj(activeTab);
+
+        this.manager.highlighter.highlightOutput(tabObj.highlight);
+    }
+
+    /**
      * Checks if an input contains carriage returns.
      * If a CR is detected, checks if the preserve CR option has been set,
      * and if not, asks the user for their preference.
@@ -1013,6 +1045,7 @@ class InputWaiter {
                     silent: true
                 }
             });
+            this.manager.highlighter.mouseUp();
         } else {
             const minNum = Math.min(...this.manager.tabs.getInputTabList());
             let direction = "right";
