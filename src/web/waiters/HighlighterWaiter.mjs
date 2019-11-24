@@ -306,7 +306,7 @@ class HighlighterWaiter {
      * Resets mouse variable to up position.
      * Used on tab change.
      */
-    mouseUp(){
+    mouseUp() {
         this.mouseButtonDown = false;
     }
 
@@ -396,11 +396,10 @@ class HighlighterWaiter {
             document.getElementById(io + "-highlighter"),
             pos);
 
-        if (direction === "forward"){
+        if (direction === "forward") {
             this.highlightInput(pos);
-        }
-        else{
-            this.manager.input.updateInputHighlight(inputNum, pos)
+        } else {
+            this.manager.input.updateInputHighlight(inputNum, pos);
         }
     }
 

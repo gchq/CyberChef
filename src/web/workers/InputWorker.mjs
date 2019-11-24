@@ -454,7 +454,7 @@ self.setInput = function(inputData) {
     if (input === undefined || input === null) return;
 
     let inputVal = input.data;
-    let highlight = input.highlight;
+    const highlight = input.highlight;
     const inputObj = {
         inputNum: inputNum,
         input: inputVal,
@@ -597,7 +597,7 @@ self.updateInputHighlight = function(inputData) {
 
     if (inputNum < 1) return;
     self.inputs[inputNum].highlight = pos;
-}
+};
 
 /**
  * Update the stored data object for an input.
@@ -845,7 +845,7 @@ self.addInput = function(
             newInputObj.data = "";
             newInputObj.status = "loaded";
             newInputObj.progress = 100;
-            newInputObj.highlight = [{"start":0,"end":0}];
+            newInputObj.highlight = [{"start": 0, "end": 0}];
             break;
         case "file":
             newInputObj.data = {

@@ -373,7 +373,7 @@ class InputWaiter {
                     });
                 }
 
-                //Restore highlighting
+                // Restore highlighting
                 this.updateInputHighlight(inputData.inputNum, inputData.pos);
                 this.restoreHighlighting();
 
