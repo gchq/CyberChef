@@ -39,6 +39,7 @@
             "URL Decode",
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
+            "Normalise Unicode",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
