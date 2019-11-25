@@ -55,7 +55,7 @@ class PLISTViewer extends Operation {
             .replace(/<\/array>/g, "]")
             .replace(/<key>.+<\/key>/g, m => `${m.slice(5, m.indexOf(/<\/key>/g)-5)}\t=> `)
             .replace(/<real>.+<\/real>/g, m => `${m.slice(6, m.indexOf(/<\/real>/g)-6)}\n`)
-            .replace(/<string>.+<\/string>/g, m => `${m.slice(8, m.indexOf(/<\/string>/g)-8)}\n`)
+            .replace(/<string>.+<\/string>/g, m => `"${m.slice(8, m.indexOf(/<\/string>/g)-8)}"\n`)
             .replace(/<integer>.+<\/integer>/g, m => `${m.slice(9, m.indexOf(/<\/integer>/g)-9)}\n`)
             .replace(/<false\/>/g, m => "false")
             .replace(/<true\/>/g, m => "true")
@@ -64,44 +64,77 @@ class PLISTViewer extends Operation {
             .replace(/<data>(\s|.)+?<\/data>/g, m => `${m.slice(6, m.indexOf(/<\/data>/g)-6)}`)
             .replace(/[ \t\r\f\v]/g, "");
 
+        /**
+         * Depending on the type of brace, it will increment the depth and amount of arrays accordingly.
+         *
+         * @param {string} elem
+         * @param {array} vals
+         * @param {number} offset
+         */
+        function braces(elem, vals,offset) {
+            let temp = vals.indexOf(elem);
+            if (temp !== -1) {
+                depthCount += offset;
+                if (temp === 1)
+                    arrCount += offset;
+            }
+        }
+
         let result = "";
+        let arrCount = 0;
+        let depthCount = 0;
 
         /**
          * Formats the input after the regex has replaced all of the relevant parts.
          *
          * @param {array} input
-         * @param {number} depthCount
+         * @param {number} index
          */
-        function printIt(input, depthCount) {
+        function printIt(input, index) {
             if (!(input.length))
                 return;
 
+            let temp = "";
+            const origArr = arrCount;
+            let currElem = input[0];
+
             // If the current position points at a larger dynamic structure.
-            if (input[0].indexOf("=>") !== -1) {
+            if (currElem.indexOf("=>") !== -1) {
 
                 // If the LHS also points at a larger structure (nested plists in a dictionary).
-                if (input[1].indexOf("=>") !== -1) {
-                    result += ("\t".repeat(depthCount)) + input[0].slice(0, -2) + " => " + input[1].slice(0, -2) + " =>\n";
-                } else {
-                    result += ("\t".repeat(depthCount)) + input[0].slice(0, -2) + " => " + input[1] + "\n";
-                }
+                if (input[1].indexOf("=>") !== -1)
+                    temp = currElem.slice(0, -2) + " => " + input[1].slice(0, -2) + " =>\n";
+                else
+                    temp = currElem.slice(0, -2) + " => " + input[1] + "\n";
 
-                // Controls the tab depth for how many opening braces there have been.
-                if (input[1] === "{" || input[1] === "[") {
-                    depthCount += 1;
-                }
                 input = input.slice(1);
             } else {
                 // Controls the tab depth for how many closing braces there have been.
-                if (input[0] === "}" || input[0] === "]")
-                    depthCount--;
+
+                braces(currElem, ["}", "]"], -1);
 
                 // Has to be here since the formatting breaks otherwise.
-                result += ("\t".repeat(depthCount)) + input[0] + "\n";
-                if (input[0] === "{" || input[0] === "[")
-                    depthCount++;
+                temp = currElem + "\n";
             }
-            printIt(input.slice(1), depthCount);
+
+            currElem = input[0];
+
+            // Tab out to the correct distance.
+            result += ("\t".repeat(depthCount));
+
+            // If it is enclosed in an array show index.
+            if (arrCount > 0 && currElem !== "]")
+                result += index.toString() + " => ";
+
+            result += temp;
+
+            // Controls the tab depth for how many opening braces there have been.
+            braces(currElem, ["{", "["],1);
+
+            // If there has been a new array then reset index.
+            if (arrCount > origArr)
+                return printIt(input.slice(1), 0);
+            return printIt(input.slice(1), ++index);
         }
 
         input = input.split("\n").filter(e => e !== "");
