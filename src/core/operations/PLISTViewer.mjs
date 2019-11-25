@@ -71,8 +71,8 @@ class PLISTViewer extends Operation {
          * @param {array} vals
          * @param {number} offset
          */
-        function braces(elem, vals,offset) {
-            let temp = vals.indexOf(elem);
+        function braces(elem, vals, offset) {
+            const temp = vals.indexOf(elem);
             if (temp !== -1) {
                 depthCount += offset;
                 if (temp === 1)
@@ -129,7 +129,7 @@ class PLISTViewer extends Operation {
             result += temp;
 
             // Controls the tab depth for how many opening braces there have been.
-            braces(currElem, ["{", "["],1);
+            braces(currElem, ["{", "["], 1);
 
             // If there has been a new array then reset index.
             if (arrCount > origArr)
