@@ -25,6 +25,13 @@ class FromBraille extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.patterns = [
+            {
+                match:  "^\\s*[⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿]+\\s*$",
+                flags:  "i",
+                args:   [true]
+            }
+        ];
     }
 
     /**
