@@ -30,6 +30,13 @@ class DecodeNetBIOSName extends Operation {
                 "value": 65
             }
         ];
+        this.patterns = [
+            {
+                match:  "^\\S{16}$",
+                flags:  "",
+                args:   [65]
+            }
+        ];
     }
 
     /**

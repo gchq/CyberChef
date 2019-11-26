@@ -23,6 +23,13 @@ class RemoveLineNumbers extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.patterns = [
+            {
+                match:  "^([0-9]+ .*?(\\n))+[0-9] .+$",
+                flags:  "",
+                args:   []
+            }
+        ];
     }
 
     /**

@@ -44,6 +44,28 @@ class BaconCipherDecode extends Operation {
                 "value": false
             }
         ];
+        this.patterns = [
+            {
+                match:  "^([01]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "0/1", false]
+            },
+            {
+                match:  "^([01]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "0/1", true]
+            },
+            {
+                match:  "^([AB]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "A/B", false]
+            },
+            {
+                match:  "^([AB]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "A/B", true]
+            }
+        ];
     }
 
     /**

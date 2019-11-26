@@ -37,6 +37,23 @@ class ChangeIPFormat extends Operation {
                 "value": ["Dotted Decimal", "Decimal", "Octal", "Hex"]
             }
         ];
+        this.patterns = [
+            {
+                match:  "([0-9]{1,3}\\.){3}[0-9]{1,3}",
+                flags:  "",
+                args:   ["Dotted Decimal","Decimal"]
+            },
+            {
+                match:  "([0-9]{1,3}\\.){3}[0-9]{1,3}",
+                flags:  "",
+                args:   ["Dotted Decimal","Octal"]
+            },
+            {
+                match:  "([0-9]{1,3}\\.){3}[0-9]{1,3}",
+                flags:  "",
+                args:   ["Dotted Decimal","Hex"]
+            }
+        ];
     }
 
     /**
