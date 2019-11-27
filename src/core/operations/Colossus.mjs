@@ -87,7 +87,7 @@ class Colossus extends Operation {
             {
                 name: "Program to run",
                 type: "option",
-                value: ["", "1+2=. (1+2 Break In, Find X1,X2)", "4=3=/1=2 (Given X1,X2 find X4,X5)", "/,5,U (Count chars to find X3)"]
+                value: ["", "Letter Count", "1+2=. (1+2 Break In, Find X1,X2)", "4=3=/1=2 (Given X1,X2 find X4,X5)", "/,5,U (Count chars to find X3)"]
             },
             {
                 name: "K Rack: Conditional",
@@ -241,7 +241,8 @@ class Colossus extends Operation {
             {
                 name: "Add-Equals",
                 type: "editableOptionShort",
-                value: SWITCHES
+                value: SWITCHES,
+                defaultIndex: 1
             },
             {
                 name: "Add-Counter1",
@@ -253,7 +254,9 @@ class Colossus extends Operation {
             },
             {
                 name: "Total Motor",
-                type: "boolean"
+                type: "editableOptionShort",
+                value: SWITCHES,
+                defaultIndex: 1
             },
             {
                 name: "Master Control Panel",
@@ -411,8 +414,27 @@ class Colossus extends Operation {
      */
     selectProgram(progname, args) {
 
+        // Basic Letter Count
+        if (progname == "Letter Count") {
+            // Set Conditional R1 : count every character into counter 1
+            args[9] = "";
+            args[10] = "";
+            args[11] = "";
+            args[12] = "";
+            args[13] = "";
+            args[14] = false;
+            args[15] = "1";
+            // clear Conditional R2 & R3
+            args[22] = "";
+            args[29] = "";
+            // Clear Negate result
+            args[30] = false;
+            // Clear Addition row counter
+            args[38] = false;
+        }
+
         // Bill Tutte's 1+2 Break In
-        if(progname == "1+2=. (1+2 Break In, Find X1,X2)") {
+        if (progname == "1+2=. (1+2 Break In, Find X1,X2)") {
             // Clear any other counters
             args[15] = ""; // Conditional R1
             args[22] = ""; // Conditional R2
@@ -428,7 +450,7 @@ class Colossus extends Operation {
         }
 
         // 4=3=/1=2 : Find X4 & X5 where X1 & X2 are known
-        if(progname == "4=3=/1=2 (Given X1,X2 find X4,X5)") {
+        if (progname == "4=3=/1=2 (Given X1,X2 find X4,X5)") {
             // Set Conditional R1 : Match NOT ..?.. into counter 1
             args[9] = ".";
             args[10] = ".";
@@ -454,7 +476,7 @@ class Colossus extends Operation {
         }
 
         // /,5,U : Count number of matches of /, 5 & U to find X3
-        if(progname == "/,5,U (Count chars to find X3)") {
+        if (progname == "/,5,U (Count chars to find X3)") {
             // Set Conditional R1 : Match / char, ITA2 = ..... into counter 1
             args[9] = ".";
             args[10] = ".";

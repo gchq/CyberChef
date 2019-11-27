@@ -61,6 +61,8 @@ export class ColossusComputer {
 
         this.rotorPtrs = {};
 
+        this.totalmotor = 0;
+
     }
 
     /**
@@ -98,13 +100,17 @@ export class ColossusComputer {
             var slowRef = "00";
             if (fast !== "") fastRef = this.leftPad(this.rotorPtrs[fast],2);
             if (slow !== "") slowRef = this.leftPad(this.rotorPtrs[slow],2);
-            result.printout += fastRef + " " + slowRef + " : ";
+            var printline = '';
             for (let c=0;c<5;c++) {
                 if (this.allCounters[c] > this.settotal) {
-                    result.printout += String.fromCharCode(c+97) + this.allCounters[c]+" ";
+                    printline += String.fromCharCode(c+97) + this.allCounters[c]+" ";
                 }
             }
-            result.printout += "\n";
+            if (printline !== "") {
+                result.printout += fastRef + " " + slowRef + " : ";
+                result.printout += printline;
+                result.printout += "\n";
+            }            
 
             // Step fast rotor if required
             if (fast != '') {
@@ -193,17 +199,17 @@ export class ColossusComputer {
         //console.log(this.Mptr);
         //console.log(this.rings.M[2]);
         const basicmotor = this.rings.M[2][this.Mptr[0]-1];
-        let totalmotor = basicmotor;
+        this.totalmotor = basicmotor;
 
         if (x2sw || s1sw) {
             if (basicmotor===0 && lim===1) {
-                totalmotor = 0;
+                this.totalmotor = 0;
             } else {
-                totalmotor = 1;
+                this.totalmotor = 1;
             }
         }
 
-        //console.log('BM='+basicmotor+', TM='+totalmotor);
+        //console.log('BM='+basicmotor+', TM='+this.totalmotor);
 
         // Step Chi rotors
         for (let r=0; r<5; r++) {
@@ -211,7 +217,7 @@ export class ColossusComputer {
             if (this.Xptr[r] > ROTOR_SIZES["X"+(r+1)]) this.Xptr[r] = 1;
         }
 
-        if (totalmotor) {
+        if (this.totalmotor) {
             //console.log('step Psi');
             // Step Psi rotors
             for (let r=0; r<5; r++) {
@@ -346,7 +352,10 @@ export class ColossusComputer {
         for (let c=0;c<5;c++) {
             if (this.qbusswitches.condNegateAll) cnt[c] = !cnt[c];
 
-            if (cnt[c]==1) this.allCounters[c]++;  
+            if (this.qbusswitches.totalMotor === "" || (this.qbusswitches.totalMotor === "x" && this.totalmotor == 0) || (this.qbusswitches.totalMotor === "." && this.totalmotor == 1)) {
+                if (cnt[c]==1) this.allCounters[c]++;  
+            }
+            
         }
 
     }
