@@ -57,7 +57,7 @@ class FormatMACAddresses extends Operation {
         ];
         this.patterns = [
             {
-                match:  "^([0-9a-f]{2}:){5}[0-9a-f]{2}$",
+                match:  "^\\s*([0-9a-f]{2}:){5}[0-9a-f]{2}$",
                 flags:  "i",
                 args:   ["Both", true, true, true, true, true]
             }

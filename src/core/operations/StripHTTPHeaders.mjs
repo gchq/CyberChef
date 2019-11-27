@@ -26,7 +26,7 @@ class StripHTTPHeaders extends Operation {
         this.args = [];
         this.patterns = [
             {
-                match:  "^HTTP(.|\\s)+?(\\r?\\n){2}",
+                match:  "^\\s*HTTP(.|\\s)+?(\\r?\\n){2}",
                 flags:  "",
                 args:   []
             }

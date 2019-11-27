@@ -44,9 +44,14 @@ class CSVToJSON extends Operation {
         ];
         this.patterns = [
             {
-                match:  "([A-Z\s]*,){5}",
+                match:  "^\\s*([A-Z\\s]*,){5}",
                 flags:  "i",
                 args:   [",", "\r\n", "Array of dictionaries"]
+            },
+            {
+                match:  "^\\s*([A-Z\\s]*,){5}",
+                flags:  "i",
+                args:   [",", "\r\n", "Array of arrays"]
             }
         ];
     }

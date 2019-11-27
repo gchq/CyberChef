@@ -28,7 +28,7 @@ class FromHexContent extends Operation {
         this.args = [];
         this.patterns = [
             {
-                match:  "^.+?\\|[0-9a-f]{2}\\|.+$",
+                match:  "^\\s*.*?\\|([0-9a-f]{2})+\\|.*$",
                 flags:  "i",
                 args:   []
             }

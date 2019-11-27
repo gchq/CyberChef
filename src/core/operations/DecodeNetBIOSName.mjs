@@ -32,7 +32,7 @@ class DecodeNetBIOSName extends Operation {
         ];
         this.patterns = [
             {
-                match:  "^\\S{16}$",
+                match:  "^\\s*\\S{32}$",
                 flags:  "",
                 args:   [65]
             }

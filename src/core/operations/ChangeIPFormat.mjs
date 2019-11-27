@@ -39,19 +39,19 @@ class ChangeIPFormat extends Operation {
         ];
         this.patterns = [
             {
-                match:  "([0-9]{1,3}\\.){3}[0-9]{1,3}",
+                match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
                 flags:  "",
-                args:   ["Dotted Decimal","Decimal"]
+                args:   ["Dotted Decimal", "Decimal"]
             },
             {
-                match:  "([0-9]{1,3}\\.){3}[0-9]{1,3}",
+                match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
                 flags:  "",
-                args:   ["Dotted Decimal","Octal"]
+                args:   ["Dotted Decimal", "Octal"]
             },
             {
-                match:  "([0-9]{1,3}\\.){3}[0-9]{1,3}",
+                match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
                 flags:  "",
-                args:   ["Dotted Decimal","Hex"]
+                args:   ["Dotted Decimal", "Hex"]
             }
         ];
     }

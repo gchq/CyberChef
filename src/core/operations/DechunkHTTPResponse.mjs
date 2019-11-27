@@ -26,7 +26,7 @@ class DechunkHTTPResponse extends Operation {
         this.args = [];
         this.patterns = [
             {
-                match:  "^[0-9A-F]+\r\n",
+                match:  "^\\s*[0-9A-F]+\r\n",
                 flags:  "i",
                 args:   []
             }

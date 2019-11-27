@@ -25,7 +25,7 @@ class RemoveLineNumbers extends Operation {
         this.args = [];
         this.patterns = [
             {
-                match:  "^([0-9]+ .*?(\\n))+[0-9] .+$",
+                match:  "^\\s*([0-9]+ .*?(\\n))+[0-9] .+$",
                 flags:  "",
                 args:   []
             }
