@@ -1282,17 +1282,30 @@ export const FILE_SIGNATURES = {
             extension: "dylib",
             mime: "application/octet-stream",
             description: "",
-            signature: {
-                0: 0xca,
-                1: 0xfe,
-                2: 0xba,
-                3: 0xbe,
-                4: 0x00,
-                5: 0x00,
-                6: 0x00,
-                7: [0x01, 0x02, 0x03]
-            },
-            extractor: null
+            signature: [
+                {
+                    0: 0xca,
+                    1: 0xfe,
+                    2: 0xba,
+                    3: 0xbe,
+                    4: 0x00,
+                    5: 0x00,
+                    6: 0x00,
+                    7: [0x01, 0x02, 0x03]
+                },
+                {
+                    0: 0xce,
+                    1: 0xfa,
+                    2: 0xed,
+                    3: 0xfe,
+                    4: 0x07,
+                    5: 0x00,
+                    6: 0x00,
+                    7: 0x00,
+                    8: [0x01, 0x02, 0x03]
+                }
+            ],
+            extractor: extractMACHO
         },
         {
             name: "MacOS Mach-O 64-bit object",
@@ -1305,7 +1318,7 @@ export const FILE_SIGNATURES = {
                 2: 0xed,
                 3: 0xfe
             },
-            extractor: null
+            extractor: extractMACHO
         },
         {
             name: "Adobe Flash",
@@ -1404,7 +1417,7 @@ export const FILE_SIGNATURES = {
                 260: 0x61,
                 261: 0x72
             },
-            extractor: null
+            extractor: extractTAR
         },
         {
             name: "Roshal Archive",
@@ -2716,6 +2729,155 @@ export function extractZIP(bytes, offset) {
     const commentLength = stream.readInt(2, "le");
     stream.moveForwardsBy(commentLength);
 
+    return stream.carve();
+}
+
+
+/**
+ * MACHO extractor
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractMACHO(bytes, offset) {
+
+    // Magic bytes.
+    const MHCIGAM64 = "207250237254";
+    const MHMAGIC64 = "254237250207";
+    const MHCIGAM = "206250237254";
+
+
+    /**
+     * Checks to see if the file is 64-bit.
+     *
+     * @param {string} magic
+     * @returns {bool}
+     */
+    function isMagic64(magic) {
+        return magic === MHCIGAM64 || magic === MHMAGIC64;
+    }
+
+
+    /**
+     * Checks the endianness of the file.
+     *
+     * @param {string} magic
+     * @returns {bool}
+     */
+    function shouldSwapBytes(magic) {
+        return magic === MHCIGAM || magic === MHCIGAM64;
+    }
+
+
+    /**
+     * Jumps through segment information and calculates the sum of the segement sizes.
+     *
+     * @param {Stream} stream
+     * @param {number} offset
+     * @param {string} isSwap
+     * @param {number} ncmds
+     * @returns {number}
+     */
+    function dumpSegmentCommands(stream, offset, isSwap, ncmds) {
+        let total = 0;
+        const LCSEGEMENT64 = 0x19;
+        const LCSEGEMENT = 0x1;
+
+        for (let i = 0; i < ncmds; i++) {
+
+            // Move to start of segment.
+            stream.moveTo(offset);
+            const cmd = stream.readInt(4, isSwap);
+            if (cmd === LCSEGEMENT64) {
+
+                // Move to size of segment field.
+                stream.moveTo(offset + 48);
+
+                // Extract size of segement.
+                total += stream.readInt(8, isSwap);
+                stream.moveTo(offset + 4);
+
+                // Move to offset of next segment.
+                offset += stream.readInt(4, isSwap);
+            } else if (cmd === LCSEGEMENT) {
+                stream.moveTo(offset + 36);
+
+                // Extract size of segement.
+                total += stream.readInt(4, isSwap);
+                stream.moveTo(offset + 4);
+                offset += stream.readInt(4, isSwap);
+            }
+        }
+        return total;
+    }
+
+
+    /**
+     * Reads the number of command segments.
+     *
+     * @param {Stream} stream
+     * @param {bool} is64
+     * @param {string} isSwap
+     * @returns {number}
+     */
+    function dumpMachHeader(stream, is64, isSwap) {
+        let loadCommandsOffset = 28;
+        if (is64)
+            loadCommandsOffset += 4;
+
+        // Move to number of commands field.
+        stream.moveTo(16);
+        const ncmds = stream.readInt(4, isSwap);
+        return dumpSegmentCommands(stream, loadCommandsOffset, isSwap, ncmds);
+    }
+
+
+    const stream = new Stream(bytes.slice(offset));
+    const magic = stream.getBytes(4).join("");
+
+    // Move to the end of the final segment.
+    stream.moveTo(dumpMachHeader(stream, isMagic64(magic), shouldSwapBytes(magic) ? "le" : "be"));
+    return stream.carve();
+}
+
+
+/**
+ * TAR extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractTAR(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+    while (stream.hasMore()) {
+
+        // Move to ustar identifier.
+        stream.moveForwardsBy(0x101);
+        if (stream.getBytes(5).join("") !== [0x75, 0x73, 0x74, 0x61, 0x72].join("")) {
+
+            // Needed since we cannot rely on there being at least 0x106 padding of 0s at the end of the TAR(even though there usually is).
+            stream.moveBackwardsBy(0x106);
+            break;
+        }
+
+        // Move back to file size field.
+        stream.moveBackwardsBy(0x8a);
+        let fsize = 0;
+
+        // Read file size field.
+        stream.getBytes(11).forEach((element, index) => {
+            fsize += (element - 48).toString();
+        });
+
+        // Round number up from octet to nearest 512.
+        fsize = (Math.ceil(parseInt(fsize, 8) / 512) * 512);
+
+        // Move forwards to the end of that file.
+        stream.moveForwardsBy(fsize + 0x179);
+    }
+    stream.consumeWhile(0x00);
     return stream.carve();
 }
 
