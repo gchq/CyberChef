@@ -31,7 +31,7 @@ class ParseUserAgent extends Operation {
                 flags:  "i",
                 args:   []
             }
-        ]
+        ];
     }
 
     /**

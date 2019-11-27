@@ -26,6 +26,13 @@ class CitrixCTX1Decode extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
+        this.patterns = [
+            {
+                match:  "([A-Z]{4}){10,}",
+                flags:  "",
+                args:   []
+            }
+        ];
     }
 
     /**
