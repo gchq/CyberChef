@@ -28,6 +28,13 @@ class ParseIPv6Address extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.patterns = [
+            {
+                match:  "^\\s*([a-f\\d]{4}:?)+\\s*$",
+                flags:  "i",
+                args:   []
+            }
+        ];
     }
 
     /**
