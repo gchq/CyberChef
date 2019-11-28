@@ -339,7 +339,7 @@ export class ColossusComputer {
 
                 // AND each row to get final result
                 if (cnt[cPnt] === -1) {
-                    cnt[cPnt] = result;
+                    cnt[cPnt] = (result?1:0);
                 } else if (result === 0) {
                     cnt[cPnt] = 0;
                 }
