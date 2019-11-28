@@ -278,27 +278,27 @@ class Colossus extends Operation {
                 value: ["", "X1", "X2", "X3", "X4", "X5", "M37", "M61", "S1", "S2", "S3", "S4", "S5"]
             },
             {
-                name: "Start X1",
+                name: "Start Χ1",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start X2",
+                name: "Start Χ2",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start X3",
+                name: "Start Χ3",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start X4",
+                name: "Start Χ4",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start X5",
+                name: "Start Χ5",
                 type: "number",
                 value: 1
             },
@@ -313,27 +313,27 @@ class Colossus extends Operation {
                 value: 1
             },
             {
-                name: "Start S1",
+                name: "Start Ψ1",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start S2",
+                name: "Start Ψ2",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start S3",
+                name: "Start Ψ3",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start S4",
+                name: "Start Ψ4",
                 type: "number",
                 value: 1
             },
             {
-                name: "Start S5",
+                name: "Start Ψ5",
                 type: "number",
                 value: 1
             }
@@ -355,7 +355,7 @@ class Colossus extends Operation {
         };
 
         const limitation = args[5];
-        let lm = [false,false,false];
+        const lm = [false, false, false];
         if (limitation.includes("Χ2")) lm[0] = true;
         if (limitation.includes("Ψ1")) lm[1] = true;
         if (limitation.includes("P5")) lm[2] = true;
@@ -369,6 +369,16 @@ class Colossus extends Operation {
         if (KRackOpt === "Select Program" && setProgram !== "") {
             args = this.selectProgram(setProgram, args);
         }
+
+        const re = new RegExp("^$|^[.x]$");
+        for (let qr=0;qr<3;qr++) {
+            for (let a=0;a<5;a++) {
+                if (!re.test(args[((qr*7)+(a+9))])) throw new OperationError("Switch R"+(qr+1)+"-Q"+(a+1)+" can only be set to blank, . or x");
+            }
+        }
+
+        if (!re.test(args[37])) throw new OperationError("Switch Add-Equals can only be set to blank, . or x");
+        if (!re.test(args[40])) throw new OperationError("Switch Total Motor can only be set to blank, . or x");
 
         // Q1,Q2,Q3,Q4,Q5,negate,counter1
         const qbusswitches = {
@@ -385,7 +395,8 @@ class Colossus extends Operation {
             totalMotor: args[40]
         };
 
-        const settotal = args[42];
+        const settotal = parseInt(args[42], 10);
+        if (settotal < 0 || settotal > 9999) throw new OperationError("Set Total must be between 0000 and 9999");
 
         // null|fast|slow for each of S1-5,M1-2,X1-5
         const control = {
@@ -394,6 +405,20 @@ class Colossus extends Operation {
         };
 
         // Start positions
+
+        if (args[52]<1 || args[52]>43) throw new OperationError("Ψ1 start must be between 1 and 43");
+        if (args[53]<1 || args[53]>47) throw new OperationError("Ψ2 start must be between 1 and 47");
+        if (args[54]<1 || args[54]>51) throw new OperationError("Ψ3 start must be between 1 and 51");
+        if (args[55]<1 || args[55]>53) throw new OperationError("Ψ4 start must be between 1 and 53");
+        if (args[56]<1 || args[57]>59) throw new OperationError("Ψ5 start must be between 1 and 59");
+        if (args[51]<1 || args[51]>37) throw new OperationError("Μ37 start must be between 1 and 37");
+        if (args[50]<1 || args[50]>61) throw new OperationError("Μ61 start must be between 1 and 61");
+        if (args[45]<1 || args[45]>41) throw new OperationError("Χ1 start must be between 1 and 41");
+        if (args[46]<1 || args[46]>31) throw new OperationError("Χ2 start must be between 1 and 31");
+        if (args[47]<1 || args[47]>29) throw new OperationError("Χ3 start must be between 1 and 29");
+        if (args[48]<1 || args[48]>26) throw new OperationError("Χ4 start must be between 1 and 26");
+        if (args[49]<1 || args[49]>23) throw new OperationError("Χ5 start must be between 1 and 23");
+
         const starts = {
             X1: args[45], X2: args[46], X3: args[47], X4: args[48], X5: args[49],
             M61: args[50], M37: args[51],
@@ -415,7 +440,7 @@ class Colossus extends Operation {
     selectProgram(progname, args) {
 
         // Basic Letter Count
-        if (progname == "Letter Count") {
+        if (progname === "Letter Count") {
             // Set Conditional R1 : count every character into counter 1
             args[9] = "";
             args[10] = "";
@@ -434,7 +459,7 @@ class Colossus extends Operation {
         }
 
         // Bill Tutte's 1+2 Break In
-        if (progname == "1+2=. (1+2 Break In, Find X1,X2)") {
+        if (progname === "1+2=. (1+2 Break In, Find X1,X2)") {
             // Clear any other counters
             args[15] = ""; // Conditional R1
             args[22] = ""; // Conditional R2
@@ -450,7 +475,7 @@ class Colossus extends Operation {
         }
 
         // 4=3=/1=2 : Find X4 & X5 where X1 & X2 are known
-        if (progname == "4=3=/1=2 (Given X1,X2 find X4,X5)") {
+        if (progname === "4=3=/1=2 (Given X1,X2 find X4,X5)") {
             // Set Conditional R1 : Match NOT ..?.. into counter 1
             args[9] = ".";
             args[10] = ".";
@@ -476,7 +501,7 @@ class Colossus extends Operation {
         }
 
         // /,5,U : Count number of matches of /, 5 & U to find X3
-        if (progname == "/,5,U (Count chars to find X3)") {
+        if (progname === "/,5,U (Count chars to find X3)") {
             // Set Conditional R1 : Match / char, ITA2 = ..... into counter 1
             args[9] = ".";
             args[10] = ".";

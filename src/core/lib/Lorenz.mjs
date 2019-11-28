@@ -5,7 +5,6 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import OperationError from "../errors/OperationError.mjs";
 
 export const SWITCHES = [
     {name: "Up (.)", value: "."},
