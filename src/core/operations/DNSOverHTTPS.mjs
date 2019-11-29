@@ -63,9 +63,9 @@ class DNSOverHTTPS extends Operation {
                 value: false
             },
             {
-                name: "Validate DNSSEC",
+                name: "Disable DNSSEC validation",
                 type: "boolean",
-                value: true
+                value: false
             }
         ];
     }
