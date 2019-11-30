@@ -332,26 +332,26 @@ export class ColossusComputer {
                 const Qswitch = this.readBusSwitches(row.Qswitches);
                 // Match switches to bit pattern
                 for (let s=0;s<5;s++) {
-                    if (Qswitch[s] >= 0 && Qswitch[s] !== this.Qbits[s]) result = false;
+                    if (Qswitch[s] >= 0 && Qswitch[s] !== parseInt(this.Qbits[s],10)) result = false;
                 }
                 // Check for NOT switch
                 if (row.Negate) result = !result;
 
                 // AND each row to get final result
                 if (cnt[cPnt] === -1) {
-                    cnt[cPnt] = (result?1:0);
-                } else if (result === 0) {
-                    cnt[cPnt] = 0;
+                    cnt[cPnt] = result;
+                } else if (!result) {
+                    cnt[cPnt] = false;
                 }
             }
         }
 
         // Negate the whole column, this allows A OR B by doing NOT(NOT A AND NOT B)
         for (let c=0;c<5;c++) {
-            if (this.qbusswitches.condNegateAll) cnt[c] = !cnt[c];
+            if (this.qbusswitches.condNegateAll && cnt[c] !== -1) cnt[c] = !cnt[c];
 
             if (this.qbusswitches.totalMotor === "" || (this.qbusswitches.totalMotor === "x" && this.totalmotor === 0) || (this.qbusswitches.totalMotor === "." && this.totalmotor === 1)) {
-                if (cnt[c]===1) this.allCounters[c]++;
+                if (cnt[c] === true) this.allCounters[c]++;
             }
 
         }

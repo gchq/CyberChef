@@ -9,7 +9,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError.mjs";
 import { ColossusComputer } from "../lib/Colossus.mjs";
-import { SWITCHES } from "../lib/Lorenz.mjs";
+import { SWITCHES, VALID_ITA2 } from "../lib/Lorenz.mjs";
 
 /**
  * Colossus operation
@@ -87,7 +87,7 @@ class Colossus extends Operation {
             {
                 name: "Program to run",
                 type: "option",
-                value: ["", "Letter Count", "1+2=. (1+2 Break In, Find X1,X2)", "4=3=/1=2 (Given X1,X2 find X4,X5)", "/,5,U (Count chars to find X3)"]
+                value: ["", "Letter Count", "1+2=. (1+2 Break In, Find X1,X2)", "4=5=/1=2 (Given X1,X2 find X4,X5)", "/,5,U (Count chars to find X3)"]
             },
             {
                 name: "K Rack: Conditional",
@@ -347,6 +347,16 @@ class Colossus extends Operation {
      */
     run(input, args) {
 
+        input = input.toUpperCase();
+        for (const character of input) {
+            if (VALID_ITA2.indexOf(character) === -1) {
+                let errltr = character;
+                if (errltr==="\n") errltr = "Carriage Return";
+                if (errltr===" ") errltr = "Space";
+                throw new OperationError("Invalid ITA2 character : "+errltr);
+            }
+        }
+
         const pattern = args[1];
         const qbusin = {
             "Z": args[2],
@@ -475,7 +485,7 @@ class Colossus extends Operation {
         }
 
         // 4=3=/1=2 : Find X4 & X5 where X1 & X2 are known
-        if (progname === "4=3=/1=2 (Given X1,X2 find X4,X5)") {
+        if (progname === "4=5=/1=2 (Given X1,X2 find X4,X5)") {
             // Set Conditional R1 : Match NOT ..?.. into counter 1
             args[9] = ".";
             args[10] = ".";
