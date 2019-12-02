@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import Stream from "../lib/Stream.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Untar operation
@@ -27,13 +28,13 @@ class Untar extends Operation {
         this.outputType = "List<File>";
         this.presentType = "html";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 "match": "^.{257}\\x75\\x73\\x74\\x61\\x72",
                 "flags": "",
                 "args": []
             }
-        ];
+        ]);
     }
 
     /**

@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Strip HTML tags operation
@@ -36,13 +37,13 @@ class StripHTMLTags extends Operation {
             }
         ];
 
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^<html>(\\S|\\s)*</html>$",
                 flags:  "i",
                 args:   [true, true]
             }
-        ];
+        ]);
     }
 
     /**

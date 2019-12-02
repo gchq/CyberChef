@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 import Utils from "../Utils.mjs";
 
 /**
@@ -42,7 +43,7 @@ class CSVToJSON extends Operation {
                 value: ["Array of dictionaries", "Array of arrays"]
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*([A-Z\\s]*,){5}",
                 flags:  "i",
@@ -53,7 +54,7 @@ class CSVToJSON extends Operation {
                 flags:  "i",
                 args:   [",", "\r\n", "Array of arrays"]
             }
-        ];
+        ]);
     }
 
     /**

@@ -9,6 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { fromBase64 } from "../lib/Base64.mjs";
 import { fromHex, toHexFast } from "../lib/Hex.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Parse SSH Host Key operation
@@ -38,13 +39,13 @@ class ParseSSHHostKey extends Operation {
                 ]
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*([A-F\\d]{2}[,;:]){15,}[A-F\\d]{2}\\s*$",
                 flags:  "i",
                 args:   ["Hex"]
             }
-        ];
+        ]);
     }
 
     /**

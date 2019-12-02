@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Base64 operation
@@ -36,7 +37,7 @@ class FromBase64 extends Operation {
                 value: true
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^\\s*(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
@@ -102,7 +103,7 @@ class FromBase64 extends Operation {
                 flags: "i",
                 args: ["./0-9A-Za-z", true]
             },
-        ];
+        ]);
     }
 
     /**

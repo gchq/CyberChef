@@ -9,6 +9,7 @@ import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD.mjs";
 import BigNumber from "bignumber.js";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From BCD operation
@@ -49,13 +50,13 @@ class FromBCD extends Operation {
                 "value": FORMAT
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^(?:\\d{4} ){3,}\\d{4}$",
                 flags: "",
                 args: ["8 4 2 1", true, false, "Nibbles"]
-            },
-        ];
+            }
+        ]);
     }
 
     /**

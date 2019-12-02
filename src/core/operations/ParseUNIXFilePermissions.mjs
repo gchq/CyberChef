@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Parse UNIX file permissions operation
@@ -25,13 +26,13 @@ class ParseUNIXFilePermissions extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*d[rxw-]{9}\\s*$",
                 flags:  "",
                 args:   []
             }
-        ];
+        ]);
     }
 
     /**

@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import unzip from "zlibjs/bin/unzip.min.js";
+import magicObject from "../lib/MagicObject.mjs";
 
 const Zlib = unzip.Zlib;
 
@@ -40,13 +41,13 @@ class Unzip extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
                 flags: "",
                 args: ["", false]
             },
-        ];
+        ]);
     }
 
     /**

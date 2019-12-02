@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {fromHex} from "../lib/Hex.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Hex Content operation
@@ -26,13 +27,13 @@ class FromHexContent extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*.*?\\|([0-9a-f]{2})+\\|.*$",
                 flags:  "i",
                 args:   []
             }
-        ];
+        ]);
     }
 
     /**

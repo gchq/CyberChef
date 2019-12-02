@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Escape Unicode Characters operation
@@ -44,7 +45,7 @@ class EscapeUnicodeCharacters extends Operation {
                 "value": true
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "\\\\u(?:[\\da-f]{4,6})",
                 flags: "i",
@@ -60,7 +61,7 @@ class EscapeUnicodeCharacters extends Operation {
                 flags: "i",
                 args: ["U+"]
             },
-        ];
+        ]);
     }
 
     /**

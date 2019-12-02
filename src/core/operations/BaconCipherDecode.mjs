@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 import {
     BACON_ALPHABETS,
     BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP,
@@ -44,7 +45,7 @@ class BaconCipherDecode extends Operation {
                 "value": false
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*([01]{5}\\s?)+$",
                 flags:  "",
@@ -85,7 +86,7 @@ class BaconCipherDecode extends Operation {
                 flags:  "",
                 args:   ["Complete", "A/B", true]
             }
-        ];
+        ]);
     }
 
     /**

@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
+import magicObject from "../lib/MagicObject.mjs";
 
 const Zlib = zlibAndGzip.Zlib;
 
@@ -27,13 +28,13 @@ class Gunzip extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^\\x1f\\x8b\\x08",
                 flags: "",
                 args: []
             },
-        ];
+        ]);
     }
 
     /**

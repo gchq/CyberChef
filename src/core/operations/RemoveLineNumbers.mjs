@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Remove line numbers operation
@@ -23,13 +24,13 @@ class RemoveLineNumbers extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*([0-9]+ .*?(\\n))+[0-9] .+$",
                 flags:  "",
                 args:   []
             }
-        ];
+        ]);
     }
 
     /**

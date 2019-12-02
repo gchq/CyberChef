@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import moment from "moment-timezone";
 import {UNITS} from "../lib/DateTime.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From UNIX Timestamp operation
@@ -33,7 +34,7 @@ class FromUNIXTimestamp extends Operation {
                 "value": UNITS
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^1?\\d{9}$",
                 flags: "",
@@ -54,7 +55,7 @@ class FromUNIXTimestamp extends Operation {
                 flags: "",
                 args: ["Nanoseconds (ns)"]
             },
-        ];
+        ]);
     }
 
     /**

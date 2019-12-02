@@ -9,6 +9,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Quoted Printable operation
@@ -28,13 +29,13 @@ class FromQuotedPrintable extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^[\\x21-\\x3d\\x3f-\\x7e \\t]{0,76}(?:=[\\da-f]{2}|=\\r?\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\r?\\n)*$",
                 flags: "i",
                 args: []
             },
-        ];
+        ]);
     }
 
     /**

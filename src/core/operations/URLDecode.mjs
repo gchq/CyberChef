@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * URL Decode operation
@@ -24,13 +25,22 @@ class URLDecode extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: ".*(?:%[\\da-f]{2}.*){4}",
                 flags: "i",
+                args: [],
+            }
+        ],
+        [
+            {
+                match: "^(?:(http(s)?|ftp):\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+                flags: "i",
+                shouldMatch: true,
                 args: []
-            },
-        ];
+            }
+        ]
+        );
     }
 
     /**

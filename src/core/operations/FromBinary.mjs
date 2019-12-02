@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromBinary} from "../lib/Binary.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Binary operation
@@ -33,7 +34,7 @@ class FromBinary extends Operation {
                 "value": BIN_DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^(?:[01]{8})+$",
                 flags: "",
@@ -69,7 +70,7 @@ class FromBinary extends Operation {
                 flags: "",
                 args: ["CRLF"]
             },
-        ];
+        ]);
     }
 
     /**

@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Strip HTTP headers operation
@@ -24,13 +25,13 @@ class StripHTTPHeaders extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*HTTP(.|\\s)+?(\\r?\\n){2}",
                 flags:  "",
                 args:   []
             }
-        ];
+        ]);
     }
 
     /**

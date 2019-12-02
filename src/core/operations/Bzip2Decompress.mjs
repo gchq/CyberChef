@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 import Bzip2 from "libbzip2-wasm";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
@@ -33,13 +34,13 @@ class Bzip2Decompress extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 "match": "^\\x42\\x5a\\x68",
                 "flags": "",
                 "args": []
             }
-        ];
+        ]);
     }
 
     /**

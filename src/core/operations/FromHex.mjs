@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Hex operation
@@ -32,7 +33,7 @@ class FromHex extends Operation {
                 value: FROM_HEX_DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^(?:[\\dA-F]{2})+$",
                 flags: "i",
@@ -78,7 +79,7 @@ class FromHex extends Operation {
                 flags: "i",
                 args: ["\\x"]
             }
-        ];
+        ]);
     }
 
     /**

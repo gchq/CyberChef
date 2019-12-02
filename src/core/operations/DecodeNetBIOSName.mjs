@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Decode NetBIOS Name operation
@@ -30,13 +31,13 @@ class DecodeNetBIOSName extends Operation {
                 "value": 65
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*\\S{32}$",
                 flags:  "",
                 args:   [65]
             }
-        ];
+        ]);
     }
 
     /**

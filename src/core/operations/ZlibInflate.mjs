@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
+import magicObject from "../lib/MagicObject.mjs";
 
 const Zlib = zlibAndGzip.Zlib;
 
@@ -59,13 +60,13 @@ class ZlibInflate extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
                 flags: "",
                 args: [0, 0, "Adaptive", false, false]
             },
-        ];
+        ]);
     }
 
     /**

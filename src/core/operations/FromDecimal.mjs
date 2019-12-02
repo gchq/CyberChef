@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromDecimal} from "../lib/Decimal.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Decimal operation
@@ -36,7 +37,7 @@ class FromDecimal extends Operation {
                 "value": false
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
@@ -67,7 +68,7 @@ class FromDecimal extends Operation {
                 flags: "",
                 args: ["CRLF", false]
             },
-        ];
+        ]);
     }
 
     /**

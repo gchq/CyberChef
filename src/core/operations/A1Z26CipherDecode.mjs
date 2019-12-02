@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * A1Z26 Cipher Decode operation
@@ -33,7 +34,7 @@ class A1Z26CipherDecode extends Operation {
                 value: DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match:  "^\\s*([12]?[0-9] )+[12]?[0-9]\\s*$",
                 flags:  "",
@@ -64,7 +65,7 @@ class A1Z26CipherDecode extends Operation {
                 flags:  "",
                 args:   ["CRLF"]
             }
-        ];
+        ]);
     }
 
     /**

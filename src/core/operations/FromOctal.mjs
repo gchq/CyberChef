@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Octal operation
@@ -32,7 +33,7 @@ class FromOctal extends Operation {
                 "value": DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = new magicObject([
             {
                 match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?: (?:[0-7]{1,2}|[123][0-7]{2}))*$",
                 flags: "",
@@ -63,7 +64,7 @@ class FromOctal extends Operation {
                 flags: "",
                 args: ["CRLF"]
             },
-        ];
+        ]);
     }
 
     /**
