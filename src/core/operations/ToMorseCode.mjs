@@ -148,7 +148,8 @@ const MORSE_TABLE = {
     "=": "<dash><dot><dot><dot><dash>",
     "&": "<dot><dash><dot><dot><dot>",
     "_": "<dot><dot><dash><dash><dot><dash>",
-    "$": "<dot><dot><dot><dash><dot><dot><dash>"
+    "$": "<dot><dot><dot><dash><dot><dot><dash>",
+    " ": "<dot><dot><dot><dot><dot><dot><dot>"
 };
 
 export default ToMorseCode;
