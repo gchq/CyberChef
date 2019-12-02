@@ -45,8 +45,14 @@ for (const opObj in Ops) {
         args:        op.args
     };
 
-    if ("patterns" in op) {
-        operationConfig[op.name].patterns = op.patterns;
+    if ("checks" in op) {
+        if ("outRegexes" in op.checks) {
+            operationConfig[op.name].outputRegexes = op.checks.outRegexes;
+        }
+
+        if ("inRegexes" in op.checks) {
+            operationConfig[op.name].inputRegexes = op.checks.inRegexes;
+        }
     }
 
     if (!(op.module in modules))

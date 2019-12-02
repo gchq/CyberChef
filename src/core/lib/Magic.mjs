@@ -4,6 +4,7 @@ import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
 import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
+import potentialOps from "./Test.mjs";
 
 /**
  * A class for detecting encodings, file types and byte frequencies and
@@ -24,28 +25,7 @@ class Magic {
     constructor(buf, opPatterns) {
         this.inputBuffer = new Uint8Array(buf);
         this.inputStr = Utils.arrayBufferToStr(buf);
-        this.opPatterns = opPatterns || Magic._generateOpPatterns();
-    }
-
-    /**
-     * Finds operations that claim to be able to decode the input based on regular
-     * expression matches.
-     *
-     * @returns {Object[]}
-     */
-    findMatchingOps() {
-        const matches = [];
-
-        for (let i = 0; i < this.opPatterns.length; i++) {
-            const pattern = this.opPatterns[i],
-                regex = new RegExp(pattern.match, pattern.flags);
-
-            if (regex.test(this.inputStr)) {
-                matches.push(pattern);
-            }
-        }
-
-        return matches;
+        this.opPatterns = new potentialOps(opPatterns);
     }
 
     /**
@@ -281,7 +261,7 @@ class Magic {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
-        const matchingOps = this.findMatchingOps();
+        const matchingOps = this.opPatterns.findMatchingInputRegexes(this.inputStr);
 
         let results = [];
 
@@ -299,32 +279,49 @@ class Magic {
         });
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
-        // Execute each of the matching operations, then recursively call the speculativeExecution()
-        // method on the resulting data, recording the properties of each option.
-        await Promise.all(matchingOps.map(async op => {
-            const opConfig = {
-                    op: op.op,
-                    args: op.args
-                },
-                output = await this._runRecipe([opConfig]);
+        async function regexesTests(flag, sensible) {
 
-            // If the recipe is repeating and returning the same data, do not continue
-            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
-                return;
-            }
+            // Execute each of the matching operations, then recursively call the speculativeExecution()
+            // method on the resulting data, recording the properties of each option.
+            await Promise.all(sensible.map(async op => {
+                const opConfig = {
+                        op: op.op,
+                        args: op.args
+                    },
+                    output = await this._runRecipe([opConfig]);
 
-            // If the recipe returned an empty buffer, do not continue
-            if (_buffersEqual(output, new ArrayBuffer())) {
-                return;
-            }
+                // If the recipe is repeating and returning the same data, do not continue
+                if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
+                    return;
+                }
 
-            const magic = new Magic(output, this.opPatterns),
-                speculativeResults = await magic.speculativeExecution(
-                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
+                // If the recipe returned an empty buffer, do not continue
+                if (_buffersEqual(output, new ArrayBuffer())) {
+                    return;
+                }
+                if(flag) {
+                    const outputRegexes = OperationConfig[op.op].outputRegexes;
+                    if (outputRegexes)
+                        for (const pattern of outputRegexes)
+                            if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))))
+                                return;
+                } else {
+                    if (!(op.match.test(output))){
+                        return;
+                    }
+                }
+                const magic = new Magic(output, this.opPatterns),
+                    speculativeResults = await magic.speculativeExecution(
+                        depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
 
-            results = results.concat(speculativeResults);
-        }));
-
+                results = results.concat(speculativeResults);
+            }));
+        }
+        
+        regexesTests(1, matchingOps);
+        regexesTests(0, this.opPatterns.getOutputRegexes());
+        //console.log("haha",this.opPatterns.getOutputRegexes());
+        
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
             const bfEncodings = await this.bruteForce();
@@ -338,6 +335,8 @@ class Magic {
             }));
         }
 
+       // console.log(results);
+
         // Prune branches that result in unhelpful outputs
         const prunedResults = results.filter(r =>
             (r.useful || r.data.length > 0) &&          // The operation resulted in ""
@@ -348,6 +347,8 @@ class Magic {
                 r.matchingOps.length                      // A matching op was found
             )
         );
+
+        // console.log(prunedResults);
 
         // Return a sorted list of possible recipes along with their properties
         return prunedResults.sort((a, b) => {
@@ -439,32 +440,6 @@ class Magic {
             return c / len * 100;
         });
         return this.freqDist;
-    }
-
-    /**
-     * Generates a list of all patterns that operations claim to be able to decode.
-     *
-     * @private
-     * @returns {Object[]}
-     */
-    static _generateOpPatterns() {
-        const opPatterns = [];
-
-        for (const op in OperationConfig) {
-            if (!("patterns" in OperationConfig[op])) continue;
-
-            OperationConfig[op].patterns.forEach(pattern => {
-                opPatterns.push({
-                    op: op,
-                    match: pattern.match,
-                    flags: pattern.flags,
-                    args: pattern.args,
-                    useful: pattern.useful || false
-                });
-            });
-        }
-
-        return opPatterns;
     }
 
     /**

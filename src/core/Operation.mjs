@@ -25,6 +25,9 @@ class Operation {
         this._flowControl     = false;
         this._manualBake      = false;
         this._ingList         = [];
+        // this._checks          = [];
+        this._inputRegexes    = [];
+        this._outputRegexes   = [];
 
         // Public fields
         this.name             = "";
