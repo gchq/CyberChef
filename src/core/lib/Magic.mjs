@@ -244,13 +244,25 @@ class Magic {
         return results;
     }
 
+    /**
+     * Uses the checks to validate the input/output of potential operations.
+     *
+     * @param {string} flag
+     * @param {array} sensible
+     * @param {Object} prevOp
+     * @param {number} depth
+     * @param {boolean} extLang
+     * @param {boolean} intensive
+     * @param {Object[]} recipeConfig
+     * @param {string} crib
+     */
     async regexesTests(flag, sensible, prevOp, depth, extLang, intensive, recipeConfig, crib) {
-        let results = []
+        let results = [];
         // Execute each of the matching operations, then recursively call the speculativeExecution()
         // method on the resulting data, recording the properties of each option.
         await Promise.all(sensible.map(async op => {
             const opConfig = {
-                    op: op.op,                        
+                    op: op.op,
                     args: op.args
                 },
                 output = await this._runRecipe([opConfig]);
@@ -265,46 +277,31 @@ class Magic {
                 return;
             }
 
+            const outputRegexes = OperationConfig[op.op].outputRegexes;
             switch (flag) {
-                case "Input": 
-                    const outputRegexes = OperationConfig[op.op].outputRegexes;
+                case "Input":
                     if (outputRegexes)
                         for (const pattern of outputRegexes)
-                            if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output)))) {
-                                if (pattern.shouldMatch)
-                                    return;
-                            } else { 
+                            if (new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))) {
                                 if (!pattern.shouldMatch)
+                                    return;
+                            } else {
+                                if (pattern.shouldMatch)
                                     return;
                             }
                     break;
                 case "Output":
-                    if(!(new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output)))){
-                        if (op.shouldMatch)
+                    if (new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output))) {
+                        if (!op.shouldMatch)
                             return;
                     } else {
-                        if (!op.shouldMatch)
+                        if (op.shouldMatch)
                             return;
                     }
                     break;
                 default:
                     console.log("This is borked");
             }
-/*            if (flag) {
-                const outputRegexes = OperationConfig[op.op].outputRegexes;
-                if (outputRegexes)
-                    for (const pattern of outputRegexes)
-                        if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output)))) {
-                            if (pattern.shouldMatch)
-                                return;
-                        } else { 
-                            if (!pattern.shouldMatch)
-                                return;
-                        }
-            } else {
-                if(!(new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output))))
-                    return;
-            } */
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
