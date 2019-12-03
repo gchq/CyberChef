@@ -102,12 +102,14 @@ class potentialOps {
     }
 
     /**
+     * Generates the list of all the operations that have a valid output.
      *
+     * @returns {Object[]}
      */
     generateOutputOpPatterns() {
         const opPatterns = [];
         for (const op in OperationConfig) {
-            if (!(OperationConfig[op].outputRegexes)) continue;
+            if (!(OperationConfig[op].outputRegexes) && (OperationConfig[op].inputRegexes)) continue;
 
             OperationConfig[op].outputRegexes.forEach(pattern => {
                 opPatterns.push({
