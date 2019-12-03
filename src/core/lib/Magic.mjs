@@ -279,6 +279,11 @@ class Magic {
         });
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
+        /**
+         *
+         * @param flag
+         * @param sensible
+         */
         async function regexesTests(flag, sensible) {
 
             // Execute each of the matching operations, then recursively call the speculativeExecution()
@@ -299,14 +304,14 @@ class Magic {
                 if (_buffersEqual(output, new ArrayBuffer())) {
                     return;
                 }
-                if(flag) {
+                if (flag) {
                     const outputRegexes = OperationConfig[op.op].outputRegexes;
                     if (outputRegexes)
                         for (const pattern of outputRegexes)
                             if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))))
                                 return;
                 } else {
-                    if (!(op.match.test(output))){
+                    if (!(op.match.test(output))) {
                         return;
                     }
                 }
@@ -317,11 +322,11 @@ class Magic {
                 results = results.concat(speculativeResults);
             }));
         }
-        
+
         regexesTests(1, matchingOps);
-        regexesTests(0, this.opPatterns.getOutputRegexes());
-        //console.log("haha",this.opPatterns.getOutputRegexes());
-        
+        // regexesTests(0, this.opPatterns.getOutputRegexes());
+        // console.log("haha", results);
+
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
             const bfEncodings = await this.bruteForce();
@@ -348,7 +353,7 @@ class Magic {
             )
         );
 
-        // console.log(prunedResults);
+        console.log("important", prunedResults);
 
         // Return a sorted list of possible recipes along with their properties
         return prunedResults.sort((a, b) => {
