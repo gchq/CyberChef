@@ -280,10 +280,10 @@ class Magic {
                     break;
                 case "Output":
                     if(!(new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output)))){
-                        if (shouldMatch)
+                        if (op.shouldMatch)
                             return;
                     } else {
-                        if (!shouldMatch)
+                        if (!op.shouldMatch)
                             return;
                     }
                     break;

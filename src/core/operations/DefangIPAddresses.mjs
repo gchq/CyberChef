@@ -32,7 +32,16 @@ class DefangIPAddresses extends Operation {
                 flags: "i",
                 args: [],
             }
-        ]);
+        ],
+        [
+            {
+                match: "^\\s*(([0-9]{1,3}\\[\\.\\]){3}[0-9]{1,3}|([0-9a-f]{4}\\[\\:\\]){7}[0-9a-f]{4})\\s*$",
+                flags: "i",
+                shouldMatch: true,
+                args: []
+            }
+        ]
+        );
     }
 
     /**
