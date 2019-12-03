@@ -264,16 +264,47 @@ class Magic {
             if (_buffersEqual(output, new ArrayBuffer())) {
                 return;
             }
-            if (flag) {
+
+            switch (flag) {
+                case "Input": 
+                    const outputRegexes = OperationConfig[op.op].outputRegexes;
+                    if (outputRegexes)
+                        for (const pattern of outputRegexes)
+                            if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output)))) {
+                                if (pattern.shouldMatch)
+                                    return;
+                            } else { 
+                                if (!pattern.shouldMatch)
+                                    return;
+                            }
+                    break;
+                case "Output":
+                    if(!(new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output)))){
+                        if (shouldMatch)
+                            return;
+                    } else {
+                        if (!shouldMatch)
+                            return;
+                    }
+                    break;
+                default:
+                    console.log("This is borked");
+            }
+/*            if (flag) {
                 const outputRegexes = OperationConfig[op.op].outputRegexes;
                 if (outputRegexes)
                     for (const pattern of outputRegexes)
-                        if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))))
-                            return;
+                        if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output)))) {
+                            if (pattern.shouldMatch)
+                                return;
+                        } else { 
+                            if (!pattern.shouldMatch)
+                                return;
+                        }
             } else {
                 if(!(new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output))))
                     return;
-            }
+            } */
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
@@ -318,8 +349,8 @@ class Magic {
         });
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
-        results = results.concat(await this.regexesTests(1, matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib));
-        results = results.concat(await this.regexesTests(0, this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib));
+        results = results.concat(await this.regexesTests("Input", matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib));
+        results = results.concat(await this.regexesTests("Output", this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib));
         // console.log("haha", results);
 
         if (intensive) {

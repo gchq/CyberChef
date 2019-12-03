@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 
 /**
@@ -25,7 +26,13 @@ class DefangIPAddresses extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-
+        this.checks = new magicObject([
+            {
+                match: "^\\s*(([0-9]{1,3}.){3}[0-9]{1,3}|([0-9a-f]{4}:){7}[0-9a-f]{4})\\s*$",
+                flags: "i",
+                args: [],
+            }
+        ]);
     }
 
     /**

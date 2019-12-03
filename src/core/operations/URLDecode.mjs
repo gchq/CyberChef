@@ -32,14 +32,14 @@ class URLDecode extends Operation {
                 args: [],
             }
         ],
-        [
+        /*[
             {
                 match: "^(?:(http(s)?|ftp):\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
                 flags: "i",
                 shouldMatch: true,
                 args: []
             }
-        ]
+        ]*/
         );
     }
 
