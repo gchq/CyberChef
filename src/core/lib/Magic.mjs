@@ -244,6 +244,45 @@ class Magic {
         return results;
     }
 
+    async regexesTests(flag, sensible, prevOp, depth, extLang, intensive, recipeConfig, crib) {
+        let results = []
+        // Execute each of the matching operations, then recursively call the speculativeExecution()
+        // method on the resulting data, recording the properties of each option.
+        await Promise.all(sensible.map(async op => {
+            const opConfig = {
+                    op: op.op,                        
+                    args: op.args
+                },
+                output = await this._runRecipe([opConfig]);
+
+                // If the recipe is repeating and returning the same data, do not continue
+            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
+                return;
+            }
+
+            // If the recipe returned an empty buffer, do not continue
+            if (_buffersEqual(output, new ArrayBuffer())) {
+                return;
+            }
+            if (flag) {
+                const outputRegexes = OperationConfig[op.op].outputRegexes;
+                if (outputRegexes)
+                    for (const pattern of outputRegexes)
+                        if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))))
+                            return;
+            } else {
+                if(!(new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output))))
+                    return;
+            }
+            const magic = new Magic(output, this.opPatterns),
+                speculativeResults = await magic.speculativeExecution(
+                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
+
+            results = results.concat(speculativeResults);
+        }));
+        return results;
+    }
+
     /**
      * Speculatively executes matching operations, recording metadata of each result.
      *
@@ -279,58 +318,13 @@ class Magic {
         });
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
-        /**
-         *
-         * @param flag
-         * @param sensible
-         */
-        async function regexesTests(flag, sensible) {
-
-            // Execute each of the matching operations, then recursively call the speculativeExecution()
-            // method on the resulting data, recording the properties of each option.
-            await Promise.all(sensible.map(async op => {
-                const opConfig = {
-                        op: op.op,
-                        args: op.args
-                    },
-                    output = await this._runRecipe([opConfig]);
-
-                // If the recipe is repeating and returning the same data, do not continue
-                if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
-                    return;
-                }
-
-                // If the recipe returned an empty buffer, do not continue
-                if (_buffersEqual(output, new ArrayBuffer())) {
-                    return;
-                }
-                if (flag) {
-                    const outputRegexes = OperationConfig[op.op].outputRegexes;
-                    if (outputRegexes)
-                        for (const pattern of outputRegexes)
-                            if (!(new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))))
-                                return;
-                } else {
-                    if (!(op.match.test(output))) {
-                        return;
-                    }
-                }
-                const magic = new Magic(output, this.opPatterns),
-                    speculativeResults = await magic.speculativeExecution(
-                        depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
-
-                results = results.concat(speculativeResults);
-            }));
-        }
-
-        regexesTests(1, matchingOps);
-        // regexesTests(0, this.opPatterns.getOutputRegexes());
+        results = results.concat(await this.regexesTests(1, matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib));
+        results = results.concat(await this.regexesTests(0, this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib));
         // console.log("haha", results);
 
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
             const bfEncodings = await this.bruteForce();
-
             await Promise.all(bfEncodings.map(async enc => {
                 const magic = new Magic(enc.data, this.opPatterns),
                     bfResults = await magic.speculativeExecution(
@@ -353,7 +347,7 @@ class Magic {
             )
         );
 
-        console.log("important", prunedResults);
+        // console.log("important", prunedResults);
 
         // Return a sorted list of possible recipes along with their properties
         return prunedResults.sort((a, b) => {
