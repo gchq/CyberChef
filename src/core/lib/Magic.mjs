@@ -245,7 +245,7 @@ class Magic {
     }
 
     /**
-     * Uses the checks to validate the input/output of potential operations.
+     * Uses the checks to validate the input//output of potential operations.
      *
      * @param {string} flag
      * @param {array} sensible
@@ -264,9 +264,13 @@ class Magic {
             const opConfig = {
                     op: op.op,
                     args: op.args
-                },
-                output = await this._runRecipe([opConfig]);
-
+                };
+                let output;
+                try {
+                    output = await this._runRecipe([opConfig]);
+                } catch(err) {
+                    return;
+                }
                 // If the recipe is repeating and returning the same data, do not continue
             if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
                 return;

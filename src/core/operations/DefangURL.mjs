@@ -7,6 +7,7 @@
 
 import Operation from "../Operation.mjs";
 import {URL_REGEX, DOMAIN_REGEX} from "../lib/Extract.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * DefangURL operation
@@ -47,6 +48,48 @@ class DefangURL extends Operation {
                 value: ["Valid domains and full URLs", "Only full URLs", "Everything"]
             }
         ];
+        this.checks = new magicObject([
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [false, false, false, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [true, false, false, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [false, true, false, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [true, true, false, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [false, false, true, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [true, false, true, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [false, true, true, "Everything"],
+            },
+            {
+                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                flags: "i",
+                args: [true, true, true, "Everything"],
+            }
+        ]);
     }
 
     /**
