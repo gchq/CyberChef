@@ -305,8 +305,6 @@ class Magic {
                         if (op.shouldMatch)
                             return;
                     }
-                    console.log(output);
-                    console.log(this.inputBuffer);
                     break;
             }
             const magic = new Magic(output, this.opPatterns),
@@ -355,7 +353,6 @@ class Magic {
 
         results = results.concat(await this.regexesTests("Input", matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib));
         results = results.concat(await this.regexesTests("Output", this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib));
-        // console.log("haha", results);
 
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
@@ -369,7 +366,6 @@ class Magic {
             }));
         }
 
-       // console.log(results);
 
         // Prune branches that result in unhelpful outputs
         const prunedResults = results.filter(r =>
@@ -382,7 +378,6 @@ class Magic {
             )
         );
 
-        // console.log("important", prunedResults);
 
         // Return a sorted list of possible recipes along with their properties
         return prunedResults.sort((a, b) => {
