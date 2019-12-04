@@ -89,6 +89,14 @@ class DefangURL extends Operation {
                 flags: "i",
                 args: [true, true, true, "Everything"],
             }
+        ],
+        [
+            {
+                match: "^\\s*(h(tt|xx)ps?|ftp)(://|\\[://\\])(-(\\.|\\[\\.\\]))?([^\\s/?\\.\\[\\]#-]+(\\.|\\[\\.\\])?)+(/\\S*)?\\s*$",
+                flags: "i",
+                shouldMatch: true,
+                args: [true, true, true, "Everything"],
+            }
         ]);
     }
 

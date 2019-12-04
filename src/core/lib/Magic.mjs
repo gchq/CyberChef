@@ -271,7 +271,7 @@ class Magic {
             } catch (err) {
                 return;
             }
-                // If the recipe is repeating and returning the same data, do not continue
+            // If the recipe is repeating and returning the same data, do not continue
             if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
                 return;
             }
@@ -284,7 +284,9 @@ class Magic {
             const outputRegexes = OperationConfig[op.op].outputRegexes;
             switch (flag) {
                 case "Input":
-                    if (outputRegexes)
+                    if (outputRegexes) { 
+                        if (_buffersEqual(output, this.inputBuffer))
+                            return;
                         for (const pattern of outputRegexes)
                             if (new RegExp(pattern.match, pattern.flags).test(Utils.arrayBufferToStr(output))) {
                                 if (!pattern.shouldMatch)
@@ -293,6 +295,7 @@ class Magic {
                                 if (pattern.shouldMatch)
                                     return;
                             }
+                    }
                     break;
                 case "Output":
                     if (new RegExp(op.match, op.flags).test(Utils.arrayBufferToStr(output))) {
@@ -302,9 +305,9 @@ class Magic {
                         if (op.shouldMatch)
                             return;
                     }
+                    console.log(output);
+                    console.log(this.inputBuffer);
                     break;
-                default:
-                    console.log("This is borked");
             }
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
