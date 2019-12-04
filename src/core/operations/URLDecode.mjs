@@ -31,16 +31,7 @@ class URLDecode extends Operation {
                 flags: "i",
                 args: [],
             }
-        ],
-        /* [
-            {
-                match: "^(?:(http(s)?|ftp):\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
-                flags: "i",
-                shouldMatch: true,
-                args: []
-            }
-        ] */
-        );
+        ]);
     }
 
     /**
