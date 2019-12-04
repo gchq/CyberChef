@@ -143,13 +143,10 @@ export class ColossusComputer {
         this.Xptr = [this.rotorPtrs.X1, this.rotorPtrs.X2, this.rotorPtrs.X3, this.rotorPtrs.X4, this.rotorPtrs.X5];
         this.Mptr = [this.rotorPtrs.M37, this.rotorPtrs.M61];
         this.Sptr = [this.rotorPtrs.S1, this.rotorPtrs.S2, this.rotorPtrs.S3, this.rotorPtrs.S4, this.rotorPtrs.S5];
-        // console.log(this.Xptr);
 
         // Run full loop of all character on the input tape (Z)
         for (let i=0; i<this.ciphertext.length; i++) {
             charZin = this.ciphertext.charAt(i);
-
-            // console.log('reading tape char #'+i+' : '+charZin);
 
             // Firstly, we check what inputs are specified on the Q-bus input switches
             this.getQbusInputs(charZin);
@@ -158,13 +155,13 @@ export class ColossusComputer {
              * Pattern conditions on individual impulses. Matching patterns of bits on the Q bus.
              * This is the top section on Colussus K rack - the Q bus programming switches
              */
-            this.runQbusProcessingConditional();
+            const tmpcnt = this.runQbusProcessingConditional();
 
             /*
              * Addition of impulses.
              * This is the bottom section of Colossus K rack.
              */
-            this.runQbusProcessingAddition();
+            this.runQbusProcessingAddition(tmpcnt);
 
             // Store Z bit impulse 5 two back required for P5 limitation
             this.P5Zbit[1] = this.P5Zbit[0];
@@ -191,14 +188,14 @@ export class ColossusComputer {
 
         // Get Chi rotor 5 two back to calculate plaintext (Z+Chi+Psi=Plain)
         let X5bPtr=this.Xptr[4]-1;
-        if (X5bPtr==0) X5bPtr=ROTOR_SIZES.X5;
+        if (X5bPtr===0) X5bPtr=ROTOR_SIZES.X5;
         X5bPtr=X5bPtr-1;
-        if (X5bPtr==0) X5bPtr=ROTOR_SIZES.X5;
+        if (X5bPtr===0) X5bPtr=ROTOR_SIZES.X5;
         // Get Psi rotor 5 two back to calculate plaintext (Z+Chi+Psi=Plain)
         let S5bPtr=this.Sptr[4]-1;
-        if (S5bPtr==0) S5bPtr=ROTOR_SIZES.S5;
+        if (S5bPtr===0) S5bPtr=ROTOR_SIZES.S5;
         S5bPtr=S5bPtr-1;
-        if (S5bPtr==0) S5bPtr=ROTOR_SIZES.S5;
+        if (S5bPtr===0) S5bPtr=ROTOR_SIZES.S5;
 
         const x2sw = this.limitations.X2;
         const s1sw = this.limitations.S1;
@@ -217,8 +214,6 @@ export class ColossusComputer {
             lim = lim ^ p5lim;
         }
 
-        // console.log(this.Mptr);
-        // console.log(this.rings.M[2]);
         const basicmotor = this.rings.M[2][this.Mptr[0]-1];
         this.totalmotor = basicmotor;
 
@@ -230,8 +225,6 @@ export class ColossusComputer {
             }
         }
 
-        // console.log('BM='+basicmotor+', TM='+this.totalmotor);
-
         // Step Chi rotors
         for (let r=0; r<5; r++) {
             this.Xptr[r]++;
@@ -239,7 +232,6 @@ export class ColossusComputer {
         }
 
         if (this.totalmotor) {
-            // console.log('step Psi');
             // Step Psi rotors
             for (let r=0; r<5; r++) {
                 this.Sptr[r]++;
@@ -263,81 +255,56 @@ export class ColossusComputer {
     getQbusInputs(charZin) {
         // Zbits - the bits from the current character from the cipher tape.
         this.Zbits = this.ITAlookup[charZin].split("");
-        // console.log('Zbits = '+this.Zbits);
         if (this.qbusin.Z === "Z") {
             // direct Z
             this.Qbits = this.Zbits;
-            // console.log('direct Z: Qbits = '+this.Qbits);
         } else if (this.qbusin.Z === "ΔZ") {
             // delta Z, the Bitwise XOR of this character Zbits + last character Zbits
             for (let b=0;b<5;b++) {
                 this.Qbits[b] = this.Zbits[b] ^ this.ZbitsOneBack[b];
             }
-
-            // console.log('delta Z: Qbits = '+this.Qbits);
         }
         this.ZbitsOneBack = this.Zbits.slice(); // copy value of object, not reference
 
-        // console.log('Zin::Q bus now '+this.Qbits+'['+this.ReverseITAlookup[this.Qbits.join("")]+']');
-
         // Xbits - the current Chi wheel bits
-        // console.log(this.rings.X);
-        // console.log('Xptr = '+this.Xptr);
-
         for (let b=0;b<5;b++) {
             this.Xbits[b] = this.rings.X[b+1][this.Xptr[b]-1];
         }
         if (this.qbusin.Chi !== "") {
-            // console.log('X Bits '+this.Xbits+'['+this.ReverseITAlookup[this.Xbits.join("")]+']');
-            // console.log('X Char = ' + this.ReverseITAlookup[this.Xbits.join("")]);
             if (this.qbusin.Chi === "Χ") {
                 // direct X added to Qbits
                 for (let b=0;b<5;b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Xbits[b];
                 }
-                // console.log('direct X: Qbits = '+this.Qbits);
             } else if (this.qbusin.Chi === "ΔΧ") {
                 // delta X
                 for (let b=0;b<5;b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Xbits[b];
                     this.Qbits[b] = this.Qbits[b] ^ this.XbitsOneBack[b];
                 }
-                // console.log('delta X: Xbits = '+this.Xbits+' Xbits-1 = '+this.XbitsOneBack);
-                // console.log('delta X: Qbits = '+this.Qbits);
             }
         }
         this.XbitsOneBack = this.Xbits.slice();
-        // console.log('setting XbitsOneBack to '+this.Xbits);
-
-        // console.log('Zin+Xin::Q bus now '+this.Qbits+'['+this.ReverseITAlookup[this.Qbits.join("")]+']');
 
         // Sbits - the current Psi wheel bits
-        // console.log(this.rings.S);
-        // console.log('Sptr = '+this.Sptr);
         for (let b=0;b<5;b++) {
             this.Sbits[b] = this.rings.S[b+1][this.Sptr[b]-1];
         }
         if (this.qbusin.Psi !== "") {
-            // console.log('S Bits '+this.Sbits+'['+this.ReverseITAlookup[this.Sbits.join("")]+']');
-            // console.log('S Char = ' + this.ReverseITAlookup[this.Sbits.join("")]);
             if (this.qbusin.Psi === "Ψ") {
                 // direct S added to Qbits
                 for (let b=0;b<5;b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Sbits[b];
                 }
-                // console.log('direct S: Qbits = '+this.Qbits);
             } else if (this.qbusin.Psi === "ΔΨ") {
                 // delta S
                 for (let b=0;b<5;b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Sbits[b];
                     this.Qbits[b] = this.Qbits[b] ^ this.SbitsOneBack[b];
                 }
-                // console.log('delta S: Qbits = '+this.Qbits);
             }
         }
         this.SbitsOneBack = this.Sbits.slice();
-
-        // console.log('Q bus now '+this.Qbits+'['+this.ReverseITAlookup[this.Qbits.join("")]+']');
     }
 
     /**
@@ -355,7 +322,7 @@ export class ColossusComputer {
                 const Qswitch = this.readBusSwitches(row.Qswitches);
                 // Match switches to bit pattern
                 for (let s=0;s<5;s++) {
-                    if (Qswitch[s] >= 0 && Qswitch[s] !== parseInt(this.Qbits[s],10)) result = false;
+                    if (Qswitch[s] >= 0 && Qswitch[s] !== parseInt(this.Qbits[s], 10)) result = false;
                 }
                 // Check for NOT switch
                 if (row.Negate) result = !result;
@@ -372,21 +339,21 @@ export class ColossusComputer {
         // Negate the whole column, this allows A OR B by doing NOT(NOT A AND NOT B)
         for (let c=0;c<5;c++) {
             if (this.qbusswitches.condNegateAll && cnt[c] !== -1) cnt[c] = !cnt[c];
-
-            if (this.qbusswitches.totalMotor === "" || (this.qbusswitches.totalMotor === "x" && this.totalmotor === 0) || (this.qbusswitches.totalMotor === "." && this.totalmotor === 1)) {
-                if (cnt[c] === true) this.allCounters[c]++;
-            }
-
         }
+
+        return cnt;
 
     }
 
     /**
      * Addition of impulses Q bus section
      */
-    runQbusProcessingAddition() {
+    runQbusProcessingAddition(cnt) {
         const row = this.qbusswitches.addition[0];
         const Qswitch = row.Qswitches.slice();
+
+        // To save making the arguments of this operation any larger, limiting addition counter to first one only
+        // Colossus could actually add into any of the five counters.
         if (row.C1) {
             let addition = 0;
             for (let s=0;s<5;s++) {
@@ -397,10 +364,24 @@ export class ColossusComputer {
             }
             const equals = (row.Equals===""?-1:(row.Equals==="."?0:1));
             if (addition === equals) {
-                this.allCounters[0]++;
+                // AND with conditional rows to get final result
+                if (cnt[0] === -1) cnt[0] = true;
+            } else {
+                cnt[0] = false;
             }
         }
-        // console.log("counter1="+this.allCounters[0]);
+
+        // Final check, check for addition section negate
+        // then, if any column set, from top to bottom of rack, add to counter.
+        for (let c=0;c<5;c++) {
+            if (this.qbusswitches.addNegateAll && cnt[c] !== -1) cnt[c] = !cnt[c];
+
+            if (this.qbusswitches.totalMotor === "" || (this.qbusswitches.totalMotor === "x" && this.totalmotor === 0) || (this.qbusswitches.totalMotor === "." && this.totalmotor === 1)) {
+                if (cnt[c] === true) this.allCounters[c]++;
+            }
+
+        }
+
     }
 
     /**

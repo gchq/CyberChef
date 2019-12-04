@@ -17,13 +17,13 @@ import { SWITCHES, VALID_ITA2 } from "../lib/Lorenz.mjs";
 class Colossus extends Operation {
 
     /**
-     * Lorenz constructor
+     * Colossus constructor
      */
     constructor() {
         super();
         this.name = "Colossus";
         this.module = "Bletchley";
-        this.description = "Colossus ... ";
+        this.description = "Colossus is the name of the world's first electronic computer. Ten computers were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines.<br><br>To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at <a href='https://virtualcolossus.co.uk' target='_blank'>https://virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/VirtualColossus/CyberChef/wiki/Colossus' target='_blank'>here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Colossus_computer";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -438,8 +438,6 @@ class Colossus extends Operation {
         const colossus = new ColossusComputer(input, pattern, qbusin, qbusswitches, control, starts, settotal, limit);
         const result = colossus.run();
 
-        console.log(result);
-
         return result;
 
     }
@@ -553,9 +551,6 @@ class Colossus extends Operation {
      * @returns {html}
      */
     present(output) {
-        console.log("output="+ typeof(output));
-        console.log("counters="+ typeof(output.counters));
-
         let html = "Colossus Printer\n\n";
         html += output.printout + "\n\n";
         html += "Colossus Counters\n\n";
