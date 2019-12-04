@@ -85,17 +85,16 @@ class potentialOps {
     generateInputOpPatterns() {
         const opPatterns = [];
         for (const op in OperationConfig) {
-            if (!("inputRegexes" in OperationConfig[op])) continue;
-
-            OperationConfig[op].inputRegexes.forEach(pattern => {
-                opPatterns.push({
-                    op: op,
-                    match: pattern.match,
-                    flags: pattern.flags,
-                    args: pattern.args,
-                    useful: pattern.useful || false
+            if (("inputRegexes" in OperationConfig[op]) && !!(OperationConfig[op].inputRegexes))
+                OperationConfig[op].inputRegexes.forEach(pattern => {
+                    opPatterns.push({
+                        op: op,
+                        match: pattern.match,
+                        flags: pattern.flags,
+                        args: pattern.args,
+                        useful: pattern.useful || false
+                    });
                 });
-            });
         }
 
         return opPatterns;
@@ -109,20 +108,19 @@ class potentialOps {
     generateOutputOpPatterns() {
         const opPatterns = [];
         for (const op in OperationConfig) {
-            if (!(OperationConfig[op].outputRegexes) && (OperationConfig[op].inputRegexes)) continue;
-
-            OperationConfig[op].outputRegexes.forEach(pattern => {
-                opPatterns.push({
-                    op: op,
-                    match: pattern.match,
-                    flags: pattern.flags,
-                    shouldMatch: pattern.shouldMatch,
-                    args: pattern.args,
-                    useful: pattern.useful || false
+            if ((OperationConfig[op].outputRegexes) && !(OperationConfig[op].inputRegexes))
+                OperationConfig[op].outputRegexes.forEach(pattern => {
+                    opPatterns.push({
+                        op: op,
+                        match: pattern.match,
+                        flags: pattern.flags,
+                        shouldMatch: pattern.shouldMatch,
+                        args: pattern.args,
+                        useful: pattern.useful || false
+                    });
                 });
-            });
         }
-
+        console.log(opPatterns);
         return opPatterns;
     }
 

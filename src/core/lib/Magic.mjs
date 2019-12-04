@@ -280,7 +280,7 @@ class Magic {
             if (_buffersEqual(output, new ArrayBuffer())) {
                 return;
             }
-
+            
             const outputRegexes = OperationConfig[op.op].outputRegexes;
             switch (flag) {
                 case "Input":
