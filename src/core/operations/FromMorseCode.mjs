@@ -42,6 +42,7 @@ class FromMorseCode extends Operation {
             {
                 match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
                 flags: "i",
+                magic:  true,
                 args: ["Space", "Line feed"]
             },
         ]);

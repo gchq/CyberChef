@@ -30,6 +30,7 @@ class ParseUNIXFilePermissions extends Operation {
             {
                 match:  "^\\s*d[rxw-]{9}\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   []
             }
         ]);

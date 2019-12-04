@@ -38,9 +38,10 @@ class ParseX509Certificate extends Operation {
         ];
         this.checks = new magicObject([
             {
-                "match": "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
-                "flags": "i",
-                "args": [
+                match: "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
+                flags: "i",
+                magic:  true,
+                args: [
                     "PEM"
                 ]
             }

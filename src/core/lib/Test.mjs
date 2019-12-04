@@ -87,13 +87,14 @@ class potentialOps {
         for (const op in OperationConfig) {
             if (("inputRegexes" in OperationConfig[op]) && !!(OperationConfig[op].inputRegexes))
                 OperationConfig[op].inputRegexes.forEach(pattern => {
-                    opPatterns.push({
-                        op: op,
-                        match: pattern.match,
-                        flags: pattern.flags,
-                        args: pattern.args,
-                        useful: pattern.useful || false
-                    });
+                    if(pattern.magic)
+                        opPatterns.push({
+                            op: op,
+                            match: pattern.match,
+                            flags: pattern.flags,
+                            args: pattern.args,
+                            useful: pattern.useful || false
+                        });
                 });
         }
 
@@ -110,14 +111,15 @@ class potentialOps {
         for (const op in OperationConfig) {
             if ((OperationConfig[op].outputRegexes) && !(OperationConfig[op].inputRegexes))
                 OperationConfig[op].outputRegexes.forEach(pattern => {
-                    opPatterns.push({
-                        op: op,
-                        match: pattern.match,
-                        flags: pattern.flags,
-                        shouldMatch: pattern.shouldMatch,
-                        args: pattern.args,
-                        useful: pattern.useful || false
-                    });
+                    if(pattern.magic)
+                        opPatterns.push({
+                            op: op,
+                            match: pattern.match,
+                            flags: pattern.flags,
+                            shouldMatch: pattern.shouldMatch,
+                            args: pattern.args,
+                            useful: pattern.useful || false
+                        });
                 });
         }
 

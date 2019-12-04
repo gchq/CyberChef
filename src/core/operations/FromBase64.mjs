@@ -41,66 +41,79 @@ class FromBase64 extends Operation {
             {
                 match: "^\\s*(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["A-Za-z0-9+/=", true]
             },
             {
                 match: "^\\s*[A-Z\\d\\-_]{20,}\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["A-Za-z0-9-_", true]
             },
             {
                 match: "^\\s*(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["A-Za-z0-9+\\-=", true]
             },
             {
                 match: "^\\s*(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["./0-9A-Za-z=", true]
             },
             {
                 match: "^\\s*[A-Z\\d_.]{20,}\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["A-Za-z0-9_.", true]
             },
             {
                 match: "^\\s*(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["A-Za-z0-9._-", true]
             },
             {
                 match: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["0-9a-zA-Z+/=", true]
             },
             {
                 match: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["0-9A-Za-z+/=", true]
             },
             {
                 match: "^[ !\"#$%&'()*+,\\-./\\d:;<=>?@A-Z[\\\\\\]^_]{20,}$",
                 flags: "",
+                magic:  true,
                 args: [" -_", false]
             },
             {
                 match: "^\\s*[A-Z\\d+\\-]{20,}\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["+\\-0-9A-Za-z", true]
             },
             {
                 match: "^\\s*[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}\\s*$",
                 flags: "",
+                magic:  true,
                 args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", true]
             },
             {
                 match: "^\\s*(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["N-ZA-Mn-za-m0-9+/=", true]
             },
             {
                 match: "^\\s*[A-Z\\d./]{20,}\\s*$",
                 flags: "i",
+                magic:  true,
                 args: ["./0-9A-Za-z", true]
             },
         ]);

@@ -29,6 +29,7 @@ class StripHTTPHeaders extends Operation {
             {
                 match:  "^\\s*HTTP(.|\\s)+?(\\r?\\n){2}",
                 flags:  "",
+                magic:  true,
                 args:   []
             }
         ]);

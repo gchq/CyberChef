@@ -43,11 +43,13 @@ class FromBase58 extends Operation {
             {
                 match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
                 flags: "",
+                magic:  true,
                 args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz", false]
             },
             {
                 match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
                 flags: "",
+                magic:  true,
                 args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz", false]
             },
         ]);

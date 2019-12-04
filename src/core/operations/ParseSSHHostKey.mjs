@@ -43,6 +43,7 @@ class ParseSSHHostKey extends Operation {
             {
                 match:  "^\\s*([A-F\\d]{2}[,;:]){15,}[A-F\\d]{2}\\s*$",
                 flags:  "i",
+                magic:  true,
                 args:   ["Hex"]
             }
         ]);

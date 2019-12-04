@@ -32,6 +32,7 @@ class Gunzip extends Operation {
             {
                 match: "^\\x1f\\x8b\\x08",
                 flags: "",
+                magic:  true,
                 args: []
             },
         ]);

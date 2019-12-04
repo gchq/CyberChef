@@ -29,6 +29,7 @@ class URLDecode extends Operation {
             {
                 match: ".*(?:%[\\da-f]{2}.*){4}",
                 flags: "i",
+                magic:  true,
                 args: [],
             }
         ]);

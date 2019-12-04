@@ -33,6 +33,7 @@ class FromQuotedPrintable extends Operation {
             {
                 match: "^[\\x21-\\x3d\\x3f-\\x7e \\t]{0,76}(?:=[\\da-f]{2}|=\\r?\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\r?\\n)*$",
                 flags: "i",
+                magic:  true,
                 args: []
             },
         ]);

@@ -64,6 +64,7 @@ class ZlibInflate extends Operation {
             {
                 match: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
                 flags: "",
+                magic:  true,
                 args: [0, 0, "Adaptive", false, false]
             },
         ]);

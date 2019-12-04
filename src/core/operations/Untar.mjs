@@ -30,9 +30,10 @@ class Untar extends Operation {
         this.args = [];
         this.checks = new magicObject([
             {
-                "match": "^.{257}\\x75\\x73\\x74\\x61\\x72",
-                "flags": "",
-                "args": []
+                match: "^.{257}\\x75\\x73\\x74\\x61\\x72",
+                flags: "",
+                magic:  true,
+                args: []
             }
         ]);
     }

@@ -29,6 +29,7 @@ class DechunkHTTPResponse extends Operation {
             {
                 match:  "^\\s*[0-9A-F]+\r\n",
                 flags:  "i",
+                magic:  true,
                 args:   []
             }
         ]);

@@ -30,6 +30,7 @@ class ParseUserAgent extends Operation {
             {
                 match:  "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
                 flags:  "i",
+                magic:  true,
                 args:   []
             }
         ]);

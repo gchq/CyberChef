@@ -38,36 +38,43 @@ class FromBinary extends Operation {
             {
                 match: "^(?:[01]{8})+$",
                 flags: "",
+                magic:  true,
                 args: ["None"]
             },
             {
                 match: "^(?:[01]{8})(?: [01]{8})*$",
                 flags: "",
+                magic:  true,
                 args: ["Space"]
             },
             {
                 match: "^(?:[01]{8})(?:,[01]{8})*$",
                 flags: "",
+                magic:  true,
                 args: ["Comma"]
             },
             {
                 match: "^(?:[01]{8})(?:;[01]{8})*$",
                 flags: "",
+                magic:  true,
                 args: ["Semi-colon"]
             },
             {
                 match: "^(?:[01]{8})(?::[01]{8})*$",
                 flags: "",
+                magic:  true,
                 args: ["Colon"]
             },
             {
                 match: "^(?:[01]{8})(?:\\n[01]{8})*$",
                 flags: "",
+                magic:  true,
                 args: ["Line feed"]
             },
             {
                 match: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
                 flags: "",
+                magic:  true,
                 args: ["CRLF"]
             },
         ]);

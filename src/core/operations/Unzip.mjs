@@ -45,6 +45,7 @@ class Unzip extends Operation {
             {
                 match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
                 flags: "",
+                magic:  true,
                 args: ["", false]
             },
         ]);

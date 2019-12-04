@@ -41,31 +41,37 @@ class FromDecimal extends Operation {
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
+                magic:  true,
                 args: ["Space", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
+                magic:  true,
                 args: ["Comma", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
+                magic:  true,
                 args: ["Semi-colon", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
+                magic:  true,
                 args: ["Colon", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
+                magic:  true,
                 args: ["Line feed", false]
             },
             {
                 match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
                 flags: "",
+                magic:  true,
                 args: ["CRLF", false]
             },
         ]);

@@ -35,6 +35,7 @@ class DecodeNetBIOSName extends Operation {
             {
                 match:  "^\\s*\\S{32}$",
                 flags:  "",
+                magic:  true,
                 args:   [65]
             }
         ]);

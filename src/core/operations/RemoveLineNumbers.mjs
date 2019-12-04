@@ -28,6 +28,7 @@ class RemoveLineNumbers extends Operation {
             {
                 match:  "^\\s*([0-9]+ .*?(\\n))+[0-9] .+$",
                 flags:  "",
+                magic:  true,
                 args:   []
             }
         ]);

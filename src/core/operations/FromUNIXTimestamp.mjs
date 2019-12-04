@@ -38,21 +38,25 @@ class FromUNIXTimestamp extends Operation {
             {
                 match: "^1?\\d{9}$",
                 flags: "",
+                magic:  true,
                 args: ["Seconds (s)"]
             },
             {
                 match: "^1?\\d{12}$",
                 flags: "",
+                magic:  true,
                 args: ["Milliseconds (ms)"]
             },
             {
                 match: "^1?\\d{15}$",
                 flags: "",
+                magic:  true,
                 args: ["Microseconds (μs)"]
             },
             {
                 match: "^1?\\d{18}$",
                 flags: "",
+                magic:  true,
                 args: ["Nanoseconds (ns)"]
             },
         ]);

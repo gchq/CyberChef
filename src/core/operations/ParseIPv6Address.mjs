@@ -33,6 +33,7 @@ class ParseIPv6Address extends Operation {
             {
                 match:  "^\\s*([a-f\\d]{4}:?)+\\s*$",
                 flags:  "i",
+                magic:  false,
                 args:   []
             }
         ]);

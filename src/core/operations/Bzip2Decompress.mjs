@@ -36,9 +36,10 @@ class Bzip2Decompress extends Operation {
         ];
         this.checks = new magicObject([
             {
-                "match": "^\\x42\\x5a\\x68",
-                "flags": "",
-                "args": []
+                match: "^\\x42\\x5a\\x68",
+                flags: "",
+                magic:  true,
+                args: []
             }
         ]);
     }

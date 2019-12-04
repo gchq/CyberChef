@@ -38,31 +38,37 @@ class A1Z26CipherDecode extends Operation {
             {
                 match:  "^\\s*([12]?[0-9] )+[12]?[0-9]\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   ["Space"]
             },
             {
                 match:  "^\\s*([12]?[0-9],)+[12]?[0-9]\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   ["Comma"]
             },
             {
                 match:  "^\\s*([12]?[0-9];)+[12]?[0-9]\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   ["Semi-colon"]
             },
             {
                 match:  "^\\s*([12]?[0-9]:)+[12]?[0-9]\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   ["Colon"]
             },
             {
                 match:  "^\\s*([12]?[0-9]\\n)+[12]?[0-9]\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   ["Line feed"]
             },
             {
                 match:  "^\\s*([12]?[0-9]\\r\\n)+[12]?[0-9]\\s*$",
                 flags:  "",
+                magic:  true,
                 args:   ["CRLF"]
             }
         ]);

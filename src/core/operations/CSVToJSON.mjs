@@ -47,11 +47,13 @@ class CSVToJSON extends Operation {
             {
                 match:  "^\\s*([A-Z\\s]*,){5}",
                 flags:  "i",
+                magic:  true,
                 args:   [",", "\r\n", "Array of dictionaries"]
             },
             {
                 match:  "^\\s*([A-Z\\s]*,){5}",
                 flags:  "i",
+                magic:  true,
                 args:   [",", "\r\n", "Array of arrays"]
             }
         ]);

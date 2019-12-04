@@ -41,6 +41,7 @@ class StripHTMLTags extends Operation {
             {
                 match:  "^<html>(\\S|\\s)*</html>$",
                 flags:  "i",
+                magic:  true,
                 args:   [true, true]
             }
         ]);

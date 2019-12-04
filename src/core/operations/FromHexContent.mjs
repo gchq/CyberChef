@@ -31,6 +31,7 @@ class FromHexContent extends Operation {
             {
                 match:  "^\\s*.*?\\|([0-9a-f]{2})+\\|.*$",
                 flags:  "i",
+                magic:  true,
                 args:   []
             }
         ]);

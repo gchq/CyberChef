@@ -31,6 +31,7 @@ class CitrixCTX1Decode extends Operation {
             {
                 match:  "([A-Z]{4}){10,}",
                 flags:  "",
+                magic:  true,
                 args:   []
             }
         ]);
