@@ -60,6 +60,7 @@ export class ColossusComputer {
         this.rotorPtrs = {};
 
         this.totalmotor = 0;
+        this.P5Zbit = [0, 0];
 
     }
 
@@ -165,6 +166,10 @@ export class ColossusComputer {
              */
             this.runQbusProcessingAddition();
 
+            // Store Z bit impulse 5 two back required for P5 limitation
+            this.P5Zbit[1] = this.P5Zbit[0];
+            this.P5Zbit[0] = this.ITAlookup[charZin].split("")[4];
+
             // Step rotors
             this.stepThyratrons();
 
@@ -184,14 +189,32 @@ export class ColossusComputer {
         let S1bPtr = this.Sptr[0]-1;
         if (S1bPtr===0) S1bPtr = ROTOR_SIZES.S1;
 
+        // Get Chi rotor 5 two back to calculate plaintext (Z+Chi+Psi=Plain)
+        let X5bPtr=this.Xptr[4]-1;
+        if (X5bPtr==0) X5bPtr=ROTOR_SIZES.X5;
+        X5bPtr=X5bPtr-1;
+        if (X5bPtr==0) X5bPtr=ROTOR_SIZES.X5;
+        // Get Psi rotor 5 two back to calculate plaintext (Z+Chi+Psi=Plain)
+        let S5bPtr=this.Sptr[4]-1;
+        if (S5bPtr==0) S5bPtr=ROTOR_SIZES.S5;
+        S5bPtr=S5bPtr-1;
+        if (S5bPtr==0) S5bPtr=ROTOR_SIZES.S5;
+
         const x2sw = this.limitations.X2;
         const s1sw = this.limitations.S1;
+        const p5sw = this.limitations.P5;
 
         // Limitation calculations
         let lim=1;
         if (x2sw) lim = this.rings.X[2][X2bPtr-1];
-        if (s1sw) {
-            lim = lim ^ this.rings.S[1][S1bPtr-1];
+        if (s1sw) lim = lim ^ this.rings.S[1][S1bPtr-1];
+
+        // P5
+        if (p5sw) {
+            let p5lim = this.P5Zbit[1];
+            p5lim = p5lim ^ this.rings.X[5][X5bPtr-1];
+            p5lim = p5lim ^ this.rings.S[5][S5bPtr-1];
+            lim = lim ^ p5lim;
         }
 
         // console.log(this.Mptr);
