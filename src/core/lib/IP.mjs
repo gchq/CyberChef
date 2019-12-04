@@ -64,7 +64,7 @@ export function ipv6CidrRange(cidr, includeNetworkInfo) {
         cidrRange = parseInt(cidr[cidr.length-1], 10);
 
     if (cidrRange < 0 || cidrRange > 127) {
-        return "IPv6 CIDR must be less than 128";
+        throw new OperationError("IPv6 CIDR must be less than 128");
     }
 
     const ip1 = new Array(8),
@@ -254,7 +254,7 @@ export function ipv6ListedRange(match, includeNetworkInfo) {
         const cidrRange = parseInt(ipv6CidrList[i].split("/")[1], 10);
 
         if (cidrRange < 0 || cidrRange > 127) {
-            return "IPv6 CIDR must be less than 128";
+            throw new OperationError("IPv6 CIDR must be less than 128");
         }
 
         const cidrIp1 = new Array(8),

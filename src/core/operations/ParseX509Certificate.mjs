@@ -31,9 +31,9 @@ class ParseX509Certificate extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Input format",
-                "type": "option",
-                "value": ["PEM", "DER Hex", "Base64", "Raw"]
+                name: "Input format",
+                type: "option",
+                value: ["PEM", "DER Hex", "Base64", "Raw"]
             }
         ];
         this.checks = new magicObject([
