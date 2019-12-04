@@ -284,7 +284,7 @@ class Magic {
             const outputRegexes = OperationConfig[op.op].outputRegexes;
             switch (flag) {
                 case "Input":
-                    if (outputRegexes) { 
+                    if (outputRegexes) {
                         if (_buffersEqual(output, this.inputBuffer))
                             return;
                         for (const pattern of outputRegexes)

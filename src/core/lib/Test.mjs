@@ -87,7 +87,7 @@ class potentialOps {
         for (const op in OperationConfig) {
             if (("inputRegexes" in OperationConfig[op]) && !!(OperationConfig[op].inputRegexes))
                 OperationConfig[op].inputRegexes.forEach(pattern => {
-                    if(pattern.magic)
+                    if (pattern.magic)
                         opPatterns.push({
                             op: op,
                             match: pattern.match,
@@ -111,7 +111,7 @@ class potentialOps {
         for (const op in OperationConfig) {
             if ((OperationConfig[op].outputRegexes) && !(OperationConfig[op].inputRegexes))
                 OperationConfig[op].outputRegexes.forEach(pattern => {
-                    if(pattern.magic)
+                    if (pattern.magic)
                         opPatterns.push({
                             op: op,
                             match: pattern.match,
