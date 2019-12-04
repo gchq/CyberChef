@@ -120,7 +120,7 @@ class potentialOps {
                     });
                 });
         }
-        console.log(opPatterns);
+
         return opPatterns;
     }
 

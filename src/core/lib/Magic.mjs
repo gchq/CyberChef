@@ -262,15 +262,15 @@ class Magic {
         // method on the resulting data, recording the properties of each option.
         await Promise.all(sensible.map(async op => {
             const opConfig = {
-                    op: op.op,
-                    args: op.args
-                };
-                let output;
-                try {
-                    output = await this._runRecipe([opConfig]);
-                } catch(err) {
-                    return;
-                }
+                op: op.op,
+                args: op.args
+            };
+            let output;
+            try {
+                output = await this._runRecipe([opConfig]);
+            } catch (err) {
+                return;
+            }
                 // If the recipe is repeating and returning the same data, do not continue
             if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
                 return;
@@ -280,7 +280,7 @@ class Magic {
             if (_buffersEqual(output, new ArrayBuffer())) {
                 return;
             }
-            
+
             const outputRegexes = OperationConfig[op.op].outputRegexes;
             switch (flag) {
                 case "Input":
