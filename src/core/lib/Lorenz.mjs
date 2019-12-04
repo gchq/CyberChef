@@ -12,6 +12,8 @@ export const SWITCHES = [
     {name: "Down (x)", value: "x"}
 ];
 
+export const VALID_ITA2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ34589+-./";
+
 export const ITA2_TABLE = {
     "A": "11000",
     "B": "10011",
