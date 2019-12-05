@@ -6,7 +6,6 @@
 
 import Operation from "../Operation.mjs";
 import {BRAILLE_LOOKUP} from "../lib/Braille.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Braille operation

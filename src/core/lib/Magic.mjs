@@ -331,10 +331,10 @@ class Magic {
      */
     async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null) {
         if (depth < 0) return [];
-        console.log("still alive");
+
         // Find any operations that can be run on this data
         const matchingOps = this.opPatterns.findMatchingInputRegexes(this.inputStr);
-        console.log(matchingOps);
+
         let results = [];
 
         // Record the properties of the current data
