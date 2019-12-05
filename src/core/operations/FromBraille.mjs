@@ -26,14 +26,6 @@ class FromBraille extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match:  "^\\s*[⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖⠗⠘⠙⠚⠛⠜⠝⠞⠟⠠⠡⠢⠣⠤⠥⠦⠧⠨⠩⠪⠫⠬⠭⠮⠯⠰⠱⠲⠳⠴⠵⠶⠷⠸⠹⠺⠻⠼⠽⠾⠿]+\\s*$",
-                flags:  "i",
-                magic:  true,
-                args:   [true]
-            }
-        ]);
     }
 
     /**
@@ -42,6 +34,7 @@ class FromBraille extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        console.log("this is broke");
         return input.split("").map(b => {
             const idx = BRAILLE_LOOKUP.dot6.indexOf(b);
             return idx < 0 ? b : BRAILLE_LOOKUP.ascii[idx];
