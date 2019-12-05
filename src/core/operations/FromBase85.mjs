@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import {alphabetName, ALPHABET_OPTIONS} from "../lib/Base85.mjs";
+import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Base85 operation
@@ -33,6 +34,26 @@ class FromBase85 extends Operation {
                 value: ALPHABET_OPTIONS
             },
         ];
+        this.checks = new magicObject([
+            {
+                match:  "^\\s*(<~)?([!-u]{4})+([!-u]{1,3})??(~>)?\\s*$",
+                flags:  "",
+                magic:  false,
+                args:   ["!-u", true]
+            },
+            {
+                match:  "^\\s*(<~)?([0-9A-Z.-:+=^!/*?&<>()[]{}@%$#]{4})+([0-9A-Z.-:+=^!/*?&<>()[]{}@%$#]{1,3})??(~>)?\\s*$",
+                flags:  "i",
+                magic:  false,
+                args:   ["0-9a-zA-Z.-:+=^!/*?&<>()[]{}@%$#", true]
+            },
+            {
+                match:  "^\\s*(<~)?([0-9A-Z.-:+=^!/*?&_<>()[]{}@%$#;`|~]{4})+([0-9A-Z.-:+=^!/*?&_<>()[]{}@%$#;`|~]{1,3})??(~>)?\\s*$",
+                flags:  "i",
+                magic:  false,
+                args:   ["0-9A-Za-z!#$%&()*+-;<=>?@^_`{|~}", true]
+            }
+        ]);
     }
 
     /**
