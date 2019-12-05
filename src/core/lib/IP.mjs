@@ -26,7 +26,7 @@ export function ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, allo
     let output = "";
 
     if (cidrRange < 0 || cidrRange > 31) {
-        return "IPv4 CIDR must be less than 32";
+        throw new OperationError("IPv4 CIDR must be less than 32");
     }
 
     const mask = ~(0xFFFFFFFF >>> cidrRange),
@@ -211,7 +211,7 @@ export function ipv4ListedRange(match, includeNetworkInfo, enumerateAddresses, a
         const network = strToIpv4(ipv4CidrList[i].split("/")[0]);
         const cidrRange = parseInt(ipv4CidrList[i].split("/")[1], 10);
         if (cidrRange < 0 || cidrRange > 31) {
-            return "IPv4 CIDR must be less than 32";
+            throw new OperationError("IPv4 CIDR must be less than 32");
         }
         const mask = ~(0xFFFFFFFF >>> cidrRange),
             cidrIp1 = network & mask,
