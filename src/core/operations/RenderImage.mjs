@@ -47,7 +47,7 @@ class RenderImage extends Operation {
         ],
         null,
         {
-            type: "Image",
+            type: "image"
         }
         );
     }

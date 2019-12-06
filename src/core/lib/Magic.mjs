@@ -5,7 +5,7 @@ import Dish from "../Dish.mjs";
 import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
 import potentialOps from "./Test.mjs";
-import { isImage } from "./FileType.mjs";
+import { isType } from "./FileType.mjs";
 
 /**
  * A class for detecting encodings, file types and byte frequencies and
@@ -253,11 +253,8 @@ class Magic {
      * @returns {boolean}
      */
     async checkMime (data, type) {
-        switch (type) {
-            case "Image":
-                if (isImage(data))
-                    return false;
-                break;
+        if (isType(type, data)) {
+            return false;
         }
         return true;
     }
