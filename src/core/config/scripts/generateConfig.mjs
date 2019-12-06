@@ -53,6 +53,10 @@ for (const opObj in Ops) {
         if ("inRegexes" in op.checks) {
             operationConfig[op.name].inputRegexes = op.checks.inRegexes;
         }
+
+        if ("mimeCheck" in op.checks) {
+            operationConfig[op.name].mimeCheck = op.checks.mimeCheck;
+        }
     }
 
     if (!(op.module in modules))

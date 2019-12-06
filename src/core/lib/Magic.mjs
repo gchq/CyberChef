@@ -5,6 +5,7 @@ import Dish from "../Dish.mjs";
 import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
 import potentialOps from "./Test.mjs";
+import { isImage } from "./FileType.mjs";
 
 /**
  * A class for detecting encodings, file types and byte frequencies and
@@ -245,6 +246,23 @@ class Magic {
     }
 
     /**
+     * Checks the mime value of the data compared to the specified type.
+     *
+     * @param {ArrayBuffer} data
+     * @param {string} type
+     * @returns {boolean}
+     */
+    async checkMime (data, type) {
+        switch (type) {
+            case "Image":
+                if (isImage(data))
+                    return false;
+                break;
+        }
+        return true;
+    }
+
+    /**
      * Uses the checks to validate the input/output of potential operations.
      *
      * @param {string} flag
@@ -275,6 +293,11 @@ class Magic {
             if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
                 return;
             }
+
+            const mime = OperationConfig[op.op].mimeCheck;
+            if (mime)
+                if (await this.checkMime(output, mime.type))
+                    return;
 
             // If the recipe returned an empty buffer, do not continue
             if (_buffersEqual(output, new ArrayBuffer())) {

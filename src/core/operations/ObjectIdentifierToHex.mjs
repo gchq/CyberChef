@@ -28,7 +28,7 @@ class ObjectIdentifierToHex extends Operation {
         this.args = [];
         this.checks = new magicObject([
             {
-                match:  "^\\s*([0-9]{1,3}\\.?)+\\s*$",
+                match:  "^\\s*([0-9]{1,3}\\.)+[0-9]{1,3}\\s*$",
                 flags:  "",
                 magic:  true,
                 args:   []

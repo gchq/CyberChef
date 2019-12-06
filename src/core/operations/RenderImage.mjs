@@ -44,7 +44,12 @@ class RenderImage extends Operation {
                 args: ["Raw"],
                 useful: true
             }
-        ]);
+        ],
+        null,
+        {
+            type: "Image",
+        }
+        );
     }
 
     /**
