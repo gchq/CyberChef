@@ -162,12 +162,13 @@ class Magic {
     }
 
     /**
-     * Calculates the Shannon entropy of the input data.
+     * Calculates the Shannon entropy of the data passed to it.
      *
+     * @param {Uint8Array} data
      * @returns {number}
      */
-    calcEntropy() {
-        const prob = this._freqDist();
+    calcEntropy(data=this.inputBuffer) {
+        const prob = this._freqDist(data);
         let entropy = 0,
             p;
 
@@ -271,8 +272,9 @@ class Magic {
      * @param {Object[]} recipeConfig
      * @param {string} crib
      */
-    async regexesTests(flag, sensible, prevOp, depth, extLang, intensive, recipeConfig, crib) {
+    async regexesTests(flag, sensible, prevOp, depth, extLang, intensive, recipeConfig, crib, inputEntropy) {
         let results = [];
+
         // Execute each of the matching operations, then recursively call the speculativeExecution()
         // method on the resulting data, recording the properties of each option.
         await Promise.all(sensible.map(async op => {
@@ -286,6 +288,7 @@ class Magic {
             } catch (err) {
                 return;
             }
+
             // If the recipe is repeating and returning the same data, do not continue
             if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
                 return;
@@ -299,6 +302,12 @@ class Magic {
             // If the recipe returned an empty buffer, do not continue
             if (_buffersEqual(output, new ArrayBuffer())) {
                 return;
+            }
+
+            const entropyTests = OperationConfig[op.op].entropyTests;
+            let outputEntropy = 0;
+            if (entropyTests) {
+                outputEntropy = this.calcEntropy(new Uint8Array(output));
             }
 
             const outputRegexes = OperationConfig[op.op].outputRegexes;
@@ -329,7 +338,7 @@ class Magic {
             }
             const magic = new Magic(output, this.opPatterns),
                 speculativeResults = await magic.speculativeExecution(
-                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
+                    depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib, outputEntropy);
 
             results = results.concat(speculativeResults);
         }));
@@ -349,30 +358,30 @@ class Magic {
      * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation output
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
-    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null) {
+    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null, inputEntropy=this.calcEntropy()) {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
         const matchingOps = this.opPatterns.findMatchingInputRegexes(this.inputStr);
 
         let results = [];
-
         // Record the properties of the current data
+
         results.push({
             recipe: recipeConfig,
             data: this.inputStr.slice(0, 100),
             languageScores: this.detectLanguage(extLang),
             fileType: this.detectFileType(),
             isUTF8: this.isUTF8(),
-            entropy: this.calcEntropy(),
+            entropy: inputEntropy,
             matchingOps: matchingOps,
             useful: useful,
             matchesCrib: crib && crib.test(this.inputStr)
         });
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
-        results = results.concat(await this.regexesTests("Input", matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib));
-        results = results.concat(await this.regexesTests("Output", this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib));
+        results = results.concat(await this.regexesTests("Input", matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib, inputEntropy));
+        results = results.concat(await this.regexesTests("Output", this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib, inputEntropy));
 
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
@@ -469,10 +478,10 @@ class Magic {
      * @private
      * @returns {number[]}
      */
-    _freqDist() {
-        if (this.freqDist) return this.freqDist;
+    _freqDist(data=this.inputBuffer) {
+        // if (this.freqDist) return this.freqDist;
 
-        const len = this.inputBuffer.length;
+        const len = data.length;
         let i = len;
         const counts = new Array(256).fill(0);
 
@@ -482,7 +491,7 @@ class Magic {
         }
 
         while (i--) {
-            counts[this.inputBuffer[i]]++;
+            counts[data[i]]++;
         }
 
         this.freqDist = counts.map(c => {

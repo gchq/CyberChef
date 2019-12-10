@@ -7,10 +7,11 @@ class magicObject {
      * @param outRegexes
      * @param mimeCheck
      */
-    constructor (inRegexes = null, outRegexes = null, mimeCheck = null) {
+    constructor (inRegexes = null, outRegexes = null, mimeCheck = null, entropyTests=null) {
         this.inRegexes = inRegexes;
         this.outRegexes = outRegexes;
         this.mimeCheck = mimeCheck;
+        this.entropyTests = entropyTests;
     }
 
 } export default magicObject;

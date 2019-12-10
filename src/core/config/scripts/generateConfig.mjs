@@ -57,6 +57,10 @@ for (const opObj in Ops) {
         if ("mimeCheck" in op.checks) {
             operationConfig[op.name].mimeCheck = op.checks.mimeCheck;
         }
+
+        if ("entropyTests" in op.checks) {
+            operationConfig[op.name].entropyTests = op.checks.entropyTests;
+        }
     }
 
     if (!(op.module in modules))
