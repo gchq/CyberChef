@@ -308,6 +308,8 @@ class Magic {
             let outputEntropy = 0;
             if (entropyTests) {
                 outputEntropy = this.calcEntropy(new Uint8Array(output));
+                console.log(entropyTests.output);
+                console.log(outputEntropy);
             }
 
             const outputRegexes = OperationConfig[op.op].outputRegexes;

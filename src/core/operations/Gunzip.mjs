@@ -40,7 +40,7 @@ class Gunzip extends Operation {
         null,
         {
             input:  [7, 8],
-            output: [3.5, 7],
+            output: [3.5, 6],
             change: true
         });
     }
