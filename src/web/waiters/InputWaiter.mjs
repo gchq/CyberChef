@@ -476,7 +476,7 @@ class InputWaiter {
      */
     resetFileThumb() {
         const fileThumb = document.getElementById("input-file-thumbnail");
-        fileThumb.src = require("../static/images/file-128x128.png");
+        fileThumb.src = require("../static/images/file-128x128.png").default;
     }
 
     /**
