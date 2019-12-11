@@ -307,8 +307,15 @@ class Magic {
             const entropyTests = OperationConfig[op.op].entropyTests;
             let outputEntropy = 0;
             if (entropyTests) {
+                let score = 0;
                 outputEntropy = this.calcEntropy(new Uint8Array(output));
-                if (inputEntropy < outputEntropy)
+                if (inputEntropy > outputEntropy)
+                    score += 1;
+                if (inputEntropy > entropyTests.input[0] && inputEntropy < entropyTests.input[1])
+                    score += 1;
+                if (outputEntropy > entropyTests.output[0] && outputEntropy < entropyTests.output[1])
+                    score += 1;
+                if (!score)
                     return;
             }
 
