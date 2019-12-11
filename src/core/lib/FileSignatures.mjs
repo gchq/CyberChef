@@ -1008,8 +1008,7 @@ export const FILE_SIGNATURES = {
                 0: 0x7b,
                 1: 0x5c,
                 2: 0x72,
-                3: 0x74,
-                4: 0x66
+                3: 0x74
             },
             extractor: extractRTF
         },
