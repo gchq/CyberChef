@@ -54,8 +54,7 @@ function main() {
         autoMagic:           true,
         imagePreview:        true,
         syncTabs:            true,
-        preserveCR:          true,
-        userSetCR:           false
+        preserveCR:          "entropy"
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
