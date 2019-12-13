@@ -73,10 +73,10 @@ class Chef {
         // The threshold is specified in KiB.
         const threshold = (options.ioDisplayThreshold || 1024) * 1024;
         const returnType =
-            this.dish.size > threshold ?
-                Dish.ARRAY_BUFFER :
-                this.dish.type === Dish.HTML ?
-                    Dish.HTML :
+            this.dish.type === Dish.HTML ?
+                Dish.HTML :
+                this.dish.size > threshold ?
+                    Dish.ARRAY_BUFFER :
                     Dish.STRING;
 
         return {
