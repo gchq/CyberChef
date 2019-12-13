@@ -197,6 +197,7 @@ class Manager {
         this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
         this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
         this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
+        this.addDynamicListener("#output-file-show-all", "click", this.output.showAllFile, this.output);
         this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
         document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);

@@ -1122,8 +1122,8 @@ class OutputWaiter {
             showFileOverlay = document.getElementById("show-file-overlay"),
             sliceFromEl = document.getElementById("output-file-slice-from"),
             sliceToEl = document.getElementById("output-file-slice-to"),
-            sliceFrom = parseInt(sliceFromEl.value, 10),
-            sliceTo = parseInt(sliceToEl.value, 10),
+            sliceFrom = parseInt(sliceFromEl.value, 10) * 1024,
+            sliceTo = parseInt(sliceToEl.value, 10) * 1024,
             output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
 
         let str;
@@ -1137,6 +1137,39 @@ class OutputWaiter {
         showFileOverlay.style.display = "block";
         outputText.value = Utils.printable(str, true);
 
+        outputText.style.display = "block";
+        outputHtml.style.display = "none";
+        outputFile.style.display = "none";
+        outputHighlighter.display = "block";
+        inputHighlighter.display = "block";
+
+        this.toggleLoader(false);
+    }
+
+    /**
+     * Handler for showing an entire file at user's discretion (even if it's way too big)
+     */
+    async showAllFile() {
+        document.querySelector("#output-loader .loading-msg").textContent = "Loading entire file at user instruction. This may cause a crash...";
+        this.toggleLoader(true);
+        const outputText = document.getElementById("output-text"),
+            outputHtml = document.getElementById("output-html"),
+            outputFile = document.getElementById("output-file"),
+            outputHighlighter = document.getElementById("output-highlighter"),
+            inputHighlighter = document.getElementById("input-highlighter"),
+            showFileOverlay = document.getElementById("show-file-overlay"),
+            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
+
+        let str;
+        if (output.type === "ArrayBuffer") {
+            str = Utils.arrayBufferToStr(output.result);
+        } else {
+            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish));
+        }
+
+        outputText.classList.remove("blur");
+        showFileOverlay.style.display = "none";
+        outputText.value = Utils.printable(str, true);
 
         outputText.style.display = "block";
         outputHtml.style.display = "none";
