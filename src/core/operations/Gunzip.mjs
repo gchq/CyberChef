@@ -39,9 +39,10 @@ class Gunzip extends Operation {
         null,
         null,
         {
-            input:  [7, 8],
+            input:  [6.5, 8],
             output: [3.5, 6]
-        });
+        }
+        );
     }
 
     /**

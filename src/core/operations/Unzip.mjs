@@ -48,7 +48,14 @@ class Unzip extends Operation {
                 magic:  true,
                 args: ["", false]
             },
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [6.5, 8],
+            output: [3.5, 6]
+        }
+        );
     }
 
     /**
