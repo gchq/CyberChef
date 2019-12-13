@@ -2946,7 +2946,7 @@ export function extractWAV(bytes, offset) {
     stream.moveTo(4);
 
     // Move to file size.
-    stream.moveTo(stream.readInt(4, "le")-4);
+    stream.moveTo(stream.readInt(4, "le"));
 
     return stream.carve();
 }
