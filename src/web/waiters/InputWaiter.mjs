@@ -767,7 +767,9 @@ class InputWaiter {
             // and manually fire inputChange()
             inputText.value = val;
             inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
-            this.debounceInputChange(e);
+            // Don't debounce here otherwise the keyup event for the Ctrl key will cancel an autobake
+            // (at least for large inputs)
+            this.inputChange(e, true);
         }
     }
 
