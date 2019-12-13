@@ -476,7 +476,7 @@ class InputWaiter {
      */
     resetFileThumb() {
         const fileThumb = document.getElementById("input-file-thumbnail");
-        fileThumb.src = require("../static/images/file-128x128.png");
+        fileThumb.src = require("../static/images/file-128x128.png").default;
     }
 
     /**
@@ -767,7 +767,9 @@ class InputWaiter {
             // and manually fire inputChange()
             inputText.value = val;
             inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
-            this.debounceInputChange(e);
+            // Don't debounce here otherwise the keyup event for the Ctrl key will cancel an autobake
+            // (at least for large inputs)
+            this.inputChange(e, true);
         }
     }
 
@@ -858,31 +860,29 @@ class InputWaiter {
         if (input.indexOf("\r") < 0) return false;
 
         const optionsStr = "This behaviour can be changed in the <a href='#' onclick='document.getElementById(\"options\").click()'>Options pane</a>";
-        if (!this.app.options.userSetCR) {
-            // User has not set a CR preference yet
-            let preserve = await new Promise(function(resolve, reject) {
-                this.app.confirm(
-                    "Carriage Return Detected",
-                    "A <a href='https://wikipedia.org/wiki/Carriage_return'>carriage return</a> (<code>\\r</code>, <code>0x0d</code>) was detected in your input. As HTML textareas <a href='https://html.spec.whatwg.org/multipage/form-elements.html#the-textarea-element'>can't display carriage returns</a>, editing must be turned off to preserve them. <br>Alternatively, you can enable editing but your carriage returns will not be preserved.<br><br>This preference will be saved but can be toggled in the options pane.",
-                    "Preserve Carriage Returns",
-                    "Enable Editing", resolve, this);
-            }.bind(this));
-            if (preserve === undefined) {
-                // The confirm pane was closed without picking a specific choice
-                this.app.alert(`Not preserving carriage returns.\n${optionsStr}`, 5000);
-                preserve = false;
-            }
-            this.manager.options.updateOption("preserveCR", preserve);
-            this.manager.options.updateOption("userSetCR", true);
-        } else {
-            if (this.app.options.preserveCR) {
-                this.app.alert(`A carriage return (\\r, 0x0d) was detected in your input, so editing has been disabled to preserve it.<br>${optionsStr}`, 10000);
-            } else {
-                this.app.alert(`A carriage return (\\r, 0x0d) was detected in your input. Editing is remaining enabled, but carriage returns will not be preserved.<br>${optionsStr}`, 10000);
-            }
+        const preserveStr = `A carriage return (\\r, 0x0d) was detected in your input. To preserve it, editing has been disabled.<br>${optionsStr}`;
+        const dontPreserveStr = `A carriage return (\\r, 0x0d) was detected in your input. It has not been preserved.<br>${optionsStr}`;
+
+        switch (this.app.options.preserveCR) {
+            case "always":
+                this.app.alert(preserveStr, 6000);
+                return true;
+            case "never":
+                this.app.alert(dontPreserveStr, 6000);
+                return false;
         }
 
-        return this.app.options.preserveCR;
+        // Only preserve for high-entropy inputs
+        const data = Utils.strToArrayBuffer(input);
+        const entropy = Utils.calculateShannonEntropy(data);
+
+        if (entropy > 6) {
+            this.app.alert(preserveStr, 6000);
+            return true;
+        }
+
+        this.app.alert(dontPreserveStr, 6000);
+        return false;
     }
 
     /**

@@ -29,7 +29,7 @@
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
 
-        <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico') %>" />
+        <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico').default %>" />
 
         <script type="application/javascript">
             "use strict";
@@ -197,7 +197,7 @@
                             </button>
 
                             <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake">
-                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
+                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png').default %>" alt="Chef Icon"/>
                                 <span>Bake!</span>
                             </button>
 
@@ -271,7 +271,7 @@
                                 <div class="file-overlay" id="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="io-card card">
-                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon" id="input-file-thumbnail"/>
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png').default %>" alt="File icon" id="input-file-thumbnail"/>
                                         <div class="card-body">
                                             <button type="button" class="close" id="input-file-close">&times;</button>
                                             Name: <span id="input-file-name"></span><br>
@@ -346,24 +346,26 @@
                                 <div id="output-highlighter" class="no-select"></div>
                                 <div id="output-html"></div>
                                 <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
-                                <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
+                                <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png').default %>" alt="Show file overlay" title="Show file overlay"/>
                                 <div id="output-file">
                                     <div class="file-overlay"></div>
                                     <div style="position: relative; height: 100%;">
                                         <div class="io-card card">
-                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
+                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png').default %>" alt="File icon"/>
                                             <div class="card-body">
                                                 Size: <span id="output-file-size"></span><br>
                                                 <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
+                                                <button id="output-file-show-all" type="button" class="btn btn-warning btn-outline" data-toggle="tooltip" title="Warning: This could crash your browser. Use at your own risk.">Show all</button>
                                                 <div class="input-group">
-                                                    <span class="input-group-btn">
-                                                        <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
+                                                    <span class="input-group-prepend">
+                                                        <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" data-toggle="tooltip" title="View slice">
                                                             <i class="material-icons">search</i>
                                                         </button>
                                                     </span>
-                                                    <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
+                                                    <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="128" min="0">
                                                     <div class="input-group-addon">to</div>
-                                                    <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
+                                                    <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="256" step="128" min="0">
+                                                    <div class="input-group-addon">KiB</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -490,6 +492,15 @@
                         </div>
 
                         <div class="form-group option-item">
+                            <label for="preserveCR" class="bmd-label-floating"> Preserve carriage returns (0x0d)</label>
+                            <select class="form-control" option="preserveCR" id="preserveCR" data-toggle="tooltip" data-placement="bottom" data-offset="-10%" data-html="true" title="HTML textareas don't support carriage returns, so if we want to preserve them in our input, we have to disable editing.<br><br>The default option is to only do this for high-entropy inputs, but you can force the choice using this dropdown.">
+                                <option value="entropy">For high-entropy inputs</option>
+                                <option value="always">Always</option>
+                                <option value="never">Never</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group option-item">
                             <label for="errorTimeout" class="bmd-label-floating">Operation error timeout in ms (0 for never)</label>
                             <input type="number" class="form-control" option="errorTimeout" id="errorTimeout">
                         </div>
@@ -573,13 +584,6 @@
                                 Keep the current tab in sync between the input and output
                             </label>
                         </div>
-
-                        <div class="checkbox option-item">
-                            <label for="preserveCR" data-toggle="tooltip" data-placement="right" data-html="true" title="As HTML textareas don't support carriage returns, editing input must be turned off to preserve them.<br><br>When this option is enabled, editing is disabled for pasted text that contains carriage returns. Otherwise, editing will remain enabled but carriage returns will not be preserved.">
-                                <input type="checkbox" option="preserveCR" id="preserveCR">
-                                Preserve carriage returns when pasting an input
-                            </label>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="reset-options">Reset options to default</button>
@@ -622,7 +626,7 @@
                         <h5 class="modal-title">CyberChef - The Cyber Swiss Army Knife</h5>
                     </div>
                     <div class="modal-body">
-                        <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" alt="CyberChef Logo"/>
+                        <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png').default %>" alt="CyberChef Logo"/>
                         <p class="subtext">
                             Version <%=  htmlWebpackPlugin.options.version %><br>
                             Compile time: <%= htmlWebpackPlugin.options.compileTime %>
@@ -745,7 +749,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     <a href="https://github.com/gchq/CyberChef">
-                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png') %>" alt="Fork me on GitHub">
+                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png').default %>" alt="Fork me on GitHub">
                     </a>
                 </div>
             </div>
