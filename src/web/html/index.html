@@ -492,6 +492,15 @@
                         </div>
 
                         <div class="form-group option-item">
+                            <label for="preserveCR" class="bmd-label-floating"> Preserve carriage returns (0x0d)</label>
+                            <select class="form-control" option="preserveCR" id="preserveCR" data-toggle="tooltip" data-placement="bottom" data-offset="-10%" data-html="true" title="HTML textareas don't support carriage returns, so if we want to preserve them in our input, we have to disable editing.<br><br>The default option is to only do this for high-entropy inputs, but you can force the choice using this dropdown.">
+                                <option value="entropy">For high-entropy inputs</option>
+                                <option value="always">Always</option>
+                                <option value="never">Never</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group option-item">
                             <label for="errorTimeout" class="bmd-label-floating">Operation error timeout in ms (0 for never)</label>
                             <input type="number" class="form-control" option="errorTimeout" id="errorTimeout">
                         </div>
@@ -573,13 +582,6 @@
                             <label for="syncTabs">
                                 <input type="checkbox" option="syncTabs" id="syncTabs">
                                 Keep the current tab in sync between the input and output
-                            </label>
-                        </div>
-
-                        <div class="checkbox option-item">
-                            <label for="preserveCR" data-toggle="tooltip" data-placement="right" data-html="true" title="As HTML textareas don't support carriage returns, editing input must be turned off to preserve them.<br><br>When this option is enabled, editing is disabled for pasted text that contains carriage returns. Otherwise, editing will remain enabled but carriage returns will not be preserved.">
-                                <input type="checkbox" option="preserveCR" id="preserveCR">
-                                Preserve carriage returns when pasting an input
                             </label>
                         </div>
                     </div>
