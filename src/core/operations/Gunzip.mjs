@@ -5,9 +5,11 @@
  */
 
 import Operation from "../Operation.mjs";
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
+// import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
+import gunzip from "zlibjs/bin/gunzip.min.js";
 
-const Zlib = zlibAndGzip.Zlib;
+// const Zlib = zlibAndGzip.Zlib;
+const Zlib = gunzip.Zlib;
 
 /**
  * Gunzip operation
@@ -42,8 +44,8 @@ class Gunzip extends Operation {
      * @returns {File}
      */
     run(input, args) {
-        const gunzip = new Zlib.Gunzip(new Uint8Array(input));
-        return new Uint8Array(gunzip.decompress()).buffer;
+        const gzipObj = new Zlib.Gunzip(new Uint8Array(input));
+        return new Uint8Array(gzipObj.decompress()).buffer;
     }
 
 }

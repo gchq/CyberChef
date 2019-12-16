@@ -6,9 +6,10 @@
 
 import Operation from "../Operation.mjs";
 import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
+// import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
+import gzip from "zlibjs/bin/gzip.min.js";
 
-const Zlib = zlibAndGzip.Zlib;
+const Zlib = gzip.Zlib;
 
 /**
  * Gzip operation
@@ -73,12 +74,15 @@ class Gzip extends Operation {
             options.filename = filename;
         }
         if (comment.length) {
-            options.flags.fcommenct = true;
+            options.flags.comment = true;
             options.comment = comment;
         }
-
-        const gzip = new Zlib.Gzip(new Uint8Array(input), options);
-        return new Uint8Array(gzip.compress()).buffer;
+        const gzipObj = new Zlib.Gzip(new Uint8Array(input), options);
+        const compressed = new Uint8Array(gzipObj.compress());
+        if (options.flags.comment) {
+            compressed[3] |= 0x10;
+        }
+        return compressed.buffer;
     }
 
 }
