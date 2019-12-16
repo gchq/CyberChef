@@ -70,7 +70,13 @@ class FromOctal extends Operation {
                 magic:  true,
                 args: ["CRLF"]
             },
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [2.5, 3],
+            output: [3.5, 6]
+        });
     }
 
     /**

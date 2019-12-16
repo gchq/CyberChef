@@ -34,7 +34,13 @@ class FromHexContent extends Operation {
                 magic:  true,
                 args:   []
             }
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [3, 4],
+            output: [3.5, 6]
+        });
     }
 
     /**

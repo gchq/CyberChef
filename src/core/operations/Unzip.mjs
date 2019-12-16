@@ -8,6 +8,8 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import unzip from "zlibjs/bin/unzip.min.js";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
+
 
 const Zlib = unzip.Zlib;
 
@@ -51,10 +53,7 @@ class Unzip extends Operation {
         ],
         null,
         null,
-        {
-            input:  [6.5, 8],
-            output: [3.5, 6]
-        }
+        criteria.compressedToDecompressed
         );
     }
 

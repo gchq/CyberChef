@@ -9,6 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import magicObject from "../lib/MagicObject.mjs";
 import Bzip2 from "libbzip2-wasm";
 import { isWorkerEnvironment } from "../Utils.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * Bzip2 Decompress operation
@@ -41,7 +42,11 @@ class Bzip2Decompress extends Operation {
                 magic:  true,
                 args: []
             }
-        ]);
+        ],
+        null,
+        null,
+        criteria.compressedToDecompressed
+        );
     }
 
     /**

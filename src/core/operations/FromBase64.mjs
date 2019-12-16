@@ -116,7 +116,14 @@ class FromBase64 extends Operation {
                 magic:  true,
                 args: ["./0-9A-Za-z", true]
             },
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [4, 5],
+            output: [3.5, 6]
+        }
+        );
     }
 
     /**

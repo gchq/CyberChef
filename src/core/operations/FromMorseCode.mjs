@@ -45,7 +45,13 @@ class FromMorseCode extends Operation {
                 magic:  true,
                 args: ["Space", "Line feed"]
             },
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [0, 2],
+            output: [3, 6]
+        });
     }
 
     /**

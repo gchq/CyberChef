@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 const Zlib = zlibAndGzip.Zlib;
 
@@ -38,10 +39,7 @@ class Gunzip extends Operation {
         ],
         null,
         null,
-        {
-            input:  [6.5, 8],
-            output: [3.5, 6]
-        }
+        criteria.compressedToDecompressed
         );
     }
 

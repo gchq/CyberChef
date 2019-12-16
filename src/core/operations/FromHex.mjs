@@ -88,7 +88,14 @@ class FromHex extends Operation {
                 magic:  true,
                 args: ["\\x"]
             }
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [2, 3],
+            output: [3.5, 6]
+        }
+        );
     }
 
     /**

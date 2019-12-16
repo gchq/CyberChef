@@ -44,7 +44,14 @@ class FromBase32 extends Operation {
                 magic:  true,
                 args: ["A-Z2-7=", false]
             },
-        ]);
+        ],
+        null,
+        null,
+        {
+            input:  [4.2, 5],
+            output: [3.5, 6]
+        }
+        );
     }
 
     /**

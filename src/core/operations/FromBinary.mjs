@@ -9,6 +9,7 @@ import Utils from "../Utils.mjs";
 import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromBinary} from "../lib/Binary.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From Binary operation
@@ -77,7 +78,11 @@ class FromBinary extends Operation {
                 magic:  true,
                 args: ["CRLF"]
             },
-        ]);
+        ],
+        null,
+        null,
+        criteria.binary
+        );
     }
 
     /**

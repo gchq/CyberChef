@@ -10,6 +10,7 @@ import OperationError from "../errors/OperationError.mjs";
 import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD.mjs";
 import BigNumber from "bignumber.js";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/magicCriteria.mjs";
 
 /**
  * From BCD operation
@@ -57,7 +58,11 @@ class FromBCD extends Operation {
                 magic:  true,
                 args: ["8 4 2 1", true, false, "Nibbles"]
             }
-        ]);
+        ],
+        null,
+        null,
+        criteria.binary
+        );
     }
 
     /**
