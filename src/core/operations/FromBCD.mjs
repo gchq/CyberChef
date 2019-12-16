@@ -10,7 +10,7 @@ import OperationError from "../errors/OperationError.mjs";
 import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD.mjs";
 import BigNumber from "bignumber.js";
 import magicObject from "../lib/MagicObject.mjs";
-import * as criteria from "../lib/magicCriteria.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From BCD operation
