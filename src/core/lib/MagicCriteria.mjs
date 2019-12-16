@@ -7,3 +7,5 @@ export const binary = {
     input:  [1, 1.5],
     output: [3.5, 6]
 };
+
+export const entropyOfText = [3.5, 6];

@@ -75,7 +75,7 @@ class FromOctal extends Operation {
         null,
         {
             input:  [2.5, 3],
-            output: [3.5, 6]
+            output: criteria.entropyOfText
         });
     }
 

@@ -121,7 +121,7 @@ class FromBase64 extends Operation {
         null,
         {
             input:  [4, 5],
-            output: [3.5, 6]
+            output: criteria.entropyOfText
         }
         );
     }

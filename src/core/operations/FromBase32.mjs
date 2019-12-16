@@ -49,7 +49,7 @@ class FromBase32 extends Operation {
         null,
         {
             input:  [4.2, 5],
-            output: [3.5, 6]
+            output: criteria.entropyOfText
         }
         );
     }

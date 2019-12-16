@@ -40,7 +40,7 @@ class FromHexdump extends Operation {
         null,
         {
             input:  [3, 4],
-            output: [3.5, 6]
+            output: criteria.entropyOfText
         });
     }
 

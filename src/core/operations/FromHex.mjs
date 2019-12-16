@@ -93,7 +93,7 @@ class FromHex extends Operation {
         null,
         {
             input:  [2, 3],
-            output: [3.5, 6]
+            output: criteria.entropyOfText
         }
         );
     }
