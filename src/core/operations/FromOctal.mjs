@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From Octal operation

@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromDecimal} from "../lib/Decimal.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From Decimal operation

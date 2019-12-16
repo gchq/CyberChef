@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From Base64 operation

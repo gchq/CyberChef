@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import { fromHex } from "../lib/Hex.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 
 /**

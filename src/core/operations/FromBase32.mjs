@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From Base32 operation

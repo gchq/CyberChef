@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 import magicObject from "../lib/MagicObject.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
  * From Hex operation
