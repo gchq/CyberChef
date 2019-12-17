@@ -6,7 +6,6 @@
 
 import Operation from "../Operation.mjs";
 import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
-// import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 import gzip from "zlibjs/bin/gzip.min.js";
 
 const Zlib = gzip.Zlib;
@@ -79,7 +78,7 @@ class Gzip extends Operation {
         }
         const gzipObj = new Zlib.Gzip(new Uint8Array(input), options);
         const compressed = new Uint8Array(gzipObj.compress());
-        if (options.flags.comment) {
+        if (options.flags.comment && !(compressed[3] & 0x10)) {
             compressed[3] |= 0x10;
         }
         return compressed.buffer;
