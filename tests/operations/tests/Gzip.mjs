@@ -1,5 +1,5 @@
 /**
- * Gzip tests.
+ * Gzip Tests.
  *
  * @author n1073645 [n1073645@gmail.com]
  *
