@@ -5,10 +5,8 @@
  */
 
 import Operation from "../Operation.mjs";
-// import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 import gunzip from "zlibjs/bin/gunzip.min.js";
 
-// const Zlib = zlibAndGzip.Zlib;
 const Zlib = gunzip.Zlib;
 
 /**
