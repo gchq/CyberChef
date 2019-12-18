@@ -266,6 +266,7 @@
             "Extract URLs",
             "Extract domains",
             "Extract file paths",
+            "Extract Entropies",
             "Extract dates",
             "Regular expression",
             "XPath expression",
