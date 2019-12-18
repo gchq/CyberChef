@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Dechunk HTTP response operation
@@ -25,14 +24,16 @@ class DechunkHTTPResponse extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match:  "^\\s*[0-9A-F]+\r\n",
-                flags:  "i",
-                magic:  true,
-                args:   []
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match:  "^\\s*[0-9A-F]+\r\n",
+                    flags:  "i",
+                    magic:  true,
+                    args:   []
+                }]
+        };
     }
 
     /**

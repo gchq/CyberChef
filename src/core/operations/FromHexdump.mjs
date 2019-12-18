@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import { fromHex } from "../lib/Hex.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 
@@ -29,20 +28,20 @@ class FromHexdump extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match: "^(?:(?:[\\dA-F]{4,16}h?:?)?[ \\t]*((?:[\\dA-F]{2} ){1,8}(?:[ \\t]|[\\dA-F]{2}-)(?:[\\dA-F]{2} ){1,8}|(?:[\\dA-F]{4} )*[\\dA-F]{4}|(?:[\\dA-F]{2} )*[\\dA-F]{2})[^\\n]*\\n?){2,}$",
-                flags: "i",
-                magic:  true,
-                args: []
-            },
-        ],
-        null,
-        null,
+        this.checks =
         {
-            input:  [3, 4],
-            output: criteria.entropyOfText
-        });
+            inRegexes: [
+                {
+                    match: "^(?:(?:[\\dA-F]{4,16}h?:?)?[ \\t]*((?:[\\dA-F]{2} ){1,8}(?:[ \\t]|[\\dA-F]{2}-)(?:[\\dA-F]{2} ){1,8}|(?:[\\dA-F]{4} )*[\\dA-F]{4}|(?:[\\dA-F]{2} )*[\\dA-F]{2})[^\\n]*\\n?){2,}$",
+                    flags: "i",
+                    magic:  true,
+                    args: []
+                }],
+            entropyTests: {
+                input:  [3, 4],
+                output: criteria.entropyOfText
+            }
+        };
     }
 
     /**

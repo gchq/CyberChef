@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import {fromHex} from "../lib/Hex.mjs";
 
 /**
@@ -38,26 +37,28 @@ class ChangeIPFormat extends Operation {
                 "value": ["Dotted Decimal", "Decimal", "Octal", "Hex"]
             }
         ];
-        this.checks = new magicObject([
-            {
-                match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
-                flags:  "",
-                magic:  false,
-                args:   ["Dotted Decimal", "Decimal"]
-            },
-            {
-                match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
-                flags:  "",
-                magic:  false,
-                args:   ["Dotted Decimal", "Octal"]
-            },
-            {
-                match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
-                flags:  "",
-                magic:  false,
-                args:   ["Dotted Decimal", "Hex"]
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
+                    flags:  "",
+                    magic:  false,
+                    args:   ["Dotted Decimal", "Decimal"]
+                },
+                {
+                    match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
+                    flags:  "",
+                    magic:  false,
+                    args:   ["Dotted Decimal", "Octal"]
+                },
+                {
+                    match:  "^\\s*([0-9]{1,3}\\.){3}[0-9]{1,3}$",
+                    flags:  "",
+                    magic:  false,
+                    args:   ["Dotted Decimal", "Hex"]
+                }]
+        };
     }
 
     /**

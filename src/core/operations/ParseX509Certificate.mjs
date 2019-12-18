@@ -10,7 +10,6 @@ import { toHex } from "../lib/Hex.mjs";
 import { formatByteStr, formatDnStr } from "../lib/PublicKey.mjs";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Parse X.509 certificate operation
@@ -36,16 +35,18 @@ class ParseX509Certificate extends Operation {
                 value: ["PEM", "DER Hex", "Base64", "Raw"]
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
-                flags: "i",
-                magic:  true,
-                args: [
-                    "PEM"
-                ]
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
+                    flags: "i",
+                    magic:  true,
+                    args: [
+                        "PEM"
+                    ]
+                }]
+        };
     }
 
     /**

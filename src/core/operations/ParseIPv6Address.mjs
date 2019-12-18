@@ -9,7 +9,6 @@ import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP.mjs";
 import BigNumber from "bignumber.js";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Parse IPv6 address operation
@@ -29,14 +28,16 @@ class ParseIPv6Address extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match:  "^\\s*([a-f\\d]{4}:?)+\\s*$",
-                flags:  "i",
-                magic:  false,
-                args:   []
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match:  "^\\s*([a-f\\d]{4}:?)+\\s*$",
+                    flags:  "i",
+                    magic:  false,
+                    args:   []
+                }]
+        };
     }
 
     /**

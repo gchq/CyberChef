@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
@@ -34,69 +33,68 @@ class FromHex extends Operation {
                 value: FROM_HEX_DELIM_OPTIONS
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:[\\dA-F]{2})+$",
-                flags: "i",
-                magic:  true,
-                args: ["None"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["Space"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["Comma"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["Semi-colon"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["Colon"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["Line feed"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["CRLF"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["0x"]
-            },
-            {
-                match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
-                flags: "i",
-                magic:  true,
-                args: ["\\x"]
-            }
-        ],
-        null,
-        null,
+        this.checks =
         {
-            input:  [2, 3],
-            output: criteria.entropyOfText
-        }
-        );
+            inRegexes: [
+                {
+                    match: "^(?:[\\dA-F]{2})+$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["None"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["Space"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["Comma"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["Semi-colon"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["Colon"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["Line feed"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["CRLF"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["0x"]
+                },
+                {
+                    match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
+                    flags: "i",
+                    magic:  true,
+                    args: ["\\x"]
+                }],
+            entropyTests: {
+                input:  [2, 3],
+                output: criteria.entropyOfText
+            }
+        };
     }
 
     /**

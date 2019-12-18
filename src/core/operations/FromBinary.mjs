@@ -8,7 +8,6 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromBinary} from "../lib/Binary.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
@@ -35,54 +34,53 @@ class FromBinary extends Operation {
                 "value": BIN_DELIM_OPTIONS
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:[01]{8})+$",
-                flags: "",
-                magic:  true,
-                args: ["None"]
-            },
-            {
-                match: "^(?:[01]{8})(?: [01]{8})*$",
-                flags: "",
-                magic:  true,
-                args: ["Space"]
-            },
-            {
-                match: "^(?:[01]{8})(?:,[01]{8})*$",
-                flags: "",
-                magic:  true,
-                args: ["Comma"]
-            },
-            {
-                match: "^(?:[01]{8})(?:;[01]{8})*$",
-                flags: "",
-                magic:  true,
-                args: ["Semi-colon"]
-            },
-            {
-                match: "^(?:[01]{8})(?::[01]{8})*$",
-                flags: "",
-                magic:  true,
-                args: ["Colon"]
-            },
-            {
-                match: "^(?:[01]{8})(?:\\n[01]{8})*$",
-                flags: "",
-                magic:  true,
-                args: ["Line feed"]
-            },
-            {
-                match: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
-                flags: "",
-                magic:  true,
-                args: ["CRLF"]
-            },
-        ],
-        null,
-        null,
-        criteria.binary
-        );
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^(?:[01]{8})+$",
+                    flags: "",
+                    magic:  true,
+                    args: ["None"]
+                },
+                {
+                    match: "^(?:[01]{8})(?: [01]{8})*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Space"]
+                },
+                {
+                    match: "^(?:[01]{8})(?:,[01]{8})*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Comma"]
+                },
+                {
+                    match: "^(?:[01]{8})(?:;[01]{8})*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Semi-colon"]
+                },
+                {
+                    match: "^(?:[01]{8})(?::[01]{8})*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Colon"]
+                },
+                {
+                    match: "^(?:[01]{8})(?:\\n[01]{8})*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Line feed"]
+                },
+                {
+                    match: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["CRLF"]
+                }],
+            entropyTests: criteria.binary
+        };
     }
 
     /**

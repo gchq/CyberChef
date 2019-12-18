@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS} from "../lib/Delim.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From Morse Code operation
@@ -38,20 +37,20 @@ class FromMorseCode extends Operation {
                 "value": WORD_DELIM_OPTIONS
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
-                flags: "i",
-                magic:  true,
-                args: ["Space", "Line feed"]
-            },
-        ],
-        null,
-        null,
+        this.checks =
         {
-            input:  [0, 2],
-            output: [3, 6]
-        });
+            inRegexes: [
+                {
+                    match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
+                    flags: "i",
+                    magic:  true,
+                    args: ["Space", "Line feed"]
+                }],
+            entropyTests: {
+                input:  [0, 2],
+                output: [3, 6]
+            }
+        };
     }
 
     /**

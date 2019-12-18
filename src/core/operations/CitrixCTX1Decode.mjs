@@ -6,7 +6,6 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import cptable from "codepage";
 
 /**
@@ -27,14 +26,16 @@ class CitrixCTX1Decode extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match:  "([A-Z]{4}){10,}",
-                flags:  "",
-                magic:  true,
-                args:   []
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match:  "([A-Z]{4}){10,}",
+                    flags:  "",
+                    magic:  true,
+                    args:   []
+                }]
+        };
     }
 
     /**

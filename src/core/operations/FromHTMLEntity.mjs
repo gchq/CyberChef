@@ -6,7 +6,6 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From HTML Entity operation
@@ -26,14 +25,16 @@ class FromHTMLEntity extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match: "&(?:#\\d{2,3}|#x[\\da-f]{2}|[a-z]{2,6});",
-                flags: "i",
-                magic:  true,
-                args: []
-            },
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "&(?:#\\d{2,3}|#x[\\da-f]{2}|[a-z]{2,6});",
+                    flags: "i",
+                    magic:  true,
+                    args: []
+                }]
+        };
     }
 
     /**

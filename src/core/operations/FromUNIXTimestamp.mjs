@@ -8,7 +8,6 @@ import Operation from "../Operation.mjs";
 import moment from "moment-timezone";
 import {UNITS} from "../lib/DateTime.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * From UNIX Timestamp operation
@@ -34,32 +33,34 @@ class FromUNIXTimestamp extends Operation {
                 "value": UNITS
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^1?\\d{9}$",
-                flags: "",
-                magic:  true,
-                args: ["Seconds (s)"]
-            },
-            {
-                match: "^1?\\d{12}$",
-                flags: "",
-                magic:  true,
-                args: ["Milliseconds (ms)"]
-            },
-            {
-                match: "^1?\\d{15}$",
-                flags: "",
-                magic:  true,
-                args: ["Microseconds (μs)"]
-            },
-            {
-                match: "^1?\\d{18}$",
-                flags: "",
-                magic:  true,
-                args: ["Nanoseconds (ns)"]
-            },
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^1?\\d{9}$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Seconds (s)"]
+                },
+                {
+                    match: "^1?\\d{12}$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Milliseconds (ms)"]
+                },
+                {
+                    match: "^1?\\d{15}$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Microseconds (μs)"]
+                },
+                {
+                    match: "^1?\\d{18}$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Nanoseconds (ns)"]
+                }]
+        };
     }
 
     /**

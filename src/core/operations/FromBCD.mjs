@@ -9,7 +9,6 @@ import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD.mjs";
 import BigNumber from "bignumber.js";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
@@ -51,18 +50,17 @@ class FromBCD extends Operation {
                 "value": FORMAT
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:\\d{4} ){3,}\\d{4}$",
-                flags: "",
-                magic:  true,
-                args: ["8 4 2 1", true, false, "Nibbles"]
-            }
-        ],
-        null,
-        null,
-        criteria.binary
-        );
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^(?:\\d{4} ){3,}\\d{4}$",
+                    flags: "",
+                    magic:  true,
+                    args: ["8 4 2 1", true, false, "Nibbles"]
+                }],
+            entropyTests: criteria.binary
+        };
     }
 
     /**

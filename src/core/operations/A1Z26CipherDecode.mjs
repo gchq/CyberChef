@@ -8,7 +8,6 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * A1Z26 Cipher Decode operation
@@ -34,44 +33,46 @@ class A1Z26CipherDecode extends Operation {
                 value: DELIM_OPTIONS
             }
         ];
-        this.checks = new magicObject([
-            {
-                match:  "^\\s*([12]?[0-9] )+[12]?[0-9]\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   ["Space"]
-            },
-            {
-                match:  "^\\s*([12]?[0-9],)+[12]?[0-9]\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   ["Comma"]
-            },
-            {
-                match:  "^\\s*([12]?[0-9];)+[12]?[0-9]\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   ["Semi-colon"]
-            },
-            {
-                match:  "^\\s*([12]?[0-9]:)+[12]?[0-9]\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   ["Colon"]
-            },
-            {
-                match:  "^\\s*([12]?[0-9]\\n)+[12]?[0-9]\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   ["Line feed"]
-            },
-            {
-                match:  "^\\s*([12]?[0-9]\\r\\n)+[12]?[0-9]\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   ["CRLF"]
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match:  "^\\s*([12]?[0-9] )+[12]?[0-9]\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   ["Space"]
+                },
+                {
+                    match:  "^\\s*([12]?[0-9],)+[12]?[0-9]\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   ["Comma"]
+                },
+                {
+                    match:  "^\\s*([12]?[0-9];)+[12]?[0-9]\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   ["Semi-colon"]
+                },
+                {
+                    match:  "^\\s*([12]?[0-9]:)+[12]?[0-9]\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   ["Colon"]
+                },
+                {
+                    match:  "^\\s*([12]?[0-9]\\n)+[12]?[0-9]\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   ["Line feed"]
+                },
+                {
+                    match:  "^\\s*([12]?[0-9]\\r\\n)+[12]?[0-9]\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   ["CRLF"]
+                }]
+        };
     }
 
     /**

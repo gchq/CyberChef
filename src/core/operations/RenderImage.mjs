@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import {isImage} from "../lib/FileType.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Render Image operation
@@ -36,20 +35,20 @@ class RenderImage extends Operation {
                 "value": ["Raw", "Base64", "Hex"]
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
-                flags: "",
-                magic:  true,
-                args: ["Raw"],
-                useful: true
-            }
-        ],
-        null,
+        this.checks =
         {
-            type: "image"
-        }
-        );
+            inRegexes: [
+                {
+                    match: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                    flags: "",
+                    magic:  true,
+                    args: ["Raw"],
+                    useful: true
+                }],
+            mimeCheck: {
+                type: "image"
+            }
+        };
     }
 
     /**

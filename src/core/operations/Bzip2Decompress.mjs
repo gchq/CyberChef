@@ -6,7 +6,6 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import Bzip2 from "libbzip2-wasm";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
@@ -35,18 +34,17 @@ class Bzip2Decompress extends Operation {
                 value: false
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^\\x42\\x5a\\x68",
-                flags: "",
-                magic:  true,
-                args: []
-            }
-        ],
-        null,
-        null,
-        criteria.compressedToDecompressed
-        );
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^\\x42\\x5a\\x68",
+                    flags: "",
+                    magic:  true,
+                    args: []
+                }],
+            entropyTests: criteria.compressedToDecompressed
+        };
     }
 
     /**

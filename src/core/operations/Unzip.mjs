@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import unzip from "zlibjs/bin/unzip.min.js";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 
@@ -43,18 +42,17 @@ class Unzip extends Operation {
                 value: false
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
-                flags: "",
-                magic:  true,
-                args: ["", false]
-            },
-        ],
-        null,
-        null,
-        criteria.compressedToDecompressed
-        );
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
+                    flags: "",
+                    magic:  true,
+                    args: ["", false]
+                }],
+            entropyTests: criteria.compressedToDecompressed
+        };
     }
 
     /**

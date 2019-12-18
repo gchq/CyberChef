@@ -7,7 +7,6 @@
 
 import Operation from "../Operation.mjs";
 import {URL_REGEX, DOMAIN_REGEX} from "../lib/Extract.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * DefangURL operation
@@ -48,65 +47,67 @@ class DefangURL extends Operation {
                 value: ["Valid domains and full URLs", "Only full URLs", "Everything"]
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [false, false, false, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [true, false, false, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [false, true, false, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [true, true, false, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [false, false, true, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [true, false, true, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [false, true, true, "Everything"],
-            },
-            {
-                match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                args: [true, true, true, "Everything"],
-            }
-        ],
-        [
-            {
-                match: "^\\s*(h(tt|xx)ps?|ftp)(://|\\[://\\])(-(\\.|\\[\\.\\]))?([^\\s/?\\.\\[\\]#-]+(\\.|\\[\\.\\])?)+(/\\S*)?\\s*$",
-                flags: "i",
-                magic:  false,
-                shouldMatch: true,
-                args: [true, true, true, "Everything"],
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [false, false, false, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [true, false, false, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [false, true, false, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [true, true, false, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [false, false, true, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [true, false, true, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [false, true, true, "Everything"],
+                },
+                {
+                    match: "^\\s*(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    args: [true, true, true, "Everything"],
+                }
+            ],
+            outRegexes: [
+                {
+                    match: "^\\s*(h(tt|xx)ps?|ftp)(://|\\[://\\])(-(\\.|\\[\\.\\]))?([^\\s/?\\.\\[\\]#-]+(\\.|\\[\\.\\])?)+(/\\S*)?\\s*$",
+                    flags: "i",
+                    magic:  false,
+                    shouldMatch: true,
+                    args: [true, true, true, "Everything"],
+                }]
+        };
     }
 
     /**

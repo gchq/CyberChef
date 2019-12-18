@@ -8,7 +8,6 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { parseQrCode } from "../lib/QRCode.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Parse QR Code operation
@@ -34,15 +33,17 @@ class ParseQRCode extends Operation {
                 "value": false
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
-                flags: "",
-                args: [false],
-                magic:  true,
-                useful: true
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                    flags: "",
+                    args: [false],
+                    magic:  true,
+                    useful: true
+                }]
+        };
     }
 
     /**

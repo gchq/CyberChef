@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
@@ -34,50 +33,50 @@ class FromOctal extends Operation {
                 "value": DELIM_OPTIONS
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?: (?:[0-7]{1,2}|[123][0-7]{2}))*$",
-                flags: "",
-                magic:  true,
-                args: ["Space"]
-            },
-            {
-                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:,(?:[0-7]{1,2}|[123][0-7]{2}))*$",
-                flags: "",
-                magic:  true,
-                args: ["Comma"]
-            },
-            {
-                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:;(?:[0-7]{1,2}|[123][0-7]{2}))*$",
-                flags: "",
-                magic:  true,
-                args: ["Semi-colon"]
-            },
-            {
-                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?::(?:[0-7]{1,2}|[123][0-7]{2}))*$",
-                flags: "",
-                magic:  true,
-                args: ["Colon"]
-            },
-            {
-                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
-                flags: "",
-                magic:  true,
-                args: ["Line feed"]
-            },
-            {
-                match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\r\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
-                flags: "",
-                magic:  true,
-                args: ["CRLF"]
-            },
-        ],
-        null,
-        null,
+        this.checks =
         {
-            input:  [2.5, 3],
-            output: criteria.entropyOfText
-        });
+            inRegexes: [
+                {
+                    match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?: (?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Space"]
+                },
+                {
+                    match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:,(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Comma"]
+                },
+                {
+                    match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:;(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Semi-colon"]
+                },
+                {
+                    match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?::(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Colon"]
+                },
+                {
+                    match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Line feed"]
+                },
+                {
+                    match: "^(?:[0-7]{1,2}|[123][0-7]{2})(?:\\r\\n(?:[0-7]{1,2}|[123][0-7]{2}))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["CRLF"]
+                }],
+            entropyTests: {
+                input:  [2.5, 3],
+                output: criteria.entropyOfText
+            }
+        };
     }
 
     /**

@@ -6,7 +6,6 @@
 
 import r from "jsrsasign";
 import Operation from "../Operation.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 
 /**
  * Object Identifier to Hex operation
@@ -26,14 +25,16 @@ class ObjectIdentifierToHex extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.checks = new magicObject([
-            {
-                match:  "^\\s*([0-9]{1,3}\\.)+[0-9]{1,3}\\s*$",
-                flags:  "",
-                magic:  true,
-                args:   []
-            }
-        ]);
+        this.checks =
+        {
+            inRegexes: [
+                {
+                    match:  "^\\s*([0-9]{1,3}\\.)+[0-9]{1,3}\\s*$",
+                    flags:  "",
+                    magic:  true,
+                    args:   []
+                }]
+        };
     }
 
     /**

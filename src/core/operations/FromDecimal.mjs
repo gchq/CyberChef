@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromDecimal} from "../lib/Decimal.mjs";
-import magicObject from "../lib/MagicObject.mjs";
 import * as criteria from "../lib/MagicCriteria.mjs";
 
 /**
@@ -38,51 +37,50 @@ class FromDecimal extends Operation {
                 "value": false
             }
         ];
-        this.checks = new magicObject([
-            {
-                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
-                flags: "",
-                magic:  true,
-                args: ["Space", false]
-            },
-            {
-                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
-                flags: "",
-                magic:  true,
-                args: ["Comma", false]
-            },
-            {
-                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
-                flags: "",
-                magic:  true,
-                args: ["Semi-colon", false]
-            },
-            {
-                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
-                flags: "",
-                magic:  true,
-                args: ["Colon", false]
-            },
-            {
-                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
-                flags: "",
-                magic:  true,
-                args: ["Line feed", false]
-            },
-            {
-                match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
-                flags: "",
-                magic:  true,
-                args: ["CRLF", false]
-            },
-        ],
-        null,
-        null,
+        this.checks =
         {
-            input:  [2.5, 3],
-            output: criteria.entropyOfText
-        }
-        );
+            inRegexes: [
+                {
+                    match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?: (?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Space", false]
+                },
+                {
+                    match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:,(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Comma", false]
+                },
+                {
+                    match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:;(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Semi-colon", false]
+                },
+                {
+                    match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?::(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Colon", false]
+                },
+                {
+                    match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["Line feed", false]
+                },
+                {
+                    match: "^(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5])(?:\\r\\n(?:\\d{1,2}|1\\d{2}|2[0-4]\\d|25[0-5]))*$",
+                    flags: "",
+                    magic:  true,
+                    args: ["CRLF", false]
+                }],
+            entropyTests: {
+                input:  [2.5, 3],
+                output: criteria.entropyOfText
+            }
+        };
     }
 
     /**
