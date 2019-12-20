@@ -5,7 +5,8 @@
  */
 
 import DishType from "./DishType.mjs";
-import { isNodeEnvironment } from "../Utils.mjs";
+import Utils, { isNodeEnvironment } from "../Utils.mjs";
+import Dish from "../Dish.mjs";
 
 
 /**
@@ -16,13 +17,14 @@ class DishListFile extends DishType {
     /**
      * convert the given value to a ArrayBuffer
      */
-    static toArrayBuffer() {
+    static async toArrayBuffer() {
         DishListFile.checkForValue(this.value);
 
         if (isNodeEnvironment()) {
             this.value = this.value.map(file => Uint8Array.from(file.data));
+        } else {
+            this.value = await DishListFile.concatenateTypedArraysWithTypedElements(...this.value);
         }
-        this.value = DishListFile.concatenateTypedArrays(...this.value).buffer;
     }
 
     /**
@@ -33,6 +35,27 @@ class DishListFile extends DishType {
         this.value = [new File(this.value, "unknown")];
     }
 
+    /**
+     * Concatenates a list of typed elements together.
+     *
+     * @param {Uint8Array[]} arrays
+     * @returns {Uint8Array}
+     */
+    static async concatenateTypedArraysWithTypedElements(...arrays) {
+        let totalLength = 0;
+        for (const arr of arrays) {
+            totalLength += arr.size;
+        }
+        const myArray = new Uint8Array(totalLength);
+
+        let offset = 0;
+        for (const arr of arrays) {
+            const data = await Utils.readFile(arr);
+            myArray.set(data, offset);
+            offset += data.length;
+        }
+        return myArray;
+    }
 
     /**
      * Concatenates a list of Uint8Arrays together
