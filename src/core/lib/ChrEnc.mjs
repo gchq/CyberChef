@@ -168,7 +168,7 @@ export const IO_FORMAT = {
  * Unicode Normalisation Forms
  *
  * @author Matthieu [m@tthieu.xyz]
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 
