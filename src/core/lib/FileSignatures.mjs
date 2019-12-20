@@ -2942,7 +2942,7 @@ export function extractBMP(bytes, offset) {
 export function extractICO(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    // Move to number of file there are.
+    // Move to number of files there are.
     stream.moveTo(4);
 
     // Read the number of files stored in the ICO
