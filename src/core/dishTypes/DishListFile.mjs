@@ -6,7 +6,6 @@
 
 import DishType from "./DishType.mjs";
 import Utils, { isNodeEnvironment } from "../Utils.mjs";
-import Dish from "../Dish.mjs";
 
 
 /**
