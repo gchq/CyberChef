@@ -1,10 +1,12 @@
 /**
  * @author masq [github.cyberchef@masq.cc]
+ * @author n1073645
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * To Case Insensitive Regex operation
@@ -54,7 +56,7 @@ class ToCaseInsensitiveRegex extends Operation {
         try {
             RegExp(input);
         } catch (error) {
-            return "Invalid Regular Expression (Please note this version of node does not support look behinds).";
+            throw new OperationError("Invalid Regular Expression (Please note this version of node does not support look behinds).");
         }
 
         // Example: [test] -> [[tT][eE][sS][tT]]
