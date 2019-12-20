@@ -6,8 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import {UNICODE_NORMALISATION_FORMS} from "../lib/ChrEnc.mjs";
 import unorm from "unorm";
-import {UNICODE_NORMALISATION_FORMS} from "../lib/ChrEnc";
 
 /**
  * Normalise Unicode operation
@@ -21,9 +21,9 @@ class NormaliseUnicode extends Operation {
         super();
 
         this.name = "Normalise Unicode";
-        this.module = "UnicodeNormalisation";
-        this.description = "Transform Unicode to one of the Normalisation Form";
-        this.infoURL = "http://www.unicode.org/reports/tr15/";
+        this.module = "Encodings";
+        this.description = "Transform Unicode characters to one of the Normalisation Forms";
+        this.infoURL = "https://wikipedia.org/wiki/Unicode_equivalence#Normal_forms";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -42,17 +42,19 @@ class NormaliseUnicode extends Operation {
      */
     run(input, args) {
         const [normalForm] = args;
-        if (normalForm === "NFD") {
-            return unorm.nfd(input);
-        } else if (normalForm === "NFC") {
-            return unorm.nfc(input);
-        } else if (normalForm === "NFKD") {
-            return unorm.nfkd(input);
-        } else if (normalForm === "NFKC") {
-            return unorm.nfc(input);
-        }
 
-        throw new OperationError("Unknown Normalisation Form");
+        switch (normalForm) {
+            case "NFD":
+                return unorm.nfd(input);
+            case "NFC":
+                return unorm.nfc(input);
+            case "NFKD":
+                return unorm.nfkd(input);
+            case "NFKC":
+                return unorm.nfc(input);
+            default:
+                throw new OperationError("Unknown Normalisation Form");
+        }
     }
 
 }

@@ -3,7 +3,7 @@
  *
  * @author Matthieu [m@tthieux.xyz]
  *
- * @copyright Crown Copyright 2018
+ * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
