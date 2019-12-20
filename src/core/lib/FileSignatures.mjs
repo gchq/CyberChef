@@ -280,7 +280,7 @@ export const FILE_SIGNATURES = {
                 9: 0x0,
                 10: [0x0, 0x1]
             },
-            extractor: null
+            extractor: extractICO
         },
         {
             name: "Radiance High Dynamic Range image",
@@ -2929,6 +2929,32 @@ export function extractBMP(bytes, offset) {
     // Move to end of file (file size minus header and size field)
     stream.moveForwardsBy(bmpSize - 6);
 
+    return stream.carve();
+}
+
+
+/**
+ * ICO extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ */
+export function extractICO(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to number of file there are.
+    stream.moveTo(4);
+
+    // Read the number of files stored in the ICO
+    const numberFiles = stream.readInt(2, "le");
+
+    // Move forward to the last file header.
+    stream.moveForwardsBy(8 + ((numberFiles-1) * 16));
+    const fileSize = stream.readInt(4, "le");
+    const fileOffset = stream.readInt(4, "le");
+
+    // Move to the end of the last file.
+    stream.moveTo(fileOffset + fileSize);
     return stream.carve();
 }
 
