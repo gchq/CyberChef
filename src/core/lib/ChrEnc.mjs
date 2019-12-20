@@ -164,3 +164,15 @@ export const IO_FORMAT = {
     "Simplified Chinese GB18030 (54936)": 54936,
 };
 
+/**
+ * Unicode Normalisation Forms
+ *
+ * @author Matthieu [m@tthieu.xyz]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * Character encoding format mappings.
+ */
+export const UNICODE_NORMALISATION_FORMS = ["NFD", "NFC", "NFKD", "NFKC"];

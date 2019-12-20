@@ -147,6 +147,7 @@
     "ssdeep.js": "0.0.2",
     "tesseract.js": "^2.0.0-alpha.15",
     "ua-parser-js": "^0.7.20",
+    "unorm": "^1.6.0",
     "utf8": "^3.0.0",
     "vkbeautify": "^0.99.3",
     "xmldom": "^0.1.27",
