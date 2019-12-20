@@ -41,6 +41,8 @@ import "./tests/DateTime.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/Fork.mjs";
 import "./tests/FromDecimal.mjs";
+import "./tests/Gzip.mjs";
+import "./tests/Gunzip.mjs";
 import "./tests/Hash.mjs";
 import "./tests/HaversineDistance.mjs";
 import "./tests/Hexdump.mjs";
