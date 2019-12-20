@@ -59,6 +59,7 @@ import "./tests/MS.mjs";
 import "./tests/Magic.mjs";
 import "./tests/MorseCode.mjs";
 import "./tests/NetBIOS.mjs";
+import "./tests/NormaliseUnicode.mjs";
 import "./tests/OTP.mjs";
 import "./tests/PGP.mjs";
 import "./tests/PHP.mjs";
