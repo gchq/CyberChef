@@ -117,6 +117,7 @@
     {
         "name": "Public Key",
         "ops": [
+            "Parse X.509 certificate bundles",
             "Parse X.509 certificate",
             "Parse ASN.1 hex string",
             "PEM to Hex",

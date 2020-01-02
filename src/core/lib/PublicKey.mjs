@@ -37,7 +37,7 @@ export function formatDnStr (dnStr, indent) {
 
         key = fields[i].split("=")[0];
         value = fields[i].split("=")[1];
-        str = key.padEnd(maxKeyLen, " ") + " = " + value + "\n";
+        str = key.padEnd(maxKeyLen, " ") + " = " + value + ",";
 
         output += str.padStart(indent + str.length, " ");
     }
