@@ -13,14 +13,10 @@ class potentialOps {
     constructor (prevOp) {
         if (typeof prevOp === "undefined") {
             this.inputRegexes = this.generateInputOpPatterns();
-            this.hasInputRegexes = true;
             this.outputRegexes = this.generateOutputOpPatterns();
-            this.hasOutputRegexes = true;
         } else {
             this.inputRegexes = prevOp.getInputRegexes();
-            this.hasInputRegexes = true;
             this.outputRegexes = prevOp.getOutputRegexes();
-            this.hasOutputRegexes = true;
         }
     }
 
@@ -31,7 +27,6 @@ class potentialOps {
      */
     setOutputRegexes (outputRegexes) {
         this.outputRegexes = [...outputRegexes];
-        this.hasOutputRegexes = true;
     }
 
     /**
@@ -41,7 +36,6 @@ class potentialOps {
      */
     setInputRegexes (inputRegexes) {
         this.inputRegexes = [...inputRegexes];
-        this.hasInputRegexes = true;
     }
 
     /**
