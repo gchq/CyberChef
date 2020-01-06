@@ -1,8 +1,12 @@
+/**
+ * An object used by magic to store the input/output criteria for valid operation results. 
+ *
+ * @author n1073645 [n1073645@gmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
 import OperationConfig from "../config/OperationConfig.json";
 
-/**
- * An object used by magic to store the input/output criteria for valid operation results.
- */
 class potentialOps {
 
     /**
