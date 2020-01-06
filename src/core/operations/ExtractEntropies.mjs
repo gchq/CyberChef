@@ -120,6 +120,7 @@ class ExtractEntropies extends Operation {
      * Calculates the scanning entropy of the input.
      *
      * @param {Uint8Array} inputBytes
+     * @param {number} binWidth
      * @returns {Object}
      */
     calculateScanningEntropy(inputBytes, binWidth) {
@@ -200,7 +201,7 @@ class ExtractEntropies extends Operation {
      * Retrieves all the blocks with entropy lower than the low mean.
      *
      * @param {Array} entropies
-     * @param {number} highEntropy
+     * @param {number} lowEntropy
      * @returns {Array}
      */
     getAllBelow(entropies, lowEntropy) {
@@ -335,8 +336,8 @@ class ExtractEntropies extends Operation {
      * Flips the groups to cover the remaining data.
      *
      * @param {Array} data
-     * @param {Number} length
-     * @param {Number} binWidth
+     * @param {number} length
+     * @param {number} binWidth
      * @returns {Array}
      */
     flipGroupings(data, length, binWidth) {
