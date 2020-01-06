@@ -50,7 +50,6 @@ class potentialOps {
      * @returns {Object[]}
      */
     getInputRegexes () {
-        console.log(typeof this.inputRegexes);
         return this.inputRegexes;
     }
 
