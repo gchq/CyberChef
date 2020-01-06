@@ -335,9 +335,11 @@ class ExtractEntropies extends Operation {
      * Flips the groups to cover the remaining data.
      *
      * @param {Array} data
+     * @param {Number} length
+     * @param {Number} binWidth
      * @returns {Array}
      */
-    flipGroupings(data) {
+    flipGroupings(data, length, binWidth) {
         const result = [];
         if (data[0]) {
             result.push(0, data[0] - 1);
@@ -345,6 +347,9 @@ class ExtractEntropies extends Operation {
         for (let i = 1; i < data.length-1; i+=2) {
             result.push(data[i]+1, data[i+1]);
         }
+        const dataLen = data.length - 1;
+        if (data[dataLen] !== length)
+            result.push(data[dataLen]+1, (length/binWidth)-1);
         return result;
     }
 
@@ -363,7 +368,7 @@ class ExtractEntropies extends Operation {
             return output;
         ranges = this.groupings(ranges);
         if (flipOutput)
-            ranges = this.flipGroupings(ranges);
+            ranges = this.flipGroupings(ranges, input.byteLength, binWidth);
 
         for (let i = 0; i < ranges.length; i+=2) {
             if (i === 0)
