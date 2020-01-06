@@ -4,7 +4,7 @@ import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
 import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
-import potentialOps from "./Test.mjs";
+import potentialOps from "./MagicObject.mjs";
 import { isType } from "./FileType.mjs";
 
 /**

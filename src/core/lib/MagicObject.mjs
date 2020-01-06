@@ -1,11 +1,12 @@
 import OperationConfig from "../config/OperationConfig.json";
 
 /**
- *
+ * An object used by magic to store the input/output criteria for valid operation results.
  */
 class potentialOps {
 
     /**
+     * PotentialOps constructor.
      *
      * @param prevOp
      */
@@ -24,6 +25,7 @@ class potentialOps {
     }
 
     /**
+     * Sets the output regexes for the operation.
      *
      * @param outputRegexes
      */
@@ -33,6 +35,7 @@ class potentialOps {
     }
 
     /**
+     * Sets the input regexes for the operation.
      *
      * @param inputRegexes
      */
@@ -42,14 +45,19 @@ class potentialOps {
     }
 
     /**
+     * Returns the operations input regexes.
      *
+     * @returns {Object[]}
      */
     getInputRegexes () {
+        console.log(typeof this.inputRegexes);
         return this.inputRegexes;
     }
 
     /**
+     * Returns the operations output regexes.
      *
+     * @returns {Object[]}
      */
     getOutputRegexes () {
         return this.outputRegexes;
