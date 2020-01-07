@@ -10,6 +10,7 @@ import InputWorker from "worker-loader?inline&fallback=false!../workers/InputWor
 import Utils, { debounce } from "../../core/Utils.mjs";
 import { toBase64 } from "../../core/lib/Base64.mjs";
 import { isImage } from "../../core/lib/FileType.mjs";
+import { calculateShannonEntropy } from "../../core/lib/Entropy.mjs";
 
 
 /**
@@ -874,7 +875,7 @@ class InputWaiter {
 
         // Only preserve for high-entropy inputs
         const data = Utils.strToArrayBuffer(input);
-        const entropy = Utils.calculateShannonEntropy(data);
+        const entropy = calculateShannonEntropy(data);
 
         if (entropy > 6) {
             this.app.alert(preserveStr, 6000);

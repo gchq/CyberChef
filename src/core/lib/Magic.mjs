@@ -4,6 +4,7 @@ import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
 import {detectFileType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
+import { freqDist, calculateShannonEntropyFromProb } from "./Entropy.mjs";
 
 /**
  * A class for detecting encodings, file types and byte frequencies and
@@ -63,7 +64,7 @@ class Magic {
             probability: Math.MIN_VALUE
         }];
 
-        const inputFreq = this._freqDist();
+        const inputFreq = freqDist(this.inputBuffer);
         const langFreqs = extLang ? EXTENSIVE_LANG_FREQS : COMMON_LANG_FREQS;
         const chiSqrs = [];
 
@@ -186,16 +187,12 @@ class Magic {
      * @returns {number}
      */
     calcEntropy() {
-        const prob = this._freqDist();
-        let entropy = 0,
-            p;
+        if (!(this.freqDist))
+            this.freqDist = freqDist(this.inputBuffer);
 
-        for (let i = 0; i < prob.length; i++) {
-            p = prob[i] / 100;
-            if (p === 0) continue;
-            entropy += p * Math.log(p) / Math.log(2);
-        }
-        return -entropy;
+        if (!(this.entropy))
+            this.entropy = calculateShannonEntropyFromProb(this.freqDist);
+        return this.entropy;
     }
 
     /**
@@ -411,34 +408,6 @@ class Magic {
             // If there are errors, return an empty buffer
             return new ArrayBuffer();
         }
-    }
-
-    /**
-     * Calculates the number of times each byte appears in the input as a percentage
-     *
-     * @private
-     * @returns {number[]}
-     */
-    _freqDist() {
-        if (this.freqDist) return this.freqDist;
-
-        const len = this.inputBuffer.length;
-        let i = len;
-        const counts = new Array(256).fill(0);
-
-        if (!len) {
-            this.freqDist = counts;
-            return this.freqDist;
-        }
-
-        while (i--) {
-            counts[this.inputBuffer[i]]++;
-        }
-
-        this.freqDist = counts.map(c => {
-            return c / len * 100;
-        });
-        return this.freqDist;
     }
 
     /**

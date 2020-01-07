@@ -9,6 +9,8 @@ import * as nodomtemp from "nodom";
 
 import Operation from "../Operation.mjs";
 
+import {calculateScanningEntropy, calculateShannonEntropy} from "../lib/Entropy.mjs";
+
 const d3 = d3temp.default ? d3temp.default : d3temp;
 const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
 
@@ -37,59 +39,6 @@ class Entropy extends Operation {
                 "value": ["Shannon scale", "Histogram (Bar)", "Histogram (Line)", "Curve", "Image"]
             }
         ];
-    }
-
-    /**
-     * Calculates the frequency of bytes in the input.
-     *
-     * @param {Uint8Array} input
-     * @returns {number}
-     */
-    calculateShannonEntropy(input) {
-        const prob = [],
-            occurrences = new Array(256).fill(0);
-
-        // Count occurrences of each byte in the input
-        let i;
-        for (i = 0; i < input.length; i++) {
-            occurrences[input[i]]++;
-        }
-
-        // Store probability list
-        for (i = 0; i < occurrences.length; i++) {
-            if (occurrences[i] > 0) {
-                prob.push(occurrences[i] / input.length);
-            }
-        }
-
-        // Calculate Shannon entropy
-        let entropy = 0,
-            p;
-
-        for (i = 0; i < prob.length; i++) {
-            p = prob[i];
-            entropy += p * Math.log(p) / Math.log(2);
-        }
-
-        return -entropy;
-    }
-
-    /**
-     * Calculates the scanning entropy of the input
-     *
-     * @param {Uint8Array} inputBytes
-     * @returns {Object}
-     */
-    calculateScanningEntropy(inputBytes) {
-        const entropyData = [];
-        const binWidth = inputBytes.length < 256 ? 8 : 256;
-
-        for (let bytePos = 0; bytePos < inputBytes.length; bytePos += binWidth) {
-            const block = inputBytes.slice(bytePos, bytePos+binWidth);
-            entropyData.push(this.calculateShannonEntropy(block));
-        }
-
-        return { entropyData, binWidth };
     }
 
     /**
@@ -394,10 +343,10 @@ class Entropy extends Operation {
                 return this.calculateByteFrequency(input);
             case "Curve":
             case "Image":
-                return this.calculateScanningEntropy(input).entropyData;
+                return calculateScanningEntropy(input, input.byteLength < 256 ? 8 : 256).entropyData;
             case "Shannon scale":
             default:
-                return this.calculateShannonEntropy(input);
+                return calculateShannonEntropy(input);
         }
     }
 

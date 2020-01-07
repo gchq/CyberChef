@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
+import {calculateScanningEntropy} from "../lib/Entropy.mjs";
 
 /**
  * Extract Entropies operation
@@ -79,60 +80,6 @@ class ExtractEntropies extends Operation {
                 value: false
             }
         ];
-    }
-
-    /**
-     * Calculates the frequency of bytes in the input.
-     *
-     * @param {Uint8Array} input
-     * @returns {number}
-     */
-    calculateShannonEntropy(input) {
-        const prob = [],
-            occurrences = new Array(256).fill(0);
-
-        // Count occurrences of each byte in the input
-        let i;
-        for (i = 0; i < input.length; i++) {
-            occurrences[input[i]]++;
-        }
-
-        // Store probability list
-        for (i = 0; i < occurrences.length; i++) {
-            if (occurrences[i] > 0) {
-                prob.push(occurrences[i] / input.length);
-            }
-        }
-
-        // Calculate Shannon entropy
-        let entropy = 0,
-            p;
-
-        for (i = 0; i < prob.length; i++) {
-            p = prob[i];
-            entropy += p * Math.log(p) / Math.log(2);
-        }
-
-        return -entropy;
-    }
-
-    /**
-     * Calculates the scanning entropy of the input.
-     *
-     * @param {Uint8Array} inputBytes
-     * @param {number} binWidth
-     * @returns {Object}
-     */
-    calculateScanningEntropy(inputBytes, binWidth) {
-        const entropyData = [];
-        // const binWidth = inputBytes.length < 256 ? 8 : 256;
-
-        for (let bytePos = 0; bytePos < inputBytes.length; bytePos += binWidth) {
-            const block = inputBytes.slice(bytePos, bytePos+binWidth);
-            entropyData.push(this.calculateShannonEntropy(block));
-        }
-
-        return { entropyData, binWidth };
     }
 
     /**
@@ -459,7 +406,7 @@ class ExtractEntropies extends Operation {
             throw new OperationError("Cannot have a negative block size");
 
         let result = [];
-        const entropies = this.calculateScanningEntropy(new Uint8Array(input), args[1]);
+        const entropies = calculateScanningEntropy(new Uint8Array(input), args[1]);
         switch (args[0]) {
             case "English Text":
                 result = this.getRange(entropies.entropyData, 3.5, 5, input, args[5], args[1]);
