@@ -43,9 +43,9 @@ Converts a letter to uppercase (if it already isn't)
 @param {char} letter - letter to convert to upper case
 @returns {char}
 */
-export function convToUpperCase(letter){
+export function convToUpperCase(letter) {
     const charCode = letter.charCodeAt();
-    if (97<=charCode && charCode<=122){
+    if (97<=charCode && charCode<=122) {
         return String.fromCharCode(charCode-32);
     }
     return letter;
@@ -54,7 +54,7 @@ export function convToUpperCase(letter){
 /**
 The SIGABA machine consisting of the 3 rotor banks: cipher, control and index banks.
 */
-export class SigabaMachine{
+export class SigabaMachine {
     /**
     SigabaMachine constructor
 
@@ -62,7 +62,7 @@ export class SigabaMachine{
     @param {Object[]} controlRotors - list of CRRotors
     @param {object[]} indexRotors - list of IRotors
     */
-    constructor(cipherRotors, controlRotors, indexRotors){
+    constructor(cipherRotors, controlRotors, indexRotors) {
         this.cipherBank = new CipherBank(cipherRotors);
         this.controlBank = new ControlBank(controlRotors);
         this.indexBank = new IndexBank(indexRotors);
@@ -71,7 +71,7 @@ export class SigabaMachine{
     /**
     Steps all the correct rotors in the machine.
     */
-    step(){
+    step() {
         const controlOut = this.controlBank.goThroughControl();
         const indexOut = this.indexBank.goThroughIndex(controlOut);
         this.cipherBank.step(indexOut);
@@ -83,12 +83,11 @@ export class SigabaMachine{
     @param {char} letter - letter to encrypt
     @returns {char}
     */
-    encryptLetter(letter){
+    encryptLetter(letter) {
         letter = convToUpperCase(letter);
-        if (letter == " "){
+        if (letter === " ") {
             letter = "Z";
-        }
-        else if (letter == "Z") {
+        } else if (letter === "Z") {
             letter = "X";
         }
         const encryptedLetter = this.cipherBank.encrypt(letter);
@@ -102,10 +101,10 @@ export class SigabaMachine{
     @param {char} letter - letter to decrypt
     @returns {char}
     */
-    decryptLetter(letter){
+    decryptLetter(letter) {
         letter = convToUpperCase(letter);
         let decryptedLetter = this.cipherBank.decrypt(letter);
-        if (decryptedLetter == "Z"){
+        if (decryptedLetter === "Z") {
             decryptedLetter = " ";
         }
         this.step();
@@ -118,9 +117,9 @@ export class SigabaMachine{
     @param {string} msg - message to encrypt
     @returns {string}
     */
-    encrypt(msg){
+    encrypt(msg) {
         let ciphertext = "";
-        for (const letter of msg){
+        for (const letter of msg) {
             ciphertext = ciphertext.concat(this.encryptLetter(letter));
         }
         return ciphertext;
@@ -132,9 +131,9 @@ export class SigabaMachine{
     @param {string} msg - message to decrypt
     @returns {string}
     */
-    decrypt(msg){
+    decrypt(msg) {
         let plaintext = "";
-        for (const letter of msg){
+        for (const letter of msg) {
             plaintext = plaintext.concat(this.decryptLetter(letter));
         }
         return plaintext;
@@ -145,13 +144,13 @@ export class SigabaMachine{
 /**
 The cipher rotor bank consists of 5 cipher rotors in either a forward or reversed orientation.
 */
-export class CipherBank{
+export class CipherBank {
     /**
     CipherBank constructor
 
     @param {Object[]} rotors - list of CRRotors
     */
-    constructor(rotors){
+    constructor(rotors) {
         this.rotors = rotors;
     }
 
@@ -161,8 +160,8 @@ export class CipherBank{
     @param {char} inputPos - the input position of the signal (letter to be encrypted)
     @returns {char}
     */
-    encrypt(inputPos){
-        for (let rotor of this.rotors){
+    encrypt(inputPos) {
+        for (const rotor of this.rotors) {
             inputPos = rotor.crypt(inputPos, "leftToRight");
         }
         return inputPos;
@@ -174,9 +173,9 @@ export class CipherBank{
     @param {char} inputPos - the input position of the signal (letter to be decrypted)
     @returns {char}
     */
-    decrypt(inputPos){
+    decrypt(inputPos) {
         const revOrderedRotors = [...this.rotors].reverse();
-        for (let rotor of revOrderedRotors){
+        for (const rotor of revOrderedRotors) {
             inputPos = rotor.crypt(inputPos, "rightToLeft");
         }
         return inputPos;
@@ -187,19 +186,19 @@ export class CipherBank{
 
     @param {number[]} indexInputs - the inputs from the index rotors
     */
-    step(indexInputs){
-        const logicDict = {0: [0,9], 1:[7,8], 2:[5,6], 3:[3,4], 4:[1,2]};
-        let rotorsToMove = [];
-        for (const key in logicDict){
+    step(indexInputs) {
+        const logicDict = {0: [0, 9], 1: [7, 8], 2: [5, 6], 3: [3, 4], 4: [1, 2]};
+        const rotorsToMove = [];
+        for (const key in logicDict) {
             const item = logicDict[key];
-            for (const i of indexInputs){
-                if (item.includes(i)){
+            for (const i of indexInputs) {
+                if (item.includes(i)) {
                     rotorsToMove.push(this.rotors[key]);
                     break;
                 }
             }
         }
-        for (let rotor of rotorsToMove){
+        for (const rotor of rotorsToMove) {
             rotor.step();
         }
     }
@@ -209,13 +208,13 @@ export class CipherBank{
 /**
 The control rotor bank consists of 5 control rotors in either a forward or reversed orientation. Signals to the control rotor bank always go from right-to-left.
 */
-export class ControlBank{
+export class ControlBank {
     /**
     ControlBank constructor. The rotors have been reversed as signals go from right-to-left through the control rotors.
 
     @param {Object[]} rotors - list of CRRotors
     */
-    constructor(rotors){
+    constructor(rotors) {
         this.rotors = [...rotors].reverse();
         this.numberOfMoves = 1;
     }
@@ -226,8 +225,8 @@ export class ControlBank{
     @param {char} inputPos - the input position of the signal
     @returns {char}
     */
-    crypt(inputPos){
-        for (let rotor of this.rotors){
+    crypt(inputPos) {
+        for (const rotor of this.rotors) {
             inputPos = rotor.crypt(inputPos, "rightToLeft");
         }
         return inputPos;
@@ -238,14 +237,14 @@ export class ControlBank{
 
     @returns {number[]}
     */
-    getOutputs(){
+    getOutputs() {
         const outputs = [this.crypt("F"), this.crypt("G"), this.crypt("H"), this.crypt("I")];
-        const logicDict = {1:"B", 2:"C", 3:"DE", 4:"FGH", 5:"IJK", 6:"LMNO", 7:"PQRST", 8:"UVWXYZ", 9:"A"};
-        let numberOutputs = [];
-        for (let key in logicDict){
+        const logicDict = {1: "B", 2: "C", 3: "DE", 4: "FGH", 5: "IJK", 6: "LMNO", 7: "PQRST", 8: "UVWXYZ", 9: "A"};
+        const numberOutputs = [];
+        for (const key in logicDict) {
             const item = logicDict[key];
-            for (let output of outputs){
-                if (item.includes(output)){
+            for (const output of outputs) {
+                if (item.includes(output)) {
                     numberOutputs.push(key);
                     break;
                 }
@@ -257,14 +256,14 @@ export class ControlBank{
     /**
     Steps the control rotors. Only 3 of the control rotors step: one after every encryption, one after every 26, and one after every 26 squared.
     */
-    step(){
+    step() {
         const MRotor = this.rotors[1], FRotor = this.rotors[2], SRotor = this.rotors[3];
         this.numberOfMoves ++;
         FRotor.step();
-        if (this.numberOfMoves%26 == 0){
+        if (this.numberOfMoves%26 === 0) {
             MRotor.step();
         }
-        if (this.numberOfMoves%(26*26) == 0){
+        if (this.numberOfMoves%(26*26) === 0) {
             SRotor.step();
         }
     }
@@ -274,7 +273,7 @@ export class ControlBank{
 
     @returns {number[]}
     */
-    goThroughControl(){
+    goThroughControl() {
         const outputs = this.getOutputs();
         this.step();
         return outputs;
@@ -285,13 +284,13 @@ export class ControlBank{
 /**
 The index rotor bank consists of 5 index rotors all placed in the forwards orientation.
 */
-export class IndexBank{
+export class IndexBank {
     /**
     IndexBank constructor
 
     @param {Object[]} rotors - list of IRotors
     */
-    constructor(rotors){
+    constructor(rotors) {
         this.rotors = rotors;
     }
 
@@ -301,8 +300,8 @@ export class IndexBank{
     @param {number} inputPos - the input position of the signal
     @returns {number}
     */
-    crypt(inputPos){
-        for (let rotor of this.rotors){
+    crypt(inputPos) {
+        for (const rotor of this.rotors) {
             inputPos = rotor.crypt(inputPos);
         }
         return inputPos;
@@ -314,9 +313,9 @@ export class IndexBank{
     @param {number[]} - inputs from the control rotors
     @returns {number[]}
     */
-    goThroughIndex(controlInputs){
-        let outputs = [];
-        for (const inp of controlInputs){
+    goThroughIndex(controlInputs) {
+        const outputs = [];
+        for (const inp of controlInputs) {
             outputs.push(this.crypt(inp));
         }
         return outputs;
@@ -327,7 +326,7 @@ export class IndexBank{
 /**
 Rotor class
 */
-export class Rotor{
+export class Rotor {
     /**
     Rotor constructor
 
@@ -335,7 +334,7 @@ export class Rotor{
     @param {bool} rev - true if the rotor is reversed, false if it isn't
     @param {number} key - the starting position or state of the rotor
     */
-    constructor(wireSetting, key, rev){
+    constructor(wireSetting, key, rev) {
         this.state = key;
         this.numMapping = this.getNumMapping(wireSetting, rev);
         this.posMapping = this.getPosMapping(rev);
@@ -348,14 +347,13 @@ export class Rotor{
     @param {bool} rev - true if reversed, false if not
     @returns {number[]}
     */
-    getNumMapping(wireSetting, rev){
-        if (rev==false){
+    getNumMapping(wireSetting, rev) {
+        if (rev===false) {
             return wireSetting;
-        }
-        else {
+        } else {
             const length = wireSetting.length;
-            let tempMapping = new Array(length);
-            for (let i=0; i<length; i++){
+            const tempMapping = new Array(length);
+            for (let i=0; i<length; i++) {
                 tempMapping[wireSetting[i]] = i;
             }
             return tempMapping;
@@ -368,22 +366,21 @@ export class Rotor{
     @param {bool} rev - true if reversed, false if not
     @returns {number[]}
     */
-    getPosMapping(rev){
+    getPosMapping(rev) {
         const length = this.numMapping.length;
-        let posMapping = [];
-        if (rev==false){
-            for (let i=this.state; i<this.state+length; i++){
+        const posMapping = [];
+        if (rev===false) {
+            for (let i = this.state; i < this.state+length; i++) {
                 let res = i%length;
-                if (res<0){
+                if (res<0) {
                     res += length;
                 }
                 posMapping.push(res);
             }
-        }
-        else {
-            for (let i=this.state; i>this.state-length; i--){
+        } else {
+            for (let i = this.state; i > this.state-length; i--) {
                 let res = i%length;
-                if (res<0){
+                if (res<0) {
                     res += length;
                 }
                 posMapping.push(res);
@@ -399,13 +396,12 @@ export class Rotor{
     @param {string} direction - one of "leftToRight" and "rightToLeft", states the direction in which the signal passes through the rotor
     @returns {number}
     */
-    cryptNum(inputPos, direction){
+    cryptNum(inputPos, direction) {
         const inpNum = this.posMapping[inputPos];
-        var outNum;
-        if (direction == "leftToRight"){
+        let outNum;
+        if (direction === "leftToRight") {
             outNum = this.numMapping[inpNum];
-        }
-        else if (direction == "rightToLeft") {
+        } else if (direction === "rightToLeft") {
             outNum = this.numMapping.indexOf(inpNum);
         }
         const outPos = this.posMapping.indexOf(outNum);
@@ -415,7 +411,7 @@ export class Rotor{
     /**
     Steps the rotor. The number at position 0 will be moved to position 1 etc.
     */
-    step(){
+    step() {
         const lastNum = this.posMapping.pop();
         this.posMapping.splice(0, 0, lastNum);
         this.state = this.posMapping[0];
@@ -426,7 +422,7 @@ export class Rotor{
 /**
 A CRRotor is a cipher (C) or control (R) rotor. These rotors are identical and interchangeable. A C or R rotor consists of 26 contacts, one for each letter, and may be put into either a forwards of reversed orientation.
 */
-export class CRRotor extends Rotor{
+export class CRRotor extends Rotor {
 
     /**
     CRRotor constructor
@@ -435,7 +431,7 @@ export class CRRotor extends Rotor{
     @param {char} key - initial state of rotor
     @param {bool} rev - true if reversed, false if not
     */
-    constructor(wireSetting, key, rev=false){
+    constructor(wireSetting, key, rev=false) {
         wireSetting = wireSetting.split("").map(CRRotor.letterToNum);
         super(wireSetting, CRRotor.letterToNum(key), rev);
     }
@@ -446,7 +442,7 @@ export class CRRotor extends Rotor{
     @param {char} letter - letter to convert to number
     @returns {number}
     */
-    static letterToNum(letter){
+    static letterToNum(letter) {
         return letter.charCodeAt()-65;
     }
 
@@ -456,7 +452,7 @@ export class CRRotor extends Rotor{
     @param {number} num - number to convert to letter
     @returns {char}
     */
-    static numToLetter(num){
+    static numToLetter(num) {
         return String.fromCharCode(num+65);
     }
 
@@ -467,7 +463,7 @@ export class CRRotor extends Rotor{
     @param {string} direction - one of "leftToRight" and "rightToLeft"
     @returns {char}
     */
-    crypt(inputPos, direction){
+    crypt(inputPos, direction) {
         inputPos = CRRotor.letterToNum(inputPos);
         const outPos = this.cryptNum(inputPos, direction);
         return CRRotor.numToLetter(outPos);
@@ -478,14 +474,14 @@ export class CRRotor extends Rotor{
 /**
 An IRotor is an index rotor, which consists of 10 contacts each numbered from 0 to 9. Unlike C and R rotors, they cannot be put in the reversed orientation. The index rotors do not step at any point during encryption or decryption.
 */
-export class IRotor extends Rotor{
+export class IRotor extends Rotor {
     /**
     IRotor constructor
 
     @param {string} wireSetting - the rotor wirings (string of numbers)
     @param {char} key - initial state of rotor
     */
-    constructor(wireSetting, key){
+    constructor(wireSetting, key) {
         wireSetting = wireSetting.split("").map(Number);
         super(wireSetting, Number(key), false);
     }
@@ -496,7 +492,7 @@ export class IRotor extends Rotor{
     @param {number} inputPos - the input position of the signal
     @returns {number}
     */
-    crypt(inputPos){
+    crypt(inputPos) {
         return this.cryptNum(inputPos, "leftToRight");
     }
 
