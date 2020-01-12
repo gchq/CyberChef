@@ -2,6 +2,8 @@
 Emulation of the SIGABA machine
 
 @author hettysymes
+@copyright hettysymes 2020
+@license Apache-2.0
 */
 
 /**
