@@ -828,6 +828,20 @@ pCGTErs=
         assert.strictEqual(result.toString().length, 4582);
     }),
 
+    it("Salsa20 Encrypt", () => {
+        const result = chef.salsa20Encrypt("Don't mention the Scottish play", {
+            key: {
+                string: "0011223344556677001122334455667700112233445566770011223344556677",
+                option: "hex",
+            },
+            nonce: {
+                string: "Macbeth!",
+                option: "utf8"
+            },
+        });
+        assert.strictEqual(result.toString(), "baaabfa62278b718790c893046d2cf24c4ae5d3930755faf0dd9506235064e");
+    }),
+
     it("Scan for embedded files", () => {
         const result = chef.scanForEmbeddedFiles(fs.readFileSync("src/web/static/images/cook_male-32x32.png"));
         const expected = "Scanning data for 'magic bytes' which may indicate embedded files.";

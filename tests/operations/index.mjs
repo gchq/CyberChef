@@ -70,6 +70,7 @@ import "./tests/Regex.mjs";
 import "./tests/Register.mjs";
 import "./tests/RemoveDiacritics.mjs";
 import "./tests/Rotate.mjs";
+import "./tests/Salsa20.mjs";
 import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
