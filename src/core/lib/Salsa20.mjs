@@ -1,10 +1,9 @@
+// Forked from https://github.com/thesimj/js-salsa20 by cbeuw (Andy Wang)
 /*
  * Copyright (c) 2017, Bubelich Mykola
  * https://www.bubelich.com
  *
  * (｡◕‿‿◕｡)
- *
- * Modified by cbeuw (Andy Wang)
  *
  * All rights reserved.
  *
