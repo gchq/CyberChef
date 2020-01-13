@@ -71,6 +71,7 @@
             "AES Decrypt",
             "Blowfish Encrypt",
             "Blowfish Decrypt",
+            "Chacha20-Poly1305 Encrypt",
             "DES Encrypt",
             "DES Decrypt",
             "Triple DES Encrypt",
