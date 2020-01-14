@@ -233,7 +233,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     }),
 
     it("Chacha20 Encrypt", () => {
-        const result = chef.chacha20Poly1305Encrypt("Come out of the cupboard, you boys and girls", {
+        const result = chef.chacha20Encrypt("Come out of the cupboard, you boys and girls", {
             key: {
                 string: "0011223344556677001122334455667700112233445566770011223344556677",
                 option: "hex",

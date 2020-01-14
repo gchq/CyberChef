@@ -8,7 +8,7 @@ TestRegister.addTests([
         expectedOutput: "76b8e0ada0f13d90405d6ae55386bd28bdd219b8a08ded1aa836efcc8b770dc7da41597c5157488d7724e03fb8d84a376a43b8f41518a11cc387b669b2ee6586",
         recipeConfig: [
             {
-                "op": "Chacha20-Poly1305 Encrypt",
+                "op": "Chacha20 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "0000000000000000000000000000000000000000000000000000000000000000"}, // Key
                     {"option": "Hex", "string": "0000000000000000"}, // Nonce
@@ -26,7 +26,7 @@ TestRegister.addTests([
         expectedOutput: "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         recipeConfig: [
             {
-                "op": "Chacha20-Poly1305 Decrypt",
+                "op": "Chacha20 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "0000000000000000000000000000000000000000000000000000000000000000"}, // Key
                     {"option": "Hex", "string": "0000000000000000"}, // Nonce
@@ -46,7 +46,7 @@ TestRegister.addTests([
         expectedOutput: "4540f05a9f1fb296d7736e7b208e3c96eb4fe1834688d2604f450952ed432d41bbe2a0b6ea7566d2a5d1e7e20d42af2c53d792b1c43fea817e9ad275ae546963",
         recipeConfig: [
             {
-                "op": "Chacha20-Poly1305 Encrypt",
+                "op": "Chacha20 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "0000000000000000000000000000000000000000000000000000000000000001"}, // Key
                     {"option": "Hex", "string": "0000000000000000"}, // Nonce
@@ -64,7 +64,7 @@ TestRegister.addTests([
         input:          "4540f05a9f1fb296d7736e7b208e3c96eb4fe1834688d2604f450952ed432d41bbe2a0b6ea7566d2a5d1e7e20d42af2c53d792b1c43fea817e9ad275ae546963",
         recipeConfig: [
             {
-                "op": "Chacha20-Poly1305 Decrypt",
+                "op": "Chacha20 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "0000000000000000000000000000000000000000000000000000000000000001"}, // Key
                     {"option": "Hex", "string": "0000000000000000"}, // Nonce
@@ -85,7 +85,7 @@ TestRegister.addTests([
 Tag: 1ae10b594f09e26a7e902ecbd0600691",
         recipeConfig: [
             {
-                "op": "Chacha20-Poly1305 Encrypt",
+                "op": "Chacha20 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f"}, // Key
                     {"option": "Hex", "string": "070000004041424344454647"}, // Nonce
@@ -109,7 +109,7 @@ or obsoleted by other documents at any time. It is inappropriate to use Internet
  other than as /“work in progress./”",
         recipeConfig: [
             {
-                "op": "Chacha20-Poly1305 Decrypt",
+                "op": "Chacha20 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "1c9240a5eb55d38af333888604f6b5f0473917c1402b80099dca5cbc207075c0"}, // Key
                     {"option": "Hex", "string": "000000000102030405060708"}, // Nonce

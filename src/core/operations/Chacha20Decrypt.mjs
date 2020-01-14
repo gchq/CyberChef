@@ -11,17 +11,17 @@ import Chacha20 from "../lib/Chacha20";
 import Chacha20Poly1305 from "../lib/Chacha20Poly1305";
 
 /**
- * Chacha20-Poly1305 Encrypt operation
+ * Chacha20 Decrypt operation
  */
-class Chacha20Poly1305Encrypt extends Operation {
+class Chacha20Decrypt extends Operation {
 
     /**
-     * Chacha20Poly1305Encrypt constructor
+     * Chacha20Decrypt constructor
      */
     constructor() {
         super();
 
-        this.name = "Chacha20-Poly1305 Encrypt";
+        this.name = "Chacha20 Decrypt";
         this.module = "Crypto";
         this.description = "Chacha20 is a stream cipher developed by Daniel Bernstein based on Salsa20. The cipher and the massage authentication code Poly1305 are defined by RFC8439. Chacha20 and Poly1305 are frequently used together for authenticated encryption, and has been included in TLS 1.3 protocol.<br><br><b>Key:</b> Key length should be 32 bytes (256 bits).<br><br><b>Nonce:</b> The one-time nonce should be 8 or 12 bytes long (64 or 96 bits).";
         this.infoURL = "https://tools.ietf.org/html/rfc8439";
@@ -60,6 +60,12 @@ class Chacha20Poly1305Encrypt extends Operation {
                 "type": "toggleString",
                 "value": "",
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+            },
+            {
+                "name": "Authentication Tag",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             }
         ];
     }
@@ -75,7 +81,8 @@ class Chacha20Poly1305Encrypt extends Operation {
             inputType = args[2],
             outputType = args[3],
             mode = args[4],
-            aad = Utils.convertToByteArray(args[5].string, args[5].option);
+            aad = Utils.convertToByteArray(args[5].string, args[5].option),
+            tag = Utils.convertToByteArray(args[6].string, args[6].option);
 
         if (key.length !== 32) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -87,31 +94,33 @@ Chacha20 requires a key length of 32 bytes`);
 
 Chacha20 requires a nonce length of 8 or 12 bytes`);
         }
-        input = Utils.convertToByteArray(input, inputType);
 
         const useAEAD = mode === "Chacha20-Poly1305";
+        if (useAEAD && tag.length !== 16) {
+            throw new OperationError(`Invalid authentication tag length: ${tag.length} bytes
 
+Poly1305 produces a 16 bytes long tag`);
+        }
+
+        input = Utils.convertToByteArray(input, inputType);
+
+        let output;
         if (useAEAD) {
             const aead = new Chacha20Poly1305(key, nonce);
-            const ret = aead.seal(input, aad);
-            if (outputType === "Hex") {
-                return Buffer.from(ret[0]).toString("hex") + "\n\n" +
-                "Tag: " + Buffer.from(ret[1]).toString("hex");
-            } else {
-                return Buffer.from(ret[0]).toString() + "\n\n" +
-                "Tag: " + Buffer.from(ret[1]).toString();
+            output = aead.open(input, aad, tag);
+            if (!output) {
+                throw new OperationError("Authentication failed");
             }
         } else {
             const cipher = new Chacha20(key, nonce);
-            const output = cipher.encrypt(input);
-            if (outputType === "Hex") {
-                return Buffer.from(output).toString("hex");
-            } else {
-                return Buffer.from(output).toString();
-            }
+            output = cipher.decrypt(input);
+        }
+        if (outputType === "Hex") {
+            return Buffer.from(output).toString("hex");
+        } else {
+            return Buffer.from(output).toString();
         }
     }
-
 }
 
-export default Chacha20Poly1305Encrypt;
+export default Chacha20Decrypt;
