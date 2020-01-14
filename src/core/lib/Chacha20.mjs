@@ -37,8 +37,8 @@
 
 /**
  * Construct Chacha20 instance with key and nonce
- * Key should be Uint8Array with 32 bytes
- * None should be Uint8Array with 8 bytes
+ * Key should be a 32 byte array
+ * None should be an 8 or 12 byte array
  *
  *
  * @throws {Error}

@@ -46,8 +46,8 @@
 
 /**
  * Construct SalSa20 instance with key and nonce
- * Key should be Uint8Array with 32 bytes
- * None should be Uint8Array with 8 bytes
+ * Key should be a 16 or 32 byte array
+ * None should be an 8 byte array
  *
  *
  * @throws {Error}
@@ -122,12 +122,6 @@ const Salsa20 = function (key, nonce) {
  * @private
  */
 Salsa20.prototype._update = function (data) {
-    /*
-    if (data.length === 0) {
-        throw new Error("Data should be type of bytes (Uint8Array) and not empty!");
-    }
-    */
-
     const output = new Uint8Array(data.length);
 
   // core function, build block and xor with input data //
@@ -146,7 +140,7 @@ Salsa20.prototype._update = function (data) {
 /**
  *  Encrypt data with key and nonce
  *
- * @param {Uint8Array} data
+ * @param {[number]} data
  * @return {Uint8Array}
  */
 Salsa20.prototype.encrypt = function (data) {
@@ -156,7 +150,7 @@ Salsa20.prototype.encrypt = function (data) {
 /**
  *  Decrypt data with key and nonce
  *
- * @param {Uint8Array} data
+ * @param {[number]} data
  * @return {Uint8Array}
  */
 Salsa20.prototype.decrypt = function (data) {
