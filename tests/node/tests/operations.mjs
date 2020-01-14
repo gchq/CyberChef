@@ -232,6 +232,20 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         assert.strictEqual(result.toString(), "(1,3):(1,4):(2,3):(2,4)");
     }),
 
+    it("Chacha20 Encrypt", () => {
+        const result = chef.chacha20Poly1305Encrypt("Come out of the cupboard, you boys and girls", {
+            key: {
+                string: "0011223344556677001122334455667700112233445566770011223344556677",
+                option: "hex",
+            },
+            nonce: {
+                string: "princeandrew",
+                option: "utf8"
+            }
+        });
+        assert.strictEqual(result.toString(), "c8607902531d2f1c9196271e296a7ccb20e3ea3486499927da1eefdd0a930fb91f74ecc64a5689f3a6eb0ed8");
+    }),
+
     it("Change IP format", () => {
         const result = chef.changeIPFormat("172.20.23.54", {
             inputFormat: "Dotted Decimal",

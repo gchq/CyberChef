@@ -26,6 +26,7 @@ import "./tests/Base62.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/ByteRepr.mjs";
 import "./tests/CartesianProduct.mjs";
+import "./tests/Chacha20Poly1305.mjs";
 import "./tests/CharEnc.mjs";
 import "./tests/ChangeIPFormat.mjs";
 import "./tests/Charts.mjs";
