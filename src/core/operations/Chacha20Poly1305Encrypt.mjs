@@ -41,17 +41,6 @@ class Chacha20Poly1305Encrypt extends Operation {
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                "name": "Authenticated Encryption",
-                "type": "boolean",
-                "value": "true"
-            },
-            {
-                "name": "Additional Authentication Data",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
-            },
-            {
                 "name": "Input",
                 "type": "option",
                 "value": ["Raw", "Hex"]
@@ -60,6 +49,17 @@ class Chacha20Poly1305Encrypt extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
+            },
+            {
+                "name": "Mode",
+                "type": "option",
+                "value": ["Chacha20", "Chacha20-Poly1305"]
+            },
+            {
+                "name": "Optional Additional Authentication Data",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             }
         ];
     }
@@ -72,10 +72,10 @@ class Chacha20Poly1305Encrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
             nonce = Utils.convertToByteArray(args[1].string, args[1].option),
-            useAEAD = args[2],
-            aad = Utils.convertToByteArray(args[3].string, args[3].option),
-            inputType = args[4],
-            outputType = args[5];
+            inputType = args[2],
+            outputType = args[3],
+            mode = args[4],
+            aad = Utils.convertToByteArray(args[5].string, args[5].option);
 
         if (key.length !== 32) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -88,6 +88,8 @@ Chacha20 requires a key length of 32 bytes`);
 Chacha20 requires a nonce length of 8 or 12 bytes`);
         }
         input = Utils.convertToByteArray(input, inputType);
+
+        const useAEAD = mode === "Chacha20-Poly1305";
 
         if (useAEAD) {
             const aead = new Chacha20Poly1305(key, nonce);
