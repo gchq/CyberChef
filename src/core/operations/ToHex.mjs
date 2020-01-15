@@ -30,6 +30,16 @@ class ToHex extends Operation {
                 name: "Delimiter",
                 type: "option",
                 value: TO_HEX_DELIM_OPTIONS
+            },
+            {
+                name: "Bytes per line",
+                type: "number",
+                value: 0
+            },
+            {
+                name: "Comma separated",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -41,7 +51,8 @@ class ToHex extends Operation {
      */
     run(input, args) {
         const delim = Utils.charRep(args[0] || "Space");
-        return toHex(new Uint8Array(input), delim, 2);
+        const comma = args[2] ? "," : "";
+        return toHex(new Uint8Array(input), delim, 2, comma, args[1]);
     }
 
     /**
