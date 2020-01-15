@@ -104,7 +104,7 @@ export function toHexFast(data) {
  */
 export function fromHex(data, delim="Auto", byteLen=2) {
     if (delim !== "None") {
-        const delimRegex = delim === "Auto" ? /[^a-f\d]/gi : Utils.regexRep(delim);
+        const delimRegex = delim === "Auto" ? /[^a-f\d]|(0x)/gi : Utils.regexRep(delim);
         data = data.replace(delimRegex, "");
     }
 
