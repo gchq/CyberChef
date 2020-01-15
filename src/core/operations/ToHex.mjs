@@ -66,15 +66,25 @@ class ToHex extends Operation {
      */
     highlight(pos, args) {
         const delim = Utils.charRep(args[0] || "Space"),
-            len = delim === "\r\n" ? 1 : delim.length;
+            lineSize = args[1],
+            comma = args[2],
+            len = (delim === "\r\n" ? 1 : delim.length) + (comma ? 1 : 0);
 
-        pos[0].start = pos[0].start * (2 + len);
-        pos[0].end = pos[0].end * (2 + len) - len;
+        const countLF = function(p) {
+            // Count the number of LFs from 0 upto p
+            return (p / lineSize | 0) - (p >= lineSize && p % lineSize === 0);
+        };
 
-        // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
-        if (delim === "0x" || delim === "\\x") {
-            pos[0].start += 2;
-            pos[0].end += 2;
+        pos[0].start = pos[0].start * (2 + len) + countLF(pos[0].start);
+        pos[0].end = pos[0].end * (2 + len) + countLF(pos[0].end);
+
+        // if the deliminators are not prepended, trim the trailing deliminator
+        if (!(delim === "0x" || delim === "\\x")) {
+            pos[0].end -= delim.length;
+        }
+        // if there is comma, trim the trailing comma
+        if (comma) {
+            pos[0].end--;
         }
         return pos;
     }
