@@ -100,19 +100,19 @@ class ToHex extends Operation {
      */
     highlightReverse(pos, args) {
         const delim = Utils.charRep(args[0] || "Space"),
-            len = delim === "\r\n" ? 1 : delim.length,
+            lineSize = args[1],
+            comma = args[2],
+            len = (delim === "\r\n" ? 1 : delim.length) + (comma ? 1 : 0),
             width = len + 2;
 
-        // 0x and \x are added to the beginning if they are selected, so increment the positions accordingly
-        if (delim === "0x" || delim === "\\x") {
-            if (pos[0].start > 1) pos[0].start -= 2;
-            else pos[0].start = 0;
-            if (pos[0].end > 1) pos[0].end -= 2;
-            else pos[0].end = 0;
-        }
+        const countLF = function(p) {
+            // Count the number of LFs from 0 up to p
+            const lineLength = width * lineSize;
+            return (p / lineLength | 0) - (p >= lineLength && p % lineLength === 0);
+        };
 
-        pos[0].start = pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
-        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / width);
+        pos[0].start = pos[0].start === 0 ? 0 : Math.round((pos[0].start - countLF(pos[0].start)) / width);
+        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil((pos[0].end - countLF(pos[0].end)) / width);
         return pos;
     }
 }
