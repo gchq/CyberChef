@@ -51,8 +51,10 @@ class ToHex extends Operation {
      */
     run(input, args) {
         const delim = Utils.charRep(args[0] || "Space");
+        const lineSize = args[1];
         const comma = args[2] ? "," : "";
-        return toHex(new Uint8Array(input), delim, 2, comma, args[1]);
+
+        return toHex(new Uint8Array(input), delim, 2, comma, lineSize);
     }
 
     /**
