@@ -113,7 +113,7 @@ class Ingredient {
                     return data;
                 }
             case "number":
-                if (data === null) return 0;
+                if (data === null) return data;
                 number = parseFloat(data);
                 if (isNaN(number)) {
                     const sample = Utils.truncate(data.toString(), 10);
