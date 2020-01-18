@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import {toHex, TO_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
+import {toHex} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
 /**
@@ -29,17 +29,12 @@ class ToHex extends Operation {
             {
                 name: "Delimiter",
                 type: "option",
-                value: TO_HEX_DELIM_OPTIONS
+                value: ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "0x with comma", "\\x", "None"]
             },
             {
                 name: "Bytes per line",
                 type: "number",
                 value: 0
-            },
-            {
-                name: "Comma separated",
-                type: "boolean",
-                value: false
             }
         ];
     }
@@ -50,9 +45,14 @@ class ToHex extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0] || "Space");
+        let delim, comma;
+        if (args[0] === "0x with comma") {
+            delim = "0x";
+            comma = ",";
+        } else {
+            delim = Utils.charRep(args[0] || "Space");
+        }
         const lineSize = args[1];
-        const comma = args[2] ? "," : "";
 
         return toHex(new Uint8Array(input), delim, 2, comma, lineSize);
     }
@@ -67,10 +67,16 @@ class ToHex extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        const delim = Utils.charRep(args[0] || "Space"),
-            lineSize = args[1],
-            comma = args[2],
-            len = (delim === "\r\n" ? 1 : delim.length) + (comma ? 1 : 0);
+        let delim, commaLen;
+        if (args[0] === "0x with comma") {
+            delim = "0x";
+            commaLen = 1;
+        } else {
+            delim = Utils.charRep(args[0] || "Space");
+        }
+
+        const lineSize = args[1],
+            len = (delim === "\r\n" ? 1 : delim.length) + commaLen;
 
         const countLF = function(p) {
             // Count the number of LFs from 0 upto p
@@ -85,9 +91,7 @@ class ToHex extends Operation {
             pos[0].end -= delim.length;
         }
         // if there is comma, trim the trailing comma
-        if (comma) {
-            pos[0].end--;
-        }
+        pos[0].end -= commaLen;
         return pos;
     }
 
@@ -101,10 +105,16 @@ class ToHex extends Operation {
      * @returns {Object[]} pos
      */
     highlightReverse(pos, args) {
-        const delim = Utils.charRep(args[0] || "Space"),
-            lineSize = args[1],
-            comma = args[2],
-            len = (delim === "\r\n" ? 1 : delim.length) + (comma ? 1 : 0),
+        let delim, commaLen;
+        if (args[0] === "0x with comma") {
+            delim = "0x";
+            commaLen = 1;
+        } else {
+            delim = Utils.charRep(args[0] || "Space");
+        }
+
+        const lineSize = args[1],
+            len = (delim === "\r\n" ? 1 : delim.length) + commaLen,
             width = len + 2;
 
         const countLF = function(p) {

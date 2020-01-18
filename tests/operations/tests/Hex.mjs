@@ -10,8 +10,7 @@ TestRegister.addTests([
                 "op": "To Hex",
                 "args": [
                     "None",
-                    0,
-                    false
+                    0
                 ]
             },
         ]
@@ -25,8 +24,7 @@ TestRegister.addTests([
                 "op": "To Hex",
                 "args": [
                     "Colon",
-                    0,
-                    false
+                    0
                 ]
             }
         ]
@@ -39,9 +37,8 @@ TestRegister.addTests([
             {
                 "op": "To Hex",
                 "args": [
-                    "0x",
-                    0,
-                    true
+                    "0x with comma",
+                    0
                 ]
             }
         ]
@@ -54,9 +51,8 @@ TestRegister.addTests([
             {
                 "op": "To Hex",
                 "args": [
-                    "0x",
-                    4,
-                    true
+                    "0x with comma",
+                    4
                 ]
             }
         ]
