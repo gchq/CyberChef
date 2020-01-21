@@ -6,6 +6,7 @@
 
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
+import levenshteinDistance from "../../core/lib/Levenshtein.mjs";
 
 
 /**
@@ -107,29 +108,74 @@ class OperationsWaiter {
     filterOperations(inStr, highlight) {
         const matchedOps = [];
         const matchedDescs = [];
+        const levenOps = [[], [], []];
 
         const searchStr = inStr.toLowerCase();
 
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
-            const namePos = opName.toLowerCase().indexOf(searchStr);
-            const descPos = op.description.toLowerCase().indexOf(searchStr);
+            const opNameLower = opName.toLowerCase();
+            const namePos = opNameLower.indexOf(searchStr);
+            const descPos = op.description.indexOf(searchStr);
+            let operation, added = false;
 
             if (namePos >= 0 || descPos >= 0) {
-                const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+                operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
                     operation.highlightSearchString(searchStr, namePos, descPos);
                 }
 
-                if (namePos < 0) {
+                if (namePos >= 0) {
                     matchedOps.push(operation);
                 } else {
                     matchedDescs.push(operation);
                 }
+                added = true;
+            }
+
+            if (!added) {
+                if (this.stringDistance(searchStr, opNameLower)) {
+                    operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+                    levenOps[this.result].push(operation);
+                }
             }
         }
 
-        return matchedDescs.concat(matchedOps);
+        return matchedOps.concat(matchedDescs.concat(levenOps[0].concat(levenOps[1].concat(levenOps[2]))));
+    }
+
+
+    /**
+     * Controls how much distance there is between the strings based on the length of the strings.
+     *
+     * @param {string} inStr
+     * @param {string} opName
+     */
+    stringDistance(inStr, opName) {
+        let opNameLength = opName.length;
+        const inStrLength = inStr.length;
+
+        // If the input string is less than the length of the operation name then sub-sample the operation name and vice-versa.
+        if (inStrLength < opNameLength) {
+            opName = opName.slice(0, inStrLength);
+            opNameLength = opName.length;
+        }
+
+        this.result = -1;
+
+        // If the search string is short then do not run the distance algorithm.
+        if (inStrLength <= 2 || opNameLength <= 2)
+            return false;
+
+        // If the search string is length 3 then the user is allowed 1 error.
+        if (inStrLength < 4 || opNameLength < 4) {
+            this.result = levenshteinDistance(inStr, opName);
+            return this.result < 2;
+        }
+
+        // If the search string is length 4 or above the user is allowed 2 errors.
+        this.result = levenshteinDistance(inStr, opName);
+        return this.result < 3;
     }
 
 
