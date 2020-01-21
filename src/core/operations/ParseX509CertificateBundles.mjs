@@ -6,9 +6,6 @@
 
 import Operation from "../Operation.mjs";
 import r from "jsrsasign";
-import {toHex} from "../lib/Hex";
-import {fromBase64} from "../lib/Base64";
-import Utils from "../Utils";
 import {formatDnStr} from "../lib/PublicKey";
 
 /**
@@ -32,7 +29,7 @@ class ParseX509CertificateBundles extends Operation {
             {
                 "name": "Input format",
                 "type": "option",
-                "value": ["PEM", "DER Hex", "Base64", "Raw"]
+                "value": ["PEM"]
             }
         ];
         this.patterns = [
@@ -51,31 +48,41 @@ class ParseX509CertificateBundles extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
+
     run(input, args) {
+
         if (!input.length) {
             return "No input";
         }
 
-        const cert = new r.X509(),
-            inputFormat = args[0];
+        const regex = /^-----BEGIN CERTIFICATE-----\r?\n((?:(?!-----).*\r?\n)*)-----END CERTIFICATE-----/gm;
 
-        switch (inputFormat) {
-            case "DER Hex":
-                input = input.replace(/\s/g, "");
-                cert.readCertHex(input);
-                break;
-            case "PEM":
-                cert.readCertPEM(input);
-                break;
-            case "Base64":
-                cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
-                break;
-            case "Raw":
-                cert.readCertHex(toHex(Utils.strToByteArray(input), ""));
-                break;
-            default:
-                throw "Undefined input format";
+        let m;
+        let res = "";
+
+        while ((m = regex.exec(input)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+
+            //console.log(m[1]);
+
+            res += "\nCertificate:\n" + parseCert("-----BEGIN CERTIFICATE-----" + "\n" + m[1] + "\n" + "-----END CERTIFICATE-----");
         }
+
+
+    return "Parsed Certificates:\n" + res;
+
+    }
+}
+
+
+function parseCert(input) {
+
+
+    const cert = new r.X509();
+    cert.readCertPEM(input);
 
         const issuer = cert.getIssuerString(),
             subject = cert.getSubjectString();
@@ -85,8 +92,9 @@ class ParseX509CertificateBundles extends Operation {
         // Extensions
         try {
             // extensions =cert.getInfo();
-            extensions = cert.getInfo().split("basicConstraints :\n")[1].split("signature")[0];
-        } catch (err) {}
+            extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
+        } catch (err) {
+        }
 
         const issuerStr = formatDnStr(issuer, 2),
             nbDate = formatDate(cert.getNotBefore()),
@@ -100,9 +108,8 @@ Issuer
 ${issuerStr}
 Subject
 ${subjectStr}
-Extensions/basicConstraints 
+Extensions/basicConstraints
 ${extensions}`;
-    }
 
 }
 
@@ -112,7 +119,7 @@ ${extensions}`;
  * @param {string} dateStr
  * @returns {string}
  */
-function formatDate (dateStr) {
+function formatDate(dateStr) {
     if (dateStr.length === 13) { // UTC Time
         dateStr = (dateStr[0] < "5" ? "20" : "19") + dateStr;
     }

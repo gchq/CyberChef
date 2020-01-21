@@ -137,6 +137,7 @@
     "nodom": "^2.4.0",
     "notepack.io": "^2.2.0",
     "nwmatcher": "^1.4.4",
+    "openssl-nodejs": "^1.0.5",
     "otp": "^0.1.3",
     "popper.js": "^1.16.0",
     "qr-image": "^3.2.0",
