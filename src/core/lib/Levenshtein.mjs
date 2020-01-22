@@ -28,6 +28,7 @@ export function levenshteinDistance(firstString, secString) {
 
     // Fill in first row distances.
     let i;
+
     for (i = 0; i < firstStringLength + 1; i++)
         distMatrix[0][i] = i;
 
