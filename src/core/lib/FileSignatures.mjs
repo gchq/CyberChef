@@ -1741,6 +1741,38 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "Linux deb",
+            extension: "deb",
+            mime: "application/vnd.debian.binary-package",
+            description: "",
+            signature: {
+                0: 0x21,
+                1: 0x3C,
+                2: 0x61,
+                3: 0x72,
+                4: 0x63,
+                5: 0x68,
+                6: 0x3e
+            },
+            extractor: null
+        },
+        {
+            name: "Apple Disk Image",
+            extension: "dmg",
+            mime: "application/x-apple-diskimage",
+            description: "",
+            signature: {
+                0: 0x78,
+                1: 0x01,
+                2: 0x73,
+                3: 0x0d,
+                4: 0x62,
+                5: 0x62,
+                6: 0x60
+            },
+            extractor: null
+        }
     ],
     "Miscellaneous": [
         {
@@ -2468,6 +2500,43 @@ export const FILE_SIGNATURES = {
                 2: 0x70,
                 3: 0x68,
                 4: 0x70,
+            },
+            extractor: null
+        },
+        {
+            name: "Smile",
+            extension: "sml",
+            mime: "	application/x-jackson-smile",
+            description: "",
+            signature: {
+                0: 0x3a,
+                1: 0x29,
+                2: 0xa
+            },
+            extractor: null
+        },
+        {
+            name: "Lua Bytecode",
+            extension: "luac",
+            mime: "application/x-lua",
+            description: "",
+            signature: {
+                0: 0x1b,
+                1: 0x4c,
+                2: 0x75,
+                3: 0x61
+            },
+            extractor: null
+        },
+        {
+            name: "WebAssembly binary",
+            extension: "wasm",
+            description: "",
+            signature: {
+                0: 0x00,
+                1: 0x61,
+                2: 0x73,
+                3: 0x6d
             },
             extractor: null
         }
