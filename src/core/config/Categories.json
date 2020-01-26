@@ -95,6 +95,7 @@
             "Affine Cipher Decode",
             "A1Z26 Cipher Encode",
             "A1Z26 Cipher Decode",
+            "Rail Fence Cipher Decode",
             "Atbash Cipher",
             "Substitute",
             "Derive PBKDF2 key",
