@@ -48,10 +48,16 @@ class RailFenceCypherDecode extends Operation {
 
         let cipher = input;
 
+        if (key < 2) {
+            return "Key has to be bigger than 2";
+        } else if (key > cipher.length) {
+            return "Key should be smaller than the cipher's length";
+        }
+
         const rest = cipher.length % key;
 
         if (rest !== 0) {
-            cipher = cipher + (" ".repeat(rest));
+            cipher = cipher + (" ".repeat(key-rest));
         }
 
         const blockLen = cipher.length / key;
