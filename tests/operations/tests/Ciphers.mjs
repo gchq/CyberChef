@@ -3,6 +3,7 @@
  *
  * @author Matt C [matt@artemisbot.uk]
  * @author n1474335 [n1474335@gmail.com]
+ * @author Flavio Diez [flaviofdiez+cyberchef@gmail.com]
  *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -415,6 +416,39 @@ TestRegister.addTests([
             {
                 "op": "Substitute",
                 "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cypher Decode: normal",
+        input: "Cytgah sTEAto rtn rsligcdsrporpyi H r fWiigo ovn oe",
+        expectedOutput: "Cryptography is THE Art of Writing or solving codes",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cypher Decode",
+                "args": [2, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cypher Decode: key has to be bigger than 2",
+        input: "Cytgah sTEAto rtn rsligcdsrporpyi H r fWiigo ovn oe",
+        expectedOutput: "Key has to be bigger than 2",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cypher Decode",
+                "args": [1, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cypher Decode: key has to be smaller than input's length",
+        input: "shortinput",
+        expectedOutput: "Key should be smaller than the cipher's length",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cypher Decode",
+                "args": [22, 0]
             }
         ],
     },
