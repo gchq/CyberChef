@@ -96,6 +96,7 @@
             "A1Z26 Cipher Encode",
             "A1Z26 Cipher Decode",
             "Atbash Cipher",
+            "CipherSaber2",
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
