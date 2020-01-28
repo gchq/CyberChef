@@ -10,7 +10,7 @@ const letters = "_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()";
 const tiles = [];
 
 /**
- *
+ * Initialises the tiles with values and positions.
  */
 export function initTiles() {
     for (let i = 0; i < 49; i++)
@@ -18,7 +18,12 @@ export function initTiles() {
 }
 
 /**
+ * Rotates the key "down".
  *
+ * @param {string} key
+ * @param {number} col
+ * @param {number} n
+ * @returns {string}
  */
 function rotateDown(key, col, n) {
     const lines = [];
@@ -41,7 +46,12 @@ function rotateDown(key, col, n) {
 }
 
 /**
+ * Rotates the key "right".
  *
+ * @param {string} key
+ * @param {number} row
+ * @param {number} n
+ * @returns {string}
  */
 function rotateRight(key, row, n) {
     const mid = key.slice(row * 7, (row + 1) * 7);
@@ -50,7 +60,10 @@ function rotateRight(key, row, n) {
 }
 
 /**
+ * Finds the position of a letter in the tiles.
  *
+ * @param {string} letter
+ * @returns {string}
  */
 function findIx(letter) {
     for (let i = 0; i < tiles.length; i++)
@@ -60,7 +73,10 @@ function findIx(letter) {
 }
 
 /**
+ * Derives key from the input password.
  *
+ * @param {string} password
+ * @returns {string}
  */
 export function deriveKey(password) {
     let i = 0;
@@ -74,7 +90,9 @@ export function deriveKey(password) {
 }
 
 /**
+ * Checks the key is a valid key.
  *
+ * @param {string} key
  */
 function checkKey(key) {
     if (key.length !== letters.length)
@@ -92,7 +110,11 @@ function checkKey(key) {
 }
 
 /**
+ * Finds the position of a letter in they key.
  *
+ * @param {letter} key
+ * @param {string} letter
+ * @returns {object}
  */
 function findPos (key, letter) {
     const index = key.indexOf(letter);
@@ -102,21 +124,35 @@ function findPos (key, letter) {
 }
 
 /**
+ * Returns the character at the position on the tiles.
  *
+ * @param {string} key
+ * @param {object} coord
+ * @returns {string}
  */
 function findAtPos(key, coord) {
     return key.charAt(coord[1] + (coord[0] * 7));
 }
 
 /**
+ * Returns new position by adding two positions.
  *
+ * @param {object} a
+ * @param {object} b
+ * @returns {object}
  */
 function addPos(a, b) {
     return [(a[0] + b[0]) % 7, (a[1] + b[1]) % 7];
 }
 
 /**
+ * Returns new position by subtracting two positions.
+ * Note: We have to manually do the remainder division, since JS does not
+ * operate correctly on negative numbers (e.g. -3 % 4 = -3 when it should be 1).
  *
+ * @param {object} a
+ * @param {object} b
+ * @returns {object}
  */
 function subPos(a, b) {
     const asub = a[0] - b[0];
@@ -125,7 +161,11 @@ function subPos(a, b) {
 }
 
 /**
+ * Encrypts the plaintext string.
  *
+ * @param {string} key
+ * @param {string} plaintext
+ * @returns {string}
  */
 function encrypt(key, plaintext) {
     checkKey(key);
@@ -146,7 +186,11 @@ function encrypt(key, plaintext) {
 }
 
 /**
+ * Decrypts the ciphertext string.
  *
+ * @param {string} key
+ * @param {string} ciphertext
+ * @returns {string}
  */
 function decrypt(key, ciphertext) {
     checkKey(key);
@@ -167,7 +211,13 @@ function decrypt(key, ciphertext) {
 }
 
 /**
+ * Adds padding to the input.
  *
+ * @param {string} key
+ * @param {string} plaintext
+ * @param {string} signature
+ * @param {number} paddingSize
+ * @returns {string}
  */
 export function encryptPad(key, plaintext, signature, paddingSize) {
     initTiles();
@@ -180,7 +230,12 @@ export function encryptPad(key, plaintext, signature, paddingSize) {
 }
 
 /**
+ * Removes padding from the ouput.
  *
+ * @param {string} key
+ * @param {string} ciphertext
+ * @param {number} paddingSize
+ * @returns {string}
  */
 export function decryptPad(key, ciphertext, paddingSize) {
     initTiles();
