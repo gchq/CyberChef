@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import * as LS47 from "../lib/LS47.mjs"
+import * as LS47 from "../lib/LS47.mjs";
 
 /**
  * LS47 Encrypt operation
@@ -49,13 +49,13 @@ class LS47Encrypt extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        
-        this.padding_size = parseInt(args[1], 10);
 
-        LS47.init_tiles();
-        
-        let key = LS47.derive_key(args[0]);
-        return LS47.encrypt_pad(key, input, args[2], this.padding_size);
+        this.paddingSize = parseInt(args[1], 10);
+
+        LS47.initTiles();
+
+        const key = LS47.deriveKey(args[0]);
+        return LS47.encryptPad(key, input, args[2], this.paddingSize);
     }
 
 }
