@@ -48,60 +48,76 @@ class ParseX509CertificateBundles extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-
     run(input, args) {
 
         if (!input.length) {
             return "No input";
         }
 
-        const regex = /^-----BEGIN CERTIFICATE-----\r?\n((?:(?!-----).*\r?\n)*)-----END CERTIFICATE-----/gm;
+        const regex1 = /^-----BEGIN CERTIFICATE-----\r?\n((?:(?!-----).*\r?\n)*)-----END CERTIFICATE-----/gm;
+        const regex2 = /^-----BEGIN TRUSTED CERTIFICATE-----\r?\n((?:(?!-----).*\r?\n)*)-----END TRUSTED CERTIFICATE-----/gm;
 
         let m;
         let res = "";
+        let count = 0;
 
-        while ((m = regex.exec(input)) !== null) {
+        while ((m = regex1.exec(input)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
-            if (m.index === regex.lastIndex) {
-                regex.lastIndex++;
+            if (m.index === regex1.lastIndex) {
+                regex1.lastIndex++;
+
             }
 
-            //console.log(m[1]);
-
+            count++;
             res += "\nCertificate:\n" + parseCert("-----BEGIN CERTIFICATE-----" + "\n" + m[1] + "\n" + "-----END CERTIFICATE-----");
         }
 
+        while ((m = regex2.exec(input)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regex2.lastIndex) {
+                regex2.lastIndex++;
 
-    return "Parsed Certificates:\n" + res;
+            }
+
+            count++;
+            res += "\nCertificate:\n" + parseCert("-----BEGIN TRUSTED CERTIFICATE-----" + "\n" + m[1] + "\n" + "-----END TRUSTED CERTIFICATE-----");
+        }
+
+
+        return "Parsed Certificates =" + count + ":\n" + res;
 
     }
 }
 
-
+/**
+ * parses individual certificates.
+ *
+ * @param {string} input
+ * @returns {string}
+ */
 function parseCert(input) {
-
 
     const cert = new r.X509();
     cert.readCertPEM(input);
 
-        const issuer = cert.getIssuerString(),
-            subject = cert.getSubjectString();
+    const issuer = cert.getIssuerString(),
+        subject = cert.getSubjectString();
 
-        let extensions = "";
+    let extensions = "";
 
-        // Extensions
-        try {
-            // extensions =cert.getInfo();
-            extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
-        } catch (err) {
-        }
+    // Extensions
+    try {
+        // extensions =cert.getInfo();
+        extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
+    } catch (err) {
+    }
 
-        const issuerStr = formatDnStr(issuer, 2),
-            nbDate = formatDate(cert.getNotBefore()),
-            naDate = formatDate(cert.getNotAfter()),
-            subjectStr = formatDnStr(subject, 2);
+    const issuerStr = formatDnStr(issuer, 2),
+        nbDate = formatDate(cert.getNotBefore()),
+        naDate = formatDate(cert.getNotAfter()),
+        subjectStr = formatDnStr(subject, 2);
 
-        return `Validity
+    return `Validity
   Not Before: ${nbDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotBefore()})
   Not After: ${naDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotAfter()})
 Issuer

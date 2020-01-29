@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be3b9f74-a124-47bf-9f48-a21e4aa8061c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/operations/ParseX509CertificateBundles.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/operations/ParseX509CertificateBundles.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/operations/sample.pem" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,71 +16,7 @@
     <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseX509CertificateBundles.mjs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="967">
-              <caret line="94" column="95" selection-start-line="94" selection-start-column="95" selection-end-line="94" selection-end-column="95" />
-              <folding>
-                <element signature="e#115#156#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/Dish.mjs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1035">
-              <caret line="82" column="22" selection-start-line="82" selection-start-column="18" selection-end-line="82" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseX509Certificate.mjs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="629">
-              <caret line="171" column="95" selection-start-line="171" selection-start-column="12" selection-end-line="171" selection-end-column="95" />
-              <folding>
-                <element signature="e#108#134#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseUDP.mjs">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseSSHHostKey.mjs">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseQRCode.mjs">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseIPv6Address.mjs">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseIPv4Header.mjs">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/operations/ParseColourCode.mjs">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -119,17 +53,18 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="x" value="-245" />
-    <option name="y" value="-1200" />
-    <option name="width" value="1920" />
-    <option name="height" value="1200" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="180" />
+    <option name="y" value="125" />
+    <option name="width" value="1080" />
+    <option name="height" value="619" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -137,29 +72,10 @@
               <item name="CyberChef" type="b2602c69:ProjectViewProjectNode" />
               <item name="CyberChef" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="CyberChef" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CyberChef" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CyberChef" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CyberChef" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CyberChef" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CyberChef" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="operations" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -210,12 +126,14 @@
       <workItem from="1578650640199" duration="321000" />
       <workItem from="1578659764129" duration="593000" />
       <workItem from="1578993508965" duration="10512000" />
-      <workItem from="1579618672801" duration="2515000" />
+      <workItem from="1579618672801" duration="2731000" />
+      <workItem from="1579700398326" duration="642000" />
+      <workItem from="1580295075999" duration="1309000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28449000" />
+    <option name="totallyTimeSpent" value="30616000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -227,10 +145,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-245" y="-1200" width="1920" height="1200" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1440" height="823" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15069222" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.35622317" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -431,9 +348,6 @@
     <entry file="file://$PROJECT_DIR$/src/core/operations/OR.mjs">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/build/prod/modules/Code.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -471,10 +385,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/Operation.mjs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="12" column="6" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operations/ParseX509CertificateBundles.mjs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="74" column="51" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="51" />
+          <folding>
+            <element signature="e#115#156#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/Dish.mjs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1035">
           <caret line="82" column="22" selection-start-line="82" selection-start-column="18" selection-end-line="82" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operations/ParseX509Certificate.mjs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="49" column="2" selection-start-line="49" selection-start-column="2" selection-end-line="52" selection-end-column="7" />
+          <folding>
+            <element signature="e#108#134#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -496,30 +437,10 @@
     <entry file="file://$PROJECT_DIR$/src/core/operations/ParseColourCode.mjs">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/Operation.mjs">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="12" column="6" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operations/ParseX509Certificate.mjs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="171" column="95" selection-start-line="171" selection-start-column="12" selection-end-line="171" selection-end-column="95" />
-          <folding>
-            <element signature="e#108#134#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operations/ParseX509CertificateBundles.mjs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="967">
-          <caret line="94" column="95" selection-start-line="94" selection-start-column="95" selection-end-line="94" selection-end-column="95" />
-          <folding>
-            <element signature="e#115#156#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="45">
+          <caret line="3" column="5" selection-start-line="3" selection-end-line="3" selection-end-column="5" />
         </state>
       </provider>
     </entry>
