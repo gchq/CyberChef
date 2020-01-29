@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Rail Fence Cipher Decode operation
@@ -48,13 +49,13 @@ class RailFenceCipherDecode extends Operation {
         let cipher = input;
 
         if (key < 2) {
-            return "Key has to be bigger than 2";
+            throw new OperationError("Key has to be bigger than 2");
         } else if (key > cipher.length) {
-            return "Key should be smaller than the cipher's length";
+            throw new OperationError("Key should be smaller than the cipher's length");
         }
 
         if (offset < 0) {
-            return "Offset has to be a positive integer";
+            throw new OperationError("Offset has to be a positive integer");
         }
 
         const cycle = (key - 1) * 2;
