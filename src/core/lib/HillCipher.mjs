@@ -14,7 +14,7 @@ let N = 0;
  * @param {boolean} keyflag
  * @returns {object}
  */
-function genMatix(theString, keyflag=false) {
+function genMatrix(theString, keyflag=false) {
     const matrix = new Array(N).fill(0).map(() => new Array(N).fill(-1));
     let count = 0;
 
@@ -198,10 +198,10 @@ export function encode(plaintext, key) {
     N = Math.ceil(Math.sqrt(key.length));
 
     // Generate matrix representation of the key.
-    const keyMatrix = genMatix(key, true);
+    const keyMatrix = genMatrix(key, true);
 
     // Generate matrix representation of the plaintext.
-    const plaintextMatrix = genMatix(plaintext);
+    const plaintextMatrix = genMatrix(plaintext);
 
     return join(multiply(keyMatrix, plaintextMatrix));
 }
@@ -219,10 +219,10 @@ export function decode(ciphertext, key) {
     N = Math.ceil(Math.sqrt(key.length));
 
     // Generate matrix representation of the key.
-    const keyMatrix = inverse(genMatix(key, true));
+    const keyMatrix = inverse(genMatrix(key, true));
 
     // Generate matrix representation of the plaintext.
-    const ciphertextMatrix = genMatix(ciphertext);
+    const ciphertextMatrix = genMatrix(ciphertext);
 
     return join(multiply(keyMatrix, ciphertextMatrix));
 
