@@ -196,14 +196,14 @@ export function _wrap(OpClass) {
             if (opInstance.flowControl) {
                 opInstance.ingValues = transformedArgs;
 
-                let state = {
+                const state = {
                     "progress": 0,
                     "dish": ensureIsDish(transformedInput),
                     "opList": [opInstance],
                     "numJumps": 0,
                     "numRegisters": 0,
                     "forkOffset": 0
-                }
+                };
 
                 const updatedState = await opInstance.run(state);
 
