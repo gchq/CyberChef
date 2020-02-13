@@ -45,6 +45,7 @@ import "./tests/Gzip.mjs";
 import "./tests/Gunzip.mjs";
 import "./tests/Hash.mjs";
 import "./tests/HaversineDistance.mjs";
+import "./tests/Hex.mjs";
 import "./tests/Hexdump.mjs";
 import "./tests/Image.mjs";
 import "./tests/IndexOfCoincidence.mjs";
