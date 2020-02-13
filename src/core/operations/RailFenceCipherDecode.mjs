@@ -21,7 +21,7 @@ class RailFenceCipherDecode extends Operation {
         this.name = "Rail Fence Cipher Decode";
         this.module = "Ciphers";
         this.description = "Decodes Strings that were created using the Rail fence Cipher provided a key and an offset";
-        this.infoURL = "https://en.wikipedia.org/wiki/Rail_fence_cipher";
+        this.infoURL = "https://wikipedia.org/wiki/Rail_fence_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
