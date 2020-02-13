@@ -36,11 +36,8 @@ export function toHex(data, delim=" ", padding=2, extraDelim="", lineSize=0) {
 
     for (let i = 0; i < data.length; i++) {
         const hex = data[i].toString(16).padStart(padding, "0");
-        if (prepend) {
-            output += delim + hex;
-        } else {
-            output += hex + delim;
-        }
+        output += prepend ? delim + hex : hex + delim;
+
         if (extraDelim) {
             output += extraDelim;
         }
@@ -50,7 +47,7 @@ export function toHex(data, delim=" ", padding=2, extraDelim="", lineSize=0) {
         }
     }
 
-    // Remove the extraDelim at the end (if there is);
+    // Remove the extraDelim at the end (if there is one)
     // and remove the delim at the end, but if it's prepended there's nothing to remove
     const rTruncLen = extraDelim.length + (prepend ? 0 : delim.length);
     if (rTruncLen) {
@@ -119,7 +116,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
 /**
  * To Hexadecimal delimiters.
  */
-export const TO_HEX_DELIM_OPTIONS = ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
+export const TO_HEX_DELIM_OPTIONS = ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "0x with comma", "\\x", "None"];
 
 
 /**

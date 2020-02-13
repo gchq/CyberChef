@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import {toHex} from "../lib/Hex.mjs";
+import {toHex, TO_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
 /**
@@ -29,7 +29,7 @@ class ToHex extends Operation {
             {
                 name: "Delimiter",
                 type: "option",
-                value: ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "0x with comma", "\\x", "None"]
+                value: TO_HEX_DELIM_OPTIONS
             },
             {
                 name: "Bytes per line",
