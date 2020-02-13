@@ -2,6 +2,12 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.13.0] - 2020-02-13
+- 'Rail Fence Cipher Encode' and 'Rail Fence Cipher Decode' operations added [@Flavsditz] | [#948]
+
+### [9.12.0] - 2019-12-20
+- 'Normalise Unicode' operation added [@matthieuxyz] | [#912]
+
 ### [9.11.0] - 2019-11-06
 - Implemented CFB, OFB, and CTR modes for Blowfish operations [@cbeuw] | [#653]
 
@@ -197,6 +203,8 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.13.0]: https://github.com/gchq/CyberChef/releases/tag/v9.13.0
+[9.12.0]: https://github.com/gchq/CyberChef/releases/tag/v9.12.0
 [9.11.0]: https://github.com/gchq/CyberChef/releases/tag/v9.11.0
 [9.10.0]: https://github.com/gchq/CyberChef/releases/tag/v9.10.0
 [9.9.0]: https://github.com/gchq/CyberChef/releases/tag/v9.9.0
@@ -281,6 +289,8 @@ All major and minor version changes will be documented in this file. Details of 
 [@jarrodconnolly]: https://github.com/jarrodconnolly
 [@VirtualColossus]: https://github.com/VirtualColossus
 [@cbeuw]: https://github.com/cbeuw
+[@matthieuxyz]: https://github.com/matthieuxyz
+[@Flavsditz]: https://github.com/Flavsditz
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -344,3 +354,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#632]: https://github.com/gchq/CyberChef/pull/632
 [#653]: https://github.com/gchq/CyberChef/pull/653
 [#865]: https://github.com/gchq/CyberChef/pull/865
+[#912]: https://github.com/gchq/CyberChef/pull/912
+[#948]: https://github.com/gchq/CyberChef/pull/948

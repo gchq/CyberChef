@@ -591,6 +591,44 @@ class Utils {
         return utf8 ? Utils.byteArrayToUtf8(arr) : Utils.byteArrayToChars(arr);
     }
 
+    /**
+     * Calculates the Shannon entropy for a given set of data.
+     *
+     * @param {Uint8Array|ArrayBuffer} input
+     * @returns {number}
+     */
+    static calculateShannonEntropy(data) {
+        if (data instanceof ArrayBuffer) {
+            data = new Uint8Array(data);
+        }
+        const prob = [],
+            occurrences = new Array(256).fill(0);
+
+        // Count occurrences of each byte in the input
+        let i;
+        for (i = 0; i < data.length; i++) {
+            occurrences[data[i]]++;
+        }
+
+        // Store probability list
+        for (i = 0; i < occurrences.length; i++) {
+            if (occurrences[i] > 0) {
+                prob.push(occurrences[i] / data.length);
+            }
+        }
+
+        // Calculate Shannon entropy
+        let entropy = 0,
+            p;
+
+        for (i = 0; i < prob.length; i++) {
+            p = prob[i];
+            entropy += p * Math.log(p) / Math.log(2);
+        }
+
+        return -entropy;
+    }
+
 
     /**
      * Parses CSV data and returns it as a two dimensional array or strings.

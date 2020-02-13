@@ -47,8 +47,8 @@ class Gunzip extends Operation {
      * @returns {File}
      */
     run(input, args) {
-        const gunzip = new Zlib.Gunzip(new Uint8Array(input));
-        return new Uint8Array(gunzip.decompress()).buffer;
+        const gzipObj = new Zlib.Gunzip(new Uint8Array(input));
+        return new Uint8Array(gzipObj.decompress()).buffer;
     }
 
 }

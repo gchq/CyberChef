@@ -219,6 +219,7 @@ module.exports = function (grunt) {
             options: {
                 webpack: webpackConfig,
                 host: "0.0.0.0",
+                port: grunt.option("port") || 8080,
                 disableHostCheck: true,
                 overlay: true,
                 inline: false,
@@ -275,7 +276,7 @@ module.exports = function (grunt) {
         connect: {
             prod: {
                 options: {
-                    port: 8000,
+                    port: grunt.option("port") || 8000,
                     base: "build/prod/"
                 }
             }

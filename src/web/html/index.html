@@ -355,15 +355,17 @@
                                             <div class="card-body">
                                                 Size: <span id="output-file-size"></span><br>
                                                 <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
+                                                <button id="output-file-show-all" type="button" class="btn btn-warning btn-outline" data-toggle="tooltip" title="Warning: This could crash your browser. Use at your own risk.">Show all</button>
                                                 <div class="input-group">
-                                                    <span class="input-group-btn">
-                                                        <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" title="View slice">
+                                                    <span class="input-group-prepend">
+                                                        <button id="output-file-slice" type="button" class="btn btn-secondary bmd-btn-icon" data-toggle="tooltip" title="View slice">
                                                             <i class="material-icons">search</i>
                                                         </button>
                                                     </span>
-                                                    <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="1024" min="0">
+                                                    <input type="number" class="form-control" id="output-file-slice-from" placeholder="From" value="0" step="128" min="0">
                                                     <div class="input-group-addon">to</div>
-                                                    <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="2048" step="1024" min="0">
+                                                    <input type="number" class="form-control" id="output-file-slice-to" placeholder="To" value="256" step="128" min="0">
+                                                    <div class="input-group-addon">KiB</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -490,6 +492,15 @@
                         </div>
 
                         <div class="form-group option-item">
+                            <label for="preserveCR" class="bmd-label-floating"> Preserve carriage returns (0x0d)</label>
+                            <select class="form-control" option="preserveCR" id="preserveCR" data-toggle="tooltip" data-placement="bottom" data-offset="-10%" data-html="true" title="HTML textareas don't support carriage returns, so if we want to preserve them in our input, we have to disable editing.<br><br>The default option is to only do this for high-entropy inputs, but you can force the choice using this dropdown.">
+                                <option value="entropy">For high-entropy inputs</option>
+                                <option value="always">Always</option>
+                                <option value="never">Never</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group option-item">
                             <label for="errorTimeout" class="bmd-label-floating">Operation error timeout in ms (0 for never)</label>
                             <input type="number" class="form-control" option="errorTimeout" id="errorTimeout">
                         </div>
@@ -571,13 +582,6 @@
                             <label for="syncTabs">
                                 <input type="checkbox" option="syncTabs" id="syncTabs">
                                 Keep the current tab in sync between the input and output
-                            </label>
-                        </div>
-
-                        <div class="checkbox option-item">
-                            <label for="preserveCR" data-toggle="tooltip" data-placement="right" data-html="true" title="As HTML textareas don't support carriage returns, editing input must be turned off to preserve them.<br><br>When this option is enabled, editing is disabled for pasted text that contains carriage returns. Otherwise, editing will remain enabled but carriage returns will not be preserved.">
-                                <input type="checkbox" option="preserveCR" id="preserveCR">
-                                Preserve carriage returns when pasting an input
                             </label>
                         </div>
                     </div>
