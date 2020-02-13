@@ -246,19 +246,6 @@ class Magic {
         return results;
     }
 
-    /**
-     * Checks the mime value of the data compared to the specified type.
-     *
-     * @param {ArrayBuffer} data
-     * @param {string} type
-     * @returns {boolean}
-     */
-    async checkMime (data, type) {
-        if (isType(type, data)) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Uses the checks to validate the input/output of potential operations.
@@ -296,7 +283,7 @@ class Magic {
 
             const mime = OperationConfig[op.op].mimeCheck;
             if (mime)
-                if (await this.checkMime(output, mime.type))
+                if (!isType(output, mime.type))
                     return;
 
             // If the recipe returned an empty buffer, do not continue
@@ -390,7 +377,7 @@ class Magic {
         const prevOp = recipeConfig[recipeConfig.length - 1];
 
         results = results.concat(await this.regexesTests("Input", matchingOps, prevOp, depth, extLang, intensive, recipeConfig, crib, inputEntropy));
-        results = results.concat(await this.regexesTests("Output", this.opPatterns.getOutputRegexes(), prevOp, depth, extLang, intensive, recipeConfig, crib, inputEntropy));
+        results = results.concat(await this.regexesTests("Output", this.opPatterns.OutputRegexes, prevOp, depth, extLang, intensive, recipeConfig, crib, inputEntropy));
 
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
@@ -488,7 +475,6 @@ class Magic {
      * @returns {number[]}
      */
     _freqDist(data=this.inputBuffer) {
-        // if (this.freqDist) return this.freqDist;
 
         const len = data.length;
         let i = len;

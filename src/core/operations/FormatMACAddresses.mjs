@@ -55,16 +55,6 @@ class FormatMACAddresses extends Operation {
                 "value": false
             }
         ];
-        this.checks =
-        {
-            inRegexes: [
-                {
-                    match:  "^\\s*([0-9a-f]{2}:){5}[0-9a-f]{2}$",
-                    flags:  "i",
-                    magic:  false,
-                    args:   ["Both", true, true, true, true, true]
-                }]
-        };
     }
 
     /**

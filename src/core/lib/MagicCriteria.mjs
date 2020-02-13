@@ -1,5 +1,5 @@
 /**
- * Constants for the entropy of text. 
+ * Constants for the entropy of text.
  *
  * @author n1073645 [n1073645@gmail.com]
  * @copyright Crown Copyright 2020

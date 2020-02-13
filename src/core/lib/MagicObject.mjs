@@ -1,12 +1,11 @@
+import OperationConfig from "../config/OperationConfig.json";
 /**
- * An object used by magic to store the input/output criteria for valid operation results. 
+ * An object used by magic to store the input/output criteria for valid operation results.
  *
  * @author n1073645 [n1073645@gmail.com]
  * @copyright Crown Copyright 2020
  * @license Apache-2.0
  */
-import OperationConfig from "../config/OperationConfig.json";
-
 class potentialOps {
 
     /**
@@ -19,8 +18,8 @@ class potentialOps {
             this.inputRegexes = this.generateInputOpPatterns();
             this.outputRegexes = this.generateOutputOpPatterns();
         } else {
-            this.inputRegexes = prevOp.getInputRegexes();
-            this.outputRegexes = prevOp.getOutputRegexes();
+            this.inputRegexes = prevOp.InputRegexes;
+            this.outputRegexes = prevOp.OutputRegexes;
         }
     }
 
@@ -29,7 +28,7 @@ class potentialOps {
      *
      * @param outputRegexes
      */
-    setOutputRegexes (outputRegexes) {
+    set OutputRegexes (outputRegexes) {
         this.outputRegexes = [...outputRegexes];
     }
 
@@ -38,7 +37,7 @@ class potentialOps {
      *
      * @param inputRegexes
      */
-    setInputRegexes (inputRegexes) {
+    set InputRegexes (inputRegexes) {
         this.inputRegexes = [...inputRegexes];
     }
 
@@ -47,7 +46,7 @@ class potentialOps {
      *
      * @returns {Object[]}
      */
-    getInputRegexes () {
+    get InputRegexes () {
         return this.inputRegexes;
     }
 
@@ -56,7 +55,7 @@ class potentialOps {
      *
      * @returns {Object[]}
      */
-    getOutputRegexes () {
+    get OutputRegexes () {
         return this.outputRegexes;
     }
 
@@ -131,4 +130,5 @@ class potentialOps {
         return opPatterns;
     }
 
-} export default potentialOps;
+}
+export default potentialOps;
