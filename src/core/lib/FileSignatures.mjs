@@ -2531,6 +2531,7 @@ export const FILE_SIGNATURES = {
         {
             name: "WebAssembly binary",
             extension: "wasm",
+            mime: "application/octet-stream",
             description: "",
             signature: {
                 0: 0x00,
