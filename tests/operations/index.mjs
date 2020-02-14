@@ -96,6 +96,7 @@ import "./tests/DefangIP.mjs";
 import "./tests/ParseUDP.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/Lorenz.mjs";
+import "./tests/CipherSaber2";
 
 
 // Cannot test operations that use the File type yet
