@@ -50,19 +50,19 @@ class EscapeUnicodeCharacters extends Operation {
                 {
                     match: "\\\\u(?:[\\da-f]{4,6})",
                     flags: "i",
-                    magic:  true,
+                    magic:  false,
                     args: ["\\u"]
                 },
                 {
                     match: "%u(?:[\\da-f]{4,6})",
                     flags: "i",
-                    magic:  true,
+                    magic:  false,
                     args: ["%u"]
                 },
                 {
                     match: "U\\+(?:[\\da-f]{4,6})",
                     flags: "i",
-                    magic:  true,
+                    magic:  false,
                     args: ["U+"]
                 }]
         };

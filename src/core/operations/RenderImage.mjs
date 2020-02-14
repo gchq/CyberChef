@@ -44,10 +44,7 @@ class RenderImage extends Operation {
                     magic:  true,
                     args: ["Raw"],
                     useful: true
-                }],
-            mimeCheck: {
-                type: "image"
-            }
+                }]
         };
     }
 
