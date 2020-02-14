@@ -203,6 +203,14 @@ export function encode(plaintext, key) {
     // Generate matrix representation of the plaintext.
     const plaintextMatrix = genMatrix(plaintext);
 
+    const det = determinant(keyMatrix, N);
+
+    if ((det % 2 === 0) || (det % 13 === 0))
+        throw new OperationError("Determinant has common factors with the modular base.");
+
+    if (det === 0)
+        throw new OperationError("Determinant is 0");
+
     return join(multiply(keyMatrix, plaintextMatrix));
 }
 

@@ -20,8 +20,8 @@ class HillCipherEncode extends Operation {
 
         this.name = "Hill Cipher Encode";
         this.module = "Crypto";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "The Hill cipher is a polygraphic substitution cipher based on linear algebra. Invented by Lester S. Hill in 1929, it was the first polygraphic cipher in which it was practical (though barely) to operate on more than three symbols at once.";
+        this.infoURL = "https://wikipedia.org/wiki/Hill_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -40,7 +40,7 @@ class HillCipherEncode extends Operation {
      */
     run(input, args) {
 
-        const key = args[0].toLowerCase();
+        let key = args[0].toLowerCase();
         input = input.toLowerCase();
 
         // The algorithm has to have a non-empty input and a non-empty key.
@@ -50,6 +50,9 @@ class HillCipherEncode extends Operation {
         // Remove spaces from input.
         while (input.indexOf(" ") !== -1)
             input = input.replace(" ", "");
+
+        while (key.indexOf(" ") !== -1)
+            key = key.replace(" ", "");
 
         return HillCipher.encode(input, key);
     }
