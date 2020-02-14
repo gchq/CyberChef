@@ -1,5 +1,5 @@
 /**
- * Cartesian Product tests.
+ * LS47 tests.
  *
  * @author n1073645 [n1073645@gmail.com]
  *
