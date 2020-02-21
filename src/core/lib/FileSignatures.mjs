@@ -3001,51 +3001,6 @@ export function extractBMP(bytes, offset) {
     return stream.carve();
 }
 
-/**
- * ICO extractor.
- *
- * @param {Uint8Array} bytes
- * @param {number} offset
- */
-export function extractICO(bytes, offset) {
-    const stream = new Stream(bytes.slice(offset));
-
-    // Move to number of files there are.
-    stream.moveTo(4);
-
-    // Read the number of files stored in the ICO
-    const numberFiles = stream.readInt(2, "le");
-
-    // Move forward to the last file header.
-    stream.moveForwardsBy(8 + ((numberFiles-1) * 16));
-    const fileSize = stream.readInt(4, "le");
-    const fileOffset = stream.readInt(4, "le");
-
-    // Move to the end of the last file.
-    stream.moveTo(fileOffset + fileSize);
-    return stream.carve();
-}
-
-
-/**
- * WAV extractor.
- *
- * @param {Uint8Array} bytes
- * @param {Number} offset
- * @returns {Uint8Array}
- */
-export function extractWAV(bytes, offset) {
-    const stream = new Stream(bytes.slice(offset));
-
-    // Move to file size field.
-    stream.moveTo(4);
-
-    // Move to file size.
-    stream.moveTo(stream.readInt(4, "le"));
-
-    return stream.carve();
-}
-
 
 /**
  * ICO extractor.

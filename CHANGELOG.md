@@ -203,10 +203,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
-<<<<<<< HEAD
-=======
 [9.13.0]: https://github.com/gchq/CyberChef/releases/tag/v9.13.0
->>>>>>> d78730edc0fcb9a03670ad7795908313e86002d6
 [9.12.0]: https://github.com/gchq/CyberChef/releases/tag/v9.12.0
 [9.11.0]: https://github.com/gchq/CyberChef/releases/tag/v9.11.0
 [9.10.0]: https://github.com/gchq/CyberChef/releases/tag/v9.10.0
@@ -293,10 +290,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@VirtualColossus]: https://github.com/VirtualColossus
 [@cbeuw]: https://github.com/cbeuw
 [@matthieuxyz]: https://github.com/matthieuxyz
-<<<<<<< HEAD
-=======
 [@Flavsditz]: https://github.com/Flavsditz
->>>>>>> d78730edc0fcb9a03670ad7795908313e86002d6
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -361,7 +355,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#653]: https://github.com/gchq/CyberChef/pull/653
 [#865]: https://github.com/gchq/CyberChef/pull/865
 [#912]: https://github.com/gchq/CyberChef/pull/912
-<<<<<<< HEAD
-=======
 [#948]: https://github.com/gchq/CyberChef/pull/948
->>>>>>> d78730edc0fcb9a03670ad7795908313e86002d6
