@@ -1741,6 +1741,38 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
+        {
+            name: "Linux deb",
+            extension: "deb",
+            mime: "application/vnd.debian.binary-package",
+            description: "",
+            signature: {
+                0: 0x21,
+                1: 0x3C,
+                2: 0x61,
+                3: 0x72,
+                4: 0x63,
+                5: 0x68,
+                6: 0x3e
+            },
+            extractor: null
+        },
+        {
+            name: "Apple Disk Image",
+            extension: "dmg",
+            mime: "application/x-apple-diskimage",
+            description: "",
+            signature: {
+                0: 0x78,
+                1: 0x01,
+                2: 0x73,
+                3: 0x0d,
+                4: 0x62,
+                5: 0x62,
+                6: 0x60
+            },
+            extractor: null
+        }
     ],
     "Miscellaneous": [
         {
@@ -2470,6 +2502,44 @@ export const FILE_SIGNATURES = {
                 4: 0x70,
             },
             extractor: null
+        },
+        {
+            name: "Smile",
+            extension: "sml",
+            mime: "	application/x-jackson-smile",
+            description: "",
+            signature: {
+                0: 0x3a,
+                1: 0x29,
+                2: 0xa
+            },
+            extractor: null
+        },
+        {
+            name: "Lua Bytecode",
+            extension: "luac",
+            mime: "application/x-lua",
+            description: "",
+            signature: {
+                0: 0x1b,
+                1: 0x4c,
+                2: 0x75,
+                3: 0x61
+            },
+            extractor: null
+        },
+        {
+            name: "WebAssembly binary",
+            extension: "wasm",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0x00,
+                1: 0x61,
+                2: 0x73,
+                3: 0x6d
+            },
+            extractor: null
         }
     ]
 };
@@ -2978,6 +3048,52 @@ export function extractWAV(bytes, offset) {
 
 
 /**
+ * ICO extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ */
+export function extractICO(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to number of files there are.
+    stream.moveTo(4);
+
+    // Read the number of files stored in the ICO
+    const numberFiles = stream.readInt(2, "le");
+
+    // Move forward to the last file header.
+    stream.moveForwardsBy(8 + ((numberFiles-1) * 16));
+    const fileSize = stream.readInt(4, "le");
+    const fileOffset = stream.readInt(4, "le");
+
+    // Move to the end of the last file.
+    stream.moveTo(fileOffset + fileSize);
+    return stream.carve();
+}
+
+
+/**
+ * WAV extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractWAV(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size field.
+    stream.moveTo(4);
+
+    // Move to file size.
+    stream.moveTo(stream.readInt(4, "le"));
+
+    return stream.carve();
+}
+
+
+/**
  * FLV extractor.
  *
  * @param {Uint8Array} bytes
@@ -3074,14 +3190,12 @@ export function extractRTF(bytes, offset) {
 export function extractSQLITE(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    stream.moveTo(16);
-
     // Extract the size of the page.
+    stream.moveTo(16);
     const pageSize = stream.readInt(2);
 
-    stream.moveTo(28);
-
     // Extract the number of pages.
+    stream.moveTo(28);
     const numPages = stream.readInt(4);
 
     // Move to the end of all the pages.
@@ -3314,10 +3428,6 @@ export function extractBZIP2(bytes, offset) {
     ];
 
     for (let i = 0; i < lookingfor.length; i++) {
-<<<<<<< HEAD
-
-=======
->>>>>>> Tidied up GIF and BZIP2 extractors
         // Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
         if (stream.getBytes(5).join("") === lookingfor[i].join(""))
@@ -3644,13 +3754,13 @@ function readHuffmanCode(stream, table) {
  */
 export function extractEVTX(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
-    stream.moveTo(0x28);
 
     // Move to first ELFCHNK.
+    stream.moveTo(0x28);
     const total = stream.readInt(4, "le") - 0x2c;
     stream.moveForwardsBy(total);
-    while (stream.hasMore()) {
 
+    while (stream.hasMore()) {
         // Loop through ELFCHNKs.
         if (stream.getBytes(7).join("") !== [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join(""))
             break;
@@ -3671,16 +3781,15 @@ export function extractEVTX(bytes, offset) {
 export function extractEVT(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    stream.moveTo(0x14);
-
     // Extract offset of EOF.
-    const eofoffset = stream.readInt(4, "le");
-    stream.moveTo(eofoffset);
+    stream.moveTo(0x14);
+    const eofOffset = stream.readInt(4, "le");
+    stream.moveTo(eofOffset);
 
     // Extract the size of the EOF.
-    const eofsize = stream.readInt(4, "le");
+    const eofSize = stream.readInt(4, "le");
 
     // Move past EOF.
-    stream.moveForwardsBy(eofsize-4);
+    stream.moveForwardsBy(eofSize-4);
     return stream.carve();
 }
