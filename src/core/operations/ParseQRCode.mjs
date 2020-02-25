@@ -33,14 +33,18 @@ class ParseQRCode extends Operation {
                 "value": false
             }
         ];
-        this.patterns = [
-            {
-                "match": "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
-                "flags": "",
-                "args": [false],
-                "useful": true
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        "match": "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                        "flags": "",
+                        "args": [false],
+                        "useful": true
+                    }
+                ]
             }
-        ];
+        };
     }
 
     /**
