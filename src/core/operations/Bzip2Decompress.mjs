@@ -33,13 +33,17 @@ class Bzip2Decompress extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
-            {
-                "match": "^\\x42\\x5a\\x68",
-                "flags": "",
-                "args": []
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        "match": "^\\x42\\x5a\\x68",
+                        "flags": "",
+                        "args": []
+                    }
+                ]
             }
-        ];
+        };
     }
 
     /**

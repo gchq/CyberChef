@@ -24,6 +24,17 @@ class StripHTTPHeaders extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*HTTP(.|\\s)+?(\\r?\\n){2}",
+                        flags:  "",
+                        args:   []
+                    }
+                ]
+            }
+        };
     }
 
     /**

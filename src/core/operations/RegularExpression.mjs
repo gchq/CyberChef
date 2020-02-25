@@ -163,7 +163,7 @@ class RegularExpression extends Operation {
                     case "List matches with capture groups":
                         return Utils.escapeHtml(regexList(input, regex, displayTotal, true, true));
                     default:
-                        return "Error: Invalid output format";
+                        throw new OperationError("Error: Invalid output format");
                 }
             } catch (err) {
                 throw new OperationError("Invalid regex. Details: " + err.message);

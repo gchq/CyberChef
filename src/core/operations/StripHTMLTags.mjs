@@ -35,6 +35,17 @@ class StripHTMLTags extends Operation {
                 "value": true
             }
         ];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^<html>(\\S|\\s)*</html>$",
+                        flags:  "i",
+                        args:   [true, true]
+                    }
+                ]
+            }
+        };
     }
 
     /**

@@ -33,6 +33,42 @@ class A1Z26CipherDecode extends Operation {
                 value: DELIM_OPTIONS
             }
         ];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*([12]?[0-9] )+[12]?[0-9]\\s*$",
+                        flags:  "",
+                        args:   ["Space"]
+                    },
+                    {
+                        match:  "^\\s*([12]?[0-9],)+[12]?[0-9]\\s*$",
+                        flags:  "",
+                        args:   ["Comma"]
+                    },
+                    {
+                        match:  "^\\s*([12]?[0-9];)+[12]?[0-9]\\s*$",
+                        flags:  "",
+                        args:   ["Semi-colon"]
+                    },
+                    {
+                        match:  "^\\s*([12]?[0-9]:)+[12]?[0-9]\\s*$",
+                        flags:  "",
+                        args:   ["Colon"]
+                    },
+                    {
+                        match:  "^\\s*([12]?[0-9]\\n)+[12]?[0-9]\\s*$",
+                        flags:  "",
+                        args:   ["Line feed"]
+                    },
+                    {
+                        match:  "^\\s*([12]?[0-9]\\r\\n)+[12]?[0-9]\\s*$",
+                        flags:  "",
+                        args:   ["CRLF"]
+                    }
+                ]
+            }
+        };
     }
 
     /**

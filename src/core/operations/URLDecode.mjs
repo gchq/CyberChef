@@ -24,13 +24,17 @@ class URLDecode extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.patterns = [
-            {
-                match: ".*(?:%[\\da-f]{2}.*){4}",
-                flags: "i",
-                args: []
-            },
-        ];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match: ".*(?:%[\\da-f]{2}.*){4}",
+                        flags: "i",
+                        args: []
+                    },
+                ]
+            }
+        };
     }
 
     /**

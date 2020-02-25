@@ -44,6 +44,52 @@ class BaconCipherDecode extends Operation {
                 "value": false
             }
         ];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*([01]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Standard (I=J and U=V)", "0/1", false]
+                    },
+                    {
+                        match:  "^\\s*([01]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Standard (I=J and U=V)", "0/1", true]
+                    },
+                    {
+                        match:  "^\\s*([AB]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Standard (I=J and U=V)", "A/B", false]
+                    },
+                    {
+                        match:  "^\\s*([AB]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Standard (I=J and U=V)", "A/B", true]
+                    },
+                    {
+                        match:  "^\\s*([01]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Complete", "0/1", false]
+                    },
+                    {
+                        match:  "^\\s*([01]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Complete", "0/1", true]
+                    },
+                    {
+                        match:  "^\\s*([AB]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Complete", "A/B", false]
+                    },
+                    {
+                        match:  "^\\s*([AB]{5}\\s?)+$",
+                        flags:  "",
+                        args:   ["Complete", "A/B", true]
+                    }
+                ]
+            }
+        };
     }
 
     /**

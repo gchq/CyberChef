@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
 import rawinflate from "zlibjs/bin/rawinflate.min.js";
 import OperationError from "../errors/OperationError.mjs";
+import * as criteria from "../lib/MagicCriteria.mjs";
 
 const Zlib = rawinflate.Zlib;
 
@@ -60,6 +61,14 @@ class RawInflate extends Operation {
                 value: false
             }
         ];
+        this.checks = {
+            input: {
+                entropy: {
+                    input: [7.5, 8],
+                    args: [0, 0, INFLATE_BUFFER_TYPE, false, false]
+                }
+            }
+        };
     }
 
     /**

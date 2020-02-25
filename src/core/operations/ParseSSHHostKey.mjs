@@ -38,6 +38,17 @@ class ParseSSHHostKey extends Operation {
                 ]
             }
         ];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*([A-F\\d]{2}[,;:]){15,}[A-F\\d]{2}\\s*$",
+                        flags:  "i",
+                        args:   ["Hex"]
+                    }
+                ]
+            }
+        };
     }
 
     /**
