@@ -97,7 +97,7 @@ class Fork extends Operation {
             dish.set(inputs[i], inputType);
 
             try {
-                progress = await recipe.execute(dish, 0, state);
+                progress = await recipe.execute(dish, state);
             } catch (err) {
                 if (!ignoreErrors) {
                     throw err;

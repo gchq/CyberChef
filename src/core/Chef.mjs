@@ -53,7 +53,7 @@ class Chef {
         this.dish.set(input, type);
 
         try {
-            progress = await recipe.execute(this.dish, progress);
+            progress = await recipe.execute(this.dish);
         } catch (err) {
             log.error(err);
             error = {

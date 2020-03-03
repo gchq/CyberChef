@@ -169,25 +169,23 @@ class Recipe  {
      * Executes each operation in the recipe over the given Dish.
      *
      * @param {Dish} dish
-     * @param {number} [startFrom=0]
-     *     - The index of the Operation to start executing from
      * @param {number} [forkState={}]
      *     - If this is a forked recipe, the state of the recipe up to this point
      * @returns {number}
      *     - The final progress through the recipe
      */
-    async execute(dish, startFrom=0, forkState={}) {
+    async execute(dish, forkState={}) {
         let op, input, output,
             numJumps = 0,
             numRegisters = forkState.numRegisters || 0;
 
-        if (startFrom === 0) this.lastRunOp = null;
+        this.lastRunOp = null;
 
         await this._hydrateOpList();
 
-        log.debug(`[*] Executing recipe of ${this.opList.length} operations, starting at ${startFrom}`);
+        log.debug(`[*] Executing recipe of ${this.opList.length} operations`);
 
-        for (let i = startFrom; i < this.opList.length; i++) {
+        for (let i = 0; i < this.opList.length; i++) {
             op = this.opList[i];
             log.debug(`[${i}] ${op.name} ${JSON.stringify(op.ingValues)}`);
             if (op.disabled) {
