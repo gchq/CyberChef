@@ -98,6 +98,8 @@
             "Rail Fence Cipher Encode",
             "Rail Fence Cipher Decode",
             "Atbash Cipher",
+            "CipherSaber2 Encrypt",
+            "CipherSaber2 Decrypt",
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",

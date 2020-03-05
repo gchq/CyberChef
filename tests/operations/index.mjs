@@ -98,6 +98,7 @@ import "./tests/ParseUDP.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/Lorenz.mjs";
 import "./tests/LuhnChecksum.mjs";
+import "./tests/CipherSaber2.mjs";
 
 
 // Cannot test operations that use the File type yet
