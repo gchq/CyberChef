@@ -7,14 +7,15 @@
 import Operation from "../Operation.mjs";
 import crypto from "crypto";
 import { encode } from "../lib/CipherSaber2.mjs";
+import Utils from "../Utils.mjs";
 
 /**
- * CipherSaber2 operation
+ * CipherSaber2 Encrypt operation
  */
-class CipherSaber2 extends Operation {
+class CipherSaber2Encrypt extends Operation {
 
     /**
-     * CipherSaber2 constructor
+     * CipherSaber2Encrypt constructor
      */
     constructor() {
         super();
@@ -28,8 +29,9 @@ class CipherSaber2 extends Operation {
         this.args = [
             {
                 name: "Key",
-                type: "string",
-                value: ""
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
                 name: "Rounds",
@@ -46,16 +48,18 @@ class CipherSaber2 extends Operation {
      */
     run(input, args) {
         input = new Uint8Array(input);
-        const result = [];
+        const result = [],
+            key = Utils.convertToByteArray(args[0].string, args[0].option),
+            rounds = args[1];
 
         // Assign into initialisation vector based on cipher mode.
         const tempIVP = crypto.randomBytes(10);
         for (let m = 0; m < 10; m++)
             result.push(tempIVP[m]);
 
-        return new Uint8Array(result.concat(encode(tempIVP, args, input))).buffer;
+        return new Uint8Array(result.concat(encode(tempIVP, key, rounds, input))).buffer;
     }
 
 }
 
-export default CipherSaber2;
+export default CipherSaber2Encrypt;

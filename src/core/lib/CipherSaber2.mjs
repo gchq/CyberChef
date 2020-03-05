@@ -1,12 +1,10 @@
-import Utils from "../Utils.mjs";
-
 /**
  * @author n1073645 [n1073645@gmail.com]
  * @copyright Crown Copyright 2020
  * @license Apache-2.0
  */
-export function encode(tempIVP, args, input) {
-    const ivp = new Uint8Array(Utils.strToByteArray(args[0]).concat(tempIVP));
+export function encode(tempIVP, key, rounds, input) {
+    const ivp = new Uint8Array(key.concat(tempIVP));
     const state = new Array(256).fill(0);
     let j = 0, i = 0;
     const result = [];
@@ -15,7 +13,7 @@ export function encode(tempIVP, args, input) {
     for (let i = 0; i < 256; i++)
         state[i] = i;
     const ivpLength = ivp.length;
-    for (let r = 0; r < args[1]; r ++) {
+    for (let r = 0; r < rounds; r ++) {
         for (let k = 0; k < 256; k++) {
             j = (j + state[k] + ivp[k % ivpLength]) % 256;
             [state[k], state[j]] = [state[j], state[k]];

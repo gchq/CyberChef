@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import { encode } from "../lib/CipherSaber2.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * CipherSaber2 Decrypt operation
@@ -27,8 +28,9 @@ class CipherSaber2Decrypt extends Operation {
         this.args = [
             {
                 name: "Key",
-                type: "string",
-                value: ""
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
                 name: "Rounds",
@@ -45,11 +47,13 @@ class CipherSaber2Decrypt extends Operation {
      */
     run(input, args) {
         input = new Uint8Array(input);
-        const result = [];
+        const result = [],
+            key = Utils.convertToByteArray(args[0].string, args[0].option),
+            rounds = args[1];
 
         const tempIVP = input.slice(0, 10);
         input = input.slice(10);
-        return new Uint8Array(result.concat(encode(tempIVP, args, input))).buffer;
+        return new Uint8Array(result.concat(encode(tempIVP, key, rounds, input))).buffer;
     }
 
 }
