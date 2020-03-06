@@ -1,7 +1,7 @@
 /**
  * Colossus - an emulation of the world's first electronic computer
  *
- * @author VirtualColossus
+ * @author VirtualColossus [martin@virtualcolossus.co.uk]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
@@ -22,7 +22,6 @@ export class ColossusComputer {
      * @param {Object} starts - rotor start positions
      */
     constructor(ciphertext, pattern, qbusin, qbusswitches, control, starts, settotal, limit) {
-
         this.ITAlookup = ITA2_TABLE;
         this.ReverseITAlookup = {};
         for (const letter in this.ITAlookup) {
@@ -61,15 +60,14 @@ export class ColossusComputer {
 
         this.totalmotor = 0;
         this.P5Zbit = [0, 0];
-
     }
 
     /**
      * Begin a run
-     * @returns {object} -
+     *
+     * @returns {object}
      */
     run() {
-
         const result = {
             printout: ""
         };
@@ -86,7 +84,6 @@ export class ColossusComputer {
         result.printout += fast + " " + slow + "\n";
 
         do {
-
             this.allCounters = [0, 0, 0, 0, 0];
             this.ZbitsOneBack = [0, 0, 0, 0, 0];
             this.XbitsOneBack = [0, 0, 0, 0, 0];
@@ -97,8 +94,8 @@ export class ColossusComputer {
             // Only print result if larger than set total
             let fastRef = "00";
             let slowRef = "00";
-            if (fast !== "") fastRef = this.leftPad(this.rotorPtrs[fast], 2);
-            if (slow !== "") slowRef = this.leftPad(this.rotorPtrs[slow], 2);
+            if (fast !== "") fastRef = this.rotorPtrs[fast].toString().padStart(2, "0");
+            if (slow !== "") slowRef = this.rotorPtrs[slow].toString().padStart(2, "0");
             let printline = "";
             for (let c=0;c<5;c++) {
                 if (this.allCounters[c] > this.settotal) {
@@ -124,7 +121,6 @@ export class ColossusComputer {
             }
 
             runcount++;
-
         } while (JSON.stringify(this.rotorPtrs) !== JSON.stringify(this.starts));
 
         result.counters = this.allCounters;
@@ -137,7 +133,6 @@ export class ColossusComputer {
      * Run tape loop
      */
     runTape() {
-
         let charZin = "";
 
         this.Xptr = [this.rotorPtrs.X1, this.rotorPtrs.X2, this.rotorPtrs.X3, this.rotorPtrs.X4, this.rotorPtrs.X5];
@@ -171,7 +166,6 @@ export class ColossusComputer {
             this.stepThyratrons();
 
         }
-
     }
 
     /**
@@ -246,7 +240,6 @@ export class ColossusComputer {
         // Always move M61 rotor
         this.Mptr[1]++;
         if (this.Mptr[1] > ROTOR_SIZES.M61) this.Mptr[1]=1;
-
     }
 
     /**
@@ -342,7 +335,6 @@ export class ColossusComputer {
         }
 
         return cnt;
-
     }
 
     /**
@@ -381,7 +373,6 @@ export class ColossusComputer {
             }
 
         }
-
     }
 
     /**
@@ -409,17 +400,6 @@ export class ColossusComputer {
                 5: INIT_PATTERNS[pattern].S[5].slice().reverse()
             }
         };
-    }
-
-    /**
-     * Left Pad number
-     */
-    leftPad(number, targetLength) {
-        let output = number + "";
-        while (output.length < targetLength) {
-            output = "0" + output;
-        }
-        return output;
     }
 
     /**

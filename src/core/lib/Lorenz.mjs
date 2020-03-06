@@ -1,7 +1,7 @@
 /**
  * Resources required by the Lorenz SZ40/42 and Colossus
  *
- * @author VirtualColossus
+ * @author VirtualColossus [martin@virtualcolossus.co.uk]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */

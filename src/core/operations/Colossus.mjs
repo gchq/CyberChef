@@ -23,7 +23,7 @@ class Colossus extends Operation {
         super();
         this.name = "Colossus";
         this.module = "Bletchley";
-        this.description = "Colossus is the name of the world's first electronic computer. Ten computers were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines.<br><br>To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at <a href='https://virtualcolossus.co.uk' target='_blank'>https://virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/VirtualColossus/CyberChef/wiki/Colossus' target='_blank'>here</a>.";
+        this.description = "Colossus is the name of the world's first electronic computer. Ten Colossi were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines.<br><br>To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at <a href='https://virtualcolossus.co.uk' target='_blank'>virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/gchq/CyberChef/wiki/Colossus' target='_blank'>here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Colossus_computer";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -61,7 +61,7 @@ class Colossus extends Operation {
             {
                 name: "K Rack Option",
                 type: "argSelector",
-                "value": [
+                value: [
                     {
                         name: "Select Program",
                         on: [7],
@@ -346,14 +346,13 @@ class Colossus extends Operation {
      * @returns {Object}
      */
     run(input, args) {
-
         input = input.toUpperCase();
         for (const character of input) {
             if (VALID_ITA2.indexOf(character) === -1) {
                 let errltr = character;
-                if (errltr==="\n") errltr = "Carriage Return";
-                if (errltr===" ") errltr = "Space";
-                throw new OperationError("Invalid ITA2 character : "+errltr);
+                if (errltr === "\n") errltr = "Carriage Return";
+                if (errltr === " ") errltr = "Space";
+                throw new OperationError("Invalid ITA2 character : " + errltr);
             }
         }
 
@@ -383,7 +382,8 @@ class Colossus extends Operation {
         const re = new RegExp("^$|^[.x]$");
         for (let qr=0;qr<3;qr++) {
             for (let a=0;a<5;a++) {
-                if (!re.test(args[((qr*7)+(a+9))])) throw new OperationError("Switch R"+(qr+1)+"-Q"+(a+1)+" can only be set to blank, . or x");
+                if (!re.test(args[((qr*7)+(a+9))]))
+                    throw new OperationError("Switch R"+(qr+1)+"-Q"+(a+1)+" can only be set to blank, . or x");
             }
         }
 
@@ -406,7 +406,8 @@ class Colossus extends Operation {
         };
 
         const settotal = parseInt(args[42], 10);
-        if (settotal < 0 || settotal > 9999) throw new OperationError("Set Total must be between 0000 and 9999");
+        if (settotal < 0 || settotal > 9999)
+            throw new OperationError("Set Total must be between 0000 and 9999");
 
         // null|fast|slow for each of S1-5,M1-2,X1-5
         const control = {
@@ -415,7 +416,6 @@ class Colossus extends Operation {
         };
 
         // Start positions
-
         if (args[52]<1 || args[52]>43) throw new OperationError("Ψ1 start must be between 1 and 43");
         if (args[53]<1 || args[53]>47) throw new OperationError("Ψ2 start must be between 1 and 47");
         if (args[54]<1 || args[54]>51) throw new OperationError("Ψ3 start must be between 1 and 51");
@@ -439,11 +439,14 @@ class Colossus extends Operation {
         const result = colossus.run();
 
         return result;
-
     }
 
     /**
      * Select Program
+     *
+     * @param {string} progname
+     * @param {Object[]} args
+     * @returns {Object[]}
      */
     selectProgram(progname, args) {
 
