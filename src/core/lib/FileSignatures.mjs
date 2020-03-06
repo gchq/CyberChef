@@ -1722,7 +1722,7 @@ export const FILE_SIGNATURES = {
                 2: 0xa8,
                 3: 0x89
             },
-            extractor: extractZIP
+            extractor: null
         },
         {
             name: "Jar Archive",
@@ -1741,7 +1741,7 @@ export const FILE_SIGNATURES = {
                 8: 0x08,
                 9: 0x00
             },
-            extractor: null
+            extractor: extractZIP
         },
         {
             name: "lzop compressed",
@@ -1761,7 +1761,7 @@ export const FILE_SIGNATURES = {
             extractor: extractLZOP
         },
         {
-            name: "Linux deb",
+            name: "Linux deb package",
             extension: "deb",
             mime: "application/vnd.debian.binary-package",
             description: "",
