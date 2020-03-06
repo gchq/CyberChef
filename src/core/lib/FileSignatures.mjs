@@ -1716,33 +1716,31 @@ export const FILE_SIGNATURES = {
             extension: "jar",
             mime: "application/java-archive",
             description: "",
-            signature:
-                {
-                    0: 0x5f,
-                    1: 0x27,
-                    2: 0xa8,
-                    3: 0x89
-                },
+            signature: {
+                0: 0x5f,
+                1: 0x27,
+                2: 0xa8,
+                3: 0x89
+            },
             extractor: extractZIP
         },
         {
-            name: "Jar Archive Alternative",
+            name: "Jar Archive",
             extension: "jar",
             mime: "application/java-archive",
             description: "",
-            signature:
-                {
-                    0: 0x50,
-                    1: 0x4B,
-                    2: 0x03,
-                    3: 0x04,
-                    4: 0x14,
-                    5: 0x00,
-                    6: 0x08,
-                    7: 0x00,
-                    8: 0x08,
-                    9: 0x00
-                },
+            signature: {
+                0: 0x50,
+                1: 0x4B,
+                2: 0x03,
+                3: 0x04,
+                4: 0x14,
+                5: 0x00,
+                6: 0x08,
+                7: 0x00,
+                8: 0x08,
+                9: 0x00
+            },
             extractor: null
         },
         {
