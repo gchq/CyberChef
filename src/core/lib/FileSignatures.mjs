@@ -3887,22 +3887,19 @@ export function extractLZOP(bytes, offset) {
     // Move past checksum.
     stream.moveForwardsBy(4);
 
-    try {
-        while (stream.hasMore()) {
-            const uncompSize = stream.readInt(4, "be");
+    while (stream.hasMore()) {
+        const uncompSize = stream.readInt(4, "be");
 
-            // If data has no length, break.
-            if (uncompSize === 0)
-                break;
+        // If data has no length, break.
+        if (uncompSize === 0)
+            break;
 
-            const compSize = stream.readInt(4, "be");
+        const compSize = stream.readInt(4, "be");
 
-            const numCheckSumSkip = (uncompSize === compSize) ? numCheckSumD : numCheckSumD + numCheckSumC;
+        const numCheckSumSkip = (uncompSize === compSize) ? numCheckSumD : numCheckSumD + numCheckSumC;
 
-            // skip forwards by compressed data size and the size of the checksum(s).
-            stream.moveForwardsBy(compSize + (numCheckSumSkip * 4));
-        }
-    } catch (error) {
+        // skip forwards by compressed data size and the size of the checksum(s).
+        stream.moveForwardsBy(compSize + (numCheckSumSkip * 4));
     }
     return stream.carve();
 
