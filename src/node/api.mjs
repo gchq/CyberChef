@@ -13,6 +13,7 @@ import NodeRecipe from "./NodeRecipe.mjs";
 import OperationConfig from "../core/config/OperationConfig.json";
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
+import levenshteinDistance from "../core/lib/Levenshtein.mjs";
 
 
 /**
@@ -47,8 +48,13 @@ function transformArgs(opArgsList, newArgs) {
     if (newArgs) {
         Object.keys(newArgs).map((key) => {
             const index = opArgs.findIndex((arg) => {
-                return arg.name.toLowerCase().replace(/ /g, "") ===
-                    key.toLowerCase().replace(/ /g, "");
+                const argLower = arg.name.toLowerCase();
+                const keyLower = key.toLowerCase();
+
+                if (argLower.length === 1 || keyLower === 1)
+                    return argLower === keyLower;
+                else
+                    return (argLower === keyLower) ? true : levenshteinDistance(argLower.replace(/ /g, ""), keyLower.replace(/ /g, "")) < 2;
             });
 
             if (index > -1) {
