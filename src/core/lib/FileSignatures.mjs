@@ -1722,6 +1722,25 @@ export const FILE_SIGNATURES = {
                 2: 0xa8,
                 3: 0x89
             },
+            extractor: extractZIP
+        },
+        {
+            name: "Jar Archive",
+            extension: "jar",
+            mime: "application/java-archive",
+            description: "",
+            signature: {
+                0: 0x50,
+                1: 0x4B,
+                2: 0x03,
+                3: 0x04,
+                4: 0x14,
+                5: 0x00,
+                6: 0x08,
+                7: 0x00,
+                8: 0x08,
+                9: 0x00
+            },
             extractor: null
         },
         {
@@ -1755,7 +1774,7 @@ export const FILE_SIGNATURES = {
                 5: 0x68,
                 6: 0x3e
             },
-            extractor: null
+            extractor: extractDEB
         },
         {
             name: "Apple Disk Image",
@@ -3444,6 +3463,37 @@ export function extractXZ(bytes, offset) {
     // Move over EOF marker
     stream.moveForwardsBy(7);
 
+    return stream.carve();
+}
+
+
+/**
+ * DEB extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ */
+export function extractDEB(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move past !<arch>
+    stream.moveForwardsBy(8);
+    while (stream.hasMore()) {
+
+        // Move to size field.
+        stream.moveForwardsBy(48);
+        let fsize= "";
+
+        // Convert size to a usable number.
+        for (const elem of stream.getBytes(10)) {
+            fsize += String.fromCharCode(elem);
+        }
+        fsize = parseInt(fsize.trim(), 10);
+
+        // Move past `\n
+        stream.moveForwardsBy(2);
+        stream.moveForwardsBy(fsize);
+    }
     return stream.carve();
 }
 
