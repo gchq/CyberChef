@@ -1716,13 +1716,21 @@ export const FILE_SIGNATURES = {
             extension: "jar",
             mime: "application/java-archive",
             description: "",
-            signature: [
+            signature:
                 {
                     0: 0x5f,
                     1: 0x27,
                     2: 0xa8,
                     3: 0x89
                 },
+            extractor: extractZIP
+        },
+        {
+            name: "Jar Archive Alternative",
+            extension: "jar",
+            mime: "application/java-archive",
+            description: "",
+            signature:
                 {
                     0: 0x50,
                     1: 0x4B,
@@ -1734,9 +1742,8 @@ export const FILE_SIGNATURES = {
                     7: 0x00,
                     8: 0x08,
                     9: 0x00
-                }
-            ],
-            extractor: extractZIP
+                },
+            extractor: null
         },
         {
             name: "lzop compressed",
