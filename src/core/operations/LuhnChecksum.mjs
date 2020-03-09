@@ -64,9 +64,15 @@ class LuhnChecksum extends Operation {
      * @returns {string}
      */
     run(input, args) {
+
+        if (!(input)) return "0";
+
         const checkSum = this.checksum(input).toString();
+
         let checkDigit = this.checksum(input+"0");
+
         checkDigit =  (checkDigit === 0 ? 0 : (10-checkDigit)).toString();
+
         return "Checksum: " + checkSum + "\n\nCheckdigit: " + checkDigit + "\n\nLuhn Validated String: "+ input + checkDigit;
     }
 
