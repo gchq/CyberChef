@@ -54,4 +54,59 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Magic Chain of Base64",
+        input: "WkVkV2VtUkRRbnBrU0Vwd1ltMWpQUT09",
+        expectedMatch: /From_Base64\('A-Za-z0-9\+\/=',true\)\nFrom_Base64\('A-Za-z0-9\+\/=',true\)\nFrom_Base64\('A-Za-z0-9\+\/=',true\)/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [3, true, false]
+            }
+        ],
+    },
+    {
+        name: "Magic Chain of Hex to Hexdump to Base64",
+        input: "MDAwMDAwMDAgIDM3IDM0IDIwIDM2IDM1IDIwIDM3IDMzIDIwIDM3IDM0IDIwIDMyIDMwIDIwIDM3ICB8NzQgNjUgNzMgNzQgMjAgN3wKMDAwMDAwMTAgIDMzIDIwIDM3IDM0IDIwIDM3IDMyIDIwIDM2IDM5IDIwIDM2IDY1IDIwIDM2IDM3ICB8MyA3NCA3MiA2OSA2ZSA2N3w=",
+        expectedMatch: /From_Base64\('A-Za-z0-9\+\/=',true\)\nFrom_Hexdump\(\)\nFrom_Hex\('Space'\)/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [3, true, false]
+            }
+        ],
+    },
+    {
+        name: "Magic Chain of Charcode to Octal to Base32",
+        input: "GY3SANRUEA2DAIBWGYQDMNJAGQYCANRXEA3DGIBUGAQDMNZAGY2CANBQEA3DEIBWGAQDIMBAGY3SANRTEA2DAIBWG4QDMNBAGQYCANRXEA3DEIBUGAQDMNRAG4YSANBQEA3DMIBRGQ2SANBQEA3DMIBWG4======",
+        expectedMatch: /From_Base32\('A-Z2-7=',false\)\nFrom_Octal\('Space'\)\nFrom_Hex\('Space'\)/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [3, true, false]
+            }
+        ],
+    },
+    {
+        name: "Magic Chain of Base64 Output Check",
+        input: "WkVkV2VtUkRRbnBrU0Vwd1ltMWpQUT09",
+        expectedMatch: /test string/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [3, true, false]
+            }
+        ],
+    },
+    {
+        name: "Magic Chain of Decimal to Base32 to Base32",
+        input: "I5CVSVCNJFBFER2BLFJUCTKKKJDVKUKEINGUUV2FIFNFIRKJIJJEORJSKNAU2SSSI5MVCRCDJVFFKRKBLFKECTSKIFDUKWKUIFEUEUSHIFNFCPJ5HU6Q====",
+        expectedMatch: /test string/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [3, true, false]
+            }
+        ],
+    },
 ]);
