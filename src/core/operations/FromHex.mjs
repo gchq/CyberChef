@@ -71,12 +71,17 @@ class FromHex extends Operation {
                         args: ["CRLF"]
                     },
                     {
-                        match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
+                        match: "^(?:0x[\\dA-F]{2})+$",
                         flags: "i",
                         args: ["0x"]
                     },
                     {
-                        match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
+                        match: "^0x[\\dA-F]{2}(?:,0x[\\dA-F]{2})*$",
+                        flags: "i",
+                        args: ["0x with comma"]
+                    },
+                    {
+                        match: "^(?:\\\\x[\\dA-F]{2})+$",
                         flags: "i",
                         args: ["\\x"]
                     }

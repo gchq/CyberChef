@@ -1182,6 +1182,7 @@ class Utils {
             "CRLF":          /\r\n/g,
             "Forward slash": /\//g,
             "Backslash":     /\\/g,
+            "0x with comma": /,?0x/g,
             "0x":            /0x/g,
             "\\x":           /\\x/g,
             "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
