@@ -36,10 +36,10 @@ class Magic {
         const matches = [];
 
         for (let i = 0; i < opPatterns.length; i++) {
-            const pattern = opPatterns[i],
-                regex = new RegExp(pattern.match, pattern.flags);
+            const pattern = opPatterns[i];
 
-            if (regex.test(this.inputStr)) {
+
+            if (pattern.match.test(this.inputStr)) {
                 matches.push(pattern);
             }
         }
@@ -522,8 +522,7 @@ class Magic {
                     OperationConfig[op].input.regex.forEach(pattern => {
                         opCriteria.regex.push({
                             op: op,
-                            match: pattern.match,
-                            flags: pattern.flags,
+                            match: new RegExp(pattern.match, pattern.flags),
                             args: pattern.args,
                             useful: pattern.useful || false
                         });
