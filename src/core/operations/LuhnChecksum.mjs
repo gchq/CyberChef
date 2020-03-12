@@ -23,19 +23,19 @@ class LuhnChecksum extends Operation {
         this.description = "The Luhn algorithm, also known as the modulus 10 or mod 10 algorithm, is a simple checksum formula used to validate a variety of identification numbers, such as credit card numbers, IMEI numbers and Canadian Social Insurance Numbers.";
         this.infoURL = "https://wikipedia.org/wiki/Luhn_algorithm";
         this.inputType = "string";
-        this.outputType = "number";
+        this.outputType = "string";
         this.args = [];
     }
 
     /**
-     * @param {string} input
-     * @param {Object[]} args
+     * Generates the Luhn Checksum from the input.
+     *
+     * @param {string} inputStr
      * @returns {number}
      */
-    run(input, args) {
+    checksum(inputStr) {
         let even = false;
-        return input.split("").reverse().reduce((acc, elem) => {
-
+        return inputStr.split("").reverse().reduce((acc, elem) => {
             // Convert element to integer.
             let temp = parseInt(elem, 10);
 
@@ -45,7 +45,6 @@ class LuhnChecksum extends Operation {
 
             // If element is in an even position
             if (even) {
-
                 // Double the element and add the quotient and remainder together.
                 temp = 2 * elem;
                 temp = Math.floor(temp/10) + (temp % 10);
@@ -53,8 +52,24 @@ class LuhnChecksum extends Operation {
 
             even = !even;
             return acc + temp;
-
         }, 0)  % 10;
+    }
+
+    /**
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run(input, args) {
+        if (!input) return "";
+
+        const checkSum = this.checksum(input);
+        let checkDigit = this.checksum(input + "0");
+        checkDigit = checkDigit === 0 ? 0 : (10-checkDigit);
+
+        return `Checksum: ${checkSum}
+Checkdigit: ${checkDigit}
+Luhn Validated String: ${input + "" + checkDigit}`;
     }
 
 }
