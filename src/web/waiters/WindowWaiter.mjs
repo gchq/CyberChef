@@ -37,7 +37,7 @@ class WindowWaiter {
      * focus is returned.
      */
     windowBlur() {
-        this.windowBlurTime = new Date().getTime();
+        this.windowBlurTime = Date.now();
     }
 
 
@@ -52,7 +52,7 @@ class WindowWaiter {
      * a long time and the browser has swapped out all its memory.
      */
     windowFocus() {
-        const unfocusedTime = new Date().getTime() - this.windowBlurTime;
+        const unfocusedTime = Date.now() - this.windowBlurTime;
         if (unfocusedTime > 60000) {
             this.app.silentBake();
         }

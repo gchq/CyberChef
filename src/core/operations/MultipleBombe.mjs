@@ -144,7 +144,7 @@ class MultipleBombe extends Operation {
      * @param {number} progress - Progress (as a float in the range 0..1)
      */
     updateStatus(nLoops, nStops, progress, start) {
-        const elapsed = new Date().getTime() - start;
+        const elapsed = Date.now() - start;
         const remaining = (elapsed / progress) * (1 - progress) / 1000;
         const hours = Math.floor(remaining / 3600);
         const minutes = `0${Math.floor((remaining % 3600) / 60)}`.slice(-2);
@@ -237,7 +237,7 @@ class MultipleBombe extends Operation {
         const totalRuns = choose(rotors.length, 3) * 6 * fourthRotors.length * reflectors.length;
         let nRuns = 0;
         let nStops = 0;
-        const start = new Date().getTime();
+        const start = Date.now();
         for (const rotor1 of rotors) {
             for (const rotor2 of rotors) {
                 if (rotor2 === rotor1) {

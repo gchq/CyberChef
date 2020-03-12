@@ -375,7 +375,7 @@ class WorkerWaiter {
      */
     bakingComplete() {
         this.setBakingStatus(false);
-        let duration = new Date().getTime() - this.bakeStartTime;
+        let duration = Date.now() - this.bakeStartTime;
         duration = duration.toLocaleString() + "ms";
         const progress = this.getBakeProgress();
 
@@ -489,7 +489,7 @@ class WorkerWaiter {
     bake(recipeConfig, options, progress, step) {
         this.setBakingStatus(true);
         this.manager.recipe.updateBreakpointIndicator(false);
-        this.bakeStartTime = new Date().getTime();
+        this.bakeStartTime = Date.now();
         this.bakeId++;
         this.recipeConfig = recipeConfig;
         this.options = options;
