@@ -70,7 +70,7 @@ class ToHexdump extends Operation {
 
             output += lineNo + "  " +
                 hexa.padEnd(length*(padding+1), " ") +
-                " |" + Utils.printable(Utils.byteArrayToChars(buff)).padEnd(buff.length, " ") + "|\n";
+                " |" + Utils.printable(Utils.byteArrayToChars(buff), false, true).padEnd(buff.length, " ") + "|\n";
 
             if (includeFinalLength && i+buff.length === data.length) {
                 output += Utils.hex(i+buff.length, 8) + "\n";
