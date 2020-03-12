@@ -36,7 +36,6 @@ class LuhnChecksum extends Operation {
     checksum(inputStr) {
         let even = false;
         return inputStr.split("").reverse().reduce((acc, elem) => {
-
             // Convert element to integer.
             let temp = parseInt(elem, 10);
 
@@ -46,7 +45,6 @@ class LuhnChecksum extends Operation {
 
             // If element is in an even position
             if (even) {
-
                 // Double the element and add the quotient and remainder together.
                 temp = 2 * elem;
                 temp = Math.floor(temp/10) + (temp % 10);
@@ -54,7 +52,6 @@ class LuhnChecksum extends Operation {
 
             even = !even;
             return acc + temp;
-
         }, 0)  % 10;
     }
 
@@ -64,16 +61,15 @@ class LuhnChecksum extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (!input) return "";
 
-        if (!(input)) return "0";
+        const checkSum = this.checksum(input);
+        let checkDigit = this.checksum(input + "0");
+        checkDigit = checkDigit === 0 ? 0 : (10-checkDigit);
 
-        const checkSum = this.checksum(input).toString();
-
-        let checkDigit = this.checksum(input+"0");
-
-        checkDigit =  (checkDigit === 0 ? 0 : (10-checkDigit)).toString();
-
-        return "Checksum: " + checkSum + "\n\nCheckdigit: " + checkDigit + "\n\nLuhn Validated String: "+ input + checkDigit;
+        return `Checksum: ${checkSum}
+Checkdigit: ${checkDigit}
+Luhn Validated String: ${input + "" + checkDigit}`;
     }
 
 }
