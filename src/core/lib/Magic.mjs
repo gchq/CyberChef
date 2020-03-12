@@ -29,8 +29,11 @@ class Magic {
     }
 
     /**
+     * Finds operations that claim to be able to decode the input based on
+     * regular expression matches.
      *
-     * @param opPatterns
+     * @param {[Object]} opPatterns
+     * @returns {Array}
      */
     inputRegexMatch(opPatterns) {
         const matches = [];
@@ -48,7 +51,11 @@ class Magic {
     }
 
     /**
+     * Finds operations that claim to be able to decode the input based on entropy
+     * matches.
      *
+     * @param {[Object]} opPatterns
+     * @returns {Array}
      */
     entropyInputMatch(opPatterns) {
         const matches = [];
@@ -64,8 +71,7 @@ class Magic {
     }
 
     /**
-     * Finds operations that claim to be able to decode the input based on regular
-     * expression matches.
+     * Finds operations that claim to be able to decode the input based on criteria.
      *
      * @returns {Object[]}
      */
