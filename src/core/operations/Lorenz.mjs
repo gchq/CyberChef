@@ -293,8 +293,8 @@ class Lorenz extends Operation {
             chosenSetting.S[3] = this.readLugs(lugs3);
             chosenSetting.S[4] = this.readLugs(lugs4);
             chosenSetting.S[5] = this.readLugs(lugs5);
-            chosenSetting.M[1] = this.readLugs(lugm37);
-            chosenSetting.M[2] = this.readLugs(lugm61);
+            chosenSetting.M[1] = this.readLugs(lugm61);
+            chosenSetting.M[2] = this.readLugs(lugm37);
             chosenSetting.X[1] = this.readLugs(lugx1);
             chosenSetting.X[2] = this.readLugs(lugx2);
             chosenSetting.X[3] = this.readLugs(lugx3);
