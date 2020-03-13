@@ -282,11 +282,11 @@ export function help(input) {
         .map(result => result.hydrated);
 
     if (matches && matches.length) {
-        console.log(`${matches.length} result${matches.length > 1 ? "s" : ""} found.`);
+        // console.log(`${matches.length} result${matches.length > 1 ? "s" : ""} found.`);
         return matches;
     }
 
-    console.log("No results found.");
+    // console.log("No results found.");
     return null;
 }
 

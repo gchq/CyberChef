@@ -36,11 +36,10 @@ module.exports = function (grunt) {
             "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
         ]);
 
-    grunt.registerTask("test",
-        "A task which runs all the operation tests in the tests directory.",
+    grunt.registerTask("configTests",
+        "A task which configures config files in preparation for tests to be run. Use `npm tests` to run tests.",
         [
-            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex",
-            "exec:nodeTests", "exec:opTests"
+            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
         ]);
 
     grunt.registerTask("testui",
@@ -55,7 +54,6 @@ module.exports = function (grunt) {
         "Lints the code base",
         ["eslint", "exec:repoSize"]);
 
-    grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
 
     grunt.registerTask("findModules",
@@ -385,14 +383,8 @@ module.exports = function (grunt) {
                 ]),
                 sync: true
             },
-            opTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
-            },
             browserTests: {
                 command: "./node_modules/.bin/nightwatch --env prod"
-            },
-            nodeTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
             },
             setupNodeConsumers: {
                 command: chainCommands([

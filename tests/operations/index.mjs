@@ -116,5 +116,8 @@ setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-TestRegister.runTests()
-    .then(logOpsTestReport);
+(async function() {
+    const results = await TestRegister.runTests();
+    logOpsTestReport(results);
+})();
+
