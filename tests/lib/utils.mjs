@@ -35,7 +35,7 @@ function handleTestResult(testStatus, testResult) {
     testStatus.counts.total += 1;
 
     if (testResult.duration > 2000) {
-        console.log(`'${testResult.test.name}' took ${(testResult.duration / 1000).toFixed(2)}s to complete`);
+        console.log(`'${testResult.test.name}' took ${(testResult.duration / 1000).toFixed(1)}s to complete`);
     }
 }
 
@@ -82,7 +82,7 @@ export function logTestReport(testStatus, results) {
  * Fail if the process takes longer than 60 seconds.
  */
 export function setLongTestFailure() {
-    const timeLimit = 60;
+    const timeLimit = 120;
     setTimeout(function() {
         console.log(`Tests took longer than ${timeLimit} seconds to run, returning.`);
         process.exit(1);
