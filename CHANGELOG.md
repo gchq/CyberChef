@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.17.0] - 2020-03-13
+- 'Generate Image' operation added [@pointhi] | [#683]
+
 ### [9.16.0] - 2020-03-06
 - 'Colossus' operation added [@VirtualColossus] | [#917]
 
@@ -212,6 +215,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.17.0]: https://github.com/gchq/CyberChef/releases/tag/v9.17.0
 [9.16.0]: https://github.com/gchq/CyberChef/releases/tag/v9.16.0
 [9.15.0]: https://github.com/gchq/CyberChef/releases/tag/v9.15.0
 [9.14.0]: https://github.com/gchq/CyberChef/releases/tag/v9.14.0
@@ -304,6 +308,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@cbeuw]: https://github.com/cbeuw
 [@matthieuxyz]: https://github.com/matthieuxyz
 [@Flavsditz]: https://github.com/Flavsditz
+[@pointhi]: https://github.com/pointhi
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -366,6 +371,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#627]: https://github.com/gchq/CyberChef/pull/627
 [#632]: https://github.com/gchq/CyberChef/pull/632
 [#653]: https://github.com/gchq/CyberChef/pull/653
+[#683]: https://github.com/gchq/CyberChef/pull/683
 [#865]: https://github.com/gchq/CyberChef/pull/865
 [#912]: https://github.com/gchq/CyberChef/pull/912
 [#917]: https://github.com/gchq/CyberChef/pull/917
