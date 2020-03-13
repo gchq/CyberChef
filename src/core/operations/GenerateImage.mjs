@@ -25,9 +25,9 @@ class GenerateImage extends Operation {
 
         this.name = "Generate Image";
         this.module = "Image";
-        this.description = "Generate an Image using the input as pixel values.";
+        this.description = "Generates an image using the input as pixel values.";
         this.infoURL = "";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
@@ -42,7 +42,7 @@ class GenerateImage extends Operation {
                 "value": 8,
             },
             {
-                "name": "Pixels per Row",
+                "name": "Pixels per row",
                 "type": "number",
                 "value": 64,
             }
@@ -55,15 +55,14 @@ class GenerateImage extends Operation {
      * @returns {ArrayBuffer}
      */
     async run(input, args) {
-        const mode = args[0];
-        const scale = args[1];
-        const width = args[2];
+        const [mode, scale, width] = args;
+        input = new Uint8Array(input);
 
-        if (scale  <= 0) {
+        if (scale <= 0) {
             throw new OperationError("Pixel Scale Factor needs to be > 0");
         }
 
-        if (width  <= 0) {
+        if (width <= 0) {
             throw new OperationError("Pixels per Row needs to be > 0");
         }
 
@@ -85,7 +84,7 @@ class GenerateImage extends Operation {
         const image = await new jimp(width, height, (err, image) => {});
 
         if (isWorkerEnvironment())
-            self.sendStatusMessage("Generate image from data...");
+            self.sendStatusMessage("Generating image from data...");
 
         if (mode === "Bits") {
             let index = 0;
@@ -150,7 +149,7 @@ class GenerateImage extends Operation {
 
         if (scale !== 1) {
             if (isWorkerEnvironment())
-                self.sendStatusMessage("Scale image...");
+                self.sendStatusMessage("Scaling image...");
 
             image.scaleToFit(width*scale, height*scale, jimp.RESIZE_NEAREST_NEIGHBOR);
         }
