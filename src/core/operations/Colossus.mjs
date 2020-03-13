@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { ColossusComputer } from "../lib/Colossus.mjs";
 import { SWITCHES, VALID_ITA2 } from "../lib/Lorenz.mjs";
