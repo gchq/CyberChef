@@ -14,18 +14,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert to NATO alphabet",
-                args: [""]
+                args: []
             }
         ]
     },
     {
         name: "Convert to NATO alphabet: full alphabet with numbers",
-        input: "abcdefghijklmnopqrstuvwxyz0123456789",
-        expectedOutput: "alfa bravo charlie delta echo foxtrot golf hotel india juliett kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu zero one two three four five six seven eight nine ",
+        input: "abcdefghijklmnopqrstuvwxyz0123456789,/.",
+        expectedOutput: "Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu Zero One Two Three Four Five Six Seven Eight Nine Comma Fraction bar Full stop ",
         recipeConfig: [
             {
                 op: "Convert to NATO alphabet",
-                args: [""]
+                args: []
             }
         ]
     }

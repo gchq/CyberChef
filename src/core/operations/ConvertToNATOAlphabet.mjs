@@ -18,8 +18,8 @@ class ConvertToNATOAlphabet extends Operation {
 
         this.name = "Convert to NATO alphabet";
         this.module = "Default";
-        this.description = "Convert a text to NATO alphabet.";
-        this.infoURL = "https://en.wikipedia.org/wiki/NATO_phonetic_alphabet";
+        this.description = "Converts characters to their representation in the NATO phonetic alphabet.";
+        this.infoURL = "https://wikipedia.org/wiki/NATO_phonetic_alphabet";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -31,130 +31,52 @@ class ConvertToNATOAlphabet extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        let result = "";
-
-        const text = input.toUpperCase();
-
-        for (let i = 0; i < text.length; i++) {
-            switch (text.charAt(i)) {
-                case "A":
-                    result +=  "alfa ";
-                    break;
-                case "B":
-                    result +=  "bravo ";
-                    break;
-                case "C":
-                    result +=  "charlie ";
-                    break;
-                case "D":
-                    result +=  "delta ";
-                    break;
-                case "E":
-                    result +=  "echo ";
-                    break;
-                case "F":
-                    result +=  "foxtrot ";
-                    break;
-                case "G":
-                    result +=  "golf ";
-                    break;
-                case "H":
-                    result +=  "hotel ";
-                    break;
-                case "I":
-                    result +=  "india ";
-                    break;
-                case "J":
-                    result +=  "juliett ";
-                    break;
-                case "K":
-                    result +=  "kilo ";
-                    break;
-                case "L":
-                    result +=  "lima ";
-                    break;
-                case "M":
-                    result +=  "mike ";
-                    break;
-                case "N":
-                    result +=  "november ";
-                    break;
-                case "O":
-                    result +=  "oscar ";
-                    break;
-                case "P":
-                    result +=  "papa ";
-                    break;
-                case "Q":
-                    result +=  "quebec ";
-                    break;
-                case "R":
-                    result +=  "romeo ";
-                    break;
-                case "S":
-                    result +=  "sierra ";
-                    break;
-                case "T":
-                    result +=  "tango ";
-                    break;
-                case "U":
-                    result +=  "uniform ";
-                    break;
-                case "V":
-                    result +=  "victor ";
-                    break;
-                case "W":
-                    result +=  "whiskey ";
-                    break;
-                case "X":
-                    result +=  "xray ";
-                    break;
-                case "Y":
-                    result +=  "yankee ";
-                    break;
-                case "Z":
-                    result +=  "zulu ";
-                    break;
-                case " ":
-                    result +=  " ";
-                    break;
-                case "0":
-                    result += "zero ";
-                    break;
-                case "1":
-                    result += "one ";
-                    break;
-                case "2":
-                    result += "two ";
-                    break;
-                case "3":
-                    result += "three ";
-                    break;
-                case "4":
-                    result += "four ";
-                    break;
-                case "5":
-                    result += "five ";
-                    break;
-                case "6":
-                    result += "six ";
-                    break;
-                case "7":
-                    result += "seven ";
-                    break;
-                case "8":
-                    result += "eight ";
-                    break;
-                case "9":
-                    result += "nine ";
-                    break;
-                default:
-                    result +=  text.charAt(i) + " ";
-            }
-        }
-
-        return result;
+        return input.replace(/[a-z0-9,/.]/ig, letter => {
+            return lookup[letter.toUpperCase()];
+        });
     }
 }
+
+const lookup = {
+    "A": "Alfa ",
+    "B": "Bravo ",
+    "C": "Charlie ",
+    "D": "Delta ",
+    "E": "Echo ",
+    "F": "Foxtrot ",
+    "G": "Golf ",
+    "H": "Hotel ",
+    "I": "India ",
+    "J": "Juliett ",
+    "K": "Kilo ",
+    "L": "Lima ",
+    "M": "Mike ",
+    "N": "November ",
+    "O": "Oscar ",
+    "P": "Papa ",
+    "Q": "Quebec ",
+    "R": "Romeo ",
+    "S": "Sierra ",
+    "T": "Tango ",
+    "U": "Uniform ",
+    "V": "Victor ",
+    "W": "Whiskey ",
+    "X": "X-ray ",
+    "Y": "Yankee ",
+    "Z": "Zulu ",
+    "0": "Zero ",
+    "1": "One ",
+    "2": "Two ",
+    "3": "Three ",
+    "4": "Four ",
+    "5": "Five ",
+    "6": "Six ",
+    "7": "Seven ",
+    "8": "Eight ",
+    "9": "Nine ",
+    ",": "Comma ",
+    "/": "Fraction bar ",
+    ".": "Full stop ",
+};
 
 export default ConvertToNATOAlphabet;
