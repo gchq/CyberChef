@@ -3096,7 +3096,8 @@ export function extractTARGA(bytes, offset) {
     /**
      * Move's backwards in the stream until it meet bytes that are the same as the amount of bytes moved.
      *
-     * @param maxSize
+     * @param {number} sizeOfSize
+     * @param {number} maxSize
      */
     function moveBackwardsUntilSize(maxSize, sizeOfSize) {
         for (let i = 0; i < maxSize; i++) {
