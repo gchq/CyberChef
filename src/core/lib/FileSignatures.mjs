@@ -780,7 +780,7 @@ export const FILE_SIGNATURES = {
                     1: 0xfb
                 }
             ],
-            extractor: null
+            extractor: extractMP3
         },
         {
             name: "MPEG-4 Part 14 audio",
@@ -3064,6 +3064,30 @@ export function extractWAV(bytes, offset) {
     stream.moveTo(stream.readInt(4, "le") + 8);
 
     return stream.carve();
+}
+
+
+/**
+ * MP3 extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractMP3(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    if (stream.readInt(1) === 0xff) {
+        console.log("gggg");
+    } else if (stream.getBytes(3) === [0x49, 0x44, 0x33]) {
+        stream.moveTo(6);
+        const tagSize = (stream.readInt(1)<<23) | (stream.readInt(1)<<15) | (stream.readInt(1)<<7) | stream.readInt(1);
+        stream.moveForwardsBy(tagSize);
+
+        if (stream.getBytes(4) !== [0xff, 0xfb, 0x30, 0xc4])
+            console.log("always bad");
+
+    }
 }
 
 
