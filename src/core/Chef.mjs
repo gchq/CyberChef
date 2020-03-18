@@ -146,7 +146,12 @@ class Chef {
             const func = direction === "forward" ? highlights[i].f : highlights[i].b;
 
             if (typeof func == "function") {
-                pos = func(pos, highlights[i].args);
+                try {
+                    pos = func(pos, highlights[i].args);
+                } catch (err) {
+                    // Throw away highlighting errors
+                    pos = [];
+                }
             }
         }
 
