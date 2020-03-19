@@ -3077,17 +3077,39 @@ export function extractWAV(bytes, offset) {
 export function extractMP3(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
-    if (stream.readInt(1) === 0xff) {
-        console.log("gggg");
-    } else if (stream.getBytes(3) === [0x49, 0x44, 0x33]) {
+    const bitRateIndexes = ["free", 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 320000, "bad"];
+
+    const samplingRateFrequencyIndex = [44100, 48000, 32000, "reserved"];
+
+    if ((stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString())) {
         stream.moveTo(6);
-        const tagSize = (stream.readInt(1)<<23) | (stream.readInt(1)<<15) | (stream.readInt(1)<<7) | stream.readInt(1);
+        const tagSize = (stream.readInt(1) << 21) | (stream.readInt(1) << 14) | (stream.readInt(1) << 7) | stream.readInt(1);
         stream.moveForwardsBy(tagSize);
-
-        if (stream.getBytes(4) !== [0xff, 0xfb, 0x30, 0xc4])
-            console.log("always bad");
-
+    } else {
+        stream.moveTo(0);
     }
+    while (stream.hasMore()) {
+        if (stream.getBytes(2).toString() !== [0xff, 0xfb].toString()) {
+            stream.moveBackwardsBy(2);
+            break;
+        }
+        const flags = stream.readInt(1);
+        const bitRate = bitRateIndexes[flags >> 4];
+        const sampleRate = samplingRateFrequencyIndex[(flags & 0x0f) >> 2];
+        const padding = (flags & 0x02) >> 1;
+        if (bitRate === "free" || bitRate === "bad" || sampleRate === "reserved") {
+            stream.moveBackwardsBy(1);
+            break;
+        }
+        const frameSize = Math.floor(((144 * bitRate) / sampleRate) + padding);
+        if ((stream.position + frameSize) > stream.length) {
+            stream.moveTo(stream.length);
+            break;
+        } else {
+            stream.moveForwardsBy(frameSize - 3);
+        }
+    }
+    return stream.carve();
 }
 
 
