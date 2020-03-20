@@ -89,7 +89,7 @@ class Fork extends Operation {
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
             // Baseline ing values for each tranche so that registers are reset
-            recipe.opList.forEach((op, i) => {
+            recipe.state.opList.forEach((op, i) => {
                 op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
             });
 

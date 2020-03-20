@@ -402,7 +402,7 @@ class Magic {
         try {
             await recipe.execute(dish);
             // Return an empty buffer if the recipe did not run to completion
-            if (recipe.lastRunOp === recipe.opList[recipe.opList.length - 1]) {
+            if (recipe.lastRunOp === recipe.state.opList[recipe.state.opList.length - 1]) {
                 return await dish.get(Dish.ARRAY_BUFFER);
             } else {
                 return new ArrayBuffer();

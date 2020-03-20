@@ -30,9 +30,6 @@ class Recipe  {
     }
 
 
-
-
-
     /**
      * Returns the value of the Recipe as it should be displayed in a recipe config.
      *
@@ -45,9 +42,6 @@ class Recipe  {
         }));
     }
 
-    get opList() {
-        return this.state.opList;
-    }
 
     /**
      * Adds a new Operation to this Recipe.
@@ -68,16 +62,6 @@ class Recipe  {
         operations.forEach(o => {
             this.state.addOperation(o);
         });
-    }
-
-
-    /**
-     * Returns true if there is a Flow Control Operation in this Recipe.
-     *
-     * @returns {boolean}
-     */
-    containsFlowControl() {
-        return this.state.containsFlowControl()
     }
 
 
@@ -121,10 +105,7 @@ class Recipe  {
                 }
 
                 if (op.flowControl) {
-
                     this.state = await op.run(this.state);
-
-
                     this.state.progress++;
                 } else {
                     output = await op.run(input, op.ingValues);
@@ -226,11 +207,16 @@ class Recipe  {
     }
 
     /**
-     * 
-     * @param recipeConfig 
+     * Build a recipe using a recipeConfig
+     *
+     * Hydrate the recipeConfig before using the hydrated operations
+     * in the Recipe constructor. This decouples the hydration of
+     * the operations from the Recipe logic.
+     *
+     * @param {recipeConfig} recipeConfig
      */
     static async buildRecipe(recipeConfig) {
-        let operations = [];
+        const operations = [];
         recipeConfig.forEach(c => {
             operations.push({
                 name: c.op,
@@ -248,7 +234,6 @@ class Recipe  {
             modules = modules.default;
         }
 
-
         const hydratedOperations = operations.map(o => {
             if (o instanceof Operation) {
                 return o;
@@ -264,12 +249,19 @@ class Recipe  {
         return new Recipe(hydratedOperations);
     }
 
-
 }
 
+/**
+ * Encapsulate the state of a Recipe
+ *
+ * Encapsulating the state makes it cleaner when passing the state
+ * between operations.
+ */
 class RecipeState {
 
-
+    /**
+     * initialise a RecipeState
+     */
     constructor() {
         this.dish = null;
         this.opList = [];
@@ -279,34 +271,51 @@ class RecipeState {
         this.numJumps = 0;
     }
 
+    /**
+     * get the next operation due to be run.
+     * @return {Operation}
+     */
     get currentOp() {
         return this.opList[this.progress];
     }
 
+    /**
+     * add an operation to the end of RecipeState's opList
+     * @param {Operation} operation
+     */
     addOperation(operation) {
         this.opList.push(operation);
     }
 
+    /**
+     * @returns {boolean} whether there's a flowControl operation in
+     * the RecipeState's opList
+     */
     containsFlowControl() {
         return this.opList.reduce((p, c) => {
             return p || c.flowControl;
         }, false);
     }
 
+    /**
+     * Update the RecipeState with state from a fork. Used at the end
+     * of the Fork operation.
+     * @param {Object} forkState
+     */
     updateForkState(forkState) {
-        if (forkState.progress || forkState.progress == 0) {
-            this.progress = forkState.progress
+        if (forkState.progress || forkState.progress === 0) {
+            this.progress = forkState.progress;
         }
 
-        if (forkState.numRegisters || forkState.numRegisters == 0) {
+        if (forkState.numRegisters || forkState.numRegisters === 0) {
             this.numRegisters = forkState.numRegisters;
         }
 
-        if (forkState.numJumps || forkState.numJumps == 0) {
+        if (forkState.numJumps || forkState.numJumps === 0) {
             this.numJumps = forkState.numJumps;
         }
 
-        if (forkState.forkOffset || forkState.forkOffset == 0) {
+        if (forkState.forkOffset || forkState.forkOffset === 0) {
             this.forkOffset = forkState.forkOffset;
         }
     }

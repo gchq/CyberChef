@@ -40,9 +40,9 @@ class Chef {
     async bake(input, recipeConfig, options) {
         log.debug("Chef baking");
 
-        const startTime     = new Date().now();
+        const startTime     = Date.now();
         const recipe        = await Recipe.buildRecipe(recipeConfig);
-        const containsFc    = recipe.containsFlowControl();
+        const containsFc    = recipe.state.containsFlowControl();
         const notUTF8       = options && "treatAsUtf8" in options && !options.treatAsUtf8;
 
         let error = false;
@@ -112,7 +112,7 @@ class Chef {
     async silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
-        const startTime = new Date().now();
+        const startTime = Date.now();
         const recipe    = await Recipe.buildRecipe(recipeConfig);
         const dish      = new Dish();
 
