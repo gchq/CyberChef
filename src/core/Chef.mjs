@@ -38,8 +38,14 @@ class Chef {
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
     */
     async bake(input, recipeConfig, options) {
+<<<<<<< HEAD
         const startTime = new Date().getTime(),
             recipe      = await Recipe.buildRecipe(recipeConfig),
+=======
+        log.debug("Chef baking");
+        const startTime = Date.now(),
+            recipe      = new Recipe(recipeConfig),
+>>>>>>> 26b19350f2dffacfb1bce8ded689a09aa42355db
             containsFc  = recipe.containsFlowControl(),
             notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
         let error = false,
@@ -83,7 +89,7 @@ class Chef {
             result: await this.dish.get(returnType, notUTF8),
             type: Dish.enumLookup(this.dish.type),
             progress: progress,
-            duration: new Date().getTime() - startTime,
+            duration: Date.now() - startTime,
             error: error
         };
     }
@@ -109,16 +115,16 @@ class Chef {
     async silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
-        const startTime = new Date().getTime(),
-            recipe = await Recipe.buildRecipe(recipeConfig),
-            dish = new Dish();
+        const startTime = new Date().now();
+        const recipe    = await Recipe.buildRecipe(recipeConfig);
+        const dish      = new Dish();
 
         try {
             recipe.execute(dish);
         } catch (err) {
             // Suppress all errors
         }
-        return new Date().getTime() - startTime;
+        return Date.now() - startTime;
     }
 
 
@@ -145,7 +151,12 @@ class Chef {
             const func = direction === "forward" ? highlights[i].f : highlights[i].b;
 
             if (typeof func == "function") {
-                pos = func(pos, highlights[i].args);
+                try {
+                    pos = func(pos, highlights[i].args);
+                } catch (err) {
+                    // Throw away highlighting errors
+                    pos = [];
+                }
             }
         }
 

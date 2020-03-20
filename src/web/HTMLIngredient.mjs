@@ -293,6 +293,16 @@ class HTMLIngredient {
 
                 this.manager.addDynamicListener(".arg-selector", "change", this.argSelectorChange, this);
                 break;
+            case "label":
+                html += `<div class="form-group">
+                    <label>${this.name}</label>
+                    <input type="hidden"
+                        class="form-control arg"
+                        id="${this.id}"
+                        arg-name="${this.name}"
+                        value="">
+                </div>`;
+                break;
             default:
                 break;
         }

@@ -1725,6 +1725,25 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
+            name: "Jar Archive",
+            extension: "jar",
+            mime: "application/java-archive",
+            description: "",
+            signature: {
+                0: 0x50,
+                1: 0x4B,
+                2: 0x03,
+                3: 0x04,
+                4: 0x14,
+                5: 0x00,
+                6: 0x08,
+                7: 0x00,
+                8: 0x08,
+                9: 0x00
+            },
+            extractor: extractZIP
+        },
+        {
             name: "lzop compressed",
             extension: "lzop,lzo",
             mime: "application/x-lzop",
@@ -1739,10 +1758,10 @@ export const FILE_SIGNATURES = {
                 6: 0x0a,
                 7: 0x1a
             },
-            extractor: null
+            extractor: extractLZOP
         },
         {
-            name: "Linux deb",
+            name: "Linux deb package",
             extension: "deb",
             mime: "application/vnd.debian.binary-package",
             description: "",
@@ -1755,7 +1774,7 @@ export const FILE_SIGNATURES = {
                 5: 0x68,
                 6: 0x3e
             },
-            extractor: null
+            extractor: extractDEB
         },
         {
             name: "Apple Disk Image",
@@ -2070,7 +2089,7 @@ export const FILE_SIGNATURES = {
                 6: [0x4d, 0x36],
                 7: [0x50, 0x34]
             },
-            extractor: null
+            extractor: extractDMP
         },
         {
             name: "Windows Prefetch",
@@ -2087,7 +2106,7 @@ export const FILE_SIGNATURES = {
                 6: 0x43,
                 7: 0x41
             },
-            extractor: null
+            extractor: extractPF
         },
         {
             name: "Windows Prefetch (Win 10)",
@@ -2101,7 +2120,7 @@ export const FILE_SIGNATURES = {
                 3: 0x04,
                 7: 0x0
             },
-            extractor: null
+            extractor: extractPFWin10
         },
         {
             name: "PList (XML)",
@@ -2374,7 +2393,7 @@ export const FILE_SIGNATURES = {
                 18: 0x00,
                 19: 0x46
             },
-            extractor: null
+            extractor: extractLNK
         },
         {
             name: "Bash",
@@ -3042,7 +3061,7 @@ export function extractWAV(bytes, offset) {
     stream.moveTo(4);
 
     // Move to file size.
-    stream.moveTo(stream.readInt(4, "le"));
+    stream.moveTo(stream.readInt(4, "le") + 8);
 
     return stream.carve();
 }
@@ -3449,6 +3468,37 @@ export function extractXZ(bytes, offset) {
 
 
 /**
+ * DEB extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ */
+export function extractDEB(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move past !<arch>
+    stream.moveForwardsBy(8);
+    while (stream.hasMore()) {
+
+        // Move to size field.
+        stream.moveForwardsBy(48);
+        let fsize= "";
+
+        // Convert size to a usable number.
+        for (const elem of stream.getBytes(10)) {
+            fsize += String.fromCharCode(elem);
+        }
+        fsize = parseInt(fsize.trim(), 10);
+
+        // Move past `\n
+        stream.moveForwardsBy(2);
+        stream.moveForwardsBy(fsize);
+    }
+    return stream.carve();
+}
+
+
+/**
  * ELF extractor.
  *
  * @param {Uint8Array} bytes
@@ -3748,4 +3798,159 @@ export function extractEVT(bytes, offset) {
     // Move past EOF.
     stream.moveForwardsBy(eofSize-4);
     return stream.carve();
+}
+
+
+/**
+ * DMP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractDMP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to fileSize field.
+    stream.moveTo(0x70);
+
+    // Multiply number of pages by page size. Plus 1 since the header is a page.
+    stream.moveTo((stream.readInt(4, "le") + 1) * 0x1000);
+
+    return stream.carve();
+}
+
+
+/**
+ * PF extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractPF(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size.
+    stream.moveTo(12);
+    stream.moveTo(stream.readInt(4, "be"));
+
+    return stream.carve();
+}
+
+
+/**
+ * PF (Win 10) extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractPFWin10(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Read in file size.
+    stream.moveTo(stream.readInt(4, "be"));
+
+    return stream.carve();
+}
+
+
+/**
+ * LNK extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractLNK(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size field.
+    stream.moveTo(0x34);
+    stream.moveTo(stream.readInt(4, "le"));
+
+    return stream.carve();
+}
+
+
+/**
+ * LZOP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractLZOP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Flag bits.
+    const F_ADLER32_D = 0x00000001;
+    const F_ADLER32_C = 0x00000002;
+    const F_CRC32_D = 0x00000100;
+    const F_CRC32_C = 0x00000200;
+    const F_H_FILTER = 0x00000800;
+    const F_H_EXTRA_FIELD = 0x00000040;
+
+    let numCheckSumC = 0, numCheckSumD = 0;
+
+    // Move over magic bytes.
+    stream.moveForwardsBy(9);
+
+    const version = stream.readInt(2, "be");
+
+    // Move to flag register offset.
+    stream.moveForwardsBy(6);
+    const flags = stream.readInt(4, "be");
+
+    if (version & F_H_FILTER)
+        stream.moveForwardsBy(4);
+
+    if (flags & F_ADLER32_C)
+        numCheckSumC++;
+
+    if (flags & F_CRC32_C)
+        numCheckSumC++;
+
+    if (flags & F_ADLER32_D)
+        numCheckSumD++;
+
+    if (flags & F_CRC32_D)
+        numCheckSumD++;
+
+    // Move over the mode, mtime_low
+    stream.moveForwardsBy(8);
+
+    if (version >= 0x0940)
+        stream.moveForwardsBy(4);
+
+    const fnameSize = stream.readInt(1, "be");
+
+    // Move forwards by size of file name and the following 4 byte checksum.
+    stream.moveForwardsBy(fnameSize);
+
+    if (flags & F_H_EXTRA_FIELD) {
+        const extraSize = stream.readInt(4, "be");
+        stream.moveForwardsBy(extraSize);
+    }
+
+    // Move past checksum.
+    stream.moveForwardsBy(4);
+
+    while (stream.hasMore()) {
+        const uncompSize = stream.readInt(4, "be");
+
+        // If data has no length, break.
+        if (uncompSize === 0)
+            break;
+
+        const compSize = stream.readInt(4, "be");
+
+        const numCheckSumSkip = (uncompSize === compSize) ? numCheckSumD : numCheckSumD + numCheckSumC;
+
+        // skip forwards by compressed data size and the size of the checksum(s).
+        stream.moveForwardsBy(compSize + (numCheckSumSkip * 4));
+    }
+    return stream.carve();
+
 }

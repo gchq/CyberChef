@@ -588,7 +588,7 @@ Password: 034148`;
         const result = await chef.generatePGPKeyPair("Back To the Drawing Board", {
             keyType: "ECC-256",
         });
-        assert.strictEqual(result.toString().length, 2005);
+        assert.strictEqual(result.toString().length, 2007);
     }),
 
     it("Generate UUID", () => {

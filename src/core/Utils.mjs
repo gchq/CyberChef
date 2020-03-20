@@ -1335,7 +1335,7 @@ export function sendStatusMessage(msg) {
         self.sendStatusMessage(msg);
     else if (isWebEnvironment())
         app.alert(msg, 10000);
-    else if (isNodeEnvironment())
+    else if (isNodeEnvironment() && !global.TESTING)
         // eslint-disable-next-line no-console
         console.debug(msg);
 }
