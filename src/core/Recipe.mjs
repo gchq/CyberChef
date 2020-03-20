@@ -298,15 +298,15 @@ class RecipeState {
             this.progress = forkState.progress
         }
 
-        if (forkState.numRegisters) {
+        if (forkState.numRegisters || forkState.numRegisters == 0) {
             this.numRegisters = forkState.numRegisters;
         }
 
-        if (forkState.numJumps) {
+        if (forkState.numJumps || forkState.numJumps == 0) {
             this.numJumps = forkState.numJumps;
         }
 
-        if (forkState.forkOffset) {
+        if (forkState.forkOffset || forkState.forkOffset == 0) {
             this.forkOffset = forkState.forkOffset;
         }
     }
