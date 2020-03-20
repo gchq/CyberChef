@@ -24,60 +24,13 @@ class Recipe  {
      *
      * @param {Object} recipeConfig
      */
-    constructor(recipeConfig) {
-        this.opList = [];
-
-        if (recipeConfig) {
-            this._parseConfig(recipeConfig);
-        }
+    constructor(operations=[]) {
+        this.state = new RecipeState();
+        this.state.opList = operations;
     }
 
 
-    /**
-     * Reads and parses the given config.
-     *
-     * @private
-     * @param {Object} recipeConfig
-     */
-    _parseConfig(recipeConfig) {
-        recipeConfig.forEach(c => {
-            this.opList.push({
-                name: c.op,
-                module: OperationConfig[c.op].module,
-                ingValues: c.args,
-                breakpoint: c.breakpoint,
-                disabled: c.disabled,
-            });
-        });
-    }
 
-
-    /**
-     * Populate elements of opList with operation instances.
-     * Dynamic import here removes top-level cyclic dependency issue.
-     *
-     * @private
-     */
-    async _hydrateOpList() {
-        if (!modules) {
-            // Using Webpack Magic Comments to force the dynamic import to be included in the main chunk
-            // https://webpack.js.org/api/module-methods/
-            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules.mjs");
-            modules = modules.default;
-        }
-
-        this.opList = this.opList.map(o => {
-            if (o instanceof Operation) {
-                return o;
-            } else {
-                const op = new modules[o.module][o.name]();
-                op.ingValues = o.ingValues;
-                op.breakpoint = o.breakpoint;
-                op.disabled = o.disabled;
-                return op;
-            }
-        });
-    }
 
 
     /**
@@ -86,12 +39,15 @@ class Recipe  {
      * @returns {Object[]}
      */
     get config() {
-        return this.opList.map(op => ({
+        return this.state.opList.map(op => ({
             op: op.name,
             args: op.ingValues,
         }));
     }
 
+    get opList() {
+        return this.state.opList;
+    }
 
     /**
      * Adds a new Operation to this Recipe.
@@ -99,7 +55,7 @@ class Recipe  {
      * @param {Operation} operation
      */
     addOperation(operation) {
-        this.opList.push(operation);
+        this.state.addOperation(operation);
     }
 
 
@@ -110,46 +66,8 @@ class Recipe  {
      */
     addOperations(operations) {
         operations.forEach(o => {
-            if (o instanceof Operation) {
-                this.opList.push(o);
-            } else {
-                this.opList.push({
-                    name: o.name,
-                    module: o.module,
-                    ingValues: o.args,
-                    breakpoint: o.breakpoint,
-                    disabled: o.disabled,
-                });
-            }
+            this.state.addOperation(o);
         });
-    }
-
-
-    /**
-     * Set a breakpoint on a specified Operation.
-     *
-     * @param {number} position - The index of the Operation
-     * @param {boolean} value
-     */
-    setBreakpoint(position, value) {
-        try {
-            this.opList[position].breakpoint = value;
-        } catch (err) {
-            // Ignore index error
-        }
-    }
-
-
-    /**
-     * Remove breakpoints on all Operations in the Recipe up to the specified position. Used by Flow
-     * Control Fork operation.
-     *
-     * @param {number} pos
-     */
-    removeBreaksUpTo(pos) {
-        for (let i = 0; i < pos; i++) {
-            this.opList[i].breakpoint = false;
-        }
     }
 
 
@@ -159,9 +77,7 @@ class Recipe  {
      * @returns {boolean}
      */
     containsFlowControl() {
-        return this.opList.reduce((acc, curr) => {
-            return acc || curr.flowControl;
-        }, false);
+        return this.state.containsFlowControl()
     }
 
 
@@ -175,18 +91,16 @@ class Recipe  {
      *     - The final progress through the recipe
      */
     async execute(dish, forkState={}) {
-        let op, input, output,
-            numJumps = 0,
-            numRegisters = forkState.numRegisters || 0;
-
+        let op, input, output;
+        this.state.dish = dish;
+        this.state.updateForkState(forkState);
         this.lastRunOp = null;
 
-        await this._hydrateOpList();
+        log.debug(`[*] Executing recipe of ${this.state.opList.length} operations`);
 
-        log.debug(`[*] Executing recipe of ${this.opList.length} operations`);
-
-        for (let i = 0; i < this.opList.length; i++) {
-            op = this.opList[i];
+        while (this.state.progress < this.state.opList.length) {
+            const i = this.state.progress;
+            op = this.state.currentOp;
             log.debug(`[${i}] ${op.name} ${JSON.stringify(op.ingValues)}`);
             if (op.disabled) {
                 log.debug("Operation is disabled, skipping");
@@ -198,32 +112,24 @@ class Recipe  {
             }
 
             try {
-                input = await dish.get(op.inputType);
+                input = await this.state.dish.get(op.inputType);
                 log.debug(`Executing operation '${op.name}'`);
 
                 if (isWorkerEnvironment()) {
-                    self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
-                    self.sendProgressMessage(i + 1, this.opList.length);
+                    self.sendStatusMessage(`Baking... (${i+1}/${this.state.opList.length})`);
+                    self.sendProgressMessage(i + 1, this.state.opList.length);
                 }
 
                 if (op.flowControl) {
-                    // Package up the current state
-                    let state = {
-                        "progress":     i,
-                        "dish":         dish,
-                        "opList":       this.opList,
-                        "numJumps":     numJumps,
-                        "numRegisters": numRegisters,
-                        "forkOffset":   forkState.forkOffset || 0
-                    };
 
-                    state = await op.run(state);
-                    i = state.progress;
-                    numJumps = state.numJumps;
-                    numRegisters = state.numRegisters;
+                    this.state = await op.run(this.state);
+
+
+                    this.state.progress++;
                 } else {
                     output = await op.run(input, op.ingValues);
-                    dish.set(output, op.outputType);
+                    this.state.dish.set(output, op.outputType);
+                    this.state.progress++;
                 }
                 this.lastRunOp = op;
             } catch (err) {
@@ -232,11 +138,11 @@ class Recipe  {
                     (err.type && err.type === "OperationError")) {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
-                    dish.set(err.message, "string");
+                    this.state.dish.set(err.message, "string");
                     return i;
                 } else if (err instanceof DishError ||
                     (err.type && err.type === "DishError")) {
-                    dish.set(err.message, "string");
+                    this.state.dish.set(err.message, "string");
                     return i;
                 } else {
                     const e = typeof err == "string" ? { message: err } : err;
@@ -255,7 +161,7 @@ class Recipe  {
         }
 
         log.debug("Recipe complete");
-        return this.opList.length;
+        return this.state.opList.length;
     }
 
 
@@ -284,18 +190,6 @@ class Recipe  {
         return JSON.stringify(this.config);
     }
 
-
-    /**
-     * Creates a Recipe from a given configuration string.
-     *
-     * @param {string} recipeStr
-     */
-    fromString(recipeStr) {
-        const recipeConfig = JSON.parse(recipeStr);
-        this._parseConfig(recipeConfig);
-    }
-
-
     /**
      * Generates a list of all the highlight functions assigned to operations in the recipe, if the
      * entire recipe supports highlighting.
@@ -305,13 +199,15 @@ class Recipe  {
      * @returns {function} highlights[].b
      * @returns {Object[]} highlights[].args
      */
-    async generateHighlightList() {
-        await this._hydrateOpList();
+    generateHighlightList() {
         const highlights = [];
-
-        for (let i = 0; i < this.opList.length; i++) {
-            const op = this.opList[i];
-            if (op.disabled) continue;
+        while (this.state.progress < this.state.opList.length) {
+        // for (let i = 0; i < this.state.opList.length; i++) {
+            const op = this.state.currentOp;
+            if (op.disabled) {
+                this.state.progress++;
+                continue;
+            }
 
             // If any breakpoints are set, do not attempt to highlight
             if (op.breakpoint) return false;
@@ -329,18 +225,92 @@ class Recipe  {
         return highlights;
     }
 
-
     /**
-     * Determines whether the previous operation has a different presentation type to its normal output.
-     *
-     * @param {number} progress
-     * @returns {boolean}
+     * 
+     * @param recipeConfig 
      */
-    lastOpPresented(progress) {
-        if (progress < 1) return false;
-        return this.opList[progress-1].presentType !== this.opList[progress-1].outputType;
+    static async buildRecipe(recipeConfig) {
+        let operations = [];
+        recipeConfig.forEach(c => {
+            operations.push({
+                name: c.op,
+                module: OperationConfig[c.op].module,
+                ingValues: c.args,
+                breakpoint: c.breakpoint,
+                disabled: c.disabled,
+            });
+        });
+
+        if (!modules) {
+            // Using Webpack Magic Comments to force the dynamic import to be included in the main chunk
+            // https://webpack.js.org/api/module-methods/
+            modules = await import(/* webpackMode: "eager" */ "./config/modules/OpModules.mjs");
+            modules = modules.default;
+        }
+
+
+        const hydratedOperations = operations.map(o => {
+            if (o instanceof Operation) {
+                return o;
+            } else {
+                const op = new modules[o.module][o.name]();
+                op.ingValues = o.ingValues;
+                op.breakpoint = o.breakpoint;
+                op.disabled = o.disabled;
+                return op;
+            }
+        });
+
+        return new Recipe(hydratedOperations);
     }
+
 
 }
 
+class RecipeState {
+
+
+    constructor() {
+        this.dish = null;
+        this.opList = [];
+        this.progress = 0;
+        this.forkOffset = 0;
+        this.numRegisters = 0;
+        this.numJumps = 0;
+    }
+
+    get currentOp() {
+        return this.opList[this.progress];
+    }
+
+    addOperation(operation) {
+        this.opList.push(operation);
+    }
+
+    containsFlowControl() {
+        return this.opList.reduce((p, c) => {
+            return p || c.flowControl;
+        }, false);
+    }
+
+    updateForkState(forkState) {
+        if (forkState.progress || forkState.progress == 0) {
+            this.progress = forkState.progress
+        }
+
+        if (forkState.numRegisters) {
+            this.numRegisters = forkState.numRegisters;
+        }
+
+        if (forkState.numJumps) {
+            this.numJumps = forkState.numJumps;
+        }
+
+        if (forkState.forkOffset) {
+            this.forkOffset = forkState.forkOffset;
+        }
+    }
+}
+
 export default Recipe;
+export { RecipeState };

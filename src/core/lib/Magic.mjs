@@ -398,7 +398,7 @@ class Magic {
 
         if (isWorkerEnvironment()) self.loadRequiredModules(recipeConfig);
 
-        const recipe = new Recipe(recipeConfig);
+        const recipe = await Recipe.buildRecipe(recipeConfig);
         try {
             await recipe.execute(dish);
             // Return an empty buffer if the recipe did not run to completion

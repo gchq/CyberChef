@@ -38,9 +38,8 @@ class Chef {
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
     */
     async bake(input, recipeConfig, options) {
-        log.debug("Chef baking");
         const startTime = new Date().getTime(),
-            recipe      = new Recipe(recipeConfig),
+            recipe      = await Recipe.buildRecipe(recipeConfig),
             containsFc  = recipe.containsFlowControl(),
             notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
         let error = false,
@@ -107,11 +106,11 @@ class Chef {
      * @param {Object[]} recipeConfig - The recipe configuration object
      * @returns {number} The time it took to run the silent bake in milliseconds.
     */
-    silentBake(recipeConfig) {
+    async silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
         const startTime = new Date().getTime(),
-            recipe = new Recipe(recipeConfig),
+            recipe = await Recipe.buildRecipe(recipeConfig),
             dish = new Dish();
 
         try {
@@ -134,8 +133,8 @@ class Chef {
      * @returns {Object}
      */
     async calculateHighlights(recipeConfig, direction, pos) {
-        const recipe = new Recipe(recipeConfig);
-        const highlights = await recipe.generateHighlightList();
+        const recipe = await Recipe.buildRecipe(recipeConfig);
+        const highlights = recipe.generateHighlightList();
 
         if (!highlights) return false;
 
