@@ -38,18 +38,15 @@ class Chef {
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
     */
     async bake(input, recipeConfig, options) {
-<<<<<<< HEAD
-        const startTime = new Date().getTime(),
-            recipe      = await Recipe.buildRecipe(recipeConfig),
-=======
         log.debug("Chef baking");
-        const startTime = Date.now(),
-            recipe      = new Recipe(recipeConfig),
->>>>>>> 26b19350f2dffacfb1bce8ded689a09aa42355db
-            containsFc  = recipe.containsFlowControl(),
-            notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
-        let error = false,
-            progress = 0;
+
+        const startTime     = new Date().now();
+        const recipe        = await Recipe.buildRecipe(recipeConfig);
+        const containsFc    = recipe.containsFlowControl();
+        const notUTF8       = options && "treatAsUtf8" in options && !options.treatAsUtf8;
+
+        let error = false;
+        let progress = 0;
 
         if (containsFc && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
