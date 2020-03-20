@@ -2,7 +2,7 @@ import OperationConfig from "../config/OperationConfig.json";
 import Utils, { isWorkerEnvironment } from "../Utils.mjs";
 import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
-import {detectFileType} from "./FileType.mjs";
+import {detectFileType, isType} from "./FileType.mjs";
 import chiSquared from "chi-squared";
 
 /**
@@ -19,33 +19,66 @@ class Magic {
      * Magic constructor.
      *
      * @param {ArrayBuffer} buf
-     * @param {Object[]} [opPatterns]
+     * @param {Object} prevOp
      */
-    constructor(buf, opPatterns) {
+    constructor(buf, opPatterns, prevOp) {
         this.inputBuffer = new Uint8Array(buf);
         this.inputStr = Utils.arrayBufferToStr(buf);
-        this.opPatterns = opPatterns || Magic._generateOpPatterns();
+        this.opPatterns = opPatterns || Magic._generateOpCriteria();
+        this.prevOp = prevOp;
     }
 
     /**
-     * Finds operations that claim to be able to decode the input based on regular
-     * expression matches.
+     * Finds operations that claim to be able to decode the input based on
+     * regular expression matches.
      *
-     * @returns {Object[]}
+     * @param {[Object]} opPatterns
+     * @returns {Array}
      */
-    findMatchingOps() {
+    inputRegexMatch(opPatterns) {
         const matches = [];
 
-        for (let i = 0; i < this.opPatterns.length; i++) {
-            const pattern = this.opPatterns[i],
-                regex = new RegExp(pattern.match, pattern.flags);
+        for (let i = 0; i < opPatterns.length; i++) {
+            const pattern = opPatterns[i];
 
-            if (regex.test(this.inputStr)) {
+
+            if (pattern.match.test(this.inputStr)) {
                 matches.push(pattern);
             }
         }
 
         return matches;
+    }
+
+    /**
+     * Finds operations that claim to be able to decode the input based on entropy
+     * matches.
+     *
+     * @param {[Object]} opPatterns
+     * @returns {Array}
+     */
+    entropyInputMatch(opPatterns) {
+        const matches = [];
+
+        const entropyOfInput = this.calcEntropy();
+
+        for (let i = 0; i < opPatterns.length; i++) {
+            const currOp = opPatterns[i];
+            if ((entropyOfInput > currOp.entropy[0]) && (entropyOfInput < currOp.entropy[1]))
+                matches.push(currOp);
+        }
+        return matches;
+    }
+
+    /**
+     * Finds operations that claim to be able to decode the input based on criteria.
+     *
+     * @returns {Object[]}
+     */
+    findMatchingInputOps() {
+        let matches = this.inputRegexMatch(this.opPatterns.regex);
+        matches = matches.concat(this.entropyInputMatch(this.opPatterns.entropy));
+        return [...new Set(matches)];
     }
 
     /**
@@ -265,6 +298,35 @@ class Magic {
     }
 
     /**
+     *
+     */
+    checkRegexes(regexes) {
+        for (const elem of regexes) {
+            const regex = new RegExp(elem.match, elem.flags);
+            if  (regex.test(this.inputStr))
+                return true;
+        }
+        return false;
+    }
+    /**
+     *
+     */
+    checkOutputFromPrevious() {
+        let score = 0;
+        if ("regex" in this.prevOp.output) {
+            if (this.checkRegexes(this.prevOp.output.regex)) score++;
+        }
+        if ("entropy" in this.prevOp.output) {
+            const inputEntropy = this.calcEntropy();
+            if ((inputEntropy > this.prevOp.output.entropy[0]) && (inputEntropy < this.prevOp.output.entropy[1])) score++;
+        }
+        if ("mime" in this.prevOp.output) {
+            if (isType(this.prevOp.output.mime, this.inputBuffer)) score++;
+        }
+        return score > 0;
+    }
+
+    /**
      * Speculatively executes matching operations, recording metadata of each result.
      *
      * @param {number} [depth=0] - How many levels to try to execute
@@ -281,8 +343,15 @@ class Magic {
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
-        const matchingOps = this.findMatchingOps();
 
+        if (this.prevOp) {
+            if ("output" in this.prevOp) {
+                if (!(this.checkOutputFromPrevious())) {
+                    return [];
+                }
+            }
+        }
+        const matchingOps = this.findMatchingInputOps();
         let results = [];
 
         // Record the properties of the current data
@@ -305,8 +374,7 @@ class Magic {
             const opConfig = {
                     op: op.op,
                     args: op.args
-                },
-                output = await this._runRecipe([opConfig]);
+                }, output = await this._runRecipe([opConfig]);
 
             // If the recipe is repeating and returning the same data, do not continue
             if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
@@ -318,7 +386,8 @@ class Magic {
                 return;
             }
 
-            const magic = new Magic(output, this.opPatterns),
+
+            const magic = new Magic(output, this.opPatterns, OperationConfig[op.op]),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
 
@@ -330,7 +399,7 @@ class Magic {
             const bfEncodings = await this.bruteForce();
 
             await Promise.all(bfEncodings.map(async enc => {
-                const magic = new Magic(enc.data, this.opPatterns),
+                const magic = new Magic(enc.data, this.opPatterns, undefined),
                     bfResults = await magic.speculativeExecution(
                         depth-1, extLang, false, [...recipeConfig, enc.conf], false, crib);
 
@@ -447,24 +516,34 @@ class Magic {
      * @private
      * @returns {Object[]}
      */
-    static _generateOpPatterns() {
-        const opPatterns = [];
+    static _generateOpCriteria() {
+        const opCriteria = {
+            regex: [],
+            entropy: []
+        };
 
         for (const op in OperationConfig) {
-            if (!("patterns" in OperationConfig[op])) continue;
-
-            OperationConfig[op].patterns.forEach(pattern => {
-                opPatterns.push({
-                    op: op,
-                    match: pattern.match,
-                    flags: pattern.flags,
-                    args: pattern.args,
-                    useful: pattern.useful || false
-                });
-            });
+            if ("input" in OperationConfig[op]) {
+                if ("regex" in OperationConfig[op].input)
+                    OperationConfig[op].input.regex.forEach(pattern => {
+                        opCriteria.regex.push({
+                            op: op,
+                            match: new RegExp(pattern.match, pattern.flags),
+                            args: pattern.args,
+                            useful: pattern.useful || false
+                        });
+                    });
+                if ("entropy" in OperationConfig[op].input) {
+                    opCriteria.entropy.push({
+                        op: op,
+                        entropy: OperationConfig[op].input.entropy.input,
+                        args:  OperationConfig[op].input.entropy.args
+                    });
+                }
+            }
         }
 
-        return opPatterns;
+        return opCriteria;
     }
 
     /**

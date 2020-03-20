@@ -25,6 +25,17 @@ class ParseUNIXFilePermissions extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*d[rxw-]{9}\\s*$",
+                        flags:  "",
+                        args:   []
+                    }
+                ]
+            }
+        };
     }
 
     /**

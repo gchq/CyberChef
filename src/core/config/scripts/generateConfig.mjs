@@ -42,13 +42,32 @@ for (const opObj in Ops) {
         outputType:  op.presentType,
         flowControl: op.flowControl,
         manualBake:  op.manualBake,
-        args:        op.args
+        args:        op.args,
     };
 
-    if ("patterns" in op) {
-        operationConfig[op.name].patterns = op.patterns;
+    if ("checks" in op) {
+        if ("input" in op.checks) {
+            operationConfig[op.name].input = {};
+            if ("regex" in op.checks.input) {
+                operationConfig[op.name].input.regex = op.checks.input.regex;
+            }
+            if ("entropy" in op.checks.input) {
+                operationConfig[op.name].input.entropy = op.checks.input.entropy;
+            }
+        }
+        if ("output" in op.checks) {
+            operationConfig[op.name].output = {};
+            if ("regex" in op.checks.output) {
+                operationConfig[op.name].output.regex = op.checks.output.regex;
+            }
+            if ("entropy" in op.checks.output) {
+                operationConfig[op.name].output.entropy = op.checks.output.entropy;
+            }
+            if ("mime" in op.checks.output) {
+                operationConfig[op.name].output.mime = op.checks.output.mime;
+            }
+        }
     }
-
     if (!(op.module in modules))
         modules[op.module] = {};
     modules[op.module][op.name] = opObj;

@@ -26,6 +26,17 @@ class FromHexContent extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*.*?\\|([0-9a-f]{2})+\\|.*$",
+                        flags:  "i",
+                        args:   []
+                    }
+                ],
+            }
+        };
     }
 
     /**

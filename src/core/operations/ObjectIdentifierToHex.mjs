@@ -25,6 +25,17 @@ class ObjectIdentifierToHex extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = {
+            input: {
+                regex: [
+                    {
+                        match:  "^\\s*([0-9]{1,3}\\.)+[0-9]{1,3}\\s*$",
+                        flags:  "",
+                        args:   []
+                    }
+                ]
+            }
+        };
     }
 
     /**
