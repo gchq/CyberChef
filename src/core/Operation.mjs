@@ -24,6 +24,7 @@ class Operation {
         this._disabled        = false;
         this._flowControl     = false;
         this._manualBake      = false;
+        this._inputSwappable   = false;
         this._ingList         = [];
 
         // Public fields
@@ -314,6 +315,25 @@ class Operation {
      */
     set manualBake(value) {
         this._manualBake = !!value;
+    }
+
+     /**
+     * Returns true if this Operation has swappable input values.
+     *
+     * @returns {boolean}
+     */
+    get inputSwappable() {
+        return this._inputSwappable;
+    }
+
+
+    /**
+     * Set whether this Operation shoud show swap input icon.
+     *
+     * @param {boolean} value
+     */
+    set inputSwappable(value) {
+        this._inputSwappable = !!value;
     }
 
 }

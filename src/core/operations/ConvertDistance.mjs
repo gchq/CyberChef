@@ -23,6 +23,7 @@ class ConvertDistance extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/Orders_of_magnitude_(length)";
         this.inputType = "BigNumber";
         this.outputType = "BigNumber";
+        this.inputSwappable = true;
         this.args = [
             {
                 "name": "Input units",

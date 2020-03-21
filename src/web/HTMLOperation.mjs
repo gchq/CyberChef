@@ -21,15 +21,16 @@ class HTMLOperation {
      * @param {Manager} manager - The CyberChef event manager.
      */
     constructor(name, config, app, manager) {
-        this.app         = app;
-        this.manager     = manager;
+        this.app            = app;
+        this.manager        = manager;
 
-        this.name        = name;
-        this.description = config.description;
-        this.infoURL     = config.infoURL;
-        this.manualBake  = config.manualBake || false;
-        this.config      = config;
-        this.ingList     = [];
+        this.name           = name;
+        this.description    = config.description;
+        this.infoURL        = config.infoURL;
+        this.manualBake     = config.manualBake || false;
+        this.inputSwappable = config.inputSwappable || false;
+        this.config         = config;
+        this.ingList        = [];
 
         for (let i = 0; i < config.args.length; i++) {
             const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
@@ -77,6 +78,9 @@ class HTMLOperation {
 
         for (let i = 0; i < this.ingList.length; i++) {
             html += this.ingList[i].toHtml();
+            if (this.inputSwappable && i === 0) {
+                html += "<div class='inline'><i class='material-icons swap-icon' title='Swap input'>swap_horiz</i></div>";
+            }
         }
 
         html += `</div>
