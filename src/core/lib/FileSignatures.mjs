@@ -3109,10 +3109,10 @@ export function extractMP3(bytes, offset) {
         // Read flag byte.
         const flags = stream.readInt(1);
 
-        // Extract frame bitrate from flag byte.
+        // Extract frame bit rate from flag byte.
         const bitRate = bitRateIndexes[flags >> 4];
 
-        // Extract frame samplerate from flag byte.
+        // Extract frame sample rate from flag byte.
         const sampleRate = samplingRateFrequencyIndex[(flags & 0x0f) >> 2];
 
         // Padding if the frame size is not a multiple of the bitrate.
