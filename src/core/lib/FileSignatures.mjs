@@ -3077,10 +3077,12 @@ export function extractWAV(bytes, offset) {
 export function extractMP3(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
+    // Constants for flag byte.
     const bitRateIndexes = ["free", 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 320000, "bad"];
 
     const samplingRateFrequencyIndex = [44100, 48000, 32000, "reserved"];
 
+    // ID3 tag, move over it.
     if ((stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString())) {
         stream.moveTo(6);
         const tagSize = (stream.readInt(1) << 21) | (stream.readInt(1) << 14) | (stream.readInt(1) << 7) | stream.readInt(1);
@@ -3088,20 +3090,45 @@ export function extractMP3(bytes, offset) {
     } else {
         stream.moveTo(0);
     }
+
+    // Loop over all the frame headers in the file.
     while (stream.hasMore()) {
+
+        // If it has an old TAG frame at the end of it, fixed size, 128 bytes.
+        if (stream.getBytes(3) === [0x54, 0x41, 0x47].toString()) {
+            stream.moveForwardsBy(125);
+            break;
+        }
+
+        // If not start of frame.
         if (stream.getBytes(2).toString() !== [0xff, 0xfb].toString()) {
             stream.moveBackwardsBy(2);
             break;
         }
+
+        // Read flag byte.
         const flags = stream.readInt(1);
+
+        // Extract frame bitrate from flag byte.
         const bitRate = bitRateIndexes[flags >> 4];
+
+        // Extract frame samplerate from flag byte.
         const sampleRate = samplingRateFrequencyIndex[(flags & 0x0f) >> 2];
+
+        // Padding if the frame size is not a multiple of the bitrate.
         const padding = (flags & 0x02) >> 1;
+
+        // Things that are either not standard or undocumented.
         if (bitRate === "free" || bitRate === "bad" || sampleRate === "reserved") {
             stream.moveBackwardsBy(1);
             break;
         }
+
+        // Formula: FrameLength = (144 * BitRate / SampleRate ) + Padding
         const frameSize = Math.floor(((144 * bitRate) / sampleRate) + padding);
+
+        // If the next move goes past the end of the bytestream then extract the entire bytestream.
+        // We assume complete frames in the above formula because there is no field that suggests otherwise.
         if ((stream.position + frameSize) > stream.length) {
             stream.moveTo(stream.length);
             break;
