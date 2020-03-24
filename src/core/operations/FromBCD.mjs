@@ -49,17 +49,13 @@ class FromBCD extends Operation {
                 "value": FORMAT
             }
         ];
-        this.checks = {
-            input: {
-                regex: [
-                    {
-                        match: "^(?:\\d{4} ){3,}\\d{4}$",
-                        flags: "",
-                        args: ["8 4 2 1", true, false, "Nibbles"]
-                    },
-                ]
-            }
-        };
+        this.checks = [
+            {
+                pattern: "^(?:\\d{4} ){3,}\\d{4}$",
+                flags: "",
+                args: ["8 4 2 1", true, false, "Nibbles"]
+            },
+        ];
     }
 
     /**

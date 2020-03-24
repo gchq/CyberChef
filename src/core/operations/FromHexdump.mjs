@@ -27,17 +27,13 @@ class FromHexdump extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
-        this.checks = {
-            input: {
-                regex: [
-                    {
-                        match: "^(?:(?:[\\dA-F]{4,16}h?:?)?[ \\t]*((?:[\\dA-F]{2} ){1,8}(?:[ \\t]|[\\dA-F]{2}-)(?:[\\dA-F]{2} ){1,8}|(?:[\\dA-F]{4} )*[\\dA-F]{4}|(?:[\\dA-F]{2} )*[\\dA-F]{2})[^\\n]*\\n?){2,}$",
-                        flags: "i",
-                        args: []
-                    },
-                ]
-            }
-        };
+        this.checks = [
+            {
+                pattern: "^(?:(?:[\\dA-F]{4,16}h?:?)?[ \\t]*((?:[\\dA-F]{2} ){1,8}(?:[ \\t]|[\\dA-F]{2}-)(?:[\\dA-F]{2} ){1,8}|(?:[\\dA-F]{4} )*[\\dA-F]{4}|(?:[\\dA-F]{2} )*[\\dA-F]{2})[^\\n]*\\n?){2,}$",
+                flags: "i",
+                args: []
+            },
+        ];
     }
 
     /**

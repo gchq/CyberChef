@@ -60,14 +60,12 @@ class RawInflate extends Operation {
                 value: false
             }
         ];
-        this.checks = {
-            input: {
-                entropy: {
-                    input: [7.5, 8],
-                    args: [0, 0, INFLATE_BUFFER_TYPE, false, false]
-                }
+        this.checks = [
+            {
+                entropyRange: [7.5, 8],
+                args: [0, 0, INFLATE_BUFFER_TYPE, false, false]
             }
-        };
+        ];
     }
 
     /**

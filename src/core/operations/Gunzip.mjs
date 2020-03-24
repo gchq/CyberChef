@@ -27,17 +27,13 @@ class Gunzip extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [];
-        this.checks = {
-            input: {
-                regex: [
-                    {
-                        match: "^\\x1f\\x8b\\x08",
-                        flags: "",
-                        args: []
-                    }
-                ]
+        this.checks = [
+            {
+                pattern: "^\\x1f\\x8b\\x08",
+                flags: "",
+                args: []
             }
-        };
+        ];
     }
 
     /**

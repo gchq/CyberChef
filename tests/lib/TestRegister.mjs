@@ -97,10 +97,14 @@ class TestRegister {
                     ret.status = "passing";
                 } else if ("expectedMatch" in test && test.expectedMatch.test(result.result)) {
                     ret.status = "passing";
+                } else if ("unexpectedMatch" in test && !test.unexpectedMatch.test(result.result)) {
+                    ret.status = "passing";
                 } else {
                     ret.status = "failing";
                     const expected = test.expectedOutput ? test.expectedOutput :
-                        test.expectedMatch ? test.expectedMatch.toString() : "unknown";
+                        test.expectedMatch ? test.expectedMatch.toString() :
+                            test.unexpectedMatch ? "to not find " + test.unexpectedMatch.toString() :
+                                "unknown";
                     ret.output = [
                         "Expected",
                         "\t" + expected.replace(/\n/g, "\n\t"),

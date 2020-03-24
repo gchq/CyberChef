@@ -19,66 +19,40 @@ class Magic {
      * Magic constructor.
      *
      * @param {ArrayBuffer} buf
-     * @param {Object} prevOp
+     * @param {Object[]} [opCriteria]
+     * @param {Object} [prevOp]
      */
-    constructor(buf, opPatterns, prevOp) {
+    constructor(buf, opCriteria=Magic._generateOpCriteria(), prevOp=null) {
         this.inputBuffer = new Uint8Array(buf);
         this.inputStr = Utils.arrayBufferToStr(buf);
-        this.opPatterns = opPatterns || Magic._generateOpCriteria();
+        this.opCriteria = opCriteria;
         this.prevOp = prevOp;
     }
 
     /**
-     * Finds operations that claim to be able to decode the input based on
-     * regular expression matches.
-     *
-     * @param {[Object]} opPatterns
-     * @returns {Array}
-     */
-    inputRegexMatch(opPatterns) {
-        const matches = [];
-
-        for (let i = 0; i < opPatterns.length; i++) {
-            const pattern = opPatterns[i];
-
-
-            if (pattern.match.test(this.inputStr)) {
-                matches.push(pattern);
-            }
-        }
-
-        return matches;
-    }
-
-    /**
-     * Finds operations that claim to be able to decode the input based on entropy
-     * matches.
-     *
-     * @param {[Object]} opPatterns
-     * @returns {Array}
-     */
-    entropyInputMatch(opPatterns) {
-        const matches = [];
-
-        const entropyOfInput = this.calcEntropy();
-
-        for (let i = 0; i < opPatterns.length; i++) {
-            const currOp = opPatterns[i];
-            if ((entropyOfInput > currOp.entropy[0]) && (entropyOfInput < currOp.entropy[1]))
-                matches.push(currOp);
-        }
-        return matches;
-    }
-
-    /**
-     * Finds operations that claim to be able to decode the input based on criteria.
+     * Finds operations that claim to be able to decode the input based on various criteria.
      *
      * @returns {Object[]}
      */
     findMatchingInputOps() {
-        let matches = this.inputRegexMatch(this.opPatterns.regex);
-        matches = matches.concat(this.entropyInputMatch(this.opPatterns.entropy));
-        return [...new Set(matches)];
+        const matches = [],
+            inputEntropy = this.calcEntropy();
+
+        this.opCriteria.forEach(check => {
+            // If the input doesn't lie in the required entropy range, move on
+            if (check.entropyRange &&
+                (inputEntropy < check.entropyRange[0] ||
+                inputEntropy > check.entropyRange[1]))
+                return;
+            // If the input doesn't match the pattern, move on
+            if (check.pattern &&
+                !check.pattern.test(this.inputStr))
+                return;
+
+            matches.push(check);
+        });
+
+        return matches;
     }
 
     /**
@@ -218,8 +192,10 @@ class Magic {
      *
      * @returns {number}
      */
-    calcEntropy() {
-        const prob = this._freqDist();
+    calcEntropy(data=this.inputBuffer, standalone=false) {
+        if (!standalone && this.inputEntropy) return this.inputEntropy;
+
+        const prob = this._freqDist(data, standalone);
         let entropy = 0,
             p;
 
@@ -228,6 +204,8 @@ class Magic {
             if (p === 0) continue;
             entropy += p * Math.log(p) / Math.log(2);
         }
+
+        if (!standalone) this.inputEntropy = -entropy;
         return -entropy;
     }
 
@@ -298,32 +276,29 @@ class Magic {
     }
 
     /**
+     * Checks whether the data passes output criteria for an operation check
      *
+     * @param {ArrayBuffer} data
+     * @param {Object} criteria
+     * @returns {boolean}
      */
-    checkRegexes(regexes) {
-        for (const elem of regexes) {
-            const regex = new RegExp(elem.match, elem.flags);
-            if  (regex.test(this.inputStr))
-                return true;
+    outputCheckPasses(data, criteria) {
+        if (criteria.pattern) {
+            const dataStr = Utils.arrayBufferToStr(data),
+                regex = new RegExp(criteria.pattern, criteria.flags);
+            if (!regex.test(dataStr))
+                return false;
         }
-        return false;
-    }
-    /**
-     *
-     */
-    checkOutputFromPrevious() {
-        let score = 0;
-        if ("regex" in this.prevOp.output) {
-            if (this.checkRegexes(this.prevOp.output.regex)) score++;
+        if (criteria.entropyRange) {
+            const dataEntropy = this.calcEntropy(data, true);
+            if (dataEntropy < criteria.entropyRange[0] || dataEntropy > criteria.entropyRange[1])
+                return false;
         }
-        if ("entropy" in this.prevOp.output) {
-            const inputEntropy = this.calcEntropy();
-            if ((inputEntropy > this.prevOp.output.entropy[0]) && (inputEntropy < this.prevOp.output.entropy[1])) score++;
-        }
-        if ("mime" in this.prevOp.output) {
-            if (isType(this.prevOp.output.mime, this.inputBuffer)) score++;
-        }
-        return score > 0;
+        if (criteria.mime &&
+            !isType(criteria.mime, data))
+            return false;
+
+        return true;
     }
 
     /**
@@ -331,26 +306,27 @@ class Magic {
      *
      * @param {number} [depth=0] - How many levels to try to execute
      * @param {boolean} [extLang=false] - Extensive language support (false = only check the most
-     *                                    common Internet languages)
+     *     common Internet languages)
      * @param {boolean} [intensive=false] - Run brute-forcing on each branch (significantly affects
-     *                                      performance)
+     *     performance)
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
      * @param {boolean} [useful=false] - Whether the current recipe should be scored highly
-     * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation output
+     * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation
+     *     output
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
-    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null) {
+    async speculativeExecution(
+        depth=0,
+        extLang=false,
+        intensive=false,
+        recipeConfig=[],
+        useful=false,
+        crib=null) {
+
+        // If we have reached the recursion depth, return
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
-
-        if (this.prevOp) {
-            if ("output" in this.prevOp) {
-                if (!(this.checkOutputFromPrevious())) {
-                    return [];
-                }
-            }
-        }
         const matchingOps = this.findMatchingInputOps();
         let results = [];
 
@@ -374,20 +350,24 @@ class Magic {
             const opConfig = {
                     op: op.op,
                     args: op.args
-                }, output = await this._runRecipe([opConfig]);
-
-            // If the recipe is repeating and returning the same data, do not continue
-            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
-                return;
-            }
+                },
+                output = await this._runRecipe([opConfig]);
 
             // If the recipe returned an empty buffer, do not continue
             if (_buffersEqual(output, new ArrayBuffer())) {
                 return;
             }
 
+            // If the recipe is repeating and returning the same data, do not continue
+            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
+                return;
+            }
 
-            const magic = new Magic(output, this.opPatterns, OperationConfig[op.op]),
+            // If the output criteria for this op doesn't match the output, do not continue
+            if (op.output && !this.outputCheckPasses(output, op.output))
+                return;
+
+            const magic = new Magic(output, this.opCriteria, OperationConfig[op.op]),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
 
@@ -399,7 +379,7 @@ class Magic {
             const bfEncodings = await this.bruteForce();
 
             await Promise.all(bfEncodings.map(async enc => {
-                const magic = new Magic(enc.data, this.opPatterns, undefined),
+                const magic = new Magic(enc.data, this.opCriteria, undefined),
                     bfResults = await magic.speculativeExecution(
                         depth-1, extLang, false, [...recipeConfig, enc.conf], false, crib);
 
@@ -414,7 +394,8 @@ class Magic {
                 r.languageScores[0].probability > 0 ||    // Some kind of language was found
                 r.fileType ||                             // A file was found
                 r.isUTF8 ||                               // UTF-8 was found
-                r.matchingOps.length                      // A matching op was found
+                r.matchingOps.length ||                   // A matching op was found
+                r.matchesCrib                             // The crib matches
             )
         );
 
@@ -445,9 +426,10 @@ class Magic {
             bScore += b.entropy;
 
             // A result with no recipe but matching ops suggests there are better options
-            if ((!a.recipe.length && a.matchingOps.length) &&
-                b.recipe.length)
+            if ((!a.recipe.length && a.matchingOps.length) && b.recipe.length)
                 return 1;
+            if ((!b.recipe.length && b.matchingOps.length) && a.recipe.length)
+                return -1;
 
             return aScore - bScore;
         });
@@ -486,14 +468,16 @@ class Magic {
      * Calculates the number of times each byte appears in the input as a percentage
      *
      * @private
+     * @param {ArrayBuffer} [data]
+     * @param {boolean} [standalone]
      * @returns {number[]}
      */
-    _freqDist() {
-        if (this.freqDist) return this.freqDist;
+    _freqDist(data=this.inputBuffer, standalone=false) {
+        if (!standalone && this.freqDist) return this.freqDist;
 
-        const len = this.inputBuffer.length;
+        const len = data.length,
+            counts = new Array(256).fill(0);
         let i = len;
-        const counts = new Array(256).fill(0);
 
         if (!len) {
             this.freqDist = counts;
@@ -501,13 +485,15 @@ class Magic {
         }
 
         while (i--) {
-            counts[this.inputBuffer[i]]++;
+            counts[data[i]]++;
         }
 
-        this.freqDist = counts.map(c => {
+        const result = counts.map(c => {
             return c / len * 100;
         });
-        return this.freqDist;
+
+        if (!standalone) this.freqDist = result;
+        return result;
     }
 
     /**
@@ -517,30 +503,25 @@ class Magic {
      * @returns {Object[]}
      */
     static _generateOpCriteria() {
-        const opCriteria = {
-            regex: [],
-            entropy: []
-        };
+        const opCriteria = [];
 
         for (const op in OperationConfig) {
-            if ("input" in OperationConfig[op]) {
-                if ("regex" in OperationConfig[op].input)
-                    OperationConfig[op].input.regex.forEach(pattern => {
-                        opCriteria.regex.push({
-                            op: op,
-                            match: new RegExp(pattern.match, pattern.flags),
-                            args: pattern.args,
-                            useful: pattern.useful || false
-                        });
-                    });
-                if ("entropy" in OperationConfig[op].input) {
-                    opCriteria.entropy.push({
-                        op: op,
-                        entropy: OperationConfig[op].input.entropy.input,
-                        args:  OperationConfig[op].input.entropy.args
-                    });
-                }
-            }
+            if (!("checks" in OperationConfig[op]))
+                continue;
+
+            OperationConfig[op].checks.forEach(check => {
+                // Add to the opCriteria list.
+                // Compile the regex here and cache the compiled version so we
+                // don't have to keep calculating it.
+                opCriteria.push({
+                    op: op,
+                    pattern: check.pattern ? new RegExp(check.pattern, check.flags) : null,
+                    args: check.args,
+                    useful: check.useful,
+                    entropyRange: check.entropyRange,
+                    output: check.output
+                });
+            });
         }
 
         return opCriteria;

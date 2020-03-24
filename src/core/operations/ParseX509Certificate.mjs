@@ -35,17 +35,13 @@ class ParseX509Certificate extends Operation {
                 "value": ["PEM", "DER Hex", "Base64", "Raw"]
             }
         ];
-        this.checks = {
-            input: {
-                regex: [
-                    {
-                        "match": "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
-                        "flags": "i",
-                        "args": ["PEM"]
-                    }
-                ]
+        this.checks = [
+            {
+                "pattern": "^-+BEGIN CERTIFICATE-+\\r?\\n[\\da-z+/\\n\\r]+-+END CERTIFICATE-+\\r?\\n?$",
+                "flags": "i",
+                "args": ["PEM"]
             }
-        };
+        ];
     }
 
     /**
