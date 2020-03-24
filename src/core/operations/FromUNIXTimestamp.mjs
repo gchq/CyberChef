@@ -33,27 +33,27 @@ class FromUNIXTimestamp extends Operation {
                 "value": UNITS
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^1?\\d{9}$",
+                pattern: "^1?\\d{9}$",
                 flags: "",
                 args: ["Seconds (s)"]
             },
             {
-                match: "^1?\\d{12}$",
+                pattern: "^1?\\d{12}$",
                 flags: "",
                 args: ["Milliseconds (ms)"]
             },
             {
-                match: "^1?\\d{15}$",
+                pattern: "^1?\\d{15}$",
                 flags: "",
                 args: ["Microseconds (μs)"]
             },
             {
-                match: "^1?\\d{18}$",
+                pattern: "^1?\\d{18}$",
                 flags: "",
                 args: ["Nanoseconds (ns)"]
-            },
+            }
         ];
     }
 
