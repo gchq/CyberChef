@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.19.0] - 2020-03-24
+- Improvements to the 'Magic' operation, allowing it to recognise more data formats and provide more accurate results [@n1073645] [@n1474335] | [#966] [b765534b](https://github.com/gchq/CyberChef/commit/b765534b8b2a0454a5132a0a52d1d8844bcbdaaa)
+
 ### [9.18.0] - 2020-03-13
 - 'Convert to NATO alphabet' operation added [@MarvinJWendt] | [#674]
 
@@ -218,6 +221,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.19.0]: https://github.com/gchq/CyberChef/releases/tag/v9.19.0
 [9.18.0]: https://github.com/gchq/CyberChef/releases/tag/v9.18.0
 [9.17.0]: https://github.com/gchq/CyberChef/releases/tag/v9.17.0
 [9.16.0]: https://github.com/gchq/CyberChef/releases/tag/v9.16.0
@@ -384,3 +388,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#948]: https://github.com/gchq/CyberChef/pull/948
 [#952]: https://github.com/gchq/CyberChef/pull/952
 [#965]: https://github.com/gchq/CyberChef/pull/965
+[#966]: https://github.com/gchq/CyberChef/pull/966
