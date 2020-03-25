@@ -44,6 +44,7 @@ function signatureMatches(sig, buf, offset=0) {
  * @param {Uint8Array} buf
  * @param {number} offset
  * @param {number} bitOffset
+ * @returns {boolean}
  */
 function bitsMatch(sig, buf, offset, bitOffset) {
 
