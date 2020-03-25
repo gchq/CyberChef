@@ -38,6 +38,65 @@ function signatureMatches(sig, buf, offset=0) {
 
 
 /**
+ * Checks whether a set of bytes match the given buffer on the bit level.
+ *
+ * @param {Object} sig
+ * @param {Uint8Array} buf
+ * @param {number} offset
+ * @param {number} bitOffset
+ */
+function bitsMatch(sig, buf, offset, bitOffset) {
+
+    /**
+     * Checks to see if the byte is contained in the bit stream.
+     *
+     * @param {number} element
+     * @param {number} pos
+     * @returns {boolean}
+     */
+    function checkBytes(element, pos) {
+        const highByte = element >> bitOffset;
+        const lowByte = (element << (8 - bitOffset)) & 0xff;
+
+        // If bytes XOR to 0 then they are equivalent.
+        if ((((buf[pos] &  (0xff >> bitOffset)) ^ highByte)) || (((buf[pos + 1] & (0xff << (8 - bitOffset))) ^ lowByte))) {
+            return false;
+        }
+        return true;
+    }
+
+    let found, posValue;
+    for (const sigoffset in sig) {
+        const pos = parseInt(sigoffset, 10) + offset;
+        switch (typeof sig[sigoffset]) {
+            case "number":
+                if (!(checkBytes(sig[sigoffset], pos)))
+                    return false;
+                break;
+            case "object":
+                found = false;
+                for (const elem of sig[sigoffset]) {
+
+                    // If an element of the signature array is contained in the byte stream.
+                    if ((found = checkBytes(elem, pos))) {
+                        break;
+                    }
+                }
+                if (!(found))
+                    return false;
+                break;
+            case "function":
+                posValue = ((buf[pos] << bitOffset) & 0xff) | ((buf[pos + 1] >> (8 - bitOffset)));
+                if (!sig[sigoffset](posValue))
+                    return false;
+                break;
+            default:
+                throw new Error(`Unrecognised signature type at offset ${sigoffset}`);
+        }
+    }
+    return true;
+}
+/**
  * Checks whether a set of bytes match the given buffer.
  *
  * @param {Object} sig - A dictionary of offsets with values assigned to them.
@@ -119,6 +178,7 @@ export function detectFileType(buf, categories=Object.keys(FILE_SIGNATURES)) {
  * the extensions and mime types.
  *
  * @param {Uint8Array} buf
+ * @param {boolean} checkBits - Checks to see if bits match.
  * @param {string[]} [categories=All] - Which categories of file to look for
  * @returns {Object[]} foundFiles
  * @returns {number} foundFiles.offset - The position in the buffer at which this file was found
@@ -128,7 +188,7 @@ export function detectFileType(buf, categories=Object.keys(FILE_SIGNATURES)) {
  * @returns {string} foundFiles.fileDetails.mime - Mime type
  * @returns {string} [foundFiles.fileDetails.desc] - Description
  */
-export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
+export function scanForFileTypes(buf, checkBits, categories=Object.keys(FILE_SIGNATURES)) {
     if (!(buf && buf.length > 1)) {
         return [];
     }
@@ -156,12 +216,33 @@ export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
                         sendStatusMessage(`Found potential signature for ${filetype.name} at pos ${pos}`);
                         foundFiles.push({
                             offset: pos,
+                            bitOffset: 0,
                             fileDetails: filetype
                         });
                     }
                     pos++;
                 }
             });
+            if (checkBits) {
+                sigs.forEach(sig => {
+                    let pos = 0;
+
+                    // Loop over all possible bit offsets.
+                    for (let i = 1; i < 8; i++) {
+                        while ((pos = locatePotentialSigBits(buf, sig, pos, i)) >= 0) {
+                            if (bitsMatch(sig, buf, pos, i)) {
+                                sendStatusMessage(`Found potential signature for ${filetype.name} at pos ${pos}`);
+                                foundFiles.push({
+                                    offset: pos,
+                                    bitOffset: i,
+                                    fileDetails: filetype
+                                });
+                            }
+                            pos++;
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -171,6 +252,59 @@ export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
     });
 }
 
+/**
+ * Locates the bits of the first byte of a signature.
+ *
+ * @param {Uint8Array} buf
+ * @param {object} sig
+ * @param {number} offset
+ * @param {number} bitOffset
+ * @returns {number}
+ */
+function locatePotentialSigBits(buf, sig, offset, bitOffset) {
+    // Find values for first key and value in sig
+    const k = parseInt(Object.keys(sig)[0], 10);
+    const v = Object.values(sig)[0];
+    let posValue = 0;
+
+    /**
+     * Checks two bytes next to one another if one byte is spread across them.
+     *
+     * @param {number}
+     * @returns {number}
+     */
+    function checkBytes(elem) {
+        const highByte = elem >> bitOffset;
+        const lowByte = (elem << (8 - bitOffset)) & 0xff;
+        for (let i = offset + k; i < buf.length - 1; i++) {
+            // Quite strict, to avoid false positives.
+            if (!(((buf[i] &  (0xff >> bitOffset)) ^ highByte)) && !(((buf[i + 1] & (0xff << (8 - bitOffset))) ^ lowByte))) {
+                return i-k;
+            }
+        }
+        return -1;
+    }
+
+    switch (typeof v) {
+        case "number":
+            return checkBytes(v);
+        case "object":
+            for (const elem of v) {
+                if ((posValue = checkBytes(elem)) >= 0)
+                    return posValue;
+            }
+            return -1;
+        case "function":
+            for (let i = offset + k; i < buf.length; i++) {
+                // Combine high byte and low byte.
+                posValue = ((buf[i] << bitOffset) & 0xff) | ((buf[i + 1] >> (8 - bitOffset)));
+                if (v(posValue)) return i - k;
+            }
+            return -1;
+        default:
+            throw new Error("Unrecognised signature type");
+    }
+}
 
 /**
  * Fastcheck function to quickly scan the buffer for the first byte in a signature.

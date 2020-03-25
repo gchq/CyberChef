@@ -32,7 +32,11 @@ class ScanForEmbeddedFiles extends Operation {
                 type: "boolean",
                 value: cat === "Miscellaneous" ? false : true
             };
-        });
+        }).concat([{
+            name: "Scan for Offset Files",
+            type: "boolean",
+            value: false
+        }]);
     }
 
     /**
@@ -46,16 +50,19 @@ class ScanForEmbeddedFiles extends Operation {
         const categories = [],
             data = new Uint8Array(input);
 
+        const scanForBits = args.pop();
+
         args.forEach((cat, i) => {
             if (cat) categories.push(Object.keys(FILE_SIGNATURES)[i]);
         });
 
-        const types = scanForFileTypes(data, categories);
+        const types = scanForFileTypes(data, scanForBits, categories);
 
         if (types.length) {
             types.forEach(type => {
                 numFound++;
                 output += `\nOffset ${type.offset} (0x${Utils.hex(type.offset)}):
+  BitOffset:   ${type.bitOffset}
   File type:   ${type.fileDetails.name}
   Extension:   ${type.fileDetails.extension}
   MIME type:   ${type.fileDetails.mime}\n`;
