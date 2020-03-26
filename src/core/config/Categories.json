@@ -61,7 +61,8 @@
             "Parse TLV",
             "CSV to JSON",
             "JSON to CSV",
-            "Avro to JSON"
+            "Avro to JSON",
+            "CBOR Encode"
         ]
     },
     {

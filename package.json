@@ -96,6 +96,7 @@
     "bootstrap-colorpicker": "^3.2.0",
     "bootstrap-material-design": "^4.1.2",
     "bson": "^4.0.3",
+    "cbor": "^5.0.1",
     "chi-squared": "^1.1.0",
     "codepage": "^1.14.0",
     "core-js": "^3.6.4",
