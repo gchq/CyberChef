@@ -51,7 +51,6 @@ class RecipeWaiter {
                 }
             }.bind(this),
             onSort: function(evt) {
-                this.updateZIndices();
                 if (evt.from.id === "rec-list") {
                     document.dispatchEvent(this.manager.statechange);
                 }
@@ -147,19 +146,6 @@ class RecipeWaiter {
 
         this.buildRecipeOperation(evt.item);
         evt.item.dispatchEvent(this.manager.operationadd);
-    }
-
-
-    /**
-     * Sets the z-index property on each operation to make sure that operations higher in the list
-     * have a higher index, meaning dropdowns are not hidden underneath subsequent operations.
-     */
-    updateZIndices() {
-        const operations = document.getElementById("rec-list").children;
-        for (let i = 0; i < operations.length; i++) {
-            const operation = operations[i];
-            operation.style.zIndex = 100 + operations.length - i;
-        }
     }
 
 
@@ -480,7 +466,6 @@ class RecipeWaiter {
         log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
 
         this.triggerArgEvents(e.target);
-        this.updateZIndices();
         window.dispatchEvent(this.manager.statechange);
     }
 
