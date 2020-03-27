@@ -474,7 +474,7 @@ export const FILE_SIGNATURES = {
             mime: "image/x-targa",
             description: "",
             signature: [
-                {
+                { // This signature is not at the beginning of the file. The extractor works backwards.
                     0: 0x54,
                     1: 0x52,
                     2: 0x55,
@@ -492,7 +492,6 @@ export const FILE_SIGNATURES = {
                     14: 0x4c,
                     15: 0x45,
                     16: 0x2e
-
                 }
             ],
             extractor: extractTARGA
@@ -3075,6 +3074,7 @@ export function extractICO(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * TARGA extractor.
  *
@@ -3082,7 +3082,6 @@ export function extractICO(bytes, offset) {
  * @param {number} offset
  */
 export function extractTARGA(bytes, offset) {
-
     // Need all the bytes since we do not know how far up the image goes.
     const stream = new Stream(bytes);
     stream.moveTo(offset - 8);
@@ -3094,7 +3093,7 @@ export function extractTARGA(bytes, offset) {
     stream.moveBackwardsBy(8);
 
     /**
-     * Move's backwards in the stream until it meet bytes that are the same as the amount of bytes moved.
+     * Moves backwards in the stream until it meet bytes that are the same as the amount of bytes moved.
      *
      * @param {number} sizeOfSize
      * @param {number} maxSize
@@ -3115,7 +3114,6 @@ export function extractTARGA(bytes, offset) {
 
     /**
      * Moves backwards in the stream until we meet bytes(when calculated) that are the same as the amount of bytes moved.
-     *
      */
     function moveBackwardsUntilImageSize() {
         stream.moveBackwardsBy(5);
@@ -3134,14 +3132,12 @@ export function extractTARGA(bytes, offset) {
 
     if (extensionOffset || developerOffset) {
         if (extensionOffset) {
-
             // Size is stored in two bytes hence the maximum is 0xffff.
             moveBackwardsUntilSize(0xffff, 2);
 
             // Move to where we think the start of the file is.
             stream.moveBackwardsBy(extensionOffset);
         } else if (developerOffset) {
-
             // Size is stored in 4 bytes hence the maxiumum is 0xffffffff.
             moveBackwardsUntilSize(0xffffffff, 4);
 
@@ -3152,7 +3148,6 @@ export function extractTARGA(bytes, offset) {
             stream.moveBackwardsBy(developerOffset);
         }
     } else {
-
         // Move backwards until size === number of bytes passed.
         moveBackwardsUntilImageSize();
 
