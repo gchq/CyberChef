@@ -100,6 +100,7 @@ import "./tests/Lorenz.mjs";
 import "./tests/LuhnChecksum.mjs";
 import "./tests/CipherSaber2.mjs";
 import "./tests/Colossus.mjs";
+import "./tests/ParseObjectIDTimestamp.mjs";
 
 
 // Cannot test operations that use the File type yet
@@ -120,4 +121,3 @@ const logOpsTestReport = logTestReport.bind(null, testStatus);
     const results = await TestRegister.runTests();
     logOpsTestReport(results);
 })();
-
