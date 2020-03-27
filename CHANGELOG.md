@@ -2,6 +2,27 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.20.0] - 2020-03-27
+- 'Parse ObjectID Timestamp' operation added [@dmfj] | [#987]
+
+### [9.19.0] - 2020-03-24
+- Improvements to the 'Magic' operation, allowing it to recognise more data formats and provide more accurate results [@n1073645] [@n1474335] | [#966] [b765534b](https://github.com/gchq/CyberChef/commit/b765534b8b2a0454a5132a0a52d1d8844bcbdaaa)
+
+### [9.18.0] - 2020-03-13
+- 'Convert to NATO alphabet' operation added [@MarvinJWendt] | [#674]
+
+### [9.17.0] - 2020-03-13
+- 'Generate Image' operation added [@pointhi] | [#683]
+
+### [9.16.0] - 2020-03-06
+- 'Colossus' operation added [@VirtualColossus] | [#917]
+
+### [9.15.0] - 2020-03-05
+- 'CipherSaber2 Encrypt' and 'CipherSaber2 Decrypt' operations added [@n1073645] | [#952]
+
+### [9.14.0] - 2020-03-05
+- 'Luhn Checksum' operation added [@n1073645] | [#965]
+
 ### [9.13.0] - 2020-02-13
 - 'Rail Fence Cipher Encode' and 'Rail Fence Cipher Decode' operations added [@Flavsditz] | [#948]
 
@@ -203,6 +224,13 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.20.0]: https://github.com/gchq/CyberChef/releases/tag/v9.20.0
+[9.19.0]: https://github.com/gchq/CyberChef/releases/tag/v9.19.0
+[9.18.0]: https://github.com/gchq/CyberChef/releases/tag/v9.18.0
+[9.17.0]: https://github.com/gchq/CyberChef/releases/tag/v9.17.0
+[9.16.0]: https://github.com/gchq/CyberChef/releases/tag/v9.16.0
+[9.15.0]: https://github.com/gchq/CyberChef/releases/tag/v9.15.0
+[9.14.0]: https://github.com/gchq/CyberChef/releases/tag/v9.14.0
 [9.13.0]: https://github.com/gchq/CyberChef/releases/tag/v9.13.0
 [9.12.0]: https://github.com/gchq/CyberChef/releases/tag/v9.12.0
 [9.11.0]: https://github.com/gchq/CyberChef/releases/tag/v9.11.0
@@ -265,6 +293,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@n1474335]: https://github.com/n1474335
 [@d98762625]: https://github.com/d98762625
 [@j433866]: https://github.com/j433866
+[@n1073645]: https://github.com/n1073645
 [@GCHQ77703]: https://github.com/GCHQ77703
 [@h345983745]: https://github.com/h345983745
 [@s2224834]: https://github.com/s2224834
@@ -291,6 +320,9 @@ All major and minor version changes will be documented in this file. Details of 
 [@cbeuw]: https://github.com/cbeuw
 [@matthieuxyz]: https://github.com/matthieuxyz
 [@Flavsditz]: https://github.com/Flavsditz
+[@pointhi]: https://github.com/pointhi
+[@MarvinJWendt]: https://github.com/MarvinJWendt
+[@dmfj]: https://github.com/dmfj
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -353,6 +385,13 @@ All major and minor version changes will be documented in this file. Details of 
 [#627]: https://github.com/gchq/CyberChef/pull/627
 [#632]: https://github.com/gchq/CyberChef/pull/632
 [#653]: https://github.com/gchq/CyberChef/pull/653
+[#674]: https://github.com/gchq/CyberChef/pull/674
+[#683]: https://github.com/gchq/CyberChef/pull/683
 [#865]: https://github.com/gchq/CyberChef/pull/865
 [#912]: https://github.com/gchq/CyberChef/pull/912
+[#917]: https://github.com/gchq/CyberChef/pull/917
 [#948]: https://github.com/gchq/CyberChef/pull/948
+[#952]: https://github.com/gchq/CyberChef/pull/952
+[#965]: https://github.com/gchq/CyberChef/pull/965
+[#966]: https://github.com/gchq/CyberChef/pull/966
+[#987]: https://github.com/gchq/CyberChef/pull/987

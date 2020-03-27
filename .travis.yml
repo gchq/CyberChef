@@ -11,7 +11,7 @@ before_script:
   - export NODE_OPTIONS=--max_old_space_size=2048
 script:
   - grunt lint
-  - grunt test
+  - npm test
   - grunt testnodeconsumer
   - grunt prod --msg="$COMPILE_MSG"
   - xvfb-run --server-args="-screen 0 1200x800x24" grunt testui

@@ -36,12 +36,12 @@ class FromBase32 extends Operation {
                 value: true
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
+                pattern: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
                 flags: "",
                 args: ["A-Z2-7=", false]
-            },
+            }
         ];
     }
 

@@ -1182,6 +1182,7 @@ class Utils {
             "CRLF":          /\r\n/g,
             "Forward slash": /\//g,
             "Backslash":     /\\/g,
+            "0x with comma": /,?0x/g,
             "0x":            /0x/g,
             "\\x":           /\\x/g,
             "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
@@ -1335,7 +1336,7 @@ export function sendStatusMessage(msg) {
         self.sendStatusMessage(msg);
     else if (isWebEnvironment())
         app.alert(msg, 10000);
-    else if (isNodeEnvironment())
+    else if (isNodeEnvironment() && !global.TESTING)
         // eslint-disable-next-line no-console
         console.debug(msg);
 }
