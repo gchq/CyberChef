@@ -2,6 +2,9 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.20.0] - 2020-03-27
+- 'Parse ObjectID Timestamp' operation added [@dmfj] | [#987]
+
 ### [9.19.0] - 2020-03-24
 - Improvements to the 'Magic' operation, allowing it to recognise more data formats and provide more accurate results [@n1073645] [@n1474335] | [#966] [b765534b](https://github.com/gchq/CyberChef/commit/b765534b8b2a0454a5132a0a52d1d8844bcbdaaa)
 
@@ -221,6 +224,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.20.0]: https://github.com/gchq/CyberChef/releases/tag/v9.20.0
 [9.19.0]: https://github.com/gchq/CyberChef/releases/tag/v9.19.0
 [9.18.0]: https://github.com/gchq/CyberChef/releases/tag/v9.18.0
 [9.17.0]: https://github.com/gchq/CyberChef/releases/tag/v9.17.0
@@ -318,6 +322,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@Flavsditz]: https://github.com/Flavsditz
 [@pointhi]: https://github.com/pointhi
 [@MarvinJWendt]: https://github.com/MarvinJWendt
+[@dmfj]: https://github.com/dmfj
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -389,3 +394,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#952]: https://github.com/gchq/CyberChef/pull/952
 [#965]: https://github.com/gchq/CyberChef/pull/965
 [#966]: https://github.com/gchq/CyberChef/pull/966
+[#987]: https://github.com/gchq/CyberChef/pull/987
