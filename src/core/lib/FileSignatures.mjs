@@ -468,6 +468,34 @@ export const FILE_SIGNATURES = {
             ],
             extractor: null
         },
+        {
+            name: "Targa Image",
+            extension: "tga",
+            mime: "image/x-targa",
+            description: "",
+            signature: [
+                { // This signature is not at the beginning of the file. The extractor works backwards.
+                    0: 0x54,
+                    1: 0x52,
+                    2: 0x55,
+                    3: 0x45,
+                    4: 0x56,
+                    5: 0x49,
+                    6: 0x53,
+                    7: 0x49,
+                    8: 0x4f,
+                    9: 0x4e,
+                    10: 0x2d,
+                    11: 0x58,
+                    12: 0x46,
+                    13: 0x49,
+                    14: 0x4c,
+                    15: 0x45,
+                    16: 0x2e
+                }
+            ],
+            extractor: extractTARGA
+        }
     ],
     "Video": [
         { // Place before webm
@@ -3044,6 +3072,90 @@ export function extractICO(bytes, offset) {
     // Move to the end of the last file.
     stream.moveTo(fileOffset + fileSize);
     return stream.carve();
+}
+
+
+/**
+ * TARGA extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ */
+export function extractTARGA(bytes, offset) {
+    // Need all the bytes since we do not know how far up the image goes.
+    const stream = new Stream(bytes);
+    stream.moveTo(offset - 8);
+
+    // Read in the offsets of the possible areas.
+    const extensionOffset = stream.readInt(4, "le");
+    const developerOffset = stream.readInt(4, "le");
+
+    stream.moveBackwardsBy(8);
+
+    /**
+     * Moves backwards in the stream until it meet bytes that are the same as the amount of bytes moved.
+     *
+     * @param {number} sizeOfSize
+     * @param {number} maxSize
+     */
+    function moveBackwardsUntilSize(maxSize, sizeOfSize) {
+        for (let i = 0; i < maxSize; i++) {
+            stream.moveBackwardsBy(1);
+
+            // Read in sizeOfSize amount of bytes in.
+            const size = stream.readInt(sizeOfSize, "le") - 1;
+            stream.moveBackwardsBy(sizeOfSize);
+
+            // If the size matches.
+            if (size === i)
+                break;
+        }
+    }
+
+    /**
+     * Moves backwards in the stream until we meet bytes(when calculated) that are the same as the amount of bytes moved.
+     */
+    function moveBackwardsUntilImageSize() {
+        stream.moveBackwardsBy(5);
+
+        // The documentation said that 0x100000 was the largest the file could be.
+        for (let i = 0; i < 0x100000; i++) {
+
+            // (Height * Width * pixel depth in bits)/8
+            const total = (stream.readInt(2, "le") * stream.readInt(2, "le") * stream.readInt(1))/8;
+            if (total === i-1)
+                break;
+
+            stream.moveBackwardsBy(6);
+        }
+    }
+
+    if (extensionOffset || developerOffset) {
+        if (extensionOffset) {
+            // Size is stored in two bytes hence the maximum is 0xffff.
+            moveBackwardsUntilSize(0xffff, 2);
+
+            // Move to where we think the start of the file is.
+            stream.moveBackwardsBy(extensionOffset);
+        } else if (developerOffset) {
+            // Size is stored in 4 bytes hence the maxiumum is 0xffffffff.
+            moveBackwardsUntilSize(0xffffffff, 4);
+
+            // Size is stored in byte position 6 so have to move back.
+            stream.moveBackwardsBy(6);
+
+            // Move to where we think the start of the file is.
+            stream.moveBackwardsBy(developerOffset);
+        }
+    } else {
+        // Move backwards until size === number of bytes passed.
+        moveBackwardsUntilImageSize();
+
+        // Move backwards over the reaminder of the header + the 5 we borrowed in moveBackwardsUntilImageSize().
+        stream.moveBackwardsBy(0xc+5);
+    }
+
+    return stream.carve(stream.position, offset+0x12);
 }
 
 
