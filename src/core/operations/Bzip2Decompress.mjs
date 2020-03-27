@@ -33,9 +33,9 @@ class Bzip2Decompress extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                "match": "^\\x42\\x5a\\x68",
+                "pattern": "^\\x42\\x5a\\x68",
                 "flags": "",
                 "args": []
             }

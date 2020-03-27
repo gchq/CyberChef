@@ -45,6 +45,7 @@ import "./tests/Gzip.mjs";
 import "./tests/Gunzip.mjs";
 import "./tests/Hash.mjs";
 import "./tests/HaversineDistance.mjs";
+import "./tests/Hex.mjs";
 import "./tests/Hexdump.mjs";
 import "./tests/Image.mjs";
 import "./tests/IndexOfCoincidence.mjs";
@@ -96,6 +97,10 @@ import "./tests/DefangIP.mjs";
 import "./tests/ParseUDP.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/Lorenz.mjs";
+import "./tests/LuhnChecksum.mjs";
+import "./tests/CipherSaber2.mjs";
+import "./tests/Colossus.mjs";
+import "./tests/ParseObjectIDTimestamp.mjs";
 
 
 // Cannot test operations that use the File type yet
@@ -112,5 +117,7 @@ setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-TestRegister.runTests()
-    .then(logOpsTestReport);
+(async function() {
+    const results = await TestRegister.runTests();
+    logOpsTestReport(results);
+})();

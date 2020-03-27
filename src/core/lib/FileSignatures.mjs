@@ -468,6 +468,34 @@ export const FILE_SIGNATURES = {
             ],
             extractor: null
         },
+        {
+            name: "Targa Image",
+            extension: "tga",
+            mime: "image/x-targa",
+            description: "",
+            signature: [
+                { // This signature is not at the beginning of the file. The extractor works backwards.
+                    0: 0x54,
+                    1: 0x52,
+                    2: 0x55,
+                    3: 0x45,
+                    4: 0x56,
+                    5: 0x49,
+                    6: 0x53,
+                    7: 0x49,
+                    8: 0x4f,
+                    9: 0x4e,
+                    10: 0x2d,
+                    11: 0x58,
+                    12: 0x46,
+                    13: 0x49,
+                    14: 0x4c,
+                    15: 0x45,
+                    16: 0x2e
+                }
+            ],
+            extractor: extractTARGA
+        }
     ],
     "Video": [
         { // Place before webm
@@ -780,7 +808,7 @@ export const FILE_SIGNATURES = {
                     1: 0xfb
                 }
             ],
-            extractor: null
+            extractor: extractMP3
         },
         {
             name: "MPEG-4 Part 14 audio",
@@ -1725,6 +1753,25 @@ export const FILE_SIGNATURES = {
             extractor: null
         },
         {
+            name: "Jar Archive",
+            extension: "jar",
+            mime: "application/java-archive",
+            description: "",
+            signature: {
+                0: 0x50,
+                1: 0x4B,
+                2: 0x03,
+                3: 0x04,
+                4: 0x14,
+                5: 0x00,
+                6: 0x08,
+                7: 0x00,
+                8: 0x08,
+                9: 0x00
+            },
+            extractor: extractZIP
+        },
+        {
             name: "lzop compressed",
             extension: "lzop,lzo",
             mime: "application/x-lzop",
@@ -1739,8 +1786,40 @@ export const FILE_SIGNATURES = {
                 6: 0x0a,
                 7: 0x1a
             },
-            extractor: null
+            extractor: extractLZOP
         },
+        {
+            name: "Linux deb package",
+            extension: "deb",
+            mime: "application/vnd.debian.binary-package",
+            description: "",
+            signature: {
+                0: 0x21,
+                1: 0x3C,
+                2: 0x61,
+                3: 0x72,
+                4: 0x63,
+                5: 0x68,
+                6: 0x3e
+            },
+            extractor: extractDEB
+        },
+        {
+            name: "Apple Disk Image",
+            extension: "dmg",
+            mime: "application/x-apple-diskimage",
+            description: "",
+            signature: {
+                0: 0x78,
+                1: 0x01,
+                2: 0x73,
+                3: 0x0d,
+                4: 0x62,
+                5: 0x62,
+                6: 0x60
+            },
+            extractor: null
+        }
     ],
     "Miscellaneous": [
         {
@@ -2038,7 +2117,7 @@ export const FILE_SIGNATURES = {
                 6: [0x4d, 0x36],
                 7: [0x50, 0x34]
             },
-            extractor: null
+            extractor: extractDMP
         },
         {
             name: "Windows Prefetch",
@@ -2055,7 +2134,7 @@ export const FILE_SIGNATURES = {
                 6: 0x43,
                 7: 0x41
             },
-            extractor: null
+            extractor: extractPF
         },
         {
             name: "Windows Prefetch (Win 10)",
@@ -2069,7 +2148,7 @@ export const FILE_SIGNATURES = {
                 3: 0x04,
                 7: 0x0
             },
-            extractor: null
+            extractor: extractPFWin10
         },
         {
             name: "PList (XML)",
@@ -2342,7 +2421,7 @@ export const FILE_SIGNATURES = {
                 18: 0x00,
                 19: 0x46
             },
-            extractor: null
+            extractor: extractLNK
         },
         {
             name: "Bash",
@@ -2468,6 +2547,44 @@ export const FILE_SIGNATURES = {
                 2: 0x70,
                 3: 0x68,
                 4: 0x70,
+            },
+            extractor: null
+        },
+        {
+            name: "Smile",
+            extension: "sml",
+            mime: "	application/x-jackson-smile",
+            description: "",
+            signature: {
+                0: 0x3a,
+                1: 0x29,
+                2: 0xa
+            },
+            extractor: null
+        },
+        {
+            name: "Lua Bytecode",
+            extension: "luac",
+            mime: "application/x-lua",
+            description: "",
+            signature: {
+                0: 0x1b,
+                1: 0x4c,
+                2: 0x75,
+                3: 0x61
+            },
+            extractor: null
+        },
+        {
+            name: "WebAssembly binary",
+            extension: "wasm",
+            mime: "application/octet-stream",
+            description: "",
+            signature: {
+                0: 0x00,
+                1: 0x61,
+                2: 0x73,
+                3: 0x6d
             },
             extractor: null
         }
@@ -2959,6 +3076,90 @@ export function extractICO(bytes, offset) {
 
 
 /**
+ * TARGA extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ */
+export function extractTARGA(bytes, offset) {
+    // Need all the bytes since we do not know how far up the image goes.
+    const stream = new Stream(bytes);
+    stream.moveTo(offset - 8);
+
+    // Read in the offsets of the possible areas.
+    const extensionOffset = stream.readInt(4, "le");
+    const developerOffset = stream.readInt(4, "le");
+
+    stream.moveBackwardsBy(8);
+
+    /**
+     * Moves backwards in the stream until it meet bytes that are the same as the amount of bytes moved.
+     *
+     * @param {number} sizeOfSize
+     * @param {number} maxSize
+     */
+    function moveBackwardsUntilSize(maxSize, sizeOfSize) {
+        for (let i = 0; i < maxSize; i++) {
+            stream.moveBackwardsBy(1);
+
+            // Read in sizeOfSize amount of bytes in.
+            const size = stream.readInt(sizeOfSize, "le") - 1;
+            stream.moveBackwardsBy(sizeOfSize);
+
+            // If the size matches.
+            if (size === i)
+                break;
+        }
+    }
+
+    /**
+     * Moves backwards in the stream until we meet bytes(when calculated) that are the same as the amount of bytes moved.
+     */
+    function moveBackwardsUntilImageSize() {
+        stream.moveBackwardsBy(5);
+
+        // The documentation said that 0x100000 was the largest the file could be.
+        for (let i = 0; i < 0x100000; i++) {
+
+            // (Height * Width * pixel depth in bits)/8
+            const total = (stream.readInt(2, "le") * stream.readInt(2, "le") * stream.readInt(1))/8;
+            if (total === i-1)
+                break;
+
+            stream.moveBackwardsBy(6);
+        }
+    }
+
+    if (extensionOffset || developerOffset) {
+        if (extensionOffset) {
+            // Size is stored in two bytes hence the maximum is 0xffff.
+            moveBackwardsUntilSize(0xffff, 2);
+
+            // Move to where we think the start of the file is.
+            stream.moveBackwardsBy(extensionOffset);
+        } else if (developerOffset) {
+            // Size is stored in 4 bytes hence the maxiumum is 0xffffffff.
+            moveBackwardsUntilSize(0xffffffff, 4);
+
+            // Size is stored in byte position 6 so have to move back.
+            stream.moveBackwardsBy(6);
+
+            // Move to where we think the start of the file is.
+            stream.moveBackwardsBy(developerOffset);
+        }
+    } else {
+        // Move backwards until size === number of bytes passed.
+        moveBackwardsUntilImageSize();
+
+        // Move backwards over the reaminder of the header + the 5 we borrowed in moveBackwardsUntilImageSize().
+        stream.moveBackwardsBy(0xc+5);
+    }
+
+    return stream.carve(stream.position, offset+0x12);
+}
+
+
+/**
  * WAV extractor.
  *
  * @param {Uint8Array} bytes
@@ -2972,8 +3173,81 @@ export function extractWAV(bytes, offset) {
     stream.moveTo(4);
 
     // Move to file size.
-    stream.moveTo(stream.readInt(4, "le"));
+    stream.moveTo(stream.readInt(4, "le") + 8);
 
+    return stream.carve();
+}
+
+
+/**
+ * MP3 extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractMP3(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Constants for flag byte.
+    const bitRateIndexes = ["free", 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 320000, "bad"];
+
+    const samplingRateFrequencyIndex = [44100, 48000, 32000, "reserved"];
+
+    // ID3 tag, move over it.
+    if ((stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString())) {
+        stream.moveTo(6);
+        const tagSize = (stream.readInt(1) << 21) | (stream.readInt(1) << 14) | (stream.readInt(1) << 7) | stream.readInt(1);
+        stream.moveForwardsBy(tagSize);
+    } else {
+        stream.moveTo(0);
+    }
+
+    // Loop over all the frame headers in the file.
+    while (stream.hasMore()) {
+
+        // If it has an old TAG frame at the end of it, fixed size, 128 bytes.
+        if (stream.getBytes(3) === [0x54, 0x41, 0x47].toString()) {
+            stream.moveForwardsBy(125);
+            break;
+        }
+
+        // If not start of frame.
+        if (stream.getBytes(2).toString() !== [0xff, 0xfb].toString()) {
+            stream.moveBackwardsBy(2);
+            break;
+        }
+
+        // Read flag byte.
+        const flags = stream.readInt(1);
+
+        // Extract frame bit rate from flag byte.
+        const bitRate = bitRateIndexes[flags >> 4];
+
+        // Extract frame sample rate from flag byte.
+        const sampleRate = samplingRateFrequencyIndex[(flags & 0x0f) >> 2];
+
+        // Padding if the frame size is not a multiple of the bitrate.
+        const padding = (flags & 0x02) >> 1;
+
+        // Things that are either not standard or undocumented.
+        if (bitRate === "free" || bitRate === "bad" || sampleRate === "reserved") {
+            stream.moveBackwardsBy(1);
+            break;
+        }
+
+        // Formula: FrameLength = (144 * BitRate / SampleRate ) + Padding
+        const frameSize = Math.floor(((144 * bitRate) / sampleRate) + padding);
+
+        // If the next move goes past the end of the bytestream then extract the entire bytestream.
+        // We assume complete frames in the above formula because there is no field that suggests otherwise.
+        if ((stream.position + frameSize) > stream.length) {
+            stream.moveTo(stream.length);
+            break;
+        } else {
+            stream.moveForwardsBy(frameSize - 3);
+        }
+    }
     return stream.carve();
 }
 
@@ -3379,6 +3653,37 @@ export function extractXZ(bytes, offset) {
 
 
 /**
+ * DEB extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ */
+export function extractDEB(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move past !<arch>
+    stream.moveForwardsBy(8);
+    while (stream.hasMore()) {
+
+        // Move to size field.
+        stream.moveForwardsBy(48);
+        let fsize= "";
+
+        // Convert size to a usable number.
+        for (const elem of stream.getBytes(10)) {
+            fsize += String.fromCharCode(elem);
+        }
+        fsize = parseInt(fsize.trim(), 10);
+
+        // Move past `\n
+        stream.moveForwardsBy(2);
+        stream.moveForwardsBy(fsize);
+    }
+    return stream.carve();
+}
+
+
+/**
  * ELF extractor.
  *
  * @param {Uint8Array} bytes
@@ -3678,4 +3983,159 @@ export function extractEVT(bytes, offset) {
     // Move past EOF.
     stream.moveForwardsBy(eofSize-4);
     return stream.carve();
+}
+
+
+/**
+ * DMP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractDMP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to fileSize field.
+    stream.moveTo(0x70);
+
+    // Multiply number of pages by page size. Plus 1 since the header is a page.
+    stream.moveTo((stream.readInt(4, "le") + 1) * 0x1000);
+
+    return stream.carve();
+}
+
+
+/**
+ * PF extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractPF(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size.
+    stream.moveTo(12);
+    stream.moveTo(stream.readInt(4, "be"));
+
+    return stream.carve();
+}
+
+
+/**
+ * PF (Win 10) extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractPFWin10(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Read in file size.
+    stream.moveTo(stream.readInt(4, "be"));
+
+    return stream.carve();
+}
+
+
+/**
+ * LNK extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractLNK(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size field.
+    stream.moveTo(0x34);
+    stream.moveTo(stream.readInt(4, "le"));
+
+    return stream.carve();
+}
+
+
+/**
+ * LZOP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {Number} offset
+ * @returns {Uint8Array}
+ */
+export function extractLZOP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Flag bits.
+    const F_ADLER32_D = 0x00000001;
+    const F_ADLER32_C = 0x00000002;
+    const F_CRC32_D = 0x00000100;
+    const F_CRC32_C = 0x00000200;
+    const F_H_FILTER = 0x00000800;
+    const F_H_EXTRA_FIELD = 0x00000040;
+
+    let numCheckSumC = 0, numCheckSumD = 0;
+
+    // Move over magic bytes.
+    stream.moveForwardsBy(9);
+
+    const version = stream.readInt(2, "be");
+
+    // Move to flag register offset.
+    stream.moveForwardsBy(6);
+    const flags = stream.readInt(4, "be");
+
+    if (version & F_H_FILTER)
+        stream.moveForwardsBy(4);
+
+    if (flags & F_ADLER32_C)
+        numCheckSumC++;
+
+    if (flags & F_CRC32_C)
+        numCheckSumC++;
+
+    if (flags & F_ADLER32_D)
+        numCheckSumD++;
+
+    if (flags & F_CRC32_D)
+        numCheckSumD++;
+
+    // Move over the mode, mtime_low
+    stream.moveForwardsBy(8);
+
+    if (version >= 0x0940)
+        stream.moveForwardsBy(4);
+
+    const fnameSize = stream.readInt(1, "be");
+
+    // Move forwards by size of file name and the following 4 byte checksum.
+    stream.moveForwardsBy(fnameSize);
+
+    if (flags & F_H_EXTRA_FIELD) {
+        const extraSize = stream.readInt(4, "be");
+        stream.moveForwardsBy(extraSize);
+    }
+
+    // Move past checksum.
+    stream.moveForwardsBy(4);
+
+    while (stream.hasMore()) {
+        const uncompSize = stream.readInt(4, "be");
+
+        // If data has no length, break.
+        if (uncompSize === 0)
+            break;
+
+        const compSize = stream.readInt(4, "be");
+
+        const numCheckSumSkip = (uncompSize === compSize) ? numCheckSumD : numCheckSumD + numCheckSumC;
+
+        // skip forwards by compressed data size and the size of the checksum(s).
+        stream.moveForwardsBy(compSize + (numCheckSumSkip * 4));
+    }
+    return stream.carve();
+
 }

@@ -33,39 +33,39 @@ class FromBinary extends Operation {
                 "value": BIN_DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^(?:[01]{8})+$",
+                pattern: "^(?:[01]{8})+$",
                 flags: "",
                 args: ["None"]
             },
             {
-                match: "^(?:[01]{8})(?: [01]{8})*$",
+                pattern: "^(?:[01]{8})(?: [01]{8})*$",
                 flags: "",
                 args: ["Space"]
             },
             {
-                match: "^(?:[01]{8})(?:,[01]{8})*$",
+                pattern: "^(?:[01]{8})(?:,[01]{8})*$",
                 flags: "",
                 args: ["Comma"]
             },
             {
-                match: "^(?:[01]{8})(?:;[01]{8})*$",
+                pattern: "^(?:[01]{8})(?:;[01]{8})*$",
                 flags: "",
                 args: ["Semi-colon"]
             },
             {
-                match: "^(?:[01]{8})(?::[01]{8})*$",
+                pattern: "^(?:[01]{8})(?::[01]{8})*$",
                 flags: "",
                 args: ["Colon"]
             },
             {
-                match: "^(?:[01]{8})(?:\\n[01]{8})*$",
+                pattern: "^(?:[01]{8})(?:\\n[01]{8})*$",
                 flags: "",
                 args: ["Line feed"]
             },
             {
-                match: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
+                pattern: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
                 flags: "",
                 args: ["CRLF"]
             },
