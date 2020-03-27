@@ -242,13 +242,13 @@
             "Convert co-ordinate format",
             "Show on map",
             "Parse UNIX file permissions",
+            "Parse ObjectID timestamp",
             "Swap endianness",
             "Parse colour code",
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
-            "Sleep",
-            "Parse ObjectId timestamp"
+            "Sleep"
         ]
     },
     {

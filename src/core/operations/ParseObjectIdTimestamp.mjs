@@ -9,19 +9,19 @@ import OperationError from "../errors/OperationError.mjs";
 import BSON from "bson";
 
 /**
- * Parse ObjectId timestamp operation
+ * Parse ObjectID timestamp operation
  */
-class ParseObjectIdTimestamp extends Operation {
+class ParseObjectIDTimestamp extends Operation {
 
     /**
-     * ParseObjectIdTimestamp constructor
+     * ParseObjectIDTimestamp constructor
      */
     constructor() {
         super();
 
-        this.name = "Parse ObjectId timestamp";
-        this.module = "Default";
-        this.description = "Parse timestamp from MongoDB/BSON ObjectId hex string.";
+        this.name = "Parse ObjectID timestamp";
+        this.module = "Serialise";
+        this.description = "Parse timestamp from MongoDB/BSON ObjectID hex string.";
         this.infoURL = "https://docs.mongodb.com/manual/reference/method/ObjectId.getTimestamp/";
         this.inputType = "string";
         this.outputType = "string";
@@ -44,4 +44,4 @@ class ParseObjectIdTimestamp extends Operation {
 
 }
 
-export default ParseObjectIdTimestamp;
+export default ParseObjectIDTimestamp;
