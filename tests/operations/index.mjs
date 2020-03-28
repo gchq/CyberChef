@@ -102,6 +102,7 @@ import "./tests/CipherSaber2.mjs";
 import "./tests/Colossus.mjs";
 import "./tests/ParseObjectIDTimestamp.mjs";
 import "./tests/CBOREncode.mjs";
+import "./tests/CBORDecode.mjs";
 
 
 // Cannot test operations that use the File type yet
