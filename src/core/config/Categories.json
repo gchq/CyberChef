@@ -208,6 +208,7 @@
     {
         "name": "Utils",
         "ops": [
+            "Cut",
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
