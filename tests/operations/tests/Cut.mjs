@@ -39,7 +39,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Cut",
-                args: ["User defined", "2-1", "\\n", "\\n", ",", ","],
+                args: ["User defined", "1-0", "\\n", "\\n", ",", ","],
             },
         ],
     },
