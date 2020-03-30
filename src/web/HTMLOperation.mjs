@@ -81,6 +81,7 @@ class HTMLOperation {
 
         html += `</div>
         <div class="recip-icons">
+            <i class="material-icons remove-icon" title="Remove operation" disabled="false">delete</i>
             <i class="material-icons breakpoint" title="Set breakpoint" break="false">pause</i>
             <i class="material-icons disable-icon" title="Disable operation" disabled="false">not_interested</i>
         </div>

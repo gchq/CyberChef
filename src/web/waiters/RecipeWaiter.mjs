@@ -263,6 +263,19 @@ class RecipeWaiter {
 
 
     /**
+     * Handler for remove click events.
+     * Removes the operation from the recipe and auto bakes.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    removeClick(e) {
+        e.target.closest(".operation").remove();
+        this.opRemove(e);
+    }
+
+
+    /**
      * Handler for operation doubleclick events.
      * Removes the operation from the recipe and auto bakes.
      *
