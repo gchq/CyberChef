@@ -24,23 +24,23 @@ class ExtractQuantisationTables extends Operation {
         this.description = "Extracts quantisation tables embedded in a JPEG image.";
         this.infoURL = "https://en.wikipedia.org/wiki/Quantization_(image_processing)";
         this.inputType = "ArrayBuffer";
-        this.outputType = "string";
+        this.outputType = "json";
+        this.presentType = "string";
         this.args = [];
     }
 
     /**
      * @param {ArrayBuffer} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {json}
      */
     run(input, args) {
         const image = new Uint8Array(input);
-        // maximally 4 tables are allowed in a JPEG file
 
         let ptr = indexOfMarker(image, 0xD8);
         if (ptr === -1) throw new OperationError("Malformed image file: Start of Image not found");
 
-        let ret = "";
+        const ret = {};
 
         do {
             const dqtIndex = indexOfMarker(image, 0xDB, ptr);
@@ -57,15 +57,39 @@ class ExtractQuantisationTables extends Operation {
             if (tableId >= 4) throw new OperationError(`Invalid table identifier ${tableId} at table definition beginning at ${dqtIndex}`);
             const table = parseQTable(image.slice(dqtIndex + 5, dqtIndex + 5 + tableLength), doublePrecision);
 
-            ret += `Quantisation table at position ${dqtIndex}. ID ${tableId}, ${(doublePrecision? "16":"8")}-bit precision:\n`;
-            ret += this.prettifyMatrix(table);
-            ret += "\n";
+            // there may be two sets of quantisation tables, one in the embedded thumbnail and one for the main image
+            // we extract both sets so there may be tables with duplicate identifiers
+            ret[dqtIndex] = {
+                id: tableId,
+                precision: doublePrecision? 16:8,
+                table: table
+            };
 
             ptr = dqtIndex + 5 + tableLength + 1;
         } while (ptr < image.length);
 
         return ret;
     }
+
+    /**
+     * Pretty print the tables with description
+     *
+     * @param {json} tables
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    present(tables, args) {
+        let ret = "";
+
+        for (const dqtIndex in tables) {
+            const tableInfo = tables[dqtIndex];
+            ret += `Quantisation table at position ${dqtIndex}. ID ${tableInfo.id}, ${tableInfo.precision}-bit precision:\n`;
+            ret += this.prettifyMatrix(tableInfo.table);
+            ret += "\n";
+        }
+        return ret;
+    }
+
 
     /**
      * @param {number[][]} mat
