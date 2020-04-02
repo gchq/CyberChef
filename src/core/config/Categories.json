@@ -379,6 +379,7 @@
             "Remove EXIF",
             "Extract EXIF",
             "Extract RGBA",
+            "Extract Quantisation Tables",
             "View Bit Plane",
             "Randomize Colour Palette",
             "Extract LSB"
