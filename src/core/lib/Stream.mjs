@@ -303,11 +303,13 @@ export default class Stream {
     /**
      * Returns a slice of the stream up to the current position.
      *
+     * @param {number} [start=0]
+     * @param {number} [finish=this.position]
      * @returns {Uint8Array}
      */
-    carve() {
-        if (this.bitPos > 0) this.position++;
-        return this.bytes.slice(0, this.position);
+    carve(start=0, finish=this.position) {
+        if (this.bitPos > 0) finish++;
+        return this.bytes.slice(start, finish);
     }
 
 }

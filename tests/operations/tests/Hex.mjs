@@ -92,6 +92,19 @@ TestRegister.addTests([
                 ]
             }
         ]
+    },
+    {
+        name: "0x with Comma to Ascii",
+        input: "0x74,0x65,0x73,0x74,0x20,0x73,0x74,0x72,0x69,0x6e,0x67",
+        expectedOutput: "test string",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": [
+                    "0x with comma"
+                ]
+            }
+        ]
 
-    }
+    },
 ]);

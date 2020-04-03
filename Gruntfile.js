@@ -37,7 +37,7 @@ module.exports = function (grunt) {
         ]);
 
     grunt.registerTask("configTests",
-        "A task which configures config files in preparation for tests to be run. Use `npm tests` to run tests.",
+        "A task which configures config files in preparation for tests to be run. Use `npm test` to run tests.",
         [
             "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
         ]);

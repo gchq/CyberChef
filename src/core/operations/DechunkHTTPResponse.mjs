@@ -24,6 +24,13 @@ class DechunkHTTPResponse extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "^[0-9A-F]+\r\n",
+                flags:  "i",
+                args:   []
+            }
+        ];
     }
 
     /**
