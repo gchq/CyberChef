@@ -1097,32 +1097,34 @@ ExifImageHeight: 57`);
             assert.ok(Object.prototype.hasOwnProperty.call(row, "matchesCrib"));
 
             row.recipe.forEach(item => {
-                assert.ok(Object.prototype.hasOwnProperty.call(item, "op"));
+                assert.ok(Object.prototype.hasOwnProperty.call(item, "op"),  `No 'op' property in item ${item}`);
                 assert.strictEqual(typeof item.op, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(item, "args"));
+                assert.ok(Object.prototype.hasOwnProperty.call(item, "args"),  `No 'args' property in item ${item}`);
                 assert.ok(Array.isArray(item.args));
             });
 
             row.languageScores.forEach(score => {
-                assert.ok(Object.prototype.hasOwnProperty.call(score, "lang"));
+                assert.ok(Object.prototype.hasOwnProperty.call(score, "lang"), `No 'lang' property in languageScore ${score}`);
                 assert.strictEqual(typeof score.lang, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(score, "score"));
+                assert.ok(Object.prototype.hasOwnProperty.call(score, "score"),  `No 'score' property in languageScore ${score}`);
                 assert.strictEqual(typeof score.score, "number");
-                assert.ok(Object.prototype.hasOwnProperty.call(score, "probability"));
+                assert.ok(Object.prototype.hasOwnProperty.call(score, "probability"),  `No 'probability' property in languageScore ${score}`);
                 assert.strictEqual(typeof score.probability, "number");
             });
 
             row.matchingOps.forEach(op => {
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "op"));
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "op"), `No 'op' property in matchingOp ${JSON.stringify(op)}`);
                 assert.strictEqual(typeof op.op, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "match"));
-                assert.strictEqual(typeof op.match, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "flags"));
-                assert.strictEqual(typeof op.flags, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "args"));
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "pattern"), `No 'pattern' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(op.pattern instanceof RegExp);
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "args"), `No 'args' property in matchingOp ${JSON.stringify(op)}`);
                 assert.ok(Array.isArray(op.args));
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "useful"));
-                assert.strictEqual(typeof op.useful, "boolean");
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "useful"), `No 'useful' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ifError(op.useful); // Expect this to be undefined
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "entropyRange"), `No 'entropyRange' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ifError(op.entropyRange); // Expect this to be undefined
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "output"), `No 'output' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ifError(op.output); // Expect this to be undefined
             });
         });
 
