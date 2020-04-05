@@ -8,6 +8,13 @@ import Operation from "../Operation.mjs";
 import {detectFileType} from "../lib/FileType.mjs";
 import {FILE_SIGNATURES} from "../lib/FileSignatures.mjs";
 
+// Concat all supported extensions into a single flat list
+const exts = [].concat.apply([], Object.keys(FILE_SIGNATURES).map(cat =>
+    [].concat.apply([], FILE_SIGNATURES[cat].map(sig =>
+        sig.extension.split(",")
+    ))
+)).unique().sort().join(", ");
+
 /**
  * Detect File Type operation
  */
@@ -22,11 +29,7 @@ class DetectFileType extends Operation {
         this.name = "Detect File Type";
         this.module = "Default";
         this.description = "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: " +
-            Object.keys(FILE_SIGNATURES).map(cat =>
-                FILE_SIGNATURES[cat].map(sig =>
-                    sig.extension.split(",")[0]
-                ).join(", ")
-            ).join(", ") + ".";
+            exts + ".";
         this.infoURL = "https://wikipedia.org/wiki/List_of_file_signatures";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";

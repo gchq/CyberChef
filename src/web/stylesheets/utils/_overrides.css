@@ -82,14 +82,6 @@ a:focus {
     border-color: var(--btn-success-hover-border-colour);
 }
 
-input[type="search"] {
-    appearance: searchfield;
-}
-
-input[type="search"]::-webkit-search-cancel-button {
-    appearance: searchfield-cancel-button;
-}
-
 select.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
     height: unset !important;
 }

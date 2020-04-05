@@ -70,7 +70,7 @@ if (typeof document !== 'undefined') {
     try {
         // Mouse move event to fill random array
         document.addEventListener('mousemove', function (e) {
-            randomRing.set((new Date().getTime() & 255) ^
+            randomRing.set((Date.now() & 255) ^
                     ((e.clientX || e.pageX) & 255) ^
                     ((e.clientY || e.pageY) & 255));
         }, false);
@@ -80,7 +80,7 @@ if (typeof document !== 'undefined') {
     try {
         // Keypress event to fill random array
         document.addEventListener('keydown', function (e) {
-            randomRing.set((new Date().getTime() & 255) ^
+            randomRing.set((Date.now() & 255) ^
                     (e.keyCode & 255));
         }, false);
     } catch (e) {

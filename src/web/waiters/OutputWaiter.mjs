@@ -174,7 +174,7 @@ class OutputWaiter {
     }
 
     /**
-     * Updates the stored bake ID for the output in the ouptut array
+     * Updates the stored bake ID for the output in the output array
      *
      * @param {number} bakeId
      * @param {number} inputNum
@@ -1046,15 +1046,25 @@ class OutputWaiter {
      * @param {Object[]} options
      */
     backgroundMagicResult(options) {
-        if (!options.length ||
-            !options[0].recipe.length)
-            return;
+        if (!options.length) return;
 
         const currentRecipeConfig = this.app.getRecipeConfig();
-        const newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
-        const opSequence = options[0].recipe.map(o => o.op).join(", ");
+        let msg = "",
+            newRecipeConfig;
 
-        this.showMagicButton(opSequence, options[0].data, newRecipeConfig);
+        if (options[0].recipe.length) {
+            const opSequence = options[0].recipe.map(o => o.op).join(", ");
+            newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
+            msg = `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(options[0].data), 30)}"</span>`;
+        } else if (options[0].fileType && options[0].fileType.name) {
+            const ft = options[0].fileType;
+            newRecipeConfig = currentRecipeConfig.concat([{op: "Detect File Type", args: []}]);
+            msg = `<i>${ft.name}</i> file detected`;
+        } else {
+            return;
+        }
+
+        this.showMagicButton(msg, newRecipeConfig);
     }
 
     /**
@@ -1072,15 +1082,14 @@ class OutputWaiter {
     }
 
     /**
-     * Displays the Magic button with a title and adds a link to a complete recipe.
+     * Displays the Magic button with a title and adds a link to a recipe.
      *
-     * @param {string} opSequence
-     * @param {string} result
+     * @param {string} msg
      * @param {Object[]} recipeConfig
      */
-    showMagicButton(opSequence, result, recipeConfig) {
+    showMagicButton(msg, recipeConfig) {
         const magicButton = document.getElementById("magic");
-        magicButton.setAttribute("data-original-title", `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(result), 30)}"</span>`);
+        magicButton.setAttribute("data-original-title", msg);
         magicButton.setAttribute("data-recipe", JSON.stringify(recipeConfig), null, "");
         magicButton.classList.remove("hidden");
         magicButton.classList.add("pulse");
@@ -1113,8 +1122,8 @@ class OutputWaiter {
             showFileOverlay = document.getElementById("show-file-overlay"),
             sliceFromEl = document.getElementById("output-file-slice-from"),
             sliceToEl = document.getElementById("output-file-slice-to"),
-            sliceFrom = parseInt(sliceFromEl.value, 10),
-            sliceTo = parseInt(sliceToEl.value, 10),
+            sliceFrom = parseInt(sliceFromEl.value, 10) * 1024,
+            sliceTo = parseInt(sliceToEl.value, 10) * 1024,
             output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
 
         let str;
@@ -1128,6 +1137,39 @@ class OutputWaiter {
         showFileOverlay.style.display = "block";
         outputText.value = Utils.printable(str, true);
 
+        outputText.style.display = "block";
+        outputHtml.style.display = "none";
+        outputFile.style.display = "none";
+        outputHighlighter.display = "block";
+        inputHighlighter.display = "block";
+
+        this.toggleLoader(false);
+    }
+
+    /**
+     * Handler for showing an entire file at user's discretion (even if it's way too big)
+     */
+    async showAllFile() {
+        document.querySelector("#output-loader .loading-msg").textContent = "Loading entire file at user instruction. This may cause a crash...";
+        this.toggleLoader(true);
+        const outputText = document.getElementById("output-text"),
+            outputHtml = document.getElementById("output-html"),
+            outputFile = document.getElementById("output-file"),
+            outputHighlighter = document.getElementById("output-highlighter"),
+            inputHighlighter = document.getElementById("input-highlighter"),
+            showFileOverlay = document.getElementById("show-file-overlay"),
+            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
+
+        let str;
+        if (output.type === "ArrayBuffer") {
+            str = Utils.arrayBufferToStr(output.result);
+        } else {
+            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish));
+        }
+
+        outputText.classList.remove("blur");
+        showFileOverlay.style.display = "none";
+        outputText.value = Utils.printable(str, true);
 
         outputText.style.display = "block";
         outputHtml.style.display = "none";

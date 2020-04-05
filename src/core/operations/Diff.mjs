@@ -48,6 +48,11 @@ class Diff extends Operation {
                 "value": true
             },
             {
+                "name": "Show subtraction",
+                "type": "boolean",
+                "value": false
+            },
+            {
                 "name": "Ignore whitespace",
                 "type": "boolean",
                 "value": false,
@@ -67,6 +72,7 @@ class Diff extends Operation {
                 diffBy,
                 showAdded,
                 showRemoved,
+                showSubtraction,
                 ignoreWhitespace
             ] = args,
             samples = input.split(sampleDelim);
@@ -116,7 +122,7 @@ class Diff extends Operation {
                 if (showAdded) output += "<span class='hl5'>" + Utils.escapeHtml(diff[i].value) + "</span>";
             } else if (diff[i].removed) {
                 if (showRemoved) output += "<span class='hl3'>" + Utils.escapeHtml(diff[i].value) + "</span>";
-            } else {
+            } else if (!showSubtraction) {
                 output += Utils.escapeHtml(diff[i].value);
             }
         }

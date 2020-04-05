@@ -39,7 +39,7 @@ class Chef {
     */
     async bake(input, recipeConfig, options) {
         log.debug("Chef baking");
-        const startTime = new Date().getTime(),
+        const startTime = Date.now(),
             recipe      = new Recipe(recipeConfig),
             containsFc  = recipe.containsFlowControl(),
             notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
@@ -73,10 +73,10 @@ class Chef {
         // The threshold is specified in KiB.
         const threshold = (options.ioDisplayThreshold || 1024) * 1024;
         const returnType =
-            this.dish.size > threshold ?
-                Dish.ARRAY_BUFFER :
-                this.dish.type === Dish.HTML ?
-                    Dish.HTML :
+            this.dish.type === Dish.HTML ?
+                Dish.HTML :
+                this.dish.size > threshold ?
+                    Dish.ARRAY_BUFFER :
                     Dish.STRING;
 
         return {
@@ -84,7 +84,7 @@ class Chef {
             result: await this.dish.get(returnType, notUTF8),
             type: Dish.enumLookup(this.dish.type),
             progress: progress,
-            duration: new Date().getTime() - startTime,
+            duration: Date.now() - startTime,
             error: error
         };
     }
@@ -110,7 +110,7 @@ class Chef {
     silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
-        const startTime = new Date().getTime(),
+        const startTime = Date.now(),
             recipe = new Recipe(recipeConfig),
             dish = new Dish();
 
@@ -119,7 +119,7 @@ class Chef {
         } catch (err) {
             // Suppress all errors
         }
-        return new Date().getTime() - startTime;
+        return Date.now() - startTime;
     }
 
 
@@ -146,7 +146,12 @@ class Chef {
             const func = direction === "forward" ? highlights[i].f : highlights[i].b;
 
             if (typeof func == "function") {
-                pos = func(pos, highlights[i].args);
+                try {
+                    pos = func(pos, highlights[i].args);
+                } catch (err) {
+                    // Throw away highlighting errors
+                    pos = [];
+                }
             }
         }
 

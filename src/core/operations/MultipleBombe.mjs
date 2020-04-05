@@ -54,7 +54,7 @@ class MultipleBombe extends Operation {
         super();
 
         this.name = "Multiple Bombe";
-        this.module = "Default";
+        this.module = "Bletchley";
         this.description = "Emulation of the Bombe machine used to attack Enigma. This version carries out multiple Bombe runs to handle unknown rotor configurations.<br><br>You should test your menu on the single Bombe operation before running it here. See the description of the Bombe operation for instructions on choosing a crib.<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Bombe";
         this.inputType = "string";
@@ -144,7 +144,7 @@ class MultipleBombe extends Operation {
      * @param {number} progress - Progress (as a float in the range 0..1)
      */
     updateStatus(nLoops, nStops, progress, start) {
-        const elapsed = new Date().getTime() - start;
+        const elapsed = Date.now() - start;
         const remaining = (elapsed / progress) * (1 - progress) / 1000;
         const hours = Math.floor(remaining / 3600);
         const minutes = `0${Math.floor((remaining % 3600) / 60)}`.slice(-2);
@@ -237,7 +237,7 @@ class MultipleBombe extends Operation {
         const totalRuns = choose(rotors.length, 3) * 6 * fourthRotors.length * reflectors.length;
         let nRuns = 0;
         let nStops = 0;
-        const start = new Date().getTime();
+        const start = Date.now();
         for (const rotor1 of rotors) {
             for (const rotor2 of rotors) {
                 if (rotor2 === rotor1) {
