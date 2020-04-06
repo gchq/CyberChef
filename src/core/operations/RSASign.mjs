@@ -6,6 +6,7 @@
  */
 
 import Operation from "../Operation";
+import OperationError from "../errors/OperationError";
 import forge from "node-forge/dist/forge.min.js";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
@@ -52,13 +53,21 @@ class RSASign extends Operation {
      */
     run(input, args) {
         const [key, password, mdAlgo] = args;
-
-        const privateKey = forge.pki.decryptRsaPrivateKey(key, password);
-        const md = MD_ALGORITHMS[mdAlgo].create();
-        md.update(input, "utf8");
-        const signature = privateKey.sign(md);
-
-        return signature.split("").map(char => char.charCodeAt());
+        if (key.replace("-----BEGIN RSA PRIVATE KEY-----", "").length === 0) {
+            throw new OperationError("Please enter a private key.");
+        }
+        try {
+            const privateKey = forge.pki.decryptRsaPrivateKey(key, password);
+            // Generate message hash
+            const md = MD_ALGORITHMS[mdAlgo].create();
+            md.update(input, "utf8");
+            // Convert signature UTF-16 string to byteArray
+            const encoder = new TextEncoder();
+            const signature = encoder.encode(privateKey.sign(md));
+            return signature;
+        } catch (err) {
+            throw new OperationError(err);
+        }
     }
 
 }
