@@ -56,6 +56,11 @@ module.exports = {
                 context: "src/core/vendor/",
                 from: "tesseract/**/*",
                 to: "assets/"
+            },
+            {
+                context: "node_modules/node-forge/dist",
+                from: "prime.worker.min.js",
+                to: "assets/forge/"
             }
         ])
     ],

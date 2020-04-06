@@ -1,4 +1,5 @@
 /**
+ * @author Matt C [me@mitt.dev]
  * @author gchq77703 []
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -55,7 +56,7 @@ class GenerateRSAKeyPair extends Operation {
         const [keyLength, outputFormat] = args;
 
         return new Promise((resolve, reject) => {
-            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: -1}, (err, keypair) => {
+            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: -1, workerScript: "./assets/forge/prime.worker.min.js"}, (err, keypair) => {
                 if (err) return reject(err);
 
                 let result;

@@ -1,11 +1,13 @@
 /**
+ * @author Matt C [me@mitt.dev]
  * @author gchq77703 []
- * @copyright Crown Copyright 2018
+ * @copyright Crown Copyright 2020
  * @license Apache-2.0
  */
 
 import Operation from "../Operation";
 import forge from "node-forge/dist/forge.min.js";
+import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
 /**
  * RSA Sign operation
@@ -31,9 +33,14 @@ class RSASign extends Operation {
                 value: "-----BEGIN RSA PRIVATE KEY-----"
             },
             {
-                name: "Password",
+                name: "Key Password",
                 type: "text",
                 value: ""
+            },
+            {
+                name: "Message Digest Algorithm",
+                type: "option",
+                value: Object.keys(MD_ALGORITHMS)
             }
         ];
     }
@@ -44,11 +51,10 @@ class RSASign extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [key, password] = args;
+        const [key, password, mdAlgo] = args;
 
         const privateKey = forge.pki.decryptRsaPrivateKey(key, password);
-
-        const md = forge.md.sha1.create();
+        const md = MD_ALGORITHMS[mdAlgo].create();
         md.update(input, "utf8");
         const signature = privateKey.sign(md);
 
