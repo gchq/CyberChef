@@ -8,7 +8,6 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import forge from "node-forge/dist/forge.min.js";
-import Utils from "../Utils.mjs";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
 /**

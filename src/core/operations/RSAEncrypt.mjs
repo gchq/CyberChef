@@ -10,19 +10,19 @@ import forge from "node-forge/dist/forge.min.js";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
 /**
- * RSA Verify operation
+ * RSA Encrypt operation
  */
-class RSAVerify extends Operation {
+class RSAEncrypt extends Operation {
 
     /**
-     * RSAVerify constructor
+     * RSAEncrypt constructor
      */
     constructor() {
         super();
 
-        this.name = "RSA Verify";
+        this.name = "RSA Encrypt";
         this.module = "Ciphers";
-        this.description = "Verify a message against a signature and a public PEM encoded RSA key.";
+        this.description = "Encrypt a message with a PEM encoded RSA public key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
         this.inputType = "string";
         this.outputType = "string";
@@ -33,9 +33,21 @@ class RSAVerify extends Operation {
                 value: "-----BEGIN RSA PUBLIC KEY-----"
             },
             {
-                name: "Message",
-                type: "text",
-                value: ""
+                name: "Encryption Scheme",
+                type: "argSelector",
+                value: [
+                    {
+                        name: "RSA-OAEP",
+                        on: [2]
+                    },
+                    {
+                        name: "RSAES-PKCS1-V1_5",
+                        off: [2]
+                    },
+                    {
+                        name: "RAW",
+                        off: [2]
+                    }]
             },
             {
                 name: "Message Digest Algorithm",
@@ -51,27 +63,22 @@ class RSAVerify extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [pemKey, message, mdAlgo] = args;
+        const [pemKey, scheme, md] = args;
+
         if (pemKey.replace("-----BEGIN RSA PUBLIC KEY-----", "").length === 0) {
             throw new OperationError("Please enter a public key.");
         }
         try {
             // Load public key
             const pubKey = forge.pki.publicKeyFromPem(pemKey);
-            // Generate message digest
-            const md = MD_ALGORITHMS[mdAlgo].create();
-            md.update(message, "utf8");
-            // Compare signed message digest and generated message digest
-            const result = pubKey.verify(md.digest().bytes(), input);
-            return result ? "Verified OK" : "Verification Failure";
+            // Encrypt message
+            const eMsg = pubKey.encrypt(input, scheme, {md: MD_ALGORITHMS[md].create()});
+            return eMsg;
         } catch (err) {
-            if (err.message === "Encrypted message length is invalid.") {
-                throw new OperationError(`Signature length (${err.length}) does not match expected length based on key (${err.expected}).`);
-            }
             throw new OperationError(err);
         }
     }
 
 }
 
-export default RSAVerify;
+export default RSAEncrypt;
