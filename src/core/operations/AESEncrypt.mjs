@@ -41,8 +41,33 @@ class AESEncrypt extends Operation {
             },
             {
                 "name": "Mode",
-                "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"]
+                "type": "argSelector",
+                "value": [
+                    {
+                        name: "CBC",
+                        off: [5]
+                    },
+                    {
+                        name: "CFB",
+                        off: [5]
+                    },
+                    {
+                        name: "OFB",
+                        off: [5]
+                    },
+                    {
+                        name:"CTR",
+                        off: [5]
+                    },
+                    {
+                        name: "GCM",
+                        on: [5]
+                    },
+                    {
+                        name: "ECB",
+                        off: [5]
+                    }
+                ]
             },
             {
                 "name": "Input",
@@ -53,6 +78,11 @@ class AESEncrypt extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
+            },
+            {
+                "name": "Additional Authenticated Data",
+                "type": "string",
+                "value": ""
             }
         ];
     }
@@ -83,7 +113,12 @@ The following algorithms will be used based on the size of the key:
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
-        cipher.start({iv: iv});
+
+        if (args[5])
+            cipher.start({iv: iv, additionalData: args[5]});
+        else
+            cipher.start({iv: iv});
+
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
