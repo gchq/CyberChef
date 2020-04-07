@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 import forge from "node-forge/dist/forge.min.js";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
@@ -24,7 +25,7 @@ class RSAVerify extends Operation {
         this.module = "Ciphers";
         this.description = "Verify a message against a signature and a public PEM encoded RSA key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
-        this.inputType = "byteArray";
+        this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {

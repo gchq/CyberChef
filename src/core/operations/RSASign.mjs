@@ -8,6 +8,7 @@
 import Operation from "../Operation";
 import OperationError from "../errors/OperationError";
 import forge from "node-forge/dist/forge.min.js";
+import Utils from "../Utils.mjs";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
 /**
@@ -26,7 +27,7 @@ class RSASign extends Operation {
         this.description = "Sign a plaintext message with a PEM encoded RSA key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
         this.inputType = "string";
-        this.outputType = "byteArray";
+        this.outputType = "string";
         this.args = [
             {
                 name: "RSA Private Key (PEM)",
@@ -61,10 +62,9 @@ class RSASign extends Operation {
             // Generate message hash
             const md = MD_ALGORITHMS[mdAlgo].create();
             md.update(input, "utf8");
-            // Convert signature UTF-16 string to byteArray
-            const encoder = new TextEncoder();
-            const signature = encoder.encode(privateKey.sign(md));
-            return signature;
+            // Sign message hash
+            const sig = privateKey.sign(md);
+            return sig;
         } catch (err) {
             throw new OperationError(err);
         }
