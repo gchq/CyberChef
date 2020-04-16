@@ -125,7 +125,8 @@ class Colossus extends Operation {
             },
             {
                 name: "R1-Negate",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "R1-Counter",
@@ -164,7 +165,8 @@ class Colossus extends Operation {
             },
             {
                 name: "R2-Negate",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "R2-Counter",
@@ -203,7 +205,8 @@ class Colossus extends Operation {
             },
             {
                 name: "R3-Negate",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "R3-Counter",
@@ -212,7 +215,8 @@ class Colossus extends Operation {
             },
             {
                 name: "Negate All",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "K Rack: Addition",
@@ -220,23 +224,28 @@ class Colossus extends Operation {
             },
             {
                 name: "Add-Q1",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Add-Q2",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Add-Q3",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Add-Q4",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Add-Q5",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Add-Equals",
@@ -246,11 +255,13 @@ class Colossus extends Operation {
             },
             {
                 name: "Add-Counter1",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Add Negate All",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Total Motor",
