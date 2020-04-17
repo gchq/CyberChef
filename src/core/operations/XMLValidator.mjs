@@ -35,22 +35,23 @@ class XMLValidator extends Operation {
      */
     run(input, args) {
 
-        try {
-            // Overwrite error handler since the built-in one does not raise exceptions.
-            (new DOMParser.DOMParser({errorHandler: {
-                warning: (msg) => {
-                    throw new OperationError(msg);
-                },
-                error: (msg) => {
-                    throw new OperationError(msg);
-                },
-                fatalError: (msg) => {
-                    throw new OperationError(msg);
-                },
-            }})).parseFromString(input);
-        } catch (err) {
-            throw new OperationError(err);
-        }
+        if (input)
+            try {
+                // Overwrite error handler since the built-in one does not raise exceptions.
+                (new DOMParser.DOMParser({errorHandler: {
+                    warning: (msg) => {
+                        throw new OperationError(msg);
+                    },
+                    error: (msg) => {
+                        throw new OperationError(msg);
+                    },
+                    fatalError: (msg) => {
+                        throw new OperationError(msg);
+                    },
+                }})).parseFromString(input);
+            } catch (err) {
+                throw new OperationError(err);
+            }
         return input;
     }
 }
