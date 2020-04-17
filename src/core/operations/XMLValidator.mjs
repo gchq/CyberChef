@@ -20,8 +20,8 @@ class XMLValidator extends Operation {
 
         this.name = "XML Validator";
         this.module = "Default";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "Extensible Markup Language (XML) is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable.";
+        this.infoURL = "https://wikipedia.org/wiki/XML";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
