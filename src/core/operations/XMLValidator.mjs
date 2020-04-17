@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import DOMParser from "xmldom";
 
 /**
  * XML Validator operation
@@ -34,11 +35,9 @@ class XMLValidator extends Operation {
      */
     run(input, args) {
 
-        const DOMParser = require("xmldom").DOMParser;
-
         try {
             // Overwrite error handler since the built-in one does not raise exceptions.
-            (new DOMParser({errorHandler: {
+            (new DOMParser.DOMParser({errorHandler: {
                 warning: (msg) => {
                     throw new OperationError(msg);
                 },
