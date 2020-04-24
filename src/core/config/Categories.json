@@ -313,6 +313,7 @@
             "SHA1",
             "SHA2",
             "SHA3",
+            "SM3",
             "Keccak",
             "Shake",
             "RIPEMD",
