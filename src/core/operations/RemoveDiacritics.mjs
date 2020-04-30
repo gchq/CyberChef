@@ -32,6 +32,8 @@ class RemoveDiacritics extends Operation {
      * @returns {string}
      */
     run(input, args) {
+
+        input = input.replace("Ł", "L").replace("ł", "l");
         // reference: https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript/37511463
         return input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
