@@ -33,7 +33,7 @@ class Length extends Operation {
         this.outputType = "number";
         this.args = [
             {
-                name: "First arg",
+                name: "Units",
                 type: "option",
                 value: [BYTES, CHARS, UTF]
             }
