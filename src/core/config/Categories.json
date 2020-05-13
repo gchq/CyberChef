@@ -225,6 +225,7 @@
             "Filter",
             "Head",
             "Tail",
+            "Length",
             "Count occurrences",
             "Expand alphabet range",
             "Drop bytes",
