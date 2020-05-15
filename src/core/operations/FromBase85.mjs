@@ -52,6 +52,8 @@ class FromBase85 extends Operation {
 
         if (input.length === 0) return [];
 
+        input = input.replace(/\s+/g, "");
+
         const matches = input.match(/<~(.+?)~>/);
         if (matches !== null) input = matches[1];
 
