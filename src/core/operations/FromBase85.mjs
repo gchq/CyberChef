@@ -33,6 +33,23 @@ class FromBase85 extends Operation {
                 value: ALPHABET_OPTIONS
             },
         ];
+        this.checks = [
+            {
+                pattern: "^\\s*(?:<~)?(?:(?:\\s*[!-u]){5}|\\s*z)+[!-u\\s]*(?:~>)?\\s*$",
+                flags: "i",
+                args: ["!-u"]
+            },
+            {
+                pattern: "^(?:\\s*[0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#])+\\s*$",
+                flags: "i",
+                args: ["0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#"]
+            },
+            {
+                pattern: "^(?:\\s*[0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~])+\\s*$",
+                flags: "i",
+                args: ["0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~"]
+            },
+        ];
     }
 
     /**
