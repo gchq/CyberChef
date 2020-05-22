@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("testnodeconsumer",
         "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
-        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:testESMDeepImportNodeConsumer", "exec:teardownNodeConsumers"]);
+        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:teardownNodeConsumers"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -413,17 +413,10 @@ module.exports = function (grunt) {
             testESMNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules esm-consumer.mjs",
+                    "node --no-warnings --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node esm-consumer.mjs",
                 ]),
                 stdout: false,
-            },
-            testESMDeepImportNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules esm-deep-import-consumer.mjs",
-                ]),
-                stdout: false,
-            },
+            }
         },
     });
 };

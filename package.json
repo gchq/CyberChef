@@ -1,6 +1,5 @@
 {
   "name": "cyberchef",
-  "type": "module",
   "version": "9.20.3",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
@@ -163,7 +162,7 @@
   "scripts": {
     "start": "grunt dev",
     "build": "grunt prod",
-    "repl": "node src/node/repl.js",
+    "repl": "node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings ./src/node/repl.mjs",
     "test": "grunt configTests && node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs && node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs",
     "test-node-consumer": "grunt testnodeconsumer",
     "testui": "grunt testui",
