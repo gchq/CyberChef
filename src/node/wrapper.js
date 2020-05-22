@@ -7,6 +7,7 @@
  * @license Apache-2.0
  */
 
+ console.log('CJS')
 /* eslint no-global-assign: ["off"] */
 require = require("esm")(module);
 module.exports = require("./index.mjs");
