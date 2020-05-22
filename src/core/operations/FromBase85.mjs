@@ -35,16 +35,31 @@ class FromBase85 extends Operation {
         ];
         this.checks = [
             {
-                pattern: "^\\s*(?:<~)?(?:(?:\\s*[!-u]){5}|\\s*z)+[!-u\\s]*(?:~>)?\\s*$",
-                args: ["!-u"]
+                pattern:
+                    "^\\s*(?:<~)?" + // Optional whitespace and starting marker
+                    "[\\s!-uz]*" +   // Any amount of base85 characters and whitespace
+                    "[!-uz]{20}" +   // At least 20 continoues base85 characters without whitespace
+                    "[\\s!-uz]*" +   // Any amount of base85 characters and whitespace
+                    "(?:~>)?\\s*$",  // Optional ending marker and whitespace
+                args: ["!-u"],
             },
             {
-                pattern: "^(?:\\s*[0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#])+\\s*$",
-                args: ["0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#"]
+                pattern:
+                    "^" +
+                    "[\\s0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]*" +
+                    "[0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]{20}" + // At least 20 continoues base85 characters without whitespace
+                    "[\\s0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]*" +
+                    "$",
+                args: ["0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#"],
             },
             {
-                pattern: "^(?:\\s*[0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~])+\\s*$",
-                args: ["0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~"]
+                pattern:
+                    "^" +
+                    "[\\s0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]*" +
+                    "[0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]{20}" + // At least 20 continoues base85 characters without whitespace
+                    "[\\s0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]*" +
+                    "$",
+                args: ["0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~"],
             },
         ];
     }
