@@ -1,5 +1,6 @@
 {
   "name": "cyberchef",
+  "type": "module",
   "version": "9.20.3",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
@@ -27,8 +28,11 @@
     "type": "git",
     "url": "https://github.com/gchq/CyberChef/"
   },
-  "main": "src/node/cjs.js",
-  "module": "src/node/index.mjs",
+  "main": "./src/node/wrapper.cjs",
+  "exports": {
+    "import": "./src/node/index.mjs",
+    "require": "./src/node/wrapper.cjs"
+  },
   "bugs": "https://github.com/gchq/CyberChef/issues",
   "browserslist": [
     "Chrome >= 50",
