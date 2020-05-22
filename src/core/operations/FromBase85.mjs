@@ -68,8 +68,10 @@ class FromBase85 extends Operation {
 
         input = input.replace(/\s+/g, "");
 
-        const matches = input.match(/<~(.+?)~>/);
-        if (matches !== null) input = matches[1];
+        if (encoding === "Standard") {
+            const matches = input.match(/<~(.+?)~>/);
+            if (matches !== null) input = matches[1];
+        }
 
         let i = 0;
         let block, blockBytes;
