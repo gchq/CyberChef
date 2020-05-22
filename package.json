@@ -163,7 +163,7 @@
     "start": "grunt dev",
     "build": "grunt prod",
     "repl": "node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings ./src/node/repl.mjs",
-    "test": "grunt configTests && node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs && node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs",
+    "test": "grunt configTests && node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation tests/node/index.mjs && node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation tests/operations/index.mjs",
     "test-node-consumer": "grunt testnodeconsumer",
     "testui": "grunt testui",
     "testuidev": "npx nightwatch --env=dev",
