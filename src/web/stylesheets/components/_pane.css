@@ -98,6 +98,11 @@
 .io-card.card input[type=number] {
     padding-right: 6px;
     padding-left: 6px;
+    height: unset;
+}
+
+.io-card.card .input-group {
+    padding-top: 5px;
 }
 
 #files .card-header .float-right a:hover {

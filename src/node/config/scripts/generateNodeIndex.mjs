@@ -9,7 +9,7 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: 0 */
+/* eslint no-console: 0 */
 
 import fs from "fs";
 import path from "path";

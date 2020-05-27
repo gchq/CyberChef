@@ -418,4 +418,114 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Rail Fence Cipher Decode: normal",
+        input: "Cytgah sTEAto rtn rsligcdsrporpyi H r fWiigo ovn oe",
+        expectedOutput: "Cryptography is THE Art of Writing or solving codes",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Decode",
+                "args": [2, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Decode: key has to be bigger than 2",
+        input: "Cytgah sTEAto rtn rsligcdsrporpyi H r fWiigo ovn oe",
+        expectedOutput: "Key has to be bigger than 2",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Decode",
+                "args": [1, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Decode: key has to be smaller than input's length",
+        input: "shortinput",
+        expectedOutput: "Key should be smaller than the cipher's length",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Decode",
+                "args": [22, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Decode: offset should be positive",
+        input: "shortinput",
+        expectedOutput: "Offset has to be a positive integer",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Decode",
+                "args": [2, -1]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Decode: Normal with Offset non-null",
+        input: "51746026813793592840",
+        expectedOutput: "12345678901234567890",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Decode",
+                "args": [4, 2]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Encode: normal",
+        input: "Cryptography is THE Art of Writing or solving codes",
+        expectedOutput: "Cytgah sTEAto rtn rsligcdsrporpyi H r fWiigo ovn oe",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Encode",
+                "args": [2, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Encode: key has to be bigger than 2",
+        input: "Cryptography is THE Art of Writing or solving codes",
+        expectedOutput: "Key has to be bigger than 2",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Encode",
+                "args": [1, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Encode: key has to be smaller than input's length",
+        input: "shortinput",
+        expectedOutput: "Key should be smaller than the plain text's length",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Encode",
+                "args": [22, 0]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Encode: offset should be positive",
+        input: "shortinput",
+        expectedOutput: "Offset has to be a positive integer",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Encode",
+                "args": [2, -1]
+            }
+        ],
+    },
+    {
+        name: "Rail Fence Cipher Encode: Normal with Offset non-null",
+        input: "12345678901234567890",
+        expectedOutput: "51746026813793592840",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Encode",
+                "args": [4, 2]
+            }
+        ],
+    },
 ]);

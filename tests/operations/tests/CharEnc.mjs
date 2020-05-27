@@ -79,7 +79,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Decode text",
-                "args": ["UTF16LE (1200)"]
+                "args": ["UTF-16LE (1200)"]
             },
             {
                 "op": "Encode text",

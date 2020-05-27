@@ -125,7 +125,7 @@ TestRegister.addApiTests([
     <a href="https://github.com">Click here</a>
     <script src="script.js"></script>
     </body>
-</html>`.replace(/\n|\s{4}/g, ""); //remove newlines, tabs
+</html>`.replace(/\n|\s{4}/g, ""); // remove newlines, tabs
 
         const dish = new Dish(html, Dish.HTML);
         dish.get(4);
@@ -187,8 +187,8 @@ TestRegister.addApiTests([
         const dish = new Dish([file1, file2], Dish.LIST_FILE);
 
         dish.get(Dish.ARRAY_BUFFER);
-        assert.deepStrictEqual(dish.value, new Uint8Array([0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b]).buffer);
-        assert.strictEqual(dish.value.byteLength, 11);
+        assert.deepStrictEqual(dish.value, [new Uint8Array([0x61, 0x62, 0x63, 0x64, 0x65]), new Uint8Array([0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b])]);
+        assert.strictEqual(dish.value.length, 2);
 
         dish.get(Dish.LIST_FILE);
         const dataArray = new Uint8Array(dish.value[0].data);

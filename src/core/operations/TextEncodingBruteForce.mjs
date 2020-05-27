@@ -7,7 +7,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import cptable from "../vendor/js-codepage/cptable.js";
+import cptable from "codepage";
 import {IO_FORMAT} from "../lib/ChrEnc.mjs";
 
 /**

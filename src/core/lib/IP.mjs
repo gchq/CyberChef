@@ -26,7 +26,7 @@ export function ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, allo
     let output = "";
 
     if (cidrRange < 0 || cidrRange > 31) {
-        return "IPv4 CIDR must be less than 32";
+        throw new OperationError("IPv4 CIDR must be less than 32");
     }
 
     const mask = ~(0xFFFFFFFF >>> cidrRange),
@@ -64,7 +64,7 @@ export function ipv6CidrRange(cidr, includeNetworkInfo) {
         cidrRange = parseInt(cidr[cidr.length-1], 10);
 
     if (cidrRange < 0 || cidrRange > 127) {
-        return "IPv6 CIDR must be less than 128";
+        throw new OperationError("IPv6 CIDR must be less than 128");
     }
 
     const ip1 = new Array(8),
@@ -211,7 +211,7 @@ export function ipv4ListedRange(match, includeNetworkInfo, enumerateAddresses, a
         const network = strToIpv4(ipv4CidrList[i].split("/")[0]);
         const cidrRange = parseInt(ipv4CidrList[i].split("/")[1], 10);
         if (cidrRange < 0 || cidrRange > 31) {
-            return "IPv4 CIDR must be less than 32";
+            throw new OperationError("IPv4 CIDR must be less than 32");
         }
         const mask = ~(0xFFFFFFFF >>> cidrRange),
             cidrIp1 = network & mask,
@@ -254,7 +254,7 @@ export function ipv6ListedRange(match, includeNetworkInfo) {
         const cidrRange = parseInt(ipv6CidrList[i].split("/")[1], 10);
 
         if (cidrRange < 0 || cidrRange > 127) {
-            return "IPv6 CIDR must be less than 128";
+            throw new OperationError("IPv6 CIDR must be less than 128");
         }
 
         const cidrIp1 = new Array(8),

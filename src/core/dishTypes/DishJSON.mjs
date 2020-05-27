@@ -17,7 +17,7 @@ class DishJSON extends DishType {
      */
     static toArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = this.value ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
+        this.value = this.value !== undefined ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
     }
 
     /**

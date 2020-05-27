@@ -20,7 +20,7 @@ export const ALPHABET_OPTIONS = [
     },
     {
         name: "IPv6",
-        value: "0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|~}",
+        value: "0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~",
     }
 ];
 

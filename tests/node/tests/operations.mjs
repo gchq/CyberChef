@@ -186,27 +186,29 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Blowfish encrypt", () => {
         const result = chef.blowfishEncrypt("Fool's Gold", {
             key: {
-                string: "One",
+                string: "0011223344556677",
                 option: "hex",
             },
             iv: {
-                string: "Two",
+                string: "exparrot",
                 option: "utf8"
-            }
+            },
+            mode: "CBC"
         });
-        assert.strictEqual(result.toString(), "8999b513bf2ff064b2977dea7e05f1b5");
+        assert.strictEqual(result.toString(), "55a2838980078ffe1722b08d5fa1d481");
     }),
 
     it("Blowfish decrypt", () => {
-        const result = chef.blowfishDecrypt("8999b513bf2ff064b2977dea7e05f1b5", {
+        const result = chef.blowfishDecrypt("55a2838980078ffe1722b08d5fa1d481", {
             key: {
-                string: "One",
+                string: "0011223344556677",
                 option: "hex",
             },
             iv: {
-                string: "Two",
+                string: "exparrot",
                 option: "utf8",
-            }
+            },
+            mode: "CBC"
         });
         assert.strictEqual(result.toString(), "Fool's Gold");
     }),
@@ -353,10 +355,10 @@ color: white;
 
     it("Decode text", () => {
         const encoded = chef.encodeText("Ugly Duckling", {
-            encoding: "UTF16LE (1200)",
+            encoding: "UTF-16LE (1200)",
         });
         const result = chef.decodeText(encoded, {
-            encoding: "UTF16LE (1200)",
+            encoding: "UTF-16LE (1200)",
         });
         assert.strictEqual(result.toString(), "Ugly Duckling");
     }),
@@ -586,7 +588,7 @@ Password: 034148`;
         const result = await chef.generatePGPKeyPair("Back To the Drawing Board", {
             keyType: "ECC-256",
         });
-        assert.strictEqual(result.toString().length, 2005);
+        assert.strictEqual(result.toString().length, 2007);
     }),
 
     it("Generate UUID", () => {

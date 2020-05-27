@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import {
     BACON_ALPHABETS,
     BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP,
     swapZeroAndOne
-} from "../lib/Bacon";
+} from "../lib/Bacon.mjs";
 
 /**
  * Bacon Cipher Decode operation
@@ -42,6 +42,48 @@ class BaconCipherDecode extends Operation {
                 "name": "Invert Translation",
                 "type": "boolean",
                 "value": false
+            }
+        ];
+        this.checks = [
+            {
+                pattern:  "^\\s*([01]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Standard (I=J and U=V)", "0/1", false]
+            },
+            {
+                pattern:  "^\\s*([01]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Standard (I=J and U=V)", "0/1", true]
+            },
+            {
+                pattern:  "^\\s*([AB]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Standard (I=J and U=V)", "A/B", false]
+            },
+            {
+                pattern:  "^\\s*([AB]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Standard (I=J and U=V)", "A/B", true]
+            },
+            {
+                pattern:  "^\\s*([01]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "0/1", false]
+            },
+            {
+                pattern:  "^\\s*([01]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "0/1", true]
+            },
+            {
+                pattern:  "^\\s*([AB]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "A/B", false]
+            },
+            {
+                pattern:  "^\\s*([AB]{5}\\s?)+$",
+                flags:  "",
+                args:   ["Complete", "A/B", true]
             }
         ];
     }

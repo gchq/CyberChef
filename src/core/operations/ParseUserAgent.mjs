@@ -25,6 +25,13 @@ class ParseUserAgent extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
+                flags:  "i",
+                args:   []
+            }
+        ];
     }
 
     /**

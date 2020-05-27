@@ -39,6 +39,7 @@
             "URL Decode",
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
+            "Normalise Unicode",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
@@ -94,7 +95,11 @@
             "Affine Cipher Decode",
             "A1Z26 Cipher Encode",
             "A1Z26 Cipher Decode",
+            "Rail Fence Cipher Encode",
+            "Rail Fence Cipher Decode",
             "Atbash Cipher",
+            "CipherSaber2 Encrypt",
+            "CipherSaber2 Decrypt",
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
@@ -109,7 +114,9 @@
             "Enigma",
             "Bombe",
             "Multiple Bombe",
-            "Typex"
+            "Typex",
+            "Lorenz",
+            "Colossus"
         ]
     },
     {
@@ -194,7 +201,8 @@
             "Encode text",
             "Decode text",
             "Remove Diacritics",
-            "Unescape Unicode Characters"
+            "Unescape Unicode Characters",
+            "Convert to NATO alphabet"
         ]
     },
     {
@@ -234,6 +242,7 @@
             "Convert co-ordinate format",
             "Show on map",
             "Parse UNIX file permissions",
+            "Parse ObjectID timestamp",
             "Swap endianness",
             "Parse colour code",
             "Escape string",
@@ -328,6 +337,7 @@
             "Fletcher-32 Checksum",
             "Fletcher-64 Checksum",
             "Adler-32 Checksum",
+            "Luhn Checksum",
             "CRC-8 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
@@ -387,6 +397,7 @@
         "ops": [
             "Render Image",
             "Play Media",
+            "Generate Image",
             "Optical Character Recognition",
             "Remove EXIF",
             "Extract EXIF",
