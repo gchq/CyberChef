@@ -6,6 +6,8 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const glob = require("glob");
 const path = require("path");
 
+const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+
 /**
  * Grunt configuration for building the app in various formats.
  *
@@ -362,15 +364,15 @@ module.exports = function (grunt) {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
+                command: `node ${nodeFlags} src/web/static/sitemap.mjs > build/prod/sitemap.xml`,
                 sync: true
             },
             generateConfig: {
                 command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
-                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
+                    `node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`,
+                    `node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`,
                     "echo '--- Config scripts finished. ---\n'"
                 ]),
                 sync: true
@@ -378,7 +380,7 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: chainCommands([
                     "echo '\n--- Regenerating node index ---'",
-                    "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
+                    `node ${nodeFlags} src/node/config/scripts/generateNodeIndex.mjs`,
                     "echo '--- Node index generated. ---\n'"
                 ]),
                 sync: true
@@ -413,7 +415,7 @@ module.exports = function (grunt) {
             testESMNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node esm-consumer.mjs",
+                    `node ${nodeFlags} esm-consumer.mjs`,
                 ]),
                 stdout: false,
             }
