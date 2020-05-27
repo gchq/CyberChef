@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - lts/dubnium
+  - lts/erbium
 cache: npm
 os: linux
 addons:
