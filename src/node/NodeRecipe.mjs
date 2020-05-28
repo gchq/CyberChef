@@ -6,6 +6,8 @@
 
 import {operations} from "./index.mjs";
 import { sanitise } from "./apiUtils.mjs";
+import Utils from "../core/Utils";
+
 
 /**
  * Similar to core/Recipe, Recipe controls a list of operations and
@@ -34,9 +36,10 @@ class NodeRecipe {
             });
             if (op) {
                 return op;
-            } else {
-                throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
             }
+
+            throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
+
         } else if (typeof ing === "function") {
             if (operations.includes(ing)) {
                 return ing;
@@ -47,14 +50,21 @@ class NodeRecipe {
         } else if (ing.op) {
             const sanitisedOp = this._validateIngredient(ing.op);
             if (ing.args) {
-                return {op: sanitisedOp, args: ing.args};
+
+                // disabled, breakpoint options sometimes come from parsed
+                // recipes pasted from UI
+                return {
+                    op: sanitisedOp,
+                    args: ing.args,
+                    disabled: ing.disabled,
+                    breakpoint: ing.breakpoint
+                };
             }
             return sanitisedOp;
         } else {
             throw new TypeError("Recipe can only contain function names or functions");
         }
     }
-
 
     /**
      * Parse config for recipe.
@@ -64,6 +74,14 @@ class NodeRecipe {
         if (!recipeConfig) {
             this.opList = [];
             return;
+        }
+
+        // Case for when recipeConfig is a chef format recipe string
+        if (typeof recipeConfig == "string" || recipeConfig instanceof String) {
+            const attemptedParseResult = Utils.parseRecipeConfig(recipeConfig);
+            if (attemptedParseResult.length > 0) {
+                recipeConfig = attemptedParseResult;
+            }
         }
 
         if (!Array.isArray(recipeConfig)) {
@@ -79,15 +97,27 @@ class NodeRecipe {
      * @returns {NodeDish}
      */
     execute(dish) {
-        return this.opList.reduce((prev, curr) => {
-            // CASE where opList item is op and args
-            if (Object.prototype.hasOwnProperty.call(curr, "op") &&
-                Object.prototype.hasOwnProperty.call(curr, "args")) {
-                return curr.op(prev, curr.args);
+        for (const op of this.opList) {
+            if (
+                Object.prototype.hasOwnProperty.call(op, "op") &&
+                Object.prototype.hasOwnProperty.call(op, "args")
+            ) {
+
+                if (op.breakpoint) {
+                    break;
+                }
+
+                if (op.disabled) {
+                    continue;
+                }
+
+                dish = op.op(dish, op.args);
+            } else {
+                dish = op(dish);
             }
-            // CASE opList item is just op.
-            return curr(prev);
-        }, dish);
+        }
+
+        return dish;
     }
 }
 
