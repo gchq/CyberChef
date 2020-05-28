@@ -35,6 +35,9 @@
     "Firefox >= 38",
     "node >= 10"
   ],
+  "bin": {
+    "cyberchef": "./cli.js"
+  },
   "devDependencies": {
     "@babel/core": "^7.8.7",
     "@babel/plugin-transform-runtime": "^7.8.3",
@@ -98,6 +101,7 @@
     "bson": "^4.0.3",
     "chi-squared": "^1.1.0",
     "codepage": "^1.14.0",
+    "commander": "^2.14.1",
     "core-js": "^3.6.4",
     "crypto-api": "^0.8.5",
     "crypto-js": "^4.0.0",
