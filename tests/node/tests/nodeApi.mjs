@@ -357,6 +357,58 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
     }),
 
+    it("chef.bake: should accept single operation Chef format recipe as second argument", () => {
+        const result = chef.bake("throw throw burrito", "To_Hex_Content('All chars',false)");
+        assert.strictEqual(result.toString(), "|7468726f77207468726f77206275727269746f|");
+    }),
+
+    it("chef.bake: should accept single operation Chef format recipe as second argument with non-default arguments", () => {
+        const result = chef.bake("Throw Throw Burrito", "ROT13(true,false,14)");
+        assert.strictEqual(result.toString(), "Tvfck Tvfck Biffwhc");
+    }),
+
+    it("chef.bake: should accept multiple operation Chef format recipe as second argument", () => {
+        const result = chef.bake("throw throw burrito", "To_Hex('Space',2)Hex_to_Object_Identifier()Extract_IP_addresses(true,false,false,true)");
+        assert.strictEqual(result.toString(), `Total found: 5
+
+2.36.104.114
+111.119.32.116
+104.114.111.119
+32.98.117.114
+114.105.116.111
+`);
+    }),
+
+    it("chef.bake: should accept multiple operation Chef format recipe as pasted from UI as second argument", () => {
+        const result = chef.bake("throw throw burrito", `To_Hex('Space',2)
+Hex_to_Object_Identifier()
+Extract_IP_addresses(true,false,false,true)
+`);
+        assert.strictEqual(result.toString(), `Total found: 5
+
+2.36.104.114
+111.119.32.116
+104.114.111.119
+32.98.117.114
+114.105.116.111
+`);
+    }),
+
+    it("chef.bake: should accept multiple operation Chef format recipe with a disabled operation", async () => {
+        const result = await chef.bake("throw throw burrito", `ROT13(true,true,13)
+Atbash_Cipher(/disabled)
+MD5()
+`);
+        assert.strictEqual(result.toString(), "f859e9e196c4452d2d25f12dffc67355");
+    }),
+
+    it("chef.bake: should accept multiple operation Chef format recipe with a breakpoint operation", async () => {
+        const result = await chef.bake("throw throw burrito", `ROT13(true,true,13)
+Atbash_Cipher()
+MD5(/breakpoint)`);
+        assert.strictEqual(result.toString(), "tfvyq tfvyq lsvvety");
+    }),
+
     it("Excluded operations: throw a sensible error when you try and call one", () => {
         try {
             chef.fork();
@@ -372,6 +424,20 @@ TestRegister.addApiTests([
         } catch (e) {
             assert.strictEqual(e.type, "ExcludedOperationError");
             assert.strictEqual(e.message, "Sorry, the RenderImage operation is not available in the Node.js version of CyberChef.");
+        }
+    }),
+
+    it("Excluded operations: throw a sensible error when you try and call one as part of a recipe", () => {
+        try {
+            chef.bake(`978346800
+1012651200
+1046696400
+1081087200
+1115305200
+1149609600`, "Fork('\\n','\\n',false)From_UNIX_Timestamp('Seconds (s)')");
+        } catch (e) {
+            assert.strictEqual(e.type, "ExcludedOperationError");
+            assert.strictEqual(e.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
         }
     }),
 
