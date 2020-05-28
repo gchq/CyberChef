@@ -1,6 +1,7 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
  * @author mshwed [m@ttshwed.com]
+ * @author Matt C [me@mitt.dev]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
@@ -12,7 +13,7 @@ import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
 import Tesseract from "tesseract.js";
-const { TesseractWorker } = Tesseract;
+const { createWorker } = Tesseract;
 
 import process from "process";
 
@@ -60,23 +61,30 @@ class OpticalCharacterRecognition extends Operation {
         const assetDir = isWorkerEnvironment() ? `${self.docURL}/assets/` : `${process.cwd()}/src/core/vendor/`;
 
         try {
+            self.sendStatusMessage("Spinning up Tesseract worker...");
             const image = `data:${type};base64,${toBase64(input)}`;
-            const worker = new TesseractWorker({
+            const worker = createWorker({
                 workerPath: `${assetDir}tesseract/worker.min.js`,
                 langPath: `${assetDir}tesseract/lang-data`,
                 corePath: `${assetDir}tesseract/tesseract-core.wasm.js`,
-            });
-            const result = await worker.recognize(image)
-                .progress(progress => {
+                logger: progress => {
                     if (isWorkerEnvironment()) {
-                        self.sendStatusMessage(`Status: ${progress.status} - ${(parseFloat(progress.progress)*100).toFixed(2)}%`);
+                        self.sendStatusMessage(`Status: ${progress.status}${progress.status === "recognizing text" ? ` - ${(parseFloat(progress.progress)*100).toFixed(2)}%`: "" }`);
                     }
-                });
+                }
+            });
+            await worker.load();
+            self.sendStatusMessage("Loading English language...");
+            await worker.loadLanguage("eng");
+            self.sendStatusMessage("Intialising Tesseract API...");
+            await worker.initialize("eng");
+            self.sendStatusMessage("Finding text...");
+            const result = await worker.recognize(image);
 
             if (showConfidence) {
-                return `Confidence: ${result.confidence}%\n\n${result.text}`;
+                return `Confidence: ${result.data.confidence}%\n\n${result.data.text}`;
             } else {
-                return result.text;
+                return result.data.text;
             }
         } catch (err) {
             throw new OperationError(`Error performing OCR on image. (${err})`);
