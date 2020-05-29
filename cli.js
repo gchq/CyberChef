@@ -49,26 +49,9 @@ const slurp = (fname) => { // {{{1
     return slurpStream(istream);
 }; // }}}1
 
-/**
- * Get a valid port number from the command line
- *
- * Used by commander
- *
- * @param {String} value
- * @param {String} dummyPrevious
- */
-const getPort = (value, dummyPrevious) => { // {{{1
-    const ret = parseInt(value, 10);
-    if (ret < 1 || ret > 65535) {
-        throw new Error("invalid port number");
-    }
-    return ret;
-};
-// }}}1
-
 /* * * * * MAIN * * * * */ // {{{1
 
-const chef = require("cyberchef");
+const chef = require("./src/node/cjs.js");
 const program = require("commander");
 
 program
@@ -78,24 +61,30 @@ program
     .usage("[options] [file [file ...]]")
     .requiredOption("-r, --recipe-file <file>",
         "recipe JSON file")
-    .option("-l, --listen [port]",
-        "listen on TCP port for data (random if not given)", getPort, false)
     .option("-o, --output <file-or-dir>",
         "where to write result (file input only; default:stdout)");
 
 try {
     program.exitOverride().parse(process.argv);
 } catch (e) {
+    console.error(e.message);
     if (e.code !== "commander.helpDisplayed") {
         console.error("Run with \"--help\" for usage");
     }
     process.exit(1);
 }
 
-// If we get no inputs and we aren't running a server,
-// make stdin our single input
+let recipe;
+try {
+    recipe = JSON.parse(fs.readFileSync(program.recipeFile));
+} catch (err) {
+    console.error(err.message);
+    process.exit(3);
+}
+
+// If we get no inputs, make stdin our single input
 let inputs = program.args;
-if (inputs.length === 0 && !program.listen) {
+if (inputs.length === 0) {
     inputs = ["-"];
 }
 
@@ -103,16 +92,16 @@ if (inputs.length === 0 && !program.listen) {
 let ostream;
 let path;
 let outputIsDir = false;
-if (program.output === undefined && !program.listen) {
+if (program.output === undefined) {
     ostream = process.stdout;
-} else if (inputs.length > 0) {
+} else {
     // See if our output is a directory
     let st;
     try {
         st = fs.statSync(program.output);
         outputIsDir = st.isDirectory();
     } catch (err) {
-        // We"re fine if the output doesn"t exist yet
+        // We"re fine if the output doesn't exist yet
         if (err.code !== "ENOENT") throw err;
     }
     if (!outputIsDir) {
@@ -121,71 +110,21 @@ if (program.output === undefined && !program.listen) {
 }
 if (outputIsDir) path = require("path");
 
-let recipe;
-slurp(program.recipeFile).then((data) => {
-    recipe = JSON.parse(data);
-})
-    .catch((err) => {
-        console.error(`Error parsing recipe: ${err.message}`);
-        process.exit(2);
-    })
-    .then(() => {
-        // First, deal with any files we want to read
-        for (const i of inputs) {
-            slurp(i).then((data) => {
-                const output = chef.bake(data, recipe);
-                if (outputIsDir) {
-                    let outFileName = path.basename(i);
-                    if (outFileName === "-") outFileName = "from-stdin";
-                    ostream = fs.createWriteStream(
-                        path.join(program.output, outFileName));
-                }
-                ostream.write(output.presentAs("string", true));
-                if (outputIsDir) ostream.end();
-            },
-            (err) => {
-                console.error(err.message);
-                process.exitCode = 2;
-            })
-                .catch((err) => {
-                    console.error(err.message);
-                    process.exitCode = 2;
-                });
+// Deal with any files we want to read
+for (const i of inputs) {
+    slurp(i).then((data) => {
+        const output = chef.bake(data, recipe);
+        if (outputIsDir) {
+            let outFileName = path.basename(i);
+            if (outFileName === "-") outFileName = "from-stdin";
+            ostream = fs.createWriteStream(
+                path.join(program.output, outFileName));
         }
-
-        // Next, listen for TCP requests.
-        // This is intentionally hardcoded to localhost to discourage
-        // the use of this script as a production system.
-        if (program.listen) {
-            const net = require("net");
-            const server = net.createServer((socket) => {
-                slurpStream(socket).then((data) => {
-                    const output = chef.bake(data, recipe);
-                    socket.write(output.presentAs("string", true));
-                    socket.end();
-                })
-                    .catch((err) => {
-                        console.error(err);
-                    });
-            });
-
-            // If no port given by user, let the OS choose one
-            if (program.listen === true) program.listen = 0;
-            server.listen(program.listen, "127.0.0.1")
-                .on("listening", () => {
-                    console.log("Now listening on " +
-                        server.address().address +
-                        ":" + server.address().port);
-                });
-
-            // Exit gracefully
-            process.on("SIGINT", () => {
-                console.log("Exiting");
-                server.close();
-            });
-        }
+        ostream.write(output.presentAs("string", true));
+        if (outputIsDir) ostream.end();
     })
-    .catch((err) => {
-        console.error(err);
-        process.exit(3);
-    });
+        .catch((err) => {
+            console.error(err.message);
+            process.exitCode = 2;
+        });
+}
