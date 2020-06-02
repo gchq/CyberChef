@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 
 /**
@@ -40,11 +39,6 @@ class ToHexdump extends Operation {
                 "name": "Include final length",
                 "type": "boolean",
                 "value": false
-            },
-            {
-                "name": "Output grouping",
-                "type": "number",
-                "value": 1
             }
         ];
     }
@@ -58,20 +52,13 @@ class ToHexdump extends Operation {
         const data = new Uint8Array(input);
         const [length, upperCase, includeFinalLength] = args;
         const padding = 2;
-        const groupSize = args[3] || 1;
-        if (length%groupSize !== 0){
-            throw new OperationError("The value of the width parameter must be divisible by the value of the output grouping parameter");
-        }
 
         let output = "";
         for (let i = 0; i < data.length; i += length) {
             const buff = data.slice(i, i+length);
             let hexa = "";
             for (let j = 0; j < buff.length; j++) {
-                hexa += Utils.hex(buff[j], padding);
-                if (groupSize === 1 || (j > 0 && (j+1)%groupSize === 0)){
-                    hexa += " ";
-                }
+                hexa += Utils.hex(buff[j], padding) + " ";
             }
 
             let lineNo = Utils.hex(i, 8);
@@ -82,7 +69,7 @@ class ToHexdump extends Operation {
             }
 
             output += lineNo + "  " +
-                hexa.padEnd(length*padding+(length/groupSize), " ") +
+                hexa.padEnd(length*(padding+1), " ") +
                 " |" + Utils.printable(Utils.byteArrayToChars(buff)).padEnd(buff.length, " ") + "|\n";
 
             if (includeFinalLength && i+buff.length === data.length) {
