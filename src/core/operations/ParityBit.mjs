@@ -63,16 +63,21 @@ class ParityBit extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        if (input.length === 0){
+        if (input.length === 0) {
             return input;
         }
+        /**
+         * determines weather to use the encode or decode method based off args[2]
+         * @param input input to be encoded or decoded
+         * @param args array
+         */
         const method = (input, args) => args[2] === "Encode" ? calculateParityBit(input, args) : decodeParityBit(input, args);
-        if (args[3].length > 0){
-            let byteStrings = input.split(args[3]);
-            for (let byteStringsArrayIndex = 0; byteStringsArrayIndex < byteStrings.length; byteStringsArrayIndex++){
+        if (args[3].length > 0) {
+            const byteStrings = input.split(args[3]);
+            for (let byteStringsArrayIndex = 0; byteStringsArrayIndex < byteStrings.length; byteStringsArrayIndex++) {
                 byteStrings[byteStringsArrayIndex] = method(byteStrings[byteStringsArrayIndex], args);
             }
-            return byteStrings.join(args[3])
+            return byteStrings.join(args[3]);
         }
         return method(input, args);
     }
@@ -87,8 +92,8 @@ class ParityBit extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        if (args[3].length === 0){
-            if (args[1] === "Prepend"){
+        if (args[3].length === 0) {
+            if (args[1] === "Prepend") {
                 pos[0].start += 1;
                 pos[0].end += 1;
             }
@@ -107,9 +112,9 @@ class ParityBit extends Operation {
      * @returns {Object[]} pos
      */
     highlightReverse(pos, args) {
-        if (args[3].length === 0){
-            if (args[1] === "Prepend"){
-                if (pos[0].start > 0){
+        if (args[3].length === 0) {
+            if (args[1] === "Prepend") {
+                if (pos[0].start > 0) {
                     pos[0].start -= 1;
                 }
                 pos[0].end -= 1;
