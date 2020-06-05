@@ -152,7 +152,7 @@ class TestRegister {
                 result.status = "passing";
             } catch (e) {
                 result.status = "erroring";
-                result.output = e.message;
+                result.output = `${e.message}\nError: ${e.stack}`;
             }
 
             testResults.push(result);

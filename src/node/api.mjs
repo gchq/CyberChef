@@ -191,7 +191,30 @@ export function _wrap(OpClass) {
          */
         wrapped = async (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+
+            // SPECIAL CASE for Magic.
+            if (opInstance.flowControl) {
+                opInstance.ingValues = transformedArgs;
+
+                const state = {
+                    "progress": 0,
+                    "dish": ensureIsDish(transformedInput),
+                    "opList": [opInstance],
+                    "numJumps": 0,
+                    "numRegisters": 0,
+                    "forkOffset": 0
+                };
+
+                const updatedState = await opInstance.run(state);
+
+                return new NodeDish({
+                    value: updatedState.dish.value,
+                    type: opInstance.outputType,
+                });
+            }
+
             const result = await opInstance.run(transformedInput, transformedArgs);
+
             return new NodeDish({
                 value: result,
                 type: opInstance.outputType,
