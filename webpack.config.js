@@ -56,6 +56,14 @@ module.exports = {
                 context: "src/core/vendor/",
                 from: "tesseract/**/*",
                 to: "assets/"
+            }, {
+                context: "node_modules/tesseract.js/",
+                from: "dist/worker.min.js",
+                to: "assets/tesseract"
+            }, {
+                context: "node_modules/tesseract.js-core/",
+                from: "tesseract-core.wasm.js",
+                to: "assets/tesseract"
             }
         ])
     ],
