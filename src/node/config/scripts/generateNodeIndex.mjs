@@ -100,8 +100,7 @@ Object.keys(operations).forEach((op) => {
 
 code += `];
 
-const prebaked = bake(operations);
-chef.bake = prebaked;
+chef.bake = bake;
 export default chef;
 
 // Operations as top level exports.
@@ -114,7 +113,7 @@ Object.keys(operations).forEach((op) => {
 });
 
 code += "    NodeDish as Dish,\n";
-code += "    prebaked as bake,\n";
+code += "    bake,\n";
 code += "    help,\n";
 code += "    OperationError,\n";
 code += "    ExcludedOperationError,\n";

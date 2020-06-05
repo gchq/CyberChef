@@ -177,6 +177,7 @@ export function _wrap(OpClass) {
     // Check to see if class's run function is async.
     const opInstance = new OpClass();
     const isAsync = opInstance.run.constructor.name === "AsyncFunction";
+    const isFlowControl = opInstance.flowControl;
 
     let wrapped;
 
@@ -192,8 +193,9 @@ export function _wrap(OpClass) {
         wrapped = async (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
 
-            // SPECIAL CASE for Magic.
-            if (opInstance.flowControl) {
+            // SPECIAL CASE for Magic. Other flowControl operations will
+            // not work because the opList is not passed through.
+            if (isFlowControl) {
                 opInstance.ingValues = transformedArgs;
 
                 const state = {
@@ -241,6 +243,8 @@ export function _wrap(OpClass) {
     // used in chef.help
     wrapped.opName = OpClass.name;
     wrapped.args = createArgInfo(opInstance);
+    // Used in NodeRecipe to check for flowControl ops
+    wrapped.flowControl = isFlowControl;
 
     return wrapped;
 }
@@ -315,25 +319,18 @@ export function help(input) {
 
 
 /**
- * bake [Wrapped] - Perform an array of operations on some input.
- * @returns {Function}
+ * bake
+ *
+ * @param {*} input - some input for a recipe.
+ * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig -
+ * An operation, operation name, or an array of either.
+ * @returns {NodeDish} of the result
+ * @throws {TypeError} if invalid recipe given.
  */
-export function bake() {
-
-    /**
-     * bake
-     *
-     * @param {*} input - some input for a recipe.
-     * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig -
-     * An operation, operation name, or an array of either.
-     * @returns {SyncDish} of the result
-     * @throws {TypeError} if invalid recipe given.
-     */
-    return function(input, recipeConfig) {
-        const recipe =  new NodeRecipe(recipeConfig);
-        const dish = ensureIsDish(input);
-        return recipe.execute(dish);
-    };
+export function bake(input, recipeConfig) {
+    const recipe =  new NodeRecipe(recipeConfig);
+    const dish = ensureIsDish(input);
+    return recipe.execute(dish);
 }
 
 

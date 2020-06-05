@@ -28,16 +28,22 @@ class NodeRecipe {
      * @param {String | Function | Object} ing
      */
     _validateIngredient(ing) {
+        // CASE operation name given. Find operation and validate
         if (typeof ing === "string") {
             const op = operations.find((op) => {
                 return sanitise(op.opName) === sanitise(ing);
             });
             if (op) {
-                return op;
+                return this._validateIngredient(op);
             } else {
                 throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
             }
+        // CASE operation given. Check its a chef operation and check its not flowcontrol
         } else if (typeof ing === "function") {
+            if (ing.flowControl) {
+                throw new TypeError(`flowControl operations like ${ing.opName} are not currently allowed in recipes for chef.bake`);
+            }
+
             if (operations.includes(ing)) {
                 return ing;
             } else {
