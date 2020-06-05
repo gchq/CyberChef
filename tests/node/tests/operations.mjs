@@ -1075,6 +1075,5 @@ ExifImageHeight: 57`);
         assert.equal(output, res.value);
     }),
 
-
 ]);
 
