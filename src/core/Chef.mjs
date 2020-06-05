@@ -39,12 +39,14 @@ class Chef {
     */
     async bake(input, recipeConfig, options) {
         log.debug("Chef baking");
-        const startTime = Date.now(),
-            recipe      = new Recipe(recipeConfig),
-            containsFc  = recipe.containsFlowControl(),
-            notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
-        let error = false,
-            progress = 0;
+
+        const startTime     = Date.now();
+        const recipe        = await Recipe.buildRecipe(recipeConfig);
+        const containsFc    = recipe.state.containsFlowControl();
+        const notUTF8       = options && "treatAsUtf8" in options && !options.treatAsUtf8;
+
+        let error = false;
+        let progress = 0;
 
         if (containsFc && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
@@ -53,7 +55,7 @@ class Chef {
         this.dish.set(input, type);
 
         try {
-            progress = await recipe.execute(this.dish, progress);
+            progress = await recipe.execute(this.dish);
         } catch (err) {
             log.error(err);
             error = {
@@ -107,12 +109,12 @@ class Chef {
      * @param {Object[]} recipeConfig - The recipe configuration object
      * @returns {number} The time it took to run the silent bake in milliseconds.
     */
-    silentBake(recipeConfig) {
+    async silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
-        const startTime = Date.now(),
-            recipe = new Recipe(recipeConfig),
-            dish = new Dish();
+        const startTime = Date.now();
+        const recipe    = await Recipe.buildRecipe(recipeConfig);
+        const dish      = new Dish();
 
         try {
             recipe.execute(dish);
@@ -134,8 +136,8 @@ class Chef {
      * @returns {Object}
      */
     async calculateHighlights(recipeConfig, direction, pos) {
-        const recipe = new Recipe(recipeConfig);
-        const highlights = await recipe.generateHighlightList();
+        const recipe = await Recipe.buildRecipe(recipeConfig);
+        const highlights = recipe.generateHighlightList();
 
         if (!highlights) return false;
 

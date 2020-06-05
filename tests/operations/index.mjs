@@ -79,7 +79,6 @@ import "./tests/StrUtils.mjs";
 import "./tests/SymmetricDifference.mjs";
 import "./tests/TextEncodingBruteForce.mjs";
 import "./tests/TranslateDateTimeFormat.mjs";
-import "./tests/Magic.mjs";
 import "./tests/ParseTLV.mjs";
 import "./tests/Media.mjs";
 import "./tests/ToFromInsensitiveRegex.mjs";

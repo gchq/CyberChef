@@ -192,6 +192,7 @@ export function _wrap(OpClass) {
         wrapped = async (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
             const result = await opInstance.run(transformedInput, transformedArgs);
+
             return new NodeDish({
                 value: result,
                 type: opInstance.outputType,

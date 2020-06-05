@@ -112,9 +112,9 @@ class Magic extends Operation {
         options.forEach(option => {
             // Construct recipe URL
             // Replace this Magic op with the generated recipe
-            const recipeConfig = currentRecipeConfig.slice(0, this.state.progress)
+            const recipeConfig = currentRecipeConfig.slice(0, this.state.progress - 1)
                     .concat(option.recipe)
-                    .concat(currentRecipeConfig.slice(this.state.progress + 1)),
+                    .concat(currentRecipeConfig.slice(this.state.progress)),
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
 
             let language = "",
