@@ -216,7 +216,6 @@ export class ControlBank {
     */
     constructor(rotors) {
         this.rotors = [...rotors].reverse();
-        this.numberOfMoves = 1;
     }
 
     /**
@@ -258,14 +257,14 @@ export class ControlBank {
     */
     step() {
         const MRotor = this.rotors[1], FRotor = this.rotors[2], SRotor = this.rotors[3];
-        this.numberOfMoves ++;
-        FRotor.step();
-        if (this.numberOfMoves%26 === 0) {
+        // 14 is the offset of "O" from "A" - the next rotor steps once the previous rotor reaches "O"
+        if (FRotor.state === 14) {
+            if (MRotor.state === 14) {
+                SRotor.step();
+            }
             MRotor.step();
         }
-        if (this.numberOfMoves%(26*26) === 0) {
-            SRotor.step();
-        }
+        FRotor.step();
     }
 
     /**
