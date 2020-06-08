@@ -61,6 +61,14 @@ module.exports = {
                 context: "node_modules/node-forge/dist",
                 from: "prime.worker.min.js",
                 to: "assets/forge/"
+            }, {
+                context: "node_modules/tesseract.js/",
+                from: "dist/worker.min.js",
+                to: "assets/tesseract"
+            }, {
+                context: "node_modules/tesseract.js-core/",
+                from: "tesseract-core.wasm.js",
+                to: "assets/tesseract"
             }
         ])
     ],

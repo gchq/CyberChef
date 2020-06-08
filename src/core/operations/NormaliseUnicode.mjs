@@ -51,7 +51,7 @@ class NormaliseUnicode extends Operation {
             case "NFKD":
                 return unorm.nfkd(input);
             case "NFKC":
-                return unorm.nfc(input);
+                return unorm.nfkc(input);
             default:
                 throw new OperationError("Unknown Normalisation Form");
         }
