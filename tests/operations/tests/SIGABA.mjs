@@ -1,10 +1,10 @@
 /**
-SIGABA machine tests
-
-@author hettysymes
-@copyright hettysymes 2020
-@license Apache-2.0
-*/
+ * SIGABA machine tests
+ *
+ * @author hettysymes
+ * @copyright hettysymes 2020
+ * @license Apache-2.0
+ */
 import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
