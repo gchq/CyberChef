@@ -38,7 +38,7 @@ class FromBase85 extends Operation {
                 pattern:
                     "^\\s*(?:<~)?" + // Optional whitespace and starting marker
                     "[\\s!-uz]*" +   // Any amount of base85 characters and whitespace
-                    "[!-uz]{20}" +   // At least 20 continoues base85 characters without whitespace
+                    "[!-uz]{15}" +   // At least 15 continoues base85 characters without whitespace
                     "[\\s!-uz]*" +   // Any amount of base85 characters and whitespace
                     "(?:~>)?\\s*$",  // Optional ending marker and whitespace
                 args: ["!-u"],
@@ -47,7 +47,7 @@ class FromBase85 extends Operation {
                 pattern:
                     "^" +
                     "[\\s0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]*" +
-                    "[0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]{20}" + // At least 20 continoues base85 characters without whitespace
+                    "[0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]{15}" + // At least 15 continoues base85 characters without whitespace
                     "[\\s0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]*" +
                     "$",
                 args: ["0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#"],
@@ -56,7 +56,7 @@ class FromBase85 extends Operation {
                 pattern:
                     "^" +
                     "[\\s0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]*" +
-                    "[0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]{20}" + // At least 20 continoues base85 characters without whitespace
+                    "[0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]{15}" + // At least 15 continoues base85 characters without whitespace
                     "[\\s0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]*" +
                     "$",
                 args: ["0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~"],
