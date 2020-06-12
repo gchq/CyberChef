@@ -24,8 +24,11 @@ class NodeRecipe {
 
 
     /**
-     * Validate an ingredient $ coerce to operation if necessary.
+     * Validate an ingredient & coerce to operation if necessary.
      * @param {String | Function | Object} ing
+     * @returns {Function || Object} The operation, or an object with the
+     *  operation and its arguments
+     * @throws {TypeError} If it cannot find the operation in chef's list of operations.
      */
     _validateIngredient(ing) {
         // CASE operation name given. Find operation and validate
@@ -34,6 +37,7 @@ class NodeRecipe {
                 return sanitise(op.opName) === sanitise(ing);
             });
             if (op) {
+                // Need to validate against case 2
                 return this._validateIngredient(op);
             } else {
                 throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
@@ -41,7 +45,7 @@ class NodeRecipe {
         // CASE operation given. Check its a chef operation and check its not flowcontrol
         } else if (typeof ing === "function") {
             if (ing.flowControl) {
-                throw new TypeError(`flowControl operations like ${ing.opName} are not currently allowed in recipes for chef.bake`);
+                throw new TypeError(`flowControl operations like ${ing.opName} are not currently allowed in recipes for chef.bake in the Node API`);
             }
 
             if (operations.includes(ing)) {
@@ -63,7 +67,7 @@ class NodeRecipe {
 
 
     /**
-     * Parse config for recipe.
+     * Parse an opList from a recipeConfig and assign it to the recipe's opList.
      * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig
      */
     _parseConfig(recipeConfig) {

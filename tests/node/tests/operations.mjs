@@ -1077,10 +1077,10 @@ ExifImageHeight: 57`);
 
     it("performs MAGIC", async () => {
         const input = "WUagwsiae6mP8gNtCCLUFpCpCB26RmBDoDD8PacdAmzAzBVjkK2QstFXaKhpC6iUS7RHqXrJtFisoRSgoJ4whjm1arm864qaNq4RcfUmLHrcsAaZc5TXCYifNdgS83gDeejGX46gaiMyuBV6EskHt1scgJ88x2tNSotQDwbGY1mmCob2ARGFvCKYNqiN9ipMq1ZU1mgkdbNuGcb76aRtYWhCGUc8g93UJudhb8htsheZnwTpgqhx83SVJSZXMXUjJT2zmpC7uXWtumqokbdSi88YtkWDAc1Toouh2oH4D4ddmNKJWUDpMwmngUmK14xwmomccPQE9hM172APnSqwxdKQ172RkcAsysnmj5gGtRmVNNh2s359wr6mS2QRP";
-        const depth = 3;
+        const depth = 1;
 
         const res = await chef.magic(input, {
-            depth: 3
+            depth,
         });
 
         // assert against the structure of the output, rather than the values.

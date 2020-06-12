@@ -194,17 +194,14 @@ export function _wrap(OpClass) {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
 
             // SPECIAL CASE for Magic. Other flowControl operations will
-            // not work because the opList is not passed through.
+            // not work because the opList is not passed in.
             if (isFlowControl) {
                 opInstance.ingValues = transformedArgs;
 
                 const state = {
-                    "progress": 0,
-                    "dish": ensureIsDish(transformedInput),
-                    "opList": [opInstance],
-                    "numJumps": 0,
-                    "numRegisters": 0,
-                    "forkOffset": 0
+                    progress: 0,
+                    dish: ensureIsDish(transformedInput),
+                    opList: [opInstance],
                 };
 
                 const updatedState = await opInstance.run(state);
