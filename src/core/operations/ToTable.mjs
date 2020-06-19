@@ -59,6 +59,18 @@ class ToTable extends Operation {
         // Process the input into a nested array of elements.
         const tableData = Utils.parseCSV(Utils.escapeHtml(input), cellDelims.split(""), rowDelims.split(""));
 
+        // Gets maximum number of columns for row formatting completion
+        let maxNumCols = 0;
+        tableData.forEach(function(row, index) {
+            let numCols = 0;
+            row.forEach(function(cell, cellIndex) {
+                numCols += 1;
+                if (numCols > maxNumCols) {
+                    maxNumCols = numCols;
+                }
+            });
+        });
+
         if (!tableData.length) return "";
 
         // Render the data in the requested format.
@@ -118,10 +130,17 @@ class ToTable extends Operation {
              * Outputs a row of correctly padded cells.
              */
             function outputRow(row, longestCells) {
+                let rowCount = 0;
                 let rowOutput = verticalBorder;
                 row.forEach(function(cell, index) {
                     rowOutput += " " + cell + " ".repeat(longestCells[index] - cell.length) + " " + verticalBorder;
+                    rowCount += 1;
                 });
+                while (rowCount < maxNumCols) {
+                    rowOutput += " " + " ".repeat(longestCells[rowCount]) + " " + verticalBorder;
+                    rowCount += 1;
+                }
+    
                 rowOutput += "\n";
                 return rowOutput;
             }
@@ -175,10 +194,16 @@ class ToTable extends Operation {
            * @param {string} cellType
            */
             function outputRow(row, cellType) {
+                let rowCount = 0
                 let output = "<tr>";
                 row.forEach(function(cell) {
                     output += "<" + cellType + ">" + cell + "</" + cellType + ">";
+                    rowCount += 1;
                 });
+                while (rowCount < maxNumCols) {
+                    output += "<" + cellType + ">" + "</" + cellType + ">";
+                    rowCount += 1;
+                }
                 output += "</tr>";
                 return output;
             }
