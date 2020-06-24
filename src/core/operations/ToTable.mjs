@@ -140,7 +140,6 @@ class ToTable extends Operation {
                     rowOutput += " " + " ".repeat(longestCells[rowCount]) + " " + verticalBorder;
                     rowCount += 1;
                 }
-    
                 rowOutput += "\n";
                 return rowOutput;
             }
@@ -194,7 +193,7 @@ class ToTable extends Operation {
            * @param {string} cellType
            */
             function outputRow(row, cellType) {
-                let rowCount = 0
+                let rowCount = 0;
                 let output = "<tr>";
                 row.forEach(function(cell) {
                     output += "<" + cellType + ">" + cell + "</" + cellType + ">";
