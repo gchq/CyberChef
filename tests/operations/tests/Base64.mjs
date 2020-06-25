@@ -35,7 +35,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -46,7 +46,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -57,7 +57,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -68,7 +68,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -79,7 +79,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -90,7 +90,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -101,7 +101,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -112,7 +112,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
