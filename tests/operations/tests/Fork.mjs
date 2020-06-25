@@ -64,7 +64,7 @@ TestRegister.addTests([
             {"op": "To Hex", "args": ["Space"]},
             {"op": "Return", "args": []},
             {"op": "Label", "args": ["skipReturn"]},
-            {"op": "To Base64", "args": ["A-Za-z0-9+/="]}
+            {"op": "To Base64", "args": ["A-Za-z0-9+/=", "Raw"]}
         ]
     }
 ]);

@@ -24,11 +24,11 @@ TestRegister.addTests([
             },
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
         ],
     },
@@ -48,7 +48,7 @@ TestRegister.addTests([
             },
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
+                args: ["A-Za-z0-9+/=", "Raw"],
             },
             {
                 op: "Label", args: ["skip match"],

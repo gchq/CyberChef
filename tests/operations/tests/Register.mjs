@@ -29,7 +29,7 @@ TestRegister.addTests([
             },
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="]
+                args: ["A-Za-z0-9+/=", "Raw"]
             }
         ]
     },
