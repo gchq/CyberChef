@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import {toBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
 
 /**
@@ -29,6 +30,11 @@ class ToBase64 extends Operation {
                 name: "Alphabet",
                 type: "editableOption",
                 value: ALPHABET_OPTIONS
+            },
+            {
+                "name": "Input",
+                "type": "option",
+                "value": ["Raw", "Hex"]
             }
         ];
     }
@@ -40,6 +46,7 @@ class ToBase64 extends Operation {
      */
     run(input, args) {
         const alphabet = args[0];
+        input = Utils.strToArrayBuffer(Utils.convertToByteString(Utils.arrayBufferToStr(input), args[1]));
         return toBase64(input, alphabet);
     }
 
