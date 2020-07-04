@@ -28,6 +28,11 @@ class BitShiftLeft extends Operation {
                 "name": "Amount",
                 "type": "number",
                 "value": 1
+            },
+            {
+                "name": "Circular",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -38,12 +43,20 @@ class BitShiftLeft extends Operation {
      * @returns {ArrayBuffer}
      */
     run(input, args) {
-        const amount = args[0];
+        const amount = args[0],
+            circular = args[1];
+
         input = new Uint8Array(input);
 
-        return input.map(b => {
-            return (b << amount) & 0xff;
-        }).buffer;
+        if (circular) {
+            return input.map(b => {
+                return (b << amount) | b >> (8 - amount);
+            }).buffer;
+        } else {
+            return input.map(b => {
+                return (b << amount) & 0xff;
+            }).buffer;
+        }
     }
 
     /**
