@@ -353,7 +353,7 @@ class WorkerWaiter {
      * @param {object} workerObj - Object containing the worker information
      * @param {ChefWorker} workerObj.worker - The actual worker object
      * @param {number} workerObj.inputNum - The inputNum of the input being baked by the worker
-     * @param {boolean} workerObj.active - If true, the worker is currrently baking an input
+     * @param {boolean} workerObj.active - If true, the worker is currently baking an input
      */
     workerFinished(workerObj) {
         const workerIdx = this.chefWorkers.indexOf(workerObj);
@@ -375,7 +375,7 @@ class WorkerWaiter {
      */
     bakingComplete() {
         this.setBakingStatus(false);
-        let duration = new Date().getTime() - this.bakeStartTime;
+        let duration = Date.now() - this.bakeStartTime;
         duration = duration.toLocaleString() + "ms";
         const progress = this.getBakeProgress();
 
@@ -489,7 +489,7 @@ class WorkerWaiter {
     bake(recipeConfig, options, progress, step) {
         this.setBakingStatus(true);
         this.manager.recipe.updateBreakpointIndicator(false);
-        this.bakeStartTime = new Date().getTime();
+        this.bakeStartTime = Date.now();
         this.bakeId++;
         this.recipeConfig = recipeConfig;
         this.options = options;

@@ -60,6 +60,12 @@ class RawInflate extends Operation {
                 value: false
             }
         ];
+        this.checks = [
+            {
+                entropyRange: [7.5, 8],
+                args: [0, 0, INFLATE_BUFFER_TYPE, false, false]
+            }
+        ];
     }
 
     /**
@@ -77,7 +83,7 @@ class RawInflate extends Operation {
             }),
             result = new Uint8Array(inflate.decompress());
 
-        // Raw Inflate somethimes messes up and returns nonsense like this:
+        // Raw Inflate sometimes messes up and returns nonsense like this:
         // ]....]....]....]....]....]....]....]....]....]....]....]....]....]...
         // e.g. Input data of [8b, 1d, dc, 44]
         // Look for the first two square brackets:

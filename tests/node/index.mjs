@@ -13,13 +13,16 @@
 import {
     setLongTestFailure,
     logTestReport,
-} from "../lib/utils";
+} from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
-import "./tests/nodeApi";
-import "./tests/operations";
-import "./tests/File";
-import "./tests/NodeDish";
+import "./tests/nodeApi.mjs";
+import "./tests/operations.mjs";
+import "./tests/File.mjs";
+import "./tests/Dish.mjs";
+import "./tests/NodeDish.mjs";
+import "./tests/Utils.mjs";
+import "./tests/Categories.mjs";
 
 const testStatus = {
     allTestsPassing: true,
@@ -32,6 +35,7 @@ setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-TestRegister.runApiTests()
-    .then(logOpsTestReport);
-
+(async function() {
+    const results = await TestRegister.runApiTests();
+    logOpsTestReport(results);
+})();

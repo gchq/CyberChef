@@ -201,9 +201,8 @@ class Utils {
      * Utils.parseEscapedChars("\\n");
      */
     static parseEscapedChars(str) {
-        return str.replace(/(\\)?\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, a, b) {
-            if (a === "\\") return "\\"+b;
-            switch (b[0]) {
+        return str.replace(/\\([bfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, a) {
+            switch (a[0]) {
                 case "\\":
                     return "\\";
                 case "0":
@@ -214,7 +213,7 @@ class Utils {
                 case "5":
                 case "6":
                 case "7":
-                    return String.fromCharCode(parseInt(b, 8));
+                    return String.fromCharCode(parseInt(a, 8));
                 case "b":
                     return "\b";
                 case "t":
@@ -232,12 +231,12 @@ class Utils {
                 case "'":
                     return "'";
                 case "x":
-                    return String.fromCharCode(parseInt(b.substr(1), 16));
+                    return String.fromCharCode(parseInt(a.substr(1), 16));
                 case "u":
-                    if (b[1] === "{")
-                        return String.fromCodePoint(parseInt(b.slice(2, -1), 16));
+                    if (a[1] === "{")
+                        return String.fromCodePoint(parseInt(a.slice(2, -1), 16));
                     else
-                        return String.fromCharCode(parseInt(b.substr(1), 16));
+                        return String.fromCharCode(parseInt(a.substr(1), 16));
             }
         });
     }
@@ -592,6 +591,44 @@ class Utils {
         return utf8 ? Utils.byteArrayToUtf8(arr) : Utils.byteArrayToChars(arr);
     }
 
+    /**
+     * Calculates the Shannon entropy for a given set of data.
+     *
+     * @param {Uint8Array|ArrayBuffer} input
+     * @returns {number}
+     */
+    static calculateShannonEntropy(data) {
+        if (data instanceof ArrayBuffer) {
+            data = new Uint8Array(data);
+        }
+        const prob = [],
+            occurrences = new Array(256).fill(0);
+
+        // Count occurrences of each byte in the input
+        let i;
+        for (i = 0; i < data.length; i++) {
+            occurrences[data[i]]++;
+        }
+
+        // Store probability list
+        for (i = 0; i < occurrences.length; i++) {
+            if (occurrences[i] > 0) {
+                prob.push(occurrences[i] / data.length);
+            }
+        }
+
+        // Calculate Shannon entropy
+        let entropy = 0,
+            p;
+
+        for (i = 0; i < prob.length; i++) {
+            p = prob[i];
+            entropy += p * Math.log(p) / Math.log(2);
+        }
+
+        return -entropy;
+    }
+
 
     /**
      * Parses CSV data and returns it as a two dimensional array or strings.
@@ -759,15 +796,15 @@ class Utils {
             "%7E": "~",
             "%21": "!",
             "%24": "$",
-            //"%26": "&",
+            // "%26": "&",
             "%27": "'",
             "%28": "(",
             "%29": ")",
             "%2A": "*",
-            //"%2B": "+",
+            // "%2B": "+",
             "%2C": ",",
             "%3B": ";",
-            //"%3D": "=",
+            // "%3D": "=",
             "%3A": ":",
             "%40": "@",
             "%2F": "/",
@@ -1145,6 +1182,7 @@ class Utils {
             "CRLF":          /\r\n/g,
             "Forward slash": /\//g,
             "Backslash":     /\\/g,
+            "0x with comma": /,?0x/g,
             "0x":            /0x/g,
             "\\x":           /\\x/g,
             "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
@@ -1298,7 +1336,7 @@ export function sendStatusMessage(msg) {
         self.sendStatusMessage(msg);
     else if (isWebEnvironment())
         app.alert(msg, 10000);
-    else if (isNodeEnvironment())
+    else if (isNodeEnvironment() && !global.TESTING)
         // eslint-disable-next-line no-console
         console.debug(msg);
 }
@@ -1336,14 +1374,14 @@ export function debounce(func, wait, id, scope, args) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 if (!String.prototype.padStart) {
     String.prototype.padStart = function padStart(targetLength, padString) {
-        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        targetLength = targetLength>>0; // floor if number or convert non-number to 0;
         padString = String((typeof padString !== "undefined" ? padString : " "));
         if (this.length > targetLength) {
             return String(this);
         } else {
             targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); // append to original to ensure we are longer than needed
             }
             return padString.slice(0, targetLength) + String(this);
         }
@@ -1355,14 +1393,14 @@ if (!String.prototype.padStart) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
 if (!String.prototype.padEnd) {
     String.prototype.padEnd = function padEnd(targetLength, padString) {
-        targetLength = targetLength>>0; //floor if number or convert non-number to 0;
+        targetLength = targetLength>>0; // floor if number or convert non-number to 0;
         padString = String((typeof padString !== "undefined" ? padString : " "));
         if (this.length > targetLength) {
             return String(this);
         } else {
             targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); // append to original to ensure we are longer than needed
             }
             return String(this) + padString.slice(0, targetLength);
         }

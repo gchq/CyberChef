@@ -14,7 +14,6 @@ const path = require("path");
  * @license Apache-2.0
  */
 
-
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
     grunt.file.preserveBOM = false;
@@ -27,7 +26,7 @@ module.exports = function (grunt) {
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
-            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "webpack:web",
+            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
             "copy:standalone", "zip:standalone", "clean:standalone", "chmod"
         ]);
 
@@ -37,11 +36,10 @@ module.exports = function (grunt) {
             "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
         ]);
 
-    grunt.registerTask("test",
-        "A task which runs all the operation tests in the tests directory.",
+    grunt.registerTask("configTests",
+        "A task which configures config files in preparation for tests to be run. Use `npm test` to run tests.",
         [
-            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex",
-            "exec:nodeTests", "exec:opTests"
+            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
         ]);
 
     grunt.registerTask("testui",
@@ -56,8 +54,20 @@ module.exports = function (grunt) {
         "Lints the code base",
         ["eslint", "exec:repoSize"]);
 
-    grunt.registerTask("tests", "test");
     grunt.registerTask("lint", "eslint");
+
+    grunt.registerTask("findModules",
+        "Finds all generated modules and updates the entry point list for Webpack",
+        function(arg1, arg2) {
+            const moduleEntryPoints = listEntryModules();
+
+            grunt.log.writeln(`Found ${Object.keys(moduleEntryPoints).length} modules.`);
+
+            grunt.config.set("webpack.web.entry",
+                Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints));
+        });
 
 
     // Load tasks provided by each plugin
@@ -84,7 +94,53 @@ module.exports = function (grunt) {
             PKG_VERSION: JSON.stringify(pkg.version),
         },
         moduleEntryPoints = listEntryModules(),
-        nodeConsumerTestPath = "~/tmp-cyberchef";
+        nodeConsumerTestPath = "~/tmp-cyberchef",
+        /**
+         * Configuration for Webpack production build. Defined as a function so that it
+         * can be recalculated when new modules are generated.
+         */
+        webpackProdConf = () => {
+            return {
+                mode: "production",
+                target: "web",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
+                output: {
+                    path: __dirname + "/build/prod",
+                    filename: chunkData => {
+                        return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
+                    },
+                    globalObject: "this"
+                },
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
+                    }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        chunks: ["main"],
+                        compileTime: compileTime,
+                        version: pkg.version,
+                        minify: {
+                            removeComments: true,
+                            collapseWhitespace: true,
+                            minifyJS: true,
+                            minifyCSS: true
+                        }
+                    }),
+                    new BundleAnalyzerPlugin({
+                        analyzerMode: "static",
+                        reportFilename: "BundleAnalyzerReport.html",
+                        openAnalyzer: false
+                    }),
+                ]
+            };
+        };
 
 
     /**
@@ -100,6 +156,26 @@ module.exports = function (grunt) {
         });
 
         return entryModules;
+    }
+
+    /**
+     * Detects the correct delimiter to use to chain shell commands together
+     * based on the current OS.
+     *
+     * @param {string[]} cmds
+     * @returns {string}
+     */
+    function chainCommands(cmds) {
+        const win = process.platform === "win32";
+        if (!win) {
+            return cmds.join(";");
+        }
+        return cmds
+            // && means that subsequent commands will not be executed if the
+            // previous one fails. & would coninue on a fail
+            .join("&&")
+            // Windows does not support \n properly
+            .replace("\n", "\\n");
     }
 
     grunt.initConfig({
@@ -135,53 +211,13 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
-            web: () => {
-                return {
-                    mode: "production",
-                    target: "web",
-                    entry: Object.assign({
-                        main: "./src/web/index.js"
-                    }, moduleEntryPoints),
-                    output: {
-                        path: __dirname + "/build/prod",
-                        filename: chunkData => {
-                            return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
-                        },
-                        globalObject: "this"
-                    },
-                    resolve: {
-                        alias: {
-                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
-                        }
-                    },
-                    plugins: [
-                        new webpack.DefinePlugin(BUILD_CONSTANTS),
-                        new HtmlWebpackPlugin({
-                            filename: "index.html",
-                            template: "./src/web/html/index.html",
-                            chunks: ["main"],
-                            compileTime: compileTime,
-                            version: pkg.version,
-                            minify: {
-                                removeComments: true,
-                                collapseWhitespace: true,
-                                minifyJS: true,
-                                minifyCSS: true
-                            }
-                        }),
-                        new BundleAnalyzerPlugin({
-                            analyzerMode: "static",
-                            reportFilename: "BundleAnalyzerReport.html",
-                            openAnalyzer: false
-                        }),
-                    ]
-                };
-            },
+            web: webpackProdConf(),
         },
         "webpack-dev-server": {
             options: {
                 webpack: webpackConfig,
                 host: "0.0.0.0",
+                port: grunt.option("port") || 8080,
                 disableHostCheck: true,
                 overlay: true,
                 inline: false,
@@ -238,7 +274,7 @@ module.exports = function (grunt) {
         connect: {
             prod: {
                 options: {
-                    port: 8000,
+                    port: grunt.option("port") || 8000,
                     base: "build/prod/"
                 }
             }
@@ -316,78 +352,76 @@ module.exports = function (grunt) {
         },
         exec: {
             repoSize: {
-                command: [
+                command: chainCommands([
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
                     "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
-                ].join(";"),
+                ]),
                 stderr: false
             },
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml"
+                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
+                sync: true
             },
             generateConfig: {
-                command: [
+                command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
                     "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
-                ].join(";")
+                ]),
+                sync: true
             },
             generateNodeIndex: {
-                command: [
+                command: chainCommands([
                     "echo '\n--- Regenerating node index ---'",
                     "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
-                ].join(";"),
-            },
-            opTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation tests/operations/index.mjs"
+                ]),
+                sync: true
             },
             browserTests: {
                 command: "./node_modules/.bin/nightwatch --env prod"
             },
-            nodeTests: {
-                command: "node --experimental-modules --no-warnings --no-deprecation tests/node/index.mjs"
-            },
             setupNodeConsumers: {
-                command: [
-                    "echo '\n--- Testing node conumers ---'",
+                command: chainCommands([
+                    "echo '\n--- Testing node consumers ---'",
                     "npm link",
                     `mkdir ${nodeConsumerTestPath}`,
                     `cp tests/node/consumers/* ${nodeConsumerTestPath}`,
                     `cd ${nodeConsumerTestPath}`,
                     "npm link cyberchef"
-                ].join(";"),
+                ]),
+                sync: true
             },
             teardownNodeConsumers: {
-                command: [
+                command: chainCommands([
                     `rm -rf ${nodeConsumerTestPath}`,
                     "echo '\n--- Node consumer tests complete ---'"
-                ].join(";"),
+                ]),
             },
             testCJSNodeConsumer: {
-                command: [
+                command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     "node --no-warnings cjs-consumer.js",
-                ].join(";"),
+                ]),
                 stdout: false,
             },
             testESMNodeConsumer: {
-                command: [
+                command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     "node --no-warnings --experimental-modules esm-consumer.mjs",
-                ].join(";"),
+                ]),
                 stdout: false,
             },
             testESMDeepImportNodeConsumer: {
-                command: [
+                command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     "node --no-warnings --experimental-modules esm-deep-import-consumer.mjs",
-                ].join(";"),
+                ]),
                 stdout: false,
             },
         },

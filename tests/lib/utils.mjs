@@ -33,6 +33,10 @@ function handleTestResult(testStatus, testResult) {
     testStatus.allTestsPassing = testStatus.allTestsPassing && testResult.status === "passing";
     testStatus.counts[testResult.status] = (testStatus.counts[testResult.status] || 0) + 1;
     testStatus.counts.total += 1;
+
+    if (testResult.duration > 2000) {
+        console.log(`'${testResult.test.name}' took ${(testResult.duration / 1000).toFixed(1)}s to complete`);
+    }
 }
 
 /**
@@ -42,8 +46,6 @@ function handleTestResult(testStatus, testResult) {
  * @param {Object[]} results - results from TestRegister
  */
 export function logTestReport(testStatus, results) {
-    console.log("Tests completed.");
-
     results.forEach(r => handleTestResult(testStatus, r));
 
     console.log();
@@ -80,8 +82,9 @@ export function logTestReport(testStatus, results) {
  * Fail if the process takes longer than 60 seconds.
  */
 export function setLongTestFailure() {
+    const timeLimit = 120;
     setTimeout(function() {
-        console.log("Tests took longer than 60 seconds to run, returning.");
+        console.log(`Tests took longer than ${timeLimit} seconds to run, returning.`);
         process.exit(1);
-    }, 60 * 1000);
+    }, timeLimit * 1000);
 }

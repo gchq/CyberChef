@@ -58,7 +58,7 @@ class GeneratePGPKeyPair extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
+    async run(input, args) {
         const [keyType, keySize] = args[0].split("-"),
             password = args[1],
             name = args[2],

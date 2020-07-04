@@ -159,10 +159,6 @@ div.toggle-string {
     width: calc(100% - 13px);
 }
 
-.operation .bmd-form-group .bmd-help {
-    margin-top: -17px;
-}
-
 .input-group .form-control {
     border-top-left-radius: 4px !important;
 }

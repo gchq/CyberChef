@@ -24,30 +24,42 @@ class NodeRecipe {
 
 
     /**
-     * Validate an ingredient $ coerce to operation if necessary.
+     * Validate an ingredient & coerce to operation if necessary.
      * @param {String | Function | Object} ing
+     * @returns {Function || Object} The operation, or an object with the
+     *  operation and its arguments
+     * @throws {TypeError} If it cannot find the operation in chef's list of operations.
      */
     _validateIngredient(ing) {
+        // CASE operation name given. Find operation and validate
         if (typeof ing === "string") {
             const op = operations.find((op) => {
                 return sanitise(op.opName) === sanitise(ing);
             });
             if (op) {
-                return op;
+                // Need to validate against case 2
+                return this._validateIngredient(op);
             } else {
                 throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
             }
+        // CASE operation given. Check its a chef operation and check its not flowcontrol
         } else if (typeof ing === "function") {
+            if (ing.flowControl) {
+                throw new TypeError(`flowControl operations like ${ing.opName} are not currently allowed in recipes for chef.bake in the Node API`);
+            }
+
             if (operations.includes(ing)) {
                 return ing;
             } else {
                 throw new TypeError("Inputted function not a Chef operation.");
             }
-        // CASE: op with configuration
-        } else if (ing.op && ing.args) {
-            // Return op and args pair for opList item.
+        // CASE: op, maybe with configuration
+        } else if (ing.op) {
             const sanitisedOp = this._validateIngredient(ing.op);
-            return {op: sanitisedOp, args: ing.args};
+            if (ing.args) {
+                return {op: sanitisedOp, args: ing.args};
+            }
+            return sanitisedOp;
         } else {
             throw new TypeError("Recipe can only contain function names or functions");
         }
@@ -55,7 +67,7 @@ class NodeRecipe {
 
 
     /**
-     * Parse config for recipe.
+     * Parse an opList from a recipeConfig and assign it to the recipe's opList.
      * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig
      */
     _parseConfig(recipeConfig) {

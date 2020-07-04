@@ -42,7 +42,7 @@ TestRegister.addTests([
     {
         name: "Fork, Comment, Base64",
         input: "cat\nsat\nmat",
-        expectedOutput: "Y2F0\nc2F0\nbWF0\n",
+        expectedOutput: "Y2F0\nc2F0\nbWF0",
         recipeConfig: [
             {
                 "op": "Fork",

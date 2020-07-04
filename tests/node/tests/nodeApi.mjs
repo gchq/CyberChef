@@ -13,10 +13,10 @@
 import assert from "assert";
 import it from "../assertionHandler.mjs";
 import chef from "../../../src/node/index.mjs";
-import OperationError from "../../../src/core/errors/OperationError.mjs";
+import { OperationError, ExcludedOperationError } from "../../../src/core/errors/index.mjs";
 import NodeDish from "../../../src/node/NodeDish.mjs";
 
-import { toBase32} from "../../../src/node/index.mjs";
+import { toBase32, magic} from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addApiTests([
@@ -181,22 +181,17 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should complain if recipe isnt a valid object", () => {
-        try {
-            chef.bake("some input", 3264);
-        } catch (e) {
-            assert.strictEqual(e.name, "TypeError");
-            assert.strictEqual(e.message, "Recipe can only contain function names or functions");
-        }
+        assert.throws(() => chef.bake("some input", 3264), {
+            name: "TypeError",
+            message: "Recipe can only contain function names or functions"
+        });
     }),
 
     it("chef.bake: Should complain if string op is invalid", () => {
-        try {
-            chef.bake("some input", "not a valid operation");
-            assert.fail("Shouldn't be hit");
-        } catch (e) {
-            assert.strictEqual(e.name, "TypeError");
-            assert.strictEqual(e.message, "Couldn't find an operation with name 'not a valid operation'.");
-        }
+        assert.throws(() => chef.bake("some input", "not a valid operation"), {
+            name: "TypeError",
+            message: "Couldn't find an operation with name 'not a valid operation'."
+        });
     }),
 
     it("chef.bake: Should take an input and an operation and perform it", () => {
@@ -205,13 +200,10 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: Should complain if an invalid operation is inputted", () => {
-        try {
-            chef.bake("https://google.com/search?q=help", () => {});
-            assert.fail("Shouldn't be hit");
-        } catch (e) {
-            assert.strictEqual(e.name, "TypeError");
-            assert.strictEqual(e.message, "Inputted function not a Chef operation.");
-        }
+        assert.throws(() => chef.bake("https://google.com/search?q=help", () => {}), {
+            name: "TypeError",
+            message: "Inputted function not a Chef operation."
+        });
     }),
 
     it("chef.bake: accepts an array of operation names and performs them all in order", () => {
@@ -241,12 +233,10 @@ TestRegister.addApiTests([
     }),
 
     it("should complain if an invalid operation is inputted as part of array", () => {
-        try {
-            chef.bake("something", [() => {}]);
-        } catch (e) {
-            assert.strictEqual(e.name, "TypeError");
-            assert.strictEqual(e.message, "Inputted function not a Chef operation.");
-        }
+        assert.throws(() => chef.bake("something", [() => {}]), {
+            name: "TypeError",
+            message: "Inputted function not a Chef operation."
+        });
     }),
 
     it("chef.bake: should take single JSON object describing op and args OBJ", () => {
@@ -259,6 +249,13 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
 
+    it("chef.bake: should take single JSON object desribing op with optional args", () => {
+        const result = chef.bake("some input", {
+            op: chef.toHex,
+        });
+        assert.strictEqual(result.toString(), "73 6f 6d 65 20 69 6e 70 75 74");
+    }),
+
     it("chef.bake: should take single JSON object describing op and args ARRAY", () => {
         const result = chef.bake("some input", {
             op: chef.toHex,
@@ -268,15 +265,13 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should error if op in JSON is not chef op", () => {
-        try {
-            chef.bake("some input", {
-                op: () => {},
-                args: ["Colon"],
-            });
-        } catch (e) {
-            assert.strictEqual(e.name, "TypeError");
-            assert.strictEqual(e.message, "Inputted function not a Chef operation.");
-        }
+        assert.throws(() => chef.bake("some input", {
+            op: () => {},
+            args: ["Colon"],
+        }), {
+            name: "TypeError",
+            message: "Inputted function not a Chef operation."
+        });
     }),
 
     it("chef.bake: should take multiple ops in JSON object form, some ops by string", () => {
@@ -293,6 +288,21 @@ TestRegister.addApiTests([
             }
         ]);
         assert.strictEqual(result.toString(), "67;63;72;66;146;72;66;144;72;66;65;72;62;60;72;66;71;72;66;145;72;67;60;72;67;65;72;67;64");
+    }),
+
+    it("chef.bake: should take multiple ops in JSON object form, some without args", () => {
+        const result = chef.bake("some input", [
+            {
+                op: chef.toHex,
+            },
+            {
+                op: "to octal",
+                args: {
+                    delimiter: "Semi-colon",
+                }
+            }
+        ]);
+        assert.strictEqual(result.toString(), "67;63;40;66;146;40;66;144;40;66;65;40;62;60;40;66;71;40;66;145;40;67;60;40;67;65;40;67;64");
     }),
 
     it("chef.bake: should handle op with multiple args", () => {
@@ -324,22 +334,49 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
     }),
 
-    it("Excluded operations: throw a sensible error when you try and call one", () => {
-        try {
-            chef.fork();
-        } catch (e) {
-            assert.strictEqual(e.type, "ExcludedOperationError");
-            assert.strictEqual(e.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
-        }
+    it("chef.bake: should accept Clean JSON format from Chef website - args optional", () => {
+        const result = chef.bake("some input", [
+            { "op": "To Morse Code" },
+            { "op": "Hex to PEM",
+                "args": ["SOMETHING"] },
+            { "op": "To Snake case",
+                "args": [false] }
+        ]);
+        assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
+    }),
+
+    it("chef.bake: cannot accept flowControl operations in recipe", () => {
+        assert.throws(() => chef.bake("some input", "magic"), {
+            name: "TypeError",
+            message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
+        });
+        assert.throws(() => chef.bake("some input", magic), {
+            name: "TypeError",
+            message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
+        });
+        assert.throws(() => chef.bake("some input", ["to base 64", "magic"]), {
+            name: "TypeError",
+            message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
+        });
     }),
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {
-        try {
-            chef.renderImage();
-        } catch (e) {
-            assert.strictEqual(e.type, "ExcludedOperationError");
-            assert.strictEqual(e.message, "Sorry, the RenderImage operation is not available in the Node.js version of CyberChef.");
-        }
+        assert.throws(chef.fork,
+            (err) => {
+                assert(err instanceof ExcludedOperationError);
+                assert.deepEqual(err.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
+                return true;
+            },
+            "Unexpected error type"
+        );
+        assert.throws(chef.javaScriptBeautify,
+            (err) => {
+                assert(err instanceof ExcludedOperationError);
+                assert.deepEqual(err.message, "Sorry, the JavaScriptBeautify operation is not available in the Node.js version of CyberChef.");
+                return true;
+            },
+            "Unexpected error type"
+        );
     }),
 
     it("Operation arguments: should be accessible from operation object if op has array arg", () => {
@@ -372,4 +409,5 @@ TestRegister.addApiTests([
         assert.equal(chef.convertDistance.args.inputUnits.options[0], "Nanometres (nm)");
         assert.equal(chef.defangURL.args.process.options[1], "Only full URLs");
     }),
+
 ]);

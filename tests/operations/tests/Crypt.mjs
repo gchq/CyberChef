@@ -76,7 +76,7 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
-        name: "AES Encrypt: AES-128-CBC, no IV, ASCII",
+        name: "AES Encrypt: AES-128-CBC with IV0, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "2ef6c3fdb1314b5c2c326a2087fe1a82d5e73bf605ec8431d73e847187fc1c8fbbe969c177df1ecdf8c13f2f505f9498",
         recipeConfig: [
@@ -84,14 +84,14 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Encrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Raw", "Hex"
                 ]
             }
         ],
     },
     {
-        name: "AES Encrypt: AES-128-CTR, no IV, ASCII",
+        name: "AES Encrypt: AES-128-CTR with IV0, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "a98c9e8e3b7c894384d740e4f0f4ed0be2bbb1e0e13a255812c3c6b0a629e4ad759c075b2469c6f4fb2c0cf9",
         recipeConfig: [
@@ -99,14 +99,14 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Encrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Raw", "Hex"
                 ]
             }
         ],
     },
     {
-        name: "AES Encrypt: AES-128-CBC with IV, ASCII",
+        name: "AES Encrypt: AES-128-CBC with IV1, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "4fa077d50cc71a57393e7b542c4e3aea0fb75383b97083f2f568ffc13c0e7a47502ec6d9f25744a061a3a5e55fe95e8d",
         recipeConfig: [
@@ -537,9 +537,10 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
+        // play.golang.org/p/4Qm2hfLGsqc
         name: "DES Encrypt: DES-CTR, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        expectedOutput: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
+        expectedOutput: "09015087e15b0937c462fd5974af0c4b5880de136a5680453c99f4500628cbeca769623515d836985110b93eacfea7fa4a7b2b3cb4f67acbb5f7e8ddb5a5d445da74bf6572b0a874befa3888c81110776388e400afd8dc908dcc0c018c7753355f8a1c9f",
         recipeConfig: [
             {
                 "op": "DES Encrypt",
@@ -630,9 +631,10 @@ DES uses a key length of 8 bytes (64 bits).`,
         ],
     },
     {
+        // play.golang.org/p/RElT6pVeNz2
         name: "Triple DES Encrypt: DES-EDE3-CTR, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
-        expectedOutput: "874d32cd7bdae52c254687e2d7e7093b077af2ec70878f99315f52a21ded5fb10c80a47e6271384335ac47376c758f675484fd7b8be9568aaec643f0d15cffdf3fe54ef3a1b2da50d5d8c7994d7a4a94e0a13a4d437443f0f1f39e93dd13ff06a80c66e4",
+        expectedOutput: "874d32cd7bdae52cd8630d3ab2bf373e7110e13713caa6a8bfed9d9dd802d0ebe93128ac0d0f05abcc56237b75fb69207dba11e68ddc4b0118a4c75e7248bbd80aaba4dd4436642546ec6ca7fa7526f3b0018ed5194c409dc2c1484530b968af554984f3",
         recipeConfig: [
             {
                 "op": "Triple DES Encrypt",
@@ -681,7 +683,7 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
-        name: "AES Decrypt: AES-128-CBC, no IV, ASCII",
+        name: "AES Decrypt: AES-128-CBC with IV0, ASCII",
         input: "2ef6c3fdb1314b5c2c326a2087fe1a82d5e73bf605ec8431d73e847187fc1c8fbbe969c177df1ecdf8c13f2f505f9498",
         expectedOutput: "The quick brown fox jumps over the lazy dog.",
         recipeConfig: [
@@ -689,7 +691,7 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Decrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
@@ -697,7 +699,7 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
-        name: "AES Decrypt: AES-128-CTR, no IV, ASCII",
+        name: "AES Decrypt: AES-128-CTR with IV0, ASCII",
         input: "a98c9e8e3b7c894384d740e4f0f4ed0be2bbb1e0e13a255812c3c6b0a629e4ad759c075b2469c6f4fb2c0cf9",
         expectedOutput: "The quick brown fox jumps over the lazy dog.",
         recipeConfig: [
@@ -705,7 +707,7 @@ The following algorithms will be used based on the size of the key:
                 "op": "AES Decrypt",
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Hex", "Raw",
                     {"option": "Hex", "string": ""}
                 ]
@@ -1160,9 +1162,10 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
+        // play.golang.org/p/FpvqncmPk7R
         name: "DES Decrypt: DES-CTR, Binary",
         input: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
-        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "7a0e643132750e96b76dc9efa7810bea2b8feaa5b97887e44f96c0e6d506cc4dd4665683c6f63139221f8d887fd0a05b39741f8a67d87d6ac6f8dc6b668bd3e4a97b8bd3a19eafd5cdf50c3e1b3f17d61087d0b67cf6db31fec338b75f5954942c852829",
         recipeConfig: [
             {
                 "op": "DES Decrypt",
@@ -1253,9 +1256,10 @@ DES uses a key length of 8 bytes (64 bits).`,
         ],
     },
     {
+        // play.golang.org/p/iBacN9kX_RO
         name: "Triple DES Decrypt: DES-EDE3-CTR, Binary",
         input: "874d32cd7bdae52c254687e2d7e7093b077af2ec70878f99315f52a21ded5fb10c80a47e6271384335ac47376c758f675484fd7b8be9568aaec643f0d15cffdf3fe54ef3a1b2da50d5d8c7994d7a4a94e0a13a4d437443f0f1f39e93dd13ff06a80c66e4",
-        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "7a0e643132750e9625205bc6fb10dc848c53b7cb5a654d1242aecb6191ad3b5114727e5044a0ee11311575873c54829a80f9471ac473a0bbe5e791a23be75062f7e8f2210d998f9fbbaf3a5bb3dacd494d42d82950e3ab273f821eb979168315a80ad20f",
         recipeConfig: [
             {
                 "op": "Triple DES Decrypt",
@@ -1368,6 +1372,381 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    /*
+        The following expectedOutputs are generated with this Python script with pyCryptoDome
+
+        from Crypto.Cipher import Blowfish
+        import binascii
+
+        input_data = b"The quick brown fox jumps over the lazy dog."
+        key = binascii.unhexlify("0011223344556677")
+        iv = binascii.unhexlify("0000000000000000")
+        mode = Blowfish.MODE_CBC
+
+        if mode == Blowfish.MODE_ECB or mode == Blowfish.MODE_CBC:
+            padding_len = 8-(len(input_data) & 7)
+            for i in range(padding_len):
+                input_data += bytes([padding_len])
+
+        cipher = Blowfish.new(key, mode)  # set iv, nonce, segment_size etc. here
+        cipher_text = cipher.encrypt(input_data)
+
+        cipher_text = binascii.hexlify(cipher_text).decode("UTF-8")
+
+        print("Encrypted: {}".format(cipher_text))
+    */
+    {
+        name: "Blowfish Encrypt: ECB, ASCII",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "f7784137ab1bf51546c0b120bdb7fed4509116e49283b35fab0e4292ac86251a9bf908330e3393815e3356bb26524027",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "ECB", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: ECB, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "3d1bf0e87d83782d435a0ca58179ca290184867f52295af5c0fb4dcac7c6c68942906bb421d05925cc7d9cd21532376a0f6ae4c3f008b250381ffa9624f5eb697dbd44de48cf5593ea7dbf5842238474b546ceeb29f6cf327a7d13698786b8d14451f52fb0f5760a",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "ECB", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: ECB, ASCII",
+        input: "f7784137ab1bf51546c0b120bdb7fed4509116e49283b35fab0e4292ac86251a9bf908330e3393815e3356bb26524027",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "ECB", // Mode
+                    "Hex", // Input
+                    "Raw" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: ECB, Binary",
+        input: "3d1bf0e87d83782d435a0ca58179ca290184867f52295af5c0fb4dcac7c6c68942906bb421d05925cc7d9cd21532376a0f6ae4c3f008b250381ffa9624f5eb697dbd44de48cf5593ea7dbf5842238474b546ceeb29f6cf327a7d13698786b8d14451f52fb0f5760a",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "ECB", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: CBC, ASCII",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "398433f39e938286a35fc240521435b6972f3fe96846b54ab9351aa5fa9e10a6a94074e883d1cb36cb9657c817274b60",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: CBC, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "3b42c51465896524e66c2fd2404c8c2b4eb26c760671f131c3372d374f48283ca9a5404d3d8aabd2a886c6551393ca41c682580f1c81f16046e3bec7b59247bdfca1d40bf2ad8ede9de99cb44b36658f775999d37776b3b1a085b9530e54ece69e1875e1bdc8cdcf",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CBC", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: CBC, ASCII",
+        input: "398433f39e938286a35fc240521435b6972f3fe96846b54ab9351aa5fa9e10a6a94074e883d1cb36cb9657c817274b60",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CBC", // Mode
+                    "Hex", // Input
+                    "Raw" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: CBC, Binary",
+        input: "3b42c51465896524e66c2fd2404c8c2b4eb26c760671f131c3372d374f48283ca9a5404d3d8aabd2a886c6551393ca41c682580f1c81f16046e3bec7b59247bdfca1d40bf2ad8ede9de99cb44b36658f775999d37776b3b1a085b9530e54ece69e1875e1bdc8cdcf",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CBC", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: CFB, ASCII",
+        input: "The quick brown fox jumps over the lazy dog.",
+        // pyCryptoDome produces a different value with default settings. This is due to segment_size having
+        // a default value of 8 bits. Setting it to 64 (one full block) will yield the same result.
+        expectedOutput: "c8ca123592570c1fcb138d4ec08f7af14ad49363245be1ac25029c8ffc508b3217e75faaa5566426180fec8f",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CFB", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: CFB, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        // see above. pyCryptoDome produces a different value with its default settings
+        expectedOutput: "e6ac1324d1576beab00e855de3f4ac1f5e3cbf89f4c2a743a5737895067ac5012e5bdb92477e256cc07bf691b58e721179b550e694abb0be7cbdc42586db755bf795f4338f47d356c57453afa6277e46aaeb3405f9744654a477f06c2ad92ede90555759",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CFB", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: CFB, ASCII",
+        input: "c8ca123592570c1fcb138d4ec08f7af14ad49363245be1ac25029c8ffc508b3217e75faaa5566426180fec8f",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        // see above. pyCryptoDome produces a different value with its default settings
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CFB", // Mode
+                    "Hex", // Input
+                    "Raw" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: CFB, Binary",
+        input: "e6ac1324d1576beab00e855de3f4ac1f5e3cbf89f4c2a743a5737895067ac5012e5bdb92477e256cc07bf691b58e721179b550e694abb0be7cbdc42586db755bf795f4338f47d356c57453afa6277e46aaeb3405f9744654a477f06c2ad92ede90555759",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        // see above. pyCryptoDome produces a different value with its default settings
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "CFB", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: OFB, ASCII",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "c8ca123592570c1fffcee88b9823b9450dc9c48e559123c1df1984214212bae7e44114d29dba79683d10cce5",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "OFB", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: OFB, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "e6ac1324d1576bea4ceb5be7691c35e4919f18be06cc2a926025ef0973222e987de7c63cd71ed3b19190ba006931d9cbdf412f5b1ac7155904ca591f693fe11aa996e17866e0de4b2eb7ff5effabf94b0f49ed159202caf72745ac2f024d86f942d83767",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "OFB", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: OFB, ASCII",
+        input: "c8ca123592570c1fffcee88b9823b9450dc9c48e559123c1df1984214212bae7e44114d29dba79683d10cce5",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "OFB", // Mode
+                    "Hex", // Input
+                    "Raw" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: OFB, Binary",
+        input: "e6ac1324d1576bea4ceb5be7691c35e4919f18be06cc2a926025ef0973222e987de7c63cd71ed3b19190ba006931d9cbdf412f5b1ac7155904ca591f693fe11aa996e17866e0de4b2eb7ff5effabf94b0f49ed159202caf72745ac2f024d86f942d83767",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
+                    "OFB", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: CTR, ASCII",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "e2a5e0f03ad4877101c7cf83861ad93477adb57acac4bebc315a7bae34b4e6a54e5532db457a3131dcd9dda6",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    // pyCryptoDome only allows the size of the nonce to be [0,7] bytes.
+                    // Internally, it right-pads the nonce to 7 bytes long if it wasn't already 7 bytes,
+                    // and the last (8th) byte is used for counter.
+                    // Therefore a pyCryptoDome nonce of "aabbccdd" is equivalent to an IV of "aabbccdd00000000" here.
+                    {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
+                    "CTR", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt: CTR, Binary",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "ccc3e1e179d4e084b2e27cef77255595ebfb694a9999b7ef8e661086058472dad7f3e0350fde9be87059ab43d5b800aa08be4c00f3f2e99402fe2702c39e8663dbcbb146700d63432227f1045f116bfd4b65022ca20b70427ddcfd7441cb3c75f4d3fff0",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    // See notes above
+                    {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
+                    "CTR", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: CTR, ASCII",
+        input: "e2a5e0f03ad4877101c7cf83861ad93477adb57acac4bebc315a7bae34b4e6a54e5532db457a3131dcd9dda6",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    // See notes above
+                    {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
+                    "CTR", // Mode
+                    "Hex", // Input
+                    "Raw" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Decrypt: CTR, Binary",
+        input: "ccc3e1e179d4e084b2e27cef77255595ebfb694a9999b7ef8e661086058472dad7f3e0350fde9be87059ab43d5b800aa08be4c00f3f2e99402fe2702c39e8663dbcbb146700d63432227f1045f116bfd4b65022ca20b70427ddcfd7441cb3c75f4d3fff0",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Blowfish Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "0011223344556677"}, // Key
+                    // See notes above
+                    {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
+                    "CTR", // Mode
+                    "Hex", // Input
+                    "Hex" // Output
                 ]
             }
         ],

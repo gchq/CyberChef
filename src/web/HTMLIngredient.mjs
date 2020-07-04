@@ -31,7 +31,9 @@ class HTMLIngredient {
         this.target = config.target;
         this.defaultIndex = config.defaultIndex || 0;
         this.toggleValues = config.toggleValues;
-        this.id = "ing-" + this.app.nextIngId();
+        this.ingId = this.app.nextIngId();
+        this.id = "ing-" + this.ingId;
+        this.tabIndex = this.ingId + 2; // Input = 1, Search = 2
         this.min = (typeof config.min === "number") ? config.min : "";
         this.max = (typeof config.max === "number") ? config.max : "";
         this.step = config.step || 1;
@@ -52,40 +54,46 @@ class HTMLIngredient {
             case "binaryString":
             case "byteArray":
                 html += `<div class="form-group">
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating">${this.name}</label>
                     <input type="text"
                         class="form-control arg"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
                         ${this.disabled ? "disabled" : ""}>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
                 break;
             case "shortString":
             case "binaryShortString":
                 html += `<div class="form-group inline">
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating inline">${this.name}</label>
                     <input type="text"
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
                         ${this.disabled ? "disabled" : ""}>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
                 break;
             case "toggleString":
                 html += `<div class="form-group input-group">
                     <div class="toggle-string">
-                        <label for="${this.id}" class="bmd-label-floating toggle-string">${this.name}</label>
+                        <label for="${this.id}"
+                            ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                            class="bmd-label-floating toggle-string">${this.name}</label>
                         <input type="text"
                             class="form-control arg toggle-string"
                             id="${this.id}"
+                            tabindex="${this.tabIndex}"
                             arg-name="${this.name}"
                             value="${this.value}"
                             ${this.disabled ? "disabled" : ""}>
-                        ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     </div>
                     <div class="input-group-append">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>
@@ -100,41 +108,46 @@ class HTMLIngredient {
                 break;
             case "number":
                 html += `<div class="form-group inline">
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating inline">${this.name}</label>
                     <input type="number"
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
                         min="${this.min}"
                         max="${this.max}"
                         step="${this.step}"
                         ${this.disabled ? "disabled" : ""}>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
                 break;
             case "boolean":
                 html += `<div class="form-group inline boolean-arg">
                     <div class="checkbox">
-                        <label>
+                        <label ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}>
                             <input type="checkbox"
                                 class="arg"
                                 id="${this.id}"
+                                tabindex="${this.tabIndex}"
                                 arg-name="${this.name}"
                                 ${this.value ? " checked" : ""}
                                 ${this.disabled ? " disabled" : ""}
                                 value="${this.name}"> ${this.name}
                         </label>
-                        ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     </div>
                 </div>`;
                 break;
             case "option":
                 html += `<div class="form-group inline">
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating inline">${this.name}</label>
                     <select
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
@@ -147,16 +160,18 @@ class HTMLIngredient {
                     }
                 }
                 html += `</select>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
                 break;
             case "populateOption":
             case "populateMultiOption":
                 html += `<div class="form-group">
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating">${this.name}</label>
                     <select
                         class="form-control arg no-state-change populate-option"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
@@ -172,7 +187,6 @@ class HTMLIngredient {
                     }
                 }
                 html += `</select>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
 
                 eventFn = this.type === "populateMultiOption" ?
@@ -182,14 +196,16 @@ class HTMLIngredient {
                 break;
             case "editableOption":
                 html += `<div class="form-group input-group">
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating">${this.name}</label>
                     <input type="text"
                         class="form-control arg"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value[this.defaultIndex].value}"
                         ${this.disabled ? "disabled" : ""}>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     <div class="input-group-append">
                         <button type="button"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
@@ -211,14 +227,16 @@ class HTMLIngredient {
                 break;
             case "editableOptionShort":
                 html += `<div class="form-group input-group inline">
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating inline">${this.name}</label>
                     <input type="text"
                         class="form-control arg inline"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value[this.defaultIndex].value}"
                         ${this.disabled ? "disabled" : ""}>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                     <div class="input-group-append inline">
                         <button type="button"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
@@ -240,22 +258,27 @@ class HTMLIngredient {
                 break;
             case "text":
                 html += `<div class="form-group">
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating">${this.name}</label>
                     <textarea
                         class="form-control arg"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         rows="${this.rows ? this.rows : 3}"
                         ${this.disabled ? "disabled" : ""}>${this.value}</textarea>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
                 break;
             case "argSelector":
                 html += `<div class="form-group inline">
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}"
+                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        class="bmd-label-floating inline">${this.name}</label>
                     <select
                         class="form-control arg inline arg-selector"
                         id="${this.id}"
+                        tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
@@ -266,10 +289,19 @@ class HTMLIngredient {
                         </option>`;
                 }
                 html += `</select>
-                    ${this.hint ? "<span class='bmd-help'>" + this.hint + "</span>" : ""}
                 </div>`;
 
                 this.manager.addDynamicListener(".arg-selector", "change", this.argSelectorChange, this);
+                break;
+            case "label":
+                html += `<div class="form-group">
+                    <label>${this.name}</label>
+                    <input type="hidden"
+                        class="form-control arg"
+                        id="${this.id}"
+                        arg-name="${this.name}"
+                        value="">
+                </div>`;
                 break;
             default:
                 break;

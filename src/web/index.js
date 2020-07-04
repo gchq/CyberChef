@@ -49,13 +49,12 @@ function main() {
         attemptHighlight:    true,
         theme:               "classic",
         useMetaKey:          false,
-        ioDisplayThreshold:  512,
+        ioDisplayThreshold:  2048,
         logLevel:            "info",
         autoMagic:           true,
         imagePreview:        true,
         syncTabs:            true,
-        preserveCR:          true,
-        userSetCR:           false
+        preserveCR:          "entropy"
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
