@@ -101,6 +101,7 @@ import "./tests/LuhnChecksum.mjs";
 import "./tests/CipherSaber2.mjs";
 import "./tests/Colossus.mjs";
 import "./tests/ParseObjectIDTimestamp.mjs";
+import "./tests/CaesarBoxCipher.mjs";
 
 
 // Cannot test operations that use the File type yet
