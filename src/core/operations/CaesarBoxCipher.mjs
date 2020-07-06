@@ -19,8 +19,8 @@ class CaesarBoxCipher extends Operation {
 
         this.name = "Caesar Box Cipher";
         this.module = "Ciphers";
-        this.description = "";
-        this.infoURL = "";
+        this.description = "Caesar Box Encryption uses a box, a rectangle (or a square), or at least a size W caracterizing its width.";
+        this.infoURL = "https://www.dcode.fr/caesar-box-cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
