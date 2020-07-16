@@ -59,13 +59,6 @@ class RailFenceCipherDecode extends Operation {
         }
 
         const cycle = (key - 1) * 2;
-
-        const rest = cipher.length % key;
-
-        if (rest !== 0) {
-            cipher = cipher + (" ".repeat(key - rest));
-        }
-
         const plaintext = new Array(cipher.length);
 
         let j = 0;
