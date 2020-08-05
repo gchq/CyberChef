@@ -29,6 +29,8 @@
             "From Base62",
             "To Base85",
             "From Base85",
+            "To Base91",
+            "From Base91",
             "To Base",
             "From Base",
             "To BCD",
