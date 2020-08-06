@@ -16,7 +16,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base91",
-                args: ["A-Za-z0-9!#$%&()*+,./:;<=>?@[]^_`{|}~&quot;"],
+                args: ["A-Za-z0-9!#$%&()*+,./:;<=>?@[]^_`{|}~\""],
+            },
+        ],
+    },
+    {
+        name: "To Base91: First",
+        input: "idevlab",
+        expectedOutput: "lM_1Z<jNG",
+        recipeConfig: [
+            {
+                op: "To Base91",
+                args: ["A-Za-z0-9!#$%&()*+,./:;<=>?@[]^_`{|}~\""],
             },
         ],
     },
