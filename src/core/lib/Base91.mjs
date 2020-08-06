@@ -15,7 +15,7 @@ import OperationError from "../errors/OperationError.mjs";
 export const ALPHABET_OPTIONS = [
     {
         name: "Standard",
-        value: "A-Za-z0-9!#$%&()*+,./:;<=>?@[]^_`{|}~\"",
+        value: "A-Za-z0-9!#$%&()*+,./:;<=>?@[]^_`{|}~&quot;",
     }
 ];
 

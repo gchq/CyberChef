@@ -1,9 +1,9 @@
 /**
- * Base64 tests.
+ * Base91 tests.
  *
- * @author n1474335 [n1474335@gmail.com]
+ * @author idevlab [nidevlab@outlook.com]
  *
- * @copyright Crown Copyright 2018
+ * @copyright Crown Copyright 2020
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
@@ -15,7 +15,8 @@ TestRegister.addTests([
         expectedOutput: "idevlab",
         recipeConfig: [
             {
-                op: "From Base64"
+                op: "From Base91",
+                args: ["A-Za-z0-9!#$%&()*+,./:;<=>?@[]^_`{|}~&quot;"],
             },
         ],
     },

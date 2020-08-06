@@ -23,6 +23,7 @@ import "./tests/BaconCipher.mjs";
 import "./tests/Base58.mjs";
 import "./tests/Base64.mjs";
 import "./tests/Base62.mjs";
+import "./tests/Base91.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/ByteRepr.mjs";
 import "./tests/CartesianProduct.mjs";
