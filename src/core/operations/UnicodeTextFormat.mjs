@@ -46,7 +46,6 @@ class UnicodeTextFormat extends Operation {
     run(input, args) {
         const [underline, strikethrough] = args;
         let output = input.map(char => [char]);
-        console.dir(output);
         if (strikethrough) {
             output = output.map(charFormat => {
                 charFormat.push(...Utils.strToUtf8ByteArray("\u0336"));
@@ -59,8 +58,8 @@ class UnicodeTextFormat extends Operation {
                 return charFormat;
             });
         }
-        console.dir(output);
-        return output.flat();
+        // return output.flat(); - Not supported in Node 10, polyfilled
+        return [].concat(...output);
     }
 
 }
