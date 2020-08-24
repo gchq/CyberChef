@@ -131,7 +131,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, 13]
+                args: [true, true, true, 13]
             },
         ],
     },
@@ -142,7 +142,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, 13]
+                args: [true, true, true, 13]
             },
         ],
     },
@@ -153,7 +153,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, 26]
+                args: [true, true, true, 26]
             },
         ],
     },
@@ -164,7 +164,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, false, 13]
+                args: [true, false, false, 13]
             },
         ],
     },
@@ -175,7 +175,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [false, true, 13]
+                args: [false, true, false, 13]
             },
         ],
     },
