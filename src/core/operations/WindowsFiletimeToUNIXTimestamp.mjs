@@ -35,6 +35,11 @@ class WindowsFiletimeToUNIXTimestamp extends Operation {
                 "name": "Input format",
                 "type": "option",
                 "value": ["Decimal", "Hex"]
+            },
+            {
+                "name": "Swap Endianness",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -45,7 +50,16 @@ class WindowsFiletimeToUNIXTimestamp extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [units, format] = args;
+        const [units, format, swapEndianness] = args;
+
+        if (swapEndianness) {
+            let result = "";
+            for (let i = input.length - 2; i >= 0; i -= 2) {
+                result += input.charAt(i);
+                result += input.charAt(i + 1);
+            }
+            input = result;
+        }
 
         if (!input) return "";
 
