@@ -1,6 +1,8 @@
 # Changelog
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
+### Unreleased
+- Add 'To Base32 (From Base16)' operation
 
 ### [9.21.0] - 2020-06-12
 - Node API now exports `magic` operation [@d98762625] | [#1049]
