@@ -17,14 +17,18 @@ class Protobuf {
      * Protobuf constructor
      *
      * @param {byteArray|Uint8Array} data
+     * @param {boolean} parseFixedAsFloats
      */
-    constructor(data) {
+    constructor(data, parseFixedAsFloats=false) {
         // Check we have a byteArray or Uint8Array
         if (data instanceof Array || data instanceof Uint8Array) {
             this.data = data;
         } else {
             throw new Error("Protobuf input must be a byteArray or Uint8Array");
         }
+
+        // Unpack config
+        this.parseFixedAsFloats = parseFixedAsFloats;
 
         // Set up masks
         this.TYPE = 0x07;
@@ -80,10 +84,11 @@ class Protobuf {
      * Parse Protobuf data
      *
      * @param {byteArray} input
+     * @param {boolean} parseFixedAsFloats
      * @returns {Object}
      */
-    static decode(input) {
-        const pb = new Protobuf(input);
+    static decode(input, parseFixedAsFloats=false) {
+        const pb = new Protobuf(input, parseFixedAsFloats);
         return pb._parse();
     }
 
@@ -149,13 +154,13 @@ class Protobuf {
                 return { "key": key, "value": this._varInt() };
             // fixed 64
             case 1:
-                return { "key": key, "value": this._uint64() };
+                return { "key": key, "value": this.parseFixedAsFloats ? this._float64() : this._uint64() };
             // length delimited
             case 2:
                 return { "key": key, "value": this._lenDelim() };
             // fixed 32
             case 5:
-                return { "key": key, "value": this._uint32() };
+                return { "key": key, "value": this.parseFixedAsFloats ? this._float32() : this._uint32() };
             // unknown type
             default:
                 throw new Error("Unknown type 0x" + type.toString(16));
@@ -256,7 +261,7 @@ class Protobuf {
         let field;
         try {
             // Attempt to parse as a new Protobuf Object
-            const pbObject = new Protobuf(fieldBytes);
+            const pbObject = new Protobuf(fieldBytes, this.parseFixedAsFloats);
             field = pbObject._parse();
         } catch (err) {
             // Otherwise treat as bytes
@@ -278,6 +283,34 @@ class Protobuf {
         const dataview = new DataView(new Uint8Array(this.data.slice(this.offset, this.offset + 4)).buffer);
         const value = dataview.getUint32(0);
         this.offset += 4;
+        return value;
+    }
+
+    /**
+     * Read a 32 bit floating point from the data
+     *
+     * @private
+     * @returns {number}
+     */
+    _float32() {
+        const sizeInBytes = 4;
+        const dataview = new DataView(new Uint8Array(this.data.slice(this.offset, this.offset + sizeInBytes)).buffer);
+        const value = dataview.getFloat32(0, true);
+        this.offset += sizeInBytes;
+        return value;
+    }
+
+    /**
+     * Read a 64 bit floating point from the data
+     *
+     * @private
+     * @returns {number}
+     */
+    _float64() {
+        const sizeInBytes = 8;
+        const dataview = new DataView(new Uint8Array(this.data.slice(this.offset, this.offset + sizeInBytes)).buffer);
+        const value = dataview.getFloat64(0, true);
+        this.offset += sizeInBytes;
         return value;
     }
 }
