@@ -58,6 +58,7 @@ import "./tests/JWTSign.mjs";
 import "./tests/JWTVerify.mjs";
 import "./tests/MS.mjs";
 import "./tests/Magic.mjs";
+import "./tests/Modhex.mjs";
 import "./tests/MorseCode.mjs";
 import "./tests/NetBIOS.mjs";
 import "./tests/NormaliseUnicode.mjs";
