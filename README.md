@@ -15,7 +15,7 @@ The tool is designed to enable both technical and non-technical analysts to mani
 
 ## Live demo
 
-CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!
+CyberChef is still under active development. As a result, it shouldn't be considered as a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!
 
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
