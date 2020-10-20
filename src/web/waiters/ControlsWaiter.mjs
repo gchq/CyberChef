@@ -334,29 +334,29 @@ class ControlsWaiter {
 
 
     /**
-     * Hides the options for all the operations in the current recipe.
+     * Hides the arguments for all the operations in the current recipe.
      */
-    hideRecipeOptClick() {
+    hideRecipeArgsClick() {
         const icon = document.getElementById("hide-icon");
 
-        if (icon.getAttribute("hide-opt") === "false") {
-            icon.setAttribute("hide-opt", "true");
-            icon.setAttribute("data-original-title", "Show options");
+        if (icon.getAttribute("hide-args") === "false") {
+            icon.setAttribute("hide-args", "true");
+            icon.setAttribute("data-original-title", "Show arguments");
             icon.children[0].innerText = "keyboard_arrow_down";
-            Array.from(document.getElementsByClassName("hide-options")).forEach(function(item){
-                item.setAttribute("hide-opt", "true");
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item){
+                item.setAttribute("hide-args", "true");
                 item.innerText = "keyboard_arrow_down";
-                item.classList.add("hide-options-selected");
+                item.classList.add("hide-args-selected");
                 item.parentNode.previousElementSibling.style.display = "none";
             });
         } else {
-            icon.setAttribute("hide-opt", "false");
-            icon.setAttribute("data-original-title", "Hide options");
+            icon.setAttribute("hide-args", "false");
+            icon.setAttribute("data-original-title", "Hide arguments");
             icon.children[0].innerText = "keyboard_arrow_up";
-            Array.from(document.getElementsByClassName("hide-options")).forEach(function(item){
-                item.setAttribute("hide-opt", "false");
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item){
+                item.setAttribute("hide-args", "false");
                 item.innerText = "keyboard_arrow_up";
-                item.classList.remove("hide-options-selected");
+                item.classList.remove("hide-args-selected");
                 item.parentNode.previousElementSibling.style.display = "grid";
             });
         }
