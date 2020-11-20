@@ -1,7 +1,9 @@
+const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -189,5 +191,45 @@ module.exports = {
     },
     performance: {
         hints: false
-    }
+    },
+
+    optimization: {
+        runtimeChunk: false,
+        splitChunks: {
+            cacheGroups: {
+                default: false,
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendor_app",
+                    chunks: "all",
+                    minChunks: 2
+                }
+            }
+        },
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    output: {
+                        comments: false
+                    },
+                    ecma: undefined,
+                    warnings: false,
+                    mangle: true,
+                    module: false,
+                    toplevel: false,
+                    nameCache: null,
+                    ie8: false,
+                }
+            }),
+            new OptimizeCssAssetsPlugin({
+                assetNameRegExp: /\.optimize\.css$/g,
+                cssProcessor: require("cssnano"),
+                cssProcessorPluginOptions: {
+                    preset: ["default", { discardComments: { removeAll: true } }]
+                },
+                canPrint: true
+            })
+        ]
+    },
+
 };
