@@ -1159,6 +1159,7 @@ class Utils {
             "Backslash":     "\\",
             "0x":            "0x",
             "\\x":           "\\x",
+            "Hyphen":        "-",
             "Nothing (separate chars)": "",
             "None":          "",
         }[token];
