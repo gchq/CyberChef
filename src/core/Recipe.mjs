@@ -190,6 +190,7 @@ class Recipe  {
         for (let i = startFrom; i < this.opList.length; i++) {
             op = this.opList[i];
             log.debug(`[${i}] ${op.name} ${JSON.stringify(op.ingValues)}`);
+
             if (op.disabled) {
                 log.debug("Operation is disabled, skipping");
                 continue;
@@ -200,7 +201,13 @@ class Recipe  {
             }
 
             try {
-                input = await dish.get(op.inputType);
+
+                if (op.name != "Comment") {
+                    input = await dish.get(op.inputType);
+                }
+                else {
+                    input = dish.value ;
+                }
                 log.debug(`Executing operation '${op.name}'`);
 
                 if (isWorkerEnvironment()) {
@@ -227,7 +234,12 @@ class Recipe  {
                     output = await op.run(input, op.ingValues);
                     dish.set(output, op.outputType);
                 }
-                this.lastRunOp = op;
+
+                // if comment is the lastRunOp, the output we want is the previous command, not necessarily a String
+                if (op.name != "Comment"){
+                    this.lastRunOp = op;
+                }
+
             } catch (err) {
                 // Return expected errors as output
                 if (err instanceof OperationError ||
@@ -273,6 +285,7 @@ class Recipe  {
             await dish.get(this.lastRunOp.outputType),
             this.lastRunOp.ingValues
         );
+
         dish.set(output, this.lastRunOp.presentType);
     }
 
