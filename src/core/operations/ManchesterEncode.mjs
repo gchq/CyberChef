@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Manchester encoding operation
@@ -40,9 +41,11 @@ class ManchesterEncode extends Operation {
             if (bit == 0){
                 encoding.push(1);
                 encoding.push(0);
-            } else {
+            } else if (bit == 1){
                 encoding.push(0);
                 encoding.push(1);
+            } else {
+                throw new OperationError(`Invalid input character ${bit}. Input should be in binary.`);
             }
 
         }
