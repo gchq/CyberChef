@@ -16,6 +16,10 @@ export const UNITS = ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", 
  */
 export const DATETIME_FORMATS = [
     {
+        name: "Custom",
+        value: ""
+    },
+    {
         name: "Standard date and time",
         value: "DD/MM/YYYY HH:mm:ss"
     },
