@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Manchester decoding operation
@@ -19,10 +20,10 @@ class ManchesterDecode extends Operation {
 
         this.name = "Manchester Decode";
         this.module = "Encodings";
-        this.description = "";
-        this.infoURL = "";
-        this.inputType = "binaryArray";
-        this.outputType = "binaryArray";
+        this.description = "Decodes data that has been encoded using the Manchester Encoding (also known as phase encoding). A <code>01</code> is converted to <code>1</code> and a <code>10</code> is converted to <code>0</code>. <br><br>As every bit is encoded into two bits when using this encoding, inputs must be a multiple of 2 long.";
+        this.infoURL = "https://en.wikipedia.org/wiki/Manchester_code";
+        this.inputType = "string";
+        this.outputType = "string";
         this.args = [];
     }
 
@@ -32,7 +33,7 @@ class ManchesterDecode extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const result = [];
+        const decoding = [];
 
         if (input.length % 2 != 0){
             throw new OperationError(`Length of an input should be a multiple of 2, the input is ${input.length} long.`);
@@ -43,16 +44,16 @@ class ManchesterDecode extends Operation {
             const bit2 = input[i+1];
 
             if (bit1 == 1 && bit2 == 0){
-                result.push(0);
+                decoding.push(0);
             } else if (bit1 == 0 && bit2 == 1){
-                result.push(1);
+                decoding.push(1);
             } else {
                 throw new OperationError(`Invalid input.`);
             }
 
         }
-
-        return result;
+        const output = decoding.join("");
+        return output;
     }
 
 }
