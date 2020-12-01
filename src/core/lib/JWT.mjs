@@ -1,5 +1,5 @@
 /**
- * DateTime resources.
+ * JWT resources
  *
  * @author mt3571 [mt3571@protonmail.com]
  * @copyright Crown Copyright 2020
