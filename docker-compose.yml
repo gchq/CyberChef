@@ -4,7 +4,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/web/Dockerfile
-        container_name: cyberchef_nginx
+        container_name: cyberchef
         restart: always
         ports:
             - 8080:80
