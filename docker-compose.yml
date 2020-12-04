@@ -1,0 +1,12 @@
+version: "3.6"
+services:
+    web:
+        build:
+            context: .
+            dockerfile: ./docker/web/Dockerfile
+        container_name: cyberchef
+        restart: always
+        ports:
+            - 8080:80
+        volumes:
+            - ./build/prod:/usr/share/nginx/html
