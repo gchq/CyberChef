@@ -5,8 +5,8 @@
  * @license Apache-2.0
  */
 
-import LoaderWorker from "worker-loader?inline&fallback=false!../workers/LoaderWorker.js";
-import InputWorker from "worker-loader?inline&fallback=false!../workers/InputWorker.mjs";
+import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
+import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
 import Utils, { debounce } from "../../core/Utils.mjs";
 import { toBase64 } from "../../core/lib/Base64.mjs";
 import { isImage } from "../../core/lib/FileType.mjs";

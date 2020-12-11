@@ -8,7 +8,7 @@
 import Utils, { debounce } from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
-import ZipWorker from "worker-loader?inline&fallback=false!../workers/ZipWorker.mjs";
+import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
 
 /**
   * Waiter to handle events related to the output

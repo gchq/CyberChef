@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Utils, { debounce } from "../core/Utils";
-import {fromBase64} from "../core/lib/Base64";
-import Manager from "./Manager";
-import HTMLCategory from "./HTMLCategory";
-import HTMLOperation from "./HTMLOperation";
+import Utils, { debounce } from "../core/Utils.mjs";
+import {fromBase64} from "../core/lib/Base64.mjs";
+import Manager from "./Manager.mjs";
+import HTMLCategory from "./HTMLCategory.mjs";
+import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
 

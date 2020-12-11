@@ -50,7 +50,19 @@ class XPathExpression extends Operation {
 
         let doc;
         try {
-            doc = new xmldom.DOMParser().parseFromString(input, "application/xml");
+            doc = new xmldom.DOMParser({
+                errorHandler: {
+                    warning(w) {
+                        throw w;
+                    },
+                    error(e) {
+                        throw e;
+                    },
+                    fatalError(e) {
+                        throw e;
+                    }
+                }
+            }).parseFromString(input, "application/xml");
         } catch (err) {
             throw new OperationError("Invalid input XML.");
         }

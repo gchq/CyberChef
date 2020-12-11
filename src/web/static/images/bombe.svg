@@ -9,13 +9,13 @@
 <svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
     x="0px" y="0px" width="550px" height="350px" viewBox="0 0 550 350" xml:space="preserve" onload="setup(evt)">
 <script type="text/ecmascript">
-    // <![CDATA[
+    <![CDATA[
     function setup(evt) {
         const allRotors = evt.target.ownerDocument.querySelectorAll('.rotor');
         const rotors = [];
         const initTime = Date.now();
         const tick = 360/26;
-        const speed = 1000; // Time for one full rotation of the fast rotor
+        const speed = 1000; /* Time for one full rotation of the fast rotor */
  
         for (const rotor of allRotors) {
             const row = parseInt(rotor.classList.value.match(/row(\d)/)[1], 10);
@@ -46,13 +46,13 @@
                     rotor.last = rotor.last + rotor.wait * numTicks;
                     rotor.el.setAttribute("transform", "rotate(" + rotor.pos + ", " + rotor.x + ", " + rotor.y + ")");
                 } else {
-                    // Don't bother looking at the rest
+                    /* Don't bother looking at the rest */
                     break;
                 }
             }
         }, speed/26/1.5 - 5);
     }
-    // ]]>
+    ]]>
 </script>
 <style>
     .row0 {--primary-color: #e5d41b;}

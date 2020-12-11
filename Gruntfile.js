@@ -242,6 +242,10 @@ module.exports = function (grunt) {
                     entry: Object.assign({
                         main: "./src/web/index.js"
                     }, moduleEntryPoints),
+                    output: {
+                        publicPath: "",
+                        globalObject: "this"
+                    },
                     resolve: {
                         alias: {
                             "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
@@ -302,7 +306,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        src: "build/prod/index.html",
+                        src: ["build/prod/index.html"],
                         dest: "build/prod/index.html"
                     }
                 ]
@@ -324,7 +328,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        src: "build/prod/index.html",
+                        src: ["build/prod/index.html"],
                         dest: `build/prod/CyberChef_v${pkg.version}.html`
                     }
                 ]

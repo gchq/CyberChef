@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import ChefWorker from "worker-loader?inline&fallback=false!../../core/ChefWorker.js";
+import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.js";
 
 /**
  * Waiter to handle conversations with a ChefWorker in the background.
