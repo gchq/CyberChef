@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import forge from "node-forge/dist/forge.min.js";
+import forge from "node-forge";
 
 /**
  * Derive PBKDF2 key operation

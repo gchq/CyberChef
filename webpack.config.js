@@ -100,7 +100,7 @@ module.exports = {
                 loader: "babel-loader"
             },
             {
-                test: /forge\.min\.js$/,
+                test: /node-forge/,
                 loader: "imports-loader",
                 options: {
                     additionalCode: "var jQuery = false;"
@@ -119,6 +119,15 @@ module.exports = {
                 options: {
                     type: "commonjs",
                     imports: "multiple buffer Buffer Buffer"
+                }
+            },
+            {
+                test: /blueimp-load-image/,
+                loader: "imports-loader",
+                options: {
+                    type: "commonjs",
+                    imports: "nodom",
+                    additionalCode: "var document = new nodom.Document();"
                 }
             },
             {
