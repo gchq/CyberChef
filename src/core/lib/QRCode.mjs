@@ -9,8 +9,9 @@
 import OperationError from "../errors/OperationError.mjs";
 import jsQR from "jsqr";
 import qr from "qr-image";
-import jimp from "jimp";
 import Utils from "../Utils.mjs";
+import jimplib from "jimp/es/index.js";
+const jimp = jimplib.default ? jimplib.default : jimplib;
 
 /**
  * Parses a QR code image from an image

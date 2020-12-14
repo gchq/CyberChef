@@ -9,7 +9,8 @@ import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { fromBinary } from "../lib/Binary.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import jimp from "jimp";
+import jimplib from "jimp/es/index.js";
+const jimp = jimplib.default ? jimplib.default : jimplib;
 
 /**
  * Extract LSB operation

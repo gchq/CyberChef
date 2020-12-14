@@ -7,7 +7,8 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import jimp from "jimp";
+import jimplib from "jimp/es/index.js";
+const jimp = jimplib.default ? jimplib.default : jimplib;
 
 import {RGBA_DELIM_OPTIONS} from "../lib/Delim.mjs";
 

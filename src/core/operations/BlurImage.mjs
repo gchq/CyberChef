@@ -9,8 +9,9 @@ import OperationError from "../errors/OperationError.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import jimp from "jimp";
 import { gaussianBlur } from "../lib/ImageManipulation.mjs";
+import jimplib from "jimp/es/index.js";
+const jimp = jimplib.default ? jimplib.default : jimplib;
 
 /**
  * Blur Image operation

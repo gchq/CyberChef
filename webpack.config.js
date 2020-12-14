@@ -51,6 +51,7 @@ module.exports = {
             entryOnly: true
         }),
         new webpack.DefinePlugin({
+            // Required by Jimp to improve loading speed in browsers
             "process.browser": "true"
         }),
         new MiniCssExtractPlugin({
@@ -84,11 +85,11 @@ module.exports = {
             "child_process": false,
             "net": false,
             "tls": false,
-            "path": false,
+            "path": require.resolve("path/"),
+            "buffer": require.resolve("buffer/"),
             "crypto": require.resolve("crypto-browserify"),
             "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib"),
-            "buffer": require.resolve("buffer/")
+            "zlib": require.resolve("browserify-zlib")
         }
     },
     module: {

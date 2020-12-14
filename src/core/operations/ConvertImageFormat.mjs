@@ -8,7 +8,8 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import jimp from "jimp";
+import jimplib from "jimp/es/index.js";
+const jimp = jimplib.default ? jimplib.default : jimplib;
 
 /**
  * Convert Image Format operation
@@ -88,7 +89,7 @@ class ConvertImageFormat extends Operation {
             "Sub": jimp.PNG_FILTER_SUB,
             "Up": jimp.PNG_FILTER_UP,
             "Average": jimp.PNG_FILTER_AVERAGE,
-            "Paeth": jimp.PNG_FILTER_PATH // Incorrect spelling in Jimp library
+            "Paeth": jimp.PNG_FILTER_PATH
         };
 
         const mime = formatMap[format];
