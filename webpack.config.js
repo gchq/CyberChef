@@ -39,7 +39,11 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             log: "loglevel",
-            process: "process"
+            // process and Buffer are no longer polyfilled in webpack 5 but
+            // many of our dependencies expect them, so it is easiest to just
+            // provide them everywhere as was the case in webpack 4-
+            process: "process",
+            Buffer: ["buffer", "Buffer"]
         }),
         new webpack.BannerPlugin({
             banner: banner,
@@ -83,7 +87,8 @@ module.exports = {
             "path": false,
             "crypto": require.resolve("crypto-browserify"),
             "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib")
+            "zlib": require.resolve("browserify-zlib"),
+            "buffer": require.resolve("buffer/")
         }
     },
     module: {
@@ -111,14 +116,6 @@ module.exports = {
                 loader: "imports-loader",
                 options: {
                     imports: "default popper.js/dist/umd/popper.js Popper"
-                }
-            },
-            {
-                test: /avsc/,
-                loader: "imports-loader",
-                options: {
-                    type: "commonjs",
-                    imports: "multiple buffer Buffer Buffer"
                 }
             },
             {

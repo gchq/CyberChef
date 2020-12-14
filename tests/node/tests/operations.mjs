@@ -640,7 +640,7 @@ WWFkYSBZYWRh\r
     }),
 
     it("Parse ASN.1 Hex string", () => {
-        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(4d) 7574682d7761746572696e67\n");
+        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(77) 7574682d7761746572696e67\n");
     }),
 
     it("Parse DateTime", () => {
