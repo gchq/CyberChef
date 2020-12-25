@@ -202,7 +202,8 @@
             "Decode text",
             "Remove Diacritics",
             "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Convert to NATO alphabet",
+            "Convert to Emoji alphabet"
         ]
     },
     {
