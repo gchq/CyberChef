@@ -30,6 +30,9 @@ jobs:
       run: npx grunt prod
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+    - name: Generate sitemap
+      run: npx grunt exec:sitemap
+    # - name: grunt copy:ghPages
     # - name: Deploy
     #   uses: peaceiris/actions-gh-pages@v3
     #   with:

@@ -34,6 +34,10 @@ const banner = `/**
 
 
 module.exports = {
+    output: {
+        publicPath: "",
+        globalObject: "this"
+    },
     plugins: [
         new webpack.ProvidePlugin({
             $: "jquery",
