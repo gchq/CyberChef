@@ -393,11 +393,15 @@ function testOp(browser, opName, input, output, args=[]) {
         .click("#clr-recipe")
         .click("#clr-io")
         .urlHash("recipe=" + recipeConfig)
-        .setValue("#input-text", input)
+        .setValue("#input-text", input);
+
+    browser.expect.element("#input-text").to.have.value.that.equals(input);
+
+    browser
         .waitForElementVisible("#stale-indicator", 5000)
         .pause(100)
         .click("#bake")
-        .pause(150)
+        .pause(100)
         .waitForElementPresent("#stale-indicator.hidden", 5000)
         .waitForElementNotVisible("#output-loader", 5000);
 
