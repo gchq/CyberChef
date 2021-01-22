@@ -394,11 +394,11 @@ function testOp(browser, opName, input, output, args=[]) {
         .click("#clr-io")
         .urlHash("recipe=" + recipeConfig)
         .setValue("#input-text", input)
-        .waitForElementVisible("#stale-indicator", 1000)
+        .waitForElementVisible("#stale-indicator", 5000)
         .pause(100)
         .click("#bake")
         .pause(150)
-        .waitForElementPresent("#stale-indicator.hidden", 1000)
+        .waitForElementPresent("#stale-indicator.hidden", 5000)
         .waitForElementNotVisible("#output-loader", 5000);
 
     if (typeof output === "string") {
