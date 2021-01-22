@@ -6,48 +6,35 @@ on:
     - master
 
 jobs:
-  setup:
+  main:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
     - name: Set node version
       uses: actions/setup-node@v1
       with:
         node-version: '10.x'
+
     - name: Install
       run: |
         npm install
         export NODE_OPTIONS=--max_old_space_size=2048
 
-  lint:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
     - name: Lint
       run: npx grunt lint
 
-  tests:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
     - name: Unit Tests
       run: |
         npm test
         npx grunt testnodeconsumer
 
-  build:
-    needs: [lint, tests]
-    runs-on: ubuntu-latest
-    steps:
     - name: Production Build
       run: npx grunt prod
+
     - name: Generate sitemap
       run: npx grunt exec:sitemap
 
-  ui-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
