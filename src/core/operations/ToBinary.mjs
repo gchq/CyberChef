@@ -31,6 +31,11 @@ class ToBinary extends Operation {
                 "name": "Delimiter",
                 "type": "option",
                 "value": BIN_DELIM_OPTIONS
+            },
+            {
+                "name": "Byte Length",
+                "type": "number",
+                "value": 8
             }
         ];
     }
@@ -42,7 +47,8 @@ class ToBinary extends Operation {
      */
     run(input, args) {
         input = new Uint8Array(input);
-        return toBinary(input, args[0]);
+        const padding = args[1] ? args[1] : 8;
+        return toBinary(input, args[0], padding);
     }
 
     /**
