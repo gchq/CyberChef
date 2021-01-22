@@ -8,7 +8,6 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v2
     - name: Set node version
@@ -23,13 +22,14 @@ jobs:
   lint:
     needs: setup
     runs-on: ubuntu-latest
-
+    steps:
     - name: Lint
       run: npx grunt lint
 
   tests:
     needs: setup
     runs-on: ubuntu-latest
+    steps:
     - name: Unit Tests
       run: |
         npm test
@@ -38,7 +38,7 @@ jobs:
   build:
     needs: [lint, tests]
     runs-on: ubuntu-latest
-
+    steps:
     - name: Production Build
       run: npx grunt prod
     - name: Generate sitemap
@@ -47,6 +47,7 @@ jobs:
   ui-tests:
     needs: build
     runs-on: ubuntu-latest
+    steps:
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
