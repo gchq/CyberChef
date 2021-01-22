@@ -38,14 +38,16 @@ jobs:
     - name: UI Tests
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
+    - name: Deploy to GitHub Pages
+      if: success() && github.ref == 'refs/heads/master'
+      run: npx grunt copy:ghPages
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: ./build/prod
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # - name: grunt copy:ghPages
-    # - name: Deploy
-    #   uses: peaceiris/actions-gh-pages@v3
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     publish_dir: ./build/prod
-    # Once NPM_AUTH_TOKEN set up in repo, uncomment this
     #- name: Deploy to NPM
     #    run: |
     #      npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
