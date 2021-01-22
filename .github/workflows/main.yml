@@ -12,9 +12,13 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
     - name: Setup
       run: |
-        npm i
+        npm install
         export NODE_OPTIONS=--max_old_space_size=2048
     - name: Lint
       run: npx grunt lint
