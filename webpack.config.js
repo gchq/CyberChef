@@ -124,8 +124,7 @@ module.exports = {
                 loader: "imports-loader",
                 options: {
                     type: "commonjs",
-                    imports: "nodom",
-                    additionalCode: "var document = new nodom.Document();"
+                    imports: "single min-document document"
                 }
             },
             {
