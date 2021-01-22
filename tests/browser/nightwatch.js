@@ -5,6 +5,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
+
 module.exports = {
     before: browser => {
         browser
