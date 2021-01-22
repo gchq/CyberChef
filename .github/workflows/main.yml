@@ -25,11 +25,11 @@ jobs:
     - name: Unit Tests
       run: |
         npm test
-        sudo npx grunt testnodeconsumer
-    # - name: Production Build
-    #   run: npx grunt prod
-    # - name: UI Tests
-    #   run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+        npx grunt testnodeconsumer
+    - name: Production Build
+      run: npx grunt prod
+     - name: UI Tests
+       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
     # - name: Deploy
     #   uses: peaceiris/actions-gh-pages@v3
     #   with:
