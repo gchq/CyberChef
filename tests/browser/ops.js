@@ -395,8 +395,9 @@ function testOp(browser, opName, input, output, args=[]) {
         .urlHash("recipe=" + recipeConfig)
         .setValue("#input-text", input)
         .waitForElementVisible("#stale-indicator", 1000)
-        .pause(250)
+        .pause(100)
         .click("#bake")
+        .pause(150)
         .waitForElementPresent("#stale-indicator.hidden", 1000)
         .waitForElementNotVisible("#output-loader", 5000);
 
