@@ -396,7 +396,8 @@ function testOp(browser, opName, input, output, args=[]) {
         .setValue("#input-text", input)
         .pause(250)
         .click("#bake")
-        .waitForElementPresent("#stale-indicator.hidden", 1000);
+        .waitForElementPresent("#stale-indicator.hidden", 1000)
+        .waitForElementNotVisible("#output-loader", 5000);
 
     if (typeof output === "string") {
         browser.expect.element("#output-text").to.have.value.that.equals(output);
