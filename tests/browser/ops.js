@@ -394,7 +394,7 @@ function testOp(browser, opName, input, output, args=[]) {
         .click("#clr-io")
         .urlHash("recipe=" + recipeConfig)
         .setValue("#input-text", input)
-        .pause(100)
+        .pause(250)
         .click("#bake")
         .waitForElementPresent("#stale-indicator.hidden", 1000);
 
