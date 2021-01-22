@@ -1,5 +1,5 @@
 {
-  "src_folders": ["tests/browser"],
+  "src_folders": ["tests/browser/ops.js"],
   "output_folder": "tests/browser/output",
 
   "test_settings": {
