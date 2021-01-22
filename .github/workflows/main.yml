@@ -1,0 +1,41 @@
+name: Test & Deploy
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup
+      run: |
+        npm i
+        export NODE_OPTIONS=--max_old_space_size=2048
+    - name: Lint
+      run: npx grunt lint
+    - name: Unit Tests
+      run: |
+        npx grunt test
+        sudo npx grunt testnodeconsumer
+    - name: Production Build
+      run: npx grunt prod
+    - name: UI Tests
+      run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/prod
+    # Once NPM_AUTH_TOKEN set up in repo, uncomment this
+    #- name: Deploy to NPM
+    #    run: |
+    #      npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+    #      npm publish || true
+    #    env:
+    # Add NPM publish token to the repo secrets
+    #      NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
