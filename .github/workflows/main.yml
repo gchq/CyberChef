@@ -6,32 +6,51 @@ on:
     - master
 
 jobs:
-  test:
-
+  setup:
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js
+    - name: Set node version
       uses: actions/setup-node@v1
       with:
         node-version: '10.x'
-    - name: Setup
+    - name: Install
       run: |
         npm install
         export NODE_OPTIONS=--max_old_space_size=2048
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+
     - name: Lint
       run: npx grunt lint
+
+  tests:
+    needs: setup
+    runs-on: ubuntu-latest
     - name: Unit Tests
       run: |
         npm test
         npx grunt testnodeconsumer
+
+  build:
+    needs: [lint, tests]
+    runs-on: ubuntu-latest
+
     - name: Production Build
       run: npx grunt prod
-    - name: UI Tests
-      run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
     - name: Generate sitemap
       run: npx grunt exec:sitemap
+
+  ui-tests:
+    needs: build
+    runs-on: ubuntu-latest
+    - name: UI Tests
+      run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+
     # - name: grunt copy:ghPages
     # - name: Deploy
     #   uses: peaceiris/actions-gh-pages@v3
