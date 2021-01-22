@@ -392,10 +392,14 @@ function testOp(browser, opName, input, output, args=[]) {
         .useCss()
         .click("#clr-recipe")
         .click("#clr-io")
-        .urlHash("recipe=" + recipeConfig)
-        .setValue("#input-text", input);
+        .waitForElementNotPresent("#rec-list li.operation")
+        .expect.element("#input-text").to.have.value.that.equals("");
 
-    browser.expect.element("#input-text").to.have.value.that.equals(input);
+    browser
+        .urlHash("recipe=" + recipeConfig)
+        .setValue("#input-text", input)
+        .waitForElementPresent("#rec-list li.operation")
+        .expect.element("#input-text").to.have.value.that.equals(input);
 
     browser
         .waitForElementVisible("#stale-indicator", 5000)
