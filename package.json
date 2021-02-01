@@ -115,6 +115,7 @@
     "esprima": "^4.0.1",
     "exif-parser": "^0.1.12",
     "file-saver": "^2.0.5",
+    "flat": "^5.0.2",
     "geodesy": "^1.1.3",
     "highlight.js": "^10.4.1",
     "jimp": "^0.16.1",
