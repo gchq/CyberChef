@@ -78,7 +78,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-chmod");
     grunt.loadNpmTasks("grunt-exec");
-    grunt.loadNpmTasks("grunt-accessibility");
     grunt.loadNpmTasks("grunt-concurrent");
     grunt.loadNpmTasks("grunt-contrib-connect");
     grunt.loadNpmTasks("grunt-zip");
@@ -196,18 +195,6 @@ module.exports = function (grunt) {
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
             node: ["src/node/**/*.{js,mjs}"],
             tests: ["tests/**/*.{js,mjs}"],
-        },
-        accessibility: {
-            options: {
-                accessibilityLevel: "WCAG2A",
-                verbose: false,
-                ignore: [
-                    "WCAG2A.Principle1.Guideline1_3.1_3_1.H42.2"
-                ]
-            },
-            test: {
-                src: ["build/**/*.html"]
-            }
         },
         webpack: {
             options: webpackConfig,

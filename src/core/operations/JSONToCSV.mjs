@@ -41,11 +41,11 @@ class JSONToCSV extends Operation {
     }
 
     /**
-     * Converts a JSON to csv equivalent.
+     * Converts JSON to a CSV equivalent.
      *
      * @returns {string}
      */
-    toCsv() {
+    toCSV() {
         const self = this;
         // If the JSON is an array of arrays, this is easy
         if (this.flattened[0] instanceof Array) {
@@ -91,14 +91,14 @@ class JSONToCSV extends Operation {
         }
 
         try {
-            return this.toCsv();
+            return this.toCSV();
         } catch (err) {
             try {
                 this.flattened = flatten(input);
                 if (!(this.flattened instanceof Array)) {
                     this.flattened = [this.flattened];
                 }
-                return this.toCsv();
+                return this.toCSV();
             } catch (err) {
                 throw new OperationError("Unable to parse JSON to CSV: " + err.toString());
             }
