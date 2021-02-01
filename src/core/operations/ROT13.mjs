@@ -36,9 +36,9 @@ class ROT13 extends Operation {
                 value: true
             },
             {
-                name: "Rotate Numbers",
+                name: "Rotate numbers",
                 type: "boolean",
-                value: true
+                value: false
             },
             {
                 name: "Amount",
@@ -74,7 +74,7 @@ class ROT13 extends Operation {
                 } else if (rot13Lowercase && chr >= 97 && chr <= 122) { // Lower case
                     chr = (chr - 97 + amount) % 26;
                     output[i] = chr + 97;
-                } else if (rotNumbers && chr >= 48 && chr <= 57) {
+                } else if (rotNumbers && chr >= 48 && chr <= 57) { // Numbers
                     chr = (chr - 48 + amount) % 10;
                     output[i] = chr + 48;
                 }
