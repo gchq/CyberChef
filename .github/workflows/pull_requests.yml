@@ -1,0 +1,37 @@
+name: PRs
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set node version
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    - name: Install
+      run: |
+        npm install
+        export NODE_OPTIONS=--max_old_space_size=2048
+
+    - name: Lint
+      run: npx grunt lint
+
+    - name: Unit Tests
+      run: |
+        npm test
+        npx grunt testnodeconsumer
+
+    - name: Production Build
+      if: success()
+      run: npx grunt prod
+
+    - name: UI Tests
+      if: success()
+      run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
