@@ -75,6 +75,10 @@ module.exports = {
                     context: "node_modules/tesseract.js-core/",
                     from: "tesseract-core.wasm.js",
                     to: "assets/tesseract"
+                }, {
+                    context: "node_modules/node-forge/dist",
+                    from: "prime.worker.min.js",
+                    to: "assets/forge/"
                 }
             ]
         })
@@ -115,6 +119,10 @@ module.exports = {
                 options: {
                     additionalCode: "var jQuery = false;"
                 }
+            },
+            {
+                test: /prime.worker.min.js$/,
+                use: "raw-loader"
             },
             {
                 test: /bootstrap-material-design/,

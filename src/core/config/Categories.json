@@ -134,6 +134,11 @@
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
+            "Generate RSA Key Pair",
+            "RSA Sign",
+            "RSA Verify",
+            "RSA Encrypt",
+            "RSA Decrypt",
             "Parse SSH Host Key"
         ]
     },
