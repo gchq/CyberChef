@@ -30,17 +30,14 @@ jobs:
         npx grunt testnodeconsumer
 
     - name: Production Build
-      id: prod_build
       if: success()
       run: npx grunt prod
 
     - name: UI Tests
-      id: ui_tests
-      needs: prod_build
+      if: success()
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
     - name: Upload Release Assets
-      needs: ui_tests
       if: success()
       id: upload-release-assets
       uses: svenstaro/upload-release-action@v2
@@ -52,7 +49,6 @@ jobs:
         file_glob: true
 
     - name: Publish to NPM
-      needs: ui_tests
       if: success()
       uses: JS-DevTools/npm-publish@v1
       with:
