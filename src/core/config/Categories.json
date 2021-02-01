@@ -200,6 +200,7 @@
         "ops": [
             "Encode text",
             "Decode text",
+            "Unicode Text Format",
             "Remove Diacritics",
             "Unescape Unicode Characters",
             "Convert to NATO alphabet"
