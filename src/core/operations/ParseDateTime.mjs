@@ -72,7 +72,7 @@ class ParseDateTime extends Operation {
             "\nLeap year: " + date.isLeapYear() +
             "\nDays in this month: " + date.daysInMonth() +
             "\n\nDay of year: " + date.dayOfYear() +
-            "\nWeek number: " + date.weekYear() +
+            "\nWeek number: " + date.week() +
             "\nQuarter: " + date.quarter();
 
         return output;

@@ -656,7 +656,7 @@ Leap year: false
 Days in this month: 31
 
 Day of year: 187
-Week number: 2001
+Week number: 27
 Quarter: 3`;
         assert.strictEqual(result.toString(), expected);
     }),
