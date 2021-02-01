@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set node version
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    - name: Install
+      run: |
+        npm install
+        export NODE_OPTIONS=--max_old_space_size=2048
+
+    - name: Lint
+      run: npx grunt lint
+
+    - name: Unit Tests
+      run: |
+        npm test
+        npx grunt testnodeconsumer
+
+    - name: Production Build
+      if: success()
+      run: npx grunt prod
+
+    - name: UI Tests
+      needs: Production Build
+      run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+    - name: Upload Release Assets
+      needs: UI Tests
+      if: success()
+      id: upload-release-assets
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/prod/*.zip
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+
+    - name: Publish to NPM
+      needs: UI Tests
+      if: success()
+      uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_TOKEN }}

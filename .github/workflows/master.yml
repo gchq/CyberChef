@@ -1,4 +1,4 @@
-name: Test & Deploy
+name: Master
 
 on:
   push:
@@ -30,12 +30,14 @@ jobs:
         npx grunt testnodeconsumer
 
     - name: Production Build
+      if: success()
       run: npx grunt prod
 
     - name: Generate sitemap
       run: npx grunt exec:sitemap
 
     - name: UI Tests
+      needs: Production Build
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
     - name: Prepare for GitHub Pages
@@ -49,11 +51,3 @@ jobs:
         build_dir: ./build/prod
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    #- name: Deploy to NPM
-    #    run: |
-    #      npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
-    #      npm publish || true
-    #    env:
-    # Add NPM publish token to the repo secrets
-    #      NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
