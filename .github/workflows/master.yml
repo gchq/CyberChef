@@ -30,6 +30,7 @@ jobs:
         npx grunt testnodeconsumer
 
     - name: Production Build
+      id: prod_build
       if: success()
       run: npx grunt prod
 
@@ -37,7 +38,7 @@ jobs:
       run: npx grunt exec:sitemap
 
     - name: UI Tests
-      needs: Production Build
+      needs: prod_build
       run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
     - name: Prepare for GitHub Pages
