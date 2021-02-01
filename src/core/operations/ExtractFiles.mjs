@@ -39,6 +39,11 @@ class ExtractFiles extends Operation {
                 name: "Ignore failed extractions",
                 type: "boolean",
                 value: "true"
+            },
+            {
+                name: "Extract Offset Files",
+                type: "boolean",
+                value: "false"
             }
         ]);
     }
@@ -51,6 +56,7 @@ class ExtractFiles extends Operation {
     run(input, args) {
         const bytes = new Uint8Array(input),
             categories = [],
+            extractOffset = args.pop(1),
             ignoreFailedExtractions = args.pop(1);
 
         args.forEach((cat, i) => {
@@ -58,14 +64,38 @@ class ExtractFiles extends Operation {
         });
 
         // Scan for embedded files
-        const detectedFiles = scanForFileTypes(bytes, categories);
+        const detectedFiles = scanForFileTypes(bytes, extractOffset, categories);
 
         // Extract each file that we support
         const files = [];
         const errors = [];
+        const offsetBytes = new Array(7);
         detectedFiles.forEach(detectedFile => {
             try {
-                files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
+
+                // If there is a bit offset.
+                if (detectedFile.bitOffset) {
+
+                    // If a pre-shifted byte stream of the input exists.
+                    if (offsetBytes[detectedFile.bitOffset - 1]) {
+
+                        // Extract the file from the bit shifted byte stream of the input.
+                        files.push(extractFile(offsetBytes[detectedFile.bitOffset - 1], detectedFile.fileDetails, detectedFile.offset));
+                    } else {
+                        offsetBytes[detectedFile.bitOffset - 1] = new Array();
+
+                        // Loop through the input byte stream, shifting it by the require amount.
+                        for (let i = 0; i < bytes.length -1; i++) {
+                            offsetBytes[detectedFile.bitOffset - 1].push(((bytes[i] << detectedFile.bitOffset) & 0xff) | (bytes[i+1] >> (8-detectedFile.bitOffset)));
+                        }
+
+                        // Store it so we do not have to re-calculate this.
+                        offsetBytes[detectedFile.bitOffset - 1] = new Uint8Array(offsetBytes[detectedFile.bitOffset - 1]);
+                        files.push(extractFile(offsetBytes[detectedFile.bitOffset - 1], detectedFile.fileDetails, detectedFile.offset));
+                    }
+                } else {
+                    files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
+                }
             } catch (err) {
                 if (!ignoreFailedExtractions && err.message.indexOf("No extraction algorithm available") < 0) {
                     errors.push(
