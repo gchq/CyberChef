@@ -33,7 +33,7 @@ class GeneratePGPKeyPair extends Operation {
             {
                 "name": "Key type",
                 "type": "option",
-                "value": ["RSA-1024", "RSA-2048", "RSA-4096", "ECC-256", "ECC-384"]
+                "value": ["RSA-1024", "RSA-2048", "RSA-4096", "ECC-256", "ECC-384", "ECC-521"]
             },
             {
                 "name": "Password (optional)",
@@ -59,11 +59,14 @@ class GeneratePGPKeyPair extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [keyType, keySize] = args[0].split("-"),
-            password = args[1],
+        let [keyType, keySize] = args[0].split("-");
+        const password = args[1],
             name = args[2],
             email = args[3];
         let userIdentifier = "";
+
+        keyType = keyType.toLowerCase();
+        keySize = parseInt(keySize, 10);
 
         if (name) userIdentifier += name;
         if (email) userIdentifier += ` <${email}>`;
