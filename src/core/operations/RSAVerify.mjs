@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import forge from "node-forge/dist/forge.min.js";
+import forge from "node-forge";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
 /**

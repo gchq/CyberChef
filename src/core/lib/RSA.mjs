@@ -1,4 +1,12 @@
-import forge from "node-forge/dist/forge.min.js";
+/**
+ * RSA resources.
+ *
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
+import forge from "node-forge";
 
 export const MD_ALGORITHMS = {
     "SHA-1": forge.md.sha1,

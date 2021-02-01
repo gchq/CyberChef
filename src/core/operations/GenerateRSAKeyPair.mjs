@@ -5,8 +5,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import forge from "node-forge/dist/forge.min.js";
+import Operation from "../Operation.mjs";
+import forge from "node-forge";
 
 /**
  * Generate RSA Key Pair operation
@@ -21,7 +21,7 @@ class GenerateRSAKeyPair extends Operation {
 
         this.name = "Generate RSA Key Pair";
         this.module = "Ciphers";
-        this.description = "Generate an RSA key pair with a given number of bits";
+        this.description = "Generate an RSA key pair with a given number of bits.<br><br>WARNING: Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness. We advise you not to use keys generated from CyberChef in operational contexts.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
         this.inputType = "string";
         this.outputType = "string";
@@ -56,7 +56,11 @@ class GenerateRSAKeyPair extends Operation {
         const [keyLength, outputFormat] = args;
 
         return new Promise((resolve, reject) => {
-            forge.pki.rsa.generateKeyPair({ bits: Number(keyLength), workers: -1, workerScript: "assets/forge/prime.worker.min.js"}, (err, keypair) => {
+            forge.pki.rsa.generateKeyPair({
+                bits: Number(keyLength),
+                workers: -1,
+                workerScript: "assets/forge/prime.worker.min.js"
+            }, (err, keypair) => {
                 if (err) return reject(err);
 
                 let result;

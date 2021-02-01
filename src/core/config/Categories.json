@@ -105,11 +105,6 @@
             "Derive EVP key",
             "Bcrypt",
             "Scrypt",
-            "Generate RSA Key Pair",
-            "RSA Sign",
-            "RSA Verify",
-            "RSA Encrypt",
-            "RSA Decrypt",
             "JWT Sign",
             "JWT Verify",
             "JWT Decode",
@@ -139,6 +134,11 @@
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
+            "Generate RSA Key Pair",
+            "RSA Sign",
+            "RSA Verify",
+            "RSA Encrypt",
+            "RSA Decrypt",
             "Parse SSH Host Key"
         ]
     },

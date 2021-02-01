@@ -1,3 +1,12 @@
+/**
+ * Various types of input data for use in tests
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
 export const ASCII_TEXT = "A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.";
 
 export const UTF8_TEXT = "Шанцы на высвятленне таго, што адбываецца на самай справе ў сусвеце настолькі выдаленыя, адзінае, што трэба зрабіць, гэта павесіць пачуццё яго і трымаць сябе занятымі.";

@@ -79,8 +79,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, UTF-8",
-        input: UTF8_TEXT,
-        expectedOutput: UTF8_TEXT,
+        input: UTF8_TEXT.substr(0, 100),
+        expectedOutput: UTF8_TEXT.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -94,8 +94,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, All bytes",
-        input: ALL_BYTES,
-        expectedOutput: ALL_BYTES,
+        input: ALL_BYTES.substr(0, 100),
+        expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -139,8 +139,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, UTF-8",
-        input: UTF8_TEXT,
-        expectedOutput: UTF8_TEXT,
+        input: UTF8_TEXT.substr(0, 100),
+        expectedOutput: UTF8_TEXT.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -154,8 +154,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, All bytes",
-        input: ALL_BYTES,
-        expectedOutput: ALL_BYTES,
+        input: ALL_BYTES.substr(0, 100),
+        expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -199,8 +199,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, UTF-8",
-        input: UTF8_TEXT,
-        expectedOutput: UTF8_TEXT,
+        input: UTF8_TEXT.substr(0, 100),
+        expectedOutput: UTF8_TEXT.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -214,8 +214,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, All bytes",
-        input: ALL_BYTES,
-        expectedOutput: ALL_BYTES,
+        input: ALL_BYTES.substr(0, 100),
+        expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -259,8 +259,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, UTF-8",
-        input: UTF8_TEXT,
-        expectedOutput: UTF8_TEXT,
+        input: UTF8_TEXT.substr(0, 80),
+        expectedOutput: UTF8_TEXT.substr(0, 80),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -274,8 +274,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, All bytes",
-        input: ALL_BYTES,
-        expectedOutput: ALL_BYTES,
+        input: ALL_BYTES.substr(0, 100),
+        expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -304,8 +304,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, ASCII",
-        input: ASCII_TEXT,
-        expectedOutput: ASCII_TEXT,
+        input: ASCII_TEXT.substr(0, 100),
+        expectedOutput: ASCII_TEXT.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -319,8 +319,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, UTF-8",
-        input: UTF8_TEXT,
-        expectedOutput: UTF8_TEXT,
+        input: UTF8_TEXT.substr(0, 60),
+        expectedOutput: UTF8_TEXT.substr(0, 60),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
@@ -334,8 +334,8 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, All bytes",
-        input: ALL_BYTES,
-        expectedOutput: ALL_BYTES,
+        input: ALL_BYTES.substr(0, 100),
+        expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
                 "op": "RSA Encrypt",
