@@ -38,7 +38,7 @@ class ExtractFiles extends Operation {
             {
                 name: "Ignore failed extractions",
                 type: "boolean",
-                value: "true"
+                value: true
             }
         ]);
     }

@@ -60,7 +60,8 @@ class Lorenz extends Operation {
             },
             {
                 name: "KT-Schalter",
-                type: "boolean"
+                type: "boolean",
+                value: false
             },
             {
                 name: "Mode",
