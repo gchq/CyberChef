@@ -56,7 +56,7 @@ class AESEncrypt extends Operation {
                         off: [5]
                     },
                     {
-                        name:"CTR",
+                        name: "CTR",
                         off: [5]
                     },
                     {
@@ -81,7 +81,7 @@ class AESEncrypt extends Operation {
             },
             {
                 "name": "Additional Authenticated Data",
-                "type": "string",
+                "type": "binaryString",
                 "value": ""
             }
         ];
@@ -99,7 +99,8 @@ class AESEncrypt extends Operation {
             iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2],
             inputType = args[3],
-            outputType = args[4];
+            outputType = args[4],
+            aad = args[5];
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -113,12 +114,10 @@ The following algorithms will be used based on the size of the key:
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
-
-        if (args[5])
-            cipher.start({iv: iv, additionalData: args[5]});
-        else
-            cipher.start({iv: iv});
-
+        cipher.start({
+            iv: iv,
+            additionalData: mode === "GCM" ? aad : undefined
+        });
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 

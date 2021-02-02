@@ -41,8 +41,33 @@ class AESDecrypt extends Operation {
             },
             {
                 "name": "Mode",
-                "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"]
+                "type": "argSelector",
+                "value": [
+                    {
+                        name: "CBC",
+                        off: [5, 6]
+                    },
+                    {
+                        name: "CFB",
+                        off: [5, 6]
+                    },
+                    {
+                        name: "OFB",
+                        off: [5, 6]
+                    },
+                    {
+                        name: "CTR",
+                        off: [5, 6]
+                    },
+                    {
+                        name: "GCM",
+                        on: [5, 6]
+                    },
+                    {
+                        name: "ECB",
+                        off: [5, 6]
+                    }
+                ]
             },
             {
                 "name": "Input",
@@ -59,6 +84,11 @@ class AESDecrypt extends Operation {
                 "type": "toggleString",
                 "value": "",
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+            },
+            {
+                "name": "Additional Authenticated Data",
+                "type": "binaryString",
+                "value": ""
             }
         ];
     }
@@ -76,7 +106,8 @@ class AESDecrypt extends Operation {
             mode = args[2],
             inputType = args[3],
             outputType = args[4],
-            gcmTag = Utils.convertToByteString(args[5].string, args[5].option);
+            gcmTag = Utils.convertToByteString(args[5].string, args[5].option),
+            aad = args[6];
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -92,7 +123,8 @@ The following algorithms will be used based on the size of the key:
         const decipher = forge.cipher.createDecipher("AES-" + mode, key);
         decipher.start({
             iv: iv.length === 0 ? "" : iv,
-            tag: gcmTag
+            tag: mode === "GCM" ? gcmTag : undefined,
+            additionalData: mode === "GCM" ? aad : undefined
         });
         decipher.update(forge.util.createBuffer(input));
         const result = decipher.finish();

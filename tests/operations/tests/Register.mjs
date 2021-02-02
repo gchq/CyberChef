@@ -63,7 +63,8 @@ TestRegister.addTests([
                     {
                         "option": "Hex",
                         "string": ""
-                    }
+                    },
+                    ""
                 ]
             }
         ]
