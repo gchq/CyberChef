@@ -247,6 +247,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.24.0]: https://github.com/gchq/CyberChef/releases/tag/v9.24.0
 [9.23.0]: https://github.com/gchq/CyberChef/releases/tag/v9.23.0
 [9.22.0]: https://github.com/gchq/CyberChef/releases/tag/v9.22.0
 [9.21.0]: https://github.com/gchq/CyberChef/releases/tag/v9.21.0
