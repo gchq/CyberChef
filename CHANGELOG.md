@@ -2,6 +2,12 @@
 All major and minor version changes will be documented in this file. Details of patch-level version changes can be found in [commit messages](https://github.com/gchq/CyberChef/commits/master).
 
 
+### [9.23.0] - 2020-02-01
+- Various RSA operations added to encrypt, decrypt, sign, verify and generate keys [@mattnotmitt] | [#652]
+
+### [9.22.0] - 2021-02-01
+- 'Unicode Text Format' operation added [@mattnotmitt] | [#1083]
+
 ### [9.21.0] - 2020-06-12
 - Node API now exports `magic` operation [@d98762625] | [#1049]
 
@@ -227,6 +233,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.23.0]: https://github.com/gchq/CyberChef/releases/tag/v9.23.0
+[9.22.0]: https://github.com/gchq/CyberChef/releases/tag/v9.22.0
+[9.21.0]: https://github.com/gchq/CyberChef/releases/tag/v9.21.0
 [9.20.0]: https://github.com/gchq/CyberChef/releases/tag/v9.20.0
 [9.19.0]: https://github.com/gchq/CyberChef/releases/tag/v9.19.0
 [9.18.0]: https://github.com/gchq/CyberChef/releases/tag/v9.18.0
@@ -326,6 +335,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@pointhi]: https://github.com/pointhi
 [@MarvinJWendt]: https://github.com/MarvinJWendt
 [@dmfj]: https://github.com/dmfj
+[@mattnotmitt]: https://github.com/mattnotmitt
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -387,6 +397,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#625]: https://github.com/gchq/CyberChef/pull/625
 [#627]: https://github.com/gchq/CyberChef/pull/627
 [#632]: https://github.com/gchq/CyberChef/pull/632
+[#652]: https://github.com/gchq/CyberChef/pull/652
 [#653]: https://github.com/gchq/CyberChef/pull/653
 [#674]: https://github.com/gchq/CyberChef/pull/674
 [#683]: https://github.com/gchq/CyberChef/pull/683
@@ -398,3 +409,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#965]: https://github.com/gchq/CyberChef/pull/965
 [#966]: https://github.com/gchq/CyberChef/pull/966
 [#987]: https://github.com/gchq/CyberChef/pull/987
+[#1049]: https://github.com/gchq/CyberChef/pull/1049
+[#1083]: https://github.com/gchq/CyberChef/pull/1083
