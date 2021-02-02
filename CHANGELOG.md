@@ -13,8 +13,11 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.24.0] - 2020-02-02
+- 'SM3' hashing function added along with more configuration options for other hashing operations [@n1073645] [@n1474335] | [#1022]
+
 ### [9.23.0] - 2020-02-01
-- Various RSA operations added to encrypt, decrypt, sign, verify and generate keys [@mattnotmitt] | [#652]
+- Various RSA operations added to encrypt, decrypt, sign, verify and generate keys [@mattnotmitt] [@GCHQ77703] | [#652]
 
 ### [9.22.0] - 2021-02-01
 - 'Unicode Text Format' operation added [@mattnotmitt] | [#1083]
@@ -420,5 +423,6 @@ All major and minor version changes will be documented in this file. Details of 
 [#965]: https://github.com/gchq/CyberChef/pull/965
 [#966]: https://github.com/gchq/CyberChef/pull/966
 [#987]: https://github.com/gchq/CyberChef/pull/987
+[#1022]: https://github.com/gchq/CyberChef/pull/1022
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1083]: https://github.com/gchq/CyberChef/pull/1083

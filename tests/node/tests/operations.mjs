@@ -854,7 +854,7 @@ pCGTErs=
 
     it("Snefru", () => {
         assert.strictEqual(
-            chef.snefru("demeaning milestone").toString(),
+            chef.snefru("demeaning milestone", {size: 256, rounds: 8}).toString(),
             "a671b48770fe073ce49e9259cc2f47d345a53712639f8ae23c5ad3fec19540a5");
     }),
 
