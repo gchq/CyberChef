@@ -30,7 +30,7 @@ class FrequencyDistribution extends Operation {
             {
                 "name": "Show 0%s",
                 "type": "boolean",
-                "value": "Entropy.FREQ_ZEROS"
+                "value": true
             }
         ];
     }

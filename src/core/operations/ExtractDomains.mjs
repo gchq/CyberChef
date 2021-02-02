@@ -27,7 +27,7 @@ class ExtractDomains extends Operation {
             {
                 "name": "Display total",
                 "type": "boolean",
-                "value": "Extract.DISPLAY_TOTAL"
+                "value": true
             }
         ];
     }
