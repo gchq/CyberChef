@@ -28,7 +28,9 @@ class HAS160 extends Operation {
             {
                 name: "Rounds",
                 type: "number",
-                value: 80
+                value: 80,
+                min: 1,
+                max: 80
             }
         ];
     }

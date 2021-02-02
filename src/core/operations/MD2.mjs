@@ -28,7 +28,8 @@ class MD2 extends Operation {
             {
                 name: "Rounds",
                 type: "number",
-                value: 18
+                value: 18,
+                min: 0
             }
         ];
     }

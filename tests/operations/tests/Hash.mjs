@@ -345,7 +345,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["2", "128"]
+                "args": ["128", "2"]
             }
         ]
     },
@@ -356,7 +356,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["4", "128"]
+                "args": ["128", "4"]
             }
         ]
     },
@@ -367,7 +367,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["8", "128"]
+                "args": ["128", "8"]
             }
         ]
     },
@@ -378,7 +378,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["2", "256"]
+                "args": ["256", "2"]
             }
         ]
     },
@@ -389,7 +389,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["4", "256"]
+                "args": ["256", "4"]
             }
         ]
     },
@@ -400,7 +400,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["8", "256"]
+                "args": ["256", "8"]
+            }
+        ]
+    },
+    {
+        name: "SM3 256 64",
+        input: "Hello, World!",
+        expectedOutput: "7ed26cbf0bee4ca7d55c1e64714c4aa7d1f163089ef5ceb603cd102c81fbcbc5",
+        recipeConfig: [
+            {
+                "op": "SM3",
+                "args": ["256", "64"]
             }
         ]
     },

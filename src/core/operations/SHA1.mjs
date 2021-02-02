@@ -28,7 +28,8 @@ class SHA1 extends Operation {
             {
                 name: "Rounds",
                 type: "number",
-                value: 80
+                value: 80,
+                min: 16
             }
         ];
     }

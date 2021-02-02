@@ -6,8 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import Sm3 from "crypto-api/src/hasher/sm3";
-import {toHex} from "crypto-api/src/encoder/hex";
+import Sm3 from "crypto-api/src/hasher/sm3.mjs";
+import {toHex} from "crypto-api/src/encoder/hex.mjs";
 
 /**
  * SM3 operation
@@ -35,7 +35,8 @@ class SM3 extends Operation {
             {
                 name: "Rounds",
                 type: "number",
-                value: 64
+                value: 64,
+                min: 16
             }
         ];
     }
