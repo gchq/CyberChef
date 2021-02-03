@@ -2,7 +2,7 @@
 
 ## Versioning
 
-CyberChef uses the [semver](https://semver.org/) system to manage versioning: MAJOR.MINOR.PATCH.
+CyberChef uses the [semver](https://semver.org/) system to manage versioning: `<MAJOR>.<MINOR>.<PATCH>`.
 
 - MAJOR version changes represent a significant change to the fundamental architecture of CyberChef and may (but don't always) make breaking changes that are not backwards compatible.
 - MINOR version changes usually mean the addition of new operations or reasonably significant new features.

@@ -63,7 +63,8 @@
         }],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double", {
-            "avoidEscape": true
+            "avoidEscape": true,
+            "allowTemplateLiterals": true
         }],
         "camelcase": ["error", {
             "properties": "always"

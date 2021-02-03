@@ -47,6 +47,7 @@ jobs:
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
+        body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
 
     - name: Publish to NPM
       if: success()

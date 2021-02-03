@@ -411,6 +411,16 @@ module.exports = function (grunt) {
                 ]),
                 stdout: false,
             },
+            fixCryptoApiImports: {
+                command: [
+                    `[[ "$OSTYPE" == "darwin"* ]]`,
+                    "&&",
+                    `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i '' -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`,
+                    "||",
+                    `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`
+                ].join(" "),
+                stdout: false
+            }
         },
     });
 };
