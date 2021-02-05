@@ -91,32 +91,51 @@ class HTMLOperation {
 
 
     /**
-     * Highlights the searched string in the name and description of the operation.
+     * Highlights searched strings in the name and description of the operation.
      *
-     * @param {string} searchStr
-     * @param {number} namePos - The position of the search string in the operation name
-     * @param {number} descPos - The position of the search string in the operation description
+     * @param {[[number]]} nameIdxs - Indexes of the search strings in the operation name [[start, length]]
+     * @param {[[number]]} descIdxs - Indexes of the search strings in the operation description [[start, length]]
      */
-    highlightSearchString(searchStr, namePos, descPos) {
-        if (namePos >= 0) {
-            this.name = this.name.slice(0, namePos) + "<b><u>" +
-                this.name.slice(namePos, namePos + searchStr.length) + "</u></b>" +
-                this.name.slice(namePos + searchStr.length);
+    highlightSearchStrings(nameIdxs, descIdxs) {
+        if (nameIdxs.length) {
+            let opName = "",
+                pos = 0;
+
+            nameIdxs.forEach(idxs => {
+                const [start, length] = idxs;
+                opName += this.name.slice(pos, start) + "<b>" +
+                    this.name.slice(start, start + length) + "</b>";
+                pos = start + length;
+            });
+            opName += this.name.slice(pos, this.name.length);
+            this.name = opName;
         }
 
-        if (this.description && descPos >= 0) {
+        if (this.description && descIdxs.length) {
             // Find HTML tag offsets
             const re = /<[^>]+>/g;
             let match;
             while ((match = re.exec(this.description))) {
                 // If the search string occurs within an HTML tag, return without highlighting it.
-                if (descPos >= match.index && descPos <= (match.index + match[0].length))
-                    return;
+                const inHTMLTag = descIdxs.reduce((acc, idxs) => {
+                    const start = idxs[0];
+                    return start >= match.index && start <= (match.index + match[0].length);
+                }, false);
+
+                if (inHTMLTag) return;
             }
 
-            this.description = this.description.slice(0, descPos) + "<b><u>" +
-                this.description.slice(descPos, descPos + searchStr.length) + "</u></b>" +
-                this.description.slice(descPos + searchStr.length);
+            let desc = "",
+                pos = 0;
+
+            descIdxs.forEach(idxs => {
+                const [start, length] = idxs;
+                desc += this.description.slice(pos, start) + "<b><u>" +
+                    this.description.slice(start, start + length) + "</u></b>";
+                pos = start + length;
+            });
+            desc += this.description.slice(pos, this.description.length);
+            this.description = desc;
         }
     }
 

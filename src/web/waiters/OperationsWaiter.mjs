@@ -6,6 +6,7 @@
 
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
+import {fuzzyMatch} from "../../core/lib/FuzzySearch.mjs";
 
 
 /**
@@ -112,24 +113,31 @@ class OperationsWaiter {
 
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
-            const namePos = opName.toLowerCase().indexOf(searchStr);
+
+            // Match op name using fuzzy match
+            const [nameMatch, score, idxs] = fuzzyMatch(inStr, opName);
+
+            // Match description based on exact match
             const descPos = op.description.toLowerCase().indexOf(searchStr);
 
-            if (namePos >= 0 || descPos >= 0) {
+            if (nameMatch || descPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
-                    operation.highlightSearchString(searchStr, namePos, descPos);
+                    operation.highlightSearchStrings(idxs || [], [[descPos, searchStr.length]]);
                 }
 
-                if (namePos < 0) {
-                    matchedOps.push(operation);
+                if (nameMatch) {
+                    matchedOps.push([operation, score]);
                 } else {
                     matchedDescs.push(operation);
                 }
             }
         }
 
-        return matchedDescs.concat(matchedOps);
+        // Sort matched operations based on fuzzy score
+        matchedOps.sort((a, b) => b[1] - a[1]);
+
+        return matchedOps.map(a => a[0]).concat(matchedDescs);
     }
 
 
