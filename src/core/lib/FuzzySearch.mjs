@@ -71,12 +71,12 @@ function fuzzyMatchRecursive(
 
     // Return if recursion limit is reached.
     if (++recursionCount >= recursionLimit) {
-        return [false, outScore];
+        return [false, outScore, []];
     }
 
     // Return if we reached ends of strings.
     if (patternCurIndex === pattern.length || strCurrIndex === str.length) {
-        return [false, outScore];
+        return [false, outScore, []];
     }
 
     // Recursion params
@@ -92,7 +92,7 @@ function fuzzyMatchRecursive(
             pattern[patternCurIndex].toLowerCase() === str[strCurrIndex].toLowerCase()
         ) {
             if (nextMatch >= maxMatches) {
-                return [false, outScore];
+                return [false, outScore, []];
             }
 
             if (firstMatch && srcMatches) {
@@ -100,8 +100,7 @@ function fuzzyMatchRecursive(
                 firstMatch = false;
             }
 
-            const recursiveMatches = [];
-            const [matched, recursiveScore] = fuzzyMatchRecursive(
+            const [matched, recursiveScore, recursiveMatches] = fuzzyMatchRecursive(
                 pattern,
                 str,
                 patternCurIndex,
@@ -181,16 +180,17 @@ function fuzzyMatchRecursive(
         // Return best result
         if (recursiveMatch && (!matched || bestRecursiveScore > outScore)) {
             // Recursive score is better than "this"
+            matches = bestRecursiveMatches;
             outScore = bestRecursiveScore;
-            return [true, outScore, calcMatchRanges(matches)];
+            return [true, outScore, matches];
         } else if (matched) {
             // "this" score is better than recursive
-            return [true, outScore, calcMatchRanges(matches)];
+            return [true, outScore, matches];
         } else {
-            return [false, outScore];
+            return [false, outScore, matches];
         }
     }
-    return [false, outScore];
+    return [false, outScore, matches];
 }
 
 /**
@@ -200,7 +200,7 @@ function fuzzyMatchRecursive(
  * @param [number] matches
  * @returns [[number]]
  */
-function calcMatchRanges(matches) {
+export function calcMatchRanges(matches) {
     const ranges = [];
     let start = matches[0],
         curr = start;

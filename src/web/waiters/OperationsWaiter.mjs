@@ -6,7 +6,7 @@
 
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
-import {fuzzyMatch} from "../../core/lib/FuzzySearch.mjs";
+import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzySearch.mjs";
 
 
 /**
@@ -123,7 +123,7 @@ class OperationsWaiter {
             if (nameMatch || descPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
-                    operation.highlightSearchStrings(idxs || [], [[descPos, searchStr.length]]);
+                    operation.highlightSearchStrings(calcMatchRanges(idxs) || [], [[descPos, searchStr.length]]);
                 }
 
                 if (nameMatch) {
