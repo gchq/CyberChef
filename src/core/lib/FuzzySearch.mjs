@@ -181,7 +181,6 @@ function fuzzyMatchRecursive(
         // Return best result
         if (recursiveMatch && (!matched || bestRecursiveScore > outScore)) {
             // Recursive score is better than "this"
-            matches = [...bestRecursiveMatches];
             outScore = bestRecursiveScore;
             return [true, outScore, calcMatchRanges(matches)];
         } else if (matched) {
