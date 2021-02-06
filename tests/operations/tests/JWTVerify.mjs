@@ -14,7 +14,7 @@ const outputObject = JSON.stringify({
     iat: 1
 }, null, 4);
 
-const invalidAlgorithm = "JsonWebTokenError: invalid algorithm";
+// const invalidAlgorithm = "JsonWebTokenError: invalid algorithm";
 
 const hsKey = "secret_cat";
 /* Retaining private key as a comment
