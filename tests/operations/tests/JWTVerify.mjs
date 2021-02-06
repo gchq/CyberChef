@@ -17,7 +17,7 @@ const outputObject = JSON.stringify({
 const invalidAlgorithm = "JsonWebTokenError: invalid algorithm";
 
 const hsKey = "secret_cat";
-const rsKey = `-----BEGIN RSA PRIVATE KEY-----
+/*const rsKey = `-----BEGIN RSA PRIVATE KEY-----
 MIICWwIBAAKBgQDdlatRjRjogo3WojgGHFHYLugdUWAY9iR3fy4arWNA1KoS8kVw
 33cJibXr8bvwUAUparCwlvdbH6dvEOfou0/gCFQsHUfQrSDv+MuSUMAe8jzKE4qW
 +jK+xQU9a03GUnKHkkle+Q0pX/g6jXZ7r1/xAK5Do2kQ+X5xK9cipRgEKwIDAQAB
@@ -31,7 +31,7 @@ Su5rsCPb8acJo5RO26gGVrfAsDcIXKC+bQJAZZ2XIpsitLyPpuiMOvBbzPavd4gY
 fSSjAkLRi54PKJ8TFUeOP15h9sQzydI8zJU+upvDEKZsZc/UhT/SySDOxQ4G/523
 Y0sz/OZtSWcol/UMgQJALesy++GdvoIDLfJX5GBQpuFgFenRiRDabxrE9MNUZ2aP
 FaFp+DyAe+b4nDwuJaW2LURbr8AEZga7oQj0uYxcYw==
------END RSA PRIVATE KEY-----`;
+-----END RSA PRIVATE KEY-----`;*/
 const rsPub = `-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDdlatRjRjogo3WojgGHFHYLugd
 UWAY9iR3fy4arWNA1KoS8kVw33cJibXr8bvwUAUparCwlvdbH6dvEOfou0/gCFQs
