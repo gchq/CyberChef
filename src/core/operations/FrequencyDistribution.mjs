@@ -31,6 +31,11 @@ class FrequencyDistribution extends Operation {
                 "name": "Show 0%s",
                 "type": "boolean",
                 "value": true
+            },
+            {
+                "name": "Show ASCII",
+                "type": "boolean",
+                "value": true
             }
         ];
     }
@@ -77,6 +82,7 @@ class FrequencyDistribution extends Operation {
      */
     present(freq, args) {
         const showZeroes = args[0];
+        const showAscii = args[1];
         // Print
         let output = `<canvas id='chart-area'></canvas><br>
 Total data length: ${freq.dataLength}
@@ -97,7 +103,17 @@ Byte   Percentage
 
         for (let i = 0; i < 256; i++) {
             if (freq.distribution[i] || showZeroes) {
-                output += " " + Utils.hex(i, 2) + "    (" +
+                let c = " ";
+                if (showAscii) {
+                    if (i <= 32) {
+                        c = String.fromCharCode(0x2400 + i);
+                    } else  if (i === 127) {
+                        c = String.fromCharCode(0x2421);
+                    } else {
+                        c = String.fromCharCode(i);
+                    }
+                }
+                output += " " + Utils.hex(i, 2) + "  " + c + " (" +
                     (freq.percentages[i].toFixed(2).replace(".00", "") + "%)").padEnd(8, " ") +
                     Array(Math.ceil(freq.percentages[i])+1).join("|") + "\n";
             }
