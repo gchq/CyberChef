@@ -97,12 +97,13 @@ class HTMLOperation {
      * @param {[[number]]} descIdxs - Indexes of the search strings in the operation description [[start, length]]
      */
     highlightSearchStrings(nameIdxs, descIdxs) {
-        if (nameIdxs.length) {
+        if (nameIdxs.length && typeof nameIdxs[0][0] === "number") {
             let opName = "",
                 pos = 0;
 
             nameIdxs.forEach(idxs => {
                 const [start, length] = idxs;
+                if (typeof start !== "number") return;
                 opName += this.name.slice(pos, start) + "<b>" +
                     this.name.slice(start, start + length) + "</b>";
                 pos = start + length;
