@@ -3,13 +3,11 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-
 import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
 import OperationError from "../errors/OperationError.mjs";
-
-
 import {JWT_ALGORITHMS} from "../lib/JWT.mjs";
+
 
 /**
  * JWT Verify operation
@@ -46,8 +44,7 @@ class JWTVerify extends Operation {
         const [key] = args;
 
         try {
-            const verified = jwt.verify(input, key, { algorithms: JWT_ALGORITHMS});
-
+            const verified = jwt.verify(input, key, { algorithms: JWT_ALGORITHMS });
 
             if (Object.prototype.hasOwnProperty.call(verified, "name") && verified.name === "JsonWebTokenError") {
                 throw new OperationError(verified.message);
