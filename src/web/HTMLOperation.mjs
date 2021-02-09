@@ -111,7 +111,7 @@ class HTMLOperation {
             this.name = opName;
         }
 
-        if (this.description && descIdxs.length) {
+        if (this.description && descIdxs.length && descIdxs[0][0] >= 0) {
             // Find HTML tag offsets
             const re = /<[^>]+>/g;
             let match;

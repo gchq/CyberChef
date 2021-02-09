@@ -109,8 +109,6 @@ class OperationsWaiter {
         const matchedOps = [];
         const matchedDescs = [];
 
-        const searchStr = inStr.toLowerCase();
-
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
 
@@ -118,12 +116,12 @@ class OperationsWaiter {
             const [nameMatch, score, idxs] = fuzzyMatch(inStr, opName);
 
             // Match description based on exact match
-            const descPos = op.description.toLowerCase().indexOf(searchStr);
+            const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
 
             if (nameMatch || descPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
-                    operation.highlightSearchStrings(calcMatchRanges(idxs) || [], [[descPos, searchStr.length]]);
+                    operation.highlightSearchStrings(calcMatchRanges(idxs) || [], [[descPos, inStr.length]]);
                 }
 
                 if (nameMatch) {
