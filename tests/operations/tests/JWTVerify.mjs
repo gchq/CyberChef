@@ -14,11 +14,9 @@ const outputObject = JSON.stringify({
     iat: 1
 }, null, 4);
 
-// const invalidAlgorithm = "JsonWebTokenError: invalid algorithm";
-
 const hsKey = "secret_cat";
 /* Retaining private key as a comment
-const rsKey = `-----BEGIN RSA PRIVATE KEY-----
+const rsPriv = `-----BEGIN RSA PRIVATE KEY-----
 MIICWwIBAAKBgQDdlatRjRjogo3WojgGHFHYLugdUWAY9iR3fy4arWNA1KoS8kVw
 33cJibXr8bvwUAUparCwlvdbH6dvEOfou0/gCFQsHUfQrSDv+MuSUMAe8jzKE4qW
 +jK+xQU9a03GUnKHkkle+Q0pX/g6jXZ7r1/xAK5Do2kQ+X5xK9cipRgEKwIDAQAB
@@ -41,7 +39,7 @@ HUfQrSDv+MuSUMAe8jzKE4qW+jK+xQU9a03GUnKHkkle+Q0pX/g6jXZ7r1/xAK5D
 o2kQ+X5xK9cipRgEKwIDAQAB
 -----END PUBLIC KEY-----`;
 /* Retaining private key as a comment
-const esKey = `-----BEGIN PRIVATE KEY-----
+const esPriv = `-----BEGIN PRIVATE KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgevZzL1gdAFr88hb2
 OF/2NxApJCzGCEDdfSp6VQO30hyhRANCAAQRWz+jn65BtOMvdyHKcvjBeBSDZH2r
 1RTwjmYSi9R/zpBnuQ4EiMnCqfMPWiZqB4QdbAd0E7oH50VpuZ1P087G

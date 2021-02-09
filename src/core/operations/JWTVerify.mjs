@@ -42,9 +42,11 @@ class JWTVerify extends Operation {
      */
     run(input, args) {
         const [key] = args;
+        const algos = JWT_ALGORITHMS;
+        algos[algos.indexOf("None")] = "none";
 
         try {
-            const verified = jwt.verify(input, key, { algorithms: JWT_ALGORITHMS });
+            const verified = jwt.verify(input, key, { algorithms: algos });
 
             if (Object.prototype.hasOwnProperty.call(verified, "name") && verified.name === "JsonWebTokenError") {
                 throw new OperationError(verified.message);
