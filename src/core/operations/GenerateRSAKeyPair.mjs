@@ -7,6 +7,7 @@
 
 import Operation from "../Operation.mjs";
 import forge from "node-forge";
+import { cryptNotice } from "../lib/Crypt.mjs";
 
 /**
  * Generate RSA Key Pair operation
@@ -21,7 +22,7 @@ class GenerateRSAKeyPair extends Operation {
 
         this.name = "Generate RSA Key Pair";
         this.module = "Ciphers";
-        this.description = "Generate an RSA key pair with a given number of bits.<br><br>WARNING: Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness. We advise you not to use keys generated from CyberChef in operational contexts.";
+        this.description = `Generate an RSA key pair with a given number of bits.<br><br>${cryptNotice}`;
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
         this.inputType = "string";
         this.outputType = "string";

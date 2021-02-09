@@ -9,8 +9,10 @@
 import Operation from "../Operation.mjs";
 import kbpgp from "kbpgp";
 import { getSubkeySize, ASP } from "../lib/PGP.mjs";
+import { cryptNotice } from "../lib/Crypt.mjs";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
+
 
 /**
  * Generate PGP Key Pair operation
@@ -25,7 +27,7 @@ class GeneratePGPKeyPair extends Operation {
 
         this.name = "Generate PGP Key Pair";
         this.module = "PGP";
-        this.description = "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.<br><br>WARNING: Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness. We advise you not to use keys generated from CyberChef in operational contexts.";
+        this.description = `Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.<br><br>${cryptNotice}`;
         this.infoURL = "https://wikipedia.org/wiki/Pretty_Good_Privacy";
         this.inputType = "string";
         this.outputType = "string";
