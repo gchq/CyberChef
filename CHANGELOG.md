@@ -13,10 +13,10 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
-### [9.24.0] - 2020-02-02
+### [9.24.0] - 2021-02-02
 - 'SM3' hashing function added along with more configuration options for other hashing operations [@n1073645] [@n1474335] | [#1022]
 
-### [9.23.0] - 2020-02-01
+### [9.23.0] - 2021-02-01
 - Various RSA operations added to encrypt, decrypt, sign, verify and generate keys [@mattnotmitt] [@GCHQ77703] | [#652]
 
 ### [9.22.0] - 2021-02-01
