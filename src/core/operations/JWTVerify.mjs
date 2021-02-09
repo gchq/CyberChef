@@ -28,7 +28,7 @@ class JWTVerify extends Operation {
         this.outputType = "JSON";
         this.args = [
             {
-                name: "Private/Secret Key",
+                name: "Public/Secret Key",
                 type: "text",
                 value: "secret"
             },
