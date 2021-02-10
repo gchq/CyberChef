@@ -6,6 +6,7 @@
 
 import HTMLIngredient from "./HTMLIngredient.mjs";
 import Utils from "../core/Utils.mjs";
+import url from "url";
 
 
 /**
@@ -147,22 +148,29 @@ class HTMLOperation {
 /**
  * Given a URL for a Wikipedia (or other wiki) page, this function returns a link to that page.
  *
- * @param {string} url
+ * @param {string} urlStr
  * @returns {string}
  */
-function titleFromWikiLink(url) {
-    const splitURL = url.split("/");
-    if (!splitURL.includes("wikipedia.org") && !splitURL.includes("forensicswiki.xyz")) {
-        // Not a wiki link, return full URL
-        return `<a href='${url}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
+function titleFromWikiLink(urlStr) {
+    const urlObj = url.parse(urlStr);
+    let wikiName = "",
+        pageTitle = "";
+
+    switch (urlObj.host) {
+        case "forensicswiki.xyz":
+            wikiName = "Forensics Wiki";
+            pageTitle = urlObj.query.substr(6).replace(/_/g, " "); // Chop off 'title='
+            break;
+        case "wikipedia.org":
+            wikiName = "Wikipedia";
+            pageTitle = urlObj.pathname.substr(6).replace(/_/g, " "); // Chop off '/wiki/'
+            break;
+        default:
+            // Not a wiki link, return full URL
+            return `<a href='${urlStr}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
     }
 
-    const wikiName = splitURL.includes("forensicswiki.xyz") ? "Forensics Wiki" : "Wikipedia";
-
-    const pageTitle = decodeURIComponent(splitURL[splitURL.length - 1])
-        .replace(/_/g, " ")
-        .replace(/index\.php\?title=/g, "");
-    return `<a href='${url}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
+    return `<a href='${urlObj.href}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
 }
 
 export default HTMLOperation;

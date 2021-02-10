@@ -704,8 +704,21 @@ class Utils {
      * Utils.stripHtmlTags("<div>Test</div>");
      */
     static stripHtmlTags(htmlStr, removeScriptAndStyle=false) {
+        /**
+         * Recursively remove a pattern from a string until there are no more matches.
+         * Avoids incomplete sanitization e.g. "aabcbc".replace(/abc/g, "") === "abc"
+         *
+         * @param {RegExp} pattern
+         * @param {string} str
+         * @returns {string}
+         */
+        function recursiveRemove(pattern, str) {
+            const newStr = str.replace(pattern, "");
+            return newStr.length === str.length ? newStr : recursiveRemove(pattern, newStr);
+        }
+
         if (removeScriptAndStyle) {
-            htmlStr = htmlStr.replace(/<(script|style)[^>]*>.*?<\/(script|style)>/gi, "");
+            htmlStr = recursiveRemove(/<(script|style)[^>]*>.*?<\/(script|style)>/gi, htmlStr);
         }
         return htmlStr.replace(/<[^>]+>/g, "");
     }
