@@ -174,7 +174,7 @@ module.exports = function (grunt) {
             // previous one fails. & would coninue on a fail
             .join("&&")
             // Windows does not support \n properly
-            .replace("\n", "\\n");
+            .replace(/\n/g, "\\n");
     }
 
     grunt.initConfig({

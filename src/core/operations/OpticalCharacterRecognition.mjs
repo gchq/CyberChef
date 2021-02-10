@@ -51,7 +51,7 @@ class OpticalCharacterRecognition extends Operation {
     async run(input, args) {
         const [showConfidence] = args;
 
-        if (!isWorkerEnvironment()) throw OperationError("This operation only works in a browser");
+        if (!isWorkerEnvironment()) throw new OperationError("This operation only works in a browser");
 
         const type = isImage(input);
         if (!type) {

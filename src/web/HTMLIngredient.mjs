@@ -153,7 +153,7 @@ class HTMLIngredient {
                 for (i = 0; i < this.value.length; i++) {
                     if ((m = this.value[i].match(/\[([a-z0-9 -()^]+)\]/i))) {
                         html += `<optgroup label="${m[1]}">`;
-                    } else if ((m = this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i))) {
+                    } else if (this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i)) {
                         html += "</optgroup>";
                     } else {
                         html += `<option ${this.defaultIndex === i ? "selected" : ""}>${this.value[i]}</option>`;
@@ -177,7 +177,7 @@ class HTMLIngredient {
                 for (i = 0; i < this.value.length; i++) {
                     if ((m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
                         html += `<optgroup label="${m[1]}">`;
-                    } else if ((m = this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i))) {
+                    } else if (this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i)) {
                         html += "</optgroup>";
                     } else {
                         const val = this.type === "populateMultiOption" ?

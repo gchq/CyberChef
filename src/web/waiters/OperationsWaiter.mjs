@@ -121,7 +121,7 @@ class OperationsWaiter {
             if (nameMatch || descPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
-                    operation.highlightSearchStrings(calcMatchRanges(idxs) || [], [[descPos, inStr.length]]);
+                    operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);
                 }
 
                 if (nameMatch) {

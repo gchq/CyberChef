@@ -102,7 +102,7 @@ class ControlsWaiter {
         const saveLinkEl = document.getElementById("save-link");
         const saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
 
-        saveLinkEl.innerHTML = Utils.truncate(saveLink, 120);
+        saveLinkEl.innerHTML = Utils.escapeHtml(Utils.truncate(saveLink, 120));
         saveLinkEl.setAttribute("href", saveLink);
     }
 
@@ -138,7 +138,7 @@ class ControlsWaiter {
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", input] : undefined,
+            includeInput ? ["input", Utils.escapeHtml(input)] : undefined,
         ];
 
         const hash = params

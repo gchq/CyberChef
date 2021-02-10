@@ -5,6 +5,7 @@
  */
 
 import HTMLIngredient from "./HTMLIngredient.mjs";
+import Utils from "../core/Utils.mjs";
 
 
 /**
@@ -72,7 +73,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toFullHtml() {
-        let html = `<div class="op-title">${this.name}</div>
+        let html = `<div class="op-title">${Utils.escapeHtml(this.name)}</div>
         <div class="ingredients">`;
 
         for (let i = 0; i < this.ingList.length; i++) {
@@ -151,15 +152,16 @@ class HTMLOperation {
  */
 function titleFromWikiLink(url) {
     const splitURL = url.split("/");
-    if (splitURL.indexOf("wikipedia.org") < 0 && splitURL.indexOf("forensicswiki.org") < 0) {
+    if (!splitURL.includes("wikipedia.org") && !splitURL.includes("forensicswiki.xyz")) {
         // Not a wiki link, return full URL
         return `<a href='${url}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
     }
 
-    const wikiName = splitURL.indexOf("forensicswiki.org") < 0 ? "Wikipedia" : "Forensics Wiki";
+    const wikiName = splitURL.includes("forensicswiki.xyz") ? "Forensics Wiki" : "Wikipedia";
 
     const pageTitle = decodeURIComponent(splitURL[splitURL.length - 1])
-        .replace(/_/g, " ");
+        .replace(/_/g, " ")
+        .replace(/index\.php\?title=/g, "");
     return `<a href='${url}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
 }
 

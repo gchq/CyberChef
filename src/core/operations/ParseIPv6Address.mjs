@@ -169,7 +169,7 @@ class ParseIPv6Address extends Operation {
 
 
             // Detect possible EUI-64 addresses
-            if ((ipv6[5] & 0xff === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
+            if (((ipv6[5] & 0xff) === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
                 output += "\n\nThis IPv6 address contains a modified EUI-64 address, identified by the presence of FF:FE in the 12th and 13th octets.";
 
                 const intIdent = Utils.hex(ipv6[4] >>> 8) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +

@@ -46,7 +46,7 @@ class FromBase extends Operation {
         }
 
         const number = input.replace(/\s/g, "").split(".");
-        let result = new BigNumber(number[0], radix) || 0;
+        let result = new BigNumber(number[0], radix);
 
         if (number.length === 1) return result;
 

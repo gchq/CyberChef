@@ -95,7 +95,7 @@ class FromBCD extends Operation {
         if (!packed) {
             // Discard each high nibble
             for (let i = 0; i < nibbles.length; i++) {
-                nibbles.splice(i, 1);
+                nibbles.splice(i, 1); // lgtm [js/loop-iteration-skipped-due-to-shifting]
             }
         }
 

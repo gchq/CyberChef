@@ -177,7 +177,7 @@ export default class Stream {
 
         // Get the skip table.
         const skiptable = preprocess(val, length);
-        let found = true;
+        let found;
 
         while (this.position < this.length) {
             // Until we hit the final element of val in the stream.

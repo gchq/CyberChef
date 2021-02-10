@@ -316,7 +316,7 @@ class RecipeWaiter {
                     };
                 } else if (ingList[j].getAttribute("type") === "number") {
                     // number
-                    ingredients[j] = parseFloat(ingList[j].value, 10);
+                    ingredients[j] = parseFloat(ingList[j].value);
                 } else {
                     // all others
                     ingredients[j] = ingList[j].value;

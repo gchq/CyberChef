@@ -207,7 +207,7 @@ class Dish {
         const data = new Uint8Array(this.value.slice(0, 2048)),
             types = detectFileType(data);
 
-        if (!types.length || !types[0].mime || !types[0].mime === "text/plain") {
+        if (!types.length || !types[0].mime || !(types[0].mime === "text/plain")) {
             return null;
         } else {
             return types[0].mime;

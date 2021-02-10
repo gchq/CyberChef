@@ -213,7 +213,7 @@ function locatePotentialSig(buf, sig, offset) {
 export function isType(type, buf) {
     const types = detectFileType(buf);
 
-    if (!(types && types.length)) return false;
+    if (!types.length) return false;
 
     if (typeof type === "string") {
         return types.reduce((acc, t) => {
