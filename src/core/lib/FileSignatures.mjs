@@ -2197,14 +2197,14 @@ export const FILE_SIGNATURES = {
             mime: "application/octet-stream",
             description: "",
             signature: {
-                0: 0x6b, // keych
+                0: 0x6b, // kych
                 1: 0x79,
                 2: 0x63,
                 3: 0x68,
                 4: 0x00,
                 5: 0x01
             },
-            extractor: null
+            extractor: extractMacOSXKeychain
         },
         {
             name: "TCP Packet",
@@ -2354,6 +2354,12 @@ export const FILE_SIGNATURES = {
                     0: 0x95,
                     1: 0x03,
                     2: 0xc6,
+                    3: 0x04
+                },
+                {
+                    0: 0x95,
+                    1: 0x05,
+                    2: 0x86,
                     3: 0x04
                 }
             ],
@@ -3401,6 +3407,26 @@ export function extractPListXML(bytes, offset) {
         }
     }
     stream.consumeIf(0x0a);
+
+    return stream.carve();
+}
+
+
+/**
+ * MacOS X Keychain Extactor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractMacOSXKeychain(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to size field.
+    stream.moveTo(0x14);
+
+    // Move forwards by size.
+    stream.moveForwardsBy(stream.readInt(4));
 
     return stream.carve();
 }
