@@ -286,6 +286,7 @@
             "JPath expression",
             "CSS selector",
             "Extract EXIF",
+            "Extract ID3",
             "Extract Files"
         ]
     },
