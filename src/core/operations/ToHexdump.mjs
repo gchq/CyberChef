@@ -20,7 +20,7 @@ class ToHexdump extends Operation {
 
         this.name = "To Hexdump";
         this.module = "Default";
-        this.description = "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.";
+        this.description = "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.<br><br>The 'UNIX format' argument defines which subset of printable characters are displayed in the preview column.";
         this.infoURL = "https://wikipedia.org/wiki/Hex_dump";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -39,6 +39,11 @@ class ToHexdump extends Operation {
                 "name": "Include final length",
                 "type": "boolean",
                 "value": false
+            },
+            {
+                "name": "UNIX format",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -50,7 +55,7 @@ class ToHexdump extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input);
-        const [length, upperCase, includeFinalLength] = args;
+        const [length, upperCase, includeFinalLength, unixFormat] = args;
         const padding = 2;
 
         let output = "";
@@ -70,7 +75,9 @@ class ToHexdump extends Operation {
 
             output += lineNo + "  " +
                 hexa.padEnd(length*(padding+1), " ") +
-                " |" + Utils.printable(Utils.byteArrayToChars(buff)).padEnd(buff.length, " ") + "|\n";
+                " |" +
+                Utils.printable(Utils.byteArrayToChars(buff), false, unixFormat).padEnd(buff.length, " ") +
+                "|\n";
 
             if (includeFinalLength && i+buff.length === data.length) {
                 output += Utils.hex(i+buff.length, 8) + "\n";

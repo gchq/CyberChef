@@ -170,11 +170,16 @@ class Utils {
      *
      * @param {string} str - The input string to display.
      * @param {boolean} [preserveWs=false] - Whether or not to print whitespace.
+     * @param {boolean} [onlyAscii=false] - Whether or not to replace non ASCII characters.
      * @returns {string}
      */
-    static printable(str, preserveWs=false) {
+    static printable(str, preserveWs=false, onlyAscii=false) {
         if (isWebEnvironment() && window.app && !window.app.options.treatAsUtf8) {
             str = Utils.byteArrayToChars(Utils.strToByteArray(str));
+        }
+
+        if (onlyAscii) {
+            return str.replace(/[^\x20-\x7f]/g, ".");
         }
 
         // eslint-disable-next-line no-misleading-character-class
