@@ -3420,7 +3420,6 @@ export function extractPListXML(bytes, offset) {
  * @returns {Uint8Array}
  */
 export function extractMacOSXKeychain(bytes, offset) {
-
     const stream = new Stream(bytes.slice(offset));
 
     // Move to size field.
