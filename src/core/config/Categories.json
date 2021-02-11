@@ -267,6 +267,7 @@
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
             "Extract dates",
+            "Get Time",
             "Sleep"
         ]
     },
