@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.26.0] - 2021-02-11
+- 'Get Time' operation added [@n1073645] [@n1474335] | [#1045]
+
 ### [9.25.0] - 2021-02-11
 - 'Extract ID3' operation added [@n1073645] [@n1474335] | [#1006]
 
@@ -250,6 +253,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.26.0]: https://github.com/gchq/CyberChef/releases/tag/v9.26.0
 [9.25.0]: https://github.com/gchq/CyberChef/releases/tag/v9.25.0
 [9.24.0]: https://github.com/gchq/CyberChef/releases/tag/v9.24.0
 [9.23.0]: https://github.com/gchq/CyberChef/releases/tag/v9.23.0
@@ -430,5 +434,6 @@ All major and minor version changes will be documented in this file. Details of 
 [#987]: https://github.com/gchq/CyberChef/pull/987
 [#1006]: https://github.com/gchq/CyberChef/pull/1006
 [#1022]: https://github.com/gchq/CyberChef/pull/1022
+[#1045]: https://github.com/gchq/CyberChef/pull/1045
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
