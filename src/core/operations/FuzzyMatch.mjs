@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import {fuzzyMatch, calcMatchRanges, DEFAULT_WEIGHTS} from "../lib/FuzzyMatch.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Fuzzy Match operation
@@ -101,16 +102,16 @@ class FuzzyMatch extends Operation {
             const matchRanges = calcMatchRanges(idxs);
 
             matchRanges.forEach(([start, length], i) => {
-                result += input.slice(pos, start);
+                result += Utils.escapeHtml(input.slice(pos, start));
                 if (i === 0) result += `<span class="${hlClass}">`;
                 pos = start + length;
-                result += `<b>${input.slice(start, pos)}</b>`;
+                result += `<b>${Utils.escapeHtml(input.slice(start, pos))}</b>`;
             });
             result += "</span>";
             hlClass = hlClass === "hl1" ? "hl2" : "hl1";
         });
 
-        result += input.slice(pos, input.length);
+        result += Utils.escapeHtml(input.slice(pos, input.length));
 
         return result;
     }
