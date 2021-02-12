@@ -6,7 +6,7 @@
 
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
-import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzySearch.mjs";
+import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 
 
 /**

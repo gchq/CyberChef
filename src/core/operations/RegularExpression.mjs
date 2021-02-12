@@ -185,7 +185,7 @@ class RegularExpression extends Operation {
  * @param {boolean} captureGroups - Display each of the capture groups separately
  * @returns {string}
  */
-function regexList (input, regex, displayTotal, matches, captureGroups) {
+function regexList(input, regex, displayTotal, matches, captureGroups) {
     let output = "",
         total = 0,
         match;
@@ -225,7 +225,7 @@ function regexList (input, regex, displayTotal, matches, captureGroups) {
  * @param {boolean} displayTotal
  * @returns {string}
  */
-function regexHighlight (input, regex, displayTotal) {
+function regexHighlight(input, regex, displayTotal) {
     let output = "",
         title = "",
         hl = 1,

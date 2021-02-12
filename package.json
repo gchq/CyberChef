@@ -173,6 +173,8 @@
     "testuidev": "npx nightwatch --env=dev",
     "lint": "npx grunt lint",
     "postinstall": "npx grunt exec:fixCryptoApiImports",
-    "newop": "node --experimental-modules src/core/config/scripts/newOperation.mjs"
+    "newop": "node --experimental-modules src/core/config/scripts/newOperation.mjs",
+    "getheapsize": "node -e 'console.log(`node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'",
+    "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
   }
 }

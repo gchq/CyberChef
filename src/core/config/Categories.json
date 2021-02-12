@@ -238,6 +238,7 @@
             "Pad lines",
             "Find / Replace",
             "Regular expression",
+            "Fuzzy Match",
             "Offset checker",
             "Hamming Distance",
             "Convert distance",

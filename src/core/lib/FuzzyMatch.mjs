@@ -16,40 +16,72 @@
  *   Anurag Awasthi - updated to 0.2.0
  */
 
-const SEQUENTIAL_BONUS = 15; // bonus for adjacent matches
-const SEPARATOR_BONUS = 30; // bonus if match occurs after a separator
-const CAMEL_BONUS = 30; // bonus if match is uppercase and prev is lower
-const FIRST_LETTER_BONUS = 15; // bonus if the first letter is matched
+export const DEFAULT_WEIGHTS = {
+    sequentialBonus: 15, // bonus for adjacent matches
+    separatorBonus: 30, // bonus if match occurs after a separator
+    camelBonus: 30, // bonus if match is uppercase and prev is lower
+    firstLetterBonus: 15, // bonus if the first letter is matched
 
-const LEADING_LETTER_PENALTY = -5; // penalty applied for every letter in str before the first match
-const MAX_LEADING_LETTER_PENALTY = -15; // maximum penalty for leading letters
-const UNMATCHED_LETTER_PENALTY = -1;
+    leadingLetterPenalty: -5, // penalty applied for every letter in str before the first match
+    maxLeadingLetterPenalty: -15, // maximum penalty for leading letters
+    unmatchedLetterPenalty: -1
+};
 
 /**
  * Does a fuzzy search to find pattern inside a string.
- * @param {*} pattern string        pattern to search for
- * @param {*} str     string        string which is being searched
+ * @param {string} pattern        pattern to search for
+ * @param {string} str            string which is being searched
+ * @param {boolean} global        whether to search for all matches or just one
  * @returns [boolean, number]       a boolean which tells if pattern was
  *                                  found or not and a search score
  */
-export function fuzzyMatch(pattern, str) {
+export function fuzzyMatch(pattern, str, global=false, weights=DEFAULT_WEIGHTS) {
     const recursionCount = 0;
     const recursionLimit = 10;
     const matches = [];
     const maxMatches = 256;
 
-    return fuzzyMatchRecursive(
-        pattern,
-        str,
-        0 /* patternCurIndex */,
-        0 /* strCurrIndex */,
-        null /* srcMatces */,
-        matches,
-        maxMatches,
-        0 /* nextMatch */,
-        recursionCount,
-        recursionLimit
-    );
+    if (!global) {
+        return fuzzyMatchRecursive(
+            pattern,
+            str,
+            0 /* patternCurIndex */,
+            0 /* strCurrIndex */,
+            null /* srcMatches */,
+            matches,
+            maxMatches,
+            0 /* nextMatch */,
+            recursionCount,
+            recursionLimit,
+            weights
+        );
+    }
+
+    // Return all matches
+    let foundMatch = true,
+        score,
+        idxs,
+        strCurrIndex = 0;
+    const results = [];
+
+    while (foundMatch) {
+        [foundMatch, score, idxs] = fuzzyMatchRecursive(
+            pattern,
+            str,
+            0 /* patternCurIndex */,
+            strCurrIndex,
+            null /* srcMatches */,
+            matches,
+            maxMatches,
+            0 /* nextMatch */,
+            recursionCount,
+            recursionLimit,
+            weights
+        );
+        if (foundMatch) results.push([foundMatch, score, [...idxs]]);
+        strCurrIndex = idxs[idxs.length - 1] + 1;
+    }
+    return results;
 }
 
 /**
@@ -65,7 +97,8 @@ function fuzzyMatchRecursive(
     maxMatches,
     nextMatch,
     recursionCount,
-    recursionLimit
+    recursionLimit,
+    weights
 ) {
     let outScore = 0;
 
@@ -110,7 +143,8 @@ function fuzzyMatchRecursive(
                 maxMatches,
                 nextMatch,
                 recursionCount,
-                recursionLimit
+                recursionLimit,
+                weights
             );
 
             if (matched) {
@@ -134,16 +168,16 @@ function fuzzyMatchRecursive(
         outScore = 100;
 
         // Apply leading letter penalty
-        let penalty = LEADING_LETTER_PENALTY * matches[0];
+        let penalty = weights.leadingLetterPenalty * matches[0];
         penalty =
-            penalty < MAX_LEADING_LETTER_PENALTY ?
-                MAX_LEADING_LETTER_PENALTY :
+            penalty < weights.maxLeadingLetterPenalty ?
+                weights.maxLeadingLetterPenalty :
                 penalty;
         outScore += penalty;
 
         // Apply unmatched penalty
         const unmatched = str.length - nextMatch;
-        outScore += UNMATCHED_LETTER_PENALTY * unmatched;
+        outScore += weights.unmatchedLetterPenalty * unmatched;
 
         // Apply ordering bonuses
         for (let i = 0; i < nextMatch; i++) {
@@ -152,7 +186,7 @@ function fuzzyMatchRecursive(
             if (i > 0) {
                 const prevIdx = matches[i - 1];
                 if (currIdx === prevIdx + 1) {
-                    outScore += SEQUENTIAL_BONUS;
+                    outScore += weights.sequentialBonus;
                 }
             }
 
@@ -165,15 +199,15 @@ function fuzzyMatchRecursive(
                     neighbor !== neighbor.toUpperCase() &&
                     curr !== curr.toLowerCase()
                 ) {
-                    outScore += CAMEL_BONUS;
+                    outScore += weights.camelBonus;
                 }
                 const isNeighbourSeparator = neighbor === "_" || neighbor === " ";
                 if (isNeighbourSeparator) {
-                    outScore += SEPARATOR_BONUS;
+                    outScore += weights.separatorBonus;
                 }
             } else {
                 // First letter
-                outScore += FIRST_LETTER_BONUS;
+                outScore += weights.firstLetterBonus;
             }
         }
 
