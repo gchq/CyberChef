@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.27.0] - 2021-02-12
+- 'Fuzzy Match' operation added [@n1474335] | [8ad18b]
+
 ### [9.26.0] - 2021-02-11
 - 'Get Time' operation added [@n1073645] [@n1474335] | [#1045]
 
@@ -253,6 +256,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.27.0]: https://github.com/gchq/CyberChef/releases/tag/v9.27.0
 [9.26.0]: https://github.com/gchq/CyberChef/releases/tag/v9.26.0
 [9.25.0]: https://github.com/gchq/CyberChef/releases/tag/v9.25.0
 [9.24.0]: https://github.com/gchq/CyberChef/releases/tag/v9.24.0
@@ -359,6 +363,8 @@ All major and minor version changes will be documented in this file. Details of 
 [@MarvinJWendt]: https://github.com/MarvinJWendt
 [@dmfj]: https://github.com/dmfj
 [@mattnotmitt]: https://github.com/mattnotmitt
+
+[8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
