@@ -39,7 +39,7 @@ class ToBase94 extends Operation {
      */
     run(input, args) {
         const [strictLength] = args;
-        return toBase94(input,strictLength);
+        return toBase94(input, strictLength);
     }
 
     /**

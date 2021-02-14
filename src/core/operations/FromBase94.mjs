@@ -44,7 +44,7 @@ class FromBase94 extends Operation {
      */
     run(input, args) {
 
-        const [strictLength,removeInvalidChars] = args;
+        const [strictLength, removeInvalidChars] = args;
 
         return fromBase94(input, strictLength, removeInvalidChars);
 

@@ -28,46 +28,39 @@ export function toBase94(data, strictLength=true) {
 
     if (data instanceof ArrayBuffer) {
         data = new Uint8Array(data);
-    }
-    else
-    {
-      throw new OperationError(`Invalid - Input not instanceof ArrayBuffer.`);
+    } else {
+        throw new OperationError(`Invalid - Input not instanceof ArrayBuffer.`);
     }
 
-    let dataModLen = data.length % 4;
+    const dataModLen = data.length % 4;
 
-    if (dataModLen > 0 && strictLength)
-    {
-
+    if (dataModLen > 0 && strictLength) {
         throw new OperationError(`Invalid - Input byte length must be a multiple of 4.`);
-
     }
 
     let output = "", i = 0, j = 0, acc = 0;
 
-    let dataPad = new Uint8Array(data.length + (dataModLen > 0 ? (4 - dataModLen) : 0));
+    const dataPad = new Uint8Array(data.length + (dataModLen > 0 ? (4 - dataModLen) : 0));
 
-    dataPad.set(data,0);
+    dataPad.set(data, 0);
 
     while (i < dataPad.length) {
 
         acc = 0;
 
-        for(j = 0; j < 4; j++)
-        {
+        for (j = 0; j < 4; j++) {
 
-          acc *= 256;
+            acc *= 256;
 
-          acc += dataPad[i + (3 - j)];
+            acc += dataPad[i + (3 - j)];
 
         }
 
-        for(j = 0; j < 5; j++)
-        {
+        for (j = 0; j < 5; j++) {
 
-          output += String.fromCharCode((acc % 94)+32);
+            output += String.fromCharCode((acc % 94)+32);
 
-          acc  = Math.floor(acc / 94);
+            acc  = Math.floor(acc / 94);
 
         }
 
@@ -105,73 +98,66 @@ export function fromBase94(data, strictLength=true, removeInvalidChars=false) {
 
         data = Utils.strToByteArray(data);
 
-    }
-    else {
+    } else {
 
-      throw new OperationError(`Invalid - typeof base94 input is not a string.`);
+        throw new OperationError(`Invalid - typeof base94 input is not a string.`);
 
     }
 
     const re = new RegExp("[^\x20-\x7e]", "g");
 
-    if(re.test(data))
-    {
-      if (removeInvalidChars) {
-          data = data.replace(re, "");
-      }
-      else {
-        throw new OperationError(`Invalid content in Base94 string.`);
-      }
+    if (re.test(data)) {
+        if (removeInvalidChars) {
+            data = data.replace(re, "");
+        } else {
+            throw new OperationError(`Invalid content in Base94 string.`);
+        }
     }
 
     let stringModLen = data.length % 5;
 
-    if (stringModLen > 0)
-    {
+    if (stringModLen > 0) {
 
-      if(strictLength)
-      {
-        throw new OperationError(`Invalid - Input string length must be a multiple of 5.`);
-      }
+        if (strictLength) {
+            throw new OperationError(`Invalid - Input string length must be a multiple of 5.`);
+        }
 
-      stringModLen = 5 - stringModLen;
+        stringModLen = 5 - stringModLen;
 
-      while(stringModLen > 0)
-      {
+        while (stringModLen > 0) {
 
-        data.push(32);
+            data.push(32);
 
-        stringModLen -= 1;
+            stringModLen -= 1;
 
-      }
+        }
 
     }
 
-    let output = [], i = 0, j = 0, acc = 0;
+    const output = [];
+    let i = 0, j = 0, acc = 0;
 
     while (i < data.length) {
 
-          acc = 0;
+        acc = 0;
 
-          for (j = 0; j < 5; j++)
-          {
+        for (j = 0; j < 5; j++) {
 
             acc = (acc * 94) + data[i + 4 - j] - 32;
 
-          }
+        }
 
-          for (j = 0; j < 4; j++)
-          {
+        for (j = 0; j < 4; j++) {
 
             output.push(acc % 256);
 
             acc = Math.floor(acc / 256);
 
-          }
+        }
 
-          i += 5;
+        i += 5;
 
-       }
+    }
 
     return output;
 
