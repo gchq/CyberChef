@@ -29,6 +29,8 @@
             "Show Base64 offsets",
             "To Base85",
             "From Base85",
+            "To Base94",
+            "From Base94",
             "To Base",
             "From Base",
             "To BCD",
