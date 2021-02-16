@@ -43,15 +43,16 @@ class JSONToCSV extends Operation {
     /**
      * Converts JSON to a CSV equivalent.
      *
+     * @param {boolean} force - Whether to force conversion of data to fit in a cell
      * @returns {string}
      */
-    toCSV() {
+    toCSV(force=false) {
         const self = this;
         // If the JSON is an array of arrays, this is easy
         if (this.flattened[0] instanceof Array) {
             return this.flattened
                 .map(row => row
-                    .map(self.escapeCellContents.bind(self))
+                    .map(d => self.escapeCellContents(d, force))
                     .join(this.cellDelim)
                 )
                 .join(this.rowDelim) +
@@ -61,13 +62,13 @@ class JSONToCSV extends Operation {
         // If it's an array of dictionaries...
         const header = Object.keys(this.flattened[0]);
         return header
-            .map(self.escapeCellContents.bind(self))
+            .map(d => self.escapeCellContents(d, force))
             .join(this.cellDelim) +
             this.rowDelim +
             this.flattened
                 .map(row => header
                     .map(h => row[h])
-                    .map(self.escapeCellContents.bind(self))
+                    .map(d => self.escapeCellContents(d, force))
                     .join(this.cellDelim)
                 )
                 .join(this.rowDelim) +
@@ -98,7 +99,7 @@ class JSONToCSV extends Operation {
                 if (!(this.flattened instanceof Array)) {
                     this.flattened = [this.flattened];
                 }
-                return this.toCSV();
+                return this.toCSV(true);
             } catch (err) {
                 throw new OperationError("Unable to parse JSON to CSV: " + err.toString());
             }
@@ -109,11 +110,12 @@ class JSONToCSV extends Operation {
      * Correctly escapes a cell's contents based on the cell and row delimiters.
      *
      * @param {string} data
+     * @param {boolean} force - Whether to force conversion of data to fit in a cell
      * @returns {string}
      */
-    escapeCellContents(data) {
+    escapeCellContents(data, force=false) {
         if (typeof data === "number") data = data.toString();
-        if (typeof data !== "string") data = JSON.stringify(data);
+        if (force && typeof data !== "string") data = JSON.stringify(data);
 
         // Double quotes should be doubled up
         data = data.replace(/"/g, '""');
