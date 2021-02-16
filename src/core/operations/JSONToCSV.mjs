@@ -113,11 +113,12 @@ class JSONToCSV extends Operation {
      */
     escapeCellContents(data) {
         if (typeof data === "number") data = data.toString();
+        if (typeof data !== "string") data = JSON.stringify(data);
 
         // Double quotes should be doubled up
         data = data.replace(/"/g, '""');
 
-        // If the cell contains a cell or row delimiter or a double quote, it mut be enclosed in double quotes
+        // If the cell contains a cell or row delimiter or a double quote, it must be enclosed in double quotes
         if (
             data.indexOf(this.cellDelim) >= 0 ||
             data.indexOf(this.rowDelim) >= 0 ||
