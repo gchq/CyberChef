@@ -725,7 +725,7 @@ class App {
         this.progress = 0;
         this.autoBake();
 
-        this.updateTitle(false, null, true);
+        this.updateTitle(true, null, true);
     }
 
 
