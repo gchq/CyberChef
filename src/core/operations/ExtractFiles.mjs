@@ -21,9 +21,24 @@ class ExtractFiles extends Operation {
     constructor() {
         super();
 
+        // Get the first extension for each signature that can be extracted
+        let supportedExts = Object.keys(FILE_SIGNATURES).map(cat => {
+            return FILE_SIGNATURES[cat]
+                .filter(sig => sig.extractor)
+                .map(sig => sig.extension.toUpperCase());
+        });
+
+        // Flatten categories and remove duplicates
+        supportedExts = [].concat(...supportedExts).unique();
+
         this.name = "Extract Files";
         this.module = "Default";
-        this.description = "Performs file carving to attempt to extract files from the input.<br><br>This operation is currently capable of carving out the following formats:<ul><li>JPG</li><li>EXE</li><li>ZIP</li><li>PDF</li><li>PNG</li><li>BMP</li><li>FLV</li><li>RTF</li><li>DOCX, PPTX, XLSX</li><li>EPUB</li><li>GZIP</li><li>ZLIB</li><li>ELF, BIN, AXF, O, PRX, SO</li></ul>";
+        this.description = `Performs file carving to attempt to extract files from the input.<br><br>This operation is currently capable of carving out the following formats:
+            <ul>
+                <li>
+                ${supportedExts.join("</li><li>")}
+                </li>
+            </ul>`;
         this.infoURL = "https://forensicswiki.xyz/wiki/index.php?title=File_Carving";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
