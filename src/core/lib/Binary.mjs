@@ -7,6 +7,7 @@
  */
 
 import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 
 /**
@@ -58,6 +59,9 @@ export function toBinary(data, delim="Space", padding=8) {
  * fromBinary("00010000:00100000:00110000", "Colon");
  */
 export function fromBinary(data, delim="Space", byteLen=8) {
+    if (byteLen < 1 || Math.round(byteLen) !== byteLen)
+        throw new OperationError("Byte length must be a positive integer");
+
     const delimRegex = Utils.regexRep(delim);
     data = data.replace(delimRegex, "");
 

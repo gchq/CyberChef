@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * To Hexdump operation
@@ -28,7 +29,8 @@ class ToHexdump extends Operation {
             {
                 "name": "Width",
                 "type": "number",
-                "value": 16
+                "value": 16,
+                "min": 1
             },
             {
                 "name": "Upper case hex",
@@ -57,6 +59,9 @@ class ToHexdump extends Operation {
         const data = new Uint8Array(input);
         const [length, upperCase, includeFinalLength, unixFormat] = args;
         const padding = 2;
+
+        if (length < 1 || Math.round(length) !== length)
+            throw new OperationError("Width must be a positive integer");
 
         let output = "";
         for (let i = 0; i < data.length; i += length) {
