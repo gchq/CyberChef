@@ -42,7 +42,7 @@ class TripleDESDecrypt extends Operation {
             {
                 "name": "Mode",
                 "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "ECB"]
+                "value": ["CBC", "CFB", "OFB", "CTR", "ECB", "CBC/NoPadding", "ECB/NoPadding"]
             },
             {
                 "name": "Input",
@@ -65,7 +65,7 @@ class TripleDESDecrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            mode = args[2],
+            mode = args[2].substring(0, 3),
             inputType = args[3],
             outputType = args[4];
 
@@ -85,6 +85,12 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("3DES-" + mode, key);
+        /* Allow for a "no padding" mode */
+        if (args[2].endsWith("NoPadding")) {
+            decipher.mode.unpad = function(output, options) {
+                return true;
+            };
+        }
         decipher.start({iv: iv});
         decipher.update(forge.util.createBuffer(input));
         const result = decipher.finish();

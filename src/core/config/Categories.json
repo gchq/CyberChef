@@ -83,6 +83,8 @@
             "ROT47",
             "XOR",
             "XOR Brute Force",
+            "SM4 Encrypt",
+            "SM4 Decrypt",
             "Vigenère Encode",
             "Vigenère Decode",
             "To Morse Code",
