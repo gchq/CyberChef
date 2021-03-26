@@ -1,8 +1,7 @@
 /**
- * From Hex Tests.
+ * CBOR Decode Tests
  *
  * @author Danh4 [dan.h4@ncsc.gov.uk]
- *
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
