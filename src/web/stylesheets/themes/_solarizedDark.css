@@ -104,6 +104,7 @@
     --disable-icon-selected-colour: var(--sol-red);
     --breakpoint-icon-colour: var(--base00);
     --breakpoint-icon-selected-colour: var(--sol-red);
+    --remove-icon-colour: var(--base00);
 
     /* Buttons */
     --btn-default-font-colour: var(--base0);

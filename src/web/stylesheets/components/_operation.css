@@ -252,6 +252,10 @@ div.toggle-string {
     color: var(--breakpoint-icon-selected-colour);
 }
 
+.remove-icon {
+    color: var(--remove-icon-colour);
+}
+
 .break {
     color: var(--breakpoint-font-colour) !important;
     background-color: var(--breakpoint-bg-colour) !important;
