@@ -85,6 +85,7 @@ class HTMLOperation {
         <div class="recip-icons">
             <i class="material-icons breakpoint" title="Set breakpoint" break="false">pause</i>
             <i class="material-icons disable-icon" title="Disable operation" disabled="false">not_interested</i>
+            <i class="material-icons hide-args-icon" title="Hide arguments" hide-args="false">keyboard_arrow_up</i>
         </div>
         <div class="clearfix">&nbsp;</div>`;
 
