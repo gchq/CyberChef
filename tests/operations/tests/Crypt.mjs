@@ -1948,4 +1948,38 @@ DES uses a key length of 8 bytes (64 bits).`,
             }
         ],
     },
+    {
+        name: "Blowfish Encrypt with variable key length: CBC, ASCII, 4 bytes",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "823f337a53ecf121aa9ec1b111bd5064d1d7586abbdaaa0c8fd0c6cc43c831c88bf088ee3e07287e3f36cf2e45f9c7e6",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt with variable key length: CBC, ASCII, 42 bytes",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "19f5a68145b34321cfba72226b0f33922ce44dd6e7869fe328db64faae156471216f12ed2a37fd0bdd7cebf867b3cff0",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdead"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    }
 ]);
