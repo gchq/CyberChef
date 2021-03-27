@@ -15,6 +15,12 @@
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
     margin: 0;
+    flex-wrap: nowrap;
+}
+
+#banner div {
+    flex-basis: auto;
+    overflow: hidden;
 }
 
 #banner i {

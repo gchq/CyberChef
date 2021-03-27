@@ -41,6 +41,7 @@ class App {
         this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
+        this.embed         = false;
     }
 
 
@@ -454,6 +455,7 @@ class App {
      * If recipe is present, replaces the current recipe with the recipe provided in the URI.
      * If input is present, decodes and sets the input to the one provided in the URI.
      * If theme is present, uses the theme.
+     * If embed mode is set, hides UI elements to increase space.
      *
      * @fires Manager#statechange
      */
@@ -495,6 +497,17 @@ class App {
         // Read in theme from URI params
         if (this.uriParams.theme) {
             this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
+        }
+
+        if (this.uriParams.embed) {
+            this.embed = true;
+            this.columnSplitter.destroy();
+            document.getElementById("operations").style.display = "none";
+            document.getElementById("recipe").style.display = "none";
+            document.getElementById("IO").style.width = "100%";
+
+            document.getElementById("options").style.display = "none";
+            document.getElementById("edit").style.display = "inline";
         }
 
         this.autoBakePause = false;
@@ -579,7 +592,9 @@ class App {
      * Resets the splitter positions to default.
      */
     resetLayout() {
-        this.columnSplitter.setSizes([20, 30, 50]);
+        if (!this.embed) {
+            this.columnSplitter.setSizes([20, 30, 50]);
+        }
         this.ioSplitter.setSizes([50, 50]);
         this.manager.recipe.adjustWidth();
         this.manager.input.calcMaxTabs();
