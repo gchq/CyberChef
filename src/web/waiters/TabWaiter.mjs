@@ -423,6 +423,22 @@ class TabWaiter {
         this.updateTabProgress(inputNum, progress, total, "output");
     }
 
+
+    /**
+     * Merge selected inputs into a single input
+     * @param {Array[number]} inputNums - list of input indices to merge
+     * @param {string} inputDelimeter - character to delimit the input merge
+     * @param {boolean} keepInputs - whether to persist inputs used in merge
+     */
+    async mergeTabs(inputNums, inputDelimeter, keepOld) {
+        if (inputNums.length <= 1) {
+            throw new Error("Cannot merge a single tab.");
+        }
+        const allInputData = await Promise.all(inputNums.map(this.manager.input.getInputValue));
+        
+
+    }
+
 }
 
 export default TabWaiter;
