@@ -1323,6 +1323,7 @@ class OutputWaiter {
     inputSwitch(switchData) {
         this.switchOrigData = switchData;
         document.getElementById("undo-switch").disabled = false;
+        this.manager.highlighter.removeHighlights();
 
         this.resetSwitchButton();
 
