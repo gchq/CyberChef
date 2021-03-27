@@ -25,7 +25,13 @@ class ProtobufDecode extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/Protocol_Buffers";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
-        this.args = [];
+        this.args = [
+            {
+                "name": "Decode non-varints as floats",
+                "type": "boolean",
+                "value": false
+            }
+        ];
     }
 
     /**
@@ -36,7 +42,7 @@ class ProtobufDecode extends Operation {
     run(input, args) {
         input = new Uint8Array(input);
         try {
-            return Protobuf.decode(input);
+            return Protobuf.decode(input, args[0]);
         } catch (err) {
             throw new OperationError(err);
         }
