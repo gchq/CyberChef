@@ -93,40 +93,63 @@ export default class Stream {
     /**
      * Reads a number of bits from the buffer.
      *
-     * @TODO Add endianness
-     *
      * @param {number} numBits
+     * @param {bool} [leftMostBitFirst=false]
      * @returns {number}
      */
-    readBits(numBits) {
+    readBits(numBits, leftMostBitFirst=false) {
         if (this.position > this.length) return undefined;
 
         let bitBuf = 0,
             bitBufLen = 0;
 
-        // Add remaining bits from current byte
-        bitBuf = (this.bytes[this.position++] & bitMask(this.bitPos)) >>> this.bitPos;
-        bitBufLen = 8 - this.bitPos;
-        this.bitPos = 0;
+        if (leftMostBitFirst) {
+            // Add remaining bits from current byte
+            const mask = ((1 << (8 - this.bitPos)) -1);
+            bitBuf = this.bytes[this.position++] & mask;
+            bitBufLen = 8 - this.bitPos;
+            this.bitPos = 0;
 
-        // Not enough bits yet
-        while (bitBufLen < numBits) {
-            bitBuf |= this.bytes[this.position++] << bitBufLen;
-            bitBufLen += 8;
-        }
+            // Not enough bits yet
+            while (bitBufLen < numBits) {
+                bitBuf = (bitBuf << 8) | this.bytes[this.position++];
+                bitBufLen += 8;
+            }
 
-        // Reverse back to numBits
-        if (bitBufLen > numBits) {
+            // Reverse back to numBits
             const excess = bitBufLen - numBits;
-            bitBuf &= (1 << numBits) - 1;
+            bitBuf = bitBuf >> excess;
             bitBufLen -= excess;
             this.position--;
             this.bitPos = 8 - excess;
+
+            return bitBuf;
+
+        } else {
+
+        // Add remaining bits from current byte
+            bitBuf = (this.bytes[this.position++] & bitMask(this.bitPos)) >>> this.bitPos;
+            bitBufLen = 8 - this.bitPos;
+            this.bitPos = 0;
+
+        // Not enough bits yet
+            while (bitBufLen < numBits) {
+                bitBuf |= this.bytes[this.position++] << bitBufLen;
+                bitBufLen += 8;
+            }
+
+        // Reverse back to numBits
+            if (bitBufLen > numBits) {
+                const excess = bitBufLen - numBits;
+                bitBuf &= (1 << numBits) - 1;
+                bitBufLen -= excess;
+                this.position--;
+                this.bitPos = 8 - excess;
+            }
+
+            return bitBuf;
         }
-
-        return bitBuf;
-
-        /**
+             /**
          * Calculates the bit mask based on the current bit position.
          *
          * @param {number} bitPos
