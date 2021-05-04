@@ -4054,7 +4054,7 @@ function DecodeImmediate( type, BySize, SizeSetting )
     
     //Sign bit adjust.
     
-    if( V32 >= ( n >> 1 ) ) { V32 -= n; }
+    if( V32 >= ( n / 2 ) ) { V32 -= n; }
     
     //Add position.
     
