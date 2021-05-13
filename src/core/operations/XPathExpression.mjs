@@ -52,12 +52,6 @@ class XPathExpression extends Operation {
         try {
             doc = new xmldom.DOMParser({
                 errorHandler: {
-                    warning(w) {
-                        throw w;
-                    },
-                    error(e) {
-                        throw e;
-                    },
                     fatalError(e) {
                         throw e;
                     }
