@@ -52,10 +52,10 @@ class MultiTapCipherEncode extends Operation {
           if(emap[plaintext.charAt(i)] == undefined)
             throw new OperationError("The input must be only alphabets");
           ciphertext += emap[plaintext.charAt(i)];
-          if(i!=plaintext.length)
+          if(i!=plaintext.length-1)
               ciphertext += delim;
       }
-      return ciphertext.substring(0,ciphertext.length-1);
+      return ciphertext.substring(0,ciphertext.length);
     }
 }
 
