@@ -6,6 +6,7 @@
 
 import Utils from "../Utils.mjs";
 import Operation from "../Operation.mjs";
+import { getMultiTapMap } from "../lib/Ciphers.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -30,6 +31,11 @@ class MultiTapCipherDecode extends Operation {
                 name: "Delimiter",
                 type: "option",
                 value: ["Hyphen","Space", "Comma", "Semi-colon", "Colon", "Line feed"]
+            },
+            {
+              name : "Representation of Space",
+              type: "option",
+              value: ["Hash","Period","Percent","Ampersand"]
             }
         ];
     }
@@ -43,13 +49,14 @@ class MultiTapCipherDecode extends Operation {
         if(input.length == 0)
           return "";
         const delim = Utils.charRep(args[0] || "Hyphen");
-        var emap = {"2":"A","22":"B","222":"C","3":"D","33":"E","333":"F","4":"G","44":"H","444":"I","5":"J","55":"K","555":"L","6":"M","66":"N","666":"O","7":"P","77":"Q","777":"R","7777":"S","8":"T","88":"U","888":"V","9":"W","99":"X","999":"Y","9999":"Z"," ":" "}
+        const space_delim = Utils.charRep(args[1] || "Hash");
+        var dmap = getMultiTapMap(2,space_delim);
         var enc_list = input.split(delim);
         var plaintext = "";
         for(let i=0;i<enc_list.length;i++){
-            if(emap[enc_list[i]] == undefined)
+            if(dmap[enc_list[i]] == undefined)
                 throw new OperationError("Invalid Input\nThe numbers must range from 2-9 and must be separated by the delimiter chosen");
-            plaintext += emap[enc_list[i]];
+            plaintext += dmap[enc_list[i]];
         }
         return plaintext;
     }
