@@ -55,7 +55,7 @@ class MultiTapCipherEncode extends Operation {
           if(i!=plaintext.length-1)
               ciphertext += delim;
       }
-      return ciphertext.substring(0,ciphertext.length);
+      return ciphertext;
     }
 }
 
