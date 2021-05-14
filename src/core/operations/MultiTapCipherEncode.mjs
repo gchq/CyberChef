@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import { getMultiTapMap } from "../lib/Ciphers.mjs";
 import OperationError from "../errors/OperationError.mjs";
 /**
  * Multi Tap Cipher Encode operation
@@ -29,6 +30,11 @@ class MultiTapCipherEncode extends Operation {
                 name: "Delimiter",
                 type: "option",
                 value: ["Hyphen","Space", "Comma", "Semi-colon", "Colon", "Line feed"]
+            },
+            {
+              name : "Representation of Space",
+              type: "option",
+              value: ["Hash","Period","Percent","Ampersand"]
             }
         ];
     }
@@ -40,13 +46,9 @@ class MultiTapCipherEncode extends Operation {
      */
     run(input, args) {
       const delim = Utils.charRep(args[0] || "Hyphen");
-      var emap = {"A" :"2","B":"22","C":"222","D":"3","E":"33","F":"333","G":"4","H":"44","I":"444","J":"5","K":"55","L":"555","M":"6","N":"66","O":"666","P":"7","Q":"77","R":"777","S":"7777","T":"8","U":"88","V":"888","W":"9","X":"99","Y":"999","Z":"9999"," ":" "};
-      input = input.toUpperCase();
-      var plaintext = "";
-      for(let i= 0;i<input.length;i++){
-          if(input.charAt(i) != ' ')
-              plaintext += input.charAt(i);
-      }
+      const space_delim = Utils.charRep(args[1] || "Hash");
+      var emap = getMultiTapMap(1,space_delim);
+      var plaintext = input.toUpperCase();
       var ciphertext = "";
       for(let i=0;i<plaintext.length;++i){
           if(emap[plaintext.charAt(i)] == undefined)
