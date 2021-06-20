@@ -22,6 +22,16 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
+## Running in Docker
+
+If you would like to run the app locally in docker please follow the steps below:
+
+```
+git clone https://github.com/gchq/CyberChef.git
+cd CyberChef
+docker build --tag cyberchef .
+docker run --rm --name cyberchef -it -p 8080:8080 cyberchef
+```
 
 ## How it works
 
