@@ -193,6 +193,7 @@
             "Protobuf Decode",
             "VarInt Encode",
             "VarInt Decode",
+            "TLS JA3 Fingerprint",
             "Format MAC addresses",
             "Change IP format",
             "Group IP addresses",

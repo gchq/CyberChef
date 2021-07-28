@@ -104,6 +104,7 @@ import "./tests/Unicode.mjs";
 import "./tests/RSA.mjs";
 import "./tests/CBOREncode.mjs";
 import "./tests/CBORDecode.mjs";
+import "./tests/TLSJA3Fingerprint.mjs";
 
 
 // Cannot test operations that use the File type yet
