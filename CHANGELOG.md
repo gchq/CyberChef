@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.29.0] - 2021-07-28
+- 'TLS JA3 Fingerprint' operation added [@n1474335] | [9a33498]
+
 ### [9.28.0] - 2021-03-26
 - 'CBOR Encode' and 'CBOR Decode' operations added [@Danh4] | [#999]
 
@@ -259,6 +262,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.29.0]: https://github.com/gchq/CyberChef/releases/tag/v9.29.0
 [9.28.0]: https://github.com/gchq/CyberChef/releases/tag/v9.28.0
 [9.27.0]: https://github.com/gchq/CyberChef/releases/tag/v9.27.0
 [9.26.0]: https://github.com/gchq/CyberChef/releases/tag/v9.26.0
@@ -370,6 +374,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@Danh4]: https://github.com/Danh4
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
+[9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
