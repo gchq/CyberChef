@@ -18,17 +18,17 @@ import Stream from "../lib/Stream.mjs";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
- * TLS JA3 Fingerprint operation
+ * JA3 Fingerprint operation
  */
-class TLSJA3Fingerprint extends Operation {
+class JA3Fingerprint extends Operation {
 
     /**
-     * TLSJA3Fingerprint constructor
+     * JA3Fingerprint constructor
      */
     constructor() {
         super();
 
-        this.name = "TLS JA3 Fingerprint";
+        this.name = "JA3 Fingerprint";
         this.module = "Crypto";
         this.description = "Generates a JA3 fingerprint to help identify TLS clients based on hashing together values from the Client Hello.<br><br>Input: A hex stream of the TLS Client Hello application layer.";
         this.infoURL = "https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967";
@@ -202,4 +202,4 @@ const GREASE_CIPHERSUITES = [
     0xfafa
 ];
 
-export default TLSJA3Fingerprint;
+export default JA3Fingerprint;
