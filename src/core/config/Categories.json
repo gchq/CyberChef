@@ -195,6 +195,8 @@
             "VarInt Decode",
             "JA3 Fingerprint",
             "JA3S Fingerprint",
+            "HASSH Client Fingerprint",
+            "HASSH Server Fingerprint",
             "Format MAC addresses",
             "Change IP format",
             "Group IP addresses",

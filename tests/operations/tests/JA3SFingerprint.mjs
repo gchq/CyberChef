@@ -41,15 +41,17 @@ TestRegister.addTests([
             }
         ],
     },
-    {
-        name: "JA3S Fingerprint: TLS 1.3",
-        input: "16030100520200004e7f123ef1609fd3f4fa8668aac5822d500fb0639b22671d0fb7258597355795511bf61301002800280024001d0020ae0e282a3b7a463e71064ecbaf671586e979b0edbebf7a4735c31678c70f660c",
-        expectedOutput: "986ae432c402479fe7a0c6fbe02164c1",
-        recipeConfig: [
-            {
-                "op": "JA3S Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
-        ],
-    },
+    // This Server Hello was based on draft 18 of the TLS1.3 spec which does not include a Session ID field, leading it to fail.
+    // The published version of TLS1.3 does require a legacy Session ID field (even if it is empty).
+    // {
+    //     name: "JA3S Fingerprint: TLS 1.3",
+    //     input: "16030100520200004e7f123ef1609fd3f4fa8668aac5822d500fb0639b22671d0fb7258597355795511bf61301002800280024001d0020ae0e282a3b7a463e71064ecbaf671586e979b0edbebf7a4735c31678c70f660c",
+    //     expectedOutput: "986ae432c402479fe7a0c6fbe02164c1",
+    //     recipeConfig: [
+    //         {
+    //             "op": "JA3S Fingerprint",
+    //             "args": ["Hex", "Hash digest"]
+    //         }
+    //     ],
+    // },
 ]);
