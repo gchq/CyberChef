@@ -8,7 +8,7 @@
       "launch_url": "http://localhost:8080",
       "webdriver": {
         "start_process": true,
-        "server_path": "./node_modules/chromedriver/lib/chromedriver/chromedriver",
+        "server_path": "./node_modules/.bin/chromedriver",
         "port": 9515,
         "log_path": false
       },

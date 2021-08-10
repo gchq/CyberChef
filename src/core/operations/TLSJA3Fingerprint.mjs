@@ -2,6 +2,13 @@
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2021
  * @license Apache-2.0
+ *
+ * JA3 created by Salesforce
+ *   John B. Althouse
+ *   Jeff Atkinson
+ *   Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
  */
 
 import Operation from "../Operation.mjs";
