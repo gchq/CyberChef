@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.32.0] - 2021-08-18
+- 'Protobuf Encode' operation added and decode operation modified to allow decoding with full and partial schemas [@n1474335] | [dd18e52]
+
 ### [9.31.0] - 2021-08-10
 - 'HASSH Client Fingerprint' and 'HASSH Server Fingerprint' operations added [@n1474335] | [e9ca4dc]
 
@@ -268,6 +271,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.32.0]: https://github.com/gchq/CyberChef/releases/tag/v9.32.0
 [9.31.0]: https://github.com/gchq/CyberChef/releases/tag/v9.31.0
 [9.30.0]: https://github.com/gchq/CyberChef/releases/tag/v9.30.0
 [9.29.0]: https://github.com/gchq/CyberChef/releases/tag/v9.29.0
@@ -385,6 +389,7 @@ All major and minor version changes will be documented in this file. Details of 
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
 [289a417]: https://github.com/gchq/CyberChef/commit/289a417dfb5923de5e1694354ec42a08d9395bfe
 [e9ca4dc]: https://github.com/gchq/CyberChef/commit/e9ca4dc9caf98f33fd986431cd400c88082a42b8
+[dd18e52]: https://github.com/gchq/CyberChef/commit/dd18e529939078b89867297b181a584e8b2cc7da
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
