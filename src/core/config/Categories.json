@@ -191,6 +191,7 @@
             "URL Encode",
             "URL Decode",
             "Protobuf Decode",
+            "Protobuf Encode",
             "VarInt Encode",
             "VarInt Decode",
             "JA3 Fingerprint",

@@ -146,6 +146,7 @@
     "path": "^0.12.7",
     "popper.js": "^1.16.1",
     "process": "^0.11.10",
+    "protobufjs": "^6.11.2",
     "qr-image": "^3.2.0",
     "scryptsy": "^2.1.0",
     "snackbarjs": "^1.1.0",
