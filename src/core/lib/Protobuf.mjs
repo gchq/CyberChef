@@ -141,7 +141,7 @@ class Protobuf {
         const messageNames = [];
         const fieldTypes = [];
         this.parsedProto.root.nestedArray.forEach(block => {
-            if (block.constructor.name === "Type") {
+            if (block instanceof protobuf.Type) {
                 messageNames.push(block.name);
                 this.parsedProto.root.nested[block.name].fieldsArray.forEach(field => {
                     fieldTypes.push(field.type);
@@ -152,12 +152,12 @@ class Protobuf {
         if (messageNames.length === 0) {
             this.mainMessageName = null;
         } else {
-            for (const name of messageNames) {
-                if (!fieldTypes.includes(name)) {
-                    this.mainMessageName = name;
-                    break;
-                }
-            }
+            // for (const name of messageNames) {
+            //     if (!fieldTypes.includes(name)) {
+            //         this.mainMessageName = name;
+            //         break;
+            //     }
+            // }
             this.mainMessageName = messageNames[0];
         }
     }
@@ -213,7 +213,7 @@ class Protobuf {
      */
     static appendTypesToFieldNames(schemaRoot) {
         for (const block of schemaRoot.nestedArray) {
-            if (block.constructor.name === "Type") {
+            if (block instanceof protobuf.Type) {
                 for (const [fieldName, fieldData] of Object.entries(block.fields)) {
                     schemaRoot.nested[block.name].remove(block.fields[fieldName]);
                     schemaRoot.nested[block.name].add(new protobuf.Field(`${fieldName} (${fieldData.type})`, fieldData.id, fieldData.type, fieldData.rule));
@@ -306,7 +306,7 @@ class Protobuf {
                 }
 
                 // Check for submessage fields
-                if (schemaField.resolvedType !== null && schemaField.resolvedType.constructor.name === "Type") {
+                if (schemaField.resolvedType instanceof protobuf.Type) {
                     const subMessageType = schemaMessage.fields[schemaFieldName].type;
                     const schemaSubMessage = this.parsedProto.root.nested[subMessageType];
                     const rawSubMessages = rawDecodedMessage[fieldName];
