@@ -20,6 +20,7 @@ import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/BCD.mjs";
 import "./tests/BSON.mjs";
 import "./tests/BaconCipher.mjs";
+import "./tests/Base45.mjs";
 import "./tests/Base58.mjs";
 import "./tests/Base64.mjs";
 import "./tests/Base62.mjs";
