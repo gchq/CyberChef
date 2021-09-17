@@ -349,15 +349,15 @@ module.exports = function (grunt) {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
+                command: "node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
                 sync: true
             },
             generateConfig: {
                 command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
-                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
+                    "node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
+                    "node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
                     "echo '--- Config scripts finished. ---\n'"
                 ]),
                 sync: true
@@ -365,7 +365,7 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: chainCommands([
                     "echo '\n--- Regenerating node index ---'",
-                    "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
+                    "node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
                     "echo '--- Node index generated. ---\n'"
                 ]),
                 sync: true
@@ -400,14 +400,14 @@ module.exports = function (grunt) {
             testESMNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules esm-consumer.mjs",
+                    "node --no-warnings --experimental-modules --experimental-json-modules esm-consumer.mjs",
                 ]),
                 stdout: false,
             },
             testESMDeepImportNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules esm-deep-import-consumer.mjs",
+                    "node --no-warnings --experimental-modules --experimental-json-modules esm-deep-import-consumer.mjs",
                 ]),
                 stdout: false,
             },
