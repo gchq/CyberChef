@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import {ALPHABET, highlightToBase45, highlightFromBase45} from "../lib/Base45.mjs";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
@@ -26,6 +27,9 @@ class FromBase45 extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
         this.inputType = "string";
         this.outputType = "byteArray";
+
+        this.highlight = highlightFromBase45;
+        this.highlightReverse = highlightToBase45;
     }
 
     /**
@@ -34,7 +38,6 @@ class FromBase45 extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const alphabet = Utils.expandAlphRange("0-9A-Z $%*+-./:").join("");
         if (!input) return [];
 
         const res = [];
@@ -43,7 +46,7 @@ class FromBase45 extends Operation {
             triple.reverse();
             let b = 0;
             for (const c of triple) {
-                const idx = alphabet.indexOf(c);
+                const idx = ALPHABET.indexOf(c);
                 if (idx === -1) {
                     throw new OperationError(`Character not in alphabet: '${c}'`);
                 }

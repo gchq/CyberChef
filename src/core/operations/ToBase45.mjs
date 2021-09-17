@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import {ALPHABET, highlightToBase45, highlightFromBase45} from "../lib/Base45.mjs";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
@@ -31,6 +32,9 @@ class ToBase45 extends Operation {
                 value: "0-9A-Za-z"
             }
         ];
+
+        this.highlight = highlightToBase45;
+        this.highlightReverse = highlightFromBase45;
     }
 
     /**
@@ -39,7 +43,6 @@ class ToBase45 extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const alphabet = Utils.expandAlphRange("0-9A-Z $%*+-./:").join("");
         input = new Uint8Array(input);
         if (!input) return "";
 
@@ -54,7 +57,7 @@ class ToBase45 extends Operation {
 
             let chars = 0;
             do {
-                res.push(alphabet[b % 45]);
+                res.push(ALPHABET[b % 45]);
                 chars++;
                 b = Math.floor(b / 45);
             } while (b > 0);
