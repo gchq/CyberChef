@@ -80,4 +80,15 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Remove Diacritics: polish letter ł",
+        input: "zażółć gęślą jaźń ZAŻÓŁĆ GĘŚLĄ JAŹŃ",
+        expectedOutput: "zazolc gesla jazn ZAZOLC GESLA JAZN",
+        recipeConfig: [
+            {
+                "op": "Remove Diacritics",
+                "args": []
+            },
+        ],
+    },
 ]);
