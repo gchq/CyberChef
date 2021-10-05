@@ -38,7 +38,7 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "Multiply by value",
+        name: "Divide by value",
         input: "10",
         expectedOutput: "5",
         recipeConfig: [

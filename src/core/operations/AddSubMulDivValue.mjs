@@ -6,8 +6,11 @@
 import BigNumber from "bignumber.js";
 import Operation from "../Operation.mjs";
 import { sum, sub, multi, div, createNumArrayFromTwoStrings } from "../lib/Arithmetic.mjs";
-import { ARITMETIC_OPTIONS } from "../lib/Delim.mjs";
 
+/**
+ * Math operations
+ */
+const ARITMETIC_OPTIONS = ["Add", "Subtract", "Multiply", "Divide"];
 
 /**
  * Sum operation
