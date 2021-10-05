@@ -171,7 +171,8 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
-            "ROT13"
+            "ROT13",
+            "Add/Subtract/Multiply/Divide by value"
         ]
     },
     {

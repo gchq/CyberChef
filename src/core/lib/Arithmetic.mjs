@@ -35,6 +35,31 @@ export function createNumArray(input, delim) {
     return numbers;
 }
 
+/**
+ * Converts two strings to a number array.
+ *
+ * @param {string} input
+ * @param {string} userValue
+ * @returns {BigNumber[]}
+ */
+export function createNumArrayFromTwoStrings(input, userValue) {
+    const numbers = [];
+    let num;
+    try {
+        num = BigNumber(input.trim());
+        if (!num.isNaN()) {
+            numbers.push(num);
+        }
+        num = BigNumber(userValue.trim());
+        if (!num.isNaN()) {
+            numbers.push(num);
+        }
+    } catch (err) {
+        // This line is not a valid number
+    }
+    return numbers;
+}
+
 
 /**
  * Adds an array of numbers and returns the value.
