@@ -344,6 +344,7 @@
             "CTPH",
             "Compare SSDEEP hashes",
             "Compare CTPH hashes",
+            "Dahua",
             "HMAC",
             "Bcrypt",
             "Bcrypt compare",
