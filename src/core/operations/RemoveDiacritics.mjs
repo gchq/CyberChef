@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import latinize from "latinize";
 
 /**
  * Remove Diacritics operation
@@ -33,7 +34,7 @@ class RemoveDiacritics extends Operation {
      */
     run(input, args) {
         // reference: https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript/37511463
-        return input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return latinize(input.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
     }
 
 }

@@ -128,6 +128,7 @@
     "jsqr": "^1.4.0",
     "jsrsasign": "^10.4.0",
     "kbpgp": "2.1.15",
+    "latinize": "0.5.0",
     "libbzip2-wasm": "0.0.4",
     "libyara-wasm": "^1.1.0",
     "lodash": "^4.17.21",
