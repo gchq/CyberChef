@@ -179,6 +179,7 @@
             "RSA Verify",
             "RSA Encrypt",
             "RSA Decrypt",
+            "Generate ECDSA Key Pair",
             "Parse SSH Host Key",
             "Parse CSR"
         ]
