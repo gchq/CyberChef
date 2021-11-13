@@ -180,6 +180,9 @@
             "RSA Encrypt",
             "RSA Decrypt",
             "Generate ECDSA Key Pair",
+            "ECDSA Signature Conversion",
+            "ECDSA Sign",
+            "ECDSA Verify",
             "Parse SSH Host Key",
             "Parse CSR"
         ]
