@@ -168,6 +168,8 @@
             "Hex to PEM",
             "Hex to Object Identifier",
             "Object Identifier to Hex",
+            "PEM to JWK",
+            "JWK to PEM",
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
