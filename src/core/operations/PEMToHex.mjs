@@ -28,6 +28,12 @@ class PEMToHex extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                "pattern": "----BEGIN ([A-Z][A-Z ]+[A-Z])-----",
+                "args": []
+            }
+        ];
     }
 
     /**
