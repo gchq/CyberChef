@@ -32,13 +32,11 @@ class BasicArithmetic extends Operation {
      */
     run(input, args) {
         if (parseInt(input, 10).toString().length === input.length) {
-            const val = parseInt(input, 10);
-            return val;
+            return parseInt(input, 10);
         } else if (input.match(/[+-]?([0-9.]+)/g)) {
             return (input.replace(/\s/g, "").match(/[+-]?([0-9.]+)/g) || [])
                 .reduce(function (sum, value) {
-                    const val = parseFloat(sum) + parseFloat(value);
-                    return val;
+                    return parseFloat(sum) + parseFloat(value);
                 });
         } else {
             return NaN;
