@@ -17,7 +17,7 @@ class BasicArithmetic extends Operation {
     constructor() {
         super();
 
-        this.name = "BasicArithmetic";
+        this.name = "Basic Arithmetic";
         this.module = "Default";
         this.description = "Evalutes Basic Arithmetic. <br><br>e.g. <code>1+2-1</code> becomes <code>2</code>";
         this.infoURL = "";

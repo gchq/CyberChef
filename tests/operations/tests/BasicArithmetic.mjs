@@ -11,7 +11,7 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        name: "BasicArithmetic: nothing",
+        name: "Basic Arithmetic: nothing",
         input: "",
         expectedOutput: "",
         recipeConfig: [
@@ -22,7 +22,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "BasicArithmetic: Addition",
+        name: "Basic Arithmetic: Addition",
         input: "1+2+3+4+5+6+7+8+9+0",
         expectedOutput: 45,
         recipeConfig: [
@@ -33,7 +33,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "BasicArithmetic: Subtraction",
+        name: "Basic Arithmetic: Subtraction",
         input: "100-9-8-7-6-5-4-3-2-1-0",
         expectedOutput: 55,
         recipeConfig: [
@@ -44,7 +44,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "BasicArithmetic: Add + Sub",
+        name: "Basic Arithmetic: Add + Sub",
         input: "1+2+3+4+5+6+7+8+9-9-8-7-6-5-4-3-2-1",
         expectedOutput: 0,
         recipeConfig: [
@@ -55,7 +55,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "BasicArithmetic: Large number",
+        name: "Basic Arithmetic: Large number",
         input: "999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999+999",
         expectedOutput: 22977,
         recipeConfig: [
