@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import BigNumber from "bignumber.js";
 import Operation from "../Operation.mjs";
 
 /**
@@ -32,19 +31,17 @@ class BasicArithmetic extends Operation {
      * @returns {number}
      */
     run(input, args) {
-        if (input.length >= 1) {
-            if (parseInt(input, 10).toString().length === input.length) {
-                const val = parseInt(input, 10);
-                return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
-            } else {
-                return (input.replace(/\s/g, "").match(/[+-]?([0-9.]+)/g) || [])
-                    .reduce(function (sum, value) {
-                        const val = parseFloat(sum) + parseFloat(value);
-                        return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
-                    });
-            }
+        if (parseInt(input, 10).toString().length === input.length) {
+            const val = parseInt(input, 10);
+            return val;
+        } else if (input.match(/[+-]?([0-9.]+)/g)) {
+            return (input.replace(/\s/g, "").match(/[+-]?([0-9.]+)/g) || [])
+                .reduce(function (sum, value) {
+                    const val = parseFloat(sum) + parseFloat(value);
+                    return val;
+                });
         } else {
-            return new BigNumber(NaN);
+            return NaN;
         }
     }
 
