@@ -16,7 +16,7 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "BasicArithmetic",
+                op: "Basic Arithmetic",
                 args: [],
             },
         ],
@@ -27,7 +27,7 @@ TestRegister.addTests([
         expectedOutput: 45,
         recipeConfig: [
             {
-                op: "BasicArithmetic",
+                op: "Basic Arithmetic",
                 args: [],
             },
         ],
@@ -38,7 +38,7 @@ TestRegister.addTests([
         expectedOutput: 55,
         recipeConfig: [
             {
-                op: "BasicArithmetic",
+                op: "Basic Arithmetic",
                 args: [],
             },
         ],
@@ -49,7 +49,7 @@ TestRegister.addTests([
         expectedOutput: 0,
         recipeConfig: [
             {
-                op: "BasicArithmetic",
+                op: "Basic Arithmetic",
                 args: [],
             },
         ],
@@ -60,7 +60,7 @@ TestRegister.addTests([
         expectedOutput: 22977,
         recipeConfig: [
             {
-                op: "BasicArithmetic",
+                op: "Basic Arithmetic",
                 args: [],
             },
         ],
