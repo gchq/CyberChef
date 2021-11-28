@@ -1,3 +1,3 @@
-    FROM nginx
+FROM nginx
 
-    COPY ./build/prod /usr/share/nginx/html
+COPY ./build/prod /usr/share/nginx/html
