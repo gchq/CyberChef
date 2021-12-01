@@ -18,15 +18,15 @@
             "From Binary",
             "To Octal",
             "From Octal",
+            "To Base64",
+            "From Base64",
+            "Show Base64 offsets",
             "To Base32",
             "From Base32",
             "To Base58",
             "From Base58",
             "To Base62",
             "From Base62",
-            "To Base64",
-            "From Base64",
-            "Show Base64 offsets",
             "To Base85",
             "From Base85",
             "To Base",
@@ -61,9 +61,7 @@
             "Parse TLV",
             "CSV to JSON",
             "JSON to CSV",
-            "Avro to JSON",
-            "CBOR Encode",
-            "CBOR Decode"
+            "Avro to JSON"
         ]
     },
     {
@@ -136,11 +134,6 @@
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
-            "Generate RSA Key Pair",
-            "RSA Sign",
-            "RSA Verify",
-            "RSA Encrypt",
-            "RSA Decrypt",
             "Parse SSH Host Key"
         ]
     },
@@ -191,13 +184,8 @@
             "URL Encode",
             "URL Decode",
             "Protobuf Decode",
-            "Protobuf Encode",
             "VarInt Encode",
             "VarInt Decode",
-            "JA3 Fingerprint",
-            "JA3S Fingerprint",
-            "HASSH Client Fingerprint",
-            "HASSH Server Fingerprint",
             "Format MAC addresses",
             "Change IP format",
             "Group IP addresses",
@@ -212,10 +200,8 @@
         "ops": [
             "Encode text",
             "Decode text",
-            "Unicode Text Format",
             "Remove Diacritics",
-            "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Unescape Unicode Characters"
         ]
     },
     {
@@ -245,7 +231,6 @@
             "Pad lines",
             "Find / Replace",
             "Regular expression",
-            "Fuzzy Match",
             "Offset checker",
             "Hamming Distance",
             "Convert distance",
@@ -256,7 +241,6 @@
             "Convert co-ordinate format",
             "Show on map",
             "Parse UNIX file permissions",
-            "Parse ObjectID timestamp",
             "Swap endianness",
             "Parse colour code",
             "Escape string",
@@ -272,10 +256,21 @@
             "Translate DateTime Format",
             "From UNIX Timestamp",
             "To UNIX Timestamp",
+            "From UNIX 32-bit Timestamp",
+            "To UNIX 32-bit Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
+	        "From Mac Absolute Timestamp",
+            "To Mac Absolute Timestamp",
+            "From HFS(+) Timestamp",
+            "To HFS(+) Timestamp",
+            "From Windows 64-bit Filetime Timestamp",
+            "To Windows 64-bit Filetime Timestamp",
+            "From Chrome Browser Timestamp",
+            "To Chrome Browser Timestamp",
+            "From Firefox Browser Timestamp",
+            "To Firefox Browser Timestamp",
             "Extract dates",
-            "Get Time",
             "Sleep"
         ]
     },
@@ -295,7 +290,6 @@
             "JPath expression",
             "CSS selector",
             "Extract EXIF",
-            "Extract ID3",
             "Extract Files"
         ]
     },
@@ -329,7 +323,6 @@
             "SHA1",
             "SHA2",
             "SHA3",
-            "SM3",
             "Keccak",
             "Shake",
             "RIPEMD",
@@ -414,7 +407,6 @@
         "ops": [
             "Render Image",
             "Play Media",
-            "Generate Image",
             "Optical Character Recognition",
             "Remove EXIF",
             "Extract EXIF",
