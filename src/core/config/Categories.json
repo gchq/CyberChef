@@ -63,7 +63,9 @@
             "JSON to CSV",
             "Avro to JSON",
             "CBOR Encode",
-            "CBOR Decode"
+            "CBOR Decode",
+            "YAML to JSON",
+            "JSON to YAML"
         ]
     },
     {
