@@ -20,7 +20,7 @@ class DNSOverHTTPS extends Operation {
         this.name = "DNS over HTTPS";
         this.module = "Default";
         this.description = [
-            "Takes one or more FQDN seperated by newlines and performs a DNS lookup using DNS over HTTPS.",
+            "Takes one or more FQDN(s) that are seperated by newlines, and performs a DNS lookup using DNS over HTTPS.",
             "<br><br>",
             "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
             "<br><br>",
@@ -101,11 +101,14 @@ class DNSOverHTTPS extends Operation {
                 if (justAnswer) {
                     if (data.Answer) {
                         return extractData(data.Answer);
-                    }
-                    else {
-                        let r = {};
-                        r[data.Question[0].name] = null;
-                        return r;
+                    } else {
+                        if(data.Question.length > 0){
+                            let r = {};
+                            r[data.Question[0].name] = null;
+                            return r;
+                        } else {
+                            return null;
+                        }
                     }
                 } else {
                     return data;
