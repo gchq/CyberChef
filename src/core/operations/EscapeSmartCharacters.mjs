@@ -127,14 +127,18 @@ class EscapeSmartCharacters extends Operation {
                     output = char;
                 }
             }
-            switch (outArg) {
-                case "Remove":
-                    break;
-                case "Replace with '.'":
-                    result += ".";
-                    break;
-                default: { // Escape & no change are the same
-                    result += output;
+            if (output == char) {
+                result += output;
+            } else {
+                switch (outArg) {
+                    case "Remove":
+                        break;
+                    case "Replace with '.'":
+                        result += ".";
+                        break;
+                    default: { // Escape & no change are the same
+                        result += output;
+                    }
                 }
             }
         }
