@@ -29,7 +29,7 @@ class EscapeSmartCharacters extends Operation {
         this.args = [
             /* Arguments. See the project wiki for full details.*/
             {
-                name: "Second arg",
+                name: "Output action",
                 type: "option",
                 value: ["Escape", "Remove", "Replace with '.'"]
             }

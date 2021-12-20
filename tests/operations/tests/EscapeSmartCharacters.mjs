@@ -18,5 +18,26 @@
             },
         ],
     },
+    {
+       name: "Escape Smart Characters - Remove",
+       input: "“”—‘’ →©…",
+       expectedOutput: " ",
+       recipeConfig: [
+           {
+               op: "Escape Smart Characters",
+               args: ["Remove"],
+           },
+       ],
+   },
+   {
+      name: "Escape Smart Characters - Replace",
+      input: "“”—‘’ →©…",
+      expectedOutput: "..... ...",
+      recipeConfig: [
+          {
+              op: "Escape Smart Characters",
+              args: ["Replace with '.'"],
+          },
+      ],
+  },
 ]);
-g
