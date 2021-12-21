@@ -16,13 +16,13 @@ import {
 } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
-import "./tests/nodeApi.mjs";
+/*import "./tests/nodeApi.mjs";
 import "./tests/operations.mjs";
 import "./tests/File.mjs";
 import "./tests/Dish.mjs";
 import "./tests/NodeDish.mjs";
 import "./tests/Utils.mjs";
-import "./tests/Categories.mjs";
+import "./tests/Categories.mjs";*/
 
 const testStatus = {
     allTestsPassing: true,
