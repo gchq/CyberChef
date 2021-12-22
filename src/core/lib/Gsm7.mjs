@@ -17,7 +17,7 @@ import OperationError from "../errors/OperationError.mjs";
  *  (Release 16)
  *  3GPP TS 23.038 V16.0.0 (2020-07)
  */
-const charsets = {
+let charsets = {
     // 6.2.1 GSM 7 bit Default Alphabet
     Default: `
         @  Δ SP  0  ¡  P  ¿  p
@@ -67,13 +67,13 @@ const charsets = {
         ê  À  º  4  D  T  d  t
         é  ∞  %  5  E  U  e  u
         ú  ^  &  6  F  V  f  v
-        í  \  '  7  G  W  g  w
+        í \\  '  7  G  W  g  w
         ó  €  (  8  H  X  h  x
         ç  Ó  )  9  I  Y  i  y
         LF |  *  :  J  Z  j  z
         Ô 1)  +  ;  K  Ã  k  ã
         ô  Â  ,  <  L  Õ  l  õ
-       CR  â  -  =  M  Ú  m  \`
+       CR  â  -  =  M  Ú  m \`
         Á  Ê  .  >  N  Ü  n  ü
         á  É  /  ?  O  §  o  à
     `,
@@ -279,7 +279,7 @@ const charsets = {
     `
 }
 
-const extensions = {
+let extensions = {
     // 6.2.1.1 GSM 7 bit default alphabet extension table
     Default: `
         0000 0000 0000 0000    | 0000 0000 0000
@@ -297,7 +297,7 @@ const extensions = {
         0000 0000 0000    [ 0000 0000 0000 0000
         0000 0000 0000    ~ 0000 0000 0000 0000
         0000 0000 0000    ] 0000 0000 0000 0000
-        0000 0000    \ 0000 0000 0000 0000 0000
+        0000 0000   \\ 0000 0000 0000 0000 0000
     `,
 
     // A.2.1 Turkish National Language Single Shift Table
@@ -317,7 +317,7 @@ const extensions = {
         0000 0000 0000    [ 0000 0000 0000 0000
         4)   0000 0000    ~ 0000 0000 0000 0000
         0000 0000 0000    ] 0000 0000 0000 0000
-        0000 0000    \ 0000 0000 0000 0000 0000
+        0000 0000   \\ 0000 0000 0000 0000 0000
     `,
 
     // A.2.2 Spanish National Language Single Shift Table
@@ -337,7 +337,7 @@ const extensions = {
         0000 0000 0000    [ 0000 0000 0000 0000
         4)   0000 0000    ~ 0000 0000 0000 0000
         0000 0000 0000    ] 0000 0000 0000 0000
-        0000 0000    \ 0000    Ó 0000    ó 0000
+        0000 0000   \\ 0000    Ó 0000    ó 0000
      `,
 
     // A.2.3 Portuguese National Language Single Shift Table
@@ -357,7 +357,7 @@ const extensions = {
            ô 0000 0000    [ 0000    Õ 0000    õ
           4) 0000 0000    ~ 0000 0000 0000 0000
            Á 0000 0000    ] 0000 0000 0000 0000
-           á    Ê    \ 0000    Ó 0000    ó    â
+           á    Ê   \\ 0000    Ó 0000    ó    â
     `,
 
     // A.2.4 Bengali National Language Single Shift Table
@@ -377,7 +377,7 @@ const extensions = {
            + 09E8 09F3    [    L 0000 0000 0000
           4) 09E9 09F4    ~    M 0000 0000 0000
            - 09EA 09F5    ]    N 0000 0000 0000
-           / 09EB    \ 0000    O 0000 0000 0000
+           / 09EB   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.5 Gujarati National Language Single Shift Table
@@ -397,7 +397,7 @@ const extensions = {
            + 0AE6 0000    [    L 0000 0000 0000
           4) 0AE7 0000    ~    M 0000 0000 0000
            - 0AE8 0000    ]    N 0000 0000 0000
-           / 0AE9    \ 0000    O 0000 0000 0000
+           / 0AE9   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.6 Hindi National Language Single Shift Table
@@ -417,7 +417,7 @@ const extensions = {
            + 0966 0958    [    L 0000 0000 0000
           4) 0967 0959    ~    M 0000 0000 0000
            - 0968 095A    ]    N 0000 0000 0000
-           / 0969    \ 0000    O 0000 0000 0000
+           / 0969   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.7 Kannada National Language Single Shift Table
@@ -437,7 +437,7 @@ const extensions = {
            + 0CE6 0000    [    L 0000 0000 0000
           4) 0CE7 0000    ~    M 0000 0000 0000
            - 0CE8 0000    ]    N 0000 0000 0000
-           / 0CE9    \ 0000    O 0000 0000 0000
+           / 0CE9   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.8 Malayalam National Language Single Shift Table
@@ -457,7 +457,7 @@ const extensions = {
            + 0D66 0D74    [    L 0000 0000 0000
           4) 0D67 0D75    ~    M 0000 0000 0000
            - 0D68 0D7A    ]    N 0000 0000 0000
-           / 0D69    \ 0000    O 0000 0000 0000
+           / 0D69   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.9 Oriya National Language Single Shift Table
@@ -477,7 +477,7 @@ const extensions = {
            + 0B66 0B71    [    L 0000 0000 0000
           4) 0B67 0000    ~    M 0000 0000 0000
            - 0B68 0000    ]    N 0000 0000 0000
-           / 0B69    \ 0000    O 0000 0000 0000
+           / 0B69   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.10 Punjabi National Language Single Shift Table
@@ -497,7 +497,7 @@ const extensions = {
            + 0A66 0A5E    [    L 0000 0000 0000
           4) 0A67 0A75    ~    M 0000 0000 0000
            - 0A68 0000    ]    N 0000 0000 0000
-           / 0A69    \ 0000    O 0000 0000 0000
+           / 0A69   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.11 Tamil National Language Single Shift Table
@@ -519,7 +519,7 @@ const extensions = {
            + 0BE6 0BF7    [    L 0000 0000 0000
           4) 0BE7 0BF8    ~    M 0000 0000 0000
            - 0BE8 0BFA    ]    N 0000 0000 0000
-           / 0BE9    \ 0000    O 0000 0000 0000
+           / 0BE9   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.12 Telugu National Language Single Shift Table
@@ -539,7 +539,7 @@ const extensions = {
            + 0CE6 0C7A    [    L 0000 0000 0000
           4) 0C67 0C7B    ~    M 0000 0000 0000
            - 0C68 0C7C    ]    N 0000 0000 0000
-           / 0C69    \ 0000    O 0000 0000 0000
+           / 0C69   \\ 0000    O 0000 0000 0000
     `,
 
     // A.2.13 Urdu National Language Single Shift Table
@@ -559,12 +559,12 @@ const extensions = {
            + 06F0 0610    [    L 0000 0000 0000
           4) 06F1 0611    ~    M 0000 0000 0000
            - 06F2 0612    ]    N 0000 0000 0000
-           / 06F3    \ 06D4    O 0000 0000 0000
+           / 06F3   \\ 06D4    O 0000 0000 0000
     `
 }
 
-// Special characters in tables
-const specials = {
+// Special characters in previous tables
+let specials = {
     '1)': '\x1b',
     '3)': '\x0c',
     '4)': '\r',
@@ -574,43 +574,39 @@ const specials = {
 }
 
 /**
- * Conversion function that turn a table where characters are listed in 8 columns of 16 rows
- * into an array of 128 unicode characters
+ * Converting 3GPP tables in charsets and extensions OPTION arrays
  */
-function converttable(table) {
-    console.log(table);
-/*    conv = [0x00] * 128
-    chars = table.strip().split()
-    for i in range(128):
-        char = chars[(i//16) + (i%16)*8]
-        char = specials.get(char, char)
-        if len(char) == 4:
-            char = chr(int(char, 16))
-        conv[i] = char
-    return conv*/
+function convertCharTable(chars) {
+    console.assert(chars.length==128)
+    let conv = new Array(128);
+    for (let i=0; i<128; i++) {
+	let char = chars[~~(i/16) + (i%16)*8];
+	if (char in specials) {
+	    //console.log("<", char, "*", specials[char], "*", specials, ">\n");
+	    char = specials[char];
+	}
+	//console.log("<", i, ~~(i/16), (i%16), ~~(i/16) + (i%16)*8, char, ">\n", chars, "------------------");
+	if (char.length == 4) {
+	    //console.log("\\u" + char);
+	    char = String.fromCodePoint(Number("0x" + char));
+	}
+	conv[i] = char;
+    }
+    return conv;
 }
-
-/**
- * Conversion of charsets and extensions tables
- */
-/*for lang,table in charsets.items():
-    charset = converttable(table)
-    charsets[lang] = charset
-for lang,table in extensions.items():
-    extension = converttable(table)
-    extensions[lang] = extension
-*/
-
-
-/**
- * Charsets and extensions
- */
-export const CHARSET_OPTIONS = [
-    {name: "Default", value: charsets['Default']}
-];
-export const EXTENSION_OPTIONS = [
-    {name: "Default", value: extensions['Default']}
-];
+export var CHARSET_OPTIONS = [];
+for (const lang in charsets) {
+    let charset = convertCharTable(charsets[lang].trim().split(/\s+/));
+    CHARSET_OPTIONS.push({name: lang, value: charset});
+}
+export var EXTENSION_OPTIONS = [];
+for (const lang in extensions) {
+    let extension = convertCharTable(extensions[lang].trim().split(/\s+/));
+    EXTENSION_OPTIONS.push({name: lang, value: extension});
+}
+charsets = undefined;
+extensions = undefined;
+specials = undefined;
 
 
 /**
@@ -621,17 +617,56 @@ export const EXTENSION_OPTIONS = [
  * @param {array} [extension]
  * @param {boolean} [CRpad=true]
  * @returns {ArrayBuffer}
- *
- * @example
- * // returns "SGVsbG8="
- * toBase64([72, 101, 108, 108, 111]);
- *
- * // returns "SGVsbG8="
- * toBase64("Hello");
  */
-export function toGsm7(text, alphabet=charsets['Default'], extension=extensions['Default'], CRpad=true) {
-    let output = [];
-    return output;
+export function toGsm7(text, charset, extension, CRpad) {
+    if (!text) return [];
+    if (charset == 'Default') {
+        charset = CHARSET_OPTIONS[0].value;
+    }
+    if (extension == 'Default') {
+        extension = EXTENSION_OPTIONS[0].value;
+    }
+
+    // step #1 : encoding with given charset and extension
+    let codePoints = [];
+    for (let char of text) {
+	let c = charset.indexOf(char);
+	if (c==-1) {
+	    c = extension.indexOf(char);
+	    if (c==-1) {
+		throw "character '" + char + "' is not present in current charset+extension." +
+		    "A real device would encode this SMS using UCS-2 (UTF-16)";
+	    }
+	    codePoints.push(0x1b);
+	}
+	codePoints.push(c);
+    }
+    
+    // optional step #2: final CR to cope with unexpected encoding of 0x00 or to affirm a wanted final CR
+    if (CRpad) {
+        if ((codePoints.length % 8 == 7) || ((codePoints.length % 8 == 0) && codePoints[-1] == 0x0d)) {
+            codePoints.push(0x0d);
+	}
+    }
+
+    // step #3: 7bit packing
+    let sms = [];
+    for (let i = 0; i < codePoints.length; i++) {
+	var previous;
+	let c = codePoints[i];
+	var mod = i % 8;
+	if (mod == 0) {
+	    previous = c;
+	} else {
+	    let b = ((c << (8 - mod)) & 0xff) + previous;
+	    previous = c >> mod;
+	    sms.push(b)
+	}
+    }
+    if (mod != 7) {
+	sms.push(previous);
+    }
+    return sms;
 }
 
 
@@ -643,15 +678,55 @@ export function toGsm7(text, alphabet=charsets['Default'], extension=extensions[
  * @param {string} [returnType="string"] - Either "string" or "byteArray"
  * @param {boolean} [removeNonAlphChars=true]
  * @returns {byteArray}
- *
- * @example
- * // returns "Hello"
- * fromBase64("SGVsbG8=");
- *
- * // returns [72, 101, 108, 108, 111]
- * fromBase64("SGVsbG8=", null, "byteArray");
  */
 export function fromGsm7(sms, alphabet=charsets['Default'], extension=extensions['Default'], CRpad=true) {
+    console.log("\n----------")
+    console.log(text);
+    //console.log(charset.join(""));
+    //console.log(extension.join(""));
+    console.log(CRpad);
+    console.log("------------\n")
+
     return "";
+/*    
+    # step #1: 7bit unpacking
+    codepoints = []
+    previousbits = 0
+    for i,b in enumerate(sms):
+        mod = i % 7
+        c = previousbits + ((b << mod) & 0x7f)
+        previousbits = (b >> (7-mod))
+        codepoints.append(c)
+        if mod == 6:
+            c = previousbits
+            previousbits = 0
+            codepoints.append(c)
+    if not codepoints:
+        return ''
+
+    # optional step #2: remove final CR when on octet boundary
+    if CRpad:
+        if ((len(codepoints) % 8 == 0) and codepoints[-1] == 0x0d):
+            codepoints.pop()
+
+    # step #3: decoding with given charset and extension
+    text = []
+    esc = False
+    for c in codepoints:
+        if esc:
+            char = extension[c]
+            if char == '\x00':
+                char = charset[c]
+            elif char == '\x1b':
+                char = ' '
+            text.append(char)
+            esc = False
+        elif c == 0x1b:
+            esc = True
+        else:
+            text.append(charset[c])
+    return ''.join(text)
+*/  
+    
 }
 
