@@ -138,7 +138,7 @@ let charsets = {
         090F 091E 0928    ? 093D 094D    o 097F
     `,
 
-    //A.3.7 Kannada National Language Locking Shift Table
+    // A.3.7 Kannada National Language Locking Shift Table
     Kannada: `
         0000 0C90   SP    0 0CAC 0CBE 0CD5    p
         0C82 0000    !    1 0CAD 0CBF    a    q
@@ -277,7 +277,7 @@ let charsets = {
         067A 0689    . 0634 0645 064F    n 0656
         067C 068A 0698    ? 0646 0657    o 0670
     `
-}
+};
 
 let extensions = {
     // 6.2.1.1 GSM 7 bit default alphabet extension table
@@ -321,7 +321,7 @@ let extensions = {
     `,
 
     // A.2.2 Spanish National Language Single Shift Table
-     Spanish: `
+    Spanish: `
         0000 0000 0000 0000    | 0000 0000 0000
         0000 0000 0000 0000    Á 0000    á 0000
         0000 0000 0000 0000 0000 0000 0000 0000
@@ -561,44 +561,44 @@ let extensions = {
            - 06F2 0612    ]    N 0000 0000 0000
            / 06F3   \\ 06D4    O 0000 0000 0000
     `
-}
+};
 
 // Special characters in previous tables
 let specials = {
-    '1)': '\x1b',
-    '3)': '\x0c',
-    '4)': '\r',
-    'SP': ' ',
-    'CR': '\r',
-    'LF': '\n'
-}
+    "1)": "\x1b",
+    "3)": "\x0c",
+    "4)": "\r",
+    "SP": " ",
+    "CR": "\r",
+    "LF": "\n"
+};
 
 /**
  * Converting 3GPP tables in charsets and extensions OPTION arrays
  */
 function convertCharTable(chars) {
-    console.assert(chars.length==128)
-    let conv = new Array(128);
+    console.assert(chars.length===128);
+    const conv = new Array(128);
     for (let i=0; i<128; i++) {
-	let char = chars[~~(i/16) + (i%16)*8];
-	if (char in specials) {
-	    char = specials[char];
-	}
-	if (char.length == 4) {
-	    char = String.fromCodePoint(Number("0x" + char));
-	}
-	conv[i] = char;
+        let char = chars[~~(i/16) + (i%16)*8];
+        if (char in specials) {
+            char = specials[char];
+        }
+        if (char.length === 4) {
+            char = String.fromCodePoint(Number("0x" + char));
+        }
+        conv[i] = char;
     }
     return conv;
 }
-export var CHARSET_OPTIONS = [];
+export const CHARSET_OPTIONS = [];
 for (const lang in charsets) {
-    let charset = convertCharTable(charsets[lang].trim().split(/\s+/));
+    const charset = convertCharTable(charsets[lang].trim().split(/\s+/));
     CHARSET_OPTIONS.push({name: lang, value: charset});
 }
-export var EXTENSION_OPTIONS = [];
+export const EXTENSION_OPTIONS = [];
 for (const lang in extensions) {
-    let extension = convertCharTable(extensions[lang].trim().split(/\s+/));
+    const extension = convertCharTable(extensions[lang].trim().split(/\s+/));
     EXTENSION_OPTIONS.push({name: lang, value: extension});
 }
 charsets = undefined;
@@ -617,51 +617,52 @@ specials = undefined;
  */
 export function toGsm7(text, charset, extension, CRpad) {
     if (!text) return [];
-    if (charset == 'Default') {
+    if (charset === "Default") {
         charset = CHARSET_OPTIONS[0].value;
     }
-    if (extension == 'Default') {
+    if (extension === "Default") {
         extension = EXTENSION_OPTIONS[0].value;
     }
 
     // step #1 : encoding with given charset and extension
-    let codePoints = [];
-    for (let char of text) {
-	let c = charset.indexOf(char);
-	if (c==-1) {
-	    c = extension.indexOf(char);
-	    if (c==-1) {
-		throw new OperationError("character '" + char + "' is not present in current charset+extension.<br>" +
-				"A real device would encode this SMS using UCS-2 (UTF-16)");
-	    }
-	    codePoints.push(0x1b);
-	}
-	codePoints.push(c);
+    const codePoints = [];
+    for (const char of text) {
+        let c = charset.indexOf(char);
+        if (c===-1) {
+            c = extension.indexOf(char);
+            if (c===-1) {
+                throw new OperationError("character '" + char + "' is not present in current charset+extension.<br>" +
+                                         "A real device would encode this SMS using UCS-2 (UTF-16)");
+            }
+            codePoints.push(0x1b);
+        }
+        codePoints.push(c);
     }
 
     // optional step #2: final CR to cope with unexpected encoding of 0x00 or to affirm a wanted final CR
     if (CRpad) {
-        if ((codePoints.length % 8 == 7) || ((codePoints.length % 8 == 0) && codePoints[codePoints.length-1] == 13)) {
+        if ((codePoints.length % 8 === 7) || ((codePoints.length % 8 === 0) && codePoints[codePoints.length-1] === 13)) {
             codePoints.push(13);
-	}
+        }
     }
 
     // step #3: 7bit packing
-    let sms = [];
+    const sms = [];
+    let mod;
+    let previous;
     for (let i = 0; i < codePoints.length; i++) {
-	var previous;
-	let c = codePoints[i];
-	var mod = i % 8;
-	if (mod == 0) {
-	    previous = c;
-	} else {
-	    let b = ((c << (8 - mod)) & 0xff) + previous;
-	    previous = c >> mod;
-	    sms.push(b)
-	}
+        const c = codePoints[i];
+        mod = i % 8;
+        if (mod === 0) {
+            previous = c;
+        } else {
+            const b = ((c << (8 - mod)) & 0xff) + previous;
+            previous = c >> mod;
+            sms.push(b);
+        }
     }
-    if (mod != 7) {
-	sms.push(previous);
+    if (mod !== 7) {
+        sms.push(previous);
     }
     return sms;
 }
@@ -677,55 +678,55 @@ export function toGsm7(text, charset, extension, CRpad) {
  * @returns {string}
  */
 export function fromGsm7(sms, charset, extension, CRpad) {
-    if (sms.length == 0) return "";
-    if (charset == 'Default') {
+    if (sms.length === 0) return "";
+    if (charset === "Default") {
         charset = CHARSET_OPTIONS[0].value;
     }
-    if (extension == 'Default') {
+    if (extension === "Default") {
         extension = EXTENSION_OPTIONS[0].value;
     }
 
     // step #1: 7bit unpacking
-    let codePoints = [];
+    const codePoints = [];
     let previousBits = 0;
     for (let i = 0; i < sms.length; i++) {
-	let b = sms[i];
-	let mod = i % 7;
-	let c = previousBits + ((b << mod) & 0x7f);
-	previousBits = b >> (7-mod);
-	codePoints.push(c);
-	if (mod==6) {
-	    c = previousBits;
-	    previousBits = 0;
-	    codePoints.push(c);
-	}
+        const b = sms[i];
+        const mod = i % 7;
+        let c = previousBits + ((b << mod) & 0x7f);
+        previousBits = b >> (7-mod);
+        codePoints.push(c);
+        if (mod===6) {
+            c = previousBits;
+            previousBits = 0;
+            codePoints.push(c);
+        }
     }
 
     // optional step #2: remove final CR when on octet boundary
     if (CRpad) {
-        if ((codePoints.length % 8 == 0) && codePoints[codePoints.length-1] == 13) {
+        if ((codePoints.length % 8 === 0) && codePoints[codePoints.length-1] === 13) {
             codePoints.pop();
-	}
+        }
     }
 
     // step #3: decoding with given charset and extension
-    let text = [];
+    const text = [];
     let esc = false;
-    for (let c of codePoints) {
-	if (esc) {
-	    let char = extension[c];
-	    if (char=='\x00') {
-		char = charset[c];
-	    } else if (char=='\x1b') {
-		char = ' ';
-	    }
-	    text.push(char);
-	    esc = false;
-	} else if (c==0x1b) {
-	    esc = true;
-	} else {
-	    text.push(charset[c]);
-	}
+    for (const c of codePoints) {
+        if (esc) {
+            let char = extension[c];
+            if (char === "\x00") {
+                char = charset[c];
+            } else if (char === "\x1b") {
+                char = " ";
+            }
+            text.push(char);
+            esc = false;
+        } else if (c === 0x1b) {
+            esc = true;
+        } else {
+            text.push(charset[c]);
+        }
     }
     return text.join("");
 }
