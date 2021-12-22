@@ -53,7 +53,6 @@ class FromGSM7 extends Operation {
 
         return fromGsm7(input, charset, extension, CRpad);
     }
-
 }
 
 export default FromGSM7;

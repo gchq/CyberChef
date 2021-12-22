@@ -641,7 +641,7 @@ export function toGsm7(text, charset, extension, CRpad) {
 	}
 	codePoints.push(c);
     }
-    
+
     // optional step #2: final CR to cope with unexpected encoding of 0x00 or to affirm a wanted final CR
     if (CRpad) {
         if ((codePoints.length % 8 == 7) || ((codePoints.length % 8 == 0) && codePoints[-1] == 0x0d)) {
@@ -673,60 +673,63 @@ export function toGsm7(text, charset, extension, CRpad) {
 /**
  * GSM-7 decode the input SMS as text
  *
- * @param {string} data
- * @param {string} [alphabet="A-Za-z0-9+/="]
- * @param {string} [returnType="string"] - Either "string" or "byteArray"
- * @param {boolean} [removeNonAlphChars=true]
- * @returns {byteArray}
+ * @param {ArrayBuffer} sms
+ * @param {array} [charset]
+ * @param {array} [extension]
+ * @param {boolean} [CRpad=true]
+ * @returns {string}
  */
-export function fromGsm7(sms, alphabet=charsets['Default'], extension=extensions['Default'], CRpad=true) {
-    console.log("\n----------")
-    console.log(text);
-    //console.log(charset.join(""));
-    //console.log(extension.join(""));
-    console.log(CRpad);
-    console.log("------------\n")
+export function fromGsm7(sms, charset, extension, CRpad) {
+    if (sms.length == 0) return "";
+    if (charset == 'Default') {
+        charset = CHARSET_OPTIONS[0].value;
+    }
+    if (extension == 'Default') {
+        extension = EXTENSION_OPTIONS[0].value;
+    }
 
-    return "";
-/*    
-    # step #1: 7bit unpacking
-    codepoints = []
-    previousbits = 0
-    for i,b in enumerate(sms):
-        mod = i % 7
-        c = previousbits + ((b << mod) & 0x7f)
-        previousbits = (b >> (7-mod))
-        codepoints.append(c)
-        if mod == 6:
-            c = previousbits
-            previousbits = 0
-            codepoints.append(c)
-    if not codepoints:
-        return ''
+    // step #1: 7bit unpacking
+    let codePoints = [];
+    let previousBits = 0;
+    for (let i = 0; i < sms.length; i++) {
+	let b = sms[i];
+	let mod = i % 7;
+	let c = previousBits + ((b << mod) & 0x7f);
+	previousBits = b >> (7-mod);
+	codePoints.push(c);
+	if (mod==6) {
+	    c = previousBits;
+	    previousBits = 0;
+	    codePoints.push(c);
+	}
+    }
 
-    # optional step #2: remove final CR when on octet boundary
-    if CRpad:
-        if ((len(codepoints) % 8 == 0) and codepoints[-1] == 0x0d):
-            codepoints.pop()
+    // optional step #2: remove final CR when on octet boundary
+    if (CRpad) {
+        if ((codePoints.length % 8 == 0) && codePoints[-1] == 0x0d) {
+            codePoints.pop();
+	}
+    }
 
-    # step #3: decoding with given charset and extension
-    text = []
-    esc = False
-    for c in codepoints:
-        if esc:
-            char = extension[c]
-            if char == '\x00':
-                char = charset[c]
-            elif char == '\x1b':
-                char = ' '
-            text.append(char)
-            esc = False
-        elif c == 0x1b:
-            esc = True
-        else:
-            text.append(charset[c])
-    return ''.join(text)
-*/  
-    
+    // step #3: decoding with given charset and extension
+    let text = [];
+    let esc = false;
+    for (let c of codePoints) {
+	if (esc) {
+	    let char = extension[c];
+	    if (char=='\x00') {
+		char = charset[c];
+	    } else if (char=='\x1b') {
+		char = ' ';
+	    }
+	    text.push(char);
+	    esc = false;
+	} else if (c==0x1b) {
+	    esc = true;
+	} else {
+	    text.push(charset[c]);
+	}
+    }
+    return text.join("");
 }
 
