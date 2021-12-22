@@ -39,32 +39,13 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "To GSM-7: not padding a 7 chars SMS",
-        input: "7Chars.",
-        expectedOutput: "b7 21 3a 2c 9f bb 00",
+        name: "To GSM-7: smiley",
+        input: "😀",
+        expectedOutput: "character '😀' is not present in current charset+extension.<br>A real device would encode this SMS using UCS-2 (UTF-16)",
         recipeConfig: [
             {
                 op: "To GSM-7",
                 args: ["Default", "Default", false],
-            },
-            {
-                op: "To Hex",
-                args: ["Space", 0],
-            }
-        ],
-    },
-    {
-        name: "To GSM-7: padding a 7 chars SMS",
-        input: "7Chars.",
-        expectedOutput: "b7 21 3a 2c 9f bb 1a",
-        recipeConfig: [
-            {
-                op: "To GSM-7",
-                args: ["Default", "Default", true],
-            },
-            {
-                op: "To Hex",
-                args: ["Space", 0],
             }
         ],
     },
@@ -91,6 +72,96 @@ TestRegister.addTests([
             {
                 op: "From Hex",
                 args: ["Auto"],
+            },
+            {
+                op: "From GSM-7",
+                args: ["Default", "Default", true],
+            }
+        ],
+    },
+    {
+        name: "GSM-7: padding/not unpadding a %7 chars SMS",
+        input: "7Chars.",
+        expectedOutput: "7Chars.\r",
+        recipeConfig: [
+            {
+                op: "To GSM-7",
+                args: ["Default", "Default", true],
+            },
+            {
+                op: "From GSM-7",
+                args: ["Default", "Default", false],
+            }
+        ],
+    },
+    {
+        name: "GSM-7: padding/unpadding a %7 chars SMS",
+        input: "twenty three characters",
+        expectedOutput: "twenty three characters",
+        recipeConfig: [
+            {
+                op: "To GSM-7",
+                args: ["Default", "Default", true],
+            },
+            {
+                op: "From GSM-7",
+                args: ["Default", "Default", true],
+            }
+        ],
+    },
+    {
+        name: "GSM-7: not padding/not unpadding a %7 chars SMS",
+        input: "<15 characters>",
+        expectedOutput: "<15 characters>@",
+        recipeConfig: [
+            {
+                op: "To GSM-7",
+                args: ["Default", "Default", false],
+            },
+            {
+                op: "From GSM-7",
+                args: ["Default", "Default", false],
+            }
+        ],
+    },
+    {
+        name: "GSM-7: padding/not unpadding a 8 chars SMS",
+        input: "8 chars.",
+        expectedOutput: "8 chars.",
+        recipeConfig: [
+            {
+                op: "To GSM-7",
+                args: ["Default", "Default", true],
+            },
+            {
+                op: "From GSM-7",
+                args: ["Default", "Default", false],
+            }
+        ],
+    },
+    {
+        name: "GSM-7: padding/not unpadding a 8 chars SMS with final CR",
+        input: "8 chars\r",
+        expectedOutput: "8 chars\r\r",
+        recipeConfig: [
+            {
+                op: "To GSM-7",
+                args: ["Default", "Default", true],
+            },
+            {
+                op: "From GSM-7",
+                args: ["Default", "Default", false],
+            }
+        ],
+    },
+    {
+        name: "GSM-7: padding/unpadding a 8 chars SMS with final CR",
+        input: "8 chars\r",
+        expectedOutput: "8 chars\r\r",
+        recipeConfig: [
+            {
+                op: "To GSM-7",
+                args: ["Default", "Default", true],
             },
             {
                 op: "From GSM-7",

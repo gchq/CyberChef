@@ -17,7 +17,7 @@ import {
 } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
-/*import "./tests/BCD.mjs";
+import "./tests/BCD.mjs";
 import "./tests/BSON.mjs";
 import "./tests/BaconCipher.mjs";
 import "./tests/Base58.mjs";
@@ -40,9 +40,9 @@ import "./tests/CSV.mjs";
 import "./tests/DateTime.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/Fork.mjs";
-import "./tests/FromDecimal.mjs";*/
+import "./tests/FromDecimal.mjs";
 import "./tests/Gsm7.mjs";
-/*import "./tests/Gzip.mjs";
+import "./tests/Gzip.mjs";
 import "./tests/Gunzip.mjs";
 import "./tests/Hash.mjs";
 import "./tests/HaversineDistance.mjs";
@@ -107,7 +107,7 @@ import "./tests/CBOREncode.mjs";
 import "./tests/CBORDecode.mjs";
 import "./tests/JA3Fingerprint.mjs";
 import "./tests/JA3SFingerprint.mjs";
-import "./tests/HASSH.mjs";*/
+import "./tests/HASSH.mjs";
 
 
 // Cannot test operations that use the File type yet

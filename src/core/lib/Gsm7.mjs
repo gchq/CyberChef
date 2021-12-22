@@ -582,12 +582,9 @@ function convertCharTable(chars) {
     for (let i=0; i<128; i++) {
 	let char = chars[~~(i/16) + (i%16)*8];
 	if (char in specials) {
-	    //console.log("<", char, "*", specials[char], "*", specials, ">\n");
 	    char = specials[char];
 	}
-	//console.log("<", i, ~~(i/16), (i%16), ~~(i/16) + (i%16)*8, char, ">\n", chars, "------------------");
 	if (char.length == 4) {
-	    //console.log("\\u" + char);
 	    char = String.fromCodePoint(Number("0x" + char));
 	}
 	conv[i] = char;
@@ -634,8 +631,8 @@ export function toGsm7(text, charset, extension, CRpad) {
 	if (c==-1) {
 	    c = extension.indexOf(char);
 	    if (c==-1) {
-		throw "character '" + char + "' is not present in current charset+extension." +
-		    "A real device would encode this SMS using UCS-2 (UTF-16)";
+		throw new OperationError("character '" + char + "' is not present in current charset+extension.<br>" +
+				"A real device would encode this SMS using UCS-2 (UTF-16)");
 	    }
 	    codePoints.push(0x1b);
 	}
@@ -644,8 +641,8 @@ export function toGsm7(text, charset, extension, CRpad) {
 
     // optional step #2: final CR to cope with unexpected encoding of 0x00 or to affirm a wanted final CR
     if (CRpad) {
-        if ((codePoints.length % 8 == 7) || ((codePoints.length % 8 == 0) && codePoints[-1] == 0x0d)) {
-            codePoints.push(0x0d);
+        if ((codePoints.length % 8 == 7) || ((codePoints.length % 8 == 0) && codePoints[codePoints.length-1] == 13)) {
+            codePoints.push(13);
 	}
     }
 
@@ -706,7 +703,7 @@ export function fromGsm7(sms, charset, extension, CRpad) {
 
     // optional step #2: remove final CR when on octet boundary
     if (CRpad) {
-        if ((codePoints.length % 8 == 0) && codePoints[-1] == 0x0d) {
+        if ((codePoints.length % 8 == 0) && codePoints[codePoints.length-1] == 13) {
             codePoints.pop();
 	}
     }
