@@ -37,6 +37,9 @@ class ToUpperCase extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (!args || args.length === 0) {
+            throw new OperationException("No capitalization scope was provided.");
+        }
         const scope = args[0];
         if (scope === "All") {
             return input.toUpperCase();
