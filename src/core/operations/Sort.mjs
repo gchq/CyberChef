@@ -38,7 +38,7 @@ class Sort extends Operation {
             {
                 "name": "Order",
                 "type": "option",
-                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)"]
+                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IPv4 address", "IPv6 address", "Numeric", "Numeric (hexadecimal)"]
             }
         ];
     }
@@ -58,8 +58,10 @@ class Sort extends Operation {
             sorted = sorted.sort();
         } else if (order === "Alphabetical (case insensitive)") {
             sorted = sorted.sort(Sort._caseInsensitiveSort);
-        } else if (order === "IP address") {
-            sorted = sorted.sort(Sort._ipSort);
+        } else if (order === "IPv4 address") {
+            sorted = sorted.sort(Sort._ipv4Sort);
+        } else if (order == "IPv6 address") {
+            sorted = sorted.sort(Sort._ipv6Sort);
         } else if (order === "Numeric") {
             sorted = sorted.sort(Sort._numericSort);
         } else if (order === "Numeric (hexadecimal)") {
@@ -91,7 +93,7 @@ class Sort extends Operation {
      * @param {string} b
      * @returns {number}
      */
-    static _ipSort(a, b) {
+    static _ipv4Sort(a, b) {
         let a_ = a.split("."),
             b_ = b.split(".");
 
@@ -103,6 +105,19 @@ class Sort extends Operation {
         if (isNaN(a_) && isNaN(b_)) return a.localeCompare(b);
 
         return a_ - b_;
+    }
+
+    /**
+     * Comparison operator for sorting of IPv6 addresses.
+     * 
+     * @param {string} a 
+     * @param {string} b 
+     * @returns {number}
+     */
+    static _ipv6Sort(a, b) {
+        const numericalA = strToIpv6(a, false),
+              numericalB = strToIpv6(b, false);
+        return numericalA < numericalB ? -1 : 1;
     }
 
     /**
