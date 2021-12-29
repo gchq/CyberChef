@@ -336,16 +336,27 @@ export function ipv4ToStr(ipInt) {
 
 
 /**
- * Converts an IPv6 address from string format to numerical array format.
+ * Converts an IPv6 address from string format to numerical format.
  *
  * @param {string} ipStr
- * @returns {number[]}
+ * @param {boolean} retArr If true, an array is returned. If false, a BigInt is returned.
+ * @returns {(number[]|BigInt)}
  *
  * @example
  * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
  * strToIpv6("ff00::1111:2222");
+ * 
+ * // returns 126946n
+ * strToIpv6("1:f000", false);
  */
-export function strToIpv6(ipStr) {
+export function strToIpv6(ipStr, retArr=true) {
+    if (retArr === false) {
+        if (ipStr.length % 2 === 1) {
+            ipStr = "0" + ipStr;
+        }
+        return BigInt("0x" + ipStr.replace(":", ""));
+        return 
+    }
     let j = 0;
     const blocks = ipStr.split(":"),
         numBlocks = parseBlocks(blocks),
