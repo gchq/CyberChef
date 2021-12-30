@@ -352,7 +352,7 @@ export function ipv4ToStr(ipInt) {
 export function strToIpv6(ipStr, retArr=true) {
     if (retArr === false) {
         // TODO: Expand address.
-        return Number("0x" + ipStr.replace(/\:/g, ''));
+        return Number("0x" + ipStr.replace(/:/g, ""));
     }
     let j = 0;
     const blocks = ipStr.split(":"),
