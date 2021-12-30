@@ -396,24 +396,36 @@ export function strToIpv6(ipStr, retArr=true) {
      * expandIpv6("5555:126f::0001");
      */
 export function expandIpv6(ipStr) {
-    const compactIndex = ipStr.search("::");
-    let expandedStr = ipStr.substring(0, compactIndex); // 1234:5678::..
-    const insertOffset = compactIndex === 0; // 0 / 1
-    const ipEnd = ipStr.substring(compactIndex + 1); // :7ABC:DEFG:...
-    const missingChars = 39 - (expandedStr.length + ipEnd.length);
-    for (let i = insertOffset; i < missingChars + insertOffset; i++) {
-        if (i % 5 === 0) {
-            expandedStr += ":";
-            continue;
+    const padHex = function(ipStr){
+        if (ipStr.length === 39) {
+            return ipStr;
         }
-        expandedStr += "0";
+        const blockArray = ipStr.split(':');
+        let reconstructed = "";
+        blockArray.forEach((a) => {
+            for (let i = a.length; i < 4; i++) {
+                reconstructed += "0";
+            }
+            reconstructed += a + ":";
+        });
+        return reconstructed.substring(0, reconstructed.length - 1);
+    };
+    ipStr = padHex(ipStr);
+    const doubleColonOffset = ipStr.search("::");
+    if (doubleColonOffset === -1) {
+        return ipStr;
     }
-    if (compactIndex === ipStr.length - 2) {
-        expandedStr = expandedStr + "0";
-        return expandedStr;
+    const totalBlocks = ipStr.match(/:/g).length - (ipStr.startsWith(":") || ipStr.endsWith(":")),
+          reqBlocks = 8 - totalBlocks;
+    let expandedBlocks = (ipStr.startsWith(":") ? "" : ":") + "0000";
+    for (let i = 1; i < reqBlocks; i++) {
+        expandedBlocks += ":0000";
     }
-    expandedStr += ipEnd;
-    return expandedStr;
+    ipStr = ipStr.substring(0, doubleColonOffset) + expandedBlocks + ":" + ipStr.substring(doubleColonOffset + 2);
+    if (ipStr.endsWith(":")) {
+        ipStr = ipStr.substring(0, ipStr.length - 1);
+    }
+    return padHex(ipStr);
 }
 
 /**
