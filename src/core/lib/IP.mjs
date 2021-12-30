@@ -390,19 +390,19 @@ export function strToIpv6(ipStr, retArr=true) {
      *
      * @param {string} ipStr
      * @returns {string}
-     * 
+     *
      * @example
      * // returns "5555:126f:0000:0000:0000:0000:0000:0001"
      * expandIpv6("5555:126f::0001");
      */
- export function expandIpv6(ipStr) {
+export function expandIpv6(ipStr) {
     const compactIndex = ipStr.search("::");
     let expandedStr = ipStr.substring(0, compactIndex); // 1234:5678::..
-    const insertOffset = compactIndex == 0;
+    const insertOffset = compactIndex === 0; // 0 / 1
     const ipEnd = ipStr.substring(compactIndex + 1); // :7ABC:DEFG:...
     const missingChars = 39 - (expandedStr.length + ipEnd.length);
     for (let i = insertOffset; i < missingChars + insertOffset; i++) {
-        if (i % 5 == 0) {
+        if (i % 5 === 0) {
             expandedStr += ":";
             continue;
         }
