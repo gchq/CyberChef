@@ -49,18 +49,15 @@ class JWTVerify extends Operation {
      */
     run(input, args) {
         const [key, alg] = args;
+        let algos = [];
         switch (alg) {
             case "Any":
-                const algos = JWT_ALGORITHMS;
+                algos = JWT_ALGORITHMS;
                 break;
             case "None":
-                const algos = [ "none" ];
+                algos.push("none");
             default:
-                const algIndex = JWT_ALGORITHMS.indexOf(alg);
-                if (algIndex === -1) {
-                    throw new OperationError("The JWT verification algorithm provided is not supported.");
-                }
-                const algos = JWT_ALGORITHMS[];
+                algos.push(alg);
                 break;
         }
 
