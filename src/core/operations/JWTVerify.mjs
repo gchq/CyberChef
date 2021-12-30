@@ -26,7 +26,7 @@ class JWTVerify extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
-        let algOptions = JWT_ALGORITHMS;
+        const algOptions = JWT_ALGORITHMS;
         algOptions.push("Any");
         this.args = [
             {
