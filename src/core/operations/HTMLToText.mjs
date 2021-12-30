@@ -1,6 +1,7 @@
 /**
  * @author tlwr [toby@toby.codes]
  * @author Matt C [me@mitt.dev]
+ * @author Michael Rowley [michaellrowley@protonmail.com]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
@@ -33,8 +34,6 @@ class HTMLToText extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        // TODO: Add blacklisted tags via args.
-        // TODO: Extract from HTML comments.
         let output = "";
         const blacklistedTags = ["script", "style"];
         const tagRegex = /<\w+>[\s?!\-_().,/#{}*"£$%^&;:a-z]*/gis;
@@ -43,7 +42,8 @@ class HTMLToText extends Operation {
             const closingTagOffset = iterativeMatch.indexOf(">");
             const tag = iterativeMatch.substring(1, closingTagOffset);
             for (let i = 0; i < blacklistedTags.length; i++) {
-                if (tag === blacklistedTags[i]) {
+                if (tag === blacklistedTags[i] ||
+                    tag.split(' ')[0] == blacklistedTags[i]) {
                     return; // This is why a forEach(...) loop couldn't be used for this nested one.
                 }
             }
