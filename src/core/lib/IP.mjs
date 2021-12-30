@@ -345,7 +345,7 @@ export function ipv4ToStr(ipInt) {
  * @example
  * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
  * strToIpv6("ff00::1111:2222");
- * 
+ *
  * // returns 126946n
  * strToIpv6("1:f000", false);
  */
@@ -356,7 +356,6 @@ export function strToIpv6(ipStr, retArr=true) {
             ipStr = "0" + ipStr;
         }
         return BigInt("0x" + ipStr.replace(":", ""));
-        return 
     }
     let j = 0;
     const blocks = ipStr.split(":"),

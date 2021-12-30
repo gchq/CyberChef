@@ -60,7 +60,7 @@ class Sort extends Operation {
             sorted = sorted.sort(Sort._caseInsensitiveSort);
         } else if (order === "IPv4 address") {
             sorted = sorted.sort(Sort._ipv4Sort);
-        } else if (order == "IPv6 address") {
+        } else if (order === "IPv6 address") {
             sorted = sorted.sort(Sort._ipv6Sort);
         } else if (order === "Numeric") {
             sorted = sorted.sort(Sort._numericSort);
@@ -109,14 +109,15 @@ class Sort extends Operation {
 
     /**
      * Comparison operator for sorting of IPv6 addresses.
-     * 
-     * @param {string} a 
-     * @param {string} b 
+     *
+     * @param {string} a
+     * @param {string} b
      * @returns {number}
      */
     static _ipv6Sort(a, b) {
-        const numericalA = strToIpv6(a, false),
-              numericalB = strToIpv6(b, false);
+        const ipLib = require("../lib/IP.mjs");
+        const numericalA = ipLib.strToIpv6(a, false),
+              numericalB = ipLib.strToIpv6(b, false);
         return numericalA < numericalB ? -1 : 1;
     }
 
