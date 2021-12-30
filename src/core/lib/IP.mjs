@@ -393,7 +393,7 @@ export function strToIpv6(ipStr, retArr=true) {
      *
      * @example
      * // returns "5555:126f:0000:0000:0000:0000:0000:0001"
-     * expandIpv6("5555:126f::0001");
+     * expandIpv6("5555:126f::1");
      */
 export function expandIpv6(ipStr) {
     const padHex = function (ipStr) {
