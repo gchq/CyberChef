@@ -26,12 +26,19 @@ class JWTVerify extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
+        let algOptions = JWT_ALGORITHMS.slice(0, JWT_ALGORITHMS.length - 1);
+        algOptions.push("Any");
         this.args = [
             {
                 name: "Public/Secret Key",
                 type: "text",
                 value: "secret"
             },
+            {
+                name: "Algorithm",
+                type: "option",
+                value: algOptions
+            }
         ];
     }
 
@@ -41,9 +48,21 @@ class JWTVerify extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [key] = args;
-        const algos = JWT_ALGORITHMS;
-        algos[algos.indexOf("None")] = "none";
+        const [key, alg] = args;
+        switch (alg) {
+            case "Any":
+                const algos = JWT_ALGORITHMS;
+                break;
+            case "None":
+                const algos = [ "none" ];
+            default:
+                const algIndex = JWT_ALGORITHMS.indexOf(alg);
+                if (algIndex === -1) {
+                    throw new OperationError("The JWT verification algorithm provided is not supported.");
+                }
+                const algos = JWT_ALGORITHMS[];
+                break;
+        }
 
         try {
             const verified = jwt.verify(input, key, { algorithms: algos });
