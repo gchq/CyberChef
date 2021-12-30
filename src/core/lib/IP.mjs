@@ -3,6 +3,7 @@
  *
  * @author picapi
  * @author n1474335 [n1474335@gmail.com]
+ * @author Michael Rowley [michaellrowley@protonmail.com]
  * @author Klaxon [klaxon@veyr.com]
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
