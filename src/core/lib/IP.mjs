@@ -340,7 +340,7 @@ export function ipv4ToStr(ipInt) {
  *
  * @param {string} ipStr
  * @param {boolean} retArr If true, an array is returned. If false, a BigInt is returned.
- * @returns {(number[]|BigInt)}
+ * @returns {(number[]|number)}
  *
  * @example
  * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
