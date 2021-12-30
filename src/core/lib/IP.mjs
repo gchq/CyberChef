@@ -403,7 +403,7 @@ export function strToIpv6(ipStr, retArr=true) {
         return ipStr;
     }
     let expandedStr = ipStr.substring(0, compactIndex); // 1234:5678::..
-    const insertOffset = compactIndex == 0 ? 1 : 0;
+    const insertOffset = compactIndex == 0;
     const ipEnd = ipStr.substring(compactIndex + 1);
     const missingChars = 39 - (expandedStr.length + ipEnd.length);
     for (let i = insertOffset; i < missingChars + insertOffset; i++) {
