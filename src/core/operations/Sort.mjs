@@ -116,8 +116,7 @@ class Sort extends Operation {
      */
     static _ipv6Sort(a, b) {
         const ipLib = require("../lib/IP.mjs");
-        const numericalA = ipLib.strToIpv6(a, false),
-              numericalB = ipLib.strToIpv6(b, false);
+        const numericalA = ipLib.strToIpv6(a, false), numericalB = ipLib.strToIpv6(b, false);
         return numericalA < numericalB ? -1 : 1;
     }
 

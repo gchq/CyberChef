@@ -355,7 +355,7 @@ export function strToIpv6(ipStr, retArr=true) {
         if (ipStr.length % 2 === 1) {
             ipStr = "0" + ipStr;
         }
-        return BigInt("0x" + ipStr.replace(":", ""));
+        return Number("0x" + ipStr.replace(":", ""));
     }
     let j = 0;
     const blocks = ipStr.split(":"),
