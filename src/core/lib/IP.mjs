@@ -396,11 +396,11 @@ export function strToIpv6(ipStr, retArr=true) {
      * expandIpv6("5555:126f::0001");
      */
 export function expandIpv6(ipStr) {
-    const padHex = function(ipStr){
+    const padHex = function (ipStr) {
         if (ipStr.length === 39) {
             return ipStr;
         }
-        const blockArray = ipStr.split(':');
+        const blockArray = ipStr.split(":");
         let reconstructed = "";
         blockArray.forEach((a) => {
             for (let i = a.length; i < 4; i++) {
@@ -416,7 +416,7 @@ export function expandIpv6(ipStr) {
         return ipStr;
     }
     const totalBlocks = ipStr.match(/:/g).length - (ipStr.startsWith(":") || ipStr.endsWith(":")),
-          reqBlocks = 8 - totalBlocks;
+        reqBlocks = 8 - totalBlocks;
     let expandedBlocks = (ipStr.startsWith(":") ? "" : ":") + "0000";
     for (let i = 1; i < reqBlocks; i++) {
         expandedBlocks += ":0000";
