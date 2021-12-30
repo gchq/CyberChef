@@ -346,8 +346,8 @@ export function ipv4ToStr(ipInt) {
  * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
  * strToIpv6("ff00::1111:2222");
  *
- * // returns 126946n
- * strToIpv6("1:f000", false);
+ * // returns 3.3895313892515355e+38
+ * strToIpv6("ff00::1111:2222", false);
  */
 export function strToIpv6(ipStr, retArr=true) {
     if (retArr === false) {
