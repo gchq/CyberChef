@@ -351,8 +351,7 @@ export function ipv4ToStr(ipInt) {
  */
 export function strToIpv6(ipStr, retArr=true) {
     if (retArr === false) {
-        // TODO: Expand address.
-        return Number("0x" + ipStr.replace(/:/g, ""));
+        return Number("0x" + expandIpv6(ipStr).replace(/:/g, ""));
     }
     let j = 0;
     const blocks = ipStr.split(":"),
@@ -384,6 +383,38 @@ export function strToIpv6(ipStr, retArr=true) {
         }
         return numBlocks;
     }
+}
+
+/**
+     * Expands an IPv6 address in string format to its 'longhand' equivalent.
+     *
+     * @param {string} ipStr
+     * @returns {string}
+     * 
+     * @example
+     * // returns "5555:126f:0000:0000:0000:0000:0000:0001"
+     * expandIpv6("5555:126f::0001");
+     */
+ export function expandIpv6(ipStr) {
+    const compactIndex = ipStr.search("::");
+    if (compactIndex === -1) {
+        // There were no occurances of '::'
+        // in ipStr.
+        return ipStr;
+    }
+    let expandedStr = ipStr.substring(0, compactIndex); // 1234:5678::..
+    const insertOffset = compactIndex == 0 ? 1 : 0;
+    const ipEnd = ipStr.substring(compactIndex + 1);
+    const missingChars = 39 - (expandedStr.length + ipEnd.length);
+    for (let i = insertOffset; i < missingChars + insertOffset; i++) {
+        if (i % 5 == 0) {
+            expandedStr += ":";
+            continue;
+        }
+        expandedStr += "0";
+    }
+    expandedStr += ipEnd;
+    return expandedStr;
 }
 
 /**
