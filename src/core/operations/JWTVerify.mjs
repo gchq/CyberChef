@@ -35,7 +35,7 @@ class JWTVerify extends Operation {
                 value: "secret"
             },
             {
-                name: "Algorithm",
+                name: "Signing algorithm",
                 type: "option",
                 value: algOptions
             }
