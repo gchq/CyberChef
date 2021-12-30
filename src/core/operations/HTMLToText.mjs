@@ -33,7 +33,24 @@ class HTMLToText extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return input;
+        // TODO: Add blacklisted tags via args.
+        // TODO: Extract from HTML comments.
+        let output = "";
+        const blacklistedTags = [ "script", "style" ];
+        const tagRegex = /<\w+>[\s?!\-_().,\/#{}*"£$%^&;:a-z]*/gis;
+        const tagMatches = input.match(tagRegex);
+        tagMatches.forEach((iterativeMatch) => {
+            const closingTagOffset = iterativeMatch.indexOf('>');
+            const tag = iterativeMatch.substring(1, closingTagOffset);
+            for (let i = 0; i < blacklistedTags.length; i++) {
+                if (tag == blacklistedTags[i]) {
+                    return; // This is why a forEach(...) loop couldn't be used for this nested one.
+                }
+            }
+            // The tag has been validated, extract all text.
+            output += iterativeMatch.substring(closingTagOffset + 1);
+        });
+        return output;
     }
 
 }
