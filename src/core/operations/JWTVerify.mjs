@@ -26,8 +26,8 @@ class JWTVerify extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
-        this.algOptions = JWT_ALGORITHMS;
-        this.algOptions.push("Any");
+        let algOptions = JWT_ALGORITHMS;
+        algOptions.push("Any");
         this.args = [
             {
                 name: "Public/Secret Key",
@@ -37,7 +37,7 @@ class JWTVerify extends Operation {
             {
                 name: "Algorithm",
                 type: "option",
-                value: this.algOptions
+                value: algOptions
             }
         ];
     }
@@ -56,6 +56,7 @@ class JWTVerify extends Operation {
                 break;
             case "None":
                 algos.push("none");
+                break;
             default:
                 algos.push(alg);
                 break;
