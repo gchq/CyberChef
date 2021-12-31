@@ -8,6 +8,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {strToIpv6} from "../lib/IP.mjs";
 
 /**
  * Sort operation
@@ -116,8 +117,7 @@ class Sort extends Operation {
      * @returns {number}
      */
     static _ipv6Sort(a, b) {
-        const ipLib = require("../lib/IP.mjs");
-        const numericalA = ipLib.strToIpv6(a, false), numericalB = ipLib.strToIpv6(b, false);
+        const numericalA = strToIpv6(a, false), numericalB = strToIpv6(b, false);
         return numericalA - numericalB;
     }
 
