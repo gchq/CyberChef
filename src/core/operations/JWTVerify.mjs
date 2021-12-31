@@ -1,6 +1,5 @@
 /**
  * @author gchq77703 []
- * @author Michael Rowley [michaellrowley@protonmail.com]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
