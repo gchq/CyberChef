@@ -453,6 +453,7 @@
             "Pseudo-Random Number Generator",
             "Generate UUID",
             "Generate TOTP",
+            "Generate TOTP Code",
             "Generate HOTP",
             "Generate QR Code",
             "Parse QR Code",
