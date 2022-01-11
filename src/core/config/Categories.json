@@ -262,7 +262,8 @@
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
-            "Sleep"
+            "Sleep",
+            "Custom Code"
         ]
     },
     {
