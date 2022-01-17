@@ -75,6 +75,8 @@
             "Blowfish Decrypt",
             "DES Encrypt",
             "DES Decrypt",
+            "Cetacean Cipher Encode",
+            "Cetacean Cipher Decode",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
             "RC2 Encrypt",

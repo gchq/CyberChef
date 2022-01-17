@@ -12,3 +12,6 @@ src/node/index.mjs
 **/*.DS_Store
 tests/browser/output/*
 
+# ide
+.idea
+*.iml
