@@ -351,15 +351,15 @@ module.exports = function (grunt) {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
+                command: `node ${nodeFlags} src/web/static/sitemap.mjs > build/prod/sitemap.xml`,
                 sync: true
             },
             generateConfig: {
                 command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
-                    "node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs",
-                    "node ${nodeFlags} src/core/config/scripts/generateConfig.mjs",
+                    `node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`,
+                    `node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`,
                     "echo '--- Config scripts finished. ---\n'"
                 ]),
                 sync: true
@@ -367,7 +367,7 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: chainCommands([
                     "echo '\n--- Regenerating node index ---'",
-                    "node ${nodeFlags} src/node/config/scripts/generateNodeIndex.mjs",
+                    `node ${nodeFlags} src/node/config/scripts/generateNodeIndex.mjs`,
                     "echo '--- Node index generated. ---\n'"
                 ]),
                 sync: true
@@ -395,21 +395,21 @@ module.exports = function (grunt) {
             testCJSNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node ${nodeFlags} cjs-consumer.js",
+                    `node ${nodeFlags} cjs-consumer.js`,
                 ]),
                 stdout: false,
             },
             testESMNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node ${nodeFlags} esm-consumer.mjs",
+                    `node ${nodeFlags} esm-consumer.mjs`,
                 ]),
                 stdout: false,
             },
             testESMDeepImportNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node ${nodeFlags} esm-deep-import-consumer.mjs",
+                    `node ${nodeFlags} esm-deep-import-consumer.mjs`,
                 ]),
                 stdout: false,
             },
