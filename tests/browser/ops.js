@@ -6,6 +6,9 @@
  * @license Apache-2.0
  */
 
+// import Images from "../operations/samples/Images.mjs";
+const Images = import("../operations/samples/Images.mjs");
+
 module.exports = {
     before: browser => {
         browser
@@ -44,42 +47,42 @@ module.exports = {
         // testOp(browser, "Bifid Cipher Encode", "test input", "test_output");
         // testOp(browser, "Bit shift left", "test input", "test_output");
         // testOp(browser, "Bit shift right", "test input", "test_output");
-        // testOp(browser, "Blowfish Decrypt", "test input", "test_output");
-        // testOp(browser, "Blowfish Encrypt", "test input", "test_output");
-        // testOp(browser, "Blur Image", "test input", "test_output");
+        testOp(browser, "Blowfish Decrypt", "10884e15427dd84ec35204e9c8e921ae", "test_output", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Hex", "Raw"]);
+        testOp(browser, "Blowfish Encrypt", "test input", "f0fadbd1d90d774f714248cf26b96410", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Raw", "Hex"]);
+        testOp(browser, "Blur Image", Images.PNG_HEX, "test_output");
         // testOp(browser, "Bombe", "test input", "test_output");
-        // testOp(browser, "Bzip2 Compress", "test input", "test_output");
-        // testOp(browser, "Bzip2 Decompress", "test input", "test_output");
-        // testOp(browser, "CRC-16 Checksum", "test input", "test_output");
-        // testOp(browser, "CRC-32 Checksum", "test input", "test_output");
-        // testOp(browser, "CRC-8 Checksum", "test input", "test_output");
-        // testOp(browser, "CSS Beautify", "test input", "test_output");
-        // testOp(browser, "CSS Minify", "test input", "test_output");
-        // testOp(browser, "CSS selector", "test input", "test_output");
+        testOp(browser, "Bzip2 Compress", "test input", "test_output");
+        testOp(browser, "Bzip2 Decompress", "test input", "test_output");
+        testOp(browser, "CRC-16 Checksum", "test input", "test_output");
+        testOp(browser, "CRC-32 Checksum", "test input", "test_output");
+        testOp(browser, "CRC-8 Checksum", "test input", "test_output");
+        testOp(browser, "CSS Beautify", "test input", "test_output");
+        testOp(browser, "CSS Minify", "test input", "test_output");
+        testOp(browser, "CSS selector", "test input", "test_output");
         // testOp(browser, "CSV to JSON", "test input", "test_output");
-        // testOp(browser, "CTPH", "test input", "test_output");
+        testOp(browser, "CTPH", "test input", "test_output");
         // testOp(browser, "Cartesian Product", "test input", "test_output");
         // testOp(browser, "Change IP format", "test input", "test_output");
-        // testOp(browser, "Chi Square", "test input", "test_output");
+        testOp(browser, "Chi Square", "test input", "test_output");
         // testOp(browser, "CipherSaber2 Decrypt", "test input", "test_output");
         // testOp(browser, "CipherSaber2 Encrypt", "test input", "test_output");
         // testOp(browser, "Citrix CTX1 Decode", "test input", "test_output");
         // testOp(browser, "Citrix CTX1 Encode", "test input", "test_output");
         // testOp(browser, "Colossus", "test input", "test_output");
         // testOp(browser, "Comment", "test input", "test_output");
-        // testOp(browser, "Compare CTPH hashes", "test input", "test_output");
-        // testOp(browser, "Compare SSDEEP hashes", "test input", "test_output");
-        // testOp(browser, "Conditional Jump", "test input", "test_output");
-        // testOp(browser, "Contain Image", "test input", "test_output");
-        // testOp(browser, "Convert area", "test input", "test_output");
-        // testOp(browser, "Convert co-ordinate format", "test input", "test_output");
-        // testOp(browser, "Convert data units", "test input", "test_output");
-        // testOp(browser, "Convert distance", "test input", "test_output");
+        testOp(browser, "Compare CTPH hashes", "test input", "test_output");
+        testOp(browser, "Compare SSDEEP hashes", "test input", "test_output");
+        // /testOp(browser, "Conditional Jump", "test input", "test_output");
+        testOp(browser, "Contain Image", "test input", "test_output");
+        testOp(browser, "Convert area", "test input", "test_output");
+        // /testOp(browser, "Convert co-ordinate format", "test input", "test_output");
+        testOp(browser, "Convert data units", "test input", "test_output");
+        testOp(browser, "Convert distance", "test input", "test_output");
         // testOp(browser, "Convert Image Format", "test input", "test_output");
-        // testOp(browser, "Convert mass", "test input", "test_output");
-        // testOp(browser, "Convert speed", "test input", "test_output");
-        // testOp(browser, "Convert to NATO alphabet", "test input", "test_output");
-        // testOp(browser, "Count occurrences", "test input", "test_output");
+        testOp(browser, "Convert mass", "test input", "test_output");
+        testOp(browser, "Convert speed", "test input", "test_output");
+        // /testOp(browser, "Convert to NATO alphabet", "test input", "test_output");
+        testOp(browser, "Count occurrences", "test input", "test_output");
         // testOp(browser, "Cover Image", "test input", "test_output");
         // testOp(browser, "Crop Image", "test input", "test_output");
         // testOp(browser, "DES Decrypt", "test input", "test_output");
