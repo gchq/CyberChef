@@ -32,7 +32,7 @@ import {
     CSSMinify,
     toBase64,
     toHex
-} from "../../../src/node/index";
+} from "../../../src/node/index.mjs";
 import chef from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 import File from "../../../src/node/File.mjs";
