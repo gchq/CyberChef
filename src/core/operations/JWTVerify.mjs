@@ -26,8 +26,7 @@ class JWTVerify extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
-        const algOptions = JWT_ALGORITHMS;
-        algOptions.push("Any");
+        const algorithmList = JWT_ALGORITHMS.concat(["Any"]);
         this.args = [
             {
                 name: "Public/Secret Key",
@@ -37,7 +36,7 @@ class JWTVerify extends Operation {
             {
                 name: "Signing algorithm",
                 type: "option",
-                value: algOptions
+                value: algorithmList
             }
         ];
     }
@@ -49,19 +48,7 @@ class JWTVerify extends Operation {
      */
     run(input, args) {
         const [key, alg] = args;
-        let algos = [];
-        switch (alg) {
-            case "Any":
-                algos = JWT_ALGORITHMS;
-                break;
-            case "None":
-                algos.push("none");
-                break;
-            default:
-                algos.push(alg);
-                break;
-        }
-
+        let algos = (alg == "Any" ? JWT_ALGORITHMS : alg);
         try {
             const verified = jwt.verify(input, key, { algorithms: algos });
 
