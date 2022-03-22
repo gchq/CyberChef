@@ -119,8 +119,7 @@ class AESEncrypt extends Operation {
                 }
             }
             if (targetKeySize !== 0) {
-                const originalLength = key.length;
-                key = key.padEnd(targetKeySize, keyPadding == "Null" ? "\0" : key);
+                key = key.padEnd(targetKeySize, keyPadding === "Null" ? "\0" : key);
             }
         }
 
