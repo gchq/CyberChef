@@ -54,6 +54,11 @@ class BlowfishEncrypt extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
+            },
+            {
+                "name": "Key Padding",
+                "type": "option",
+                "value": ["None", "Null", "Repeat"]
             }
         ];
     }
@@ -64,11 +69,16 @@ class BlowfishEncrypt extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteString(args[1].string, args[1].option),
+        var key = Utils.convertToByteString(args[0].string, args[0].option);
+        const iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2],
             inputType = args[3],
-            outputType = args[4];
+            outputType = args[4],
+            keyPadding = args[5];
+
+        if (keyPadding !== "None" && key.length < 8) {
+            key = key.padEnd(8, keyPadding === "Null" ? "\0" : key);
+        }
 
         if (key.length !== 8) {
             throw new OperationError(`Invalid key length: ${key.length} bytes

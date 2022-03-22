@@ -1670,7 +1670,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1687,7 +1688,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1704,7 +1706,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1721,7 +1724,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1738,7 +1742,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1755,7 +1760,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1772,7 +1778,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1789,7 +1796,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1808,7 +1816,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1826,7 +1835,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1844,7 +1854,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1862,7 +1873,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1879,7 +1891,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1896,7 +1909,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1913,7 +1927,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1930,7 +1945,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1951,7 +1967,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1969,7 +1986,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1987,7 +2005,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -2005,7 +2024,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
