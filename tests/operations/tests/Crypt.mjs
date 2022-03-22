@@ -619,7 +619,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -634,7 +634,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -649,7 +649,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -664,7 +664,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -680,7 +680,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -695,7 +695,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1370,7 +1370,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1385,7 +1385,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1400,7 +1400,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1415,7 +1415,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1431,7 +1431,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1446,7 +1446,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],

@@ -53,6 +53,11 @@ class DESDecrypt extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Raw", "Hex"]
+            },
+            {
+                "name": "Key Padding",
+                "type": "option",
+                "value": ["None", "Null", "Repeat"]
             }
         ];
     }
@@ -63,9 +68,13 @@ class DESDecrypt extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            [,, mode, inputType, outputType] = args;
+        const key = Utils.convertToByteString(args[0].string, args[0].option);
+        var iv = Utils.convertToByteArray(args[1].string, args[1].option),
+            [,, mode, inputType, outputType, keyPadding] = args;
+
+        if (keyPadding !== "None" && key.length < 8) {
+            key = key.padEnd(8, keyPadding == "Null" ? "\0" : key);
+        }
 
         if (key.length !== 8) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
