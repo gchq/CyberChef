@@ -48,7 +48,7 @@ class JWTVerify extends Operation {
      */
     run(input, args) {
         const [key, alg] = args;
-        let algos = (alg == "Any" ? JWT_ALGORITHMS : alg);
+        const algos = (alg === "Any" ? JWT_ALGORITHMS : alg);
         try {
             const verified = jwt.verify(input, key, { algorithms: algos });
 
