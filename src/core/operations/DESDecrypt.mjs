@@ -68,7 +68,7 @@ class DESDecrypt extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const key = Utils.convertToByteString(args[0].string, args[0].option);
+        var key = Utils.convertToByteString(args[0].string, args[0].option);
         var iv = Utils.convertToByteArray(args[1].string, args[1].option),
             [,, mode, inputType, outputType, keyPadding] = args;
 

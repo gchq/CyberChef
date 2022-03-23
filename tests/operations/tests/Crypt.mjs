@@ -81,6 +81,40 @@ The following algorithms will be used based on the size of the key:
         ],
     },
     {
+        name: "AES Encrypt: Null key padding",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "96a46d1f3796b5fffd6117f0a51bf88504b7b6e3ea036e30fee34bf7450d6547c9729ab67afb6cd5596c63b557ce9c23",
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""},
+                    "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: Repeat key padding",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "f12f09d6a74ac64e1600af169e25fe9a17b419741ef4bcee253d8faccb24e9ffcb592bfdad855d80c5fa6f1a1ba055a7",
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""},
+                    "Repeat"
+                ]
+            }
+        ],
+    },
+    {
         name: "AES Encrypt: AES-128-CBC with IV0, ASCII",
         input: "The quick brown fox jumps over the lazy dog.",
         expectedOutput: "2ef6c3fdb1314b5c2c326a2087fe1a82d5e73bf605ec8431d73e847187fc1c8fbbe969c177df1ecdf8c13f2f505f9498",
@@ -625,6 +659,36 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
+        name: "DES Encrypt: Null key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "6726f7460726374d6e3b7efe7034313b2a6fb6cb0dd504dd5a03a97e9aa514d7d4caf105f260d652bd75639faa827b9565896952b6dd965a8fc731dd41d5491cdd35723edb0a2c965174266e9dca415bdb60d4804c226c320746e48b455e761e827ec8caf2d47c3f",
+        recipeConfig: [
+            {
+                "op": "DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "58345efb"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "DES Encrypt: Repeat key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "bb8098d737005184a6ecb05a0c0cdd1e17191bb83f1da02e578d28aacb2fd013082180dd67960dd70e35957e8bc16e3e3704ab384cb22cdd0bcdde383ef329564a56a0babca7bce290ff7c587d66bdd37ed56dcbbd8d8f3de1d259f983e4dc6b6e82a83ea07cd73e",
+        recipeConfig: [
+            {
+                "op": "DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "58345efb"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Repeat"
+                ]
+            }
+        ],
+    },
+    {
         name: "DES Encrypt: DES-CBC, Binary",
         input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
         expectedOutput: "6500defb824b0eb8ccbf1fa9689c6f5bcc65247d93ecb0e573232824bca82dd41e2361f8fd82ef187de9f3b74f7ba3ca2b4e735f3ca6304fb8dd1675933c576424b1ea72b3219bdab62fce56d49c820d5ac02a4702a6d688e90b0933de97da21e4829e5cf85caae8",
@@ -831,6 +895,42 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
                     "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: Null key padding",
+        input: "96a46d1f3796b5fffd6117f0a51bf88504b7b6e3ea036e30fee34bf7450d6547c9729ab67afb6cd5596c63b557ce9c23",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": ""},
+                    "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: Repeat key padding",
+        input: "f12f09d6a74ac64e1600af169e25fe9a17b419741ef4bcee253d8faccb24e9ffcb592bfdad855d80c5fa6f1a1ba055a7",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": ""},
+                    "Repeat"
                 ]
             }
         ],
@@ -1376,6 +1476,36 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
+        name: "DES Decrypt: Repeat key padding",
+        input: "97e5507b01e9847f20e2d6f28e743f698f4cf26cf159b8acd637c27628dd6b7e7fc9f5371dd31b1729d0d1346f1c50a625e99ed4c09824f2f99e73d93566e78322b0dd93f5d8b1c939f2a5039c6cc8aec3e4c2b1ebdfd01451f224787e92593750efa4e47e3cba35",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01000100"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Repeat"
+                ]
+            }
+        ],
+    },
+    {
+        name: "DES Decrypt: Null key padding",
+        input: "97e5507b01e9847f20e2d6f28e743f698f4cf26cf159b8acd637c27628dd6b7e7fc9f5371dd31b1729d0d1346f1c50a625e99ed4c09824f2f99e73d93566e78322b0dd93f5d8b1c939f2a5039c6cc8aec3e4c2b1ebdfd01451f224787e92593750efa4e47e3cba35",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01000100"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
         name: "DES Decrypt: DES-CBC, Binary",
         input: "6500defb824b0eb8ccbf1fa9689c6f5bcc65247d93ecb0e573232824bca82dd41e2361f8fd82ef187de9f3b74f7ba3ca2b4e735f3ca6304fb8dd1675933c576424b1ea72b3219bdab62fce56d49c820d5ac02a4702a6d688e90b0933de97da21e4829e5cf85caae8",
         expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
@@ -1421,7 +1551,6 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         ],
     },
     {
-        // play.golang.org/p/FpvqncmPk7R
         name: "DES Decrypt: DES-CTR, Binary",
         input: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
         expectedOutput: "7a0e643132750e96b76dc9efa7810bea2b8feaa5b97887e44f96c0e6d506cc4dd4665683c6f63139221f8d887fd0a05b39741f8a67d87d6ac6f8dc6b668bd3e4a97b8bd3a19eafd5cdf50c3e1b3f17d61087d0b67cf6db31fec338b75f5954942c852829",
