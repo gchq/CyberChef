@@ -133,7 +133,7 @@
     "lodash": "^4.17.21",
     "loglevel": "^1.7.1",
     "loglevel-message-prefix": "^3.0.0",
-    "markdown-it": "^12.2.0",
+    "markdown-it": "^12.3.2",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "ngeohash": "^0.6.3",
