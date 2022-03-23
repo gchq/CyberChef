@@ -777,7 +777,37 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Encrypt: Null key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "d81502f7af1f75823729f319fcc658f27cd180b8e3e471f81518dea8a6a91c2a030edea1d0e3e6b439c3ce64970dcc945f1293fd0fa2acda421fed39b5385a5a2ede1ed97351cb05ba16cf6697114a30985d5a0a785fa5883baaae9fc5a296486228bd01064d061c6083a1d3ca68640dbc13c65b8a9812b28b0592c27a197e74f31dd0f9169aaecfc43232f531c25462ee6059ced7994cd24bdf35bd4880c24b103fa68427e22a5449a34e62b51c01d2f64f60014075b526bc3f055aa02a7e6a2330bd4fed558559fdb0488bbc5bfb34",
+        recipeConfig: [
+            {
+                "op": "Triple DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Encrypt: Repeat key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "72949667dbf3ebb6ea6ad62644fb4c2de74aaa2de2e159b3822c594f6ee52df5f79ddfa51f4d641874acf91d396ab06cbb07c7ce926a2420e4e9a29ab4dff5216628a5590c15bbe51d4c0ba46ebf7b588bc087cf05bad4476a4e8fa43c8feb2e473505fad2cb4b927a9fae2ad2a6dd12e5424c8727cb199e64e93312cc4ee39425b0ce919145549810c2ea87aa9a2a76d4221d774f1756e52e5a7aa97a7657f51396a5a30fcbbb532ae7b7554a3aa5dedabf625c8c049f53d3e059c14ed256644a207c5070d8a4ffd71ef610689f90cb",
+        recipeConfig: [
+            {
+                "op": "Triple DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Repeat"
                 ]
             }
         ],
@@ -792,7 +822,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -807,7 +837,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -822,7 +852,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -838,7 +868,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -853,7 +883,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1593,7 +1623,37 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Decrypt: Null key padding",
+        input: "d81502f7af1f75823729f319fcc658f27cd180b8e3e471f81518dea8a6a91c2a030edea1d0e3e6b439c3ce64970dcc945f1293fd0fa2acda421fed39b5385a5a2ede1ed97351cb05ba16cf6697114a30985d5a0a785fa5883baaae9fc5a296486228bd01064d061c6083a1d3ca68640dbc13c65b8a9812b28b0592c27a197e74f31dd0f9169aaecfc43232f531c25462ee6059ced7994cd24bdf35bd4880c24b103fa68427e22a5449a34e62b51c01d2f64f60014075b526bc3f055aa02a7e6a2330bd4fed558559fdb0488bbc5bfb34",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Triple DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f4"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Decrypt: Repeat key padding",
+        input: "72949667dbf3ebb6ea6ad62644fb4c2de74aaa2de2e159b3822c594f6ee52df5f79ddfa51f4d641874acf91d396ab06cbb07c7ce926a2420e4e9a29ab4dff5216628a5590c15bbe51d4c0ba46ebf7b588bc087cf05bad4476a4e8fa43c8feb2e473505fad2cb4b927a9fae2ad2a6dd12e5424c8727cb199e64e93312cc4ee39425b0ce919145549810c2ea87aa9a2a76d4221d774f1756e52e5a7aa97a7657f51396a5a30fcbbb532ae7b7554a3aa5dedabf625c8c049f53d3e059c14ed256644a207c5070d8a4ffd71ef610689f90cb",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Triple DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f4"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Repeat"
                 ]
             }
         ],
@@ -1608,7 +1668,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1623,7 +1683,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1638,7 +1698,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1654,7 +1714,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1669,7 +1729,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
