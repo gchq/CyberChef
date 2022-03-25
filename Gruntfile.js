@@ -189,9 +189,6 @@ module.exports = function (grunt) {
             standalone: ["build/prod/CyberChef*.html"]
         },
         eslint: {
-            options: {
-                configFile: "./.eslintrc.json"
-            },
             configs: ["*.{js,mjs}"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
