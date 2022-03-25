@@ -5,8 +5,8 @@
  * @copyright Karsten Silkenbäumer 2019
  * @license Apache-2.0
  */
-import TestRegister from "../../lib/TestRegister";
-import { BACON_ALPHABETS, BACON_TRANSLATIONS } from "../../../src/core/lib/Bacon";
+import TestRegister from "../../lib/TestRegister.mjs";
+import { BACON_ALPHABETS, BACON_TRANSLATIONS } from "../../../src/core/lib/Bacon.mjs";
 
 const alphabets = Object.keys(BACON_ALPHABETS);
 const translations = BACON_TRANSLATIONS;

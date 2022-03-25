@@ -7,7 +7,5 @@
  * @license Apache-2.0
  */
 
-/* eslint no-global-assign: ["off"] */
-require = require("esm")(module);
-module.exports = require("./index.mjs");
-module.exports.File = require("./File.mjs");
+module.exports = (async () => await import("./index.mjs"))();
+module.exports.File = (async () => await import("./File.mjs"))();
