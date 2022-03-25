@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 import assert from "assert";
-import { bake, toHex, reverse, unique, multiply } from "cyberchef/src/node/index.mjs";
+import { bake, toHex, reverse, unique, multiply } from "cyberchef";
 
 const d = bake("Testing, 1 2 3", [
     toHex,
