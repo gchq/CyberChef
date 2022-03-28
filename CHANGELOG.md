@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.35.0] - 2022-03-28
+- 'To Base45' and 'From Base45' operations added [@t-8ch] | [#1242]
+
 ### [9.34.0] - 2022-03-28
 - 'Get All Casings' operation added [@n1073645] | [#1065]
 
@@ -278,6 +281,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.35.0]: https://github.com/gchq/CyberChef/releases/tag/v9.35.0
 [9.34.0]: https://github.com/gchq/CyberChef/releases/tag/v9.34.0
 [9.33.0]: https://github.com/gchq/CyberChef/releases/tag/v9.33.0
 [9.32.0]: https://github.com/gchq/CyberChef/releases/tag/v9.32.0
@@ -482,6 +486,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1065]: https://github.com/gchq/CyberChef/pull/1065
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
+[#1242]: https://github.com/gchq/CyberChef/pull/1242
 [#1244]: https://github.com/gchq/CyberChef/pull/1244
 [#1313]: https://github.com/gchq/CyberChef/pull/1313
 [#1326]: https://github.com/gchq/CyberChef/pull/1326
