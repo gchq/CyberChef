@@ -46,7 +46,7 @@ class GetAllCasings extends Operation {
             }
             result += temp.join("") + "\n";
         }
-        return result;
+        return result.slice(0, -1);
     }
 }
 
