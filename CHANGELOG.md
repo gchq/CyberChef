@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.34.0] - 2022-03-28
+- 'Get All Casings' operation added [@n1073645] | [#1065]
+
 ### [9.33.0] - 2022-03-25
 - Updated to support Node 17 [@n1474335] [@john19696] [@t-8ch] | [[#1326] [#1313] [#1244]
 - Improved CJS and ESM module support [@d98762625] | [#1037]
@@ -275,6 +278,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.34.0]: https://github.com/gchq/CyberChef/releases/tag/v9.34.0
 [9.33.0]: https://github.com/gchq/CyberChef/releases/tag/v9.33.0
 [9.32.0]: https://github.com/gchq/CyberChef/releases/tag/v9.32.0
 [9.31.0]: https://github.com/gchq/CyberChef/releases/tag/v9.31.0
@@ -476,6 +480,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1037]: https://github.com/gchq/CyberChef/pull/1037
 [#1045]: https://github.com/gchq/CyberChef/pull/1045
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
+[#1065]: https://github.com/gchq/CyberChef/pull/1065
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
 [#1244]: https://github.com/gchq/CyberChef/pull/1244
 [#1313]: https://github.com/gchq/CyberChef/pull/1313
