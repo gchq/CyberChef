@@ -27,6 +27,13 @@ class FromBase45 extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
         this.inputType = "string";
         this.outputType = "byteArray";
+        this.args = [
+            {
+                name: "Alphabet",
+                type: "string",
+                value: ALPHABET
+            }
+        ];
 
         this.highlight = highlightFromBase45;
         this.highlightReverse = highlightToBase45;
@@ -39,6 +46,7 @@ class FromBase45 extends Operation {
      */
     run(input, args) {
         if (!input) return [];
+        const alphabet = Utils.expandAlphRange(args[0]);
 
         const res = [];
 
@@ -46,7 +54,7 @@ class FromBase45 extends Operation {
             triple.reverse();
             let b = 0;
             for (const c of triple) {
-                const idx = ALPHABET.indexOf(c);
+                const idx = alphabet.indexOf(c);
                 if (idx === -1) {
                     throw new OperationError(`Character not in alphabet: '${c}'`);
                 }

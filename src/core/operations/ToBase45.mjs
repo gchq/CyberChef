@@ -29,7 +29,7 @@ class ToBase45 extends Operation {
             {
                 name: "Alphabet",
                 type: "string",
-                value: "0-9A-Za-z"
+                value: ALPHABET
             }
         ];
 
@@ -44,6 +44,7 @@ class ToBase45 extends Operation {
      */
     run(input, args) {
         input = new Uint8Array(input);
+        const alphabet = Utils.expandAlphRange(args[0]);
         if (!input) return "";
 
         const res = [];
@@ -57,7 +58,7 @@ class ToBase45 extends Operation {
 
             let chars = 0;
             do {
-                res.push(ALPHABET[b % 45]);
+                res.push(alphabet[b % 45]);
                 chars++;
                 b = Math.floor(b / 45);
             } while (b > 0);

@@ -9,6 +9,8 @@
 
 import TestRegister from "../../lib/TestRegister.mjs";
 
+const defaultB45Alph = "0-9A-Z $%*+\\-./:";
+
 TestRegister.addTests([
     {
         name: "To Base45: nothing",
@@ -17,7 +19,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -28,7 +30,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -39,7 +41,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -50,7 +52,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -61,7 +63,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -72,7 +74,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -83,7 +85,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
@@ -94,7 +96,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [],
+                args: [defaultB45Alph],
             },
         ],
     },
