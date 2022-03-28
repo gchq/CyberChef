@@ -200,50 +200,35 @@ module.exports = function (grunt) {
             web: webpackProdConf(),
         },
         "webpack-dev-server": {
-            options: {
-                webpack: webpackConfig,
-                host: "0.0.0.0",
-                port: grunt.option("port") || 8080,
-                disableHostCheck: true,
-                overlay: true,
-                inline: false,
-                clientLogLevel: "error",
-                stats: {
-                    children: false,
-                    chunks: false,
-                    modules: false,
-                    entrypoints: false,
-                    warningsFilter: [
-                        /source-map/,
-                        /dependency is an expression/,
-                        /export 'default'/,
-                        /Can't resolve 'sodium'/
-                    ],
-                }
-            },
+            options: webpackConfig,
             start: {
-                webpack: {
-                    mode: "development",
-                    target: "web",
-                    entry: Object.assign({
-                        main: "./src/web/index.js"
-                    }, moduleEntryPoints),
-                    resolve: {
-                        alias: {
-                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
-                        }
-                    },
-                    plugins: [
-                        new webpack.DefinePlugin(BUILD_CONSTANTS),
-                        new HtmlWebpackPlugin({
-                            filename: "index.html",
-                            template: "./src/web/html/index.html",
-                            chunks: ["main"],
-                            compileTime: compileTime,
-                            version: pkg.version,
-                        })
-                    ]
-                }
+                mode: "development",
+                target: "web",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
+                    }
+                },
+                devServer: {
+                    port: grunt.option("port") || 8080,
+                    client: {
+                        logging: "error",
+                        overlay: true
+                    }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        chunks: ["main"],
+                        compileTime: compileTime,
+                        version: pkg.version,
+                    })
+                ]
             }
         },
         zip: {

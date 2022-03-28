@@ -685,8 +685,8 @@ Arguments:
     it("Parse user agent", () => {
         const result = chef.parseUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ");
         const expected = `Browser
-    Name: Mozilla
-    Version: 5.0
+    Name: Firefox
+    Version: 47.0
 Device
     Model: unknown
     Type: unknown

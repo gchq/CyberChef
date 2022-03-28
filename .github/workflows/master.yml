@@ -28,7 +28,7 @@ jobs:
     - name: Unit Tests
       run: |
         npm test
-        npx grunt testnodeconsumer
+        npm run testnodeconsumer
 
     - name: Production Build
       if: success()
