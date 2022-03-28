@@ -20,6 +20,8 @@
             "From Octal",
             "To Base32",
             "From Base32",
+            "To Base45",
+            "From Base45",
             "To Base58",
             "From Base58",
             "To Base62",
