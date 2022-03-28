@@ -13,6 +13,10 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.33.0] - 2022-03-25
+- Updated to support Node 17 [@n1474335] [@john19696] [@t-8ch] | [[#1326] [#1313] [#1244]
+- Improved CJS and ESM module support [@d98762625] | [#1037]
+
 ### [9.32.0] - 2021-08-18
 - 'Protobuf Encode' operation added and decode operation modified to allow decoding with full and partial schemas [@n1474335] | [dd18e52]
 
@@ -271,6 +275,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.33.0]: https://github.com/gchq/CyberChef/releases/tag/v9.33.0
 [9.32.0]: https://github.com/gchq/CyberChef/releases/tag/v9.32.0
 [9.31.0]: https://github.com/gchq/CyberChef/releases/tag/v9.31.0
 [9.30.0]: https://github.com/gchq/CyberChef/releases/tag/v9.30.0
@@ -384,6 +389,8 @@ All major and minor version changes will be documented in this file. Details of 
 [@dmfj]: https://github.com/dmfj
 [@mattnotmitt]: https://github.com/mattnotmitt
 [@Danh4]: https://github.com/Danh4
+[@john19696]: https://github.com/john19696
+[@t-8ch]: https://github.com/t-8ch
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -466,6 +473,10 @@ All major and minor version changes will be documented in this file. Details of 
 [#999]: https://github.com/gchq/CyberChef/pull/999
 [#1006]: https://github.com/gchq/CyberChef/pull/1006
 [#1022]: https://github.com/gchq/CyberChef/pull/1022
+[#1037]: https://github.com/gchq/CyberChef/pull/1037
 [#1045]: https://github.com/gchq/CyberChef/pull/1045
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
+[#1244]: https://github.com/gchq/CyberChef/pull/1244
+[#1313]: https://github.com/gchq/CyberChef/pull/1313
+[#1326]: https://github.com/gchq/CyberChef/pull/1326
