@@ -27,13 +27,10 @@
     "type": "git",
     "url": "https://github.com/gchq/CyberChef/"
   },
-  "main": "src/node/cjs.js",
-  "module": "src/node/index.mjs",
+  "main": "src/node/wrapper.js",
   "exports": {
-    ".": {
-      "require": "./src/node/cjs.js",
-      "import": "./src/node/index.mjs"
-    }
+    "import": "./src/node/index.mjs",
+    "require": "./src/node/wrapper.js"
   },
   "bugs": "https://github.com/gchq/CyberChef/issues",
   "browserslist": [
@@ -174,7 +171,7 @@
   "scripts": {
     "start": "npx grunt dev",
     "build": "npx grunt prod",
-    "repl": "node src/node/repl.js",
+    "repl": "node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings src/node/repl.mjs",
     "test": "npx grunt configTests && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation tests/node/index.mjs && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation tests/operations/index.mjs",
     "test-node-consumer": "npx grunt testnodeconsumer",
     "testui": "npx grunt testui",
