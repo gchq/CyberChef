@@ -66,6 +66,7 @@ class DESDecrypt extends Operation {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
             mode = args[2].substring(0, 3),
+            noPadding = args[2].endsWith("NoPadding"),
             [,,, inputType, outputType] = args;
 
         if (key.length !== 8) {
@@ -84,12 +85,14 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("DES-" + mode, key);
-         /* Allow for a "no padding" mode */
-        if (args[2].endsWith("NoPadding")) {
+
+        /* Allow for a "no padding" mode */
+        if (noPadding) {
             decipher.mode.unpad = function(output, options) {
                 return true;
             };
         }
+
         decipher.start({iv: iv});
         decipher.update(forge.util.createBuffer(input));
         const result = decipher.finish();

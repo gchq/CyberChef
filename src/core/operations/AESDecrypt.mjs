@@ -113,6 +113,7 @@ class AESDecrypt extends Operation {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2].substring(0, 3),
+            noPadding = args[2].endsWith("NoPadding"),
             inputType = args[3],
             outputType = args[4],
             gcmTag = Utils.convertToByteString(args[5].string, args[5].option),
@@ -130,12 +131,14 @@ The following algorithms will be used based on the size of the key:
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("AES-" + mode, key);
+
         /* Allow for a "no padding" mode */
-        if (args[2].endsWith("NoPadding")) {
+        if (noPadding) {
             decipher.mode.unpad = function(output, options) {
                 return true;
             };
         }
+
         decipher.start({
             iv: iv.length === 0 ? "" : iv,
             tag: mode === "GCM" ? gcmTag : undefined,

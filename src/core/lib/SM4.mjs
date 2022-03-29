@@ -38,7 +38,8 @@ const Sbox = [
     0x8d, 0x1b, 0xaf, 0x92, 0xbb, 0xdd, 0xbc, 0x7f, 0x11, 0xd9, 0x5c, 0x41, 0x1f, 0x10, 0x5a, 0xd8,
     0x0a, 0xc1, 0x31, 0x88, 0xa5, 0xcd, 0x7b, 0xbd, 0x2d, 0x74, 0xd0, 0x12, 0xb8, 0xe5, 0xb4, 0xb0,
     0x89, 0x69, 0x97, 0x4a, 0x0c, 0x96, 0x77, 0x7e, 0x65, 0xb9, 0xf1, 0x09, 0xc5, 0x6e, 0xc6, 0x84,
-    0x18, 0xf0, 0x7d, 0xec, 0x3a, 0xdc, 0x4d, 0x20, 0x79, 0xee, 0x5f, 0x3e, 0xd7, 0xcb, 0x39, 0x48];
+    0x18, 0xf0, 0x7d, 0xec, 0x3a, 0xdc, 0x4d, 0x20, 0x79, 0xee, 0x5f, 0x3e, 0xd7, 0xcb, 0x39, 0x48
+];
 
 /** "Fixed parameter CK" used in key expansion */
 const CK = [
@@ -170,7 +171,7 @@ export function encryptSM4(message, key, iv, mode="ECB", noPadding=false) {
     if (mode === "ECB" || mode === "CBC") {
         if (noPadding) {
             if (nPadding !== 16)
-                throw new OperationError("No padding requested in "+mode+" mode but input is not a 16-byte multiple.");
+                throw new OperationError(`No padding requested in ${mode} mode but input is not a 16-byte multiple.`);
             nPadding = 0;
         } else
             padByte = nPadding;
@@ -255,10 +256,11 @@ export function decryptSM4(cipherText, key, iv, mode="ECB", ignorePadding=false)
         /* Init decryption key */
         roundKey = roundKey.reverse();
         if ((originalLength & 0xF) !== 0 && !ignorePadding)
-            throw new OperationError("With ECB or CBC modes, the input must be divisible into 16 byte blocks. ("+(cipherText.length & 0xF)+" bytes extra)");
-    } else /* Pad dummy bytes for other modes, chop them off at the end */
+            throw new OperationError(`With ECB or CBC modes, the input must be divisible into 16 byte blocks. (${cipherText.length & 0xF} bytes extra)`);
+    } else { /* Pad dummy bytes for other modes, chop them off at the end */
         while ((cipherText.length & 0xF) !== 0)
             cipherText.push(0);
+    }
 
     const clearText = [];
     switch (mode) {
@@ -310,7 +312,7 @@ export function decryptSM4(cipherText, key, iv, mode="ECB", ignorePadding=false)
             }
             break;
         default:
-            throw new OperationError("Invalid block cipher mode: "+mode);
+            throw new OperationError(`Invalid block cipher mode: ${mode}`);
     }
     /* Check PKCS#7 padding */
     if (mode === "ECB" || mode === "CBC") {

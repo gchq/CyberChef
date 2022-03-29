@@ -22,7 +22,7 @@ class TripleDESDecrypt extends Operation {
 
         this.name = "Triple DES Decrypt";
         this.module = "Ciphers";
-        this.description = "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
+        this.description = "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.";
         this.infoURL = "https://wikipedia.org/wiki/Triple_DES";
         this.inputType = "string";
         this.outputType = "string";
@@ -66,6 +66,7 @@ class TripleDESDecrypt extends Operation {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
             mode = args[2].substring(0, 3),
+            noPadding = args[2].endsWith("NoPadding"),
             inputType = args[3],
             outputType = args[4];
 
@@ -85,12 +86,14 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("3DES-" + mode, key);
+
         /* Allow for a "no padding" mode */
-        if (args[2].endsWith("NoPadding")) {
+        if (noPadding) {
             decipher.mode.unpad = function(output, options) {
                 return true;
             };
         }
+
         decipher.start({iv: iv});
         decipher.update(forge.util.createBuffer(input));
         const result = decipher.finish();
