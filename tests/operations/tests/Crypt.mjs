@@ -74,7 +74,42 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
                     "CBC", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: Null key padding",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "96a46d1f3796b5fffd6117f0a51bf88504b7b6e3ea036e30fee34bf7450d6547c9729ab67afb6cd5596c63b557ce9c23",
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""},
+                    "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: Repeat key padding",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "f12f09d6a74ac64e1600af169e25fe9a17b419741ef4bcee253d8faccb24e9ffcb592bfdad855d80c5fa6f1a1ba055a7",
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""},
+                    "Repeat"
                 ]
             }
         ],
@@ -90,7 +125,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -106,7 +142,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -122,7 +159,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CBC", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -138,7 +176,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CFB", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -154,7 +193,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "OFB", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -170,7 +210,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CTR", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -186,7 +227,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "ECB", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -204,7 +246,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "GCM", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -222,7 +265,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
                     "GCM", "Raw", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -238,7 +282,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -254,7 +299,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -270,7 +316,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -286,7 +333,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -304,7 +352,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -322,7 +371,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -338,7 +388,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -354,7 +405,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -370,7 +422,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -386,7 +439,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -402,7 +456,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -420,7 +475,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -438,7 +494,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -454,7 +511,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -470,7 +528,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -486,7 +545,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -502,7 +562,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -518,7 +579,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -536,7 +598,8 @@ Tag: 821b1e5f32dad052e502775a523d957a`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -554,7 +617,8 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -570,7 +634,8 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -588,7 +653,37 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "DES Encrypt: Null key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "6726f7460726374d6e3b7efe7034313b2a6fb6cb0dd504dd5a03a97e9aa514d7d4caf105f260d652bd75639faa827b9565896952b6dd965a8fc731dd41d5491cdd35723edb0a2c965174266e9dca415bdb60d4804c226c320746e48b455e761e827ec8caf2d47c3f",
+        recipeConfig: [
+            {
+                "op": "DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "58345efb"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "DES Encrypt: Repeat key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "bb8098d737005184a6ecb05a0c0cdd1e17191bb83f1da02e578d28aacb2fd013082180dd67960dd70e35957e8bc16e3e3704ab384cb22cdd0bcdde383ef329564a56a0babca7bce290ff7c587d66bdd37ed56dcbbd8d8f3de1d259f983e4dc6b6e82a83ea07cd73e",
+        recipeConfig: [
+            {
+                "op": "DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "58345efb"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Repeat"
                 ]
             }
         ],
@@ -603,7 +698,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -618,7 +713,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -633,7 +728,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -649,7 +744,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -664,7 +759,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -682,7 +777,37 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Encrypt: Null key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "d81502f7af1f75823729f319fcc658f27cd180b8e3e471f81518dea8a6a91c2a030edea1d0e3e6b439c3ce64970dcc945f1293fd0fa2acda421fed39b5385a5a2ede1ed97351cb05ba16cf6697114a30985d5a0a785fa5883baaae9fc5a296486228bd01064d061c6083a1d3ca68640dbc13c65b8a9812b28b0592c27a197e74f31dd0f9169aaecfc43232f531c25462ee6059ced7994cd24bdf35bd4880c24b103fa68427e22a5449a34e62b51c01d2f64f60014075b526bc3f055aa02a7e6a2330bd4fed558559fdb0488bbc5bfb34",
+        recipeConfig: [
+            {
+                "op": "Triple DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Encrypt: Repeat key padding",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "72949667dbf3ebb6ea6ad62644fb4c2de74aaa2de2e159b3822c594f6ee52df5f79ddfa51f4d641874acf91d396ab06cbb07c7ce926a2420e4e9a29ab4dff5216628a5590c15bbe51d4c0ba46ebf7b588bc087cf05bad4476a4e8fa43c8feb2e473505fad2cb4b927a9fae2ad2a6dd12e5424c8727cb199e64e93312cc4ee39425b0ce919145549810c2ea87aa9a2a76d4221d774f1756e52e5a7aa97a7657f51396a5a30fcbbb532ae7b7554a3aa5dedabf625c8c049f53d3e059c14ed256644a207c5070d8a4ffd71ef610689f90cb",
+        recipeConfig: [
+            {
+                "op": "Triple DES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Repeat"
                 ]
             }
         ],
@@ -697,7 +822,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -712,7 +837,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -727,7 +852,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -743,7 +868,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -758,7 +883,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -780,7 +905,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     "CBC", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -797,7 +923,44 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: Null key padding",
+        input: "96a46d1f3796b5fffd6117f0a51bf88504b7b6e3ea036e30fee34bf7450d6547c9729ab67afb6cd5596c63b557ce9c23",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": ""},
+                    "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: Repeat key padding",
+        input: "f12f09d6a74ac64e1600af169e25fe9a17b419741ef4bcee253d8faccb24e9ffcb592bfdad855d80c5fa6f1a1ba055a7",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01020304"},
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
+                    {"option": "Hex", "string": ""},
+                    "Repeat"
                 ]
             }
         ],
@@ -814,7 +977,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -831,7 +995,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CBC", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -848,7 +1013,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CFB", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -865,7 +1031,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "OFB", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -882,7 +1049,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CTR", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -899,7 +1067,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     "ECB", "Hex", "Raw",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -916,7 +1085,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     "GCM", "Hex", "Raw",
                     {"option": "Hex", "string": "16a3e732a605cc9ca29108f742ca0743"},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -933,7 +1103,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
                     "GCM", "Hex", "Raw",
                     {"option": "Hex", "string": "3b5378917f67b0aade9891fc6c291646"},
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -950,7 +1121,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -967,7 +1139,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -984,7 +1157,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1001,7 +1175,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1018,7 +1193,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "70fad2ca19412c20f40fd06918736e56"},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1035,7 +1211,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "61cc4b70809452b0b3e38f913fa0a109"},
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -1052,7 +1229,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1069,7 +1247,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1086,7 +1265,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1103,7 +1283,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1120,7 +1301,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1137,7 +1319,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "86db597d5302595223cadbd990f1309b"},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1154,7 +1337,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "aeedf3e6ca4201577c0cf3e9ce58159d"},
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -1171,7 +1355,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1188,7 +1373,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1205,7 +1391,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1222,7 +1409,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1239,7 +1427,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1256,7 +1445,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "821b1e5f32dad052e502775a523d957a"},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1273,7 +1463,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "a8f04c4d93bbef82bef61a103371aef9"},
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "None"
                 ]
             }
         ],
@@ -1290,7 +1481,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
                     {"option": "Hex", "string": ""},
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "None"
                 ]
             }
         ],
@@ -1308,7 +1500,37 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "DES Decrypt: Repeat key padding",
+        input: "97e5507b01e9847f20e2d6f28e743f698f4cf26cf159b8acd637c27628dd6b7e7fc9f5371dd31b1729d0d1346f1c50a625e99ed4c09824f2f99e73d93566e78322b0dd93f5d8b1c939f2a5039c6cc8aec3e4c2b1ebdfd01451f224787e92593750efa4e47e3cba35",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01000100"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Repeat"
+                ]
+            }
+        ],
+    },
+    {
+        name: "DES Decrypt: Null key padding",
+        input: "97e5507b01e9847f20e2d6f28e743f698f4cf26cf159b8acd637c27628dd6b7e7fc9f5371dd31b1729d0d1346f1c50a625e99ed4c09824f2f99e73d93566e78322b0dd93f5d8b1c939f2a5039c6cc8aec3e4c2b1ebdfd01451f224787e92593750efa4e47e3cba35",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "01000100"},
+                    {"option": "Hex", "string": "533ed1378bfd929e"},
+                    "CBC", "Hex", "Hex", "Null"
                 ]
             }
         ],
@@ -1323,7 +1545,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1338,7 +1560,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1353,13 +1575,12 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
     },
     {
-        // play.golang.org/p/FpvqncmPk7R
         name: "DES Decrypt: DES-CTR, Binary",
         input: "09015087e15b0937ab0ae5a84d66e520893690a6ea066382bf1330e8876cb3aa82ccc634f8f0d458bbe0257df6f4637cdac89f311168ba91208a21ba4bdd13c4b1a92cb93b33364b5b94a5d3d7fba68f6eed5807d9f5afeb7fbffcd94792131d264004ae",
         expectedOutput: "7a0e643132750e96b76dc9efa7810bea2b8feaa5b97887e44f96c0e6d506cc4dd4665683c6f63139221f8d887fd0a05b39741f8a67d87d6ac6f8dc6b668bd3e4a97b8bd3a19eafd5cdf50c3e1b3f17d61087d0b67cf6db31fec338b75f5954942c852829",
@@ -1369,7 +1590,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1384,7 +1605,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "args": [
                     {"option": "Hex", "string": "58345efb0a64e87e"},
                     {"option": "Hex", "string": "533ed1378bfd929e"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1402,7 +1623,37 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Decrypt: Null key padding",
+        input: "d81502f7af1f75823729f319fcc658f27cd180b8e3e471f81518dea8a6a91c2a030edea1d0e3e6b439c3ce64970dcc945f1293fd0fa2acda421fed39b5385a5a2ede1ed97351cb05ba16cf6697114a30985d5a0a785fa5883baaae9fc5a296486228bd01064d061c6083a1d3ca68640dbc13c65b8a9812b28b0592c27a197e74f31dd0f9169aaecfc43232f531c25462ee6059ced7994cd24bdf35bd4880c24b103fa68427e22a5449a34e62b51c01d2f64f60014075b526bc3f055aa02a7e6a2330bd4fed558559fdb0488bbc5bfb34",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Triple DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f4"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Null"
+                ]
+            }
+        ],
+    },
+    {
+        name: "Triple DES Decrypt: Repeat key padding",
+        input: "72949667dbf3ebb6ea6ad62644fb4c2de74aaa2de2e159b3822c594f6ee52df5f79ddfa51f4d641874acf91d396ab06cbb07c7ce926a2420e4e9a29ab4dff5216628a5590c15bbe51d4c0ba46ebf7b588bc087cf05bad4476a4e8fa43c8feb2e473505fad2cb4b927a9fae2ad2a6dd12e5424c8727cb199e64e93312cc4ee39425b0ce919145549810c2ea87aa9a2a76d4221d774f1756e52e5a7aa97a7657f51396a5a30fcbbb532ae7b7554a3aa5dedabf625c8c049f53d3e059c14ed256644a207c5070d8a4ffd71ef610689f90cb",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "Triple DES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "190da55fb54b9e7dd6de05f4"},
+                    {"option": "Hex", "string": "14f67ac044a84da6"},
+                    "CBC", "Hex", "Hex", "Repeat"
                 ]
             }
         ],
@@ -1417,7 +1668,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1432,7 +1683,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1447,7 +1698,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1463,7 +1714,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1478,7 +1729,7 @@ DES uses a key length of 8 bytes (64 bits).`,
                 "args": [
                     {"option": "Hex", "string": "190da55fb54b9e7dd6de05f43bf3347ef203cd34a5829b23"},
                     {"option": "Hex", "string": "14f67ac044a84da6"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex", "None"
                 ]
             }
         ],
@@ -1608,7 +1859,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1625,7 +1877,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1642,7 +1895,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1659,7 +1913,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV
                     "ECB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1676,7 +1931,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1693,7 +1949,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1710,7 +1967,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1727,7 +1985,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CBC", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1746,7 +2005,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1764,7 +2024,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1782,7 +2043,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1800,7 +2062,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "CFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1817,7 +2080,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1834,7 +2098,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1851,7 +2116,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1868,7 +2134,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "ffeeddccbbaa9988"}, // IV
                     "OFB", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1889,7 +2156,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Raw", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1907,7 +2175,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1925,7 +2194,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Hex", // Input
-                    "Raw" // Output
+                    "Raw", // Output
+                    "None" // Key Padding
                 ]
             }
         ],
@@ -1943,7 +2213,8 @@ DES uses a key length of 8 bytes (64 bits).`,
                     {"option": "Hex", "string": "0000000000000000"}, // IV (nonce)
                     "CTR", // Mode
                     "Hex", // Input
-                    "Hex" // Output
+                    "Hex", // Output
+                    "None" // Key Padding
                 ]
             }
         ],

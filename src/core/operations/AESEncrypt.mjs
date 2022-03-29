@@ -84,6 +84,11 @@ class AESEncrypt extends Operation {
                 "type": "toggleString",
                 "value": "",
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+            },
+            {
+                "name": "Key Padding",
+                "type": "option",
+                "value": ["None", "Null", "Repeat"]
             }
         ];
     }
@@ -96,14 +101,29 @@ class AESEncrypt extends Operation {
      * @throws {OperationError} if invalid key length
      */
     run(input, args) {
-        const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteString(args[1].string, args[1].option),
+        var key = Utils.convertToByteString(args[0].string, args[0].option);
+        const iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2],
             inputType = args[3],
             outputType = args[4],
-            aad = Utils.convertToByteString(args[5].string, args[5].option);
+            aad = Utils.convertToByteString(args[5].string, args[5].option),
+            keyPadding = args[6],
+            keySizes = [16, 24, 32];
 
-        if ([16, 24, 32].indexOf(key.length) < 0) {
+        if (keyPadding !== "None") {
+            var targetKeySize = 0;
+            for (var i = 0; i < keySizes.length; i++) {
+                if (key.length < keySizes[i]) {
+                    targetKeySize = keySizes[i];
+                    break;
+                }
+            }
+            if (targetKeySize !== 0) {
+                key = key.padEnd(targetKeySize, keyPadding === "Null" ? "\0" : key);
+            }
+        }
+
+        if (keySizes.indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
 
 The following algorithms will be used based on the size of the key:
@@ -113,7 +133,6 @@ The following algorithms will be used based on the size of the key:
         }
 
         input = Utils.convertToByteString(input, inputType);
-
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
         cipher.start({
             iv: iv,
