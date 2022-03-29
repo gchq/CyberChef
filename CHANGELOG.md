@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.36.0] - 2022-03-29
+- 'SIGABA' operation added [@hettysymes] | [#934]
+
 ### [9.35.0] - 2022-03-28
 - 'To Base45' and 'From Base45' operations added [@t-8ch] | [#1242]
 
@@ -281,6 +284,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.36.0]: https://github.com/gchq/CyberChef/releases/tag/v9.36.0
 [9.35.0]: https://github.com/gchq/CyberChef/releases/tag/v9.35.0
 [9.34.0]: https://github.com/gchq/CyberChef/releases/tag/v9.34.0
 [9.33.0]: https://github.com/gchq/CyberChef/releases/tag/v9.33.0
@@ -399,6 +403,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@Danh4]: https://github.com/Danh4
 [@john19696]: https://github.com/john19696
 [@t-8ch]: https://github.com/t-8ch
+[@hettysymes]: https://github.com/hettysymes
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -473,6 +478,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#865]: https://github.com/gchq/CyberChef/pull/865
 [#912]: https://github.com/gchq/CyberChef/pull/912
 [#917]: https://github.com/gchq/CyberChef/pull/917
+[#934]: https://github.com/gchq/CyberChef/pull/934
 [#948]: https://github.com/gchq/CyberChef/pull/948
 [#952]: https://github.com/gchq/CyberChef/pull/952
 [#965]: https://github.com/gchq/CyberChef/pull/965
