@@ -13,6 +13,10 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.37.0] - 2022-03-29
+- 'SM4 Encrypt' and 'SM4 Decrypt' operations added [@swesven] | [#1189]
+- NoPadding options added for CBC and ECB modes in AES, DES and Triple DES Decrypt operations [@swesven] | [#1189]
+
 ### [9.36.0] - 2022-03-29
 - 'SIGABA' operation added [@hettysymes] | [#934]
 
@@ -284,6 +288,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.37.0]: https://github.com/gchq/CyberChef/releases/tag/v9.37.0
 [9.36.0]: https://github.com/gchq/CyberChef/releases/tag/v9.36.0
 [9.35.0]: https://github.com/gchq/CyberChef/releases/tag/v9.35.0
 [9.34.0]: https://github.com/gchq/CyberChef/releases/tag/v9.34.0
@@ -404,6 +409,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@john19696]: https://github.com/john19696
 [@t-8ch]: https://github.com/t-8ch
 [@hettysymes]: https://github.com/hettysymes
+[@swesven]: https://github.com/swesven
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -492,6 +498,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1065]: https://github.com/gchq/CyberChef/pull/1065
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
+[#1189]: https://github.com/gchq/CyberChef/pull/1189
 [#1242]: https://github.com/gchq/CyberChef/pull/1242
 [#1244]: https://github.com/gchq/CyberChef/pull/1244
 [#1313]: https://github.com/gchq/CyberChef/pull/1313
