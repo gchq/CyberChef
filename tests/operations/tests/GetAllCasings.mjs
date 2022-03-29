@@ -11,7 +11,7 @@ TestRegister.addTests([
     {
         name: "All casings of test",
         input: "test",
-        expectedOutput: "test\nTest\ntEst\nTEst\nteSt\nTeSt\ntESt\nTESt\ntesT\nTesT\ntEsT\nTEsT\nteST\nTeST\ntEST\nTEST\n",
+        expectedOutput: "test\nTest\ntEst\nTEst\nteSt\nTeSt\ntESt\nTESt\ntesT\nTesT\ntEsT\nTEsT\nteST\nTeST\ntEST\nTEST",
         recipeConfig: [
             {
                 "op": "Get All Casings",
@@ -22,7 +22,7 @@ TestRegister.addTests([
     {
         name: "All casings of t",
         input: "t",
-        expectedOutput: "t\nT\n",
+        expectedOutput: "t\nT",
         recipeConfig: [
             {
                 "op": "Get All Casings",
@@ -33,7 +33,7 @@ TestRegister.addTests([
     {
         name: "All casings of null",
         input: "",
-        expectedOutput: "\n",
+        expectedOutput: "",
         recipeConfig: [
             {
                 "op": "Get All Casings",
