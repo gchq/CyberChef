@@ -74,7 +74,7 @@ class SeriesChart extends Operation {
             pipRadius = args[3],
             // Escape HTML from all colours to prevent reflected XSS. See https://github.com/gchq/CyberChef/issues/1265
             seriesColours = args[4].split(",").map((colour) => {
-                return Utils.escapeHtml(colour)
+                return Utils.escapeHtml(colour);
             }),
             svgWidth = 500,
             interSeriesPadding = 20,
