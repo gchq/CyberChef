@@ -1,6 +1,6 @@
 import TestRegister from "../../lib/TestRegister.mjs";
-import Categories from "../../../src/core/config/Categories.json";
-import OperationConfig from "../../../src/core/config/OperationConfig.json";
+import Categories from "../../../src/core/config/Categories.json" assert {type: "json"};
+import OperationConfig from "../../../src/core/config/OperationConfig.json" assert {type: "json"};
 import it from "../assertionHandler.mjs";
 import assert from "assert";
 

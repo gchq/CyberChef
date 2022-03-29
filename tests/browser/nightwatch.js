@@ -71,7 +71,7 @@ module.exports = {
             .moveToElement(toHex, 10, 10)
             .useCss()
             .waitForElementVisible(".popover-body", 1000)
-            .doubleClick();
+            .doubleClick("xpath", toHex);
 
         // Confirm that it has been added to the recipe
         browser
@@ -90,7 +90,7 @@ module.exports = {
         browser
             .useCss()
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text").to.have.value.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
+            .expect.element("#output-text").to.have.property("value").that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
         browser
@@ -202,11 +202,11 @@ module.exports = {
         browser
             .getLocationInView(genUUID)
             .moveToElement(genUUID, 10, 10)
-            .doubleClick()
+            .doubleClick("xpath", genUUID)
             .useCss()
             .waitForElementVisible(".operation .op-title", 1000)
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text").to.have.value.which.matches(/[\da-f-]{36}/);
+            .expect.element("#output-text").to.have.property("value").which.matches(/[\da-f-]{36}/);
 
         browser.click("#clr-recipe");
     },

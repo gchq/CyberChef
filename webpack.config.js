@@ -36,7 +36,8 @@ const banner = `/**
 module.exports = {
     output: {
         publicPath: "",
-        globalObject: "this"
+        globalObject: "this",
+        assetModuleFilename: "assets/[hash][ext][query]"
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -122,7 +123,7 @@ module.exports = {
             },
             {
                 test: /prime.worker.min.js$/,
-                use: "raw-loader"
+                type: "asset/source"
             },
             {
                 test: /bootstrap-material-design/,
@@ -165,53 +166,33 @@ module.exports = {
                     "sass-loader",
                 ]
             },
-            /**
-             * The limit for these files has been increased to 60,000 (60KB)
-             * to ensure the material icons font is inlined.
-             *
-             * See: https://github.com/gchq/CyberChef/issues/612
-             */
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
-                loader: "url-loader",
-                options: {
-                    limit: 60000,
-                    name: "[hash].[ext]",
-                    outputPath: "assets"
-                }
+                type: "asset/resource",
             },
             {
                 test: /\.svg$/,
-                loader: "svg-url-loader",
-                options: {
-                    encoding: "base64"
-                }
+                type: "asset/inline",
             },
             { // Store font .fnt and .png files in a separate fonts folder
                 test: /(\.fnt$|bmfonts\/.+\.png$)/,
-                loader: "file-loader",
-                options: {
-                    name: "[name].[ext]",
-                    outputPath: "assets/fonts"
+                type: "asset/resource",
+                generator: {
+                    filename: "assets/fonts/[name][ext]"
                 }
             },
             { // First party images are saved as files to be cached
                 test: /\.(png|jpg|gif)$/,
                 exclude: /(node_modules|bmfonts)/,
-                loader: "file-loader",
-                options: {
-                    name: "images/[name].[ext]"
+                type: "asset/resource",
+                generator: {
+                    filename: "images/[name][ext]"
                 }
             },
             { // Third party images are inlined
                 test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
-                loader: "url-loader",
-                options: {
-                    limit: 10000,
-                    name: "[hash].[ext]",
-                    outputPath: "assets"
-                }
+                type: "asset/inline",
             },
         ]
     },
@@ -219,14 +200,15 @@ module.exports = {
         children: false,
         chunks: false,
         modules: false,
-        entrypoints: false,
-        warningsFilter: [
-            /source-map/,
-            /dependency is an expression/,
-            /export 'default'/,
-            /Can't resolve 'sodium'/
-        ],
+        entrypoints: false
     },
+    ignoreWarnings: [
+        /source-map/,
+        /source map/,
+        /dependency is an expression/,
+        /export 'default'/,
+        /Can't resolve 'sodium'/
+    ],
     performance: {
         hints: false
     }
