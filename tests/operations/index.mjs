@@ -75,6 +75,7 @@ import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
 import "./tests/SetUnion.mjs";
+import "./tests/SM4.mjs";
 import "./tests/StrUtils.mjs";
 import "./tests/SymmetricDifference.mjs";
 import "./tests/TextEncodingBruteForce.mjs";
