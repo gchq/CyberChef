@@ -22,9 +22,9 @@ class Sigaba extends Operation {
         super();
 
         this.name = "SIGABA";
-        this.module = "SIGABA";
+        this.module = "Bletchley";
         this.description = "Encipher/decipher with the WW2 SIGABA machine. <br><br>SIGABA, otherwise known as ECM Mark II, was used by the United States for message encryption during WW2 up to the 1950s. It was developed in the 1930s by the US Army and Navy, and has up to this day never been broken. Consisting of 15 rotors: 5 cipher rotors and 10 rotors (5 control rotors and 5 index rotors) controlling the stepping of the cipher rotors, the rotor stepping for SIGABA is much more complex than other rotor machines of its time, such as Enigma. All example rotor wirings are random example sets.<br><br>To configure rotor wirings, for the cipher and control rotors enter a string of letters which map from A to Z, and for the index rotors enter a sequence of numbers which map from 0 to 9. Note that encryption is not the same as decryption, so first choose the desired mode. <br><br> Note: Whilst this has been tested against other software emulators, it has not been tested against hardware.";
-        this.infoURL = "https://en.wikipedia.org/wiki/SIGABA";
+        this.infoURL = "https://wikipedia.org/wiki/SIGABA";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

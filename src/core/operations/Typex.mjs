@@ -1,6 +1,9 @@
 /**
  * Emulation of the Typex machine.
  *
+ * Tested against a genuine Typex machine using a variety of inputs
+ * and settings to confirm correctness.
+ *
  * @author s2224834
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
