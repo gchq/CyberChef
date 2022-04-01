@@ -336,16 +336,23 @@ export function ipv4ToStr(ipInt) {
 
 
 /**
- * Converts an IPv6 address from string format to numerical array format.
+ * Converts an IPv6 address from string format to numerical format.
  *
  * @param {string} ipStr
- * @returns {number[]}
+ * @param {boolean} retArr If true, an array is returned. If false, a BigInt is returned.
+ * @returns {(number[]|number)}
  *
  * @example
  * // returns [65280, 0, 0, 0, 0, 0, 4369, 8738]
  * strToIpv6("ff00::1111:2222");
+ *
+ * // returns 3.3895313892515355e+38
+ * strToIpv6("ff00::1111:2222", false);
  */
-export function strToIpv6(ipStr) {
+export function strToIpv6(ipStr, retArr=true) {
+    if (retArr === false) {
+        return Number("0x" + expandIpv6(ipStr).replace(/:/g, ""));
+    }
     let j = 0;
     const blocks = ipStr.split(":"),
         numBlocks = parseBlocks(blocks),
@@ -376,6 +383,49 @@ export function strToIpv6(ipStr) {
         }
         return numBlocks;
     }
+}
+
+/**
+     * Expands an IPv6 address in string format to its 'longhand' equivalent.
+     *
+     * @param {string} ipStr
+     * @returns {string}
+     *
+     * @example
+     * // returns "5555:126f:0000:0000:0000:0000:0000:0001"
+     * expandIpv6("5555:126f::1");
+     */
+export function expandIpv6(ipStr) {
+    const padHex = function (ipStr) {
+        if (ipStr.length === 39) {
+            return ipStr;
+        }
+        const blockArray = ipStr.split(":");
+        let reconstructed = "";
+        blockArray.forEach((a) => {
+            for (let i = a.length; i < 4; i++) {
+                reconstructed += "0";
+            }
+            reconstructed += a + ":";
+        });
+        return reconstructed.substring(0, reconstructed.length - 1);
+    };
+    ipStr = padHex(ipStr);
+    const doubleColonOffset = ipStr.search("::");
+    if (doubleColonOffset === -1) {
+        return ipStr;
+    }
+    const totalBlocks = ipStr.match(/:/g).length - (ipStr.startsWith(":") || ipStr.endsWith(":")),
+        reqBlocks = 8 - totalBlocks;
+    let expandedBlocks = (ipStr.startsWith(":") ? "" : ":") + "0000";
+    for (let i = 1; i < reqBlocks; i++) {
+        expandedBlocks += ":0000";
+    }
+    ipStr = ipStr.substring(0, doubleColonOffset) + expandedBlocks + ":" + ipStr.substring(doubleColonOffset + 2);
+    if (ipStr.endsWith(":")) {
+        ipStr = ipStr.substring(0, ipStr.length - 1);
+    }
+    return padHex(ipStr);
 }
 
 /**
