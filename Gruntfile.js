@@ -50,7 +50,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("testnodeconsumer",
         "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
-        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:testESMDeepImportNodeConsumer", "exec:teardownNodeConsumers"]);
+        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:teardownNodeConsumers"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -189,9 +189,6 @@ module.exports = function (grunt) {
             standalone: ["build/prod/CyberChef*.html"]
         },
         eslint: {
-            options: {
-                configFile: "./.eslintrc.json"
-            },
             configs: ["*.{js,mjs}"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
@@ -203,50 +200,35 @@ module.exports = function (grunt) {
             web: webpackProdConf(),
         },
         "webpack-dev-server": {
-            options: {
-                webpack: webpackConfig,
-                host: "0.0.0.0",
-                port: grunt.option("port") || 8080,
-                disableHostCheck: true,
-                overlay: true,
-                inline: false,
-                clientLogLevel: "error",
-                stats: {
-                    children: false,
-                    chunks: false,
-                    modules: false,
-                    entrypoints: false,
-                    warningsFilter: [
-                        /source-map/,
-                        /dependency is an expression/,
-                        /export 'default'/,
-                        /Can't resolve 'sodium'/
-                    ],
-                }
-            },
+            options: webpackConfig,
             start: {
-                webpack: {
-                    mode: "development",
-                    target: "web",
-                    entry: Object.assign({
-                        main: "./src/web/index.js"
-                    }, moduleEntryPoints),
-                    resolve: {
-                        alias: {
-                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
-                        }
-                    },
-                    plugins: [
-                        new webpack.DefinePlugin(BUILD_CONSTANTS),
-                        new HtmlWebpackPlugin({
-                            filename: "index.html",
-                            template: "./src/web/html/index.html",
-                            chunks: ["main"],
-                            compileTime: compileTime,
-                            version: pkg.version,
-                        })
-                    ]
-                }
+                mode: "development",
+                target: "web",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
+                    }
+                },
+                devServer: {
+                    port: grunt.option("port") || 8080,
+                    client: {
+                        logging: "error",
+                        overlay: true
+                    }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        chunks: ["main"],
+                        compileTime: compileTime,
+                        version: pkg.version,
+                    })
+                ]
             }
         },
         zip: {
@@ -403,13 +385,6 @@ module.exports = function (grunt) {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
                     `node ${nodeFlags} esm-consumer.mjs`,
-                ]),
-                stdout: false,
-            },
-            testESMDeepImportNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    `node ${nodeFlags} esm-deep-import-consumer.mjs`,
                 ]),
                 stdout: false,
             },

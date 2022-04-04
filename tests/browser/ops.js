@@ -420,7 +420,7 @@ function bakeOp(browser, opName, input, args=[]) {
         .click("#clr-recipe")
         .click("#clr-io")
         .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.value.that.equals("");
+        .expect.element("#input-text").to.have.property("value").that.equals("");
 
     browser
         .urlHash("recipe=" + recipeConfig)
@@ -434,7 +434,7 @@ function bakeOp(browser, opName, input, args=[]) {
         })
         .setValue("#input-text", input)
         .waitForElementPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.value.that.equals(input);
+        .expect.element("#input-text").to.have.property("value").that.equals(input);
 
     browser
         .waitForElementVisible("#stale-indicator", 5000)
@@ -465,9 +465,9 @@ function testOp(browser, opName, input, output, args=[]) {
     bakeOp(browser, opName, input, args);
 
     if (typeof output === "string") {
-        browser.expect.element("#output-text").to.have.value.that.equals(output);
+        browser.expect.element("#output-text").to.have.property("value").that.equals(output);
     } else if (output instanceof RegExp) {
-        browser.expect.element("#output-text").to.have.value.that.matches(output);
+        browser.expect.element("#output-text").to.have.property("value").that.matches(output);
     }
 }
 

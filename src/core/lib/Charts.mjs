@@ -6,6 +6,7 @@
  */
 
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * @constant
@@ -128,7 +129,7 @@ export function getScatterValuesWithColour(input, recordDelimiter, fieldDelimite
         if (Number.isNaN(x)) throw new OperationError("Values must be numbers in base 10.");
         if (Number.isNaN(y)) throw new OperationError("Values must be numbers in base 10.");
 
-        return [x, y, colour];
+        return [x, y, Utils.escapeHtml(colour)];
     });
 
     return { headings, values };
