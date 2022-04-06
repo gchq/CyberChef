@@ -198,8 +198,9 @@ module.exports = {
         // testOp(browser, "MD4", "test input", "test_output");
         // testOp(browser, "MD5", "test input", "test_output");
         // testOp(browser, "MD6", "test input", "test_output");
-        // testOpHtml(browser, "Magic", "dGVzdCBvdXRwdXQ=", "td", /Result snippet/);
-        testOpHtml(browser, "Magic", "dGVzdCBvdXRwdXQ=", "tr:{1} td:{2}", "Result snippet");
+        testOpHtml(browser, "Magic", "dGVzdF9vdXRwdXQ=", "tr:nth-of-type(1) th:nth-of-type(2)", "Result snippet");
+        testOpHtml(browser, "Magic", "dGVzdF9vdXRwdXQ=", "tr:nth-of-type(2) td:nth-of-type(2)", "test_output");
+        testOpHtml(browser, "Magic", "dGVzdF9vdXRwdXQ=", "tr:nth-of-type(2) td:nth-of-type(1)", /Base64/);
         // testOp(browser, "Mean", "test input", "test_output");
         // testOp(browser, "Median", "test input", "test_output");`
         // testOp(browser, "Merge", "test input", "test_output");`
@@ -374,26 +375,30 @@ module.exports = {
     }
 };
 
-/**
+/** @function
  * Clears the current recipe and bakes a new operation.
  *
- * @param {string} opName
- * @param {Browser} browser
+ * @param {Browser} browser - Nightwatch client
+ * @param {string|Array<string>} opName - name of operation to be tested, array for pre & post ops
+ * @param {string} input - input text for test
+ * @param {Array.<string>} args - arguments for test
  */
 function bakeOp(browser, opName, input, args=[]) {
 
-    let recipeConfig;
+    let op, recipeConfig;
     /*
     * Create recipeConfig as single operation
     * or wrapped with a pre-op and
     * possibly a post-op too
     */
     if (typeof(opName) === "string") {
+        op = opName;
         recipeConfig = JSON.stringify([{
             "op": opName,
             "args": args
         }]);
     } else if (opName.length === 2) {
+        op = opName[1];
         recipeConfig = JSON.stringify([{
             "op": opName[0],
             "args": []
@@ -402,6 +407,7 @@ function bakeOp(browser, opName, input, args=[]) {
             "args": args
         }]);
     } else {
+        op = opName[1];
         recipeConfig = JSON.stringify([{
             "op": opName[0],
             "args": []
@@ -411,7 +417,6 @@ function bakeOp(browser, opName, input, args=[]) {
         }, {
             "op": opName[2],
             "args": []
-
         }]);
     }
 
@@ -419,18 +424,22 @@ function bakeOp(browser, opName, input, args=[]) {
         .useCss()
         .click("#clr-recipe")
         .click("#clr-io")
+        .perform(function() {
+            console.log("\nCurrent Operation: ", op);
+        })
         .waitForElementNotPresent("#rec-list li.operation")
         .expect.element("#input-text").to.have.property("value").that.equals("");
 
+    let currentUrl;
     browser
         .urlHash("recipe=" + recipeConfig)
+        // get the current URL
         .url(function(result) {
             currentUrl = result;
         })
+        // and put it out
         .perform(function() {
-            console.log(currentUrl);
-            console.log(opName);
-            console.log(recipeConfig);
+            console.log("Current URL: ", currentUrl.value);
         })
         .setValue("#input-text", input)
         .waitForElementPresent("#rec-list li.operation")
@@ -443,22 +452,16 @@ function bakeOp(browser, opName, input, args=[]) {
         .pause(100)
         .waitForElementPresent("#stale-indicator.hidden", 5000)
         .waitForElementNotVisible("#output-loader", 5000);
-
-    let currentUrl="";
-    browser
-        .url(function(result) {
-            currentUrl = result;
-        })
-        .perform(function() {
-            console.log(currentUrl.value);
-        });
 }
 
-/**
+/** @function
  * Clears the current recipe and tests a new operation.
  *
- * @param {string} opName
- * @param {Browser} browser
+ * @param {Browser} browser - Nightwatch client
+ * @param {string|Array<string>} opName - name of operation to be tested, array for pre & post ops
+ * @param {string} input - input text for test
+ * @param {string} output - expected output
+ * @param {Array.<string>} args - arguments for test
  */
 function testOp(browser, opName, input, output, args=[]) {
 
@@ -471,19 +474,23 @@ function testOp(browser, opName, input, output, args=[]) {
     }
 }
 
-/**
+/** @function
  * Clears the current recipe and tests a new operation.
  *
- * @param {string} opName
- * @param {Browser} browser
+ * @param {Browser} browser - Nightwatch client
+ * @param {string} opName - name of operation to be tested
+ * @param {string} input - input text for test
+ * @param {string} cssSelector - CSS selector for HTML output
+ * @param {string} output - expected output
+ * @param {Array.<string>} args - arguments for test 
  */
-function testOpHtml(browser, opName, input, element, output, args=[]) {
+function testOpHtml(browser, opName, input, cssSelector, output, args=[]) {
 
     bakeOp(browser, opName, input, args);
-    browser.waitForElementPresent("#output-html", 5000);
+
     if (typeof output === "string") {
-        browser.expect.element("#output-html " + element).to.have.value.that.equals(output);
+        browser.expect.element("#output-html " + cssSelector).text.that.equals(output);
     } else if (output instanceof RegExp) {
-        browser.expect.element("#output-html " + element).to.have.value.that.matches(output);
+        browser.expect.element("#output-html " + cssSelector).text.that.matches(output);
     }
 }
