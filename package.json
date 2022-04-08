@@ -75,6 +75,7 @@
     "postcss-import": "^14.1.0",
     "postcss-loader": "^6.2.1",
     "prompt": "^1.2.2",
+    "sass": "^1.50.0",
     "sass-loader": "^12.6.0",
     "sitemap": "^7.1.1",
     "terser": "^5.12.1",
