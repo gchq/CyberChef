@@ -87,6 +87,7 @@
             "SM4 Decrypt",
             "ROT13",
             "ROT47",
+            "ROT8000",
             "XOR",
             "XOR Brute Force",
             "Vigenère Encode",
@@ -176,7 +177,8 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
-            "ROT13"
+            "ROT13",
+            "ROT8000"
         ]
     },
     {
