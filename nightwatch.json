@@ -14,7 +14,8 @@
       },
       "desiredCapabilities": {
         "browserName": "chrome"
-      }
+      },
+      "enable_fail_fast": true
     },
 
     "dev": {
