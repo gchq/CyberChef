@@ -816,7 +816,7 @@ pCGTErs=
     it("RC4 Drop", () => {
         assert.strictEqual(
             chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
-            "8fa5f2751d34476a0c857439f43816cf");
+            "b85cb1c4ed6bed8f260ab92829bba942");
     }),
 
     it("Regular Expression", () => {
