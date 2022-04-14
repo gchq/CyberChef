@@ -7,7 +7,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
-import { JPG_RAW } from "../samples/Images.mjs";
+import { JPG_RAW } from "../../samples/Images.mjs";
 
 TestRegister.addTests([
     {
