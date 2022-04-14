@@ -43,9 +43,9 @@ class ToBase45 extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (!input) return "";
         input = new Uint8Array(input);
         const alphabet = Utils.expandAlphRange(args[0]);
-        if (!input) return "";
 
         const res = [];
 
