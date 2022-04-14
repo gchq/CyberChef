@@ -471,7 +471,7 @@ color: white;
     }),
 
     it("Extract dates", () => {
-        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992\n");
+        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992");
     }),
 
     it("Filter", () => {
@@ -859,7 +859,7 @@ pCGTErs=
     }),
 
     it("SQL Beautify", () => {
-        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F 
+        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F
 FROM STATS;`);
         const expected = `SELECT MONTH,
          ID,
@@ -879,8 +879,7 @@ FROM STATS;`;
         const result = chef.strings("smothering ampersand abreast", {displayTotal: true});
         const expected = `Total found: 1
 
-smothering ampersand abreast
-`;
+smothering ampersand abreast`;
         assert.strictEqual(result.toString(), expected);
     }),
 
