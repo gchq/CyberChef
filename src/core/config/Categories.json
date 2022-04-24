@@ -248,6 +248,7 @@
             "Expand alphabet range",
             "Drop bytes",
             "Take bytes",
+            "Byte Length",
             "Pad lines",
             "Find / Replace",
             "Regular expression",
