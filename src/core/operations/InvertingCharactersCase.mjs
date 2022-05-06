@@ -33,8 +33,8 @@ class InvertingCharactersCase extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        var result = "";
-        for(var i = 0; i < input.length; i++){
+        let result = "";
+        for (let i = 0; i < input.length; i++) {
             result += this.checkAndChangeCase(input[i]);
         }
         return result;
@@ -44,9 +44,9 @@ class InvertingCharactersCase extends Operation {
      * Check if a character is Uppercase or Lowercase 
      * and returns the opposite
      */
-    checkAndChangeCase(character){
+    checkAndChangeCase(character) {
         try {
-            if(character.charCodeAt(0) > 64 && character.charCodeAt(0) < 91)
+            if (character.charCodeAt(0) > 64 && character.charCodeAt(0) < 91)
                 return character.toLowerCase();
             else if (character.charCodeAt(0) > 96 && character.charCodeAt(0) < 123)
                 return character.toUpperCase();
