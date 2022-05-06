@@ -65,7 +65,8 @@
             "JSON to CSV",
             "Avro to JSON",
             "CBOR Encode",
-            "CBOR Decode"
+            "CBOR Decode",
+            "Inverting characters case"
         ]
     },
     {
@@ -220,7 +221,8 @@
             "Unicode Text Format",
             "Remove Diacritics",
             "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Convert to NATO alphabet",
+            "Inverting characters case"
         ]
     },
     {
