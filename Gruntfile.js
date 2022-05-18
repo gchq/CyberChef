@@ -6,6 +6,8 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const glob = require("glob");
 const path = require("path");
 
+const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+
 /**
  * Grunt configuration for building the app in various formats.
  *
@@ -48,7 +50,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("testnodeconsumer",
         "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
-        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:testESMDeepImportNodeConsumer", "exec:teardownNodeConsumers"]);
+        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:teardownNodeConsumers"]);
 
     grunt.registerTask("default",
         "Lints the code base",
@@ -187,9 +189,6 @@ module.exports = function (grunt) {
             standalone: ["build/prod/CyberChef*.html"]
         },
         eslint: {
-            options: {
-                configFile: "./.eslintrc.json"
-            },
             configs: ["*.{js,mjs}"],
             core: ["src/core/**/*.{js,mjs}", "!src/core/vendor/**/*", "!src/core/operations/legacy/**/*"],
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
@@ -201,50 +200,35 @@ module.exports = function (grunt) {
             web: webpackProdConf(),
         },
         "webpack-dev-server": {
-            options: {
-                webpack: webpackConfig,
-                host: "0.0.0.0",
-                port: grunt.option("port") || 8080,
-                disableHostCheck: true,
-                overlay: true,
-                inline: false,
-                clientLogLevel: "error",
-                stats: {
-                    children: false,
-                    chunks: false,
-                    modules: false,
-                    entrypoints: false,
-                    warningsFilter: [
-                        /source-map/,
-                        /dependency is an expression/,
-                        /export 'default'/,
-                        /Can't resolve 'sodium'/
-                    ],
-                }
-            },
+            options: webpackConfig,
             start: {
-                webpack: {
-                    mode: "development",
-                    target: "web",
-                    entry: Object.assign({
-                        main: "./src/web/index.js"
-                    }, moduleEntryPoints),
-                    resolve: {
-                        alias: {
-                            "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
-                        }
-                    },
-                    plugins: [
-                        new webpack.DefinePlugin(BUILD_CONSTANTS),
-                        new HtmlWebpackPlugin({
-                            filename: "index.html",
-                            template: "./src/web/html/index.html",
-                            chunks: ["main"],
-                            compileTime: compileTime,
-                            version: pkg.version,
-                        })
-                    ]
-                }
+                mode: "development",
+                target: "web",
+                entry: Object.assign({
+                    main: "./src/web/index.js"
+                }, moduleEntryPoints),
+                resolve: {
+                    alias: {
+                        "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
+                    }
+                },
+                devServer: {
+                    port: grunt.option("port") || 8080,
+                    client: {
+                        logging: "error",
+                        overlay: true
+                    }
+                },
+                plugins: [
+                    new webpack.DefinePlugin(BUILD_CONSTANTS),
+                    new HtmlWebpackPlugin({
+                        filename: "index.html",
+                        template: "./src/web/html/index.html",
+                        chunks: ["main"],
+                        compileTime: compileTime,
+                        version: pkg.version,
+                    })
+                ]
             }
         },
         zip: {
@@ -349,15 +333,15 @@ module.exports = function (grunt) {
                 command: "git gc --prune=now --aggressive"
             },
             sitemap: {
-                command: "node --experimental-modules --no-warnings --no-deprecation src/web/static/sitemap.mjs > build/prod/sitemap.xml",
+                command: `node ${nodeFlags} src/web/static/sitemap.mjs > build/prod/sitemap.xml`,
                 sync: true
             },
             generateConfig: {
                 command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
-                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateOpsIndex.mjs",
-                    "node --experimental-modules --no-warnings --no-deprecation src/core/config/scripts/generateConfig.mjs",
+                    `node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`,
+                    `node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`,
                     "echo '--- Config scripts finished. ---\n'"
                 ]),
                 sync: true
@@ -365,7 +349,7 @@ module.exports = function (grunt) {
             generateNodeIndex: {
                 command: chainCommands([
                     "echo '\n--- Regenerating node index ---'",
-                    "node --experimental-modules --no-warnings --no-deprecation src/node/config/scripts/generateNodeIndex.mjs",
+                    `node ${nodeFlags} src/node/config/scripts/generateNodeIndex.mjs`,
                     "echo '--- Node index generated. ---\n'"
                 ]),
                 sync: true
@@ -393,21 +377,14 @@ module.exports = function (grunt) {
             testCJSNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings cjs-consumer.js",
+                    `node ${nodeFlags} cjs-consumer.js`,
                 ]),
                 stdout: false,
             },
             testESMNodeConsumer: {
                 command: chainCommands([
                     `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules esm-consumer.mjs",
-                ]),
-                stdout: false,
-            },
-            testESMDeepImportNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    "node --no-warnings --experimental-modules esm-deep-import-consumer.mjs",
+                    `node ${nodeFlags} esm-consumer.mjs`,
                 ]),
                 stdout: false,
             },

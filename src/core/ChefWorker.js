@@ -7,7 +7,7 @@
  */
 
 import Chef from "./Chef.mjs";
-import OperationConfig from "./config/OperationConfig.json";
+import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
 import OpModules from "./config/modules/OpModules.mjs";
 
 // Add ">" to the start of all log messages in the Chef Worker

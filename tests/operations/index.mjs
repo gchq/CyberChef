@@ -20,6 +20,7 @@ import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/BCD.mjs";
 import "./tests/BSON.mjs";
 import "./tests/BaconCipher.mjs";
+import "./tests/Base45.mjs";
 import "./tests/Base58.mjs";
 import "./tests/Base64.mjs";
 import "./tests/Base62.mjs";
@@ -74,6 +75,7 @@ import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
 import "./tests/SetUnion.mjs";
+import "./tests/SM4.mjs";
 import "./tests/StrUtils.mjs";
 import "./tests/SymmetricDifference.mjs";
 import "./tests/TextEncodingBruteForce.mjs";
@@ -107,6 +109,8 @@ import "./tests/CBORDecode.mjs";
 import "./tests/JA3Fingerprint.mjs";
 import "./tests/JA3SFingerprint.mjs";
 import "./tests/HASSH.mjs";
+import "./tests/GetAllCasings.mjs";
+import "./tests/SIGABA.mjs";
 
 
 // Cannot test operations that use the File type yet

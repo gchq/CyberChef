@@ -1,6 +1,9 @@
 /**
  * Emulation of the Lorenz SZ40/42a/42b cipher attachment.
  *
+ * Tested against the Colossus Rebuild at Bletchley Park's TNMOC
+ * using a variety of inputs and settings to confirm correctness.
+ *
  * @author VirtualColossus [martin@virtualcolossus.co.uk]
  * @copyright Crown Copyright 2019
  * @license Apache-2.0

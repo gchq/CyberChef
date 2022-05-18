@@ -16,7 +16,8 @@ module.exports = {
             .click("#auto-bake-label");
     },
 
-    "Sanity check operations": browser => {
+    "Sanity check operations": async browser => {
+        const Images = await import("../samples/Images.mjs");
         testOp(browser, "A1Z26 Cipher Decode", "20 5 19 20 15 21 20 16 21 20", "testoutput");
         testOp(browser, "A1Z26 Cipher Encode", "test input", "20 5 19 20 9 14 16 21 20");
         testOp(browser, "ADD", "test input", "Ê»ÉÊv¿ÄÆËÊ", [{ "option": "Hex", "string": "56" }]);
@@ -24,7 +25,7 @@ module.exports = {
         testOp(browser, "AES Encrypt", "test input", "e42eb8fbfb7a98fff061cd2c1a794d92", [{"option": "Hex", "string": "00112233445566778899aabbccddeeff"}, {"option": "Hex", "string": "00000000000000000000000000000000"}, "CBC", "Raw", "Hex"]);
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");
-        // testOp(browser, "Add Text To Image", "test input", "test_output");
+        testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16], []]);
         testOp(browser, "Adler-32 Checksum", "test input", "16160411");
         testOp(browser, "Affine Cipher Decode", "test input", "rcqr glnsr", [1, 2]);
         testOp(browser, "Affine Cipher Encode", "test input", "njln rbfpn", [2, 1]);
@@ -44,12 +45,12 @@ module.exports = {
         // testOp(browser, "Bifid Cipher Encode", "test input", "test_output");
         // testOp(browser, "Bit shift left", "test input", "test_output");
         // testOp(browser, "Bit shift right", "test input", "test_output");
-        // testOp(browser, "Blowfish Decrypt", "test input", "test_output");
-        // testOp(browser, "Blowfish Encrypt", "test input", "test_output");
-        // testOp(browser, "Blur Image", "test input", "test_output");
+        testOp(browser, "Blowfish Decrypt", "10884e15427dd84ec35204e9c8e921ae", "test_output", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Hex", "Raw"]);
+        testOp(browser, "Blowfish Encrypt", "test input", "f0fadbd1d90d774f714248cf26b96410", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Raw", "Hex"]);
+        testOp(browser, ["From Hex", "Blur Image", "To Base64"], Images.PNG_HEX, Images.PNG_BLUR_B64);
         // testOp(browser, "Bombe", "test input", "test_output");
-        // testOp(browser, "Bzip2 Compress", "test input", "test_output");
-        // testOp(browser, "Bzip2 Decompress", "test input", "test_output");
+        testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
+        testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
         // testOp(browser, "CRC-16 Checksum", "test input", "test_output");
         // testOp(browser, "CRC-32 Checksum", "test input", "test_output");
         // testOp(browser, "CRC-8 Checksum", "test input", "test_output");
@@ -69,10 +70,10 @@ module.exports = {
         // testOp(browser, "Comment", "test input", "test_output");
         // testOp(browser, "Compare CTPH hashes", "test input", "test_output");
         // testOp(browser, "Compare SSDEEP hashes", "test input", "test_output");
-        // testOp(browser, "Conditional Jump", "test input", "test_output");
+        // /testOp(browser, "Conditional Jump", "test input", "test_output");
         // testOp(browser, "Contain Image", "test input", "test_output");
         // testOp(browser, "Convert area", "test input", "test_output");
-        // testOp(browser, "Convert co-ordinate format", "test input", "test_output");
+        // /testOp(browser, "Convert co-ordinate format", "test input", "test_output");
         // testOp(browser, "Convert data units", "test input", "test_output");
         // testOp(browser, "Convert distance", "test input", "test_output");
         // testOp(browser, "Convert Image Format", "test input", "test_output");
@@ -197,10 +198,12 @@ module.exports = {
         // testOp(browser, "MD4", "test input", "test_output");
         // testOp(browser, "MD5", "test input", "test_output");
         // testOp(browser, "MD6", "test input", "test_output");
-        // testOp(browser, "Magic", "test input", "test_output");
+        testOpHtml(browser, "Magic", "dGVzdF9vdXRwdXQ=", "tr:nth-of-type(1) th:nth-of-type(2)", "Result snippet");
+        testOpHtml(browser, "Magic", "dGVzdF9vdXRwdXQ=", "tr:nth-of-type(2) td:nth-of-type(2)", "test_output");
+        testOpHtml(browser, "Magic", "dGVzdF9vdXRwdXQ=", "tr:nth-of-type(2) td:nth-of-type(1)", /Base64/);
         // testOp(browser, "Mean", "test input", "test_output");
-        // testOp(browser, "Median", "test input", "test_output");
-        // testOp(browser, "Merge", "test input", "test_output");
+        // testOp(browser, "Median", "test input", "test_output");`
+        // testOp(browser, "Merge", "test input", "test_output");`
         // testOp(browser, "Microsoft Script Decoder", "test input", "test_output");
         // testOp(browser, "Multiple Bombe", "test input", "test_output");
         // testOp(browser, "Multiply", "test input", "test_output");
@@ -372,34 +375,50 @@ module.exports = {
     }
 };
 
-/**
- * Clears the current recipe and tests a new operation.
+/** @function
+ * Clears the current recipe and bakes a new operation.
  *
- * @param {string} opName
- * @param {Browser} browser
+ * @param {Browser} browser - Nightwatch client
+ * @param {string|Array<string>} opName - name of operation to be tested, array for multiple ops
+ * @param {string} input - input text for test
+ * @param {Array<string>|Array<Array<string>>} args - aarguments, nested if multiple ops
  */
-function testOp(browser, opName, input, output, args=[]) {
+function bakeOp(browser, opName, input, args=[]) {
+    let recipeConfig;
 
-    const recipeConfig = JSON.stringify([{
-        "op": opName,
-        "args": args
-    }]);
+    if (typeof(opName) === "string") {
+        recipeConfig = JSON.stringify([{
+            "op": opName,
+            "args": args
+        }]);
+    } else if (opName instanceof Array) {
+        recipeConfig = JSON.stringify(
+            opName.map((op, i) => {
+                return {
+                    op: op,
+                    args: args.length ? args[i] : []
+                };
+            })
+        );
+    } else {
+        throw new Error("Invalid operation type. Must be string or array of strings. Received: " + typeof(opName));
+    }
 
     browser
-        .perform(function() {
-            console.log(opName);
-        })
         .useCss()
         .click("#clr-recipe")
         .click("#clr-io")
         .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.value.that.equals("");
+        .expect.element("#input-text").to.have.property("value").that.equals("");
 
     browser
+        .perform(function() {
+            console.log(`Current test: ${opName}`);
+        })
         .urlHash("recipe=" + recipeConfig)
         .setValue("#input-text", input)
         .waitForElementPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.value.that.equals(input);
+        .expect.element("#input-text").to.have.property("value").that.equals(input);
 
     browser
         .waitForElementVisible("#stale-indicator", 5000)
@@ -408,10 +427,44 @@ function testOp(browser, opName, input, output, args=[]) {
         .pause(100)
         .waitForElementPresent("#stale-indicator.hidden", 5000)
         .waitForElementNotVisible("#output-loader", 5000);
+}
+
+/** @function
+ * Clears the current recipe and tests a new operation.
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string|Array<string>} opName - name of operation to be tested, array for multiple ops
+ * @param {string} input - input text
+ * @param {string} output - expected output
+ * @param {Array<string>|Array<Array<string>>} args - arguments, nested if multiple ops
+ */
+function testOp(browser, opName, input, output, args=[]) {
+
+    bakeOp(browser, opName, input, args);
 
     if (typeof output === "string") {
-        browser.expect.element("#output-text").to.have.value.that.equals(output);
+        browser.expect.element("#output-text").to.have.property("value").that.equals(output);
     } else if (output instanceof RegExp) {
-        browser.expect.element("#output-text").to.have.value.that.matches(output);
+        browser.expect.element("#output-text").to.have.property("value").that.matches(output);
+    }
+}
+
+/** @function
+ * Clears the current recipe and tests a new operation.
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string|Array<string>} opName - name of operation to be tested array for multiple ops
+ * @param {string} input - input text
+ * @param {string} cssSelector - CSS selector for HTML output
+ * @param {string} output - expected output
+ * @param {Array<string>|Array<Array<string>>} args - arguments, nested if multiple ops
+ */
+function testOpHtml(browser, opName, input, cssSelector, output, args=[]) {
+    bakeOp(browser, opName, input, args);
+
+    if (typeof output === "string") {
+        browser.expect.element("#output-html " + cssSelector).text.that.equals(output);
+    } else if (output instanceof RegExp) {
+        browser.expect.element("#output-html " + cssSelector).text.that.matches(output);
     }
 }

@@ -7,8 +7,8 @@
  * @license Apache-2.0
  */
 
-const chef = require("./cjs.js");
-const repl = require("repl");
+import chef from "./index.mjs";
+import repl from "repl";
 
 
 /* eslint no-console: ["off"] */

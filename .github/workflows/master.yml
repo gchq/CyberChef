@@ -1,6 +1,7 @@
 name: "Master Build, Test & Deploy"
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - master
@@ -14,7 +15,7 @@ jobs:
     - name: Set node version
       uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: '17.x'
 
     - name: Install
       run: |
@@ -27,7 +28,7 @@ jobs:
     - name: Unit Tests
       run: |
         npm test
-        npx grunt testnodeconsumer
+        npm run testnodeconsumer
 
     - name: Production Build
       if: success()

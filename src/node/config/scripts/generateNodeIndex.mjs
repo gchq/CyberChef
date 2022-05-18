@@ -41,7 +41,7 @@ let code = `/**
 import NodeDish from "./NodeDish.mjs";
 import { _wrap, help, bake, _explainExcludedFunction } from "./api.mjs";
 import File from "./File.mjs";
-import { OperationError, DishError, ExcludedOperationError } from "../core/errors/index";
+import { OperationError, DishError, ExcludedOperationError } from "../core/errors/index.mjs";
 import {
     // import as core_ to avoid name clashes after wrap.
 `;
@@ -52,7 +52,7 @@ includedOperations.forEach((op) => {
 });
 
 code +=`
-} from "../core/operations/index";
+} from "../core/operations/index.mjs";
 
 global.File = File;
 

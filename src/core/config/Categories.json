@@ -20,6 +20,8 @@
             "From Octal",
             "To Base32",
             "From Base32",
+            "To Base45",
+            "From Base45",
             "To Base58",
             "From Base58",
             "To Base62",
@@ -81,6 +83,8 @@
             "RC2 Decrypt",
             "RC4",
             "RC4 Drop",
+            "SM4 Encrypt",
+            "SM4 Decrypt",
             "ROT13",
             "ROT47",
             "XOR",
@@ -118,7 +122,8 @@
             "Multiple Bombe",
             "Typex",
             "Lorenz",
-            "Colossus"
+            "Colossus",
+            "SIGABA"
         ]
     },
     {
@@ -230,6 +235,7 @@
             "From Case Insensitive Regex",
             "Add line numbers",
             "Remove line numbers",
+            "Get All Casings",
             "To Table",
             "Reverse",
             "Sort",
