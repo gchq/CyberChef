@@ -65,6 +65,10 @@ class ToBase45 extends Operation {
 
             if (chars < 2) {
                 res.push("0");
+                chars++;
+            }
+            if (pair.length > 1 && chars < 3) {
+                res.push("0");
             }
         }
 
