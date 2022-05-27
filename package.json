@@ -48,7 +48,7 @@
     "autoprefixer": "^10.4.4",
     "babel-loader": "^8.2.4",
     "babel-plugin-dynamic-import-node": "^2.3.3",
-    "chromedriver": "^99.0.0",
+    "chromedriver": "^101.0.0",
     "cli-progress": "^3.10.0",
     "colors": "^1.4.0",
     "copy-webpack-plugin": "^10.2.4",

@@ -36,6 +36,8 @@ class OptionsWaiter {
         for (i = 0; i < cboxes.length; i++) {
             cboxes[i].checked = this.app.options[cboxes[i].getAttribute("option")];
         }
+        // init ux option - ux is last cbox
+        cboxes[i-1].dispatchEvent(new Event("change"));
 
         const nboxes = document.querySelectorAll("#options-body input[type=number]");
         for (i = 0; i < nboxes.length; i++) {
@@ -188,6 +190,18 @@ class OptionsWaiter {
         log.setLevel(level, false);
         this.manager.worker.setLogLevel();
         this.manager.input.setLogLevel();
+    }
+
+
+    /**
+     * Changes the UX using CSS change so that actions can be managed
+     * regardless of visibility
+     *
+     * @param {Event} e
+     */
+    uxChange(e) {
+        const checked = $("#accessibleUX").is(":checked");
+        $(".accessibleUX").css("display", checked ? "block" : "none");
     }
 }
 

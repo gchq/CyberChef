@@ -261,6 +261,43 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
+    /**
+     * Handler for remove click events.
+     * Removes the operation from the recipe and auto bakes.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    removeClick(e) {
+        e.target.parentNode.parentNode.remove();
+        this.opRemove(e);
+    }
+
+    /**
+     * Handler for remove click events.
+     * Removes the operation from the recipe and auto bakes.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    moveUpClick(e) {
+        const li = $(e.target.parentNode.parentNode);
+        li.prev().before(li);
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+    /**
+     * Handler for down click events.
+     * Moves the operation in the recipe and auto bakes.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    moveDownClick(e) {
+        const li = $(e.target.parentNode.parentNode);
+        li.next().after(li);
+        window.dispatchEvent(this.manager.statechange);
+    }
 
     /**
      * Handler for operation doubleclick events.
@@ -368,7 +405,7 @@ class RecipeWaiter {
      * @param {element} el - The operation stub element from the operations pane
      */
     buildRecipeOperation(el) {
-        const opName = el.textContent;
+        const opName = $(el).data('opname');
         const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         el.innerHTML = op.toFullHtml();
 
@@ -395,7 +432,7 @@ class RecipeWaiter {
         const item = document.createElement("li");
 
         item.classList.add("operation");
-        item.innerHTML = name;
+        $(item).data("opname", name);
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
 

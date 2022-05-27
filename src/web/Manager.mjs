@@ -93,6 +93,7 @@ class Manager {
         this.bindings.updateKeybList();
         this.background.registerChefWorker();
         this.seasonal.load();
+        this.options.load();
     }
 
 
@@ -126,6 +127,7 @@ class Manager {
         // Operations
         this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
         this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
+        this.addDynamicListener(".op-list li.operation button i", "click", this.ops.operationAdd, this.ops);
         document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
@@ -137,6 +139,9 @@ class Manager {
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
+        this.addDynamicListener(".remove-icon", "click", this.recipe.removeClick, this.recipe);
+        this.addDynamicListener(".move-down", "click", this.recipe.moveDownClick, this.recipe);
+        this.addDynamicListener(".move-up", "click", this.recipe.moveUpClick, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
         this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
@@ -233,6 +238,7 @@ class Manager {
         document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
         document.getElementById("logLevel").addEventListener("change", this.options.logLevelChange.bind(this.options));
         document.getElementById("imagePreview").addEventListener("change", this.input.renderFileThumb.bind(this.input));
+        document.getElementById("accessibleUX").addEventListener("change", this.options.uxChange.bind(this.options));
 
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));

@@ -205,8 +205,21 @@ class OperationsWaiter {
      */
     operationDblclick(e) {
         const li = e.target;
+        // get operation name from <li> data
+        this.manager.recipe.addOperation($(li).data("opname"));
+    }
 
-        this.manager.recipe.addOperation(li.textContent);
+    /**
+     * Handler for operation add events.
+     * Adds the operation to the recipe and auto bakes.
+     *
+     * @param {event} e
+     */
+    operationAdd(e) {
+        log.info("add");
+        const li = e.target.parentNode.parentNode.parentNode;
+        // get operation name from <li> data
+        this.manager.recipe.addOperation($(li).data("opname"));
     }
 
 

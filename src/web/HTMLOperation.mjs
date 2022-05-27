@@ -46,7 +46,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon) {
-        let html = "<li class='operation'";
+        let html = `<li class='operation' data-opName="${this.name}"`;
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
@@ -57,6 +57,12 @@ class HTMLOperation {
         }
 
         html += ">" + this.name;
+
+        html += `<span class='float-right'>
+                <button type="button" class="btn btn-primary bmd-btn-icon accessibleUX" data-toggle="tooltip" data-original-title="Add to recipe">
+                    <i class='material-icons'>add_box</i>
+                </button>
+            </span>`;
 
         if (removeIcon) {
             html += "<i class='material-icons remove-icon op-icon'>delete</i>";
@@ -83,6 +89,9 @@ class HTMLOperation {
 
         html += `</div>
         <div class="recip-icons">
+            <i class="material-icons move-down accessibleUX" title="Move down">arrow_downward</i>
+            <i class="material-icons move-up accessibleUX">arrow_upward</i>
+            <i class="material-icons remove-icon accessibleUX" title="Delete operation">delete</i>
             <i class="material-icons breakpoint" title="Set breakpoint" break="false">pause</i>
             <i class="material-icons disable-icon" title="Disable operation" disabled="false">not_interested</i>
         </div>

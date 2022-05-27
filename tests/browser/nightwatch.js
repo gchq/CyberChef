@@ -56,6 +56,40 @@ module.exports = {
         browser.expect.element("//li[contains(@class, 'operation') and text()='Register']").to.be.present;
     },
 
+    "Accessible user experience": browser => {
+        const addOp = "#catFavourites li.operation";
+        const recOp = "#rec-list li:nth-child(1)";
+        const down = " i.move-down.accessibleUX";
+        const remove = " i.remove-icon.accessibleUX";
+
+        // Switch UX on
+        browser
+            .useCss()
+            .click("#options")
+            .waitForElementVisible("#options-modal", 1000)
+            .click("#reset-options")
+            .pause(500)
+            // Using label for checkbox click because nightwatch thinks #acessibleUX isn't visible
+            .click('label[for="accessibleUX"]')
+            .click("#options-modal .modal-footer button:last-child")
+            .waitForElementNotVisible("#options-modal")
+            .expect.element(addOp).to.be.visible;
+
+        // add Operations & move them
+        browser
+            .useCss()
+            .click(addOp + ":nth-child(1) button")
+            .click(addOp + ":nth-child(2) button")
+            .click(recOp + down)
+            .expect.element(recOp).text.to.contain("From Base64");
+
+        // delete operations
+        browser
+            .click(recOp + remove)
+            .click(recOp + remove)
+            .waitForElementNotPresent(recOp);
+    },
+
     "Recipe can be run": browser => {
         const toHex = "//li[contains(@class, 'operation') and text()='To Hex']";
         const op = "#rec-list .operation .op-title";
