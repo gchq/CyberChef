@@ -405,7 +405,7 @@ class RecipeWaiter {
      * @param {element} el - The operation stub element from the operations pane
      */
     buildRecipeOperation(el) {
-        const opName = $(el).data('opname');
+        const opName = $(el).data("opname");
         const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         el.innerHTML = op.toFullHtml();
 
