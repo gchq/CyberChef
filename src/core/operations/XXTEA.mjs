@@ -98,7 +98,7 @@ class XXTEAEncrypt extends Operation {
         return RESULT;
     }
 
-    /** 
+    /**
      * @param {number} sum
      * @param {number} y
      * @param {number} z
