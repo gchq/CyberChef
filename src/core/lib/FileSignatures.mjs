@@ -3778,8 +3778,8 @@ function parseDEFLATE(stream) {
 
     while (!finalBlock) {
         // Read header
-        finalBlock = stream.readBits(1);
-        const blockType = stream.readBits(2);
+        finalBlock = stream.readBits(1, "le");
+        const blockType = stream.readBits(2, "le");
 
         if (blockType === 0) {
             /* No compression */
@@ -3798,16 +3798,16 @@ function parseDEFLATE(stream) {
             /* Dynamic Huffman */
 
             // Read the number of liternal and length codes
-            const hlit = stream.readBits(5) + 257;
+            const hlit = stream.readBits(5, "le") + 257;
             // Read the number of distance codes
-            const hdist = stream.readBits(5) + 1;
+            const hdist = stream.readBits(5, "le") + 1;
             // Read the number of code lengths
-            const hclen = stream.readBits(4) + 4;
+            const hclen = stream.readBits(4, "le") + 4;
 
             // Parse code lengths
             const codeLengths = new Uint8Array(huffmanOrder.length);
             for (let i = 0; i < hclen; i++) {
-                codeLengths[huffmanOrder[i]] = stream.readBits(3);
+                codeLengths[huffmanOrder[i]] = stream.readBits(3, "le");
             }
 
             // Parse length table
@@ -3819,16 +3819,16 @@ function parseDEFLATE(stream) {
                 code = readHuffmanCode(stream, codeLengthsTable);
                 switch (code) {
                     case 16:
-                        repeat = 3 + stream.readBits(2);
+                        repeat = 3 + stream.readBits(2, "le");
                         while (repeat--) lengthTable[i++] = prev;
                         break;
                     case 17:
-                        repeat = 3 + stream.readBits(3);
+                        repeat = 3 + stream.readBits(3, "le");
                         while (repeat--) lengthTable[i++] = 0;
                         prev = 0;
                         break;
                     case 18:
-                        repeat = 11 + stream.readBits(7);
+                        repeat = 11 + stream.readBits(7, "le");
                         while (repeat--) lengthTable[i++] = 0;
                         prev = 0;
                         break;
@@ -3886,11 +3886,11 @@ function parseHuffmanBlock(stream, litTab, distTab) {
         if (code < 256) continue;
 
         // Length code
-        stream.readBits(lengthExtraTable[code - 257]);
+        stream.readBits(lengthExtraTable[code - 257], "le");
 
         // Dist code
         code = readHuffmanCode(stream, distTab);
-        stream.readBits(distanceExtraTable[code]);
+        stream.readBits(distanceExtraTable[code], "le");
     }
 }
 
@@ -3948,7 +3948,7 @@ function readHuffmanCode(stream, table) {
     const [codeTable, maxCodeLength] = table;
 
     // Read max length
-    const bitsBuf = stream.readBits(maxCodeLength);
+    const bitsBuf = stream.readBits(maxCodeLength, "le");
     const codeWithLength = codeTable[bitsBuf & ((1 << maxCodeLength) - 1)];
     const codeLength = codeWithLength >>> 16;
 

@@ -13,7 +13,7 @@ import OperationError from "../errors/OperationError.mjs";
 /**
  * Convert a byte array into a binary string.
  *
- * @param {Uint8Array|byteArray} data
+ * @param {Uint8Array|byteArray|number} data
  * @param {string} [delim="Space"]
  * @param {number} [padding=8]
  * @returns {string}
@@ -26,13 +26,17 @@ import OperationError from "../errors/OperationError.mjs";
  * toBinary([10,20,30], ":");
  */
 export function toBinary(data, delim="Space", padding=8) {
-    if (!data) return "";
-
     delim = Utils.charRep(delim);
     let output = "";
 
-    for (let i = 0; i < data.length; i++) {
-        output += data[i].toString(2).padStart(padding, "0") + delim;
+    if (data.length) { // array
+        for (let i = 0; i < data.length; i++) {
+            output += data[i].toString(2).padStart(padding, "0") + delim;
+        }
+    } else if (typeof data === "number") { // Single value
+        return data.toString(2).padStart(padding, "0");
+    } else {
+        return "";
     }
 
     if (delim.length) {

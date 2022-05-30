@@ -96,6 +96,7 @@ import "./tests/Protobuf.mjs";
 import "./tests/ParseSSHHostKey.mjs";
 import "./tests/DefangIP.mjs";
 import "./tests/ParseUDP.mjs";
+import "./tests/ParseTCP.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/Lorenz.mjs";
 import "./tests/LuhnChecksum.mjs";
