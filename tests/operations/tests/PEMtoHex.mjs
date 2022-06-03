@@ -74,7 +74,7 @@ iwY6d+at4xDlIHwvZZmG4Smk56eHhvQE3I8sSAzgoLMBamQ5m3MbiULAYtxskCpC
 fjFxrL6Ziaaj7HZoneF40R30KCI9ygF8vkzxLwe3t5Y4XgHL9TYQm1+BDninupIB
 /zTeO1ygBGA66m6zpmkmuG7d8HXIducz+wIDAQAB
 -----END RSA PUBLIC KEY-----`;
-    
+
 const PEMS_RSA_PUBLIC_KEY_PKCS8 = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5WykLKHiBAhmZh5Whocg
 pQQqZjdrApuRxRT21SJZx6Ce+Oz2V17/heozu5LEz63jCxW1NrBckzl/Ys8p9Leq
@@ -144,7 +144,7 @@ TestRegister.addTests([
     },
     {
         name: "PEMtoHex: No footer",
-        input: PEMS_RSA_PRIVATE_KEY_PKCS1.substr(0, 200),
+        input: PEMS_RSA_PRIVATE_KEY_PKCS1.substring(0, 200),
         expectedOutput: "PEM footer '-----END RSA PRIVATE KEY-----' not found",
         recipeConfig: [
             {
@@ -155,7 +155,7 @@ TestRegister.addTests([
     },
     {
         name: "PEMtoHex: Multiple PEMs",
-        input: PEMS_FOO + '\n' + PEMS_BAR,
+        input: PEMS_FOO + "\n" + PEMS_BAR,
         expectedOutput: "FOOBAR",
         recipeConfig: [
             {
@@ -164,13 +164,13 @@ TestRegister.addTests([
             },
             {
                 "op": "From Hex",
-                "args": ["None"]
+                "args": ["Auto"]
             }
         ]
     },
     {
         name: "PEMtoHex: Single line PEM",
-        input: PEMS_FOO.replace(/(\n|\r)/gm,""),
+        input: PEMS_FOO.replace(/(\n|\r)/gm, ""),
         expectedOutput: "FOO",
         recipeConfig: [
             {

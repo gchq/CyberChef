@@ -5,10 +5,10 @@
  * @license Apache-2.0
  */
 
-import {fromBase64} from "../lib/Base64.mjs";
+import { fromBase64 } from "../lib/Base64.mjs";
+import { toHexFast } from "../lib/Hex.mjs";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import Utils from "../Utils.mjs";
 
 /**
  * PEM to Hex operation
@@ -22,9 +22,9 @@ class PEMToHex extends Operation {
         super();
 
         this.name = "PEM to Hex";
-        this.module = "PublicKey";
+        this.module = "Default";
         this.description = "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.";
-        this.infoURL = "https://wikipedia.org/wiki/X.690#DER_encoding";
+        this.infoURL = "https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail#Format";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -42,7 +42,7 @@ class PEMToHex extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        let output = "";
+        const output = [];
         let match;
         const regex = /-----BEGIN ([A-Z][A-Z ]+[A-Z])-----/g;
         while ((match = regex.exec(input)) !== null) {
@@ -57,10 +57,10 @@ class PEMToHex extends Operation {
             // decode base64 content
             const base64 = input.substring(indexBase64, indexFooter);
             const bytes = fromBase64(base64, "A-Za-z0-9+/=", "byteArray", true);
-            const hex = bytes.map(b => Utils.hex(b)).join("");
-            output += hex;
+            const hex = toHexFast(bytes);
+            output.push(hex);
         }
-        return output;
+        return output.join("\n");
     }
 
 }
