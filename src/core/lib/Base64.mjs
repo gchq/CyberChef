@@ -95,6 +95,7 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
 
     const output = [];
     let chr1, chr2, chr3,
+        encChr1, encChr2, encChr3, encChr4,
         enc1, enc2, enc3, enc4,
         i = 0;
 
@@ -103,15 +104,39 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
         data = data.replace(re, "");
     }
 
-    while (i < data.length) {
-        enc1 = alphabet.indexOf(data.charAt(i++));
-        enc2 = alphabet.indexOf(data.charAt(i++) || "=");
-        enc3 = alphabet.indexOf(data.charAt(i++) || "=");
-        enc4 = alphabet.indexOf(data.charAt(i++) || "=");
+    if (data.length % 4 === 1) {
+        throw new OperationError(`Invalid Base64 input length (${data.length}): it won't be 4n+1`);
+    }
 
-        enc2 = enc2 === -1 ? 64 : enc2;
-        enc3 = enc3 === -1 ? 64 : enc3;
-        enc4 = enc4 === -1 ? 64 : enc4;
+    if (alphabet.length === 65) {
+        const pad = alphabet.charAt(64);
+        const padPos = data.indexOf(pad);
+        if (padPos >= 0) {
+            // padding character should appear only at the end of the input
+            // there should be only one or two padding character(s) if it exists
+            if (padPos < data.length - 2 || data.charAt(data.length - 1) !== pad) {
+                throw new OperationError("Invalid Base64 input: padding character misused");
+            }
+            if (data.length % 4 !== 0) {
+                throw new OperationError("Invalid Base64 input: padded not to multiple of 4");
+            }
+        }
+    }
+
+    while (i < data.length) {
+        encChr1 = data.charAt(i++);
+        encChr2 = data.charAt(i++);
+        encChr3 = data.charAt(i++);
+        encChr4 = data.charAt(i++);
+
+        enc1 = alphabet.indexOf(encChr1);
+        enc2 = alphabet.indexOf(encChr2);
+        enc3 = alphabet.indexOf(encChr3);
+        enc4 = alphabet.indexOf(encChr4);
+
+        if (enc1 < 0 || enc2 < 0 || enc3 < 0 || enc4 < 0) {
+            throw new OperationError("Invalid Base64 input: contains non-alphabet char(s)");
+        }
 
         chr1 = (enc1 << 2) | (enc2 >> 4);
         chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -119,10 +144,10 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
 
         output.push(chr1);
 
-        if (enc3 !== 64) {
+        if (encChr3 !== "" && enc3 !== 64) {
             output.push(chr2);
         }
-        if (enc4 !== 64) {
+        if (encChr4 !== "" && enc4 !== 64) {
             output.push(chr3);
         }
     }
