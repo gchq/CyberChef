@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * To Upper case operation
@@ -38,27 +39,29 @@ class ToUpperCase extends Operation {
      */
     run(input, args) {
         if (!args || args.length === 0) {
-            throw new OperationException("No capitalization scope was provided.");
+            throw new OperationError("No capitalization scope was provided.");
         }
+
         const scope = args[0];
+
         if (scope === "All") {
             return input.toUpperCase();
         }
+
         const scopeRegex = {
             "Word": /(\b\w)/gi,
             "Sentence": /(?:\.|^)\s*(\b\w)/gi,
             "Paragraph": /(?:\n|^)\s*(\b\w)/gi
-        }[ scope ];
-        if (scopeRegex !== undefined) {
-            // Use the regexes to capitalize the input.
-            return input.replace(scopeRegex, function(m) {
-                return m.toUpperCase();
-            });
-        }
-        else {
-            // The selected scope was invalid.
+        }[scope];
+
+        if (scopeRegex === undefined) {
             throw new OperationError("Unrecognized capitalization scope");
         }
+
+        // Use the regex to capitalize the input
+        return input.replace(scopeRegex, function(m) {
+            return m.toUpperCase();
+        });
     }
 
     /**
