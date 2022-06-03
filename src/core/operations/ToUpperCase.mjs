@@ -37,24 +37,27 @@ class ToUpperCase extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (!args || args.length === 0) {
+            throw new OperationException("No capitalization scope was provided.");
+        }
         const scope = args[0];
-
-        switch (scope) {
-            case "Word":
-                return input.replace(/(\b\w)/gi, function(m) {
-                    return m.toUpperCase();
-                });
-            case "Sentence":
-                return input.replace(/(?:\.|^)\s*(\b\w)/gi, function(m) {
-                    return m.toUpperCase();
-                });
-            case "Paragraph":
-                return input.replace(/(?:\n|^)\s*(\b\w)/gi, function(m) {
-                    return m.toUpperCase();
-                });
-            case "All": /* falls through */
-            default:
-                return input.toUpperCase();
+        if (scope === "All") {
+            return input.toUpperCase();
+        }
+        const scopeRegex = {
+            "Word": /(\b\w)/gi,
+            "Sentence": /(?:\.|^)\s*(\b\w)/gi,
+            "Paragraph": /(?:\n|^)\s*(\b\w)/gi
+        }[ scope ];
+        if (scopeRegex !== undefined) {
+            // Use the regexes to capitalize the input.
+            return input.replace(scopeRegex, function(m) {
+                return m.toUpperCase();
+            });
+        }
+        else {
+            // The selected scope was invalid.
+            throw new OperationError("Unrecognized capitalization scope");
         }
     }
 
