@@ -67,6 +67,7 @@ import "./tests/PGP.mjs";
 import "./tests/PHP.mjs";
 import "./tests/ParseIPRange.mjs";
 import "./tests/ParseQRCode.mjs";
+import "./tests/PEMtoHex.mjs";
 import "./tests/PowerSet.mjs";
 import "./tests/Regex.mjs";
 import "./tests/Register.mjs";

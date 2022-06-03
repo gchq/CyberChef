@@ -1,11 +1,14 @@
 /**
  * @author n1474335 [n1474335@gmail.com]
+ * @author cplussharp
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
+import {fromBase64} from "../lib/Base64.mjs";
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * PEM to Hex operation
@@ -25,6 +28,12 @@ class PEMToHex extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                "pattern": "----BEGIN ([A-Z][A-Z ]+[A-Z])-----",
+                "args": []
+            }
+        ];
     }
 
     /**
@@ -33,17 +42,25 @@ class PEMToHex extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        if (input.indexOf("-----BEGIN") < 0) {
-            // Add header so that the KEYUTIL function works
-            input = "-----BEGIN CERTIFICATE-----" + input;
+        let output = "";
+        let match;
+        const regex = /-----BEGIN ([A-Z][A-Z ]+[A-Z])-----/g;
+        while ((match = regex.exec(input)) !== null) {
+            // find corresponding end tag
+            const indexBase64 = match.index + match[0].length;
+            const footer = `-----END ${match[1]}-----`;
+            const indexFooter = input.indexOf(footer, indexBase64);
+            if (indexFooter === -1) {
+                throw new OperationError(`PEM footer '${footer}' not found`);
+            }
+
+            // decode base64 content
+            const base64 = input.substring(indexBase64, indexFooter);
+            const bytes = fromBase64(base64, "A-Za-z0-9+/=", "byteArray", true);
+            const hex = bytes.map(b => Utils.hex(b)).join("");
+            output += hex;
         }
-        if (input.indexOf("-----END") < 0) {
-            // Add footer so that the KEYUTIL function works
-            input = input + "-----END CERTIFICATE-----";
-        }
-        const cert = new r.X509();
-        cert.readCertPEM(input);
-        return cert.hex;
+        return output;
     }
 
 }
