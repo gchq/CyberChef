@@ -45,10 +45,6 @@ export function toBinary(data, delim="Space", padding=8) {
     } else {
         return "";
     }
-    if (delim.length) {
-        // Remove the delimiter from the end of the string.
-        output = output.slice(0, -delim.length);
-    }
     return output;
 }
 
