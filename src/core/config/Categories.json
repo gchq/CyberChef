@@ -413,7 +413,8 @@
             "Extract RGBA",
             "View Bit Plane",
             "Randomize Colour Palette",
-            "Extract LSB"
+            "Extract LSB",
+            "ELF Info"
         ]
     },
     {
