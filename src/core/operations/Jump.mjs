@@ -52,6 +52,7 @@ class Jump extends Operation {
         const jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {
+            state.numJumps = 0;
             return state;
         }
 
