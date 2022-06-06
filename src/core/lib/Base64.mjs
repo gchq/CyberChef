@@ -130,10 +130,11 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
         i = 0;
 
     while (i < data.length) {
-        enc1 = alphabet.indexOf(data.charAt(i++));
-        enc2 = alphabet.indexOf(data.charAt(i++));
-        enc3 = alphabet.indexOf(data.charAt(i++));
-        enc4 = alphabet.indexOf(data.charAt(i++));
+        // Including `|| null` forces empty strings to null so that indexOf returns -1 instead of 0
+        enc1 = alphabet.indexOf(data.charAt(i++) || null);
+        enc2 = alphabet.indexOf(data.charAt(i++) || null);
+        enc3 = alphabet.indexOf(data.charAt(i++) || null);
+        enc4 = alphabet.indexOf(data.charAt(i++) || null);
 
         if (strictMode && (enc1 < 0 || enc2 < 0 || enc3 < 0 || enc4 < 0)) {
             throw new OperationError("Error: Base64 input contains non-alphabet char(s)");
@@ -143,13 +144,13 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
         chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
         chr3 = ((enc3 & 3) << 6) | enc4;
 
-        if (chr1 < 256) {
+        if (chr1 >= 0 && chr1 < 256) {
             output.push(chr1);
         }
-        if (chr2 < 256 && enc3 !== 64) {
+        if (chr2 >= 0 && chr2 < 256 && enc3 !== 64) {
             output.push(chr2);
         }
-        if (chr3 < 256 && enc4 !== 64) {
+        if (chr3 >= 0 && chr3 < 256 && enc4 !== 64) {
             output.push(chr3);
         }
     }
