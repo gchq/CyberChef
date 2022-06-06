@@ -44,7 +44,7 @@ class OperationsWaiter {
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 if (selected > -1) {
-                    this.manager.recipe.addOperation(ops[selected].innerHTML);
+                    this.manager.recipe.addOperation($(ops[selected]).data("opname"));
                 }
             }
         }
@@ -216,7 +216,6 @@ class OperationsWaiter {
      * @param {event} e
      */
     operationAdd(e) {
-        log.info("add");
         const li = e.target.parentNode.parentNode.parentNode;
         // get operation name from <li> data
         this.manager.recipe.addOperation($(li).data("opname"));

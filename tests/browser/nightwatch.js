@@ -59,8 +59,10 @@ module.exports = {
     "Accessible user experience": browser => {
         const addOp = "#catFavourites li.operation";
         const recOp = "#rec-list li:nth-child(1)";
+        const searchOp = "#search-results";
         const down = " i.move-down.accessibleUX";
         const remove = " i.remove-icon.accessibleUX";
+        const favCat = "#categories div:nth-child(1)"
 
         // Switch UX on
         browser
@@ -68,8 +70,7 @@ module.exports = {
             .click("#options")
             .waitForElementVisible("#options-modal", 1000)
             .click("#reset-options")
-            .pause(500)
-            // Using label for checkbox click because nightwatch thinks #acessibleUX isn't visible
+            // Using label for checkbox click because nightwatch thinks #accessibleUX isn't visible
             .click('label[for="accessibleUX"]')
             .click("#options-modal .modal-footer button:last-child")
             .waitForElementNotVisible("#options-modal")
@@ -88,6 +89,16 @@ module.exports = {
             .click(recOp + remove)
             .click(recOp + remove)
             .waitForElementNotPresent(recOp);
+
+        // Search for an op
+        browser
+            .useCss()
+            .clearValue("#search")
+            .setValue("#search", "md5")
+            .click(searchOp + " button")
+            .click(recOp + remove)
+            .click(favCat)
+            .expect.element(searchOp).text.to.contain("MD5");
     },
 
     "Recipe can be run": browser => {
@@ -243,16 +254,6 @@ module.exports = {
             .expect.element("#output-text").to.have.property("value").which.matches(/[\da-f-]{36}/);
 
         browser.click("#clr-recipe");
-    },
-
-    "Search": browser => {
-        // Search for an op
-        browser
-            .useCss()
-            .clearValue("#search")
-            .setValue("#search", "md5")
-            .useXpath()
-            .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
     },
 
     after: browser => {
