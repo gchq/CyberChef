@@ -48,11 +48,13 @@ export default class Stream {
      * Interpret the following bytes as a string, stopping at the next null byte or
      * the supplied limit.
      *
-     * @param {number} numBytes
+     * @param {number} [numBytes=-1]
      * @returns {string}
      */
-    readString(numBytes) {
+    readString(numBytes=-1) {
         if (this.position > this.length) return undefined;
+
+        if (numBytes === -1) numBytes = this.length - this.position;
 
         let result = "";
         for (let i = this.position; i < this.position + numBytes; i++) {
