@@ -66,7 +66,7 @@ class ELFInfo extends Operation {
             const preMove = stream.position;
             stream.moveTo(namesOffset + nameOffset);
 
-            let nameResult = stream.readString();
+            const nameResult = stream.readString();
             stream.moveTo(preMove);
             return nameResult;
         }
