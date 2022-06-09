@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.39.0] - 2022-06-09
+- Added 'ELF Info' operation [@n1073645] | [#1364]
+
 ### [9.38.0] - 2022-05-30
 - Added 'Parse TCP' operation [@n1474335] | [a895d1d]
 
@@ -291,6 +294,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.39.0]: https://github.com/gchq/CyberChef/releases/tag/v9.39.0
 [9.38.0]: https://github.com/gchq/CyberChef/releases/tag/v9.38.0
 [9.37.0]: https://github.com/gchq/CyberChef/releases/tag/v9.37.0
 [9.36.0]: https://github.com/gchq/CyberChef/releases/tag/v9.36.0
@@ -508,3 +512,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#1244]: https://github.com/gchq/CyberChef/pull/1244
 [#1313]: https://github.com/gchq/CyberChef/pull/1313
 [#1326]: https://github.com/gchq/CyberChef/pull/1326
+[#1364]: https://github.com/gchq/CyberChef/pull/1364
