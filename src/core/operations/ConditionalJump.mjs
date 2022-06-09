@@ -74,8 +74,7 @@ class ConditionalJump extends Operation {
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
-            }
-            else {
+            } else {
                 state.numJumps = 0;
             }
         }
