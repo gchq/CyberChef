@@ -125,7 +125,7 @@ class ELFInfo extends Operation {
             ehResult.push("Format:".padEnd(align) + `${format === 1 ? "32-bit" : "64-bit"}`);
 
             endianness = stream.readInt(1) === 1 ? "le" : "be";
-            ehResult.push("Endianness:".padEnd(align) + `${endianness === 1 ? "Little" : "Big"}`);
+            ehResult.push("Endianness:".padEnd(align) + `${endianness === "le" ? "Little" : "Big"}`);
 
             ehResult.push("Version:".padEnd(align) + `${stream.readInt(1).toString()}`);
 
