@@ -62,7 +62,7 @@ module.exports = {
         const searchOp = "#search-results";
         const down = " i.move-down.accessibleUX";
         const remove = " i.remove-icon.accessibleUX";
-        const favCat = "#categories div:nth-child(1)"
+        const favCat = "#categories div:nth-child(1)";
 
         // Switch UX on
         browser
