@@ -43,9 +43,9 @@ class ToBase45 extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (!input) return "";
         input = new Uint8Array(input);
         const alphabet = Utils.expandAlphRange(args[0]);
-        if (!input) return "";
 
         const res = [];
 
@@ -64,6 +64,10 @@ class ToBase45 extends Operation {
             } while (b > 0);
 
             if (chars < 2) {
+                res.push("0");
+                chars++;
+            }
+            if (pair.length > 1 && chars < 3) {
                 res.push("0");
             }
         }

@@ -723,8 +723,8 @@ class Utils {
         }
 
         if (removeScriptAndStyle) {
-            htmlStr = recursiveRemove(/<script[^>]*>.*?<\/script>/gi, htmlStr);
-            htmlStr = recursiveRemove(/<style[^>]*>.*?<\/style>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<script[^>]*>.*?<\/script[^>]*>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<style[^>]*>.*?<\/style[^>]*>/gi, htmlStr);
         }
         return htmlStr.replace(/<[^>]+>/g, "");
     }

@@ -109,11 +109,15 @@ class OperationsWaiter {
         const matchedOps = [];
         const matchedDescs = [];
 
+        // Create version with no whitespace for the fuzzy match
+        // Helps avoid missing matches e.g. query "TCP " would not find "Parse TCP"
+        const inStrNWS = inStr.replace(/\s/g, "");
+
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
 
             // Match op name using fuzzy match
-            const [nameMatch, score, idxs] = fuzzyMatch(inStr, opName);
+            const [nameMatch, score, idxs] = fuzzyMatch(inStrNWS, opName);
 
             // Match description based on exact match
             const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());

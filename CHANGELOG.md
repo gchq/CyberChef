@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.38.0] - 2022-05-30
+- Added 'Parse TCP' operation [@n1474335] | [a895d1d]
+
 ### [9.37.0] - 2022-03-29
 - 'SM4 Encrypt' and 'SM4 Decrypt' operations added [@swesven] | [#1189]
 - NoPadding options added for CBC and ECB modes in AES, DES and Triple DES Decrypt operations [@swesven] | [#1189]
@@ -135,7 +138,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 <details>
     <summary>Click to expand v8 minor versions</summary>
-    
+
 ### [8.38.0] - 2019-07-03
 - 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
 
@@ -288,6 +291,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.38.0]: https://github.com/gchq/CyberChef/releases/tag/v9.38.0
 [9.37.0]: https://github.com/gchq/CyberChef/releases/tag/v9.37.0
 [9.36.0]: https://github.com/gchq/CyberChef/releases/tag/v9.36.0
 [9.35.0]: https://github.com/gchq/CyberChef/releases/tag/v9.35.0
@@ -416,6 +420,7 @@ All major and minor version changes will be documented in this file. Details of 
 [289a417]: https://github.com/gchq/CyberChef/commit/289a417dfb5923de5e1694354ec42a08d9395bfe
 [e9ca4dc]: https://github.com/gchq/CyberChef/commit/e9ca4dc9caf98f33fd986431cd400c88082a42b8
 [dd18e52]: https://github.com/gchq/CyberChef/commit/dd18e529939078b89867297b181a584e8b2cc7da
+[a895d1d]: https://github.com/gchq/CyberChef/commit/a895d1d82a2f92d440a0c5eca2bc7c898107b737
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173

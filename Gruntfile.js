@@ -217,7 +217,8 @@ module.exports = function (grunt) {
                     client: {
                         logging: "error",
                         overlay: true
-                    }
+                    },
+                    hot: "only"
                 },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS),
