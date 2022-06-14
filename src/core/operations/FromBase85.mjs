@@ -32,6 +32,11 @@ class FromBase85 extends Operation {
                 type: "editableOption",
                 value: ALPHABET_OPTIONS
             },
+            {
+                name: "Remove non-alphabet chars",
+                type: "boolean",
+                value: true
+            },
         ];
     }
 
@@ -43,11 +48,18 @@ class FromBase85 extends Operation {
     run(input, args) {
         const alphabet = Utils.expandAlphRange(args[0]).join(""),
             encoding = alphabetName(alphabet),
+            removeNonAlphChars = args[1],
             result = [];
 
         if (alphabet.length !== 85 ||
             [].unique.call(alphabet).length !== 85) {
             throw new OperationError("Alphabet must be of length 85");
+        }
+
+        // Remove non-alphabet characters
+        if (removeNonAlphChars) {
+            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
+            input = input.replace(re, "");
         }
 
         if (input.length === 0) return [];
@@ -69,7 +81,7 @@ class FromBase85 extends Operation {
                     .map((chr, idx) => {
                         const digit = alphabet.indexOf(chr);
                         if (digit < 0 || digit > 84) {
-                            throw `Invalid character '${chr}' at index ${idx}`;
+                            throw `Invalid character '${chr}' at index ${i + idx}`;
                         }
                         return digit;
                     });
