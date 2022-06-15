@@ -87,7 +87,6 @@ class TestRegister {
                     if (result.error.displayStr === test.expectedOutput) {
                         ret.status = "passing";
                     } else {
-                        console.log(result);
                         ret.status = "failing";
                         ret.output = [
                             "Expected",
