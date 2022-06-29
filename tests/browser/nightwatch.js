@@ -82,7 +82,7 @@ module.exports = {
         // Enter input
         browser
             .useCss()
-            .setValue("#input-text", "Don't Panic.")
+            .setValue("#input-text", "Don't Panic.") // TODO
             .pause(1000)
             .click("#bake");
 

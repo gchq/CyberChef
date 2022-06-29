@@ -112,7 +112,7 @@ CMYK: ${cmyk}
         useAlpha: true
     }).on('colorpickerChange', function(e) {
         var color = e.color.string('rgba');
-        document.getElementById('input-text').value = color;
+        window.app.manager.input.setInput(color);
         window.app.manager.input.debounceInputChange(new Event("keyup"));
     });
 </script>`;

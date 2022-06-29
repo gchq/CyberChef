@@ -155,12 +155,11 @@ class HighlighterWaiter {
         this.mouseTarget = INPUT;
         this.removeHighlights();
 
-        const el = e.target;
-        const start = el.selectionStart;
-        const end = el.selectionEnd;
+        const sel = document.getSelection();
+        const start = sel.baseOffset;
+        const end = sel.extentOffset;
 
         if (start !== 0 || end !== 0) {
-            document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
             this.highlightOutput([{start: start, end: end}]);
         }
     }
@@ -248,12 +247,11 @@ class HighlighterWaiter {
             this.mouseTarget !== INPUT)
             return;
 
-        const el = e.target;
-        const start = el.selectionStart;
-        const end = el.selectionEnd;
+        const sel = document.getSelection();
+        const start = sel.baseOffset;
+        const end = sel.extentOffset;
 
         if (start !== 0 || end !== 0) {
-            document.getElementById("input-selection-info").innerHTML = this.selectionInfo(start, end);
             this.highlightOutput([{start: start, end: end}]);
         }
     }
@@ -328,7 +326,6 @@ class HighlighterWaiter {
     removeHighlights() {
         document.getElementById("input-highlighter").innerHTML = "";
         document.getElementById("output-highlighter").innerHTML = "";
-        document.getElementById("input-selection-info").innerHTML = "";
         document.getElementById("output-selection-info").innerHTML = "";
     }
 

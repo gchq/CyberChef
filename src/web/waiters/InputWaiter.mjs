@@ -7,9 +7,19 @@
 
 import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
 import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
-import Utils, { debounce } from "../../core/Utils.mjs";
-import { toBase64 } from "../../core/lib/Base64.mjs";
-import { isImage } from "../../core/lib/FileType.mjs";
+import Utils, {debounce} from "../../core/Utils.mjs";
+import {toBase64} from "../../core/lib/Base64.mjs";
+import {isImage} from "../../core/lib/FileType.mjs";
+
+import {
+    EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor
+} from "@codemirror/view";
+import {EditorState, Compartment} from "@codemirror/state";
+import {defaultKeymap, insertTab, insertNewline, history, historyKeymap} from "@codemirror/commands";
+import {bracketMatching} from "@codemirror/language";
+import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
+
+import {statusBar} from "../extensions/statusBar.mjs";
 
 
 /**
@@ -26,6 +36,9 @@ class InputWaiter {
     constructor(app, manager) {
         this.app = app;
         this.manager = manager;
+
+        this.inputTextEl = document.getElementById("input-text");
+        this.initEditor();
 
         // Define keys that don't change the input so we don't have to autobake when they are pressed
         this.badKeys = [
@@ -59,6 +72,135 @@ class InputWaiter {
             // the entire available resources
             this.maxWorkers = navigator.hardwareConcurrency - 1;
         }
+    }
+
+    /**
+     * Sets up the CodeMirror Editor and returns the view
+     */
+    initEditor() {
+        this.inputEditorConf = {
+            eol: new Compartment,
+            lineWrapping: new Compartment
+        };
+
+        const initialState = EditorState.create({
+            doc: null,
+            extensions: [
+                history(),
+                highlightSpecialChars({render: this.renderSpecialChar}),
+                drawSelection(),
+                rectangularSelection(),
+                crosshairCursor(),
+                bracketMatching(),
+                highlightSelectionMatches(),
+                search({top: true}),
+                statusBar(this.inputEditorConf),
+                this.inputEditorConf.lineWrapping.of(EditorView.lineWrapping),
+                this.inputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
+                EditorState.allowMultipleSelections.of(true),
+                keymap.of([
+                    // Explicitly insert a tab rather than indenting the line
+                    { key: "Tab", run: insertTab },
+                    // Explicitly insert a new line (using the current EOL char) rather
+                    // than messing around with indenting, which does not respect EOL chars
+                    { key: "Enter", run: insertNewline },
+                    ...historyKeymap,
+                    ...defaultKeymap,
+                    ...searchKeymap
+                ]),
+            ]
+        });
+
+        this.inputEditorView = new EditorView({
+            state: initialState,
+            parent: this.inputTextEl
+        });
+    }
+
+    /**
+     * Override for rendering special characters.
+     * Should mirror the toDOM function in
+     * https://github.com/codemirror/view/blob/main/src/special-chars.ts#L150
+     * But reverts the replacement of line feeds with newline control pictures.
+     * @param {number} code
+     * @param {string} desc
+     * @param {string} placeholder
+     * @returns {element}
+     */
+    renderSpecialChar(code, desc, placeholder) {
+        const s = document.createElement("span");
+        // CodeMirror changes 0x0a to "NL" instead of "LF". We change it back.
+        s.textContent = code === 0x0a ? "\u240a" : placeholder;
+        s.title = desc;
+        s.setAttribute("aria-label", desc);
+        s.className = "cm-specialChar";
+        return s;
+    }
+
+    /**
+     * Handler for EOL Select clicks
+     * Sets the line separator
+     * @param {Event} e
+     */
+    eolSelectClick(e) {
+        e.preventDefault();
+
+        const eolLookup = {
+            "LF": "\u000a",
+            "VT": "\u000b",
+            "FF": "\u000c",
+            "CR": "\u000d",
+            "CRLF": "\u000d\u000a",
+            "NEL": "\u0085",
+            "LS": "\u2028",
+            "PS": "\u2029"
+        };
+        const eolval = eolLookup[e.target.getAttribute("data-val")];
+        const oldInputVal = this.getInput();
+
+        // Update the EOL value
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolval))
+        });
+
+        // Reset the input so that lines are recalculated, preserving the old EOL values
+        this.setInput(oldInputVal);
+    }
+
+    /**
+     * Sets word wrap on the input editor
+     * @param {boolean} wrap
+     */
+    setWordWrap(wrap) {
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.lineWrapping.reconfigure(
+                wrap ? EditorView.lineWrapping : []
+            )
+        });
+    }
+
+    /**
+     * Gets the value of the current input
+     * @returns {string}
+     */
+    getInput() {
+        const doc = this.inputEditorView.state.doc;
+        const eol = this.inputEditorView.state.lineBreak;
+        return doc.sliceString(0, doc.length, eol);
+    }
+
+    /**
+     * Sets the value of the current input
+     * @param {string} data
+     */
+    setInput(data) {
+        this.inputEditorView.dispatch({
+            changes: {
+                from: 0,
+                to: this.inputEditorView.state.doc.length,
+                insert: data
+            }
+        });
     }
 
     /**
@@ -339,10 +481,8 @@ class InputWaiter {
             const activeTab = this.manager.tabs.getActiveInputTab();
             if (inputData.inputNum !== activeTab) return;
 
-            const inputText = document.getElementById("input-text");
-
             if (typeof inputData.input === "string") {
-                inputText.value = inputData.input;
+                this.setInput(inputData.input);
                 const fileOverlay = document.getElementById("input-file"),
                     fileName = document.getElementById("input-file-name"),
                     fileSize = document.getElementById("input-file-size"),
@@ -355,17 +495,11 @@ class InputWaiter {
                 fileType.textContent = "";
                 fileLoaded.textContent = "";
 
-                inputText.style.overflow = "auto";
-                inputText.classList.remove("blur");
-                inputText.scroll(0, 0);
-
-                const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
-                    inputData.input.count("\n") + 1 : null;
-                this.setInputInfo(inputData.input.length, lines);
+                this.inputTextEl.classList.remove("blur");
 
                 // Set URL to current input
                 const inputStr = toBase64(inputData.input, "A-Za-z0-9+/");
-                if (inputStr.length > 0 && inputStr.length <= 68267) {
+                if (inputStr.length >= 0 && inputStr.length <= 68267) {
                     this.setUrl({
                         includeInput: true,
                         input: inputStr
@@ -414,7 +548,6 @@ class InputWaiter {
             fileLoaded.textContent = inputData.progress + "%";
         }
 
-        this.setInputInfo(inputData.size, null);
         this.displayFilePreview(inputData);
 
         if (!silent) window.dispatchEvent(this.manager.statechange);
@@ -488,12 +621,10 @@ class InputWaiter {
      */
     displayFilePreview(inputData) {
         const activeTab = this.manager.tabs.getActiveInputTab(),
-            input = inputData.input,
-            inputText = document.getElementById("input-text");
+            input = inputData.input;
         if (inputData.inputNum !== activeTab) return;
-        inputText.style.overflow = "hidden";
-        inputText.classList.add("blur");
-        inputText.value = Utils.printable(Utils.arrayBufferToStr(input.slice(0, 4096)));
+        this.inputTextEl.classList.add("blur");
+        this.setInput(Utils.arrayBufferToStr(input.slice(0, 4096)));
 
         this.renderFileThumb();
 
@@ -576,7 +707,7 @@ class InputWaiter {
      */
     async getInputValue(inputNum) {
         return await new Promise(resolve => {
-            this.getInput(inputNum, false, r => {
+            this.getInputFromWorker(inputNum, false, r => {
                 resolve(r.data);
             });
         });
@@ -590,7 +721,7 @@ class InputWaiter {
      */
     async getInputObj(inputNum) {
         return await new Promise(resolve => {
-            this.getInput(inputNum, true, r => {
+            this.getInputFromWorker(inputNum, true, r => {
                 resolve(r.data);
             });
         });
@@ -604,7 +735,7 @@ class InputWaiter {
      * @param {Function} callback - The callback to execute when the input is returned
      * @returns {ArrayBuffer | string | object}
      */
-    getInput(inputNum, getObj, callback) {
+    getInputFromWorker(inputNum, getObj, callback) {
         const id = this.callbackID++;
 
         this.callbacks[id] = callback;
@@ -647,29 +778,6 @@ class InputWaiter {
         });
     }
 
-
-    /**
-     * Displays information about the input.
-     *
-     * @param {number} length - The length of the current input string
-     * @param {number} lines - The number of the lines in the current input string
-     */
-    setInputInfo(length, lines) {
-        let width = length.toString().length.toLocaleString();
-        width = width < 2 ? 2 : width;
-
-        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        let msg = "length: " + lengthStr;
-
-        if (typeof lines === "number") {
-            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>lines: " + linesStr;
-        }
-
-        document.getElementById("input-info").innerHTML = msg;
-
-    }
-
     /**
      * Handler for input change events.
      * Debounces the input so we don't call autobake too often.
@@ -696,79 +804,19 @@ class InputWaiter {
         // Remove highlighting from input and output panes as the offsets might be different now
         this.manager.highlighter.removeHighlights();
 
-        const textArea = document.getElementById("input-text");
-        const value = (textArea.value !== undefined) ? textArea.value : "";
+        const value = this.getInput();
         const activeTab = this.manager.tabs.getActiveInputTab();
 
         this.app.progress = 0;
 
-        const lines = value.length < (this.app.options.ioDisplayThreshold * 1024) ?
-            (value.count("\n") + 1) : null;
-        this.setInputInfo(value.length, lines);
         this.updateInputValue(activeTab, value);
-        this.manager.tabs.updateInputTabHeader(activeTab, value.replace(/[\n\r]/g, "").slice(0, 100));
+        this.manager.tabs.updateInputTabHeader(activeTab, value.slice(0, 100).replace(/[\n\r]/g, ""));
 
         if (e && this.badKeys.indexOf(e.keyCode) < 0) {
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
         }
     }
-
-    /**
-     * Handler for input paste events
-     * Checks that the size of the input is below the display limit, otherwise treats it as a file/blob
-     *
-     * @param {event} e
-     */
-    async inputPaste(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const self = this;
-        /**
-         * Triggers the input file/binary data overlay
-         *
-         * @param {string} pastedData
-         */
-        function triggerOverlay(pastedData) {
-            const file = new File([pastedData], "PastedData", {
-                type: "text/plain",
-                lastModified: Date.now()
-            });
-
-            self.loadUIFiles([file]);
-        }
-
-        const pastedData = e.clipboardData.getData("Text");
-        const inputText = document.getElementById("input-text");
-        const selStart = inputText.selectionStart;
-        const selEnd = inputText.selectionEnd;
-        const startVal = inputText.value.slice(0, selStart);
-        const endVal = inputText.value.slice(selEnd);
-        const val = startVal + pastedData + endVal;
-
-        if (val.length >= (this.app.options.ioDisplayThreshold * 1024)) {
-            // Data too large to display, use overlay
-            triggerOverlay(val);
-            return false;
-        } else if (await this.preserveCarriageReturns(val)) {
-            // Data contains a carriage return and the user doesn't wish to edit it, use overlay
-            // We check this in a separate condition to make sure it is not run unless absolutely
-            // necessary.
-            triggerOverlay(val);
-            return false;
-        } else {
-            // Pasting normally fires the inputChange() event before
-            // changing the value, so instead change it here ourselves
-            // and manually fire inputChange()
-            inputText.value = val;
-            inputText.setSelectionRange(selStart + pastedData.length, selStart + pastedData.length);
-            // Don't debounce here otherwise the keyup event for the Ctrl key will cancel an autobake
-            // (at least for large inputs)
-            this.inputChange(e, true);
-        }
-    }
-
 
     /**
      * Handler for input dragover events.
@@ -818,7 +866,7 @@ class InputWaiter {
 
         if (text) {
             // Append the text to the current input and fire inputChange()
-            document.getElementById("input-text").value += text;
+            this.setInput(this.getInput() + text);
             this.inputChange(e);
             return;
         }
@@ -841,44 +889,6 @@ class InputWaiter {
             this.loadUIFiles(e.target.files);
             e.target.value = "";
         }
-    }
-
-    /**
-     * Checks if an input contains carriage returns.
-     * If a CR is detected, checks if the preserve CR option has been set,
-     * and if not, asks the user for their preference.
-     *
-     * @param {string} input - The input to be checked
-     * @returns {boolean} - If true, the input contains a CR which should be
-     *      preserved, so display an overlay so it can't be edited
-     */
-    async preserveCarriageReturns(input) {
-        if (input.indexOf("\r") < 0) return false;
-
-        const optionsStr = "This behaviour can be changed in the <a href='#' onclick='document.getElementById(\"options\").click()'>Options pane</a>";
-        const preserveStr = `A carriage return (\\r, 0x0d) was detected in your input. To preserve it, editing has been disabled.<br>${optionsStr}`;
-        const dontPreserveStr = `A carriage return (\\r, 0x0d) was detected in your input. It has not been preserved.<br>${optionsStr}`;
-
-        switch (this.app.options.preserveCR) {
-            case "always":
-                this.app.alert(preserveStr, 6000);
-                return true;
-            case "never":
-                this.app.alert(dontPreserveStr, 6000);
-                return false;
-        }
-
-        // Only preserve for high-entropy inputs
-        const data = Utils.strToArrayBuffer(input);
-        const entropy = Utils.calculateShannonEntropy(data);
-
-        if (entropy > 6) {
-            this.app.alert(preserveStr, 6000);
-            return true;
-        }
-
-        this.app.alert(dontPreserveStr, 6000);
-        return false;
     }
 
     /**
@@ -1080,6 +1090,9 @@ class InputWaiter {
         this.manager.worker.setupChefWorker();
         this.addInput(true);
         this.bakeAll();
+
+        // Fire the statechange event as the input has been modified
+        window.dispatchEvent(this.manager.statechange);
     }
 
     /**

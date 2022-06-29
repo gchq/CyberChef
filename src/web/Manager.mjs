@@ -146,8 +146,7 @@ class Manager {
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
 
         // Input
-        this.addMultiEventListener("#input-text", "keyup", this.input.debounceInputChange, this.input);
-        this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
+        document.getElementById("input-text").addEventListener("keyup", this.input.debounceInputChange.bind(this.input));
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
@@ -179,6 +178,7 @@ class Manager {
         this.addDynamicListener(".input-filter-result", "click", this.input.filterItemClick, this.input);
         document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
         document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
+        this.addDynamicListener(".eol-select a", "click", this.input.eolSelectClick, this.input);
 
 
         // Output

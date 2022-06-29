@@ -140,7 +140,7 @@ class ControlsWaiter {
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", Utils.escapeHtml(input)] : undefined,
+            includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
         ];
 
         const hash = params

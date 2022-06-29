@@ -1019,7 +1019,6 @@ class OutputWaiter {
         }
 
         document.getElementById("output-info").innerHTML = msg;
-        document.getElementById("input-selection-info").innerHTML = "";
         document.getElementById("output-selection-info").innerHTML = "";
     }
 
@@ -1292,9 +1291,7 @@ class OutputWaiter {
         if (this.outputs[activeTab].data.type === "string" &&
             active.byteLength <= this.app.options.ioDisplayThreshold * 1024) {
             const dishString = await this.getDishStr(this.getOutputDish(activeTab));
-            if (!await this.manager.input.preserveCarriageReturns(dishString)) {
-                active = dishString;
-            }
+            active = dishString;
         } else {
             transferable.push(active);
         }

@@ -409,16 +409,16 @@ function bakeOp(browser, opName, input, args=[]) {
         .click("#clr-recipe")
         .click("#clr-io")
         .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.property("value").that.equals("");
+        .expect.element("#input-text").to.have.property("value").that.equals(""); // TODO
 
     browser
         .perform(function() {
             console.log(`Current test: ${opName}`);
         })
         .urlHash("recipe=" + recipeConfig)
-        .setValue("#input-text", input)
+        .setValue("#input-text", input) // TODO
         .waitForElementPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.property("value").that.equals(input);
+        .expect.element("#input-text").to.have.property("value").that.equals(input); // TODO
 
     browser
         .waitForElementVisible("#stale-indicator", 5000)

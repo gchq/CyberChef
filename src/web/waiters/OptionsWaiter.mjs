@@ -53,6 +53,9 @@ class OptionsWaiter {
                 selects[i].selectedIndex = 0;
             }
         }
+
+        // Initialise options
+        this.setWordWrap();
     }
 
 
@@ -136,14 +139,13 @@ class OptionsWaiter {
      * Sets or unsets word wrap on the input and output depending on the wordWrap option value.
      */
     setWordWrap() {
-        document.getElementById("input-text").classList.remove("word-wrap");
+        this.manager.input.setWordWrap(this.app.options.wordWrap);
         document.getElementById("output-text").classList.remove("word-wrap");
         document.getElementById("output-html").classList.remove("word-wrap");
         document.getElementById("input-highlighter").classList.remove("word-wrap");
         document.getElementById("output-highlighter").classList.remove("word-wrap");
 
         if (!this.app.options.wordWrap) {
-            document.getElementById("input-text").classList.add("word-wrap");
             document.getElementById("output-text").classList.add("word-wrap");
             document.getElementById("output-html").classList.add("word-wrap");
             document.getElementById("input-highlighter").classList.add("word-wrap");
