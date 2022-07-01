@@ -410,6 +410,17 @@ ${navigator.userAgent}
         }
     }
 
+    /**
+     * Calculates the height of the controls area and adjusts the recipe
+     * height accordingly.
+     */
+    calcControlsHeight() {
+        const controls = document.getElementById("controls"),
+            recList = document.getElementById("rec-list");
+
+        recList.style.bottom = controls.clientHeight + "px";
+    }
+
 }
 
 export default ControlsWaiter;
