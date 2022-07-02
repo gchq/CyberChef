@@ -140,14 +140,11 @@ class OptionsWaiter {
      */
     setWordWrap() {
         this.manager.input.setWordWrap(this.app.options.wordWrap);
-        document.getElementById("output-text").classList.remove("word-wrap");
-        document.getElementById("output-html").classList.remove("word-wrap");
+        this.manager.output.setWordWrap(this.app.options.wordWrap);
         document.getElementById("input-highlighter").classList.remove("word-wrap");
         document.getElementById("output-highlighter").classList.remove("word-wrap");
 
         if (!this.app.options.wordWrap) {
-            document.getElementById("output-text").classList.add("word-wrap");
-            document.getElementById("output-html").classList.add("word-wrap");
             document.getElementById("input-highlighter").classList.add("word-wrap");
             document.getElementById("output-highlighter").classList.add("word-wrap");
         }

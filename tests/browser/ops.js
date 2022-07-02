@@ -443,9 +443,9 @@ function testOp(browser, opName, input, output, args=[]) {
     bakeOp(browser, opName, input, args);
 
     if (typeof output === "string") {
-        browser.expect.element("#output-text").to.have.property("value").that.equals(output);
+        browser.expect.element("#output-text").to.have.property("value").that.equals(output); // TODO
     } else if (output instanceof RegExp) {
-        browser.expect.element("#output-text").to.have.property("value").that.matches(output);
+        browser.expect.element("#output-text").to.have.property("value").that.matches(output); // TODO
     }
 }
 
@@ -463,8 +463,8 @@ function testOpHtml(browser, opName, input, cssSelector, output, args=[]) {
     bakeOp(browser, opName, input, args);
 
     if (typeof output === "string") {
-        browser.expect.element("#output-html " + cssSelector).text.that.equals(output);
+        browser.expect.element("#output-html " + cssSelector).text.that.equals(output); // TODO
     } else if (output instanceof RegExp) {
-        browser.expect.element("#output-html " + cssSelector).text.that.matches(output);
+        browser.expect.element("#output-html " + cssSelector).text.that.matches(output); // TODO
     }
 }

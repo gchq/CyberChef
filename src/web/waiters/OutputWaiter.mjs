@@ -10,6 +10,18 @@ import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
 
+import {
+    EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor
+} from "@codemirror/view";
+import {EditorState, Compartment} from "@codemirror/state";
+import {defaultKeymap} from "@codemirror/commands";
+import {bracketMatching} from "@codemirror/language";
+import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
+
+import {statusBar} from "../utils/statusBar.mjs";
+import {renderSpecialChar} from "../utils/editorUtils.mjs";
+import {htmlPlugin} from "../utils/htmlWidget.mjs";
+
 /**
   * Waiter to handle events related to the output
   */
@@ -25,10 +37,153 @@ class OutputWaiter {
         this.app = app;
         this.manager = manager;
 
+        this.outputTextEl = document.getElementById("output-text");
+        // Object to contain bake statistics - used by statusBar extension
+        this.bakeStats = {
+            duration: 0
+        };
+        // Object to handle output HTML state - used by htmlWidget extension
+        this.htmlOutput = {
+            html: "",
+            changed: false
+        };
+        this.initEditor();
+
         this.outputs = {};
         this.zipWorker = null;
         this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.tabTimeout = null;
+    }
+
+    /**
+     * Sets up the CodeMirror Editor and returns the view
+     */
+    initEditor() {
+        this.outputEditorConf = {
+            eol: new Compartment,
+            lineWrapping: new Compartment
+        };
+
+        const initialState = EditorState.create({
+            doc: null,
+            extensions: [
+                EditorState.readOnly.of(true),
+                htmlPlugin(this.htmlOutput),
+                highlightSpecialChars({render: renderSpecialChar}),
+                drawSelection(),
+                rectangularSelection(),
+                crosshairCursor(),
+                bracketMatching(),
+                highlightSelectionMatches(),
+                search({top: true}),
+                statusBar({
+                    label: "Output",
+                    bakeStats: this.bakeStats,
+                    eolHandler: this.eolChange.bind(this)
+                }),
+                this.outputEditorConf.lineWrapping.of(EditorView.lineWrapping),
+                this.outputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
+                EditorState.allowMultipleSelections.of(true),
+                keymap.of([
+                    ...defaultKeymap,
+                    ...searchKeymap
+                ]),
+            ]
+        });
+
+        this.outputEditorView = new EditorView({
+            state: initialState,
+            parent: this.outputTextEl
+        });
+    }
+
+    /**
+     * Handler for EOL change events
+     * Sets the line separator
+     */
+    eolChange(eolval) {
+        const oldOutputVal = this.getOutput();
+
+        // Update the EOL value
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolval))
+        });
+
+        // Reset the output so that lines are recalculated, preserving the old EOL values
+        this.setOutput(oldOutputVal);
+    }
+
+    /**
+     * Sets word wrap on the output editor
+     * @param {boolean} wrap
+     */
+    setWordWrap(wrap) {
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.lineWrapping.reconfigure(
+                wrap ? EditorView.lineWrapping : []
+            )
+        });
+    }
+
+    /**
+     * Gets the value of the current output
+     * @returns {string}
+     */
+    getOutput() {
+        const doc = this.outputEditorView.state.doc;
+        const eol = this.outputEditorView.state.lineBreak;
+        return doc.sliceString(0, doc.length, eol);
+    }
+
+    /**
+     * Sets the value of the current output
+     * @param {string} data
+     */
+    setOutput(data) {
+        this.outputEditorView.dispatch({
+            changes: {
+                from: 0,
+                to: this.outputEditorView.state.doc.length,
+                insert: data
+            }
+        });
+    }
+
+    /**
+     * Sets the value of the current output to a rendered HTML value
+     * @param {string} html
+     */
+    setHTMLOutput(html) {
+        this.htmlOutput.html = html;
+        this.htmlOutput.changed = true;
+        // This clears the text output, but also fires a View update which
+        // triggers the htmlWidget to render the HTML.
+        this.setOutput("");
+
+        // Execute script sections
+        const scriptElements = document.getElementById("output-html").querySelectorAll("script");
+        for (let i = 0; i < scriptElements.length; i++) {
+            try {
+                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+            } catch (err) {
+                log.error(err);
+            }
+        }
+    }
+
+    /**
+     * Clears the HTML output
+     */
+    clearHTMLOutput() {
+        this.htmlOutput.html = "";
+        this.htmlOutput.changed = true;
+        // Fire a blank change to force the htmlWidget to update and remove any HTML
+        this.outputEditorView.dispatch({
+            changes: {
+                from: 0,
+                insert: ""
+            }
+        });
     }
 
     /**
@@ -245,8 +400,6 @@ class OutputWaiter {
                 activeTab = this.manager.tabs.getActiveOutputTab();
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
-            const outputText = document.getElementById("output-text");
-            const outputHtml = document.getElementById("output-html");
             const outputFile = document.getElementById("output-file");
             const outputHighlighter = document.getElementById("output-highlighter");
             const inputHighlighter = document.getElementById("input-highlighter");
@@ -278,95 +431,68 @@ class OutputWaiter {
             } else if (output.status === "error") {
                 // style the tab if it's being shown
                 this.toggleLoader(false);
-                outputText.style.display = "block";
-                outputText.classList.remove("blur");
-                outputHtml.style.display = "none";
+                this.outputTextEl.style.display = "block";
+                this.outputTextEl.classList.remove("blur");
                 outputFile.style.display = "none";
                 outputHighlighter.display = "none";
                 inputHighlighter.display = "none";
+                this.clearHTMLOutput();
 
                 if (output.error) {
-                    outputText.value = output.error;
+                    this.setOutput(output.error);
                 } else {
-                    outputText.value = output.data.result;
+                    this.setOutput(output.data.result);
                 }
-                outputHtml.innerHTML = "";
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
                 this.closeFile();
-                let scriptElements, lines, length;
 
                 if (output.data === null) {
-                    outputText.style.display = "block";
-                    outputHtml.style.display = "none";
+                    this.outputTextEl.style.display = "block";
                     outputFile.style.display = "none";
                     outputHighlighter.display = "block";
                     inputHighlighter.display = "block";
 
-                    outputText.value = "";
-                    outputHtml.innerHTML = "";
+                    this.clearHTMLOutput();
+                    this.setOutput("");
 
                     this.toggleLoader(false);
                     return;
                 }
 
+                this.bakeStats.duration = output.data.duration;
+
                 switch (output.data.type) {
                     case "html":
-                        outputText.style.display = "none";
-                        outputHtml.style.display = "block";
                         outputFile.style.display = "none";
                         outputHighlighter.style.display = "none";
                         inputHighlighter.style.display = "none";
 
-                        outputText.value = "";
-                        outputHtml.innerHTML = output.data.result;
-
-                        // Execute script sections
-                        scriptElements = outputHtml.querySelectorAll("script");
-                        for (let i = 0; i < scriptElements.length; i++) {
-                            try {
-                                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-                            } catch (err) {
-                                log.error(err);
-                            }
-                        }
+                        this.setHTMLOutput(output.data.result);
                         break;
                     case "ArrayBuffer":
-                        outputText.style.display = "block";
-                        outputHtml.style.display = "none";
+                        this.outputTextEl.style.display = "block";
                         outputHighlighter.display = "none";
                         inputHighlighter.display = "none";
 
-                        outputText.value = "";
-                        outputHtml.innerHTML = "";
+                        this.clearHTMLOutput();
+                        this.setOutput("");
 
-                        length = output.data.result.byteLength;
                         this.setFile(await this.getDishBuffer(output.data.dish), activeTab);
                         break;
                     case "string":
                     default:
-                        outputText.style.display = "block";
-                        outputHtml.style.display = "none";
+                        this.outputTextEl.style.display = "block";
                         outputFile.style.display = "none";
                         outputHighlighter.display = "block";
                         inputHighlighter.display = "block";
 
-                        outputText.value = Utils.printable(output.data.result, true);
-                        outputHtml.innerHTML = "";
-
-                        lines = output.data.result.count("\n") + 1;
-                        length = output.data.result.length;
+                        this.clearHTMLOutput();
+                        this.setOutput(output.data.result);
                         break;
                 }
                 this.toggleLoader(false);
 
-                if (output.data.type === "html") {
-                    const dishStr = await this.getDishStr(output.data.dish);
-                    length = dishStr.length;
-                    lines = dishStr.count("\n") + 1;
-                }
-
-                this.setOutputInfo(length, lines, output.data.duration);
                 debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
             }
         }.bind(this));
@@ -383,14 +509,13 @@ class OutputWaiter {
         // Display file overlay in output area with details
         const fileOverlay = document.getElementById("output-file"),
             fileSize = document.getElementById("output-file-size"),
-            outputText = document.getElementById("output-text"),
             fileSlice = buf.slice(0, 4096);
 
         fileOverlay.style.display = "block";
         fileSize.textContent = buf.byteLength.toLocaleString() + " bytes";
 
-        outputText.classList.add("blur");
-        outputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
+        this.outputTextEl.classList.add("blur");
+        this.setOutput(Utils.arrayBufferToStr(fileSlice));
     }
 
     /**
@@ -398,7 +523,7 @@ class OutputWaiter {
      */
     closeFile() {
         document.getElementById("output-file").style.display = "none";
-        document.getElementById("output-text").classList.remove("blur");
+        this.outputTextEl.classList.remove("blur");
     }
 
     /**
@@ -466,7 +591,6 @@ class OutputWaiter {
         clearTimeout(this.outputLoaderTimeout);
 
         const outputLoader = document.getElementById("output-loader"),
-            outputElement = document.getElementById("output-text"),
             animation = document.getElementById("output-loader-animation");
 
         if (value) {
@@ -483,7 +607,6 @@ class OutputWaiter {
 
             // Show the loading screen
             this.outputLoaderTimeout = setTimeout(function() {
-                outputElement.disabled = true;
                 outputLoader.style.visibility = "visible";
                 outputLoader.style.opacity = 1;
             }, 200);
@@ -494,7 +617,6 @@ class OutputWaiter {
                     animation.removeChild(this.bombeEl);
                 } catch (err) {}
             }.bind(this), 500);
-            outputElement.disabled = false;
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
         }
@@ -717,8 +839,7 @@ class OutputWaiter {
 
         debounce(this.set, 50, "setOutput", this, [inputNum])();
 
-        document.getElementById("output-html").scroll(0, 0);
-        document.getElementById("output-text").scroll(0, 0);
+        this.outputTextEl.scroll(0, 0); // TODO
 
         if (changeInput) {
             this.manager.input.changeTab(inputNum, false);
@@ -997,32 +1118,6 @@ class OutputWaiter {
     }
 
     /**
-     * Displays information about the output.
-     *
-     * @param {number} length - The length of the current output string
-     * @param {number} lines - The number of the lines in the current output string
-     * @param {number} duration - The length of time (ms) it took to generate the output
-     */
-    setOutputInfo(length, lines, duration) {
-        if (!length) return;
-        let width = length.toString().length;
-        width = width < 4 ? 4 : width;
-
-        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const timeStr = (duration.toString() + "ms").padStart(width, " ").replace(/ /g, "&nbsp;");
-
-        let msg = "time: " + timeStr + "<br>length: " + lengthStr;
-
-        if (typeof lines === "number") {
-            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>lines: " + linesStr;
-        }
-
-        document.getElementById("output-info").innerHTML = msg;
-        document.getElementById("output-selection-info").innerHTML = "";
-    }
-
-    /**
      * Triggers the BackgroundWorker to attempt Magic on the current output.
      */
     async backgroundMagic() {
@@ -1111,9 +1206,7 @@ class OutputWaiter {
     async displayFileSlice() {
         document.querySelector("#output-loader .loading-msg").textContent = "Loading file slice...";
         this.toggleLoader(true);
-        const outputText = document.getElementById("output-text"),
-            outputHtml = document.getElementById("output-html"),
-            outputFile = document.getElementById("output-file"),
+        const outputFile = document.getElementById("output-file"),
             outputHighlighter = document.getElementById("output-highlighter"),
             inputHighlighter = document.getElementById("input-highlighter"),
             showFileOverlay = document.getElementById("show-file-overlay"),
@@ -1130,12 +1223,12 @@ class OutputWaiter {
             str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish).slice(sliceFrom, sliceTo));
         }
 
-        outputText.classList.remove("blur");
+        this.outputTextEl.classList.remove("blur");
         showFileOverlay.style.display = "block";
-        outputText.value = Utils.printable(str, true);
+        this.clearHTMLOutput();
+        this.setOutput(str);
 
-        outputText.style.display = "block";
-        outputHtml.style.display = "none";
+        this.outputTextEl.style.display = "block";
         outputFile.style.display = "none";
         outputHighlighter.display = "block";
         inputHighlighter.display = "block";
@@ -1149,9 +1242,7 @@ class OutputWaiter {
     async showAllFile() {
         document.querySelector("#output-loader .loading-msg").textContent = "Loading entire file at user instruction. This may cause a crash...";
         this.toggleLoader(true);
-        const outputText = document.getElementById("output-text"),
-            outputHtml = document.getElementById("output-html"),
-            outputFile = document.getElementById("output-file"),
+        const outputFile = document.getElementById("output-file"),
             outputHighlighter = document.getElementById("output-highlighter"),
             inputHighlighter = document.getElementById("input-highlighter"),
             showFileOverlay = document.getElementById("show-file-overlay"),
@@ -1164,12 +1255,12 @@ class OutputWaiter {
             str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish));
         }
 
-        outputText.classList.remove("blur");
+        this.outputTextEl.classList.remove("blur");
         showFileOverlay.style.display = "none";
-        outputText.value = Utils.printable(str, true);
+        this.clearHTMLOutput();
+        this.setOutput(str);
 
-        outputText.style.display = "block";
-        outputHtml.style.display = "none";
+        this.outputTextEl.style.display = "block";
         outputFile.style.display = "none";
         outputHighlighter.display = "block";
         inputHighlighter.display = "block";
@@ -1185,7 +1276,7 @@ class OutputWaiter {
     showFileOverlayClick(e) {
         const showFileOverlay = e.target;
 
-        document.getElementById("output-text").classList.add("blur");
+        this.outputTextEl.classList.add("blur");
         showFileOverlay.style.display = "none";
         this.set(this.manager.tabs.getActiveOutputTab());
     }
@@ -1212,7 +1303,7 @@ class OutputWaiter {
      * Handler for copy click events.
      * Copies the output to the clipboard
      */
-    async copyClick() {
+    async copyClick() { // TODO - do we need this?
         const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
         if (dish === null) {
             this.app.alert("Could not find data to copy. Has this output been baked yet?", 3000);

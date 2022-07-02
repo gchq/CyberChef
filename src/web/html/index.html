@@ -191,7 +191,7 @@
                     <ul id="rec-list" class="list-area no-select"></ul>
 
                     <div id="controls" class="no-select hide-on-maximised-output">
-                        <div id="controls-content" class="d-flex align-items-center">
+                        <div id="controls-content">
                             <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe">
                                 Step
                             </button>
@@ -289,8 +289,6 @@
                             <label for="output-text">Output</label>
                             <span class="pane-controls">
                                 <div class="io-info" id="bake-info"></div>
-                                <div class="io-info" id="output-selection-info"></div>
-                                <div class="io-info" id="output-info"></div>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a zip file" style="display: none">
                                         <i class="material-icons">archive</i>
                                     </button>
@@ -344,8 +342,7 @@
                             </div>
                             <div class="textarea-wrapper">
                                 <div id="output-highlighter" class="no-select"></div>
-                                <div id="output-html"></div>
-                                <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
+                                <div id="output-text"></div>
                                 <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
                                 <div id="output-file">
                                     <div class="file-overlay"></div>

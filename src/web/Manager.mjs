@@ -178,7 +178,6 @@ class Manager {
         this.addDynamicListener(".input-filter-result", "click", this.input.filterItemClick, this.input);
         document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
         document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
-        this.addDynamicListener(".eol-select a", "click", this.input.eolSelectClick, this.input);
 
 
         // Output
@@ -192,10 +191,7 @@ class Manager {
         document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
         document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
         document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
-        document.getElementById("output-html").addEventListener("mouseup", this.highlighter.outputHtmlMouseup.bind(this.highlighter));
-        document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
         this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
-        this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
         this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
         this.addDynamicListener("#output-file-show-all", "click", this.output.showAllFile, this.output);
         this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);

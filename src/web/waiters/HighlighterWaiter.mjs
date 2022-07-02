@@ -176,30 +176,12 @@ class HighlighterWaiter {
         this.mouseTarget = OUTPUT;
         this.removeHighlights();
 
-        const el = e.target;
-        const start = el.selectionStart;
-        const end = el.selectionEnd;
+        const sel = document.getSelection();
+        const start = sel.baseOffset;
+        const end = sel.extentOffset;
 
         if (start !== 0 || end !== 0) {
-            document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
             this.highlightInput([{start: start, end: end}]);
-        }
-    }
-
-
-    /**
-     * Handler for output HTML mousedown events.
-     * Calculates the current selection info.
-     *
-     * @param {event} e
-     */
-    outputHtmlMousedown(e) {
-        this.mouseButtonDown = true;
-        this.mouseTarget = OUTPUT;
-
-        const sel = this._getOutputHtmlSelectionOffsets();
-        if (sel.start !== 0 || sel.end !== 0) {
-            document.getElementById("output-selection-info").innerHTML = this.selectionInfo(sel.start, sel.end);
         }
     }
 
@@ -220,16 +202,6 @@ class HighlighterWaiter {
      * @param {event} e
      */
     outputMouseup(e) {
-        this.mouseButtonDown = false;
-    }
-
-
-    /**
-     * Handler for output HTML mouseup events.
-     *
-     * @param {event} e
-     */
-    outputHtmlMouseup(e) {
         this.mouseButtonDown = false;
     }
 
@@ -270,33 +242,12 @@ class HighlighterWaiter {
             this.mouseTarget !== OUTPUT)
             return;
 
-        const el = e.target;
-        const start = el.selectionStart;
-        const end = el.selectionEnd;
+        const sel = document.getSelection();
+        const start = sel.baseOffset;
+        const end = sel.extentOffset;
 
         if (start !== 0 || end !== 0) {
-            document.getElementById("output-selection-info").innerHTML = this.selectionInfo(start, end);
             this.highlightInput([{start: start, end: end}]);
-        }
-    }
-
-
-    /**
-     * Handler for output HTML mousemove events.
-     * Calculates the current selection info.
-     *
-     * @param {event} e
-     */
-    outputHtmlMousemove(e) {
-        // Check that the left mouse button is pressed
-        if (!this.mouseButtonDown ||
-            e.which !== 1 ||
-            this.mouseTarget !== OUTPUT)
-            return;
-
-        const sel = this._getOutputHtmlSelectionOffsets();
-        if (sel.start !== 0 || sel.end !== 0) {
-            document.getElementById("output-selection-info").innerHTML = this.selectionInfo(sel.start, sel.end);
         }
     }
 
@@ -326,7 +277,6 @@ class HighlighterWaiter {
     removeHighlights() {
         document.getElementById("input-highlighter").innerHTML = "";
         document.getElementById("output-highlighter").innerHTML = "";
-        document.getElementById("output-selection-info").innerHTML = "";
     }
 
 
@@ -379,7 +329,8 @@ class HighlighterWaiter {
 
         const io = direction === "forward" ? "output" : "input";
 
-        document.getElementById(io + "-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
+        // TODO
+        // document.getElementById(io + "-selection-info").innerHTML = this.selectionInfo(pos[0].start, pos[0].end);
         this.highlight(
             document.getElementById(io + "-text"),
             document.getElementById(io + "-highlighter"),
@@ -398,67 +349,67 @@ class HighlighterWaiter {
      * @param {number} pos.end - The end offset.
      */
     async highlight(textarea, highlighter, pos) {
-        if (!this.app.options.showHighlighter) return false;
-        if (!this.app.options.attemptHighlight) return false;
+        // if (!this.app.options.showHighlighter) return false;
+        // if (!this.app.options.attemptHighlight) return false;
 
-        // Check if there is a carriage return in the output dish as this will not
-        // be displayed by the HTML textarea and will mess up highlighting offsets.
-        if (await this.manager.output.containsCR()) return false;
+        // // Check if there is a carriage return in the output dish as this will not
+        // // be displayed by the HTML textarea and will mess up highlighting offsets.
+        // if (await this.manager.output.containsCR()) return false;
 
-        const startPlaceholder = "[startHighlight]";
-        const startPlaceholderRegex = /\[startHighlight\]/g;
-        const endPlaceholder = "[endHighlight]";
-        const endPlaceholderRegex = /\[endHighlight\]/g;
-        let text = textarea.value;
+        // const startPlaceholder = "[startHighlight]";
+        // const startPlaceholderRegex = /\[startHighlight\]/g;
+        // const endPlaceholder = "[endHighlight]";
+        // const endPlaceholderRegex = /\[endHighlight\]/g;
+        // // let text = textarea.value; // TODO
 
-        // Put placeholders in position
-        // If there's only one value, select that
-        // If there are multiple, ignore the first one and select all others
-        if (pos.length === 1) {
-            if (pos[0].end < pos[0].start) return;
-            text = text.slice(0, pos[0].start) +
-                startPlaceholder + text.slice(pos[0].start, pos[0].end) + endPlaceholder +
-                text.slice(pos[0].end, text.length);
-        } else {
-            // O(n^2) - Can anyone improve this without overwriting placeholders?
-            let result = "",
-                endPlaced = true;
+        // // Put placeholders in position
+        // // If there's only one value, select that
+        // // If there are multiple, ignore the first one and select all others
+        // if (pos.length === 1) {
+        //     if (pos[0].end < pos[0].start) return;
+        //     text = text.slice(0, pos[0].start) +
+        //         startPlaceholder + text.slice(pos[0].start, pos[0].end) + endPlaceholder +
+        //         text.slice(pos[0].end, text.length);
+        // } else {
+        //     // O(n^2) - Can anyone improve this without overwriting placeholders?
+        //     let result = "",
+        //         endPlaced = true;
 
-            for (let i = 0; i < text.length; i++) {
-                for (let j = 1; j < pos.length; j++) {
-                    if (pos[j].end < pos[j].start) continue;
-                    if (pos[j].start === i) {
-                        result += startPlaceholder;
-                        endPlaced = false;
-                    }
-                    if (pos[j].end === i) {
-                        result += endPlaceholder;
-                        endPlaced = true;
-                    }
-                }
-                result += text[i];
-            }
-            if (!endPlaced) result += endPlaceholder;
-            text = result;
-        }
+        //     for (let i = 0; i < text.length; i++) {
+        //         for (let j = 1; j < pos.length; j++) {
+        //             if (pos[j].end < pos[j].start) continue;
+        //             if (pos[j].start === i) {
+        //                 result += startPlaceholder;
+        //                 endPlaced = false;
+        //             }
+        //             if (pos[j].end === i) {
+        //                 result += endPlaceholder;
+        //                 endPlaced = true;
+        //             }
+        //         }
+        //         result += text[i];
+        //     }
+        //     if (!endPlaced) result += endPlaceholder;
+        //     text = result;
+        // }
 
-        const cssClass = "hl1";
+        // const cssClass = "hl1";
 
-        // Remove HTML tags
-        text = text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/\n/g, "&#10;")
-            // Convert placeholders to tags
-            .replace(startPlaceholderRegex, "<span class=\""+cssClass+"\">")
-            .replace(endPlaceholderRegex, "</span>") + "&nbsp;";
+        // // Remove HTML tags
+        // text = text
+        //     .replace(/&/g, "&amp;")
+        //     .replace(/</g, "&lt;")
+        //     .replace(/>/g, "&gt;")
+        //     .replace(/\n/g, "&#10;")
+        //     // Convert placeholders to tags
+        //     .replace(startPlaceholderRegex, "<span class=\""+cssClass+"\">")
+        //     .replace(endPlaceholderRegex, "</span>") + "&nbsp;";
 
-        // Adjust width to allow for scrollbars
-        highlighter.style.width = textarea.clientWidth + "px";
-        highlighter.innerHTML = text;
-        highlighter.scrollTop = textarea.scrollTop;
-        highlighter.scrollLeft = textarea.scrollLeft;
+        // // Adjust width to allow for scrollbars
+        // highlighter.style.width = textarea.clientWidth + "px";
+        // highlighter.innerHTML = text;
+        // highlighter.scrollTop = textarea.scrollTop;
+        // highlighter.scrollLeft = textarea.scrollLeft;
     }
 
 }

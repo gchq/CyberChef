@@ -19,7 +19,8 @@ import {defaultKeymap, insertTab, insertNewline, history, historyKeymap} from "@
 import {bracketMatching} from "@codemirror/language";
 import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
 
-import {statusBar} from "../extensions/statusBar.mjs";
+import {statusBar} from "../utils/statusBar.mjs";
+import {renderSpecialChar} from "../utils/editorUtils.mjs";
 
 
 /**
@@ -87,14 +88,17 @@ class InputWaiter {
             doc: null,
             extensions: [
                 history(),
-                highlightSpecialChars({render: this.renderSpecialChar}),
+                highlightSpecialChars({render: renderSpecialChar}),
                 drawSelection(),
                 rectangularSelection(),
                 crosshairCursor(),
                 bracketMatching(),
                 highlightSelectionMatches(),
                 search({top: true}),
-                statusBar(this.inputEditorConf),
+                statusBar({
+                    label: "Input",
+                    eolHandler: this.eolChange.bind(this)
+                }),
                 this.inputEditorConf.lineWrapping.of(EditorView.lineWrapping),
                 this.inputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
                 EditorState.allowMultipleSelections.of(true),
@@ -118,44 +122,10 @@ class InputWaiter {
     }
 
     /**
-     * Override for rendering special characters.
-     * Should mirror the toDOM function in
-     * https://github.com/codemirror/view/blob/main/src/special-chars.ts#L150
-     * But reverts the replacement of line feeds with newline control pictures.
-     * @param {number} code
-     * @param {string} desc
-     * @param {string} placeholder
-     * @returns {element}
-     */
-    renderSpecialChar(code, desc, placeholder) {
-        const s = document.createElement("span");
-        // CodeMirror changes 0x0a to "NL" instead of "LF". We change it back.
-        s.textContent = code === 0x0a ? "\u240a" : placeholder;
-        s.title = desc;
-        s.setAttribute("aria-label", desc);
-        s.className = "cm-specialChar";
-        return s;
-    }
-
-    /**
-     * Handler for EOL Select clicks
+     * Handler for EOL change events
      * Sets the line separator
-     * @param {Event} e
      */
-    eolSelectClick(e) {
-        e.preventDefault();
-
-        const eolLookup = {
-            "LF": "\u000a",
-            "VT": "\u000b",
-            "FF": "\u000c",
-            "CR": "\u000d",
-            "CRLF": "\u000d\u000a",
-            "NEL": "\u0085",
-            "LS": "\u2028",
-            "PS": "\u2029"
-        };
-        const eolval = eolLookup[e.target.getAttribute("data-val")];
+    eolChange(eolval) {
         const oldInputVal = this.getInput();
 
         // Update the EOL value

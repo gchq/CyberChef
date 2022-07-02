@@ -424,7 +424,7 @@ class Utils {
         const utf8Str = utf8.encode(str);
 
         if (str.length !== utf8Str.length) {
-            if (isWorkerEnvironment()) {
+            if (isWorkerEnvironment() && self && typeof self.setOption === "function") {
                 self.setOption("attemptHighlight", false);
             } else if (isWebEnvironment()) {
                 window.app.options.attemptHighlight = false;
