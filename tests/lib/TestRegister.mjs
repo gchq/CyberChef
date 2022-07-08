@@ -84,7 +84,17 @@ class TestRegister {
 
             if (result.error) {
                 if (test.expectedError) {
-                    ret.status = "passing";
+                    if (result.error.displayStr === test.expectedOutput) {
+                        ret.status = "passing";
+                    } else {
+                        ret.status = "failing";
+                        ret.output = [
+                            "Expected",
+                            "\t" + test.expectedOutput.replace(/\n/g, "\n\t"),
+                            "Received",
+                            "\t" + result.error.displayStr.replace(/\n/g, "\n\t"),
+                        ].join("\n");
+                    }
                 } else {
                     ret.status = "erroring";
                     ret.output = result.error.displayStr;

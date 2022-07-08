@@ -32,7 +32,12 @@ class FromBase45 extends Operation {
                 name: "Alphabet",
                 type: "string",
                 value: ALPHABET
-            }
+            },
+            {
+                name: "Remove non-alphabet chars",
+                type: "boolean",
+                value: true
+            },
         ];
 
         this.highlight = highlightFromBase45;
@@ -46,9 +51,16 @@ class FromBase45 extends Operation {
      */
     run(input, args) {
         if (!input) return [];
-        const alphabet = Utils.expandAlphRange(args[0]);
+        const alphabet = Utils.expandAlphRange(args[0]).join("");
+        const removeNonAlphChars = args[1];
 
         const res = [];
+
+        // Remove non-alphabet characters
+        if (removeNonAlphChars) {
+            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
+            input = input.replace(re, "");
+        }
 
         for (const triple of Utils.chunked(input, 3)) {
             triple.reverse();
