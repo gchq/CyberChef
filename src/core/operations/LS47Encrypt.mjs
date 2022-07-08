@@ -20,8 +20,8 @@ class LS47Encrypt extends Operation {
 
         this.name = "LS47 Encrypt";
         this.module = "Crypto";
-        this.description = "This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold.\nThe LS47 alphabet consists of following characters: _abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()\nA LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.";
-        this.infoURL = "https://gitea.blesmrt.net/exa/ls47/src/branch/master";
+        this.description = "This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold.<br>The LS47 alphabet consists of following characters: <code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>A LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.";
+        this.infoURL = "https://github.com/exaexa/ls47";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -49,7 +49,6 @@ class LS47Encrypt extends Operation {
      * @returns {string}
      */
     run(input, args) {
-
         this.paddingSize = parseInt(args[1], 10);
 
         LS47.initTiles();

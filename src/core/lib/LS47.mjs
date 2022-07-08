@@ -102,10 +102,10 @@ function checkKey(key) {
         counts[letters.charAt(i)] = 0;
     for (const elem of letters) {
         if (letters.indexOf(elem) === -1)
-            throw new OperationError("Letter " + elem + " not in LS47!");
+            throw new OperationError("Letter " + elem + " not in LS47");
         counts[elem]++;
         if (counts[elem] > 1)
-            throw new OperationError("Letter duplicated in the key!");
+            throw new OperationError("Letter duplicated in the key");
     }
 }
 
@@ -120,7 +120,7 @@ function findPos (key, letter) {
     const index = key.indexOf(letter);
     if (index >= 0 && index < 49)
         return [Math.floor(index/7), index%7];
-    throw new OperationError("Letter " + letter + " is not in the key!");
+    throw new OperationError("Letter " + letter + " is not in the key");
 }
 
 /**
