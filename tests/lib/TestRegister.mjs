@@ -12,6 +12,7 @@
 import Chef from "../../src/core/Chef.mjs";
 import Utils from "../../src/core/Utils.mjs";
 import cliProgress from "cli-progress";
+import log from "loglevel";
 
 /**
  * Object to store and run the list of tests.
@@ -50,6 +51,9 @@ class TestRegister {
      * Runs all the tests in the register.
      */
     async runTests () {
+        // Turn off logging to avoid messy errors
+        log.setLevel("silent", false);
+
         const progBar = new cliProgress.SingleBar({
             format: formatter,
             stopOnComplete: true
@@ -127,6 +131,9 @@ class TestRegister {
             testResults.push(ret);
             progBar.increment();
         }
+
+        // Turn logging back on
+        log.setLevel("info", false);
 
         return testResults;
     }

@@ -85,6 +85,10 @@ class FromBase85 extends Operation {
             throw new OperationError("Alphabet must be of length 85");
         }
 
+        // Remove delimiters if present
+        const matches = input.match(/^<~(.+?)~>$/);
+        if (matches !== null) input = matches[1];
+
         // Remove non-alphabet characters
         if (removeNonAlphChars) {
             const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
@@ -92,13 +96,6 @@ class FromBase85 extends Operation {
         }
 
         if (input.length === 0) return [];
-
-        input = input.replace(/\s+/g, "");
-
-        if (encoding === "Standard") {
-            const matches = input.match(/<~(.+?)~>/);
-            if (matches !== null) input = matches[1];
-        }
 
         let i = 0;
         let block, blockBytes;
