@@ -70,7 +70,7 @@ export const FILE_SIGNATURES = {
                 10: 0x42,
                 11: 0x50
             },
-            extractor: null
+            extractor: extractWEBP
         },
         {
             name: "Camera Image File Format",
@@ -3027,6 +3027,30 @@ export function extractPNG(bytes, offset) {
         stream.moveForwardsBy(chunkSize + 4);
     }
 
+
+    return stream.carve();
+}
+
+
+/**
+ * WEBP extractor.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {Uint8Array}
+ */
+export function extractWEBP(bytes, offset) {
+    const stream = new Stream(bytes.slice(offset));
+
+    // Move to file size offset.
+    stream.moveForwardsBy(4);
+
+    // Read file size field.
+    const fileSize = stream.readInt(4, "le");
+
+    // Move to end of file.
+    // There is no need to minus 8 from the size as the size factors in the offset.
+    stream.moveForwardsBy(fileSize);
 
     return stream.carve();
 }
