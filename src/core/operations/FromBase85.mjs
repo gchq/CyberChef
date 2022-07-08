@@ -38,6 +38,35 @@ class FromBase85 extends Operation {
                 value: true
             },
         ];
+        this.checks = [
+            {
+                pattern:
+                    "^\\s*(?:<~)?" + // Optional whitespace and starting marker
+                    "[\\s!-uz]*" +   // Any amount of base85 characters and whitespace
+                    "[!-uz]{15}" +   // At least 15 continoues base85 characters without whitespace
+                    "[\\s!-uz]*" +   // Any amount of base85 characters and whitespace
+                    "(?:~>)?\\s*$",  // Optional ending marker and whitespace
+                args: ["!-u"],
+            },
+            {
+                pattern:
+                    "^" +
+                    "[\\s0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]*" +
+                    "[0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]{15}" + // At least 15 continoues base85 characters without whitespace
+                    "[\\s0-9a-zA-Z.\\-:+=^!/*?&<>()[\\]{}@%$#]*" +
+                    "$",
+                args: ["0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#"],
+            },
+            {
+                pattern:
+                    "^" +
+                    "[\\s0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]*" +
+                    "[0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]{15}" + // At least 15 continoues base85 characters without whitespace
+                    "[\\s0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~]*" +
+                    "$",
+                args: ["0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~"],
+            },
+        ];
     }
 
     /**
@@ -64,8 +93,12 @@ class FromBase85 extends Operation {
 
         if (input.length === 0) return [];
 
-        const matches = input.match(/<~(.+?)~>/);
-        if (matches !== null) input = matches[1];
+        input = input.replace(/\s+/g, "");
+
+        if (encoding === "Standard") {
+            const matches = input.match(/<~(.+?)~>/);
+            if (matches !== null) input = matches[1];
+        }
 
         let i = 0;
         let block, blockBytes;
