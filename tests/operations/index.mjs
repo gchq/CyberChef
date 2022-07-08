@@ -114,6 +114,7 @@ import "./tests/HASSH.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/SIGABA.mjs";
 import "./tests/ELFInfo.mjs";
+import "./tests/Subsection.mjs";
 
 
 // Cannot test operations that use the File type yet

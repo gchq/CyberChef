@@ -67,12 +67,21 @@ class Subsection extends Operation {
             subOpList   = [];
 
         if (input && section !== "") {
+            // Set to 1 as if we are here, then there is one, the current one.
+            let numOp = 1;
             // Create subOpList for each tranche to operate on
             // all remaining operations unless we encounter a Merge
             for (let i = state.progress + 1; i < opList.length; i++) {
                 if (opList[i].name === "Merge" && !opList[i].disabled) {
-                    break;
+                    numOp--;
+                    if (numOp === 0 || opList[i].ingValues[0])
+                        break;
+                    else
+                        // Not this subsection's Merge.
+                        subOpList.push(opList[i]);
                 } else {
+                    if (opList[i].name === "Fork" || opList[i].name === "Subsection")
+                        numOp++;
                     subOpList.push(opList[i]);
                 }
             }
