@@ -20,7 +20,7 @@ class ROT8000 extends Operation {
         this.name = "ROT8000";
         this.module = "Default";
         this.description = "The simple Caesar-cypher encryption that replaces each Unicode character with the one 0x8000 places forward or back along the alphabet.";
-        this.infoURL = "https://github.com/rottytooth/rot8000";
+        this.infoURL = "https://rot8000.com/info";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -35,7 +35,25 @@ class ROT8000 extends Operation {
         // Inspired from https://github.com/rottytooth/rot8000/blob/main/rot8000.js
         // these come from the valid-code-point-transitions.json file generated from the c# proj
         // this is done bc: 1) don't trust JS's understanging of surrogate pairs and 2) consistency with original rot8000
-        const validCodePoints = JSON.parse('{"33":true,"127":false,"161":true,"5760":false,"5761":true,"8192":false,"8203":true,"8232":false,"8234":true,"8239":false,"8240":true,"8287":false,"8288":true,"12288":false,"12289":true,"55296":false,"57344":true}');
+        const validCodePoints = {
+            "33": true,
+            "127": false,
+            "161": true,
+            "5760": false,
+            "5761": true,
+            "8192": false,
+            "8203": true,
+            "8232": false,
+            "8234": true,
+            "8239": false,
+            "8240": true,
+            "8287": false,
+            "8288": true,
+            "12288": false,
+            "12289": true,
+            "55296": false,
+            "57344": true
+        };
         const bmpSize = 0x10000;
         const rotList = {}; // the mapping of char to rotated char
         const hiddenBlocks = [];
