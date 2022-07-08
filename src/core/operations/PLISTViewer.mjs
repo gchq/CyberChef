@@ -7,36 +7,23 @@
 import Operation from "../Operation.mjs";
 
 /**
- * PLIST Viewer operation
+ * P-list Viewer operation
  */
-class PLISTViewer extends Operation {
+class PlistViewer extends Operation {
 
     /**
-     * PLISTViewer constructor
+     * PlistViewer constructor
      */
     constructor() {
         super();
 
-        this.name = "PLIST Viewer";
-        this.module = "Other";
-        this.description = "Converts PLISTXML file into a human readable format.";
-        this.infoURL = "";
+        this.name = "P-list Viewer";
+        this.module = "Default";
+        this.description = "In the macOS, iOS, NeXTSTEP, and GNUstep programming frameworks, property list files are files that store serialized objects. Property list files use the filename extension .plist, and thus are often referred to as p-list files.<br><br>This operation displays plist files in a human readable format.";
+        this.infoURL = "https://wikipedia.org/wiki/Property_list";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
-        ];
+        this.args = [];
     }
 
     /**
@@ -46,7 +33,7 @@ class PLISTViewer extends Operation {
      */
     run(input, args) {
 
-        // Regexes are designed to transform the xml format into a reasonably more readable string format.
+        // Regexes are designed to transform the xml format into a more readable string format.
         input = input.slice(input.indexOf("<plist"))
             .replace(/<plist.+>/g, "plist => ")
             .replace(/<dict>/g, "{")
@@ -143,4 +130,4 @@ class PLISTViewer extends Operation {
     }
 }
 
-export default PLISTViewer;
+export default PlistViewer;
