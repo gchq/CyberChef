@@ -58,7 +58,7 @@ class ExtractFiles extends Operation {
             {
                 name: "Minimum File Size",
                 type: "number",
-                value: 0
+                value: 100
             }
         ]);
     }
@@ -86,8 +86,8 @@ class ExtractFiles extends Operation {
         const errors = [];
         detectedFiles.forEach(detectedFile => {
             try {
-                let file;
-                if ((file = extractFile(bytes, detectedFile.fileDetails, detectedFile.offset)).size >= minSize)
+                const file = extractFile(bytes, detectedFile.fileDetails, detectedFile.offset);
+                if (file.size >= minSize)
                     files.push(file);
             } catch (err) {
                 if (!ignoreFailedExtractions && err.message.indexOf("No extraction algorithm available") < 0) {
