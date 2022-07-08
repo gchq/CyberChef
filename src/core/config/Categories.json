@@ -97,6 +97,7 @@
             "Bacon Cipher Decode",
             "Bifid Cipher Encode",
             "Bifid Cipher Decode",
+            "Caesar Box Cipher",
             "Affine Cipher Encode",
             "Affine Cipher Decode",
             "A1Z26 Cipher Encode",
