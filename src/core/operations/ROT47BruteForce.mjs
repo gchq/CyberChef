@@ -25,28 +25,28 @@ class ROT47BruteForce extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Sample length",
-                "type": "number",
-                "value": 100
+                name: "Sample length",
+                type: "number",
+                value: 100
             },
             {
-                "name": "Sample offset",
-                "type": "number",
-                "value": 0
+                name: "Sample offset",
+                type: "number",
+                value: 0
             },
             {
-                "name": "Print amount",
-                "type": "boolean",
-                "value": true
+                name: "Print amount",
+                type: "boolean",
+                value: true
             },
             {
-                "name": "Crib (known plaintext string)",
-                "type": "string",
-                "value": ""
+                name: "Crib (known plaintext string)",
+                type: "string",
+                value: ""
             }
         ];
     }
-    
+
     /**
      * @param {byteArray} input
      * @param {Object[]} args
