@@ -91,6 +91,7 @@
             "ROT13 Brute Force",
             "ROT47",
             "ROT47 Brute Force",
+            "ROT8000",
             "XOR",
             "XOR Brute Force",
             "Vigenère Encode",
@@ -181,7 +182,8 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
-            "ROT13"
+            "ROT13",
+            "ROT8000"
         ]
     },
     {
