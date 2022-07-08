@@ -1,5 +1,5 @@
 /**
- * Base58 tests.
+ * Caesar Box Cipher tests.
  *
  * @author n1073645 [n1073645@gmail.com]
  *

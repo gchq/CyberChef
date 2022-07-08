@@ -19,7 +19,7 @@ class CaesarBoxCipher extends Operation {
 
         this.name = "Caesar Box Cipher";
         this.module = "Ciphers";
-        this.description = "Caesar Box Encryption uses a box, a rectangle (or a square), or at least a size W caracterizing its width.";
+        this.description = "Caesar Box is a transposition cipher used in the Roman Empire, in which letters of the message are written in rows in a square (or a rectangle) and then, read by column.";
         this.infoURL = "https://www.dcode.fr/caesar-box-cipher";
         this.inputType = "string";
         this.outputType = "string";
