@@ -20,7 +20,7 @@ class CetaceanCipherDecode extends Operation {
         this.name = "Cetacean Cipher Decode";
         this.module = "Ciphers";
         this.description = "Decode Cetacean Cipher input. <br/><br/>e.g. <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code> becomes <code>hi</code>";
-        this.infoURL = "";
+        this.infoURL = "https://hitchhikers.fandom.com/wiki/Dolphins";
         this.inputType = "string";
         this.outputType = "string";
 
@@ -30,7 +30,7 @@ class CetaceanCipherDecode extends Operation {
                 flags: "",
                 args: []
             }
-        ]
+        ];
     }
 
     /**
@@ -40,24 +40,23 @@ class CetaceanCipherDecode extends Operation {
      */
     run(input, args) {
         const binaryArray = [];
-        for ( const char of input ) {
-            if ( char === ' ' ) {
-                binaryArray.push(...[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ]);
+        for (const char of input) {
+            if (char === " ") {
+                binaryArray.push(...[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]);
             } else {
-                binaryArray.push( char === 'e' ? 1 : 0 );
+                binaryArray.push(char === "e" ? 1 : 0);
             }
         }
 
         const byteArray = [];
 
-        for ( let i = 0;  i < binaryArray.length; i += 16 ) {
-            byteArray.push(binaryArray.slice(i, i + 16).join(''))
+        for (let i = 0;  i < binaryArray.length; i += 16) {
+            byteArray.push(binaryArray.slice(i, i + 16).join(""));
         }
 
-        return byteArray.map( byte =>
-            String.fromCharCode(parseInt( byte , 2 )
-            )
-        ).join('');
+        return byteArray.map(byte =>
+            String.fromCharCode(parseInt(byte, 2))
+        ).join("");
     }
 }
 
