@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.44.0] - 2022-07-08
+- Added 'LZString Compress' and 'LZString Decompress' operations [@crespyl] | [#1266]
+
 ### [9.43.0] - 2022-07-08
 - Added 'ROT13 Brute Force' and 'ROT47 Brute Force' operations [@mikecat] | [#1264]
 
@@ -306,6 +309,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.44.0]: https://github.com/gchq/CyberChef/releases/tag/v9.44.0
 [9.43.0]: https://github.com/gchq/CyberChef/releases/tag/v9.43.0
 [9.42.0]: https://github.com/gchq/CyberChef/releases/tag/v9.42.0
 [9.41.0]: https://github.com/gchq/CyberChef/releases/tag/v9.41.0
@@ -435,6 +439,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@hettysymes]: https://github.com/hettysymes
 [@swesven]: https://github.com/swesven
 [@mikecat]: https://github.com/mikecat
+[@crespyl]: https://github.com/crespyl
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -534,4 +539,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1326]: https://github.com/gchq/CyberChef/pull/1326
 [#1364]: https://github.com/gchq/CyberChef/pull/1364
 [#1264]: https://github.com/gchq/CyberChef/pull/1264
+[#1266]: https://github.com/gchq/CyberChef/pull/1266
 
