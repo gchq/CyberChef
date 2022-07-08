@@ -28,6 +28,8 @@ import "./tests/Base85.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/ByteRepr.mjs";
 import "./tests/CartesianProduct.mjs";
+import "./tests/CetaceanCipherEncode.mjs";
+import "./tests/CetaceanCipherDecode.mjs";
 import "./tests/CharEnc.mjs";
 import "./tests/ChangeIPFormat.mjs";
 import "./tests/Charts.mjs";
