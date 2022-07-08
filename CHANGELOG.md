@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.41.0] - 2022-07-08
+- Added 'Caesar Box Cipher' operation [@n1073645] | [#1066]
+
 ### [9.40.0] - 2022-07-08
 - Added 'P-list Viewer' operation [@n1073645] | [#906]
 
@@ -297,6 +300,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.41.0]: https://github.com/gchq/CyberChef/releases/tag/v9.41.0
 [9.40.0]: https://github.com/gchq/CyberChef/releases/tag/v9.40.0
 [9.39.0]: https://github.com/gchq/CyberChef/releases/tag/v9.39.0
 [9.38.0]: https://github.com/gchq/CyberChef/releases/tag/v9.38.0
@@ -511,6 +515,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1045]: https://github.com/gchq/CyberChef/pull/1045
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1065]: https://github.com/gchq/CyberChef/pull/1065
+[#1066]: https://github.com/gchq/CyberChef/pull/1066
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
 [#1189]: https://github.com/gchq/CyberChef/pull/1189
 [#1242]: https://github.com/gchq/CyberChef/pull/1242
