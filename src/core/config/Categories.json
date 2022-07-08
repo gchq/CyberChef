@@ -325,7 +325,9 @@
             "Bzip2 Decompress",
             "Bzip2 Compress",
             "Tar",
-            "Untar"
+            "Untar",
+            "LZString Compress",
+            "LZString Decompress"
         ]
     },
     {
