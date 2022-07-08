@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.40.0] - 2022-07-08
+- Added 'P-list Viewer' operation [@n1073645] | [#906]
+
 ### [9.39.0] - 2022-06-09
 - Added 'ELF Info' operation [@n1073645] | [#1364]
 
@@ -294,6 +297,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.40.0]: https://github.com/gchq/CyberChef/releases/tag/v9.40.0
 [9.39.0]: https://github.com/gchq/CyberChef/releases/tag/v9.39.0
 [9.38.0]: https://github.com/gchq/CyberChef/releases/tag/v9.38.0
 [9.37.0]: https://github.com/gchq/CyberChef/releases/tag/v9.37.0
@@ -491,6 +495,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#674]: https://github.com/gchq/CyberChef/pull/674
 [#683]: https://github.com/gchq/CyberChef/pull/683
 [#865]: https://github.com/gchq/CyberChef/pull/865
+[#906]: https://github.com/gchq/CyberChef/pull/906
 [#912]: https://github.com/gchq/CyberChef/pull/912
 [#917]: https://github.com/gchq/CyberChef/pull/917
 [#934]: https://github.com/gchq/CyberChef/pull/934
