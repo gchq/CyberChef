@@ -24,9 +24,16 @@
     line-height: calc(var(--title-height) - 14px);
 }
 
-.title>span,
-.title>.btn {
-    margin-top: -4px;
+.pane-controls {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    display: flex;
+    flex-direction: row;
+}
+
+.pane-controls .btn {
+    margin-left: 2px;
 }
 
 .list-area {

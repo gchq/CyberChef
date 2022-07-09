@@ -23,11 +23,11 @@ class WindowWaiter {
 
     /**
      * Handler for window resize events.
-     * Resets the layout of CyberChef's panes after 200ms (so that continuous resizing doesn't cause
+     * Resets adjustable component sizes after 200ms (so that continuous resizing doesn't cause
      * continuous resetting).
      */
     windowResize() {
-        debounce(this.app.resetLayout, 200, "windowResize", this.app, [])();
+        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
 

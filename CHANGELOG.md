@@ -13,6 +13,33 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.46.0] - 2022-07-08
+- Added 'Cetacean Cipher Encode' and 'Cetacean Cipher Decode' operations [@valdelaseras] | [#1308]
+
+### [9.45.0] - 2022-07-08
+- Added 'ROT8000' operation [@thomasleplus] | [#1250]
+
+### [9.44.0] - 2022-07-08
+- Added 'LZString Compress' and 'LZString Decompress' operations [@crespyl] | [#1266]
+
+### [9.43.0] - 2022-07-08
+- Added 'ROT13 Brute Force' and 'ROT47 Brute Force' operations [@mikecat] | [#1264]
+
+### [9.42.0] - 2022-07-08
+- Added 'LS47 Encrypt' and 'LS47 Decrypt' operations [@n1073645] | [#951]
+
+### [9.41.0] - 2022-07-08
+- Added 'Caesar Box Cipher' operation [@n1073645] | [#1066]
+
+### [9.40.0] - 2022-07-08
+- Added 'P-list Viewer' operation [@n1073645] | [#906]
+
+### [9.39.0] - 2022-06-09
+- Added 'ELF Info' operation [@n1073645] | [#1364]
+
+### [9.38.0] - 2022-05-30
+- Added 'Parse TCP' operation [@n1474335] | [a895d1d]
+
 ### [9.37.0] - 2022-03-29
 - 'SM4 Encrypt' and 'SM4 Decrypt' operations added [@swesven] | [#1189]
 - NoPadding options added for CBC and ECB modes in AES, DES and Triple DES Decrypt operations [@swesven] | [#1189]
@@ -135,7 +162,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 <details>
     <summary>Click to expand v8 minor versions</summary>
-    
+
 ### [8.38.0] - 2019-07-03
 - 'Streebog' and 'GOST hash' operations added [@MShwed] [@n1474335] | [#530]
 
@@ -288,6 +315,15 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.46.0]: https://github.com/gchq/CyberChef/releases/tag/v9.46.0
+[9.45.0]: https://github.com/gchq/CyberChef/releases/tag/v9.45.0
+[9.44.0]: https://github.com/gchq/CyberChef/releases/tag/v9.44.0
+[9.43.0]: https://github.com/gchq/CyberChef/releases/tag/v9.43.0
+[9.42.0]: https://github.com/gchq/CyberChef/releases/tag/v9.42.0
+[9.41.0]: https://github.com/gchq/CyberChef/releases/tag/v9.41.0
+[9.40.0]: https://github.com/gchq/CyberChef/releases/tag/v9.40.0
+[9.39.0]: https://github.com/gchq/CyberChef/releases/tag/v9.39.0
+[9.38.0]: https://github.com/gchq/CyberChef/releases/tag/v9.38.0
 [9.37.0]: https://github.com/gchq/CyberChef/releases/tag/v9.37.0
 [9.36.0]: https://github.com/gchq/CyberChef/releases/tag/v9.36.0
 [9.35.0]: https://github.com/gchq/CyberChef/releases/tag/v9.35.0
@@ -410,12 +446,17 @@ All major and minor version changes will be documented in this file. Details of 
 [@t-8ch]: https://github.com/t-8ch
 [@hettysymes]: https://github.com/hettysymes
 [@swesven]: https://github.com/swesven
+[@mikecat]: https://github.com/mikecat
+[@crespyl]: https://github.com/crespyl
+[@thomasleplus]: https://github.com/thomasleplus
+[@valdelaseras]: https://github.com/valdelaseras
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
 [289a417]: https://github.com/gchq/CyberChef/commit/289a417dfb5923de5e1694354ec42a08d9395bfe
 [e9ca4dc]: https://github.com/gchq/CyberChef/commit/e9ca4dc9caf98f33fd986431cd400c88082a42b8
 [dd18e52]: https://github.com/gchq/CyberChef/commit/dd18e529939078b89867297b181a584e8b2cc7da
+[a895d1d]: https://github.com/gchq/CyberChef/commit/a895d1d82a2f92d440a0c5eca2bc7c898107b737
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -482,10 +523,12 @@ All major and minor version changes will be documented in this file. Details of 
 [#674]: https://github.com/gchq/CyberChef/pull/674
 [#683]: https://github.com/gchq/CyberChef/pull/683
 [#865]: https://github.com/gchq/CyberChef/pull/865
+[#906]: https://github.com/gchq/CyberChef/pull/906
 [#912]: https://github.com/gchq/CyberChef/pull/912
 [#917]: https://github.com/gchq/CyberChef/pull/917
 [#934]: https://github.com/gchq/CyberChef/pull/934
 [#948]: https://github.com/gchq/CyberChef/pull/948
+[#951]: https://github.com/gchq/CyberChef/pull/951
 [#952]: https://github.com/gchq/CyberChef/pull/952
 [#965]: https://github.com/gchq/CyberChef/pull/965
 [#966]: https://github.com/gchq/CyberChef/pull/966
@@ -497,9 +540,16 @@ All major and minor version changes will be documented in this file. Details of 
 [#1045]: https://github.com/gchq/CyberChef/pull/1045
 [#1049]: https://github.com/gchq/CyberChef/pull/1049
 [#1065]: https://github.com/gchq/CyberChef/pull/1065
+[#1066]: https://github.com/gchq/CyberChef/pull/1066
 [#1083]: https://github.com/gchq/CyberChef/pull/1083
 [#1189]: https://github.com/gchq/CyberChef/pull/1189
 [#1242]: https://github.com/gchq/CyberChef/pull/1242
 [#1244]: https://github.com/gchq/CyberChef/pull/1244
 [#1313]: https://github.com/gchq/CyberChef/pull/1313
 [#1326]: https://github.com/gchq/CyberChef/pull/1326
+[#1364]: https://github.com/gchq/CyberChef/pull/1364
+[#1264]: https://github.com/gchq/CyberChef/pull/1264
+[#1266]: https://github.com/gchq/CyberChef/pull/1266
+[#1250]: https://github.com/gchq/CyberChef/pull/1250
+[#1308]: https://github.com/gchq/CyberChef/pull/1308
+

@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const { ModifySourcePlugin } = require("modify-source-webpack-plugin");
 const path = require("path");
 
 /**
@@ -80,6 +81,16 @@ module.exports = {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
+                }
+            ]
+        }),
+        new ModifySourcePlugin({
+            rules: [
+                {
+                    // Fix toSpare(0) bug in Split.js by avoiding gutter accomodation
+                    test: /split\.es\.js$/,
+                    modify: (src, path) =>
+                        src.replace("if (pixelSize < elementMinSize)", "if (false)")
                 }
             ]
         })

@@ -2,7 +2,6 @@
  * Parse UDP tests.
  *
  * @author h345983745
- *
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
@@ -12,15 +11,11 @@ TestRegister.addTests([
     {
         name: "Parse UDP: No Data - JSON",
         input: "04 89 00 35 00 2c 01 01",
-        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0101\"}",
+        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0x0101\"}",
         recipeConfig: [
             {
-                op: "From Hex",
-                args: ["Auto"],
-            },
-            {
                 op: "Parse UDP",
-                args: [],
+                args: ["Hex"],
             },
             {
                 op: "JSON Minify",
@@ -30,15 +25,11 @@ TestRegister.addTests([
     }, {
         name: "Parse UDP: With Data - JSON",
         input: "04 89 00 35 00 2c 01 01 02 02",
-        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0101\",\"Data\":\"0202\"}",
+        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0x0101\",\"Data\":\"0x0202\"}",
         recipeConfig: [
             {
-                op: "From Hex",
-                args: ["Auto"],
-            },
-            {
                 op: "Parse UDP",
-                args: [],
+                args: ["Hex"],
             },
             {
                 op: "JSON Minify",
@@ -52,12 +43,8 @@ TestRegister.addTests([
         expectedOutput: "Need 8 bytes for a UDP Header",
         recipeConfig: [
             {
-                op: "From Hex",
-                args: ["Auto"],
-            },
-            {
                 op: "Parse UDP",
-                args: [],
+                args: ["Hex"],
             },
             {
                 op: "JSON Minify",
