@@ -305,9 +305,6 @@ class TabWaiter {
     changeTab(inputNum, io) {
         const tabsList = document.getElementById(`${io}-tabs`);
 
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
-
         let found = false;
         for (let i = 0; i < tabsList.children.length; i++) {
             const tabNum = parseInt(tabsList.children.item(i).getAttribute("inputNum"), 10);

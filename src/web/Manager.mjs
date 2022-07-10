@@ -153,10 +153,6 @@ class Manager {
         this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
         this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
         this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
-        document.getElementById("input-text").addEventListener("scroll", this.highlighter.inputScroll.bind(this.highlighter));
-        document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
-        document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
-        this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
         document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
@@ -188,10 +184,6 @@ class Manager {
         document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
         document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
         document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
-        document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
-        document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
-        document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
-        this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
         this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
         this.addDynamicListener("#output-file-show-all", "click", this.output.showAllFile, this.output);
         this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);

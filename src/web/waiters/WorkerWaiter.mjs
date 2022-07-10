@@ -794,7 +794,7 @@ class WorkerWaiter {
      *
      * @param {Object[]} recipeConfig
      * @param {string} direction
-     * @param {Object} pos - The position object for the highlight.
+     * @param {Object[]} pos - The position object for the highlight.
      * @param {number} pos.start - The start offset.
      * @param {number} pos.end - The end offset.
      */

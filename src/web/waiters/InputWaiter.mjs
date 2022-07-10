@@ -87,6 +87,7 @@ class InputWaiter {
         const initialState = EditorState.create({
             doc: null,
             extensions: [
+                // Editor extensions
                 history(),
                 highlightSpecialChars({render: renderSpecialChar}),
                 drawSelection(),
@@ -95,13 +96,19 @@ class InputWaiter {
                 bracketMatching(),
                 highlightSelectionMatches(),
                 search({top: true}),
+                EditorState.allowMultipleSelections.of(true),
+
+                // Custom extensions
                 statusBar({
                     label: "Input",
                     eolHandler: this.eolChange.bind(this)
                 }),
+
+                // Mutable state
                 this.inputEditorConf.lineWrapping.of(EditorView.lineWrapping),
                 this.inputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
-                EditorState.allowMultipleSelections.of(true),
+
+                // Keymap
                 keymap.of([
                     // Explicitly insert a tab rather than indenting the line
                     { key: "Tab", run: insertTab },
@@ -112,6 +119,12 @@ class InputWaiter {
                     ...defaultKeymap,
                     ...searchKeymap
                 ]),
+
+                // Event listeners
+                EditorView.updateListener.of(e => {
+                    if (e.selectionSet)
+                        this.manager.highlighter.selectionChange("input", e);
+                })
             ]
         });
 
@@ -771,9 +784,6 @@ class InputWaiter {
         const fileOverlay = document.getElementById("input-file");
         if (fileOverlay.style.display === "block") return;
 
-        // Remove highlighting from input and output panes as the offsets might be different now
-        this.manager.highlighter.removeHighlights();
-
         const value = this.getInput();
         const activeTab = this.manager.tabs.getActiveInputTab();
 
@@ -1033,9 +1043,6 @@ class InputWaiter {
         this.manager.output.removeAllOutputs();
         this.manager.output.terminateZipWorker();
 
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
-
         const tabsList = document.getElementById("input-tabs");
         const tabsListChildren = tabsList.children;
 
@@ -1072,9 +1079,6 @@ class InputWaiter {
     clearIoClick() {
         const inputNum = this.manager.tabs.getActiveInputTab();
         if (inputNum === -1) return;
-
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
 
         this.updateInputValue(inputNum, "", true);
 

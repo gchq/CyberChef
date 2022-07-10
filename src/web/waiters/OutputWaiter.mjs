@@ -67,6 +67,7 @@ class OutputWaiter {
         const initialState = EditorState.create({
             doc: null,
             extensions: [
+                // Editor extensions
                 EditorState.readOnly.of(true),
                 htmlPlugin(this.htmlOutput),
                 highlightSpecialChars({render: renderSpecialChar}),
@@ -76,18 +77,30 @@ class OutputWaiter {
                 bracketMatching(),
                 highlightSelectionMatches(),
                 search({top: true}),
+                EditorState.allowMultipleSelections.of(true),
+
+                // Custom extensiosn
                 statusBar({
                     label: "Output",
                     bakeStats: this.bakeStats,
                     eolHandler: this.eolChange.bind(this)
                 }),
+
+                // Mutable state
                 this.outputEditorConf.lineWrapping.of(EditorView.lineWrapping),
                 this.outputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
-                EditorState.allowMultipleSelections.of(true),
+
+                // Keymap
                 keymap.of([
                     ...defaultKeymap,
                     ...searchKeymap
                 ]),
+
+                // Event listeners
+                EditorView.updateListener.of(e => {
+                    if (e.selectionSet)
+                        this.manager.highlighter.selectionChange("output", e);
+                })
             ]
         });
 
@@ -817,9 +830,6 @@ class OutputWaiter {
 
         this.hideMagicButton();
 
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
-
         if (!this.manager.tabs.changeOutputTab(inputNum)) {
             let direction = "right";
             if (currentNum > inputNum) {
@@ -1341,21 +1351,6 @@ class OutputWaiter {
 
         // Clean up
         document.body.removeChild(textarea);
-    }
-
-    /**
-     * Returns true if the output contains carriage returns
-     *
-     * @returns {boolean}
-     */
-    async containsCR() {
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
-        if (dish === null) return;
-
-        if (dish.type === Dish.STRING) {
-            const data = await dish.get(Dish.STRING);
-            return data.indexOf("\r") >= 0;
-        }
     }
 
     /**
