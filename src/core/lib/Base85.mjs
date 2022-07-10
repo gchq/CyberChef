@@ -1,3 +1,5 @@
+import Utils from "../Utils.mjs";
+
 /**
  * Base85 resources.
  *
@@ -32,13 +34,12 @@ export const ALPHABET_OPTIONS = [
  * @returns {string}
  */
 export function alphabetName(alphabet) {
-    alphabet = alphabet.replace(/'/g, "&apos;");
-    alphabet = alphabet.replace(/"/g, "&quot;");
-    alphabet = alphabet.replace(/\\/g, "&bsol;");
+    alphabet = escape(alphabet);
     let name;
 
     ALPHABET_OPTIONS.forEach(function(a) {
-        if (escape(alphabet) === escape(a.value)) name = a.name;
+        const expanded = Utils.expandAlphRange(a.value).join("");
+        if (alphabet === escape(expanded)) name = a.name;
     });
 
     return name;
