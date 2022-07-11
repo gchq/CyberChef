@@ -45,18 +45,10 @@ class HighlighterWaiter {
         // from setting the selection in this class
         if (!e.transactions[0].isUserEvent("select")) return false;
 
-        const view = io === "input" ?
-            this.manager.output.outputEditorView :
-            this.manager.input.inputEditorView;
-
         this.currentSelectionRanges = [];
 
         // Confirm some non-empty ranges are set
-        const selectionRanges = e.state.selection.ranges.filter(r => !r.empty);
-        if (!selectionRanges.length) {
-            this.resetSelections(view);
-            return;
-        }
+        const selectionRanges = e.state.selection.ranges;
 
         // Loop through ranges and send request for output offsets for each one
         const direction = io === "input" ? "forward" : "reverse";
@@ -67,19 +59,6 @@ class HighlighterWaiter {
             }];
             this.manager.worker.highlight(this.app.getRecipeConfig(), direction, pos);
         }
-    }
-
-    /**
-     * Resets the current set of selections in the given view
-     * @param {EditorView} view
-     */
-    resetSelections(view) {
-        this.currentSelectionRanges = [];
-
-        // Clear current selection in output or input
-        view.dispatch({
-            selection: EditorSelection.create([EditorSelection.range(0, 0)])
-        });
     }
 
 
@@ -120,18 +99,30 @@ class HighlighterWaiter {
 
         // Add new SelectionRanges to existing ones
         for (const range of ranges) {
-            if (!range.start || !range.end) continue;
-            this.currentSelectionRanges.push(
-                EditorSelection.range(range.start, range.end)
-            );
+            if (typeof range.start !== "number" ||
+                typeof range.end !== "number")
+                continue;
+            const selection = range.end <= range.start ?
+                EditorSelection.cursor(range.start) :
+                EditorSelection.range(range.start, range.end);
+
+            this.currentSelectionRanges.push(selection);
         }
 
         // Set selection
         if (this.currentSelectionRanges.length) {
-            view.dispatch({
-                selection: EditorSelection.create(this.currentSelectionRanges),
-                scrollIntoView: true
-            });
+            try {
+                view.dispatch({
+                    selection: EditorSelection.create(this.currentSelectionRanges),
+                    scrollIntoView: true
+                });
+            } catch (err) {
+                // Ignore Range Errors
+                if (!err.toString().startsWith("RangeError")) {
+                    console.error(err);
+                }
+
+            }
         }
     }
 

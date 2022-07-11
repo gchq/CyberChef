@@ -12,7 +12,7 @@ import {toBase64} from "../../core/lib/Base64.mjs";
 import {isImage} from "../../core/lib/FileType.mjs";
 
 import {
-    EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor
+    EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor, dropCursor
 } from "@codemirror/view";
 import {EditorState, Compartment} from "@codemirror/state";
 import {defaultKeymap, insertTab, insertNewline, history, historyKeymap} from "@codemirror/commands";
@@ -93,6 +93,7 @@ class InputWaiter {
                 drawSelection(),
                 rectangularSelection(),
                 crosshairCursor(),
+                dropCursor(),
                 bracketMatching(),
                 highlightSelectionMatches(),
                 search({top: true}),
