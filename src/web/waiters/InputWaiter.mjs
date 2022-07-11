@@ -41,24 +41,6 @@ class InputWaiter {
         this.inputTextEl = document.getElementById("input-text");
         this.initEditor();
 
-        // Define keys that don't change the input so we don't have to autobake when they are pressed
-        this.badKeys = [
-            16, // Shift
-            17, // Ctrl
-            18, // Alt
-            19, // Pause
-            20, // Caps
-            27, // Esc
-            33, 34, 35, 36, // PgUp, PgDn, End, Home
-            37, 38, 39, 40, // Directional
-            44, // PrntScrn
-            91, 92, // Win
-            93, // Context
-            112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, // F1-12
-            144, // Num
-            145, // Scroll
-        ];
-
         this.inputWorker = null;
         this.loaderWorkers = [];
         this.workerId = 0;
@@ -125,6 +107,8 @@ class InputWaiter {
                 EditorView.updateListener.of(e => {
                     if (e.selectionSet)
                         this.manager.highlighter.selectionChange("input", e);
+                    if (e.docChanged)
+                        this.inputChange(e);
                 })
             ]
         });
@@ -396,7 +380,7 @@ class InputWaiter {
                 this.showLoadingInfo(r.data, true);
                 break;
             case "setInput":
-                debounce(this.set, 50, "setInput", this, [r.data.inputObj, r.data.silent])();
+                this.set(r.data.inputObj, r.data.silent);
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
@@ -764,39 +748,28 @@ class InputWaiter {
 
     /**
      * Handler for input change events.
-     * Debounces the input so we don't call autobake too often.
-     *
-     * @param {event} e
-     */
-    debounceInputChange(e) {
-        debounce(this.inputChange, 50, "inputChange", this, [e])();
-    }
-
-    /**
-     * Handler for input change events.
      * Updates the value stored in the inputWorker
+     * Debounces the input so we don't call autobake too often.
      *
      * @param {event} e
      *
      * @fires Manager#statechange
      */
     inputChange(e) {
-        // Ignore this function if the input is a file
-        const fileOverlay = document.getElementById("input-file");
-        if (fileOverlay.style.display === "block") return;
+        debounce(function(e) {
+            // Ignore this function if the input is a file
+            const fileOverlay = document.getElementById("input-file");
+            if (fileOverlay.style.display === "block") return;
 
-        const value = this.getInput();
-        const activeTab = this.manager.tabs.getActiveInputTab();
+            const value = this.getInput();
+            const activeTab = this.manager.tabs.getActiveInputTab();
 
-        this.app.progress = 0;
+            this.updateInputValue(activeTab, value);
+            this.manager.tabs.updateInputTabHeader(activeTab, value.slice(0, 100).replace(/[\n\r]/g, ""));
 
-        this.updateInputValue(activeTab, value);
-        this.manager.tabs.updateInputTabHeader(activeTab, value.slice(0, 100).replace(/[\n\r]/g, ""));
-
-        if (e && this.badKeys.indexOf(e.keyCode) < 0) {
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
-        }
+        }, 20, "inputChange", this, [e])();
     }
 
     /**

@@ -728,10 +728,11 @@ class App {
      * @param {event} e
      */
     stateChange(e) {
-        this.progress = 0;
-        this.autoBake();
-
-        this.updateTitle(true, null, true);
+        debounce(function() {
+            this.progress = 0;
+            this.autoBake();
+            this.updateTitle(true, null, true);
+        }, 20, "stateChange", this, [])();
     }
 
 

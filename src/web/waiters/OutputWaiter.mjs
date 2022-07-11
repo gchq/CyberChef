@@ -847,9 +847,7 @@ class OutputWaiter {
             }
         }
 
-        debounce(this.set, 50, "setOutput", this, [inputNum])();
-
-        this.outputTextEl.scroll(0, 0); // TODO
+        this.set(inputNum);
 
         if (changeInput) {
             this.manager.input.changeTab(inputNum, false);
