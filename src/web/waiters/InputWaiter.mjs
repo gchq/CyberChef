@@ -797,7 +797,10 @@ class InputWaiter {
     inputDragleave(e) {
         e.stopPropagation();
         e.preventDefault();
-        e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
+        // Dragleave often fires when moving between lines in the editor.
+        // If the target element is within the input-text element, we are still on target.
+        if (!this.inputTextEl.contains(e.target))
+            e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
     }
 
     /**
@@ -813,17 +816,10 @@ class InputWaiter {
 
         e.stopPropagation();
         e.preventDefault();
-
-        const text = e.dataTransfer.getData("Text");
-
         e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
 
-        if (text) {
-            // Append the text to the current input and fire inputChange()
-            this.setInput(this.getInput() + text);
-            this.inputChange(e);
-            return;
-        }
+        // Dropped text is handled by the editor itself
+        if (e.dataTransfer.getData("Text")) return;
 
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             this.loadUIFiles(e.dataTransfer.files);

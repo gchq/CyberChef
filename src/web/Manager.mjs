@@ -149,9 +149,9 @@ class Manager {
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
-        this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
-        this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
-        this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
+        this.addListeners("#input-wrapper", "dragover", this.input.inputDragover, this.input);
+        this.addListeners("#input-wrapper", "dragleave", this.input.inputDragleave, this.input);
+        this.addListeners("#input-wrapper", "drop", this.input.inputDrop, this.input);
         document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
