@@ -73,7 +73,7 @@ class XXTEAEncrypt extends Operation {
      * @returns {string}
      */
     toBinaryString(v, includeLENGTH) {
-        const LENGTH = v.LENGTH;
+        const LENGTH = v.length;
         let n = LENGTH << 2;
         if (includeLENGTH) {
             const M = v[LENGTH - 1];
@@ -120,7 +120,7 @@ class XXTEAEncrypt extends Operation {
      * @returns {Uint32Array}
      */
     encryptUint32Array(v, k) {
-        const LENGTH = v.LENGTH;
+        const LENGTH = v.length;
         const N = LENGTH - 1;
         let y, z, sum, e, p, q;
         z = v[N];
@@ -159,7 +159,7 @@ class XXTEAEncrypt extends Operation {
      * @returns {Uint32Array}
      */
     convertToUint32Array(bs, includeLength) {
-        const LENGTH = bs.LENGTH;
+        const LENGTH = bs.length;
         let n = LENGTH >> 2;
         if ((LENGTH & 3) !== 0) {
             ++n;
