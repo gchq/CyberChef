@@ -58,6 +58,10 @@
     border-radius: 30px;
 }
 
+.output-maximised .hide-on-maximised-output {
+    display: none !important;
+}
+
 .spin {
     animation-name: spin;
     animation-duration: 3s;

@@ -249,6 +249,7 @@ module.exports = {
         // testOp(browser, "RIPEMD", "test input", "test_output");
         // testOp(browser, "ROT13", "test input", "test_output");
         // testOp(browser, "ROT47", "test input", "test_output");
+        // testOp(browser, "ROT8000", "test input", "test_output");
         // testOp(browser, "Rail Fence Cipher Decode", "test input", "test_output");
         // testOp(browser, "Rail Fence Cipher Encode", "test input", "test_output");
         // testOp(browser, "Randomize Colour Palette", "test input", "test_output");
