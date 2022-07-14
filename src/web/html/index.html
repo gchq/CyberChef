@@ -29,7 +29,7 @@
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
 
-        <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico').default %>" />
+        <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico') %>" />
 
         <script type="application/javascript">
             "use strict";
@@ -176,7 +176,7 @@
                 <div id="recipe" class="split split-horizontal no-select">
                     <div class="title no-select">
                         Recipe
-                        <span class="float-right">
+                        <span class="pane-controls hide-on-maximised-output">
                             <button type="button" class="btn btn-primary bmd-btn-icon" id="save" data-toggle="tooltip" title="Save recipe">
                                 <i class="material-icons">save</i>
                             </button>
@@ -190,14 +190,14 @@
                     </div>
                     <ul id="rec-list" class="list-area no-select"></ul>
 
-                    <div id="controls" class="no-select">
+                    <div id="controls" class="no-select hide-on-maximised-output">
                         <div id="controls-content" class="d-flex align-items-center">
                             <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe">
                                 Step
                             </button>
 
                             <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake">
-                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png').default %>" alt="Chef Icon"/>
+                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
                                 <span>Bake!</span>
                             </button>
 
@@ -217,7 +217,10 @@
                     <div id="input" class="split no-select">
                         <div class="title no-select">
                             <label for="input-text">Input</label>
-                            <span class="float-right">
+                            <span class="pane-controls">
+                                <div class="io-info" id="input-files-info"></div>
+                                <div class="io-info" id="input-selection-info"></div>
+                                <div class="io-info" id="input-info"></div>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab">
                                     <i class="material-icons">add</i>
                                 </button>
@@ -236,9 +239,7 @@
                                     <i class="material-icons">view_compact</i>
                                 </button>
                             </span>
-                            <div class="io-info" id="input-files-info"></div>
-                            <div class="io-info" id="input-info"></div>
-                            <div class="io-info" id="input-selection-info"></div>
+
                         </div>
                         <div id="input-tabs-wrapper" style="display: none;" class="no-select">
                             <span id="btn-previous-input-tab" class="input-tab-buttons">
@@ -271,7 +272,7 @@
                                 <div class="file-overlay" id="file-overlay"></div>
                                 <div style="position: relative; height: 100%;">
                                     <div class="io-card card">
-                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png').default %>" alt="File icon" id="input-file-thumbnail"/>
+                                        <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon" id="input-file-thumbnail"/>
                                         <div class="card-body">
                                             <button type="button" class="close" id="input-file-close">&times;</button>
                                             Name: <span id="input-file-name"></span><br>
@@ -288,7 +289,10 @@
                     <div id="output" class="split">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
-                            <span class="float-right">
+                            <span class="pane-controls">
+                                <div class="io-info" id="bake-info"></div>
+                                <div class="io-info" id="output-selection-info"></div>
+                                <div class="io-info" id="output-info"></div>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a zip file" style="display: none">
                                         <i class="material-icons">archive</i>
                                     </button>
@@ -308,9 +312,7 @@
                                     <i class="material-icons">fullscreen</i>
                                 </button>
                             </span>
-                            <div class="io-info" id="bake-info"></div>
-                            <div class="io-info" id="output-info"></div>
-                            <div class="io-info" id="output-selection-info"></div>
+
                             <button type="button" class="btn btn-primary bmd-btn-icon hidden" id="magic" data-toggle="tooltip" title="Magic!" data-html="true">
                                 <svg width="22" height="22" viewBox="0 0 24 24">
                                     <path d="M7.5,5.6L5,7L6.4,4.5L5,2L7.5,3.4L10,2L8.6,4.5L10,7L7.5,5.6M19.5,15.4L22,14L20.6,16.5L22,19L19.5,17.6L17,19L18.4,16.5L17,14L19.5,15.4M22,2L20.6,4.5L22,7L19.5,5.6L17,7L18.4,4.5L17,2L19.5,3.4L22,2M13.34,12.78L15.78,10.34L13.66,8.22L11.22,10.66L13.34,12.78M14.37,7.29L16.71,9.63C17.1,10 17.1,10.65 16.71,11.04L5.04,22.71C4.65,23.1 4,23.1 3.63,22.71L1.29,20.37C0.9,20 0.9,19.35 1.29,18.96L12.96,7.29C13.35,6.9 14,6.9 14.37,7.29Z" />
@@ -346,12 +348,12 @@
                                 <div id="output-highlighter" class="no-select"></div>
                                 <div id="output-html"></div>
                                 <textarea id="output-text" readonly="readonly" spellcheck="false"></textarea>
-                                <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png').default %>" alt="Show file overlay" title="Show file overlay"/>
+                                <img id="show-file-overlay" aria-hidden="true" src="<%- require('../static/images/file-32x32.png') %>" alt="Show file overlay" title="Show file overlay"/>
                                 <div id="output-file">
                                     <div class="file-overlay"></div>
                                     <div style="position: relative; height: 100%;">
                                         <div class="io-card card">
-                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png').default %>" alt="File icon"/>
+                                            <img aria-hidden="true" src="<%- require('../static/images/file-128x128.png') %>" alt="File icon"/>
                                             <div class="card-body">
                                                 Size: <span id="output-file-size"></span><br>
                                                 <button id="output-file-download" type="button" class="btn btn-primary btn-outline">Download</button>
@@ -626,7 +628,7 @@
                         <h5 class="modal-title">CyberChef - The Cyber Swiss Army Knife</h5>
                     </div>
                     <div class="modal-body">
-                        <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png').default %>" alt="CyberChef Logo"/>
+                        <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" alt="CyberChef Logo"/>
                         <p class="subtext">
                             Version <%=  htmlWebpackPlugin.options.version %><br>
                             Compile time: <%= htmlWebpackPlugin.options.compileTime %>
@@ -749,7 +751,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     <a href="https://github.com/gchq/CyberChef">
-                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png').default %>" alt="Fork me on GitHub">
+                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png') %>" alt="Fork me on GitHub">
                     </a>
                 </div>
             </div>

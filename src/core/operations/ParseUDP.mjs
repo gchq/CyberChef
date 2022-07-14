@@ -6,7 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import Stream from "../lib/Stream.mjs";
-import {toHex} from "../lib/Hex.mjs";
+import {toHexFast, fromHex} from "../lib/Hex.mjs";
+import {objToTable} from "../lib/Protocol.mjs";
+import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -24,58 +26,61 @@ class ParseUDP extends Operation {
         this.module = "Default";
         this.description = "Parses a UDP header and payload (if present).";
         this.infoURL = "https://wikipedia.org/wiki/User_Datagram_Protocol";
-        this.inputType = "ArrayBuffer";
+        this.inputType = "string";
         this.outputType = "json";
         this.presentType = "html";
-        this.args = [];
+        this.args = [
+            {
+                name: "Input format",
+                type: "option",
+                value: ["Hex", "Raw"]
+            }
+        ];
     }
 
     /**
-     * @param {ArrayBuffer} input
+     * @param {string} input
+     * @param {Object[]} args
      * @returns {Object}
      */
     run(input, args) {
-        if (input.byteLength < 8) {
-            throw new OperationError("Need 8 bytes for a UDP Header");
+        const format = args[0];
+
+        if (format === "Hex") {
+            input = fromHex(input);
+        } else if (format === "Raw") {
+            input = Utils.strToArrayBuffer(input);
+        } else {
+            throw new OperationError("Unrecognised input format.");
         }
 
         const s = new Stream(new Uint8Array(input));
+        if (s.length < 8) {
+            throw new OperationError("Need 8 bytes for a UDP Header");
+        }
+
         // Parse Header
         const UDPPacket = {
             "Source port": s.readInt(2),
             "Destination port": s.readInt(2),
             "Length": s.readInt(2),
-            "Checksum": toHex(s.getBytes(2), "")
+            "Checksum": "0x" + toHexFast(s.getBytes(2))
         };
         // Parse data if present
         if (s.hasMore()) {
-            UDPPacket.Data = toHex(s.getBytes(UDPPacket.Length - 8), "");
+            UDPPacket.Data = "0x" + toHexFast(s.getBytes(UDPPacket.Length - 8));
         }
 
         return UDPPacket;
     }
 
     /**
-     * Displays the UDP Packet in a table style
+     * Displays the UDP Packet in a tabular style
      * @param {Object} data
      * @returns {html}
      */
     present(data) {
-        const html = [];
-        html.push("<table class='table table-hover table-sm table-bordered table-nonfluid' style='table-layout: fixed'>");
-        html.push("<tr>");
-        html.push("<th>Field</th>");
-        html.push("<th>Value</th>");
-        html.push("</tr>");
-
-        for (const key in data) {
-            html.push("<tr>");
-            html.push("<td style=\"word-wrap:break-word\">" + key + "</td>");
-            html.push("<td>" + data[key] + "</td>");
-            html.push("</tr>");
-        }
-        html.push("</table>");
-        return html.join("");
+        return objToTable(data);
     }
 
 }

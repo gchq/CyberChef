@@ -27,15 +27,17 @@ export default class Stream {
     }
 
     /**
-     * Get a number of bytes from the current position.
+     * Get a number of bytes from the current position, or all remaining bytes.
      *
-     * @param {number} numBytes
+     * @param {number} [numBytes=null]
      * @returns {Uint8Array}
      */
-    getBytes(numBytes) {
+    getBytes(numBytes=null) {
         if (this.position > this.length) return undefined;
 
-        const newPosition = this.position + numBytes;
+        const newPosition = numBytes !== null ?
+            this.position + numBytes :
+            this.length;
         const bytes = this.bytes.slice(this.position, newPosition);
         this.position = newPosition;
         this.bitPos = 0;
@@ -46,11 +48,13 @@ export default class Stream {
      * Interpret the following bytes as a string, stopping at the next null byte or
      * the supplied limit.
      *
-     * @param {number} numBytes
+     * @param {number} [numBytes=-1]
      * @returns {string}
      */
-    readString(numBytes) {
+    readString(numBytes=-1) {
         if (this.position > this.length) return undefined;
+
+        if (numBytes === -1) numBytes = this.length - this.position;
 
         let result = "";
         for (let i = this.position; i < this.position + numBytes; i++) {
@@ -91,34 +95,40 @@ export default class Stream {
     }
 
     /**
-     * Reads a number of bits from the buffer.
-     *
-     * @TODO Add endianness
+     * Reads a number of bits from the buffer in big or little endian.
      *
      * @param {number} numBits
+     * @param {string} [endianness="be"]
      * @returns {number}
      */
-    readBits(numBits) {
+    readBits(numBits, endianness="be") {
         if (this.position > this.length) return undefined;
 
         let bitBuf = 0,
             bitBufLen = 0;
 
         // Add remaining bits from current byte
-        bitBuf = (this.bytes[this.position++] & bitMask(this.bitPos)) >>> this.bitPos;
+        bitBuf = this.bytes[this.position++] & bitMask(this.bitPos);
+        if (endianness !== "be") bitBuf >>>= this.bitPos;
         bitBufLen = 8 - this.bitPos;
         this.bitPos = 0;
 
         // Not enough bits yet
         while (bitBufLen < numBits) {
-            bitBuf |= this.bytes[this.position++] << bitBufLen;
+            if (endianness === "be")
+                bitBuf = (bitBuf << bitBufLen) | this.bytes[this.position++];
+            else
+                bitBuf |= this.bytes[this.position++] << bitBufLen;
             bitBufLen += 8;
         }
 
         // Reverse back to numBits
         if (bitBufLen > numBits) {
             const excess = bitBufLen - numBits;
-            bitBuf &= (1 << numBits) - 1;
+            if (endianness === "be")
+                bitBuf >>>= excess;
+            else
+                bitBuf &= (1 << numBits) - 1;
             bitBufLen -= excess;
             this.position--;
             this.bitPos = 8 - excess;
@@ -133,7 +143,9 @@ export default class Stream {
          * @returns {number} The bit mask
          */
         function bitMask(bitPos) {
-            return 256 - (1 << bitPos);
+            return endianness === "be" ?
+                (1 << (8 - bitPos)) - 1 :
+                256 - (1 << bitPos);
         }
     }
 

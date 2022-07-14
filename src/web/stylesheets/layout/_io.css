@@ -280,9 +280,8 @@
 }
 
 .io-info {
-    margin-right: 20px;
+    margin-right: 18px;
     margin-top: 1px;
-    float: right;
     height: 30px;
     text-align: right;
     line-height: 12px;
@@ -303,7 +302,7 @@
 
 #stale-indicator {
     opacity: 1;
-    visibility: visibile;
+    visibility: visible;
     transition: margin 0s, opacity 0.3s;
     margin-left: 5px;
     cursor: help;
@@ -316,7 +315,7 @@
 
 #magic {
     opacity: 1;
-    visibility: visibile;
+    visibility: visible;
     transition: margin 0s 0.3s, opacity 0.3s 0.3s, visibility 0.3s 0.3s;
     margin-left: 5px;
     margin-bottom: 5px;

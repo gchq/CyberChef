@@ -10,11 +10,12 @@
         "start_process": true,
         "server_path": "./node_modules/.bin/chromedriver",
         "port": 9515,
-        "log_path": false
+        "log_path": "tests/browser/output"
       },
       "desiredCapabilities": {
         "browserName": "chrome"
-      }
+      },
+      "enable_fail_fast": true
     },
 
     "dev": {

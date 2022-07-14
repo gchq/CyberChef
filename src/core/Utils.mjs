@@ -723,7 +723,8 @@ class Utils {
         }
 
         if (removeScriptAndStyle) {
-            htmlStr = recursiveRemove(/<(script|style)[^>]*>.*?<\/(script|style)>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<script[^>]*>.*?<\/script[^>]*>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<style[^>]*>.*?<\/style[^>]*>/gi, htmlStr);
         }
         return htmlStr.replace(/<[^>]+>/g, "");
     }
@@ -1206,6 +1207,30 @@ class Utils {
         }[token];
     }
 
+    /**
+     * Iterate object in chunks of given size.
+     *
+     * @param {Iterable} iterable
+     * @param {number} chunksize
+     */
+    static* chunked(iterable, chunksize) {
+        const iterator = iterable[Symbol.iterator]();
+        while (true) {
+            const res = [];
+            for (let i = 0; i < chunksize; i++) {
+                const next = iterator.next();
+                if (next.done) {
+                    break;
+                }
+                res.push(next.value);
+            }
+            if (res.length) {
+                yield res;
+            } else {
+                return;
+            }
+        }
+    }
 }
 
 /**
