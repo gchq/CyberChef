@@ -127,7 +127,7 @@ class EscapeSmartCharacters extends Operation {
                     output = char;
                 }
             }
-            if (output == char) {
+            if (output === char) {
                 result += output;
             } else {
                 switch (outArg) {
