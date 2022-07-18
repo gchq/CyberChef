@@ -5,6 +5,9 @@
  */
 
 import {WidgetType, Decoration, ViewPlugin} from "@codemirror/view";
+import {escapeControlChars} from "./editorUtils.mjs";
+import {htmlCopyOverride} from "./copyOverride.mjs";
+
 
 /**
  * Adds an HTML widget to the Code Mirror editor
@@ -14,9 +17,10 @@ class HTMLWidget extends WidgetType {
     /**
      * HTMLWidget consructor
      */
-    constructor(html) {
+    constructor(html, view) {
         super();
         this.html = html;
+        this.view = view;
     }
 
     /**
@@ -27,7 +31,43 @@ class HTMLWidget extends WidgetType {
         const wrap = document.createElement("span");
         wrap.setAttribute("id", "output-html");
         wrap.innerHTML = this.html;
+
+        // Find text nodes and replace unprintable chars with control codes
+        this.walkTextNodes(wrap);
+
+        // Add a handler for copy events to ensure the control codes are copied correctly
+        wrap.addEventListener("copy", htmlCopyOverride);
         return wrap;
+    }
+
+    /**
+     * Walks all text nodes in a given element
+     * @param {DOMNode} el
+     */
+    walkTextNodes(el) {
+        for (const node of el.childNodes) {
+            switch (node.nodeType) {
+                case Node.TEXT_NODE:
+                    this.replaceControlChars(node);
+                    break;
+                default:
+                    if (node.nodeName !== "SCRIPT" &&
+                        node.nodeName !== "STYLE")
+                        this.walkTextNodes(node);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Renders control characters in text nodes
+     * @param {DOMNode} textNode
+     */
+    replaceControlChars(textNode) {
+        const val = escapeControlChars(textNode.nodeValue, true, this.view.state.lineBreak);
+        const node = document.createElement("null");
+        node.innerHTML = val;
+        textNode.parentNode.replaceChild(node, textNode);
     }
 
 }
@@ -42,7 +82,7 @@ function decorateHTML(view, html) {
     const widgets = [];
     if (html.length) {
         const deco = Decoration.widget({
-            widget: new HTMLWidget(html),
+            widget: new HTMLWidget(html, view),
             side: 1
         });
         widgets.push(deco.range(0));
@@ -79,7 +119,8 @@ export function htmlPlugin(htmlOutput) {
                 }
             }
         }, {
-            decorations: v => v.decorations
+            decorations: v => v.decorations,
+
         }
     );
 

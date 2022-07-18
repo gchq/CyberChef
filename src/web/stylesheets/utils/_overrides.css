@@ -232,3 +232,11 @@ optgroup {
 .colorpicker-color div {
     height: 100px;
 }
+
+
+/* CodeMirror */
+
+.ͼ2 .cm-specialChar,
+.cm-specialChar {
+    color: red;
+}

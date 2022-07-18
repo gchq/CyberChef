@@ -5,7 +5,7 @@
  * @license Apache-2.0
  */
 
-import Utils, { debounce } from "../../core/Utils.mjs";
+import Utils, {debounce} from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
@@ -19,8 +19,9 @@ import {bracketMatching} from "@codemirror/language";
 import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
 
 import {statusBar} from "../utils/statusBar.mjs";
-import {renderSpecialChar} from "../utils/editorUtils.mjs";
 import {htmlPlugin} from "../utils/htmlWidget.mjs";
+import {copyOverride} from "../utils/copyOverride.mjs";
+import {renderSpecialChar} from "../utils/editorUtils.mjs";
 
 /**
   * Waiter to handle events related to the output
@@ -61,7 +62,8 @@ class OutputWaiter {
     initEditor() {
         this.outputEditorConf = {
             eol: new Compartment,
-            lineWrapping: new Compartment
+            lineWrapping: new Compartment,
+            drawSelection: new Compartment
         };
 
         const initialState = EditorState.create({
@@ -69,9 +71,10 @@ class OutputWaiter {
             extensions: [
                 // Editor extensions
                 EditorState.readOnly.of(true),
-                htmlPlugin(this.htmlOutput),
-                highlightSpecialChars({render: renderSpecialChar}),
-                drawSelection(),
+                highlightSpecialChars({
+                    render: renderSpecialChar, // Custom character renderer to handle special cases
+                    addSpecialChars: /[\ue000-\uf8ff]/g // Add the Unicode Private Use Area which we use for some whitespace chars
+                }),
                 rectangularSelection(),
                 crosshairCursor(),
                 bracketMatching(),
@@ -79,16 +82,19 @@ class OutputWaiter {
                 search({top: true}),
                 EditorState.allowMultipleSelections.of(true),
 
-                // Custom extensiosn
+                // Custom extensions
                 statusBar({
                     label: "Output",
                     bakeStats: this.bakeStats,
                     eolHandler: this.eolChange.bind(this)
                 }),
+                htmlPlugin(this.htmlOutput),
+                copyOverride(),
 
                 // Mutable state
                 this.outputEditorConf.lineWrapping.of(EditorView.lineWrapping),
                 this.outputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
+                this.outputEditorConf.drawSelection.of(drawSelection()),
 
                 // Keymap
                 keymap.of([
@@ -153,6 +159,14 @@ class OutputWaiter {
      * @param {string} data
      */
     setOutput(data) {
+        // Turn drawSelection back on
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.drawSelection.reconfigure(
+                drawSelection()
+            )
+        });
+
+        // Insert data into editor
         this.outputEditorView.dispatch({
             changes: {
                 from: 0,
@@ -172,6 +186,11 @@ class OutputWaiter {
         // This clears the text output, but also fires a View update which
         // triggers the htmlWidget to render the HTML.
         this.setOutput("");
+
+        // Turn off drawSelection
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.drawSelection.reconfigure([])
+        });
 
         // Execute script sections
         const scriptElements = document.getElementById("output-html").querySelectorAll("script");
@@ -414,8 +433,6 @@ class OutputWaiter {
             if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
 
             const outputFile = document.getElementById("output-file");
-            const outputHighlighter = document.getElementById("output-highlighter");
-            const inputHighlighter = document.getElementById("input-highlighter");
 
             // If pending or baking, show loader and status message
             // If error, style the tab and handle the error
@@ -447,8 +464,6 @@ class OutputWaiter {
                 this.outputTextEl.style.display = "block";
                 this.outputTextEl.classList.remove("blur");
                 outputFile.style.display = "none";
-                outputHighlighter.display = "none";
-                inputHighlighter.display = "none";
                 this.clearHTMLOutput();
 
                 if (output.error) {
@@ -463,8 +478,6 @@ class OutputWaiter {
                 if (output.data === null) {
                     this.outputTextEl.style.display = "block";
                     outputFile.style.display = "none";
-                    outputHighlighter.display = "block";
-                    inputHighlighter.display = "block";
 
                     this.clearHTMLOutput();
                     this.setOutput("");
@@ -478,15 +491,11 @@ class OutputWaiter {
                 switch (output.data.type) {
                     case "html":
                         outputFile.style.display = "none";
-                        outputHighlighter.style.display = "none";
-                        inputHighlighter.style.display = "none";
 
                         this.setHTMLOutput(output.data.result);
                         break;
                     case "ArrayBuffer":
                         this.outputTextEl.style.display = "block";
-                        outputHighlighter.display = "none";
-                        inputHighlighter.display = "none";
 
                         this.clearHTMLOutput();
                         this.setOutput("");
@@ -497,8 +506,6 @@ class OutputWaiter {
                     default:
                         this.outputTextEl.style.display = "block";
                         outputFile.style.display = "none";
-                        outputHighlighter.display = "block";
-                        inputHighlighter.display = "block";
 
                         this.clearHTMLOutput();
                         this.setOutput(output.data.result);
@@ -1215,8 +1222,6 @@ class OutputWaiter {
         document.querySelector("#output-loader .loading-msg").textContent = "Loading file slice...";
         this.toggleLoader(true);
         const outputFile = document.getElementById("output-file"),
-            outputHighlighter = document.getElementById("output-highlighter"),
-            inputHighlighter = document.getElementById("input-highlighter"),
             showFileOverlay = document.getElementById("show-file-overlay"),
             sliceFromEl = document.getElementById("output-file-slice-from"),
             sliceToEl = document.getElementById("output-file-slice-to"),
@@ -1238,8 +1243,6 @@ class OutputWaiter {
 
         this.outputTextEl.style.display = "block";
         outputFile.style.display = "none";
-        outputHighlighter.display = "block";
-        inputHighlighter.display = "block";
 
         this.toggleLoader(false);
     }
@@ -1251,8 +1254,6 @@ class OutputWaiter {
         document.querySelector("#output-loader .loading-msg").textContent = "Loading entire file at user instruction. This may cause a crash...";
         this.toggleLoader(true);
         const outputFile = document.getElementById("output-file"),
-            outputHighlighter = document.getElementById("output-highlighter"),
-            inputHighlighter = document.getElementById("input-highlighter"),
             showFileOverlay = document.getElementById("show-file-overlay"),
             output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
 
@@ -1270,8 +1271,6 @@ class OutputWaiter {
 
         this.outputTextEl.style.display = "block";
         outputFile.style.display = "none";
-        outputHighlighter.display = "block";
-        inputHighlighter.display = "block";
 
         this.toggleLoader(false);
     }
@@ -1319,36 +1318,13 @@ class OutputWaiter {
         }
 
         const output = await dish.get(Dish.STRING);
+        const self = this;
 
-        // Create invisible textarea to populate with the raw dish string (not the printable version that
-        // contains dots instead of the actual bytes)
-        const textarea = document.createElement("textarea");
-        textarea.style.position = "fixed";
-        textarea.style.top = 0;
-        textarea.style.left = 0;
-        textarea.style.width = 0;
-        textarea.style.height = 0;
-        textarea.style.border = "none";
-
-        textarea.value = output;
-        document.body.appendChild(textarea);
-
-        let success = false;
-        try {
-            textarea.select();
-            success = output && document.execCommand("copy");
-        } catch (err) {
-            success = false;
-        }
-
-        if (success) {
-            this.app.alert("Copied raw output successfully.", 2000);
-        } else {
-            this.app.alert("Sorry, the output could not be copied.", 3000);
-        }
-
-        // Clean up
-        document.body.removeChild(textarea);
+        navigator.clipboard.writeText(output).then(function() {
+            self.app.alert("Copied raw output successfully.", 2000);
+        }, function(err) {
+            self.app.alert("Sorry, the output could not be copied.", 3000);
+        });
     }
 
     /**

@@ -177,29 +177,10 @@
 }
 
 .textarea-wrapper textarea,
-.textarea-wrapper #output-text,
-.textarea-wrapper #output-highlighter {
+.textarea-wrapper #output-text {
     font-family: var(--fixed-width-font-family);
     font-size: var(--fixed-width-font-size);
     color: var(--fixed-width-font-colour);
-}
-
-#input-highlighter,
-#output-highlighter {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 3px;
-    margin: 0;
-    overflow: hidden;
-    letter-spacing: normal;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    color: #fff;
-    background-color: transparent;
-    border: none;
-    pointer-events: none;
 }
 
 #output-loader {

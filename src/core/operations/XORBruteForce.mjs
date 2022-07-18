@@ -126,11 +126,7 @@ class XORBruteForce extends Operation {
 
             if (crib && resultUtf8.toLowerCase().indexOf(crib) < 0) continue;
             if (printKey) record += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
-            if (outputHex) {
-                record += toHex(result);
-            } else {
-                record += Utils.printable(resultUtf8, false);
-            }
+            record += outputHex ? toHex(result) : Utils.escapeWhitespace(resultUtf8);
 
             output.push(record);
         }

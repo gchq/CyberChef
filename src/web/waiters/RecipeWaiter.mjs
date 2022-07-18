@@ -7,6 +7,7 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
+import {escapeControlChars} from "../utils/editorUtils.mjs";
 
 
 /**
@@ -568,7 +569,7 @@ class RecipeWaiter {
 
         const registerList = [];
         for (let i = 0; i < registers.length; i++) {
-            registerList.push(`$R${numPrevRegisters + i} = ${Utils.escapeHtml(Utils.truncate(Utils.printable(registers[i]), 100))}`);
+            registerList.push(`$R${numPrevRegisters + i} = ${escapeControlChars(Utils.escapeHtml(Utils.truncate(registers[i], 100)))}`);
         }
         const registerListEl = `<div class="register-list">
                 ${registerList.join("<br>")}
