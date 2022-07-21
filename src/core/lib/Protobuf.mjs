@@ -116,16 +116,22 @@ class Protobuf {
         return this.mergeDecodes(input);
     }
 
+    /**
+     * Parse Protobuf stream data
+     * @param {byteArray} input
+     * @param {any[]} args
+     * @returns {any[]}
+     */
     static decodeStream(input, args) {
         this.updateProtoRoot(args[0]);
         this.showUnknownFields = args[1];
         this.showTypes = args[2];
 
-        let streams = new Protobuf(input);
-        let output = [];
+        const streams = new Protobuf(input);
+        const output = [];
         let objLength = streams._varInt();
         while (!isNaN(objLength) && objLength > 0) {
-            let subData = streams.data.slice(streams.offset, streams.offset + objLength);
+            const subData = streams.data.slice(streams.offset, streams.offset + objLength);
             output.push(this.mergeDecodes(subData));
             streams.offset += objLength;
             objLength = streams._varInt();
