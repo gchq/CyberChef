@@ -327,7 +327,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Protobuf Stream Decode",
-                "args": ["", false, false]
+                "args": [false]
             }
         ]
     },
