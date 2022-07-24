@@ -50,38 +50,77 @@ MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
 q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
 -----END PUBLIC KEY-----`;
 
+const signedInputs = {
+    HS: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
+    RS: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.MjEJhtZk2nXzigi24piMzANmrj3mILHJcDl0xOjl5a8EgdKVL1oaMEjTkMQp5RA8YrqeRBFaX-BGGCKOXn5zPY1DJwWsBUyN9C-wGR2Qye0eogH_3b4M9EW00TPCUPXm2rx8URFj7Wg9VlsmrGzLV2oKkPgkVxuFSxnpO3yjn1Y",
+    ES: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.WkECT51jSfpRkcpQ4x0h5Dwe7CFBI6u6Et2gWp91HC7mpN_qCFadRpsvJLtKubm6cJTLa68xtei0YrDD8fxIUA"
+};
+
 TestRegister.addTests([
     {
         name: "JWT Verify: HS",
-        input: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
+        input: signedInputs.HS,
         expectedOutput: outputObject,
         recipeConfig: [
             {
                 op: "JWT Verify",
-                args: [hsKey],
+                args: [hsKey, "HS256"],
             }
-        ],
+        ]
+    },
+    {
+        name: "JWT Verify: Invalid HS",
+        input: signedInputs.HS,
+        expectedOutput: "JsonWebTokenError: invalid algorithm",
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [hsKey, "RS256"],
+            }
+        ]
     },
     {
         name: "JWT Verify: RS",
-        input: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.MjEJhtZk2nXzigi24piMzANmrj3mILHJcDl0xOjl5a8EgdKVL1oaMEjTkMQp5RA8YrqeRBFaX-BGGCKOXn5zPY1DJwWsBUyN9C-wGR2Qye0eogH_3b4M9EW00TPCUPXm2rx8URFj7Wg9VlsmrGzLV2oKkPgkVxuFSxnpO3yjn1Y",
+        input: signedInputs.RS,
         expectedOutput: outputObject,
         recipeConfig: [
             {
                 op: "JWT Verify",
-                args: [rsPub],
+                args: [rsPub, "RS256"],
             }
-        ],
+        ]
+    },
+    {
+        name: "JWT Verify: Invalid RS",
+        input: signedInputs.RS,
+        expectedOutput: "JsonWebTokenError: invalid algorithm",
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [rsPub, "ES256"],
+            }
+        ]
     },
     {
         name: "JWT Verify: ES",
-        input: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.WkECT51jSfpRkcpQ4x0h5Dwe7CFBI6u6Et2gWp91HC7mpN_qCFadRpsvJLtKubm6cJTLa68xtei0YrDD8fxIUA",
+        input: signedInputs.ES,
         expectedOutput: outputObject,
         recipeConfig: [
             {
                 op: "JWT Verify",
-                args: [esPub],
+                args: [esPub, "ES256"],
             }
-        ],
+        ]
+    },
+    {
+        name: "JWT Verify: Invalid ES",
+        input: signedInputs.ES,
+        expectedOutput: "JsonWebTokenError: invalid algorithm",
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [esPub, "HS256"],
+            }
+        ]
     }
 ]);

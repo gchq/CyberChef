@@ -26,6 +26,7 @@ class JWTSign extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "JSON";
         this.outputType = "string";
+        const algorithmList = JWT_ALGORITHMS.concat(["None"]);
         this.args = [
             {
                 name: "Private/Secret Key",
@@ -35,7 +36,7 @@ class JWTSign extends Operation {
             {
                 name: "Signing algorithm",
                 type: "option",
-                value: JWT_ALGORITHMS
+                value: algorithmList
             }
         ];
     }
