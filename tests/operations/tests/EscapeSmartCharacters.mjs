@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
- import TestRegister from "../../lib/TestRegister.mjs";
+import TestRegister from "../../lib/TestRegister.mjs";
 
- TestRegister.addTests([
-     {
+TestRegister.addTests([
+    {
         name: "Escape Smart Characters",
         input: "“”—‘’ →©…",
         expectedOutput: "\"\"--'' -->(C)...",
@@ -19,25 +19,25 @@
         ],
     },
     {
-       name: "Escape Smart Characters - Remove",
-       input: "“”—‘’ →©…",
-       expectedOutput: " ",
-       recipeConfig: [
-           {
-               op: "Escape Smart Characters",
-               args: ["Remove"],
-           },
-       ],
-   },
-   {
-      name: "Escape Smart Characters - Replace",
-      input: "“”—‘’ →©…",
-      expectedOutput: "..... ...",
-      recipeConfig: [
-          {
-              op: "Escape Smart Characters",
-              args: ["Replace with '.'"],
-          },
-      ],
-  },
+        name: "Escape Smart Characters - Remove",
+        input: "“”—‘’ →©…",
+        expectedOutput: " ",
+        recipeConfig: [
+            {
+                op: "Escape Smart Characters",
+                args: ["Remove"],
+            },
+        ],
+    },
+    {
+        name: "Escape Smart Characters - Replace",
+        input: "“”—‘’ →©…",
+        expectedOutput: "..... ...",
+        recipeConfig: [
+            {
+                op: "Escape Smart Characters",
+                args: ["Replace with '.'"],
+            },
+        ],
+    },
 ]);
