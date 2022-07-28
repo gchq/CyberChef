@@ -31,7 +31,7 @@ TestRegister.addTests([
             },
             {
                 op: "Merge",
-                args: [],
+                args: [true],
             },
         ],
     },
@@ -50,7 +50,7 @@ TestRegister.addTests([
             },
             {
                 op: "Merge",
-                args: [],
+                args: [true],
             },
         ],
     },
@@ -66,5 +66,16 @@ TestRegister.addTests([
             {"op": "Label", "args": ["skipReturn"]},
             {"op": "To Base64", "args": ["A-Za-z0-9+/="]}
         ]
-    }
+    },
+    {
+        name: "Fork, Partial Merge",
+        input: "Hello World",
+        expectedOutput: "48656c6c6f 576f726c64",
+        recipeConfig: [
+            { "op": "Fork",   "args": [" ", " ", false] },
+            { "op": "Fork",   "args": ["l", "l", false] },
+            { "op": "Merge",  "args": [false] },
+            { "op": "To Hex", "args": ["None", 0] },
+        ]
+    },
 ]);
