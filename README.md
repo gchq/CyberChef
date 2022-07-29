@@ -71,14 +71,12 @@ You can use as many operations as you like in simple or complex ways. Some examp
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be downloaded and run locally. You can use the link in the top left corner of the app to download a full copy of CyberChef and drop it into a virtual machine, share it with other people, or host it in a closed network.
 
-
 ## Deep linking
 
 By manipulation of CyberChef's URL hash, you can change the initial settings with which the page opens.
 The format is `https://gchq.github.io/CyberChef/#recipe=Operation()&input=...`
 
-Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`. 
-
+Supported arguments are `recipe`, `input` (encoded in Base64), `theme`, and `embed`. All options except `embed` (which if present will render CyberChef with fewer frames so it's more easily embedded) take a single argument.
 
 ## Browser support
 
