@@ -178,7 +178,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["", "\n"]
+                "args": ["", "\n", false]
             }
         ],
     },
@@ -189,7 +189,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["", "\n"]
+                "args": ["", "\n", false]
             }
         ],
     },
@@ -205,7 +205,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$.store.book[*].author", "\n"]
+                "args": ["$.store.book[*].author", "\n", false]
             }
         ],
     },
@@ -223,7 +223,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..title", "\n"]
+                "args": ["$..title", "\n", false]
             }
         ],
     },
@@ -238,7 +238,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$.store.*", "\n"]
+                "args": ["$.store.*", "\n", false]
             }
         ],
     },
@@ -249,7 +249,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[-1:]", "\n"]
+                "args": ["$..book[-1:]", "\n", false]
             }
         ],
     },
@@ -263,7 +263,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[:2]", "\n"]
+                "args": ["$..book[:2]", "\n", false]
             }
         ],
     },
@@ -277,7 +277,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[?(@.isbn)]", "\n"]
+                "args": ["$..book[?(@.isbn)]", "\n", false]
             }
         ],
     },
@@ -292,7 +292,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[?(@.price<30 && @.category==\"fiction\")]", "\n"]
+                "args": ["$..book[?(@.price<30 && @.category==\"fiction\")]", "\n", false]
             }
         ],
     },
@@ -306,7 +306,25 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[?(@.price<10)]", "\n"]
+                "args": ["$..book[?(@.price<10)]", "\n", false]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Fetch raw output of all values with matching key",
+        input: JSON.stringify(JSON_TEST_DATA),
+        expectedOutput: [
+            "Sayings of the Century",
+            "Sword of Honour",
+            "Moby Dick",
+            "The Lord of the Rings",
+            "Financial Times",
+            "The Guardian"
+        ].join("\n"),
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$..title", "\n", true]
             }
         ],
     },

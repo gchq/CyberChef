@@ -35,6 +35,11 @@ class JPathExpression extends Operation {
                 "name": "Result delimiter",
                 "type": "binaryShortString",
                 "value": "\\n"
+            },
+            {
+                "name": "Raw output(if result is a string)",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -45,7 +50,7 @@ class JPathExpression extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [query, delimiter] = args;
+        const [query, delimiter, rawOutput] = args;
         let results,
             obj;
 
@@ -59,6 +64,10 @@ class JPathExpression extends Operation {
             results = jpath.query(obj, query);
         } catch (err) {
             throw new OperationError(`Invalid JPath expression: ${err.message}`);
+        }
+
+        if (rawOutput) {
+            return results.map(result => typeof result === "string" ? result : JSON.stringify(result)).join(delimiter);
         }
 
         return results.map(result => JSON.stringify(result)).join(delimiter);
