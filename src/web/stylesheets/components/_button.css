@@ -11,3 +11,7 @@ span.btn img {
     margin-right: 3px;
     margin-bottom: 1px;
 }
+
+button.btn.accessibleUX {
+    margin-top: -5px;
+}
