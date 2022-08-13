@@ -1001,6 +1001,11 @@ class InputWaiter {
      */
     changeTab(inputNum, changeOutput) {
         if (this.manager.tabs.getInputTabItem(inputNum) !== null) {
+            if (this.manager.tabs.getActiveTab("input") === inputNum) {
+                if (changeOutput && this.manager.tabs.getActiveTab("output") !== inputNum)
+                    this.manager.output.changeTab(inputNum, false);
+                return;
+            }
             this.manager.tabs.changeInputTab(inputNum);
             this.inputWorker.postMessage({
                 action: "setInput",
@@ -1090,6 +1095,7 @@ class InputWaiter {
         const inputNum = this.manager.tabs.getActiveInputTab();
         if (inputNum === -1) return;
 
+        this.manager.tabs.removeTabHeaderAlias(inputNum);
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
@@ -1228,6 +1234,7 @@ class InputWaiter {
                 removeChefWorker: true
             }
         });
+        this.manager.tabs.removeTabHeaderAlias(inputNum);
 
         this.manager.output.removeTab(inputNum);
     }
@@ -1241,9 +1248,10 @@ class InputWaiter {
         if (!mouseEvent.target) {
             return;
         }
-        const tabNum = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
-        if (tabNum) {
-            this.removeInput(parseInt(tabNum, 10));
+        const tabNumStr = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
+        if (tabNumStr) {
+            const tabNum = parseInt(tabNumStr, 10);
+            this.removeInput(tabNum);
         }
     }
 
@@ -1438,6 +1446,74 @@ class InputWaiter {
         this.app.updateTitle(urlData.includeInput, urlData.input, true);
     }
 
+    /**
+     * Handler for renaming tabs.
+     * Opens the tab-renaming dialogue.
+     *
+     * @param {event} mouseEvent - The mouse event that this call was triggered by
+     */
+    async renameTabClick(mouseEvent) {
+        const targetElement = mouseEvent.target;
+        if (!targetElement) return;
+
+        const editingElement = document.createElement("input");
+        editingElement.classList.add("form-control");
+        let renameContents = targetElement.textContent;
+        const renameContentsColon = renameContents.indexOf(":");
+
+        // Calling 'getInputValue()' might take a long time for large datasets,
+        // it could be beneficial to modify the API to allow for querying whether
+        // there is any input rather than getting the full string just to access its length.
+        const inputLength = (await this.getInputValue(this.manager.tabs.getActiveInputTab())).length;
+
+        // Remove the data from the renaming section
+        if (renameContentsColon !== -1 && inputLength !== 0) {
+            renameContents = renameContents.substring(0, renameContentsColon);
+        }
+
+        // Remove the single quotation marks from the renaming section
+        renameContents = renameContents.replaceAll("'", "");
+
+        if (renameContents.length < 3 && !isNaN(parseInt(renameContents, 10))) {
+            renameContents = `Tab ${renameContents.toString()}`;
+        }
+
+        editingElement.setAttribute("value", renameContents);
+        editingElement.setAttribute("minlength", "3"); // Delimiting between shortened tab headers and custom ones.
+        targetElement.textContent = "";
+        editingElement.style.height = "1.5em";
+        editingElement.style.textAlign = "center";
+        targetElement.appendChild(editingElement);
+        // A delay is required between appending and focusing.
+        await new Promise(r => setTimeout(r, 100));
+        editingElement.focus();
+    }
+
+    /**
+     * Assigns the current user-entered text to
+     * the tab's new name.
+     * Resets the DOM of the tab to the default non-editable state.
+     */
+    async confirmTabRename() {
+        const activeInputTabNum = this.manager.tabs.getActiveInputTab();
+        if (activeInputTabNum === -1) {
+            return;
+        }
+        const activeInputTabElement = this.manager.tabs.getTabItem(activeInputTabNum, "input");
+        if (activeInputTabElement == null || activeInputTabElement.children.size < 1) {
+            return;
+        }
+        const tabContent = activeInputTabElement.children[0];
+        const tabHeader = tabContent.children[0].children[0].value;
+        const inputContents = await this.getInputValue(activeInputTabNum);
+
+        if (tabHeader.length === 0)
+            this.manager.tabs.removeTabHeaderAlias(activeInputTabNum, false);
+        else
+            this.manager.tabs.addTabHeaderAlias(activeInputTabNum, tabHeader);
+        this.manager.tabs.updateInputTabHeader(activeInputTabNum, inputContents);
+        this.manager.tabs.updateOutputTabHeader(activeInputTabNum, inputContents);
+    }
 
 }
 

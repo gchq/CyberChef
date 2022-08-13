@@ -18,6 +18,7 @@ class TabWaiter {
     constructor(app, manager) {
         this.app = app;
         this.manager = manager;
+        this.tabHeaderAliases = []; // Mapping custom tab headers to indexes/numbers.
     }
 
     /**
@@ -251,21 +252,20 @@ class TabWaiter {
             tabsList.appendChild(this.createTabElement(nums[i], active, io));
         }
 
-        // Display shadows if there are tabs left / right of the displayed tabs
-        if (tabsLeft) {
-            tabsList.classList.add("tabs-left");
-        } else {
-            tabsList.classList.remove("tabs-left");
-        }
-        if (tabsRight) {
-            tabsList.classList.add("tabs-right");
-        } else {
-            tabsList.classList.remove("tabs-right");
-        }
-
         // Show or hide the tab bar depending on how many tabs we have
         if (nums.length > 1) {
             this.showTabBar();
+            // Display shadows if there are tabs left / right of the displayed tabs
+            if (tabsLeft) {
+                tabsList.classList.add("tabs-left");
+            } else {
+                tabsList.classList.remove("tabs-left");
+            }
+            if (tabsRight) {
+                tabsList.classList.add("tabs-right");
+            } else {
+                tabsList.classList.remove("tabs-right");
+            }
         } else {
             this.hideTabBar();
         }
@@ -349,16 +349,35 @@ class TabWaiter {
      * @param {string} data - The data to display in the tab header
      * @param {string} io - Either "input" or "output"
      */
-    updateTabHeader(inputNum, data, io) {
+    async updateTabHeader(inputNum, data, io) {
         const tab = this.getTabItem(inputNum, io);
-        if (tab === null) return;
+        if (tab == null) return;
 
-        let headerData = `Tab ${inputNum}`;
-        if (data.length > 0) {
-            headerData = data.slice(0, 100);
-            headerData = `${inputNum}: ${headerData}`;
+        const customHeaderData = this.getTabHeaderAlias(inputNum);
+
+        // When 'customHeaderData === `Tab ${inputNum}`' is true, it's usually due to
+        // a user having opened the rename textbox but then closing it without change.
+        const isStandardHeader = customHeaderData === null || customHeaderData === `Tab ${inputNum}`;
+
+        let headerData = isStandardHeader ? `Tab ${inputNum}` : customHeaderData;
+        const dataIsFile = data instanceof ArrayBuffer;
+        const includeData = data.length > 0 || dataIsFile;
+
+        if (includeData) {
+            const inputObj = await this.manager.input.getInputObj(inputNum);
+
+            const dataPreview = dataIsFile ? inputObj.data.name : data.slice(0, 100);
+
+            if (isStandardHeader)
+                headerData = inputNum.toString();
+            else
+                headerData = `'${customHeaderData}'`;
+
+            headerData += `: ${dataPreview}`;
         }
         tab.firstElementChild.innerText = headerData;
+        if (!isStandardHeader && !includeData)
+            tab.firstElementChild.innerText = `'${headerData}'`;
     }
 
     /**
@@ -423,6 +442,63 @@ class TabWaiter {
         this.updateTabProgress(inputNum, progress, total, "output");
     }
 
+    /**
+     * Adds an alias between a custom tab header and a tab number so that
+     * mapping between the two is possible if DOM element is removed.
+     *
+     * @param {number} tabNum - The index of the tab being aliased
+     * @param {string} tabHeader - The custom tab header
+     */
+    addTabHeaderAlias(tabNum, tabHeader) {
+        // First, we try to overwrite an existing alias.
+        for (let i = 0; i < this.tabHeaderAliases.length; i++) {
+            if (this.tabHeaderAliases.at(i).tabNumber === tabNum) {
+                this.tabHeaderAliases.at(i).customHeader = tabHeader;
+                return;
+            }
+        }
+        this.tabHeaderAliases.push({tabNumber: tabNum, customHeader: tabHeader});
+    }
+
+    /**
+     * Removes a previously-assigned header alias.
+     *
+     * @param {number} tabNum - The index of the tab that should be removed.
+     * @param {boolean} shouldThrow - A boolean representing whether the function should throw an exception or return silently if it cannot locate the tab header.
+     */
+    removeTabHeaderAlias(tabNum, shouldThrow) {
+        for (let i = 0; i < this.tabHeaderAliases.length; i++) {
+
+            if (this.tabHeaderAliases.at(i).tabNumber === tabNum) {
+                this.tabHeaderAliases.splice(i, 1);
+                return;
+            }
+
+        }
+        if (shouldThrow)
+            throw `Unable to locate header alias at tab index ${tabNum.toString()}.`;
+    }
+
+    /**
+     * Retrieves the custom header for a given tab.
+     *
+     * @param {number} tabNum - The index of the tab whose alias should be retrieved.
+     * @param {boolean} shouldThrow - Whether the function should throw an exception (instead of returning null) in the event of it being unable to locate the tab.
+     * @returns {string} customHeader - The custom header for the requested tab.
+     */
+    getTabHeaderAlias(tabNum, shouldThrow) {
+        for (let i = 0; i < this.tabHeaderAliases.length; i++) {
+
+            if (this.tabHeaderAliases.at(i).tabNumber === tabNum)
+                return this.tabHeaderAliases.at(i).customHeader;
+
+        }
+        if (shouldThrow)
+            throw `Unable to locate header alias at tab index ${tabNum.toString()}.`;
+        return null;
+    }
+
 }
 
 export default TabWaiter;
+
