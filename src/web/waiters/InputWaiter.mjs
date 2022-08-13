@@ -1471,15 +1471,15 @@ class InputWaiter {
             renameContents = renameContents.substring(0, renameContentsColon);
         }
 
-        // Remove the single quotation marks from the renaming section
-        renameContents = renameContents.replaceAll("'", "");
-
-        if (renameContents.length < 3 && !isNaN(parseInt(renameContents, 10))) {
+        // Restore the full header if it hasn't been renamed
+        if (renameContents.indexOf("'") === -1 && !isNaN(parseInt(renameContents, 10))) {
             renameContents = `Tab ${renameContents.toString()}`;
         }
 
+        // Remove the single quotation marks from the renaming section
+        renameContents = renameContents.replaceAll("'", "");
+
         editingElement.setAttribute("value", renameContents);
-        editingElement.setAttribute("minlength", "3"); // Delimiting between shortened tab headers and custom ones.
         targetElement.textContent = "";
         editingElement.style.height = "1.5em";
         editingElement.style.textAlign = "center";
