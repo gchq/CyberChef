@@ -268,49 +268,6 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "JPath Expression: All elements in array with property",
-        input: JSON.stringify(JSON_TEST_DATA),
-        expectedOutput: [
-            "{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}",
-            "{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}"
-        ].join("\n"),
-        recipeConfig: [
-            {
-                "op": "JPath expression",
-                "args": ["$..book[?(@.isbn)]", "\n"]
-            }
-        ],
-    },
-    {
-        name: "JPath Expression: All elements in array which meet condition",
-        input: JSON.stringify(JSON_TEST_DATA),
-        expectedOutput: [
-            "{\"category\":\"fiction\",\"author\":\"Evelyn Waugh\",\"title\":\"Sword of Honour\",\"price\":12.99}",
-            "{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}",
-            "{\"category\":\"fiction\",\"author\":\"J. R. R. Tolkien\",\"title\":\"The Lord of the Rings\",\"isbn\":\"0-395-19395-8\",\"price\":22.99}"
-        ].join("\n"),
-        recipeConfig: [
-            {
-                "op": "JPath expression",
-                "args": ["$..book[?(@.price<30 && @.category==\"fiction\")]", "\n"]
-            }
-        ],
-    },
-    {
-        name: "JPath Expression: All elements in object",
-        input: JSON.stringify(JSON_TEST_DATA),
-        expectedOutput: [
-            "{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"title\":\"Sayings of the Century\",\"price\":8.95}",
-            "{\"category\":\"fiction\",\"author\":\"Herman Melville\",\"title\":\"Moby Dick\",\"isbn\":\"0-553-21311-3\",\"price\":8.99}"
-        ].join("\n"),
-        recipeConfig: [
-            {
-                "op": "JPath expression",
-                "args": ["$..book[?(@.price<10)]", "\n"]
-            }
-        ],
-    },
-    {
         name: "JPath Expression: Script-based expression",
         input: "[{}]",
         recipeConfig: [
