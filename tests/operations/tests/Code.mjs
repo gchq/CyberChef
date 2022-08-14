@@ -311,6 +311,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "JPath Expression: Script-based expression",
+        input: "[{}]",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$..[?(({__proto__:[].constructor}).constructor(\"self.postMessage({action:'bakeComplete',data:{bakeId:1,dish:{type:1,value:''},duration:1,error:false,id:undefined,inputNum:2,progress:1,result:'<iframe/onload=debugger>',type: 'html'}});\")();)]", "\n"]
+            }
+        ],
+        expectedOutput: "Query contains unsafe expression."
+    },
+    {
         name: "CSS selector",
         input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
         expectedOutput: '<p class="a">hello</p>\n<p class="a">again</p>',

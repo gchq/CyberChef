@@ -49,6 +49,14 @@ class JPathExpression extends Operation {
         let results,
             obj;
 
+        // Split the string by literal quotes
+        const quoteSplit = query.split(/(?<=[^\\])"/);
+        for (let i = 0; i < quoteSplit.length; i++) {
+            // Only check the text that isn't surrounded by quotes.
+            if (i % 2 === 0 && quoteSplit[i].match(/\[\??\(/))
+                throw new OperationError("Query contains unsafe expression.");
+        }
+
         try {
             obj = JSON.parse(input);
         } catch (err) {
