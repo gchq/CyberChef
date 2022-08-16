@@ -47,6 +47,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "JSON to CSV: boolean and null as values",
+        input: JSON.stringify({a: false, b: null, c: 3}),
+        expectedOutput: "a,b,c\r\nfalse,null,3\r\n",
+        recipeConfig: [
+            {
+                op: "JSON to CSV",
+                args: [",", "\\r\\n"]
+            },
+        ],
+    },
+    {
         name: "JSON to CSV: JSON as an array",
         input: JSON.stringify([{a: 1, b: "2", c: 3}]),
         expectedOutput: EXPECTED_CSV_SINGLE,
