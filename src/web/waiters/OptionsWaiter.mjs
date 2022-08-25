@@ -201,7 +201,8 @@ class OptionsWaiter {
      */
     uxChange(e) {
         const checked = $("#accessibleUX").is(":checked");
-        $(".accessibleUX").css("display", checked ? "block" : "none");
+        const UXstyle = "display:" + (checked ? "block" : "none");
+        $('html > head').append($('<style>.accessibleUX {' + UXstyle + '; }</style>'));
     }
 }
 
