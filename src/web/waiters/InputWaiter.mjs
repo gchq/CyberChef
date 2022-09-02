@@ -997,7 +997,6 @@ class InputWaiter {
         this.setupInputWorker();
         this.manager.worker.setupChefWorker();
         this.addInput(true);
-        this.bakeAll();
 
         // Fire the statechange event as the input has been modified
         window.dispatchEvent(this.manager.statechange);

@@ -49,6 +49,8 @@ class OutputWaiter {
             html: "",
             changed: false
         };
+        // Hold a copy of the currently displayed output so that we don't have to update it unnecessarily
+        this.currentOutputCache = null;
         this.outputChrEnc = 0;
         this.initEditor();
 
@@ -170,9 +172,26 @@ class OutputWaiter {
 
     /**
      * Sets the value of the current output
-     * @param {string} data
+     * @param {string|ArrayBuffer} data
      */
     setOutput(data) {
+        // Don't do anything if the output hasn't changed
+        if (data === this.currentOutputCache) return;
+        this.currentOutputCache = data;
+
+        // If data is an ArrayBuffer, convert to a string in the correct character encoding
+        if (data instanceof ArrayBuffer) {
+            if (this.outputChrEnc === 0) {
+                data = Utils.arrayBufferToStr(data);
+            } else {
+                try {
+                    data = cptable.utils.decode(this.outputChrEnc, new Uint8Array(data));
+                } catch (err) {
+                    data = err;
+                }
+            }
+        }
+
         // Turn drawSelection back on
         this.outputEditorView.dispatch({
             effects: this.outputEditorConf.drawSelection.reconfigure(
@@ -508,28 +527,7 @@ class OutputWaiter {
 
                         this.setHTMLOutput(output.data.result);
                         break;
-                    case "ArrayBuffer": {
-                        this.outputTextEl.style.display = "block";
-                        outputFile.style.display = "none";
-
-                        this.clearHTMLOutput();
-
-                        let outputVal = "";
-                        if (this.outputChrEnc === 0) {
-                            outputVal = Utils.arrayBufferToStr(output.data.result);
-                        } else {
-                            try {
-                                outputVal = cptable.utils.decode(this.outputChrEnc, new Uint8Array(output.data.result));
-                            } catch (err) {
-                                outputVal = err;
-                            }
-                        }
-
-                        this.setOutput(outputVal);
-
-                        // this.setFile(await this.getDishBuffer(output.data.dish), activeTab);
-                        break;
-                    }
+                    case "ArrayBuffer":
                     case "string":
                     default:
                         this.outputTextEl.style.display = "block";
@@ -1136,7 +1134,8 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async displayTabInfo(inputNum) {
-        if (!this.outputExists(inputNum)) return;
+        // Don't display anything if there are no, or only one, tabs
+        if (!this.outputExists(inputNum) || Object.keys(this.outputs).length <= 1) return;
 
         const dish = this.getOutputDish(inputNum);
         let tabStr = "";

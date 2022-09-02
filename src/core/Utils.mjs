@@ -407,6 +407,7 @@ class Utils {
      */
     static strToArrayBuffer(str) {
         log.debug("Converting string to array buffer");
+        if (!str) return new ArrayBuffer;
         const arr = new Uint8Array(str.length);
         let i = str.length, b;
         while (i--) {
@@ -434,6 +435,7 @@ class Utils {
      */
     static strToUtf8ArrayBuffer(str) {
         log.debug("Converting string to UTF8 array buffer");
+        if (!str) return new ArrayBuffer;
         const utf8Str = utf8.encode(str);
 
         if (str.length !== utf8Str.length) {
@@ -464,6 +466,7 @@ class Utils {
      */
     static strToByteArray(str) {
         log.debug("Converting string to byte array");
+        if (!str) return [];
         const byteArray = new Array(str.length);
         let i = str.length, b;
         while (i--) {
@@ -491,6 +494,7 @@ class Utils {
      */
     static strToUtf8ByteArray(str) {
         log.debug("Converting string to UTF8 byte array");
+        if (!str) return [];
         const utf8Str = utf8.encode(str);
 
         if (str.length !== utf8Str.length) {
@@ -520,6 +524,7 @@ class Utils {
      */
     static strToCharcode(str) {
         log.debug("Converting string to charcode");
+        if (!str) return [];
         const charcode = [];
 
         for (let i = 0; i < str.length; i++) {
@@ -555,6 +560,7 @@ class Utils {
      */
     static byteArrayToUtf8(byteArray) {
         log.debug("Converting byte array to UTF8");
+        if (!byteArray || !byteArray.length) return "";
         const str = Utils.byteArrayToChars(byteArray);
         try {
             const utf8Str = utf8.decode(str);
@@ -588,7 +594,7 @@ class Utils {
      */
     static byteArrayToChars(byteArray) {
         log.debug("Converting byte array to chars");
-        if (!byteArray) return "";
+        if (!byteArray || !byteArray.length) return "";
         let str = "";
         // String concatenation appears to be faster than an array join
         for (let i = 0; i < byteArray.length;) {
@@ -611,6 +617,7 @@ class Utils {
      */
     static arrayBufferToStr(arrayBuffer, utf8=true) {
         log.debug("Converting array buffer to str");
+        if (!arrayBuffer || !arrayBuffer.byteLength) return "";
         const arr = new Uint8Array(arrayBuffer);
         return utf8 ? Utils.byteArrayToUtf8(arr) : Utils.byteArrayToChars(arr);
     }
