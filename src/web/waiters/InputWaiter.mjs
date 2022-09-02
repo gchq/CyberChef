@@ -9,7 +9,6 @@ import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWork
 import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
 import Utils, {debounce} from "../../core/Utils.mjs";
 import {toBase64} from "../../core/lib/Base64.mjs";
-import {isImage} from "../../core/lib/FileType.mjs";
 import cptable from "codepage";
 
 import {
@@ -21,6 +20,7 @@ import {bracketMatching} from "@codemirror/language";
 import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
 
 import {statusBar} from "../utils/statusBar.mjs";
+import {fileDetailsPanel} from "../utils/fileDetails.mjs";
 import {renderSpecialChar} from "../utils/editorUtils.mjs";
 
 
@@ -65,7 +65,8 @@ class InputWaiter {
     initEditor() {
         this.inputEditorConf = {
             eol: new Compartment,
-            lineWrapping: new Compartment
+            lineWrapping: new Compartment,
+            fileDetailsPanel: new Compartment
         };
 
         const initialState = EditorState.create({
@@ -92,6 +93,7 @@ class InputWaiter {
                 }),
 
                 // Mutable state
+                this.inputEditorConf.fileDetailsPanel.of([]),
                 this.inputEditorConf.lineWrapping.of(EditorView.lineWrapping),
                 this.inputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
 
@@ -466,42 +468,31 @@ class InputWaiter {
             if (inputNum !== activeTab) return;
 
             if (inputData.file) {
-                this.setFile(inputNum, inputData, silent);
+                this.setFile(inputNum, inputData);
             } else {
-                // TODO Per-tab encodings?
-                let inputVal;
-                if (this.inputChrEnc > 0) {
-                    inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
-                } else {
-                    inputVal = Utils.arrayBufferToStr(inputData.buffer);
-                }
-
-                this.setInput(inputVal);
-                const fileOverlay = document.getElementById("input-file"),
-                    fileName = document.getElementById("input-file-name"),
-                    fileSize = document.getElementById("input-file-size"),
-                    fileType = document.getElementById("input-file-type"),
-                    fileLoaded = document.getElementById("input-file-loaded");
-
-                fileOverlay.style.display = "none";
-                fileName.textContent = "";
-                fileSize.textContent = "";
-                fileType.textContent = "";
-                fileLoaded.textContent = "";
-
-                this.inputTextEl.classList.remove("blur");
-
-                // Set URL to current input
-                if (inputVal.length >= 0 && inputVal.length <= 51200) {
-                    const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
-                    this.setUrl({
-                        includeInput: true,
-                        input: inputStr
-                    });
-                }
-
-                if (!silent) window.dispatchEvent(this.manager.statechange);
+                this.clearFile(inputNum);
             }
+
+            // TODO Per-tab encodings?
+            let inputVal;
+            if (this.inputChrEnc > 0) {
+                inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
+            } else {
+                inputVal = Utils.arrayBufferToStr(inputData.buffer);
+            }
+
+            this.setInput(inputVal);
+
+            // Set URL to current input
+            if (inputVal.length >= 0 && inputVal.length <= 51200) {
+                const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
+                this.setUrl({
+                    includeInput: true,
+                    input: inputStr
+                });
+            }
+
+            if (!silent) window.dispatchEvent(this.manager.statechange);
 
         }.bind(this));
     }
@@ -520,33 +511,38 @@ class InputWaiter {
      *         @param {string} file.type
      *     @param {string} status
      *     @param {number} progress
-     * @param {boolean} [silent=true] - If false, fires the manager statechange event
      */
-    setFile(inputNum, inputData, silent=true) {
+    setFile(inputNum, inputData) {
         const activeTab = this.manager.tabs.getActiveInputTab();
         if (inputNum !== activeTab) return;
 
-        const fileOverlay = document.getElementById("input-file"),
-            fileName = document.getElementById("input-file-name"),
-            fileSize = document.getElementById("input-file-size"),
-            fileType = document.getElementById("input-file-type"),
-            fileLoaded = document.getElementById("input-file-loaded");
+        // Create file details panel
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
+                fileDetailsPanel({
+                    fileDetails: inputData.file,
+                    progress: inputData.progress,
+                    status: inputData.status,
+                    buffer: inputData.buffer,
+                    renderPreview: this.app.options.imagePreview
+                })
+            )
+        });
+    }
 
-        fileOverlay.style.display = "block";
-        fileName.textContent = inputData.file.name;
-        fileSize.textContent = inputData.file.size + " bytes";
-        fileType.textContent = inputData.file.type;
-        if (inputData.status === "error") {
-            fileLoaded.textContent = "Error";
-            fileLoaded.style.color = "#FF0000";
-        } else {
-            fileLoaded.style.color = "";
-            fileLoaded.textContent = inputData.progress + "%";
-        }
+    /**
+     * Clears the file details panel
+     *
+     * @param {number} inputNum
+     */
+    clearFile(inputNum) {
+        const activeTab = this.manager.tabs.getActiveInputTab();
+        if (inputNum !== activeTab) return;
 
-        this.displayFilePreview(inputNum, inputData);
-
-        if (!silent) window.dispatchEvent(this.manager.statechange);
+        // Clear file details panel
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.fileDetailsPanel.reconfigure([])
+        });
     }
 
     /**
@@ -572,77 +568,25 @@ class InputWaiter {
     }
 
     /**
-     * Render the input thumbnail
-     */
-    async renderFileThumb() {
-        const activeTab = this.manager.tabs.getActiveInputTab(),
-            input = await this.getInputValue(activeTab),
-            fileThumb = document.getElementById("input-file-thumbnail");
-
-        if (typeof input === "string" ||
-            !this.app.options.imagePreview) {
-            this.resetFileThumb();
-            return;
-        }
-
-        const inputArr = new Uint8Array(input),
-            type = isImage(inputArr);
-
-        if (type && type !== "image/tiff" && inputArr.byteLength <= 512000) {
-            // Most browsers don't support displaying TIFFs, so ignore them
-            // Don't render images over 512000 bytes
-            const blob = new Blob([inputArr], {type: type}),
-                url = URL.createObjectURL(blob);
-            fileThumb.src = url;
-        } else {
-            this.resetFileThumb();
-        }
-
-    }
-
-    /**
-     * Reset the input thumbnail to the default icon
-     */
-    resetFileThumb() {
-        const fileThumb = document.getElementById("input-file-thumbnail");
-        fileThumb.src = require("../static/images/file-128x128.png").default;
-    }
-
-    /**
-     * Shows a chunk of the file in the input behind the file overlay
-     *
-     * @param {number} inputNum - The inputNum of the file being displayed
-     * @param {Object} inputData - Object containing the input data
-     * @param {string} inputData.stringSample - The first 4096 bytes of input as a string
-     */
-    displayFilePreview(inputNum, inputData) {
-        const activeTab = this.manager.tabs.getActiveInputTab(),
-            input = inputData.buffer;
-        if (inputNum !== activeTab) return;
-        this.inputTextEl.classList.add("blur");
-        this.setInput(input.stringSample);
-
-        this.renderFileThumb();
-    }
-
-    /**
      * Updates the displayed load progress for a file
      *
      * @param {number} inputNum
      * @param {number | string} progress - Either a number or "error"
      */
     updateFileProgress(inputNum, progress) {
-        const activeTab = this.manager.tabs.getActiveInputTab();
-        if (inputNum !== activeTab) return;
+        // const activeTab = this.manager.tabs.getActiveInputTab();
+        // if (inputNum !== activeTab) return;
 
-        const fileLoaded = document.getElementById("input-file-loaded");
-        if (progress === "error") {
-            fileLoaded.textContent = "Error";
-            fileLoaded.style.color = "#FF0000";
-        } else {
-            fileLoaded.textContent = progress + "%";
-            fileLoaded.style.color = "";
-        }
+        // TODO
+
+        // const fileLoaded = document.getElementById("input-file-loaded");
+        // if (progress === "error") {
+        //     fileLoaded.textContent = "Error";
+        //     fileLoaded.style.color = "#FF0000";
+        // } else {
+        //     fileLoaded.textContent = progress + "%";
+        //     fileLoaded.style.color = "";
+        // }
     }
 
     /**
@@ -778,10 +722,6 @@ class InputWaiter {
      */
     inputChange(e) {
         debounce(function(e) {
-            // Ignore this function if the input is a file
-            const fileOverlay = document.getElementById("input-file");
-            if (fileOverlay.style.display === "block") return;
-
             const value = this.getInput();
             const activeTab = this.manager.tabs.getActiveInputTab();
 
@@ -806,7 +746,7 @@ class InputWaiter {
 
         e.stopPropagation();
         e.preventDefault();
-        e.target.closest("#input-text,#input-file").classList.add("dropping-file");
+        e.target.closest("#input-text").classList.add("dropping-file");
     }
 
     /**
@@ -821,7 +761,7 @@ class InputWaiter {
         // Dragleave often fires when moving between lines in the editor.
         // If the target element is within the input-text element, we are still on target.
         if (!this.inputTextEl.contains(e.target))
-            e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
+            e.target.closest("#input-text").classList.remove("dropping-file");
     }
 
     /**
@@ -837,7 +777,7 @@ class InputWaiter {
 
         e.stopPropagation();
         e.preventDefault();
-        e.target.closest("#input-text,#input-file").classList.remove("dropping-file");
+        e.target.closest("#input-text").classList.remove("dropping-file");
 
         // Dropped text is handled by the editor itself
         if (e.dataTransfer.getData("Text")) return;
@@ -1061,23 +1001,6 @@ class InputWaiter {
 
         // Fire the statechange event as the input has been modified
         window.dispatchEvent(this.manager.statechange);
-    }
-
-    /**
-     * Handler for clear IO click event.
-     * Resets the input for the current tab
-     */
-    clearIoClick() {
-        const inputNum = this.manager.tabs.getActiveInputTab();
-        if (inputNum === -1) return;
-
-        this.updateInputValue(inputNum, "", true);
-
-        this.set(inputNum, {
-            buffer: new ArrayBuffer()
-        });
-
-        this.manager.tabs.updateInputTabHeader(inputNum, "");
     }
 
     /**

@@ -152,7 +152,6 @@ class Manager {
         this.addListeners("#input-wrapper", "dragover", this.input.inputDragover, this.input);
         this.addListeners("#input-wrapper", "dragleave", this.input.inputDragleave, this.input);
         this.addListeners("#input-wrapper", "drop", this.input.inputDrop, this.input);
-        document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("mousedown", this.input.nextTabClick.bind(this.input));
@@ -218,7 +217,6 @@ class Manager {
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
         document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
         document.getElementById("logLevel").addEventListener("change", this.options.logLevelChange.bind(this.options));
-        document.getElementById("imagePreview").addEventListener("change", this.input.renderFileThumb.bind(this.input));
 
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));

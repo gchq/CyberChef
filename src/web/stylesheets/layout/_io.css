@@ -220,7 +220,6 @@
     transition: all 0.5s ease;
 }
 
-#input-file,
 #output-file {
     position: absolute;
     left: 0;
@@ -450,9 +449,10 @@
     font-size: 12px !important;
 }
 
-.ͼ2 .cm-panels {
+.ͼ2 .cm-panels,
+.ͼ2 .cm-side-panels {
     background-color: var(--secondary-background-colour);
-    border-color: var(--secondary-border-colour);
+    border-color: var(--primary-border-colour);
     color: var(--primary-font-colour);
 }
 
@@ -547,4 +547,44 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
+}
+
+
+/* File details panel */
+
+.cm-file-details {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding-bottom: 21px;
+    height: 100%;
+}
+
+.file-details-heading {
+    font-weight: bold;
+    margin: 10px 0 10px 0;
+}
+
+.file-details-data {
+    text-align: left;
+    margin: 10px 2px;
+}
+
+.file-details-data td {
+    padding: 0 3px;
+    max-width: 130px;
+    min-width: 60px;
+    overflow: hidden;
+    vertical-align: top;
+    word-break: break-all;
+}
+
+.file-details-error {
+    color: #f00;
+}
+
+.file-details-thumbnail {
+    max-width: 180px;
 }
