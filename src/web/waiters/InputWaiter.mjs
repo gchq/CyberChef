@@ -10,6 +10,7 @@ import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker
 import Utils, {debounce} from "../../core/Utils.mjs";
 import {toBase64} from "../../core/lib/Base64.mjs";
 import {isImage} from "../../core/lib/FileType.mjs";
+import cptable from "codepage";
 
 import {
     EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor, dropCursor
@@ -39,6 +40,7 @@ class InputWaiter {
         this.manager = manager;
 
         this.inputTextEl = document.getElementById("input-text");
+        this.inputChrEnc = 0;
         this.initEditor();
 
         this.inputWorker = null;
@@ -84,7 +86,9 @@ class InputWaiter {
                 // Custom extensions
                 statusBar({
                     label: "Input",
-                    eolHandler: this.eolChange.bind(this)
+                    eolHandler: this.eolChange.bind(this),
+                    chrEncHandler: this.chrEncChange.bind(this),
+                    initialChrEncVal: this.inputChrEnc
                 }),
 
                 // Mutable state
@@ -122,17 +126,28 @@ class InputWaiter {
     /**
      * Handler for EOL change events
      * Sets the line separator
+     * @param {string} eolVal
      */
-    eolChange(eolval) {
+    eolChange(eolVal) {
         const oldInputVal = this.getInput();
 
         // Update the EOL value
         this.inputEditorView.dispatch({
-            effects: this.inputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolval))
+            effects: this.inputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
         });
 
         // Reset the input so that lines are recalculated, preserving the old EOL values
         this.setInput(oldInputVal);
+    }
+
+    /**
+     * Handler for Chr Enc change events
+     * Sets the input character encoding
+     * @param {number} chrEncVal
+     */
+    chrEncChange(chrEncVal) {
+        this.inputChrEnc = chrEncVal;
+        this.inputChange();
     }
 
     /**
@@ -380,7 +395,7 @@ class InputWaiter {
                 this.showLoadingInfo(r.data, true);
                 break;
             case "setInput":
-                this.set(r.data.inputObj, r.data.silent);
+                this.set(r.data.inputNum, r.data.inputObj, r.data.silent);
                 break;
             case "inputAdded":
                 this.inputAdded(r.data.changeTab, r.data.inputNum);
@@ -402,9 +417,6 @@ class InputWaiter {
                 break;
             case "setUrl":
                 this.setUrl(r.data);
-                break;
-            case "inputSwitch":
-                this.manager.output.inputSwitch(r.data);
                 break;
             case "getInput":
             case "getInputNums":
@@ -435,22 +447,36 @@ class InputWaiter {
     /**
      * Sets the input in the input area
      *
-     * @param {object} inputData - Object containing the input and its metadata
-     * @param {number} inputData.inputNum - The unique inputNum for the selected input
-     * @param {string | object} inputData.input - The actual input data
-     * @param {string} inputData.name - The name of the input file
-     * @param {number} inputData.size - The size in bytes of the input file
-     * @param {string} inputData.type - The MIME type of the input file
-     * @param {number} inputData.progress - The load progress of the input file
+     * @param {number} inputNum
+     * @param {Object} inputData - Object containing the input and its metadata
+     *     @param {string} type
+     *     @param {ArrayBuffer} buffer
+     *     @param {string} stringSample
+     *     @param {Object} file
+     *         @param {string} file.name
+     *         @param {number} file.size
+     *         @param {string} file.type
+     *     @param {string} status
+     *     @param {number} progress
      * @param {boolean} [silent=false] - If false, fires the manager statechange event
      */
-    async set(inputData, silent=false) {
+    async set(inputNum, inputData, silent=false) {
         return new Promise(function(resolve, reject) {
             const activeTab = this.manager.tabs.getActiveInputTab();
-            if (inputData.inputNum !== activeTab) return;
+            if (inputNum !== activeTab) return;
 
-            if (typeof inputData.input === "string") {
-                this.setInput(inputData.input);
+            if (inputData.file) {
+                this.setFile(inputNum, inputData, silent);
+            } else {
+                // TODO Per-tab encodings?
+                let inputVal;
+                if (this.inputChrEnc > 0) {
+                    inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
+                } else {
+                    inputVal = Utils.arrayBufferToStr(inputData.buffer);
+                }
+
+                this.setInput(inputVal);
                 const fileOverlay = document.getElementById("input-file"),
                     fileName = document.getElementById("input-file-name"),
                     fileSize = document.getElementById("input-file-size"),
@@ -466,8 +492,8 @@ class InputWaiter {
                 this.inputTextEl.classList.remove("blur");
 
                 // Set URL to current input
-                const inputStr = toBase64(inputData.input, "A-Za-z0-9+/");
-                if (inputStr.length >= 0 && inputStr.length <= 68267) {
+                if (inputVal.length >= 0 && inputVal.length <= 51200) {
+                    const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
                     this.setUrl({
                         includeInput: true,
                         input: inputStr
@@ -475,8 +501,6 @@ class InputWaiter {
                 }
 
                 if (!silent) window.dispatchEvent(this.manager.statechange);
-            } else {
-                this.setFile(inputData, silent);
             }
 
         }.bind(this));
@@ -485,18 +509,22 @@ class InputWaiter {
     /**
      * Displays file details
      *
-     * @param {object} inputData - Object containing the input and its metadata
-     * @param {number} inputData.inputNum - The unique inputNum for the selected input
-     * @param {string | object} inputData.input - The actual input data
-     * @param {string} inputData.name - The name of the input file
-     * @param {number} inputData.size - The size in bytes of the input file
-     * @param {string} inputData.type - The MIME type of the input file
-     * @param {number} inputData.progress - The load progress of the input file
+     * @param {number} inputNum
+     * @param {Object} inputData - Object containing the input and its metadata
+     *     @param {string} type
+     *     @param {ArrayBuffer} buffer
+     *     @param {string} stringSample
+     *     @param {Object} file
+     *         @param {string} file.name
+     *         @param {number} file.size
+     *         @param {string} file.type
+     *     @param {string} status
+     *     @param {number} progress
      * @param {boolean} [silent=true] - If false, fires the manager statechange event
      */
-    setFile(inputData, silent=true) {
+    setFile(inputNum, inputData, silent=true) {
         const activeTab = this.manager.tabs.getActiveInputTab();
-        if (inputData.inputNum !== activeTab) return;
+        if (inputNum !== activeTab) return;
 
         const fileOverlay = document.getElementById("input-file"),
             fileName = document.getElementById("input-file-name"),
@@ -505,9 +533,9 @@ class InputWaiter {
             fileLoaded = document.getElementById("input-file-loaded");
 
         fileOverlay.style.display = "block";
-        fileName.textContent = inputData.name;
-        fileSize.textContent = inputData.size + " bytes";
-        fileType.textContent = inputData.type;
+        fileName.textContent = inputData.file.name;
+        fileSize.textContent = inputData.file.size + " bytes";
+        fileType.textContent = inputData.file.type;
         if (inputData.status === "error") {
             fileLoaded.textContent = "Error";
             fileLoaded.style.color = "#FF0000";
@@ -516,7 +544,7 @@ class InputWaiter {
             fileLoaded.textContent = inputData.progress + "%";
         }
 
-        this.displayFilePreview(inputData);
+        this.displayFilePreview(inputNum, inputData);
 
         if (!silent) window.dispatchEvent(this.manager.statechange);
     }
@@ -583,19 +611,18 @@ class InputWaiter {
     /**
      * Shows a chunk of the file in the input behind the file overlay
      *
+     * @param {number} inputNum - The inputNum of the file being displayed
      * @param {Object} inputData - Object containing the input data
-     * @param {number} inputData.inputNum - The inputNum of the file being displayed
-     * @param {ArrayBuffer} inputData.input - The actual input to display
+     * @param {string} inputData.stringSample - The first 4096 bytes of input as a string
      */
-    displayFilePreview(inputData) {
+    displayFilePreview(inputNum, inputData) {
         const activeTab = this.manager.tabs.getActiveInputTab(),
-            input = inputData.input;
-        if (inputData.inputNum !== activeTab) return;
+            input = inputData.buffer;
+        if (inputNum !== activeTab) return;
         this.inputTextEl.classList.add("blur");
-        this.setInput(Utils.arrayBufferToStr(input.slice(0, 4096)));
+        this.setInput(input.stringSample);
 
         this.renderFileThumb();
-
     }
 
     /**
@@ -623,46 +650,40 @@ class InputWaiter {
      *
      * @param {number} inputNum
      * @param {string | ArrayBuffer} value
-     * @param {boolean} [force=false] - If true, forces the value to be updated even if the type is different to the currently stored type
      */
     updateInputValue(inputNum, value, force=false) {
-        let includeInput = false;
-        const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
-        if (recipeStr.length > 0 && recipeStr.length <= 68267) {
-            includeInput = true;
+        // Prepare the value as a buffer (full value) and a string sample (up to 4096 bytes)
+        let buffer;
+        let stringSample = "";
+
+        // If value is a string, interpret it using the specified character encoding
+        if (typeof value === "string") {
+            stringSample = value.slice(0, 4096);
+            if (this.inputChrEnc > 0) {
+                buffer = cptable.utils.encode(this.inputChrEnc, value);
+                buffer = new Uint8Array(buffer).buffer;
+            } else {
+                buffer = Utils.strToArrayBuffer(value);
+            }
+        } else {
+            buffer = value;
+            stringSample = Utils.arrayBufferToStr(value.slice(0, 4096));
         }
+
+
+        const recipeStr = buffer.byteLength < 51200 ? toBase64(buffer, "A-Za-z0-9+/") : ""; // B64 alphabet with no padding
         this.setUrl({
-            includeInput: includeInput,
+            includeInput: recipeStr.length > 0 && buffer.byteLength < 51200,
             input: recipeStr
         });
 
-        // Value is either a string set by the input or an ArrayBuffer from a LoaderWorker,
-        // so is safe to use typeof === "string"
-        const transferable = (typeof value !== "string") ? [value] : undefined;
+        const transferable = [buffer];
         this.inputWorker.postMessage({
             action: "updateInputValue",
             data: {
                 inputNum: inputNum,
-                value: value,
-                force: force
-            }
-        }, transferable);
-    }
-
-    /**
-     * Updates the .data property for the input of the specified inputNum.
-     * Used for switching the output into the input
-     *
-     * @param {number} inputNum - The inputNum of the input we're changing
-     * @param {object} inputData - The new data object
-     */
-    updateInputObj(inputNum, inputData) {
-        const transferable = (typeof inputData !== "string") ? [inputData.fileBuffer] : undefined;
-        this.inputWorker.postMessage({
-            action: "updateInputObj",
-            data: {
-                inputNum: inputNum,
-                data: inputData
+                buffer: buffer,
+                stringSample: stringSample
             }
         }, transferable);
     }
@@ -1052,9 +1073,8 @@ class InputWaiter {
 
         this.updateInputValue(inputNum, "", true);
 
-        this.set({
-            inputNum: inputNum,
-            input: ""
+        this.set(inputNum, {
+            buffer: new ArrayBuffer()
         });
 
         this.manager.tabs.updateInputTabHeader(inputNum, "");

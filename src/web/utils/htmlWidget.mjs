@@ -65,9 +65,11 @@ class HTMLWidget extends WidgetType {
      */
     replaceControlChars(textNode) {
         const val = escapeControlChars(textNode.nodeValue, true, this.view.state.lineBreak);
-        const node = document.createElement("null");
-        node.innerHTML = val;
-        textNode.parentNode.replaceChild(node, textNode);
+        if (val.length !== textNode.nodeValue.length) {
+            const node = document.createElement("span");
+            node.innerHTML = val;
+            textNode.parentNode.replaceChild(node, textNode);
+        }
     }
 
 }
@@ -119,8 +121,7 @@ export function htmlPlugin(htmlOutput) {
                 }
             }
         }, {
-            decorations: v => v.decorations,
-
+            decorations: v => v.decorations
         }
     );
 

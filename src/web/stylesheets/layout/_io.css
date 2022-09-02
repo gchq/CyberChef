@@ -224,7 +224,7 @@
 #output-file {
     position: absolute;
     left: 0;
-    bottom: 0;
+    top: 50%;
     width: 100%;
     display: none;
 }
@@ -446,6 +446,10 @@
 
 /* Status bar */
 
+.cm-panel input::placeholder {
+    font-size: 12px !important;
+}
+
 .ͼ2 .cm-panels {
     background-color: var(--secondary-background-colour);
     border-color: var(--secondary-border-colour);
@@ -509,12 +513,38 @@
     background-color: #ddd
 }
 
-/* Show the dropup menu on hover */
-.cm-status-bar-select:hover .cm-status-bar-select-content {
-    display: block;
-}
-
 /* Change the background color of the dropup button when the dropup content is shown */
 .cm-status-bar-select:hover .cm-status-bar-select-btn {
     background-color: #f1f1f1;
+}
+
+/* The search field */
+.cm-status-bar-filter-input {
+    box-sizing: border-box;
+    font-size: 12px;
+    padding-left: 10px !important;
+    border: none;
+}
+
+.cm-status-bar-filter-search {
+    border-top: 1px solid #ddd;
+}
+
+/* Show the dropup menu */
+.cm-status-bar-select .show {
+    display: block;
+}
+
+.cm-status-bar-select-scroll {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.chr-enc-value {
+    max-width: 150px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
 }

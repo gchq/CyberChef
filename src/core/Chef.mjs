@@ -68,16 +68,10 @@ class Chef {
         // Present the raw result
         await recipe.present(this.dish);
 
-        // Depending on the size of the output, we may send it back as a string or an ArrayBuffer.
-        // This can prevent unnecessary casting as an ArrayBuffer can be easily downloaded as a file.
-        // The threshold is specified in KiB.
-        const threshold = (options.ioDisplayThreshold || 1024) * 1024;
         const returnType =
             this.dish.type === Dish.HTML ?
                 Dish.HTML :
-                this.dish.size > threshold ?
-                    Dish.ARRAY_BUFFER :
-                    Dish.STRING;
+                Dish.ARRAY_BUFFER;
 
         return {
             dish: rawDish,

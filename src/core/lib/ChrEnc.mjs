@@ -9,7 +9,7 @@
 /**
  * Character encoding format mappings.
  */
-export const IO_FORMAT = {
+export const CHR_ENC_CODE_PAGES = {
     "UTF-8 (65001)": 65001,
     "UTF-7 (65000)": 65000,
     "UTF-16LE (1200)": 1200,
@@ -163,6 +163,17 @@ export const IO_FORMAT = {
     "HZ-GB2312 Simplified Chinese (52936)": 52936,
     "Simplified Chinese GB18030 (54936)": 54936,
 };
+
+
+export const CHR_ENC_SIMPLE_LOOKUP = {};
+export const CHR_ENC_SIMPLE_REVERSE_LOOKUP = {};
+
+for (const name in CHR_ENC_CODE_PAGES) {
+    const simpleName = name.match(/(^.+)\([\d/]+\)$/)[1];
+
+    CHR_ENC_SIMPLE_LOOKUP[simpleName] = CHR_ENC_CODE_PAGES[name];
+    CHR_ENC_SIMPLE_REVERSE_LOOKUP[CHR_ENC_CODE_PAGES[name]] = simpleName;
+}
 
 /**
  * Unicode Normalisation Forms

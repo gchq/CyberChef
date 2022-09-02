@@ -5,6 +5,7 @@
  */
 
 import {showPanel} from "@codemirror/view";
+import {CHR_ENC_SIMPLE_LOOKUP, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/lib/ChrEnc.mjs";
 
 /**
  * A Status bar extension for CodeMirror
@@ -19,6 +20,10 @@ class StatusBarPanel {
         this.label = opts.label;
         this.bakeStats = opts.bakeStats ? opts.bakeStats : null;
         this.eolHandler = opts.eolHandler;
+        this.chrEncHandler = opts.chrEncHandler;
+
+        this.eolVal = null;
+        this.chrEncVal = null;
 
         this.dom = this.buildDOM();
     }
@@ -40,9 +45,34 @@ class StatusBarPanel {
         dom.appendChild(rhs);
 
         // Event listeners
-        dom.addEventListener("click", this.eolSelectClick.bind(this), false);
+        dom.querySelectorAll(".cm-status-bar-select-btn").forEach(
+            el => el.addEventListener("click", this.showDropUp.bind(this), false)
+        );
+        dom.querySelector(".eol-select").addEventListener("click", this.eolSelectClick.bind(this), false);
+        dom.querySelector(".chr-enc-select").addEventListener("click", this.chrEncSelectClick.bind(this), false);
+        dom.querySelector(".cm-status-bar-filter-input").addEventListener("keyup", this.chrEncFilter.bind(this), false);
 
         return dom;
+    }
+
+    /**
+     * Handler for dropup clicks
+     * Shows/Hides the dropup
+     * @param {Event} e
+     */
+    showDropUp(e) {
+        const el = e.target
+            .closest(".cm-status-bar-select")
+            .querySelector(".cm-status-bar-select-content");
+
+        el.classList.add("show");
+
+        // Focus the filter input if present
+        const filter = el.querySelector(".cm-status-bar-filter-input");
+        if (filter) filter.focus();
+
+        // Set up a listener to close the menu if the user clicks outside of it
+        hideOnClickOutside(el, e);
     }
 
     /**
@@ -51,8 +81,6 @@ class StatusBarPanel {
      * @param {Event} e
      */
     eolSelectClick(e) {
-        e.preventDefault();
-
         const eolLookup = {
             "LF": "\u000a",
             "VT": "\u000b",
@@ -65,8 +93,46 @@ class StatusBarPanel {
         };
         const eolval = eolLookup[e.target.getAttribute("data-val")];
 
+        if (eolval === undefined) return;
+
         // Call relevant EOL change handler
         this.eolHandler(eolval);
+        hideElement(e.target.closest(".cm-status-bar-select-content"));
+    }
+
+    /**
+     * Handler for Chr Enc Select clicks
+     * Sets the character encoding
+     * @param {Event} e
+     */
+    chrEncSelectClick(e) {
+        const chrEncVal = parseInt(e.target.getAttribute("data-val"), 10);
+
+        if (isNaN(chrEncVal)) return;
+
+        this.chrEncHandler(chrEncVal);
+        this.updateCharEnc(chrEncVal);
+        hideElement(e.target.closest(".cm-status-bar-select-content"));
+    }
+
+    /**
+     * Handler for Chr Enc keyup events
+     * Filters the list of selectable character encodings
+     * @param {Event} e
+     */
+    chrEncFilter(e) {
+        const input = e.target;
+        const filter = input.value.toLowerCase();
+        const div = input.closest(".cm-status-bar-select-content");
+        const a = div.getElementsByTagName("a");
+        for (let i = 0; i < a.length; i++) {
+            const txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toLowerCase().includes(filter)) {
+                a[i].style.display = "block";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
     }
 
     /**
@@ -121,33 +187,48 @@ class StatusBarPanel {
     }
 
     /**
-     * Gets the current character encoding of the document
-     * @param {EditorState} state
-     */
-    updateCharEnc(state) {
-        // const charenc = this.dom.querySelector("#char-enc-value");
-        // TODO
-        // charenc.textContent = "TODO";
-    }
-
-    /**
-     * Returns what the current EOL separator is set to
+     * Sets the current EOL separator in the status bar
      * @param {EditorState} state
      */
     updateEOL(state) {
+        if (state.lineBreak === this.eolVal) return;
+
         const eolLookup = {
-            "\u000a": "LF",
-            "\u000b": "VT",
-            "\u000c": "FF",
-            "\u000d": "CR",
-            "\u000d\u000a": "CRLF",
-            "\u0085": "NEL",
-            "\u2028": "LS",
-            "\u2029": "PS"
+            "\u000a": ["LF", "Line Feed"],
+            "\u000b": ["VT", "Vertical Tab"],
+            "\u000c": ["FF", "Form Feed"],
+            "\u000d": ["CR", "Carriage Return"],
+            "\u000d\u000a": ["CRLF", "Carriage Return + Line Feed"],
+            "\u0085": ["NEL", "Next Line"],
+            "\u2028": ["LS", "Line Separator"],
+            "\u2029": ["PS", "Paragraph Separator"]
         };
 
         const val = this.dom.querySelector(".eol-value");
-        val.textContent = eolLookup[state.lineBreak];
+        const button = val.closest(".cm-status-bar-select-btn");
+        const eolName = eolLookup[state.lineBreak];
+        val.textContent = eolName[0];
+        button.setAttribute("title", `End of line sequence: ${eolName[1]}`);
+        button.setAttribute("data-original-title", `End of line sequence: ${eolName[1]}`);
+        this.eolVal = state.lineBreak;
+    }
+
+
+    /**
+     * Gets the current character encoding of the document
+     * @param {number} chrEncVal
+     */
+    updateCharEnc(chrEncVal) {
+        if (chrEncVal === this.chrEncVal) return;
+
+        const name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
+
+        const val = this.dom.querySelector(".chr-enc-value");
+        const button = val.closest(".cm-status-bar-select-btn");
+        val.textContent = name;
+        button.setAttribute("title", `${this.label} character encoding: ${name}`);
+        button.setAttribute("data-original-title", `${this.label} character encoding: ${name}`);
+        this.chrEncVal = chrEncVal;
     }
 
     /**
@@ -166,6 +247,19 @@ class StatusBarPanel {
         } else {
             bakingTimeInfo.style.display = "none";
         }
+    }
+
+    /**
+     * Updates the sizing of elements that need to fit correctly
+     * @param {EditorView} view
+     */
+    updateSizing(view) {
+        const viewHeight = view.contentDOM.clientHeight;
+        this.dom.querySelectorAll(".cm-status-bar-select-scroll").forEach(
+            el => {
+                el.style.maxHeight = (viewHeight - 50) + "px";
+            }
+        );
     }
 
     /**
@@ -197,38 +291,97 @@ class StatusBarPanel {
     /**
      * Builds the Right-hand-side widgets
      * Event listener set up in Manager
+     *
      * @returns {string}
      */
     constructRHS() {
+        const chrEncOptions = Object.keys(CHR_ENC_SIMPLE_LOOKUP).map(name =>
+            `<a href="#" draggable="false" data-val="${CHR_ENC_SIMPLE_LOOKUP[name]}">${name}</a>`
+        ).join("");
+
         return `
             <span class="baking-time-info" style="display: none" data-toggle="tooltip" title="Baking time">
                 <i class="material-icons">schedule</i>
                 <span class="baking-time-value"></span>ms
             </span>
 
-            <span data-toggle="tooltip" title="${this.label} character encoding">
-                <i class="material-icons">language</i>
-                <span class="char-enc-value">UTF-16</span>
-            </span>
+            <div class="cm-status-bar-select chr-enc-select">
+                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-placement="left" title="${this.label} character encoding">
+                    <i class="material-icons">text_fields</i> <span class="chr-enc-value">Raw Bytes</span>
+                </span>
+                <div class="cm-status-bar-select-content">
+                    <div class="cm-status-bar-select-scroll no-select">
+                        <a href="#" draggable="false" data-val="0">Raw Bytes</a>
+                        ${chrEncOptions}
+                    </div>
+                    <div class="input-group cm-status-bar-filter-search">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="material-icons">search</i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control cm-status-bar-filter-input" placeholder="Filter...">
+                    </div>
+                </div>
+            </div>
 
             <div class="cm-status-bar-select eol-select">
                 <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-placement="left" title="End of line sequence">
                     <i class="material-icons">keyboard_return</i> <span class="eol-value"></span>
                 </span>
-                <div class="cm-status-bar-select-content">
-                    <a href="#" data-val="LF">Line Feed, U+000A</a>
-                    <a href="#" data-val="VT">Vertical Tab, U+000B</a>
-                    <a href="#" data-val="FF">Form Feed, U+000C</a>
-                    <a href="#" data-val="CR">Carriage Return, U+000D</a>
-                    <a href="#" data-val="CRLF">CR+LF, U+000D U+000A</a>
-                    <!-- <a href="#" data-val="NL">Next Line, U+0085</a> This causes problems. -->
-                    <a href="#" data-val="LS">Line Separator, U+2028</a>
-                    <a href="#" data-val="PS">Paragraph Separator, U+2029</a>
+                <div class="cm-status-bar-select-content no-select">
+                    <a href="#" draggable="false" data-val="LF">Line Feed, U+000A</a>
+                    <a href="#" draggable="false" data-val="VT">Vertical Tab, U+000B</a>
+                    <a href="#" draggable="false" data-val="FF">Form Feed, U+000C</a>
+                    <a href="#" draggable="false" data-val="CR">Carriage Return, U+000D</a>
+                    <a href="#" draggable="false" data-val="CRLF">CR+LF, U+000D U+000A</a>
+                    <!-- <a href="#" draggable="false" data-val="NL">Next Line, U+0085</a> This causes problems. -->
+                    <a href="#" draggable="false" data-val="LS">Line Separator, U+2028</a>
+                    <a href="#" draggable="false" data-val="PS">Paragraph Separator, U+2029</a>
                 </div>
             </div>`;
     }
 
 }
+
+const elementsWithListeners = {};
+
+/**
+ * Hides the provided element when a click is made outside of it
+ * @param {Element} element
+ * @param {Event} instantiatingEvent
+ */
+function hideOnClickOutside(element, instantiatingEvent) {
+    /**
+     * Handler for document click events
+     * Closes element if click is outside it.
+     * @param {Event} event
+     */
+    const outsideClickListener = event => {
+        // Don't trigger if we're clicking inside the element, or if the element
+        // is not visible, or if this is the same click event that opened it.
+        if (!element.contains(event.target) &&
+            event.timeStamp !== instantiatingEvent.timeStamp) {
+            hideElement(element);
+        }
+    };
+
+    if (!Object.keys(elementsWithListeners).includes(element)) {
+        document.addEventListener("click", outsideClickListener);
+        elementsWithListeners[element] = outsideClickListener;
+    }
+}
+
+/**
+ * Hides the specified element and removes the click listener for it
+ * @param {Element} element
+ */
+function hideElement(element) {
+    element.classList.remove("show");
+    document.removeEventListener("click", elementsWithListeners[element]);
+    delete elementsWithListeners[element];
+}
+
 
 /**
  * A panel constructor factory building a panel that re-counts the stats every time the document changes.
@@ -240,7 +393,7 @@ function makePanel(opts) {
 
     return (view) => {
         sbPanel.updateEOL(view.state);
-        sbPanel.updateCharEnc(view.state);
+        sbPanel.updateCharEnc(opts.initialChrEncVal);
         sbPanel.updateBakeStats();
         sbPanel.updateStats(view.state.doc);
         sbPanel.updateSelection(view.state, false);
@@ -250,8 +403,10 @@ function makePanel(opts) {
             update(update) {
                 sbPanel.updateEOL(update.state);
                 sbPanel.updateSelection(update.state, update.selectionSet);
-                sbPanel.updateCharEnc(update.state);
                 sbPanel.updateBakeStats();
+                if (update.geometryChanged) {
+                    sbPanel.updateSizing(update.view);
+                }
                 if (update.docChanged) {
                     sbPanel.updateStats(update.state.doc);
                 }

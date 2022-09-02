@@ -9,6 +9,7 @@ import Utils, {debounce} from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
+import cptable from "codepage";
 
 import {
     EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor
@@ -48,6 +49,7 @@ class OutputWaiter {
             html: "",
             changed: false
         };
+        this.outputChrEnc = 0;
         this.initEditor();
 
         this.outputs = {};
@@ -86,7 +88,9 @@ class OutputWaiter {
                 statusBar({
                     label: "Output",
                     bakeStats: this.bakeStats,
-                    eolHandler: this.eolChange.bind(this)
+                    eolHandler: this.eolChange.bind(this),
+                    chrEncHandler: this.chrEncChange.bind(this),
+                    initialChrEncVal: this.outputChrEnc
                 }),
                 htmlPlugin(this.htmlOutput),
                 copyOverride(),
@@ -119,17 +123,27 @@ class OutputWaiter {
     /**
      * Handler for EOL change events
      * Sets the line separator
+     * @param {string} eolVal
      */
-    eolChange(eolval) {
+    eolChange(eolVal) {
         const oldOutputVal = this.getOutput();
 
         // Update the EOL value
         this.outputEditorView.dispatch({
-            effects: this.outputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolval))
+            effects: this.outputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
         });
 
         // Reset the output so that lines are recalculated, preserving the old EOL values
         this.setOutput(oldOutputVal);
+    }
+
+    /**
+     * Handler for Chr Enc change events
+     * Sets the output character encoding
+     * @param {number} chrEncVal
+     */
+    chrEncChange(chrEncVal) {
+        this.outputChrEnc = chrEncVal;
     }
 
     /**
@@ -193,7 +207,8 @@ class OutputWaiter {
         });
 
         // Execute script sections
-        const scriptElements = document.getElementById("output-html").querySelectorAll("script");
+        const outputHTML = document.getElementById("output-html");
+        const scriptElements = outputHTML ? outputHTML.querySelectorAll("script") : [];
         for (let i = 0; i < scriptElements.length; i++) {
             try {
                 eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
@@ -405,8 +420,6 @@ class OutputWaiter {
     removeAllOutputs() {
         this.outputs = {};
 
-        this.resetSwitch();
-
         const tabsList = document.getElementById("output-tabs");
         const tabsListChildren = tabsList.children;
 
@@ -418,19 +431,18 @@ class OutputWaiter {
     }
 
     /**
-     * Sets the output in the output textarea.
+     * Sets the output in the output pane.
      *
      * @param {number} inputNum
      */
     async set(inputNum) {
+        inputNum = parseInt(inputNum, 10);
         if (inputNum !== this.manager.tabs.getActiveOutputTab() ||
             !this.outputExists(inputNum)) return;
         this.toggleLoader(true);
 
         return new Promise(async function(resolve, reject) {
-            const output = this.outputs[inputNum],
-                activeTab = this.manager.tabs.getActiveOutputTab();
-            if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
+            const output = this.outputs[inputNum];
 
             const outputFile = document.getElementById("output-file");
 
@@ -491,17 +503,33 @@ class OutputWaiter {
                 switch (output.data.type) {
                     case "html":
                         outputFile.style.display = "none";
+                        // TODO what if the HTML content needs to be in a certain character encoding?
+                        // Grey out chr enc selection? Set back to Raw Bytes?
 
                         this.setHTMLOutput(output.data.result);
                         break;
-                    case "ArrayBuffer":
+                    case "ArrayBuffer": {
                         this.outputTextEl.style.display = "block";
+                        outputFile.style.display = "none";
 
                         this.clearHTMLOutput();
-                        this.setOutput("");
 
-                        this.setFile(await this.getDishBuffer(output.data.dish), activeTab);
+                        let outputVal = "";
+                        if (this.outputChrEnc === 0) {
+                            outputVal = Utils.arrayBufferToStr(output.data.result);
+                        } else {
+                            try {
+                                outputVal = cptable.utils.decode(this.outputChrEnc, new Uint8Array(output.data.result));
+                            } catch (err) {
+                                outputVal = err;
+                            }
+                        }
+
+                        this.setOutput(outputVal);
+
+                        // this.setFile(await this.getDishBuffer(output.data.dish), activeTab);
                         break;
+                    }
                     case "string":
                     default:
                         this.outputTextEl.style.display = "block";
@@ -1333,7 +1361,6 @@ class OutputWaiter {
      */
     async switchClick() {
         const activeTab = this.manager.tabs.getActiveOutputTab();
-        const transferable = [];
 
         const switchButton = document.getElementById("switch");
         switchButton.classList.add("spin");
@@ -1341,82 +1368,15 @@ class OutputWaiter {
         switchButton.firstElementChild.innerHTML = "autorenew";
         $(switchButton).tooltip("hide");
 
-        let active = await this.getDishBuffer(this.getOutputDish(activeTab));
+        const activeData = await this.getDishBuffer(this.getOutputDish(activeTab));
 
-        if (!this.outputExists(activeTab)) {
-            this.resetSwitchButton();
-            return;
-        }
-
-        if (this.outputs[activeTab].data.type === "string" &&
-            active.byteLength <= this.app.options.ioDisplayThreshold * 1024) {
-            const dishString = await this.getDishStr(this.getOutputDish(activeTab));
-            active = dishString;
-        } else {
-            transferable.push(active);
-        }
-
-        this.manager.input.inputWorker.postMessage({
-            action: "inputSwitch",
-            data: {
+        if (this.outputExists(activeTab)) {
+            this.manager.input.set({
                 inputNum: activeTab,
-                outputData: active
-            }
-        }, transferable);
-    }
-
-    /**
-     * Handler for when the inputWorker has switched the inputs.
-     * Stores the old input
-     *
-     * @param {object} switchData
-     * @param {number} switchData.inputNum
-     * @param {string | object} switchData.data
-     * @param {ArrayBuffer} switchData.data.fileBuffer
-     * @param {number} switchData.data.size
-     * @param {string} switchData.data.type
-     * @param {string} switchData.data.name
-     */
-    inputSwitch(switchData) {
-        this.switchOrigData = switchData;
-        document.getElementById("undo-switch").disabled = false;
-
-        this.resetSwitchButton();
-
-    }
-
-    /**
-     * Handler for undo switch click events.
-     * Removes the output from the input and replaces the input that was removed.
-     */
-    undoSwitchClick() {
-        this.manager.input.updateInputObj(this.switchOrigData.inputNum, this.switchOrigData.data);
-
-        this.manager.input.fileLoaded(this.switchOrigData.inputNum);
-
-        this.resetSwitch();
-    }
-
-    /**
-     * Removes the switch data and resets the switch buttons
-     */
-    resetSwitch() {
-        if (this.switchOrigData !== undefined) {
-            delete this.switchOrigData;
+                input: activeData
+            });
         }
 
-        const undoSwitch = document.getElementById("undo-switch");
-        undoSwitch.disabled = true;
-        $(undoSwitch).tooltip("hide");
-
-        this.resetSwitchButton();
-    }
-
-    /**
-     * Resets the switch button to its usual state
-     */
-    resetSwitchButton() {
-        const switchButton = document.getElementById("switch");
         switchButton.classList.remove("spin");
         switchButton.disabled = false;
         switchButton.firstElementChild.innerHTML = "open_in_browser";

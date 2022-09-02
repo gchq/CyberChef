@@ -101,14 +101,17 @@ async function bake(data) {
     // Ensure the relevant modules are loaded
     self.loadRequiredModules(data.recipeConfig);
     try {
-        self.inputNum = (data.inputNum !== undefined) ? data.inputNum : -1;
+        self.inputNum = data.inputNum === undefined ? -1 : data.inputNum;
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
             data.options         // Options set by the user
         );
 
-        const transferable = (data.input instanceof ArrayBuffer) ? [data.input] : undefined;
+        const transferable = (response.dish.value instanceof ArrayBuffer) ?
+            [response.dish.value] :
+            undefined;
+
         self.postMessage({
             action: "bakeComplete",
             data: Object.assign(response, {
