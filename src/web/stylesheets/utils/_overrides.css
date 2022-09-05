@@ -93,7 +93,8 @@ select.form-control:not([size]):not([multiple]), select.custom-file-control:not(
 [class^="bmd-label"],
 .form-control,
 .is-focused .form-control {
-    color: var(--primary-font-colour);
+    color: var(--primary-font-colour) !important;
+    background-color: var(--primary-background-colour) !important;
 }
 
 .form-control,
