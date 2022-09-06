@@ -270,7 +270,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     removeClick(e) {
-        e.target.parentNode.parentNode.remove(e)
+        e.target.parentNode.parentNode.remove(e);
         this.opRemove(e);
     }
 
