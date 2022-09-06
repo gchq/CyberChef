@@ -263,6 +263,19 @@ class RecipeWaiter {
 
 
     /**
+     * Handler for remove click events.
+     * Updates the icon status.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    removeClick(e) {
+        e.target.parentNode.parentNode.remove(e)
+        this.opRemove(e);
+    }
+
+
+    /**
      * Handler for operation doubleclick events.
      * Removes the operation from the recipe and auto bakes.
      *
