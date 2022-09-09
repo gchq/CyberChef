@@ -49,7 +49,7 @@
     "babel-loader": "^8.2.5",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-transform-builtin-extend": "1.1.2",
-    "chromedriver": "^101.0.0",
+    "chromedriver": "^103.0.0",
     "cli-progress": "^3.11.1",
     "colors": "^1.4.0",
     "copy-webpack-plugin": "^11.0.0",
