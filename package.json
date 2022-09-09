@@ -154,7 +154,7 @@
     "split.js": "^1.6.5",
     "ssdeep.js": "0.0.3",
     "stream-browserify": "^3.0.0",
-    "tesseract.js": "2.1.5",
+    "tesseract.js": "3.0.2",
     "ua-parser-js": "^1.0.2",
     "unorm": "^1.6.0",
     "utf8": "^3.0.0",
