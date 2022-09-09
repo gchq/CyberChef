@@ -77,7 +77,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
 By manipulating CyberChef's URL hash, you can change the initial settings with which the page opens.
 The format is `https://gchq.github.io/CyberChef/#recipe=Operation()&input=...`
 
-Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`. 
+Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`.
 
 
 ## Browser support
@@ -90,7 +90,7 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier do not work in `v12`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v16`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
 
 
 ## Contributing
