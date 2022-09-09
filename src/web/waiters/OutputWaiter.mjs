@@ -146,6 +146,8 @@ class OutputWaiter {
      */
     chrEncChange(chrEncVal) {
         this.outputChrEnc = chrEncVal;
+        // Reset the output, forcing it to re-decode the data with the new character encoding
+        this.setOutput(this.currentOutputCache, true);
     }
 
     /**
@@ -173,10 +175,11 @@ class OutputWaiter {
     /**
      * Sets the value of the current output
      * @param {string|ArrayBuffer} data
+     * @param {boolean} [force=false]
      */
-    setOutput(data) {
+    setOutput(data, force=false) {
         // Don't do anything if the output hasn't changed
-        if (data === this.currentOutputCache) return;
+        if (!force && data === this.currentOutputCache) return;
         this.currentOutputCache = data;
 
         // If data is an ArrayBuffer, convert to a string in the correct character encoding

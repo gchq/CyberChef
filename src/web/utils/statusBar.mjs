@@ -81,6 +81,9 @@ class StatusBarPanel {
      * @param {Event} e
      */
     eolSelectClick(e) {
+        // preventDefault is required to stop the URL being modified and popState being triggered
+        e.preventDefault();
+
         const eolLookup = {
             "LF": "\u000a",
             "VT": "\u000b",
@@ -106,6 +109,9 @@ class StatusBarPanel {
      * @param {Event} e
      */
     chrEncSelectClick(e) {
+        // preventDefault is required to stop the URL being modified and popState being triggered
+        e.preventDefault(); // TODO - this breaks the menus when you click the button itself
+
         const chrEncVal = parseInt(e.target.getAttribute("data-val"), 10);
 
         if (isNaN(chrEncVal)) return;
@@ -366,9 +372,9 @@ function hideOnClickOutside(element, instantiatingEvent) {
         }
     };
 
-    if (!Object.keys(elementsWithListeners).includes(element)) {
-        document.addEventListener("click", outsideClickListener);
+    if (!Object.prototype.hasOwnProperty.call(elementsWithListeners, element)) {
         elementsWithListeners[element] = outsideClickListener;
+        document.addEventListener("click", elementsWithListeners[element], false);
     }
 }
 
@@ -378,7 +384,7 @@ function hideOnClickOutside(element, instantiatingEvent) {
  */
 function hideElement(element) {
     element.classList.remove("show");
-    document.removeEventListener("click", elementsWithListeners[element]);
+    document.removeEventListener("click", elementsWithListeners[element], false);
     delete elementsWithListeners[element];
 }
 
