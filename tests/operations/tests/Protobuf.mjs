@@ -40,10 +40,10 @@ TestRegister.addTests([
             "Apple": [
                 28
             ],
-            "Banana": "You",
             "Carrot": [
                 "Me"
-            ]
+            ],
+            "Banana": "You"
         }, null, 4),
         recipeConfig: [
             {
@@ -72,10 +72,10 @@ TestRegister.addTests([
                 "Apple": [
                     28
                 ],
-                "Banana": "You",
                 "Carrot": [
                     "Me"
-                ]
+                ],
+                "Banana": "You"
             },
             "Unknown Fields": {
                 "4": 43,
@@ -111,10 +111,10 @@ TestRegister.addTests([
             "Apple": [
                 28
             ],
-            "Banana": "You",
             "Carrot": [
                 "Me"
             ],
+            "Banana": "You",
             "Date": 43,
             "Elderberry": {
                 "Fig": "abc123",
@@ -154,10 +154,10 @@ TestRegister.addTests([
         input: "0d1c0000001203596f751a024d65202b2a0a0a06616263313233120031ba32a96cc10200003801",
         expectedOutput: JSON.stringify({
             "Test": {
-                "Banana (string)": "You",
                 "Carrot (string)": [
                     "Me"
                 ],
+                "Banana (string)": "You",
                 "Date (int32)": 43,
                 "Imbe (Options)": "Option1"
             },
