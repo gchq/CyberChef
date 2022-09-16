@@ -54,7 +54,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
      - Whenever you modify the input or the recipe, CyberChef will automatically "bake" for you and produce the output immediately.
      - This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).
  - Automated encoding detection
-     - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect which encodings your data is under. If it finds a suitable operation which can make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
+     - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect which encodings your data is under. If it finds a suitable operation that make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
  - Breakpoints
      - You can set breakpoints on any operation in your recipe to pause execution before running it.
      - You can also step through the recipe one operation at a time to see what the data looks like at each stage.
@@ -66,7 +66,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Highlighting
      - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][11]).
  - Save to file and load from file
-     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
+     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however, some operations may take a very long time to run over this much data.
  - CyberChef is entirely client-side
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be downloaded and run locally. You can use the link in the top left corner of the app to download a full copy of CyberChef and drop it into a virtual machine, share it with other people, or host it in a closed network.
@@ -74,10 +74,10 @@ You can use as many operations as you like in simple or complex ways. Some examp
 
 ## Deep linking
 
-By manipulation of CyberChef's URL hash, you can change the initial settings with which the page opens.
+By manipulating CyberChef's URL hash, you can change the initial settings with which the page opens.
 The format is `https://gchq.github.io/CyberChef/#recipe=Operation()&input=...`
 
-Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`. 
+Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`.
 
 
 ## Browser support
@@ -90,12 +90,12 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier does not work in `v12`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v16`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
 
 
 ## Contributing
 
-Contributing a new operation to CyberChef is super easy! There is a quickstart script which will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
+Contributing a new operation to CyberChef is super easy! The quickstart script will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
 
 An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
 

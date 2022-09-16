@@ -15,7 +15,7 @@ jobs:
     - name: Set node version
       uses: actions/setup-node@v1
       with:
-        node-version: '17.x'
+        node-version: '18.x'
 
     - name: Install
       run: |

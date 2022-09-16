@@ -165,19 +165,6 @@ module.exports = {
                 ]
             },
             {
-                test: /\.scss$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: "../"
-                        }
-                    },
-                    "css-loader",
-                    "sass-loader",
-                ]
-            },
-            {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
                 type: "asset/resource",
             },

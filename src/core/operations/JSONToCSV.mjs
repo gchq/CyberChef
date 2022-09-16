@@ -114,8 +114,11 @@ class JSONToCSV extends Operation {
      * @returns {string}
      */
     escapeCellContents(data, force=false) {
-        if (typeof data === "number") data = data.toString();
-        if (force && typeof data !== "string") data = JSON.stringify(data);
+        if (data !== "string") {
+            const isPrimitive = data == null || typeof data !== "object";
+            if (isPrimitive) data = `${data}`;
+            else if (force) data = JSON.stringify(data);
+        }
 
         // Double quotes should be doubled up
         data = data.replace(/"/g, '""');
