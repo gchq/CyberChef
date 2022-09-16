@@ -167,6 +167,7 @@
   "scripts": {
     "start": "npx grunt dev",
     "build": "npx grunt prod",
+    "node": "npx grunt node",
     "repl": "node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings src/node/repl.mjs",
     "test": "npx grunt configTests && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation tests/node/index.mjs && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation tests/operations/index.mjs",
     "testnodeconsumer": "npx grunt testnodeconsumer",
