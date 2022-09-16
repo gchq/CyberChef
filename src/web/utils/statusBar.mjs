@@ -21,6 +21,7 @@ class StatusBarPanel {
         this.bakeStats = opts.bakeStats ? opts.bakeStats : null;
         this.eolHandler = opts.eolHandler;
         this.chrEncHandler = opts.chrEncHandler;
+        this.chrEncGetter = opts.chrEncGetter;
 
         this.eolVal = null;
         this.chrEncVal = null;
@@ -222,9 +223,9 @@ class StatusBarPanel {
 
     /**
      * Gets the current character encoding of the document
-     * @param {number} chrEncVal
      */
-    updateCharEnc(chrEncVal) {
+    updateCharEnc() {
+        const chrEncVal = this.chrEncGetter();
         if (chrEncVal === this.chrEncVal) return;
 
         const name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
@@ -399,7 +400,7 @@ function makePanel(opts) {
 
     return (view) => {
         sbPanel.updateEOL(view.state);
-        sbPanel.updateCharEnc(opts.initialChrEncVal);
+        sbPanel.updateCharEnc();
         sbPanel.updateBakeStats();
         sbPanel.updateStats(view.state.doc);
         sbPanel.updateSelection(view.state, false);
@@ -408,6 +409,7 @@ function makePanel(opts) {
             "dom": sbPanel.dom,
             update(update) {
                 sbPanel.updateEOL(update.state);
+                sbPanel.updateCharEnc();
                 sbPanel.updateSelection(update.state, update.selectionSet);
                 sbPanel.updateBakeStats();
                 if (update.geometryChanged) {

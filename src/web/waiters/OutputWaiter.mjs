@@ -92,7 +92,7 @@ class OutputWaiter {
                     bakeStats: this.bakeStats,
                     eolHandler: this.eolChange.bind(this),
                     chrEncHandler: this.chrEncChange.bind(this),
-                    initialChrEncVal: this.outputChrEnc
+                    chrEncGetter: this.getChrEnc.bind(this)
                 }),
                 htmlPlugin(this.htmlOutput),
                 copyOverride(),
@@ -145,9 +145,20 @@ class OutputWaiter {
      * @param {number} chrEncVal
      */
     chrEncChange(chrEncVal) {
+        if (typeof chrEncVal !== "number") return;
         this.outputChrEnc = chrEncVal;
         // Reset the output, forcing it to re-decode the data with the new character encoding
         this.setOutput(this.currentOutputCache, true);
+        // Update the URL manually since we aren't firing a statechange event
+        this.app.updateURL(true);
+    }
+
+    /**
+     * Getter for the input character encoding
+     * @returns {number}
+     */
+    getChrEnc() {
+        return this.outputChrEnc;
     }
 
     /**

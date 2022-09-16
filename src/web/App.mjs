@@ -451,6 +451,7 @@ class App {
      * Searches the URI parameters for recipe and input parameters.
      * If recipe is present, replaces the current recipe with the recipe provided in the URI.
      * If input is present, decodes and sets the input to the one provided in the URI.
+     * If character encodings are present, sets them appropriately.
      * If theme is present, uses the theme.
      *
      * @fires Manager#statechange
@@ -488,6 +489,16 @@ class App {
                 const inputData = fromBase64(this.uriParams.input);
                 this.setInput(inputData);
             } catch (err) {}
+        }
+
+        // Input Character Encoding
+        if (this.uriParams.ienc) {
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10));
+        }
+
+        // Output Character Encoding
+        if (this.uriParams.oenc) {
+            this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10));
         }
 
         // Read in theme from URI params
@@ -731,19 +742,19 @@ class App {
         debounce(function() {
             this.progress = 0;
             this.autoBake();
-            this.updateTitle(true, null, true);
+            this.updateURL(true, null, true);
         }, 20, "stateChange", this, [])();
     }
 
 
     /**
-     * Update the page title to contain the new recipe
+     * Update the page title and URL to contain the new recipe
      *
      * @param {boolean} includeInput
-     * @param {string} input
+     * @param {string} [input=null]
      * @param {boolean} [changeUrl=true]
      */
-    updateTitle(includeInput, input, changeUrl=true) {
+    updateURL(includeInput, input=null, changeUrl=true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";

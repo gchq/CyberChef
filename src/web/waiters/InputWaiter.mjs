@@ -89,7 +89,7 @@ class InputWaiter {
                     label: "Input",
                     eolHandler: this.eolChange.bind(this),
                     chrEncHandler: this.chrEncChange.bind(this),
-                    initialChrEncVal: this.inputChrEnc
+                    chrEncGetter: this.getChrEnc.bind(this)
                 }),
 
                 // Mutable state
@@ -148,8 +148,17 @@ class InputWaiter {
      * @param {number} chrEncVal
      */
     chrEncChange(chrEncVal) {
+        if (typeof chrEncVal !== "number") return;
         this.inputChrEnc = chrEncVal;
         this.inputChange();
+    }
+
+    /**
+     * Getter for the input character encoding
+     * @returns {number}
+     */
+    getChrEnc() {
+        return this.inputChrEnc;
     }
 
     /**
@@ -418,7 +427,7 @@ class InputWaiter {
                 this.app.handleError(r.data);
                 break;
             case "setUrl":
-                this.setUrl(r.data);
+                this.app.updateURL(r.data.includeInput, r.data.input);
                 break;
             case "getInput":
             case "getInputNums":
@@ -486,10 +495,7 @@ class InputWaiter {
             // Set URL to current input
             if (inputVal.length >= 0 && inputVal.length <= 51200) {
                 const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
-                this.setUrl({
-                    includeInput: true,
-                    input: inputStr
-                });
+                this.app.updateURL(true, inputStr);
             }
 
             if (!silent) window.dispatchEvent(this.manager.statechange);
@@ -616,10 +622,8 @@ class InputWaiter {
 
 
         const recipeStr = buffer.byteLength < 51200 ? toBase64(buffer, "A-Za-z0-9+/") : ""; // B64 alphabet with no padding
-        this.setUrl({
-            includeInput: recipeStr.length > 0 && buffer.byteLength < 51200,
-            input: recipeStr
-        });
+        const includeInput = recipeStr.length > 0 && buffer.byteLength < 51200;
+        this.app.updateURL(includeInput, recipeStr);
 
         const transferable = [buffer];
         this.inputWorker.postMessage({
@@ -1325,18 +1329,6 @@ class InputWaiter {
         $("#input-tab-modal").modal("hide");
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
-
-    /**
-     * Update the input URL to the new value
-     *
-     * @param {object} urlData - Object containing the URL data
-     * @param {boolean} urlData.includeInput - If true, the input is included in the title
-     * @param {string} urlData.input - The input data to be included
-     */
-    setUrl(urlData) {
-        this.app.updateTitle(urlData.includeInput, urlData.input, true);
-    }
-
 
 }
 

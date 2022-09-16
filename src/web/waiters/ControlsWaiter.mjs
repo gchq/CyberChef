@@ -138,9 +138,14 @@ class ControlsWaiter {
             }
         }
 
+        const inputChrEnc = this.manager.input.inputChrEnc;
+        const outputChrEnc = this.manager.output.outputChrEnc;
+
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
             includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
+            inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
+            outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined
         ];
 
         const hash = params
