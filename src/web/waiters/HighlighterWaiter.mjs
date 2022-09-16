@@ -5,7 +5,7 @@
  */
 
 import {EditorSelection} from "@codemirror/state";
-
+import {chrEncWidth} from "../../core/lib/ChrEnc.mjs";
 
 /**
  * Waiter to handle events related to highlighting in CyberChef.
@@ -50,12 +50,23 @@ class HighlighterWaiter {
         // Confirm some non-empty ranges are set
         const selectionRanges = e.state.selection.ranges;
 
+        // Adjust offsets based on the width of the character set
+        const inputCharacterWidth = chrEncWidth(this.manager.input.inputChrEnc);
+        const outputCharacterWidth = chrEncWidth(this.manager.output.outputChrEnc);
+        let ratio = 1;
+        if (inputCharacterWidth !== outputCharacterWidth &&
+            inputCharacterWidth !== 0 && outputCharacterWidth !== 0) {
+            ratio = io === "input" ?
+                inputCharacterWidth / outputCharacterWidth :
+                outputCharacterWidth / inputCharacterWidth;
+        }
+
         // Loop through ranges and send request for output offsets for each one
         const direction = io === "input" ? "forward" : "reverse";
         for (const range of selectionRanges) {
             const pos = [{
-                start: range.from,
-                end: range.to
+                start: Math.floor(range.from * ratio),
+                end: Math.floor(range.to * ratio)
             }];
             this.manager.worker.highlight(this.app.getRecipeConfig(), direction, pos);
         }
@@ -80,8 +91,7 @@ class HighlighterWaiter {
 
 
     /**
-     * Adds the relevant HTML to the specified highlight element such that highlighting appears
-     * underneath the correct offset.
+     * Sends selection updates to the relevant EditorView.
      *
      * @param {string} io - The input or output
      * @param {Object[]} ranges - An array of position objects to highlight
