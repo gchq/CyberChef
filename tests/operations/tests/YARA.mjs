@@ -20,5 +20,28 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "YARA Match: hashing rules",
+        input: "Hello World!",
+        expectedOutput: "Input matches rule \"HelloWorldMD5\".\nInput matches rule \"HelloWorldSHA256\".\n",
+        recipeConfig: [
+            {
+                "op": "YARA Rules",
+                "args": [
+                    `import "hash"
+                    rule HelloWorldMD5 {
+                        condition:
+                            hash.md5(0,filesize) == "ed076287532e86365e841e92bfc50d8c"
+                    }
+
+                    rule HelloWorldSHA256 {
+                        condition:
+                            hash.sha256(0,filesize) == "7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
+                    }`,
+                    true, true, true, true
+                ],
+            }
+        ],
+    },
 ]);
 

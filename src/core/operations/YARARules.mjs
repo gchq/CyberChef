@@ -100,7 +100,7 @@ class YARARules extends Operation {
                         }
                         meta = meta.slice(0, -2) + "]";
                     }
-                    const countString = showCounts ? `${matches.size()} time${matches.size() > 1 ? "s" : ""}` : "";
+                    const countString = matches.size() === 0 ? "" : (showCounts ? `${matches.size()} time${matches.size() > 1 ? "s" : ""}` : "");
                     if (matches.size() === 0 || !(showStrings || showLengths)) {
                         matchString += `Input matches rule "${rule.ruleName}"${meta}${countString.length > 0 ? ` ${countString}`: ""}.\n`;
                     } else {

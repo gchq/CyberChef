@@ -128,7 +128,7 @@
     "jsrsasign": "^10.5.23",
     "kbpgp": "2.1.15",
     "libbzip2-wasm": "0.0.4",
-    "libyara-wasm": "^1.1.0",
+    "libyara-wasm": "^1.2.0",
     "lodash": "^4.17.21",
     "loglevel": "^1.8.0",
     "loglevel-message-prefix": "^3.0.0",
