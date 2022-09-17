@@ -65,7 +65,9 @@
             "JSON to CSV",
             "Avro to JSON",
             "CBOR Encode",
-            "CBOR Decode"
+            "CBOR Decode",
+	    "From GSM-7",
+	    "To GSM-7"
         ]
     },
     {
