@@ -331,7 +331,8 @@
             "Tar",
             "Untar",
             "LZString Compress",
-            "LZString Decompress"
+            "LZString Decompress",
+            "LZMA Compress"
         ]
     },
     {
