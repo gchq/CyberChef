@@ -330,8 +330,9 @@
             "Bzip2 Compress",
             "Tar",
             "Untar",
-            "LZString Compress",
             "LZString Decompress",
+            "LZString Compress",
+            "LZMA Decompress",
             "LZMA Compress"
         ]
     },

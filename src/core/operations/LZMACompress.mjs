@@ -44,8 +44,9 @@ class LZMACompress extends Operation {
      * @returns {ArrayBuffer}
      */
     run(input, args) {
+        const mode = Number(args[0]);
         return new Promise((resolve, reject) => {
-            compress(new Uint8Array(input), Number(args[0]), (result, error) => {
+            compress(new Uint8Array(input), mode, (result, error) => {
                 if (error) {
                     reject(new OperationError(`Failed to compress input: ${error.message}`));
                 }
