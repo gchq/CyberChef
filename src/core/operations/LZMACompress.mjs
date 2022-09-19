@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 import { compress } from "@blu3r4y/lzma";
+import {isWorkerEnvironment} from "../Utils.mjs";
 
 /**
  * LZMA Compress operation
@@ -43,7 +44,7 @@ class LZMACompress extends Operation {
      * @param {Object[]} args
      * @returns {ArrayBuffer}
      */
-    run(input, args) {
+    async run(input, args) {
         const mode = Number(args[0]);
         return new Promise((resolve, reject) => {
             compress(new Uint8Array(input), mode, (result, error) => {
@@ -53,7 +54,7 @@ class LZMACompress extends Operation {
                 // The compression returns as an Int8Array, but we can just get the unsigned data from the buffer
                 resolve(new Int8Array(result).buffer);
             }, (percent) => {
-                self.sendStatusMessage(`Compressing input: ${(percent*100).toFixed(2)}%`);
+                if (isWorkerEnvironment()) self.sendStatusMessage(`Compressing input: ${(percent*100).toFixed(2)}%`);
             });
         });
     }

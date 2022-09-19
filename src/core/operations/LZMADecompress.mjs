@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import {decompress} from "@blu3r4y/lzma";
+import Utils, {isWorkerEnvironment} from "../Utils.mjs";
 
 /**
  * LZMA Decompress operation
@@ -32,16 +33,21 @@ class LZMADecompress extends Operation {
      * @param {Object[]} args
      * @returns {ArrayBuffer}
      */
-    run(input, args) {
+    async run(input, args) {
         return new Promise((resolve, reject) => {
             decompress(new Uint8Array(input), (result, error) => {
                 if (error) {
                     reject(new OperationError(`Failed to decompress input: ${error.message}`));
                 }
-                // The decompression returns as an Int8Array, but we can just get the unsigned data from the buffer
-                resolve(new Int8Array(result).buffer);
+                // The decompression returns either a String or an untyped unsigned int8 array, but we can just get the unsigned data from the buffer
+
+                if (typeof result == "string") {
+                    resolve(Utils.strToArrayBuffer(result));
+                } else {
+                    resolve(new Int8Array(result).buffer);
+                }
             }, (percent) => {
-                self.sendStatusMessage(`Decompressing input: ${(percent*100).toFixed(2)}%`);
+                if (isWorkerEnvironment()) self.sendStatusMessage(`Decompressing input: ${(percent*100).toFixed(2)}%`);
             });
         });
     }
