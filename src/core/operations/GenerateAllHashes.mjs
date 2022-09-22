@@ -66,47 +66,47 @@ class GenerateAllHashes extends Operation {
             },
         ];
         this.hashes = [
-           {"name": "MD2", "hash": (new MD2()), "type": "arrayBuffer", params: []},
-           {"name": "MD4", "hash": (new MD4()), "type": "arrayBuffer", params: []},
-           {"name": "MD5", "hash": (new MD5()), "type": "arrayBuffer", params: []},
-           {"name": "MD6", "hash": (new MD6()), "type": "str", params: []},
-           {"name": "SHA0", "hash": (new SHA0()), "type": "arrayBuffer", params: []},
-           {"name": "SHA1", "hash": (new SHA1()), "type": "arrayBuffer", params: []},
-           {"name": "SHA2 224", "hash": (new SHA2()), "type": "arrayBuffer", params: ["224"]},
-           {"name": "SHA2 256", "hash": (new SHA2()), "type": "arrayBuffer", params: ["256"]},
-           {"name": "SHA2 384", "hash": (new SHA2()), "type": "arrayBuffer", params: ["384"]},
-           {"name": "SHA2 512", "hash": (new SHA2()), "type": "arrayBuffer", params: ["512"]},
-           {"name": "SHA3 224", "hash": (new SHA3()), "type": "arrayBuffer", params: ["224"]},
-           {"name": "SHA3 256", "hash": (new SHA3()), "type": "arrayBuffer", params: ["256"]},
-           {"name": "SHA3 384", "hash": (new SHA3()), "type": "arrayBuffer", params: ["384"]},
-           {"name": "SHA3 512", "hash": (new SHA3()), "type": "arrayBuffer", params: ["512"]},
-           {"name": "Keccak 224", "hash": (new Keccak()), "type": "arrayBuffer", params: ["224"]},
-           {"name": "Keccak 256", "hash": (new Keccak()), "type": "arrayBuffer", params: ["256"]},
-           {"name": "Keccak 384", "hash": (new Keccak()), "type": "arrayBuffer", params: ["384"]},
-           {"name": "Keccak 512", "hash": (new Keccak()), "type": "arrayBuffer", params: ["512"]},
-           {"name": "Shake 128", "hash": (new Shake()), "type": "arrayBuffer", params: ["128", 256]},
-           {"name": "Shake 256", "hash": (new Shake()), "type": "arrayBuffer", params: ["256", 512]},
-           {"name": "RIPEMD-128", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["128"]},
-           {"name": "RIPEMD-160", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["160"]},
-           {"name": "RIPEMD-256", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["256"]},
-           {"name": "RIPEMD-320", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["320"]},
-           {"name": "HAS-160", "hash": (new HAS160()), "type": "arrayBuffer", params: []},
-           {"name": "Whirlpool-0", "hash": (new Whirlpool()), "type": "arrayBuffer", params: ["Whirlpool-0"]},
-           {"name": "Whirlpool-T", "hash": (new Whirlpool()), "type": "arrayBuffer", params: ["Whirlpool-T"]},
-           {"name": "Whirlpool", "hash": (new Whirlpool()), "type": "arrayBuffer", params: ["Whirlpool"]},
-           {"name": "BLAKE2b-128", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["128","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2b-160", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["160","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2b-256", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["256","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2b-384", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["384","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2b-512", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["512","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2s-128", "hash": (new BLAKE2s), "type": "arrayBuffer", params: ["128","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2s-160", "hash": (new BLAKE2s), "type": "arrayBuffer", params: ["160","Hex", {string: "", option: "UTF8"}]},
-           {"name": "BLAKE2s-256", "hash": (new BLAKE2s), "type": "arrayBuffer", params: ["256","Hex", {string: "", option: "UTF8"}]},
-           {"name": "Streebog-256", "hash": (new Streebog), "type": "arrayBuffer", params: ["256"]},
-           {"name": "Streebog-512", "hash": (new Streebog), "type": "arrayBuffer", params: ["512"]},
-           {"name": "GOST", "hash": (new GOSTHash), "type": "arrayBuffer", params: ["D-A"]},
-           {"name": "SSDEEP", "hash": (new SSDEEP()), "type": "str"},
-           {"name": "CTPH", "hash": (new CTPH()), "type": "str"}
+            {"name": "MD2", "hash": (new MD2()), "type": "arrayBuffer", params: []},
+            {"name": "MD4", "hash": (new MD4()), "type": "arrayBuffer", params: []},
+            {"name": "MD5", "hash": (new MD5()), "type": "arrayBuffer", params: []},
+            {"name": "MD6", "hash": (new MD6()), "type": "str", params: []},
+            {"name": "SHA0", "hash": (new SHA0()), "type": "arrayBuffer", params: []},
+            {"name": "SHA1", "hash": (new SHA1()), "type": "arrayBuffer", params: []},
+            {"name": "SHA2 224", "hash": (new SHA2()), "type": "arrayBuffer", params: ["224"]},
+            {"name": "SHA2 256", "hash": (new SHA2()), "type": "arrayBuffer", params: ["256"]},
+            {"name": "SHA2 384", "hash": (new SHA2()), "type": "arrayBuffer", params: ["384"]},
+            {"name": "SHA2 512", "hash": (new SHA2()), "type": "arrayBuffer", params: ["512"]},
+            {"name": "SHA3 224", "hash": (new SHA3()), "type": "arrayBuffer", params: ["224"]},
+            {"name": "SHA3 256", "hash": (new SHA3()), "type": "arrayBuffer", params: ["256"]},
+            {"name": "SHA3 384", "hash": (new SHA3()), "type": "arrayBuffer", params: ["384"]},
+            {"name": "SHA3 512", "hash": (new SHA3()), "type": "arrayBuffer", params: ["512"]},
+            {"name": "Keccak 224", "hash": (new Keccak()), "type": "arrayBuffer", params: ["224"]},
+            {"name": "Keccak 256", "hash": (new Keccak()), "type": "arrayBuffer", params: ["256"]},
+            {"name": "Keccak 384", "hash": (new Keccak()), "type": "arrayBuffer", params: ["384"]},
+            {"name": "Keccak 512", "hash": (new Keccak()), "type": "arrayBuffer", params: ["512"]},
+            {"name": "Shake 128", "hash": (new Shake()), "type": "arrayBuffer", params: ["128", 256]},
+            {"name": "Shake 256", "hash": (new Shake()), "type": "arrayBuffer", params: ["256", 512]},
+            {"name": "RIPEMD-128", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["128"]},
+            {"name": "RIPEMD-160", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["160"]},
+            {"name": "RIPEMD-256", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["256"]},
+            {"name": "RIPEMD-320", "hash": (new RIPEMD()), "type": "arrayBuffer", params: ["320"]},
+            {"name": "HAS-160", "hash": (new HAS160()), "type": "arrayBuffer", params: []},
+            {"name": "Whirlpool-0", "hash": (new Whirlpool()), "type": "arrayBuffer", params: ["Whirlpool-0"]},
+            {"name": "Whirlpool-T", "hash": (new Whirlpool()), "type": "arrayBuffer", params: ["Whirlpool-T"]},
+            {"name": "Whirlpool", "hash": (new Whirlpool()), "type": "arrayBuffer", params: ["Whirlpool"]},
+            {"name": "BLAKE2b-128", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["128", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2b-160", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["160", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2b-256", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["256", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2b-384", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["384", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2b-512", "hash": (new BLAKE2b), "type": "arrayBuffer", params: ["512", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2s-128", "hash": (new BLAKE2s), "type": "arrayBuffer", params: ["128", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2s-160", "hash": (new BLAKE2s), "type": "arrayBuffer", params: ["160", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "BLAKE2s-256", "hash": (new BLAKE2s), "type": "arrayBuffer", params: ["256", "Hex", {string: "", option: "UTF8"}]},
+            {"name": "Streebog-256", "hash": (new Streebog), "type": "arrayBuffer", params: ["256"]},
+            {"name": "Streebog-512", "hash": (new Streebog), "type": "arrayBuffer", params: ["512"]},
+            {"name": "GOST", "hash": (new GOSTHash), "type": "arrayBuffer", params: ["D-A"]},
+            {"name": "SSDEEP", "hash": (new SSDEEP()), "type": "str"},
+            {"name": "CTPH", "hash": (new CTPH()), "type": "str"}
         ];
         this.checksums = [
             {"name":  "Fletcher-8:   ", "checksum": (new Fletcher8Checksum), "type": "byteArray", "params": []},
@@ -133,13 +133,13 @@ class GenerateAllHashes extends Operation {
             str = Utils.arrayBufferToStr(arrayBuffer, false),
             byteArray = new Uint8Array(arrayBuffer);
 
-        var value, output = "";
+        let value, output = "";
         // iterate over each of the hashes
         this.hashes.forEach(function (hash) {
             // calculate the hash value
-            if (hash.type == "arrayBuffer") {
+            if (hash.type === "arrayBuffer") {
                 value = hash.hash.run(arrayBuffer, hash.params);
-            } else if (hash.type == "str") {
+            } else if (hash.type === "str") {
                 if ("params" in hash) {
                     value = hash.hash.run(str, hash.params);
                 } else {
@@ -147,7 +147,7 @@ class GenerateAllHashes extends Operation {
                 }
             }
             // output the values base on the args: length & names
-            if (length == "All" || value.length === parseInt(length)) {
+            if (length === "All" || value.length === parseInt(length)) {
                 if (names) {
                     output += hash.name + ":" + " ".repeat(13-hash.name.length);
                 }
@@ -155,7 +155,7 @@ class GenerateAllHashes extends Operation {
             }
         });
 
-        if (length == "All") {
+        if (length === "All") {
             output += "\nChecksums:" +
                 "\nFletcher-8:   " + (new Fletcher8Checksum).run(byteArray, []) +
                 "\nFletcher-16:  " + (new Fletcher16Checksum).run(byteArray, []) +
