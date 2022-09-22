@@ -1,8 +1,8 @@
 /**
- * GetAllCasings tests.
+ * GenerateAllHashes tests.
  *
- * @author n1073645 [n1073645@gmail.com]
- * @copyright Crown Copyright 2020
+ * @author john19696 [john19696@protonmail.com]
+ * @copyright Crown Copyright 2022
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
