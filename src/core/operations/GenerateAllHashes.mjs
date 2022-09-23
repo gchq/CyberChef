@@ -147,7 +147,7 @@ class GenerateAllHashes extends Operation {
                 }
             }
             // output the values base on the args: length & names
-            if (length === "All" || value.length === parseInt(length)) {
+            if (length === "All" || value.length === parseInt(length, 10)) {
                 if (names) {
                     output += hash.name + ":" + " ".repeat(13-hash.name.length);
                 }
