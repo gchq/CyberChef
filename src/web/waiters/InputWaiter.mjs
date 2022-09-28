@@ -357,7 +357,6 @@ class InputWaiter {
 
                 inputText.style.overflow = "auto";
                 inputText.classList.remove("blur");
-                inputText.scroll(0, 0);
 
                 const lines = inputData.input.length < (this.app.options.ioDisplayThreshold * 1024) ?
                     inputData.input.count("\n") + 1 : null;

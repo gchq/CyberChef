@@ -718,7 +718,6 @@ class OutputWaiter {
         debounce(this.set, 50, "setOutput", this, [inputNum])();
 
         document.getElementById("output-html").scroll(0, 0);
-        document.getElementById("output-text").scroll(0, 0);
 
         if (changeInput) {
             this.manager.input.changeTab(inputNum, false);
