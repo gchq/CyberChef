@@ -24,20 +24,7 @@ class ToPythonString extends Operation {
         this.infoURL = "";
         this.inputType = "byteArray";
         this.outputType = "string";
-        this.args = [
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
-        ];
+        this.args = [];
     }
 
     /**
