@@ -18,7 +18,7 @@ class ToPythonString extends Operation {
     constructor() {
         super();
 
-        this.name = "toPythonString";
+        this.name = "To Python String";
         this.module = "Default";
         this.description = "Convert any byte array to python string or byte string";
         this.infoURL = "";
@@ -46,10 +46,11 @@ class ToPythonString extends Operation {
      * @returns {string}
      */
     toPyChar(value){
-        //check if it's a standard ascii value
+        //check if it's a standard ascii value and return the corresponding char or format it as a hex value with the \x prefix
         if(32 <= value && value <= 126)
             return String.fromCharCode(value)
-            
+        else
+            return "\\x" + value.toString(16).padStart(2, "0")     
     }
 
     /**
@@ -58,9 +59,8 @@ class ToPythonString extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        // const [firstArg, secondArg] = args;
-
-        throw new OperationError("Test");
+        //format the converted string as a python byte string
+        return 'b"' + input.map(this.toPyChar).join("") + '"';
     }
 
 }
