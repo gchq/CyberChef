@@ -14,6 +14,7 @@ import process from "process";
 import fs from "fs";
 import path from "path";
 import EscapeString from "../../operations/EscapeString.mjs";
+import iniparser from "iniparser";
 
 
 const dir = path.join(process.cwd() + "/src/core/operations/");
@@ -22,6 +23,23 @@ if (!fs.existsSync(dir)) {
     console.log("Error: newOperation.mjs should be run from the project root");
     console.log("Example> node --experimental-modules src/core/config/scripts/newOperation.mjs");
     process.exit(1);
+}
+const testDir = path.join(process.cwd() + "/tests/operations/tests/");
+
+const configFile = "/.gitconfig";
+let gitUserEmail, gitUserName;
+// gitconfig in root is better than global one
+let gitConfig = process.cwd() + configFile;
+if (!fs.existsSync()) {
+    gitConfig = process.env.HOME +  configFile;
+}
+// get user settings from git
+if (fs.existsSync(gitConfig)) {
+    const config = iniparser.parseSync(gitConfig);
+    if ("user" in config) {
+        if ("email" in config.user) gitUserEmail = config.user.email;
+        if ("name" in config.user) gitUserName = config.user.name; 
+    }
 }
 
 const ioTypes = ["string", "byteArray", "number", "html", "ArrayBuffer", "BigNumber", "JSON", "File", "List<File>"];
@@ -88,12 +106,14 @@ If your operation does not rely on a library, just leave this blank and it will 
         authorName: {
             description: "Your name or username will be added to the @author tag for this operation.",
             example: "n1474335",
+            default: gitUserName,
             prompt: "Username",
             type: "string"
         },
         authorEmail: {
             description: "Your email address will also be added to the @author tag for this operation.",
             example: "n1474335@gmail.com",
+            default: gitUserEmail,
             prompt: "Email",
             type: "string"
         }
@@ -123,6 +143,30 @@ prompt.get(schema, (err, result) => {
         return txt.charAt(0).toUpperCase() + txt.substr(1);
     }).replace(/[\s-()./]/g, "");
 
+    const testTemplate = `/**
+* ${moduleName} tests
+*    
+* @author ${result.authorName} [${result.authorEmail}]
+* @copyright Crown Copyright ${(new Date()).getFullYear()}
+* @license Apache-2.0
+*/
+
+import TestRegister from "../../lib/TestRegister.mjs";
+
+TestRegister.addTests([
+    {
+        name: " ${moduleName}: test",
+        input: "Example input",
+        expectedOutput: "Expected output",
+        recipeConfig: [
+            {
+                op: " ${moduleName}",
+                args: [],
+            },
+        ],
+    },
+]);
+`;
 
     const template = `/**
  * @author ${result.authorName} [${result.authorEmail}]
@@ -218,13 +262,18 @@ export default ${moduleName};
     }
     fs.writeFileSync(filename, template);
 
+    const testFilename = path.join(testDir, `./${moduleName}.mjs`);
+    fs.writeFileSync(testFilename, testTemplate);
+
     console.log(`\nOperation template written to ${colors.green(filename)}`);
+    console.log(`\nOperation test template written to ${colors.green(testFilename)}`);
     console.log(`\nNext steps:
 1. Add your operation to ${colors.green("src/core/config/Categories.json")}
-2. Write your operation code.
-3. Write tests in ${colors.green("tests/operations/tests/")}
-4. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
-5. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
+2. Write your operation code in ${colors.green(filename)}
+3. Add your operation to ${colors.green("tests/operations/index.mjs")}
+4. Write your operation test code in ${colors.green(testFilename)}
+5. Write tests in ${colors.green("tests/operations/tests/")}
+6. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
+7. Submit a Pull Request to get your operation aldded to the official CyberChef repository.`);
 
 });
-
