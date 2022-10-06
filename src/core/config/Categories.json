@@ -236,6 +236,7 @@
     {
         "name": "Utils",
         "ops": [
+            "Search",
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
