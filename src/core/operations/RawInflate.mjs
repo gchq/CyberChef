@@ -83,24 +83,6 @@ class RawInflate extends Operation {
             }),
             result = new Uint8Array(inflate.decompress());
 
-        // Raw Inflate sometimes messes up and returns nonsense like this:
-        // ]....]....]....]....]....]....]....]....]....]....]....]....]....]...
-        // e.g. Input data of [8b, 1d, dc, 44]
-        // Look for the first two square brackets:
-        if (result.length > 158 && result[0] === 93 && result[5] === 93) {
-            // If the first two square brackets are there, check that the others
-            // are also there. If they are, throw an error. If not, continue.
-            let valid = false;
-            for (let i = 0; i < 155; i += 5) {
-                if (result[i] !== 93) {
-                    valid = true;
-                }
-            }
-
-            if (!valid) {
-                throw new OperationError("Error: Unable to inflate data");
-            }
-        }
         // This seems to be the easiest way...
         return result.buffer;
     }
