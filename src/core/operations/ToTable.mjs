@@ -68,8 +68,7 @@ class ToTable extends Operation {
             case "HTML":
                 return htmlOutput(tableData);
             case "Markdown":
-                    return markdownOutput(tableData);
-    
+                return markdownOutput(tableData);
             default:
                 return htmlOutput(tableData);
         }
@@ -188,6 +187,12 @@ class ToTable extends Operation {
             }
         }
 
+        /**
+         * Outputs an array of data as a Markdown table.
+         *
+         * @param {string[][]} tableData
+         * @returns {string}
+         */
         function markdownOutput(tableData) {
             const headerDivider = "-";
             const verticalBorder = "|";
