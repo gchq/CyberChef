@@ -82,7 +82,6 @@ class RawInflate extends Operation {
             }),
             result = new Uint8Array(inflate.decompress());
 
-        // This seems to be the easiest way...
         return result.buffer;
     }
 
