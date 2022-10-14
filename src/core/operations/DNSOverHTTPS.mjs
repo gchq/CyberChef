@@ -51,11 +51,27 @@ class DNSOverHTTPS extends Operation {
                 value: [
                     "A",
                     "AAAA",
-                    "TXT",
-                    "MX",
+                    "ANAME",
+                    "CERT",
+                    "CNAME",
                     "DNSKEY",
+                    "HTTPS",
+                    "IPSECKEY",
+                    "LOC",
+                    "MX",
                     "NS",
-                    "PTR"
+                    "OPENPGPKEY",
+                    "PTR",
+                    "RRSIG",
+                    "SIG",
+                    "SOA",
+                    "SPF",
+                    "SRV",
+                    "SSHFP",
+                    "TA",
+                    "TXT",
+                    "URI",
+                    "ANY"
                 ]
             },
             {
