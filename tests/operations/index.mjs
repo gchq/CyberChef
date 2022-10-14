@@ -120,6 +120,7 @@ import "./tests/SIGABA.mjs";
 import "./tests/ELFInfo.mjs";
 import "./tests/Subsection.mjs";
 import "./tests/CaesarBoxCipher.mjs";
+import "./tests/UnescapeString.mjs";
 import "./tests/LS47.mjs";
 import "./tests/LZString.mjs";
 
