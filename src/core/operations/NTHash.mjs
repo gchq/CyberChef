@@ -10,20 +10,20 @@ import cptable from "codepage";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
- * NTLM operation
+ * NT Hash operation
  */
-class NTLM extends Operation {
+class NTHash extends Operation {
 
     /**
-     * NTLM constructor
+     * NTHash constructor
      */
     constructor() {
         super();
 
-        this.name = "NTLM";
+        this.name = "NT Hash";
         this.module = "Crypto";
-        this.description = "Performs NTLM hashing on the input. It works by running MD4 on UTF16LE-encoded input. NTLM hashes are considered weak because they can be brute-forced very easily with modern hardware.";
-        this.infoURL = "https://en.wikipedia.org/wiki/NT_LAN_Manager";
+        this.description = "An NT Hash, sometimes referred to as an NTLM hash, is a method of storing passwords on Windows systems. It works by running MD4 on UTF-16LE encoded input. NTLM hashes are considered weak because they can be brute-forced very easily with modern hardware.";
+        this.infoURL = "https://wikipedia.org/wiki/NT_LAN_Manager";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -35,7 +35,7 @@ class NTLM extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const format = 1200;
+        const format = 1200; // UTF-16LE
         const encoded = cptable.utils.encode(format, input);
         const hashed = runHash("md4", encoded);
 
@@ -43,4 +43,4 @@ class NTLM extends Operation {
     }
 }
 
-export default NTLM;
+export default NTHash;

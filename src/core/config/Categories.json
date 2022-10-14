@@ -369,6 +369,8 @@
             "Bcrypt compare",
             "Bcrypt parse",
             "Scrypt",
+            "NT Hash",
+            "LM Hash",
             "Fletcher-8 Checksum",
             "Fletcher-16 Checksum",
             "Fletcher-32 Checksum",
@@ -378,8 +380,7 @@
             "CRC-8 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum",
-            "NTLM"
+            "TCP/IP Checksum"
         ]
     },
     {

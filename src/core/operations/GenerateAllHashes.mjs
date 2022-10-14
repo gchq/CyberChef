@@ -34,6 +34,8 @@ import BLAKE2b from "./BLAKE2b.mjs";
 import BLAKE2s from "./BLAKE2s.mjs";
 import Streebog from "./Streebog.mjs";
 import GOSTHash from "./GOSTHash.mjs";
+import LMHash from "./LMHash.mjs";
+import NTHash from "./NTHash.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -107,6 +109,8 @@ class GenerateAllHashes extends Operation {
             {name: "Streebog-256", algo: (new Streebog), inputType: "arrayBuffer", params: ["256"]},
             {name: "Streebog-512", algo: (new Streebog), inputType: "arrayBuffer", params: ["512"]},
             {name: "GOST", algo: (new GOSTHash), inputType: "arrayBuffer", params: ["D-A"]},
+            {name: "LM Hash", algo: (new LMHash), inputType: "str", params: []},
+            {name: "NT Hash", algo: (new NTHash), inputType: "str", params: []},
             {name: "SSDEEP", algo: (new SSDEEP()), inputType: "str"},
             {name: "CTPH", algo: (new CTPH()), inputType: "str"}
         ];
