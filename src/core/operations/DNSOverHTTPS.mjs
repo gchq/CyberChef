@@ -54,7 +54,8 @@ class DNSOverHTTPS extends Operation {
                     "TXT",
                     "MX",
                     "DNSKEY",
-                    "NS"
+                    "NS",
+                    "PTR"
                 ]
             },
             {
