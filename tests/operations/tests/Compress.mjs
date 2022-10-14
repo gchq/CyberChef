@@ -23,4 +23,56 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "LZMA compress & decompress",
+        input: "The cat sat on the mat.",
+        // Generated using command `echo -n "The cat sat on the mat." | lzma -z -6 | xxd -p`
+        expectedOutput: "The cat sat on the mat.",
+        recipeConfig: [
+            {
+                "op": "LZMA Compress",
+                "args": ["6"]
+            },
+            {
+                "op": "LZMA Decompress",
+                "args": []
+            },
+        ],
+    },
+    {
+        name: "LZMA decompress: binary",
+        // Generated using command `echo "00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10" | xxd -r -p | lzma -z -6 | xxd -p`
+        input: "5d00008000ffffffffffffffff00000052500a84f99bb28021a969d627e03e8a922effffbd160000",
+        expectedOutput: "00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Space"]
+            },
+            {
+                "op": "LZMA Decompress",
+                "args": []
+            },
+            {
+                "op": "To Hex",
+                "args": ["Space", 0]
+            }
+        ],
+    },
+    {
+        name: "LZMA decompress: string",
+        // Generated using command `echo -n "The cat sat on the mat." | lzma -z -6 | xxd -p`
+        input: "5d00008000ffffffffffffffff002a1a08a202b1a4b814b912c94c4152e1641907d3fd8cd903ffff4fec0000",
+        expectedOutput: "The cat sat on the mat.",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Space"]
+            },
+            {
+                "op": "LZMA Decompress",
+                "args": []
+            }
+        ],
+    },
 ]);
