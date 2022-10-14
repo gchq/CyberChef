@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.47.0] - 2022-10-14
+- Added 'LZMA Decompress' and 'LZMA Compress' operations [@mattnotmitt] | [#1421]
+
 ### [9.46.0] - 2022-07-08
 - Added 'Cetacean Cipher Encode' and 'Cetacean Cipher Decode' operations [@valdelaseras] | [#1308]
 
@@ -315,6 +318,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.47.0]: https://github.com/gchq/CyberChef/releases/tag/v9.47.0
 [9.46.0]: https://github.com/gchq/CyberChef/releases/tag/v9.46.0
 [9.45.0]: https://github.com/gchq/CyberChef/releases/tag/v9.45.0
 [9.44.0]: https://github.com/gchq/CyberChef/releases/tag/v9.44.0
@@ -552,4 +556,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1266]: https://github.com/gchq/CyberChef/pull/1266
 [#1250]: https://github.com/gchq/CyberChef/pull/1250
 [#1308]: https://github.com/gchq/CyberChef/pull/1308
+[#1421]: https://github.com/gchq/CyberChef/pull/1421
 
