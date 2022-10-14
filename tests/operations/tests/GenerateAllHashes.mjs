@@ -61,7 +61,8 @@ Fletcher-64:  00000459000001c0
 Adler-32:     045d01c1
 CRC-8:        b9
 CRC-16:       f82e
-CRC-32:       d87f7e0c`,
+CRC-32:       d87f7e0c
+`,
         recipeConfig: [
             {
                 "op": "Generate all hashes",
@@ -82,7 +83,7 @@ BLAKE2s-128:  e9ddd9926b9dcb382e09be39ba403d2c
         recipeConfig: [
             {
                 "op": "Generate all hashes",
-                "args": ["32", true]
+                "args": ["128", true]
             }
         ]
     },
@@ -103,7 +104,7 @@ ee67303696d205ddd2b2363e8e01b4b7199a80957d94d7678eaad3fc834c5a27
         recipeConfig: [
             {
                 "op": "Generate all hashes",
-                "args": ["64", false]
+                "args": ["256", false]
             }
         ]
     }
