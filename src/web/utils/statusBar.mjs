@@ -222,7 +222,7 @@ class StatusBarPanel {
 
 
     /**
-     * Gets the current character encoding of the document
+     * Sets the current character encoding of the document
      */
     updateCharEnc() {
         const chrEncVal = this.chrEncGetter();

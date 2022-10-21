@@ -93,6 +93,23 @@ class Manager {
         this.bindings.updateKeybList();
         this.background.registerChefWorker();
         this.seasonal.load();
+
+        this.confirmWaitersLoaded();
+    }
+
+    /**
+     * Confirms that all Waiters have loaded correctly.
+     */
+    confirmWaitersLoaded() {
+        if (this.tabs.getActiveTab("input") >= 0 &&
+            this.tabs.getActiveTab("output") >= 0) {
+            log.debug("Waiters loaded");
+            this.app.waitersLoaded = true;
+            this.app.loaded();
+        } else {
+            // Not loaded yet, try again soon
+            setTimeout(this.confirmWaitersLoaded.bind(this), 10);
+        }
     }
 
 

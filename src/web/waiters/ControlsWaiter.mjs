@@ -138,8 +138,8 @@ class ControlsWaiter {
             }
         }
 
-        const inputChrEnc = this.manager.input.inputChrEnc;
-        const outputChrEnc = this.manager.output.outputChrEnc;
+        const inputChrEnc = this.manager.input.getChrEnc();
+        const outputChrEnc = this.manager.output.getChrEnc();
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,

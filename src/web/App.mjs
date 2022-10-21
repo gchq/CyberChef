@@ -11,6 +11,7 @@ import HTMLCategory from "./HTMLCategory.mjs";
 import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
+import cptable from "codepage";
 
 
 /**
@@ -41,6 +42,10 @@ class App {
         this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
+
+        this.appLoaded     = false;
+        this.workerLoaded  = false;
+        this.waitersLoaded = false;
     }
 
 
@@ -59,11 +64,10 @@ class App {
         this.manager.output.saveBombe();
         this.adjustComponentSizes();
         this.setCompileMessage();
+        this.uriParams = this.getURIParams();
 
         log.debug("App loaded");
         this.appLoaded = true;
-
-        this.loadURIParams();
         this.loaded();
     }
 
@@ -76,8 +80,11 @@ class App {
     loaded() {
         // Check that both the app and the worker have loaded successfully, and that
         // we haven't already loaded before attempting to remove the loading screen.
-        if (!this.workerLoaded || !this.appLoaded ||
+        if (!this.workerLoaded || !this.appLoaded || !this.waitersLoaded ||
             !document.getElementById("loader-wrapper")) return;
+
+        // Load state from URI
+        this.loadURIParams(this.uriParams);
 
         // Trigger CSS animations to remove preloader
         document.body.classList.add("loaded");
@@ -454,11 +461,12 @@ class App {
      * If character encodings are present, sets them appropriately.
      * If theme is present, uses the theme.
      *
+     * @param {Object} params
      * @fires Manager#statechange
      */
-    loadURIParams() {
+    loadURIParams(params=this.getURIParams()) {
         this.autoBakePause = true;
-        this.uriParams = this.getURIParams();
+        this.uriParams = params;
 
         // Read in recipe from URI params
         if (this.uriParams.recipe) {
@@ -483,15 +491,8 @@ class App {
             search.dispatchEvent(new Event("search"));
         }
 
-        // Read in input data from URI params
-        if (this.uriParams.input) {
-            try {
-                const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData);
-            } catch (err) {}
-        }
-
         // Input Character Encoding
+        // Must be set before the input is loaded
         if (this.uriParams.ienc) {
             this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10));
         }
@@ -499,6 +500,21 @@ class App {
         // Output Character Encoding
         if (this.uriParams.oenc) {
             this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10));
+        }
+
+        // Read in input data from URI params
+        if (this.uriParams.input) {
+            try {
+                let inputVal;
+                const inputChrEnc = this.manager.input.getChrEnc();
+                const inputData = fromBase64(this.uriParams.input);
+                if (inputChrEnc > 0) {
+                    inputVal= cptable.utils.decode(inputChrEnc, inputData);
+                } else {
+                    inputVal = Utils.arrayBufferToStr(inputData);
+                }
+                this.setInput(inputVal);
+            } catch (err) {}
         }
 
         // Read in theme from URI params

@@ -51,8 +51,8 @@ class HighlighterWaiter {
         const selectionRanges = e.state.selection.ranges;
 
         // Adjust offsets based on the width of the character set
-        const inputCharacterWidth = chrEncWidth(this.manager.input.inputChrEnc);
-        const outputCharacterWidth = chrEncWidth(this.manager.output.outputChrEnc);
+        const inputCharacterWidth = chrEncWidth(this.manager.input.getChrEnc());
+        const outputCharacterWidth = chrEncWidth(this.manager.output.getChrEnc());
         let ratio = 1;
         if (inputCharacterWidth !== outputCharacterWidth &&
             inputCharacterWidth !== 0 && outputCharacterWidth !== 0) {

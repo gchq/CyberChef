@@ -217,7 +217,7 @@ class WorkerWaiter {
                 break;
             case "workerLoaded":
                 this.app.workerLoaded = true;
-                log.debug("ChefWorker loaded.");
+                log.debug("ChefWorker loaded");
                 if (!this.loaded) {
                     this.app.loaded();
                     this.loaded = true;

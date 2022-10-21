@@ -469,6 +469,7 @@ class InputWaiter {
      *         @param {string} file.type
      *     @param {string} status
      *     @param {number} progress
+     *     @param {number} encoding
      * @param {boolean} [silent=false] - If false, fires the manager statechange event
      */
     async set(inputNum, inputData, silent=false) {
@@ -476,13 +477,14 @@ class InputWaiter {
             const activeTab = this.manager.tabs.getActiveTab("input");
             if (inputNum !== activeTab) return;
 
+            this.inputChrEnc = inputData.encoding;
+
             if (inputData.file) {
                 this.setFile(inputNum, inputData);
             } else {
                 this.clearFile(inputNum);
             }
 
-            // TODO Per-tab encodings?
             let inputVal;
             if (this.inputChrEnc > 0) {
                 inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
@@ -609,8 +611,8 @@ class InputWaiter {
         // If value is a string, interpret it using the specified character encoding
         if (typeof value === "string") {
             stringSample = value.slice(0, 4096);
-            if (this.inputChrEnc > 0) {
-                buffer = cptable.utils.encode(this.inputChrEnc, value);
+            if (this.getChrEnc() > 0) {
+                buffer = cptable.utils.encode(this.getChrEnc(), value);
                 buffer = new Uint8Array(buffer).buffer;
             } else {
                 buffer = Utils.strToArrayBuffer(value);
@@ -631,7 +633,8 @@ class InputWaiter {
             data: {
                 inputNum: inputNum,
                 buffer: buffer,
-                stringSample: stringSample
+                stringSample: stringSample,
+                encoding: this.getChrEnc()
             }
         }, transferable);
     }
@@ -924,7 +927,7 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the tab to change to
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
-    changeTab(inputNum, changeOutput) {
+    changeTab(inputNum, changeOutput=false) {
         if (this.manager.tabs.getTabItem(inputNum, "input") !== null) {
             this.manager.tabs.changeTab(inputNum, "input");
             this.inputWorker.postMessage({

@@ -51,7 +51,6 @@ class OutputWaiter {
         };
         // Hold a copy of the currently displayed output so that we don't have to update it unnecessarily
         this.currentOutputCache = null;
-        this.outputChrEnc = 0;
         this.initEditor();
 
         this.outputs = {};
@@ -146,7 +145,14 @@ class OutputWaiter {
      */
     chrEncChange(chrEncVal) {
         if (typeof chrEncVal !== "number") return;
-        this.outputChrEnc = chrEncVal;
+
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum >= 0) {
+            this.outputs[currentTabNum].encoding = chrEncVal;
+        } else {
+            throw new Error("Cannot change output chrEnc to " + chrEncVal);
+        }
+
         // Reset the output, forcing it to re-decode the data with the new character encoding
         this.setOutput(this.currentOutputCache, true);
         // Update the URL manually since we aren't firing a statechange event
@@ -154,11 +160,15 @@ class OutputWaiter {
     }
 
     /**
-     * Getter for the input character encoding
+     * Getter for the output character encoding
      * @returns {number}
      */
     getChrEnc() {
-        return this.outputChrEnc;
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum < 0) {
+            return 0;
+        }
+        return this.outputs[currentTabNum].encoding;
     }
 
     /**
@@ -195,11 +205,12 @@ class OutputWaiter {
 
         // If data is an ArrayBuffer, convert to a string in the correct character encoding
         if (data instanceof ArrayBuffer) {
-            if (this.outputChrEnc === 0) {
+            const encoding = this.getChrEnc();
+            if (encoding === 0) {
                 data = Utils.arrayBufferToStr(data);
             } else {
                 try {
-                    data = cptable.utils.decode(this.outputChrEnc, new Uint8Array(data));
+                    data = cptable.utils.decode(encoding, new Uint8Array(data));
                 } catch (err) {
                     data = err;
                 }
@@ -324,7 +335,8 @@ class OutputWaiter {
             error: null,
             status: "inactive",
             bakeId: -1,
-            progress: false
+            progress: false,
+            encoding: 0
         };
 
         this.outputs[inputNum] = newOutput;
@@ -851,7 +863,7 @@ class OutputWaiter {
 
         if (!this.manager.tabs.getTabItem(inputNum, "output") && numTabs < this.maxTabs) {
             // Create a new tab element
-            const newTab = this.manager.tabs.reateTabElement(inputNum, changeTab, "output");
+            const newTab = this.manager.tabs.createTabElement(inputNum, changeTab, "output");
             tabsWrapper.appendChild(newTab);
         } else if (numTabs === this.maxTabs) {
             // Can't create a new tab
