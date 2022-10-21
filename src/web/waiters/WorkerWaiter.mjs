@@ -266,7 +266,7 @@ class WorkerWaiter {
         if (progress !== false) {
             this.manager.output.updateOutputStatus("error", inputNum);
 
-            if (inputNum === this.manager.tabs.getActiveInputTab()) {
+            if (inputNum === this.manager.tabs.getActiveTab("input")) {
                 this.manager.recipe.updateBreakpointIndicator(progress);
             }
 
@@ -335,16 +335,16 @@ class WorkerWaiter {
             this.manager.output.updateOutputStatus("inactive", this.inputNums[i]);
         }
 
-        const tabList = this.manager.tabs.getOutputTabList();
+        const tabList = this.manager.tabs.getTabList("output");
         for (let i = 0; i < tabList.length; i++) {
-            this.manager.tabs.getOutputTabItem(tabList[i]).style.background = "";
+            this.manager.tabs.getTabItem(tabList[i], "output").style.background = "";
         }
 
         this.inputs = [];
         this.inputNums = [];
         this.totalOutputs = 0;
         this.loadingOutputs = 0;
-        if (!silent) this.manager.output.set(this.manager.tabs.getActiveOutputTab());
+        if (!silent) this.manager.output.set(this.manager.tabs.getActiveTab("output"));
     }
 
     /**

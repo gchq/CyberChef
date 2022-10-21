@@ -208,7 +208,7 @@ class InputWaiter {
                 action: "updateMaxTabs",
                 data: {
                     maxTabs: numTabs,
-                    activeTab: this.manager.tabs.getActiveInputTab()
+                    activeTab: this.manager.tabs.getActiveTab("input")
                 }
             });
         }
@@ -237,7 +237,7 @@ class InputWaiter {
             action: "updateMaxTabs",
             data: {
                 maxTabs: this.maxTabs,
-                activeTab: this.manager.tabs.getActiveInputTab()
+                activeTab: this.manager.tabs.getActiveTab("input")
             }
         });
         this.inputWorker.postMessage({
@@ -357,7 +357,7 @@ class InputWaiter {
 
         if (Object.prototype.hasOwnProperty.call(r, "progress") &&
             Object.prototype.hasOwnProperty.call(r, "inputNum")) {
-            this.manager.tabs.updateInputTabProgress(r.inputNum, r.progress, 100);
+            this.manager.tabs.updateTabProgress(r.inputNum, r.progress, 100, "input");
         }
 
         const transferable = Object.prototype.hasOwnProperty.call(r, "fileBuffer") ? [r.fileBuffer] : undefined;
@@ -400,7 +400,7 @@ class InputWaiter {
                 this.changeTab(r.data, this.app.options.syncTabs);
                 break;
             case "updateTabHeader":
-                this.manager.tabs.updateInputTabHeader(r.data.inputNum, r.data.input);
+                this.manager.tabs.updateTabHeader(r.data.inputNum, r.data.input, "input");
                 break;
             case "loadingInfo":
                 this.showLoadingInfo(r.data, true);
@@ -473,7 +473,7 @@ class InputWaiter {
      */
     async set(inputNum, inputData, silent=false) {
         return new Promise(function(resolve, reject) {
-            const activeTab = this.manager.tabs.getActiveInputTab();
+            const activeTab = this.manager.tabs.getActiveTab("input");
             if (inputNum !== activeTab) return;
 
             if (inputData.file) {
@@ -519,7 +519,7 @@ class InputWaiter {
      *     @param {number} progress
      */
     setFile(inputNum, inputData) {
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (inputNum !== activeTab) return;
 
         // Create file details panel
@@ -542,7 +542,7 @@ class InputWaiter {
      * @param {number} inputNum
      */
     clearFile(inputNum) {
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (inputNum !== activeTab) return;
 
         // Clear file details panel
@@ -557,9 +557,9 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the input which has finished loading
      */
     fileLoaded(inputNum) {
-        this.manager.tabs.updateInputTabProgress(inputNum, 100, 100);
+        this.manager.tabs.updateTabProgress(inputNum, 100, 100, "input");
 
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (activeTab !== inputNum) return;
 
         this.inputWorker.postMessage({
@@ -580,7 +580,7 @@ class InputWaiter {
      * @param {number | string} progress - Either a number or "error"
      */
     updateFileProgress(inputNum, progress) {
-        // const activeTab = this.manager.tabs.getActiveInputTab();
+        // const activeTab = this.manager.tabs.getActiveTab("input");
         // if (inputNum !== activeTab) return;
 
         // TODO
@@ -727,10 +727,10 @@ class InputWaiter {
     inputChange(e) {
         debounce(function(e) {
             const value = this.getInput();
-            const activeTab = this.manager.tabs.getActiveInputTab();
+            const activeTab = this.manager.tabs.getActiveTab("input");
 
             this.updateInputValue(activeTab, value);
-            this.manager.tabs.updateInputTabHeader(activeTab, value.slice(0, 100).replace(/[\n\r]/g, ""));
+            this.manager.tabs.updateTabHeader(activeTab, value.slice(0, 100).replace(/[\n\r]/g, ""), "input");
 
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
@@ -813,7 +813,7 @@ class InputWaiter {
      */
     loadUIFiles(files) {
         const numFiles = files.length;
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         log.debug(`Loading ${numFiles} files.`);
 
         // Display the number of files as pending so the user
@@ -912,7 +912,7 @@ class InputWaiter {
             setTimeout(function() {
                 this.inputWorker.postMessage({
                     action: "getLoadProgress",
-                    data: this.manager.tabs.getActiveInputTab()
+                    data: this.manager.tabs.getActiveTab("input")
                 });
             }.bind(this), 100);
         }
@@ -925,8 +925,8 @@ class InputWaiter {
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
     changeTab(inputNum, changeOutput) {
-        if (this.manager.tabs.getInputTabItem(inputNum) !== null) {
-            this.manager.tabs.changeInputTab(inputNum);
+        if (this.manager.tabs.getTabItem(inputNum, "input") !== null) {
+            this.manager.tabs.changeTab(inputNum, "input");
             this.inputWorker.postMessage({
                 action: "setInput",
                 data: {
@@ -935,7 +935,7 @@ class InputWaiter {
                 }
             });
         } else {
-            const minNum = Math.min(...this.manager.tabs.getInputTabList());
+            const minNum = Math.min(...this.manager.tabs.getTabList("input"));
             let direction = "right";
             if (inputNum < minNum) {
                 direction = "left";
@@ -1070,8 +1070,8 @@ class InputWaiter {
         const tabsWrapper = document.getElementById("input-tabs"),
             numTabs = tabsWrapper.children.length;
 
-        if (!this.manager.tabs.getInputTabItem(inputNum) && numTabs < this.maxTabs) {
-            const newTab = this.manager.tabs.createInputTabElement(inputNum, changeTab);
+        if (!this.manager.tabs.getTabItem(inputNum, "input") && numTabs < this.maxTabs) {
+            const newTab = this.manager.tabs.createTabElement(inputNum, changeTab, "input");
             tabsWrapper.appendChild(newTab);
 
             if (numTabs > 0) {
@@ -1101,7 +1101,7 @@ class InputWaiter {
      * @param {boolean} tabsRight - True if there are input tabs to the right of the displayed tabs
      */
     refreshTabs(nums, activeTab, tabsLeft, tabsRight) {
-        this.manager.tabs.refreshInputTabs(nums, activeTab, tabsLeft, tabsRight);
+        this.manager.tabs.refreshTabs(nums, activeTab, tabsLeft, tabsRight, "input");
 
         this.inputWorker.postMessage({
             action: "setInput",
@@ -1120,7 +1120,7 @@ class InputWaiter {
      */
     removeInput(inputNum) {
         let refresh = false;
-        if (this.manager.tabs.getInputTabItem(inputNum) !== null) {
+        if (this.manager.tabs.getTabItem(inputNum, "input") !== null) {
             refresh = true;
         }
         this.inputWorker.postMessage({
@@ -1213,7 +1213,7 @@ class InputWaiter {
      * Changes to the next (right) tab
      */
     changeTabRight() {
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (activeTab === -1) return;
         this.inputWorker.postMessage({
             action: "changeTabRight",
@@ -1227,7 +1227,7 @@ class InputWaiter {
      * Changes to the previous (left) tab
      */
     changeTabLeft() {
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (activeTab === -1) return;
         this.inputWorker.postMessage({
             action: "changeTabLeft",
@@ -1242,7 +1242,7 @@ class InputWaiter {
      */
     async goToTab() {
         const inputNums = await this.getInputNums();
-        let tabNum = window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.manager.tabs.getActiveInputTab().toString());
+        let tabNum = window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.manager.tabs.getActiveTab("input").toString());
 
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);

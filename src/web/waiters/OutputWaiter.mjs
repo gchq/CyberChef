@@ -273,7 +273,7 @@ class OutputWaiter {
         const numTabs = this.manager.tabs.calcMaxTabs();
         if (numTabs !== this.maxTabs) {
             this.maxTabs = numTabs;
-            this.refreshTabs(this.manager.tabs.getActiveOutputTab(), "right");
+            this.refreshTabs(this.manager.tabs.getActiveTab("output"), "right");
         }
     }
 
@@ -351,7 +351,7 @@ class OutputWaiter {
 
         this.outputs[inputNum].data = data;
 
-        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
+        const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
         if (tabItem) tabItem.style.background = "";
 
         if (set) this.set(inputNum);
@@ -431,7 +431,7 @@ class OutputWaiter {
         this.outputs[inputNum].progress = progress;
 
         if (progress !== false) {
-            this.manager.tabs.updateOutputTabProgress(inputNum, progress, total);
+            this.manager.tabs.updateTabProgress(inputNum, progress, total, "output");
         }
 
     }
@@ -470,7 +470,7 @@ class OutputWaiter {
      */
     async set(inputNum) {
         inputNum = parseInt(inputNum, 10);
-        if (inputNum !== this.manager.tabs.getActiveOutputTab() ||
+        if (inputNum !== this.manager.tabs.getActiveTab("output") ||
             !this.outputExists(inputNum)) return;
         this.toggleLoader(true);
 
@@ -565,7 +565,7 @@ class OutputWaiter {
      * @param {number} activeTab
      */
     setFile(buf, activeTab) {
-        if (activeTab !== this.manager.tabs.getActiveOutputTab()) return;
+        if (activeTab !== this.manager.tabs.getActiveTab("output")) return;
         // Display file overlay in output area with details
         const fileOverlay = document.getElementById("output-file"),
             fileSize = document.getElementById("output-file-size"),
@@ -694,7 +694,7 @@ class OutputWaiter {
      * Handler for file download events.
      */
     async downloadFile() {
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (dish === null) {
             this.app.alert("Could not find any output data to download. Has this output been baked?", 3000);
             return;
@@ -849,9 +849,9 @@ class OutputWaiter {
         const tabsWrapper = document.getElementById("output-tabs");
         const numTabs = tabsWrapper.children.length;
 
-        if (!this.manager.tabs.getOutputTabItem(inputNum) && numTabs < this.maxTabs) {
+        if (!this.manager.tabs.getTabItem(inputNum, "output") && numTabs < this.maxTabs) {
             // Create a new tab element
-            const newTab = this.manager.tabs.createOutputTabElement(inputNum, changeTab);
+            const newTab = this.manager.tabs.reateTabElement(inputNum, changeTab, "output");
             tabsWrapper.appendChild(newTab);
         } else if (numTabs === this.maxTabs) {
             // Can't create a new tab
@@ -873,11 +873,11 @@ class OutputWaiter {
      */
     changeTab(inputNum, changeInput = false) {
         if (!this.outputExists(inputNum)) return;
-        const currentNum = this.manager.tabs.getActiveOutputTab();
+        const currentNum = this.manager.tabs.getActiveTab("output");
 
         this.hideMagicButton();
 
-        if (!this.manager.tabs.changeOutputTab(inputNum)) {
+        if (!this.manager.tabs.changeTab(inputNum, "output")) {
             let direction = "right";
             if (currentNum > inputNum) {
                 direction = "left";
@@ -887,7 +887,7 @@ class OutputWaiter {
             const tabsLeft = (newOutputs[0] !== this.getSmallestInputNum());
             const tabsRight = (newOutputs[newOutputs.length - 1] !== this.getLargestInputNum());
 
-            this.manager.tabs.refreshOutputTabs(newOutputs, inputNum, tabsLeft, tabsRight);
+            this.manager.tabs.refreshTabs(newOutputs, inputNum, tabsLeft, tabsRight, "output");
 
             for (let i = 0; i < newOutputs.length; i++) {
                 this.displayTabInfo(newOutputs[i]);
@@ -977,7 +977,7 @@ class OutputWaiter {
      * Handler for changing to the left tab
      */
     changeTabLeft() {
-        const currentTab = this.manager.tabs.getActiveOutputTab();
+        const currentTab = this.manager.tabs.getActiveTab("output");
         this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
     }
 
@@ -985,7 +985,7 @@ class OutputWaiter {
      * Handler for changing to the right tab
      */
     changeTabRight() {
-        const currentTab = this.manager.tabs.getActiveOutputTab();
+        const currentTab = this.manager.tabs.getActiveTab("output");
         this.changeTab(this.getNextInputNum(currentTab), this.app.options.syncTabs);
     }
 
@@ -996,7 +996,7 @@ class OutputWaiter {
         const min = this.getSmallestInputNum(),
             max = this.getLargestInputNum();
 
-        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.manager.tabs.getActiveOutputTab().toString());
+        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.manager.tabs.getActiveTab("output").toString());
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);
 
@@ -1115,7 +1115,7 @@ class OutputWaiter {
     removeTab(inputNum) {
         if (!this.outputExists(inputNum)) return;
 
-        const tabElement = this.manager.tabs.getOutputTabItem(inputNum);
+        const tabElement = this.manager.tabs.getTabItem(inputNum, "output");
 
         this.removeOutput(inputNum);
 
@@ -1134,7 +1134,7 @@ class OutputWaiter {
             tabsLeft = (newNums[0] !== this.getSmallestInputNum() && newNums.length > 0),
             tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum() && newNums.length > 0);
 
-        this.manager.tabs.refreshOutputTabs(newNums, activeTab, tabsLeft, tabsRight);
+        this.manager.tabs.refreshTabs(newNums, activeTab, tabsLeft, tabsRight, "output");
 
         for (let i = 0; i < newNums.length; i++) {
             this.displayTabInfo(newNums[i]);
@@ -1158,12 +1158,12 @@ class OutputWaiter {
             tabStr = await this.getDishTitle(this.getOutputDish(inputNum), 100);
             tabStr = tabStr.replace(/[\n\r]/g, "");
         }
-        this.manager.tabs.updateOutputTabHeader(inputNum, tabStr);
+        this.manager.tabs.updateTabHeader(inputNum, tabStr, "output");
         if (this.manager.worker.recipeConfig !== undefined) {
-            this.manager.tabs.updateOutputTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length);
+            this.manager.tabs.updateTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length, "output");
         }
 
-        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
+        const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
         if (tabItem) {
             if (this.outputs[inputNum].status === "error") {
                 tabItem.style.color = "#FF0000";
@@ -1178,7 +1178,7 @@ class OutputWaiter {
      */
     async backgroundMagic() {
         this.hideMagicButton();
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (!this.app.options.autoMagic || dish === null) return;
         const buffer = await this.getDishBuffer(dish);
         const sample = buffer.slice(0, 1000) || "";
@@ -1268,7 +1268,7 @@ class OutputWaiter {
             sliceToEl = document.getElementById("output-file-slice-to"),
             sliceFrom = parseInt(sliceFromEl.value, 10) * 1024,
             sliceTo = parseInt(sliceToEl.value, 10) * 1024,
-            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
+            output = this.outputs[this.manager.tabs.getActiveTab("output")].data;
 
         let str;
         if (output.type === "ArrayBuffer") {
@@ -1296,7 +1296,7 @@ class OutputWaiter {
         this.toggleLoader(true);
         const outputFile = document.getElementById("output-file"),
             showFileOverlay = document.getElementById("show-file-overlay"),
-            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
+            output = this.outputs[this.manager.tabs.getActiveTab("output")].data;
 
         let str;
         if (output.type === "ArrayBuffer") {
@@ -1326,7 +1326,7 @@ class OutputWaiter {
 
         this.outputTextEl.classList.add("blur");
         showFileOverlay.style.display = "none";
-        this.set(this.manager.tabs.getActiveOutputTab());
+        this.set(this.manager.tabs.getActiveTab("output"));
     }
 
     /**
@@ -1352,7 +1352,7 @@ class OutputWaiter {
      * Copies the output to the clipboard
      */
     async copyClick() { // TODO - do we need this?
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (dish === null) {
             this.app.alert("Could not find data to copy. Has this output been baked yet?", 3000);
             return;
@@ -1373,7 +1373,7 @@ class OutputWaiter {
      * Moves the current output into the input textarea.
      */
     async switchClick() {
-        const activeTab = this.manager.tabs.getActiveOutputTab();
+        const activeTab = this.manager.tabs.getActiveTab("output");
 
         const switchButton = document.getElementById("switch");
         switchButton.classList.add("spin");

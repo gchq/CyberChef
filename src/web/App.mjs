@@ -156,7 +156,7 @@ class App {
             this.manager.input.inputWorker.postMessage({
                 action: "autobake",
                 data: {
-                    activeTab: this.manager.tabs.getActiveInputTab()
+                    activeTab: this.manager.tabs.getActiveTab("input")
                 }
             });
         } else {
@@ -174,7 +174,7 @@ class App {
         // Reset status using cancelBake
         this.manager.worker.cancelBake(true, false);
 
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (activeTab === -1) return;
 
         let progress = 0;
@@ -221,7 +221,7 @@ class App {
     setInput(input) {
         // Get the currently active tab.
         // If there isn't one, assume there are no inputs so use inputNum of 1
-        let inputNum = this.manager.tabs.getActiveInputTab();
+        let inputNum = this.manager.tabs.getActiveTab("input");
         if (inputNum === -1) inputNum = 1;
         this.manager.input.updateInputValue(inputNum, input);
 
