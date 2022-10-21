@@ -109,7 +109,8 @@ module.exports = {
             "buffer": require.resolve("buffer/"),
             "crypto": require.resolve("crypto-browserify"),
             "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib")
+            "zlib": require.resolve("browserify-zlib"),
+            "process": false
         }
     },
     module: {
