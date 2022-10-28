@@ -79,7 +79,7 @@ class RabbitStreamCipher extends Operation {
         }
 
         // Inner State
-        const X = [], C = [];
+        const X = new Uint32Array(8), C = new Uint32Array(8);
         let b = 0;
 
         // Counter System
@@ -91,7 +91,7 @@ class RabbitStreamCipher extends Operation {
             for (let j = 0; j < 8; j++) {
                 const temp = C[j] + A[j] + b;
                 b = (temp / ((1 << 30) * 4)) >>> 0;
-                C[j] = temp >>> 0;
+                C[j] = temp;
             }
         };
 
@@ -106,18 +106,18 @@ class RabbitStreamCipher extends Operation {
             const lswTemp = lowerLower + (upperLower2 & 0xffff) * (1 << 16);
             const msw = mswTemp + ((lswTemp / ((1 << 30) * 4)) >>> 0);
             const lsw = lswTemp >>> 0;
-            return (lsw ^ msw) >>> 0;
+            return lsw ^ msw;
         };
         const leftRotate = function(value, width) {
             return (value << width) | (value >>> (32 - width));
         };
         const nextStateHelper1 = function(v0, v1, v2) {
-            return (v0 + leftRotate(v1, 16) + leftRotate(v2, 16)) >>> 0;
+            return v0 + leftRotate(v1, 16) + leftRotate(v2, 16);
         };
         const nextStateHelper2 = function(v0, v1, v2) {
-            return (v0 + leftRotate(v1, 8) + v2) >>> 0;
+            return v0 + leftRotate(v1, 8) + v2;
         };
-        const G = new Array(8);
+        const G = new Uint32Array(8);
         const nextState = function() {
             for (let j = 0; j < 8; j++) {
                 G[j] = g(X[j], C[j]);
@@ -133,23 +133,23 @@ class RabbitStreamCipher extends Operation {
         };
 
         // Key Setup Scheme
-        const K = [];
+        const K = new Uint16Array(8);
         if (littleEndian) {
             for (let i = 0; i < 8; i++) {
-                K.push((key[1 + 2 * i] << 8) | key[2 * i]);
+                K[i] = (key[1 + 2 * i] << 8) | key[2 * i];
             }
         } else {
             for (let i = 0; i < 8; i++) {
-                K.push((key[14 - 2 * i] << 8) | key[15 - 2 * i]);
+                K[i] = (key[14 - 2 * i] << 8) | key[15 - 2 * i];
             }
         }
         for (let j = 0; j < 8; j++) {
             if (j % 2 === 0) {
-                X.push(((K[(j + 1) % 8] << 16) | K[j]) >>> 0);
-                C.push(((K[(j + 4) % 8] << 16) | K[(j + 5) % 8]) >>> 0);
+                X[j] = (K[(j + 1) % 8] << 16) | K[j];
+                C[j] = (K[(j + 4) % 8] << 16) | K[(j + 5) % 8];
             } else {
-                X.push(((K[(j + 5) % 8] << 16) | K[(j + 4) % 8]) >>> 0);
-                C.push(((K[j] << 16) | K[(j + 1) % 8]) >>> 0);
+                X[j] = (K[(j + 5) % 8] << 16) | K[(j + 4) % 8];
+                C[j] = (K[j] << 16) | K[(j + 1) % 8];
             }
         }
         for (let i = 0; i < 4; i++) {
@@ -157,28 +157,28 @@ class RabbitStreamCipher extends Operation {
             nextState();
         }
         for (let j = 0; j < 8; j++) {
-            C[j] = (C[j] ^ X[(j + 4) % 8]) >>> 0;
+            C[j] = C[j] ^ X[(j + 4) % 8];
         }
 
         // IV Setup Scheme
         if (iv.length === 8) {
             const getIVValue = function(a, b, c, d) {
                 if (littleEndian) {
-                    return ((iv[a] << 24) | (iv[b] << 16) |
-                        (iv[c] << 8) | iv[d]) >>> 0;
+                    return (iv[a] << 24) | (iv[b] << 16) |
+                        (iv[c] << 8) | iv[d];
                 } else {
-                    return ((iv[7 - a] << 24) | (iv[7 - b] << 16) |
-                        (iv[7 - c] << 8) | iv[7 - d]) >>> 0;
+                    return (iv[7 - a] << 24) | (iv[7 - b] << 16) |
+                        (iv[7 - c] << 8) | iv[7 - d];
                 }
             };
-            C[0] = (C[0] ^ getIVValue(3, 2, 1, 0)) >>> 0;
-            C[1] = (C[1] ^ getIVValue(7, 6, 3, 2)) >>> 0;
-            C[2] = (C[2] ^ getIVValue(7, 6, 5, 4)) >>> 0;
-            C[3] = (C[3] ^ getIVValue(5, 4, 1, 0)) >>> 0;
-            C[4] = (C[4] ^ getIVValue(3, 2, 1, 0)) >>> 0;
-            C[5] = (C[5] ^ getIVValue(7, 6, 3, 2)) >>> 0;
-            C[6] = (C[6] ^ getIVValue(7, 6, 5, 4)) >>> 0;
-            C[7] = (C[7] ^ getIVValue(5, 4, 1, 0)) >>> 0;
+            C[0] = C[0] ^ getIVValue(3, 2, 1, 0);
+            C[1] = C[1] ^ getIVValue(7, 6, 3, 2);
+            C[2] = C[2] ^ getIVValue(7, 6, 5, 4);
+            C[3] = C[3] ^ getIVValue(5, 4, 1, 0);
+            C[4] = C[4] ^ getIVValue(3, 2, 1, 0);
+            C[5] = C[5] ^ getIVValue(7, 6, 3, 2);
+            C[6] = C[6] ^ getIVValue(7, 6, 5, 4);
+            C[7] = C[7] ^ getIVValue(5, 4, 1, 0);
             for (let i = 0; i < 4; i++) {
                 counterUpdate();
                 nextState();
@@ -186,7 +186,7 @@ class RabbitStreamCipher extends Operation {
         }
 
         // Extraction Scheme
-        const S = new Array(16);
+        const S = new Uint8Array(16);
         const extract = function() {
             let pos = 0;
             const addPart = function(value) {
