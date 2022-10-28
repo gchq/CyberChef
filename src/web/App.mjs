@@ -342,7 +342,7 @@ class App {
         let favourites;
 
         if (this.isLocalStorageAvailable()) {
-            favourites = localStorage.favourites && localStorage.favourites.length > 2 ?
+            favourites = localStorage?.favourites?.length > 2 ?
                 JSON.parse(localStorage.favourites) :
                 this.dfavourites;
             favourites = this.validFavourites(favourites);

@@ -159,7 +159,7 @@ class StatusBarPanel {
      * @param {boolean} selectionSet
      */
     updateSelection(state, selectionSet) {
-        const selLen = state.selection && state.selection.main ?
+        const selLen = state?.selection?.main ?
             state.selection.main.to - state.selection.main.from :
             0;
 

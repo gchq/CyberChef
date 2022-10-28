@@ -807,7 +807,7 @@ class InputWaiter {
         // Dropped text is handled by the editor itself
         if (e.dataTransfer.getData("Text")) return;
 
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        if (e?.dataTransfer?.files?.length > 0) {
             this.loadUIFiles(e.dataTransfer.files);
         }
     }

@@ -2,11 +2,11 @@
  * Implementation Web Crypto interfaces for GOST algorithms
  * 1.76
  * 2014-2016, Rudolf Nickolaev. All rights reserved.
- * 
+ *
  * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
-/* 
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -29,7 +29,7 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  */
 
 import GostRandom from './gostRandom.mjs';
@@ -39,7 +39,7 @@ import crypto from 'crypto'
 
 /*
 * Algorithm normalization
-* 
+*
 */ // <editor-fold defaultstate="collapsed">
 
 var root = {};
@@ -233,7 +233,7 @@ function normalize(algorithm, method) {
             break;
     }
 
-    // Encrypt additional modes 
+    // Encrypt additional modes
     if (na.mode === 'ES') {
         if (algorithm.block)
             na.block = algorithm.block; // ECB, CFB, OFB, CTR, CBC
@@ -383,7 +383,7 @@ function checkNative(algorithm) {
 
 /*
     * Key conversion methods
-    * 
+    *
     */ // <editor-fold defaultstate="collapsed">
 
 // Check key parameter
@@ -522,7 +522,7 @@ function swapBytes(src) {
 /**
  * Promise stub object (not fulfill specification, only for internal use)
  * Class not defined if Promise class already defined in root context<br><br>
- * 
+ *
  * The Promise object is used for deferred and asynchronous computations. A Promise is in one of the three states:
  *  <ul>
  *      <li>pending: initial state, not fulfilled or rejected.</li>
@@ -532,8 +532,8 @@ function swapBytes(src) {
  * Another term describing the state is settled: the Promise is either fulfilled or rejected, but not pending.<br><br>
  * @class Promise
  * @global
- * @param {function} executor Function object with two arguments resolve and reject. 
- * The first argument fulfills the promise, the second argument rejects it. 
+ * @param {function} executor Function object with two arguments resolve and reject.
+ * The first argument fulfills the promise, the second argument rejects it.
  * We can call these functions, once our operation is completed.
  */ // <editor-fold defaultstate="collapsed">
 if (!Promise) {
@@ -588,15 +588,15 @@ if (!Promise) {
                 }
             }
             /**
-             * The then() method returns a Promise. It takes two arguments, both are 
+             * The then() method returns a Promise. It takes two arguments, both are
              * callback functions for the success and failure cases of the Promise.
-             * 
+             *
              * @method then
              * @memberOf Promise
              * @instance
              * @param {function} onFulfilled A Function called when the Promise is fulfilled. This function has one argument, the fulfillment value.
              * @param {function} onRejected A Function called when the Promise is rejected. This function has one argument, the rejection reason.
-             * @returns {Promise} 
+             * @returns {Promise}
              */
             this.then = function (onFulfilled, onRejected) {
 
@@ -611,7 +611,7 @@ if (!Promise) {
                             return;
                         }
                         value = mswrap(value);
-                        if (value && value.then && value.then.call) {
+                        if (value && value?.then?.call) {
                             value.then(resolve, reject);
                         } else {
                             resolve(value);
@@ -627,7 +627,7 @@ if (!Promise) {
                             return;
                         }
                         reason = mswrap(reason);
-                        if (reason && reason.then && reason.then.call) {
+                        if (reason && reason?.then?.call) {
                             reason.then(resolve, reject);
                         } else {
                             reject(reason);
@@ -647,14 +647,14 @@ if (!Promise) {
 
             };
             /**
-             * The catch() method returns a Promise and deals with rejected cases only. 
+             * The catch() method returns a Promise and deals with rejected cases only.
              * It behaves the same as calling Promise.prototype.then(undefined, onRejected).
-             * 
+             *
              * @method catch
              * @memberOf Promise
              * @instance
              * @param {function} onRejected A Function called when the Promise is rejected. This function has one argument, the rejection reason.
-             * @returns {Promise} 
+             * @returns {Promise}
              */
             this['catch'] = function (onRejected) {
                 return this.then(undefined, onRejected);
@@ -662,15 +662,15 @@ if (!Promise) {
         }
 
         /**
-         * The Promise.all(iterable) method returns a promise that resolves when all 
+         * The Promise.all(iterable) method returns a promise that resolves when all
          * of the promises in the iterable argument have resolved.<br><br>
-         * 
-         * The result is passed as an array of values from all the promises. 
-         * If something passed in the iterable array is not a promise, it's converted to 
-         * one by Promise.resolve. If any of the passed in promises rejects, the 
-         * all Promise immediately rejects with the value of the promise that rejected, 
+         *
+         * The result is passed as an array of values from all the promises.
+         * If something passed in the iterable array is not a promise, it's converted to
+         * one by Promise.resolve. If any of the passed in promises rejects, the
+         * all Promise immediately rejects with the value of the promise that rejected,
          * discarding all the other promises whether or not they have resolved.
-         * 
+         *
          * @method all
          * @memberOf Promise
          * @static
@@ -698,7 +698,7 @@ if (!Promise) {
 
                 for (var i = 0, n = promises.length; i < n; i++) {
                     var data = promises[i];
-                    if (data.then && data.then.call)
+                    if (data?.then?.call)
                         data.then(asyncResolve(i), asyncReject);
                     else
                         result[i] = data;
@@ -715,7 +715,7 @@ if (!Promise) {
 
 /*
     * Worker executor
-    * 
+    *
     */ // <editor-fold defaultstate="collapsed">
 
 var baseUrl = '', nameSuffix = '';
@@ -797,7 +797,7 @@ if (!root.importScripts) {
 
 if (!worker) {
     // Import main module
-    // Reason: we are already in worker process or Worker interface is not 
+    // Reason: we are already in worker process or Worker interface is not
     // yet supported
     root.gostEngine || require('./gostEngine');
 }
@@ -841,11 +841,11 @@ function call(callback) {
 
 /*
     * WebCrypto common class references
-    * 
+    *
     */ // <editor-fold defaultstate="collapsed">
 /**
- * The Algorithm object is a dictionary object [WebIDL] which is used to 
- * specify an algorithm and any additional parameters required to fully 
+ * The Algorithm object is a dictionary object [WebIDL] which is used to
+ * specify an algorithm and any additional parameters required to fully
  * specify the desired operation.<br>
  * <pre>
  *  dictionary Algorithm {
@@ -867,7 +867,7 @@ function call(callback) {
  */
 
 /**
- * The KeyAlgorithm interface represents information about the contents of a 
+ * The KeyAlgorithm interface represents information about the contents of a
  * given Key object.
  * <pre>
  *  interface KeyAlgorithm {
@@ -875,14 +875,14 @@ function call(callback) {
  *  };
  * </pre>
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#key-algorithm-interface}
- * @class KeyAlgorithm 
+ * @class KeyAlgorithm
  * @param {DOMString} name The name of the algorithm used to generate the Key
  */
 
 /**
- * The type of a key. The recognized key type values are "public", "private" 
- * and "secret". Opaque keying material, including that used for symmetric 
- * algorithms, is represented by "secret", while keys used as part of asymmetric 
+ * The type of a key. The recognized key type values are "public", "private"
+ * and "secret". Opaque keying material, including that used for symmetric
+ * algorithms, is represented by "secret", while keys used as part of asymmetric
  * algorithms composed of public/private keypairs will be either "public" or "private".
  * <pre>
  *  typedef DOMString KeyType;
@@ -892,8 +892,8 @@ function call(callback) {
  */
 
 /**
- * Sequence of operation type that may be performed using a key. The recognized 
- * key usage values are "encrypt", "decrypt", "sign", "verify", "deriveKey", 
+ * Sequence of operation type that may be performed using a key. The recognized
+ * key usage values are "encrypt", "decrypt", "sign", "verify", "deriveKey",
  * "deriveBits", "wrapKey" and "unwrapKey".
  * <pre>
  *  typedef DOMString[] KeyUsages;
@@ -903,19 +903,19 @@ function call(callback) {
  */
 
 /**
- * The Key object represents an opaque reference to keying material that is 
+ * The Key object represents an opaque reference to keying material that is
  * managed by the user agent.<br>
- * This specification provides a uniform interface for many different kinds of 
- * keying material managed by the user agent. This may include keys that have 
- * been generated by the user agent, derived from other keys by the user agent, 
- * imported to the user agent through user actions or using this API, 
- * pre-provisioned within software or hardware to which the user agent has 
- * access or made available to the user agent in other ways. The term key refers 
- * broadly to any keying material including actual keys for cryptographic 
+ * This specification provides a uniform interface for many different kinds of
+ * keying material managed by the user agent. This may include keys that have
+ * been generated by the user agent, derived from other keys by the user agent,
+ * imported to the user agent through user actions or using this API,
+ * pre-provisioned within software or hardware to which the user agent has
+ * access or made available to the user agent in other ways. The term key refers
+ * broadly to any keying material including actual keys for cryptographic
  * operations and secret values obtained within key derivation or exchange operations.<br>
- * The Key object is not required to directly interface with the underlying key 
- * storage mechanism, and may instead simply be a reference for the user agent 
- * to understand how to obtain the keying material when needed, eg. when performing 
+ * The Key object is not required to directly interface with the underlying key
+ * storage mechanism, and may instead simply be a reference for the user agent
+ * to understand how to obtain the keying material when needed, eg. when performing
  * a cryptographic operation.
  * <pre>
  *  interface Key {
@@ -923,14 +923,14 @@ function call(callback) {
  *      readonly attribute boolean extractable;
  *      readonly attribute KeyAlgorithm algorithm;
  *      readonly attribute KeyUsages usages;
- *  };     
+ *  };
  * </pre>
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#key-interface}
  * @class Key
  * @param {KeyType} type The type of a key. The recognized key type values are "public", "private" and "secret".
  * @param {boolean} extractable Whether or not the raw keying material may be exported by the application.
  * @param {KeyAlgorithm} algorithm The Algorithm used to generate the key.
- * @param {KeyUsages} usages Key usage array: type of operation that may be performed using a key. 
+ * @param {KeyUsages} usages Key usage array: type of operation that may be performed using a key.
  */
 
 /**
@@ -939,7 +939,7 @@ function call(callback) {
  *  interface KeyPair {
  *      readonly attribute Key publicKey;
  *      readonly attribute Key privateKey;
- *  };     
+ *  };
  * </pre>
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#keypair}
  * @class KeyPair
@@ -963,7 +963,7 @@ function call(callback) {
  */
 
 /**
- * Binary data 
+ * Binary data
  *  <pre>
  *  typedef (ArrayBuffer or ArrayBufferView) CryptoOperationData;
  *  </pre>
@@ -982,9 +982,9 @@ var CryptoOperationData = ArrayBuffer;
 
 /**
  * The gostCrypto provide general purpose cryptographic functionality for
- * GOST standards including a cryptographically strong pseudo-random number 
+ * GOST standards including a cryptographically strong pseudo-random number
  * generator seeded with truly random values.
- * 
+ *
  * @namespace gostCrypto
  */
 var gostCrypto = {};
@@ -992,17 +992,17 @@ var gostCrypto = {};
 /**
  * The SubtleCrypto class provides low-level cryptographic primitives and algorithms.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#subtlecrypto-interface}
- * 
+ *
  * @class SubtleCrypto
  */ // <editor-fold>
 function SubtleCrypto() {
 }
 
 /**
- * The encrypt method returns a new Promise object that will encrypt data 
+ * The encrypt method returns a new Promise object that will encrypt data
  * using the specified algorithm identifier with the supplied Key.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-encrypt}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST 28147-ECB</b> "prostaya zamena" (ECB) mode (default)</li>
@@ -1016,8 +1016,8 @@ function SubtleCrypto() {
  *      <li><b>GOST R 34.12-CTR</b> "gammirovanie" (counter) mode</li>
  *      <li><b>GOST R 34.12-CBC</b> Cipher-Block-Chaining (CBC) mode</li>
  *  </ul>
- *  For more information see {@link GostCipher} 
- * 
+ *  For more information see {@link GostCipher}
+ *
  * @memberOf SubtleCrypto
  * @method encrypt
  * @instance
@@ -1039,10 +1039,10 @@ SubtleCrypto.prototype.encrypt = function (algorithm, key, data) // <editor-fold
 }; // </editor-fold>
 
 /**
- * The decrypt method returns a new Promise object that will decrypt data 
- * using the specified algorithm identifier with the supplied Key. 
+ * The decrypt method returns a new Promise object that will decrypt data
+ * using the specified algorithm identifier with the supplied Key.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-decrypt}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST 28147-ECB</b> "prostaya zamena" (ECB) mode (default)</li>
@@ -1056,8 +1056,8 @@ SubtleCrypto.prototype.encrypt = function (algorithm, key, data) // <editor-fold
  *      <li><b>GOST R 34.12-CTR</b> "gammirovanie" (counter) mode</li>
  *      <li><b>GOST R 34.12-CBC</b> Cipher-Block-Chaining (CBC) mode</li>
  *  </ul>
- *  For additional modes see {@link GostCipher} 
- * 
+ *  For additional modes see {@link GostCipher}
+ *
  * @memberOf SubtleCrypto
  * @method decrypt
  * @instance
@@ -1079,10 +1079,10 @@ SubtleCrypto.prototype.decrypt = function (algorithm, key, data) // <editor-fold
 }; // </editor-fold>
 
 /**
- * The sign method returns a new Promise object that will sign data using 
+ * The sign method returns a new Promise object that will sign data using
  * the specified algorithm identifier with the supplied Key.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-sign}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10-94</b> GOST Signature</li>
@@ -1096,12 +1096,12 @@ SubtleCrypto.prototype.decrypt = function (algorithm, key, data) // <editor-fold
  *      <li><b>SHA-HMAC</b> HMAC base on SHA</li>
  *  </ul>
  *  For additional modes see {@link GostSign}, {@link GostDigest} and {@link GostCipher}
- * 
+ *
  * @memberOf SubtleCrypto
  * @method sign
  * @instance
  * @param {AlgorithmIdentifier} algorithm Algorithm identifier
- * @param {Key} key Key object 
+ * @param {Key} key Key object
  * @param {CryptoOperationData} data Operation data
  * @returns {Promise} Promise that resolves with {@link CryptoOperationData}
  */
@@ -1124,10 +1124,10 @@ SubtleCrypto.prototype.sign = function (algorithm, key, data) // <editor-fold de
 }; // </editor-fold>
 
 /**
- * The verify method returns a new Promise object that will verify data 
+ * The verify method returns a new Promise object that will verify data
  * using the specified algorithm identifier with the supplied Key.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-verify}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10-94</b> GOST Signature</li>
@@ -1141,7 +1141,7 @@ SubtleCrypto.prototype.sign = function (algorithm, key, data) // <editor-fold de
  *      <li><b>SHA-HMAC</b> HMAC base on SHA</li>
  *  </ul>
  *  For additional modes see {@link GostSign}, {@link GostDigest} and {@link GostCipher}
- * 
+ *
  * @memberOf SubtleCrypto
  * @method verify
  * @instance
@@ -1168,10 +1168,10 @@ SubtleCrypto.prototype.verify = function (algorithm, key, signature, data) // <e
 }; // </editor-fold>
 
 /**
- * The digest method returns a new Promise object that will digest data 
- * using the specified algorithm identifier. 
+ * The digest method returns a new Promise object that will digest data
+ * using the specified algorithm identifier.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-digest}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.11-94</b> Old-Style GOST Hash</li>
@@ -1179,7 +1179,7 @@ SubtleCrypto.prototype.verify = function (algorithm, key, signature, data) // <e
  *      <li><b>SHA</b> SHA Hash</li>
  *  </ul>
  *  For additional modes see {@link GostDigest}
- * 
+ *
  * @memberOf SubtleCrypto
  * @method digest
  * @instance
@@ -1201,10 +1201,10 @@ SubtleCrypto.prototype.digest = function (algorithm, data) // <editor-fold defau
 /**
  * The generateKey method returns a new Promise object that will key(s) using
  * the specified algorithm identifier. Key can be used in according with
- * KeyUsages sequence. The recognized key usage values are "encrypt", "decrypt", 
+ * KeyUsages sequence. The recognized key usage values are "encrypt", "decrypt",
  * "sign", "verify", "deriveKey", "deriveBits", "wrapKey" and "unwrapKey".
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-generateKey}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10</b> ECGOST Key Pairs</li>
@@ -1216,7 +1216,7 @@ SubtleCrypto.prototype.digest = function (algorithm, data) // <editor-fold defau
  *  </ul>
  *  For additional modes see {@link GostSign}, {@link GostDigest} and {@link GostCipher}<br>
  *  Note: Generation key for GOST R 34.10-94 not supported.
- * 
+ *
  * @memberOf SubtleCrypto
  * @method generateKey
  * @instance
@@ -1254,10 +1254,10 @@ SubtleCrypto.prototype.generateKey = function (algorithm, extractable, keyUsages
 /**
  * The deriveKey method returns a new Promise object that will key(s) using
  * the specified algorithm identifier. Key can be used in according with
- * KeyUsage sequence. The recognized key usage values are "encrypt", "decrypt", 
+ * KeyUsage sequence. The recognized key usage values are "encrypt", "decrypt",
  * "sign", "verify", "deriveKey", "deriveBits", "wrapKey" and "unwrapKey".
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-deriveKey}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10-DH</b> ECDH Key Agreement mode</li>
@@ -1269,7 +1269,7 @@ SubtleCrypto.prototype.generateKey = function (algorithm, extractable, keyUsages
  *      <li><b>SHA-PFXKDF</b> PFX Key for Derivation Algorithm</li>
  *  </ul>
  *  For additional modes see {@link GostSign} and {@link GostDigest}
- * 
+ *
  * @memberOf SubtleCrypto
  * @method deriveKey
  * @instance
@@ -1277,7 +1277,7 @@ SubtleCrypto.prototype.generateKey = function (algorithm, extractable, keyUsages
  * @param {Key} baseKey Derivation key object
  * @param {AlgorithmIdentifier} derivedKeyType Derived key algorithm identifier
  * @param {boolean} extractable Whether or not the raw keying material may be exported by the application
- * @param {KeyUsages} keyUsages Key usage array: type of operation that may be performed using a key 
+ * @param {KeyUsages} keyUsages Key usage array: type of operation that may be performed using a key
  * @returns {Promise} Promise that resolves with {@link Key}
  */
 SubtleCrypto.prototype.deriveKey = function (algorithm, baseKey,
@@ -1302,10 +1302,10 @@ SubtleCrypto.prototype.deriveKey = function (algorithm, baseKey,
 }; // </editor-fold>
 
 /**
- * The deriveBits method returns length bits on baseKey using the 
- * specified algorithm identifier. 
+ * The deriveBits method returns length bits on baseKey using the
+ * specified algorithm identifier.
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-deriveBits}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10-DH</b> ECDH Key Agreement mode</li>
@@ -1317,7 +1317,7 @@ SubtleCrypto.prototype.deriveKey = function (algorithm, baseKey,
  *      <li><b>SHA-PFXKDF</b> PFX Key for Derivation Algorithm</li>
  *  </ul>
  *  For additional modes see {@link GostSign} and {@link GostDigest}
- * 
+ *
  * @memberOf SubtleCrypto
  * @method deriveBits
  * @instance
@@ -1342,7 +1342,7 @@ SubtleCrypto.prototype.deriveBits = function (algorithm, baseKey, length) // <ed
 /**
  * The importKey method returns a new Promise object that will key(s) using
  * the specified algorithm identifier. Key can be used in according with
- * KeyUsage sequence. The recognized key usage values are "encrypt", "decrypt", 
+ * KeyUsage sequence. The recognized key usage values are "encrypt", "decrypt",
  * "sign", "verify", "deriveKey", "deriveBits", "wrapKey" and "unwrapKey".<br><br>
  * Parameter keyData contains data in defined format.
  * The suppored key format values are:
@@ -1352,7 +1352,7 @@ SubtleCrypto.prototype.deriveBits = function (algorithm, baseKey, length) // <ed
  *      <li>'spki' - The DER encoding of the SubjectPublicKeyInfo structure from RFC 5280.</li>
  *  </ul>
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-importKey}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10-94</b> GOST Private and Public keys</li>
@@ -1364,7 +1364,7 @@ SubtleCrypto.prototype.deriveBits = function (algorithm, baseKey, length) // <ed
  *      <li><b>GOST R 34.11-KDF</b> Key for Derivation Algorithm</li>
  *  </ul>
  *  For additional modes see {@link GostSign}, {@link GostDigest} and {@link GostCipher}<br>
- * 
+ *
  * @memberOf SubtleCrypto
  * @method importKey
  * @instance
@@ -1455,7 +1455,7 @@ SubtleCrypto.prototype.importKey = function (format, keyData, algorithm, extract
  *      <li>'spki' - The DER encoding of the SubjectPublicKeyInfo structure from RFC 5280.</li>
  *  </ul>
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-exportKey}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST R 34.10-94</b> GOST Private and Public keys</li>
@@ -1472,7 +1472,7 @@ SubtleCrypto.prototype.importKey = function (format, keyData, algorithm, extract
  *      <li><b>SHA-PFXKDF</b> Import PFX Key for Derivation Algorithm</li>
  *  </ul>
  *  For additional modes see {@link GostSign}, {@link GostDigest} and {@link GostCipher}<br>
- * 
+ *
  * @memberOf SubtleCrypto
  * @method exportKey
  * @instance
@@ -1492,7 +1492,7 @@ SubtleCrypto.prototype.exportKey = function (format, key) // <editor-fold defaul
         var raw = extractKey(null, null, key);
         if (format === 'raw')
             return raw;
-        else if (format === 'pkcs8' && key.algorithm && key.algorithm.id) {
+        else if (format === 'pkcs8' && key?.algorithm?.id) {
             if (key.algorithm.procreator === 'VN') {
                 // Add masks for ViPNet
                 var algorithm = key.algorithm, mask;
@@ -1514,7 +1514,7 @@ SubtleCrypto.prototype.exportKey = function (format, key) // <editor-fold defaul
                 });
             } else
                 return gostCrypto.asn1.GostPrivateKeyInfo.encode(key);
-        } else if (format === 'spki' && key.algorithm && key.algorithm.id)
+        } else if (format === 'spki' && key?.algorithm?.id)
             return gostCrypto.asn1.GostSubjectPublicKeyInfo.encode(key);
         else
             throw new NotSupportedError('Key format not supported');
@@ -1524,7 +1524,7 @@ SubtleCrypto.prototype.exportKey = function (format, key) // <editor-fold defaul
 /**
  * The wrapKey method returns a new Promise object that will wrapped key(s).
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-wrapKey}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST 28147-KW</b> Key Wrapping GOST 28147 modes</li>
@@ -1534,7 +1534,7 @@ SubtleCrypto.prototype.exportKey = function (format, key) // <editor-fold defaul
  *      <li><b>GOST R 34.10-MASK</b> Key Mask GOST R 34.10 modes</li>
  *  </ul>
  *  For additional modes see {@link GostCipher}<br>
- * 
+ *
  * @memberOf SubtleCrypto
  * @method wrapKey
  * @instance
@@ -1567,7 +1567,7 @@ SubtleCrypto.prototype.wrapKey = function (format, key, wrappingKey, wrapAlgorit
 /**
  * The unwrapKey method returns a new Promise object that will unwrapped key(s).
  * WebCrypto API reference {@link http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-unwrapKey}<br><br>
- * 
+ *
  * Supported algorithm names:
  *  <ul>
  *      <li><b>GOST 28147-KW</b> Key Wrapping GOST 28147 modes</li>
@@ -1577,7 +1577,7 @@ SubtleCrypto.prototype.wrapKey = function (format, key, wrappingKey, wrapAlgorit
  *      <li><b>GOST R 34.10-MASK</b> Key Mask GOST R 34.10 modes</li>
  *  </ul>
  *  For additional modes see {@link GostCipher}<br>
- * 
+ *
  * @memberOf SubtleCrypto
  * @method unwrapKey
  * @instance
@@ -1620,21 +1620,21 @@ SubtleCrypto.prototype.unwrapKey = function (format, wrappedKey, unwrappingKey,
 }; // </editor-fold>
 
 /**
- * The subtle attribute provides an instance of the SubtleCrypto 
- * interface which provides low-level cryptographic primitives and 
+ * The subtle attribute provides an instance of the SubtleCrypto
+ * interface which provides low-level cryptographic primitives and
  * algorithms.
- * 
+ *
  * @memberOf gostCrypto
  * @type SubtleCrypto
  */
 gostCrypto.subtle = new SubtleCrypto();
 
 /**
- * The getRandomValues method generates cryptographically random values. 
- * 
+ * The getRandomValues method generates cryptographically random values.
+ *
  * First try to use Web Crypto random genereator. Next make random
  * bytes based on standart Math.random mixed with time and mouse pointer
- * 
+ *
  * @memberOf gostCrypto
  * @param {(CryptoOperationData)} array Destination buffer for random data
  */

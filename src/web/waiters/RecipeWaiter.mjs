@@ -133,7 +133,7 @@ class RecipeWaiter {
         // Reinitialise the popover on the original element in the ops list because for some reason it
         // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
         let enableOpsElement;
-        if (evt.clone.parentNode && evt.clone.parentNode.classList.contains("op-list")) {
+        if (evt.clone?.parentNode?.classList?.contains("op-list")) {
             enableOpsElement = evt.clone;
         } else {
             enableOpsElement = evt.item;
@@ -163,13 +163,13 @@ class RecipeWaiter {
 
         e.stopPropagation();
         e.preventDefault();
-        if (e.target.className && e.target.className.indexOf("category-title") > -1) {
+        if (e.target?.className?.indexOf("category-title") > -1) {
             // Hovering over the a
             e.target.classList.add("favourites-hover");
-        } else if (e.target.parentNode.className && e.target.parentNode.className.indexOf("category-title") > -1) {
+        } else if (e.target?.parentNode?.className?.indexOf("category-title") > -1) {
             // Hovering over the Edit button
             e.target.parentNode.classList.add("favourites-hover");
-        } else if (e.target.parentNode.parentNode.className && e.target.parentNode.parentNode.className.indexOf("category-title") > -1) {
+        } else if (e.target?.parentNode?.parentNode?.className?.indexOf("category-title") > -1) {
             // Hovering over the image on the Edit button
             e.target.parentNode.parentNode.classList.add("favourites-hover");
         }
@@ -211,7 +211,7 @@ class RecipeWaiter {
      * @fires Manager#statechange
      */
     ingChange(e) {
-        if (e && e.target && e.target.classList.contains("no-state-change")) return;
+        if (e && e?.target?.classList?.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
 

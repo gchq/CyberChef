@@ -155,7 +155,7 @@ class OutputWaiter {
     getEOLSeq() {
         const currentTabNum = this.manager.tabs.getActiveTab("output");
         if (currentTabNum < 0) {
-            return this.outputEditorConf.state.lineBreak;
+            return this.outputEditorConf.state?.lineBreak || "\n";
         }
         return this.outputs[currentTabNum].eolSequence;
     }
