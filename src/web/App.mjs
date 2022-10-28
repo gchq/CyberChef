@@ -502,6 +502,16 @@ class App {
             this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10));
         }
 
+        // Input EOL sequence
+        if (this.uriParams.ieol) {
+            this.manager.input.eolChange(this.uriParams.ieol);
+        }
+
+        // Output EOL sequence
+        if (this.uriParams.oeol) {
+            this.manager.output.eolChange(this.uriParams.oeol);
+        }
+
         // Read in input data from URI params
         if (this.uriParams.input) {
             try {

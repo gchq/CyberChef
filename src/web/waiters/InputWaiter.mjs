@@ -143,6 +143,14 @@ class InputWaiter {
     }
 
     /**
+     * Getter for the input EOL sequence
+     * @returns {string}
+     */
+    getEOLSeq() {
+        return this.inputEditorView.state.lineBreak;
+    }
+
+    /**
      * Handler for Chr Enc change events
      * Sets the input character encoding
      * @param {number} chrEncVal
@@ -179,7 +187,7 @@ class InputWaiter {
      */
     getInput() {
         const doc = this.inputEditorView.state.doc;
-        const eol = this.inputEditorView.state.lineBreak;
+        const eol = this.getEOLSeq();
         return doc.sliceString(0, doc.length, eol);
     }
 
@@ -644,7 +652,7 @@ class InputWaiter {
                 buffer: buffer,
                 stringSample: stringSample,
                 encoding: this.getChrEnc(),
-                eolSequence: this.inputEditorView.state.lineBreak
+                eolSequence: this.getEOLSeq()
             }
         }, transferable);
     }

@@ -142,7 +142,22 @@ class OutputWaiter {
         });
 
         // Reset the output so that lines are recalculated, preserving the old EOL values
-        this.setOutput(oldOutputVal);
+        this.setOutput(oldOutputVal, true);
+        // Update the URL manually since we aren't firing a statechange event
+        this.app.updateURL(true);
+    }
+
+    /**
+     * Getter for the output EOL sequence
+     * Prefer reading value from `this.outputs` since the editor may not have updated yet.
+     * @returns {string}
+     */
+    getEOLSeq() {
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum < 0) {
+            return this.outputEditorConf.state.lineBreak;
+        }
+        return this.outputs[currentTabNum].eolSequence;
     }
 
     /**

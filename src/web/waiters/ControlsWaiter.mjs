@@ -140,12 +140,16 @@ class ControlsWaiter {
 
         const inputChrEnc = this.manager.input.getChrEnc();
         const outputChrEnc = this.manager.output.getChrEnc();
+        const inputEOLSeq = this.manager.input.getEOLSeq();
+        const outputEOLSeq = this.manager.output.getEOLSeq();
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
             includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
             inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
-            outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined
+            outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined,
+            inputEOLSeq !== "\n" ? ["ieol", inputEOLSeq] : undefined,
+            outputEOLSeq !== "\n" ? ["oeol", outputEOLSeq] : undefined
         ];
 
         const hash = params
