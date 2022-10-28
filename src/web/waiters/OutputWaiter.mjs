@@ -129,6 +129,13 @@ class OutputWaiter {
     eolChange(eolVal) {
         const oldOutputVal = this.getOutput();
 
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum >= 0) {
+            this.outputs[currentTabNum].eolSequence = eolVal;
+        } else {
+            throw new Error("Cannot change output eol sequence to " + eolVal);
+        }
+
         // Update the EOL value
         this.outputEditorView.dispatch({
             effects: this.outputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
@@ -336,7 +343,8 @@ class OutputWaiter {
             status: "inactive",
             bakeId: -1,
             progress: false,
-            encoding: 0
+            encoding: 0,
+            eolSequence: "\u000a"
         };
 
         this.outputs[inputNum] = newOutput;
@@ -490,6 +498,13 @@ class OutputWaiter {
             const output = this.outputs[inputNum];
 
             const outputFile = document.getElementById("output-file");
+
+            // Update the EOL value
+            this.outputEditorView.dispatch({
+                effects: this.outputEditorConf.eol.reconfigure(
+                    EditorState.lineSeparator.of(output.eolSequence)
+                )
+            });
 
             // If pending or baking, show loader and status message
             // If error, style the tab and handle the error

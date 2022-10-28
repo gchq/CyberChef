@@ -31,6 +31,7 @@ self.pendingFiles = [];
  * @property {string} status
  * @property {number} progress
  * @property {number} encoding
+ * @property {string} eolSequence
  */
 self.inputs = {};
 self.loaderWorkers = [];
@@ -514,6 +515,7 @@ self.updateInputProgress = function(inputData) {
  * @param {number} inputData.inputNum - The input that's having its value updated
  * @param {ArrayBuffer} inputData.buffer - The new value of the input as a buffer
  * @param {number} [inputData.encoding] - The character encoding of the input data
+ * @param {string} [inputData.eolSequence] - The end of line sequence of the input data
  * @param {string} [inputData.stringSample] - A sample of the value as a string (truncated to 4096 chars)
  */
 self.updateInputValue = function(inputData) {
@@ -526,6 +528,9 @@ self.updateInputValue = function(inputData) {
     self.inputs[inputNum].buffer = inputData.buffer;
     if ("encoding" in inputData) {
         self.inputs[inputNum].encoding = inputData.encoding;
+    }
+    if ("eolSequence" in inputData) {
+        self.inputs[inputNum].eolSequence = inputData.eolSequence;
     }
     if (!("stringSample" in inputData)) {
         inputData.stringSample = Utils.arrayBufferToStr(inputData.buffer.slice(0, 4096));
@@ -762,7 +767,8 @@ self.addInput = function(
         file: null,
         status: "pending",
         progress: 0,
-        encoding: 0
+        encoding: 0,
+        eolSequence: "\u000a"
     };
 
     switch (type) {

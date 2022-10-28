@@ -470,6 +470,7 @@ class InputWaiter {
      *     @param {string} status
      *     @param {number} progress
      *     @param {number} encoding
+     *     @param {string} eolSequence
      * @param {boolean} [silent=false] - If false, fires the manager statechange event
      */
     async set(inputNum, inputData, silent=false) {
@@ -477,7 +478,15 @@ class InputWaiter {
             const activeTab = this.manager.tabs.getActiveTab("input");
             if (inputNum !== activeTab) return;
 
+            // Update current character encoding
             this.inputChrEnc = inputData.encoding;
+
+            // Update current eol sequence
+            this.inputEditorView.dispatch({
+                effects: this.inputEditorConf.eol.reconfigure(
+                    EditorState.lineSeparator.of(inputData.eolSequence)
+                )
+            });
 
             if (inputData.file) {
                 this.setFile(inputNum, inputData);
@@ -634,7 +643,8 @@ class InputWaiter {
                 inputNum: inputNum,
                 buffer: buffer,
                 stringSample: stringSample,
-                encoding: this.getChrEnc()
+                encoding: this.getChrEnc(),
+                eolSequence: this.inputEditorView.state.lineBreak
             }
         }, transferable);
     }
