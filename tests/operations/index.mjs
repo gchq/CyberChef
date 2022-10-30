@@ -124,6 +124,7 @@ import "./tests/UnescapeString.mjs";
 import "./tests/LS47.mjs";
 import "./tests/LZString.mjs";
 import "./tests/NTLM.mjs";
+import "./tests/MSDOSDateAndTime.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";

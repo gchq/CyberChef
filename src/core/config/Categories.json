@@ -290,6 +290,8 @@
             "To UNIX Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
+            "From MS-DOS Date and Time",
+            "To MS-DOS Date and Time",
             "Extract dates",
             "Get Time",
             "Sleep"
