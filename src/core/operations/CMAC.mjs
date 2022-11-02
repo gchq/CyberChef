@@ -57,15 +57,17 @@ class CMAC extends Operation {
                     }
                     return {
                         "algorithm": "AES-ECB",
+                        "key": key,
                         "blockSize": 16,
                         "Rb": new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x87]),
                     };
                 case "Triple DES":
-                    if (key.length !== 24) {
-                        throw new OperationError("the key for Triple DES must be 24 bytes (currently " + key.length + " bytes)");
+                    if (key.length !== 16 && key.length !== 24) {
+                        throw new OperationError("the key for Triple DES must be 16 or 24 bytes (currently " + key.length + " bytes)");
                     }
                     return {
                         "algorithm": "3DES-ECB",
+                        "key": key.length === 16 ? key + key.substring(0, 8) : key,
                         "blockSize": 8,
                         "Rb": new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0x1b]),
                     };
@@ -89,7 +91,7 @@ class CMAC extends Operation {
             }
             return out;
         };
-        const cipher = forge.cipher.createCipher(info.algorithm, key);
+        const cipher = forge.cipher.createCipher(info.algorithm, info.key);
         const encrypt = function(a, out) {
             if (!out) out = new Uint8Array(a.length);
             cipher.start();

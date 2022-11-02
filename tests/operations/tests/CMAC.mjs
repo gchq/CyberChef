@@ -303,7 +303,7 @@ TestRegister.addTests([
     {
         "name": "CMAC-TDES: invalid key length",
         "input": "",
-        "expectedOutput": "the key for Triple DES must be 24 bytes (currently 20 bytes)",
+        "expectedOutput": "the key for Triple DES must be 16 or 24 bytes (currently 20 bytes)",
         "recipeConfig": [
             {
                 "op": "CMAC",
