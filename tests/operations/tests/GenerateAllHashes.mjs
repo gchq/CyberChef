@@ -63,6 +63,7 @@ Fletcher-64:  00000459000001c0
 Adler-32:     045d01c1
 CRC-8:        b9
 CRC-16:       f82e
+CRC-16-CCITT: 9b06
 CRC-32:       d87f7e0c
 `,
         recipeConfig: [
