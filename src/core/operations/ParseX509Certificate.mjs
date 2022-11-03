@@ -59,7 +59,7 @@ class ParseX509Certificate extends Operation {
 
         switch (inputFormat) {
             case "DER Hex":
-                input = input.replace(/\s/g, "");
+                input = input.replace(/\s/g, "").toLowerCase();
                 cert.readCertHex(input);
                 break;
             case "PEM":
