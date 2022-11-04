@@ -517,11 +517,11 @@ class App {
             try {
                 let inputVal;
                 const inputChrEnc = this.manager.input.getChrEnc();
-                const inputData = fromBase64(this.uriParams.input);
+                const inputData = fromBase64(this.uriParams.input, null, "byteArray");
                 if (inputChrEnc > 0) {
-                    inputVal= cptable.utils.decode(inputChrEnc, inputData);
+                    inputVal = cptable.utils.decode(inputChrEnc, inputData);
                 } else {
-                    inputVal = Utils.arrayBufferToStr(inputData);
+                    inputVal = Utils.byteArrayToChars(inputData);
                 }
                 this.setInput(inputVal);
             } catch (err) {}
