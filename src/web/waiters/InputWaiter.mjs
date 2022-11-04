@@ -750,7 +750,10 @@ class InputWaiter {
             const activeTab = this.manager.tabs.getActiveTab("input");
 
             this.updateInputValue(activeTab, value);
-            this.manager.tabs.updateTabHeader(activeTab, value.slice(0, 100).replace(/[\n\r]/g, ""), "input");
+            this.inputWorker.postMessage({
+                action: "updateTabHeader",
+                data: activeTab
+            });
 
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
