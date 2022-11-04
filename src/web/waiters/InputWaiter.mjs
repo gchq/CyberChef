@@ -49,6 +49,7 @@ class InputWaiter {
         this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.callbacks = {};
         this.callbackID = 0;
+        this.fileDetails = {};
 
         this.maxWorkers = 1;
         if (navigator.hardwareConcurrency !== undefined &&
@@ -542,15 +543,16 @@ class InputWaiter {
         if (inputNum !== activeTab) return;
 
         // Create file details panel
+        this.fileDetails = {
+            fileDetails: inputData.file,
+            progress: inputData.progress,
+            status: inputData.status,
+            buffer: inputData.buffer,
+            renderPreview: this.app.options.imagePreview
+        };
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
-                fileDetailsPanel({
-                    fileDetails: inputData.file,
-                    progress: inputData.progress,
-                    status: inputData.status,
-                    buffer: inputData.buffer,
-                    renderPreview: this.app.options.imagePreview
-                })
+                fileDetailsPanel(this.fileDetails)
             )
         });
     }
@@ -599,19 +601,16 @@ class InputWaiter {
      * @param {number | string} progress - Either a number or "error"
      */
     updateFileProgress(inputNum, progress) {
-        // const activeTab = this.manager.tabs.getActiveTab("input");
-        // if (inputNum !== activeTab) return;
+        const activeTab = this.manager.tabs.getActiveTab("input");
+        if (inputNum !== activeTab) return;
 
-        // TODO
-
-        // const fileLoaded = document.getElementById("input-file-loaded");
-        // if (progress === "error") {
-        //     fileLoaded.textContent = "Error";
-        //     fileLoaded.style.color = "#FF0000";
-        // } else {
-        //     fileLoaded.textContent = progress + "%";
-        //     fileLoaded.style.color = "";
-        // }
+        this.fileDetails.progress = progress;
+        if (progress === "error") this.fileDetails.status = "error";
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
+                fileDetailsPanel(this.fileDetails)
+            )
+        });
     }
 
     /**

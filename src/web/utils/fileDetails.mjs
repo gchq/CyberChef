@@ -18,11 +18,11 @@ class FileDetailsPanel {
      * @param {Object} opts
      */
     constructor(opts) {
-        this.fileDetails = opts.fileDetails;
-        this.progress = opts.progress;
-        this.status = opts.status;
-        this.buffer = opts.buffer;
-        this.renderPreview = opts.renderPreview;
+        this.fileDetails = opts?.fileDetails;
+        this.progress = opts?.progress ?? 0;
+        this.status = opts?.status;
+        this.buffer = opts?.buffer;
+        this.renderPreview = opts?.renderPreview;
         this.dom = this.buildDOM();
         this.renderFileThumb();
     }
@@ -42,20 +42,20 @@ class FileDetailsPanel {
             <table class="file-details-data">
                 <tr>
                     <td>Name:</td>
-                    <td class="file-details-name" title="${Utils.escapeHtml(this.fileDetails.name)}">
-                        ${Utils.escapeHtml(this.fileDetails.name)}
+                    <td class="file-details-name" title="${Utils.escapeHtml(this.fileDetails?.name)}">
+                        ${Utils.escapeHtml(this.fileDetails?.name)}
                     </td>
                 </tr>
                 <tr>
                     <td>Size:</td>
-                    <td class="file-details-size" title="${Utils.escapeHtml(this.fileDetails.size)} bytes">
-                        ${Utils.escapeHtml(this.fileDetails.size)} bytes
+                    <td class="file-details-size" title="${Utils.escapeHtml(this.fileDetails?.size)} bytes">
+                        ${Utils.escapeHtml(this.fileDetails?.size)} bytes
                     </td>
                 </tr>
                 <tr>
                     <td>Type:</td>
-                    <td class="file-details-type" title="${Utils.escapeHtml(this.fileDetails.type)}">
-                        ${Utils.escapeHtml(this.fileDetails.type)}
+                    <td class="file-details-type" title="${Utils.escapeHtml(this.fileDetails?.type)}">
+                        ${Utils.escapeHtml(this.fileDetails?.type)}
                     </td>
                 </tr>
                 <tr>

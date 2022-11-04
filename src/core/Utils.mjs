@@ -779,9 +779,9 @@ class Utils {
             "`": "&#x60;"
         };
 
-        return str.replace(/[&<>"'`]/g, function (match) {
+        return str ? str.replace(/[&<>"'`]/g, function (match) {
             return HTML_CHARS[match];
-        });
+        }) : str;
     }
 
 
