@@ -8,7 +8,6 @@
 import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
 import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
 import Utils, { debounce } from "../../core/Utils.mjs";
-import { toBase64 } from "../../core/lib/Base64.mjs";
 import { isImage } from "../../core/lib/FileType.mjs";
 
 
@@ -291,7 +290,7 @@ class InputWaiter {
                 this.app.handleError(r.data);
                 break;
             case "setUrl":
-                this.setUrl(r.data);
+                this.setUrl();
                 break;
             case "inputSwitch":
                 this.manager.output.inputSwitch(r.data);
@@ -305,6 +304,9 @@ class InputWaiter {
                 break;
             case "fileLoaded":
                 this.fileLoaded(r.data.inputNum);
+                break;
+            case "getTabName":
+                this.callbacks[r.data.id](r.data);
                 break;
             default:
                 log.error(`Unknown action ${r.action}.`);
@@ -363,14 +365,7 @@ class InputWaiter {
                     inputData.input.count("\n") + 1 : null;
                 this.setInputInfo(inputData.input.length, lines);
 
-                // Set URL to current input
-                const inputStr = toBase64(inputData.input, "A-Za-z0-9+/");
-                if (inputStr.length > 0 && inputStr.length <= 68267) {
-                    this.setUrl({
-                        includeInput: true,
-                        input: inputStr
-                    });
-                }
+                this.setUrl();
 
                 if (!silent) window.dispatchEvent(this.manager.statechange);
             } else {
@@ -527,15 +522,7 @@ class InputWaiter {
      * @param {boolean} [force=false] - If true, forces the value to be updated even if the type is different to the currently stored type
      */
     updateInputValue(inputNum, value, force=false) {
-        let includeInput = false;
-        const recipeStr = toBase64(value, "A-Za-z0-9+/"); // B64 alphabet with no padding
-        if (recipeStr.length > 0 && recipeStr.length <= 68267) {
-            includeInput = true;
-        }
-        this.setUrl({
-            includeInput: includeInput,
-            input: recipeStr
-        });
+        this.setUrl();
 
         // Value is either a string set by the input or an ArrayBuffer from a LoaderWorker,
         // so is safe to use typeof === "string"
@@ -1084,6 +1071,7 @@ class InputWaiter {
         this.setupInputWorker();
         this.manager.worker.setupChefWorker();
         this.addInput(true);
+        this.manager.input.changeTab(1, true);
         this.bakeAll();
     }
 
@@ -1095,7 +1083,7 @@ class InputWaiter {
         const inputNum = this.manager.tabs.getActiveInputTab();
         if (inputNum === -1) return;
 
-        this.manager.tabs.removeTabHeaderAlias(inputNum);
+        this.manager.input.setTabName(inputNum, "");
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
@@ -1234,7 +1222,6 @@ class InputWaiter {
                 removeChefWorker: true
             }
         });
-        this.manager.tabs.removeTabHeaderAlias(inputNum);
 
         this.manager.output.removeTab(inputNum);
     }
@@ -1248,10 +1235,9 @@ class InputWaiter {
         if (!mouseEvent.target) {
             return;
         }
-        const tabNumStr = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
-        if (tabNumStr) {
-            const tabNum = parseInt(tabNumStr, 10);
-            this.removeInput(tabNum);
+        const tabNum = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
+        if (tabNum) {
+            this.removeInput(parseInt(tabNum, 10));
         }
     }
 
@@ -1437,13 +1423,61 @@ class InputWaiter {
 
     /**
      * Update the input URL to the new value
-     *
-     * @param {object} urlData - Object containing the URL data
-     * @param {boolean} urlData.includeInput - If true, the input is included in the title
-     * @param {string} urlData.input - The input data to be included
      */
-    setUrl(urlData) {
-        this.app.updateTitle(urlData.includeInput, urlData.input, true);
+    setUrl() {
+        this.app.updateTitle(true);
+    }
+
+    /**
+     * Retrieves the custom name of any tab
+     *
+     * @param {number} inputNum - The input number of the tab
+     * @returns {string} - The tab's custom name or null if it has not been assigned one
+     */
+    async getTabName(inputNum) {
+        if (inputNum <= 0) {
+            return null;
+        }
+        const tabName = (await new Promise(resolve => {
+            this.queryTabName(r => {
+                resolve(r);
+            }, inputNum);
+        })).data;
+        return tabName === null ? "" : tabName;
+    }
+
+    /**
+     * Sends the inputWorker a message requesting the custom name of a given tab
+     *
+     * @param {object} callback - The callback to be executed after the worker finishes
+     * @param {number} inputNum - The input number of the tab
+     */
+    queryTabName(callback, inputNum) {
+        const callbackId = this.callbackID++;
+        this.callbacks[callbackId] = callback;
+        this.inputWorker.postMessage({
+            action: "getTabName",
+            data: {
+                id: callbackId,
+                inputNum: inputNum
+            }
+        });
+    }
+
+    /**
+     * Assigns the provided tab with a custo name
+     *
+     * @param {number} inputNum - The input number of the tab
+     * @param {string} tabName - The new name for the tab
+     */
+    setTabName(inputNum, tabName) {
+        this.inputWorker.postMessage({
+            action: "setTabName",
+            data: {
+                inputNum: inputNum,
+                tabName: tabName
+            }
+        });
     }
 
     /**
@@ -1461,9 +1495,6 @@ class InputWaiter {
         let renameContents = targetElement.textContent;
         const renameContentsColon = renameContents.indexOf(":");
 
-        // Calling 'getInputValue()' might take a long time for large datasets,
-        // it could be beneficial to modify the API to allow for querying whether
-        // there is any input rather than getting the full string just to access its length.
         const inputLength = (await this.getInputValue(this.manager.tabs.getActiveInputTab())).length;
 
         // Remove the data from the renaming section
@@ -1499,20 +1530,25 @@ class InputWaiter {
         if (activeInputTabNum === -1) {
             return;
         }
+
         const activeInputTabElement = this.manager.tabs.getTabItem(activeInputTabNum, "input");
         if (activeInputTabElement == null || activeInputTabElement.children.size < 1) {
             return;
         }
+
         const tabContent = activeInputTabElement.children[0];
         const tabHeader = tabContent.children[0].children[0].value;
         const inputContents = await this.getInputValue(activeInputTabNum);
 
         if (tabHeader.length === 0)
-            this.manager.tabs.removeTabHeaderAlias(activeInputTabNum, false);
+            this.manager.input.setTabName(activeInputTabNum, "");
         else
-            this.manager.tabs.addTabHeaderAlias(activeInputTabNum, tabHeader);
+            this.manager.input.setTabName(activeInputTabNum, tabHeader);
+
         this.manager.tabs.updateInputTabHeader(activeInputTabNum, inputContents);
         this.manager.tabs.updateOutputTabHeader(activeInputTabNum, inputContents);
+
+        this.manager.input.setUrl();
     }
 
 }

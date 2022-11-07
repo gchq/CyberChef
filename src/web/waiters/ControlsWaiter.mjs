@@ -5,6 +5,7 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import { toBase64 }  from "../../core/lib/Base64.mjs";
 
 
 /**
@@ -100,10 +101,10 @@ class ControlsWaiter {
         const includeRecipe = document.getElementById("save-link-recipe-checkbox").checked;
         const includeInput = document.getElementById("save-link-input-checkbox").checked;
         const saveLinkEl = document.getElementById("save-link");
-        const saveLink = this.generateStateUrl(includeRecipe, includeInput, null, recipeConfig);
-
-        saveLinkEl.innerHTML = Utils.escapeHtml(Utils.truncate(saveLink, 120));
-        saveLinkEl.setAttribute("href", saveLink);
+        this.generateStateUrl(includeRecipe, includeInput, recipeConfig).then((saveLink) => {
+            saveLinkEl.innerHTML = Utils.escapeHtml(Utils.truncate(saveLink, 120));
+            saveLinkEl.setAttribute("href", saveLink);
+        });
     }
 
 
@@ -112,12 +113,11 @@ class ControlsWaiter {
      *
      * @param {boolean} includeRecipe - Whether to include the recipe in the URL.
      * @param {boolean} includeInput - Whether to include the input in the URL.
-     * @param {string} input
      * @param {Object[]} [recipeConfig] - The recipe configuration object array.
      * @param {string} [baseURL] - The CyberChef URL, set to the current URL if not included
      * @returns {string}
      */
-    generateStateUrl(includeRecipe, includeInput, input, recipeConfig, baseURL) {
+    async generateStateUrl(includeRecipe, includeInput, recipeConfig, baseURL) {
         recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
         const link = baseURL || window.location.protocol + "//" +
@@ -127,21 +127,30 @@ class ControlsWaiter {
 
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
 
-        // If we don't get passed an input, get it from the current URI
-        if (input === null && includeInput) {
-            const params = this.app.getURIParams();
-            if (params.input) {
-                includeInput = true;
-                input = params.input;
-            } else {
-                includeInput = false;
+        const params = [includeRecipe ? ["recipe", recipeStr] : undefined];
+
+        if (includeInput) {
+            // getTabList() only returns visible tabs so we need to use getInputNums().
+            const inputRange = (await this.manager.input.getInputNums()).inputNums;
+            for (let i = 0; i < inputRange.length; i++) {
+                const inputNum = parseInt(inputRange[i], 10);
+
+                const inputValue = toBase64(await this.manager.input.getInputValue(inputNum), "A-Za-z0-9-_");
+                if (typeof inputValue !== "string" || inputValue.length > 2048 ||
+                    (!this.app.options.emptyInputPreserve && inputValue.length === 0)) {
+                    // Don't store other datatypes or strings that are too long (arbitrary size limit).
+                    continue;
+                }
+
+                let inputIdentifier = inputNum.toString();
+                const tabHeader = await this.manager.input.getTabName(inputNum);
+                if (typeof tabHeader === "string" && tabHeader.length > 0) {
+                    inputIdentifier = "'" + toBase64(tabHeader, "A-Za-z0-9-_") + "'";
+                }
+
+                params.push([`input[${inputIdentifier}]`, inputValue]);
             }
         }
-
-        const params = [
-            includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", Utils.escapeHtml(input)] : undefined,
-        ];
 
         const hash = params
             .filter(v => v)
@@ -344,17 +353,17 @@ class ControlsWaiter {
         e.preventDefault();
 
         const reportBugInfo = document.getElementById("report-bug-info");
-        const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
+        this.generateStateUrl(true, true, null, "https://gchq.github.io/CyberChef/").then((saveLink) => {
+            if (reportBugInfo) {
+                reportBugInfo.innerHTML = `* Version: ${PKG_VERSION}
+    * Compile time: ${COMPILE_TIME}
+    * User-Agent:
+    ${navigator.userAgent}
+    * [Link to reproduce](${saveLink})
 
-        if (reportBugInfo) {
-            reportBugInfo.innerHTML = `* Version: ${PKG_VERSION}
-* Compile time: ${COMPILE_TIME}
-* User-Agent:
-${navigator.userAgent}
-* [Link to reproduce](${saveLink})
-
-`;
-        }
+    `;
+            }
+        });
     }
 
 

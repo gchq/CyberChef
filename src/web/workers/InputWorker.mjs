@@ -113,6 +113,12 @@ self.addEventListener("message", function(e) {
         case "getInputNums":
             self.getInputNums(r.data);
             break;
+        case "getTabName":
+            self.getTabName(r.data);
+            break;
+        case "setTabName":
+            self.setTabName(r.data.inputNum, r.data.tabName);
+            break;
         default:
             log.error(`Unknown action '${r.action}'.`);
     }
@@ -413,14 +419,17 @@ self.getNearbyNums = function(inputNum, direction) {
 };
 
 /**
- * Gets the data to display in the tab header for an input, and
- * posts it back to the inputWaiter
+ * Gets the data to display in the tab header for an input and
+ * posts it back to the inputWaiter.
  *
- * @param {number} inputNum - The inputNum of the tab header
+ * @param {number} inputNum - The inputNum of the tab header.
  */
 self.updateTabHeader = function(inputNum) {
     const input = self.getInputObj(inputNum);
-    if (input === null || input === undefined) return;
+    if (input === null || input === undefined) {
+        return;
+    }
+
     let inputData = input.data;
     if (typeof inputData !== "string") {
         inputData = input.data.name;
@@ -1078,4 +1087,34 @@ self.inputSwitch = function(switchData) {
         }
     });
 
+};
+
+/**
+ * Gets the custom name of a tab, returning null if one has not been set
+ *
+ * @param {object} inputData
+ * @param {number} inputData.inputNum - The input number of the tab
+ * @param {number} inputData.id - The callback ID for the callvack to run when returning to the inputWaiter
+ */
+self.getTabName = function(inputData) {
+    const { inputNum, id } = inputData;
+    const inputName = self.inputs[inputNum].inputName;
+    const tabName = typeof inputName !== "string" ? null : inputName;
+    self.postMessage({
+        action: "getTabName",
+        data: {
+            data: tabName,
+            id: id
+        }
+    });
+};
+
+/**
+ * Sets the custom name of a tab, overwriting any previously-assigned one
+ *
+ * @param {number} inputNum - The input number of the tab
+ * @param {string} tabName  - The custom name that should be assigned to the tab
+ */
+self.setTabName = function(inputNum, tabName) {
+    self.inputs[inputNum].inputName = tabName;
 };

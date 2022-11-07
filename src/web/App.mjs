@@ -212,29 +212,6 @@ class App {
         this.manager.worker.silentBake(recipeConfig);
     }
 
-
-    /**
-     * Sets the user's input data.
-     *
-     * @param {string} input - The string to set the input to
-     */
-    setInput(input) {
-        // Get the currently active tab.
-        // If there isn't one, assume there are no inputs so use inputNum of 1
-        let inputNum = this.manager.tabs.getActiveInputTab();
-        if (inputNum === -1) inputNum = 1;
-        this.manager.input.updateInputValue(inputNum, input);
-
-        this.manager.input.inputWorker.postMessage({
-            action: "setInput",
-            data: {
-                inputNum: inputNum,
-                silent: true
-            }
-        });
-    }
-
-
     /**
      * Populates the operations accordion list with the categories and operations specified in the
      * view constructor.
@@ -483,12 +460,36 @@ class App {
         }
 
         // Read in input data from URI params
-        if (this.uriParams.input) {
-            try {
-                const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData);
-            } catch (err) {}
+        this.manager.input.clearAllIoClick();
+        let maxInputNum = 1;
+        for (const [param, value] of Object.entries(this.uriParams)) {
+            if (typeof param !== "string") {
+                continue;
+            }
+
+            const inputHeaderRegex = /input\[('?[A-Za-z0-9\-_]+)'?\]/.exec(param);
+            if (inputHeaderRegex === null && param !== "input") {
+                // Invalid parameter key.
+                continue;
+            }
+
+            if (maxInputNum > 1) {
+                this.manager.input.addInput(false);
+            }
+
+            if (inputHeaderRegex !== null && inputHeaderRegex.length !== 1) {
+                // This input has a custom header that can be 'imported'.
+                const header = inputHeaderRegex[1];
+                if (header[0] === "'") {
+                    this.manager.input.setTabName(maxInputNum, fromBase64(header.substring(1)));
+                }
+            }
+
+            this.manager.input.updateInputValue(maxInputNum, fromBase64(value));
+            maxInputNum++;
         }
+        this.manager.input.changeTab(1, true);
+        this.manager.input.bakeAll();
 
         // Read in theme from URI params
         if (this.uriParams.theme) {
@@ -730,18 +731,16 @@ class App {
         this.progress = 0;
         this.autoBake();
 
-        this.updateTitle(true, null, true);
+        this.updateTitle(true);
     }
 
 
     /**
      * Update the page title to contain the new recipe
      *
-     * @param {boolean} includeInput
-     * @param {string} input
      * @param {boolean} [changeUrl=true]
      */
-    updateTitle(includeInput, input, changeUrl=true) {
+    updateTitle(changeUrl=true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
@@ -761,8 +760,10 @@ class App {
 
         // Update the current history state (not creating a new one)
         if (this.options.updateUrl && changeUrl) {
-            this.lastStateUrl = this.manager.controls.generateStateUrl(true, includeInput, input, recipeConfig);
-            window.history.replaceState({}, title, this.lastStateUrl);
+            this.manager.controls.generateStateUrl(true, true, recipeConfig).then((lastStateUrl) => {
+                this.lastStateUrl = lastStateUrl;
+                window.history.replaceState({}, title, this.lastStateUrl);
+            });
         }
     }
 
