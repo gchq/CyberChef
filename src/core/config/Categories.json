@@ -333,7 +333,9 @@
             "LZString Decompress",
             "LZString Compress",
             "LZMA Decompress",
-            "LZMA Compress"
+            "LZMA Compress",
+            "LZ4 Decompress",
+            "LZ4 Compress"
         ]
     },
     {
