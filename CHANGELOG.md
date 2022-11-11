@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.49.0] - 2022-11-11
+- Added 'LZ4 Compress' and 'LZ4 Decompress' operations [@n1474335] | [31a7f83]
+
 ### [9.48.0] - 2022-10-14
 - Added 'LM Hash' and 'NT Hash' operations [@n1474335] [@brun0ne] | [#1427]
 
@@ -321,6 +324,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.49.0]: https://github.com/gchq/CyberChef/releases/tag/v9.49.0
 [9.48.0]: https://github.com/gchq/CyberChef/releases/tag/v9.48.0
 [9.47.0]: https://github.com/gchq/CyberChef/releases/tag/v9.47.0
 [9.46.0]: https://github.com/gchq/CyberChef/releases/tag/v9.46.0
@@ -466,6 +470,7 @@ All major and minor version changes will be documented in this file. Details of 
 [e9ca4dc]: https://github.com/gchq/CyberChef/commit/e9ca4dc9caf98f33fd986431cd400c88082a42b8
 [dd18e52]: https://github.com/gchq/CyberChef/commit/dd18e529939078b89867297b181a584e8b2cc7da
 [a895d1d]: https://github.com/gchq/CyberChef/commit/a895d1d82a2f92d440a0c5eca2bc7c898107b737
+[31a7f83]: https://github.com/gchq/CyberChef/commit/31a7f83b82e78927f89689f323fcb9185144d6ff
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
