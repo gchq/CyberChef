@@ -249,6 +249,7 @@
             "To Table",
             "Reverse",
             "Sort",
+            "Shuffle",
             "Unique",
             "Split",
             "Filter",
