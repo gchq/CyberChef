@@ -69,7 +69,7 @@ class Substitute extends Operation {
             if (dict[char.toLowerCase()] !== undefined)
                 return dict[char.toLowerCase()].toUpperCase();
         } else {
-            if(dict[char.toUpperCase()] !== undefined)
+            if (dict[char.toUpperCase()] !== undefined)
                 return dict[char.toUpperCase()].toLowerCase();
         }
 
