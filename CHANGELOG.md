@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.52.0] - 2022-11-25
+- Added 'ChaCha' operation [@joostrijneveld] | [#1466]
+
 ### [9.51.0] - 2022-11-25
 - Added 'CMAC' operation [@mikecat] | [#1457]
 
@@ -330,6 +333,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.52.0]: https://github.com/gchq/CyberChef/releases/tag/v9.52.0
 [9.51.0]: https://github.com/gchq/CyberChef/releases/tag/v9.51.0
 [9.50.0]: https://github.com/gchq/CyberChef/releases/tag/v9.50.0
 [9.49.0]: https://github.com/gchq/CyberChef/releases/tag/v9.49.0
@@ -471,6 +475,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@thomasleplus]: https://github.com/thomasleplus
 [@valdelaseras]: https://github.com/valdelaseras
 [@brun0ne]: https://github.com/brun0ne
+[@joostrijneveld]: https://github.com/joostrijneveld
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -578,4 +583,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1427]: https://github.com/gchq/CyberChef/pull/1427
 [#1472]: https://github.com/gchq/CyberChef/pull/1472
 [#1457]: https://github.com/gchq/CyberChef/pull/1457
+[#1466]: https://github.com/gchq/CyberChef/pull/1466
 
