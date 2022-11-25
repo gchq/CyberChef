@@ -136,7 +136,7 @@ const getFeature = function() {
 
             fs.writeFileSync(path.join(process.cwd(), "CHANGELOG.md"), changelogData);
 
-            console.log("Written CHANGELOG.md");
+            console.log("Written CHANGELOG.md\nCommit changes and then run `npm version minor`.");
         }
     });
 };
