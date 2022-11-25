@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.50.0] - 2022-11-25
+- Added 'Shuffle' operation [@mikecat] | [#1472]
+
 ### [9.49.0] - 2022-11-11
 - Added 'LZ4 Compress' and 'LZ4 Decompress' operations [@n1474335] | [31a7f83]
 
@@ -324,6 +327,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.50.0]: https://github.com/gchq/CyberChef/releases/tag/v9.50.0
 [9.49.0]: https://github.com/gchq/CyberChef/releases/tag/v9.49.0
 [9.48.0]: https://github.com/gchq/CyberChef/releases/tag/v9.48.0
 [9.47.0]: https://github.com/gchq/CyberChef/releases/tag/v9.47.0
@@ -568,4 +572,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1308]: https://github.com/gchq/CyberChef/pull/1308
 [#1421]: https://github.com/gchq/CyberChef/pull/1421
 [#1427]: https://github.com/gchq/CyberChef/pull/1427
+[#1472]: https://github.com/gchq/CyberChef/pull/1472
 
