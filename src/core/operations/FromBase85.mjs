@@ -91,8 +91,11 @@ class FromBase85 extends Operation {
 
         // Remove non-alphabet characters
         if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
+            const re = new RegExp("[^" + "z~" +alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
             input = input.replace(re, "");
+            // Remove delimiters again if present (incase of non-alphabet characters in front/behind delimiters)
+            const matches = input.match(/^<~(.+?)~>$/);
+            if (matches !== null) input = matches[1];
         }
 
         if (input.length === 0) return [];
@@ -111,7 +114,11 @@ class FromBase85 extends Operation {
                     .map((chr, idx) => {
                         const digit = alphabet.indexOf(chr);
                         if (digit < 0 || digit > 84) {
-                            throw `Invalid character '${chr}' at index ${i + idx}`;
+                            if (chr === "z"){
+                                // Pass (Ignore character)
+                            }else{
+                                throw `Invalid character '${chr}' at index ${i + idx}`;
+                            }
                         }
                         return digit;
                     });
