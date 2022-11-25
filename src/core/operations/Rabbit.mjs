@@ -10,19 +10,19 @@ import { toHexFast } from "../lib/Hex.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
- * Rabbit Stream Cipher operation
+ * Rabbit operation
  */
-class RabbitStreamCipher extends Operation {
+class Rabbit extends Operation {
 
     /**
-     * RabbitStreamCipher constructor
+     * Rabbit constructor
      */
     constructor() {
         super();
 
-        this.name = "Rabbit Stream Cipher";
+        this.name = "Rabbit";
         this.module = "Ciphers";
-        this.description = "Rabbit Stream Cipher, a stream cipher algorithm defined in RFC4503.<br><br>The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV).<br><br>big-endian: based on RFC4503 and RFC3447<br>little-endian: compatible with Crypto++";
+        this.description = "Rabbit is a high-speed stream cipher introduced in 2003 and defined in RFC 4503.<br><br>The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV).<br><br>big-endian: based on RFC4503 and RFC3447<br>little-endian: compatible with Crypto++";
         this.infoURL = "https://wikipedia.org/wiki/Rabbit_(cipher)";
         this.inputType = "string";
         this.outputType = "string";
@@ -244,4 +244,4 @@ class RabbitStreamCipher extends Operation {
 
 }
 
-export default RabbitStreamCipher;
+export default Rabbit;

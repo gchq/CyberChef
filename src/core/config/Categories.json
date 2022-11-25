@@ -75,7 +75,6 @@
             "AES Decrypt",
             "Blowfish Encrypt",
             "Blowfish Decrypt",
-            "ChaCha",
             "DES Encrypt",
             "DES Decrypt",
             "Triple DES Encrypt",
@@ -86,6 +85,8 @@
             "RC2 Decrypt",
             "RC4",
             "RC4 Drop",
+            "ChaCha",
+            "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
             "ROT13",
@@ -134,8 +135,7 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA",
-            "Rabbit Stream Cipher"
+            "SIGABA"
         ]
     },
     {
