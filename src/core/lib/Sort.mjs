@@ -105,7 +105,7 @@ export function hexadecimalSort(a, b) {
 }
 
 /**
- * Comparison operation for sorting of lines by length
+ * Comparison operation for sorting by length
  *
  * @param {string} a
  * @param {string} b
