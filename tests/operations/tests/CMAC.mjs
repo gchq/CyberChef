@@ -292,7 +292,7 @@ TestRegister.addTests([
     {
         "name": "CMAC-AES: invalid key length",
         "input": "",
-        "expectedOutput": "the key for AES must be either 16, 24, or 32 bytes (currently 20 bytes)",
+        "expectedOutput": "The key for AES must be either 16, 24, or 32 bytes (currently 20 bytes)",
         "recipeConfig": [
             {
                 "op": "CMAC",
@@ -303,7 +303,7 @@ TestRegister.addTests([
     {
         "name": "CMAC-TDES: invalid key length",
         "input": "",
-        "expectedOutput": "the key for Triple DES must be 16 or 24 bytes (currently 20 bytes)",
+        "expectedOutput": "The key for Triple DES must be 16 or 24 bytes (currently 20 bytes)",
         "recipeConfig": [
             {
                 "op": "CMAC",
