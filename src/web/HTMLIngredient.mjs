@@ -30,6 +30,7 @@ class HTMLIngredient {
         this.rows = config.rows || false;
         this.target = config.target;
         this.defaultIndex = config.defaultIndex || 0;
+        this.maxLength = config.maxLength || null;
         this.toggleValues = config.toggleValues;
         this.ingId = this.app.nextIngId();
         this.id = "ing-" + this.ingId;
@@ -63,7 +64,8 @@ class HTMLIngredient {
                         tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
-                        ${this.disabled ? "disabled" : ""}>
+                        ${this.disabled ? "disabled" : ""}
+                        ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
                 </div>`;
                 break;
             case "shortString":
@@ -78,7 +80,8 @@ class HTMLIngredient {
                         tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
                         value="${this.value}"
-                        ${this.disabled ? "disabled" : ""}>
+                        ${this.disabled ? "disabled" : ""}
+                        ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
                 </div>`;
                 break;
             case "toggleString":
@@ -93,7 +96,8 @@ class HTMLIngredient {
                             tabindex="${this.tabIndex}"
                             arg-name="${this.name}"
                             value="${this.value}"
-                            ${this.disabled ? "disabled" : ""}>
+                            ${this.disabled ? "disabled" : ""}
+                            ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
                     </div>
                     <div class="input-group-append">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>

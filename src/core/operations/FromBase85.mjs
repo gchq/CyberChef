@@ -7,7 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {alphabetName, ALPHABET_OPTIONS} from "../lib/Base85.mjs";
+import {ALPHABET_OPTIONS} from "../lib/Base85.mjs";
 
 /**
  * From Base85 operation
@@ -40,8 +40,9 @@ class FromBase85 extends Operation {
             {
                 name: "All-zero group char",
                 type: "binaryShortString",
-                value: "z"
-            },
+                value: "z",
+                maxLength: 1
+            }
         ];
         this.checks = [
             {
@@ -81,14 +82,17 @@ class FromBase85 extends Operation {
      */
     run(input, args) {
         const alphabet = Utils.expandAlphRange(args[0]).join(""),
-            encoding = alphabetName(alphabet),
             removeNonAlphChars = args[1],
-            allZeroGroupChar = args[2],
+            allZeroGroupChar = typeof args[2] === "string" ? args[2].slice(0, 1) : "",
             result = [];
 
         if (alphabet.length !== 85 ||
             [].unique.call(alphabet).length !== 85) {
             throw new OperationError("Alphabet must be of length 85");
+        }
+
+        if (allZeroGroupChar && alphabet.includes(allZeroGroupChar)) {
+            throw new OperationError("The all-zero group char cannot appear in the alphabet");
         }
 
         // Remove delimiters if present
@@ -109,7 +113,7 @@ class FromBase85 extends Operation {
         let i = 0;
         let block, blockBytes;
         while (i < input.length) {
-            if (encoding === "Standard" && input[i] === allZeroGroupChar) {
+            if (input[i] === allZeroGroupChar) {
                 result.push(0, 0, 0, 0);
                 i++;
             } else {
