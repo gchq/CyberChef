@@ -125,6 +125,7 @@ import "./tests/LS47.mjs";
 import "./tests/LZString.mjs";
 import "./tests/NTLM.mjs";
 import "./tests/Shuffle.mjs";
+import "./tests/FletcherChecksum.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
