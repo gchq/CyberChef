@@ -54,7 +54,7 @@ TestRegister.addTests([
         input: allZeroExample,
         expectedOutput: allZeroOutput,
         recipeConfig: [
-            { "op": "From Base85",
+            { "op": "To Base85",
                 "args": ["!-u"] }
         ]
     },
@@ -64,7 +64,7 @@ TestRegister.addTests([
         expectedOutput: allZeroExample,
         recipeConfig: [
             { "op": "From Base85",
-                "args": ["!-u", true] }
+                "args": ["!-u", true, "z"] }
         ]
     },
 ]);
