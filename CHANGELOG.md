@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.54.0] - 2022-11-25
+- Added 'Rabbit' operation [@mikecat] | [#1450]
+
 ### [9.53.0] - 2022-11-25
 - Added 'AES Key Wrap' and 'AES Key Unwrap' operations [@mikecat] | [#1456]
 
@@ -336,6 +339,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.54.0]: https://github.com/gchq/CyberChef/releases/tag/v9.54.0
 [9.53.0]: https://github.com/gchq/CyberChef/releases/tag/v9.53.0
 [9.52.0]: https://github.com/gchq/CyberChef/releases/tag/v9.52.0
 [9.51.0]: https://github.com/gchq/CyberChef/releases/tag/v9.51.0
@@ -589,4 +593,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1457]: https://github.com/gchq/CyberChef/pull/1457
 [#1466]: https://github.com/gchq/CyberChef/pull/1466
 [#1456]: https://github.com/gchq/CyberChef/pull/1456
+[#1450]: https://github.com/gchq/CyberChef/pull/1450
 
