@@ -37,6 +37,11 @@ class FromBase85 extends Operation {
                 type: "boolean",
                 value: true
             },
+            {
+                name: "All-zero group char",
+                type: "binaryShortString",
+                value: "z"
+            },
         ];
         this.checks = [
             {
@@ -78,6 +83,7 @@ class FromBase85 extends Operation {
         const alphabet = Utils.expandAlphRange(args[0]).join(""),
             encoding = alphabetName(alphabet),
             removeNonAlphChars = args[1],
+            allZeroGroupChar = args[2],
             result = [];
 
         if (alphabet.length !== 85 ||
@@ -91,8 +97,11 @@ class FromBase85 extends Operation {
 
         // Remove non-alphabet characters
         if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
+            const re = new RegExp("[^~" + allZeroGroupChar +alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
             input = input.replace(re, "");
+            // Remove delimiters again if present (incase of non-alphabet characters in front/behind delimiters)
+            const matches = input.match(/^<~(.+?)~>$/);
+            if (matches !== null) input = matches[1];
         }
 
         if (input.length === 0) return [];
@@ -100,7 +109,7 @@ class FromBase85 extends Operation {
         let i = 0;
         let block, blockBytes;
         while (i < input.length) {
-            if (encoding === "Standard" && input[i] === "z") {
+            if (encoding === "Standard" && input[i] === allZeroGroupChar) {
                 result.push(0, 0, 0, 0);
                 i++;
             } else {
@@ -110,7 +119,7 @@ class FromBase85 extends Operation {
                     .split("")
                     .map((chr, idx) => {
                         const digit = alphabet.indexOf(chr);
-                        if (digit < 0 || digit > 84) {
+                        if ((digit < 0 || digit > 84) && chr !== allZeroGroupChar) {
                             throw `Invalid character '${chr}' at index ${i + idx}`;
                         }
                         return digit;
