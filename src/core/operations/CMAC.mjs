@@ -49,11 +49,13 @@ class CMAC extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option);
+        const algo = args[1];
+
         const info = (function() {
-            switch (args[1]) {
+            switch (algo) {
                 case "AES":
                     if (key.length !== 16 && key.length !== 24 && key.length !== 32) {
-                        throw new OperationError("the key for AES must be either 16, 24, or 32 bytes (currently " + key.length + " bytes)");
+                        throw new OperationError("The key for AES must be either 16, 24, or 32 bytes (currently " + key.length + " bytes)");
                     }
                     return {
                         "algorithm": "AES-ECB",
@@ -63,7 +65,7 @@ class CMAC extends Operation {
                     };
                 case "Triple DES":
                     if (key.length !== 16 && key.length !== 24) {
-                        throw new OperationError("the key for Triple DES must be 16 or 24 bytes (currently " + key.length + " bytes)");
+                        throw new OperationError("The key for Triple DES must be 16 or 24 bytes (currently " + key.length + " bytes)");
                     }
                     return {
                         "algorithm": "3DES-ECB",
@@ -72,9 +74,10 @@ class CMAC extends Operation {
                         "Rb": new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0x1b]),
                     };
                 default:
-                    throw new OperationError("undefined encryption algorithm");
+                    throw new OperationError("Undefined encryption algorithm");
             }
         })();
+
         const xor = function(a, b, out) {
             if (!out) out = new Uint8Array(a.length);
             for (let i = 0; i < a.length; i++) {
@@ -82,6 +85,7 @@ class CMAC extends Operation {
             }
             return out;
         };
+
         const leftShift1 = function(a) {
             const out = new Uint8Array(a.length);
             let carry = 0;
@@ -91,6 +95,7 @@ class CMAC extends Operation {
             }
             return out;
         };
+
         const cipher = forge.cipher.createCipher(info.algorithm, info.key);
         const encrypt = function(a, out) {
             if (!out) out = new Uint8Array(a.length);
@@ -127,6 +132,7 @@ class CMAC extends Operation {
                 return xor(data, K2, data);
             }
         })();
+
         const X = new Uint8Array(info.blockSize);
         const Y = new Uint8Array(info.blockSize);
         for (let i = 0; i < n - 1; i++) {
