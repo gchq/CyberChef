@@ -114,7 +114,7 @@ class FromBase85 extends Operation {
                     .map((chr, idx) => {
                         const digit = alphabet.indexOf(chr);
                         if ((digit < 0 || digit > 84) && chr !== "z") {
-                                throw `Invalid character '${chr}' at index ${i + idx}`;
+                            throw `Invalid character '${chr}' at index ${i + idx}`;
                         }
                         return digit;
                     });
