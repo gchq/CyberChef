@@ -60,9 +60,10 @@ class Substitute extends Operation {
 
         // convert using the dictionary keeping the case of the input character
 
-        if (dict[char] !== undefined)
+        if (dict[char] !== undefined) {
             // if the character is in the dictionary return the value with the input case
             return isUpperCase ? dict[char].toUpperCase() : dict[char].toLowerCase();
+        }
 
         // check for the other case, if it is in the dictionary return the value with the right case
         if (isUpperCase) {
@@ -84,21 +85,24 @@ class Substitute extends Operation {
      */
     run(input, args) {
         const plaintext = Utils.expandAlphRange([...args[0]]),
-            ciphertext = Utils.expandAlphRange([...args[1]]);
+            ciphertext = Utils.expandAlphRange([...args[1]]),
+            ignoreCase = args[2];
         let output = "";
-        const ignoreCase = args[2];
 
-        if (plaintext.length !== ciphertext.length)
+        if (plaintext.length !== ciphertext.length) {
             output = "Warning: Plaintext and Ciphertext lengths differ\n\n";
+        }
 
         // create dictionary for conversion
         const dict = {};
-        for (let i = 0; i < Math.min(ciphertext.length, plaintext.length); i++)
+        for (let i = 0; i < Math.min(ciphertext.length, plaintext.length); i++) {
             dict[plaintext[i]] = ciphertext[i];
+        }
 
         // map every letter with the conversion function
-        for (const character of input)
+        for (const character of input) {
             output += this.cipherSingleChar(character, dict, ignoreCase);
+        }
 
         return output;
     }
