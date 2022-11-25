@@ -50,18 +50,18 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "From Base85",
+        name: "To Base85",
         input: allZeroExample,
         expectedOutput: allZeroOutput,
         recipeConfig: [
             { "op": "From Base85",
-                "args": ["!-u", false] }
+                "args": ["!-u"] }
         ]
     },
     {
         name: "From Base85",
-        input: allZeroExample,
-        expectedOutput: allZeroOutput,
+        input: allZeroOutput,
+        expectedOutput: allZeroExample,
         recipeConfig: [
             { "op": "From Base85",
                 "args": ["!-u", true] }
