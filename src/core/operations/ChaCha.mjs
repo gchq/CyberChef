@@ -159,9 +159,12 @@ class ChaCha extends Operation {
 
 ChaCha uses a key of 16 or 32 bytes (128 or 256 bits).`);
         }
-        let counter, nonce;
-        let counterLength;
-        if (nonceType !== "Integer") {
+
+        let counter, nonce, counterLength;
+        if (nonceType === "Integer") {
+            nonce = Utils.intToByteArray(parseInt(args[1].string, 10), 12, "little");
+            counterLength = 4;
+        } else {
             nonce = Utils.convertToByteArray(args[1].string, args[1].option);
             if (!(nonce.length === 12 || nonce.length === 8)) {
                 throw new OperationError(`Invalid nonce length: ${nonce.length} bytes.
@@ -169,15 +172,10 @@ ChaCha uses a key of 16 or 32 bytes (128 or 256 bits).`);
 ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).`);
             }
             counterLength = 16 - nonce.length;
-            counter = Utils.intToByteArray(args[2], counterLength, "little");
         }
-        if (nonceType === "Integer") {
-            nonce = Utils.intToByteArray(parseInt(args[1].string, 10), 12, "little");
-            counterLength = 4;
-            counter = Utils.intToByteArray(args[2], counterLength, "little");
-        }
+        counter = Utils.intToByteArray(args[2], counterLength, "little");
 
-        const output = new Array();
+        const output = [];
         input = Utils.convertToByteArray(input, inputType);
 
         let counterAsInt = Utils.byteArrayToInt(counter, "little");

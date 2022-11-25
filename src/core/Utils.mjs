@@ -381,6 +381,7 @@ class Utils {
         }
     }
 
+
     /**
      * Converts a byte array to an integer.
      *
@@ -390,10 +391,10 @@ class Utils {
      *
      * @example
      * // returns 67305985
-     * Utils.byteArrayToInt([ 1, 2, 3, 4], "little");
+     * Utils.byteArrayToInt([1, 2, 3, 4], "little");
      *
      * // returns 16909060
-     * Utils.byteArrayToInt([ 1, 2, 3, 4], "big");
+     * Utils.byteArrayToInt([1, 2, 3, 4], "big");
      */
     static byteArrayToInt(byteArray, byteorder) {
         let value = 0;
@@ -409,6 +410,7 @@ class Utils {
         return value;
     }
 
+
     /**
      * Converts an integer to a byte array of {length} bytes.
      *
@@ -418,13 +420,13 @@ class Utils {
      * @returns {byteArray}
      *
      * @example
-     * // returns [ 5, 255, 109, 1 ]
+     * // returns [5, 255, 109, 1]
      * Utils.intToByteArray(23985925, 4, "little");
      *
-     * // returns [ 1, 109, 255, 5 ]
+     * // returns [1, 109, 255, 5]
      * Utils.intToByteArray(23985925, 4, "big");
      *
-     * // returns [ 0, 0, 0, 0, 1, 109, 255, 5 ]
+     * // returns [0, 0, 0, 0, 1, 109, 255, 5]
      * Utils.intToByteArray(23985925, 8, "big");
      */
     static intToByteArray(value, length, byteorder) {
@@ -442,6 +444,7 @@ class Utils {
         }
         return arr;
     }
+
 
     /**
      * Converts a string to an ArrayBuffer.
