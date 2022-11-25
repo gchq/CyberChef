@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.51.0] - 2022-11-25
+- Added 'CMAC' operation [@mikecat] | [#1457]
+
 ### [9.50.0] - 2022-11-25
 - Added 'Shuffle' operation [@mikecat] | [#1472]
 
@@ -327,6 +330,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.51.0]: https://github.com/gchq/CyberChef/releases/tag/v9.51.0
 [9.50.0]: https://github.com/gchq/CyberChef/releases/tag/v9.50.0
 [9.49.0]: https://github.com/gchq/CyberChef/releases/tag/v9.49.0
 [9.48.0]: https://github.com/gchq/CyberChef/releases/tag/v9.48.0
@@ -573,4 +577,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1421]: https://github.com/gchq/CyberChef/pull/1421
 [#1427]: https://github.com/gchq/CyberChef/pull/1427
 [#1472]: https://github.com/gchq/CyberChef/pull/1472
+[#1457]: https://github.com/gchq/CyberChef/pull/1457
 
