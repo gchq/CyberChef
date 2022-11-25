@@ -132,7 +132,9 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "AES Key Wrap",
+            "AES Key Unwrap"
         ]
     },
     {
