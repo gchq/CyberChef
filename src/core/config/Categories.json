@@ -368,6 +368,7 @@
             "Compare SSDEEP hashes",
             "Compare CTPH hashes",
             "HMAC",
+            "CMAC",
             "Bcrypt",
             "Bcrypt compare",
             "Bcrypt parse",
