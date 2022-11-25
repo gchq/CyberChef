@@ -13,7 +13,7 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Shuffle",
-                "args": ["Character"]
+                "args": ["Comma"]
             }
         ]
     },
@@ -24,34 +24,11 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Shuffle",
-                "args": ["Byte"]
+                "args": ["Nothing (separate chars)"]
             },
             {
                 "op": "To Hex",
                 "args": ["Space", 0]
-            },
-            {
-                "op": "Sort",
-                "args": ["Space", false, "Alphabetical (case sensitive)"]
-            }
-        ]
-    },
-    {
-        "name": "Shuffle characters",
-        "input": "1234\uff15\uff16\uff17\uff18",
-        "expectedOutput": " 0031 0032 0033 0034 FF15 FF16 FF17 FF18",
-        "recipeConfig": [
-            {
-                "op": "Shuffle",
-                "args": ["Character"]
-            },
-            {
-                "op": "Escape Unicode Characters",
-                "args": ["%u", true, 4, true]
-            },
-            {
-                "op": "Split",
-                "args": ["%u", " "]
             },
             {
                 "op": "Sort",
@@ -66,27 +43,12 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Shuffle",
-                "args": ["Line"]
+                "args": ["Line feed"]
             },
             {
                 "op": "Sort",
                 "args": ["Line feed", false, "Alphabetical (case sensitive)"]
             }
         ]
-    },
-    {
-        "name": "Shuffle lines (last character is not newline)",
-        "input": "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf",
-        "expectedOutput": "\n1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf",
-        "recipeConfig": [
-            {
-                "op": "Shuffle",
-                "args": ["Line"]
-            },
-            {
-                "op": "Sort",
-                "args": ["Line feed", false, "Alphabetical (case sensitive)"]
-            }
-        ]
-    },
+    }
 ]);

@@ -5,6 +5,8 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
 
 /**
  * Shuffle operation
@@ -21,34 +23,25 @@ class Shuffle extends Operation {
         this.module = "Default";
         this.description = "Randomly reorders input elements.";
         this.infoURL = "https://wikipedia.org/wiki/Shuffling";
-        this.inputType = "ArrayBuffer";
-        this.outputType = "ArrayBuffer";
+        this.inputType = "string";
+        this.outputType = "string";
         this.args = [
             {
-                "name": "By",
-                "type": "option",
-                "value": ["Byte", "Character", "Line"],
-                "defaultIndex": 1
+                name: "Delimiter",
+                type: "option",
+                value: INPUT_DELIM_OPTIONS
             }
         ];
     }
 
     /**
-     * @param {ArrayBuffer} input
+     * @param {string} input
      * @param {Object[]} args
-     * @returns {ArrayBuffer}
+     * @returns {string}
      */
     run(input, args) {
-        const type = args[0];
-        if (input.byteLength === 0) return input;
-        if (ArrayBuffer.isView(input)) {
-            if (input.byteOffset === 0 && input.byteLength === input.buffer.byteLength) {
-                input = input.buffer;
-            } else {
-                input = input.buffer.slice(input.byteOffset, input.byteOffset + input.byteLength);
-            }
-        }
-        const inputBytes = new Uint8Array(input);
+        const delim = Utils.charRep(args[0]);
+        if (input.length === 0) return input;
 
         // return a random number in [0, 1)
         const rng = (typeof crypto) !== "undefined" && crypto.getRandomValues ? (function() {
@@ -66,71 +59,10 @@ class Shuffle extends Operation {
             return Math.floor(rng() * max);
         };
 
-        const toShuffle = [];
-        let addLastNewLine = false;
-        switch (type) {
-            case "Character":
-                // split input into UTF-8 code points
-                for (let i = 0; i < inputBytes.length;) {
-                    const charLength = (function() {
-                        if (inputBytes[i] < 0xc0) return 1;
-                        if (inputBytes[i] < 0xe0) return 2;
-                        if (inputBytes[i] < 0xf0) return 3;
-                        if (inputBytes[i] < 0xf8) return 4;
-                        return 1;
-                    })();
-                    if (i + charLength <= inputBytes.length) {
-                        let elementLength = charLength;
-                        for (let j = 1; j < charLength; j++) {
-                            if ((inputBytes[i + j] & 0xc0) !== 0x80) {
-                                elementLength = 1;
-                                break;
-                            }
-                        }
-                        toShuffle.push([i, elementLength]);
-                        i += elementLength;
-                    } else {
-                        toShuffle.push([i, 1]);
-                        i++;
-                    }
-                }
-                break;
-            case "Line":
-                {
-                    // split input by newline characters
-                    let lineBegin = 0;
-                    for (let i = 0; i < inputBytes.length; i++) {
-                        if (inputBytes[i] === 0xd || inputBytes[i] === 0xa) {
-                            if (i + 1 < inputBytes.length && inputBytes[i] === 0xd && inputBytes[i + 1] === 0xa) {
-                                i++;
-                            }
-                            toShuffle.push([lineBegin, i - lineBegin + 1]);
-                            lineBegin = i + 1;
-                        }
-                    }
-                    if (lineBegin < inputBytes.length) {
-                        toShuffle.push([lineBegin, inputBytes.length - lineBegin]);
-                        addLastNewLine = true;
-                    }
-                }
-                break;
-            default:
-            {
-                // Creating element information for each bytes looks very wasteful.
-                // Therefore, directly shuffle here.
-                const outputBytes = new Uint8Array(inputBytes);
-                for (let i = outputBytes.length - 1; i > 0; i--) {
-                    const idx = randint(i + 1);
-                    const tmp = outputBytes[idx];
-                    outputBytes[idx] = outputBytes[i];
-                    outputBytes[i] = tmp;
-                }
-                return outputBytes.buffer;
-            }
-        }
+        // Split input into shuffleable sections
+        const toShuffle = input.split(delim);
 
         // shuffle elements
-        const lastStart = toShuffle[toShuffle.length - 1][0];
         for (let i = toShuffle.length - 1; i > 0; i--) {
             const idx = randint(i + 1);
             const tmp = toShuffle[idx];
@@ -138,18 +70,7 @@ class Shuffle extends Operation {
             toShuffle[i] = tmp;
         }
 
-        // place shuffled elements
-        const outputBytes = new Uint8Array(inputBytes.length + (addLastNewLine ? 1 : 0));
-        let outputPos = 0;
-        for (let i = 0; i < toShuffle.length; i++) {
-            outputBytes.set(new Uint8Array(input, toShuffle[i][0], toShuffle[i][1]), outputPos);
-            outputPos += toShuffle[i][1];
-            if (addLastNewLine && toShuffle[i][0] === lastStart) {
-                outputBytes[outputPos] = 0xa;
-                outputPos++;
-            }
-        }
-        return outputBytes.buffer;
+        return toShuffle.join(delim);
     }
 
 }
