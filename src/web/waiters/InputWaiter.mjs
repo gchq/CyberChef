@@ -1056,6 +1056,10 @@ class InputWaiter {
         this.manager.highlighter.removeHighlights();
         getSelection().removeAllRanges();
 
+        this.setUrl({
+            includeInput: false
+        });
+
         const tabsList = document.getElementById("input-tabs");
         const tabsListChildren = tabsList.children;
 
