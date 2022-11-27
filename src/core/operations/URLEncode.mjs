@@ -65,10 +65,10 @@ class URLEncode extends Operation {
      * @returns {string}
      */
     encodeAllSpecialChars (str) {
-        const specialChars = "!#'()*-._~";
+        const SPECIAL_CHARS = "!#'()*-._~";
         let encoded = "";
         for (const char of str) {
-            if (encodeURIComponent(char) === char && specialChars.includes(char)) {
+            if (encodeURIComponent(char) === char && SPECIAL_CHARS.includes(char)) {
                 encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
             } else {
                 encoded += encodeURIComponent(char);
