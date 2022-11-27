@@ -43,10 +43,9 @@ class URLEncode extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const encodeAll = args[0];
-        const encodeAllEvery = args[1];
-        return encodeAllEvery ? this.encodeAllEveryChars(input) : encodeAll ? this.encodeAllChars(input) : encodeURI(input);
-        //return encodeAll ? this.encodeAllChars(input) : encodeURI(input);
+        const encodeSpecial = args[0];
+        const encodeAll = args[1];
+        return encodeAll ? this.encodeAllChars(input) : encodeSpecial ? this.encodeAllSpecialChars(input) : encodeURI(input);
     }
 
     /**
@@ -65,7 +64,7 @@ class URLEncode extends Operation {
      * @param {string} str
      * @returns {string}
      */
-    encodeAllChars (str) {
+    encodeAllSpecialChars (str) {
         // TODO Do this programmatically
         return encodeURIComponent(str)
             .replace(/!/g, "%21")
@@ -86,7 +85,7 @@ class URLEncode extends Operation {
      * @param {string} str
      * @returns {string}
      */
-    encodeAllEveryChars (str) {
+    encodeAllChars (str) {
         let encoded = "";
         for (var char of str) {
             encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0")
