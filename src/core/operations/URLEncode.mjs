@@ -65,18 +65,16 @@ class URLEncode extends Operation {
      * @returns {string}
      */
     encodeAllSpecialChars (str) {
-        // TODO Do this programmatically
-        return encodeURIComponent(str)
-            .replace(/!/g, "%21")
-            .replace(/#/g, "%23")
-            .replace(/'/g, "%27")
-            .replace(/\(/g, "%28")
-            .replace(/\)/g, "%29")
-            .replace(/\*/g, "%2A")
-            .replace(/-/g, "%2D")
-            .replace(/\./g, "%2E")
-            .replace(/_/g, "%5F")
-            .replace(/~/g, "%7E");
+        const specialChars = "!#'()*-._~";
+        let encoded = "";
+        for (var char of str) {
+            if (encodeURIComponent(char) === char && specialChars.includes(char)){
+                encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
+            } else {
+                encoded += encodeURIComponent(char);
+            }
+        }
+        return encoded;
     }
 
     /**
