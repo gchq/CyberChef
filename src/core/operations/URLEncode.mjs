@@ -54,7 +54,7 @@ class URLEncode extends Operation {
      * @param {string} str
      * @returns {string}
      */
-    frontPad (str, length, char){
+    frontPad (str, length, char) {
         return str.length >= length ? str : (char * (length - str.length)) + str;
     }
 
@@ -67,8 +67,8 @@ class URLEncode extends Operation {
     encodeAllSpecialChars (str) {
         const specialChars = "!#'()*-._~";
         let encoded = "";
-        for (var char of str) {
-            if (encodeURIComponent(char) === char && specialChars.includes(char)){
+        for (let char of str) {
+            if (encodeURIComponent(char) === char && specialChars.includes(char)) {
                 encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
             } else {
                 encoded += encodeURIComponent(char);
@@ -85,8 +85,8 @@ class URLEncode extends Operation {
      */
     encodeAllChars (str) {
         let encoded = "";
-        for (var char of str) {
-            encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0")
+        for (let char of str) {
+            encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
         }
         return encoded;
     }
