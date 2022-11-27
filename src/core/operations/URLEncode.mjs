@@ -67,7 +67,7 @@ class URLEncode extends Operation {
     encodeAllSpecialChars (str) {
         const specialChars = "!#'()*-._~";
         let encoded = "";
-        for (let char of str) {
+        for (const char of str) {
             if (encodeURIComponent(char) === char && specialChars.includes(char)) {
                 encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
             } else {
@@ -85,7 +85,7 @@ class URLEncode extends Operation {
      */
     encodeAllChars (str) {
         let encoded = "";
-        for (let char of str) {
+        for (const char of str) {
             encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
         }
         return encoded;
