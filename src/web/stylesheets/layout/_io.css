@@ -563,6 +563,43 @@
     height: 100%;
 }
 
+.file-details-toggle-shown,
+.file-details-toggle-hidden {
+    width: 8px;
+    height: 40px;
+    border: 1px solid var(--secondary-border-colour);
+    position: absolute;
+    top: calc(50% - 20px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-border-colour);
+    color: var(--subtext-font-colour);
+    z-index: 1;
+}
+
+.file-details-toggle-shown {
+    left: 0;
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.file-details-toggle-hidden {
+    left: -8px;
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.file-details-toggle-shown:hover,
+.file-details-toggle-hidden:hover {
+    background-color: var(--primary-border-colour);
+    border-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
+}
+
 .file-details-heading {
     font-weight: bold;
     margin: 10px 0 10px 0;

@@ -23,6 +23,8 @@ class FileDetailsPanel {
         this.status = opts?.status;
         this.buffer = opts?.buffer;
         this.renderPreview = opts?.renderPreview;
+        this.toggleHandler = opts?.toggleHandler;
+        this.hidden = opts?.hidden;
         this.dom = this.buildDOM();
         this.renderFileThumb();
     }
@@ -37,6 +39,11 @@ class FileDetailsPanel {
         dom.className = "cm-file-details";
         const fileThumb = require("../static/images/file-128x128.png");
         dom.innerHTML = `
+            <div class="${this.hidden ? "file-details-toggle-hidden" : "file-details-toggle-shown"}"
+                data-toggle="tooltip"
+                title="${this.hidden ? "Show" : "Hide"} file details">
+                ${this.hidden ? "&#10096;" : "&#10097;"}
+            </div>
             <p class="file-details-heading">File details</p>
             <img aria-hidden="true" src="${fileThumb}" alt="File icon" class="file-details-thumbnail"/>
             <table class="file-details-data">
@@ -66,6 +73,9 @@ class FileDetailsPanel {
                 </tr>
             </table>
         `;
+
+        dom.querySelector(".file-details-toggle-shown,.file-details-toggle-hidden")
+            .addEventListener("click", this.toggleHandler, false);
 
         return dom;
     }
@@ -116,8 +126,11 @@ function makePanel(opts) {
     return (view) => {
         return {
             dom: fdPanel.dom,
-            width: 200,
+            width: opts?.hidden ? 1 : 200,
             update(update) {
+            },
+            mount() {
+                $("[data-toggle='tooltip']").tooltip();
             }
         };
     };

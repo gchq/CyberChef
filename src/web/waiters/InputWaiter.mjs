@@ -548,7 +548,9 @@ class InputWaiter {
             progress: inputData.progress,
             status: inputData.status,
             buffer: inputData.buffer,
-            renderPreview: this.app.options.imagePreview
+            renderPreview: this.app.options.imagePreview,
+            toggleHandler: this.toggleFileDetails.bind(this),
+            hidden: false
         };
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
@@ -569,6 +571,20 @@ class InputWaiter {
         // Clear file details panel
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure([])
+        });
+    }
+
+    /**
+     * Handler for file details toggle clicks
+     * @param {event} e
+     */
+    toggleFileDetails(e) {
+        $("[data-toggle='tooltip']").tooltip("hide");
+        this.fileDetails.hidden = !this.fileDetails.hidden;
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
+                fileDetailsPanel(this.fileDetails)
+            )
         });
     }
 
