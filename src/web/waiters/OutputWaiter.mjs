@@ -512,8 +512,6 @@ class OutputWaiter {
         return new Promise(async function(resolve, reject) {
             const output = this.outputs[inputNum];
 
-            const outputFile = document.getElementById("output-file");
-
             // Update the EOL value
             this.outputEditorView.dispatch({
                 effects: this.outputEditorConf.eol.reconfigure(
@@ -539,18 +537,12 @@ class OutputWaiter {
                 this.manager.recipe.updateBreakpointIndicator(false);
             }
 
-            document.getElementById("show-file-overlay").style.display = "none";
-
             if (output.status === "pending" || output.status === "baking") {
                 // show the loader and the status message if it's being shown
                 // otherwise don't do anything
                 document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
             } else if (output.status === "error") {
-                // style the tab if it's being shown
                 this.toggleLoader(false);
-                this.outputTextEl.style.display = "block";
-                this.outputTextEl.classList.remove("blur");
-                outputFile.style.display = "none";
                 this.clearHTMLOutput();
 
                 if (output.error) {
@@ -560,15 +552,10 @@ class OutputWaiter {
                 }
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
-                this.closeFile();
 
                 if (output.data === null) {
-                    this.outputTextEl.style.display = "block";
-                    outputFile.style.display = "none";
-
                     this.clearHTMLOutput();
                     this.setOutput("");
-
                     this.toggleLoader(false);
                     return;
                 }
@@ -577,7 +564,6 @@ class OutputWaiter {
 
                 switch (output.data.type) {
                     case "html":
-                        outputFile.style.display = "none";
                         // TODO what if the HTML content needs to be in a certain character encoding?
                         // Grey out chr enc selection? Set back to Raw Bytes?
 
@@ -586,9 +572,6 @@ class OutputWaiter {
                     case "ArrayBuffer":
                     case "string":
                     default:
-                        this.outputTextEl.style.display = "block";
-                        outputFile.style.display = "none";
-
                         this.clearHTMLOutput();
                         this.setOutput(output.data.result);
                         break;
@@ -598,34 +581,6 @@ class OutputWaiter {
                 debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
             }
         }.bind(this));
-    }
-
-    /**
-     * Shows file details
-     *
-     * @param {ArrayBuffer} buf
-     * @param {number} activeTab
-     */
-    setFile(buf, activeTab) {
-        if (activeTab !== this.manager.tabs.getActiveTab("output")) return;
-        // Display file overlay in output area with details
-        const fileOverlay = document.getElementById("output-file"),
-            fileSize = document.getElementById("output-file-size"),
-            fileSlice = buf.slice(0, 4096);
-
-        fileOverlay.style.display = "block";
-        fileSize.textContent = buf.byteLength.toLocaleString() + " bytes";
-
-        this.outputTextEl.classList.add("blur");
-        this.setOutput(Utils.arrayBufferToStr(fileSlice));
-    }
-
-    /**
-     * Clears output file details
-     */
-    closeFile() {
-        document.getElementById("output-file").style.display = "none";
-        this.outputTextEl.classList.remove("blur");
     }
 
     /**
@@ -1295,80 +1250,6 @@ class OutputWaiter {
         magicButton.classList.remove("pulse");
         magicButton.setAttribute("data-recipe", "");
         magicButton.setAttribute("data-original-title", "Magic!");
-    }
-
-
-    /**
-     * Handler for file slice display events.
-     */
-    async displayFileSlice() {
-        document.querySelector("#output-loader .loading-msg").textContent = "Loading file slice...";
-        this.toggleLoader(true);
-        const outputFile = document.getElementById("output-file"),
-            showFileOverlay = document.getElementById("show-file-overlay"),
-            sliceFromEl = document.getElementById("output-file-slice-from"),
-            sliceToEl = document.getElementById("output-file-slice-to"),
-            sliceFrom = parseInt(sliceFromEl.value, 10) * 1024,
-            sliceTo = parseInt(sliceToEl.value, 10) * 1024,
-            output = this.outputs[this.manager.tabs.getActiveTab("output")].data;
-
-        let str;
-        if (output.type === "ArrayBuffer") {
-            str = Utils.arrayBufferToStr(output.result.slice(sliceFrom, sliceTo));
-        } else {
-            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish).slice(sliceFrom, sliceTo));
-        }
-
-        this.outputTextEl.classList.remove("blur");
-        showFileOverlay.style.display = "block";
-        this.clearHTMLOutput();
-        this.setOutput(str);
-
-        this.outputTextEl.style.display = "block";
-        outputFile.style.display = "none";
-
-        this.toggleLoader(false);
-    }
-
-    /**
-     * Handler for showing an entire file at user's discretion (even if it's way too big)
-     */
-    async showAllFile() {
-        document.querySelector("#output-loader .loading-msg").textContent = "Loading entire file at user instruction. This may cause a crash...";
-        this.toggleLoader(true);
-        const outputFile = document.getElementById("output-file"),
-            showFileOverlay = document.getElementById("show-file-overlay"),
-            output = this.outputs[this.manager.tabs.getActiveTab("output")].data;
-
-        let str;
-        if (output.type === "ArrayBuffer") {
-            str = Utils.arrayBufferToStr(output.result);
-        } else {
-            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish));
-        }
-
-        this.outputTextEl.classList.remove("blur");
-        showFileOverlay.style.display = "none";
-        this.clearHTMLOutput();
-        this.setOutput(str);
-
-        this.outputTextEl.style.display = "block";
-        outputFile.style.display = "none";
-
-        this.toggleLoader(false);
-    }
-
-    /**
-     * Handler for show file overlay events
-     *
-     * @param {Event} e
-     */
-    showFileOverlayClick(e) {
-        const showFileOverlay = e.target;
-
-        this.outputTextEl.classList.add("blur");
-        showFileOverlay.style.display = "none";
-        this.set(this.manager.tabs.getActiveTab("output"));
     }
 
     /**

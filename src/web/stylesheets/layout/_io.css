@@ -165,10 +165,6 @@
     height: calc(100% - var(--tab-height) - var(--title-height));
 }
 
-#show-file-overlay {
-    height: 32px;
-}
-
 .input-wrapper.textarea-wrapper {
     width: 100%;
     box-sizing: border-box;
@@ -219,30 +215,6 @@
     position: relative;
 
     transition: all 0.5s ease;
-}
-
-#output-file {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    display: none;
-}
-
-.file-overlay {
-    position: absolute;
-    opacity: 0.8;
-    background-color: var(--title-background-colour);
-    width: 100%;
-    height: 100%;
-}
-
-#show-file-overlay {
-    position: absolute;
-    right: 15px;
-    top: calc(var(--title-height) + 10px);
-    cursor: pointer;
-    display: none;
 }
 
 .io-info {
