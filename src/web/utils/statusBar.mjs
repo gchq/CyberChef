@@ -22,6 +22,7 @@ class StatusBarPanel {
         this.eolHandler = opts.eolHandler;
         this.chrEncHandler = opts.chrEncHandler;
         this.chrEncGetter = opts.chrEncGetter;
+        this.htmlOutput = opts.htmlOutput;
 
         this.eolVal = null;
         this.chrEncVal = null;
@@ -65,6 +66,9 @@ class StatusBarPanel {
         const el = e.target
             .closest(".cm-status-bar-select")
             .querySelector(".cm-status-bar-select-content");
+        const btn = e.target.closest(".cm-status-bar-select-btn");
+
+        if (btn.classList.contains("disabled")) return;
 
         el.classList.add("show");
 
@@ -270,6 +274,30 @@ class StatusBarPanel {
     }
 
     /**
+     * Checks whether there is HTML output requiring some widgets to be disabled
+     */
+    monitorHTMLOutput() {
+        if (!this.htmlOutput?.changed) return;
+
+        if (this.htmlOutput?.html === "") {
+            // Enable all controls
+            this.dom.querySelectorAll(".disabled").forEach(el => {
+                el.classList.remove("disabled");
+            });
+        } else {
+            // Disable chrenc, length, selection etc.
+            this.dom.querySelectorAll(".cm-status-bar-select-btn").forEach(el => {
+                el.classList.add("disabled");
+            });
+
+            this.dom.querySelector(".stats-length-value").parentNode.classList.add("disabled");
+            this.dom.querySelector(".stats-lines-value").parentNode.classList.add("disabled");
+            this.dom.querySelector(".sel-info").classList.add("disabled");
+            this.dom.querySelector(".cur-offset-info").classList.add("disabled");
+        }
+    }
+
+    /**
      * Builds the Left-hand-side widgets
      * @returns {string}
      */
@@ -404,6 +432,7 @@ function makePanel(opts) {
         sbPanel.updateBakeStats();
         sbPanel.updateStats(view.state.doc);
         sbPanel.updateSelection(view.state, false);
+        sbPanel.monitorHTMLOutput();
 
         return {
             "dom": sbPanel.dom,
@@ -412,6 +441,7 @@ function makePanel(opts) {
                 sbPanel.updateCharEnc();
                 sbPanel.updateSelection(update.state, update.selectionSet);
                 sbPanel.updateBakeStats();
+                sbPanel.monitorHTMLOutput();
                 if (update.geometryChanged) {
                     sbPanel.updateSizing(update.view);
                 }

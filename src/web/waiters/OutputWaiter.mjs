@@ -91,7 +91,8 @@ class OutputWaiter {
                     bakeStats: this.bakeStats,
                     eolHandler: this.eolChange.bind(this),
                     chrEncHandler: this.chrEncChange.bind(this),
-                    chrEncGetter: this.getChrEnc.bind(this)
+                    chrEncGetter: this.getChrEnc.bind(this),
+                    htmlOutput: this.htmlOutput
                 }),
                 htmlPlugin(this.htmlOutput),
                 copyOverride(),
@@ -564,9 +565,6 @@ class OutputWaiter {
 
                 switch (output.data.type) {
                     case "html":
-                        // TODO what if the HTML content needs to be in a certain character encoding?
-                        // Grey out chr enc selection? Set back to Raw Bytes?
-
                         this.setHTMLOutput(output.data.result);
                         break;
                     case "ArrayBuffer":

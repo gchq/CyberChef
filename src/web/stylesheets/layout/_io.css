@@ -449,6 +449,11 @@
     margin-left: 0;
 }
 
+.cm-status-bar .disabled {
+    background-color: unset !important;
+    cursor: not-allowed;
+}
+
 /* Dropup Button */
 .cm-status-bar-select-btn {
     border: none;
