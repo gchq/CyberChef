@@ -46,6 +46,8 @@
             "From Quoted Printable",
             "To Punycode",
             "From Punycode",
+            "AMF Encode",
+            "AMF Decode",
             "To Hex Content",
             "From Hex Content",
             "PEM to Hex",
