@@ -398,6 +398,16 @@ module.exports = function (grunt) {
                     `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`
                 ].join(" "),
                 stdout: false
+            },
+            fixSnackbarMarkup: {
+                command: [
+                    `[[ "$OSTYPE" == "darwin"* ]]`,
+                    "&&",
+                    `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`,
+                    "||",
+                    `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`
+                ].join(" "),
+                stdout: false
             }
         },
     });

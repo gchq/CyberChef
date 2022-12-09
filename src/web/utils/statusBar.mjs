@@ -111,7 +111,7 @@ class StatusBarPanel {
      */
     chrEncSelectClick(e) {
         // preventDefault is required to stop the URL being modified and popState being triggered
-        e.preventDefault(); // TODO - this breaks the menus when you click the button itself
+        e.preventDefault();
 
         const chrEncVal = parseInt(e.target.getAttribute("data-val"), 10);
 

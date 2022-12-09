@@ -1274,7 +1274,7 @@ class OutputWaiter {
      * Handler for copy click events.
      * Copies the output to the clipboard
      */
-    async copyClick() { // TODO - do we need this?
+    async copyClick() {
         const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (dish === null) {
             this.app.alert("Could not find data to copy. Has this output been baked yet?", 3000);
