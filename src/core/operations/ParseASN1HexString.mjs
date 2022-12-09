@@ -45,8 +45,8 @@ class ParseASN1HexString extends Operation {
      */
     run(input, args) {
         const [index, truncateLen] = args;
-        return r.ASN1HEX.dump(input.replace(/\s/g, ""), {
-            "ommitLongOctet": truncateLen
+        return r.ASN1HEX.dump(input.replace(/\s/g, "").toLowerCase(), {
+            "ommit_long_octet": truncateLen
         }, index);
     }
 

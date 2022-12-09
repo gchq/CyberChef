@@ -46,6 +46,8 @@
             "From Quoted Printable",
             "To Punycode",
             "From Punycode",
+            "AMF Encode",
+            "AMF Decode",
             "To Hex Content",
             "From Hex Content",
             "PEM to Hex",
@@ -85,6 +87,8 @@
             "RC2 Decrypt",
             "RC4",
             "RC4 Drop",
+            "ChaCha",
+            "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
             "ROT13",
@@ -124,6 +128,8 @@
             "JWT Decode",
             "Citrix CTX1 Encode",
             "Citrix CTX1 Decode",
+            "AES Key Wrap",
+            "AES Key Unwrap",
             "Pseudo-Random Number Generator",
             "Enigma",
             "Bombe",
@@ -249,6 +255,7 @@
             "To Table",
             "Reverse",
             "Sort",
+            "Shuffle",
             "Unique",
             "Split",
             "Filter",
@@ -333,7 +340,9 @@
             "LZString Decompress",
             "LZString Compress",
             "LZMA Decompress",
-            "LZMA Compress"
+            "LZMA Compress",
+            "LZ4 Decompress",
+            "LZ4 Compress"
         ]
     },
     {
@@ -365,6 +374,7 @@
             "Compare SSDEEP hashes",
             "Compare CTPH hashes",
             "HMAC",
+            "CMAC",
             "Bcrypt",
             "Bcrypt compare",
             "Bcrypt parse",

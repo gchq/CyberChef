@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Reverse operation
@@ -26,7 +27,8 @@ class Reverse extends Operation {
             {
                 "name": "By",
                 "type": "option",
-                "value": ["Character", "Line"]
+                "value": ["Byte", "Character", "Line"],
+                "defaultIndex": 1
             }
         ];
     }
@@ -57,6 +59,24 @@ class Reverse extends Operation {
                 result.push(0x0a);
             }
             return result.slice(0, input.length);
+        } else if (args[0] === "Character") {
+            const inputString = Utils.byteArrayToUtf8(input);
+            let result = "";
+            for (let i = inputString.length - 1; i >= 0; i--) {
+                const c = inputString.charCodeAt(i);
+                if (i > 0 && 0xdc00 <= c && c <= 0xdfff) {
+                    const c2 = inputString.charCodeAt(i - 1);
+                    if (0xd800 <= c2 && c2 <= 0xdbff) {
+                        // surrogates
+                        result += inputString.charAt(i - 1);
+                        result += inputString.charAt(i);
+                        i--;
+                        continue;
+                    }
+                }
+                result += inputString.charAt(i);
+            }
+            return Utils.strToUtf8ByteArray(result);
         } else {
             return input.reverse();
         }

@@ -394,6 +394,70 @@ class Utils {
 
 
     /**
+     * Converts a byte array to an integer.
+     *
+     * @param {byteArray} byteArray
+     * @param {string} byteorder - "little" or "big"
+     * @returns {integer}
+     *
+     * @example
+     * // returns 67305985
+     * Utils.byteArrayToInt([1, 2, 3, 4], "little");
+     *
+     * // returns 16909060
+     * Utils.byteArrayToInt([1, 2, 3, 4], "big");
+     */
+    static byteArrayToInt(byteArray, byteorder) {
+        let value = 0;
+        if (byteorder === "big") {
+            for (let i = 0; i < byteArray.length; i++) {
+                value = (value * 256) + byteArray[i];
+            }
+        } else {
+            for (let i = byteArray.length - 1; i >= 0; i--) {
+                value = (value * 256) + byteArray[i];
+            }
+        }
+        return value;
+    }
+
+
+    /**
+     * Converts an integer to a byte array of {length} bytes.
+     *
+     * @param {integer} value
+     * @param {integer} length
+     * @param {string} byteorder - "little" or "big"
+     * @returns {byteArray}
+     *
+     * @example
+     * // returns [5, 255, 109, 1]
+     * Utils.intToByteArray(23985925, 4, "little");
+     *
+     * // returns [1, 109, 255, 5]
+     * Utils.intToByteArray(23985925, 4, "big");
+     *
+     * // returns [0, 0, 0, 0, 1, 109, 255, 5]
+     * Utils.intToByteArray(23985925, 8, "big");
+     */
+    static intToByteArray(value, length, byteorder) {
+        const arr = new Array(length);
+        if (byteorder === "little") {
+            for (let i = 0; i < length; i++) {
+                arr[i] = value & 0xFF;
+                value = value >>> 8;
+            }
+        } else {
+            for (let i = length - 1; i >= 0; i--) {
+                arr[i] = value & 0xFF;
+                value = value >>> 8;
+            }
+        }
+        return arr;
+    }
+
+
+    /**
      * Converts a string to an ArrayBuffer.
      * Treats the string as UTF-8 if any values are over 255.
      *
