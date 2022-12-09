@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [9.55.0] - 2022-12-09
+- Added 'AMF Encode' and 'AMF Decode' operations [@n1474335] | [760eff4]
+
 ### [9.54.0] - 2022-11-25
 - Added 'Rabbit' operation [@mikecat] | [#1450]
 
@@ -339,6 +342,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[9.55.0]: https://github.com/gchq/CyberChef/releases/tag/v9.55.0
 [9.54.0]: https://github.com/gchq/CyberChef/releases/tag/v9.54.0
 [9.53.0]: https://github.com/gchq/CyberChef/releases/tag/v9.53.0
 [9.52.0]: https://github.com/gchq/CyberChef/releases/tag/v9.52.0
@@ -492,6 +496,7 @@ All major and minor version changes will be documented in this file. Details of 
 [dd18e52]: https://github.com/gchq/CyberChef/commit/dd18e529939078b89867297b181a584e8b2cc7da
 [a895d1d]: https://github.com/gchq/CyberChef/commit/a895d1d82a2f92d440a0c5eca2bc7c898107b737
 [31a7f83]: https://github.com/gchq/CyberChef/commit/31a7f83b82e78927f89689f323fcb9185144d6ff
+[760eff4]: https://github.com/gchq/CyberChef/commit/760eff49b5307aaa3104c5e5b437ffe62299acd1
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
