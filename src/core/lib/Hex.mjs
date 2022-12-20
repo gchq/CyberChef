@@ -105,13 +105,17 @@ export function fromHex(data, delim="Auto", byteLen=2) {
         throw new OperationError("Byte length must be a positive integer");
 
     if (delim !== "None") {
-        const delimRegex = delim === "Auto" ? /[^a-f\d]|(0x)/gi : Utils.regexRep(delim);
-        data = data.replace(delimRegex, "");
+        const delimRegex = delim === "Auto" ? /[^a-f\d]|0x/gi : Utils.regexRep(delim);
+        data = data.split(delimRegex);
+    } else {
+        data = [data];
     }
 
     const output = [];
-    for (let i = 0; i < data.length; i += byteLen) {
-        output.push(parseInt(data.substr(i, byteLen), 16));
+    for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < data[i].length; j += byteLen) {
+            output.push(parseInt(data[i].substr(j, byteLen), 16));
+        }
     }
     return output;
 }

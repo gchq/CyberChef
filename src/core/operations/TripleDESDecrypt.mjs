@@ -70,7 +70,7 @@ class TripleDESDecrypt extends Operation {
             inputType = args[3],
             outputType = args[4];
 
-        if (key.length !== 24) {
+        if (key.length !== 24 && key.length !== 16) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
 
 Triple DES uses a key length of 24 bytes (192 bits).
@@ -85,7 +85,8 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
 
         input = Utils.convertToByteString(input, inputType);
 
-        const decipher = forge.cipher.createDecipher("3DES-" + mode, key);
+        const decipher = forge.cipher.createDecipher("3DES-" + mode,
+            key.length === 16 ? key + key.substring(0, 8) : key);
 
         /* Allow for a "no padding" mode */
         if (noPadding) {
