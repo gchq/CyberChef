@@ -313,6 +313,7 @@
             "Extract domains",
             "Extract file paths",
             "Extract dates",
+            "Extract Hashes",
             "Regular expression",
             "XPath expression",
             "JPath expression",
