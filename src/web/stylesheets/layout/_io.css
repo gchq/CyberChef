@@ -211,7 +211,7 @@
     letter-spacing: normal;
     white-space: pre-wrap;
     word-wrap: break-word;
-    color: #fff;
+    color: transparent;
     background-color: transparent;
     border: none;
     pointer-events: none;
