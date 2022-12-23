@@ -39,6 +39,8 @@
             "From HTML Entity",
             "URL Encode",
             "URL Decode",
+            "Query String Encode",
+            "Query String Decode",
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "Normalise Unicode",
