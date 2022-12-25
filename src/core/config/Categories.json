@@ -265,6 +265,7 @@
             "Expand alphabet range",
             "Drop bytes",
             "Take bytes",
+            "Insert bytes",
             "Pad lines",
             "Find / Replace",
             "Regular expression",
