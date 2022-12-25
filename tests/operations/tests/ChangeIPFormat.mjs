@@ -48,5 +48,45 @@ TestRegister.addTests([
                 args: ["Octal", "Decimal"],
             },
         ],
+    }, {
+        name: "Change IP format: Decimal (Little Endian) to Dotted Decimal",
+        input: "16885952",
+        expectedOutput: "192.168.1.1",
+        recipeConfig: [
+            {
+                op: "Change IP format",
+                args: ["Decimal (Little Endian)", "Dotted Decimal"],
+            },
+        ],
+    }, {
+        name: "Change IP format: Dotted Decimal to Decimal (Little Endian)",
+        input: "192.168.1.1",
+        expectedOutput: "16885952",
+        recipeConfig: [
+            {
+                op: "Change IP format",
+                args: ["Dotted Decimal", "Decimal (Little Endian)"],
+            },
+        ],
+    }, {
+        name: "Change IP format: Octal (Little Endian) to Dotted Decimal",
+        input: "0100324300",
+        expectedOutput: "192.168.1.1",
+        recipeConfig: [
+            {
+                op: "Change IP format",
+                args: ["Octal (Little Endian)", "Dotted Decimal"],
+            },
+        ],
+    }, {
+        name: "Change IP format: Dotted Decimal to Octal (Little Endian)",
+        input: "192.168.1.1",
+        expectedOutput: "0100324300",
+        recipeConfig: [
+            {
+                op: "Change IP format",
+                args: ["Dotted Decimal", "Octal (Little Endian)"],
+            },
+        ],
     },
 ]);
