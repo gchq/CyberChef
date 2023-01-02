@@ -45,6 +45,7 @@
     "@babel/plugin-transform-runtime": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "@babel/runtime": "^7.18.3",
+    "@tauri-apps/cli": "^1.2.2",
     "autoprefixer": "^10.4.7",
     "babel-loader": "^8.2.5",
     "babel-plugin-dynamic-import-node": "^2.3.3",
@@ -170,6 +171,7 @@
     "zlibjs": "^0.3.1"
   },
   "scripts": {
+    "tauri": "tauri",
     "start": "npx grunt dev",
     "build": "npx grunt prod",
     "node": "npx grunt node",
