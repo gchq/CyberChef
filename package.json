@@ -126,6 +126,7 @@
     "json5": "^2.2.1",
     "jsonpath-plus": "^7.2.0",
     "jsonwebtoken": "^8.5.1",
+    "jspdf": "^2.5.1",
     "jsqr": "^1.4.0",
     "jsrsasign": "^10.5.23",
     "kbpgp": "2.1.15",

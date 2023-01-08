@@ -9,6 +9,7 @@ import Utils, { debounce } from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
+import jsPDF from "jspdf";
 
 /**
   * Waiter to handle events related to the output
@@ -507,6 +508,9 @@ class OutputWaiter {
     saveClick() {
         this.downloadFile();
     }
+    savetopdf() {
+        this.downloadPdf();
+    }
 
     /**
      * Handler for file download events.
@@ -525,6 +529,41 @@ class OutputWaiter {
         const data = await dish.get(Dish.ARRAY_BUFFER),
             file = new File([data], fileName);
         FileSaver.saveAs(file, fileName, false);
+    }
+
+    async downloadPdf() {
+        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        if (dish === null) {
+            this.app.alert("Could not find any output data to download. Has this output been baked?", 3000);
+            return;
+        }
+        const fileName = window.prompt("Please enter a filename: ", "download.pdf");
+
+        // Assume if the user clicks cancel they don't want to download
+        if (fileName === null) return;
+
+        const data = await dish.get(Dish.HTML);
+        //const printdata = '<meta name="viewport" content="width=900px, initial-scale=0.1" />'
+        //const realdata = printdata + data
+        console.log(data, "this is our html")
+        var doc = new jsPDF('p', 'px', 'a4');
+        
+        const width = doc.internal.pageSize.getWidth();    
+        doc.html(data, {
+         autoPaging: 'text',
+         width: width,
+         windowWidth: width,
+         callback: function (doc) {
+          doc.save(fileName);
+         }
+        });
+
+
+
+
+
+
+
     }
 
     /**
