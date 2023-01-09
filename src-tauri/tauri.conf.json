@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "CyberChef",
-    "version": "2023.0.1"
+    "version": "../package.json"
   },
   "tauri": {
     "allowlist": {
