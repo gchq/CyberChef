@@ -508,6 +508,11 @@ class OutputWaiter {
     saveClick() {
         this.downloadFile();
     }
+
+    /**
+     * Handler for save to pdf events
+     * Saves the current output to a file.
+     */
     savetopdf() {
         this.downloadPdf();
     }
@@ -539,12 +544,12 @@ class OutputWaiter {
         }
         const fileName = window.prompt("Please enter a filename: ", "download.pdf");
 
-        // Assume if the user clicks cancel they don't want to download
+        //Assume if the user clicks cancel they don't want to download
         if (fileName === null) return;
 
         const data = await dish.get(Dish.HTML);
         //console.log(data, "this is our html")
-        var doc = new jsPDF('p', 'px', 'a4');
+        const doc = new jsPDF('p', 'px', 'a4');
         
         const width = doc.internal.pageSize.getWidth();    
         doc.html(data, {
