@@ -7,7 +7,6 @@
 import Operation from "../Operation.mjs";
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
-import { jsPDF } from "jspdf";
 
 /**
  * Render Markdown operation
@@ -33,12 +32,6 @@ class RenderMarkdown extends Operation {
                 value: false
             },
             {
-                name: "Print to PDF",
-                type: "boolean",
-                value: false
-            },
-        
-            {
                 name: "Enable syntax highlighting",
                 type: "boolean",
                 value: true
@@ -52,37 +45,23 @@ class RenderMarkdown extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [convertLinks, printto, enableHighlighting] = args,
+        const [convertLinks, enableHighlighting] = args,
             md = new MarkdownIt({
                 linkify: convertLinks,
                 html: false, // Explicitly disable HTML rendering
                 highlight: function(str, lang) {
                     if (lang && hljs.getLanguage(lang) && enableHighlighting) {
                         try {
-                            return hljs.highlight(lang, str).value;
-                            
+                            return hljs.highlight(lang, str).value;                            
                         } catch (__) {
                             
-
-                        }
                     }
+                }
 
                     return "";
-
-                   
-            
                 }
             }),
             rendered = md.render(input);
-
-           
-
-            
-
-            
-
-
-
 
         return `<div style="font-family: var(--primary-font-family)">${rendered}</div>`;
     }

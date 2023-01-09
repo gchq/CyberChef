@@ -543,9 +543,7 @@ class OutputWaiter {
         if (fileName === null) return;
 
         const data = await dish.get(Dish.HTML);
-        //const printdata = '<meta name="viewport" content="width=900px, initial-scale=0.1" />'
-        //const realdata = printdata + data
-        console.log(data, "this is our html")
+        //console.log(data, "this is our html")
         var doc = new jsPDF('p', 'px', 'a4');
         
         const width = doc.internal.pageSize.getWidth();    
