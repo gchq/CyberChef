@@ -53,10 +53,8 @@ class RenderMarkdown extends Operation {
                     if (lang && hljs.getLanguage(lang) && enableHighlighting) {
                         try {
                             return hljs.highlight(lang, str).value;                            
-                        } catch (__) {
-                            
+                        } catch (__) {}
                     }
-                }
 
                     return "";
                 }
