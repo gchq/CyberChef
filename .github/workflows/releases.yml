@@ -91,6 +91,11 @@ jobs:
         # Remove `&& yarn build` if you build your frontend in `beforeBuildCommand`
         run: |
             npm install
+
+      - name: Set heap size on macos and ubuntu
+        if: matrix.platform != 'windows-latest'
+        # Remove `&& yarn build` if you build your frontend in `beforeBuildCommand`
+        run: |
             npm run setheapsize
 
       - name: Build the app
