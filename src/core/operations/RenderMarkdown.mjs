@@ -52,7 +52,7 @@ class RenderMarkdown extends Operation {
                 highlight: function(str, lang) {
                     if (lang && hljs.getLanguage(lang) && enableHighlighting) {
                         try {
-                            return hljs.highlight(lang, str).value;
+                            return hljs.highlight(lang, str).value;                          
                         } catch (__) {}
                     }
 
