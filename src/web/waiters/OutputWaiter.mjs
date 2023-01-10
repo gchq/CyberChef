@@ -547,11 +547,11 @@ class OutputWaiter {
         }
         const fileName = window.prompt("Please enter a filename: ", "download.pdf");
 
-        //Assume if the user clicks cancel they don't want to download
+        // Assume if the user clicks cancel they don't want to download
         if (fileName === null) return;
 
         const data = await dish.get(Dish.HTML);
-        //console.log(data, "this is our html")
+        // console.log(data, "this is our html")
         const doc = new jsPDF("p", "px", "a4");
         
         const width = doc.internal.pageSize.getWidth();    
