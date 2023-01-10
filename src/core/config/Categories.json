@@ -245,6 +245,7 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
+            "Swap case",
             "To Case Insensitive Regex",
             "From Case Insensitive Regex",
             "Add line numbers",
