@@ -269,6 +269,7 @@
             "Fuzzy Match",
             "Offset checker",
             "Hamming Distance",
+            "Levenshtein Distance",
             "Convert distance",
             "Convert area",
             "Convert mass",
