@@ -535,7 +535,10 @@ class OutputWaiter {
             file = new File([data], fileName);
         FileSaver.saveAs(file, fileName, false);
     }
-
+    
+    /** 
+     * Handler for file download as pdf events.
+     */
     async downloadPdf() {
         const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
         if (dish === null) {
@@ -549,24 +552,17 @@ class OutputWaiter {
 
         const data = await dish.get(Dish.HTML);
         //console.log(data, "this is our html")
-        const doc = new jsPDF('p', 'px', 'a4');
+        const doc = new jsPDF("p", "px", "a4");
         
         const width = doc.internal.pageSize.getWidth();    
         doc.html(data, {
-         autoPaging: 'text',
+         autoPaging: "text",
          width: width,
          windowWidth: width,
          callback: function (doc) {
           doc.save(fileName);
          }
         });
-
-
-
-
-
-
-
     }
 
     /**
