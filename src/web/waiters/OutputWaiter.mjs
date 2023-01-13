@@ -12,17 +12,34 @@ import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs
 import cptable from "codepage";
 
 import {
-    EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor
+    EditorView,
+    keymap,
+    highlightSpecialChars,
+    drawSelection,
+    rectangularSelection,
+    crosshairCursor
 } from "@codemirror/view";
-import {EditorState, Compartment} from "@codemirror/state";
-import {defaultKeymap} from "@codemirror/commands";
-import {bracketMatching} from "@codemirror/language";
-import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
+import {
+    EditorState,
+    Compartment
+} from "@codemirror/state";
+import {
+    defaultKeymap
+} from "@codemirror/commands";
+import {
+    bracketMatching
+} from "@codemirror/language";
+import {
+    search,
+    searchKeymap,
+    highlightSelectionMatches
+} from "@codemirror/search";
 
 import {statusBar} from "../utils/statusBar.mjs";
 import {htmlPlugin} from "../utils/htmlWidget.mjs";
 import {copyOverride} from "../utils/copyOverride.mjs";
 import {renderSpecialChar} from "../utils/editorUtils.mjs";
+
 
 /**
   * Waiter to handle events related to the output
@@ -60,9 +77,10 @@ class OutputWaiter {
     }
 
     /**
-     * Sets up the CodeMirror Editor and returns the view
+     * Sets up the CodeMirror Editor
      */
     initEditor() {
+        // Mutable extensions
         this.outputEditorConf = {
             eol: new Compartment,
             lineWrapping: new Compartment,
@@ -1307,7 +1325,9 @@ class OutputWaiter {
         if (this.outputExists(activeTab)) {
             this.manager.input.set(activeTab, {
                 type: "userinput",
-                buffer: activeData
+                buffer: activeData,
+                encoding: this.outputs[activeTab].encoding,
+                eolSequence: this.outputs[activeTab].eolSequence
             });
         }
 

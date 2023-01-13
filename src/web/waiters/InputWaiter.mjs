@@ -12,12 +12,33 @@ import {toBase64} from "../../core/lib/Base64.mjs";
 import cptable from "codepage";
 
 import {
-    EditorView, keymap, highlightSpecialChars, drawSelection, rectangularSelection, crosshairCursor, dropCursor
+    EditorView,
+    keymap,
+    highlightSpecialChars,
+    drawSelection,
+    rectangularSelection,
+    crosshairCursor,
+    dropCursor
 } from "@codemirror/view";
-import {EditorState, Compartment} from "@codemirror/state";
-import {defaultKeymap, insertTab, insertNewline, history, historyKeymap} from "@codemirror/commands";
-import {bracketMatching} from "@codemirror/language";
-import {search, searchKeymap, highlightSelectionMatches} from "@codemirror/search";
+import {
+    EditorState,
+    Compartment
+} from "@codemirror/state";
+import {
+    defaultKeymap,
+    insertTab,
+    insertNewline,
+    history,
+    historyKeymap
+} from "@codemirror/commands";
+import {
+    bracketMatching
+} from "@codemirror/language";
+import {
+    search,
+    searchKeymap,
+    highlightSelectionMatches
+} from "@codemirror/search";
 
 import {statusBar} from "../utils/statusBar.mjs";
 import {fileDetailsPanel} from "../utils/fileDetails.mjs";
@@ -61,9 +82,10 @@ class InputWaiter {
     }
 
     /**
-     * Sets up the CodeMirror Editor and returns the view
+     * Sets up the CodeMirror Editor
      */
     initEditor() {
+        // Mutable extensions
         this.inputEditorConf = {
             eol: new Compartment,
             lineWrapping: new Compartment,
@@ -75,7 +97,9 @@ class InputWaiter {
             extensions: [
                 // Editor extensions
                 history(),
-                highlightSpecialChars({render: renderSpecialChar}),
+                highlightSpecialChars({
+                    render: renderSpecialChar // Custom character renderer to handle special cases
+                }),
                 drawSelection(),
                 rectangularSelection(),
                 crosshairCursor(),
@@ -500,19 +524,22 @@ class InputWaiter {
                 )
             });
 
+            // Handle file previews
             if (inputData.file) {
                 this.setFile(inputNum, inputData);
             } else {
                 this.clearFile(inputNum);
             }
 
+            // Decode the data to a string
             let inputVal;
-            if (this.inputChrEnc > 0) {
+            if (this.getChrEnc() > 0) {
                 inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
             } else {
                 inputVal = Utils.arrayBufferToStr(inputData.buffer);
             }
 
+            // Populate the input editor
             this.setInput(inputVal);
 
             // Set URL to current input
@@ -521,6 +548,7 @@ class InputWaiter {
                 this.app.updateURL(true, inputStr);
             }
 
+            // Trigger a state change
             if (!silent) window.dispatchEvent(this.manager.statechange);
 
         }.bind(this));
@@ -657,11 +685,12 @@ class InputWaiter {
             stringSample = Utils.arrayBufferToStr(value.slice(0, 4096));
         }
 
-
+        // Update the deep link
         const recipeStr = buffer.byteLength < 51200 ? toBase64(buffer, "A-Za-z0-9+/") : ""; // B64 alphabet with no padding
         const includeInput = recipeStr.length > 0 && buffer.byteLength < 51200;
         this.app.updateURL(includeInput, recipeStr);
 
+        // Post new value to the InputWorker
         const transferable = [buffer];
         this.inputWorker.postMessage({
             action: "updateInputValue",
@@ -764,7 +793,16 @@ class InputWaiter {
      * @fires Manager#statechange
      */
     inputChange(e) {
+        // Change debounce delay based on input length
+        const inputLength = this.inputEditorView.state.doc.length;
+        let delay;
+        if (inputLength < 10000) delay = 20;
+        else if (inputLength < 100000) delay = 50;
+        else if (inputLength < 1000000) delay = 200;
+        else delay = 500;
+
         debounce(function(e) {
+            console.log("inputChange", inputLength, delay);
             const value = this.getInput();
             const activeTab = this.manager.tabs.getActiveTab("input");
 
@@ -776,7 +814,7 @@ class InputWaiter {
 
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
-        }, 20, "inputChange", this, [e])();
+        }, delay, "inputChange", this, [e])();
     }
 
     /**
@@ -804,6 +842,7 @@ class InputWaiter {
     inputDragleave(e) {
         e.stopPropagation();
         e.preventDefault();
+
         // Dragleave often fires when moving between lines in the editor.
         // If the from element is within the input-text element, we are still on target.
         if (!this.inputTextEl.contains(e.fromElement)) {
@@ -850,6 +889,22 @@ class InputWaiter {
     }
 
     /**
+     * Handler for open input button click.
+     * Opens the open file dialog.
+     */
+    inputOpenClick() {
+        document.getElementById("open-file").click();
+    }
+
+    /**
+     * Handler for open folder button click
+     * Opens the open folder dialog.
+     */
+    folderOpenClick() {
+        document.getElementById("open-folder").click();
+    }
+
+    /**
      * Load files from the UI into the inputWorker
      *
      * @param {FileList} files - The list of files to be loaded
@@ -879,22 +934,6 @@ class InputWaiter {
                 activeTab: activeTab
             }
         });
-    }
-
-    /**
-     * Handler for open input button click.
-     * Opens the open file dialog.
-     */
-    inputOpenClick() {
-        document.getElementById("open-file").click();
-    }
-
-    /**
-     * Handler for open folder button click
-     * Opens the open folder dialog.
-     */
-    folderOpenClick() {
-        document.getElementById("open-folder").click();
     }
 
     /**
