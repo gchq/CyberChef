@@ -219,8 +219,8 @@ class StatusBarPanel {
         const button = val.closest(".cm-status-bar-select-btn");
         const eolName = eolLookup[state.lineBreak];
         val.textContent = eolName[0];
-        button.setAttribute("title", `End of line sequence: ${eolName[1]}`);
-        button.setAttribute("data-original-title", `End of line sequence: ${eolName[1]}`);
+        button.setAttribute("title", `End of line sequence:<br>${eolName[1]}`);
+        button.setAttribute("data-original-title", `End of line sequence:<br>${eolName[1]}`);
         this.eolVal = state.lineBreak;
     }
 
@@ -237,8 +237,8 @@ class StatusBarPanel {
         const val = this.dom.querySelector(".chr-enc-value");
         const button = val.closest(".cm-status-bar-select-btn");
         val.textContent = name;
-        button.setAttribute("title", `${this.label} character encoding: ${name}`);
-        button.setAttribute("data-original-title", `${this.label} character encoding: ${name}`);
+        button.setAttribute("title", `${this.label} character encoding:<br>${name}`);
+        button.setAttribute("data-original-title", `${this.label} character encoding:<br>${name}`);
         this.chrEncVal = chrEncVal;
     }
 
@@ -341,7 +341,7 @@ class StatusBarPanel {
             </span>
 
             <div class="cm-status-bar-select chr-enc-select">
-                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-placement="left" title="${this.label} character encoding">
+                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-html="true" data-placement="left" title="${this.label} character encoding">
                     <i class="material-icons">text_fields</i> <span class="chr-enc-value">Raw Bytes</span>
                 </span>
                 <div class="cm-status-bar-select-content">
@@ -361,7 +361,7 @@ class StatusBarPanel {
             </div>
 
             <div class="cm-status-bar-select eol-select">
-                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-placement="left" title="End of line sequence">
+                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-html="true" data-placement="left" title="End of line sequence">
                     <i class="material-icons">keyboard_return</i> <span class="eol-value"></span>
                 </span>
                 <div class="cm-status-bar-select-content no-select">
