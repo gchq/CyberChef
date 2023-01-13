@@ -265,7 +265,7 @@ class StatusBarPanel {
      * @param {EditorView} view
      */
     updateSizing(view) {
-        const viewHeight = view.contentDOM.clientHeight;
+        const viewHeight = view.contentDOM.parentNode.clientHeight;
         this.dom.querySelectorAll(".cm-status-bar-select-scroll").forEach(
             el => {
                 el.style.maxHeight = (viewHeight - 50) + "px";
