@@ -166,6 +166,8 @@ class Manager {
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
+        document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
+        document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
         this.addListeners("#input-wrapper", "dragover", this.input.inputDragover, this.input);
         this.addListeners("#input-wrapper", "dragleave", this.input.inputDragleave, this.input);
         this.addListeners("#input-wrapper", "drop", this.input.inputDrop, this.input);
@@ -187,8 +189,6 @@ class Manager {
         document.getElementById("input-num-results").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-filter-refresh").addEventListener("click", this.input.filterTabSearch.bind(this.input));
         this.addDynamicListener(".input-filter-result", "click", this.input.filterItemClick, this.input);
-        document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
-        document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
 
 
         // Output

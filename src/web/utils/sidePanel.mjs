@@ -138,7 +138,6 @@ class PanelGroup {
         this.dom = undefined;
         this.classes = "";
         this.panels = [];
-        this.bufferWidth = 0;
         this.syncClasses();
     }
 
@@ -159,6 +158,7 @@ class PanelGroup {
             if (this.dom) {
                 this.dom.remove();
                 this.dom = undefined;
+                this.setScrollerMargin(0);
             }
             return;
         }
@@ -171,21 +171,30 @@ class PanelGroup {
         }
 
         let curDOM = this.dom.firstChild;
+        let bufferWidth = 0;
         for (const panel of this.panels) {
+            bufferWidth += panel.width;
             if (panel.dom.parentNode === this.dom) {
                 while (curDOM !== panel.dom) curDOM = rm(curDOM);
                 curDOM = curDOM.nextSibling;
             } else {
                 this.dom.insertBefore(panel.dom, curDOM);
-                this.bufferWidth = panel.width;
                 panel.dom.style.width = panel.width + "px";
-                this.dom.style.width = this.bufferWidth + "px";
+                this.dom.style.width = bufferWidth + "px";
             }
         }
         while (curDOM) curDOM = rm(curDOM);
 
+        this.setScrollerMargin(bufferWidth);
+    }
+
+    /**
+     * Sets the margin of the cm-scroller element to make room for the panel
+     */
+    setScrollerMargin(width) {
+        const parent = this.container || this.view.dom;
         const margin = this.left ? "marginLeft" : "marginRight";
-        parent.querySelector(".cm-scroller").style[margin] = this.bufferWidth + "px";
+        parent.querySelector(".cm-scroller").style[margin] = width + "px";
     }
 
     /**

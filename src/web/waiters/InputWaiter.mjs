@@ -805,9 +805,10 @@ class InputWaiter {
         e.stopPropagation();
         e.preventDefault();
         // Dragleave often fires when moving between lines in the editor.
-        // If the target element is within the input-text element, we are still on target.
-        if (!this.inputTextEl.contains(e.target))
+        // If the from element is within the input-text element, we are still on target.
+        if (!this.inputTextEl.contains(e.fromElement)) {
             e.target.closest("#input-text").classList.remove("dropping-file");
+        }
     }
 
     /**
@@ -994,6 +995,9 @@ class InputWaiter {
         if (changeOutput) {
             this.manager.output.changeTab(inputNum, false);
         }
+
+        // Set cursor focus to current tab
+        this.inputEditorView.focus();
     }
 
     /**
@@ -1108,7 +1112,7 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the new tab
      * @param {boolean} [changeTab=true] - If true, changes to the new tab once it's been added
      */
-    addTab(inputNum, changeTab = true) {
+    addTab(inputNum, changeTab=true) {
         const tabsWrapper = document.getElementById("input-tabs"),
             numTabs = tabsWrapper.children.length;
 
