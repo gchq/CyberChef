@@ -1305,9 +1305,9 @@ class OutputWaiter {
         const activeData = await this.getDishBuffer(this.getOutputDish(activeTab));
 
         if (this.outputExists(activeTab)) {
-            this.manager.input.set({
-                inputNum: activeTab,
-                input: activeData
+            this.manager.input.set(activeTab, {
+                type: "userinput",
+                buffer: activeData
             });
         }
 
