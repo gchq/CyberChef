@@ -485,7 +485,10 @@ class InputWaiter {
     async set(inputNum, inputData, silent=false) {
         return new Promise(function(resolve, reject) {
             const activeTab = this.manager.tabs.getActiveTab("input");
-            if (inputNum !== activeTab) return;
+            if (inputNum !== activeTab) {
+                this.changeTab(inputNum, this.app.options.syncTabs);
+                return;
+            }
 
             // Update current character encoding
             this.inputChrEnc = inputData.encoding;

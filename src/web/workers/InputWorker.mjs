@@ -434,8 +434,7 @@ self.updateTabHeader = function(inputNum) {
  * @param {boolean} inputData.silent - If false, the manager statechange event will be fired
  */
 self.setInput = function(inputData) {
-    const inputNum = inputData.inputNum;
-    const silent = inputData.silent;
+    const {inputNum, silent} = inputData;
     const input = self.getInputObj(inputNum);
     if (input === undefined || input === null) return;
 
@@ -695,8 +694,7 @@ self.terminateLoaderWorker = function(id) {
  * @param {number} filesData.activeTab - The active tab in the UI
  */
 self.loadFiles = function(filesData) {
-    const files = filesData.files;
-    const activeTab = filesData.activeTab;
+    const {files, activeTab} = filesData;
     let lastInputNum = -1;
     const inputNums = [];
     for (let i = 0; i < files.length; i++) {
@@ -735,7 +733,7 @@ self.loadFiles = function(filesData) {
     }
 
     self.getLoadProgress();
-    self.setInput({inputNum: activeTab, silent: true});
+    self.setInput({inputNum: lastInputNum, silent: true});
 };
 
 /**
