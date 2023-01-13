@@ -41,8 +41,7 @@ class Chef {
         log.debug("Chef baking");
         const startTime = Date.now(),
             recipe      = new Recipe(recipeConfig),
-            containsFc  = recipe.containsFlowControl(),
-            notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
+            containsFc  = recipe.containsFlowControl();
         let error = false,
             progress = 0;
 
@@ -75,7 +74,7 @@ class Chef {
 
         return {
             dish: rawDish,
-            result: await this.dish.get(returnType, notUTF8),
+            result: await this.dish.get(returnType),
             type: Dish.enumLookup(this.dish.type),
             progress: progress,
             duration: Date.now() - startTime,

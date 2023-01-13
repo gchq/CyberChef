@@ -42,7 +42,6 @@ function main() {
     const defaultOptions = {
         updateUrl:           true,
         showHighlighter:     true,
-        treatAsUtf8:         true,
         wordWrap:            true,
         showErrors:          true,
         errorTimeout:        4000,
