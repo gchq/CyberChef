@@ -305,11 +305,20 @@ class InputWaiter {
         if (this.loaderWorkers.length === this.maxWorkers) {
             return -1;
         }
-        log.debug("Adding new LoaderWorker.");
+        log.debug(`Adding new LoaderWorker (${this.loaderWorkers.length + 1}/${this.maxWorkers}).`);
         const newWorker = new LoaderWorker();
         const workerId = this.workerId++;
         newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
-        newWorker.postMessage({id: workerId});
+        newWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
+        newWorker.postMessage({
+            action: "setID",
+            data: {
+                id: workerId
+            }
+        });
         const newWorkerObj = {
             worker: newWorker,
             id: workerId
@@ -374,8 +383,11 @@ class InputWaiter {
         const idx = this.getLoaderWorkerIndex(inputData.workerId);
         if (idx === -1) return;
         this.loaderWorkers[idx].worker.postMessage({
-            file: inputData.file,
-            inputNum: inputData.inputNum
+            action: "loadFile",
+            data: {
+                file: inputData.file,
+                inputNum: inputData.inputNum
+            }
         });
     }
 
@@ -402,7 +414,7 @@ class InputWaiter {
 
 
     /**
-     * Handler for messages sent back by the inputWorker
+     * Handler for messages sent back by the InputWorker
      *
      * @param {MessageEvent} e
      */
@@ -414,7 +426,7 @@ class InputWaiter {
             return;
         }
 
-        log.debug(`Receiving ${r.action} from InputWorker.`);
+        log.debug(`Receiving '${r.action}' from InputWorker.`);
 
         switch (r.action) {
             case "activateLoaderWorker":
@@ -802,7 +814,6 @@ class InputWaiter {
         else delay = 500;
 
         debounce(function(e) {
-            console.log("inputChange", inputLength, delay);
             const value = this.getInput();
             const activeTab = this.manager.tabs.getActiveTab("input");
 
@@ -1092,11 +1103,16 @@ class InputWaiter {
     }
 
     /**
-     * Sets the console log level in the worker.
-     *
-     * @param {string} level
+     * Sets the console log level in the workers.
      */
-    setLogLevel(level) {
+    setLogLevel() {
+        this.loaderWorkers.forEach(w => {
+            w.postMessage({
+                action: "setLogLevel",
+                data: log.getLevel()
+            });
+        });
+
         if (!this.inputWorker) return;
         this.inputWorker.postMessage({
             action: "setLogLevel",

@@ -180,6 +180,8 @@ class OptionsWaiter {
         log.setLevel(level, false);
         this.manager.worker.setLogLevel();
         this.manager.input.setLogLevel();
+        this.manager.output.setLogLevel();
+        this.manager.background.setLogLevel();
     }
 }
 

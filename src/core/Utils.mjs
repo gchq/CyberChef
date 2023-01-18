@@ -472,7 +472,7 @@ class Utils {
      * Utils.strToArrayBuffer("你好");
      */
     static strToArrayBuffer(str) {
-        log.debug("Converting string to array buffer");
+        log.debug(`Converting string[${str?.length}] to array buffer`);
         if (!str) return new ArrayBuffer;
         const arr = new Uint8Array(str.length);
         let i = str.length, b;
@@ -500,7 +500,7 @@ class Utils {
      * Utils.strToUtf8ArrayBuffer("你好");
      */
     static strToUtf8ArrayBuffer(str) {
-        log.debug("Converting string to UTF8 array buffer");
+        log.debug(`Converting string[${str?.length}] to UTF8 array buffer`);
         if (!str) return new ArrayBuffer;
         const utf8Str = utf8.encode(str);
 
@@ -531,7 +531,7 @@ class Utils {
      * Utils.strToByteArray("你好");
      */
     static strToByteArray(str) {
-        log.debug("Converting string to byte array");
+        log.debug(`Converting string[${str?.length}] to byte array`);
         if (!str) return [];
         const byteArray = new Array(str.length);
         let i = str.length, b;
@@ -559,7 +559,7 @@ class Utils {
      * Utils.strToUtf8ByteArray("你好");
      */
     static strToUtf8ByteArray(str) {
-        log.debug("Converting string to UTF8 byte array");
+        log.debug(`Converting string[${str?.length}] to UTF8 byte array`);
         if (!str) return [];
         const utf8Str = utf8.encode(str);
 
@@ -589,7 +589,7 @@ class Utils {
      * Utils.strToCharcode("你好");
      */
     static strToCharcode(str) {
-        log.debug("Converting string to charcode");
+        log.debug(`Converting string[${str?.length}] to charcode`);
         if (!str) return [];
         const charcode = [];
 
@@ -625,7 +625,7 @@ class Utils {
      * Utils.byteArrayToUtf8([228,189,160,229,165,189]);
      */
     static byteArrayToUtf8(byteArray) {
-        log.debug("Converting byte array to UTF8");
+        log.debug(`Converting byte array[${byteArray?.length}] to UTF8`);
         if (!byteArray || !byteArray.length) return "";
         const str = Utils.byteArrayToChars(byteArray);
         try {
@@ -659,7 +659,7 @@ class Utils {
      * Utils.byteArrayToChars([20320,22909]);
      */
     static byteArrayToChars(byteArray) {
-        log.debug("Converting byte array to chars");
+        log.debug(`Converting byte array[${byteArray?.length}] to chars`);
         if (!byteArray || !byteArray.length) return "";
         let str = "";
         // String concatenation appears to be faster than an array join
@@ -682,7 +682,7 @@ class Utils {
      * Utils.arrayBufferToStr(Uint8Array.from([104,101,108,108,111]).buffer);
      */
     static arrayBufferToStr(arrayBuffer, utf8=true) {
-        log.debug("Converting array buffer to str");
+        log.debug(`Converting array buffer[${arrayBuffer?.byteLength}] to str`);
         if (!arrayBuffer || !arrayBuffer.byteLength) return "";
         const arr = new Uint8Array(arrayBuffer);
         return utf8 ? Utils.byteArrayToUtf8(arr) : Utils.byteArrayToChars(arr);

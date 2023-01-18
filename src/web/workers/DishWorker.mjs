@@ -7,11 +7,17 @@
  */
 
 import Dish from "../../core/Dish.mjs";
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: ["DishWorker"]
+});
 
 self.addEventListener("message", function(e) {
     // Handle message from the main thread
     const r = e.data;
-    log.debug(`DishWorker receiving command '${r.action}'`);
+    log.debug(`Receiving command '${r.action}'`);
 
     switch (r.action) {
         case "getDishAs":
@@ -20,8 +26,11 @@ self.addEventListener("message", function(e) {
         case "getDishTitle":
             getDishTitle(r.data);
             break;
+        case "setLogLevel":
+            log.setLevel(r.data, false);
+            break;
         default:
-            log.error(`DishWorker sent invalid action: '${r.action}'`);
+            log.error(`Unknown action: '${r.action}'`);
     }
 });
 

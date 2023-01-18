@@ -9,6 +9,12 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: ["InputWorker"]
+});
 
 // Default max values
 // These will be correctly calculated automatically
@@ -52,7 +58,7 @@ self.addEventListener("message", function(e) {
         return;
     }
 
-    log.debug(`Receiving ${r.action} from InputWaiter.`);
+    log.debug(`Receiving command '${r.action}'`);
 
     switch (r.action) {
         case "loadUIFiles":

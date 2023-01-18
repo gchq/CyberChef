@@ -9,15 +9,7 @@
 import Chef from "./Chef.mjs";
 import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
 import OpModules from "./config/modules/OpModules.mjs";
-
-// Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
-
-loglevelMessagePrefix(log, {
-    prefixes: [],
-    staticPrefixes: [">"],
-    prefixFormat: "%p"
-});
 
 
 // Set up Chef instance
@@ -56,7 +48,7 @@ self.postMessage({
 self.addEventListener("message", function(e) {
     // Handle message
     const r = e.data;
-    log.debug("ChefWorker receiving command '" + r.action + "'");
+    log.debug(`Receiving command '${r.action}'`);
 
     switch (r.action) {
         case "bake":
@@ -85,6 +77,12 @@ self.addEventListener("message", function(e) {
             break;
         case "setLogLevel":
             log.setLevel(r.data, false);
+            break;
+        case "setLogPrefix":
+            loglevelMessagePrefix(log, {
+                prefixes: [],
+                staticPrefixes: [r.data]
+            });
             break;
         default:
             break;

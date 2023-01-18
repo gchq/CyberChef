@@ -146,13 +146,11 @@ class OutputWaiter {
      * @param {string} eolVal
      */
     eolChange(eolVal) {
-        const oldOutputVal = this.getOutput();
-
         const currentTabNum = this.manager.tabs.getActiveTab("output");
         if (currentTabNum >= 0) {
             this.outputs[currentTabNum].eolSequence = eolVal;
         } else {
-            throw new Error("Cannot change output eol sequence to " + eolVal);
+            throw new Error(`Cannot change output ${currentTabNum} EOL sequence to ${eolVal}`);
         }
 
         // Update the EOL value
@@ -161,7 +159,7 @@ class OutputWaiter {
         });
 
         // Reset the output so that lines are recalculated, preserving the old EOL values
-        this.setOutput(oldOutputVal, true);
+        this.setOutput(this.currentOutputCache, true);
         // Update the URL manually since we aren't firing a statechange event
         this.app.updateURL(true);
     }
@@ -191,7 +189,7 @@ class OutputWaiter {
         if (currentTabNum >= 0) {
             this.outputs[currentTabNum].encoding = chrEncVal;
         } else {
-            throw new Error("Cannot change output chrEnc to " + chrEncVal);
+            throw new Error(`Cannot change output ${currentTabNum} chrEnc to ${chrEncVal}`);
         }
 
         // Reset the output, forcing it to re-decode the data with the new character encoding
@@ -222,16 +220,6 @@ class OutputWaiter {
                 wrap ? EditorView.lineWrapping : []
             )
         });
-    }
-
-    /**
-     * Gets the value of the current output
-     * @returns {string}
-     */
-    getOutput() {
-        const doc = this.outputEditorView.state.doc;
-        const eol = this.outputEditorView.state.lineBreak;
-        return doc.sliceString(0, doc.length, eol);
     }
 
     /**
@@ -498,7 +486,7 @@ class OutputWaiter {
     removeOutput(inputNum) {
         if (!this.outputExists(inputNum)) return;
 
-        delete (this.outputs[inputNum]);
+        delete this.outputs[inputNum];
     }
 
     /**
@@ -600,7 +588,7 @@ class OutputWaiter {
     }
 
     /**
-     * Retrieves the dish as a string, returning the cached version if possible.
+     * Retrieves the dish as a string
      *
      * @param {Dish} dish
      * @returns {string}
@@ -614,7 +602,7 @@ class OutputWaiter {
     }
 
     /**
-     * Retrieves the dish as an ArrayBuffer, returning the cached version if possible.
+     * Retrieves the dish as an ArrayBuffer
      *
      * @param {Dish} dish
      * @returns {ArrayBuffer}
@@ -719,12 +707,12 @@ class OutputWaiter {
 
         const data = await dish.get(Dish.ARRAY_BUFFER),
             file = new File([data], fileName);
-        FileSaver.saveAs(file, fileName, false);
+        FileSaver.saveAs(file, fileName, {autoBom: false});
     }
 
     /**
      * Handler for save all click event
-     * Saves all outputs to a single archvie file
+     * Saves all outputs to a single archive file
      */
     async saveAllClick() {
         const downloadButton = document.getElementById("save-all-to-file");
@@ -744,7 +732,6 @@ class OutputWaiter {
             }
         }
     }
-
 
     /**
      * Spawns a new ZipWorker and sends it the outputs so that they can
@@ -801,9 +788,16 @@ class OutputWaiter {
         log.debug("Creating ZipWorker");
         this.zipWorker = new ZipWorker();
         this.zipWorker.postMessage({
-            outputs: this.outputs,
-            filename: fileName,
-            fileExtension: fileExt
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
+        this.zipWorker.postMessage({
+            action: "zipFiles",
+            data: {
+                outputs: this.outputs,
+                filename: fileName,
+                fileExtension: fileExt
+            }
         });
         this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
     }
@@ -820,15 +814,11 @@ class OutputWaiter {
         this.zipWorker = null;
 
         const downloadButton = document.getElementById("save-all-to-file");
-
         downloadButton.classList.remove("spin");
         downloadButton.title = "Save all outputs to a zip file";
         downloadButton.setAttribute("data-original-title", "Save all outputs to a zip file");
-
         downloadButton.firstElementChild.innerHTML = "archive";
-
     }
-
 
     /**
      * Handle messages sent back by the ZipWorker
@@ -847,7 +837,7 @@ class OutputWaiter {
         }
 
         const file = new File([r.zippedFile], r.filename);
-        FileSaver.saveAs(file, r.filename, false);
+        FileSaver.saveAs(file, r.filename, {autoBom: false});
 
         this.terminateZipWorker();
     }
@@ -1050,9 +1040,7 @@ class OutputWaiter {
                 nums.push(newNum);
             }
         }
-        nums.sort(function(a, b) {
-            return a - b;
-        });
+        nums.sort((a, b) => a - b); // Forces the sort function to treat a and b as numbers
         return nums;
     }
 
@@ -1139,6 +1127,7 @@ class OutputWaiter {
 
     /**
      * Redraw the entire tab bar to remove any outdated tabs
+     *
      * @param {number} activeTab
      * @param {string} direction - Either "left" or "right"
      */
@@ -1152,7 +1141,6 @@ class OutputWaiter {
         for (let i = 0; i < newNums.length; i++) {
             this.displayTabInfo(newNums[i]);
         }
-
     }
 
     /**
@@ -1297,7 +1285,7 @@ class OutputWaiter {
             return;
         }
 
-        const output = await dish.get(Dish.STRING);
+        const output = await this.getDishStr(dish);
         const self = this;
 
         navigator.clipboard.writeText(output).then(function() {
@@ -1313,8 +1301,8 @@ class OutputWaiter {
      */
     async switchClick() {
         const activeTab = this.manager.tabs.getActiveTab("output");
-
         const switchButton = document.getElementById("switch");
+
         switchButton.classList.add("spin");
         switchButton.disabled = true;
         switchButton.firstElementChild.innerHTML = "autorenew";
@@ -1479,6 +1467,18 @@ class OutputWaiter {
 
         $("#output-tab-modal").modal("hide");
         this.changeTab(inputNum, this.app.options.syncTabs);
+    }
+
+
+    /**
+     * Sets the console log level in the workers.
+     */
+    setLogLevel() {
+        if (!this.zipWorker) return;
+        this.zipWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 }
 

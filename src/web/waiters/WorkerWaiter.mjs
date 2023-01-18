@@ -72,6 +72,10 @@ class WorkerWaiter {
 
         this.dishWorker.worker = new DishWorker();
         this.dishWorker.worker.addEventListener("message", this.handleDishMessage.bind(this));
+        this.dishWorker.worker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
 
         if (this.dishWorkerQueue.length > 0) {
             this.postDishMessage(this.dishWorkerQueue.splice(0, 1)[0]);
@@ -89,22 +93,27 @@ class WorkerWaiter {
             return -1;
         }
 
-        log.debug("Adding new ChefWorker");
+        log.debug(`Adding new ChefWorker (${this.chefWorkers.length + 1}/${this.maxWorkers})`);
 
         // Create a new ChefWorker and send it the docURL
         const newWorker = new ChefWorker();
         newWorker.addEventListener("message", this.handleChefMessage.bind(this));
+        newWorker.postMessage({
+            action: "setLogPrefix",
+            data: "ChefWorker"
+        });
+        newWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
+
         let docURL = document.location.href.split(/[#?]/)[0];
         const index = docURL.lastIndexOf("/");
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
-
         newWorker.postMessage({"action": "docURL", "data": docURL});
-        newWorker.postMessage({
-            action: "setLogLevel",
-            data: log.getLevel()
-        });
+
 
         // Store the worker, whether or not it's active, and the inputNum as an object
         const newWorkerObj = {
@@ -177,7 +186,7 @@ class WorkerWaiter {
     handleChefMessage(e) {
         const r = e.data;
         let inputNum = 0;
-        log.debug(`Receiving ${r.action} from ChefWorker.`);
+        log.debug(`Receiving '${r.action}' from ChefWorker.`);
 
         if (Object.prototype.hasOwnProperty.call(r.data, "inputNum")) {
             inputNum = r.data.inputNum;
@@ -626,7 +635,7 @@ class WorkerWaiter {
      */
     handleDishMessage(e) {
         const r = e.data;
-        log.debug(`Receiving ${r.action} from DishWorker`);
+        log.debug(`Receiving '${r.action}' from DishWorker`);
 
         switch (r.action) {
             case "dishReturned":
@@ -729,12 +738,18 @@ class WorkerWaiter {
      * Sets the console log level in the workers.
      */
     setLogLevel() {
-        for (let i = 0; i < this.chefWorkers.length; i++) {
-            this.chefWorkers[i].worker.postMessage({
+        this.chefWorkers.forEach(w => {
+            w.postMessage({
                 action: "setLogLevel",
                 data: log.getLevel()
             });
-        }
+        });
+
+        if (!this.dishWorker.worker) return;
+        this.dishWorker.worker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 
     /**
