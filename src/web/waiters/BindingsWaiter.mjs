@@ -40,11 +40,11 @@ class BindingsWaiter {
                     break;
                 case "KeyI": // Focus input
                     e.preventDefault();
-                    document.getElementById("input-text").focus();
+                    this.manager.input.inputEditorView.focus();
                     break;
                 case "KeyO": // Focus output
                     e.preventDefault();
-                    document.getElementById("output-text").focus();
+                    this.manager.output.outputEditorView.focus();
                     break;
                 case "Period": // Focus next operation
                     e.preventDefault();

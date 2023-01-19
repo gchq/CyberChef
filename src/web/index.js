@@ -51,8 +51,7 @@ function main() {
         logLevel:            "info",
         autoMagic:           true,
         imagePreview:        true,
-        syncTabs:            true,
-        preserveCR:          "entropy"
+        syncTabs:            true
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

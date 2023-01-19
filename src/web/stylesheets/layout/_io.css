@@ -13,6 +13,7 @@
     height: 100%;
     margin: 0;
     background-color: transparent;
+    overflow: hidden;
 }
 
 .cm-editor {
@@ -23,19 +24,6 @@
     font-family: var(--fixed-width-font-family);
     font-size: var(--fixed-width-font-size);
     color: var(--fixed-width-font-colour);
-}
-
-#output-wrapper{
-    margin: 0;
-    padding: 0;
-}
-
-#output-wrapper .textarea-wrapper {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-    pointer-events: auto;
 }
 
 #input-tabs-wrapper #input-tabs,
@@ -163,20 +151,6 @@
 #input-wrapper.show-tabs,
 #output-wrapper.show-tabs {
     height: calc(100% - var(--tab-height) - var(--title-height));
-}
-
-.input-wrapper.textarea-wrapper {
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-    pointer-events: auto;
-}
-
-.textarea-wrapper textarea,
-.textarea-wrapper #output-text {
-    font-family: var(--fixed-width-font-family);
-    font-size: var(--fixed-width-font-size);
-    color: var(--fixed-width-font-colour);
 }
 
 #output-loader {

@@ -237,33 +237,33 @@
                                     <i class="material-icons">view_compact</i>
                                 </button>
                             </span>
+                        </div>
 
-                        </div>
-                        <div id="input-tabs-wrapper" style="display: none;" class="no-select">
-                            <span id="btn-previous-input-tab" class="input-tab-buttons">
-                                &lt;
-                            </span>
-                            <span id="btn-input-tab-dropdown" class="input-tab-buttons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                ···
-                            </span>
-                            <div class="dropdown-menu" aria-labelledby="btn-input-tab-dropdown">
-                                <a id="btn-go-to-input-tab" class="dropdown-item">
-                                    Go to tab
-                                </a>
-                                <a id="btn-find-input-tab" class="dropdown-item">
-                                    Find tab
-                                </a>
-                                <a id="btn-close-all-tabs" class="dropdown-item">
-                                    Close all tabs
-                                </a>
+                        <div id="input-wrapper" class="no-select">
+                            <div id="input-tabs-wrapper" style="display: none;" class="no-select">
+                                <span id="btn-previous-input-tab" class="input-tab-buttons">
+                                    &lt;
+                                </span>
+                                <span id="btn-input-tab-dropdown" class="input-tab-buttons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    ···
+                                </span>
+                                <div class="dropdown-menu" aria-labelledby="btn-input-tab-dropdown">
+                                    <a id="btn-go-to-input-tab" class="dropdown-item">
+                                        Go to tab
+                                    </a>
+                                    <a id="btn-find-input-tab" class="dropdown-item">
+                                        Find tab
+                                    </a>
+                                    <a id="btn-close-all-tabs" class="dropdown-item">
+                                        Close all tabs
+                                    </a>
+                                </div>
+                                <span id="btn-next-input-tab" class="input-tab-buttons">
+                                    &gt;
+                                </span>
+                                <ul id="input-tabs">
+                                </ul>
                             </div>
-                            <span id="btn-next-input-tab" class="input-tab-buttons">
-                                &gt;
-                            </span>
-                            <ul id="input-tabs">
-                            </ul>
-                        </div>
-                        <div class="textarea-wrapper no-select input-wrapper" id="input-wrapper">
                             <div id="input-text"></div>
                         </div>
                     </div>
@@ -299,7 +299,8 @@
                                 <i class="material-icons">access_time</i>
                             </span>
                         </div>
-                        <div id="output-wrapper">
+
+                        <div id="output-wrapper" class="no-select">
                             <div id="output-tabs-wrapper" style="display: none" class="no-select">
                                 <span id="btn-previous-output-tab" class="output-tab-buttons">
                                     &lt;
@@ -321,14 +322,12 @@
                                 <ul id="output-tabs">
                                 </ul>
                             </div>
-                            <div class="textarea-wrapper">
-                                <div id="output-text"></div>
-                                <div id="output-loader">
-                                    <div id="output-loader-animation">
-                                        <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
-                                    </div>
-                                    <div class="loading-msg"></div>
+                            <div id="output-text"></div>
+                            <div id="output-loader">
+                                <div id="output-loader-animation">
+                                    <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%"></object>
                                 </div>
+                                <div class="loading-msg"></div>
                             </div>
                         </div>
                     </div>
@@ -444,20 +443,6 @@
                         </div>
 
                         <div class="form-group option-item">
-                            <label for="preserveCR" class="bmd-label-floating"> Preserve carriage returns (0x0d)</label>
-                            <select class="form-control" option="preserveCR" id="preserveCR" data-toggle="tooltip" data-placement="bottom" data-offset="-10%" data-html="true" title="HTML textareas don't support carriage returns, so if we want to preserve them in our input, we have to disable editing.<br><br>The default option is to only do this for high-entropy inputs, but you can force the choice using this dropdown.">
-                                <option value="entropy">For high-entropy inputs</option>
-                                <option value="always">Always</option>
-                                <option value="never">Never</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group option-item">
-                            <label for="errorTimeout" class="bmd-label-floating">Operation error timeout in ms (0 for never)</label>
-                            <input type="number" class="form-control" option="errorTimeout" id="errorTimeout">
-                        </div>
-
-                        <div class="form-group option-item">
                             <label for="logLevel" class="bmd-label-floating">Console logging level</label>
                             <select class="form-control" option="logLevel" id="logLevel">
                                 <option value="silent">Silent</option>
@@ -490,11 +475,16 @@
                             </label>
                         </div>
 
-                        <div class="checkbox option-item">
+                        <div class="checkbox option-item mb-0">
                             <label for="showErrors">
                                 <input type="checkbox" option="showErrors" id="showErrors" checked>
-                                Operation error reporting (recommended)
+                                Show errors from operations (recommended)
                             </label>
+                        </div>
+
+                        <div class="form-group option-item">
+                            <label for="errorTimeout" class="bmd-label-floating">Operation error timeout in ms (0 for never)</label>
+                            <input type="number" class="form-control" option="errorTimeout" id="errorTimeout">
                         </div>
 
                         <div class="checkbox option-item">
