@@ -72,7 +72,6 @@ class HighlighterWaiter {
         }
     }
 
-
     /**
      * Displays highlight offsets sent back from the Chef.
      *
@@ -88,7 +87,6 @@ class HighlighterWaiter {
         const io = direction === "forward" ? "output" : "input";
         this.highlight(io, pos);
     }
-
 
     /**
      * Sends selection updates to the relevant EditorView.
@@ -129,9 +127,8 @@ class HighlighterWaiter {
             } catch (err) {
                 // Ignore Range Errors
                 if (!err.toString().startsWith("RangeError")) {
-                    console.error(err);
+                    log.error(err);
                 }
-
             }
         }
     }

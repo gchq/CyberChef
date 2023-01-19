@@ -26,33 +26,27 @@ class OptionsWaiter {
      * @param {Object} options
      */
     load(options) {
-        for (const option in options) {
-            this.app.options[option] = options[option];
-        }
+        Object.assign(this.app.options, options);
 
         // Set options to match object
-        const cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
-        let i;
-        for (i = 0; i < cboxes.length; i++) {
-            cboxes[i].checked = this.app.options[cboxes[i].getAttribute("option")];
-        }
+        document.querySelectorAll("#options-body input[type=checkbox]").forEach(cbox => {
+            cbox.checked = this.app.options[cbox.getAttribute("option")];
+        });
 
-        const nboxes = document.querySelectorAll("#options-body input[type=number]");
-        for (i = 0; i < nboxes.length; i++) {
-            nboxes[i].value = this.app.options[nboxes[i].getAttribute("option")];
-            nboxes[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
-        }
+        document.querySelectorAll("#options-body input[type=number]").forEach(nbox => {
+            nbox.value = this.app.options[nbox.getAttribute("option")];
+            nbox.dispatchEvent(new CustomEvent("change", {bubbles: true}));
+        });
 
-        const selects = document.querySelectorAll("#options-body select");
-        for (i = 0; i < selects.length; i++) {
-            const val = this.app.options[selects[i].getAttribute("option")];
+        document.querySelectorAll("#options-body select").forEach(select => {
+            const val = this.app.options[select.getAttribute("option")];
             if (val) {
-                selects[i].value = val;
-                selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
+                select.value = val;
+                select.dispatchEvent(new CustomEvent("change", {bubbles: true}));
             } else {
-                selects[i].selectedIndex = 0;
+                select.selectedIndex = 0;
             }
-        }
+        });
 
         // Initialise options
         this.setWordWrap();
@@ -151,7 +145,6 @@ class OptionsWaiter {
      */
     themeChange(e) {
         const themeClass = e.target.value;
-
         this.changeTheme(themeClass);
     }
 
