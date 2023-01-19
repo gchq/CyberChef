@@ -738,8 +738,8 @@ class WorkerWaiter {
      * Sets the console log level in the workers.
      */
     setLogLevel() {
-        this.chefWorkers.forEach(w => {
-            w.postMessage({
+        this.chefWorkers.forEach(cw => {
+            cw.worker.postMessage({
                 action: "setLogLevel",
                 data: log.getLevel()
             });

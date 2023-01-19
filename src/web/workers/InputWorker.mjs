@@ -21,8 +21,6 @@ loglevelMessagePrefix(log, {
 self.maxWorkers = 4;
 self.maxTabs = 1;
 
-self.pendingFiles = [];
-
 /**
  * Dictionary of inputs keyed on the inputNum
  * Each entry is an object with the following type:
@@ -41,6 +39,7 @@ self.pendingFiles = [];
  */
 self.inputs = {};
 self.loaderWorkers = [];
+self.pendingFiles = [];
 self.currentInputNum = 1;
 self.numInputs = 0;
 self.pendingInputs = 0;
@@ -172,7 +171,7 @@ self.getLoadProgress = function(inputNum) {
  * whole recipe
  */
 self.autoBake = function(inputNum, progress, step=false) {
-    const input = self.getInputObj(inputNum);
+    const input = self.inputs[inputNum];
     if (input) {
         self.postMessage({
             action: "bakeAllInputs",
@@ -190,14 +189,12 @@ self.autoBake = function(inputNum, progress, step=false) {
  * Sends a list of inputNums to the workerwaiter
  */
 self.bakeAllInputs = function() {
-    const inputNums = Object.keys(self.inputs),
-        nums = [];
+    const inputNums = Object.keys(self.inputs);
 
-    for (let i = 0; i < inputNums.length; i++) {
-        if (self.inputs[inputNums[i]].status === "loaded") {
-            nums.push(parseInt(inputNums[i], 10));
-        }
-    }
+    const nums = inputNums
+        .filter(n => self.inputs[n].status === "loaded")
+        .map(n => parseInt(n, 10));
+
     self.postMessage({
         action: "bakeAllInputs",
         data: {
@@ -215,7 +212,7 @@ self.bakeAllInputs = function() {
  * @param {number} bakeId
  */
 self.bakeInput = function(inputNum, bakeId) {
-    const inputObj = self.getInputObj(inputNum);
+    const inputObj = self.inputs[inputNum];
     if (inputObj === null ||
         inputObj === undefined ||
         inputObj.status !== "loaded") {
@@ -241,16 +238,6 @@ self.bakeInput = function(inputNum, bakeId) {
 };
 
 /**
- * Gets the stored object for a specific inputNum
- *
- * @param {number} inputNum - The input we want to get the object for
- * @returns {object}
- */
-self.getInputObj = function(inputNum) {
-    return self.inputs[inputNum];
-};
-
-/**
  * Gets the stored value or object for a specific inputNum and sends it to the inputWaiter.
  *
  * @param {object} inputData - Object containing data about the input to retrieve
@@ -259,12 +246,11 @@ self.getInputObj = function(inputNum) {
  * @param {number} inputData.id - The callback ID for the callback to run when returned to the inputWaiter
  */
 self.getInput = function(inputData) {
-    const inputNum = inputData.inputNum,
-        data = (inputData.getObj) ? self.getInputObj(inputNum) : self.inputs[inputNum].buffer;
+    const input = self.inputs[inputData.inputNum];
     self.postMessage({
         action: "getInput",
         data: {
-            data: data,
+            data: inputData.getObj ? input : input.buffer,
             id: inputData.id
         }
     });
@@ -298,8 +284,8 @@ self.getInputNums = function(id) {
  * @returns {number | string} - Returns "error" if there was a load error
  */
 self.getInputProgress = function(inputNum) {
-    const inputObj = self.getInputObj(inputNum);
-    if (inputObj === undefined || inputObj === null) return;
+    const inputObj = self.inputs[inputNum];
+    if (!inputObj) return;
     if (inputObj.status === "error") {
         return "error";
     }
@@ -416,11 +402,11 @@ self.getNearbyNums = function(inputNum, direction) {
  * @param {number} inputNum - The inputNum of the tab header
  */
 self.updateTabHeader = function(inputNum) {
-    const input = self.getInputObj(inputNum);
-    if (input === null || input === undefined) return;
+    const input = self.inputs[inputNum];
+    if (!input) return;
 
     let header = input.type === "file" ? input.file.name : input.stringSample;
-    header = header.slice(0, 100).replace(/[\n\r]/g, "");
+    header = header.slice(0, 100).replace(/[\n\r\u2028\u2029]/g, "");
 
     self.postMessage({
         action: "updateTabHeader",
@@ -441,8 +427,8 @@ self.updateTabHeader = function(inputNum) {
  */
 self.setInput = function(inputData) {
     const {inputNum, silent} = inputData;
-    const input = self.getInputObj(inputNum);
-    if (input === undefined || input === null) return;
+    const input = self.inputs[inputNum];
+    if (!input) return;
 
     self.postMessage({
         action: "setInput",
@@ -505,8 +491,7 @@ self.updateInputStatus = function(inputNum, status) {
  * @param {number} inputData.progress - The load progress of the input
  */
 self.updateInputProgress = function(inputData) {
-    const inputNum = inputData.inputNum;
-    const progress = inputData.progress;
+    const {inputNum, progress} = inputData;
 
     if (self.inputs[inputNum] !== undefined) {
         self.inputs[inputNum].progress = progress;
