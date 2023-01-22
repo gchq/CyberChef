@@ -179,7 +179,8 @@
             "RSA Verify",
             "RSA Encrypt",
             "RSA Decrypt",
-            "Parse SSH Host Key"
+            "Parse SSH Host Key",
+            "Parse CSR"
         ]
     },
     {
