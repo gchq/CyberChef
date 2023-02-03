@@ -55,6 +55,45 @@ class TimingWaiter {
     }
 
     /**
+     * The duration of the main stages of a bake
+     *
+     * @param {number} inputNum
+     * @returns {number}
+     */
+    duration(inputNum) {
+        const input = this.inputs[inputNum.toString()];
+
+        // If this input has not been encoded yet, we cannot calculate a time
+        if (!input ||
+            !input.trigger ||
+            !input.inputEncodingEnd ||
+            !input.inputEncodingStart)
+            return 0;
+
+        // input encoding can happen before a bake is triggered, so it is calculated separately
+        const inputEncodingTotal = input.inputEncodingEnd - input.inputEncodingStart;
+
+        let total = 0, outputDecodingTotal = 0;
+
+        if (input.bakeComplete && input.bakeComplete > input.trigger)
+            total = input.bakeComplete - input.trigger;
+
+        if (input.settingOutput && input.settingOutput > input.trigger)
+            total = input.settingOutput - input.trigger;
+
+        if (input.outputDecodingStart && (input.outputDecodingStart > input.trigger) &&
+            input.outputDecodingEnd && (input.outputDecodingEnd > input.trigger)) {
+            total = input.outputDecodingEnd - input.trigger;
+            outputDecodingTotal = input.outputDecodingEnd - input.outputDecodingStart;
+        }
+
+        if (input.complete && input.complete > input.trigger)
+            total = inputEncodingTotal + input.bakeDuration + outputDecodingTotal;
+
+        return total;
+    }
+
+    /**
      * The total time for a completed bake
      *
      * @param {number} inputNum
@@ -101,7 +140,6 @@ class TimingWaiter {
     printStages(inputNum) {
         const input = this.inputs[inputNum.toString()];
         if (!input || !input.trigger) return "";
-        this.logAllTimes(inputNum);
 
         const total = this.overallDuration(inputNum),
             inputEncoding = input.inputEncodingEnd - input.inputEncodingStart,
@@ -111,8 +149,7 @@ class TimingWaiter {
         return `Input encoding: ${inputEncoding}ms
 Recipe duration: ${input.bakeDuration}ms
 Output decoding: ${outputDecoding}ms
-Threading overhead: ${overhead}ms
-Total: ${total}ms`;
+<span class="small">Threading overhead: ${overhead}ms</span>`;
     }
 
     /**

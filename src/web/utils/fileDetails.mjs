@@ -6,7 +6,7 @@
 
 import {showSidePanel} from "./sidePanel.mjs";
 import Utils from "../../core/Utils.mjs";
-import {isImage} from "../../core/lib/FileType.mjs";
+import {isImage, detectFileType} from "../../core/lib/FileType.mjs";
 
 /**
  * A File Details extension for CodeMirror
@@ -102,7 +102,7 @@ class FileDetailsPanel {
         } else {
             this.resetFileThumb();
         }
-        fileType.textContent = type;
+        fileType.textContent = type ? type : detectFileType(fileBuffer)[0]?.mime ?? "unknown";
     }
 
     /**

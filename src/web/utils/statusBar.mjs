@@ -254,7 +254,7 @@ class StatusBarPanel {
 
         if (this.label === "Output" && this.timing) {
             bakingTimeInfo.style.display = "inline-block";
-            bakingTime.textContent = this.timing.overallDuration(this.tabNumGetter());
+            bakingTime.textContent = this.timing.duration(this.tabNumGetter());
 
             const info = this.timing.printStages(this.tabNumGetter()).replace(/\n/g, "<br>");
             bakingTimeInfo.setAttribute("title", info);
