@@ -639,6 +639,7 @@ class OutputWaiter {
     async bufferToStr(buffer) {
         const encoding = this.getChrEnc();
 
+        if (buffer.byteLength === 0) return "";
         return await new Promise(resolve => {
             this.manager.worker.bufferToStr(buffer, encoding, r => {
                 resolve(r.value);

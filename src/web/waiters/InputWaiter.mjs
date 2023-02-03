@@ -263,6 +263,10 @@ class InputWaiter {
         log.debug("Adding new InputWorker");
         this.inputWorker = new InputWorker();
         this.inputWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
+        this.inputWorker.postMessage({
             action: "updateMaxWorkers",
             data: this.maxWorkers
         });
@@ -273,10 +277,7 @@ class InputWaiter {
                 activeTab: this.manager.tabs.getActiveTab("input")
             }
         });
-        this.inputWorker.postMessage({
-            action: "setLogLevel",
-            data: log.getLevel()
-        });
+
         this.inputWorker.addEventListener("message", this.handleInputWorkerMessage.bind(this));
     }
 
@@ -1103,8 +1104,11 @@ class InputWaiter {
         this.manager.worker.setupChefWorker();
         this.addInput(true);
 
-        // Fire the statechange event as the input has been modified
-        window.dispatchEvent(this.manager.statechange);
+        // Fire the statechange event as the input has been modified,
+        // leaving enough time for workers to be initialised
+        setTimeout(function() {
+            window.dispatchEvent(this.manager.statechange);
+        }.bind(this), 100);
     }
 
     /**

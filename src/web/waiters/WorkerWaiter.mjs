@@ -326,30 +326,36 @@ class WorkerWaiter {
      * Cancels the current bake by terminating and removing all ChefWorkers
      *
      * @param {boolean} [silent=false] - If true, don't set the output
-     * @param {boolean} killAll - If true, kills all chefWorkers regardless of status
+     * @param {boolean} [killAll=false] - If true, kills all chefWorkers regardless of status
      */
-    cancelBake(silent, killAll) {
+    cancelBake(silent=false, killAll=false) {
+        const deactiveOutputs = new Set();
+
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
             if (this.chefWorkers[i].active || killAll) {
                 const inputNum = this.chefWorkers[i].inputNum;
                 this.removeChefWorker(this.chefWorkers[i]);
-                this.manager.output.updateOutputStatus("inactive", inputNum);
+                deactiveOutputs.add(inputNum);
             }
         }
         this.setBakingStatus(false);
 
-        for (let i = 0; i < this.inputs.length; i++) {
-            this.manager.output.updateOutputStatus("inactive", this.inputs[i].inputNum);
-        }
+        this.inputs.forEach(input => {
+            deactiveOutputs.add(input.inputNum);
+        });
 
-        for (let i = 0; i < this.inputNums.length; i++) {
-            this.manager.output.updateOutputStatus("inactive", this.inputNums[i]);
-        }
+        this.inputNums.forEach(inputNum => {
+            deactiveOutputs.add(inputNum);
+        });
+
+        deactiveOutputs.forEach(num => {
+            this.manager.output.updateOutputStatus("inactive", num);
+        });
 
         const tabList = this.manager.tabs.getTabList("output");
-        for (let i = 0; i < tabList.length; i++) {
-            this.manager.tabs.getTabItem(tabList[i], "output").style.background = "";
-        }
+        tabList.forEach(tab => {
+            this.manager.tabs.getTabItem(tab, "output").style.background = "";
+        });
 
         this.inputs = [];
         this.inputNums = [];
@@ -567,7 +573,7 @@ class WorkerWaiter {
 
         return await new Promise(resolve => {
             if (this.app.baking) return;
-            const inputNums = inputData.nums;
+            const inputNums = inputData.nums.filter(n => n > 0);
             const step = inputData.step;
 
             // Use cancelBake to clear out the inputs
@@ -610,6 +616,7 @@ class WorkerWaiter {
                 });
                 this.loadingOutputs++;
             }
+            if (numBakes === 0) this.bakingComplete();
         });
     }
 
