@@ -462,8 +462,8 @@ class InputWaiter {
             case "queueInputError":
                 this.manager.worker.queueInputError(r.data);
                 break;
-            case "bakeAllInputs":
-                this.manager.worker.bakeAllInputs(r.data);
+            case "bakeInputs":
+                this.manager.worker.bakeInputs(r.data);
                 break;
             case "displayTabSearchResults":
                 this.displayTabSearchResults(r.data);
@@ -544,12 +544,14 @@ class InputWaiter {
             }
 
             // Decode the data to a string
+            this.manager.timing.recordTime("inputEncodingStart", inputNum);
             let inputVal;
             if (this.getChrEnc() > 0) {
                 inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
             } else {
                 inputVal = Utils.arrayBufferToStr(inputData.buffer);
             }
+            this.manager.timing.recordTime("inputEncodingEnd", inputNum);
 
             // Populate the input editor
             this.setInput(inputVal);
@@ -684,6 +686,8 @@ class InputWaiter {
         let stringSample = "";
 
         // If value is a string, interpret it using the specified character encoding
+        const tabNum = this.manager.tabs.getActiveTab("input");
+        this.manager.timing.recordTime("inputEncodingStart", tabNum);
         if (typeof value === "string") {
             stringSample = value.slice(0, 4096);
             if (this.getChrEnc() > 0) {
@@ -696,6 +700,7 @@ class InputWaiter {
             buffer = value;
             stringSample = Utils.arrayBufferToStr(value.slice(0, 4096));
         }
+        this.manager.timing.recordTime("inputEncodingEnd", tabNum);
 
         // Update the deep link
         const recipeStr = buffer.byteLength < 51200 ? toBase64(buffer, "A-Za-z0-9+/") : ""; // B64 alphabet with no padding

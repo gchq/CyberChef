@@ -9,7 +9,6 @@ import Utils, {debounce} from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
-import cptable from "codepage";
 
 import {
     EditorView,
@@ -57,10 +56,6 @@ class OutputWaiter {
         this.manager = manager;
 
         this.outputTextEl = document.getElementById("output-text");
-        // Object to contain bake statistics - used by statusBar extension
-        this.bakeStats = {
-            duration: 0
-        };
         // Object to handle output HTML state - used by htmlWidget extension
         this.htmlOutput = {
             html: "",
@@ -106,7 +101,10 @@ class OutputWaiter {
                 // Custom extensions
                 statusBar({
                     label: "Output",
-                    bakeStats: this.bakeStats,
+                    timing: this.manager.timing,
+                    tabNumGetter: function() {
+                        return this.manager.tabs.getActiveTab("output");
+                    }.bind(this),
                     eolHandler: this.eolChange.bind(this),
                     chrEncHandler: this.chrEncChange.bind(this),
                     chrEncGetter: this.getChrEnc.bind(this),
@@ -145,7 +143,7 @@ class OutputWaiter {
      * Sets the line separator
      * @param {string} eolVal
      */
-    eolChange(eolVal) {
+    async eolChange(eolVal) {
         const currentTabNum = this.manager.tabs.getActiveTab("output");
         if (currentTabNum >= 0) {
             this.outputs[currentTabNum].eolSequence = eolVal;
@@ -159,7 +157,7 @@ class OutputWaiter {
         });
 
         // Reset the output so that lines are recalculated, preserving the old EOL values
-        this.setOutput(this.currentOutputCache, true);
+        await this.setOutput(this.currentOutputCache, true);
         // Update the URL manually since we aren't firing a statechange event
         this.app.updateURL(true);
     }
@@ -182,7 +180,7 @@ class OutputWaiter {
      * Sets the output character encoding
      * @param {number} chrEncVal
      */
-    chrEncChange(chrEncVal) {
+    async chrEncChange(chrEncVal) {
         if (typeof chrEncVal !== "number") return;
 
         const currentTabNum = this.manager.tabs.getActiveTab("output");
@@ -193,7 +191,7 @@ class OutputWaiter {
         }
 
         // Reset the output, forcing it to re-decode the data with the new character encoding
-        this.setOutput(this.currentOutputCache, true);
+        await this.setOutput(this.currentOutputCache, true);
         // Update the URL manually since we aren't firing a statechange event
         this.app.updateURL(true);
     }
@@ -227,24 +225,18 @@ class OutputWaiter {
      * @param {string|ArrayBuffer} data
      * @param {boolean} [force=false]
      */
-    setOutput(data, force=false) {
+    async setOutput(data, force=false) {
         // Don't do anything if the output hasn't changed
         if (!force && data === this.currentOutputCache) return;
         this.currentOutputCache = data;
 
         // If data is an ArrayBuffer, convert to a string in the correct character encoding
+        const tabNum = this.manager.tabs.getActiveTab("output");
+        this.manager.timing.recordTime("outputDecodingStart", tabNum);
         if (data instanceof ArrayBuffer) {
-            const encoding = this.getChrEnc();
-            if (encoding === 0) {
-                data = Utils.arrayBufferToStr(data);
-            } else {
-                try {
-                    data = cptable.utils.decode(encoding, new Uint8Array(data));
-                } catch (err) {
-                    data = err;
-                }
-            }
+            data = await this.bufferToStr(data);
         }
+        this.manager.timing.recordTime("outputDecodingEnd", tabNum);
 
         // Turn drawSelection back on
         this.outputEditorView.dispatch({
@@ -267,12 +259,12 @@ class OutputWaiter {
      * Sets the value of the current output to a rendered HTML value
      * @param {string} html
      */
-    setHTMLOutput(html) {
+    async setHTMLOutput(html) {
         this.htmlOutput.html = html;
         this.htmlOutput.changed = true;
         // This clears the text output, but also fires a View update which
         // triggers the htmlWidget to render the HTML.
-        this.setOutput("");
+        await this.setOutput("");
 
         // Turn off drawSelection
         this.outputEditorView.dispatch({
@@ -518,6 +510,7 @@ class OutputWaiter {
 
         return new Promise(async function(resolve, reject) {
             const output = this.outputs[inputNum];
+            this.manager.timing.recordTime("settingOutput", inputNum);
 
             // Update the EOL value
             this.outputEditorView.dispatch({
@@ -553,34 +546,41 @@ class OutputWaiter {
                 this.clearHTMLOutput();
 
                 if (output.error) {
-                    this.setOutput(output.error);
+                    await this.setOutput(output.error);
                 } else {
-                    this.setOutput(output.data.result);
+                    await this.setOutput(output.data.result);
                 }
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
 
                 if (output.data === null) {
                     this.clearHTMLOutput();
-                    this.setOutput("");
+                    await this.setOutput("");
                     this.toggleLoader(false);
                     return;
                 }
 
-                this.bakeStats.duration = output.data.duration;
-
                 switch (output.data.type) {
                     case "html":
-                        this.setHTMLOutput(output.data.result);
+                        await this.setHTMLOutput(output.data.result);
                         break;
                     case "ArrayBuffer":
                     case "string":
                     default:
                         this.clearHTMLOutput();
-                        this.setOutput(output.data.result);
+                        await this.setOutput(output.data.result);
                         break;
                 }
                 this.toggleLoader(false);
+                this.manager.timing.recordTime("complete", inputNum);
+
+                // Trigger an update so that the status bar recalculates timings
+                this.outputEditorView.dispatch({
+                    changes: {
+                        from: 0,
+                        to: 0
+                    }
+                });
 
                 debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
             }
@@ -625,6 +625,22 @@ class OutputWaiter {
     async getDishTitle(dish, maxLength) {
         return await new Promise(resolve => {
             this.manager.worker.getDishTitle(dish, maxLength, r => {
+                resolve(r.value);
+            });
+        });
+    }
+
+    /**
+     * Asks a worker to translate an ArrayBuffer into a certain character encoding
+     *
+     * @param {ArrrayBuffer} buffer
+     * @returns {string}
+     */
+    async bufferToStr(buffer) {
+        const encoding = this.getChrEnc();
+
+        return await new Promise(resolve => {
+            this.manager.worker.bufferToStr(buffer, encoding, r => {
                 resolve(r.value);
             });
         });

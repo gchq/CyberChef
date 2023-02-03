@@ -174,7 +174,7 @@ self.autoBake = function(inputNum, progress, step=false) {
     const input = self.inputs[inputNum];
     if (input) {
         self.postMessage({
-            action: "bakeAllInputs",
+            action: "bakeInputs",
             data: {
                 nums: [parseInt(inputNum, 10)],
                 step: step,
@@ -196,7 +196,7 @@ self.bakeAllInputs = function() {
         .map(n => parseInt(n, 10));
 
     self.postMessage({
-        action: "bakeAllInputs",
+        action: "bakeInputs",
         data: {
             nums: nums,
             step: false,

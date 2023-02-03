@@ -18,7 +18,8 @@ class StatusBarPanel {
      */
     constructor(opts) {
         this.label = opts.label;
-        this.bakeStats = opts.bakeStats ? opts.bakeStats : null;
+        this.timing = opts.timing;
+        this.tabNumGetter = opts.tabNumGetter;
         this.eolHandler = opts.eolHandler;
         this.chrEncHandler = opts.chrEncHandler;
         this.chrEncGetter = opts.chrEncGetter;
@@ -243,18 +244,21 @@ class StatusBarPanel {
     }
 
     /**
-     * Sets the latest bake duration
+     * Sets the latest timing info
      */
-    updateBakeStats() {
+    updateTiming() {
+        if (!this.timing) return;
+
         const bakingTime = this.dom.querySelector(".baking-time-value");
         const bakingTimeInfo = this.dom.querySelector(".baking-time-info");
 
-        if (this.label === "Output" &&
-            this.bakeStats &&
-            typeof this.bakeStats.duration === "number" &&
-            this.bakeStats.duration >= 0) {
+        if (this.label === "Output" && this.timing) {
             bakingTimeInfo.style.display = "inline-block";
-            bakingTime.textContent = this.bakeStats.duration;
+            bakingTime.textContent = this.timing.overallDuration(this.tabNumGetter());
+
+            const info = this.timing.printStages(this.tabNumGetter()).replace(/\n/g, "<br>");
+            bakingTimeInfo.setAttribute("title", info);
+            bakingTimeInfo.setAttribute("data-original-title", info);
         } else {
             bakingTimeInfo.style.display = "none";
         }
@@ -335,7 +339,7 @@ class StatusBarPanel {
         ).join("");
 
         return `
-            <span class="baking-time-info" style="display: none" data-toggle="tooltip" title="Baking time">
+            <span class="baking-time-info" style="display: none" data-toggle="tooltip" data-html="true" title="Baking time">
                 <i class="material-icons">schedule</i>
                 <span class="baking-time-value"></span>ms
             </span>
@@ -429,7 +433,7 @@ function makePanel(opts) {
     return (view) => {
         sbPanel.updateEOL(view.state);
         sbPanel.updateCharEnc();
-        sbPanel.updateBakeStats();
+        sbPanel.updateTiming();
         sbPanel.updateStats(view.state.doc);
         sbPanel.updateSelection(view.state, false);
         sbPanel.monitorHTMLOutput();
@@ -440,7 +444,7 @@ function makePanel(opts) {
                 sbPanel.updateEOL(update.state);
                 sbPanel.updateCharEnc();
                 sbPanel.updateSelection(update.state, update.selectionSet);
-                sbPanel.updateBakeStats();
+                sbPanel.updateTiming();
                 sbPanel.monitorHTMLOutput();
                 if (update.geometryChanged) {
                     sbPanel.updateSizing(update.view);

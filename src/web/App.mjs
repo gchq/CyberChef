@@ -160,11 +160,9 @@ class App {
 
         if (this.autoBake_ && !this.baking) {
             log.debug("Auto-baking");
-            this.manager.input.inputWorker.postMessage({
-                action: "autobake",
-                data: {
-                    activeTab: this.manager.tabs.getActiveTab("input")
-                }
+            this.manager.worker.bakeInputs({
+                nums: [this.manager.tabs.getActiveTab("input")],
+                step: false
             });
         } else {
             this.manager.controls.showStaleIndicator();

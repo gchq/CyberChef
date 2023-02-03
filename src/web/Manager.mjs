@@ -17,6 +17,7 @@ import SeasonalWaiter from "./waiters/SeasonalWaiter.mjs";
 import BindingsWaiter from "./waiters/BindingsWaiter.mjs";
 import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter.mjs";
 import TabWaiter from "./waiters/TabWaiter.mjs";
+import TimingWaiter from "./waiters/TimingWaiter.mjs";
 
 
 /**
@@ -59,6 +60,7 @@ class Manager {
         this.statechange = new CustomEvent("statechange", {bubbles: true});
 
         // Define Waiter objects to handle various areas
+        this.timing      = new TimingWaiter(this.app, this);
         this.worker      = new WorkerWaiter(this.app, this);
         this.window      = new WindowWaiter(this.app);
         this.controls    = new ControlsWaiter(this.app, this);

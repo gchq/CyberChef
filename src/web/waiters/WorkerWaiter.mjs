@@ -197,6 +197,8 @@ class WorkerWaiter {
         switch (r.action) {
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
+                this.manager.timing.recordTime("bakeComplete", inputNum);
+                this.manager.timing.recordTime("bakeDuration", inputNum, r.data.duration);
 
                 if (r.data.error) {
                     this.app.handleError(r.data.error);
@@ -464,6 +466,7 @@ class WorkerWaiter {
         if (input instanceof ArrayBuffer || ArrayBuffer.isView(input)) {
             transferable = [input];
         }
+        this.manager.timing.recordTime("chefWorkerTasked", nextInput.inputNum);
         this.chefWorkers[workerIdx].worker.postMessage({
             action: "bake",
             data: {
@@ -559,7 +562,9 @@ class WorkerWaiter {
      * @param {boolean} inputData.step - If true, only execute the next operation in the recipe
      * @param {number} inputData.progress - The current progress through the recipe. Used when stepping
      */
-    async bakeAllInputs(inputData) {
+    async bakeInputs(inputData) {
+        log.debug(`Baking input list [${inputData.nums.join(",")}]`);
+
         return await new Promise(resolve => {
             if (this.app.baking) return;
             const inputNums = inputData.nums;
@@ -595,6 +600,7 @@ class WorkerWaiter {
                 numBakes = this.inputNums.length;
             }
             for (let i = 0; i < numBakes; i++) {
+                this.manager.timing.recordTime("trigger", this.inputNums[0]);
                 this.manager.input.inputWorker.postMessage({
                     action: "bakeNext",
                     data: {
@@ -654,7 +660,7 @@ class WorkerWaiter {
     }
 
     /**
-     * Asks the ChefWorker to return the dish as the specified type
+     * Asks the DishWorker to return the dish as the specified type
      *
      * @param {Dish} dish
      * @param {string} type
@@ -662,10 +668,9 @@ class WorkerWaiter {
      */
     getDishAs(dish, type, callback) {
         const id = this.callbackID++;
-
         this.callbacks[id] = callback;
-
         if (this.dishWorker.worker === null) this.setupDishWorker();
+
         this.postDishMessage({
             action: "getDishAs",
             data: {
@@ -677,7 +682,7 @@ class WorkerWaiter {
     }
 
     /**
-     * Asks the ChefWorker to get the title of the dish
+     * Asks the DishWorker to get the title of the dish
      *
      * @param {Dish} dish
      * @param {number} maxLength
@@ -686,9 +691,7 @@ class WorkerWaiter {
      */
     getDishTitle(dish, maxLength, callback) {
         const id = this.callbackID++;
-
         this.callbacks[id] = callback;
-
         if (this.dishWorker.worker === null) this.setupDishWorker();
 
         this.postDishMessage({
@@ -696,6 +699,29 @@ class WorkerWaiter {
             data: {
                 dish: dish,
                 maxLength: maxLength,
+                id: id
+            }
+        });
+    }
+
+    /**
+     * Asks the DishWorker to translate a buffer into a specific character encoding
+     *
+     * @param {ArrayBuffer} buffer
+     * @param {number} encoding
+     * @param {Function} callback
+     * @returns {string}
+     */
+    bufferToStr(buffer, encoding, callback) {
+        const id = this.callbackID++;
+        this.callbacks[id] = callback;
+        if (this.dishWorker.worker === null) this.setupDishWorker();
+
+        this.postDishMessage({
+            action: "bufferToStr",
+            data: {
+                buffer: buffer,
+                encoding: encoding,
                 id: id
             }
         });

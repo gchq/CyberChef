@@ -7,6 +7,8 @@
  */
 
 import Dish from "../../core/Dish.mjs";
+import Utils from "../../core/Utils.mjs";
+import cptable from "codepage";
 import loglevelMessagePrefix from "loglevel-message-prefix";
 
 loglevelMessagePrefix(log, {
@@ -25,6 +27,9 @@ self.addEventListener("message", function(e) {
             break;
         case "getDishTitle":
             getDishTitle(r.data);
+            break;
+        case "bufferToStr":
+            bufferToStr(r.data);
             break;
         case "setLogLevel":
             log.setLevel(r.data, false);
@@ -72,6 +77,35 @@ async function getDishTitle(data) {
         action: "dishReturned",
         data: {
             value: title,
+            id: data.id
+        }
+    });
+}
+
+/**
+ * Translates a buffer to a string using a specified encoding
+ *
+ * @param {object} data
+ * @param {ArrayBuffer} data.buffer
+ * @param {number} data.id
+ * @param {number} data.encoding
+ */
+async function bufferToStr(data) {
+    let str;
+    if (data.encoding === 0) {
+        str = Utils.arrayBufferToStr(data.buffer);
+    } else {
+        try {
+            str = cptable.utils.decode(data.encoding, new Uint8Array(data.buffer));
+        } catch (err) {
+            str = err;
+        }
+    }
+
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: str,
             id: data.id
         }
     });
