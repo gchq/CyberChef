@@ -474,6 +474,7 @@ class Utils {
     static strToArrayBuffer(str) {
         log.debug(`Converting string[${str?.length}] to array buffer`);
         if (!str) return new ArrayBuffer;
+
         const arr = new Uint8Array(str.length);
         let i = str.length, b;
         while (i--) {
@@ -502,9 +503,10 @@ class Utils {
     static strToUtf8ArrayBuffer(str) {
         log.debug(`Converting string[${str?.length}] to UTF8 array buffer`);
         if (!str) return new ArrayBuffer;
-        const utf8Str = utf8.encode(str);
 
-        if (str.length !== utf8Str.length) {
+        const buffer = new TextEncoder("utf-8").encode(str);
+
+        if (str.length !== buffer.length) {
             if (isWorkerEnvironment() && self && typeof self.setOption === "function") {
                 self.setOption("attemptHighlight", false);
             } else if (isWebEnvironment()) {
@@ -512,7 +514,7 @@ class Utils {
             }
         }
 
-        return Utils.strToArrayBuffer(utf8Str);
+        return buffer.buffer;
     }
 
 
@@ -627,20 +629,24 @@ class Utils {
     static byteArrayToUtf8(byteArray) {
         log.debug(`Converting byte array[${byteArray?.length}] to UTF8`);
         if (!byteArray || !byteArray.length) return "";
-        const str = Utils.byteArrayToChars(byteArray);
+        if (!(byteArray instanceof Uint8Array))
+            byteArray = new Uint8Array(byteArray);
+
         try {
-            const utf8Str = utf8.decode(str);
-            if (str.length !== utf8Str.length) {
+            const str = new TextDecoder("utf-8", {fatal: true}).decode(byteArray);
+
+            if (str.length !== byteArray.length) {
                 if (isWorkerEnvironment()) {
                     self.setOption("attemptHighlight", false);
                 } else if (isWebEnvironment()) {
                     window.app.options.attemptHighlight = false;
                 }
             }
-            return utf8Str;
+
+            return str;
         } catch (err) {
             // If it fails, treat it as ANSI
-            return str;
+            return Utils.byteArrayToChars(byteArray);
         }
     }
 
@@ -662,9 +668,10 @@ class Utils {
         log.debug(`Converting byte array[${byteArray?.length}] to chars`);
         if (!byteArray || !byteArray.length) return "";
         let str = "";
-        // String concatenation appears to be faster than an array join
-        for (let i = 0; i < byteArray.length;) {
-            str += String.fromCharCode(byteArray[i++]);
+        // Maxiumum arg length for fromCharCode is 65535, but the stack may already be fairly deep,
+        // so don't get too near it.
+        for (let i = 0; i < byteArray.length; i += 20000) {
+            str += String.fromCharCode(...(byteArray.slice(i, i+20000)));
         }
         return str;
     }
