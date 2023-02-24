@@ -221,12 +221,41 @@ class InputWaiter {
      * @param {string} data
      */
     setInput(data) {
-        this.inputEditorView.dispatch({
-            changes: {
-                from: 0,
-                to: this.inputEditorView.state.doc.length,
-                insert: data
+        const lineLengthThreshold = 131072; // 128KB
+        let wrap = this.app.options.wordWrap;
+        if (data.length > lineLengthThreshold) {
+            const lines = data.split(this.getEOLSeq());
+            const longest = lines.reduce((a, b) =>
+                a > b.length ? a : b.length, 0
+            );
+            if (longest > lineLengthThreshold) {
+                // If we are exceeding the max line length, turn off word wrap
+                wrap = false;
+                this.app.alert("Maximum line length exceeded. Word wrap will be temporarily disabled to improve performance.", 20000);
             }
+        }
+
+        // If turning word wrap off, do it before we populate the editor for performance reasons
+        if (!wrap) this.setWordWrap(wrap);
+
+        // We use setTimeout here to delay the editor dispatch until the next event cycle,
+        // ensuring all async actions have completed before attempting to set the contents
+        // of the editor. This is mainly with the above call to setWordWrap() in mind.
+        setTimeout(() => {
+            // Insert data into editor, overwriting any previous contents
+            this.inputEditorView.dispatch({
+                changes: {
+                    from: 0,
+                    to: this.inputEditorView.state.doc.length,
+                    insert: data
+                }
+            });
+
+            // If turning word wrap on, do it after we populate the editor
+            if (wrap)
+                setTimeout(() => {
+                    this.setWordWrap(wrap);
+                });
         });
     }
 

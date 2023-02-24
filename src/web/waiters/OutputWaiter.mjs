@@ -128,6 +128,10 @@ class OutputWaiter {
                 EditorView.updateListener.of(e => {
                     if (e.selectionSet)
                         this.manager.highlighter.selectionChange("output", e);
+                    if (e.docChanged || this.docChanging) {
+                        this.docChanging = false;
+                        this.toggleLoader(false);
+                    }
                 })
             ]
         });
@@ -230,6 +234,8 @@ class OutputWaiter {
         if (!force && data === this.currentOutputCache) return;
         this.currentOutputCache = data;
 
+        this.toggleLoader(true);
+
         // If data is an ArrayBuffer, convert to a string in the correct character encoding
         const tabNum = this.manager.tabs.getActiveTab("output");
         this.manager.timing.recordTime("outputDecodingStart", tabNum);
@@ -245,13 +251,42 @@ class OutputWaiter {
             )
         });
 
-        // Insert data into editor
-        this.outputEditorView.dispatch({
-            changes: {
-                from: 0,
-                to: this.outputEditorView.state.doc.length,
-                insert: data
+        // Ensure we're not exceeding the maximum line length
+        let wrap = this.app.options.wordWrap;
+        const lineLengthThreshold = 131072; // 128KB
+        if (data.length > lineLengthThreshold) {
+            const lines = data.split(this.getEOLSeq());
+            const longest = lines.reduce((a, b) =>
+                a > b.length ? a : b.length, 0
+            );
+            if (longest > lineLengthThreshold) {
+                // If we are exceeding the max line length, turn off word wrap
+                wrap = false;
             }
+        }
+
+        // If turning word wrap off, do it before we populate the editor for performance reasons
+        if (!wrap) this.setWordWrap(wrap);
+
+        // We use setTimeout here to delay the editor dispatch until the next event cycle,
+        // ensuring all async actions have completed before attempting to set the contents
+        // of the editor. This is mainly with the above call to setWordWrap() in mind.
+        setTimeout(() => {
+            this.docChanging = true;
+            // Insert data into editor, overwriting any previous contents
+            this.outputEditorView.dispatch({
+                changes: {
+                    from: 0,
+                    to: this.outputEditorView.state.doc.length,
+                    insert: data
+                }
+            });
+
+            // If turning word wrap on, do it after we populate the editor
+            if (wrap)
+                setTimeout(() => {
+                    this.setWordWrap(wrap);
+                });
         });
     }
 
@@ -263,8 +298,9 @@ class OutputWaiter {
         this.htmlOutput.html = html;
         this.htmlOutput.changed = true;
         // This clears the text output, but also fires a View update which
-        // triggers the htmlWidget to render the HTML.
-        await this.setOutput("");
+        // triggers the htmlWidget to render the HTML. We set the force flag
+        // to ensure the loader gets removed and HTML is rendered.
+        await this.setOutput("", true);
 
         // Turn off drawSelection
         this.outputEditorView.dispatch({
@@ -542,7 +578,6 @@ class OutputWaiter {
                 // otherwise don't do anything
                 document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
             } else if (output.status === "error") {
-                this.toggleLoader(false);
                 this.clearHTMLOutput();
 
                 if (output.error) {
@@ -556,7 +591,6 @@ class OutputWaiter {
                 if (output.data === null) {
                     this.clearHTMLOutput();
                     await this.setOutput("");
-                    this.toggleLoader(false);
                     return;
                 }
 
@@ -571,7 +605,6 @@ class OutputWaiter {
                         await this.setOutput(output.data.result);
                         break;
                 }
-                this.toggleLoader(false);
                 this.manager.timing.recordTime("complete", inputNum);
 
                 // Trigger an update so that the status bar recalculates timings
@@ -665,35 +698,40 @@ class OutputWaiter {
      * @param {boolean} value - If true, show the loader
      */
     toggleLoader(value) {
-        clearTimeout(this.appendBombeTimeout);
-        clearTimeout(this.outputLoaderTimeout);
-
         const outputLoader = document.getElementById("output-loader"),
             animation = document.getElementById("output-loader-animation");
 
         if (value) {
             this.manager.controls.hideStaleIndicator();
+            // Don't add the bombe if it's already there or scheduled to be loaded
+            if (animation.children.length === 0 && !this.appendBombeTimeout) {
+                // Start a timer to add the Bombe to the DOM just before we make it
+                // visible so that there is no stuttering
+                this.appendBombeTimeout = setTimeout(function() {
+                    this.appendBombeTimeout = null;
+                    animation.appendChild(this.bombeEl);
+                }.bind(this), 150);
+            }
 
-            // Don't add the bombe if it's already there!
-            if (animation.children.length > 0) return;
+            if (outputLoader.style.visibility !== "visible" && !this.outputLoaderTimeout) {
+                // Show the loading screen
+                this.outputLoaderTimeout = setTimeout(function() {
+                    this.outputLoaderTimeout = null;
+                    outputLoader.style.visibility = "visible";
+                    outputLoader.style.opacity = 1;
+                }, 200);
+            }
+        } else if (outputLoader.style.visibility !== "hidden" || this.appendBombeTimeout || this.outputLoaderTimeout) {
+            clearTimeout(this.appendBombeTimeout);
+            clearTimeout(this.outputLoaderTimeout);
+            this.appendBombeTimeout = null;
+            this.outputLoaderTimeout = null;
 
-            // Start a timer to add the Bombe to the DOM just before we make it
-            // visible so that there is no stuttering
-            this.appendBombeTimeout = setTimeout(function() {
-                animation.appendChild(this.bombeEl);
-            }.bind(this), 150);
-
-            // Show the loading screen
-            this.outputLoaderTimeout = setTimeout(function() {
-                outputLoader.style.visibility = "visible";
-                outputLoader.style.opacity = 1;
-            }, 200);
-        } else {
             // Remove the Bombe from the DOM to save resources
             this.outputLoaderTimeout = setTimeout(function () {
-                try {
+                this.outputLoaderTimeout = null;
+                if (animation.children.length > 0)
                     animation.removeChild(this.bombeEl);
-                } catch (err) {}
             }.bind(this), 500);
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
