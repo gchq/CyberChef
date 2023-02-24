@@ -966,6 +966,7 @@ class OutputWaiter {
      */
     changeTabClick(mouseEvent) {
         if (!mouseEvent.target) return;
+
         const tabNum = mouseEvent.target.parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);

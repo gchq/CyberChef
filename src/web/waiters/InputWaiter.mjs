@@ -138,8 +138,9 @@ class InputWaiter {
                 EditorView.updateListener.of(e => {
                     if (e.selectionSet)
                         this.manager.highlighter.selectionChange("input", e);
-                    if (e.docChanged)
+                    if (e.docChanged && !this.silentInputChange)
                         this.inputChange(e);
+                    this.silentInputChange = false;
                 })
             ]
         });
@@ -219,8 +220,9 @@ class InputWaiter {
     /**
      * Sets the value of the current input
      * @param {string} data
+     * @param {boolean} [silent=false]
      */
-    setInput(data) {
+    setInput(data, silent=false) {
         const lineLengthThreshold = 131072; // 128KB
         let wrap = this.app.options.wordWrap;
         if (data.length > lineLengthThreshold) {
@@ -243,6 +245,7 @@ class InputWaiter {
         // of the editor. This is mainly with the above call to setWordWrap() in mind.
         setTimeout(() => {
             // Insert data into editor, overwriting any previous contents
+            this.silentInputChange = silent;
             this.inputEditorView.dispatch({
                 changes: {
                     from: 0,
@@ -584,7 +587,7 @@ class InputWaiter {
             this.manager.timing.recordTime("inputEncodingEnd", inputNum);
 
             // Populate the input editor
-            this.setInput(inputVal);
+            this.setInput(inputVal, silent);
 
             // Set URL to current input
             if (inputVal.length >= 0 && inputVal.length <= 51200) {
