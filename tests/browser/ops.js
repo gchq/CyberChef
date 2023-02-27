@@ -410,16 +410,16 @@ function bakeOp(browser, opName, input, args=[]) {
         .click("#clr-recipe")
         .click("#clr-io")
         .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.property("value").that.equals(""); // TODO
+        .expect.element("#input-text .cm-content").to.have.property("textContent").that.equals("");
 
     browser
         .perform(function() {
             console.log(`Current test: ${opName}`);
         })
         .urlHash("recipe=" + recipeConfig)
-        .setValue("#input-text", input) // TODO
+        .sendKeys("#input-text .cm-content", input)
         .waitForElementPresent("#rec-list li.operation")
-        .expect.element("#input-text").to.have.property("value").that.equals(input); // TODO
+        .expect.element("#input-text .cm-content").to.have.property("textContent").that.equals(input);
 
     browser
         .waitForElementVisible("#stale-indicator", 5000)
@@ -444,9 +444,9 @@ function testOp(browser, opName, input, output, args=[]) {
     bakeOp(browser, opName, input, args);
 
     if (typeof output === "string") {
-        browser.expect.element("#output-text").to.have.property("value").that.equals(output); // TODO
+        browser.expect.element("#output-text .cm-content").to.have.property("textContent").that.equals(output);
     } else if (output instanceof RegExp) {
-        browser.expect.element("#output-text").to.have.property("value").that.matches(output); // TODO
+        browser.expect.element("#output-text .cm-content").to.have.property("textContent").that.matches(output);
     }
 }
 

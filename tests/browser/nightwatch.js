@@ -82,7 +82,7 @@ module.exports = {
         // Enter input
         browser
             .useCss()
-            .setValue("#input-text", "Don't Panic.") // TODO
+            .sendKeys("#input-text .cm-content", "Don't Panic.")
             .pause(1000)
             .click("#bake");
 
@@ -90,7 +90,7 @@ module.exports = {
         browser
             .useCss()
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text").to.have.property("value").that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e"); // TODO
+            .expect.element("#output-text .cm-content").to.have.property("textContent").that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
         browser
@@ -206,7 +206,7 @@ module.exports = {
             .useCss()
             .waitForElementVisible(".operation .op-title", 1000)
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text").to.have.property("value").which.matches(/[\da-f-]{36}/); // TODO
+            .expect.element("#output-text .cm-content").to.have.property("textContent").which.matches(/[\da-f-]{36}/);
 
         browser.click("#clr-recipe");
     },
