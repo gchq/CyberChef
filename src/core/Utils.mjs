@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+// loglevel import required for Node API
+import log from "loglevel";
 import utf8 from "utf8";
 import {fromBase64, toBase64} from "./lib/Base64.mjs";
 import {fromHex} from "./lib/Hex.mjs";

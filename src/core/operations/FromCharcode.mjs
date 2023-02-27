@@ -59,7 +59,7 @@ class FromCharcode extends Operation {
         }
 
         if (input.length === 0) {
-            return [];
+            return new ArrayBuffer;
         }
 
         if (base !== 16 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);

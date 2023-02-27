@@ -27,8 +27,8 @@ class Chef {
      *
      * @param {string|ArrayBuffer} input - The input data as a string or ArrayBuffer
      * @param {Object[]} recipeConfig - The recipe configuration object
-     * @param {Object} options - The options object storing various user choices
-     * @param {boolean} options.attempHighlight - Whether or not to attempt highlighting
+     * @param {Object} [options={}] - The options object storing various user choices
+     * @param {string} [options.returnType] - What type to return the result as
      *
      * @returns {Object} response
      * @returns {string} response.result - The output of the recipe
@@ -37,7 +37,7 @@ class Chef {
      * @returns {number} response.duration - The number of ms it took to execute the recipe
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
     */
-    async bake(input, recipeConfig, options) {
+    async bake(input, recipeConfig, options={}) {
         log.debug("Chef baking");
         const startTime = Date.now(),
             recipe      = new Recipe(recipeConfig),
@@ -68,9 +68,8 @@ class Chef {
         await recipe.present(this.dish);
 
         const returnType =
-            this.dish.type === Dish.HTML ?
-                Dish.HTML :
-                Dish.ARRAY_BUFFER;
+            this.dish.type === Dish.HTML ? Dish.HTML :
+                options?.returnType ? options.returnType : Dish.ARRAY_BUFFER;
 
         return {
             dish: rawDish,
