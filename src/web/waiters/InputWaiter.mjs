@@ -905,7 +905,7 @@ class InputWaiter {
      *
      * @param {event} e
      */
-    inputDrop(e) {
+    async inputDrop(e) {
         // This will be set if we're dragging an operation
         if (e.dataTransfer.effectAllowed === "move")
             return false;
@@ -917,8 +917,95 @@ class InputWaiter {
         // Dropped text is handled by the editor itself
         if (e.dataTransfer.getData("Text")) return;
 
+        // Dropped files
         if (e?.dataTransfer?.files?.length > 0) {
-            this.loadUIFiles(e.dataTransfer.files);
+            let files = [];
+
+            // Handling the files as FileSystemEntry objects allows us to open directories,
+            // but relies on a function that may be deprecated in future.
+            if (Object.prototype.hasOwnProperty.call(DataTransferItem.prototype, "webkitGetAsEntry")) {
+                const fileEntries = await this.getAllFileEntries(e.dataTransfer.items);
+                // Read all FileEntry objects into File objects
+                files = await Promise.all(fileEntries.map(async fe => await this.getFile(fe)));
+            } else {
+                files = e.dataTransfer.files;
+            }
+
+            this.loadUIFiles(files);
+        }
+    }
+
+    /**
+     *
+     * @param {DataTransferItemList} dataTransferItemList
+     * @returns {FileSystemEntry[]}
+     */
+    async getAllFileEntries(dataTransferItemList) {
+        const fileEntries = [];
+        // Use BFS to traverse entire directory/file structure
+        const queue = [];
+        // Unfortunately dataTransferItemList is not iterable i.e. no forEach
+        for (let i = 0; i < dataTransferItemList.length; i++) {
+            // Note webkitGetAsEntry a non-standard feature and may change
+            // Usage is necessary for handling directories
+            queue.push(dataTransferItemList[i].webkitGetAsEntry());
+        }
+        while (queue.length > 0) {
+            const entry = queue.shift();
+            if (entry.isFile) {
+                fileEntries.push(entry);
+            } else if (entry.isDirectory) {
+                queue.push(...await this.readAllDirectoryEntries(entry.createReader()));
+            }
+        }
+        return fileEntries;
+    }
+
+    /**
+     * Get all the entries (files or sub-directories) in a directory by calling
+     * readEntries until it returns empty array
+     *
+     * @param {FileSystemDirectoryReader} directoryReader
+     * @returns {FileSystemEntry[]}
+     */
+    async readAllDirectoryEntries(directoryReader) {
+        const entries = [];
+        let readEntries = await this.readEntriesPromise(directoryReader);
+        while (readEntries.length > 0) {
+            entries.push(...readEntries);
+            readEntries = await this.readEntriesPromise(directoryReader);
+        }
+        return entries;
+    }
+
+    /**
+     * Wrap readEntries in a promise to make working with readEntries easier.
+     * readEntries will return only some of the entries in a directory
+     * e.g. Chrome returns at most 100 entries at a time
+     *
+     * @param {FileSystemDirectoryReader} directoryReader
+     * @returns {Promise}
+     */
+    async readEntriesPromise(directoryReader) {
+        try {
+            return await new Promise((resolve, reject) => {
+                directoryReader.readEntries(resolve, reject);
+            });
+        } catch (err) {
+            log.error(err);
+        }
+    }
+
+    /**
+     * Reads a FileEntry and returns it as a File object
+     * @param {FileEntry} fileEntry
+     * @returns {File}
+     */
+    async getFile(fileEntry) {
+        try {
+            return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
+        } catch (err) {
+            log.error(err);
         }
     }
 
