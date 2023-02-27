@@ -90,7 +90,7 @@ module.exports = {
         browser
             .useCss()
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text .cm-content").to.have.property("textContent").that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
+            .expect.element("#output-text .cm-content").text.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
         browser
@@ -206,7 +206,7 @@ module.exports = {
             .useCss()
             .waitForElementVisible(".operation .op-title", 1000)
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text .cm-content").to.have.property("textContent").which.matches(/[\da-f-]{36}/);
+            .expect.element("#output-text .cm-content").text.which.matches(/[\da-f-]{36}/);
 
         browser.click("#clr-recipe");
     },
