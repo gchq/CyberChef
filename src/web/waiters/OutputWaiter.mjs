@@ -1217,7 +1217,7 @@ class OutputWaiter {
         }
         this.manager.tabs.updateTabHeader(inputNum, tabStr, "output");
         if (this.manager.worker.recipeConfig !== undefined) {
-            this.manager.tabs.updateTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length, "output");
+            this.manager.tabs.updateTabProgress(inputNum, this.outputs[inputNum]?.progress, this.manager.worker.recipeConfig.length, "output");
         }
 
         const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
