@@ -25,6 +25,9 @@ const Names = {
     8232: "line separator",
     8237: "left-to-right override",
     8238: "right-to-left override",
+    8294: "left-to-right isolate",
+    8295: "right-to-left isolate",
+    8297: "pop directional isolate",
     8233: "paragraph separator",
     65279: "zero width no-break space",
     65532: "object replacement"
@@ -32,13 +35,13 @@ const Names = {
 
 // Regex for Special Characters to be replaced
 const UnicodeRegexpSupport = /x/.unicode != null ? "gu" : "g";
-const Specials = new RegExp("[\u0000-\u0008\u000a-\u001f\u007f-\u009f\u00ad\u061c\u200b\u200e\u200f\u2028\u2029\u202d\u202e\ufeff\ufff9-\ufffc\ue000-\uf8ff]", UnicodeRegexpSupport);
+const Specials = new RegExp("[\u0000-\u0008\u000a-\u001f\u007f-\u009f\u00ad\u061c\u200b\u200e\u200f\u2028\u2029\u202d\u202e\u2066\u2067\u2069\ufeff\ufff9-\ufffc\ue000-\uf8ff]", UnicodeRegexpSupport);
 
 
 /**
  * Override for rendering special characters.
  * Should mirror the toDOM function in
- * https://github.com/codemirror/view/blob/main/src/special-chars.ts#L150
+ * https://github.com/codemirror/view/blob/main/src/special-chars.ts#L153
  * But reverts the replacement of line feeds with newline control pictures.
  *
  * @param {number} code

@@ -835,6 +835,11 @@ class Utils {
      * Escapes HTML tags in a string to stop them being rendered.
      * https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
      *
+     * Null bytes are a special case and are converted to a character from the Unicode
+     * Private Use Area, which CyberChef will display as a control character picture.
+     * This is done due to null bytes not being rendered or stored correctly in HTML
+     * DOM building.
+     *
      * @param {string} str
      * @returns string
      *
@@ -849,10 +854,11 @@ class Utils {
             ">": "&gt;",
             '"': "&quot;",
             "'": "&#x27;", // &apos; not recommended because it's not in the HTML spec
-            "`": "&#x60;"
+            "`": "&#x60;",
+            "\u0000": "\ue000"
         };
 
-        return str ? str.replace(/[&<>"'`]/g, function (match) {
+        return str ? str.replace(/[&<>"'`\u0000]/g, function (match) {
             return HTML_CHARS[match];
         }) : str;
     }
@@ -876,10 +882,11 @@ class Utils {
             "&quot;": '"',
             "&#x27;": "'",
             "&#x2F;": "/",
-            "&#x60;": "`"
+            "&#x60;": "`",
+            "\ue000": "\u0000"
         };
 
-        return str.replace(/&#?x?[a-z0-9]{2,4};/ig, function (match) {
+        return str.replace(/(&#?x?[a-z0-9]{2,4};|\ue000)/ig, function (match) {
             return HTML_CHARS[match] || match;
         });
     }

@@ -382,7 +382,7 @@ module.exports = {
  * @param {Browser} browser - Nightwatch client
  * @param {string|Array<string>} opName - name of operation to be tested, array for multiple ops
  * @param {string} input - input text for test
- * @param {Array<string>|Array<Array<string>>} args - aarguments, nested if multiple ops
+ * @param {Array<string>|Array<Array<string>>} args - arguments, nested if multiple ops
  */
 function bakeOp(browser, opName, input, args=[]) {
     let recipeConfig;
