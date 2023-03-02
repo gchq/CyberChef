@@ -37,6 +37,18 @@ const ALL_BYTES = [
 
 const PUA_CHARS = "\ue000\ue001\uf8fe\uf8ff";
 
+const MULTI_LINE_STRING =`"You know," said Arthur, "it's at times like this, when I'm trapped in a Vogon airlock with a man from Betelgeuse, and about to die of asphyxiation in deep space that I really wish I'd listened to what my mother told me when I was young."
+"Why, what did she tell you?"
+"I don't know, I didn't listen."`;
+
+const SELECTABLE_STRING = `ONE
+two
+ONE
+three
+ONE
+four
+ONE`;
+
 // Descriptions for named control characters
 const CONTROL_CHAR_NAMES = {
     0: "null",
@@ -117,9 +129,7 @@ module.exports = {
 
     "Adding content": browser => {
         /* Status bar updates correctly */
-        setInput(browser, `"You know," said Arthur, "it's at times like this, when I'm trapped in a Vogon airlock with a man from Betelgeuse, and about to die of asphyxiation in deep space that I really wish I'd listened to what my mother told me when I was young."
-"Why, what did she tell you?"
-"I don't know, I didn't listen."`);
+        setInput(browser, MULTI_LINE_STRING);
 
         browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("301");
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("3");
@@ -293,17 +303,120 @@ module.exports = {
     },
 
     "Highlighting": browser => {
-        /* Selecting text also selects other instances */
-        /* Selecting input text highlights in output */
+        setInput(browser, SELECTABLE_STRING);
+        bake(browser);
+
+        /* Selecting input text also selects other instances in input and output */
+        browser // Input
+            .click("#auto-bake-label")
+            .doubleClick("#input-text .cm-content .cm-line:nth-of-type(1)")
+            .waitForElementVisible("#input-text .cm-selectionLayer .cm-selectionBackground")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(1) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(2) .cm-selectionMatch")
+            .waitForElementVisible("#input-text .cm-content .cm-line:nth-of-type(3) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(4) .cm-selectionMatch")
+            .waitForElementVisible("#input-text .cm-content .cm-line:nth-of-type(5) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(6) .cm-selectionMatch")
+            .waitForElementVisible("#input-text .cm-content .cm-line:nth-of-type(7) .cm-selectionMatch");
+
+        browser // Output
+            .waitForElementVisible("#output-text .cm-selectionLayer .cm-selectionBackground")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(1) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(2) .cm-selectionMatch")
+            .waitForElementVisible("#output-text .cm-content .cm-line:nth-of-type(3) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(4) .cm-selectionMatch")
+            .waitForElementVisible("#output-text .cm-content .cm-line:nth-of-type(5) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(6) .cm-selectionMatch")
+            .waitForElementVisible("#output-text .cm-content .cm-line:nth-of-type(7) .cm-selectionMatch");
+
         /* Selecting output text highlights in input */
+        browser // Output
+            .click("#output-text")
+            .waitForElementNotPresent("#input-text .cm-selectionLayer .cm-selectionBackground")
+            .waitForElementNotPresent("#output-text .cm-selectionLayer .cm-selectionBackground")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line .cm-selectionMatch")
+            .doubleClick("#output-text .cm-content .cm-line:nth-of-type(7)")
+            .waitForElementVisible("#output-text .cm-selectionLayer .cm-selectionBackground")
+            .waitForElementVisible("#output-text .cm-content .cm-line:nth-of-type(1) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(2) .cm-selectionMatch")
+            .waitForElementVisible("#output-text .cm-content .cm-line:nth-of-type(3) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(4) .cm-selectionMatch")
+            .waitForElementVisible("#output-text .cm-content .cm-line:nth-of-type(5) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(6) .cm-selectionMatch")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(7) .cm-selectionMatch");
+
+        browser // Input
+            .waitForElementVisible("#input-text .cm-selectionLayer .cm-selectionBackground")
+            .waitForElementVisible("#input-text .cm-content .cm-line:nth-of-type(1) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(2) .cm-selectionMatch")
+            .waitForElementVisible("#input-text .cm-content .cm-line:nth-of-type(3) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(4) .cm-selectionMatch")
+            .waitForElementVisible("#input-text .cm-content .cm-line:nth-of-type(5) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(6) .cm-selectionMatch")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(7) .cm-selectionMatch");
+
+        // Turn autobake off again
+        browser.click("#auto-bake-label");
     },
 
     "Character encoding": browser => {
+        const CHINESE_CHARS = "不要恐慌。";
         /* Dropup works */
         /* Selecting changes output correctly */
+        setInput(browser, CHINESE_CHARS, false);
+        setChrEnc(browser, "input", "UTF-8");
+        bake(browser);
+        expectOutput(browser, "\u00E4\u00B8\u008D\u00E8\u00A6\u0081\u00E6\u0081\u0090\u00E6\u0085\u008C\u00E3\u0080\u0082");
+
         /* Changing output to match input works as expected */
+        setChrEnc(browser, "output", "UTF-8");
+        bake(browser);
+        expectOutput(browser, CHINESE_CHARS);
+
         /* Encodings appear in the URL */
+        browser.assert.urlContains("ienc=65001");
+        browser.assert.urlContains("oenc=65001");
+
         /* Preserved when changing tabs */
+        browser
+            .click("#btn-new-tab")
+            .waitForElementVisible("#input-tabs li:nth-of-type(2).active-input-tab");
+        browser.expect.element("#input-text .chr-enc-value").text.that.equals("Raw Bytes");
+        browser.expect.element("#output-text .chr-enc-value").text.that.equals("Raw Bytes");
+
+        setChrEnc(browser, "input", "UTF-7");
+        setChrEnc(browser, "output", "UTF-7");
+
+        browser
+            .click("#input-tabs li:nth-of-type(1)")
+            .waitForElementVisible("#input-tabs li:nth-of-type(1).active-input-tab");
+        browser.expect.element("#input-text .chr-enc-value").text.that.equals("UTF-8");
+        browser.expect.element("#output-text .chr-enc-value").text.that.equals("UTF-8");
+
+        /* Try various encodings */
+        // These are not meant to be realistic encodings for this data
+        setInput(browser, CHINESE_CHARS, false);
+        setChrEnc(browser, "input", "UTF-8");
+        setChrEnc(browser, "output", "UTF-16LE");
+        bake(browser);
+        expectOutput(browser, "\uB8E4\uE88D\u81A6\u81E6\uE690\u8C85\u80E3");
+
+        setChrEnc(browser, "output", "Simplified Chinese GBK");
+        bake(browser);
+        expectOutput(browser, "\u6D93\u5D88\uFDFF\u93AD\u612D\u53A1\u9286\u0000");
+
+        setChrEnc(browser, "input", "UTF-7");
+        bake(browser);
+        expectOutput(browser, "+Tg0-+iYE-+YFA-+YUw-");
+
+        setChrEnc(browser, "input", "Traditional Chinese Big5");
+        bake(browser);
+        expectOutput(browser, "\u3043\u74B6\uFDFF\u7A3A\uFDFF");
+
+        setChrEnc(browser, "output", "Windows-1251 Cyrillic");
+        bake(browser);
+        expectOutput(browser, "\u00A4\u0408\u00ADn\u00AE\u0408\u00B7W\u040EC");
     },
 
     "Line endings": browser => {
@@ -483,4 +596,16 @@ function loadRecipe(browser, opName, input, args) {
     browser
         .urlHash("recipe=" + recipeConfig)
         .waitForElementPresent("#rec-list li.operation");
+}
+
+/** @function
+ * Tests whether the output matches a given value
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string} expected - The expected output value
+ */
+function expectOutput(browser, expected) {
+    browser.execute(expected => {
+        return expected === window.app.manager.output.outputEditorView.state.doc.toString();
+    }, [expected]);
 }
