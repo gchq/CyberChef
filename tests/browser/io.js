@@ -422,23 +422,207 @@ module.exports = {
     "Line endings": browser => {
         /* Dropup works */
         /* Selecting changes view in input */
+        setInput(browser, MULTI_LINE_STRING);
+
+        // Line endings: LF
+
+        // Input
+        browser
+            .waitForElementPresent("#input-text .cm-content .cm-line:nth-of-type(3)")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(4)")
+            .waitForElementNotPresent("#input-text .cm-content .cm-specialChar");
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("301");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("3");
+
+        // Output
+        bake(browser);
+        browser
+            .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(3)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(4)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-specialChar");
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("301");
+        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("3");
+
+        // Input EOL: VT
+        setEOLSeq(browser, "input", "VT");
+
+        // Input
+        browser
+            .waitForElementPresent("#input-text .cm-content .cm-line:nth-of-type(1)")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementPresent("#input-text .cm-content .cm-specialChar");
+        browser.expect.element("#input-text .cm-content .cm-specialChar").text.to.equal("␊");
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("301");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("1");
+
+        // Output
+        bake(browser);
+        browser
+            .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(3)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(4)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-specialChar");
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("301");
+        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("3");
+
+        // Output EOL: VT
+        setEOLSeq(browser, "output", "VT");
+
+        // Input
+        browser
+            .waitForElementPresent("#input-text .cm-content .cm-line:nth-of-type(1)")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementPresent("#input-text .cm-content .cm-specialChar");
+        browser.expect.element("#input-text .cm-content .cm-specialChar").text.to.equal("␊");
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("301");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("1");
+
+        // Output
+        browser
+            .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(1)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementPresent("#output-text .cm-content .cm-specialChar");
+        browser.expect.element("#output-text .cm-content .cm-specialChar").text.to.equal("␊");
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("301");
+        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("1");
+
         /* Adding new line ending changes output correctly */
-        /* Other EOL characters are displayed correctly when not being used to end a line */
-        /* Changing in output has the correct effect */
+        browser.sendKeys("#input-text .cm-content", browser.Keys.RETURN);
+
+        // Input
+        browser
+            .waitForElementPresent("#input-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(3)");
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("302");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+
+        // Output
+        bake(browser);
+        browser
+            .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(3)");
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("302");
+        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+
+        // Input EOL: CRLF
+        setEOLSeq(browser, "input", "CRLF");
+        // Output EOL: CR
+        setEOLSeq(browser, "output", "CR");
+        browser.sendKeys("#input-text .cm-content", browser.Keys.RETURN);
+
+        // Input
+        browser
+            .waitForElementPresent("#input-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementNotPresent("#input-text .cm-content .cm-line:nth-of-type(3)")
+            .waitForElementPresent("#input-text .cm-content .cm-line:nth-of-type(1) .cm-specialChar:nth-of-type(3)");
+        browser.expect.element("#input-text .cm-content .cm-line:nth-of-type(1) .cm-specialChar:nth-of-type(3)").text.to.equal("␋");
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("304");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+
+        // Output
+        bake(browser);
+        browser
+            .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(2)")
+            .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(3)")
+            .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(2) .cm-specialChar");
+        browser.expect.element("#output-text .cm-content .cm-line:nth-of-type(2) .cm-specialChar").text.to.equal("␊");
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("304");
+        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+
         /* Line endings appear in the URL */
+        browser.assert.urlContains("ieol=%0D%0A");
+        browser.assert.urlContains("oeol=%0D");
+
         /* Preserved when changing tabs */
+        browser
+            .click("#btn-new-tab")
+            .waitForElementVisible("#input-tabs li:nth-of-type(2).active-input-tab");
+        browser.expect.element("#input-text .eol-value").text.that.equals("LF");
+        browser.expect.element("#output-text .eol-value").text.that.equals("LF");
+
+        setEOLSeq(browser, "input", "FF");
+        setEOLSeq(browser, "output", "LS");
+
+        browser
+            .click("#input-tabs li:nth-of-type(1)")
+            .waitForElementVisible("#input-tabs li:nth-of-type(1).active-input-tab");
+        browser.expect.element("#input-text .eol-value").text.that.equals("CRLF");
+        browser.expect.element("#output-text .eol-value").text.that.equals("CR");
     },
 
     "File inputs": browser => {
-        /* By button */
-        /* By drag and drop */
+        clear(browser);
+
         /* Side panel displays correct info */
+        uploadFile(browser, "files/TowelDay.jpeg");
+
+        browser
+            .waitForElementVisible("#input-text .cm-file-details")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
+        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("TowelDay.jpeg");
+        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("61,379 bytes");
+        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
+        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
+
         /* Side panel can be hidden */
+        browser
+            .click("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementNotPresent("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-hidden")
+            .expect.element("#input-text .cm-file-details").to.have.css("width").which.equals("1px");
+
+        browser
+            .click("#input-text .cm-file-details .file-details-toggle-hidden")
+            .waitForElementNotPresent("#input-text .cm-file-details .file-details-toggle-hidden")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+            .expect.element("#input-text .cm-file-details").to.have.css("width").which.equals("200px");
     },
 
     "Folder inputs": browser => {
-        /* By button */
-        /* By drag and drop */
+        clear(browser);
+
+        /* Side panel displays correct info */
+        uploadFolder(browser, "files");
+
+        // Tab 1
+        browser
+            .click("#input-tabs li:nth-of-type(1)")
+            .waitForElementVisible("#input-tabs li:nth-of-type(1).active-input-tab");
+
+        browser
+            .waitForElementVisible("#input-text .cm-file-details")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
+        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("TowelDay.jpeg");
+        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("61,379 bytes");
+        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
+        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
+
+        // Tab 2
+        browser
+            .click("#input-tabs li:nth-of-type(2)")
+            .waitForElementVisible("#input-tabs li:nth-of-type(2).active-input-tab");
+
+        browser
+            .waitForElementVisible("#input-text .cm-file-details")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
+        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("Hitchhikers_Guide.jpeg");
+        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("36,595 bytes");
+        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
+        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
     },
 
     "Loading from URL": browser => {
@@ -516,10 +700,28 @@ function setChrEnc(browser, io, enc) {
     browser
         .useCss()
         .click(io + " .chr-enc-value")
-        .waitForElementVisible(io + " .cm-status-bar-select-scroll")
+        .waitForElementVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
         .click("link text", enc)
-        .waitForElementNotVisible(io + " .cm-status-bar-select-scroll")
+        .waitForElementNotVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
         .expect.element(io + " .chr-enc-value").text.that.equals(enc);
+}
+
+/** @function
+ * Sets the end of line sequence in the input or output
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string} io - Either "input" or "output"
+ * @param {string} eol - The sequence to set
+ */
+function setEOLSeq(browser, io, eol) {
+    io = `#${io}-text`;
+    browser
+        .useCss()
+        .click(io + " .eol-value")
+        .waitForElementVisible(io + " .eol-select .cm-status-bar-select-content")
+        .click(`${io} .cm-status-bar-select-content a[data-val=${eol}]`)
+        .waitForElementNotVisible(io + " .eol-select .cm-status-bar-select-content")
+        .expect.element(io + " .eol-value").text.that.equals(eol);
 }
 
 /** @function
@@ -608,4 +810,52 @@ function expectOutput(browser, expected) {
     browser.execute(expected => {
         return expected === window.app.manager.output.outputEditorView.state.doc.toString();
     }, [expected]);
+}
+
+/** @function
+ * Uploads a file using the #open-file input
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string} filename - A path to a file in the samples directory
+ */
+function uploadFile(browser, filename) {
+    const filepath = require("path").resolve(__dirname + "/../samples/" + filename);
+
+    // The file input cannot be interacted with by nightwatch while it is hidden,
+    // so we temporarily expose it for the purposes of this test.
+    browser.execute(() => {
+        document.getElementById("open-file").style.display = "block";
+    });
+    browser
+        .pause(100)
+        .setValue("#open-file", filepath)
+        .pause(100);
+    browser.execute(() => {
+        document.getElementById("open-file").style.display = "none";
+    });
+    browser.waitForElementVisible("#input-text .cm-file-details");
+}
+
+/** @function
+ * Uploads a folder using the #open-folder input
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string} foldername - A path to a folder in the samples directory
+ */
+function uploadFolder(browser, foldername) {
+    const folderpath = require("path").resolve(__dirname + "/../samples/" + foldername);
+
+    // The folder input cannot be interacted with by nightwatch while it is hidden,
+    // so we temporarily expose it for the purposes of this test.
+    browser.execute(() => {
+        document.getElementById("open-folder").style.display = "block";
+    });
+    browser
+        .pause(100)
+        .setValue("#open-folder", folderpath)
+        .pause(500);
+    browser.execute(() => {
+        document.getElementById("open-folder").style.display = "none";
+    });
+    browser.waitForElementVisible("#input-text .cm-file-details");
 }

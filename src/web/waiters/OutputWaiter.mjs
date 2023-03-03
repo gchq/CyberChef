@@ -231,9 +231,13 @@ class OutputWaiter {
      */
     async setOutput(data, force=false) {
         // Don't do anything if the output hasn't changed
-        if (!force && data === this.currentOutputCache) return;
-        this.currentOutputCache = data;
+        if (!force && data === this.currentOutputCache) {
+            this.manager.controls.hideStaleIndicator();
+            this.toggleLoader(false);
+            return;
+        }
 
+        this.currentOutputCache = data;
         this.toggleLoader(true);
 
         // If data is an ArrayBuffer, convert to a string in the correct character encoding

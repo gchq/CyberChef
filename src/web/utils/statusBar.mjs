@@ -149,13 +149,20 @@ class StatusBarPanel {
 
     /**
      * Counts the stats of a document
-     * @param {Text} doc
+     * @param {EditorState} state
      */
-    updateStats(doc) {
+    updateStats(state) {
         const length = this.dom.querySelector(".stats-length-value"),
             lines = this.dom.querySelector(".stats-lines-value");
-        length.textContent = doc.length;
-        lines.textContent = doc.lines;
+
+        let docLength = state.doc.length;
+        // CodeMirror always counts line breaks as one character.
+        // We want to show an accurate reading of how many bytes there are.
+        if (state.lineBreak.length !== 1) {
+            docLength += (state.lineBreak.length * state.doc.lines) - state.doc.lines - 1;
+        }
+        length.textContent = docLength;
+        lines.textContent = state.doc.lines;
     }
 
     /**
@@ -434,7 +441,7 @@ function makePanel(opts) {
         sbPanel.updateEOL(view.state);
         sbPanel.updateCharEnc();
         sbPanel.updateTiming();
-        sbPanel.updateStats(view.state.doc);
+        sbPanel.updateStats(view.state);
         sbPanel.updateSelection(view.state, false);
         sbPanel.monitorHTMLOutput();
 
@@ -450,7 +457,7 @@ function makePanel(opts) {
                     sbPanel.updateSizing(update.view);
                 }
                 if (update.docChanged) {
-                    sbPanel.updateStats(update.state.doc);
+                    sbPanel.updateStats(update.state);
                 }
             }
         };

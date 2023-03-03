@@ -1222,12 +1222,6 @@ class InputWaiter {
         this.setupInputWorker();
         this.manager.worker.setupChefWorker();
         this.addInput(true);
-
-        // Fire the statechange event as the input has been modified,
-        // leaving enough time for workers to be initialised
-        setTimeout(function() {
-            window.dispatchEvent(this.manager.statechange);
-        }.bind(this), 100);
     }
 
     /**
