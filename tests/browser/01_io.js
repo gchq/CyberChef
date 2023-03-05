@@ -7,6 +7,22 @@
  * @license Apache-2.0
  */
 
+// import {
+//     clear,
+//     utils.setInput,
+//     bake,
+//     setChrEnc,
+//     setEOLSeq,
+//     copy,
+//     paste,
+//     loadRecipe,
+//     expectOutput,
+//     uploadFile,
+//     uploadFolder
+// } from "./browserUtils.js";
+
+const utils = require("./browserUtils.js");
+
 const SPECIAL_CHARS = [
     "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000a\u000b\u000c\u000d\u000e\u000f",
     "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f",
@@ -129,7 +145,7 @@ module.exports = {
 
     "Adding content": browser => {
         /* Status bar updates correctly */
-        setInput(browser, MULTI_LINE_STRING);
+        utils.setInput(browser, MULTI_LINE_STRING);
 
         browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("301");
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("3");
@@ -143,7 +159,7 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .eol-value").text.to.equal("LF");
 
         /* Output updates correctly */
-        bake(browser);
+        utils.bake(browser);
         browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("301");
         browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("3");
         browser.expect.element("#output-text .cm-status-bar .baking-time-info").text.to.contain("ms");
@@ -153,7 +169,7 @@ module.exports = {
 
     "Special content": browser => {
         /* Special characters are rendered correctly */
-        setInput(browser, SPECIAL_CHARS, false);
+        utils.setInput(browser, SPECIAL_CHARS, false);
 
         // First line
         for (let i = 0x0; i <= 0x8; i++) {
@@ -183,8 +199,8 @@ module.exports = {
         }
 
         /* Output renders correctly */
-        setChrEnc(browser, "output", "UTF-8");
-        bake(browser);
+        utils.setChrEnc(browser, "output", "UTF-8");
+        utils.bake(browser);
 
         // First line
         for (let i = 0x0; i <= 0x8; i++) {
@@ -214,7 +230,7 @@ module.exports = {
         }
 
         /* Bytes are rendered correctly */
-        setInput(browser, ALL_BYTES, false);
+        utils.setInput(browser, ALL_BYTES, false);
         // Expect length to be 255, since one character is creating a newline
         browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{255}$/);
         browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("256");
@@ -222,9 +238,9 @@ module.exports = {
 
 
         /* PUA \ue000-\uf8ff */
-        setInput(browser, PUA_CHARS, false);
-        setChrEnc(browser, "output", "UTF-8");
-        bake(browser);
+        utils.setInput(browser, PUA_CHARS, false);
+        utils.setChrEnc(browser, "output", "UTF-8");
+        utils.bake(browser);
 
         // Confirm input and output as expected
         /*  In order to render whitespace characters as control character pictures in the output, even
@@ -238,16 +254,16 @@ module.exports = {
         browser.expect.element(`#output-text .cm-content`).to.have.property("textContent").match(/^\u2400\u2401\u3cfe\u3cff$/);
 
         /* Can be copied */
-        setInput(browser, SPECIAL_CHARS, false);
-        setChrEnc(browser, "output", "UTF-8");
-        bake(browser);
+        utils.setInput(browser, SPECIAL_CHARS, false);
+        utils.setChrEnc(browser, "output", "UTF-8");
+        utils.bake(browser);
 
         // Manual copy
         browser
             .doubleClick("#output-text .cm-content .cm-line:nth-of-type(1) .cm-specialChar:nth-of-type(1)")
             .waitForElementVisible("#output-text .cm-selectionBackground");
-        copy(browser);
-        paste(browser, "#search"); // Paste into search box as this won't mess with the values
+        utils.copy(browser);
+        utils.paste(browser, "#search"); // Paste into search box as this won't mess with the values
 
         // Ensure that the values are as expected
         browser.expect.element("#search").to.have.value.that.equals("\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008");
@@ -257,7 +273,7 @@ module.exports = {
         browser
             .click("#copy-output")
             .pause(100);
-        paste(browser, "#search"); // Paste into search box as this won't mess with the values
+        utils.paste(browser, "#search"); // Paste into search box as this won't mess with the values
 
         // Ensure that the values are as expected
         browser.expect.element("#search").to.have.value.that.matches(/^\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009/);
@@ -266,8 +282,8 @@ module.exports = {
 
     "HTML output": browser => {
         /* Displays correctly */
-        loadRecipe(browser, "Entropy", ALL_BYTES);
-        bake(browser);
+        utils.loadRecipe(browser, "Entropy", ALL_BYTES);
+        utils.bake(browser);
 
         browser
             .waitForElementVisible("#output-html")
@@ -280,8 +296,8 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .disabled .eol-value").to.be.visible;
 
         /* Displays special chars correctly */
-        loadRecipe(browser, "To Table", ",\u0000\u0001\u0002\u0003\u0004", [",", "\\r\\n", false, "HTML"]);
-        bake(browser);
+        utils.loadRecipe(browser, "To Table", ",\u0000\u0001\u0002\u0003\u0004", [",", "\\r\\n", false, "HTML"]);
+        utils.bake(browser);
 
         for (let i = 0x0; i <= 0x4; i++) {
             browser.expect.element(`#output-html .cm-specialChar:nth-of-type(${i+1})`)
@@ -295,7 +311,7 @@ module.exports = {
         browser
             .click("#copy-output")
             .pause(100);
-        paste(browser, "#search"); // Paste into search box as this won't mess with the values
+        utils.paste(browser, "#search"); // Paste into search box as this won't mess with the values
 
         // Ensure that the values are as expected
         browser.expect.element("#search").to.have.value.that.matches(/\u0000\u0001\u0002\u0003\u0004/);
@@ -303,8 +319,8 @@ module.exports = {
     },
 
     "Highlighting": browser => {
-        setInput(browser, SELECTABLE_STRING);
-        bake(browser);
+        utils.setInput(browser, SELECTABLE_STRING);
+        utils.bake(browser);
 
         /* Selecting input text also selects other instances in input and output */
         browser // Input
@@ -364,15 +380,15 @@ module.exports = {
         const CHINESE_CHARS = "不要恐慌。";
         /* Dropup works */
         /* Selecting changes output correctly */
-        setInput(browser, CHINESE_CHARS, false);
-        setChrEnc(browser, "input", "UTF-8");
-        bake(browser);
-        expectOutput(browser, "\u00E4\u00B8\u008D\u00E8\u00A6\u0081\u00E6\u0081\u0090\u00E6\u0085\u008C\u00E3\u0080\u0082");
+        utils.setInput(browser, CHINESE_CHARS, false);
+        utils.setChrEnc(browser, "input", "UTF-8");
+        utils.bake(browser);
+        utils.expectOutput(browser, "\u00E4\u00B8\u008D\u00E8\u00A6\u0081\u00E6\u0081\u0090\u00E6\u0085\u008C\u00E3\u0080\u0082");
 
         /* Changing output to match input works as expected */
-        setChrEnc(browser, "output", "UTF-8");
-        bake(browser);
-        expectOutput(browser, CHINESE_CHARS);
+        utils.setChrEnc(browser, "output", "UTF-8");
+        utils.bake(browser);
+        utils.expectOutput(browser, CHINESE_CHARS);
 
         /* Encodings appear in the URL */
         browser.assert.urlContains("ienc=65001");
@@ -385,8 +401,8 @@ module.exports = {
         browser.expect.element("#input-text .chr-enc-value").text.that.equals("Raw Bytes");
         browser.expect.element("#output-text .chr-enc-value").text.that.equals("Raw Bytes");
 
-        setChrEnc(browser, "input", "UTF-7");
-        setChrEnc(browser, "output", "UTF-7");
+        utils.setChrEnc(browser, "input", "UTF-7");
+        utils.setChrEnc(browser, "output", "UTF-7");
 
         browser
             .click("#input-tabs li:nth-of-type(1)")
@@ -396,33 +412,33 @@ module.exports = {
 
         /* Try various encodings */
         // These are not meant to be realistic encodings for this data
-        setInput(browser, CHINESE_CHARS, false);
-        setChrEnc(browser, "input", "UTF-8");
-        setChrEnc(browser, "output", "UTF-16LE");
-        bake(browser);
-        expectOutput(browser, "\uB8E4\uE88D\u81A6\u81E6\uE690\u8C85\u80E3");
+        utils.setInput(browser, CHINESE_CHARS, false);
+        utils.setChrEnc(browser, "input", "UTF-8");
+        utils.setChrEnc(browser, "output", "UTF-16LE");
+        utils.bake(browser);
+        utils.expectOutput(browser, "\uB8E4\uE88D\u81A6\u81E6\uE690\u8C85\u80E3");
 
-        setChrEnc(browser, "output", "Simplified Chinese GBK");
-        bake(browser);
-        expectOutput(browser, "\u6D93\u5D88\uFDFF\u93AD\u612D\u53A1\u9286\u0000");
+        utils.setChrEnc(browser, "output", "Simplified Chinese GBK");
+        utils.bake(browser);
+        utils.expectOutput(browser, "\u6D93\u5D88\uFDFF\u93AD\u612D\u53A1\u9286\u0000");
 
-        setChrEnc(browser, "input", "UTF-7");
-        bake(browser);
-        expectOutput(browser, "+Tg0-+iYE-+YFA-+YUw-");
+        utils.setChrEnc(browser, "input", "UTF-7");
+        utils.bake(browser);
+        utils.expectOutput(browser, "+Tg0-+iYE-+YFA-+YUw-");
 
-        setChrEnc(browser, "input", "Traditional Chinese Big5");
-        bake(browser);
-        expectOutput(browser, "\u3043\u74B6\uFDFF\u7A3A\uFDFF");
+        utils.setChrEnc(browser, "input", "Traditional Chinese Big5");
+        utils.bake(browser);
+        utils.expectOutput(browser, "\u3043\u74B6\uFDFF\u7A3A\uFDFF");
 
-        setChrEnc(browser, "output", "Windows-1251 Cyrillic");
-        bake(browser);
-        expectOutput(browser, "\u00A4\u0408\u00ADn\u00AE\u0408\u00B7W\u040EC");
+        utils.setChrEnc(browser, "output", "Windows-1251 Cyrillic");
+        utils.bake(browser);
+        utils.expectOutput(browser, "\u00A4\u0408\u00ADn\u00AE\u0408\u00B7W\u040EC");
     },
 
     "Line endings": browser => {
         /* Dropup works */
         /* Selecting changes view in input */
-        setInput(browser, MULTI_LINE_STRING);
+        utils.setInput(browser, MULTI_LINE_STRING);
 
         // Line endings: LF
 
@@ -435,7 +451,7 @@ module.exports = {
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("3");
 
         // Output
-        bake(browser);
+        utils.bake(browser);
         browser
             .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(3)")
             .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(4)")
@@ -444,7 +460,7 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("3");
 
         // Input EOL: VT
-        setEOLSeq(browser, "input", "VT");
+        utils.setEOLSeq(browser, "input", "VT");
 
         // Input
         browser
@@ -456,7 +472,7 @@ module.exports = {
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("1");
 
         // Output
-        bake(browser);
+        utils.bake(browser);
         browser
             .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(3)")
             .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(4)")
@@ -465,7 +481,7 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("3");
 
         // Output EOL: VT
-        setEOLSeq(browser, "output", "VT");
+        utils.setEOLSeq(browser, "output", "VT");
 
         // Input
         browser
@@ -496,7 +512,7 @@ module.exports = {
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
 
         // Output
-        bake(browser);
+        utils.bake(browser);
         browser
             .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(2)")
             .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(3)");
@@ -504,9 +520,9 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("2");
 
         // Input EOL: CRLF
-        setEOLSeq(browser, "input", "CRLF");
+        utils.setEOLSeq(browser, "input", "CRLF");
         // Output EOL: CR
-        setEOLSeq(browser, "output", "CR");
+        utils.setEOLSeq(browser, "output", "CR");
         browser.sendKeys("#input-text .cm-content", browser.Keys.RETURN);
 
         // Input
@@ -519,7 +535,7 @@ module.exports = {
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
 
         // Output
-        bake(browser);
+        utils.bake(browser);
         browser
             .waitForElementPresent("#output-text .cm-content .cm-line:nth-of-type(2)")
             .waitForElementNotPresent("#output-text .cm-content .cm-line:nth-of-type(3)")
@@ -539,8 +555,8 @@ module.exports = {
         browser.expect.element("#input-text .eol-value").text.that.equals("LF");
         browser.expect.element("#output-text .eol-value").text.that.equals("LF");
 
-        setEOLSeq(browser, "input", "FF");
-        setEOLSeq(browser, "output", "LS");
+        utils.setEOLSeq(browser, "input", "FF");
+        utils.setEOLSeq(browser, "output", "LS");
 
         browser
             .click("#input-tabs li:nth-of-type(1)")
@@ -550,10 +566,10 @@ module.exports = {
     },
 
     "File inputs": browser => {
-        clear(browser);
+        utils.clear(browser);
 
         /* Side panel displays correct info */
-        uploadFile(browser, "files/TowelDay.jpeg");
+        utils.uploadFile(browser, "files/TowelDay.jpeg");
 
         browser
             .waitForElementVisible("#input-text .cm-file-details")
@@ -583,10 +599,10 @@ module.exports = {
     },
 
     "Folder inputs": browser => {
-        clear(browser);
+        utils.clear(browser);
 
         /* Side panel displays correct info */
-        uploadFolder(browser, "files");
+        utils.uploadFolder(browser, "files");
 
         // Tab 1
         browser
@@ -627,11 +643,59 @@ module.exports = {
 
     "Loading from URL": browser => {
         /* Complex deep link populates the input correctly (encoding, eol, input) */
+        browser
+            .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=%0C&oeol=%E2%80%A9")
+            .waitForElementVisible("#rec-list li.operation");
+
+        browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{65}$/);
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("66");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+
+        browser.expect.element("#input-text .chr-enc-value").text.that.equals("KOI8-U Ukrainian Cyrillic");
+        browser.expect.element("#output-text .chr-enc-value").text.that.equals("UTF-16BE");
+
+        browser.expect.element("#input-text .eol-value").text.that.equals("FF");
+        browser.expect.element("#output-text .eol-value").text.that.equals("PS");
+
+        utils.bake(browser);
+
+        browser.expect.element(`#output-text .cm-content`).to.have.property("textContent").match(/^.{44}$/);
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("44");
+        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("1");
     },
 
     "Replace input with output": browser => {
         /* Input is correctly populated */
+        utils.loadRecipe(browser, "XOR", "The ships hung in the sky in much the same way that bricks don't.", [{ "option": "Hex", "string": "65" }, "Standard", false]);
+        utils.setChrEnc(browser, "input", "UTF-32LE");
+        utils.setChrEnc(browser, "output", "UTF-7");
+        utils.setEOLSeq(browser, "input", "CRLF");
+        utils.setEOLSeq(browser, "output", "LS");
+
+        browser
+            .sendKeys("#input-text .cm-content", browser.Keys.RETURN)
+            .expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+        utils.bake(browser);
+
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("67");
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+        browser.expect.element("#input-text .chr-enc-value").text.that.equals("UTF-32LE");
+        browser.expect.element("#input-text .eol-value").text.that.equals("CRLF");
+        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("268");
+
+        browser
+            .click("#switch")
+            .waitForElementVisible("#stale-indicator");
+
+        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("268");
+
         /* Special characters, encodings and line endings all as expected */
+        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("1");
+        browser.expect.element("#input-text .chr-enc-value").text.that.equals("UTF-7");
+        browser.expect.element("#input-text .eol-value").text.that.equals("LS");
+        browser.expect.element("#input-text .cm-line:nth-of-type(1) .cm-specialChar:nth-of-type(1)").text.to.equal("␍");
+        browser.expect.element("#input-text .cm-line:nth-of-type(1) .cm-specialChar:nth-of-type(49)").text.to.equal("␑");
+        browser.waitForElementNotPresent("#input-text .cm-line:nth-of-type(1) .cm-specialChar:nth-of-type(50)");
     },
 
 
@@ -639,223 +703,3 @@ module.exports = {
         browser.end();
     }
 };
-
-/** @function
- * Clears the recipe and input
- *
- * @param {Browser} browser - Nightwatch client
- */
-function clear(browser) {
-    browser
-        .useCss()
-        .click("#clr-recipe")
-        .click("#clr-io")
-        .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text .cm-content").text.that.equals("");
-}
-
-/** @function
- * Sets the input to the desired string
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} input - The text to populate the input with
- * @param {boolean} [type=true] - Whether to type the characters in by using sendKeys,
- *      or to set the value of the editor directly (useful for special characters)
- */
-function setInput(browser, input, type=true) {
-    clear(browser);
-    if (type) {
-        browser
-            .useCss()
-            .sendKeys("#input-text .cm-content", input)
-            .pause(100);
-    } else {
-        browser.execute(text => {
-            window.app.setInput(text);
-        }, [input]);
-    }
-}
-
-/** @function
- * Triggers a bake
- *
- * @param {Browser} browser - Nightwatch client
- */
-function bake(browser) {
-    browser
-        .click("#bake")
-        .pause(100)
-        .waitForElementPresent("#stale-indicator.hidden", 5000);
-}
-
-/** @function
- * Sets the character encoding in the input or output
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} io - Either "input" or "output"
- * @param {string} enc - The encoding to be set
- */
-function setChrEnc(browser, io, enc) {
-    io = `#${io}-text`;
-    browser
-        .useCss()
-        .click(io + " .chr-enc-value")
-        .waitForElementVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
-        .click("link text", enc)
-        .waitForElementNotVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
-        .expect.element(io + " .chr-enc-value").text.that.equals(enc);
-}
-
-/** @function
- * Sets the end of line sequence in the input or output
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} io - Either "input" or "output"
- * @param {string} eol - The sequence to set
- */
-function setEOLSeq(browser, io, eol) {
-    io = `#${io}-text`;
-    browser
-        .useCss()
-        .click(io + " .eol-value")
-        .waitForElementVisible(io + " .eol-select .cm-status-bar-select-content")
-        .click(`${io} .cm-status-bar-select-content a[data-val=${eol}]`)
-        .waitForElementNotVisible(io + " .eol-select .cm-status-bar-select-content")
-        .expect.element(io + " .eol-value").text.that.equals(eol);
-}
-
-/** @function
- * Copies whatever is currently selected
- *
- * @param {Browser} browser - Nightwatch client
- */
-function copy(browser) {
-    browser.perform(function() {
-        const actions = this.actions({async: true});
-
-        // Ctrl + Ins used as this works on Windows, Linux and Mac
-        return actions
-            .keyDown(browser.Keys.CONTROL)
-            .keyDown(browser.Keys.INSERT)
-            .keyUp(browser.Keys.INSERT)
-            .keyUp(browser.Keys.CONTROL);
-    });
-}
-
-/** @function
- * Pastes into the target element
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} el - Target element selector
- */
-function paste(browser, el) {
-    browser
-        .click(el)
-        .perform(function() {
-            const actions = this.actions({async: true});
-
-            // Shift + Ins used as this works on Windows, Linux and Mac
-            return actions
-                .keyDown(browser.Keys.SHIFT)
-                .keyDown(browser.Keys.INSERT)
-                .keyUp(browser.Keys.INSERT)
-                .keyUp(browser.Keys.SHIFT);
-        })
-        .pause(100);
-}
-
-/** @function
- * Loads a recipe and input
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string|Array<string>} opName - name of operation to be loaded, array for multiple ops
- * @param {string} input - input text for test
- * @param {Array<string>|Array<Array<string>>} args - arguments, nested if multiple ops
- */
-function loadRecipe(browser, opName, input, args) {
-    let recipeConfig;
-
-    if (typeof(opName) === "string") {
-        recipeConfig = JSON.stringify([{
-            "op": opName,
-            "args": args
-        }]);
-    } else if (opName instanceof Array) {
-        recipeConfig = JSON.stringify(
-            opName.map((op, i) => {
-                return {
-                    op: op,
-                    args: args.length ? args[i] : []
-                };
-            })
-        );
-    } else {
-        throw new Error("Invalid operation type. Must be string or array of strings. Received: " + typeof(opName));
-    }
-
-    clear(browser);
-    setInput(browser, input, false);
-    browser
-        .urlHash("recipe=" + recipeConfig)
-        .waitForElementPresent("#rec-list li.operation");
-}
-
-/** @function
- * Tests whether the output matches a given value
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} expected - The expected output value
- */
-function expectOutput(browser, expected) {
-    browser.execute(expected => {
-        return expected === window.app.manager.output.outputEditorView.state.doc.toString();
-    }, [expected]);
-}
-
-/** @function
- * Uploads a file using the #open-file input
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} filename - A path to a file in the samples directory
- */
-function uploadFile(browser, filename) {
-    const filepath = require("path").resolve(__dirname + "/../samples/" + filename);
-
-    // The file input cannot be interacted with by nightwatch while it is hidden,
-    // so we temporarily expose it for the purposes of this test.
-    browser.execute(() => {
-        document.getElementById("open-file").style.display = "block";
-    });
-    browser
-        .pause(100)
-        .setValue("#open-file", filepath)
-        .pause(100);
-    browser.execute(() => {
-        document.getElementById("open-file").style.display = "none";
-    });
-    browser.waitForElementVisible("#input-text .cm-file-details");
-}
-
-/** @function
- * Uploads a folder using the #open-folder input
- *
- * @param {Browser} browser - Nightwatch client
- * @param {string} foldername - A path to a folder in the samples directory
- */
-function uploadFolder(browser, foldername) {
-    const folderpath = require("path").resolve(__dirname + "/../samples/" + foldername);
-
-    // The folder input cannot be interacted with by nightwatch while it is hidden,
-    // so we temporarily expose it for the purposes of this test.
-    browser.execute(() => {
-        document.getElementById("open-folder").style.display = "block";
-    });
-    browser
-        .pause(100)
-        .setValue("#open-folder", folderpath)
-        .pause(500);
-    browser.execute(() => {
-        document.getElementById("open-folder").style.display = "none";
-    });
-    browser.waitForElementVisible("#input-text .cm-file-details");
-}

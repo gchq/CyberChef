@@ -6,6 +6,8 @@
  * @license Apache-2.0
  */
 
+const utils = require("./browserUtils.js");
+
 module.exports = {
     before: browser => {
         browser
@@ -376,6 +378,7 @@ module.exports = {
     }
 };
 
+
 /** @function
  * Clears the current recipe and bakes a new operation.
  *
@@ -385,49 +388,12 @@ module.exports = {
  * @param {Array<string>|Array<Array<string>>} args - arguments, nested if multiple ops
  */
 function bakeOp(browser, opName, input, args=[]) {
-    let recipeConfig;
-
-    if (typeof(opName) === "string") {
-        recipeConfig = JSON.stringify([{
-            "op": opName,
-            "args": args
-        }]);
-    } else if (opName instanceof Array) {
-        recipeConfig = JSON.stringify(
-            opName.map((op, i) => {
-                return {
-                    op: op,
-                    args: args.length ? args[i] : []
-                };
-            })
-        );
-    } else {
-        throw new Error("Invalid operation type. Must be string or array of strings. Received: " + typeof(opName));
-    }
-
-    browser
-        .useCss()
-        .click("#clr-recipe")
-        .click("#clr-io")
-        .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text .cm-content").text.that.equals("");
-
-    browser
-        .perform(function() {
-            console.log(`Current test: ${opName}`);
-        })
-        .urlHash("recipe=" + recipeConfig)
-        .sendKeys("#input-text .cm-content", input)
-        .waitForElementPresent("#rec-list li.operation")
-        .expect.element("#input-text .cm-content").text.that.equals(input);
-
-    browser
-        .waitForElementVisible("#stale-indicator", 5000)
-        .pause(100)
-        .click("#bake")
-        .pause(100)
-        .waitForElementPresent("#stale-indicator.hidden", 5000)
-        .waitForElementNotVisible("#output-loader", 5000);
+    browser.perform(function() {
+        console.log(`Current test: ${opName}`);
+    });
+    utils.loadRecipe(browser, opName, input, args);
+    browser.waitForElementVisible("#stale-indicator", 5000);
+    utils.bake(browser);
 }
 
 /** @function
@@ -440,7 +406,6 @@ function bakeOp(browser, opName, input, args=[]) {
  * @param {Array<string>|Array<Array<string>>} args - arguments, nested if multiple ops
  */
 function testOp(browser, opName, input, output, args=[]) {
-
     bakeOp(browser, opName, input, args);
 
     if (typeof output === "string") {
