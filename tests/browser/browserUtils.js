@@ -170,11 +170,16 @@ function loadRecipe(browser, opName, input, args) {
  * Tests whether the output matches a given value
  *
  * @param {Browser} browser - Nightwatch client
- * @param {string} expected - The expected output value
+ * @param {string|RegExp} expected - The expected output value
  */
 function expectOutput(browser, expected) {
     browser.execute(expected => {
-        return expected === window.app.manager.output.outputEditorView.state.doc.toString();
+        const output = window.app.manager.output.outputEditorView.state.doc.toString();
+        if (expected instanceof RegExp) {
+            return expected.test(output);
+        } else {
+            return expected === output;
+        }
     }, [expected]);
 }
 

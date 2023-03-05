@@ -34,28 +34,28 @@ module.exports = {
         testOp(browser, "Analyse hash", "0123456789abcdef", /CRC-64/);
         testOp(browser, "Atbash Cipher", "test input", "gvhg rmkfg");
         // testOp(browser, "Avro to JSON", "test input", "test_output");
-        // testOp(browser, "BLAKE2b", "test input", "test_output");
-        // testOp(browser, "BLAKE2s", "test input", "test_output");
+        testOp(browser, "BLAKE2b", "test input", "33ebdc8f38177f3f3f334eeb117a84e11f061bbca4db6b8923e5cec85103f59f415551a5d5a933fdb6305dc7bf84671c2540b463dbfa08ee1895cfaa5bd780b5", ["512", "Hex", { "option": "UTF8", "string": "pass" }]);
+        testOp(browser, "BLAKE2s", "test input", "defe73d61dfa6e5807e4f9643e159a09ccda6be3c26dcd65f8a9bb38bfc973a7", ["256", "Hex", { "option": "UTF8", "string": "pass" }]);
         // testOp(browser, "BSON deserialise", "test input", "test_output");
         // testOp(browser, "BSON serialise", "test input", "test_output");
         // testOp(browser, "Bacon Cipher Decode", "test input", "test_output");
         // testOp(browser, "Bacon Cipher Encode", "test input", "test_output");
-        // testOp(browser, "Bcrypt", "test input", "test_output");
-        // testOp(browser, "Bcrypt compare", "test input", "test_output");
-        // testOp(browser, "Bcrypt parse", "test input", "test_output");
-        // testOp(browser, "Bifid Cipher Decode", "test input", "test_output");
-        // testOp(browser, "Bifid Cipher Encode", "test input", "test_output");
-        // testOp(browser, "Bit shift left", "test input", "test_output");
-        // testOp(browser, "Bit shift right", "test input", "test_output");
+        testOp(browser, "Bcrypt", "test input", /^\$2a\$06\$.{53}$/, [6]);
+        testOp(browser, "Bcrypt compare", "test input", "Match: test input", ["$2a$05$FCfBSVX7OeRkK.9kQVFCiOYu9XtwtIbePqUiroD1lkASW9q5QClzG"]);
+        testOp(browser, "Bcrypt parse", "$2a$05$kXWtAIGB/R8VEzInoM5ocOTBtyc0m2YTIwFiBU/0XoW032f9QrkWW", /Rounds: 5/);
+        testOp(browser, "Bifid Cipher Decode", "qblb tfovy", "test input", ["pass"]);
+        testOp(browser, "Bifid Cipher Encode", "test input", "qblb tfovy", ["pass"]);
+        testOp(browser, "Bit shift left", "test input", "\u00E8\u00CA\u00E6\u00E8@\u00D2\u00DC\u00E0\u00EA\u00E8");
+        testOp(browser, "Bit shift right", "test input", ":29:\u0010478::");
         testOp(browser, "Blowfish Decrypt", "10884e15427dd84ec35204e9c8e921ae", "test_output", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Hex", "Raw"]);
         testOp(browser, "Blowfish Encrypt", "test input", "f0fadbd1d90d774f714248cf26b96410", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Raw", "Hex"]);
         testOp(browser, ["From Hex", "Blur Image", "To Base64"], Images.PNG_HEX, Images.PNG_BLUR_B64);
         // testOp(browser, "Bombe", "test input", "test_output");
         testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
-        // testOp(browser, "CRC-16 Checksum", "test input", "test_output");
-        // testOp(browser, "CRC-32 Checksum", "test input", "test_output");
-        // testOp(browser, "CRC-8 Checksum", "test input", "test_output");
+        testOp(browser, "CRC-16 Checksum", "test input", "77c7");
+        testOp(browser, "CRC-32 Checksum", "test input", "29822bc8");
+        testOp(browser, "CRC-8 Checksum", "test input", "9d");
         // testOp(browser, "CSS Beautify", "test input", "test_output");
         // testOp(browser, "CSS Minify", "test input", "test_output");
         // testOp(browser, "CSS selector", "test input", "test_output");
@@ -311,7 +311,7 @@ module.exports = {
         // testOp(browser, "TCP/IP Checksum", "test input", "test_output");
         // testOp(browser, "Tail", "test input", "test_output");
         // testOp(browser, "Take bytes", "test input", "test_output");
-        // testOp(browser, "Tar", "test input", "test_output");
+        testOp(browser, "Tar", "test input", /^file\.txt\x00{92}/);
         // testOp(browser, "Text Encoding Brute Force", "test input", "test_output");
         // testOp(browser, "To BCD", "test input", "test_output");
         // testOp(browser, "To Base", "test input", "test_output");
@@ -352,22 +352,22 @@ module.exports = {
         // testOp(browser, "Unescape Unicode Characters", "test input", "test_output");
         // testOp(browser, "Unique", "test input", "test_output");
         // testOp(browser, "Untar", "test input", "test_output");
-        // testOp(browser, "Unzip", "test input", "test_output");
+        testOpHtml(browser, ["Zip", "Unzip"], "test input", "#files span.float-right", /10 bytes/);
         // testOp(browser, "VarInt Decode", "test input", "test_output");
         // testOp(browser, "VarInt Encode", "test input", "test_output");
         // testOp(browser, "View Bit Plane", "test input", "test_output");
         // testOp(browser, "Vigenère Decode", "test input", "test_output");
         // testOp(browser, "Vigenère Encode", "test input", "test_output");
-        // testOp(browser, "Whirlpool", "test input", "test_output");
+        testOp(browser, "Whirlpool", "test input", "8a0ee6885ba241353d17cbbe5f06538a7f04c8c955d376c20d6233fd4dd41aaffd13291447090ce781b5f940da266ed6d02cf8b79d4867065d10bdfc04166f38");
         // testOp(browser, "Windows Filetime to UNIX Timestamp", "test input", "test_output");
-        // testOp(browser, "XKCD Random Number", "test input", "test_output");
+        testOp(browser, "XKCD Random Number", "test input", "4");
         // testOp(browser, "XML Beautify", "test input", "test_output");
         // testOp(browser, "XML Minify", "test input", "test_output");
         // testOp(browser, "XOR", "test input", "test_output");
         // testOp(browser, "XOR Brute Force", "test input", "test_output");
         // testOp(browser, "XPath expression", "test input", "test_output");
         // testOp(browser, "YARA Rules", "test input", "test_output");
-        // testOp(browser, "Zip", "test input", "test_output");
+        testOp(browser, "Zip", "test input", /^PK\u0003\u0004\u0014\u0000{3}/);
         // testOp(browser, "Zlib Deflate", "test input", "test_output");
         // testOp(browser, "Zlib Inflate", "test input", "test_output");
     },
@@ -407,12 +407,7 @@ function bakeOp(browser, opName, input, args=[]) {
  */
 function testOp(browser, opName, input, output, args=[]) {
     bakeOp(browser, opName, input, args);
-
-    if (typeof output === "string") {
-        browser.expect.element("#output-text .cm-content").to.have.property("textContent").that.equals(output);
-    } else if (output instanceof RegExp) {
-        browser.expect.element("#output-text .cm-content").to.have.property("textContent").that.matches(output);
-    }
+    utils.expectOutput(browser, output);
 }
 
 /** @function
