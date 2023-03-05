@@ -24,7 +24,7 @@ class TranslateDateTimeFormat extends Operation {
         this.description = "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.";
         this.infoURL = "https://momentjs.com/docs/#/parsing/string-format/";
         this.inputType = "string";
-        this.outputType = "html";
+        this.outputType = "string";
         this.args = [
             {
                 "name": "Built in formats",
@@ -58,7 +58,7 @@ class TranslateDateTimeFormat extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {html}
+     * @returns {string}
      */
     run(input, args) {
         const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args.slice(1);
