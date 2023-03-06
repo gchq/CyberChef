@@ -6,6 +6,8 @@
  * @license Apache-2.0
  */
 
+const utils = require("./browserUtils.js");
+
 module.exports = {
     before: browser => {
         browser
@@ -219,6 +221,25 @@ module.exports = {
             .setValue("#search", "md5")
             .useXpath()
             .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
+    },
+
+    "Alert bar": browser => {
+        // Bake nothing to create an empty output which can be copied
+        utils.clear(browser);
+        utils.bake(browser);
+
+        // Alert bar shows and contains correct content
+        browser
+            .click("#copy-output")
+            .waitForElementVisible("#snackbar-container")
+            .waitForElementVisible("#snackbar-container .snackbar-content")
+            .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
+
+        // Alert bar disappears after the correct amount of time
+        // Should disappear after 2000ms
+        browser
+            .waitForElementNotPresent("#snackbar-container .snackbar-content", 2500)
+            .waitForElementNotVisible("#snackbar-container");
     },
 
     after: browser => {
