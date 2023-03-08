@@ -240,6 +240,9 @@ class OutputWaiter {
         this.currentOutputCache = data;
         this.toggleLoader(true);
 
+        // Remove class to #output-text to change display settings
+        this.outputTextEl.classList.remove("html-output");
+
         // If data is an ArrayBuffer, convert to a string in the correct character encoding
         const tabNum = this.manager.tabs.getActiveTab("output");
         this.manager.timing.recordTime("outputDecodingStart", tabNum);
@@ -310,6 +313,9 @@ class OutputWaiter {
         this.outputEditorView.dispatch({
             effects: this.outputEditorConf.drawSelection.reconfigure([])
         });
+
+        // Add class to #output-text to change display settings
+        this.outputTextEl.classList.add("html-output");
 
         // Execute script sections
         const outputHTML = document.getElementById("output-html");

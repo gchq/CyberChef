@@ -17,8 +17,16 @@
     user-select: auto;
 }
 
+#output-text.html-output .cm-content,
+#output-text.html-output .cm-line,
 #output-html {
+    display: block;
+    height: 100%;
     user-select: auto;
+}
+#output-text.html-output .cm-line .cm-widgetBuffer,
+#output-text.html-output .cm-line>br {
+    display: none;
 }
 
 .cm-editor {

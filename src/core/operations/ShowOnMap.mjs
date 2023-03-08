@@ -94,14 +94,8 @@ class ShowOnMap extends Operation {
     #output-text .cm-content,
     #output-text .cm-line,
     #output-html {
-        display: block;
-        white-space: normal;
         padding: 0;
-        height: 100%;
-    }
-    #output-text .cm-line .cm-widgetBuffer,
-    #output-text .cm-line br {
-        display: none;
+        white-space: normal;
     }
 </style>
 <div id="presentedMap" style="width: 100%; height: 100%;"></div>
