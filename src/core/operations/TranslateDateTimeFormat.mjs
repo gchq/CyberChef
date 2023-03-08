@@ -24,7 +24,7 @@ class TranslateDateTimeFormat extends Operation {
         this.description = "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.";
         this.infoURL = "https://momentjs.com/docs/#/parsing/string-format/";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "html";
         this.args = [
             {
                 "name": "Built in formats",
@@ -58,7 +58,7 @@ class TranslateDateTimeFormat extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {html}
      */
     run(input, args) {
         const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args.slice(1);
@@ -71,7 +71,7 @@ class TranslateDateTimeFormat extends Operation {
             return `Invalid format.\n\n${FORMAT_EXAMPLES}`;
         }
 
-        return date.tz(outputTimezone).format(outputFormat);
+        return date.tz(outputTimezone).format(outputFormat.replace(/[<>]/g, ""));
     }
 
 }
