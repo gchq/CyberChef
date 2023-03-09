@@ -401,13 +401,14 @@ module.exports = function (grunt) {
                 stdout: false
             },
             fixSnackbarMarkup: {
-                command: [
-                    `[[ "$OSTYPE" == "darwin"* ]]`,
-                    "&&",
-                    `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`,
-                    "||",
-                    `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`
-                ].join(" "),
+                command: function () {
+                    switch (process.platform) {
+                        case "darwin":
+                            return `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
+                        default:
+                            return `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
+                    }
+                },
                 stdout: false
             }
         },
