@@ -585,42 +585,6 @@ class RecipeWaiter {
     adjustWidth() {
         const recList = document.getElementById("rec-list");
 
-        if (!this.ingredientRuleID) {
-            this.ingredientRuleID = null;
-            this.ingredientChildRuleID = null;
-
-            // Find relevant rules in the stylesheet
-            // try/catch for chrome 64+ CORS error on cssRules.
-            try {
-                for (const i in document.styleSheets[0].cssRules) {
-                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
-                        this.ingredientRuleID = i;
-                    }
-                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
-                        this.ingredientChildRuleID = i;
-                    }
-                }
-            } catch (e) {
-                // Do nothing.
-            }
-        }
-
-        if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
-
-        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID];
-        const ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
-
-        if (recList.clientWidth < 450) {
-            ingredientRule.style.gridTemplateColumns = "auto auto";
-            ingredientChildRule.style.gridColumn = "1 / span 2";
-        } else if (recList.clientWidth < 620) {
-            ingredientRule.style.gridTemplateColumns = "auto auto auto";
-            ingredientChildRule.style.gridColumn = "1 / span 3";
-        } else {
-            ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
-            ingredientChildRule.style.gridColumn = "1 / span 4";
-        }
-
         // Hide Chef icon on Bake button if the page is compressed
         const bakeIcon = document.querySelector("#bake img");
 
@@ -636,7 +600,7 @@ class RecipeWaiter {
         const controlsContent = document.getElementById("controls-content");
         const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
 
-        controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        controlsContent.style.transform = `scale(${scale})`;
     }
 
 }
