@@ -5,8 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-
-import cptable from "codepage";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
@@ -35,10 +33,14 @@ class NTHash extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const format = 1200; // UTF-16LE
-        const encoded = cptable.utils.encode(format, input);
-        const hashed = runHash("md4", encoded);
+        // Convert to UTF-16LE
+        const buf = new ArrayBuffer(input.length * 2);
+        const bufView = new Uint16Array(buf);
+        for (let i = 0; i < input.length; i++) {
+            bufView[i] = input.charCodeAt(i);
+        }
 
+        const hashed = runHash("md4", buf);
         return hashed.toUpperCase();
     }
 }
