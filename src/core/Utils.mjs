@@ -824,8 +824,8 @@ class Utils {
         }
 
         if (removeScriptAndStyle) {
-            htmlStr = recursiveRemove(/<script[^>]*>.*?<\/script[^>]*>/gi, htmlStr);
-            htmlStr = recursiveRemove(/<style[^>]*>.*?<\/style[^>]*>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<script[^>]*>[/s/S]*?<\/script[^>]*>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<style[^>]*>[/s/S]*?<\/style[^>]*>/gi, htmlStr);
         }
         return recursiveRemove(/<[^>]+>/g, htmlStr);
     }
