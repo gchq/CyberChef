@@ -311,7 +311,7 @@ var Hex = {// <editor-fold defaultstate="collapsed">
      * @returns {CryptoOperationData} Decoded binary data
      */
     decode: function (s, endean) {
-        s = s.replace(/[^A-fa-f0-9]/g, '');
+        s = s.replace(/[^A-Fa-f0-9]/g, '');
         var n = Math.ceil(s.length / 2), r = new Uint8Array(n);
         s = (s.length % 2 > 0 ? '0' : '') + s;
         if (endean && ((typeof endean !== 'string') ||
@@ -370,7 +370,7 @@ var Int16 = {// <editor-fold defaultstate="collapsed">
      * @returns {CryptoOperationData} Decoded binary data
      */
     decode: function (s) {
-        s = (s || '').replace(/[^\-A-fa-f0-9]/g, '');
+        s = (s || '').replace(/[^\-A-Fa-f0-9]/g, '');
         if (s.length === 0)
             s = '0';
         // Signature
