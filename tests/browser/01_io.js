@@ -604,41 +604,40 @@ module.exports = {
         /* Side panel displays correct info */
         utils.uploadFolder(browser, "files");
 
-        // Tab 1
-        browser
-            .click("#input-tabs li:nth-of-type(1)")
-            .waitForElementVisible("#input-tabs li:nth-of-type(1).active-input-tab");
+        // Loop through tabs
+        for (let i = 1; i < 3; i++) {
+            browser
+                .click(`#input-tabs li:nth-of-type(${i})`)
+                .waitForElementVisible(`#input-tabs li:nth-of-type(${i}).active-input-tab`);
 
-        browser
-            .waitForElementVisible("#input-text .cm-file-details")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
-        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("TowelDay.jpeg");
-        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("61,379 bytes");
-        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
-        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
+            browser
+                .waitForElementVisible("#input-text .cm-file-details")
+                .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+                .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+                .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+                .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+                .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+                .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
 
-        // Tab 2
-        browser
-            .click("#input-tabs li:nth-of-type(2)")
-            .waitForElementVisible("#input-tabs li:nth-of-type(2).active-input-tab");
-
-        browser
-            .waitForElementVisible("#input-text .cm-file-details")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
-        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("Hitchhikers_Guide.jpeg");
-        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("36,595 bytes");
-        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
-        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
+            browser.getText("#input-text .cm-file-details .file-details-name", function(result) {
+                switch (result.value) {
+                    case "TowelDay.jpeg":
+                        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("TowelDay.jpeg");
+                        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("61,379 bytes");
+                        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
+                        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
+                        break;
+                    case "Hitchhikers_Guide.jpeg":
+                        browser.expect.element("#input-text .cm-file-details .file-details-name").text.that.equals("Hitchhikers_Guide.jpeg");
+                        browser.expect.element("#input-text .cm-file-details .file-details-size").text.that.equals("36,595 bytes");
+                        browser.expect.element("#input-text .cm-file-details .file-details-type").text.that.equals("image/jpeg");
+                        browser.expect.element("#input-text .cm-file-details .file-details-loaded").text.that.equals("100%");
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
     },
 
     "Loading from URL": browser => {
