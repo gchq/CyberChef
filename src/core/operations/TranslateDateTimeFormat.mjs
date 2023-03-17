@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
@@ -85,9 +86,7 @@ class TranslateDateTimeFormat extends Operation {
         if (data === this.invalidFormatMessage) {
             return `${data}\n\n${FORMAT_EXAMPLES}`;
         }
-        return data.replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
+        return Utils.escapeHtml(data);
     }
 }
 
