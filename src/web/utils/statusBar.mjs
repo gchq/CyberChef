@@ -41,6 +41,8 @@ class StatusBarPanel {
         const rhs = document.createElement("div");
 
         dom.className = "cm-status-bar";
+        dom.setAttribute("data-help-title", `${this.label} status bar`);
+        dom.setAttribute("data-help", `This status bar provides information about data in the ${this.label}. Help topics are available for each of the components by activating help when hovering over them.`);
         lhs.innerHTML = this.constructLHS();
         rhs.innerHTML = this.constructRHS();
 
@@ -184,6 +186,17 @@ class StatusBarPanel {
             return;
         }
 
+        // CodeMirror always counts line breaks as one character.
+        // We want to show an accurate reading of how many bytes there are.
+        let from = state.selection.main.from,
+            to = state.selection.main.to;
+        if (state.lineBreak.length !== 1) {
+            const fromLine = state.doc.lineAt(from).number;
+            const toLine = state.doc.lineAt(to).number;
+            from += (state.lineBreak.length * fromLine) - fromLine - 1;
+            to += (state.lineBreak.length * toLine) - toLine - 1;
+        }
+
         if (selLen > 0) { // Range
             const start = this.dom.querySelector(".sel-start-value"),
                 end = this.dom.querySelector(".sel-end-value"),
@@ -191,17 +204,15 @@ class StatusBarPanel {
 
             selInfo.style.display = "inline-block";
             curOffsetInfo.style.display = "none";
-
-            start.textContent = state.selection.main.from;
-            end.textContent = state.selection.main.to;
-            length.textContent = state.selection.main.to - state.selection.main.from;
+            start.textContent = from;
+            end.textContent = to;
+            length.textContent = to - from;
         } else { // Position
             const offset = this.dom.querySelector(".cur-offset-value");
 
             selInfo.style.display = "none";
             curOffsetInfo.style.display = "inline-block";
-
-            offset.textContent = state.selection.main.from;
+            offset.textContent = from;
         }
     }
 
@@ -314,21 +325,21 @@ class StatusBarPanel {
      */
     constructLHS() {
         return `
-            <span data-toggle="tooltip" title="${this.label} length">
+            <span data-toggle="tooltip" title="${this.label} length" data-help-title="${this.label} length" data-help="This number represents the number of characters in the ${this.label}.<br><br>The CRLF end of line separator is counted as two characters which impacts this value.">
                 <i class="material-icons">abc</i>
                 <span class="stats-length-value"></span>
             </span>
-            <span data-toggle="tooltip" title="Number of lines">
+            <span data-toggle="tooltip" title="Number of lines"  data-help-title="Number of lines" data-help="This number represents the number of lines in the ${this.label}. Lines are separated by the End of Line Sequence which can be changed using the EOL selector at the far right of this status bar.">
                 <i class="material-icons">sort</i>
                 <span class="stats-lines-value"></span>
             </span>
 
-            <span class="sel-info" data-toggle="tooltip" title="Main selection">
+            <span class="sel-info" data-toggle="tooltip" title="Main selection" data-help-title="Main selection" data-help="These numbers show which offsets have been selected and how many characters are in the current selection. If multiple selections are made, these numbers refer to the latest one. ">
                 <i class="material-icons">highlight_alt</i>
                 <span class="sel-start-value"></span>\u279E<span class="sel-end-value"></span>
                 (<span class="sel-length-value"></span> selected)
             </span>
-            <span class="cur-offset-info" data-toggle="tooltip" title="Cursor offset">
+            <span class="cur-offset-info" data-toggle="tooltip" title="Cursor offset" data-help-title="Cursor offset" data-help="This number indicates what the current offset of the cursor is from the beginning of the ${this.label}.<br><br>The CRLF end of line separator is counted as two characters which impacts this value.">
                 <i class="material-icons">location_on</i>
                 <span class="cur-offset-value"></span>
             </span>`;
@@ -345,13 +356,23 @@ class StatusBarPanel {
             `<a href="#" draggable="false" data-val="${CHR_ENC_SIMPLE_LOOKUP[name]}">${name}</a>`
         ).join("");
 
+        let chrEncHelpText = "",
+            eolHelpText = "";
+        if (this.label === "Input") {
+            chrEncHelpText = "The input character encoding defines how the input text is encoded into bytes which are then processed by the Recipe.<br><br>The 'Raw bytes' option attempts to treat the input as individual bytes in the range 0-255. If it detects any characters with Unicode values above 255, it will treat the entire input as UTF-8. 'Raw bytes' is usually the best option if you are inputting binary data, such as a file.";
+            eolHelpText = "The End of Line Sequence defines which bytes are considered EOL terminators. Pressing the return key will enter this value into the input and create a new line.<br><br>Changing the EOL sequence will not modify any existing data in the input but may change how previously entered line breaks are displayed. Lines added while a different EOL terminator was set may not now result in a new line, but may be displayed as control characters instead.";
+        } else {
+            chrEncHelpText = "The output character encoding defines how the output bytes are decoded into text which can be displayed to you.<br><br>The 'Raw bytes' option treats the output data as individual bytes in the range 0-255.";
+            eolHelpText = "The End of Line Sequence defines which bytes are considered EOL terminators.<br><br>Changing this value will not modify the value of the output, but may change how certain bytes are displayed and whether they result in a new line being created.";
+        }
+
         return `
-            <span class="baking-time-info" style="display: none" data-toggle="tooltip" data-html="true" title="Baking time">
+            <span class="baking-time-info" style="display: none" data-toggle="tooltip" data-html="true" title="Baking time" data-help-title="Baking time" data-help="The baking time is the total time between data being read from the input, processed, and then displayed in the output.<br><br>The 'Threading overhead' value accounts for the transfer of data between different processing threads, as well as some garbage collection. It is not included in the overall bake time displayed in the status bar as it is largely influenced by background operating system and browser activity which can fluctuate significantly.">
                 <i class="material-icons">schedule</i>
                 <span class="baking-time-value"></span>ms
             </span>
 
-            <div class="cm-status-bar-select chr-enc-select">
+            <div class="cm-status-bar-select chr-enc-select" data-help-title="${this.label} character encoding" data-help="${chrEncHelpText}">
                 <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-html="true" data-placement="left" title="${this.label} character encoding">
                     <i class="material-icons">text_fields</i> <span class="chr-enc-value">Raw Bytes</span>
                 </span>
@@ -371,7 +392,7 @@ class StatusBarPanel {
                 </div>
             </div>
 
-            <div class="cm-status-bar-select eol-select">
+            <div class="cm-status-bar-select eol-select" data-help-title="${this.label} EOL sequence" data-help="${eolHelpText}">
                 <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-html="true" data-placement="left" title="End of line sequence">
                     <i class="material-icons">keyboard_return</i> <span class="eol-value"></span>
                 </span>

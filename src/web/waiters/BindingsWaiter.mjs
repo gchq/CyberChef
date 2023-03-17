@@ -148,6 +148,12 @@ class BindingsWaiter {
                     }
                     break;
             }
+        } else {
+            switch (e.code) {
+                case "F1":
+                    this.contextualHelp();
+                    break;
+            }
         }
     }
 
@@ -164,9 +170,14 @@ class BindingsWaiter {
         }
         document.getElementById("keybList").innerHTML = `
         <tr>
-            <td><b>Command</b></td>
-            <td><b>Shortcut (Win/Linux)</b></td>
-            <td><b>Shortcut (Mac)</b></td>
+            <th>Command</th>
+            <th>Shortcut (Win/Linux)</th>
+            <th>Shortcut (Mac)</th>
+        </tr>
+        <tr>
+            <td>Activate contextual help</td>
+            <td>F1</td>
+            <td>F1</td>
         </tr>
         <tr>
             <td>Place cursor in search field</td>
@@ -253,6 +264,29 @@ class BindingsWaiter {
             <td>Ctrl+${modMac}+LeftArrow</td>
         </tr>
         `;
+    }
+
+    /**
+     * Shows contextual help message based on where the mouse pointer is
+     */
+    contextualHelp() {
+        const hoveredHelpEls = document.querySelectorAll(":hover[data-help]");
+
+        if (hoveredHelpEls.length) {
+            const helpEl = hoveredHelpEls[hoveredHelpEls.length - 1],
+                helpText = helpEl.getAttribute("data-help");
+            let helpTitle = helpEl.getAttribute("data-help-title");
+
+            if (helpTitle)
+                helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
+            else
+                helpTitle = "<span class='text-muted'>Help topic</span>";
+
+            document.querySelector("#help-modal .modal-body").innerHTML = helpText;
+            document.querySelector("#help-modal #help-title").innerHTML = helpTitle;
+
+            $("#help-modal").modal();
+        }
     }
 
 }

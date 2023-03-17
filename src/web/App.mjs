@@ -281,7 +281,15 @@ class App {
         }
 
         // Add edit button to first category (Favourites)
-        document.querySelector("#categories a").appendChild(document.getElementById("edit-favourites"));
+        const favCat = document.querySelector("#categories a");
+        favCat.appendChild(document.getElementById("edit-favourites"));
+        favCat.setAttribute("data-help-title", "Favourite operations");
+        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
+        <ul>
+            <li><b>To add:</b> drag an operation over the Favourites category</li>
+            <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
+            <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
+        </ul>`);
     }
 
 
@@ -656,6 +664,8 @@ class App {
         const notice = document.getElementById("notice");
         notice.innerHTML = compileInfo;
         notice.setAttribute("title", Utils.stripHtmlTags(window.compileMessage));
+        notice.setAttribute("data-help-title", "Last build");
+        notice.setAttribute("data-help", "This live version of CyberChef is updated whenever new commits are added to the master branch of the CyberChef repository. It represents the latest, most up-to-date build of CyberChef.");
     }
 
 

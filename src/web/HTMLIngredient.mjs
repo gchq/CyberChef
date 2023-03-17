@@ -85,7 +85,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "toggleString":
-                html += `<div class="form-group input-group ing-wide">
+                html += `<div class="form-group input-group ing-wide" data-help-title="Multi-type ingredients" data-help="Selecting a data type from the dropdown will change how the ingredient is interpreted by the operation.">
                     <div class="toggle-string">
                         <label for="${this.id}"
                             ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
@@ -168,7 +168,7 @@ class HTMLIngredient {
                 break;
             case "populateOption":
             case "populateMultiOption":
-                html += `<div class="form-group ing-medium">
+                html += `<div class="form-group ing-medium" data-help-title="Population dropdowns" data-help="Selecting a value from this dropdown will populate some of the other ingredients for this operation with pre-canned values.">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating">${this.name}</label>
@@ -275,7 +275,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "argSelector":
-                html += `<div class="form-group inline ing-medium">
+                html += `<div class="form-group inline ing-medium" data-help-title="Ingredient selector" data-help="Selecting options in this dropdown will configure which operation ingredients are visible.">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating inline">${this.name}</label>
