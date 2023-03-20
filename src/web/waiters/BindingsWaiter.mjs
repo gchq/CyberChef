@@ -270,23 +270,36 @@ class BindingsWaiter {
      * Shows contextual help message based on where the mouse pointer is
      */
     contextualHelp() {
-        const hoveredHelpEls = document.querySelectorAll(":hover[data-help]");
+        const hoveredHelpEls = document.querySelectorAll(":hover[data-help],:hover[data-help-proxy]");
+        if (!hoveredHelpEls.length) return;
 
-        if (hoveredHelpEls.length) {
-            const helpEl = hoveredHelpEls[hoveredHelpEls.length - 1],
-                helpText = helpEl.getAttribute("data-help");
-            let helpTitle = helpEl.getAttribute("data-help-title");
-
-            if (helpTitle)
-                helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
-            else
-                helpTitle = "<span class='text-muted'>Help topic</span>";
-
-            document.querySelector("#help-modal .modal-body").innerHTML = helpText;
-            document.querySelector("#help-modal #help-title").innerHTML = helpTitle;
-
-            $("#help-modal").modal();
+        let helpEl = hoveredHelpEls[hoveredHelpEls.length - 1];
+        const helpElSelector = helpEl.getAttribute("data-help-proxy");
+        if (helpElSelector) {
+            // A hovered element is directing us to another element for its help text
+            helpEl = document.querySelector(helpElSelector);
         }
+        this.displayHelp(helpEl);
+    }
+
+    /**
+     * Displays the help pane populated with help text associated with the given element
+     *
+     * @param {Element} el
+     */
+    displayHelp(el) {
+        const helpText = el.getAttribute("data-help");
+        let helpTitle = el.getAttribute("data-help-title");
+
+        if (helpTitle)
+            helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
+        else
+            helpTitle = "<span class='text-muted'>Help topic</span>";
+
+        document.querySelector("#help-modal .modal-body").innerHTML = helpText;
+        document.querySelector("#help-modal #help-title").innerHTML = helpTitle;
+
+        $("#help-modal").modal();
     }
 
 }

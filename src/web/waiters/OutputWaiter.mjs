@@ -7,6 +7,7 @@
 
 import Utils, {debounce} from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
+import {detectFileType} from "../../core/lib/FileType.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
 
@@ -765,13 +766,22 @@ class OutputWaiter {
             this.app.alert("Could not find any output data to download. Has this output been baked?", 3000);
             return;
         }
-        const fileName = window.prompt("Please enter a filename: ", "download.dat");
+
+        const data = await dish.get(Dish.ARRAY_BUFFER);
+        let ext = ".dat";
+
+        // Detect file type automatically
+        const types = detectFileType(data);
+        if (types.length) {
+            ext = `.${types[0].extension.split(",", 1)[0]}`;
+        }
+
+        const fileName = window.prompt("Please enter a filename: ", `download${ext}`);
 
         // Assume if the user clicks cancel they don't want to download
         if (fileName === null) return;
 
-        const data = await dish.get(Dish.ARRAY_BUFFER),
-            file = new File([data], fileName);
+        const file = new File([data], fileName);
         FileSaver.saveAs(file, fileName, {autoBom: false});
     }
 
