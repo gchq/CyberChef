@@ -486,6 +486,7 @@
             "Disassemble x86",
             "Pseudo-Random Number Generator",
             "Generate UUID",
+            "Analyse UUID",
             "Generate TOTP",
             "Generate HOTP",
             "Generate QR Code",
