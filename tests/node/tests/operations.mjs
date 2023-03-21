@@ -581,73 +581,73 @@ Password: 282760`;
     }),
 
     it("Generate UUID v1", () => {
-        const result = chef.generateUUID("", "v1");
-        assert.ok(result.toString());
-        assert.strictEqual(result.toString().length, 36);
+        const result = chef.generateUUID("", "v1").toString();
+        assert.ok(result);
+        assert.strictEqual(result.length, 36);
     }),
 
     it("Generate UUID v3", () => {
-        const namespace = chef.generateUUID("", "v1");
-        const result = chef.generateUUID("v3", "random string", namespace);
-        assert.ok(result.toString());
-        assert.strictEqual(result.toString().length, 36);
+        const namespace = chef.generateUUID("", "v1").toString();
+        const result = chef.generateUUID("v3", "user input", namespace).toString();
+        assert.ok(result);
+        assert.strictEqual(result.length, 36);
     }),
 
     it("Generate UUID v4", () => {
-        const result = chef.generateUUID("", "v4");
-        assert.ok(result.toString());
-        assert.strictEqual(result.toString().length, 36);
+        const result = chef.generateUUID("", "v4").toString();
+        assert.ok(result);
+        assert.strictEqual(result.length, 36);
     }),
 
     it("Generate UUID v5", () => {
-        const namespace = chef.generateUUID("", "v1");
-        const result = chef.generateUUID("v5", "random string", namespace);
-        assert.ok(result.toString());
-        assert.strictEqual(result.toString().length, 36);
+        const namespace = chef.generateUUID("", "v1").toString();
+        const result = chef.generateUUID("v5", "user input", namespace).toString();
+        assert.ok(result);
+        assert.strictEqual(result.length, 36);
     }),
 
     it("Validate UUID v3 namespace", () => {
-        const namespace = chef.generateUUID("", "v1");
-        const firstResult = chef.generateUUID("v3", "random string", namespace);
-        const secondResult = chef.generateUUID("v3", "random string", namespace);
-        assert.strictEqual(firstResult.toString(), secondResult.toString());
+        const namespace = chef.generateUUID("", "v1").toString();
+        const firstResult = chef.generateUUID("v3", "user input", namespace).toString();
+        const secondResult = chef.generateUUID("v3", "user input", namespace).toString();
+        assert.strictEqual(firstResult, secondResult);
     }),
 
     it("Validate UUID v5 namespace", () => {
-        const namespace = chef.generateUUID("", "v1");
-        const firstResult = chef.generateUUID("v5", "random string", namespace);
-        const secondResult = chef.generateUUID("v5", "random string", namespace);
-        assert.strictEqual(firstResult.toString(), secondResult.toString());
+        const namespace = chef.generateUUID("", "v1").toString();
+        const firstResult = chef.generateUUID("v5", "user input", namespace).toString();
+        const secondResult = chef.generateUUID("v5", "user input", namespace).toString();
+        assert.strictEqual(firstResult, secondResult);
     }),
 
     it("Analyse UUID v1", () => {
-        const uuidv1 = chef.generateUUID("", "v1");
-        const uuidAnalysis = chef.analyseUUID(uuidv1);
+        const uuidv1 = chef.generateUUID("", "v1").toString();
+        const uuidAnalysis = chef.analyseUUID(uuidv1).toString();
 
         assert.strictEqual(uuidAnalysis, "UUID version: 1");
     }),
 
     it("Analyse UUID v3", () => {
-        const namespace = chef.generateUUID("", "v1");
-        const uuidv3 = chef.generateUUID("v3", "random string", namespace);
-        const uuidAnalysis = chef.analyseUUID(uuidv3);
+        const namespace = chef.generateUUID("", "v1").toString();
+        const uuidv3 = chef.generateUUID("v3", "user input", namespace).toString();
+        const uuidAnalysis = chef.analyseUUID(uuidv3).toString();
 
         assert.strictEqual(uuidAnalysis, "UUID version: 3");
     }),
 
     it("Analyse UUID v4", () => {
-        const uuidv4 = chef.generateUUID("", "v4");
-        const uuidAnalysis = chef.analyseUUID(uuidv4);
+        const uuidv4 = chef.generateUUID("", "v4").toString();
+        const uuidAnalysis = chef.analyseUUID(uuidv4).toString();
 
         assert.strictEqual(uuidAnalysis, "UUID version: 4");
     }),
 
     it("Analyse UUID v5", () => {
-        const namespace = chef.generateUUID("", "v1");
-        const uuidv5 = chef.generateUUID("v5", "random string", namespace);
-        const uuidAnalysis = chef.analyseUUID(uuidv5);
+        const namespace = chef.generateUUID("", "v1").toString();
+        const uuidv5 = chef.generateUUID("v5", "user input", namespace).toString();
+        const uuidAnalysis = chef.analyseUUID(uuidv5).toString();
 
-        assert.strictEqual(uuidAnalysis, "UUID version: 3");
+        assert.strictEqual(uuidAnalysis, "UUID version: 5");
     }),
 
     it("Gzip, Gunzip", () => {
