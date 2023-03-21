@@ -580,10 +580,74 @@ Password: 282760`;
         assert.strictEqual(result.toString().substr(0, 37), "-----BEGIN PGP PRIVATE KEY BLOCK-----");
     }),
 
-    it("Generate UUID", () => {
-        const result = chef.generateUUID();
+    it("Generate UUID v1", () => {
+        const result = chef.generateUUID("", "v1");
         assert.ok(result.toString());
         assert.strictEqual(result.toString().length, 36);
+    }),
+
+    it("Generate UUID v3", () => {
+        const namespace = chef.generateUUID("", "v1");
+        const result = chef.generateUUID("v3", "random string", namespace);
+        assert.ok(result.toString());
+        assert.strictEqual(result.toString().length, 36);
+    }),
+
+    it("Generate UUID v4", () => {
+        const result = chef.generateUUID("", "v4");
+        assert.ok(result.toString());
+        assert.strictEqual(result.toString().length, 36);
+    }),
+
+    it("Generate UUID v5", () => {
+        const namespace = chef.generateUUID("", "v1");
+        const result = chef.generateUUID("v5", "random string", namespace);
+        assert.ok(result.toString());
+        assert.strictEqual(result.toString().length, 36);
+    }),
+
+    it("Validate UUID v3 namespace", () => {
+        const namespace = chef.generateUUID("", "v1");
+        const firstResult = chef.generateUUID("v3", "random string", namespace);
+        const secondResult = chef.generateUUID("v3", "random string", namespace);
+        assert.strictEqual(firstResult.toString(), secondResult.toString());
+    }),
+
+    it("Validate UUID v5 namespace", () => {
+        const namespace = chef.generateUUID("", "v1");
+        const firstResult = chef.generateUUID("v5", "random string", namespace);
+        const secondResult = chef.generateUUID("v5", "random string", namespace);
+        assert.strictEqual(firstResult.toString(), secondResult.toString());
+    }),
+
+    it("Analyse UUID v1", () => {
+        const uuidv1 = chef.generateUUID("", "v1");
+        const uuidAnalysis = chef.analyseUUID(uuidv1);
+
+        assert.strictEqual(uuidAnalysis, "UUID version: 1");
+    }),
+
+    it("Analyse UUID v3", () => {
+        const namespace = chef.generateUUID("", "v1");
+        const uuidv3 = chef.generateUUID("v3", "random string", namespace);
+        const uuidAnalysis = chef.analyseUUID(uuidv3);
+
+        assert.strictEqual(uuidAnalysis, "UUID version: 3");
+    }),
+
+    it("Analyse UUID v4", () => {
+        const uuidv4 = chef.generateUUID("", "v4");
+        const uuidAnalysis = chef.analyseUUID(uuidv4);
+
+        assert.strictEqual(uuidAnalysis, "UUID version: 4");
+    }),
+
+    it("Analyse UUID v5", () => {
+        const namespace = chef.generateUUID("", "v1");
+        const uuidv5 = chef.generateUUID("v5", "random string", namespace);
+        const uuidAnalysis = chef.analyseUUID(uuidv5);
+
+        assert.strictEqual(uuidAnalysis, "UUID version: 3");
     }),
 
     it("Gzip, Gunzip", () => {
