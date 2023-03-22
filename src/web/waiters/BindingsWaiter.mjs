@@ -151,6 +151,7 @@ class BindingsWaiter {
         } else {
             switch (e.code) {
                 case "F1":
+                    e.preventDefault();
                     this.contextualHelp();
                     break;
             }
