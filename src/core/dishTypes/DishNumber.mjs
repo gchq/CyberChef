@@ -23,11 +23,10 @@ class DishNumber extends DishType {
 
     /**
      * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
      */
-    static fromArrayBuffer(notUTF8) {
+    static fromArrayBuffer() {
         DishNumber.checkForValue(this.value);
-        this.value = this.value ? parseFloat(Utils.arrayBufferToStr(this.value, !notUTF8)) : 0;
+        this.value = this.value ? parseFloat(Utils.arrayBufferToStr(this.value)) : 0;
     }
 }
 

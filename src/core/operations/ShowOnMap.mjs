@@ -90,7 +90,14 @@ class ShowOnMap extends Operation {
             leafletUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.js",
             leafletCssUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.css";
         return `<link rel="stylesheet" href="${leafletCssUrl}" crossorigin=""/>
-<style>#output-html { white-space: normal; padding: 0; }</style>
+<style>
+    #output-text .cm-content,
+    #output-text .cm-line,
+    #output-html {
+        padding: 0;
+        white-space: normal;
+    }
+</style>
 <div id="presentedMap" style="width: 100%; height: 100%;"></div>
 <script type="text/javascript">
 var mapscript = document.createElement('script');

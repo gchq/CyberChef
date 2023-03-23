@@ -16,10 +16,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *    
+ *
  * Used library JSBN http://www-cs-students.stanford.edu/~tjw/jsbn/
  * Copyright (c) 2003-2005  Tom Wu (tjw@cs.Stanford.EDU)
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,7 +30,7 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  */
 
  import GostRandom from './gostRandom.mjs';
@@ -40,11 +40,11 @@
 
     /*
      * Predefined curves and params collection
-     * 
+     *
      * http://tools.ietf.org/html/rfc5832
      * http://tools.ietf.org/html/rfc7091
      * http://tools.ietf.org/html/rfc4357
-     * 
+     *
      */ // <editor-fold defaultstate="collapsed">
 
 var root = {};
@@ -181,10 +181,10 @@ var GostParams = {
     }
 }; // </editor-fold>
 
-/* 
-    * BigInteger arithmetic tools 
-    * optimized release of http://www-cs-students.stanford.edu/~tjw/jsbn/jsbn.js 
-    * 
+/*
+    * BigInteger arithmetic tools
+    * optimized release of http://www-cs-students.stanford.edu/~tjw/jsbn/jsbn.js
+    *
     */ // <editor-fold defaultstate="collapsed">
 
 // Bits per one element
@@ -688,8 +688,8 @@ function extend(c, o) {
 /*
     * Classic, Barret, Mongomery reductions, optimized ExpMod algorithms
     * optimized release of http://www-cs-students.stanford.edu/~tjw/jsbn/jsbn2.js
-    * 
-    */ // <editor-fold defaultstate="collapsed"> 
+    *
+    */ // <editor-fold defaultstate="collapsed">
 
 // Classic reduction
 var Classic = function (m) {
@@ -974,8 +974,8 @@ function expMod(x, e, m) {
 /*
     * EC Field Elements, Points, Curves
     * optimized release of http://www-cs-students.stanford.edu/~tjw/jsbn/ec.js
-    * 
-    */ // <editor-fold defaultstate="collapsed"> 
+    *
+    */ // <editor-fold defaultstate="collapsed">
 
 // EC Field Elemets
 function newFE(a, x) {
@@ -1233,8 +1233,8 @@ function newCurve(q, a, b) {
 
 /*
     * Converion tools (hex, binary)
-    * 
-    */ // <editor-fold defaultstate="collapsed"> 
+    *
+    */ // <editor-fold defaultstate="collapsed">
 
 function atobi(d) {
     var k = 8;
@@ -1445,7 +1445,7 @@ function hash(d) {
 function buffer(d) {
     if (d instanceof CryptoOperationData)
         return d;
-    else if (d && d.buffer && d.buffer instanceof CryptoOperationData)
+    else if (d && d?.buffer instanceof CryptoOperationData)
         return d.byteOffset === 0 && d.byteLength === d.buffer.byteLength ?
                 d.buffer : new Uint8Array(new Uint8Array(d, d.byteOffset, d.byteLength)).buffer;
     else
@@ -1483,9 +1483,9 @@ function getSeed(length) {
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * The sign method returns sign data generated with the supplied privateKey.<br>
- * 
+ *
  * @memberOf GostSign
  * @method sign
  * @instance
@@ -1518,7 +1518,7 @@ function sign(privateKey, data) // <editor-fold defaultstate="collapsed">
                     getSeed(this.bitLength)), q); // pseudo random 0 < k < q
             // Stage 4
             if (this.curve) {
-                // Gost R 34.10-2001 || Gost R 34.10-2012 
+                // Gost R 34.10-2001 || Gost R 34.10-2012
                 var P = this.P;
                 var C = mulEC(P, k);
                 r = mod(getX(C), q);
@@ -1552,9 +1552,9 @@ function sign(privateKey, data) // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * The verify method returns signature verification for the supplied publicKey.<br>
- * 
+ *
  * @memberOf GostSign
  * @method sign
  * @instance
@@ -1578,7 +1578,7 @@ function verify(publicKey, signature, data) // <editor-fold defaultstate="collap
             signature = swap(signature);
         var zetta = to2(signature);
         // Swap bytes for CryptoPro algorithm
-        s = zetta[1]; //  first 32 octets contain the big-endian representation of s 
+        s = zetta[1]; //  first 32 octets contain the big-endian representation of s
         r = zetta[0]; //  and second 32 octets contain the big-endian representation of r
     }
     if (compare(r, q) >= 0 || compare(s, q) >= 0)
@@ -1597,13 +1597,13 @@ function verify(publicKey, signature, data) // <editor-fold defaultstate="collap
     var z2 = sub(q, mod(mul(r, v), q));
     // Stage 6
     if (this.curve) {
-        // Gost R 34.10-2001 || Gost R 34.10-2012 
+        // Gost R 34.10-2001 || Gost R 34.10-2012
         var k2 = to2(publicKey),
                 curve = this.curve,
                 P = this.P,
                 x = newFE(curve, k2[0]), // first 32 octets contain the little-endian representation of x
                 y = newFE(curve, k2[1]), // and second 32 octets contain the little-endian representation of y.
-                Q = new newEC(curve, x, y); // This corresponds to the binary representation of (<y>256||<x>256) 
+                Q = new newEC(curve, x, y); // This corresponds to the binary representation of (<y>256||<x>256)
         var C = mulTwoEC(P, z1, Q, z2);
         var R = mod(getX(C), q);
     } else {
@@ -1618,10 +1618,10 @@ function verify(publicKey, signature, data) // <editor-fold defaultstate="collap
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
- * The generateKey method returns a new generated key pair using the specified 
+ *
+ * The generateKey method returns a new generated key pair using the specified
  * AlgorithmIdentifier.
- * 
+ *
  * @memberOf GostSign
  * @method generateKey
  * @instance
@@ -1664,9 +1664,9 @@ function generateKey() // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.10 mode MASK<br><br>
- * 
+ *
  * The generateMaskKey method returns a new generated key mask using for wrapping.
- * 
+ *
  * @memberOf GostSign
  * @method generateMaskKey
  * @instance
@@ -1689,9 +1689,9 @@ function generateMaskKey() // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * Unwrap private key from private key and ukm (mask)
- * 
+ *
  * @memberOf GostSign
  * @method unwrap
  * @instance
@@ -1714,9 +1714,9 @@ function unwrapKey(baseKey, data) // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * Wrap private key with private key and ukm (mask)
- * 
+ *
  * @memberOf GostSign
  * @method unwrap
  * @instance
@@ -1739,7 +1739,7 @@ function wrapKey(baseKey, data) // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * @memberOf GostSign
  * @method derive
  * @instance
@@ -1755,36 +1755,36 @@ function derive(baseKey) // <editor-fold defaultstate="collapsed">
     var x = mod(atobi(buffer(baseKey)), q);
 
     if (this.curve) {
-        // 1) Let K(x,y,UKM) = ((UKM*x)(mod q)) . (y.P) (512 bit), where      
-        // x - sender’s private key (256 bit)      
-        // x.P - sender’s public key (512 bit)      
-        // y - recipient’s private key (256 bit)      
-        // y.P - recipient’s public key (512 bit)      
-        // UKM - non-zero integer, produced as in step 2 p. 6.1 [GOSTR341001]      
-        // P - base point on the elliptic curve (two 256-bit coordinates)      
-        // UKM*x - x multiplied by UKM as integers      
-        // x.P - a multiple point   
+        // 1) Let K(x,y,UKM) = ((UKM*x)(mod q)) . (y.P) (512 bit), where
+        // x - sender’s private key (256 bit)
+        // x.P - sender’s public key (512 bit)
+        // y - recipient’s private key (256 bit)
+        // y.P - recipient’s public key (512 bit)
+        // UKM - non-zero integer, produced as in step 2 p. 6.1 [GOSTR341001]
+        // P - base point on the elliptic curve (two 256-bit coordinates)
+        // UKM*x - x multiplied by UKM as integers
+        // x.P - a multiple point
         var K = mulEC(this.peer_Q, mod(mul(ukm, x), q));
         k = from2(getX(K), getY(K), // This corresponds to the binary representation of (<y>256||<x>256)
                 this.bitLength);
     } else {
-        // 1) Let K(x,y) = a^(x*y) (mod p), where      
-        // x - sender’s private key, a^x - sender’s public key      
-        // y - recipient’s private key, a^y - recipient’s public key      
+        // 1) Let K(x,y) = a^(x*y) (mod p), where
+        // x - sender’s private key, a^x - sender’s public key
+        // y - recipient’s private key, a^y - recipient’s public key
         // a, p - parameters
         var p = this.p, a = this.a;
         k = bitoa(expMod(this.peer_y, x, p));
     }
-    // 2) Calculate a 256-bit hash of K(x,y,UKM):      
+    // 2) Calculate a 256-bit hash of K(x,y,UKM):
     // KEK(x,y,UKM) = gostSign (K(x,y,UKM)
     return hash.call(this, k);
 } // </editor-fold>
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * The deriveBits method returns length bits on baseKey.
- * 
+ *
  * @memberOf GostSign
  * @method deriveBits
  * @instance
@@ -1806,13 +1806,13 @@ function deriveBits(baseKey, length) // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.10<br><br>
- * 
+ *
  * The deriveKey method returns 256 bit Key encryption key on baseKey.
- * 
- * This algorithm creates a key encryption key (KEK) using 64 bit UKM,   
- * the sender’s private key, and the recipient’s public key (or the   
+ *
+ * This algorithm creates a key encryption key (KEK) using 64 bit UKM,
+ * the sender’s private key, and the recipient’s public key (or the
  * reverse of the latter pair
- * 
+ *
  * @memberOf GostSign
  * @method deriveKey
  * @instance
@@ -1831,11 +1831,11 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
 
 /**
  * Gost R 34.10 universal object<br><br>
- * 
+ *
  * References: {@link http://tools.ietf.org/html/rfc6986} and {@link http://tools.ietf.org/html/rfc5831}<br><br>
- * 
+ *
  * Normalized algorithm identifier common parameters:
- * 
+ *
  *  <ul>
  *      <li><b>name</b> Algorithm name 'GOST R 34.10'</li>
  *      <li><b>version</b> Algorithm version
@@ -1859,9 +1859,9 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
  *      </li>
  *      <li><b>sBox</b> Paramset sBox for GOST 34.11-94. Used only if version = 1994 or 2001</li>
  *  </ul>
- *  
+ *
  * Supported algorithms, modes and parameters:
- * 
+ *
  *  <ul>
  *      <li>Sign/Verify mode (SIGN)</li>
  *      <li>DeriveKey/DeriveBits mode (DH)
@@ -1897,7 +1897,7 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
  *          </ul>
  *      </li>
  *  </ul>
- *  
+ *
  * @class GostSign
  * @param {AlgorithmIndentifier} algorithm
  */
@@ -2015,7 +2015,7 @@ function GostSign(algorithm) // <editor-fold defaultstate="collapsed">
     }
 
     // Pregenerated seed for key exchange algorithms
-    if (algorithm.ukm) // Now don't check size 
+    if (algorithm.ukm) // Now don't check size
         this.ukm = algorithm.ukm;
 
 } // </editor-fold>

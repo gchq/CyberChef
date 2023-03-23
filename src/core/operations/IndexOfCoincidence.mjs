@@ -78,7 +78,7 @@ The graph shows the IC of the input data. A low IC generally means that the text
 
 <script type='application/javascript'>
   var canvas = document.getElementById("chart-area"),
-      parentRect = canvas.parentNode.getBoundingClientRect(),
+      parentRect = canvas.closest(".cm-scroller").getBoundingClientRect(),
       ic = ${ic};
 
   canvas.width = parentRect.width * 0.95;
