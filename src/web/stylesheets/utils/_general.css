@@ -50,6 +50,11 @@ body {
     padding-left: 2px;
 }
 
+.modal-icon {
+    position: absolute;
+    right: 25px;
+}
+
 .konami {
     transform: rotate(180deg);
 }

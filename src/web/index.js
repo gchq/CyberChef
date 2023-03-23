@@ -42,19 +42,16 @@ function main() {
     const defaultOptions = {
         updateUrl:           true,
         showHighlighter:     true,
-        treatAsUtf8:         true,
         wordWrap:            true,
         showErrors:          true,
         errorTimeout:        4000,
         attemptHighlight:    true,
         theme:               "classic",
         useMetaKey:          false,
-        ioDisplayThreshold:  2048,
         logLevel:            "info",
         autoMagic:           true,
         imagePreview:        true,
-        syncTabs:            true,
-        preserveCR:          "entropy"
+        syncTabs:            true
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

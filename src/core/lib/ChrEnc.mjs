@@ -6,10 +6,12 @@
  * @license Apache-2.0
  */
 
+import cptable from "codepage";
+
 /**
  * Character encoding format mappings.
  */
-export const IO_FORMAT = {
+export const CHR_ENC_CODE_PAGES = {
     "UTF-8 (65001)": 65001,
     "UTF-7 (65000)": 65000,
     "UTF-16LE (1200)": 1200,
@@ -163,6 +165,57 @@ export const IO_FORMAT = {
     "HZ-GB2312 Simplified Chinese (52936)": 52936,
     "Simplified Chinese GB18030 (54936)": 54936,
 };
+
+
+export const CHR_ENC_SIMPLE_LOOKUP = {};
+export const CHR_ENC_SIMPLE_REVERSE_LOOKUP = {};
+
+for (const name in CHR_ENC_CODE_PAGES) {
+    const simpleName = name.match(/(^.+)\([\d/]+\)$/)[1];
+
+    CHR_ENC_SIMPLE_LOOKUP[simpleName] = CHR_ENC_CODE_PAGES[name];
+    CHR_ENC_SIMPLE_REVERSE_LOOKUP[CHR_ENC_CODE_PAGES[name]] = simpleName;
+}
+
+
+/**
+ * Returns the width of the character set for the given codepage.
+ * For example, UTF-8 is a Single Byte Character Set, whereas
+ * UTF-16 is a Double Byte Character Set.
+ *
+ * @param {number} page - The codepage number
+ * @returns {number}
+ */
+export function chrEncWidth(page) {
+    if (typeof page !== "number") return 0;
+
+    // Raw Bytes have a width of 1
+    if (page === 0) return 1;
+
+    const pageStr = page.toString();
+    // Confirm this page is legitimate
+    if (!Object.prototype.hasOwnProperty.call(CHR_ENC_SIMPLE_REVERSE_LOOKUP, pageStr))
+        return 0;
+
+    // Statically defined code pages
+    if (Object.prototype.hasOwnProperty.call(cptable, pageStr))
+        return cptable[pageStr].dec.length > 256 ? 2 : 1;
+
+    // Cached code pages
+    if (cptable.utils.cache.sbcs.includes(pageStr))
+        return 1;
+    if (cptable.utils.cache.dbcs.includes(pageStr))
+        return 2;
+
+    // Dynamically generated code pages
+    if (Object.prototype.hasOwnProperty.call(cptable.utils.magic, pageStr)) {
+        // Generate a single character and measure it
+        const a = cptable.utils.encode(page, "a");
+        return a.length;
+    }
+
+    return 0;
+}
 
 /**
  * Unicode Normalisation Forms

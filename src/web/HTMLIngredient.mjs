@@ -54,7 +54,7 @@ class HTMLIngredient {
             case "string":
             case "binaryString":
             case "byteArray":
-                html += `<div class="form-group">
+                html += `<div class="form-group ing-wide">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating">${this.name}</label>
@@ -70,7 +70,7 @@ class HTMLIngredient {
                 break;
             case "shortString":
             case "binaryShortString":
-                html += `<div class="form-group inline">
+                html += `<div class="form-group ing-short">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating inline">${this.name}</label>
@@ -85,7 +85,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "toggleString":
-                html += `<div class="form-group input-group">
+                html += `<div class="form-group input-group ing-wide" data-help-title="Multi-type ingredients" data-help="Selecting a data type from the dropdown will change how the ingredient is interpreted by the operation.">
                     <div class="toggle-string">
                         <label for="${this.id}"
                             ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
@@ -111,7 +111,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "number":
-                html += `<div class="form-group inline">
+                html += `<div class="form-group inline ing-medium">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating inline">${this.name}</label>
@@ -128,7 +128,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "boolean":
-                html += `<div class="form-group inline boolean-arg">
+                html += `<div class="form-group inline boolean-arg ing-flexible">
                     <div class="checkbox">
                         <label ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}>
                             <input type="checkbox"
@@ -144,7 +144,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "option":
-                html += `<div class="form-group inline">
+                html += `<div class="form-group ing-medium">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating inline">${this.name}</label>
@@ -168,7 +168,7 @@ class HTMLIngredient {
                 break;
             case "populateOption":
             case "populateMultiOption":
-                html += `<div class="form-group">
+                html += `<div class="form-group ing-medium" data-help-title="Population dropdowns" data-help="Selecting a value from this dropdown will populate some of the other ingredients for this operation with pre-canned values.">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating">${this.name}</label>
@@ -199,7 +199,7 @@ class HTMLIngredient {
                 this.manager.addDynamicListener("#" + this.id, "change", eventFn, this);
                 break;
             case "editableOption":
-                html += `<div class="form-group input-group">
+                html += `<div class="form-group input-group ing-wide">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating">${this.name}</label>
@@ -230,7 +230,7 @@ class HTMLIngredient {
                 this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
                 break;
             case "editableOptionShort":
-                html += `<div class="form-group input-group inline">
+                html += `<div class="form-group input-group ing-short">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating inline">${this.name}</label>
@@ -261,7 +261,7 @@ class HTMLIngredient {
                 this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
                 break;
             case "text":
-                html += `<div class="form-group">
+                html += `<div class="form-group ing-very-wide">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating">${this.name}</label>
@@ -275,7 +275,7 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "argSelector":
-                html += `<div class="form-group inline">
+                html += `<div class="form-group inline ing-medium" data-help-title="Ingredient selector" data-help="Selecting options in this dropdown will configure which operation ingredients are visible.">
                     <label for="${this.id}"
                         ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
                         class="bmd-label-floating inline">${this.name}</label>
@@ -298,7 +298,7 @@ class HTMLIngredient {
                 this.manager.addDynamicListener(".arg-selector", "change", this.argSelectorChange, this);
                 break;
             case "label":
-                html += `<div class="form-group">
+                html += `<div class="form-group ing-flexible">
                     <label>${this.name}</label>
                     <input type="hidden"
                         class="form-control arg"

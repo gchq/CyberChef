@@ -63,33 +63,32 @@ class ToHexdump extends Operation {
         if (length < 1 || Math.round(length) !== length)
             throw new OperationError("Width must be a positive integer");
 
-        let output = "";
+        const lines = [];
         for (let i = 0; i < data.length; i += length) {
-            const buff = data.slice(i, i+length);
-            let hexa = "";
-            for (let j = 0; j < buff.length; j++) {
-                hexa += Utils.hex(buff[j], padding) + " ";
-            }
-
             let lineNo = Utils.hex(i, 8);
 
+            const buff = data.slice(i, i+length);
+            const hex = [];
+            buff.forEach(b => hex.push(Utils.hex(b, padding)));
+            let hexStr = hex.join(" ").padEnd(length*(padding+1), " ");
+
+            const ascii = Utils.printable(Utils.byteArrayToChars(buff), false, unixFormat);
+            const asciiStr = ascii.padEnd(buff.length, " ");
+
             if (upperCase) {
-                hexa = hexa.toUpperCase();
+                hexStr = hexStr.toUpperCase();
                 lineNo = lineNo.toUpperCase();
             }
 
-            output += lineNo + "  " +
-                hexa.padEnd(length*(padding+1), " ") +
-                " |" +
-                Utils.printable(Utils.byteArrayToChars(buff), false, unixFormat).padEnd(buff.length, " ") +
-                "|\n";
+            lines.push(`${lineNo}  ${hexStr} |${asciiStr}|`);
+
 
             if (includeFinalLength && i+buff.length === data.length) {
-                output += Utils.hex(i+buff.length, 8) + "\n";
+                lines.push(Utils.hex(i+buff.length, 8));
             }
         }
 
-        return output.slice(0, -1);
+        return lines.join("\n");
     }
 
     /**
