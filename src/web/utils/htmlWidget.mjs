@@ -7,6 +7,7 @@
 import {WidgetType, Decoration, ViewPlugin} from "@codemirror/view";
 import {escapeControlChars} from "./editorUtils.mjs";
 import {htmlCopyOverride} from "./copyOverride.mjs";
+import Utils from "../../core/Utils.mjs";
 
 
 /**
@@ -64,7 +65,11 @@ class HTMLWidget extends WidgetType {
      * @param {DOMNode} textNode
      */
     replaceControlChars(textNode) {
-        const val = escapeControlChars(textNode.nodeValue, true, this.view.state.lineBreak);
+        // .nodeValue unencodes HTML encoding such as &lt; to "<"
+        // We must remember to escape any potential HTML in TextNodes as we do not
+        // want to render it.
+        const textValue = Utils.escapeHtml(textNode.nodeValue);
+        const val = escapeControlChars(textValue, true, this.view.state.lineBreak);
         if (val.length !== textNode.nodeValue.length) {
             const node = document.createElement("span");
             node.innerHTML = val;
