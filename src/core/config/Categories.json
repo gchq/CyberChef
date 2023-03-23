@@ -121,6 +121,7 @@
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "Derive HKDF key",
             "Bcrypt",
             "Scrypt",
             "JWT Sign",
