@@ -131,6 +131,7 @@ import "./tests/CMAC.mjs";
 import "./tests/AESKeyWrap.mjs";
 import "./tests/Rabbit.mjs";
 import "./tests/LevenshteinDistance.mjs";
+import "./tests/SwapCase.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
