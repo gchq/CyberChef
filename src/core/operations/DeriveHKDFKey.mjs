@@ -20,7 +20,7 @@ class DeriveHKDFKey extends Operation {
     constructor() {
         super();
 
-        this.name = "Derive HKDF Key";
+        this.name = "Derive HKDF key";
         this.module = "Crypto";
         this.description = "A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.";
         this.infoURL = "https://wikipedia.org/wiki/HKDF";
