@@ -13,6 +13,10 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.1.0] - 2023-03-23
+- Added 'Levenshtein Distance' operation [@mikecat] | [#1498]
+- Added 'Swap case' operation [@mikecat] | [#1499]
+
 ## [10.0.0] - 2023-03-22
 - [Full details explained here](https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features)
 - Status bars added to the Input and Output [@n1474335] | [#1405]
@@ -358,6 +362,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[10.1.0]: https://github.com/gchq/CyberChef/releases/tag/v10.1.0
 [10.0.0]: https://github.com/gchq/CyberChef/releases/tag/v10.0.0
 [9.55.0]: https://github.com/gchq/CyberChef/releases/tag/v9.55.0
 [9.54.0]: https://github.com/gchq/CyberChef/releases/tag/v9.54.0
@@ -617,4 +622,6 @@ All major and minor version changes will be documented in this file. Details of 
 [#1466]: https://github.com/gchq/CyberChef/pull/1466
 [#1456]: https://github.com/gchq/CyberChef/pull/1456
 [#1450]: https://github.com/gchq/CyberChef/pull/1450
+[#1498]: https://github.com/gchq/CyberChef/pull/1498
+[#1499]: https://github.com/gchq/CyberChef/pull/1499
 
