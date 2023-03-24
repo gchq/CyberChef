@@ -26,7 +26,7 @@ class Argon2Compare extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Hash",
+                "name": "Encoded hash",
                 "type": "string",
                 "value": ""
             }

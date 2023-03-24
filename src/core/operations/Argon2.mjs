@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 import argon2 from "argon2-browser";
 
 /**
@@ -28,8 +29,9 @@ class Argon2 extends Operation {
         this.args = [
             {
                 "name": "Salt",
-                "type": "string",
-                "value": "somesalt"
+                "type": "toggleString",
+                "value": "somesalt",
+                "toggleValues": ["UTF8", "Hex", "Base64", "Latin1"]
             },
             {
                 "name": "Iterations",
@@ -56,6 +58,11 @@ class Argon2 extends Operation {
                 "type": "option",
                 "value": ["Argon2i", "Argon2d", "Argon2id"],
                 "defaultIndex": 0
+            },
+            {
+                "name": "Output format",
+                "type": "option",
+                "value": ["Encoded hash", "Hex hash", "Raw hash"]
             }
         ];
     }
@@ -72,12 +79,13 @@ class Argon2 extends Operation {
             "Argon2id": argon2.ArgonType.Argon2id
         };
 
-        const salt = args[0],
+        const salt = Utils.convertToByteString(args[0].string || "", args[0].option),
             time = args[1],
             mem = args[2],
             parallelism = args[3],
             hashLen = args[4],
-            type = argon2Types[args[5]];
+            type = argon2Types[args[5]],
+            outFormat = args[6];
 
         try {
             const result = await argon2.hash({
@@ -90,7 +98,15 @@ class Argon2 extends Operation {
                 type,
             });
 
-            return result.encoded;
+            switch (outFormat) {
+                case "Hex hash":
+                    return result.hashHex;
+                case "Raw hash":
+                    return Utils.arrayBufferToStr(result.hash);
+                case "Encoded hash":
+                default:
+                    return result.encoded;
+            }
         } catch (err) {
             throw new OperationError(`Error: ${err.message}`);
         }
