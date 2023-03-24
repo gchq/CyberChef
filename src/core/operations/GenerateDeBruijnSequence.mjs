@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Generate De Bruijn Sequence operation
@@ -58,9 +58,7 @@ class GenerateDeBruijnSequence extends Operation {
             throw new OperationError("Too many permutations, please reduce k^n to under 50,000.");
         }
 
-        const a = [];
-        for (let i = 0; i < k * n; i++) a.push(0);
-
+        const a = new Array(k * n).fill(0);
         const sequence = [];
 
         (function db(t = 1, p = 1) {
