@@ -114,6 +114,8 @@ module.exports = {
         }
     },
     module: {
+        // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
+        noParse: /node_modules\/argon2-browser\/dist\/argon2\.wasm$/,
         rules: [
             {
                 test: /\.m?js$/,
@@ -127,11 +129,11 @@ module.exports = {
                 loader: "babel-loader"
             },
             {
-                test: /node-forge/,
-                loader: "imports-loader",
-                options: {
-                    additionalCode: "var jQuery = false;"
-                }
+                test: /node_modules\/argon2-browser\/dist\/argon2\.wasm$/,
+                // Load argon2.wasm as base64-encoded binary file
+                // expected by argon2-browser
+                loaders: "base64-loader",
+                type: "javascript/auto"
             },
             {
                 test: /prime.worker.min.js$/,

@@ -94,6 +94,7 @@
     "@astronautlabs/amf": "^0.0.6",
     "@babel/polyfill": "^7.12.1",
     "@blu3r4y/lzma": "^2.3.3",
+    "argon2-browser": "^1.11.1",
     "arrive": "^2.4.1",
     "avsc": "^5.7.7",
     "bcryptjs": "^2.4.3",
