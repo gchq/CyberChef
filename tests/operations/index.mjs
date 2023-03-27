@@ -133,6 +133,7 @@ import "./tests/Rabbit.mjs";
 import "./tests/LevenshteinDistance.mjs";
 import "./tests/SwapCase.mjs";
 import "./tests/HKDF.mjs";
+import "./tests/GenerateDeBruijnSequence.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
