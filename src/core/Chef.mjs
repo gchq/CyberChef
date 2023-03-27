@@ -56,7 +56,7 @@ class Chef {
         } catch (err) {
             log.error(err);
             error = {
-                displayStr: err.displayStr,
+                displayStr: err.displayStr || err.toString(),
             };
             progress = err.progress;
         }
