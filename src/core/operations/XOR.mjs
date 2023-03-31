@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import { bitOp, xor, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
+import { bitOp, xor, add, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
 
 /**
  * XOR operation
@@ -21,7 +21,7 @@ class XOR extends Operation {
 
         this.name = "XOR";
         this.module = "Default";
-        this.description = "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Scheme:</u><ul><li>Standard - key is unchanged after each round</li><li>Input differential - key is set to the value of the previous unprocessed byte</li><li>Output differential - key is set to the value of the previous processed byte</li><li>Cascade - key is set to the input byte shifted by one</li></ul>";
+        this.description = "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Scheme:</u><ul><li>Standard - key is unchanged after each round</li><li>Input differential - key is set to the value of the previous unprocessed byte</li><li>Output differential - key is set to the value of the previous processed byte</li><li>Cascade - key is set to the input byte shifted by one</li><li>Rolling - key is set to the value of itself added with the current position in the bytes</li>Rolling cumulative - key is set to the value of itself added with a cumulative addition of the position in the bytes<li></li><li>Rolling cumulative (self) - key is set to the value of itself XOR'd with the previous chunk of bytes (where the chunk size is equal to key size)</li></ul>";
         this.infoURL = "https://wikipedia.org/wiki/XOR";
         this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
@@ -35,7 +35,7 @@ class XOR extends Operation {
             {
                 "name": "Scheme",
                 "type": "option",
-                "value": ["Standard", "Input differential", "Output differential", "Cascade"]
+                "value": ["Standard", "Input differential", "Output differential", "Cascade", "Rolling", "Rolling cumulative", "Rolling cumulative (self)"]
             },
             {
                 "name": "Null preserving",
@@ -54,6 +54,31 @@ class XOR extends Operation {
         input = new Uint8Array(input);
         const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
             [, scheme, nullPreserving] = args;
+
+		if (scheme.startswith("Rolling") && key.length) {
+			const inputChunks = Utils.chunked(input, key.length);
+			let runningIndex = 0;
+			let runningKey = key;
+			let xorred = null;
+			return inputChunks.reduce((result, current, index) => {
+				runningIndex += index;
+				switch (scheme) {
+					case "Rolling":  // key = key + index
+						return result.concat(bitOp(current, key.map(x => add(x, index)), xor, nullPreserving, scheme));
+					case "Rolling cumulative":  // key = key + index + previous
+						return result.concat(bitOp(current, key.map(x => add(x, runningIndex)), xor, nullPreserving, scheme));
+					case "Rolling cumulative (self)":  // key = key XOR previous chunk
+						// Xor this chunk
+						xorred = bitOp(current, runningKey, xor, nullPreserving, scheme));
+
+						// Update the running key for next part of loop
+						runningKey = bitOp(runningKey, current, xor, nullPreserving, scheme));
+
+						// Return the result with the newest xor'd chunk
+						return result.concat(xorred);
+				}
+			}, Utils.strToByteArray(""));
+		}
 
         return bitOp(input, key, xor, nullPreserving, scheme);
     }
