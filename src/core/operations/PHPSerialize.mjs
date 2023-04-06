@@ -35,7 +35,7 @@ class PHPSerialize extends Operation {
     run(input, args) {
         /**
          * Determines if a number is an integer
-         * @param {number} value 
+         * @param {number} value
          * @returns {boolean}
          */
         function isInteger(value) {
@@ -44,7 +44,7 @@ class PHPSerialize extends Operation {
 
         /**
          * Serialize basic types
-         * @param {string | number | boolean} content 
+         * @param {string | number | boolean} content
          * @returns {string}
          */
         function serializeBasicTypes(content) {
@@ -54,40 +54,36 @@ class PHPSerialize extends Operation {
                 "float": "d",
                 "boolean": "b"
             };
-        
             /**
              * Booleans
              * cast to 0 or 1
              */
-            if (typeof content === "boolean"){
-                return `${basicTypes["boolean"]}:${content ? 1 : 0}`;
+            if (typeof content === "boolean") {
+                return `${basicTypes.boolean}:${content ? 1 : 0}`;
             }
-            
             /**
              * Numbers
              */
-            if (typeof content === "number"){
-                if (isInteger(content)){
-                    return `${basicTypes["integer"]}:${content.toString()}`
-                }
-                else {
-                    return `${basicTypes["float"]}:${content.toString()}`
+            if (typeof content === "number") {
+                if (isInteger(content)) {
+                    return `${basicTypes.integer}:${content.toString()}`;
+                } else {
+                    return `${basicTypes.float}:${content.toString()}`;
                 }
             }
-        
             /**
              * Strings
              */
             if (typeof content === "string")
-                return `${basicTypes["string"]}:${content.length}:"${content}"`;
-            
+                return `${basicTypes.string}:${content.length}:"${content}"`;
+
             /** This should be unreachable */
             throw new OperationError(`Encountered a non-implemented type: ${typeof content}`);
         }
 
         /**
          * Recursively serialize
-         * @param {*} object 
+         * @param {*} object
          * @returns {string}
          */
         function serialize(object) {
@@ -95,42 +91,38 @@ class PHPSerialize extends Operation {
              * Null
              */
             if (object == null) {
-                return `N;`
+                return `N;`;
             }
-        
-            /**
-             * Basic types
-             */
-            if (typeof object !== "object"){
+
+            if (typeof object !== "object") {
+                /**
+                 * Basic types
+                 */
                 return `${serializeBasicTypes(object)};`;
-            }
-        
-            /**
-             * Arrays
-             */
-            else if (object instanceof Array) {
+            } else if (object instanceof Array) {
+                /**
+                 * Arrays
+                 */
                 const serializedElements = [];
-        
+
                 for (let i = 0; i < object.length; i++) {
                     serializedElements.push(`${serialize(i)}${serialize(object[i])}`);
                 }
-        
-                return `a:${object.length}:{${serializedElements.join("")}}`
-            }
-        
-            /**
-             * Objects
-             * Note: the output cannot be guaranteed to be in the same order as the input 
-             */
-            else if (object instanceof Object) {
+
+                return `a:${object.length}:{${serializedElements.join("")}}`;
+            } else if (object instanceof Object) {
+                /**
+                 * Objects
+                 * Note: the output cannot be guaranteed to be in the same order as the input
+                 */
                 const serializedElements = [];
                 const keys = Object.keys(object);
-        
+
                 for (const key of keys) {
                     serializedElements.push(`${serialize(key)}${serialize(object[key])}`);
                 }
-        
-                return `a:${keys.length}:{${serializedElements.join("")}}`
+
+                return `a:${keys.length}:{${serializedElements.join("")}}`;
             }
 
             /** This should be unreachable */
