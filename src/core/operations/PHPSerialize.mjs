@@ -61,9 +61,7 @@ class PHPSerialize extends Operation {
             if (typeof content === "boolean") {
                 return `${basicTypes.boolean}:${content ? 1 : 0}`;
             }
-            /**
-             * Numbers
-             */
+            /* Numbers */
             if (typeof content === "number") {
                 if (isInteger(content)) {
                     return `${basicTypes.integer}:${content.toString()}`;
@@ -71,9 +69,7 @@ class PHPSerialize extends Operation {
                     return `${basicTypes.float}:${content.toString()}`;
                 }
             }
-            /**
-             * Strings
-             */
+            /* Strings */
             if (typeof content === "string")
                 return `${basicTypes.string}:${content.length}:"${content}"`;
 
@@ -87,22 +83,16 @@ class PHPSerialize extends Operation {
          * @returns {string}
          */
         function serialize(object) {
-            /**
-             * Null
-             */
+            /* Null */
             if (object == null) {
                 return `N;`;
             }
 
             if (typeof object !== "object") {
-                /**
-                 * Basic types
-                 */
+                /* Basic types */
                 return `${serializeBasicTypes(object)};`;
             } else if (object instanceof Array) {
-                /**
-                 * Arrays
-                 */
+                /* Arrays */
                 const serializedElements = [];
 
                 for (let i = 0; i < object.length; i++) {
