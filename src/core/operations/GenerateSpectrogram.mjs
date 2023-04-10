@@ -30,7 +30,7 @@ class GenerateSpectrogram extends Operation {
 
         this.name = "Generate Spectrogram";
         this.module = "Default";
-        this.description = "Generates a spectrogram from a wave file";
+        this.description = "Generates a spectrogram from a wave file.<br /><br /><code>Frame size</code> - the number of samples process at once by FFT.<br /><code>Overlap</code> - the number of samples to overlap between frames.<br /><code>Color scheme</code> - the color scheme to use.<br /><code>Gain (dB)</code> - gain in decibels.<br /><code>Channel</code> - the channel to use.<br /><code>Include axes</code> - whether to include axes and labels on the rendered image.";
         this.infoURL = "https://en.wikipedia.org/wiki/Spectrogram";
         this.inputType = "string";
         this.outputType = "byteArray";
