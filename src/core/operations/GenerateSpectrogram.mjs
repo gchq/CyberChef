@@ -204,8 +204,6 @@ class GenerateSpectrogram extends Operation {
                 /* pad with zeros */
                 const pad = new Float64Array(frameSize - chunk.length).fill(0);
                 chunk = Float64Array.from([...chunk, ...pad]);
-
-                console.log(chunk);
             }
 
             /* get frequency spectrum */
@@ -282,8 +280,6 @@ class GenerateSpectrogram extends Operation {
      * @returns {string} HTML
      */
     async present(data, args) {
-        console.log(args);
-
         if (!data.length) return "";
 
         // check file type
