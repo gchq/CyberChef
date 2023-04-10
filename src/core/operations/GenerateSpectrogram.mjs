@@ -112,12 +112,12 @@ class GenerateSpectrogram extends Operation {
      */
     async getSpectrogram(sampleChannels, sampleRate, args) {
         /* args */
-        const frameSize = parseInt(args[0]);
-        const overlap = (parseInt(args[1]) / 100) * frameSize; 
+        const frameSize = parseInt(args[0], 10);
+        const overlap = (parseInt(args[1], 10) / 100) * frameSize;
         const colorScheme = args[2];
         const gain = args[3];
         const channelNum = args[4];
-        const include_axes = args[5];
+        const includeAxes = args[5];
 
         if (sampleChannels[channelNum] == null) {
             throw new OperationError(`Invalid channel number: ${channelNum}`);
@@ -127,44 +127,49 @@ class GenerateSpectrogram extends Operation {
         const MAX_FREQ = sampleRate / 2;
 
         /* positions and sizes */
-        let padding_left = 0;
-        let padding_right = 0;
-        let padding_bottom = 0;
-        if (include_axes){
-            padding_left = Math.log10(MAX_FREQ) * 10 + 10 * 3; // space for the text (10px per digit)
-            padding_right = 50;
-            padding_bottom = 20;
+        let paddingLeft = 0;
+        let paddingRight = 0;
+        let paddingBottom = 0;
+        if (includeAxes) {
+            paddingLeft = Math.log10(MAX_FREQ) * 10 + 10 * 3; // space for the frequency labels (10px per digit)
+            paddingRight = 50;
+            paddingBottom = 20;
         }
 
         const width = channel.length / (frameSize - overlap);
         const height = frameSize / 2;
 
-        const image_width = width + padding_left + padding_right;
-        const image_height = height + padding_bottom;
+        const imageWidth = width + paddingLeft + paddingRight;
+        const imageHeight = height + paddingBottom;
 
         /* create an image */
-        const image = new jimp(image_width, image_height, (err, image) => {});
+        const image = new jimp(imageWidth, imageHeight, (err, image) => {});
         if (isWorkerEnvironment())
             self.sendStatusMessage("Generating a spectrogram from data...");
 
+        /**
+         * Returns a function filling a pixel with given color
+         * @param {array<number>} rgba
+         * @returns function
+         */
         function fill(rgba) {
             return function(x, y, idx) {
                 this.bitmap.data[idx + 0] = rgba[0];
                 this.bitmap.data[idx + 1] = rgba[1];
                 this.bitmap.data[idx + 2] = rgba[2];
                 this.bitmap.data[idx + 3] = rgba[3];
-            }
+            };
         }
 
         /* fill with black */
         image.scan(0, 0, image.bitmap.width, image.bitmap.height, fill([0, 0, 0, 255]).bind(image));
 
-        if (include_axes) {
+        if (includeAxes) {
             /* draw border */
-            image.scan(padding_left - 1, height + 1, width + 2, 1, fill([255, 255, 255, 255]).bind(image)); // horizontal
-            image.scan(padding_left - 1, 0, 1, height + 1, fill([255, 255, 255, 255]).bind(image)); // vertical (left)
-            image.scan(padding_left + width + 1, 0, 1, height + 1, fill([255, 255, 255, 255]).bind(image)); // vertical (right)
-            
+            image.scan(paddingLeft - 1, height + 1, width + 2, 1, fill([255, 255, 255, 255]).bind(image)); // horizontal
+            image.scan(paddingLeft - 1, 0, 1, height + 1, fill([255, 255, 255, 255]).bind(image)); // vertical (left)
+            image.scan(paddingLeft + width + 1, 0, 1, height + 1, fill([255, 255, 255, 255]).bind(image)); // vertical (right)
+
             /* set font */
             const font = await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.fnt");
             await import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.png");
@@ -177,12 +182,12 @@ class GenerateSpectrogram extends Operation {
             const textImage = new jimp(image.bitmap.width * textScale, image.bitmap.height * textScale, (err, image) => {});
 
             /* write min and max frequency */
-            textImage.print(jimpFont, /* align to right */ (padding_left - 30) * textScale, (height - 10) * textScale, "0 Hz");
-            textImage.print(jimpFont, /* align to right */ (padding_left - (Math.log10(MAX_FREQ) + 1) * 10) * textScale, 5 * textScale, `${(MAX_FREQ).toFixed(0)} Hz`);
+            textImage.print(jimpFont, /* align to right */ (paddingLeft - 30) * textScale, (height - 10) * textScale, "0 Hz");
+            textImage.print(jimpFont, /* align to right */ (paddingLeft - (Math.log10(MAX_FREQ) + 1) * 10) * textScale, 5 * textScale, `${(MAX_FREQ).toFixed(0)} Hz`);
 
             /* write min and max time */
-            textImage.print(jimpFont, (padding_left - 5) * textScale, (height + 5) * textScale, "0 s");
-            textImage.print(jimpFont, (padding_left + width) * textScale, (height + 5) * textScale, `${(channel.length / sampleRate).toFixed(0)} s`);
+            textImage.print(jimpFont, (paddingLeft - 5) * textScale, (height + 5) * textScale, "0 s");
+            textImage.print(jimpFont, (paddingLeft + width) * textScale, (height + 5) * textScale, `${(channel.length / sampleRate).toFixed(0)} s`);
 
             /* draw the scaled image on the original image */
             textImage.scaleToFit(image.bitmap.width, image.bitmap.height);
@@ -191,8 +196,8 @@ class GenerateSpectrogram extends Operation {
 
         const rfft = new RFFT(frameSize, sampleRate);
 
-        let frames = [];
-        for (let start = 0; start < channel.length; start += (frameSize - overlap)){
+        const frames = [];
+        for (let start = 0; start < channel.length; start += (frameSize - overlap)) {
             let chunk = channel.slice(start, start+frameSize);
 
             if (chunk.length < frameSize) {
@@ -205,12 +210,12 @@ class GenerateSpectrogram extends Operation {
 
             /* get frequency spectrum */
             const freq = rfft.forward(chunk);
-            let frame = [];
+            const frame = [];
             for (let i = 0; i < freq.length; i++) {
                 /* convert to decibels */
                 let strength = 10 * Math.log10(Math.abs(freq[i])) + gain;
-                
-                if (freq[i] == 0) // avoid -Infinity
+
+                if (freq[i] === 0) // avoid -Infinity
                     strength = 0;
 
                 if (strength < 0)
@@ -220,7 +225,7 @@ class GenerateSpectrogram extends Operation {
             }
             frames.push(frame);
         }
-        
+
         /* normalize */
         let max = 0;
         for (let i = 0; i < frames.length; i++) {
@@ -231,7 +236,7 @@ class GenerateSpectrogram extends Operation {
         }
 
         /* draw */
-        let pos_x = padding_left;
+        let posX = paddingLeft;
         for (let i = 0; i < frames.length; i++) {
             for (let j = 0; j < frames[i].length; j++) {
                 const colorStrength = (frames[i][j] / max) * 255;
@@ -254,9 +259,9 @@ class GenerateSpectrogram extends Operation {
                         throw new OperationError(`Unknown color scheme: ${colorScheme}`);
                 }
 
-                image.scan(pos_x, height - j, 1, 1, fill(color).bind(image));
+                image.scan(posX, height - j, 1, 1, fill(color).bind(image));
             }
-            pos_x++;
+            posX++;
         }
 
         /* get image data */
@@ -267,7 +272,7 @@ class GenerateSpectrogram extends Operation {
             throw new OperationError(`Error generating image. (${err})`);
         }
 
-        return `<img src="data:image/png;base64,${toBase64(imageBuffer)}" />`
+        return `<img src="data:image/png;base64,${toBase64(imageBuffer)}" />`;
     }
 
     /**
@@ -291,8 +296,7 @@ class GenerateSpectrogram extends Operation {
         let wave;
         try {
             wave = new wavefile.WaveFile(data);
-        }
-        catch (err) {
+        } catch (err) {
             throw new OperationError("Invalid WAV file");
         }
 
@@ -304,8 +308,7 @@ class GenerateSpectrogram extends Operation {
         let sampleChannels = [];
         if (numChannels > 1) {
             sampleChannels = wave.getSamples(); // returns an array of arrays
-        }
-        else {
+        } else {
             sampleChannels.push(wave.getSamples()); // returns an array
         }
 
