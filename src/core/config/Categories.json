@@ -29,6 +29,8 @@
             "To Base64",
             "From Base64",
             "Show Base64 offsets",
+            "To Base92",
+            "From Base92",
             "To Base85",
             "From Base85",
             "To Base",
