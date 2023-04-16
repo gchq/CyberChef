@@ -413,7 +413,8 @@
     font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
-    margin: 0 5px;
+    /*0 5px for desktop*/
+    margin: 5px 15px;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;

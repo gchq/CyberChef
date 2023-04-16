@@ -29,8 +29,9 @@ body {
 /*//////// mobile ui updates below ///////////*/
 /* this is temporary ( unorganised and unrefined )*/
 
+/*@todo: use a banner-height var or something so these two will always align*/
 #workspace-wrapper {
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 #content-wrapper,

@@ -8,9 +8,9 @@
 
 #banner {
     position: absolute;
-    height: 30px;
+    height: 40px;
     width: 100%;
-    line-height: 30px;
+    line-height: 40px;
     border-bottom: 1px solid var(--primary-border-colour);
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
