@@ -20,10 +20,10 @@
         linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
-#edit-favourites {
-    float: right;
-    margin-top: -7px;
-}
+/*#edit-favourites {*/
+/*    float: right;*/
+/*    margin-top: -7px;*/
+/*}*/
 
 .favourites-hover {
     color: var(--rec-list-operation-font-colour);
@@ -41,3 +41,4 @@
 .op-list .operation:hover {
     filter: brightness(98%);
 }
+
