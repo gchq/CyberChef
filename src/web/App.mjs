@@ -46,6 +46,8 @@ class App {
         this.appLoaded     = false;
         this.workerLoaded  = false;
         this.waitersLoaded = false;
+
+        this.breakpoint = 1024;
     }
 
 
@@ -57,15 +59,17 @@ class App {
     setup() {
         document.dispatchEvent(this.manager.appstart);
 
-        this.initialiseSplitter();
+        if (  window.innerWidth >= this.breakpoint ) {
+            this.initialiseSplitter();
+            this.setCompileMessage();
+            this.adjustComponentSizes();
+        }
+
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
         this.manager.output.saveBombe();
-        this.adjustComponentSizes();
-        this.setCompileMessage();
         this.uriParams = this.getURIParams();
-
         log.debug("App loaded");
         this.appLoaded = true;
         this.loaded();
