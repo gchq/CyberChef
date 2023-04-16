@@ -26,7 +26,8 @@ body {
     cursor: ns-resize;
 }
 
-/*//////// dolphins mobile ui below ///////////*/
+/*//////// mobile ui updates below ///////////*/
+/* this is temporary ( unorganised and unrefined )*/
 
 #workspace-wrapper {
     margin-top: 30px;
@@ -39,7 +40,7 @@ body {
 #input,
 #output,
 #search {
-    width: 100vw;
+    width: 100%;
 }
 
 #recipe {
@@ -60,6 +61,11 @@ body {
     justify-content: space-between;
 }
 
+label[for="input-text"],
+label[for="output-text"] {
+    line-height: revert;
+}
+
 #content-wrapper {
     position: absolute;
     top: 0;
@@ -68,7 +74,6 @@ body {
     left: 0;
 }
 
-/*@TODO: move elsewhere*/
 .desktop-only {
     display: none;
 }
