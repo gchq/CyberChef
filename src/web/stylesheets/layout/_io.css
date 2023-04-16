@@ -131,10 +131,7 @@
 .output-tab-content {
     width: 100%;
     max-width: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 5px;
     height: var(--tab-height);
     vertical-align: middle;
     overflow: hidden;
@@ -319,8 +316,7 @@
 #output-num-results-container {
     width: 20%;
     float: right;
-    margin: 0;
-    margin-left: 10%;
+    margin: 0 0 0 10%;
 }
 
 #input-find-options-checkboxes,
@@ -355,10 +351,7 @@
 
 #input-search-results li,
 #output-search-results li {
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 5px;
     text-align: center;
     width: 100%;
     color: var(--op-list-operation-font-colour);
