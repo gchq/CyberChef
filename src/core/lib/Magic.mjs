@@ -1,4 +1,6 @@
-import OperationConfig from "../config/OperationConfig.json" assert {type: "json"};
+// @TODO: NTS return this to original? ( it breaks dev though )
+// import OperationConfig from "../config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "../config/OperationConfig.json";
 import Utils, { isWorkerEnvironment } from "../Utils.mjs";
 import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
