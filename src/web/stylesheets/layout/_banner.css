@@ -15,8 +15,6 @@
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
     margin: 0;
-
-    /*///////// dolphin additions //////*/
     justify-content: space-between;
 }
 

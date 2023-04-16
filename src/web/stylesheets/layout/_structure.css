@@ -45,13 +45,13 @@ body {
 
 #recipe {
     height: 15vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #input .cm-scroller,
 #output .cm-scroller {
     height: 20vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #recipe .title,
